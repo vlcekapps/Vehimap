@@ -2475,20 +2475,20 @@ OpenDashboardDialog(showMainOnClose := false) {
 
     DashboardGui.AddText("x20 y20 w980", "Dashboard nabízí rychlý přehled vozidel, termínů, nákladů i kvality evidencí, které teď stojí za pozornost nebo doplnění.")
 
-    DashboardGui.AddGroupBox("x20 y50 w980 h60", "Vozidla")
-    DashboardSummaryVehiclesLabel := DashboardGui.AddText("x35 y74 w950 h24", "")
+    DashboardGui.AddGroupBox("x20 y50 w980 h70", "Vozidla")
+    DashboardSummaryVehiclesLabel := DashboardGui.AddText("x35 y74 w950 h34", "")
 
-    DashboardGui.AddGroupBox("x20 y115 w980 h60", "Termíny")
-    DashboardSummaryTermsLabel := DashboardGui.AddText("x35 y139 w950 h24", "")
+    DashboardGui.AddGroupBox("x20 y125 w980 h70", "Termíny")
+    DashboardSummaryTermsLabel := DashboardGui.AddText("x35 y149 w950 h34", "")
 
-    DashboardGui.AddGroupBox("x20 y180 w980 h60", "Náklady")
-    DashboardSummaryCostsLabel := DashboardGui.AddText("x35 y204 w950 h24", "")
+    DashboardGui.AddGroupBox("x20 y200 w980 h70", "Náklady")
+    DashboardSummaryCostsLabel := DashboardGui.AddText("x35 y224 w950 h34", "")
 
-    DashboardGui.AddGroupBox("x20 y245 w980 h60", "Evidence")
-    DashboardSummaryDataLabel := DashboardGui.AddText("x35 y269 w950 h24", "")
+    DashboardGui.AddGroupBox("x20 y275 w980 h70", "Evidence")
+    DashboardSummaryDataLabel := DashboardGui.AddText("x35 y299 w950 h34", "")
 
-    DashboardGui.AddGroupBox("x20 y310 w980 h225", "Nejbližší položky a datové nedostatky")
-    DashboardList := DashboardGui.AddListView("x35 y335 w950 h185 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "SPZ", "Položka / termín", "Stav"])
+    DashboardGui.AddGroupBox("x20 y350 w980 h185", "Položky k řešení a datové nedostatky")
+    DashboardList := DashboardGui.AddListView("x35 y375 w950 h145 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "SPZ", "Položka / termín", "Stav"])
     DashboardList.OnEvent("DoubleClick", OpenSelectedDashboardItem)
     DashboardList.ModifyCol(1, "155")
     DashboardList.ModifyCol(2, "190")
@@ -2574,7 +2574,7 @@ PopulateDashboardList(focusList := false) {
     SortDashboardEntries(&DashboardEntries)
 
     if IsObject(DashboardSummaryVehiclesLabel) {
-        DashboardSummaryVehiclesLabel.Text := BuildDashboardVehicleSummaryText()
+        DashboardSummaryVehiclesLabel.Text := BuildDashboardVehicleSummaryText(DashboardEntries)
     }
 
     if IsObject(DashboardSummaryTermsLabel) {
@@ -2618,21 +2618,16 @@ PopulateDashboardList(focusList := false) {
     DashboardList.Modify(1, focusList ? "Select Focus Vis" : "Select Vis")
 }
 
-BuildDashboardVehicleSummaryText() {
+BuildDashboardVehicleSummaryText(dashboardEntries := "") {
     global Vehicles
 
     archivedCount := 0
     veteranCount := 0
     parkedCount := 0
-    attentionCount := 0
 
     for vehicle in Vehicles {
         meta := GetVehicleMeta(vehicle.id)
         state := NormalizeVehicleState(meta.state)
-
-        if VehicleNeedsAttention(vehicle) {
-            attentionCount += 1
-        }
 
         switch state {
             case "Archiv":
@@ -2649,7 +2644,14 @@ BuildDashboardVehicleSummaryText() {
         activeCount := 0
     }
 
-    return "Celkem vozidel: " Vehicles.Length ". Aktivní: " activeCount ". Archiv: " archivedCount ". Veterán: " veteranCount ". Odstaveno: " parkedCount ". Vyžaduje pozornost: " attentionCount ". Bez zelené karty: " GetMissingGreenCardCount() "."
+    attentionCount := GetDashboardProblemVehicleCount(dashboardEntries)
+    text := "Celkem vozidel: " Vehicles.Length ". Aktivní: " activeCount ". Archiv: " archivedCount ". Veterán: " veteranCount ". Odstaveno: " parkedCount ". Vyžaduje pozornost: " attentionCount ". Bez zelené karty: " GetMissingGreenCardCount() "."
+    highlights := BuildDashboardProblemHighlightsText(dashboardEntries)
+    if (highlights != "") {
+        text .= " Nejvíc pálí: " highlights "."
+    }
+
+    return text
 }
 
 BuildDashboardTermSummaryText() {
@@ -2675,6 +2677,9 @@ BuildDashboardCostSummaryText() {
     total := summary.totalFuel + summary.totalHistory + summary.totalRecords
     if (summary.parsedCount = 0) {
         text := "Rok " summary.year ": zatím nejsou započítané žádné číselné náklady."
+        if (summary.zeroCostVehicleCount > 0) {
+            text .= " Bez číselného nákladu letos: " summary.zeroCostVehicleCount " z " summary.activeVehicleCount " aktivních vozidel."
+        }
         if (summary.skippedCount > 0) {
             text .= " Položek s nečíselnou částkou: " summary.skippedCount "."
         }
@@ -2689,18 +2694,31 @@ BuildDashboardCostSummaryText() {
     text .= " Historie a servis: " FormatCostAmount(summary.totalHistory) "."
     text .= " Doklady a pojištění: " FormatCostAmount(summary.totalRecords) "."
 
-    if (summary.topVehicleId != "") {
-        vehicle := FindVehicleById(summary.topVehicleId)
-        if IsObject(vehicle) {
-            text .= " Nejvyšší zatím " vehicle.name " za " FormatCostAmount(summary.topVehicleTotal) "."
+    topVehiclesText := BuildDashboardTopVehicleCostsText(summary)
+    if (topVehiclesText != "") {
+        text .= " Nejvýš: " topVehiclesText "."
+    }
+
+    if (summary.zeroCostVehicleCount > 0) {
+        text .= " Bez číselného nákladu letos: " summary.zeroCostVehicleCount " z " summary.activeVehicleCount " aktivních vozidel."
+    }
+
+    if (summary.skippedCount > 0 || summary.undatedCount > 0) {
+        issueParts := []
+        if (summary.skippedCount > 0) {
+            issueParts.Push(summary.skippedCount " s nečíselnou částkou")
         }
+        if (summary.undatedCount > 0) {
+            issueParts.Push(summary.undatedCount " bez použitelného data")
+        }
+        text .= " Nezapočteno: " JoinInline(issueParts, ", ") "."
     }
 
     return text
 }
 
 BuildDashboardCurrentYearCostSummary() {
-    global VehicleFuelLog, VehicleHistory, VehicleRecords
+    global Vehicles, VehicleFuelLog, VehicleHistory, VehicleRecords
 
     yearLabel := FormatTime(A_Now, "yyyy")
     yearValue := yearLabel + 0
@@ -2713,8 +2731,11 @@ BuildDashboardCurrentYearCostSummary() {
         skippedCount: 0,
         undatedCount: 0,
         vehicleTotals: Map(),
+        topVehicles: [],
         topVehicleId: "",
-        topVehicleTotal: 0.0
+        topVehicleTotal: 0.0,
+        activeVehicleCount: 0,
+        zeroCostVehicleCount: 0
     }
 
     for entry in VehicleFuelLog {
@@ -2780,10 +2801,20 @@ BuildDashboardCurrentYearCostSummary() {
         }
     }
 
-    for vehicleId, total in summary.vehicleTotals {
-        if (summary.topVehicleId = "" || total > summary.topVehicleTotal) {
-            summary.topVehicleId := vehicleId
-            summary.topVehicleTotal := total
+    summary.topVehicles := BuildDashboardSortedVehicleCostTotals(summary.vehicleTotals)
+    if (summary.topVehicles.Length > 0) {
+        summary.topVehicleId := summary.topVehicles[1].vehicleId
+        summary.topVehicleTotal := summary.topVehicles[1].total
+    }
+
+    for vehicle in Vehicles {
+        if IsVehicleInactive(vehicle) {
+            continue
+        }
+
+        summary.activeVehicleCount += 1
+        if !summary.vehicleTotals.Has(vehicle.id) {
+            summary.zeroCostVehicleCount += 1
         }
     }
 
@@ -2796,6 +2827,162 @@ AddDashboardVehicleCostTotal(vehicleTotals, vehicleId, amount) {
     }
 
     vehicleTotals[vehicleId] += amount
+}
+
+BuildDashboardSortedVehicleCostTotals(vehicleTotals) {
+    items := []
+    for vehicleId, total in vehicleTotals {
+        items.Push({
+            vehicleId: vehicleId,
+            total: total
+        })
+    }
+
+    SortDashboardVehicleCostTotals(&items)
+    return items
+}
+
+SortDashboardVehicleCostTotals(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareDashboardVehicleCostTotals(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareDashboardVehicleCostTotals(left, right) {
+    if (left.total > right.total) {
+        return -1
+    }
+    if (left.total < right.total) {
+        return 1
+    }
+
+    leftVehicle := FindVehicleById(left.vehicleId)
+    rightVehicle := FindVehicleById(right.vehicleId)
+    leftName := IsObject(leftVehicle) ? leftVehicle.name : left.vehicleId
+    rightName := IsObject(rightVehicle) ? rightVehicle.name : right.vehicleId
+    return CompareTextValues(leftName, rightName)
+}
+
+BuildDashboardTopVehicleCostsText(summary, limit := 3) {
+    if !summary.HasOwnProp("topVehicles") || summary.topVehicles.Length = 0 {
+        return ""
+    }
+
+    parts := []
+    for item in summary.topVehicles {
+        vehicle := FindVehicleById(item.vehicleId)
+        if !IsObject(vehicle) {
+            continue
+        }
+
+        parts.Push(ShortenText(vehicle.name, 24) " " FormatCostAmount(item.total))
+        if (parts.Length >= limit) {
+            break
+        }
+    }
+
+    return JoinInline(parts, ", ")
+}
+
+BuildDashboardProblemHighlightsText(entries := "", limit := 3) {
+    items := GetDashboardProblemHighlightItems(entries, limit)
+    return JoinInline(items, ", ")
+}
+
+GetDashboardProblemVehicleCount(entries := "") {
+    if !IsObject(entries) {
+        entries := BuildDashboardEntries()
+        SortDashboardEntries(&entries)
+    }
+
+    seenVehicles := Map()
+    for entry in entries {
+        if !IsObject(entry) || !entry.HasOwnProp("vehicle") || !IsObject(entry.vehicle) {
+            continue
+        }
+
+        vehicleId := entry.vehicle.HasOwnProp("id") ? entry.vehicle.id : ""
+        if (vehicleId = "" || seenVehicles.Has(vehicleId)) {
+            continue
+        }
+
+        seenVehicles[vehicleId] := true
+    }
+
+    return seenVehicles.Count
+}
+
+GetDashboardProblemHighlightItems(entries := "", limit := 3) {
+    if !IsObject(entries) {
+        entries := BuildDashboardEntries()
+        SortDashboardEntries(&entries)
+    }
+
+    highlights := []
+    seenVehicles := Map()
+
+    for entry in entries {
+        if !IsObject(entry) || !entry.HasOwnProp("vehicle") || !IsObject(entry.vehicle) {
+            continue
+        }
+
+        vehicleId := entry.vehicle.HasOwnProp("id") ? entry.vehicle.id : ""
+        if (vehicleId != "" && seenVehicles.Has(vehicleId)) {
+            continue
+        }
+
+        text := BuildDashboardProblemHighlightText(entry)
+        if (text = "") {
+            continue
+        }
+
+        if (vehicleId != "") {
+            seenVehicles[vehicleId] := true
+        }
+        highlights.Push(text)
+        if (highlights.Length >= limit) {
+            break
+        }
+    }
+
+    return highlights
+}
+
+BuildDashboardProblemHighlightText(entry) {
+    if !entry.HasOwnProp("vehicle") || !IsObject(entry.vehicle) {
+        return ""
+    }
+
+    vehicleName := ShortenText(entry.vehicle.name, 22)
+    switch entry.kind {
+        case "technical":
+            detail := "TK " entry.status
+        case "green":
+            detail := (entry.HasOwnProp("isMissingGreen") && entry.isMissingGreen) ? "ZK chybí" : "ZK " entry.status
+        case "custom":
+            detail := "Připomínka " entry.status
+        case "record_path":
+            detail := "Doklad " entry.status
+        case "vehicle_field":
+            detail := entry.term " chybí"
+        default:
+            detail := entry.kindLabel " " entry.status
+    }
+
+    return vehicleName " (" detail ")"
 }
 
 BuildDashboardDataSummaryText() {

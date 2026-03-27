@@ -17,6 +17,7 @@ RunSmokeTests() {
         "SmokeTestGlobalSearch",
         "SmokeTestRecordPathInfo",
         "SmokeTestDashboardCosts",
+        "SmokeTestDashboardProblemHighlights",
         "SmokeTestDashboardDataSummary",
         "SmokeTestDashboardEntries",
         "SmokeTestOverviewDataIssues",
@@ -233,7 +234,8 @@ SmokeTestDashboardCosts() {
     currentYear := FormatTime(A_Now, "yyyy")
     Vehicles := [
         {id: "veh_1", name: "Skoda", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
-        {id: "veh_2", name: "Yamaha", category: "Motocykly", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"}
+        {id: "veh_2", name: "Yamaha", category: "Motocykly", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
+        {id: "veh_3", name: "Transit", category: "Nákladní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"}
     ]
     VehicleFuelLog := [
         {id: "fuel_1", vehicleId: "veh_1", entryDate: "01.02." currentYear, odometer: "10000", liters: "40", totalCost: "1000", fullTank: 1, fuelType: "Benzin", note: ""}
@@ -251,7 +253,43 @@ SmokeTestDashboardCosts() {
     AssertEqual(summary.totalHistory, 2000.0, "Součet historie nesedí.")
     AssertEqual(summary.totalRecords, 1500.0, "Součet dokladů nesedí.")
     AssertEqual(summary.topVehicleId, "veh_1", "Nejvyšší náklad měl patřit prvnímu vozidlu.")
-    AssertContains(BuildDashboardCostSummaryText(), "Rok " currentYear, "Text nákladového souhrnu má obsahovat aktuální rok.")
+    AssertEqual(summary.zeroCostVehicleCount, 1, "Dashboard má počítat aktivní vozidla bez číselného nákladu v aktuálním roce.")
+    AssertEqual(summary.topVehicles.Length, 2, "Dashboard má vrátit pořadí jen pro vozidla s číselnými náklady.")
+
+    summaryText := BuildDashboardCostSummaryText()
+    AssertContains(summaryText, "Rok " currentYear, "Text nákladového souhrnu má obsahovat aktuální rok.")
+    AssertContains(summaryText, "Nejvýš:", "Text nákladového souhrnu má ukázat i pořadí nejdražších vozidel.")
+    AssertContains(summaryText, "Bez číselného nákladu letos: 1 z 3 aktivních vozidel.", "Text nákladového souhrnu má upozornit na aktivní vozidla bez nákladů.")
+}
+
+SmokeTestDashboardProblemHighlights() {
+    global Vehicles, VehicleRecords
+
+    ResetSmokeData()
+    tempRoot := A_Temp "\vehimap_smoke_dashboard_highlights"
+    missingFile := tempRoot "\chybi.pdf"
+    if DirExist(tempRoot) {
+        DirDelete(tempRoot, true)
+    }
+    DirCreate(tempRoot)
+
+    Vehicles := [
+        {id: "veh_1", name: "TK auto", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "1AB2345", year: "", power: "", lastTk: "", nextTk: "01/2000", greenCardFrom: "", greenCardTo: "12/2099"},
+        {id: "veh_2", name: "Doklad auto", category: "Motocykly", vehicleType: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: "12/2099", greenCardFrom: "", greenCardTo: "12/2099"},
+        {id: "veh_3", name: "Bez SPZ", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "12/2099", greenCardFrom: "", greenCardTo: "12/2099"}
+    ]
+    VehicleRecords := [
+        {id: "record_1", vehicleId: "veh_2", recordType: "Doklad", title: "Chybějící příloha", provider: "", validFrom: "", validTo: "", price: "", filePath: missingFile, note: ""}
+    ]
+
+    entries := BuildDashboardEntries()
+    SortDashboardEntries(&entries)
+
+    text := BuildDashboardVehicleSummaryText(entries)
+    AssertContains(text, "Nejvíc pálí:", "Dashboard má vypisovat rychlé highlighty nejvážnějších stavů.")
+    AssertContains(text, "TK auto (TK", "Highlighty mají obsahovat vozidlo s nejbližším problémem.")
+    AssertContains(text, "Doklad auto (Doklad Chybí soubor)", "Highlighty mají obsahovat i problémové přílohy dokladů.")
+    AssertContains(text, "Bez SPZ (SPZ chybí)", "Highlighty mají obsahovat i chybějící klíčové údaje vozidla.")
 }
 
 SmokeTestDashboardDataSummary() {
