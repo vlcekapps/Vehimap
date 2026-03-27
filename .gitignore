@@ -3,6 +3,8 @@
 !README.md
 !RELEASE.md
 !CHANGELOG.md
+!update/
+!update/**
 !build/
 !build/**
 !src/

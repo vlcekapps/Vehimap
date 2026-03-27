@@ -9,6 +9,8 @@ RunSmokeTests() {
     failures := []
     tests := [
         "SmokeTestBuildInfo",
+        "SmokeTestUpdateManifestFile",
+        "SmokeTestSemVerComparison",
         "SmokeTestGlobalSearch",
         "SmokeTestRecordPathInfo",
         "SmokeTestDashboardCosts",
@@ -48,6 +50,22 @@ SmokeTestBuildInfo() {
     AssertContains(aboutText, "Verze: " AppVersion, "O programu ma zobrazit aktualni verzi.")
     AssertContains(aboutText, "Datová složka: " DataDir, "O programu ma zobrazit datovou slozku.")
     AssertTrue(!InStr(aboutText, "Souborová verze"), "Stabilni build nema zobrazovat redundantni windows file version.")
+}
+
+SmokeTestUpdateManifestFile() {
+    global AppVersion
+
+    manifestPath := A_ScriptDir "\..\..\update\latest.ini"
+    manifest := ReadLatestReleaseManifestFile(manifestPath)
+    AssertEqual(manifest.version, AppVersion, "Lokalni update manifest ma odpovidat aktualni verzi aplikace.")
+}
+
+SmokeTestSemVerComparison() {
+    AssertEqual(CompareSemVer("1.0.0", "1.0.0"), 0, "Stejne verze se musi vyhodnotit jako shodne.")
+    AssertEqual(CompareSemVer("1.0.1", "1.0.0"), 1, "Vyssi patch verze musi byt novejsi.")
+    AssertEqual(CompareSemVer("1.1.0", "1.2.0"), -1, "Nizsi minor verze musi byt starsi.")
+    AssertEqual(CompareSemVer("1.0.0-beta.1", "1.0.0"), -1, "Prerelease musi byt starsi nez final.")
+    AssertEqual(CompareSemVer("1.0.0-beta.2", "1.0.0-beta.1"), 1, "Vyssi prerelease poradi musi byt novejsi.")
 }
 
 SmokeTestGlobalSearch() {

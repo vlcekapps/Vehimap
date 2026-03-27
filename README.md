@@ -45,7 +45,7 @@ V hlavním okně:
 - zaškrtávátko `Skrýt archivovaná a odstavená vozidla` schová neaktivní vozidla jen z hlavního seznamu a svou volbu si pamatuje i po dalším spuštění
 - tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence otevřete i z menu `Vozidlo`
 - položky `Dashboard` a `Globální hledání` v menu `Přehled` otevřou rychlý souhrn termínů, nákladů a stavu evidencí nebo vyhledání napříč všemi evidencemi
-- v menu `Nápověda` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky
+- v menu `Nápověda` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky i samostatnou ruční kontrolu aktualizací
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned

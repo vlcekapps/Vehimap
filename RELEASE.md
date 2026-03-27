@@ -9,6 +9,7 @@ Skript `build/release.ps1`:
 - nacte aktualni verzi ze souboru `src/VERSION`
 - zvysi verzi nebo pouzije verzi predanou parametrem
 - vygeneruje `src/GeneratedBuildInfo.ahk` s embedded verzi pro runtime i EXE metadata
+- prepise `update/latest.ini` pro rucni kontrolu aktualizaci v aplikaci
 - aktualizuje `CHANGELOG.md` ze sekce `## [Unreleased]`
 - zkompiluje `src/Vehimap.ahk` do `dist/vehimap.exe`
 - vytvori asset `dist/vehimap-VERZE.zip`

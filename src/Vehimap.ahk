@@ -164,6 +164,7 @@ global DueCheckIntervalMs := 900000
 global AutoBackupCheckIntervalMs := 3600000
 global ResumeDueCheckDelayMs := 1500
 global LastTrayIconTip := ""
+global UpdateManifestUrl := "https://raw.githubusercontent.com/vlcekapps/Vehimap/main/update/latest.ini"
 
 #HotIf IsMainVehimapWindowActive()
 ^n::AddVehicle()
@@ -902,11 +903,47 @@ OpenAboutDialog(*) {
 CheckForUpdates(*) {
     global AppTitle
 
-    MsgBox(
-        "Samostatná kontrola aktualizací je připravená v menu a bude doplněna v dalším kroku.",
-        AppTitle,
-        0x40
-    )
+    currentVersion := GetAppVersion()
+    try {
+        manifest := LoadLatestReleaseManifest()
+    } catch as err {
+        MsgBox("Kontrolu aktualizací se nepodařilo dokončit.`n`n" err.Message, AppTitle, 0x30)
+        return
+    }
+
+    try {
+        comparison := CompareSemVer(currentVersion, manifest.version)
+    } catch as err {
+        MsgBox("Porovnání verzí se nepodařilo dokončit.`n`n" err.Message, AppTitle, 0x30)
+        return
+    }
+
+    if (comparison < 0) {
+        message := "Je dostupná novější verze Vehimap.`n`nAktuálně používáte: " currentVersion "`nNejnovější dostupná verze: " manifest.version
+        if (manifest.publishedAt != "") {
+            message .= "`nVydáno: " manifest.publishedAt
+        }
+        if (manifest.notesUrl != "") {
+            result := MsgBox(message "`n`nOtevřít stránku vydání?", AppTitle, 0x34)
+            if (result = "Yes") {
+                Run('"' manifest.notesUrl '"')
+            }
+        } else {
+            MsgBox(message, AppTitle, 0x40)
+        }
+        return
+    }
+
+    if (comparison > 0) {
+        MsgBox(
+            "Používáte novější lokální verzi (" currentVersion ") než je zatím zapsaná v manifestu (" manifest.version ").",
+            AppTitle,
+            0x40
+        )
+        return
+    }
+
+    MsgBox("Používáte aktuální verzi Vehimap (" currentVersion ").", AppTitle, 0x40)
 }
 
 GetAppVersion() {
@@ -951,6 +988,149 @@ GetAppFileVersion() {
     }
 
     return ""
+}
+
+LoadLatestReleaseManifest() {
+    global AppTitle, UpdateManifestUrl
+
+    if !A_IsCompiled {
+        SplitPath(A_LineFile, , &sourceDir)
+        localManifestPath := sourceDir "\..\update\latest.ini"
+        if FileExist(localManifestPath) {
+            return ReadLatestReleaseManifestFile(localManifestPath)
+        }
+    }
+
+    tempPath := A_Temp "\Vehimap_update_manifest.ini"
+    requestUrl := UpdateManifestUrl "?ts=" A_NowUTC
+    try {
+        request := ComObject("WinHttp.WinHttpRequest.5.1")
+        request.Open("GET", requestUrl, false)
+        request.SetRequestHeader("User-Agent", AppTitle "/" GetAppVersion())
+        request.Send()
+        if (request.Status != 200) {
+            throw Error("Server vrátil HTTP " request.Status ".")
+        }
+
+        WriteTextFileUtf8(tempPath, request.ResponseText)
+        return ReadLatestReleaseManifestFile(tempPath)
+    } catch as err {
+        throw Error("Nepodařilo se načíst manifest aktualizací. " err.Message)
+    } finally {
+        if FileExist(tempPath) {
+            FileDelete(tempPath)
+        }
+    }
+}
+
+ReadLatestReleaseManifestFile(path) {
+    version := Trim(IniRead(path, "release", "version", ""))
+    if (version = "") {
+        throw Error("Manifest neobsahuje položku release/version.")
+    }
+
+    return {
+        version: version,
+        publishedAt: Trim(IniRead(path, "release", "published_at", "")),
+        notesUrl: Trim(IniRead(path, "release", "notes_url", "")),
+        assetUrl: Trim(IniRead(path, "release", "asset_url", ""))
+    }
+}
+
+ParseSemVer(value) {
+    value := Trim(value)
+    if !RegExMatch(value, "^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(?:-(?<prerelease>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$", &match) {
+        throw Error("Neplatná semver verze: " value)
+    }
+
+    prerelease := ""
+    try {
+        prerelease := match["prerelease"]
+    }
+
+    return {
+        major: match["major"] + 0,
+        minor: match["minor"] + 0,
+        patch: match["patch"] + 0,
+        prerelease: prerelease
+    }
+}
+
+CompareSemVer(left, right) {
+    leftParts := ParseSemVer(left)
+    rightParts := ParseSemVer(right)
+
+    for _, partName in ["major", "minor", "patch"] {
+        if (leftParts.%partName% < rightParts.%partName%) {
+            return -1
+        }
+        if (leftParts.%partName% > rightParts.%partName%) {
+            return 1
+        }
+    }
+
+    leftPrerelease := leftParts.prerelease
+    rightPrerelease := rightParts.prerelease
+    if (leftPrerelease = "" && rightPrerelease = "") {
+        return 0
+    }
+    if (leftPrerelease = "") {
+        return 1
+    }
+    if (rightPrerelease = "") {
+        return -1
+    }
+
+    leftIds := StrSplit(leftPrerelease, ".")
+    rightIds := StrSplit(rightPrerelease, ".")
+    maxCount := leftIds.Length
+    if (rightIds.Length > maxCount) {
+        maxCount := rightIds.Length
+    }
+
+    Loop maxCount {
+        index := A_Index
+        if (index > leftIds.Length) {
+            return -1
+        }
+        if (index > rightIds.Length) {
+            return 1
+        }
+
+        leftId := leftIds[index]
+        rightId := rightIds[index]
+        leftNumeric := RegExMatch(leftId, "^\d+$")
+        rightNumeric := RegExMatch(rightId, "^\d+$")
+
+        if (leftNumeric && rightNumeric) {
+            leftNumber := leftId + 0
+            rightNumber := rightId + 0
+            if (leftNumber < rightNumber) {
+                return -1
+            }
+            if (leftNumber > rightNumber) {
+                return 1
+            }
+            continue
+        }
+
+        if (leftNumeric && !rightNumeric) {
+            return -1
+        }
+        if (!leftNumeric && rightNumeric) {
+            return 1
+        }
+
+        textComparison := StrCompare(leftId, rightId)
+        if (textComparison < 0) {
+            return -1
+        }
+        if (textComparison > 0) {
+            return 1
+        }
+    }
+
+    return 0
 }
 
 IsEquivalentAppAndFileVersion(appVersion, fileVersion) {

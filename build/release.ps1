@@ -200,6 +200,32 @@ function Write-BuildInfoFile {
     Write-Utf8NoBom -Path $Path -Content $content
 }
 
+function Write-UpdateManifestFile {
+    param(
+        [string]$Path,
+        [string]$Version,
+        [string]$TagName
+    )
+
+    $publishedAt = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+    $assetUrl = "https://github.com/vlcekapps/Vehimap/releases/download/$TagName/vehimap-$Version.zip"
+    $notesUrl = "https://github.com/vlcekapps/Vehimap/releases/tag/$TagName"
+    $content = @(
+        "[release]"
+        "version=$Version"
+        "published_at=$publishedAt"
+        "asset_url=$assetUrl"
+        "notes_url=$notesUrl"
+    ) -join "`n"
+
+    $directory = Split-Path -Parent $Path
+    if ($directory -and !(Test-Path $directory)) {
+        New-Item -ItemType Directory -Path $directory | Out-Null
+    }
+
+    Write-Utf8NoBom -Path $Path -Content $content
+}
+
 function Ensure-ChangelogFile {
     param([string]$Path)
 
@@ -333,6 +359,7 @@ Require-Command -Name git
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $versionPath = Join-Path $projectRoot "src\VERSION"
 $buildInfoPath = Join-Path $projectRoot "src\GeneratedBuildInfo.ahk"
+$updateManifestPath = Join-Path $projectRoot "update\latest.ini"
 $scriptPath = Join-Path $projectRoot "src\Vehimap.ahk"
 $readmePath = Join-Path $projectRoot "src\readme.txt"
 $changelogPath = Join-Path $projectRoot "CHANGELOG.md"
@@ -377,8 +404,11 @@ if ($isPrerelease) {
 
 Write-Utf8NoBom -Path $versionPath -Content ($newVersion + "`n")
 Write-BuildInfoFile -Path $buildInfoPath -Version $newVersion -FileVersion $fileVersion
+Write-UpdateManifestFile -Path $updateManifestPath -Version $newVersion -TagName $tagName
 $buildInfoLeaf = Split-Path -Leaf $buildInfoPath
 Write-Host "$buildInfoLeaf aktualizovan."
+$updateManifestLeaf = Split-Path -Leaf $updateManifestPath
+Write-Host "$updateManifestLeaf aktualizovan."
 $changelogUpdated = Update-Changelog -Path $changelogPath -NewVersion $newVersion
 if ($changelogUpdated) {
     Write-Host "CHANGELOG.md aktualizovan."
@@ -397,7 +427,7 @@ Compile-Vehimap -CompilerPath $compilerPath -ScriptPath $scriptPath -OutPath $ex
 Write-Host "Vytvarim asset $zipPath ..."
 New-ReleaseZip -ReadmePath $readmePath -ExePath $exePath -OutPath $zipPath
 
-Invoke-Git @("add", "src/VERSION", "src/GeneratedBuildInfo.ahk", "CHANGELOG.md")
+Invoke-Git @("add", "src/VERSION", "src/GeneratedBuildInfo.ahk", "update/latest.ini", "CHANGELOG.md")
 Invoke-Git @("commit", "-m", "chore(release): $newVersion")
 
 if (-not $SkipPush) {
