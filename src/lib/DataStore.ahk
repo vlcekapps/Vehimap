@@ -1,0 +1,1626 @@
+LoadVehicles() {
+    global Vehicles, VehiclesFile
+
+    Vehicles := []
+    if !FileExist(VehiclesFile) {
+        return
+    }
+
+    content := FileRead(VehiclesFile, "UTF-8")
+    content := StrReplace(content, Chr(0xFEFF))
+    lines := StrSplit(content, "`n", "`r")
+    firstNonEmptyLine := ""
+    dataStarted := false
+
+    for rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        firstNonEmptyLine := line
+        break
+    }
+
+    if (firstNonEmptyLine = "") {
+        return
+    }
+
+    if (firstNonEmptyLine != "# Vehimap data v3") {
+        ShowVehiclesFileFormatError("Soubor vozidel není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap data v3'.")
+        return
+    }
+
+    for index, rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        if !dataStarted {
+            dataStarted := true
+            continue
+        }
+
+        if (SubStr(line, 1, 1) = "#") {
+            ShowVehiclesFileFormatError("Soubor vozidel obsahuje neplatnou hlavičku nebo komentář na řádku " index ". Vehimap očekává jen jednu hlavičku '# Vehimap data v3'.")
+            Vehicles := []
+            return
+        }
+
+        fields := StrSplit(line, "`t")
+        if (fields.Length != 12) {
+            ShowVehiclesFileFormatError("Soubor vozidel je poškozený nebo není ve formátu v3. Řádek " index " musí obsahovat přesně 12 polí oddělených tabulátory.")
+            Vehicles := []
+            return
+        }
+
+        Vehicles.Push({
+            id: UnescapeField(fields[1]),
+            name: UnescapeField(fields[2]),
+            category: NormalizeCategory(UnescapeField(fields[3])),
+            vehicleType: UnescapeField(fields[4]),
+            makeModel: UnescapeField(fields[5]),
+            plate: UnescapeField(fields[6]),
+            year: UnescapeField(fields[7]),
+            power: UnescapeField(fields[8]),
+            lastTk: UnescapeField(fields[9]),
+            nextTk: UnescapeField(fields[10]),
+            greenCardFrom: UnescapeField(fields[11]),
+            greenCardTo: UnescapeField(fields[12])
+        })
+    }
+}
+
+ShowVehiclesFileFormatError(message) {
+    global AppTitle, VehiclesFile
+
+    MsgBox(message "`n`nZkontrolujte soubor:`n" VehiclesFile, AppTitle, 0x30)
+}
+
+SaveVehicles() {
+    global Vehicles, VehiclesFile
+
+    lines := ["# Vehimap data v3"]
+    for vehicle in Vehicles {
+        lines.Push(
+            EscapeField(vehicle.id) "`t"
+            EscapeField(vehicle.name) "`t"
+            EscapeField(vehicle.category) "`t"
+            EscapeField(vehicle.vehicleType) "`t"
+            EscapeField(vehicle.makeModel) "`t"
+            EscapeField(vehicle.plate) "`t"
+            EscapeField(vehicle.year) "`t"
+            EscapeField(vehicle.power) "`t"
+            EscapeField(vehicle.lastTk) "`t"
+            EscapeField(vehicle.nextTk) "`t"
+            EscapeField(vehicle.greenCardFrom) "`t"
+            EscapeField(vehicle.greenCardTo)
+        )
+    }
+
+    output := JoinLines(lines)
+    if FileExist(VehiclesFile) {
+        FileDelete(VehiclesFile)
+    }
+    FileAppend(output, VehiclesFile, "UTF-8")
+}
+
+LoadVehicleHistory() {
+    global AppTitle, VehicleHistory, HistoryFile
+
+    VehicleHistory := []
+    if !FileExist(HistoryFile) {
+        return
+    }
+
+    content := FileRead(HistoryFile, "UTF-8")
+    content := StrReplace(content, Chr(0xFEFF))
+    lines := StrSplit(content, "`n", "`r")
+    firstNonEmptyLine := ""
+    dataStarted := false
+
+    for rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        firstNonEmptyLine := line
+        break
+    }
+
+    if (firstNonEmptyLine = "") {
+        return
+    }
+
+    if (firstNonEmptyLine != "# Vehimap history v1") {
+        MsgBox("Soubor historie není v podporovaném formátu.`n`nZkontrolujte soubor:`n" HistoryFile, AppTitle, 0x30)
+        return
+    }
+
+    for index, rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        if !dataStarted {
+            dataStarted := true
+            continue
+        }
+
+        if (SubStr(line, 1, 1) = "#") {
+            MsgBox("Soubor historie obsahuje neplatnou hlavičku nebo komentář na řádku " index ".`n`nZkontrolujte soubor:`n" HistoryFile, AppTitle, 0x30)
+            VehicleHistory := []
+            return
+        }
+
+        fields := StrSplit(line, "`t")
+        if (fields.Length != 6 && fields.Length != 7) {
+            MsgBox("Soubor historie je poškozený. Řádek " index " musí obsahovat 6 nebo 7 polí oddělených tabulátory.`n`nZkontrolujte soubor:`n" HistoryFile, AppTitle, 0x30)
+            VehicleHistory := []
+            return
+        }
+
+        VehicleHistory.Push({
+            id: UnescapeField(fields[1]),
+            vehicleId: UnescapeField(fields[2]),
+            eventDate: UnescapeField(fields[3]),
+            eventType: UnescapeField(fields[4]),
+            odometer: UnescapeField(fields[5]),
+            cost: UnescapeField(fields[6]),
+            note: (fields.Length = 7) ? UnescapeField(fields[7]) : ""
+        })
+    }
+}
+
+SaveVehicleHistory() {
+    global VehicleHistory, HistoryFile
+
+    output := BuildHistoryDataContent()
+    if FileExist(HistoryFile) {
+        FileDelete(HistoryFile)
+    }
+    FileAppend(output, HistoryFile, "UTF-8")
+}
+
+BuildHistoryDataContent() {
+    global VehicleHistory
+
+    lines := ["# Vehimap history v1"]
+    for event in VehicleHistory {
+        lines.Push(
+            EscapeField(event.id) "`t"
+            EscapeField(event.vehicleId) "`t"
+            EscapeField(event.eventDate) "`t"
+            EscapeField(event.eventType) "`t"
+            EscapeField(event.odometer) "`t"
+            EscapeField(event.cost) "`t"
+            EscapeField(event.note)
+        )
+    }
+
+    return JoinLines(lines)
+}
+
+DeleteVehicleHistory(vehicleId) {
+    global VehicleHistory
+
+    filtered := []
+    for event in VehicleHistory {
+        if (event.vehicleId != vehicleId) {
+            filtered.Push(event)
+        }
+    }
+
+    VehicleHistory := filtered
+    SaveVehicleHistory()
+}
+
+GetVehicleHistoryEntries(vehicleId) {
+    global VehicleHistory
+
+    entries := []
+    for event in VehicleHistory {
+        if (event.vehicleId = vehicleId) {
+            entries.Push(event)
+        }
+    }
+
+    SortVehicleHistoryByDateDescending(&entries)
+    return entries
+}
+
+GetRecentVehicleHistoryEntries(vehicleId, maxCount := 5) {
+    entries := GetVehicleHistoryEntries(vehicleId)
+    if (entries.Length <= maxCount) {
+        return entries
+    }
+
+    recent := []
+    Loop maxCount {
+        recent.Push(entries[A_Index])
+    }
+
+    return recent
+}
+
+GetVehicleHistoryCount(vehicleId) {
+    return GetVehicleHistoryEntries(vehicleId).Length
+}
+
+BuildVehicleHistorySummaryText(vehicleId) {
+    entries := GetVehicleHistoryEntries(vehicleId)
+    if (entries.Length = 0) {
+        return "K tomuto vozidlu zatím není uložená žádná historie událostí."
+    }
+
+    latest := entries[1]
+    summary := "Celkem událostí: " entries.Length ". Poslední událost: " latest.eventType " (" latest.eventDate ")."
+    if (latest.odometer != "") {
+        summary .= " Tachometr: " FormatHistoryOdometer(latest.odometer) "."
+    }
+    return summary
+}
+
+FindVehicleHistoryEventById(eventId) {
+    global VehicleHistory
+
+    for event in VehicleHistory {
+        if (event.id = eventId) {
+            return event
+        }
+    }
+
+    return ""
+}
+
+FindVehicleHistoryEventIndexById(eventId) {
+    global VehicleHistory
+
+    for index, event in VehicleHistory {
+        if (event.id = eventId) {
+            return index
+        }
+    }
+
+    return 0
+}
+
+GenerateHistoryEventId() {
+    return "hist_" A_Now "_" Random(1000, 9999)
+}
+
+LoadVehicleFuelLog() {
+    global AppTitle, VehicleFuelLog, FuelLogFile
+
+    VehicleFuelLog := []
+    if !FileExist(FuelLogFile) {
+        return
+    }
+
+    content := FileRead(FuelLogFile, "UTF-8")
+    content := StrReplace(content, Chr(0xFEFF))
+    lines := StrSplit(content, "`n", "`r")
+    firstNonEmptyLine := ""
+    dataStarted := false
+
+    for rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        firstNonEmptyLine := line
+        break
+    }
+
+    if (firstNonEmptyLine = "") {
+        return
+    }
+
+    if (firstNonEmptyLine != "# Vehimap fuel v1") {
+        MsgBox("Soubor kilometrů a tankování není v podporovaném formátu.`n`nZkontrolujte soubor:`n" FuelLogFile, AppTitle, 0x30)
+        return
+    }
+
+    for index, rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        if !dataStarted {
+            dataStarted := true
+            continue
+        }
+
+        if (SubStr(line, 1, 1) = "#") {
+            MsgBox("Soubor kilometrů a tankování obsahuje neplatnou hlavičku nebo komentář na řádku " index ".`n`nZkontrolujte soubor:`n" FuelLogFile, AppTitle, 0x30)
+            VehicleFuelLog := []
+            return
+        }
+
+        fields := StrSplit(line, "`t")
+        if (fields.Length != 9) {
+            MsgBox("Soubor kilometrů a tankování je poškozený. Řádek " index " musí obsahovat přesně 9 polí oddělených tabulátory.`n`nZkontrolujte soubor:`n" FuelLogFile, AppTitle, 0x30)
+            VehicleFuelLog := []
+            return
+        }
+
+        VehicleFuelLog.Push({
+            id: UnescapeField(fields[1]),
+            vehicleId: UnescapeField(fields[2]),
+            entryDate: UnescapeField(fields[3]),
+            odometer: UnescapeField(fields[4]),
+            liters: UnescapeField(fields[5]),
+            totalCost: UnescapeField(fields[6]),
+            fullTank: (UnescapeField(fields[7]) = "1") ? 1 : 0,
+            fuelType: UnescapeField(fields[8]),
+            note: UnescapeField(fields[9])
+        })
+    }
+}
+
+SaveVehicleFuelLog() {
+    global FuelLogFile
+
+    WriteTextFileUtf8(FuelLogFile, BuildFuelDataContent())
+}
+
+BuildFuelDataContent() {
+    global VehicleFuelLog
+
+    lines := ["# Vehimap fuel v1"]
+    for entry in VehicleFuelLog {
+        lines.Push(
+            EscapeField(entry.id) "`t"
+            EscapeField(entry.vehicleId) "`t"
+            EscapeField(entry.entryDate) "`t"
+            EscapeField(entry.odometer) "`t"
+            EscapeField(entry.liters) "`t"
+            EscapeField(entry.totalCost) "`t"
+            EscapeField(entry.fullTank ? "1" : "0") "`t"
+            EscapeField(entry.fuelType) "`t"
+            EscapeField(entry.note)
+        )
+    }
+
+    return JoinLines(lines)
+}
+
+DeleteVehicleFuelEntries(vehicleId) {
+    global VehicleFuelLog
+
+    filtered := []
+    changed := false
+    for entry in VehicleFuelLog {
+        if (entry.vehicleId = vehicleId) {
+            changed := true
+        } else {
+            filtered.Push(entry)
+        }
+    }
+
+    VehicleFuelLog := filtered
+    if changed {
+        SaveVehicleFuelLog()
+    }
+}
+
+GetVehicleFuelEntries(vehicleId) {
+    global VehicleFuelLog
+
+    entries := []
+    for entry in VehicleFuelLog {
+        if (entry.vehicleId = vehicleId) {
+            entries.Push(entry)
+        }
+    }
+
+    SortVehicleFuelEntries(&entries)
+    return entries
+}
+
+GetVehicleFuelEntryCount(vehicleId) {
+    count := 0
+    global VehicleFuelLog
+
+    for entry in VehicleFuelLog {
+        if (entry.vehicleId = vehicleId) {
+            count += 1
+        }
+    }
+
+    return count
+}
+
+BuildVehicleFuelSummaryText(vehicleId) {
+    entries := GetVehicleFuelEntries(vehicleId)
+    if (entries.Length = 0) {
+        return "K tomuto vozidlu zatím nejsou uloženy žádné záznamy kilometrů ani tankování."
+    }
+
+    summary := "Záznamů: " entries.Length ". Poslední tachometr: " FormatHistoryOdometer(entries[1].odometer) "."
+    latestFuelEntry := ""
+    for entry in entries {
+        if (entry.liters != "" || entry.totalCost != "") {
+            latestFuelEntry := entry
+            break
+        }
+    }
+
+    if IsObject(latestFuelEntry) {
+        summary .= " Poslední tankování: "
+        if (latestFuelEntry.liters != "") {
+            summary .= FormatFuelLiters(latestFuelEntry.liters)
+        } else {
+            summary .= "bez údajů o litrech"
+        }
+        if (latestFuelEntry.totalCost != "") {
+            summary .= " za " FormatFuelMoney(latestFuelEntry.totalCost)
+        }
+        summary .= " (" latestFuelEntry.entryDate ")."
+    }
+
+    return summary
+}
+
+FindVehicleFuelEntryById(entryId) {
+    global VehicleFuelLog
+
+    for entry in VehicleFuelLog {
+        if (entry.id = entryId) {
+            return entry
+        }
+    }
+
+    return ""
+}
+
+FindVehicleFuelEntryIndexById(entryId) {
+    global VehicleFuelLog
+
+    for index, entry in VehicleFuelLog {
+        if (entry.id = entryId) {
+            return index
+        }
+    }
+
+    return 0
+}
+
+GenerateFuelEntryId() {
+    return "fuel_" A_Now "_" Random(1000, 9999)
+}
+
+SortVehicleFuelEntries(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareVehicleFuelEntries(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareVehicleFuelEntries(left, right) {
+    leftStamp := ParseEventDateStamp(left.entryDate)
+    rightStamp := ParseEventDateStamp(right.entryDate)
+
+    if (leftStamp > rightStamp) {
+        return -1
+    }
+    if (leftStamp < rightStamp) {
+        return 1
+    }
+
+    leftOdometer := (Trim(left.odometer) = "") ? -1 : left.odometer + 0
+    rightOdometer := (Trim(right.odometer) = "") ? -1 : right.odometer + 0
+    if (leftOdometer > rightOdometer) {
+        return -1
+    }
+    if (leftOdometer < rightOdometer) {
+        return 1
+    }
+
+    return CompareTextValues(left.id, right.id)
+}
+
+NormalizeDecimalText(value) {
+    value := Trim(StrReplace(value, " ", ""))
+    if (value = "") {
+        return ""
+    }
+
+    value := StrReplace(value, ".", ",")
+    if !RegExMatch(value, "^\d+(,\d+)?$") {
+        return ""
+    }
+
+    parts := StrSplit(value, ",")
+    integerPart := RegExReplace(parts[1], "^0+(?=\d)", "")
+    if (integerPart = "") {
+        integerPart := "0"
+    }
+
+    if (parts.Length = 1) {
+        return integerPart
+    }
+
+    decimalPart := RegExReplace(parts[2], "0+$")
+    if (decimalPart = "") {
+        return integerPart
+    }
+
+    return integerPart "," decimalPart
+}
+
+FormatFuelLiters(value) {
+    value := Trim(StrReplace(value, ".", ","))
+    if (value = "") {
+        return ""
+    }
+
+    return value " l"
+}
+
+FormatFuelMoney(value) {
+    value := Trim(StrReplace(value, ".", ","))
+    if (value = "") {
+        return ""
+    }
+
+    return value " Kč"
+}
+
+GetLatestVehicleOdometerText(vehicleId) {
+    global VehicleHistory, VehicleFuelLog
+
+    bestStamp := ""
+    bestOdometer := ""
+    bestOdometerValue := -1
+
+    for entry in VehicleFuelLog {
+        if (entry.vehicleId != vehicleId || Trim(entry.odometer) = "") {
+            continue
+        }
+
+        stamp := ParseEventDateStamp(entry.entryDate)
+        odometerValue := entry.odometer + 0
+        if (bestStamp = "" || stamp > bestStamp || (stamp = bestStamp && odometerValue > bestOdometerValue)) {
+            bestStamp := stamp
+            bestOdometer := entry.odometer
+            bestOdometerValue := odometerValue
+        }
+    }
+
+    for event in VehicleHistory {
+        if (event.vehicleId != vehicleId || Trim(event.odometer) = "") {
+            continue
+        }
+
+        stamp := ParseEventDateStamp(event.eventDate)
+        odometerValue := event.odometer + 0
+        if (bestStamp = "" || stamp > bestStamp || (stamp = bestStamp && odometerValue > bestOdometerValue)) {
+            bestStamp := stamp
+            bestOdometer := event.odometer
+            bestOdometerValue := odometerValue
+        }
+    }
+
+    return bestOdometer
+}
+
+LoadVehicleRecords() {
+    global AppTitle, VehicleRecords, RecordsFile
+
+    VehicleRecords := []
+    if !FileExist(RecordsFile) {
+        return
+    }
+
+    content := FileRead(RecordsFile, "UTF-8")
+    content := StrReplace(content, Chr(0xFEFF))
+    lines := StrSplit(content, "`n", "`r")
+    firstNonEmptyLine := ""
+    dataStarted := false
+
+    for rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        firstNonEmptyLine := line
+        break
+    }
+
+    if (firstNonEmptyLine = "") {
+        return
+    }
+
+    if (firstNonEmptyLine != "# Vehimap records v1") {
+        MsgBox("Soubor pojištění a dokladů není v podporovaném formátu.`n`nZkontrolujte soubor:`n" RecordsFile, AppTitle, 0x30)
+        return
+    }
+
+    for index, rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        if !dataStarted {
+            dataStarted := true
+            continue
+        }
+
+        if (SubStr(line, 1, 1) = "#") {
+            MsgBox("Soubor pojištění a dokladů obsahuje neplatnou hlavičku nebo komentář na řádku " index ".`n`nZkontrolujte soubor:`n" RecordsFile, AppTitle, 0x30)
+            VehicleRecords := []
+            return
+        }
+
+        fields := StrSplit(line, "`t")
+        if (fields.Length != 10) {
+            MsgBox("Soubor pojištění a dokladů je poškozený. Řádek " index " musí obsahovat přesně 10 polí oddělených tabulátory.`n`nZkontrolujte soubor:`n" RecordsFile, AppTitle, 0x30)
+            VehicleRecords := []
+            return
+        }
+
+        VehicleRecords.Push({
+            id: UnescapeField(fields[1]),
+            vehicleId: UnescapeField(fields[2]),
+            recordType: UnescapeField(fields[3]),
+            title: UnescapeField(fields[4]),
+            provider: UnescapeField(fields[5]),
+            validFrom: UnescapeField(fields[6]),
+            validTo: UnescapeField(fields[7]),
+            price: UnescapeField(fields[8]),
+            filePath: UnescapeField(fields[9]),
+            note: UnescapeField(fields[10])
+        })
+    }
+}
+
+SaveVehicleRecords() {
+    global RecordsFile
+
+    WriteTextFileUtf8(RecordsFile, BuildRecordsDataContent())
+}
+
+BuildRecordsDataContent() {
+    global VehicleRecords
+
+    lines := ["# Vehimap records v1"]
+    for entry in VehicleRecords {
+        lines.Push(
+            EscapeField(entry.id) "`t"
+            EscapeField(entry.vehicleId) "`t"
+            EscapeField(entry.recordType) "`t"
+            EscapeField(entry.title) "`t"
+            EscapeField(entry.provider) "`t"
+            EscapeField(entry.validFrom) "`t"
+            EscapeField(entry.validTo) "`t"
+            EscapeField(entry.price) "`t"
+            EscapeField(entry.filePath) "`t"
+            EscapeField(entry.note)
+        )
+    }
+
+    return JoinLines(lines)
+}
+
+DeleteVehicleRecords(vehicleId) {
+    global VehicleRecords
+
+    filtered := []
+    changed := false
+    for entry in VehicleRecords {
+        if (entry.vehicleId = vehicleId) {
+            changed := true
+        } else {
+            filtered.Push(entry)
+        }
+    }
+
+    VehicleRecords := filtered
+    if changed {
+        SaveVehicleRecords()
+    }
+}
+
+GetVehicleRecords(vehicleId) {
+    global VehicleRecords
+
+    entries := []
+    for entry in VehicleRecords {
+        if (entry.vehicleId = vehicleId) {
+            entries.Push(entry)
+        }
+    }
+
+    SortVehicleRecords(&entries)
+    return entries
+}
+
+GetVehicleRecordCount(vehicleId) {
+    count := 0
+    global VehicleRecords
+
+    for entry in VehicleRecords {
+        if (entry.vehicleId = vehicleId) {
+            count += 1
+        }
+    }
+
+    return count
+}
+
+BuildVehicleRecordsSummaryText(vehicleId) {
+    entries := GetVehicleRecords(vehicleId)
+    if (entries.Length = 0) {
+        return "K tomuto vozidlu zatím není uložen žádný záznam pojištění ani dokladů."
+    }
+
+    summary := "Záznamů: " entries.Length "."
+    missingPathCount := 0
+    emptyPathCount := 0
+    for entry in entries {
+        pathKind := GetVehicleRecordPathInfo(entry).kind
+        if (pathKind = "missing_file" || pathKind = "missing_folder") {
+            missingPathCount += 1
+        } else if (pathKind = "empty") {
+            emptyPathCount += 1
+        }
+    }
+
+    nearestRecord := ""
+    for entry in entries {
+        if (Trim(entry.validTo) != "") {
+            nearestRecord := entry
+            break
+        }
+    }
+
+    if IsObject(nearestRecord) {
+        summary .= " Nejbližší platnost: " nearestRecord.title
+        if (nearestRecord.provider != "") {
+            summary .= " (" nearestRecord.provider ")"
+        }
+        summary .= " do " nearestRecord.validTo "."
+    } else {
+        summary .= " U žádného záznamu není vyplněné datum platnosti."
+    }
+
+    if (missingPathCount > 0) {
+        summary .= " Nedostupných cest: " missingPathCount "."
+    }
+    if (emptyPathCount > 0) {
+        summary .= " Bez vyplněné cesty: " emptyPathCount "."
+    }
+
+    return summary
+}
+
+FindVehicleRecordById(entryId) {
+    global VehicleRecords
+
+    for entry in VehicleRecords {
+        if (entry.id = entryId) {
+            return entry
+        }
+    }
+
+    return ""
+}
+
+FindVehicleRecordIndexById(entryId) {
+    global VehicleRecords
+
+    for index, entry in VehicleRecords {
+        if (entry.id = entryId) {
+            return index
+        }
+    }
+
+    return 0
+}
+
+GenerateVehicleRecordId() {
+    return "record_" A_Now "_" Random(1000, 9999)
+}
+
+SortVehicleRecords(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareVehicleRecordEntries(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareVehicleRecordEntries(left, right) {
+    leftKey := ParseDueStamp(left.validTo)
+    rightKey := ParseDueStamp(right.validTo)
+
+    if (leftKey = "") {
+        leftKey := "99999999999999"
+    }
+    if (rightKey = "") {
+        rightKey := "99999999999999"
+    }
+
+    if (leftKey < rightKey) {
+        return -1
+    }
+    if (leftKey > rightKey) {
+        return 1
+    }
+
+    result := CompareTextValues(left.recordType, right.recordType)
+    if (result != 0) {
+        return result
+    }
+
+    return CompareTextValues(left.title, right.title)
+}
+
+GetFileNameFromPath(path) {
+    path := Trim(path)
+    if (path = "") {
+        return ""
+    }
+
+    SplitPath(path, &fileName)
+    return (fileName = "") ? path : fileName
+}
+
+LoadVehicleMeta() {
+    global AppTitle, VehicleMetaEntries, VehicleMetaFile
+
+    VehicleMetaEntries := []
+    if !FileExist(VehicleMetaFile) {
+        return
+    }
+
+    content := FileRead(VehicleMetaFile, "UTF-8")
+    content := StrReplace(content, Chr(0xFEFF))
+    lines := StrSplit(content, "`n", "`r")
+    firstNonEmptyLine := ""
+    dataStarted := false
+
+    for rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        firstNonEmptyLine := line
+        break
+    }
+
+    if (firstNonEmptyLine = "") {
+        return
+    }
+
+    if (firstNonEmptyLine != "# Vehimap meta v1") {
+        MsgBox("Soubor stavů a štítků vozidel není v podporovaném formátu.`n`nZkontrolujte soubor:`n" VehicleMetaFile, AppTitle, 0x30)
+        return
+    }
+
+    for index, rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        if !dataStarted {
+            dataStarted := true
+            continue
+        }
+
+        if (SubStr(line, 1, 1) = "#") {
+            MsgBox("Soubor stavů a štítků vozidel obsahuje neplatnou hlavičku nebo komentář na řádku " index ".`n`nZkontrolujte soubor:`n" VehicleMetaFile, AppTitle, 0x30)
+            VehicleMetaEntries := []
+            return
+        }
+
+        fields := StrSplit(line, "`t")
+        if (fields.Length != 3) {
+            MsgBox("Soubor stavů a štítků vozidel je poškozený. Řádek " index " musí obsahovat přesně 3 pole oddělená tabulátory.`n`nZkontrolujte soubor:`n" VehicleMetaFile, AppTitle, 0x30)
+            VehicleMetaEntries := []
+            return
+        }
+
+        VehicleMetaEntries.Push({
+            vehicleId: UnescapeField(fields[1]),
+            state: UnescapeField(fields[2]),
+            tags: UnescapeField(fields[3])
+        })
+    }
+}
+
+SaveVehicleMeta() {
+    global VehicleMetaFile
+
+    WriteTextFileUtf8(VehicleMetaFile, BuildVehicleMetaDataContent())
+}
+
+BuildVehicleMetaDataContent() {
+    global VehicleMetaEntries
+
+    lines := ["# Vehimap meta v1"]
+    for entry in VehicleMetaEntries {
+        lines.Push(
+            EscapeField(entry.vehicleId) "`t"
+            EscapeField(entry.state) "`t"
+            EscapeField(entry.tags)
+        )
+    }
+
+    return JoinLines(lines)
+}
+
+GetVehicleMeta(vehicleId) {
+    global VehicleMetaEntries
+
+    for entry in VehicleMetaEntries {
+        if (entry.vehicleId = vehicleId) {
+            return entry
+        }
+    }
+
+    return {
+        vehicleId: vehicleId,
+        state: "",
+        tags: ""
+    }
+}
+
+SaveVehicleMetaEntry(vehicleId, state := "", tags := "") {
+    global VehicleMetaEntries
+
+    state := NormalizeVehicleState(state)
+    tags := NormalizeTagList(tags)
+    index := FindVehicleMetaIndex(vehicleId)
+
+    if (state = "" && tags = "") {
+        if index {
+            VehicleMetaEntries.RemoveAt(index)
+            SaveVehicleMeta()
+        }
+        return
+    }
+
+    entry := {
+        vehicleId: vehicleId,
+        state: state,
+        tags: tags
+    }
+
+    if index {
+        VehicleMetaEntries[index] := entry
+    } else {
+        VehicleMetaEntries.Push(entry)
+    }
+
+    SaveVehicleMeta()
+}
+
+FindVehicleMetaIndex(vehicleId) {
+    global VehicleMetaEntries
+
+    for index, entry in VehicleMetaEntries {
+        if (entry.vehicleId = vehicleId) {
+            return index
+        }
+    }
+
+    return 0
+}
+
+DeleteVehicleMeta(vehicleId) {
+    global VehicleMetaEntries
+
+    index := FindVehicleMetaIndex(vehicleId)
+    if !index {
+        return
+    }
+
+    VehicleMetaEntries.RemoveAt(index)
+    SaveVehicleMeta()
+}
+
+NormalizeVehicleState(state) {
+    global VehicleStateOptions
+
+    state := Trim(state)
+    if (state = "") {
+        return ""
+    }
+
+    for item in VehicleStateOptions {
+        if (item = state) {
+            return item
+        }
+    }
+
+    return state
+}
+
+NormalizeTagList(tags) {
+    tags := Trim(tags)
+    if (tags = "") {
+        return ""
+    }
+
+    tags := StrReplace(tags, ";", ",")
+    rawItems := StrSplit(tags, ",")
+    normalized := []
+    seen := Map()
+
+    for item in rawItems {
+        cleanItem := Trim(item)
+        if (cleanItem = "") {
+            continue
+        }
+
+        key := StrLower(cleanItem)
+        if seen.Has(key) {
+            continue
+        }
+
+        seen[key] := true
+        normalized.Push(cleanItem)
+    }
+
+    return JoinInline(normalized, ", ")
+}
+
+LoadVehicleReminders() {
+    global AppTitle, VehicleReminders, RemindersFile
+
+    VehicleReminders := []
+    if !FileExist(RemindersFile) {
+        return
+    }
+
+    content := FileRead(RemindersFile, "UTF-8")
+    content := StrReplace(content, Chr(0xFEFF))
+    lines := StrSplit(content, "`n", "`r")
+    firstNonEmptyLine := ""
+    dataStarted := false
+
+    for rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        firstNonEmptyLine := line
+        break
+    }
+
+    if (firstNonEmptyLine = "") {
+        return
+    }
+
+    if (firstNonEmptyLine != "# Vehimap reminders v1" && firstNonEmptyLine != "# Vehimap reminders v2") {
+        MsgBox("Soubor vlastních připomínek není v podporovaném formátu.`n`nZkontrolujte soubor:`n" RemindersFile, AppTitle, 0x30)
+        return
+    }
+
+    isV2 := (firstNonEmptyLine = "# Vehimap reminders v2")
+
+    for index, rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        if !dataStarted {
+            dataStarted := true
+            continue
+        }
+
+        if (SubStr(line, 1, 1) = "#") {
+            MsgBox("Soubor vlastních připomínek obsahuje neplatnou hlavičku nebo komentář na řádku " index ".`n`nZkontrolujte soubor:`n" RemindersFile, AppTitle, 0x30)
+            VehicleReminders := []
+            return
+        }
+
+        fields := StrSplit(line, "`t")
+        expectedFieldCount := isV2 ? 7 : 6
+        if (fields.Length != expectedFieldCount) {
+            MsgBox("Soubor vlastních připomínek je poškozený. Řádek " index " musí obsahovat přesně " expectedFieldCount " polí oddělených tabulátory.`n`nZkontrolujte soubor:`n" RemindersFile, AppTitle, 0x30)
+            VehicleReminders := []
+            return
+        }
+
+        reminderDays := UnescapeField(fields[5])
+        if !RegExMatch(reminderDays, "^\d{1,3}$") {
+            reminderDays := "30"
+        }
+
+        VehicleReminders.Push({
+            id: UnescapeField(fields[1]),
+            vehicleId: UnescapeField(fields[2]),
+            title: UnescapeField(fields[3]),
+            dueDate: UnescapeField(fields[4]),
+            reminderDays: reminderDays,
+            repeatMode: isV2 ? NormalizeReminderRepeat(UnescapeField(fields[6])) : "Neopakovat",
+            note: isV2 ? UnescapeField(fields[7]) : UnescapeField(fields[6])
+        })
+    }
+}
+
+SaveVehicleReminders() {
+    global RemindersFile
+
+    WriteTextFileUtf8(RemindersFile, BuildVehicleRemindersDataContent())
+}
+
+BuildVehicleRemindersDataContent() {
+    global VehicleReminders
+
+    lines := ["# Vehimap reminders v2"]
+    for entry in VehicleReminders {
+        lines.Push(
+            EscapeField(entry.id) "`t"
+            EscapeField(entry.vehicleId) "`t"
+            EscapeField(entry.title) "`t"
+            EscapeField(entry.dueDate) "`t"
+            EscapeField(entry.reminderDays) "`t"
+            EscapeField(GetReminderRepeatLabel(entry.HasOwnProp("repeatMode") ? entry.repeatMode : "")) "`t"
+            EscapeField(entry.note)
+        )
+    }
+
+    return JoinLines(lines)
+}
+
+DeleteVehicleReminders(vehicleId) {
+    global VehicleReminders
+
+    filtered := []
+    changed := false
+    for entry in VehicleReminders {
+        if (entry.vehicleId = vehicleId) {
+            changed := true
+        } else {
+            filtered.Push(entry)
+        }
+    }
+
+    VehicleReminders := filtered
+    if changed {
+        SaveVehicleReminders()
+    }
+}
+
+GetVehicleReminderEntries(vehicleId) {
+    global VehicleReminders
+
+    entries := []
+    for entry in VehicleReminders {
+        if (entry.vehicleId = vehicleId) {
+            entries.Push(entry)
+        }
+    }
+
+    SortVehicleReminderEntries(&entries)
+    return entries
+}
+
+GetVehicleReminderCount(vehicleId) {
+    count := 0
+    global VehicleReminders
+
+    for entry in VehicleReminders {
+        if (entry.vehicleId = vehicleId) {
+            count += 1
+        }
+    }
+
+    return count
+}
+
+BuildVehicleReminderSummaryText(vehicleId) {
+    entries := GetVehicleReminderEntries(vehicleId)
+    if (entries.Length = 0) {
+        return "K tomuto vozidlu zatím nejsou uloženy žádné vlastní připomínky."
+    }
+
+    nearest := entries[1]
+    status := GetReminderExpirationStatusText(nearest.dueDate, nearest.reminderDays + 0)
+    summary := "Připomínek: " entries.Length ". Nejbližší: " nearest.title " (" nearest.dueDate
+    if (status != "") {
+        summary .= ", " status
+    }
+    repeatLabel := GetReminderRepeatLabel(nearest.HasOwnProp("repeatMode") ? nearest.repeatMode : "")
+    if (repeatLabel != "Neopakovat") {
+        summary .= ", " repeatLabel
+    }
+    summary .= ")."
+    return summary
+}
+
+FindVehicleReminderById(entryId) {
+    global VehicleReminders
+
+    for entry in VehicleReminders {
+        if (entry.id = entryId) {
+            return entry
+        }
+    }
+
+    return ""
+}
+
+FindVehicleReminderIndexById(entryId) {
+    global VehicleReminders
+
+    for index, entry in VehicleReminders {
+        if (entry.id = entryId) {
+            return index
+        }
+    }
+
+    return 0
+}
+
+GenerateVehicleReminderId() {
+    return "rem_" A_Now "_" Random(1000, 9999)
+}
+
+NormalizeReminderRepeat(repeatMode) {
+    global ReminderRepeatOptions
+
+    repeatMode := Trim(repeatMode)
+    if (repeatMode = "") {
+        return "Neopakovat"
+    }
+
+    for option in ReminderRepeatOptions {
+        if (option = repeatMode) {
+            return option
+        }
+    }
+
+    return "Neopakovat"
+}
+
+GetReminderRepeatLabel(repeatMode) {
+    return NormalizeReminderRepeat(repeatMode)
+}
+
+GetReminderRepeatYears(repeatMode) {
+    repeatMode := NormalizeReminderRepeat(repeatMode)
+
+    switch repeatMode {
+        case "Každý rok":
+            return 1
+        case "Každé 2 roky":
+            return 2
+        case "Každých 5 let":
+            return 5
+        default:
+            return 0
+    }
+}
+
+AddYearsToEventDate(eventDate, yearsToAdd) {
+    normalized := NormalizeEventDate(eventDate)
+    if (normalized = "" || yearsToAdd = 0) {
+        return normalized
+    }
+
+    parts := StrSplit(normalized, ".")
+    day := parts[1] + 0
+    month := parts[2] + 0
+    year := (parts[3] + 0) + yearsToAdd
+    maxDay := DaysInMonth(year, month)
+    if (day > maxDay) {
+        day := maxDay
+    }
+
+    return Format("{:02}.{:02}.{:04}", day, month, year)
+}
+
+SortVehicleReminderEntries(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareVehicleReminderEntries(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareVehicleReminderEntries(left, right) {
+    leftStamp := ParseReminderDueStamp(left.dueDate)
+    rightStamp := ParseReminderDueStamp(right.dueDate)
+
+    if (leftStamp = "") {
+        leftStamp := "99999999999999"
+    }
+    if (rightStamp = "") {
+        rightStamp := "99999999999999"
+    }
+
+    if (leftStamp < rightStamp) {
+        return -1
+    }
+    if (leftStamp > rightStamp) {
+        return 1
+    }
+
+    return CompareTextValues(left.title, right.title)
+}
+
+ParseReminderDueStamp(reminderDate) {
+    normalized := NormalizeEventDate(reminderDate)
+    if (normalized = "") {
+        return ""
+    }
+
+    parts := StrSplit(normalized, ".")
+    return parts[3] parts[2] parts[1] "235959"
+}
+
+GetReminderExpirationStatusText(reminderDate, reminderDays := 30) {
+    dueStamp := ParseReminderDueStamp(reminderDate)
+    if (dueStamp = "") {
+        return ""
+    }
+
+    if (dueStamp < A_Now) {
+        return "Po termínu"
+    }
+
+    cutoff := DateAdd(A_Now, reminderDays, "Days")
+    if (dueStamp <= cutoff) {
+        daysLeft := DateDiff(dueStamp, A_Now, "Days")
+        if (daysLeft < 1) {
+            return "Dnes"
+        }
+        return "Do " daysLeft " dnů"
+    }
+
+    return ""
+}
+
+GetUpcomingCustomReminders(vehicleId := "") {
+    global VehicleReminders
+
+    upcoming := []
+    for entry in VehicleReminders {
+        if (vehicleId != "" && entry.vehicleId != vehicleId) {
+            continue
+        }
+
+        vehicle := FindVehicleById(entry.vehicleId)
+        if !IsObject(vehicle) {
+            continue
+        }
+
+        dueStamp := ParseReminderDueStamp(entry.dueDate)
+        if (dueStamp = "") {
+            continue
+        }
+
+        reminderDays := entry.reminderDays + 0
+        cutoff := DateAdd(A_Now, reminderDays, "Days")
+        if (dueStamp <= cutoff) {
+            upcoming.Push({
+                kind: "custom",
+                vehicle: vehicle,
+                reminder: entry,
+                dueStamp: dueStamp
+            })
+        }
+    }
+
+    SortUpcomingByDue(&upcoming)
+    return upcoming
+}
+
+GetVehicleReminderStateText(vehicleId) {
+    upcoming := GetUpcomingCustomReminders(vehicleId)
+    if (upcoming.Length = 0) {
+        return ""
+    }
+
+    entry := upcoming[1].reminder
+    status := GetReminderExpirationStatusText(entry.dueDate, entry.reminderDays + 0)
+    if (status = "") {
+        return ""
+    }
+
+    return "Př: " status
+}
+
+NormalizeEventDate(value) {
+    value := Trim(value)
+    if (value = "") {
+        return ""
+    }
+
+    if !RegExMatch(value, "^\s*(\d{1,2})\s*[./-]\s*(\d{1,2})\s*[./-]\s*(\d{4})\s*$", &match) {
+        return ""
+    }
+
+    day := match[1] + 0
+    month := match[2] + 0
+    year := match[3] + 0
+    if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1900 || year > 2200) {
+        return ""
+    }
+
+    stamp := Format("{:04}{:02}{:02}", year, month, day)
+    if !IsValidDateStamp(stamp) {
+        return ""
+    }
+
+    return Format("{:02}.{:02}.{:04}", day, month, year)
+}
+
+ParseEventDateStamp(eventDate) {
+    normalized := NormalizeEventDate(eventDate)
+    if (normalized = "") {
+        return ""
+    }
+
+    parts := StrSplit(normalized, ".")
+    return parts[3] parts[2] parts[1] "000000"
+}
+
+IsValidDateStamp(stamp) {
+    try {
+        DateDiff(stamp, stamp, "Days")
+        return true
+    } catch {
+        return false
+    }
+}
+
+NormalizeOdometerText(value) {
+    value := Trim(StrReplace(value, " ", ""))
+    if (value = "") {
+        return ""
+    }
+
+    return RegExMatch(value, "^\d+$") ? value : ""
+}
+
+FormatHistoryOdometer(value) {
+    value := Trim(value)
+    if (value = "") {
+        return ""
+    }
+
+    return value " km"
+}
+
+SortVehicleHistoryByDateDescending(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        swapped := false
+        Loop count - A_Index {
+            left := items[A_Index]
+            right := items[A_Index + 1]
+            leftStamp := ParseEventDateStamp(left.eventDate)
+            rightStamp := ParseEventDateStamp(right.eventDate)
+            if (leftStamp < rightStamp) {
+                items[A_Index] := right
+                items[A_Index + 1] := left
+                swapped := true
+            }
+        }
+        if !swapped {
+            break
+        }
+    }
+}
+
+FormatDisplayValue(value, emptyText := "Nevyplněno") {
+    value := Trim(value)
+    return (value = "") ? emptyText : value
+}
+
+BuildGreenCardRangeText(vehicle) {
+    if (vehicle.greenCardFrom = "" && vehicle.greenCardTo = "") {
+        return "Nevyplněno"
+    }
+
+    return FormatDisplayValue(vehicle.greenCardFrom, "od nevyplněno") " až " FormatDisplayValue(vehicle.greenCardTo, "do nevyplněno")
+}
+
+BuildVehicleDetailStatusText(vehicle) {
+    status := GetVehicleStatusText(vehicle)
+    return (status = "") ? "V pořádku" : status
+}
+
+BuildVehiclesDataContent() {
+    global Vehicles
+
+    lines := ["# Vehimap data v3"]
+    for vehicle in Vehicles {
+        lines.Push(
+            EscapeField(vehicle.id) "`t"
+            EscapeField(vehicle.name) "`t"
+            EscapeField(vehicle.category) "`t"
+            EscapeField(vehicle.vehicleType) "`t"
+            EscapeField(vehicle.makeModel) "`t"
+            EscapeField(vehicle.plate) "`t"
+            EscapeField(vehicle.year) "`t"
+            EscapeField(vehicle.power) "`t"
+            EscapeField(vehicle.lastTk) "`t"
+            EscapeField(vehicle.nextTk) "`t"
+            EscapeField(vehicle.greenCardFrom) "`t"
+            EscapeField(vehicle.greenCardTo)
+        )
+    }
+
+    return JoinLines(lines)
+}
+
+NormalizeTextForStorage(text) {
+    text := StrReplace(text, Chr(0xFEFF))
+    text := StrReplace(text, "`r`n", "`n")
+    text := StrReplace(text, "`r", "`n")
+    return text
+}
+
+WriteTextFileUtf8(path, content) {
+    if FileExist(path) {
+        FileDelete(path)
+    }
+
+    FileAppend(content, path, "UTF-8")
+}
+
+WriteTextFileUtf8NoBom(path, content) {
+    if FileExist(path) {
+        FileDelete(path)
+    }
+
+    file := FileOpen(path, "w", "UTF-8-RAW")
+    file.Write(content)
+    file.Close()
+}

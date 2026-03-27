@@ -1,0 +1,659 @@
+AddVehicle(*) {
+    OpenVehicleForm("add")
+}
+
+EditSelectedVehicle(*) {
+    global AppTitle
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, které chcete upravit.", AppTitle, 0x40)
+        return
+    }
+
+    OpenVehicleForm("edit", vehicle)
+}
+
+DeleteSelectedVehicle(*) {
+    global AppTitle, Vehicles
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, které chcete odstranit.", AppTitle, 0x40)
+        return
+    }
+
+    historyCount := GetVehicleHistoryCount(vehicle.id)
+    fuelCount := GetVehicleFuelEntryCount(vehicle.id)
+    recordCount := GetVehicleRecordCount(vehicle.id)
+    reminderCount := GetVehicleReminderCount(vehicle.id)
+    message := "Opravdu chcete odstranit vozidlo: " vehicle.name "?"
+    if (historyCount > 0) {
+        message .= "`n`nSoučasně bude odstraněno i " historyCount " záznamů z historie událostí."
+    }
+    if (fuelCount > 0) {
+        message .= "`nSoučasně bude odstraněno i " fuelCount " záznamů kilometrů a tankování."
+    }
+    if (recordCount > 0) {
+        message .= "`nSoučasně bude odstraněno i " recordCount " záznamů pojištění a dokladů."
+    }
+    if (reminderCount > 0) {
+        message .= "`nSoučasně bude odstraněno i " reminderCount " vlastních připomínek."
+    }
+
+    result := MsgBox(message, AppTitle, 0x34)
+    if (result != "Yes") {
+        return
+    }
+
+    index := FindVehicleIndexById(vehicle.id)
+    if !index {
+        return
+    }
+
+    Vehicles.RemoveAt(index)
+    SaveVehicles()
+    DeleteVehicleHistory(vehicle.id)
+    DeleteVehicleFuelEntries(vehicle.id)
+    DeleteVehicleRecords(vehicle.id)
+    DeleteVehicleReminders(vehicle.id)
+    DeleteVehicleMeta(vehicle.id)
+    RefreshVehicleList()
+    CheckDueVehicles(false, false)
+}
+
+OpenSelectedVehicleDetail(*) {
+    global AppTitle
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, jehož detail chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    OpenVehicleDetailDialog(vehicle)
+}
+
+OpenSelectedVehicleHistory(*) {
+    global AppTitle
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, jehož historii chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    OpenVehicleHistoryDialog(vehicle)
+}
+
+OpenSelectedVehicleFuelLog(*) {
+    global AppTitle
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, jehož kilometry a tankování chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    OpenVehicleFuelDialog(vehicle)
+}
+
+OpenSelectedVehicleRecords(*) {
+    global AppTitle
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, jehož pojištění a doklady chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    OpenVehicleRecordsDialog(vehicle)
+}
+
+OpenSelectedVehicleReminders(*) {
+    global AppTitle
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, jehož vlastní připomínky chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    OpenVehicleReminderDialog(vehicle)
+}
+
+OpenSelectedVehicleCosts(*) {
+    global AppTitle
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, jehož náklady a souhrny chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    OpenVehicleCostSummaryDialog(vehicle)
+}
+
+OpenVehicleDetailDialog(vehicle) {
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
+
+    if IsObject(DetailGui) {
+        WinActivate("ahk_id " DetailGui.Hwnd)
+        return
+    }
+
+    if IsObject(FormGui) {
+        WinActivate("ahk_id " FormGui.Hwnd)
+        return
+    }
+
+    if IsObject(SettingsGui) {
+        WinActivate("ahk_id " SettingsGui.Hwnd)
+        return
+    }
+
+    if IsObject(OverviewGui) {
+        WinActivate("ahk_id " OverviewGui.Hwnd)
+        return
+    }
+
+    if IsObject(OverdueGui) {
+        WinActivate("ahk_id " OverdueGui.Hwnd)
+        return
+    }
+
+    if IsObject(HistoryGui) {
+        WinActivate("ahk_id " HistoryGui.Hwnd)
+        return
+    }
+
+    if IsObject(HistoryFormGui) {
+        WinActivate("ahk_id " HistoryFormGui.Hwnd)
+        return
+    }
+
+    if IsObject(FuelGui) {
+        WinActivate("ahk_id " FuelGui.Hwnd)
+        return
+    }
+
+    if IsObject(FuelFormGui) {
+        WinActivate("ahk_id " FuelFormGui.Hwnd)
+        return
+    }
+
+    if IsObject(RecordsGui) {
+        WinActivate("ahk_id " RecordsGui.Hwnd)
+        return
+    }
+
+    if IsObject(RecordFormGui) {
+        WinActivate("ahk_id " RecordFormGui.Hwnd)
+        return
+    }
+
+    ShowMainWindow()
+
+    DetailVehicleId := vehicle.id
+    meta := GetVehicleMeta(vehicle.id)
+    DetailGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Detail vozidla")
+    DetailGui.SetFont("s10", "Segoe UI")
+    DetailGui.OnEvent("Close", CloseVehicleDetailDialog)
+    DetailGui.OnEvent("Escape", CloseVehicleDetailDialog)
+
+    MainGui.Opt("+Disabled")
+
+    DetailGui.AddText("x20 y20 w720", "Zde vidíte souhrn všech údajů o vybraném vozidle, poslední záznamy z historie, vlastní připomínky, orientační údaje o tankování a přehled pojištění, dokladů i nákladů.")
+
+    DetailGui.AddGroupBox("x20 y50 w720 h180", "Základní údaje")
+    DetailGui.AddText("x35 y80 w130", "Vlastní pojmenování")
+    DetailGui.AddText("x170 y80 w150", FormatDisplayValue(vehicle.name))
+    DetailGui.AddText("x355 y80 w110", "Kategorie")
+    DetailGui.AddText("x470 y80 w180", FormatDisplayValue(vehicle.category))
+    DetailGui.AddText("x35 y110 w130", "Typ")
+    DetailGui.AddText("x170 y110 w150", FormatDisplayValue(vehicle.vehicleType))
+    DetailGui.AddText("x355 y110 w110", "Značka / model")
+    DetailGui.AddText("x470 y110 w180", FormatDisplayValue(vehicle.makeModel))
+    DetailGui.AddText("x35 y140 w130", "SPZ")
+    DetailGui.AddText("x170 y140 w150", FormatDisplayValue(vehicle.plate))
+    DetailGui.AddText("x355 y140 w110", "Rok výroby")
+    DetailGui.AddText("x470 y140 w180", FormatDisplayValue(vehicle.year))
+    DetailGui.AddText("x35 y170 w130", "Výkon")
+    DetailGui.AddText("x170 y170 w150", FormatDisplayValue(vehicle.power))
+    DetailGui.AddText("x355 y170 w110", "Celkový stav")
+    DetailGui.AddText("x470 y170 w180", BuildVehicleDetailStatusText(vehicle))
+    DetailGui.AddText("x35 y195 w130", "Poslední tachometr")
+    DetailGui.AddText("x170 y195 w150", FormatDisplayValue(GetLatestVehicleOdometerText(vehicle.id), "Neznámý"))
+    DetailGui.AddText("x355 y195 w110", "Stav vozidla")
+    DetailGui.AddText("x470 y195 w180", FormatDisplayValue(meta.state, "Nevyplněno"))
+    DetailGui.AddText("x35 y220 w130", "Štítky")
+    DetailGui.AddText("x170 y220 w520", FormatDisplayValue(meta.tags, "Nevyplněno"))
+
+    DetailGui.AddGroupBox("x20 y240 w720 h110", "Platnost a termíny")
+    DetailGui.AddText("x35 y270 w130", "Poslední TK")
+    DetailGui.AddText("x170 y270 w150", FormatDisplayValue(vehicle.lastTk))
+    DetailGui.AddText("x355 y270 w110", "Příští TK")
+    DetailGui.AddText("x470 y270 w180", FormatDisplayValue(vehicle.nextTk))
+    DetailGui.AddText("x35 y300 w130", "Stav TK")
+    DetailGui.AddText("x170 y300 w150", FormatDisplayValue(GetExpirationStatusText(vehicle.nextTk, GetTechnicalReminderDays()), "V pořádku"))
+    DetailGui.AddText("x355 y300 w110", "Zelená karta")
+    DetailGui.AddText("x470 y300 w220", BuildGreenCardRangeText(vehicle))
+    DetailGui.AddText("x35 y330 w130", "Stav ZK")
+    DetailGui.AddText("x170 y330 w520", FormatDisplayValue(GetExpirationStatusText(vehicle.greenCardTo, GetGreenCardReminderDays()), vehicle.greenCardTo = "" ? "Nevyplněno" : "V pořádku"))
+
+    DetailGui.AddGroupBox("x20 y360 w720 h150", "Poslední události")
+    DetailHistorySummaryLabel := DetailGui.AddText("x35 y390 w685", BuildVehicleHistorySummaryText(vehicle.id))
+    DetailRecentHistoryList := DetailGui.AddListView("x35 y418 w685 h60 Grid -Multi", ["Datum", "Událost", "Km", "Cena"])
+    DetailRecentHistoryList.ModifyCol(1, "85")
+    DetailRecentHistoryList.ModifyCol(2, "220")
+    DetailRecentHistoryList.ModifyCol(3, "110")
+    DetailRecentHistoryList.ModifyCol(4, "190")
+    PopulateVehicleDetailHistoryList(vehicle.id)
+
+    DetailGui.AddGroupBox("x20 y520 w720 h95", "Další evidence")
+    DetailReminderSummaryLabel := DetailGui.AddText("x35 y545 w685", BuildVehicleReminderSummaryText(vehicle.id))
+    DetailFuelSummaryLabel := DetailGui.AddText("x35 y568 w685", BuildVehicleFuelSummaryText(vehicle.id))
+    DetailRecordsSummaryLabel := DetailGui.AddText("x35 y591 w685", BuildVehicleRecordsSummaryText(vehicle.id))
+
+    editButton := DetailGui.AddButton("x35 y630 w120 h30", "Upravit vozidlo")
+    editButton.OnEvent("Click", EditVehicleFromDetail)
+
+    historyButton := DetailGui.AddButton("x165 y630 w110 h30", "Historie")
+    historyButton.OnEvent("Click", OpenHistoryFromDetail)
+
+    remindersButton := DetailGui.AddButton("x285 y630 w120 h30", "Připomínky")
+    remindersButton.OnEvent("Click", OpenRemindersFromDetail)
+
+    fuelButton := DetailGui.AddButton("x415 y630 w120 h30", "Tankování")
+    fuelButton.OnEvent("Click", OpenFuelFromDetail)
+
+    recordsButton := DetailGui.AddButton("x545 y630 w160 h30", "Pojištění a doklady")
+    recordsButton.OnEvent("Click", OpenRecordsFromDetail)
+
+    costsButton := DetailGui.AddButton("x240 y665 w150 h30", "Náklady a souhrny")
+    costsButton.OnEvent("Click", OpenCostsFromDetail)
+
+    closeButton := DetailGui.AddButton("x400 y665 w100 h30", "Zavřít")
+    closeButton.OnEvent("Click", CloseVehicleDetailDialog)
+
+    DetailGui.Show("w760 h720")
+    closeButton.Focus()
+}
+
+CloseVehicleDetailDialog(*) {
+    global DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, MainGui
+
+    if IsObject(DetailGui) {
+        DetailGui.Destroy()
+        DetailGui := 0
+    }
+
+    DetailVehicleId := ""
+    DetailRecentHistoryList := 0
+    DetailHistorySummaryLabel := 0
+    DetailReminderSummaryLabel := 0
+    DetailFuelSummaryLabel := 0
+    DetailRecordsSummaryLabel := 0
+    MainGui.Opt("-Disabled")
+    ShowMainWindow()
+}
+
+EditVehicleFromDetail(*) {
+    global DetailVehicleId
+
+    vehicle := FindVehicleById(DetailVehicleId)
+    if !IsObject(vehicle) {
+        return
+    }
+
+    CloseVehicleDetailDialog()
+    OpenVehicleForm("edit", vehicle)
+}
+
+OpenHistoryFromDetail(*) {
+    global DetailVehicleId
+
+    vehicle := FindVehicleById(DetailVehicleId)
+    if !IsObject(vehicle) {
+        return
+    }
+
+    CloseVehicleDetailDialog()
+    OpenVehicleHistoryDialog(vehicle)
+}
+
+OpenFuelFromDetail(*) {
+    global DetailVehicleId
+
+    vehicle := FindVehicleById(DetailVehicleId)
+    if !IsObject(vehicle) {
+        return
+    }
+
+    CloseVehicleDetailDialog()
+    OpenVehicleFuelDialog(vehicle)
+}
+
+OpenRemindersFromDetail(*) {
+    global DetailVehicleId
+
+    vehicle := FindVehicleById(DetailVehicleId)
+    if !IsObject(vehicle) {
+        return
+    }
+
+    CloseVehicleDetailDialog()
+    OpenVehicleReminderDialog(vehicle)
+}
+
+OpenRecordsFromDetail(*) {
+    global DetailVehicleId
+
+    vehicle := FindVehicleById(DetailVehicleId)
+    if !IsObject(vehicle) {
+        return
+    }
+
+    CloseVehicleDetailDialog()
+    OpenVehicleRecordsDialog(vehicle)
+}
+
+OpenCostsFromDetail(*) {
+    global DetailVehicleId
+
+    vehicle := FindVehicleById(DetailVehicleId)
+    if !IsObject(vehicle) {
+        return
+    }
+
+    CloseVehicleDetailDialog()
+    OpenVehicleCostSummaryDialog(vehicle)
+}
+
+PopulateVehicleDetailHistoryList(vehicleId) {
+    global DetailRecentHistoryList
+
+    if !IsObject(DetailRecentHistoryList) {
+        return
+    }
+
+    DetailRecentHistoryList.Delete()
+    recentEvents := GetRecentVehicleHistoryEntries(vehicleId, 5)
+    for event in recentEvents {
+        DetailRecentHistoryList.Add("", event.eventDate, event.eventType, FormatHistoryOdometer(event.odometer), event.cost)
+    }
+}
+
+OpenVehicleForm(mode, vehicle := "") {
+    global AppTitle, Categories, VehicleStateOptions, FormGui, FormControls, FormMode, FormVehicleId, MainGui, TabsCtrl, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
+
+    if IsObject(FormGui) {
+        WinActivate("ahk_id " FormGui.Hwnd)
+        return
+    }
+
+    if IsObject(SettingsGui) {
+        WinActivate("ahk_id " SettingsGui.Hwnd)
+        return
+    }
+
+    if IsObject(OverviewGui) {
+        WinActivate("ahk_id " OverviewGui.Hwnd)
+        return
+    }
+
+    if IsObject(OverdueGui) {
+        WinActivate("ahk_id " OverdueGui.Hwnd)
+        return
+    }
+
+    if IsObject(DetailGui) {
+        WinActivate("ahk_id " DetailGui.Hwnd)
+        return
+    }
+
+    if IsObject(HistoryGui) {
+        WinActivate("ahk_id " HistoryGui.Hwnd)
+        return
+    }
+
+    if IsObject(HistoryFormGui) {
+        WinActivate("ahk_id " HistoryFormGui.Hwnd)
+        return
+    }
+
+    if IsObject(FuelGui) {
+        WinActivate("ahk_id " FuelGui.Hwnd)
+        return
+    }
+
+    if IsObject(FuelFormGui) {
+        WinActivate("ahk_id " FuelFormGui.Hwnd)
+        return
+    }
+
+    if IsObject(RecordsGui) {
+        WinActivate("ahk_id " RecordsGui.Hwnd)
+        return
+    }
+
+    if IsObject(RecordFormGui) {
+        WinActivate("ahk_id " RecordFormGui.Hwnd)
+        return
+    }
+
+    FormMode := mode
+    FormVehicleId := IsObject(vehicle) ? vehicle.id : ""
+    FormControls := {}
+
+    title := (mode = "edit") ? "Upravit vozidlo" : "Přidat vozidlo"
+    FormGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - " title)
+    FormGui.SetFont("s10", "Segoe UI")
+    FormGui.OnEvent("Close", CloseVehicleForm)
+    FormGui.OnEvent("Escape", CloseVehicleForm)
+
+    MainGui.Opt("+Disabled")
+
+    labelX := 20
+    inputX := 245
+    inputW := 275
+    rowY := 60
+    rowStep := 35
+
+    FormGui.AddText("x20 y20 w500", "Pole označená jako povinné musíte vyplnit. Pole označená jako volitelné můžete nechat prázdná.")
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Vlastní pojmenování (povinné)")
+    FormControls.name := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Kategorie (povinné)")
+    FormControls.category := FormGui.AddDropDownList(Format("x{} y{} w{}", inputX, rowY - 3, inputW), Categories)
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Typ (volitelné)")
+    FormControls.vehicleType := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Značka / model (povinné)")
+    FormControls.makeModel := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "SPZ (volitelné)")
+    FormControls.plate := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Rok výroby (volitelné)")
+    FormControls.year := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Výkon (volitelné)")
+    FormControls.power := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Poslední TK (volitelné)")
+    FormControls.lastTk := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Příští TK (povinné)")
+    FormControls.nextTk := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Zelená karta od (volitelné)")
+    FormControls.greenCardFrom := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Zelená karta do (volitelné)")
+    FormControls.greenCardTo := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Stav vozidla (volitelné)")
+    FormControls.vehicleState := FormGui.AddDropDownList(Format("x{} y{} w{}", inputX, rowY - 3, inputW), VehicleStateOptions)
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Štítky (volitelné)")
+    FormControls.vehicleTags := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    rowY += rowStep + 10
+
+    FormGui.AddText("x20 y" rowY " w500", "Datum zadávejte jako MM/RRRR, například 04/2026. Pro upozornění se používají pole Příští TK a Zelená karta do.")
+
+    saveButton := FormGui.AddButton(Format("x185 y{} w140 h30 Default", rowY + 45), "Uložit")
+    saveButton.OnEvent("Click", SaveVehicleFromForm)
+
+    cancelButton := FormGui.AddButton(Format("x335 y{} w140 h30", rowY + 45), "Zrušit")
+    cancelButton.OnEvent("Click", CloseVehicleForm)
+
+    if IsObject(vehicle) {
+        FormControls.name.Text := vehicle.name
+        SetDropDownToText(FormControls.category, vehicle.category, Categories)
+        FormControls.vehicleType.Text := vehicle.vehicleType
+        FormControls.makeModel.Text := vehicle.makeModel
+        FormControls.plate.Text := vehicle.plate
+        FormControls.year.Text := vehicle.year
+        FormControls.power.Text := vehicle.power
+        FormControls.lastTk.Text := vehicle.lastTk
+        FormControls.nextTk.Text := vehicle.nextTk
+        FormControls.greenCardFrom.Text := vehicle.greenCardFrom
+        FormControls.greenCardTo.Text := vehicle.greenCardTo
+        meta := GetVehicleMeta(vehicle.id)
+        SetDropDownToText(FormControls.vehicleState, meta.state, VehicleStateOptions)
+        FormControls.vehicleTags.Text := meta.tags
+    } else {
+        FormControls.category.Value := TabsCtrl.Value
+    }
+
+    FormGui.Show("w550 h635")
+    FormControls.name.Focus()
+}
+
+CloseVehicleForm(*) {
+    global FormGui, MainGui
+
+    if IsObject(FormGui) {
+        hwnd := FormGui.Hwnd
+        FormGui.Destroy()
+        FormGui := 0
+    }
+
+    MainGui.Opt("-Disabled")
+    ShowMainWindow()
+}
+
+SaveVehicleFromForm(*) {
+    global AppTitle, FormMode, FormVehicleId, FormControls, Vehicles
+
+    name := Trim(FormControls.name.Text)
+    category := Trim(FormControls.category.Text)
+    vehicleType := Trim(FormControls.vehicleType.Text)
+    makeModel := Trim(FormControls.makeModel.Text)
+    plate := StrUpper(Trim(FormControls.plate.Text))
+    year := Trim(FormControls.year.Text)
+    power := Trim(FormControls.power.Text)
+    lastTk := NormalizeMonthYear(FormControls.lastTk.Text)
+    nextTk := NormalizeMonthYear(FormControls.nextTk.Text)
+    greenCardFrom := NormalizeMonthYear(FormControls.greenCardFrom.Text)
+    greenCardTo := NormalizeMonthYear(FormControls.greenCardTo.Text)
+    vehicleState := Trim(FormControls.vehicleState.Text)
+    vehicleTags := Trim(FormControls.vehicleTags.Text)
+
+    if (name = "") {
+        MsgBox("Vyplňte prosím vlastní pojmenování vozidla.", AppTitle, 0x30)
+        FormControls.name.Focus()
+        return
+    }
+
+    if (category = "") {
+        MsgBox("Vyberte prosím kategorii vozidla.", AppTitle, 0x30)
+        FormControls.category.Focus()
+        return
+    }
+
+    if (makeModel = "") {
+        MsgBox("Vyplňte prosím značku / model.", AppTitle, 0x30)
+        FormControls.makeModel.Focus()
+        return
+    }
+
+    if (Trim(FormControls.lastTk.Text) != "" && lastTk = "") {
+        MsgBox("Pole Poslední TK musí být ve formátu MM/RRRR.", AppTitle, 0x30)
+        FormControls.lastTk.Focus()
+        return
+    }
+
+    if (nextTk = "") {
+        MsgBox("Pole Příští TK je povinné a musí být ve formátu MM/RRRR.", AppTitle, 0x30)
+        FormControls.nextTk.Focus()
+        return
+    }
+
+    if (Trim(FormControls.greenCardFrom.Text) != "" && greenCardFrom = "") {
+        MsgBox("Pole Zelená karta od musí být ve formátu MM/RRRR.", AppTitle, 0x30)
+        FormControls.greenCardFrom.Focus()
+        return
+    }
+
+    if (Trim(FormControls.greenCardTo.Text) != "" && greenCardTo = "") {
+        MsgBox("Pole Zelená karta do musí být ve formátu MM/RRRR.", AppTitle, 0x30)
+        FormControls.greenCardTo.Focus()
+        return
+    }
+
+    if (greenCardFrom != "" && greenCardTo != "" && ParseDueStamp(greenCardFrom) > ParseDueStamp(greenCardTo)) {
+        MsgBox("Pole Zelená karta od nesmí být později než pole Zelená karta do.", AppTitle, 0x30)
+        FormControls.greenCardFrom.Focus()
+        return
+    }
+
+    if (year != "" && !RegExMatch(year, "^\d{4}$")) {
+        MsgBox("Rok výroby zadejte prosím jako čtyřciferný rok, nebo pole nechte prázdné.", AppTitle, 0x30)
+        FormControls.year.Focus()
+        return
+    }
+
+    vehicle := {
+        id: (FormMode = "edit") ? FormVehicleId : GenerateVehicleId(),
+        name: name,
+        category: NormalizeCategory(category),
+        vehicleType: vehicleType,
+        makeModel: makeModel,
+        plate: plate,
+        year: year,
+        power: power,
+        lastTk: lastTk,
+        nextTk: nextTk,
+        greenCardFrom: greenCardFrom,
+        greenCardTo: greenCardTo
+    }
+
+    index := FindVehicleIndexById(vehicle.id)
+    if index {
+        Vehicles[index] := vehicle
+    } else {
+        Vehicles.Push(vehicle)
+    }
+
+    SaveVehicles()
+    SaveVehicleMetaEntry(vehicle.id, vehicleState, vehicleTags)
+    CloseVehicleForm()
+    OpenVehicleById(vehicle.id, true)
+    CheckDueVehicles(false, false)
+}
