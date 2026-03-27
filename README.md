@@ -17,8 +17,8 @@ Komplexní řešení pro evidenci vašich vozidel.
 - samostatný `Balíček pro vozidlo`, který umí v jednom kroku nabídnout doporučené servisní plány, placeholdery dokladů i obecné připomínky podle kategorie a servisního profilu
 - rychlé hledání a řazení sloupců v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách, včetně zapamatování posledního řazení
 - samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, otevření navázaného souboru i otevření jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy
-- `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku
-- samostatný přehled `Náklady napříč vozidly` pro vybrané období s porovnáním vozidel, rozpadnutím částek podle skupin, upozorněním na aktivní vozidla bez číselného nákladu a se stavy k řešení přímo u jednotlivých vozidel
+- `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku, včetně `Ujeto km`, `Ceny / km` a srovnání s předchozím stejně dlouhým obdobím
+- samostatný přehled `Náklady napříč vozidly` pro vybrané období s porovnáním vozidel, rozpadnutím částek podle skupin, `Ujeto km`, `Cenou / km`, upozorněním na aktivní vozidla bez číselného nákladu a se stavy k řešení přímo u jednotlivých vozidel
 - export nákladových přehledů do `TSV souhrnu`, `TSV detailu` a `HTML sestavy`
 - vlastní připomínky i s volbou opakování `Neopakovat`, `Každý rok`, `Každé 2 roky` a `Každých 5 let`
 - upozornění na blížící se nebo propadlou technickou kontrolu
@@ -145,6 +145,7 @@ V `Náklady a souhrny`:
 
 - nahoře lze vybrat rok, předvolbu období a vlastní rozsah měsíců od 1 do 12
 - předvolby pokrývají 1, 2, 3, 6, 9 a 12 měsíců, ale můžete si nastavit i vlastní rozsah v rámci roku
+- souhrn vybraného období nově dopočítává i `Ujeto km`, `Cenu / km` a srovnání proti předchozímu stejně dlouhému období
 - pod tím zůstává i dlouhodobý přehled podle jednotlivých let
 - tlačítka `TSV souhrn`, `TSV detail` a `HTML sestava` umí vyexportovat vybrané období i dlouhodobý přehled do souboru pro další práci, tisk nebo archivaci
 

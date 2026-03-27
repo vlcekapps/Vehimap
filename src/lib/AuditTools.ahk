@@ -959,5 +959,5 @@ BuildDistanceText(distanceSummary) {
         return "NedostupnĂ„â€šĂ‚Â©"
     }
 
-    return FormatHistoryOdometer(distanceSummary.distanceKm) " km"
+    return Trim(distanceSummary.distanceKm) " km"
 }

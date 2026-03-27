@@ -10,9 +10,10 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - explicitní servisní profil vozidla s poli `Pohon`, `Klimatizace`, `Rozvody` a `Převodovka`, který slouží jako základ pro doporučené servisní šablony
 - výběrový dialog doporučených servisních šablon, ve kterém lze návrhy před přidáním odškrtnout nebo upravit
 - automatická nabídka doporučených servisních šablon hned po založení nového vozidla
-- nový `Balíček pro vozidlo`, který umí v jednom kroku nabídnout doporučené servisní plány, placeholdery dokladů a obecné připomínky podle kategorie i servisního profilu vozidla
+- nový `Balíček pro vozidlo`, který umí v jednom kroku nabídnout doporučené servisní plány, placeholdery dokladů i obecné připomínky podle kategorie i servisního profilu vozidla
 - akce v dashboardu pro rychlé otevření historie vozidla a okamžité označení servisního úkonu jako splněného
 - samostatný přehled `Náklady napříč vozidly` pro porovnání vozidel v jednom období
+- výpočet `Ujeto km`, `Ceny / km` a srovnání proti předchozímu stejně dlouhému období v nákladech vozidla i v přehledu `Náklady napříč vozidly`
 
 ### Změněno
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`
@@ -21,6 +22,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ### Opraveno
 - zpracování servisních doporučení, záloh a meta dat vozidel tak, aby správně fungoval nový servisní profil i smoke testy
+- výpočet ujetých kilometrů v nákladových souhrnech už nepřidává jednotku `km` dvakrát
 
 ## [1.0.2] - 2026-03-27
 

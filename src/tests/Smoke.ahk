@@ -25,6 +25,7 @@ RunSmokeTests() {
         "SmokeTestMaintenanceBackupRoundTrip",
         "SmokeTestRecordPathInfo",
         "SmokeTestFleetCostSummary",
+        "SmokeTestVehicleCostComparison",
         "SmokeTestDashboardCosts",
         "SmokeTestDashboardProblemHighlights",
         "SmokeTestDashboardMaintenanceActions",
@@ -733,28 +734,82 @@ SmokeTestFleetCostSummary() {
     AssertEqual(summary.totalFuel, 1000.0, "Fleet součet tankování nesedí.")
     AssertEqual(summary.totalHistory, 2000.0, "Fleet součet historie nesedí.")
     AssertEqual(summary.totalRecords, 1500.0, "Fleet součet dokladů nesedí.")
+    AssertEqual(summary.total, 4500.0, "Fleet celkový součet nesedí.")
     AssertEqual(summary.skippedCount, 1, "Fleet summary měl zachytit jednu nečíselnou částku.")
     AssertEqual(summary.undatedCount, 1, "Fleet summary měl zachytit jednu položku bez použitelného data.")
     AssertEqual(summary.activeVehicleCount, 3, "Fleet summary má počítat jen aktivní vozidla.")
     AssertEqual(summary.activeWithoutCostCount, 1, "Fleet summary má ukázat aktivní vozidla bez číselného nákladu.")
+    AssertEqual(summary.totalDistanceKm, 100, "Fleet summary má sečíst ujeté kilometry tam, kde jsou dostupné.")
+    AssertEqual(summary.costPerKmUnavailableCount, 1, "Fleet summary má hlídat vozidla s nákladem bez vypočtené ceny za kilometr.")
     AssertEqual(summary.rows[1].vehicle.id, "veh_1", "Nejvýš má být ve fleet přehledu vozidlo s nejvyšším součtem.")
+    AssertEqual(summary.rows[1].distanceSummary.distanceKm, 100, "První řádek fleet summary má obsahovat ujeté kilometry vozidla.")
+    AssertEqual(summary.rows[1].costPerKm, 30.0, "První řádek fleet summary má obsahovat cenu za kilometr.")
 
     summaryText := BuildFleetCostPeriodSummaryText(summary)
     AssertContains(summaryText, "Bez číselného nákladu: 1 z 3 aktivních vozidel.", "Fleet souhrn má upozornit na aktivní vozidla bez nákladu.")
     AssertContains(summaryText, "Nezapočteno: 1 s nečíselnou částkou, 1 bez použitelného data.", "Fleet souhrn má zmínit přeskočené položky.")
+    AssertContains(summaryText, "Ujeto km: 100 km.", "Fleet souhrn má ukázat ujeté kilometry.")
+    AssertContains(summaryText, "Cena / km: 30,00 Kč/km.", "Fleet souhrn má ukázat cenu za kilometr tam, kde jde spočítat.")
+    AssertContains(summaryText, "Cena / km nedostupná u 1 vozidel s nákladem.", "Fleet souhrn má upozornit i na nedostupnou cenu za kilometr.")
 
     rowSummaryText := BuildFleetCostRowsSummaryText(summary)
     AssertContains(rowSummaryText, "Nejvíc pálí:", "Fleet přehled má vypsat i rychlé highlighty problémových stavů.")
+    AssertContains(rowSummaryText, "Cena / km chybí u 1 vozidel s nákladem.", "Fleet přehled má zmínit nedostupnou cenu za kilometr.")
 
     zeroRow := ""
+    unavailableRow := ""
     for row in summary.rows {
         if (row.vehicle.id = "veh_4") {
             zeroRow := row
-            break
+        } else if (row.vehicle.id = "veh_2") {
+            unavailableRow := row
         }
     }
     AssertTrue(IsObject(zeroRow), "Vozidlo bez nákladů musí být ve fleet přehledu zachované.")
+    AssertTrue(IsObject(unavailableRow), "Vozidlo s náklady bez km musí být ve fleet přehledu zachované.")
     AssertContains(zeroRow.status, "Bez nákladu v období", "Řádek bez nákladů má mít jasný stav.")
+    AssertContains(unavailableRow.status, "Cena / km: chybí km v období", "Řádek s náklady bez km má mít jasný stav.")
+}
+
+SmokeTestVehicleCostComparison() {
+    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords
+
+    ResetSmokeData()
+    currentYear := FormatTime(A_Now, "yyyy") + 0
+    previousYear := currentYear - 1
+
+    Vehicles := [
+        {id: "veh_1", name: "Srovnávací auto", category: "Osobní vozidla", vehicleNote: "", makeModel: "Skoda Octavia", plate: "1AB2345", year: "", power: "", lastTk: "", nextTk: "03/2028", greenCardFrom: "", greenCardTo: "04/2027"}
+    ]
+    VehicleFuelLog := [
+        {id: "fuel_prev", vehicleId: "veh_1", entryDate: "10.11." previousYear, odometer: "9500", liters: "35", totalCost: "800", fullTank: 1, fuelType: "Benzin", note: ""},
+        {id: "fuel_now", vehicleId: "veh_1", entryDate: "10.01." currentYear, odometer: "10000", liters: "40", totalCost: "1000", fullTank: 1, fuelType: "Benzin", note: ""}
+    ]
+    VehicleHistory := [
+        {id: "hist_prev", vehicleId: "veh_1", eventDate: "15.12." previousYear, eventType: "Servis", odometer: "9600", cost: "1200", note: ""},
+        {id: "hist_now", vehicleId: "veh_1", eventDate: "15.02." currentYear, eventType: "Servis", odometer: "10100", cost: "2000", note: ""}
+    ]
+    VehicleRecords := [
+        {id: "record_prev", vehicleId: "veh_1", recordType: "Doklad", title: "Loňský doklad", provider: "", validFrom: "11/" previousYear, validTo: "12/" previousYear, price: "400", filePath: "", note: ""},
+        {id: "record_now", vehicleId: "veh_1", recordType: "Doklad", title: "Aktuální doklad", provider: "", validFrom: "01/" currentYear, validTo: "02/" currentYear, price: "500", filePath: "", note: ""}
+    ]
+
+    summary := BuildVehicleCostPeriodSummary("veh_1", currentYear, 1, 2)
+    AssertEqual(summary.total, 3500.0, "Součet nákladů za vybrané období nesedí.")
+    AssertTrue(IsObject(summary.distanceSummary) && summary.distanceSummary.available, "Souhrn nákladů má obsahovat dostupné km v období.")
+    AssertEqual(summary.distanceSummary.distanceKm, 100, "Souhrn nákladů má správně spočítat ujeté kilometry.")
+    AssertEqual(summary.costPerKm, 35.0, "Souhrn nákladů má správně spočítat cenu za kilometr.")
+    AssertTrue(IsObject(summary.comparison), "Souhrn nákladů má vrátit i srovnání s předchozím obdobím.")
+    AssertEqual(summary.comparison.previousLabel, BuildMonthIndexRangeLabel(GetMonthIndex(previousYear, 11), GetMonthIndex(previousYear, 12)), "Srovnání má použít stejně dlouhé předchozí období.")
+    AssertEqual(summary.comparison.totalDifference, 1100.0, "Rozdíl celkových nákladů vůči minulému období nesedí.")
+    AssertTrue(summary.comparison.totalPercentAvailable, "Procentní změna celkových nákladů má být dostupná.")
+    AssertTrue(summary.comparison.costPerKmAvailable, "Srovnání ceny za kilometr má být dostupné.")
+    AssertEqual(summary.comparison.costPerKmDifference, 11.0, "Rozdíl ceny za kilometr vůči minulému období nesedí.")
+
+    text := BuildVehicleCostPeriodSummaryText(summary)
+    AssertContains(text, "Ujeto km: 100 km.", "Souhrn vozidla má ukázat ujeté kilometry.")
+    AssertContains(text, "Cena / km: 35,00 Kč/km.", "Souhrn vozidla má ukázat cenu za kilometr.")
+    AssertContains(text, "Oproti " BuildMonthIndexRangeLabel(GetMonthIndex(previousYear, 11), GetMonthIndex(previousYear, 12)), "Souhrn vozidla má ukázat srovnání proti minulému období.")
 }
 
 SmokeTestDashboardCosts() {

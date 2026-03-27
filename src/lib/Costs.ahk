@@ -183,16 +183,18 @@ OpenFleetCostOverviewDialog(*) {
     FleetCostGui.AddGroupBox("x20 y295 w980 h250", "Vozidla a stavy v období")
     FleetCostSummaryLabel := FleetCostGui.AddText("x35 y325 w940 h32", "")
 
-    FleetCostList := FleetCostGui.AddListView("x35 y360 w940 h145 Grid -Multi", ["Vozidlo", "Kategorie", "SPZ", "Tankování", "Historie", "Doklady", "Celkem", "Stav"])
+    FleetCostList := FleetCostGui.AddListView("x35 y360 w940 h145 Grid -Multi", ["Vozidlo", "Kategorie", "SPZ", "Tankování", "Historie", "Doklady", "Celkem", "Ujeto km", "Cena / km", "Stav"])
     FleetCostList.OnEvent("DoubleClick", OpenSelectedFleetVehicleCostSummary)
-    FleetCostList.ModifyCol(1, "185")
-    FleetCostList.ModifyCol(2, "135")
-    FleetCostList.ModifyCol(3, "90")
-    FleetCostList.ModifyCol(4, "120")
-    FleetCostList.ModifyCol(5, "120")
-    FleetCostList.ModifyCol(6, "120")
-    FleetCostList.ModifyCol(7, "120")
-    FleetCostList.ModifyCol(8, "270")
+    FleetCostList.ModifyCol(1, "150")
+    FleetCostList.ModifyCol(2, "110")
+    FleetCostList.ModifyCol(3, "80")
+    FleetCostList.ModifyCol(4, "90")
+    FleetCostList.ModifyCol(5, "90")
+    FleetCostList.ModifyCol(6, "90")
+    FleetCostList.ModifyCol(7, "90")
+    FleetCostList.ModifyCol(8, "80")
+    FleetCostList.ModifyCol(9, "95")
+    FleetCostList.ModifyCol(10, "170")
 
     FleetCostVehicleCostsButton := FleetCostGui.AddButton("x130 y515 w150 h30", "Náklady vozidla")
     FleetCostVehicleCostsButton.OnEvent("Click", OpenSelectedFleetVehicleCostSummary)
@@ -321,7 +323,7 @@ RefreshFleetCostOverview(*) {
     FleetCostList.Delete()
     for row in FleetCostRows {
         plateText := Trim(row.vehicle.plate) = "" ? "-" : row.vehicle.plate
-        FleetCostList.Add("", row.vehicle.name, row.vehicle.category, plateText, FormatCostAmount(row.fuel), FormatCostAmount(row.history), FormatCostAmount(row.records), FormatCostAmount(row.total), row.status)
+        FleetCostList.Add("", row.vehicle.name, row.vehicle.category, plateText, FormatCostAmount(row.fuel), FormatCostAmount(row.history), FormatCostAmount(row.records), FormatCostAmount(row.total), row.distanceText, row.costPerKmText, row.status)
     }
     FleetCostList.Opt("+Redraw")
 
@@ -1123,17 +1125,27 @@ GetFleetCostSummaryYearOptions() {
 }
 
 BuildFleetCostPeriodSummary(yearLabel, fromMonth, toMonth) {
+    yearValue := yearLabel + 0
+    startMonthIndex := GetMonthIndex(yearValue, fromMonth)
+    endMonthIndex := GetMonthIndex(yearValue, toMonth)
+    return BuildFleetCostPeriodSummaryForRange(yearLabel, fromMonth, toMonth, startMonthIndex, endMonthIndex)
+}
+
+BuildFleetCostPeriodSummaryForRange(yearLabel, fromMonth, toMonth, startMonthIndex, endMonthIndex, includeComparison := true) {
     global Vehicles, VehicleFuelLog, VehicleHistory, VehicleRecords
 
-    yearValue := yearLabel + 0
     rowsMap := Map()
     summary := {
         year: yearLabel,
         fromMonth: fromMonth,
         toMonth: toMonth,
+        startMonthIndex: startMonthIndex,
+        endMonthIndex: endMonthIndex,
+        periodLabel: BuildMonthIndexRangeLabel(startMonthIndex, endMonthIndex),
         totalFuel: 0.0,
         totalHistory: 0.0,
         totalRecords: 0.0,
+        total: 0.0,
         fuelCount: 0,
         historyCount: 0,
         recordCount: 0,
@@ -1143,6 +1155,14 @@ BuildFleetCostPeriodSummary(yearLabel, fromMonth, toMonth) {
         activeVehicleCount: 0,
         activeWithoutCostCount: 0,
         vehiclesWithCosts: 0,
+        totalDistanceKm: 0,
+        distanceText: "Nedostupné",
+        costPerKm: "",
+        costPerKmText: "Nedostupné",
+        costPerKmVehicleCount: 0,
+        costPerKmUnavailableCount: 0,
+        costPerKmCostTotal: 0.0,
+        comparison: "",
         rows: []
     }
 
@@ -1157,12 +1177,13 @@ BuildFleetCostPeriodSummary(yearLabel, fromMonth, toMonth) {
         if !IsObject(row) || Trim(entry.totalCost) = "" {
             continue
         }
-        if !TryGetEventYearMonth(entry.entryDate, &entryYear, &entryMonth) {
+        monthIndex := GetEventDateMonthIndex(entry.entryDate)
+        if (monthIndex = "") {
             summary.undatedCount += 1
             row.undatedCount += 1
             continue
         }
-        if (entryYear != yearValue || entryMonth < fromMonth || entryMonth > toMonth) {
+        if (monthIndex < startMonthIndex || monthIndex > endMonthIndex) {
             continue
         }
         if TryParseMoneyAmount(entry.totalCost, &amount) {
@@ -1183,12 +1204,13 @@ BuildFleetCostPeriodSummary(yearLabel, fromMonth, toMonth) {
         if !IsObject(row) || Trim(entry.cost) = "" {
             continue
         }
-        if !TryGetEventYearMonth(entry.eventDate, &entryYear, &entryMonth) {
+        monthIndex := GetEventDateMonthIndex(entry.eventDate)
+        if (monthIndex = "") {
             summary.undatedCount += 1
             row.undatedCount += 1
             continue
         }
-        if (entryYear != yearValue || entryMonth < fromMonth || entryMonth > toMonth) {
+        if (monthIndex < startMonthIndex || monthIndex > endMonthIndex) {
             continue
         }
         if TryParseMoneyAmount(entry.cost, &amount) {
@@ -1209,12 +1231,13 @@ BuildFleetCostPeriodSummary(yearLabel, fromMonth, toMonth) {
         if !IsObject(row) || Trim(entry.price) = "" {
             continue
         }
-        if !TryGetRecordYearMonth(entry, &entryYear, &entryMonth) {
+        monthIndex := GetRecordMonthIndex(entry)
+        if (monthIndex = "") {
             summary.undatedCount += 1
             row.undatedCount += 1
             continue
         }
-        if (entryYear != yearValue || entryMonth < fromMonth || entryMonth > toMonth) {
+        if (monthIndex < startMonthIndex || monthIndex > endMonthIndex) {
             continue
         }
         if TryParseMoneyAmount(entry.price, &amount) {
@@ -1243,6 +1266,21 @@ BuildFleetCostPeriodSummary(yearLabel, fromMonth, toMonth) {
 
     rows := []
     for _, row in rowsMap {
+        row.distanceSummary := GetVehicleDistanceSummaryForMonthRange(row.vehicle.id, startMonthIndex, endMonthIndex)
+        row.distanceText := BuildDistanceText(row.distanceSummary)
+        row.costPerKm := ""
+        row.costPerKmText := BuildCostPerKmText(row.total, row.distanceSummary)
+        if (row.total > 0) {
+            if (row.distanceSummary.available && row.distanceSummary.distanceKm > 0) {
+                row.costPerKm := row.total / row.distanceSummary.distanceKm
+                row.costPerKmText := FormatCostPerKmValue(row.costPerKm)
+                summary.totalDistanceKm += row.distanceSummary.distanceKm
+                summary.costPerKmCostTotal += row.total
+                summary.costPerKmVehicleCount += 1
+            } else {
+                summary.costPerKmUnavailableCount += 1
+            }
+        }
         row.status := BuildFleetCostRowStatusText(row)
         rows.Push(row)
         if (row.total > 0) {
@@ -1252,8 +1290,29 @@ BuildFleetCostPeriodSummary(yearLabel, fromMonth, toMonth) {
         }
     }
 
+    summary.total := summary.totalFuel + summary.totalHistory + summary.totalRecords
+    if (summary.totalDistanceKm > 0) {
+        summary.distanceText := Trim(summary.totalDistanceKm) " km"
+    }
+    if (summary.costPerKmVehicleCount > 0 && summary.totalDistanceKm > 0) {
+        summary.costPerKm := summary.costPerKmCostTotal / summary.totalDistanceKm
+        summary.costPerKmText := FormatCostPerKmValue(summary.costPerKm)
+    }
+
     SortFleetCostRows(&rows)
     summary.rows := rows
+    if includeComparison {
+        comparisonContext := BuildVehicleCostComparisonContext(yearLabel, fromMonth, toMonth)
+        previousSummary := BuildFleetCostPeriodSummaryForRange(
+            comparisonContext.previousYear,
+            comparisonContext.previousFromMonth,
+            comparisonContext.previousToMonth,
+            comparisonContext.previousStartIndex,
+            comparisonContext.previousEndIndex,
+            false
+        )
+        summary.comparison := BuildCostPeriodComparisonSummary(summary, previousSummary)
+    }
     return summary
 }
 
@@ -1296,13 +1355,17 @@ CreateFleetCostRow(vehicle) {
         parsedCount: 0,
         skippedCount: 0,
         undatedCount: 0,
+        distanceSummary: "",
+        distanceText: "Nedostupné",
+        costPerKm: "",
+        costPerKmText: "Nedostupné",
         status: ""
     }
 }
 
 BuildFleetCostPeriodSummaryText(summary) {
-    total := summary.totalFuel + summary.totalHistory + summary.totalRecords
-    periodLabel := BuildVehicleCostPeriodLabel(summary.year, summary.fromMonth, summary.toMonth)
+    total := summary.total
+    periodLabel := summary.periodLabel
     if (summary.parsedCount = 0) {
         text := "Období " periodLabel ": zatím nejsou započítané žádné číselné náklady."
     } else {
@@ -1311,10 +1374,15 @@ BuildFleetCostPeriodSummaryText(summary) {
         if (topText != "") {
             text .= " Nejvýš: " topText "."
         }
+        text .= " Ujeto km: " summary.distanceText "."
+        text .= " Cena / km: " summary.costPerKmText "."
     }
 
     if (summary.activeWithoutCostCount > 0) {
         text .= " Bez číselného nákladu: " summary.activeWithoutCostCount " z " summary.activeVehicleCount " aktivních vozidel."
+    }
+    if (summary.costPerKmUnavailableCount > 0) {
+        text .= " Cena / km nedostupná u " summary.costPerKmUnavailableCount " vozidel s nákladem."
     }
 
     if (summary.skippedCount > 0 || summary.undatedCount > 0) {
@@ -1326,6 +1394,11 @@ BuildFleetCostPeriodSummaryText(summary) {
             issueParts.Push(summary.undatedCount " bez použitelného data")
         }
         text .= " Nezapočteno: " JoinInline(issueParts, ", ") "."
+    }
+
+    comparisonText := BuildCostPeriodComparisonText(summary.comparison)
+    if (comparisonText != "") {
+        text .= " " comparisonText
     }
 
     return text
@@ -1343,6 +1416,9 @@ BuildFleetCostRowsSummaryText(summary) {
     }
     if (summary.activeWithoutCostCount > 0) {
         text .= " Bez nákladu zůstává " summary.activeWithoutCostCount " aktivních vozidel."
+    }
+    if (summary.costPerKmUnavailableCount > 0) {
+        text .= " Cena / km chybí u " summary.costPerKmUnavailableCount " vozidel s nákladem."
     }
     if (issueVehicleCount > 0) {
         text .= " U " issueVehicleCount " vozidel je navíc stav k řešení."
@@ -1423,6 +1499,10 @@ BuildFleetCostRowStatusText(row) {
     if (row.total <= 0 && !IsVehicleInactive(row.vehicle)) {
         parts.Push("Bez nákladu v období")
     }
+    distanceIssueText := GetFleetCostRowDistanceIssueText(row)
+    if (distanceIssueText != "") {
+        parts.Push(distanceIssueText)
+    }
     if (row.skippedCount > 0) {
         parts.Push("Nečíselné částky: " row.skippedCount)
     }
@@ -1448,6 +1528,10 @@ GetFirstFleetCostRowIssueText(row) {
     if VehicleHasMissingGreenCard(row.vehicle) {
         return "ZK chybí"
     }
+    distanceIssueText := GetFleetCostRowDistanceIssueText(row)
+    if (distanceIssueText != "") {
+        return distanceIssueText
+    }
     if (row.total <= 0 && !IsVehicleInactive(row.vehicle)) {
         return "Bez nákladu v období"
     }
@@ -1461,12 +1545,39 @@ GetFirstFleetCostRowIssueText(row) {
     return ""
 }
 
+GetFleetCostRowDistanceIssueText(row) {
+    if (row.total <= 0) {
+        return ""
+    }
+
+    if !IsObject(row.distanceSummary) {
+        return "Cena / km nedostupná"
+    }
+    if (row.distanceSummary.available && row.distanceSummary.distanceKm > 0) {
+        return ""
+    }
+    if row.distanceSummary.hasRegression {
+        return "Cena / km: nekonzistentní tachometr"
+    }
+    if (row.distanceSummary.available && row.distanceSummary.distanceKm <= 0) {
+        return "Cena / km: nulový nájezd"
+    }
+    if (row.distanceSummary.sampleCount < 2) {
+        return "Cena / km: chybí km v období"
+    }
+
+    return "Cena / km nedostupná"
+}
+
 GetFleetCostRowIssueScore(row) {
     score := row.skippedCount + row.undatedCount
     if (GetVehicleStatusText(row.vehicle) != "") {
         score += 3
     }
     if VehicleHasMissingGreenCard(row.vehicle) {
+        score += 2
+    }
+    if (GetFleetCostRowDistanceIssueText(row) != "") {
         score += 2
     }
     if (row.total <= 0 && !IsVehicleInactive(row.vehicle)) {
@@ -1581,6 +1692,23 @@ BuildVehicleCostSummary(vehicleId) {
 
     for _, item in yearsMap {
         item.total := item.fuel + item.history + item.records
+        if RegExMatch(item.year, "^\d{4}$") {
+            yearValue := item.year + 0
+            item.distanceSummary := GetVehicleDistanceSummaryForMonthRange(vehicleId, GetMonthIndex(yearValue, 1), GetMonthIndex(yearValue, 12))
+            item.distanceText := BuildDistanceText(item.distanceSummary)
+            if (item.distanceSummary.available && item.distanceSummary.distanceKm > 0) {
+                item.costPerKm := item.total / item.distanceSummary.distanceKm
+                item.costPerKmText := FormatCostPerKmValue(item.costPerKm)
+            } else {
+                item.costPerKm := ""
+                item.costPerKmText := BuildCostPerKmText(item.total, item.distanceSummary)
+            }
+        } else {
+            item.distanceSummary := ""
+            item.distanceText := "Nedostupné"
+            item.costPerKm := ""
+            item.costPerKmText := "Nedostupné"
+        }
         summary.years.Push(item)
     }
 
@@ -1590,22 +1718,37 @@ BuildVehicleCostSummary(vehicleId) {
 }
 
 BuildVehicleCostPeriodSummary(vehicleId, yearLabel, fromMonth, toMonth) {
+    yearValue := yearLabel + 0
+    startMonthIndex := GetMonthIndex(yearValue, fromMonth)
+    endMonthIndex := GetMonthIndex(yearValue, toMonth)
+    return BuildVehicleCostPeriodSummaryForRange(vehicleId, yearLabel, fromMonth, toMonth, startMonthIndex, endMonthIndex)
+}
+
+BuildVehicleCostPeriodSummaryForRange(vehicleId, yearLabel, fromMonth, toMonth, startMonthIndex, endMonthIndex, includeComparison := true) {
     global VehicleFuelLog, VehicleHistory, VehicleRecords
 
-    yearValue := yearLabel + 0
     summary := {
         year: yearLabel,
         fromMonth: fromMonth,
         toMonth: toMonth,
+        startMonthIndex: startMonthIndex,
+        endMonthIndex: endMonthIndex,
+        periodLabel: BuildMonthIndexRangeLabel(startMonthIndex, endMonthIndex),
         totalFuel: 0.0,
         totalHistory: 0.0,
         totalRecords: 0.0,
+        total: 0.0,
         fuelCount: 0,
         historyCount: 0,
         recordCount: 0,
         parsedCount: 0,
         skippedCount: 0,
-        undatedCount: 0
+        undatedCount: 0,
+        distanceSummary: "",
+        distanceText: "Nedostupné",
+        costPerKm: "",
+        costPerKmText: "Nedostupné",
+        comparison: ""
     }
 
     for entry in VehicleFuelLog {
@@ -1613,11 +1756,12 @@ BuildVehicleCostPeriodSummary(vehicleId, yearLabel, fromMonth, toMonth) {
             continue
         }
 
-        if !TryGetEventYearMonth(entry.entryDate, &entryYear, &entryMonth) {
+        monthIndex := GetEventDateMonthIndex(entry.entryDate)
+        if (monthIndex = "") {
             summary.undatedCount += 1
             continue
         }
-        if (entryYear != yearValue || entryMonth < fromMonth || entryMonth > toMonth) {
+        if (monthIndex < startMonthIndex || monthIndex > endMonthIndex) {
             continue
         }
 
@@ -1635,11 +1779,12 @@ BuildVehicleCostPeriodSummary(vehicleId, yearLabel, fromMonth, toMonth) {
             continue
         }
 
-        if !TryGetEventYearMonth(entry.eventDate, &entryYear, &entryMonth) {
+        monthIndex := GetEventDateMonthIndex(entry.eventDate)
+        if (monthIndex = "") {
             summary.undatedCount += 1
             continue
         }
-        if (entryYear != yearValue || entryMonth < fromMonth || entryMonth > toMonth) {
+        if (monthIndex < startMonthIndex || monthIndex > endMonthIndex) {
             continue
         }
 
@@ -1657,11 +1802,12 @@ BuildVehicleCostPeriodSummary(vehicleId, yearLabel, fromMonth, toMonth) {
             continue
         }
 
-        if !TryGetRecordYearMonth(entry, &entryYear, &entryMonth) {
+        monthIndex := GetRecordMonthIndex(entry)
+        if (monthIndex = "") {
             summary.undatedCount += 1
             continue
         }
-        if (entryYear != yearValue || entryMonth < fromMonth || entryMonth > toMonth) {
+        if (monthIndex < startMonthIndex || monthIndex > endMonthIndex) {
             continue
         }
 
@@ -1674,19 +1820,48 @@ BuildVehicleCostPeriodSummary(vehicleId, yearLabel, fromMonth, toMonth) {
         }
     }
 
+    summary.total := summary.totalFuel + summary.totalHistory + summary.totalRecords
+    summary.distanceSummary := GetVehicleDistanceSummaryForMonthRange(vehicleId, startMonthIndex, endMonthIndex)
+    summary.distanceText := BuildDistanceText(summary.distanceSummary)
+    if (summary.distanceSummary.available && summary.distanceSummary.distanceKm > 0) {
+        summary.costPerKm := summary.total / summary.distanceSummary.distanceKm
+        summary.costPerKmText := FormatCostPerKmValue(summary.costPerKm)
+    } else {
+        summary.costPerKmText := BuildCostPerKmText(summary.total, summary.distanceSummary)
+    }
+    if includeComparison {
+        comparisonContext := BuildVehicleCostComparisonContext(yearLabel, fromMonth, toMonth)
+        previousSummary := BuildVehicleCostPeriodSummaryForRange(
+            vehicleId,
+            comparisonContext.previousYear,
+            comparisonContext.previousFromMonth,
+            comparisonContext.previousToMonth,
+            comparisonContext.previousStartIndex,
+            comparisonContext.previousEndIndex,
+            false
+        )
+        summary.comparison := BuildCostPeriodComparisonSummary(summary, previousSummary)
+    }
+
     return summary
 }
 
 BuildVehicleCostPeriodSummaryText(summary) {
-    total := summary.totalFuel + summary.totalHistory + summary.totalRecords
-    text := "Období " BuildVehicleCostPeriodLabel(summary.year, summary.fromMonth, summary.toMonth) ". "
+    total := summary.total
+    text := "Období " summary.periodLabel ". "
     text .= "Celkem nákladů: " FormatCostAmount(total) ". "
     text .= "Započteno položek: " summary.parsedCount "."
+    text .= " Ujeto km: " summary.distanceText "."
+    text .= " Cena / km: " summary.costPerKmText "."
     if (summary.skippedCount > 0) {
         text .= " Přeskočeno nečíselných částek: " summary.skippedCount "."
     }
     if (summary.undatedCount > 0) {
         text .= " Položek bez použitelného data: " summary.undatedCount "."
+    }
+    comparisonText := BuildCostPeriodComparisonText(summary.comparison)
+    if (comparisonText != "") {
+        text .= " " comparisonText
     }
     return text
 }
@@ -1697,6 +1872,102 @@ BuildVehicleCostPeriodLabel(yearLabel, fromMonth, toMonth) {
     }
 
     return Format("{:02}/{} až {:02}/{}", fromMonth, yearLabel, toMonth, yearLabel)
+}
+
+BuildMonthIndexRangeLabel(startMonthIndex, endMonthIndex) {
+    GetMonthYearFromIndex(startMonthIndex, &startYear, &startMonth)
+    GetMonthYearFromIndex(endMonthIndex, &endYear, &endMonth)
+
+    if (startYear = endYear && startMonth = endMonth) {
+        return Format("{:02}/{}", startMonth, startYear)
+    }
+    return Format("{:02}/{} až {:02}/{}", startMonth, startYear, endMonth, endYear)
+}
+
+GetRecordMonthIndex(entry) {
+    if !TryGetRecordYearMonth(entry, &entryYear, &entryMonth) {
+        return ""
+    }
+
+    return GetMonthIndex(entryYear, entryMonth)
+}
+
+FormatCostPerKmValue(value) {
+    return FormatCostAmount(value) "/km"
+}
+
+BuildCostPeriodComparisonSummary(currentSummary, previousSummary) {
+    comparison := {
+        previousLabel: previousSummary.periodLabel,
+        totalDifference: currentSummary.total - previousSummary.total,
+        totalPercentAvailable: previousSummary.total != 0,
+        totalPercent: previousSummary.total != 0 ? ((currentSummary.total - previousSummary.total) / previousSummary.total) * 100.0 : "",
+        costPerKmAvailable: currentSummary.costPerKm != "" && previousSummary.costPerKm != "",
+        costPerKmDifference: "",
+        costPerKmPercentAvailable: false,
+        costPerKmPercent: ""
+    }
+
+    if comparison.costPerKmAvailable {
+        comparison.costPerKmDifference := currentSummary.costPerKm - previousSummary.costPerKm
+        if (previousSummary.costPerKm != 0) {
+            comparison.costPerKmPercentAvailable := true
+            comparison.costPerKmPercent := (comparison.costPerKmDifference / previousSummary.costPerKm) * 100.0
+        }
+    }
+
+    return comparison
+}
+
+BuildCostPeriodComparisonText(comparison) {
+    if !IsObject(comparison) || comparison.previousLabel = "" {
+        return ""
+    }
+
+    text := "Oproti " comparison.previousLabel ": celkem " FormatSignedCostAmount(comparison.totalDifference)
+    if comparison.totalPercentAvailable {
+        text .= " (" FormatSignedPercentValue(comparison.totalPercent) ")"
+    }
+    text .= "."
+
+    if comparison.costPerKmAvailable {
+        text .= " Cena / km " FormatSignedCostPerKmValue(comparison.costPerKmDifference)
+        if comparison.costPerKmPercentAvailable {
+            text .= " (" FormatSignedPercentValue(comparison.costPerKmPercent) ")"
+        }
+        text .= "."
+    } else {
+        text .= " Cena / km: nedostupné."
+    }
+
+    return text
+}
+
+FormatSignedCostAmount(value) {
+    if (value > 0) {
+        return "+" FormatCostAmount(value)
+    }
+    if (value < 0) {
+        return "-" FormatCostAmount(Abs(value))
+    }
+
+    return FormatCostAmount(0)
+}
+
+FormatSignedCostPerKmValue(value) {
+    if (value > 0) {
+        return "+" FormatCostPerKmValue(value)
+    }
+    if (value < 0) {
+        return "-" FormatCostPerKmValue(Abs(value))
+    }
+
+    return FormatCostPerKmValue(0)
+}
+
+FormatSignedPercentValue(value) {
+    sign := value > 0 ? "+" : (value < 0 ? "-" : "")
+    return sign StrReplace(Format("{:.1f}", Abs(value) + 0.0), ".", ",") " %"
 }
 
 GetVehicleCostSummaryYearOptions(vehicleId) {
