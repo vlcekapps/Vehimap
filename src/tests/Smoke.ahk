@@ -10,6 +10,7 @@ RunSmokeTests() {
     tests := [
         "SmokeTestBuildInfo",
         "SmokeTestUpdateManifestFile",
+        "SmokeTestUpdateCheckAction",
         "SmokeTestUpdateHelperScript",
         "SmokeTestSemVerComparison",
         "SmokeTestGlobalSearch",
@@ -61,6 +62,73 @@ SmokeTestUpdateManifestFile() {
     AssertEqual(manifest.version, AppVersion, "Lokalni update manifest ma odpovidat aktualni verzi aplikace.")
     AssertContains(manifest.assetUrl, "releases/download/", "Manifest ma obsahovat odkaz na release asset.")
     AssertContains(manifest.notesUrl, "releases/tag/", "Manifest ma obsahovat odkaz na release poznamky.")
+}
+
+SmokeTestUpdateCheckAction() {
+    global AppVersion, VehimapTestHooks
+
+    originalVersion := AppVersion
+    try {
+        VehimapTestHooks := {
+            messages: [],
+            runs: [],
+            msgBoxResults: [],
+            updateManifest: {
+                version: originalVersion,
+                publishedAt: "2026-03-27T10:00:59Z",
+                notesUrl: "https://example.com/releases/v" originalVersion,
+                assetUrl: "https://example.com/download/vehimap-" originalVersion ".zip",
+                assetSha256: "341890872be1df557a1a65159ac63734c53b4288f8aee98cfe5c7d154613f736",
+                assetSize: "691749"
+            }
+        }
+
+        CheckForUpdates()
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "Kontrola aktualizaci ma pro aktualni verzi zobrazit jednu hlasku.")
+        AssertContains(VehimapTestHooks.messages[1].text, "Vehimap (" originalVersion ").", "Aktualni verze ma byt oznamena v dialogu.")
+        AssertEqual(VehimapTestHooks.runs.Length, 0, "Pri aktualni verzi se nema otevirat zadna stranka.")
+        AssertTrue(!VehimapTestHooks.HasOwnProp("exitRequested"), "Ve smoke testu se aplikace nema pokouset ukoncit.")
+
+        AppVersion := "1.0.0"
+        VehimapTestHooks := {
+            messages: [],
+            runs: [],
+            msgBoxResults: ["Yes"],
+            updateManifest: {
+                version: originalVersion,
+                publishedAt: "2026-03-27T10:00:59Z",
+                notesUrl: "https://example.com/releases/v" originalVersion,
+                assetUrl: "https://example.com/download/vehimap-" originalVersion ".zip",
+                assetSha256: "341890872be1df557a1a65159ac63734c53b4288f8aee98cfe5c7d154613f736",
+                assetSize: "2048"
+            }
+        }
+
+        CheckForUpdates()
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "Pri novejsi verzi ma ve skriptovem rezimu probehnout jedno potvrzeni.")
+        AssertContains(VehimapTestHooks.messages[1].text, "1.0.0", "Dialog ma obsahovat aktualni lokalni verzi.")
+        AssertContains(VehimapTestHooks.messages[1].text, originalVersion, "Dialog ma obsahovat nejnovejsi dostupnou verzi.")
+        AssertContains(VehimapTestHooks.messages[1].text, "vehimap.exe", "Dialog ma vysvetlit omezeni automaticke instalace ve skriptovem rezimu.")
+        AssertContains(VehimapTestHooks.messages[1].text, "2,0 KB", "Dialog ma ukazat velikost update assetu.")
+        AssertEqual(VehimapTestHooks.runs.Length, 1, "Po potvrzeni ma aplikace otevrit stranku vydani.")
+        AssertContains(VehimapTestHooks.runs[1].command, "https://example.com/releases/v" originalVersion, "Otevrena ma byt URL release poznamek.")
+        AssertTrue(!VehimapTestHooks.HasOwnProp("exitRequested"), "Ve skriptovem rezimu se nema vyzadovat ukonceni aplikace.")
+
+        VehimapTestHooks := {
+            messages: [],
+            runs: [],
+            msgBoxResults: [],
+            updateManifestError: "manifest selhal"
+        }
+
+        CheckForUpdates()
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "Pri chybe manifestu ma byt zobrazena jedna chybova hlaska.")
+        AssertContains(VehimapTestHooks.messages[1].text, "manifest selhal", "Chybovy dialog ma obsahovat duvod selhani.")
+        AssertEqual(VehimapTestHooks.runs.Length, 0, "Pri chybe manifestu se nema otevirat zadna stranka.")
+    } finally {
+        AppVersion := originalVersion
+        VehimapTestHooks := 0
+    }
 }
 
 SmokeTestUpdateHelperScript() {

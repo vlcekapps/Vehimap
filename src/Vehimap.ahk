@@ -341,6 +341,70 @@ IsVehimapTestMode() {
     return (EnvGet("VEHIMAP_TEST_MODE") = "1") || (IsSet(VehimapTestMode) && VehimapTestMode)
 }
 
+GetVehimapTestHooks() {
+    global VehimapTestHooks
+
+    if IsVehimapTestMode() && IsSet(VehimapTestHooks) && IsObject(VehimapTestHooks) {
+        return VehimapTestHooks
+    }
+
+    return 0
+}
+
+AppMsgBox(text, title := "", options := 0) {
+    hooks := GetVehimapTestHooks()
+
+    if IsObject(hooks) {
+        if !hooks.HasOwnProp("messages") || !IsObject(hooks.messages) {
+            hooks.messages := []
+        }
+
+        hooks.messages.Push({
+            text: text,
+            title: title,
+            options: options
+        })
+
+        if hooks.HasOwnProp("msgBoxResults") && IsObject(hooks.msgBoxResults) && hooks.msgBoxResults.Length > 0 {
+            return hooks.msgBoxResults.RemoveAt(1)
+        }
+
+        return "OK"
+    }
+
+    return MsgBox(text, title, options)
+}
+
+AppRun(command, workingDir := "", options := "") {
+    hooks := GetVehimapTestHooks()
+
+    if IsObject(hooks) {
+        if !hooks.HasOwnProp("runs") || !IsObject(hooks.runs) {
+            hooks.runs := []
+        }
+
+        hooks.runs.Push({
+            command: command,
+            workingDir: workingDir,
+            options: options
+        })
+        return 0
+    }
+
+    return Run(command, workingDir, options)
+}
+
+AppExit() {
+    hooks := GetVehimapTestHooks()
+
+    if IsObject(hooks) {
+        hooks.exitRequested := true
+        return
+    }
+
+    ExitApp()
+}
+
 InitApp() {
     ConfigureAppIdentity()
     EnsureDataFiles()
@@ -897,7 +961,7 @@ OpenDashboard(*) {
 OpenAboutDialog(*) {
     global AppTitle
 
-    MsgBox(BuildAboutProgramText(), AppTitle " - O programu", 0x40)
+    AppMsgBox(BuildAboutProgramText(), AppTitle " - O programu", 0x40)
 }
 
 CheckForUpdates(*) {
@@ -907,14 +971,14 @@ CheckForUpdates(*) {
     try {
         manifest := LoadLatestReleaseManifest()
     } catch as err {
-        MsgBox("Kontrolu aktualizací se nepodařilo dokončit.`n`n" err.Message, AppTitle, 0x30)
+        AppMsgBox("Kontrolu aktualizací se nepodařilo dokončit.`n`n" err.Message, AppTitle, 0x30)
         return
     }
 
     try {
         comparison := CompareSemVer(currentVersion, manifest.version)
     } catch as err {
-        MsgBox("Porovnání verzí se nepodařilo dokončit.`n`n" err.Message, AppTitle, 0x30)
+        AppMsgBox("Porovnání verzí se nepodařilo dokončit.`n`n" err.Message, AppTitle, 0x30)
         return
     }
 
@@ -941,7 +1005,7 @@ CheckForUpdates(*) {
         }
 
         if canInstall {
-            result := MsgBox(
+            result := AppMsgBox(
                 message "`n`nAktualizaci můžeme stáhnout a nainstalovat nyní. Vehimap se ukončí a po dokončení znovu spustí.`nPřed pokračováním si prosím uložte případné rozpracované úpravy.`n`nPokračovat?",
                 AppTitle,
                 0x34
@@ -949,9 +1013,9 @@ CheckForUpdates(*) {
             if (result = "Yes") {
                 try {
                     StartUpdateInstallFromManifest(manifest)
-                    ExitApp()
+                    AppExit()
                 } catch as err {
-                    MsgBox("Aktualizaci se nepodařilo připravit.`n`n" err.Message, AppTitle, 0x30)
+                    AppMsgBox("Aktualizaci se nepodařilo připravit.`n`n" err.Message, AppTitle, 0x30)
                 }
             }
             return
@@ -964,18 +1028,18 @@ CheckForUpdates(*) {
         }
 
         if (manifest.notesUrl != "") {
-            result := MsgBox(message "`n`nOtevřít stránku vydání?", AppTitle, 0x34)
+            result := AppMsgBox(message "`n`nOtevřít stránku vydání?", AppTitle, 0x34)
             if (result = "Yes") {
-                Run('"' manifest.notesUrl '"')
+                AppRun('"' manifest.notesUrl '"')
             }
         } else {
-            MsgBox(message, AppTitle, 0x40)
+            AppMsgBox(message, AppTitle, 0x40)
         }
         return
     }
 
     if (comparison > 0) {
-        MsgBox(
+        AppMsgBox(
             "Používáte novější lokální verzi (" currentVersion ") než je zatím zapsaná v manifestu (" manifest.version ").",
             AppTitle,
             0x40
@@ -983,7 +1047,7 @@ CheckForUpdates(*) {
         return
     }
 
-    MsgBox("Používáte aktuální verzi Vehimap (" currentVersion ").", AppTitle, 0x40)
+    AppMsgBox("Používáte aktuální verzi Vehimap (" currentVersion ").", AppTitle, 0x40)
 }
 
 GetAppVersion() {
@@ -1032,6 +1096,19 @@ GetAppFileVersion() {
 
 LoadLatestReleaseManifest() {
     global AppTitle, UpdateManifestUrl
+
+    hooks := GetVehimapTestHooks()
+    if IsObject(hooks) {
+        if hooks.HasOwnProp("updateManifestError") && Trim(hooks.updateManifestError) != "" {
+            throw Error(hooks.updateManifestError)
+        }
+        if hooks.HasOwnProp("updateManifest") && IsObject(hooks.updateManifest) {
+            return hooks.updateManifest
+        }
+        if hooks.HasOwnProp("updateManifestPath") && Trim(hooks.updateManifestPath) != "" {
+            return ReadLatestReleaseManifestFile(hooks.updateManifestPath)
+        }
+    }
 
     if !A_IsCompiled {
         SplitPath(A_LineFile, , &sourceDir)
