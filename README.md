@@ -20,7 +20,7 @@ První verze jednoduché přístupné evidence vozidel v AutoHotkey v2.
 - vlastní připomínky i s volbou opakování `Neopakovat`, `Každý rok`, `Každé 2 roky` a `Každých 5 let`
 - upozornění na blížící se nebo propadlou technickou kontrolu
 - upozornění na blížící se nebo propadlou zelenou kartu
-- samostatný `Dashboard` s rychlým souhrnem vozidel, termínů, nákladů v aktuálním roce, kvality evidencí, chybějících zelených karet a nejbližších položek k řešení
+- samostatný `Dashboard` s rychlým souhrnem vozidel, termínů, nákladů v aktuálním roce, kvality evidencí a akčním seznamem nejbližších termínů, chybějících zelených karet, vozidel bez SPZ nebo příští TK i dokladů s nedostupnou nebo prázdnou cestou
 - samostatný dialog s přehledem všech blížících se a propadlých termínů, filtrem, rychlým hledáním podle názvu nebo SPZ, ruční obnovou, řazením podle sloupců, přímým otevřením vozidla, editací vozidla a zapamatováním posledního nastavení přehledu
 - samostatný dialog `Propadlé termíny` se seznamem všech už propadlých `TK` a `ZK`, rychlým hledáním a přímým otevřením nebo editací vozidla
 - `Tiskový přehled` všech vozidel ve formátu HTML, který se otevře v prohlížeči a dá se vytisknout běžným `Ctrl+P`
@@ -45,6 +45,7 @@ V hlavním okně:
 - zaškrtávátko `Skrýt archivovaná a odstavená vozidla` schová neaktivní vozidla jen z hlavního seznamu a svou volbu si pamatuje i po dalším spuštění
 - tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence otevřete i z menu `Vozidlo`
 - položky `Dashboard` a `Globální hledání` v menu `Přehled` otevřou rychlý souhrn termínů, nákladů a stavu evidencí nebo vyhledání napříč všemi evidencemi
+- v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
 Klávesové zkratky v hlavním okně:
 
@@ -68,7 +69,7 @@ Klávesové zkratky v dashboardu a přehledech:
 - `Globální hledání`: `Ctrl+F` přesune fokus do hledání, `Ctrl+O` nebo `Enter` na seznamu otevře vybraný výsledek
 - `Přehled termínů`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+Shift+T` přepne do propadlých termínů
 - `Propadlé termíny`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+T` přepne zpět do přehledu termínů
-- v `Dashboardu`, `Přehledu termínů` i `Propadlých termínech` klávesa `Enter` otevře právě vybranou položku
+- v `Dashboardu`, `Přehledu termínů` i `Propadlých termínech` klávesa `Enter` otevře právě vybranou položku; v dashboardu totéž umí i dvojklik na seznamu
 
 Klávesové zkratky v detailu a evidencích:
 

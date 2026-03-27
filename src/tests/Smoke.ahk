@@ -12,6 +12,7 @@ RunSmokeTests() {
         {name: "record path info", fn: Func("SmokeTestRecordPathInfo")},
         {name: "dashboard costs", fn: Func("SmokeTestDashboardCosts")},
         {name: "dashboard data summary", fn: Func("SmokeTestDashboardDataSummary")},
+        {name: "dashboard entries", fn: Func("SmokeTestDashboardEntries")},
         {name: "sort settings", fn: Func("SmokeTestSortSettings")}
     ]
 
@@ -145,6 +146,38 @@ SmokeTestDashboardDataSummary() {
     AssertContains(text, "Dokladů bez cesty: 1.", "Dashboard má počítat doklady bez cesty.")
 }
 
+SmokeTestDashboardEntries() {
+    global Vehicles, VehicleRecords
+
+    ResetSmokeData()
+    tempRoot := A_Temp "\vehimap_smoke_dashboard_entries"
+    missingFile := tempRoot "\chybi.pdf"
+    if DirExist(tempRoot) {
+        DirDelete(tempRoot, true)
+    }
+    DirCreate(tempRoot)
+
+    Vehicles := [
+        {id: "veh_1", name: "Bez dat", category: "OsobnĂ­ vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
+        {id: "veh_2", name: "BrzkĂˇ TK", category: "Motocykly", vehicleType: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: FormatTime(A_Now, "MM/yyyy"), greenCardFrom: "", greenCardTo: "12/2099"}
+    ]
+    VehicleRecords := [
+        {id: "record_1", vehicleId: "veh_1", recordType: "Doklad", title: "Bez cesty", provider: "", validFrom: "", validTo: "", price: "", filePath: "", note: ""},
+        {id: "record_2", vehicleId: "veh_2", recordType: "Doklad", title: "ChybÄ›jĂ­cĂ­ soubor", provider: "", validFrom: "", validTo: "", price: "", filePath: missingFile, note: ""}
+    ]
+
+    entries := BuildDashboardEntries()
+    SortDashboardEntries(&entries)
+
+    AssertTrue(entries.Length >= 5, "Dashboard mÄ›l vrĂˇtit termĂ­ny i datovĂ© nedostatky.")
+    AssertEqual(entries[1].kind, "technical", "Dashboard mĂˇ Å™adit skuteÄŤnĂ© termĂ­ny pÅ™ed datovĂ© nedostatky.")
+    AssertDashboardEntryPresent(entries, "green", "veh_1", "ChybĂ­", "NevyplnÄ›no")
+    AssertDashboardEntryPresent(entries, "vehicle_field", "veh_1", "Doplnit v editaci", "SPZ")
+    AssertDashboardEntryPresent(entries, "vehicle_field", "veh_1", "Doplnit v editaci", "PÅ™Ă­ĹˇtĂ­ TK")
+    AssertDashboardEntryPresent(entries, "record_path", "veh_1", "Bez cesty", "Bez cesty")
+    AssertDashboardEntryPresent(entries, "record_path", "veh_2", "ChybĂ­ soubor", "ChybÄ›jĂ­cĂ­ soubor")
+}
+
 SmokeTestSortSettings() {
     global SettingsFile
 
@@ -220,6 +253,26 @@ AssertEqual(actual, expected, message := "") {
         message := "Hodnoty nejsou shodné."
     }
     throw Error(message " Skutečnost: " actual " Očekáváno: " expected)
+}
+
+AssertDashboardEntryPresent(entries, expectedKind, vehicleId, expectedStatus := "", expectedTerm := "") {
+    for entry in entries {
+        if (entry.kind != expectedKind) {
+            continue
+        }
+        if !entry.HasOwnProp("vehicle") || !IsObject(entry.vehicle) || entry.vehicle.id != vehicleId {
+            continue
+        }
+        if (expectedStatus != "" && entry.status != expectedStatus) {
+            continue
+        }
+        if (expectedTerm != "" && entry.term != expectedTerm) {
+            continue
+        }
+        return
+    }
+
+    throw Error("V dashboardu chybĂ­ oÄŤekĂˇvanĂˇ poloĹľka typu " expectedKind " pro vozidlo " vehicleId ".")
 }
 
 WriteSmokeOutput(text) {

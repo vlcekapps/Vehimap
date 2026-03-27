@@ -202,7 +202,7 @@ F2::EditSelectedDashboardVehicle()
 #HotIf
 
 #HotIf IsListViewFocusedInGui(DashboardGui)
-Enter::OpenSelectedDashboardVehicle()
+Enter::OpenSelectedDashboardItem()
 #HotIf
 
 #HotIf IsGuiWindowActive(OverviewGui)
@@ -1802,7 +1802,7 @@ OpenDashboardDialog(showMainOnClose := false) {
 
     MainGui.Opt("+Disabled")
 
-    DashboardGui.AddText("x20 y20 w980", "Dashboard nabízí rychlý přehled vozidel, termínů, nákladů i kvality evidencí, které teď stojí za pozornost.")
+    DashboardGui.AddText("x20 y20 w980", "Dashboard nabízí rychlý přehled vozidel, termínů, nákladů i kvality evidencí, které teď stojí za pozornost nebo doplnění.")
 
     DashboardGui.AddGroupBox("x20 y50 w980 h60", "Vozidla")
     DashboardSummaryVehiclesLabel := DashboardGui.AddText("x35 y74 w950 h24", "")
@@ -1816,15 +1816,15 @@ OpenDashboardDialog(showMainOnClose := false) {
     DashboardGui.AddGroupBox("x20 y245 w980 h60", "Evidence")
     DashboardSummaryDataLabel := DashboardGui.AddText("x35 y269 w950 h24", "")
 
-    DashboardGui.AddGroupBox("x20 y310 w980 h225", "Nejbližší položky a chybějící zelené karty")
-    DashboardList := DashboardGui.AddListView("x35 y335 w950 h185 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "SPZ", "Termín", "Stav"])
-    DashboardList.OnEvent("DoubleClick", OpenSelectedDashboardVehicle)
+    DashboardGui.AddGroupBox("x20 y310 w980 h225", "Nejbližší položky a datové nedostatky")
+    DashboardList := DashboardGui.AddListView("x35 y335 w950 h185 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "SPZ", "Položka / termín", "Stav"])
+    DashboardList.OnEvent("DoubleClick", OpenSelectedDashboardItem)
     DashboardList.ModifyCol(1, "155")
-    DashboardList.ModifyCol(2, "205")
-    DashboardList.ModifyCol(3, "170")
-    DashboardList.ModifyCol(4, "100")
-    DashboardList.ModifyCol(5, "90")
-    DashboardList.ModifyCol(6, "180")
+    DashboardList.ModifyCol(2, "190")
+    DashboardList.ModifyCol(3, "150")
+    DashboardList.ModifyCol(4, "95")
+    DashboardList.ModifyCol(5, "210")
+    DashboardList.ModifyCol(6, "145")
 
     DashboardGui.AddGroupBox("x20 y545 w980 h110", "Akce")
 
@@ -1899,8 +1899,8 @@ PopulateDashboardList(focusList := false) {
         return
     }
 
-    DashboardEntries := BuildUpcomingOverviewEntries(true)
-    SortOverviewEntries(&DashboardEntries)
+    DashboardEntries := BuildDashboardEntries()
+    SortDashboardEntries(&DashboardEntries)
 
     if IsObject(DashboardSummaryVehiclesLabel) {
         DashboardSummaryVehiclesLabel.Text := BuildDashboardVehicleSummaryText()
@@ -2156,6 +2156,173 @@ BuildDashboardDataSummaryText() {
     return "Bez SPZ: " missingPlateCount ". Bez příští TK: " missingTechnicalCount ". Bez vyplněné ZK: " GetMissingGreenCardCount() ". Dokladů s nedostupnou přílohou: " missingPathCount ". Dokladů bez cesty: " emptyPathCount "."
 }
 
+BuildDashboardEntries() {
+    entries := BuildUpcomingOverviewEntries(true)
+
+    for entry in BuildDashboardDataIssueEntries() {
+        entries.Push(entry)
+    }
+
+    return entries
+}
+
+BuildDashboardDataIssueEntries() {
+    global Vehicles, VehicleRecords
+
+    entries := []
+
+    for vehicle in Vehicles {
+        if (Trim(vehicle.plate) = "") {
+            entries.Push(BuildDashboardVehicleFieldIssueEntry(vehicle, "plate"))
+        }
+        if (Trim(vehicle.nextTk) = "") {
+            entries.Push(BuildDashboardVehicleFieldIssueEntry(vehicle, "next_tk"))
+        }
+    }
+
+    for entry in VehicleRecords {
+        pathInfo := GetVehicleRecordPathInfo(entry)
+        if (pathInfo.kind = "missing_file" || pathInfo.kind = "missing_folder" || pathInfo.kind = "empty") {
+            vehicle := FindVehicleById(entry.vehicleId)
+            if IsObject(vehicle) {
+                entries.Push(BuildDashboardRecordIssueEntry(vehicle, entry, pathInfo))
+            }
+        }
+    }
+
+    return entries
+}
+
+BuildDashboardVehicleFieldIssueEntry(vehicle, fieldKind) {
+    if (fieldKind = "plate") {
+        return {
+            kind: "vehicle_field",
+            kindLabel: "Chybějící SPZ",
+            vehicle: vehicle,
+            dueStamp: "99999999999996",
+            term: "SPZ",
+            status: "Doplnit v editaci"
+        }
+    }
+
+    return {
+        kind: "vehicle_field",
+        kindLabel: "Chybějící příští TK",
+        vehicle: vehicle,
+        dueStamp: "99999999999997",
+        term: "Příští TK",
+        status: "Doplnit v editaci"
+    }
+}
+
+BuildDashboardRecordIssueEntry(vehicle, entry, pathInfo) {
+    title := Trim(entry.title)
+    if (title = "") {
+        title := "(bez názvu)"
+    }
+
+    return {
+        kind: "record_path",
+        kindLabel: "Doklad / příloha",
+        vehicle: vehicle,
+        dueStamp: "99999999999995",
+        term: ShortenText(title, 36),
+        status: GetVehicleRecordPathStateLabel(pathInfo.kind),
+        entryId: entry.id
+    }
+}
+
+SortDashboardEntries(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareDashboardEntries(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareDashboardEntries(left, right) {
+    leftGroup := GetDashboardEntrySortGroup(left)
+    rightGroup := GetDashboardEntrySortGroup(right)
+
+    result := CompareNumberValues(leftGroup, rightGroup)
+    if (result != 0) {
+        return result
+    }
+
+    if (leftGroup = 1) {
+        result := CompareOverviewDueStamp(left, right)
+        if (result != 0) {
+            return result
+        }
+    }
+
+    if (leftGroup = 4) {
+        result := CompareDashboardVehicleFieldKind(left, right)
+        if (result != 0) {
+            return result
+        }
+    }
+
+    result := CompareTextValues(left.kindLabel, right.kindLabel)
+    if (result != 0) {
+        return result
+    }
+
+    result := CompareVehicles(left.vehicle, right.vehicle)
+    if (result != 0) {
+        return result
+    }
+
+    result := CompareTextValues(left.term, right.term)
+    if (result != 0) {
+        return result
+    }
+
+    return CompareTextValues(left.status, right.status)
+}
+
+GetDashboardEntrySortGroup(entry) {
+    if (entry.kind = "record_path") {
+        return 3
+    }
+
+    if (entry.kind = "vehicle_field") {
+        return 4
+    }
+
+    if (entry.kind = "green" && entry.HasOwnProp("isMissingGreen") && entry.isMissingGreen) {
+        return 2
+    }
+
+    return 1
+}
+
+CompareDashboardVehicleFieldKind(left, right) {
+    return CompareNumberValues(GetDashboardVehicleFieldSortValue(left.term), GetDashboardVehicleFieldSortValue(right.term))
+}
+
+GetDashboardVehicleFieldSortValue(term) {
+    switch term {
+        case "Příští TK":
+            return 1
+        case "SPZ":
+            return 2
+    }
+
+    return 9
+}
+
 GetSelectedDashboardEntry() {
     global DashboardList, DashboardEntries
 
@@ -2191,9 +2358,17 @@ OpenSelectedDashboardItem(*) {
     }
 
     CloseDashboardDialog()
-    if (entry.kind = "custom" && entry.HasOwnProp("entryId") && entry.entryId != "") {
-        OpenVehicleReminderDialog(entry.vehicle, false, entry.entryId)
-        return
+    switch entry.kind {
+        case "custom":
+            if (entry.HasOwnProp("entryId") && entry.entryId != "") {
+                OpenVehicleReminderDialog(entry.vehicle, false, entry.entryId)
+                return
+            }
+        case "record_path":
+            if (entry.HasOwnProp("entryId") && entry.entryId != "") {
+                OpenVehicleRecordsDialog(entry.vehicle, false, entry.entryId)
+                return
+            }
     }
 
     OpenVehicleForm("edit", entry.vehicle)
