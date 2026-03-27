@@ -326,7 +326,13 @@ Delete::DeleteSelectedVehicleReminder()
 ^s::SaveVehicleReminderFromForm()
 #HotIf
 
-InitApp()
+if !IsVehimapTestMode() {
+    InitApp()
+}
+
+IsVehimapTestMode() {
+    return (EnvGet("VEHIMAP_TEST_MODE") = "1") || (IsSet(VehimapTestMode) && VehimapTestMode)
+}
 
 InitApp() {
     ConfigureAppIdentity()
