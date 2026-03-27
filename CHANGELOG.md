@@ -6,9 +6,11 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- nový přehled `Audit dat`, který sjednocuje chybějící povinné údaje, neplatné rozsahy, problematické doklady, podezřelé tachometry, nákladové nesrovnalosti i servisní plány bez použitelného odometru
 - explicitní servisní profil vozidla s poli `Pohon`, `Klimatizace`, `Rozvody` a `Převodovka`, který slouží jako základ pro doporučené servisní šablony
 - výběrový dialog doporučených servisních šablon, ve kterém lze návrhy před přidáním odškrtnout nebo upravit
 - automatická nabídka doporučených servisních šablon hned po založení nového vozidla
+- nový `Balíček pro vozidlo`, který umí v jednom kroku nabídnout doporučené servisní plány, placeholdery dokladů a obecné připomínky podle kategorie i servisního profilu vozidla
 - akce v dashboardu pro rychlé otevření historie vozidla a okamžité označení servisního úkonu jako splněného
 - samostatný přehled `Náklady napříč vozidly` pro porovnání vozidel v jednom období
 

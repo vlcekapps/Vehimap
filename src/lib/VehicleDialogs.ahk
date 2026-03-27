@@ -755,7 +755,7 @@ SaveVehicleFromForm(*) {
     CloseVehicleForm()
     OpenVehicleById(vehicle.id, true)
     if isNewVehicle {
-        OfferVehicleMaintenanceRecommendationsAfterCreate(vehicle.id)
+        OfferVehicleStarterBundleAfterCreate(vehicle.id)
     }
     CheckDueVehicles(false, false)
 }

@@ -14,6 +14,7 @@ Persistent
 #Include lib\Overviews.ahk
 #Include lib\SettingsDialog.ahk
 #Include lib\VehicleDialogs.ahk
+#Include lib\VehicleBundles.ahk
 #Include lib\MaintenancePlans.ahk
 #Include lib\FuelDialog.ahk
 #Include lib\RecordsDialog.ahk
@@ -182,6 +183,15 @@ global MaintenanceRecommendItems := []
 global MaintenanceRecommendVehicleId := ""
 global MaintenanceRecommendSelectedIndex := 0
 global MaintenanceRecommendLoading := false
+global VehicleBundleGui := 0
+global VehicleBundleList := 0
+global VehicleBundleSummaryLabel := 0
+global VehicleBundleControls := {}
+global VehicleBundleItems := []
+global VehicleBundleVehicleId := ""
+global VehicleBundleSelectedIndex := 0
+global VehicleBundleLoading := false
+global VehicleBundleParentGui := 0
 global MaintenanceFormGui := 0
 global MaintenanceFormControls := {}
 global MaintenanceFormMode := ""
@@ -403,6 +413,12 @@ Delete::DeleteSelectedVehicleMaintenancePlan()
 ^s::SaveSelectedVehicleMaintenanceRecommendationsFromDialog()
 ^a::SelectAllMaintenanceRecommendations()
 ^+a::ClearAllMaintenanceRecommendations()
+#HotIf
+
+#HotIf IsGuiWindowActive(VehicleBundleGui)
+^s::SaveSelectedVehicleStarterBundleFromDialog()
+^a::SelectAllVehicleStarterBundleItems()
+^+a::ClearAllVehicleStarterBundleSelections()
 #HotIf
 
 #HotIf IsGuiWindowActive(CostSummaryGui)

@@ -19,6 +19,8 @@ RunSmokeTests() {
         "SmokeTestMaintenanceRecommendations",
         "SmokeTestMaintenanceRecommendationAction",
         "SmokeTestMaintenanceRecommendationOfferAfterCreate",
+        "SmokeTestVehicleStarterBundleAction",
+        "SmokeTestVehicleStarterBundleOfferAfterCreate",
         "SmokeTestVehicleMetaProfiles",
         "SmokeTestMaintenanceBackupRoundTrip",
         "SmokeTestRecordPathInfo",
@@ -462,6 +464,145 @@ SmokeTestMaintenanceRecommendationOfferAfterCreate() {
     }
 }
 
+SmokeTestVehicleStarterBundleAction() {
+    global Vehicles, VehicleMetaEntries, VehicleMaintenancePlans, VehicleRecords, VehicleReminders, VehimapTestHooks, MaintenancePlansFile, RecordsFile, RemindersFile
+
+    ResetSmokeData()
+    currentYear := FormatTime(A_Now, "yyyy")
+    originalMaintenancePlansFile := MaintenancePlansFile
+    originalRecordsFile := RecordsFile
+    originalRemindersFile := RemindersFile
+    tempRoot := A_Temp "\vehimap_smoke_vehicle_bundle_action"
+    if DirExist(tempRoot) {
+        DirDelete(tempRoot, true)
+    }
+    DirCreate(tempRoot)
+    MaintenancePlansFile := tempRoot "\maintenance.tsv"
+    RecordsFile := tempRoot "\records.tsv"
+    RemindersFile := tempRoot "\reminders.tsv"
+    Vehicles := [
+        {
+            id: "veh_1",
+            name: "Balíček test",
+            category: "Osobní vozidla",
+            vehicleNote: "Rodinné auto",
+            makeModel: "Volkswagen Passat",
+            plate: "2AB3456",
+            year: "2022",
+            power: "110",
+            lastTk: "05/2025",
+            nextTk: "05/2027",
+            greenCardFrom: "05/2025",
+            greenCardTo: "05/2026"
+        }
+    ]
+    VehicleMetaEntries := [
+        {vehicleId: "veh_1", state: "Běžný provoz", tags: "test", powertrain: "Nafta", climateProfile: "Má klimatizaci", timingDrive: "Řemen", transmission: "Automatická"}
+    ]
+    VehicleMaintenancePlans := []
+    VehicleRecords := []
+    VehicleReminders := []
+
+    try {
+        VehimapTestHooks := {
+            messages: [],
+            vehicleStarterBundleSelection: {
+                selectedKeys: [
+                    BuildVehicleStarterBundleDraftMatchKey("maintenance", "Motorový olej a filtr"),
+                    BuildVehicleStarterBundleDraftMatchKey("record", "Povinné ručení"),
+                    BuildVehicleStarterBundleDraftMatchKey("reminder", "Pravidelná kontrola stavu vozidla")
+                ],
+                updates: [
+                    {section: "maintenance", matchTitle: "Motorový olej a filtr", title: "Motorový olej roční", note: "Upraveno v balíčku"},
+                    {section: "record", matchTitle: "Povinné ručení", provider: "Kooperativa", validTo: "12/" currentYear, note: "Doplnit číslo smlouvy"},
+                    {section: "reminder", matchTitle: "Pravidelná kontrola stavu vozidla", title: "Roční kontrola stavu", dueDate: "15.05." currentYear, note: "Připomenout jarní kontrolu"}
+                ]
+            }
+        }
+
+        AssertTrue(OpenVehicleStarterBundleForVehicle(Vehicles[1]), "Ruční akce balíčku pro vozidlo má otevřít výběr doporučených položek.")
+        AssertTrue(VehimapTestHooks.HasOwnProp("vehicleStarterBundleOpened"), "Otevření balíčku má registrovat nabídnuté položky do test hooku.")
+        AssertContains(VehimapTestHooks.vehicleStarterBundleOpened.profileLabel, "naftový pohon", "Balíček má nést i servisní profil vozidla.")
+        AssertTrue(HasMaintenanceTemplateWithTitleByText(VehimapTestHooks.vehicleStarterBundleOpened.recordTitles, "Povinné ručení"), "Balíček má nabídnout i placeholder dokladu povinného ručení.")
+        AssertTrue(HasMaintenanceTemplateWithTitleByText(VehimapTestHooks.vehicleStarterBundleOpened.reminderTitles, "Pravidelná kontrola stavu vozidla"), "Balíček má nabídnout i obecnou připomínku podle kategorie.")
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "Po potvrzení výběru balíčku má být zobrazena právě jedna výsledková hláška.")
+        AssertContains(VehimapTestHooks.messages[1].text, "Přidáno servisních plánů: 1.", "Balíček má respektovat ručně vybraný počet servisních plánů.")
+        AssertContains(VehimapTestHooks.messages[1].text, "Přidáno dokladů: 1.", "Balíček má respektovat ručně vybraný počet dokladů.")
+        AssertContains(VehimapTestHooks.messages[1].text, "Přidáno připomínek: 1.", "Balíček má respektovat ručně vybraný počet připomínek.")
+        AssertEqual(CountMaintenancePlansByTitle("veh_1", "Motorový olej roční"), 1, "Balíček má uložit i ručně upravený servisní plán.")
+        AssertEqual(CountVehicleRecordsByTitle("veh_1", "Povinné ručení"), 1, "Balíček má vytvořit vybraný placeholder dokladu.")
+        AssertEqual(CountVehicleRemindersByTitle("veh_1", "Roční kontrola stavu"), 1, "Balíček má vytvořit i ručně přejmenovanou připomínku.")
+        AssertEqual(CountVehicleRecordsByTitle("veh_1", "Havarijní pojištění"), 0, "Nevybraný doklad se nesmí do balíčku přidat.")
+        AssertEqual(CountVehicleRemindersByTitle("veh_1", "Pravidelná kontrola stavu vozidla"), 0, "Nevybraná výchozí připomínka se nesmí uložit pod původním názvem.")
+    } finally {
+        VehimapTestHooks := 0
+        MaintenancePlansFile := originalMaintenancePlansFile
+        RecordsFile := originalRecordsFile
+        RemindersFile := originalRemindersFile
+    }
+}
+
+SmokeTestVehicleStarterBundleOfferAfterCreate() {
+    global Vehicles, VehicleMetaEntries, VehimapTestHooks
+
+    ResetSmokeData()
+    Vehicles := [
+        {
+            id: "veh_1",
+            name: "Nové vozidlo pro balíček",
+            category: "Osobní vozidla",
+            vehicleNote: "Rodinné auto",
+            makeModel: "Volkswagen Passat",
+            plate: "2AB3456",
+            year: "2022",
+            power: "110",
+            lastTk: "05/2025",
+            nextTk: "05/2027",
+            greenCardFrom: "05/2025",
+            greenCardTo: "05/2026"
+        }
+    ]
+    VehicleMetaEntries := [
+        {vehicleId: "veh_1", state: "Běžný provoz", tags: "test", powertrain: "Nafta", climateProfile: "Má klimatizaci", timingDrive: "Řemen", transmission: "Automatická"}
+    ]
+
+    try {
+        VehimapTestHooks := {
+            messages: [],
+            msgBoxResults: ["Yes"],
+            skipPostCreateVehicleBundleOpen: true
+        }
+
+        AssertTrue(OfferVehicleStarterBundleAfterCreate("veh_1"), "Po vytvoření vozidla má jít nabídnout celý balíček doporučených položek.")
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "Po vytvoření vozidla se má zobrazit právě jedna nabídka balíčku.")
+        AssertContains(VehimapTestHooks.messages[1].text, "balíček doporučených položek", "Nabídka po vytvoření vozidla má vysvětlit další krok.")
+        AssertContains(VehimapTestHooks.messages[1].text, "Doklady: 3.", "Nabídka má uvést počet doporučených placeholderů dokladů.")
+        AssertContains(VehimapTestHooks.messages[1].text, "Připomínky: 1.", "Nabídka má uvést i počet doporučených připomínek.")
+        AssertTrue(VehimapTestHooks.HasOwnProp("postCreateVehicleBundle"), "Kladná volba má otevřít balíček i z toku založení vozidla.")
+        AssertContains(VehimapTestHooks.postCreateVehicleBundle.profileLabel, "naftový pohon", "Balíček po vytvoření vozidla má nést správný servisní profil.")
+        AssertEqual(VehimapTestHooks.postCreateVehicleBundle.recordCount, 3, "Silniční vozidlo má po vytvoření nabídnout tři základní placeholdery dokladů.")
+        AssertEqual(VehimapTestHooks.postCreateVehicleBundle.reminderCount, 1, "Po vytvoření vozidla má být nabídnuta jedna obecná připomínka.")
+        AssertTrue(VehimapTestHooks.postCreateVehicleBundle.maintenanceCount >= 1, "Po vytvoření vozidla má být nabídnut alespoň jeden servisní plán.")
+
+        VehimapTestHooks := {
+            messages: [],
+            msgBoxResults: ["No"],
+            skipPostCreateVehicleBundleOpen: true
+        }
+        AssertTrue(!OfferVehicleStarterBundleAfterCreate("veh_1"), "Při odmítnutí nabídky se balíček nemá otevřít.")
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "I odmítnutá nabídka má zobrazit jeden potvrzovací dialog.")
+        AssertTrue(!VehimapTestHooks.HasOwnProp("postCreateVehicleBundle"), "Záporná volba nesmí otevřít balíček.")
+
+        VehimapTestHooks := {
+            messages: []
+        }
+        AssertTrue(!OfferVehicleStarterBundleAfterCreate("missing"), "Neexistující vozidlo nesmí balíček po vytvoření otevírat.")
+        AssertEqual(VehimapTestHooks.messages.Length, 0, "Pro neexistující vozidlo se nemá zobrazit žádná hláška.")
+    } finally {
+        VehimapTestHooks := 0
+    }
+}
+
 SmokeTestVehicleMetaProfiles() {
     global VehicleMetaEntries
 
@@ -879,6 +1020,32 @@ CountMaintenancePlansByTitle(vehicleId, title) {
 
     for plan in VehicleMaintenancePlans {
         if (plan.vehicleId = vehicleId && plan.title = title) {
+            count += 1
+        }
+    }
+
+    return count
+}
+
+CountVehicleRecordsByTitle(vehicleId, title) {
+    global VehicleRecords
+
+    count := 0
+    for entry in VehicleRecords {
+        if (entry.vehicleId = vehicleId && entry.title = title) {
+            count += 1
+        }
+    }
+
+    return count
+}
+
+CountVehicleRemindersByTitle(vehicleId, title) {
+    global VehicleReminders
+
+    count := 0
+    for entry in VehicleReminders {
+        if (entry.vehicleId = vehicleId && entry.title = title) {
             count += 1
         }
     }

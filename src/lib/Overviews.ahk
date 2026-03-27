@@ -665,6 +665,11 @@ OpenSelectedOverviewItem(*) {
     }
 
     CloseUpcomingOverviewDialog()
+    if (entry.HasOwnProp("isAuditIssue") && entry.isAuditIssue) {
+        OpenVehimapAuditItem(entry)
+        return
+    }
+
     switch entry.kind {
         case "custom":
             if (entry.HasOwnProp("entryId") && entry.entryId != "") {
@@ -1135,6 +1140,10 @@ FilterOverviewEntriesBySearch(entries, searchText := "") {
 }
 
 BuildOverviewEntryKey(entry) {
+    if (entry.HasOwnProp("auditKey") && entry.auditKey != "") {
+        return entry.auditKey
+    }
+
     if (entry.HasOwnProp("entryId")) {
         return entry.kind "|" entry.vehicle.id "|" entry.entryId
     }
@@ -1143,5 +1152,5 @@ BuildOverviewEntryKey(entry) {
 }
 
 IsOverviewDataIssueEntry(entry) {
-    return entry.kind = "record_path" || entry.kind = "vehicle_field"
+    return entry.HasOwnProp("isAuditIssue") && entry.isAuditIssue
 }

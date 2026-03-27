@@ -14,6 +14,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - historii událostí pro každé vozidlo, včetně přidání, úpravy a odstranění servisních nebo jiných záznamů
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů
 - samostatný `Plán údržby` pro každé vozidlo, včetně šablon běžných servisních úkonů, doporučených balíků podle kategorie a explicitního servisního profilu vozidla, intervalu podle kilometrů nebo měsíců, evidence posledního servisu a rychlého označení splnění s volitelným zapsáním do historie
+- samostatný `Balíček pro vozidlo`, který umí v jednom kroku nabídnout doporučené servisní plány, placeholdery dokladů i obecné připomínky podle kategorie a servisního profilu
 - rychlé hledání a řazení sloupců v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách, včetně zapamatování posledního řazení
 - samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, otevření navázaného souboru i otevření jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku
@@ -54,7 +55,8 @@ V hlavním okně:
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
 - v dashboardu přibyly i akce `Souhrn nákladů` a `Náklady vozidla`, takže jde rovnou otevřít globální přehled nákladů nebo náklady vybraného vozidla z právě řešeného problému
 - v dashboardu lze nově z vybraného servisního úkonu rovnou otevřít historii vozidla nebo servis přímo označit jako splněný bez ručního hledání správného plánu
-- v `Plánu údržby` lze tlačítkem `Doporučené šablony` nebo zkratkou `Ctrl+Shift+N` otevřít výběr jen chybějících servisních plánů podle kategorie a servisního profilu vozidla a před přidáním je ještě upravit nebo odškrtnout; po založení nového vozidla může Vehimap stejný výběr nabídnout rovnou
+- v `Plánu údržby` lze tlačítkem `Doporučené šablony` nebo zkratkou `Ctrl+Shift+N` otevřít výběr jen chybějících servisních plánů podle kategorie a servisního profilu vozidla a před přidáním je ještě upravit nebo odškrtnout
+- po založení nového vozidla může Vehimap nabídnout rovnou celý `Balíček pro vozidlo`, tedy doporučené servisní plány, placeholdery dokladů i obecné připomínky
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
 
@@ -167,7 +169,7 @@ Pro upozornění aplikace používá pole `Příští TK`, `Zelená karta do` a 
 V horním menu najdete tyto části:
 
 - `Soubor`: `Tiskový přehled`, `Export dat`, `Import dat`, `Konec`
-- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby a pojištění a dokladů
+- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby, `Balíčku pro vozidlo` a pojištění a dokladů
 - `Přehled`: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Přehled termínů`, `Propadlé termíny`
 - `Nástroje`: `Nastavení`, `Skrýt do lišty`
 - `Nápověda`: `O programu`, `Zkontrolovat aktualizace`
