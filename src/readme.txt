@@ -13,7 +13,7 @@ První verze jednoduché přístupné evidence vozidel v AutoHotkey v2.
 - detail vozidla se souhrnem údajů, stavem platností, posledními událostmi z historie a souhrnem tankování i dokladů
 - historii událostí pro každé vozidlo, včetně přidání, úpravy a odstranění servisních nebo jiných záznamů
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů
-- rychlé hledání a řazení sloupců v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách
+- rychlé hledání a řazení sloupců v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách, včetně zapamatování posledního řazení
 - samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, otevření navázaného souboru i otevření jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku
 - export nákladových přehledů do `TSV souhrnu`, `TSV detailu` a `HTML sestavy`
@@ -75,7 +75,7 @@ Klávesové zkratky v detailu a evidencích:
 - `Detail vozidla`: `Ctrl+U` nebo `F2` upraví vozidlo, `Ctrl+H` otevře historii, `Ctrl+R` připomínky, `Ctrl+K` kilometry a tankování a `Ctrl+P` pojištění a doklady
 - `Historie událostí`, `Kilometry a tankování`, `Pojištění a doklady` i `Vlastní připomínky`: `Ctrl+F` přesune fokus do rychlého hledání, `Ctrl+N` přidá záznam, `Ctrl+U` nebo `F2` upraví vybraný záznam a `Ctrl+D` otevře detail vozidla
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní
-- kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce
+- kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce a Vehimap si poslední volbu pamatuje i po dalším otevření
 - v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu, `Ctrl+Shift+O` jeho složku a `Ctrl+Shift+C` zkopíruje uloženou cestu
 - ve `Vlastních připomínkách` navíc `Ctrl+Shift+N` posune vybranou opakovanou připomínku na další termín
 - v `Nákladech a souhrnech` `Ctrl+R` obnoví vybrané období a `Ctrl+D` otevře detail vozidla

@@ -480,6 +480,14 @@ EnsureDataFiles() {
         IniWrite("0", SettingsFile, "overview", "include_missing_green")
         IniWrite("6", SettingsFile, "overview", "sort_column")
         IniWrite("0", SettingsFile, "overview", "sort_descending")
+        IniWrite("1", SettingsFile, "history_view", "sort_column")
+        IniWrite("1", SettingsFile, "history_view", "sort_descending")
+        IniWrite("1", SettingsFile, "fuel_view", "sort_column")
+        IniWrite("1", SettingsFile, "fuel_view", "sort_descending")
+        IniWrite("4", SettingsFile, "records_view", "sort_column")
+        IniWrite("0", SettingsFile, "records_view", "sort_descending")
+        IniWrite("2", SettingsFile, "reminder_view", "sort_column")
+        IniWrite("0", SettingsFile, "reminder_view", "sort_descending")
     }
 
     EnsureSettingsDefaults()
@@ -2851,6 +2859,82 @@ SaveOverviewSortSettings(column, descending) {
     IniWrite(descending ? "1" : "0", SettingsFile, "overview", "sort_descending")
 }
 
+GetListSortColumnSetting(sectionName, defaultColumn, maxColumn) {
+    global SettingsFile
+
+    column := IniRead(SettingsFile, sectionName, "sort_column", defaultColumn) + 0
+    if (column < 1 || column > maxColumn) {
+        return defaultColumn
+    }
+
+    return column
+}
+
+GetListSortDescendingSetting(sectionName, defaultDescending := false) {
+    global SettingsFile
+
+    return IniRead(SettingsFile, sectionName, "sort_descending", defaultDescending ? "1" : "0") = "1"
+}
+
+SaveListSortSettings(sectionName, column, descending, defaultColumn, maxColumn) {
+    global SettingsFile
+
+    if (column < 1 || column > maxColumn) {
+        column := defaultColumn
+    }
+
+    IniWrite(column, SettingsFile, sectionName, "sort_column")
+    IniWrite(descending ? "1" : "0", SettingsFile, sectionName, "sort_descending")
+}
+
+GetHistorySortColumnSetting() {
+    return GetListSortColumnSetting("history_view", 1, 5)
+}
+
+GetHistorySortDescendingSetting() {
+    return GetListSortDescendingSetting("history_view", true)
+}
+
+SaveHistorySortSettings(column, descending) {
+    SaveListSortSettings("history_view", column, descending, 1, 5)
+}
+
+GetFuelSortColumnSetting() {
+    return GetListSortColumnSetting("fuel_view", 1, 7)
+}
+
+GetFuelSortDescendingSetting() {
+    return GetListSortDescendingSetting("fuel_view", true)
+}
+
+SaveFuelSortSettings(column, descending) {
+    SaveListSortSettings("fuel_view", column, descending, 1, 7)
+}
+
+GetRecordsSortColumnSetting() {
+    return GetListSortColumnSetting("records_view", 4, 7)
+}
+
+GetRecordsSortDescendingSetting() {
+    return GetListSortDescendingSetting("records_view", false)
+}
+
+SaveRecordsSortSettings(column, descending) {
+    SaveListSortSettings("records_view", column, descending, 4, 7)
+}
+
+GetReminderSortColumnSetting() {
+    return GetListSortColumnSetting("reminder_view", 2, 6)
+}
+
+GetReminderSortDescendingSetting() {
+    return GetListSortDescendingSetting("reminder_view", false)
+}
+
+SaveReminderSortSettings(column, descending) {
+    SaveListSortSettings("reminder_view", column, descending, 2, 6)
+}
+
 FilterUpcomingOverviewEntries(entries, filterKind := "all") {
     filtered := []
 
@@ -3670,8 +3754,8 @@ OpenVehicleHistoryDialog(vehicle, openAddEvent := false, selectEventId := "") {
     HistoryAllEntries := []
     HistorySearchCtrl := 0
     VisibleHistoryEventIds := []
-    HistorySortColumn := 1
-    HistorySortDescending := true
+    HistorySortColumn := GetHistorySortColumnSetting()
+    HistorySortDescending := GetHistorySortDescendingSetting()
     HistoryGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Historie událostí")
     HistoryGui.SetFont("s10", "Segoe UI")
     HistoryGui.OnEvent("Close", CloseVehicleHistoryDialog)
@@ -3798,6 +3882,8 @@ OnHistoryColumnClick(ctrl, column) {
         HistorySortColumn := column
         HistorySortDescending := (column = 1)
     }
+
+    SaveHistorySortSettings(HistorySortColumn, HistorySortDescending)
 
     selectedEventId := ""
     event := GetSelectedVehicleHistoryEvent()
@@ -4147,8 +4233,8 @@ OpenVehicleFuelDialog(vehicle, openAddEntry := false, selectEntryId := "") {
     FuelAllEntries := []
     FuelSearchCtrl := 0
     VisibleFuelEntryIds := []
-    FuelSortColumn := 1
-    FuelSortDescending := true
+    FuelSortColumn := GetFuelSortColumnSetting()
+    FuelSortDescending := GetFuelSortDescendingSetting()
     FuelGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Kilometry a tankování")
     FuelGui.SetFont("s10", "Segoe UI")
     FuelGui.OnEvent("Close", CloseVehicleFuelDialog)
@@ -4285,6 +4371,8 @@ OnFuelColumnClick(ctrl, column) {
         FuelSortColumn := column
         FuelSortDescending := (column = 1 || column = 2)
     }
+
+    SaveFuelSortSettings(FuelSortColumn, FuelSortDescending)
 
     selectedEntryId := ""
     entry := GetSelectedVehicleFuelEntry()
@@ -4658,8 +4746,8 @@ OpenVehicleRecordsDialog(vehicle, openAddEntry := false, selectEntryId := "") {
     RecordsSearchCtrl := 0
     RecordsPathStatusLabel := 0
     VisibleRecordIds := []
-    RecordsSortColumn := 4
-    RecordsSortDescending := false
+    RecordsSortColumn := GetRecordsSortColumnSetting()
+    RecordsSortDescending := GetRecordsSortDescendingSetting()
     RecordsOpenFileButton := 0
     RecordsOpenFolderButton := 0
     RecordsCopyPathButton := 0
@@ -4821,6 +4909,8 @@ OnRecordsColumnClick(ctrl, column) {
         RecordsSortColumn := column
         RecordsSortDescending := false
     }
+
+    SaveRecordsSortSettings(RecordsSortColumn, RecordsSortDescending)
 
     selectedEntryId := ""
     entry := GetSelectedVehicleRecord()
@@ -5402,8 +5492,8 @@ OpenVehicleReminderDialog(vehicle, openAddEntry := false, selectEntryId := "") {
     ReminderAllEntries := []
     ReminderSearchCtrl := 0
     VisibleReminderIds := []
-    ReminderSortColumn := 2
-    ReminderSortDescending := false
+    ReminderSortColumn := GetReminderSortColumnSetting()
+    ReminderSortDescending := GetReminderSortDescendingSetting()
     ReminderGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Vlastní připomínky")
     ReminderGui.SetFont("s10", "Segoe UI")
     ReminderGui.OnEvent("Close", CloseVehicleReminderDialog)
@@ -5541,6 +5631,8 @@ OnReminderColumnClick(ctrl, column) {
         ReminderSortColumn := column
         ReminderSortDescending := false
     }
+
+    SaveReminderSortSettings(ReminderSortColumn, ReminderSortDescending)
 
     selectedEntryId := ""
     entry := GetSelectedVehicleReminder()
@@ -9480,6 +9572,14 @@ EnsureSettingsDefaults() {
     EnsureIniKeyExists(SettingsFile, "overview", "include_missing_green", "0")
     EnsureIniKeyExists(SettingsFile, "overview", "sort_column", "6")
     EnsureIniKeyExists(SettingsFile, "overview", "sort_descending", "0")
+    EnsureIniKeyExists(SettingsFile, "history_view", "sort_column", "1")
+    EnsureIniKeyExists(SettingsFile, "history_view", "sort_descending", "1")
+    EnsureIniKeyExists(SettingsFile, "fuel_view", "sort_column", "1")
+    EnsureIniKeyExists(SettingsFile, "fuel_view", "sort_descending", "1")
+    EnsureIniKeyExists(SettingsFile, "records_view", "sort_column", "4")
+    EnsureIniKeyExists(SettingsFile, "records_view", "sort_descending", "0")
+    EnsureIniKeyExists(SettingsFile, "reminder_view", "sort_column", "2")
+    EnsureIniKeyExists(SettingsFile, "reminder_view", "sort_descending", "0")
 }
 
 EnsureIniKeyExists(path, section, key, defaultValue) {
