@@ -348,14 +348,38 @@ SmokeTestMaintenanceRecommendationAction() {
     try {
         VehimapTestHooks := {
             messages: [],
-            msgBoxResults: ["Yes"]
+            maintenanceRecommendationSelection: {
+                selectedTitles: ["Palivový filtr", "Brzdová kapalina"],
+                updates: [
+                    {matchTitle: "Palivový filtr", title: "Palivový filtr diesel", note: "Upraveno ve výběru"}
+                ]
+            }
         }
 
         AddRecommendedVehicleMaintenancePlans()
-        AssertEqual(VehimapTestHooks.messages.Length, 2, "Akce doporučených šablon má zobrazit potvrzení a výsledek.")
-        AssertContains(VehimapTestHooks.messages[1].text, "Palivový filtr", "Potvrzovací dialog má vypsat doporučené servisní plány.")
-        AssertContains(VehimapTestHooks.messages[2].text, "Přidáno doporučených plánů", "Po doplnění má být zobrazen výsledek.")
-        AssertTrue(CountMaintenancePlansByTitle("veh_1", "Palivový filtr") = 1, "Akce doporučených šablon má plán opravdu přidat.")
+        AssertTrue(VehimapTestHooks.HasOwnProp("maintenanceRecommendationOpened"), "Akce doporučených šablon má otevřít výběrový dialog.")
+        AssertContains(VehimapTestHooks.maintenanceRecommendationOpened.profileLabel, "naftový pohon", "Výběrový dialog má nést profil doporučení.")
+        AssertTrue(HasMaintenanceTemplateWithTitleByText(VehimapTestHooks.maintenanceRecommendationOpened.titles, "Palivový filtr"), "Výběrový dialog má nabídnout i dieselové doporučení.")
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "Po potvrzení výběru má být zobrazen jen výsledek přidání.")
+        AssertContains(VehimapTestHooks.messages[1].text, "Přidáno doporučených plánů: 2.", "Výsledek má respektovat jen ručně vybraný počet šablon.")
+        AssertTrue(CountMaintenancePlansByTitle("veh_1", "Palivový filtr diesel") = 1, "Akce doporučených šablon má uložit i ručně upravený název.")
+        AssertTrue(CountMaintenancePlansByTitle("veh_1", "Motorový olej a filtr") = 0, "Nevybraná doporučená šablona se nesmí přidat.")
+
+        VehimapTestHooks := {
+            messages: [],
+            maintenanceRecommendationSelection: {
+                cancel: true
+            }
+        }
+        AddRecommendedVehicleMaintenancePlans()
+        AssertEqual(VehimapTestHooks.messages.Length, 0, "Při zrušení výběrového dialogu se nemá zobrazit výsledek ani chyba.")
+
+        VehimapTestHooks := {
+            messages: [],
+            maintenanceRecommendationSelection: {}
+        }
+        AddRecommendedVehicleMaintenancePlans()
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "Při doplnění zbytku doporučených šablon má být zobrazen výsledek přidání.")
 
         VehimapTestHooks := {
             messages: []
@@ -766,6 +790,16 @@ CountMaintenancePlansByTitle(vehicleId, title) {
     }
 
     return count
+}
+
+HasMaintenanceTemplateWithTitleByText(items, title) {
+    for item in items {
+        if (item = title) {
+            return true
+        }
+    }
+
+    return false
 }
 
 AssertSearchKindPresent(results, expectedKind) {

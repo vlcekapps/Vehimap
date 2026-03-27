@@ -78,7 +78,13 @@ OpenVehicleMaintenanceDialog(vehicle, openAddPlan := false, selectPlanId := "") 
 }
 
 CloseVehicleMaintenanceDialog(*) {
-    global MaintenanceGui, MaintenanceVehicleId, MaintenanceList, MaintenanceSummaryLabel, MaintenanceAllPlans, MaintenanceSearchCtrl, VisibleMaintenancePlanIds, MaintenanceSortColumn, MaintenanceSortDescending, MaintenanceCompleteButton, MainGui
+    global MaintenanceGui, MaintenanceVehicleId, MaintenanceList, MaintenanceSummaryLabel, MaintenanceAllPlans, MaintenanceSearchCtrl, VisibleMaintenancePlanIds, MaintenanceSortColumn, MaintenanceSortDescending, MaintenanceCompleteButton
+    global MaintenanceRecommendGui, MaintenanceRecommendList, MaintenanceRecommendSummaryLabel, MaintenanceRecommendControls, MaintenanceRecommendItems, MaintenanceRecommendVehicleId, MaintenanceRecommendSelectedIndex, MaintenanceRecommendLoading, MainGui
+
+    if IsObject(MaintenanceRecommendGui) {
+        MaintenanceRecommendGui.Destroy()
+        MaintenanceRecommendGui := 0
+    }
 
     if IsObject(MaintenanceGui) {
         MaintenanceGui.Destroy()
@@ -94,6 +100,13 @@ CloseVehicleMaintenanceDialog(*) {
     MaintenanceSortColumn := 5
     MaintenanceSortDescending := false
     MaintenanceCompleteButton := 0
+    MaintenanceRecommendList := 0
+    MaintenanceRecommendSummaryLabel := 0
+    MaintenanceRecommendControls := {}
+    MaintenanceRecommendItems := []
+    MaintenanceRecommendVehicleId := ""
+    MaintenanceRecommendSelectedIndex := 0
+    MaintenanceRecommendLoading := false
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
@@ -331,17 +344,476 @@ AddRecommendedVehicleMaintenancePlans(*) {
         return
     }
 
-    result := AppMsgBox(BuildVehicleMaintenanceRecommendationPrompt(preview), AppTitle, 0x34)
-    if (result != "Yes") {
+    OpenVehicleMaintenanceRecommendationDialog(preview)
+}
+
+OpenVehicleMaintenanceRecommendationDialog(preview) {
+    global AppTitle, MaintenanceGui, MaintenanceRecommendGui, MaintenanceRecommendList, MaintenanceRecommendSummaryLabel, MaintenanceRecommendControls, MaintenanceRecommendItems, MaintenanceRecommendVehicleId, MaintenanceRecommendSelectedIndex, MaintenanceRecommendLoading
+
+    if IsObject(MaintenanceRecommendGui) {
+        WinActivate("ahk_id " MaintenanceRecommendGui.Hwnd)
         return
     }
 
-    applied := AddVehicleMaintenanceRecommendedTemplates(preview.vehicle.id, preview.missing)
-    selectPlanId := (applied.addedPlans.Length > 0) ? applied.addedPlans[1].id : ""
+    hooks := GetVehimapTestHooks()
+    if IsObject(hooks) && hooks.HasOwnProp("maintenanceRecommendationSelection") {
+        RunMaintenanceRecommendationSelectionInTestMode(preview, hooks.maintenanceRecommendationSelection)
+        return
+    }
+
+    if !IsObject(MaintenanceGui) {
+        return
+    }
+
+    MaintenanceRecommendItems := BuildVehicleMaintenanceRecommendationDrafts(preview.missing)
+    MaintenanceRecommendVehicleId := preview.vehicle.id
+    MaintenanceRecommendSelectedIndex := 0
+    MaintenanceRecommendLoading := false
+    MaintenanceRecommendControls := {}
+
+    MaintenanceRecommendGui := Gui("+Owner" MaintenanceGui.Hwnd, AppTitle " - Doporučené servisní šablony")
+    MaintenanceRecommendGui.SetFont("s10", "Segoe UI")
+    MaintenanceRecommendGui.OnEvent("Close", CloseVehicleMaintenanceRecommendationDialog)
+    MaintenanceRecommendGui.OnEvent("Escape", CloseVehicleMaintenanceRecommendationDialog)
+
+    MaintenanceGui.Opt("+Disabled")
+
+    MaintenanceRecommendGui.AddText("x20 y18 w820", "Vehimap pro vozidlo " preview.vehicle.name " našel chybějící servisní plány. Vyberte, které chcete přidat, a vybranou položku můžete ještě upravit.")
+    MaintenanceRecommendGui.AddText("x20 y45 w820", "Profil doporučení: " preview.profileLabel)
+    MaintenanceRecommendSummaryLabel := MaintenanceRecommendGui.AddText("x20 y72 w820", "")
+
+    MaintenanceRecommendGui.AddText("x20 y104 w320", "Doporučené servisní plány")
+    MaintenanceRecommendList := MaintenanceRecommendGui.AddListView("x20 y128 w360 h250 Checked Grid -Multi", ["Úkon", "Interval", "Poznámka"])
+    MaintenanceRecommendList.OnEvent("ItemSelect", OnMaintenanceRecommendationSelectionChanged)
+    MaintenanceRecommendList.OnEvent("Click", OnMaintenanceRecommendationListClicked)
+    MaintenanceRecommendList.ModifyCol(1, "165")
+    MaintenanceRecommendList.ModifyCol(2, "85")
+    MaintenanceRecommendList.ModifyCol(3, "90")
+
+    selectAllButton := MaintenanceRecommendGui.AddButton("x20 y388 w110 h28", "Vybrat vše")
+    selectAllButton.OnEvent("Click", SelectAllMaintenanceRecommendations)
+
+    clearAllButton := MaintenanceRecommendGui.AddButton("x140 y388 w130 h28", "Vymazat výběr")
+    clearAllButton.OnEvent("Click", ClearAllMaintenanceRecommendations)
+
+    MaintenanceRecommendGui.AddText("x410 y104 w380", "Úprava vybrané šablony")
+    MaintenanceRecommendGui.AddText("x410 y128 w320", "Změny se uloží jen do právě přidávaných plánů.")
+
+    MaintenanceRecommendGui.AddText("x410 y166 w170", "Název úkonu")
+    MaintenanceRecommendControls.title := MaintenanceRecommendGui.AddEdit("x580 y163 w240")
+    MaintenanceRecommendControls.title.OnEvent("Change", OnMaintenanceRecommendationDraftFieldChanged)
+
+    MaintenanceRecommendGui.AddText("x410 y201 w170", "Interval kilometrů")
+    MaintenanceRecommendControls.intervalKm := MaintenanceRecommendGui.AddEdit("x580 y198 w240")
+    MaintenanceRecommendControls.intervalKm.OnEvent("Change", OnMaintenanceRecommendationDraftFieldChanged)
+
+    MaintenanceRecommendGui.AddText("x410 y236 w170", "Interval měsíců")
+    MaintenanceRecommendControls.intervalMonths := MaintenanceRecommendGui.AddEdit("x580 y233 w240")
+    MaintenanceRecommendControls.intervalMonths.OnEvent("Change", OnMaintenanceRecommendationDraftFieldChanged)
+
+    MaintenanceRecommendGui.AddText("x410 y271 w170", "Poznámka")
+    MaintenanceRecommendControls.note := MaintenanceRecommendGui.AddEdit("x410 y296 w410 h120 Multi")
+    MaintenanceRecommendControls.note.OnEvent("Change", OnMaintenanceRecommendationDraftFieldChanged)
+
+    saveButton := MaintenanceRecommendGui.AddButton("x465 y432 w150 h30 Default", "Přidat vybrané")
+    saveButton.OnEvent("Click", SaveSelectedVehicleMaintenanceRecommendationsFromDialog)
+
+    cancelButton := MaintenanceRecommendGui.AddButton("x625 y432 w120 h30", "Zrušit")
+    cancelButton.OnEvent("Click", CloseVehicleMaintenanceRecommendationDialog)
+
+    MaintenanceRecommendGui.Show("w850 h480")
+    PopulateMaintenanceRecommendationList(1)
+}
+
+CloseVehicleMaintenanceRecommendationDialog(*) {
+    global MaintenanceRecommendGui, MaintenanceRecommendList, MaintenanceRecommendSummaryLabel, MaintenanceRecommendControls, MaintenanceRecommendItems, MaintenanceRecommendVehicleId, MaintenanceRecommendSelectedIndex, MaintenanceRecommendLoading, MaintenanceGui
+
+    if IsObject(MaintenanceRecommendGui) {
+        MaintenanceRecommendGui.Destroy()
+        MaintenanceRecommendGui := 0
+    }
+
+    MaintenanceRecommendList := 0
+    MaintenanceRecommendSummaryLabel := 0
+    MaintenanceRecommendControls := {}
+    MaintenanceRecommendItems := []
+    MaintenanceRecommendVehicleId := ""
+    MaintenanceRecommendSelectedIndex := 0
+    MaintenanceRecommendLoading := false
+
+    if IsObject(MaintenanceGui) {
+        MaintenanceGui.Opt("-Disabled")
+        WinActivate("ahk_id " MaintenanceGui.Hwnd)
+    }
+}
+
+PopulateMaintenanceRecommendationList(selectIndex := 1) {
+    global MaintenanceRecommendGui, MaintenanceRecommendList, MaintenanceRecommendItems
+
+    if !IsObject(MaintenanceRecommendGui) || !IsObject(MaintenanceRecommendList) {
+        return
+    }
+
+    MaintenanceRecommendList.Opt("-Redraw")
+    MaintenanceRecommendList.Delete()
+    for index, item in MaintenanceRecommendItems {
+        row := MaintenanceRecommendList.Add("", item.title, BuildVehicleMaintenanceIntervalText(item), ShortenText(item.note, 38))
+        MaintenanceRecommendList.Modify(row, item.selected ? "Check" : "-Check")
+    }
+    MaintenanceRecommendList.Opt("+Redraw")
+
+    UpdateMaintenanceRecommendationSummary()
+    SelectMaintenanceRecommendationRow(selectIndex, true)
+}
+
+SelectMaintenanceRecommendationRow(index, focusList := false) {
+    global MaintenanceRecommendList, MaintenanceRecommendItems, MaintenanceRecommendSelectedIndex
+
+    if !IsObject(MaintenanceRecommendList) || index < 1 || index > MaintenanceRecommendItems.Length {
+        MaintenanceRecommendSelectedIndex := 0
+        LoadMaintenanceRecommendationDraftIntoControls(0)
+        return
+    }
+
+    MaintenanceRecommendSelectedIndex := index
+    MaintenanceRecommendList.Modify(index, focusList ? "Select Focus Vis" : "Select Vis")
+    LoadMaintenanceRecommendationDraftIntoControls(index)
+}
+
+OnMaintenanceRecommendationSelectionChanged(*) {
+    global MaintenanceRecommendList
+
+    if !IsObject(MaintenanceRecommendList) {
+        return
+    }
+
+    row := MaintenanceRecommendList.GetNext(0)
+    SelectMaintenanceRecommendationRow(row)
+}
+
+OnMaintenanceRecommendationListClicked(*) {
+    SyncMaintenanceRecommendationSelectionsFromList()
+    UpdateMaintenanceRecommendationSummary()
+}
+
+LoadMaintenanceRecommendationDraftIntoControls(index) {
+    global MaintenanceRecommendControls, MaintenanceRecommendItems, MaintenanceRecommendLoading
+
+    if !IsObject(MaintenanceRecommendControls) || !MaintenanceRecommendControls.Has("title") {
+        return
+    }
+
+    MaintenanceRecommendLoading := true
+    if (index < 1 || index > MaintenanceRecommendItems.Length) {
+        MaintenanceRecommendControls.title.Text := ""
+        MaintenanceRecommendControls.intervalKm.Text := ""
+        MaintenanceRecommendControls.intervalMonths.Text := ""
+        MaintenanceRecommendControls.note.Text := ""
+        MaintenanceRecommendLoading := false
+        return
+    }
+
+    item := MaintenanceRecommendItems[index]
+    MaintenanceRecommendControls.title.Text := item.title
+    MaintenanceRecommendControls.intervalKm.Text := item.intervalKm
+    MaintenanceRecommendControls.intervalMonths.Text := item.intervalMonths
+    MaintenanceRecommendControls.note.Text := item.note
+    MaintenanceRecommendLoading := false
+}
+
+OnMaintenanceRecommendationDraftFieldChanged(*) {
+    global MaintenanceRecommendControls, MaintenanceRecommendItems, MaintenanceRecommendSelectedIndex, MaintenanceRecommendLoading, MaintenanceRecommendList
+
+    if MaintenanceRecommendLoading || !IsObject(MaintenanceRecommendControls) {
+        return
+    }
+
+    index := MaintenanceRecommendSelectedIndex
+    if (index < 1 || index > MaintenanceRecommendItems.Length) {
+        return
+    }
+
+    item := MaintenanceRecommendItems[index]
+    item.title := MaintenanceRecommendControls.title.Text
+    item.intervalKm := MaintenanceRecommendControls.intervalKm.Text
+    item.intervalMonths := MaintenanceRecommendControls.intervalMonths.Text
+    item.note := MaintenanceRecommendControls.note.Text
+
+    if IsObject(MaintenanceRecommendList) {
+        MaintenanceRecommendList.Modify(index, "", item.title, BuildVehicleMaintenanceIntervalText(item), ShortenText(item.note, 38))
+    }
+}
+
+SyncMaintenanceRecommendationSelectionsFromList() {
+    global MaintenanceRecommendList, MaintenanceRecommendItems
+
+    if !IsObject(MaintenanceRecommendList) {
+        return
+    }
+
+    checkedRows := Map()
+    row := 0
+    while row := MaintenanceRecommendList.GetNext(row, "Checked") {
+        checkedRows[row] := true
+    }
+
+    for index, item in MaintenanceRecommendItems {
+        item.selected := checkedRows.Has(index)
+    }
+}
+
+UpdateMaintenanceRecommendationSummary() {
+    global MaintenanceRecommendSummaryLabel, MaintenanceRecommendItems
+
+    if !IsObject(MaintenanceRecommendSummaryLabel) {
+        return
+    }
+
+    selectedCount := 0
+    for item in MaintenanceRecommendItems {
+        if item.selected {
+            selectedCount += 1
+        }
+    }
+
+    MaintenanceRecommendSummaryLabel.Text := "Doporučeno: " MaintenanceRecommendItems.Length ". Vybráno k přidání: " selectedCount "."
+}
+
+SelectAllMaintenanceRecommendations(*) {
+    SetAllMaintenanceRecommendationSelections(true)
+}
+
+ClearAllMaintenanceRecommendations(*) {
+    SetAllMaintenanceRecommendationSelections(false)
+}
+
+SetAllMaintenanceRecommendationSelections(selected) {
+    global MaintenanceRecommendList, MaintenanceRecommendItems
+
+    if !IsObject(MaintenanceRecommendList) {
+        return
+    }
+
+    for index, item in MaintenanceRecommendItems {
+        item.selected := selected ? 1 : 0
+        MaintenanceRecommendList.Modify(index, selected ? "Check" : "-Check")
+    }
+
+    UpdateMaintenanceRecommendationSummary()
+}
+
+SaveSelectedVehicleMaintenanceRecommendationsFromDialog(*) {
+    global AppTitle, MaintenanceRecommendVehicleId, MaintenanceRecommendSelectedIndex
+
+    result := ApplyVehicleMaintenanceRecommendationDrafts(MaintenanceRecommendVehicleId, MaintenanceRecommendItems)
+    if result.HasOwnProp("errorMessage") {
+        AppMsgBox(result.errorMessage, AppTitle, 0x30)
+        if (result.HasOwnProp("invalidIndex")) {
+            SelectMaintenanceRecommendationRow(result.invalidIndex, false)
+        }
+        if (result.HasOwnProp("focusField")) {
+            FocusMaintenanceRecommendationField(result.focusField)
+        }
+        return
+    }
+
+    selectPlanId := (result.addedPlans.Length > 0) ? result.addedPlans[1].id : ""
+    CloseVehicleMaintenanceRecommendationDialog()
+    RefreshMaintenanceDependentState(result.vehicle.id)
+    PopulateVehicleMaintenanceList(selectPlanId, true)
+    AppMsgBox(BuildVehicleMaintenanceRecommendationResultText(result), AppTitle, 0x40)
+}
+
+FocusMaintenanceRecommendationField(fieldName) {
+    global MaintenanceRecommendControls
+
+    if IsObject(MaintenanceRecommendControls) && MaintenanceRecommendControls.Has(fieldName) {
+        MaintenanceRecommendControls.%fieldName%.Focus()
+    }
+}
+
+BuildVehicleMaintenanceRecommendationDrafts(templates) {
+    drafts := []
+
+    for template in templates {
+        drafts.Push({
+            title: template.title,
+            intervalKm: template.intervalKm,
+            intervalMonths: template.intervalMonths,
+            note: template.note,
+            selected: 1
+        })
+    }
+
+    return drafts
+}
+
+ApplyVehicleMaintenanceRecommendationDrafts(vehicleId, drafts, persist := true) {
+    SyncMaintenanceRecommendationSelectionsFromList()
+
+    normalizedDrafts := []
+    selectedCount := 0
+
+    for index, draft in drafts {
+        if !draft.selected {
+            continue
+        }
+
+        selectedCount += 1
+        normalizedDraft := ""
+        errorMessage := ""
+        focusField := ""
+        if !TryNormalizeVehicleMaintenanceRecommendationDraft(draft, &normalizedDraft, &errorMessage, &focusField) {
+            return {
+                errorMessage: errorMessage,
+                focusField: focusField,
+                invalidIndex: index
+            }
+        }
+        normalizedDrafts.Push(normalizedDraft)
+    }
+
+    if (selectedCount = 0) {
+        return {
+            errorMessage: "Vyberte alespoň jednu doporučenou šablonu, kterou chcete přidat.",
+            focusField: "title",
+            invalidIndex: 1
+        }
+    }
+
+    applied := AddVehicleMaintenanceRecommendedTemplates(vehicleId, normalizedDrafts, persist)
+    applied.selectedCount := selectedCount
+    return applied
+}
+
+TryNormalizeVehicleMaintenanceRecommendationDraft(draft, &normalizedDraft, &errorMessage, &focusField) {
+    title := Trim(draft.title)
+    intervalKm := NormalizePositiveIntegerText(draft.intervalKm)
+    intervalMonths := NormalizePositiveIntegerText(draft.intervalMonths)
+    note := Trim(draft.note)
+
+    if (title = "") {
+        errorMessage := "Každá vybraná doporučená šablona musí mít vyplněný název úkonu."
+        focusField := "title"
+        return false
+    }
+
+    if (intervalKm = "" && intervalMonths = "") {
+        errorMessage := "Každá vybraná doporučená šablona musí mít vyplněný interval kilometrů, měsíců nebo obojí."
+        focusField := "intervalKm"
+        return false
+    }
+
+    if (Trim(draft.intervalKm) != "" && intervalKm = "") {
+        errorMessage := "Interval kilometrů u doporučené šablony zadejte jako kladné celé číslo."
+        focusField := "intervalKm"
+        return false
+    }
+
+    if (Trim(draft.intervalMonths) != "" && intervalMonths = "") {
+        errorMessage := "Interval měsíců u doporučené šablony zadejte jako kladné celé číslo."
+        focusField := "intervalMonths"
+        return false
+    }
+
+    normalizedDraft := {
+        title: title,
+        intervalKm: intervalKm,
+        intervalMonths: intervalMonths,
+        note: note
+    }
+    return true
+}
+
+RunMaintenanceRecommendationSelectionInTestMode(preview, selection) {
+    global AppTitle
+
+    hooks := GetVehimapTestHooks()
+    drafts := BuildVehicleMaintenanceRecommendationDrafts(preview.missing)
+    RegisterMaintenanceRecommendationPreviewInHooks(preview, drafts)
+    ApplyMaintenanceRecommendationSelectionHook(&drafts, selection)
+
+    if IsObject(selection) && selection.HasOwnProp("cancel") && selection.cancel {
+        return
+    }
+
+    result := ApplyVehicleMaintenanceRecommendationDrafts(preview.vehicle.id, drafts)
+    if result.HasOwnProp("errorMessage") {
+        AppMsgBox(result.errorMessage, AppTitle, 0x30)
+        return
+    }
+
+    selectPlanId := (result.addedPlans.Length > 0) ? result.addedPlans[1].id : ""
     RefreshMaintenanceDependentState(preview.vehicle.id)
     PopulateVehicleMaintenanceList(selectPlanId, true)
+    AppMsgBox(BuildVehicleMaintenanceRecommendationResultText(result), AppTitle, 0x40)
+}
 
-    AppMsgBox(BuildVehicleMaintenanceRecommendationResultText(applied), AppTitle, 0x40)
+RegisterMaintenanceRecommendationPreviewInHooks(preview, drafts) {
+    hooks := GetVehimapTestHooks()
+    if !IsObject(hooks) {
+        return
+    }
+
+    titles := []
+    for draft in drafts {
+        titles.Push(draft.title)
+    }
+
+    hooks.maintenanceRecommendationOpened := {
+        vehicleId: preview.vehicle.id,
+        profileLabel: preview.profileLabel,
+        titles: titles
+    }
+}
+
+ApplyMaintenanceRecommendationSelectionHook(&drafts, selection) {
+    if !IsObject(selection) {
+        return
+    }
+
+    if selection.HasOwnProp("selectedTitles") && IsObject(selection.selectedTitles) {
+        wantedTitles := Map()
+        for title in selection.selectedTitles {
+            wantedTitles[NormalizeVehicleMaintenancePlanTitleKey(title)] := true
+        }
+
+        for draft in drafts {
+            draft.selected := wantedTitles.Has(NormalizeVehicleMaintenancePlanTitleKey(draft.title))
+        }
+    }
+
+    if selection.HasOwnProp("updates") && IsObject(selection.updates) {
+        for update in selection.updates {
+            matchKey := NormalizeVehicleMaintenancePlanTitleKey(update.HasOwnProp("matchTitle") ? update.matchTitle : "")
+            if (matchKey = "") {
+                continue
+            }
+
+            for draft in drafts {
+                if (NormalizeVehicleMaintenancePlanTitleKey(draft.title) != matchKey) {
+                    continue
+                }
+
+                if update.HasOwnProp("title") {
+                    draft.title := update.title
+                }
+                if update.HasOwnProp("intervalKm") {
+                    draft.intervalKm := update.intervalKm
+                }
+                if update.HasOwnProp("intervalMonths") {
+                    draft.intervalMonths := update.intervalMonths
+                }
+                if update.HasOwnProp("note") {
+                    draft.note := update.note
+                }
+                if update.HasOwnProp("selected") {
+                    draft.selected := update.selected ? 1 : 0
+                }
+                break
+            }
+        }
+    }
 }
 
 EditSelectedVehicleMaintenancePlan(*) {

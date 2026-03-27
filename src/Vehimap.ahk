@@ -169,6 +169,14 @@ global VisibleMaintenancePlanIds := []
 global MaintenanceSortColumn := 5
 global MaintenanceSortDescending := false
 global MaintenanceCompleteButton := 0
+global MaintenanceRecommendGui := 0
+global MaintenanceRecommendList := 0
+global MaintenanceRecommendSummaryLabel := 0
+global MaintenanceRecommendControls := {}
+global MaintenanceRecommendItems := []
+global MaintenanceRecommendVehicleId := ""
+global MaintenanceRecommendSelectedIndex := 0
+global MaintenanceRecommendLoading := false
 global MaintenanceFormGui := 0
 global MaintenanceFormControls := {}
 global MaintenanceFormMode := ""
@@ -376,6 +384,12 @@ F2::EditSelectedVehicleMaintenancePlan()
 #HotIf IsListViewFocusedInGui(MaintenanceGui)
 Enter::EditSelectedVehicleMaintenancePlan()
 Delete::DeleteSelectedVehicleMaintenancePlan()
+#HotIf
+
+#HotIf IsGuiWindowActive(MaintenanceRecommendGui)
+^s::SaveSelectedVehicleMaintenanceRecommendationsFromDialog()
+^a::SelectAllMaintenanceRecommendations()
+^+a::ClearAllMaintenanceRecommendations()
 #HotIf
 
 #HotIf IsGuiWindowActive(CostSummaryGui)

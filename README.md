@@ -54,7 +54,7 @@ V hlavním okně:
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
 - v dashboardu přibyly i akce `Souhrn nákladů` a `Náklady vozidla`, takže jde rovnou otevřít globální přehled nákladů nebo náklady vybraného vozidla z právě řešeného problému
 - v dashboardu lze nově z vybraného servisního úkonu rovnou otevřít historii vozidla nebo servis přímo označit jako splněný bez ručního hledání správného plánu
-- v `Plánu údržby` lze tlačítkem `Doporučené šablony` nebo zkratkou `Ctrl+Shift+N` doplnit jen chybějící servisní plány podle kategorie vozidla a rozpoznaného pohonu
+- v `Plánu údržby` lze tlačítkem `Doporučené šablony` nebo zkratkou `Ctrl+Shift+N` otevřít výběr jen chybějících servisních plánů podle kategorie vozidla a rozpoznaného pohonu a před přidáním je ještě upravit nebo odškrtnout
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
 
@@ -89,6 +89,7 @@ V hlavním okně:
 - `Detail vozidla`: `Ctrl+U` nebo `F2` upraví vozidlo, `Ctrl+H` otevře historii, `Ctrl+R` připomínky, `Ctrl+K` kilometry a tankování, `Ctrl+M` plán údržby a `Ctrl+P` pojištění a doklady
 - `Historie událostí`, `Kilometry a tankování`, `Pojištění a doklady` i `Vlastní připomínky`: `Ctrl+F` přesune fokus do rychlého hledání, `Ctrl+N` přidá záznam, `Ctrl+U` nebo `F2` upraví vybraný záznam a `Ctrl+D` otevře detail vozidla
 - `Plán údržby`: `Ctrl+F` přesune fokus do hledání, `Ctrl+N` přidá úkon, `Ctrl+Shift+N` nabídne doporučené šablony, `Ctrl+U` nebo `F2` upraví vybraný úkon, `Ctrl+L` jej označí jako splněný a `Ctrl+D` otevře detail vozidla
+- `Výběr doporučených šablon`: `Ctrl+S` přidá vybrané položky, `Ctrl+A` vybere vše a `Ctrl+Shift+A` výběr vymaže
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní
 - v `Plánu údržby` klávesa `Enter` upraví vybraný úkon a `Delete` jej odstraní
 - kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce a Vehimap si poslední volbu pamatuje i po dalším otevření
@@ -127,7 +128,7 @@ V plánu údržby:
 - alespoň jeden interval `po kilometrech` nebo `po měsících` musí být vyplněný
 - `Poslední servis dne`, `Stav tachometru při posledním servisu`, `Poznámka` a volba aktivního plánu jsou volitelné
 - nahoře lze zvolit šablonu běžného servisního úkonu, která předvyplní název, intervaly i doporučenou poznámku
-- tlačítko `Doporučené šablony` dopočítá podle kategorie vozidla a rozpoznaného pohonu jen takové běžné servisní plány, které u vozidla ještě chybí
+- tlačítko `Doporučené šablony` otevře výběrový dialog, ve kterém lze doporučené plány podle kategorie vozidla a rozpoznaného pohonu před přidáním odškrtnout nebo doladit
 - tlačítko `Označit splněno` uloží nové datum a tachometr posledního servisu a volitelně zapíše stejnou událost i do historie vozidla
 
 V evidenci pojištění a dokladů:
