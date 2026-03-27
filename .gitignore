@@ -1,5 +1,8 @@
 *
 !.gitignore
 !README.md
+!CHANGELOG.md
+!build/
+!build/**
 !src/
 !src/**
