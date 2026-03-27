@@ -14,6 +14,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - akce v dashboardu pro rychlé otevření historie vozidla a okamžité označení servisního úkonu jako splněného
 - samostatný přehled `Náklady napříč vozidly` pro porovnání vozidel v jednom období
 - výpočet `Ujeto km`, `Ceny / km` a srovnání proti předchozímu stejně dlouhému období v nákladech vozidla i v přehledu `Náklady napříč vozidly`
+- nová `Časová osa vozidla`, která spojuje historii, tankování, připomínky, expirace dokladů, TK, ZK i servisní úkoly s konkrétním datem
+- ruční export budoucích termínů do kalendářového souboru `.ics`
 
 ### Změněno
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`

@@ -12,6 +12,7 @@ Persistent
 #Include lib\ImportExport.ahk
 #Include lib\MainWindow.ahk
 #Include lib\Overviews.ahk
+#Include lib\TimelineAndCalendar.ahk
 #Include lib\SettingsDialog.ahk
 #Include lib\VehicleDialogs.ahk
 #Include lib\VehicleBundles.ahk
@@ -238,6 +239,16 @@ global AuditItems := []
 global AuditOpenButton := 0
 global AuditVehicleButton := 0
 global AuditEditButton := 0
+global TimelineGui := 0
+global TimelineVehicleId := ""
+global TimelineList := 0
+global TimelineSummaryLabel := 0
+global TimelineFilterCtrl := 0
+global TimelineSearchCtrl := 0
+global TimelineEntries := []
+global TimelineAllEntries := []
+global TimelineOpenButton := 0
+global TimelineVehicleButton := 0
 global DashboardEntries := []
 global DashboardOpenButton := 0
 global DashboardItemButton := 0
@@ -436,6 +447,16 @@ F2::EditSelectedFleetCostVehicle()
 
 #HotIf IsListViewFocusedInGui(FleetCostGui)
 Enter::OpenSelectedFleetVehicleCostSummary()
+#HotIf
+
+#HotIf IsGuiWindowActive(TimelineGui)
+^f::FocusVehicleTimelineSearchShortcut()
+^o::OpenSelectedVehicleTimelineItem()
+^d::OpenSelectedVehicleTimelineVehicle()
+#HotIf
+
+#HotIf IsListViewFocusedInGui(TimelineGui)
+Enter::OpenSelectedVehicleTimelineItem()
 #HotIf
 
 #HotIf IsGuiWindowActive(SettingsGui)

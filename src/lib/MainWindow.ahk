@@ -92,6 +92,7 @@ BuildMainMenuBar() {
     vehicleMenu.Add("Pojištění a doklady`tCtrl+P", OpenSelectedVehicleRecords)
     vehicleMenu.Add("Vlastní připomínky`tCtrl+R", OpenSelectedVehicleReminders)
     vehicleMenu.Add("Plán údržby`tCtrl+M", OpenSelectedVehicleMaintenancePlans)
+    vehicleMenu.Add("Časová osa vozidla", OpenSelectedVehicleTimeline)
     vehicleMenu.Add("Balíček pro vozidlo", OpenSelectedVehicleStarterBundle)
     vehicleMenu.Add("Náklady a souhrny", OpenSelectedVehicleCosts)
     vehicleMenu.Add()
@@ -113,6 +114,7 @@ BuildMainMenuBar() {
     overviewMenu.Add("Přehled termínů`tCtrl+T", OpenUpcomingOverviewDialog)
     overviewMenu.Add("Propadlé termíny`tCtrl+Shift+T", OpenOverdueDialog)
     overviewMenu.Add("Audit dat", OpenAuditDialog)
+    overviewMenu.Add("Export termínů do kalendáře (.ics)", ExportVehimapCalendarIcs)
 
     toolsMenu := Menu()
     toolsMenu.Add("Nastavení", OpenSettingsDialog)

@@ -26,6 +26,8 @@ RunSmokeTests() {
         "SmokeTestRecordPathInfo",
         "SmokeTestFleetCostSummary",
         "SmokeTestVehicleCostComparison",
+        "SmokeTestVehicleTimelineEntries",
+        "SmokeTestVehimapCalendarExport",
         "SmokeTestDashboardCosts",
         "SmokeTestDashboardProblemHighlights",
         "SmokeTestDashboardMaintenanceActions",
@@ -812,6 +814,104 @@ SmokeTestVehicleCostComparison() {
     AssertContains(text, "Oproti " BuildMonthIndexRangeLabel(GetMonthIndex(previousYear, 11), GetMonthIndex(previousYear, 12)), "Souhrn vozidla má ukázat srovnání proti minulému období.")
 }
 
+SmokeTestVehicleTimelineEntries() {
+    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleReminders, VehicleMaintenancePlans, VehimapTestHooks
+
+    ResetSmokeData()
+    reminderDate := FormatTime(DateAdd(A_Now, 5, "Days"), "dd.MM.yyyy")
+    recentHistoryDate := FormatTime(DateAdd(A_Now, -10, "Days"), "dd.MM.yyyy")
+    olderFuelDate := FormatTime(DateAdd(A_Now, -20, "Days"), "dd.MM.yyyy")
+    lastServiceDate := FormatTime(A_Now, "dd.MM.yyyy")
+
+    Vehicles := [
+        {id: "veh_1", name: "Timeline auto", category: "Osobní vozidla", vehicleNote: "Rodinné", makeModel: "Skoda Octavia", plate: "1AB2345", year: "", power: "", lastTk: "", nextTk: "12/2099", greenCardFrom: "01/2099", greenCardTo: "11/2099"}
+    ]
+    VehicleHistory := [
+        {id: "hist_1", vehicleId: "veh_1", eventDate: recentHistoryDate, eventType: "Servis", odometer: "15200", cost: "1800", note: "Výměna oleje"}
+    ]
+    VehicleFuelLog := [
+        {id: "fuel_1", vehicleId: "veh_1", entryDate: olderFuelDate, odometer: "15000", liters: "42", totalCost: "1500", fullTank: 1, fuelType: "Benzin", note: "Shell"}
+    ]
+    VehicleRecords := [
+        {id: "record_1", vehicleId: "veh_1", recordType: "Doklad", title: "Pojistka", provider: "Kooperativa", validFrom: "01/2099", validTo: "10/2099", price: "4500", filePath: "", note: "Roční obnova"}
+    ]
+    VehicleReminders := [
+        {id: "rem_1", vehicleId: "veh_1", title: "Výměna stěračů", dueDate: reminderDate, reminderDays: "7", repeatMode: "Každý rok", note: "Před zimou"}
+    ]
+    VehicleMaintenancePlans := [
+        {id: "plan_1", vehicleId: "veh_1", title: "Brzdová kapalina", intervalKm: "", intervalMonths: "12", lastServiceDate: lastServiceDate, lastServiceOdometer: "", note: "Pravidelná výměna", isActive: 1}
+    ]
+
+    entries := BuildVehicleTimelineEntries("veh_1")
+    AssertTrue(entries.Length >= 6, "Časová osa má spojit historii, tankování, doklady, připomínky, TK, ZK i servis.")
+    AssertEqual(entries[1].kind, "custom", "Nejbližší budoucí položka má být v časové ose nahoře.")
+    AssertTrue(HasVehicleTimelineKind(entries, "maintenance"), "Časová osa má obsahovat i servisní úkol s konkrétním datem.")
+    AssertTrue(HasVehicleTimelineKind(entries, "record"), "Časová osa má obsahovat i expiraci dokladu.")
+    AssertTrue(HasVehicleTimelineKind(entries, "technical"), "Časová osa má obsahovat i příští TK.")
+    AssertTrue(HasVehicleTimelineKind(entries, "green"), "Časová osa má obsahovat i konec zelené karty.")
+    AssertTrue(GetVehicleTimelineEntryIndex(entries, "history") < GetVehicleTimelineEntryIndex(entries, "fuel"), "V minulých položkách má být novější historie před starším tankováním.")
+
+    futureEntries := FilterVehicleTimelineEntries(entries, "future", "")
+    pastEntries := FilterVehicleTimelineEntries(entries, "past", "")
+    AssertTrue(futureEntries.Length >= 4, "Filtr budoucích položek má zachovat termíny a plánované úkony.")
+    AssertEqual(pastEntries.Length, 2, "Filtr minulých položek má vrátit historii a tankování.")
+
+    VehimapTestHooks := {captureTimelineOpenActions: true}
+    try {
+        recordEntry := FindVehicleTimelineEntryByKind(entries, "record")
+        OpenVehicleTimelineEntry(recordEntry, false)
+        AssertEqual(VehimapTestHooks.timelineOpenActions.Length, 1, "Otevření položky časové osy má být zachytitelné v testovacím režimu.")
+        AssertEqual(VehimapTestHooks.timelineOpenActions[1].kind, "record", "Časová osa má otevírat správný typ evidence.")
+        AssertEqual(VehimapTestHooks.timelineOpenActions[1].entryId, "record_1", "Časová osa má otevírat správný záznam.")
+    } finally {
+        VehimapTestHooks := 0
+    }
+}
+
+SmokeTestVehimapCalendarExport() {
+    global Vehicles, VehicleRecords, VehicleReminders, VehicleMaintenancePlans
+
+    ResetSmokeData()
+    reminderDate := FormatTime(DateAdd(A_Now, 3, "Days"), "dd.MM.yyyy")
+    pastReminderDate := FormatTime(DateAdd(A_Now, -3, "Days"), "dd.MM.yyyy")
+    lastServiceDate := FormatTime(A_Now, "dd.MM.yyyy")
+
+    Vehicles := [
+        {id: "veh_1", name: "Export auto", category: "Osobní vozidla", vehicleNote: "", makeModel: "Volkswagen Passat", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: "12/2099", greenCardFrom: "01/2099", greenCardTo: "11/2099"}
+    ]
+    VehicleRecords := [
+        {id: "record_1", vehicleId: "veh_1", recordType: "Doklad", title: "Velký techničák", provider: "Úřad", validFrom: "01/2099", validTo: "10/2099", price: "", filePath: "", note: ""}
+    ]
+    VehicleReminders := [
+        {id: "rem_1", vehicleId: "veh_1", title: "Objednat pneuservis", dueDate: reminderDate, reminderDays: "5", repeatMode: "Neopakovat", note: ""},
+        {id: "rem_2", vehicleId: "veh_1", title: "Stará připomínka", dueDate: pastReminderDate, reminderDays: "5", repeatMode: "Neopakovat", note: ""}
+    ]
+    VehicleMaintenancePlans := [
+        {id: "plan_date", vehicleId: "veh_1", title: "Servis klimatizace", intervalKm: "", intervalMonths: "12", lastServiceDate: lastServiceDate, lastServiceOdometer: "", note: "", isActive: 1},
+        {id: "plan_km_only", vehicleId: "veh_1", title: "Kontrola řetězu", intervalKm: "10000", intervalMonths: "", lastServiceDate: "", lastServiceOdometer: "", note: "", isActive: 1}
+    ]
+
+    exportData := BuildVehimapCalendarExportItems()
+    AssertEqual(exportData.items.Length, 5, "ICS export má zahrnout budoucí TK, ZK, připomínku, doklad a servis s datem.")
+    AssertEqual(exportData.skippedMaintenanceCount, 1, "ICS export má hlásit servisní úkoly bez konkrétního data, které vynechal.")
+
+    content := BuildVehimapCalendarIcsContent(exportData.items)
+    AssertContains(content, "BEGIN:VCALENDAR", "ICS export musí vytvořit hlavičku kalendáře.")
+    AssertContains(content, "SUMMARY:Vehimap - TK - Export auto", "ICS export má vytvářet čitelný název pro TK.")
+    AssertContains(content, "SUMMARY:Vehimap - Připomínka - Export auto", "ICS export má vytvářet čitelný název pro připomínku.")
+
+    maintenanceItem := FindVehimapCalendarItemByKind(exportData.items, "maintenance")
+    AssertTrue(IsObject(maintenanceItem), "ICS export má obsahovat i servisní úkol s datem.")
+    AssertContains(content, "UID:" maintenanceItem.uid, "ICS export má používat stabilní UID.")
+
+    exportPath := A_Temp "\vehimap_calendar_export.ics"
+    try FileDelete(exportPath)
+    WriteVehimapCalendarIcs(exportPath, exportData.items)
+    savedContent := FileRead(exportPath, "UTF-8")
+    AssertContains(savedContent, "BEGIN:VEVENT", "Zapsaný ICS soubor musí obsahovat události.")
+    AssertContains(savedContent, "SUMMARY:Vehimap - Doklad - Export auto", "Zapsaný ICS soubor musí obsahovat i expiraci dokladu.")
+}
+
 SmokeTestDashboardCosts() {
     global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords
 
@@ -1068,6 +1168,46 @@ HasMaintenanceTemplateWithTitle(items, title) {
     }
 
     return false
+}
+
+HasVehicleTimelineKind(entries, kind) {
+    for entry in entries {
+        if IsObject(entry) && entry.kind = kind {
+            return true
+        }
+    }
+
+    return false
+}
+
+GetVehicleTimelineEntryIndex(entries, kind) {
+    for index, entry in entries {
+        if IsObject(entry) && entry.kind = kind {
+            return index
+        }
+    }
+
+    return 0
+}
+
+FindVehicleTimelineEntryByKind(entries, kind) {
+    for entry in entries {
+        if IsObject(entry) && entry.kind = kind {
+            return entry
+        }
+    }
+
+    return ""
+}
+
+FindVehimapCalendarItemByKind(items, kind) {
+    for item in items {
+        if IsObject(item) && item.kind = kind {
+            return item
+        }
+    }
+
+    return ""
 }
 
 CountMaintenancePlansByTitle(vehicleId, title) {

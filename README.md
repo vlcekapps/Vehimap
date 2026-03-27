@@ -57,6 +57,8 @@ V hlavním okně:
 - v dashboardu lze nově z vybraného servisního úkonu rovnou otevřít historii vozidla nebo servis přímo označit jako splněný bez ručního hledání správného plánu
 - v `Plánu údržby` lze tlačítkem `Doporučené šablony` nebo zkratkou `Ctrl+Shift+N` otevřít výběr jen chybějících servisních plánů podle kategorie a servisního profilu vozidla a před přidáním je ještě upravit nebo odškrtnout
 - po založení nového vozidla může Vehimap nabídnout rovnou celý `Balíček pro vozidlo`, tedy doporučené servisní plány, placeholdery dokladů i obecné připomínky
+- `Časová osa vozidla` spojuje do jednoho seznamu historii, tankování, připomínky, expirace dokladů, technickou kontrolu, zelenou kartu i servisní úkoly s konkrétním datem
+- v `Přehledu` lze nově ručně exportovat budoucí termíny do kalendářového souboru `.ics`, včetně TK, ZK, připomínek, expirací dokladů a servisních úkolů s datem
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
 
@@ -149,6 +151,13 @@ V `Náklady a souhrny`:
 - pod tím zůstává i dlouhodobý přehled podle jednotlivých let
 - tlačítka `TSV souhrn`, `TSV detail` a `HTML sestava` umí vyexportovat vybrané období i dlouhodobý přehled do souboru pro další práci, tisk nebo archivaci
 
+V `Časové ose vozidla`:
+
+- nahoře lze přepnout mezi `Vše`, `Budoucí` a `Minulé` a průběžně vyhledávat podle druhu, položky, detailu nebo stavu
+- nahoře se zobrazují nejbližší budoucí termíny a pod nimi nejnovější minulost
+- tlačítko `Otevřít položku` nebo klávesa `Enter` otevře správnou evidenci přímo na vybrané položce
+- tlačítko `Detail vozidla` otevře detail právě sledovaného vozidla bez návratu do hlavního seznamu
+
 Ve vlastních připomínkách:
 
 - `Název připomínky`, `Termín` a `Upozornit dnů předem` jsou povinné
@@ -170,8 +179,8 @@ Pro upozornění aplikace používá pole `Příští TK`, `Zelená karta do` a 
 V horním menu najdete tyto části:
 
 - `Soubor`: `Tiskový přehled`, `Export dat`, `Import dat`, `Konec`
-- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby, `Balíčku pro vozidlo` a pojištění a dokladů
-- `Přehled`: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Přehled termínů`, `Propadlé termíny`
+- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, `Časové osy vozidla`, plánu údržby, `Balíčku pro vozidlo` a pojištění a dokladů
+- `Přehled`: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Přehled termínů`, `Propadlé termíny`, `Audit dat`, `Export termínů do kalendáře (.ics)`
 - `Nástroje`: `Nastavení`, `Skrýt do lišty`
 - `Nápověda`: `O programu`, `Zkontrolovat aktualizace`
 

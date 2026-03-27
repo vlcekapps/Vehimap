@@ -140,6 +140,18 @@ OpenSelectedVehicleMaintenancePlans(*) {
     OpenVehicleMaintenanceDialog(vehicle)
 }
 
+OpenSelectedVehicleTimeline(*) {
+    global AppTitle
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, jehož časovou osu chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    OpenVehicleTimelineDialog(vehicle)
+}
+
 OpenSelectedVehicleCosts(*) {
     global AppTitle
 
@@ -317,10 +329,13 @@ OpenVehicleDetailDialog(vehicle) {
     maintenanceButton := DetailGui.AddButton("x110 y805 w150 h30", "Plán údržby")
     maintenanceButton.OnEvent("Click", OpenMaintenanceFromDetail)
 
-    costsButton := DetailGui.AddButton("x270 y805 w150 h30", "Náklady a souhrny")
+    timelineButton := DetailGui.AddButton("x270 y805 w150 h30", "Časová osa")
+    timelineButton.OnEvent("Click", OpenTimelineFromDetail)
+
+    costsButton := DetailGui.AddButton("x430 y805 w140 h30", "Náklady a souhrny")
     costsButton.OnEvent("Click", OpenCostsFromDetail)
 
-    closeButton := DetailGui.AddButton("x430 y805 w100 h30", "Zavřít")
+    closeButton := DetailGui.AddButton("x580 y805 w100 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleDetailDialog)
 
     DetailGui.Show("w760 h860")
@@ -416,6 +431,18 @@ OpenMaintenanceFromDetail(*) {
 
     CloseVehicleDetailDialog()
     OpenVehicleMaintenanceDialog(vehicle)
+}
+
+OpenTimelineFromDetail(*) {
+    global DetailVehicleId
+
+    vehicle := FindVehicleById(DetailVehicleId)
+    if !IsObject(vehicle) {
+        return
+    }
+
+    CloseVehicleDetailDialog()
+    OpenVehicleTimelineDialog(vehicle)
 }
 
 OpenCostsFromDetail(*) {
