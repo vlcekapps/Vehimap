@@ -7,12 +7,13 @@ Komplexní řešení pro evidenci vašich vozidel.
 - rozdělení vozidel do kategorií `Osobní vozidla`, `Motocykly`, `Nákladní vozidla`, `Autobusy`, `Ostatní`
 - přidání, úpravu a odstranění vozidla
 - vyhledávání v hlavním seznamu podle názvu, typu, značky nebo SPZ
-- globální hledání napříč vozidly, historií událostí, kilometry a tankováním, pojištěním a doklady i vlastními připomínkami
+- globální hledání napříč vozidly, historií událostí, kilometry a tankováním, pojištěním a doklady, vlastními připomínkami i plány údržby
 - filtr hlavního seznamu na všechna vozidla, vozidla s blížícím se termínem, vozidla po termínu a vozidla bez vyplněné zelené karty
 - volitelné skrytí archivovaných a odstavených vozidel v hlavním seznamu, aniž by zmizela z dat a přehledů
 - detail vozidla se souhrnem údajů, stavem platností, posledními událostmi z historie a souhrnem tankování i dokladů
 - historii událostí pro každé vozidlo, včetně přidání, úpravy a odstranění servisních nebo jiných záznamů
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů
+- samostatný `Plán údržby` pro každé vozidlo, včetně šablon běžných servisních úkonů, intervalu podle kilometrů nebo měsíců, evidence posledního servisu a rychlého označení splnění s volitelným zapsáním do historie
 - rychlé hledání a řazení sloupců v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách, včetně zapamatování posledního řazení
 - samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, otevření navázaného souboru i otevření jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku
@@ -21,18 +22,18 @@ Komplexní řešení pro evidenci vašich vozidel.
 - vlastní připomínky i s volbou opakování `Neopakovat`, `Každý rok`, `Každé 2 roky` a `Každých 5 let`
 - upozornění na blížící se nebo propadlou technickou kontrolu
 - upozornění na blížící se nebo propadlou zelenou kartu
-- samostatný `Dashboard` s rychlým souhrnem vozidel, termínů, nákladů v aktuálním roce, pořadím nejdražších vozidel, upozorněním na aktivní vozidla bez číselného nákladu, rychlými highlighty nejpalčivějších problémových stavů a akčním seznamem nejbližších termínů, chybějících zelených karet, vozidel bez SPZ nebo příští TK i dokladů s nedostupnou nebo prázdnou cestou
-- samostatný dialog s přehledem všech blížících se a propadlých termínů, filtrem, rychlým hledáním podle názvu, SPZ nebo typu položky, ruční obnovou, řazením podle sloupců, volitelným zobrazením datových nedostatků, přímým otevřením řešené položky, otevřením vozidla i editací vozidla a zapamatováním posledního nastavení přehledu
-- samostatný dialog `Propadlé termíny` se seznamem všech už propadlých `TK` a `ZK`, rychlým hledáním a přímým otevřením řešené položky, otevřením vozidla nebo editací vozidla
+- samostatný `Dashboard` s rychlým souhrnem vozidel, termínů, nákladů v aktuálním roce, pořadím nejdražších vozidel, upozorněním na aktivní vozidla bez číselného nákladu, rychlými highlighty nejpalčivějších problémových stavů a akčním seznamem nejbližších termínů, blížících se servisních úkonů, chybějících zelených karet, vozidel bez SPZ nebo příští TK i dokladů s nedostupnou nebo prázdnou cestou
+- samostatný dialog s přehledem všech blížících se a propadlých termínů, servisních úkonů a připomínek, filtrem, rychlým hledáním podle názvu, SPZ nebo typu položky, ruční obnovou, řazením podle sloupců, volitelným zobrazením datových nedostatků, přímým otevřením řešené položky, otevřením vozidla i editací vozidla a zapamatováním posledního nastavení přehledu
+- samostatný dialog `Propadlé termíny` se seznamem všech už propadlých `TK`, `ZK` a servisních úkonů, rychlým hledáním a přímým otevřením řešené položky, otevřením vozidla nebo editací vozidla
 - `Tiskový přehled` všech vozidel ve formátu HTML, který se otevře v prohlížeči a dá se vytisknout běžným `Ctrl+P`
-- `Export dat` do jednoho záložního souboru `.vehimapbak`
-- `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním
+- `Export dat` do jednoho záložního souboru `.vehimapbak` včetně plánů údržby
+- `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním a obnovení plánů údržby
 - pravidelné automatické zálohy do `data/auto-backups` se samostatným intervalem ve dnech a omezením počtu ponechaných souborů
-- samostatné nastavení počtu dnů pro upozornění na `TK` a `ZK`
+- samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
 - horní menu `Soubor`, `Vozidlo`, `Přehled`, `Nástroje` a `Nápověda`
 - tray menu pro rychlé otevření nejbližších termínů i dalších funkcí aplikace
-- automatickou kontrolu termínů každých 15 minut a znovu po probuzení počítače ze spánku
+- automatickou kontrolu termínů, připomínek a servisních plánů každých 15 minut a znovu po probuzení počítače ze spánku
 
 ## Jak se používá
 
@@ -44,11 +45,12 @@ V hlavním okně:
 - pole `Hledat název, značku nebo SPZ` filtruje jen aktuálně otevřenou kategorii
 - pole `Filtr seznamu` rychle zobrazí jen vozidla, která právě vyžadují pozornost
 - zaškrtávátko `Skrýt archivovaná a odstavená vozidla` schová neaktivní vozidla jen z hlavního seznamu a svou volbu si pamatuje i po dalším spuštění
-- tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence otevřete i z menu `Vozidlo`
-- položky `Dashboard` a `Globální hledání` v menu `Přehled` otevřou rychlý souhrn termínů, nákladů, problémových stavů a stavu evidencí nebo vyhledání napříč všemi evidencemi
+- tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence včetně `Plánu údržby` otevřete i z menu `Vozidlo`
+- položky `Dashboard` a `Globální hledání` v menu `Přehled` otevřou rychlý souhrn termínů, servisních úkonů, nákladů, problémových stavů a stavu evidencí nebo vyhledání napříč všemi evidencemi
 - položka `Náklady napříč vozidly` v menu `Přehled` otevře porovnání nákladů za zvolené období mezi všemi vozidly a umožní z přehledu rovnou přejít na detail nákladů, detail vozidla nebo editaci
 - v menu `Nápověda` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky i samostatnou ruční kontrolu aktualizací
 - v dashboardu souhrn vozidel vypisuje i nejpalčivější problémové stavy podle priority a nákladový souhrn ukazuje nejdražší vozidla i aktivní vozidla bez číselného nákladu v aktuálním roce
+- v dashboardu, `Přehledu termínů` i `Propadlých termínech` se vedle `TK`, `ZK` a vlastních připomínek zobrazují i blížící se nebo propadlé servisní úkony
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
 - v dashboardu přibyly i akce `Souhrn nákladů` a `Náklady vozidla`, takže jde rovnou otevřít globální přehled nákladů nebo náklady vybraného vozidla z právě řešeného problému
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
@@ -66,6 +68,7 @@ V hlavním okně:
 - `Ctrl+O`: zobrazit detail vybraného vozidla
 - `Ctrl+H`: otevřít historii vybraného vozidla
 - `Ctrl+K`: otevřít kilometry a tankování vybraného vozidla
+- `Ctrl+M`: otevřít plán údržby vybraného vozidla
 - `Ctrl+P`: otevřít pojištění a doklady vybraného vozidla
 - `Ctrl+R`: otevřít vlastní připomínky vybraného vozidla
 - v hlavním seznamu klávesa `Enter` otevře detail právě vybraného vozidla
@@ -81,9 +84,11 @@ V hlavním okně:
 
 ## Klávesové zkratky v detailu a evidencích:
 
-- `Detail vozidla`: `Ctrl+U` nebo `F2` upraví vozidlo, `Ctrl+H` otevře historii, `Ctrl+R` připomínky, `Ctrl+K` kilometry a tankování a `Ctrl+P` pojištění a doklady
+- `Detail vozidla`: `Ctrl+U` nebo `F2` upraví vozidlo, `Ctrl+H` otevře historii, `Ctrl+R` připomínky, `Ctrl+K` kilometry a tankování, `Ctrl+M` plán údržby a `Ctrl+P` pojištění a doklady
 - `Historie událostí`, `Kilometry a tankování`, `Pojištění a doklady` i `Vlastní připomínky`: `Ctrl+F` přesune fokus do rychlého hledání, `Ctrl+N` přidá záznam, `Ctrl+U` nebo `F2` upraví vybraný záznam a `Ctrl+D` otevře detail vozidla
+- `Plán údržby`: `Ctrl+F` přesune fokus do hledání, `Ctrl+N` přidá úkon, `Ctrl+U` nebo `F2` upraví vybraný úkon, `Ctrl+L` jej označí jako splněný a `Ctrl+D` otevře detail vozidla
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní
+- v `Plánu údržby` klávesa `Enter` upraví vybraný úkon a `Delete` jej odstraní
 - kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce a Vehimap si poslední volbu pamatuje i po dalším otevření
 - v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu, `Ctrl+Shift+O` jeho složku a `Ctrl+Shift+C` zkopíruje uloženou cestu
 - ve `Vlastních připomínkách` navíc `Ctrl+Shift+N` posune vybranou opakovanou připomínku na další termín
@@ -114,6 +119,14 @@ V evidenci kilometrů a tankování:
 - datum záznamu se zadává jako `DD.MM.RRRR`, například `26.03.2026`
 - `Natankováno litrů`, `Cena celkem v Kč`, `Typ paliva`, `Plná nádrž` a `Poznámka` jsou volitelné
 
+V plánu údržby:
+
+- `Název úkonu` je povinný
+- alespoň jeden interval `po kilometrech` nebo `po měsících` musí být vyplněný
+- `Poslední servis dne`, `Stav tachometru při posledním servisu`, `Poznámka` a volba aktivního plánu jsou volitelné
+- nahoře lze zvolit šablonu běžného servisního úkonu, která předvyplní název, intervaly i doporučenou poznámku
+- tlačítko `Označit splněno` uloží nové datum a tachometr posledního servisu a volitelně zapíše stejnou událost i do historie vozidla
+
 V evidenci pojištění a dokladů:
 
 - `Druh záznamu` a `Název záznamu` jsou povinné
@@ -140,14 +153,16 @@ V nastavení:
 - pole `Interval automatické zálohy ve dnech` určuje, po kolika dnech má vzniknout nová automatická záloha
 - pole `Ponechat posledních automatických záloh` určuje, kolik nejnovějších souborů si Vehimap ponechá a starší automaticky smaže
 - tlačítko `Zálohovat ihned` vytvoří novou zálohu okamžitě do stejné složky bez čekání na další automatický interval
+- pole `Upozornit na údržbu dnů předem` určuje, jak brzy má Vehimap začít hlásit blížící se servis podle data
+- pole `Upozornit na údržbu kilometrů předem` určuje, jak brzy má Vehimap začít hlásit blížící se servis podle tachometru
 - automatické zálohy se ukládají do složky `data/auto-backups`
 
-Pro upozornění aplikace používá pole `Příští TK` a `Zelená karta do`. Je to spolehlivější než automaticky dopočítávat intervaly jen podle druhu vozidla, protože se mohou lišit podle zvláštního režimu vozidla.
+Pro upozornění aplikace používá pole `Příští TK`, `Zelená karta do` a u servisních úkonů intervaly uložené v `Plánu údržby`. Je to spolehlivější než automaticky dopočítávat vše jen podle druhu vozidla, protože se mohou lišit podle zvláštního režimu vozidla i servisního plánu.
 
 V horním menu najdete tyto části:
 
 - `Soubor`: `Tiskový přehled`, `Export dat`, `Import dat`, `Konec`
-- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování a pojištění a dokladů
+- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby a pojištění a dokladů
 - `Přehled`: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Přehled termínů`, `Propadlé termíny`
 - `Nástroje`: `Nastavení`, `Skrýt do lišty`
 - `Nápověda`: `O programu`, `Zkontrolovat aktualizace`
@@ -158,6 +173,7 @@ V horním menu najdete tyto části:
 - historie událostí se ukládá do souboru `data/history.tsv`
 - kilometry a tankování se ukládají do souboru `data/fuel.tsv`
 - pojištění a doklady se ukládají do souboru `data/records.tsv`
+- plány údržby se ukládají do souboru `data/maintenance.tsv`
 - nastavení upozornění a chování aplikace se ukládá do souboru `data/settings.ini`
 - automatické zálohy se ukládají do složky `data/auto-backups`
 - při importu se původní soubory před přepsáním automaticky odloží do `data/import-backups`
@@ -166,10 +182,11 @@ V horním menu najdete tyto části:
 - historie používá hlavičku `# Vehimap history v1`
 - kilometry a tankování používají hlavičku `# Vehimap fuel v1`
 - pojištění a doklady používají hlavičku `# Vehimap records v1`
+- plány údržby používají hlavičku `# Vehimap maintenance v1`
 - export vytváří jeden soubor se zálohou ve formátu `.vehimapbak`
 
 ## Poznámka k oznamovací oblasti
 
-Zavření hlavního okna aplikaci neukončí. Vehimap se schová do oznamovací oblasti a dál hlídá technické kontroly i zelené karty. Kontrola běží průběžně na pozadí každých 15 minut a znovu se vyvolá i po probuzení počítače ze spánku. Stejným způsobem se na pozadí jednou za hodinu ověřuje i potřeba automatické zálohy. Pokud je vše v pořádku, tooltip tray ikony zůstává jen `Vehimap`; pokud ne, zobrazí souhrn propadlých a brzy končících `TK` a `ZK`.
+Zavření hlavního okna aplikaci neukončí. Vehimap se schová do oznamovací oblasti a dál hlídá technické kontroly, zelené karty, vlastní připomínky i plány údržby. Kontrola běží průběžně na pozadí každých 15 minut a znovu se vyvolá i po probuzení počítače ze spánku. Stejným způsobem se na pozadí jednou za hodinu ověřuje i potřeba automatické zálohy. Pokud je vše v pořádku, tooltip tray ikony zůstává jen `Vehimap`; pokud ne, zobrazí souhrn propadlých a brzy končících `TK`, `ZK`, připomínek i servisních úkonů.
 
 

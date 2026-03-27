@@ -279,14 +279,29 @@ CompareOverviewText(leftText, rightText) {
 }
 
 CompareOverviewDueStamp(left, right) {
-    if (left.dueStamp < right.dueStamp) {
+    leftKey := GetOverviewDueSortKey(left)
+    rightKey := GetOverviewDueSortKey(right)
+
+    if (leftKey < rightKey) {
         return -1
     }
-    if (left.dueStamp > right.dueStamp) {
+    if (leftKey > rightKey) {
         return 1
     }
 
     return CompareTextValues(left.kind, right.kind)
+}
+
+GetOverviewDueSortKey(entry) {
+    if IsObject(entry) && entry.HasOwnProp("overviewSortKey") && Trim(entry.overviewSortKey) != "" {
+        return entry.overviewSortKey
+    }
+
+    if IsObject(entry) && entry.HasOwnProp("dueStamp") {
+        return entry.dueStamp
+    }
+
+    return "99999999999999"
 }
 
 CompareTextValues(leftText, rightText) {

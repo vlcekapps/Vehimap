@@ -1295,6 +1295,187 @@ GenerateVehicleReminderId() {
     return "rem_" A_Now "_" Random(1000, 9999)
 }
 
+LoadVehicleMaintenancePlans() {
+    global AppTitle, VehicleMaintenancePlans, MaintenancePlansFile
+
+    VehicleMaintenancePlans := []
+    if !FileExist(MaintenancePlansFile) {
+        return
+    }
+
+    content := FileRead(MaintenancePlansFile, "UTF-8")
+    content := StrReplace(content, Chr(0xFEFF))
+    lines := StrSplit(content, "`n", "`r")
+    firstNonEmptyLine := ""
+    dataStarted := false
+
+    for rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        firstNonEmptyLine := line
+        break
+    }
+
+    if (firstNonEmptyLine = "") {
+        return
+    }
+
+    if (firstNonEmptyLine != "# Vehimap maintenance v1") {
+        MsgBox("Soubor plánů údržby není v podporovaném formátu.`n`nZkontrolujte soubor:`n" MaintenancePlansFile, AppTitle, 0x30)
+        return
+    }
+
+    for index, rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        if !dataStarted {
+            dataStarted := true
+            continue
+        }
+
+        if (SubStr(line, 1, 1) = "#") {
+            MsgBox("Soubor plánů údržby obsahuje neplatnou hlavičku nebo komentář na řádku " index ".`n`nZkontrolujte soubor:`n" MaintenancePlansFile, AppTitle, 0x30)
+            VehicleMaintenancePlans := []
+            return
+        }
+
+        fields := StrSplit(line, "`t")
+        if (fields.Length != 9) {
+            MsgBox("Soubor plánů údržby je poškozený. Řádek " index " musí obsahovat přesně 9 polí oddělených tabulátory.`n`nZkontrolujte soubor:`n" MaintenancePlansFile, AppTitle, 0x30)
+            VehicleMaintenancePlans := []
+            return
+        }
+
+        intervalKm := NormalizeOdometerText(UnescapeField(fields[4]))
+        intervalMonths := NormalizePositiveIntegerText(UnescapeField(fields[5]))
+        lastServiceDate := NormalizeEventDate(UnescapeField(fields[6]))
+        lastServiceOdometer := NormalizeOdometerText(UnescapeField(fields[7]))
+        isActive := (UnescapeField(fields[8]) = "0") ? 0 : 1
+
+        VehicleMaintenancePlans.Push({
+            id: UnescapeField(fields[1]),
+            vehicleId: UnescapeField(fields[2]),
+            title: UnescapeField(fields[3]),
+            intervalKm: intervalKm,
+            intervalMonths: intervalMonths,
+            lastServiceDate: lastServiceDate,
+            lastServiceOdometer: lastServiceOdometer,
+            isActive: isActive,
+            note: UnescapeField(fields[9])
+        })
+    }
+}
+
+SaveVehicleMaintenancePlans() {
+    global MaintenancePlansFile
+
+    WriteTextFileUtf8(MaintenancePlansFile, BuildVehicleMaintenanceDataContent())
+}
+
+BuildVehicleMaintenanceDataContent() {
+    global VehicleMaintenancePlans
+
+    lines := ["# Vehimap maintenance v1"]
+    for plan in VehicleMaintenancePlans {
+        lines.Push(
+            EscapeField(plan.id) "`t"
+            EscapeField(plan.vehicleId) "`t"
+            EscapeField(plan.title) "`t"
+            EscapeField(plan.intervalKm) "`t"
+            EscapeField(plan.intervalMonths) "`t"
+            EscapeField(plan.lastServiceDate) "`t"
+            EscapeField(plan.lastServiceOdometer) "`t"
+            EscapeField(plan.isActive ? "1" : "0") "`t"
+            EscapeField(plan.note)
+        )
+    }
+
+    return JoinLines(lines)
+}
+
+DeleteVehicleMaintenancePlans(vehicleId) {
+    global VehicleMaintenancePlans
+
+    filtered := []
+    changed := false
+    for plan in VehicleMaintenancePlans {
+        if (plan.vehicleId = vehicleId) {
+            changed := true
+        } else {
+            filtered.Push(plan)
+        }
+    }
+
+    VehicleMaintenancePlans := filtered
+    if changed {
+        SaveVehicleMaintenancePlans()
+    }
+}
+
+GetVehicleMaintenancePlans(vehicleId, includeInactive := true) {
+    global VehicleMaintenancePlans
+
+    plans := []
+    for plan in VehicleMaintenancePlans {
+        if (plan.vehicleId != vehicleId) {
+            continue
+        }
+        if !includeInactive && !plan.isActive {
+            continue
+        }
+        plans.Push(plan)
+    }
+
+    return plans
+}
+
+GetVehicleMaintenancePlanCount(vehicleId) {
+    count := 0
+    global VehicleMaintenancePlans
+
+    for plan in VehicleMaintenancePlans {
+        if (plan.vehicleId = vehicleId) {
+            count += 1
+        }
+    }
+
+    return count
+}
+
+FindVehicleMaintenancePlanById(planId) {
+    global VehicleMaintenancePlans
+
+    for plan in VehicleMaintenancePlans {
+        if (plan.id = planId) {
+            return plan
+        }
+    }
+
+    return ""
+}
+
+FindVehicleMaintenancePlanIndexById(planId) {
+    global VehicleMaintenancePlans
+
+    for index, plan in VehicleMaintenancePlans {
+        if (plan.id = planId) {
+            return index
+        }
+    }
+
+    return 0
+}
+
+GenerateVehicleMaintenancePlanId() {
+    return "mnt_" A_Now "_" Random(1000, 9999)
+}
+
 NormalizeReminderRepeat(repeatMode) {
     global ReminderRepeatOptions
 
@@ -1347,6 +1528,28 @@ AddYearsToEventDate(eventDate, yearsToAdd) {
     }
 
     return Format("{:02}.{:02}.{:04}", day, month, year)
+}
+
+AddMonthsToEventDate(eventDate, monthsToAdd) {
+    normalized := NormalizeEventDate(eventDate)
+    if (normalized = "" || monthsToAdd = 0) {
+        return normalized
+    }
+
+    parts := StrSplit(normalized, ".")
+    day := parts[1] + 0
+    month := parts[2] + 0
+    year := parts[3] + 0
+
+    totalMonths := (year * 12 + month - 1) + monthsToAdd
+    targetYear := Floor(totalMonths / 12)
+    targetMonth := Mod(totalMonths, 12) + 1
+    maxDay := DaysInMonth(targetYear, targetMonth)
+    if (day > maxDay) {
+        day := maxDay
+    }
+
+    return Format("{:02}.{:02}.{:04}", day, targetMonth, targetYear)
 }
 
 SortVehicleReminderEntries(&items) {
@@ -1522,6 +1725,19 @@ NormalizeOdometerText(value) {
     }
 
     return RegExMatch(value, "^\d+$") ? value : ""
+}
+
+NormalizePositiveIntegerText(value) {
+    value := Trim(StrReplace(value, " ", ""))
+    if (value = "") {
+        return ""
+    }
+
+    if !RegExMatch(value, "^\d+$") {
+        return ""
+    }
+
+    return (value + 0) > 0 ? (value + 0) "" : ""
 }
 
 FormatHistoryOdometer(value) {

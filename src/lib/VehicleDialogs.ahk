@@ -27,6 +27,7 @@ DeleteSelectedVehicle(*) {
     fuelCount := GetVehicleFuelEntryCount(vehicle.id)
     recordCount := GetVehicleRecordCount(vehicle.id)
     reminderCount := GetVehicleReminderCount(vehicle.id)
+    maintenanceCount := GetVehicleMaintenancePlanCount(vehicle.id)
     message := "Opravdu chcete odstranit vozidlo: " vehicle.name "?"
     if (historyCount > 0) {
         message .= "`n`nSoučasně bude odstraněno i " historyCount " záznamů z historie událostí."
@@ -39,6 +40,9 @@ DeleteSelectedVehicle(*) {
     }
     if (reminderCount > 0) {
         message .= "`nSoučasně bude odstraněno i " reminderCount " vlastních připomínek."
+    }
+    if (maintenanceCount > 0) {
+        message .= "`nSoučasně bude odstraněno i " maintenanceCount " plánů údržby."
     }
 
     result := MsgBox(message, AppTitle, 0x34)
@@ -57,6 +61,7 @@ DeleteSelectedVehicle(*) {
     DeleteVehicleFuelEntries(vehicle.id)
     DeleteVehicleRecords(vehicle.id)
     DeleteVehicleReminders(vehicle.id)
+    DeleteVehicleMaintenancePlans(vehicle.id)
     DeleteVehicleMeta(vehicle.id)
     RefreshVehicleList()
     CheckDueVehicles(false, false)
@@ -122,6 +127,18 @@ OpenSelectedVehicleReminders(*) {
     OpenVehicleReminderDialog(vehicle)
 }
 
+OpenSelectedVehicleMaintenancePlans(*) {
+    global AppTitle
+
+    vehicle := GetSelectedVehicle()
+    if !IsObject(vehicle) {
+        MsgBox("Nejprve vyberte vozidlo, jehož plán údržby chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    OpenVehicleMaintenanceDialog(vehicle)
+}
+
 OpenSelectedVehicleCosts(*) {
     global AppTitle
 
@@ -135,7 +152,7 @@ OpenSelectedVehicleCosts(*) {
 }
 
 OpenVehicleDetailDialog(vehicle) {
-    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, DetailMaintenanceSummaryLabel, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, MaintenanceGui, MaintenanceFormGui, MaintenanceCompleteGui
 
     if IsObject(DetailGui) {
         WinActivate("ahk_id " DetailGui.Hwnd)
@@ -189,6 +206,21 @@ OpenVehicleDetailDialog(vehicle) {
 
     if IsObject(RecordFormGui) {
         WinActivate("ahk_id " RecordFormGui.Hwnd)
+        return
+    }
+
+    if IsObject(MaintenanceGui) {
+        WinActivate("ahk_id " MaintenanceGui.Hwnd)
+        return
+    }
+
+    if IsObject(MaintenanceFormGui) {
+        WinActivate("ahk_id " MaintenanceFormGui.Hwnd)
+        return
+    }
+
+    if IsObject(MaintenanceCompleteGui) {
+        WinActivate("ahk_id " MaintenanceCompleteGui.Hwnd)
         return
     }
 
@@ -250,38 +282,42 @@ OpenVehicleDetailDialog(vehicle) {
     DetailRecentHistoryList.ModifyCol(4, "190")
     PopulateVehicleDetailHistoryList(vehicle.id)
 
-    DetailGui.AddGroupBox("x20 y520 w720 h95", "Další evidence")
+    DetailGui.AddGroupBox("x20 y520 w720 h120", "Další evidence")
     DetailReminderSummaryLabel := DetailGui.AddText("x35 y545 w685", BuildVehicleReminderSummaryText(vehicle.id))
     DetailFuelSummaryLabel := DetailGui.AddText("x35 y568 w685", BuildVehicleFuelSummaryText(vehicle.id))
     DetailRecordsSummaryLabel := DetailGui.AddText("x35 y591 w685", BuildVehicleRecordsSummaryText(vehicle.id))
+    DetailMaintenanceSummaryLabel := DetailGui.AddText("x35 y614 w685", BuildVehicleMaintenanceSummaryText(vehicle.id))
 
-    editButton := DetailGui.AddButton("x35 y630 w120 h30", "Upravit vozidlo")
+    editButton := DetailGui.AddButton("x35 y655 w120 h30", "Upravit vozidlo")
     editButton.OnEvent("Click", EditVehicleFromDetail)
 
-    historyButton := DetailGui.AddButton("x165 y630 w110 h30", "Historie")
+    historyButton := DetailGui.AddButton("x165 y655 w110 h30", "Historie")
     historyButton.OnEvent("Click", OpenHistoryFromDetail)
 
-    remindersButton := DetailGui.AddButton("x285 y630 w120 h30", "Připomínky")
+    remindersButton := DetailGui.AddButton("x285 y655 w120 h30", "Připomínky")
     remindersButton.OnEvent("Click", OpenRemindersFromDetail)
 
-    fuelButton := DetailGui.AddButton("x415 y630 w120 h30", "Tankování")
+    fuelButton := DetailGui.AddButton("x415 y655 w120 h30", "Tankování")
     fuelButton.OnEvent("Click", OpenFuelFromDetail)
 
-    recordsButton := DetailGui.AddButton("x545 y630 w160 h30", "Pojištění a doklady")
+    recordsButton := DetailGui.AddButton("x545 y655 w160 h30", "Pojištění a doklady")
     recordsButton.OnEvent("Click", OpenRecordsFromDetail)
 
-    costsButton := DetailGui.AddButton("x240 y665 w150 h30", "Náklady a souhrny")
+    maintenanceButton := DetailGui.AddButton("x110 y690 w150 h30", "Plán údržby")
+    maintenanceButton.OnEvent("Click", OpenMaintenanceFromDetail)
+
+    costsButton := DetailGui.AddButton("x270 y690 w150 h30", "Náklady a souhrny")
     costsButton.OnEvent("Click", OpenCostsFromDetail)
 
-    closeButton := DetailGui.AddButton("x400 y665 w100 h30", "Zavřít")
+    closeButton := DetailGui.AddButton("x430 y690 w100 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleDetailDialog)
 
-    DetailGui.Show("w760 h720")
+    DetailGui.Show("w760 h745")
     closeButton.Focus()
 }
 
 CloseVehicleDetailDialog(*) {
-    global DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, MainGui
+    global DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, DetailMaintenanceSummaryLabel, MainGui
 
     if IsObject(DetailGui) {
         DetailGui.Destroy()
@@ -294,6 +330,7 @@ CloseVehicleDetailDialog(*) {
     DetailReminderSummaryLabel := 0
     DetailFuelSummaryLabel := 0
     DetailRecordsSummaryLabel := 0
+    DetailMaintenanceSummaryLabel := 0
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
@@ -358,6 +395,18 @@ OpenRecordsFromDetail(*) {
     OpenVehicleRecordsDialog(vehicle)
 }
 
+OpenMaintenanceFromDetail(*) {
+    global DetailVehicleId
+
+    vehicle := FindVehicleById(DetailVehicleId)
+    if !IsObject(vehicle) {
+        return
+    }
+
+    CloseVehicleDetailDialog()
+    OpenVehicleMaintenanceDialog(vehicle)
+}
+
 OpenCostsFromDetail(*) {
     global DetailVehicleId
 
@@ -385,7 +434,7 @@ PopulateVehicleDetailHistoryList(vehicleId) {
 }
 
 OpenVehicleForm(mode, vehicle := "") {
-    global AppTitle, Categories, VehicleStateOptions, FormGui, FormControls, FormMode, FormVehicleId, MainGui, TabsCtrl, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
+    global AppTitle, Categories, VehicleStateOptions, FormGui, FormControls, FormMode, FormVehicleId, MainGui, TabsCtrl, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, MaintenanceGui, MaintenanceFormGui, MaintenanceCompleteGui
 
     if IsObject(FormGui) {
         WinActivate("ahk_id " FormGui.Hwnd)
@@ -439,6 +488,21 @@ OpenVehicleForm(mode, vehicle := "") {
 
     if IsObject(RecordFormGui) {
         WinActivate("ahk_id " RecordFormGui.Hwnd)
+        return
+    }
+
+    if IsObject(MaintenanceGui) {
+        WinActivate("ahk_id " MaintenanceGui.Hwnd)
+        return
+    }
+
+    if IsObject(MaintenanceFormGui) {
+        WinActivate("ahk_id " MaintenanceFormGui.Hwnd)
+        return
+    }
+
+    if IsObject(MaintenanceCompleteGui) {
+        WinActivate("ahk_id " MaintenanceCompleteGui.Hwnd)
         return
     }
 

@@ -91,6 +91,7 @@ BuildMainMenuBar() {
     vehicleMenu.Add("Kilometry a tankování`tCtrl+K", OpenSelectedVehicleFuelLog)
     vehicleMenu.Add("Pojištění a doklady`tCtrl+P", OpenSelectedVehicleRecords)
     vehicleMenu.Add("Vlastní připomínky`tCtrl+R", OpenSelectedVehicleReminders)
+    vehicleMenu.Add("Plán údržby`tCtrl+M", OpenSelectedVehicleMaintenancePlans)
     vehicleMenu.Add("Náklady a souhrny", OpenSelectedVehicleCosts)
     vehicleMenu.Add()
     vehicleMenu.Add("Odstranit vybrané vozidlo", DeleteSelectedVehicle)
@@ -262,6 +263,11 @@ VehicleHasOverdueTerm(vehicle) {
         return true
     }
 
+    maintenance := GetUpcomingVehicleMaintenance(vehicle.id)
+    if (maintenance.Length > 0 && IsVehicleMaintenanceSnapshotOverdue(maintenance[1].snapshot)) {
+        return true
+    }
+
     return false
 }
 
@@ -375,5 +381,13 @@ FocusReminderSearchShortcut() {
 
     if IsObject(ReminderSearchCtrl) {
         ReminderSearchCtrl.Focus()
+    }
+}
+
+FocusMaintenanceSearchShortcut() {
+    global MaintenanceSearchCtrl
+
+    if IsObject(MaintenanceSearchCtrl) {
+        MaintenanceSearchCtrl.Focus()
     }
 }

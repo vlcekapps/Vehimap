@@ -23,7 +23,7 @@ OpenGlobalSearchDialog(*) {
 
     MainGui.Opt("+Disabled")
 
-    GlobalSearchGui.AddText("x20 y20 w1000", "Zde můžete hledat napříč názvy vozidel, historií událostí, kilometry a tankováním, pojištěním a doklady i vlastními připomínkami.")
+    GlobalSearchGui.AddText("x20 y20 w1000", "Zde můžete hledat napříč názvy vozidel, historií událostí, kilometry a tankováním, pojištěním a doklady, vlastními připomínkami i plány údržby.")
     GlobalSearchGui.AddText("x20 y55 w210", "Hledat napříč celým Vehimapem")
     GlobalSearchSearchCtrl := GlobalSearchGui.AddEdit("x240 y52 w430")
     GlobalSearchSearchCtrl.OnEvent("Change", OnGlobalSearchChanged)
@@ -135,7 +135,7 @@ GetGlobalSearchText() {
 }
 
 BuildGlobalSearchResults(searchText := "") {
-    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleReminders
+    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleReminders, VehicleMaintenancePlans
 
     results := []
     needle := StrLower(Trim(searchText))
@@ -237,6 +237,26 @@ BuildGlobalSearchResults(searchText := "") {
             BuildGlobalSearchReminderDetailText(entry),
             entry.dueDate,
             [vehicle.name, vehicle.plate, vehicle.makeModel, entry.title, entry.dueDate, entry.reminderDays, GetReminderRepeatLabel(entry.HasOwnProp("repeatMode") ? entry.repeatMode : ""), GetReminderExpirationStatusText(entry.dueDate, entry.reminderDays + 0), entry.note]
+        )
+    }
+
+    for entry in VehicleMaintenancePlans {
+        if !vehicleMap.Has(entry.vehicleId) {
+            continue
+        }
+        vehicle := vehicleMap[entry.vehicleId]
+        snapshot := BuildVehicleMaintenancePlanSnapshot(entry, vehicle)
+        AddGlobalSearchResultIfMatch(
+            &results,
+            needle,
+            "maintenance",
+            "Údržba",
+            vehicle,
+            entry.id,
+            Trim(entry.title) != "" ? entry.title : "Plán údržby",
+            BuildGlobalSearchMaintenanceDetailText(snapshot),
+            snapshot.nextServiceText,
+            [vehicle.name, vehicle.plate, vehicle.makeModel, entry.title, snapshot.intervalText, snapshot.lastServiceText, snapshot.nextServiceText, snapshot.statusText, entry.note]
         )
     }
 
@@ -357,6 +377,8 @@ GetGlobalSearchKindPriority(kind) {
             return 4
         case "fuel":
             return 5
+        case "maintenance":
+            return 6
     }
 
     return 99
@@ -365,7 +387,7 @@ GetGlobalSearchKindPriority(kind) {
 BuildGlobalSearchSummaryText(results, searchText := "") {
     needle := Trim(searchText)
     if (needle = "") {
-        return "Zadejte hledaný text. Vehimap bude prohledávat vozidla, historii, tankování, doklady i připomínky."
+        return "Zadejte hledaný text. Vehimap bude prohledávat vozidla, historii, tankování, doklady, připomínky i údržbu."
     }
 
     if (results.Length = 0) {
@@ -377,6 +399,7 @@ BuildGlobalSearchSummaryText(results, searchText := "") {
     fuelCount := 0
     recordCount := 0
     reminderCount := 0
+    maintenanceCount := 0
 
     for result in results {
         switch result.kind {
@@ -390,10 +413,12 @@ BuildGlobalSearchSummaryText(results, searchText := "") {
                 recordCount += 1
             case "reminder":
                 reminderCount += 1
+            case "maintenance":
+                maintenanceCount += 1
         }
     }
 
-    return "Nalezeno výsledků: " results.Length ". Vozidla: " vehicleCount ". Historie: " historyCount ". Tankování: " fuelCount ". Doklady: " recordCount ". Připomínky: " reminderCount "."
+    return "Nalezeno výsledků: " results.Length ". Vozidla: " vehicleCount ". Historie: " historyCount ". Tankování: " fuelCount ". Doklady: " recordCount ". Připomínky: " reminderCount ". Údržba: " maintenanceCount "."
 }
 
 BuildGlobalSearchResultKey(result) {
@@ -450,6 +475,8 @@ OpenSelectedGlobalSearchResult(*) {
             OpenVehicleRecordsDialog(result.vehicle, false, result.itemId)
         case "reminder":
             OpenVehicleReminderDialog(result.vehicle, false, result.itemId)
+        case "maintenance":
+            OpenVehicleMaintenanceDialog(result.vehicle, false, result.itemId)
     }
 }
 
@@ -576,6 +603,21 @@ BuildGlobalSearchReminderDetailText(entry) {
 
     if (Trim(entry.note) != "") {
         parts.Push(ShortenText(entry.note, 50))
+    }
+
+    return JoinInline(parts, " | ")
+}
+
+BuildGlobalSearchMaintenanceDetailText(snapshot) {
+    parts := []
+    if (Trim(snapshot.intervalText) != "") {
+        parts.Push(snapshot.intervalText)
+    }
+    if (Trim(snapshot.statusText) != "") {
+        parts.Push(snapshot.statusText)
+    }
+    if (Trim(snapshot.plan.note) != "") {
+        parts.Push(ShortenText(snapshot.plan.note, 50))
     }
 
     return JoinInline(parts, " | ")

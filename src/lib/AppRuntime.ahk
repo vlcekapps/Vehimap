@@ -75,6 +75,7 @@ InitApp() {
     LoadVehicleRecords()
     LoadVehicleMeta()
     LoadVehicleReminders()
+    LoadVehicleMaintenancePlans()
     BuildMainGui()
     RefreshVehicleList()
     SetupTrayMenu()
@@ -171,7 +172,7 @@ FocusVehicleListLater() {
 }
 
 EnsureDataFiles() {
-    global DataDir, VehiclesFile, HistoryFile, FuelLogFile, RecordsFile, VehicleMetaFile, RemindersFile, SettingsFile
+    global DataDir, VehiclesFile, HistoryFile, FuelLogFile, RecordsFile, VehicleMetaFile, RemindersFile, MaintenancePlansFile, SettingsFile
 
     if !InStr(FileExist(DataDir), "D") {
         DirCreate(DataDir)
@@ -201,15 +202,23 @@ EnsureDataFiles() {
         FileAppend("# Vehimap reminders v2`n", RemindersFile, "UTF-8")
     }
 
+    if !FileExist(MaintenancePlansFile) {
+        FileAppend("# Vehimap maintenance v1`n", MaintenancePlansFile, "UTF-8")
+    }
+
     if !FileExist(SettingsFile) {
         IniWrite("31", SettingsFile, "notifications", "technical_reminder_days")
         IniWrite("31", SettingsFile, "notifications", "green_card_reminder_days")
+        IniWrite("31", SettingsFile, "notifications", "maintenance_reminder_days")
+        IniWrite("1000", SettingsFile, "notifications", "maintenance_reminder_km")
         IniWrite("", SettingsFile, "notifications", "last_alert_day")
         IniWrite("", SettingsFile, "notifications", "last_alert_signature")
         IniWrite("", SettingsFile, "notifications", "last_green_alert_day")
         IniWrite("", SettingsFile, "notifications", "last_green_alert_signature")
         IniWrite("", SettingsFile, "notifications", "last_reminder_alert_day")
         IniWrite("", SettingsFile, "notifications", "last_reminder_alert_signature")
+        IniWrite("", SettingsFile, "notifications", "last_maintenance_alert_day")
+        IniWrite("", SettingsFile, "notifications", "last_maintenance_alert_signature")
         IniWrite("0", SettingsFile, "app", "run_at_startup")
         IniWrite("0", SettingsFile, "app", "hide_on_launch")
         IniWrite("0", SettingsFile, "app", "hide_inactive_vehicles")

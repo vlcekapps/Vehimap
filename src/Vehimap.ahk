@@ -13,6 +13,7 @@ Persistent
 #Include lib\Overviews.ahk
 #Include lib\SettingsDialog.ahk
 #Include lib\VehicleDialogs.ahk
+#Include lib\MaintenancePlans.ahk
 #Include lib\FuelDialog.ahk
 #Include lib\RecordsDialog.ahk
 #Include lib\ReminderDialog.ahk
@@ -28,6 +29,7 @@ global FuelLogFile := DataDir "\fuel.tsv"
 global RecordsFile := DataDir "\records.tsv"
 global VehicleMetaFile := DataDir "\vehicle_meta.tsv"
 global RemindersFile := DataDir "\reminders.tsv"
+global MaintenancePlansFile := DataDir "\maintenance.tsv"
 global SettingsFile := DataDir "\settings.ini"
 global Categories := ["Osobní vozidla", "Motocykly", "Nákladní vozidla", "Autobusy", "Ostatní"]
 global FuelTypeOptions := ["", "Benzin", "Nafta", "LPG", "CNG", "Elektřina", "Jiné"]
@@ -43,6 +45,7 @@ global VehicleFuelLog := []
 global VehicleRecords := []
 global VehicleMetaEntries := []
 global VehicleReminders := []
+global VehicleMaintenancePlans := []
 global VisibleVehicleIds := []
 global MainGui := 0
 global TabsCtrl := 0
@@ -64,6 +67,7 @@ global DetailHistorySummaryLabel := 0
 global DetailReminderSummaryLabel := 0
 global DetailFuelSummaryLabel := 0
 global DetailRecordsSummaryLabel := 0
+global DetailMaintenanceSummaryLabel := 0
 global SettingsGui := 0
 global SettingsControls := {}
 global OverviewGui := 0
@@ -155,6 +159,25 @@ global ReminderFormControls := {}
 global ReminderFormMode := ""
 global ReminderFormEntryId := ""
 global ReminderFormVehicleId := ""
+global MaintenanceGui := 0
+global MaintenanceVehicleId := ""
+global MaintenanceList := 0
+global MaintenanceSummaryLabel := 0
+global MaintenanceAllPlans := []
+global MaintenanceSearchCtrl := 0
+global VisibleMaintenancePlanIds := []
+global MaintenanceSortColumn := 5
+global MaintenanceSortDescending := false
+global MaintenanceCompleteButton := 0
+global MaintenanceFormGui := 0
+global MaintenanceFormControls := {}
+global MaintenanceFormMode := ""
+global MaintenanceFormPlanId := ""
+global MaintenanceFormVehicleId := ""
+global MaintenanceCompleteGui := 0
+global MaintenanceCompleteControls := {}
+global MaintenanceCompletePlanId := ""
+global MaintenanceCompleteVehicleId := ""
 global CostSummaryGui := 0
 global CostSummaryVehicleId := ""
 global CostSummarySummaryLabel := 0
@@ -211,6 +234,7 @@ F2::EditSelectedVehicle()
 ^k::OpenSelectedVehicleFuelLog()
 ^p::OpenSelectedVehicleRecords()
 ^r::OpenSelectedVehicleReminders()
+^m::OpenSelectedVehicleMaintenancePlans()
 #HotIf
 
 #HotIf IsListViewFocusedInGui(MainGui)
@@ -276,6 +300,7 @@ F2::EditVehicleFromDetail()
 ^r::OpenRemindersFromDetail()
 ^k::OpenFuelFromDetail()
 ^p::OpenRecordsFromDetail()
+^m::OpenMaintenanceFromDetail()
 #HotIf
 
 #HotIf IsGuiWindowActive(HistoryGui)
@@ -334,6 +359,20 @@ Enter::EditSelectedVehicleReminder()
 Delete::DeleteSelectedVehicleReminder()
 #HotIf
 
+#HotIf IsGuiWindowActive(MaintenanceGui)
+^f::FocusMaintenanceSearchShortcut()
+^n::AddVehicleMaintenancePlan()
+^u::EditSelectedVehicleMaintenancePlan()
+F2::EditSelectedVehicleMaintenancePlan()
+^l::CompleteSelectedVehicleMaintenancePlan()
+^d::OpenVehicleDetailFromMaintenance()
+#HotIf
+
+#HotIf IsListViewFocusedInGui(MaintenanceGui)
+Enter::EditSelectedVehicleMaintenancePlan()
+Delete::DeleteSelectedVehicleMaintenancePlan()
+#HotIf
+
 #HotIf IsGuiWindowActive(CostSummaryGui)
 ^r::RefreshVehicleCostPeriodSummary()
 ^d::OpenVehicleDetailFromCostSummary()
@@ -376,7 +415,14 @@ Enter::OpenSelectedFleetVehicleCostSummary()
 ^s::SaveVehicleReminderFromForm()
 #HotIf
 
+#HotIf IsGuiWindowActive(MaintenanceFormGui)
+^s::SaveVehicleMaintenancePlanFromForm()
+#HotIf
+
+#HotIf IsGuiWindowActive(MaintenanceCompleteGui)
+^s::SaveVehicleMaintenanceCompletionFromForm()
+#HotIf
+
 if !IsVehimapTestMode() {
     InitApp()
 }
-

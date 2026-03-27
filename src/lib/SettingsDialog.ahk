@@ -73,42 +73,46 @@ OpenSettingsDialog(*) {
 
     SettingsGui.AddText("x20 y20 w570", "Zde nastavíte samostatně upozornění, chování aplikace po spuštění i pravidelné automatické zálohy.")
 
-    SettingsGui.AddGroupBox("x20 y50 w570 h145", "Upozornění")
+    SettingsGui.AddGroupBox("x20 y50 w570 h215", "Upozornění")
     SettingsGui.AddText("x35 y80 w350", "Počet dní pro upozornění na technickou kontrolu (povinné)")
     SettingsControls.technicalReminderDays := SettingsGui.AddEdit("x405 y77 w120 Limit3 Number", GetTechnicalReminderDays())
     SettingsGui.AddText("x35 y115 w350", "Počet dní pro upozornění na platnost zelené karty (povinné)")
     SettingsControls.greenCardReminderDays := SettingsGui.AddEdit("x405 y112 w120 Limit3 Number", GetGreenCardReminderDays())
-    SettingsGui.AddText("x35 y150 w520", "Zadejte celé číslo od 1 do 999. Například 31 znamená upozornění přibližně měsíc před koncem.")
+    SettingsGui.AddText("x35 y150 w350", "Počet dní pro upozornění na plán údržby (povinné)")
+    SettingsControls.maintenanceReminderDays := SettingsGui.AddEdit("x405 y147 w120 Limit3 Number", GetMaintenanceReminderDays())
+    SettingsGui.AddText("x35 y185 w350", "Počet km pro upozornění na plán údržby (povinné)")
+    SettingsControls.maintenanceReminderKm := SettingsGui.AddEdit("x405 y182 w120 Limit6 Number", GetMaintenanceReminderKm())
+    SettingsGui.AddText("x35 y220 w520", "Zadejte celé číslo. Například 31 znamená upozornění přibližně měsíc před termínem, 1000 znamená upozornění 1000 km před servisním limitem.")
 
-    SettingsGui.AddGroupBox("x20 y205 w570 h145", "Aplikace")
-    SettingsControls.runAtStartup := SettingsGui.AddCheckBox("x35 y235 w300", "Spustit po startu počítače")
+    SettingsGui.AddGroupBox("x20 y275 w570 h145", "Aplikace")
+    SettingsControls.runAtStartup := SettingsGui.AddCheckBox("x35 y305 w300", "Spustit po startu počítače")
     SettingsControls.runAtStartup.Value := GetRunAtStartupEnabled()
-    SettingsControls.hideOnLaunch := SettingsGui.AddCheckBox("x35 y265 w300", "Automaticky skrýt na lištu")
+    SettingsControls.hideOnLaunch := SettingsGui.AddCheckBox("x35 y335 w300", "Automaticky skrýt na lištu")
     SettingsControls.hideOnLaunch.Value := GetHideOnLaunchEnabled()
-    SettingsControls.showDashboardOnLaunch := SettingsGui.AddCheckBox("x35 y295 w300", "Zobrazovat dashboard při startu")
+    SettingsControls.showDashboardOnLaunch := SettingsGui.AddCheckBox("x35 y365 w300", "Zobrazovat dashboard při startu")
     SettingsControls.showDashboardOnLaunch.Value := GetShowDashboardOnLaunchEnabled()
-    SettingsGui.AddText("x55 y323 w500", "Pokud je zapnuté automatické skrytí do lišty, dashboard se při startu neotevře.")
+    SettingsGui.AddText("x55 y393 w500", "Pokud je zapnuté automatické skrytí do lišty, dashboard se při startu neotevře.")
 
-    SettingsGui.AddGroupBox("x20 y360 w570 h155", "Zálohy")
-    SettingsControls.automaticBackupsEnabled := SettingsGui.AddCheckBox("x35 y390 w350", "Pravidelně vytvářet automatické zálohy")
+    SettingsGui.AddGroupBox("x20 y430 w570 h155", "Zálohy")
+    SettingsControls.automaticBackupsEnabled := SettingsGui.AddCheckBox("x35 y460 w350", "Pravidelně vytvářet automatické zálohy")
     SettingsControls.automaticBackupsEnabled.Value := GetAutomaticBackupsEnabled()
-    SettingsGui.AddText("x35 y422 w350", "Interval automatické zálohy ve dnech (povinné)")
-    SettingsControls.automaticBackupIntervalDays := SettingsGui.AddEdit("x405 y419 w120 Limit3 Number", GetAutomaticBackupIntervalDays())
-    SettingsGui.AddText("x35 y454 w350", "Ponechat posledních automatických záloh (povinné)")
-    SettingsControls.automaticBackupKeepCount := SettingsGui.AddEdit("x405 y451 w120 Limit3 Number", GetAutomaticBackupKeepCount())
-    SettingsControls.backupStatusLabel := SettingsGui.AddText("x35 y483 w520 h24", BuildAutomaticBackupStatusText())
+    SettingsGui.AddText("x35 y492 w350", "Interval automatické zálohy ve dnech (povinné)")
+    SettingsControls.automaticBackupIntervalDays := SettingsGui.AddEdit("x405 y489 w120 Limit3 Number", GetAutomaticBackupIntervalDays())
+    SettingsGui.AddText("x35 y524 w350", "Ponechat posledních automatických záloh (povinné)")
+    SettingsControls.automaticBackupKeepCount := SettingsGui.AddEdit("x405 y521 w120 Limit3 Number", GetAutomaticBackupKeepCount())
+    SettingsControls.backupStatusLabel := SettingsGui.AddText("x35 y553 w520 h24", BuildAutomaticBackupStatusText())
 
-    SettingsGui.AddGroupBox("x20 y525 w570 h80", "Akce")
-    backupNowButton := SettingsGui.AddButton("x170 y553 w140 h30", "Zálohovat ihned")
+    SettingsGui.AddGroupBox("x20 y595 w570 h80", "Akce")
+    backupNowButton := SettingsGui.AddButton("x170 y623 w140 h30", "Zálohovat ihned")
     backupNowButton.OnEvent("Click", CreateImmediateBackupFromSettings)
 
-    saveButton := SettingsGui.AddButton("x320 y553 w120 h30 Default", "Uložit")
+    saveButton := SettingsGui.AddButton("x320 y623 w120 h30 Default", "Uložit")
     saveButton.OnEvent("Click", SaveSettingsFromDialog)
 
-    cancelButton := SettingsGui.AddButton("x450 y553 w100 h30", "Zrušit")
+    cancelButton := SettingsGui.AddButton("x450 y623 w100 h30", "Zrušit")
     cancelButton.OnEvent("Click", CloseSettingsDialog)
 
-    SettingsGui.Show("w610 h625")
+    SettingsGui.Show("w610 h695")
     SettingsControls.technicalReminderDays.Focus()
 }
 
@@ -159,6 +163,16 @@ SaveSettingsFromDialog(*) {
         return
     }
 
+    maintenanceReminderDays := ValidateReminderDaysSetting(SettingsControls.maintenanceReminderDays, "Počet dní pro upozornění na plán údržby")
+    if (maintenanceReminderDays = "") {
+        return
+    }
+
+    maintenanceReminderKm := ValidatePositiveIntegerSetting(SettingsControls.maintenanceReminderKm, "Počet km pro upozornění na plán údržby", 1, 999999)
+    if (maintenanceReminderKm = "") {
+        return
+    }
+
     automaticBackupIntervalDays := ValidatePositiveIntegerSetting(SettingsControls.automaticBackupIntervalDays, "Interval automatické zálohy ve dnech", 1, 999)
     if (automaticBackupIntervalDays = "") {
         return
@@ -180,6 +194,8 @@ SaveSettingsFromDialog(*) {
 
     IniWrite(technicalReminderDays, SettingsFile, "notifications", "technical_reminder_days")
     IniWrite(greenCardReminderDays, SettingsFile, "notifications", "green_card_reminder_days")
+    IniWrite(maintenanceReminderDays, SettingsFile, "notifications", "maintenance_reminder_days")
+    IniWrite(maintenanceReminderKm, SettingsFile, "notifications", "maintenance_reminder_km")
     IniWrite(runAtStartup, SettingsFile, "app", "run_at_startup")
     IniWrite(hideOnLaunch, SettingsFile, "app", "hide_on_launch")
     IniWrite(showDashboardOnLaunch, SettingsFile, "app", "show_dashboard_on_launch")

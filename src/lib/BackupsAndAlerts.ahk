@@ -66,6 +66,16 @@ GetRemindersContentForBackup() {
     return BuildVehicleRemindersDataContent()
 }
 
+GetMaintenancePlansContentForBackup() {
+    global MaintenancePlansFile
+
+    if FileExist(MaintenancePlansFile) {
+        return NormalizeTextForStorage(FileRead(MaintenancePlansFile, "UTF-8"))
+    }
+
+    return BuildVehicleMaintenanceDataContent()
+}
+
 BuildCurrentBackupContent() {
     return BuildBackupContent(
         GetSettingsContentForBackup(),
@@ -74,7 +84,8 @@ BuildCurrentBackupContent() {
         BuildFuelDataContent(),
         BuildRecordsDataContent(),
         BuildVehicleMetaDataContent(),
-        BuildVehicleRemindersDataContent()
+        BuildVehicleRemindersDataContent(),
+        BuildVehicleMaintenanceDataContent()
     )
 }
 
@@ -212,7 +223,7 @@ EnsureBackupExtension(path) {
     return path
 }
 
-BuildBackupContent(settingsContent, vehiclesContent, historyContent := "", fuelContent := "", recordsContent := "", metaContent := "", remindersContent := "") {
+BuildBackupContent(settingsContent, vehiclesContent, historyContent := "", fuelContent := "", recordsContent := "", metaContent := "", remindersContent := "", maintenanceContent := "") {
     settingsContent := NormalizeTextForStorage(settingsContent)
     vehiclesContent := NormalizeTextForStorage(vehiclesContent)
     historyContent := NormalizeTextForStorage(historyContent)
@@ -220,22 +231,24 @@ BuildBackupContent(settingsContent, vehiclesContent, historyContent := "", fuelC
     recordsContent := NormalizeTextForStorage(recordsContent)
     metaContent := NormalizeTextForStorage(metaContent)
     remindersContent := NormalizeTextForStorage(remindersContent)
+    maintenanceContent := NormalizeTextForStorage(maintenanceContent)
 
     header := JoinLines([
-        "# Vehimap backup v4",
+        "# Vehimap backup v5",
         "settings_length=" StrLen(settingsContent),
         "vehicles_length=" StrLen(vehiclesContent),
         "history_length=" StrLen(historyContent),
         "fuel_length=" StrLen(fuelContent),
         "records_length=" StrLen(recordsContent),
         "meta_length=" StrLen(metaContent),
-        "reminders_length=" StrLen(remindersContent)
+        "reminders_length=" StrLen(remindersContent),
+        "maintenance_length=" StrLen(maintenanceContent)
     ])
 
-    return header "`n`n" settingsContent vehiclesContent historyContent fuelContent recordsContent metaContent remindersContent
+    return header "`n`n" settingsContent vehiclesContent historyContent fuelContent recordsContent metaContent remindersContent maintenanceContent
 }
 
-TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &errorMessage) {
+TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &errorMessage) {
     settingsContent := ""
     vehiclesContent := ""
     historyContent := ""
@@ -243,6 +256,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
     recordsContent := ""
     metaContent := ""
     remindersContent := ""
+    maintenanceContent := ""
     errorMessage := ""
     content := NormalizeTextForStorage(content)
 
@@ -261,7 +275,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
     }
 
     backupVersion := headerLines[1]
-    if (backupVersion != "# Vehimap backup v1" && backupVersion != "# Vehimap backup v2" && backupVersion != "# Vehimap backup v3" && backupVersion != "# Vehimap backup v4") {
+    if (backupVersion != "# Vehimap backup v1" && backupVersion != "# Vehimap backup v2" && backupVersion != "# Vehimap backup v3" && backupVersion != "# Vehimap backup v4" && backupVersion != "# Vehimap backup v5") {
         errorMessage := "Soubor není ve formátu zálohy Vehimap."
         return false
     }
@@ -283,7 +297,13 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
     recordsLength := 0
     metaLength := 0
     remindersLength := 0
-    if (backupVersion = "# Vehimap backup v2" || backupVersion = "# Vehimap backup v3") {
+    maintenanceLength := 0
+    if (
+        backupVersion = "# Vehimap backup v2"
+        || backupVersion = "# Vehimap backup v3"
+        || backupVersion = "# Vehimap backup v4"
+        || backupVersion = "# Vehimap backup v5"
+    ) {
         if (headerLines.Length < 4 || !RegExMatch(headerLines[4], "^history_length=(\d+)$", &historyMatch)) {
             errorMessage := "Soubor zálohy neobsahuje délku historie."
             return false
@@ -291,7 +311,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         historyLength := historyMatch[1] + 0
     }
 
-    if (backupVersion = "# Vehimap backup v3" || backupVersion = "# Vehimap backup v4") {
+    if (backupVersion = "# Vehimap backup v3" || backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5") {
         if (headerLines.Length < 6 || !RegExMatch(headerLines[5], "^fuel_length=(\d+)$", &fuelMatch) || !RegExMatch(headerLines[6], "^records_length=(\d+)$", &recordsMatch)) {
             errorMessage := "Soubor zálohy neobsahuje délky kilometrů a dokladů."
             return false
@@ -300,7 +320,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         recordsLength := recordsMatch[1] + 0
     }
 
-    if (backupVersion = "# Vehimap backup v4") {
+    if (backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5") {
         if (headerLines.Length < 8 || !RegExMatch(headerLines[7], "^meta_length=(\d+)$", &metaMatch) || !RegExMatch(headerLines[8], "^reminders_length=(\d+)$", &remindersMatch)) {
             errorMessage := "Soubor zálohy neobsahuje délky stavů a připomínek."
             return false
@@ -309,12 +329,20 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         remindersLength := remindersMatch[1] + 0
     }
 
-    if (settingsLength < 0 || vehiclesLength < 0 || historyLength < 0 || fuelLength < 0 || recordsLength < 0 || metaLength < 0 || remindersLength < 0) {
+    if (backupVersion = "# Vehimap backup v5") {
+        if (headerLines.Length < 9 || !RegExMatch(headerLines[9], "^maintenance_length=(\d+)$", &maintenanceMatch)) {
+            errorMessage := "Soubor zálohy neobsahuje délku plánů údržby."
+            return false
+        }
+        maintenanceLength := maintenanceMatch[1] + 0
+    }
+
+    if (settingsLength < 0 || vehiclesLength < 0 || historyLength < 0 || fuelLength < 0 || recordsLength < 0 || metaLength < 0 || remindersLength < 0 || maintenanceLength < 0) {
         errorMessage := "Soubor zálohy obsahuje neplatné délky dat."
         return false
     }
 
-    if (StrLen(payload) != settingsLength + vehiclesLength + historyLength + fuelLength + recordsLength + metaLength + remindersLength) {
+    if (StrLen(payload) != settingsLength + vehiclesLength + historyLength + fuelLength + recordsLength + metaLength + remindersLength + maintenanceLength) {
         errorMessage := "Soubor zálohy je neúplný nebo poškozený."
         return false
     }
@@ -323,14 +351,19 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
     vehiclesContent := SubStr(payload, settingsLength + 1, vehiclesLength)
     payloadOffset := settingsLength + vehiclesLength + 1
 
-    if (backupVersion = "# Vehimap backup v2" || backupVersion = "# Vehimap backup v3") {
+    if (
+        backupVersion = "# Vehimap backup v2"
+        || backupVersion = "# Vehimap backup v3"
+        || backupVersion = "# Vehimap backup v4"
+        || backupVersion = "# Vehimap backup v5"
+    ) {
         historyContent := SubStr(payload, payloadOffset, historyLength)
         payloadOffset += historyLength
     } else {
         historyContent := "# Vehimap history v1`n"
     }
 
-    if (backupVersion = "# Vehimap backup v3" || backupVersion = "# Vehimap backup v4") {
+    if (backupVersion = "# Vehimap backup v3" || backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5") {
         fuelContent := SubStr(payload, payloadOffset, fuelLength)
         payloadOffset += fuelLength
         recordsContent := SubStr(payload, payloadOffset, recordsLength)
@@ -340,13 +373,20 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         recordsContent := "# Vehimap records v1`n"
     }
 
-    if (backupVersion = "# Vehimap backup v4") {
+    if (backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5") {
         metaContent := SubStr(payload, payloadOffset, metaLength)
         payloadOffset += metaLength
         remindersContent := SubStr(payload, payloadOffset, remindersLength)
+        payloadOffset += remindersLength
     } else {
         metaContent := "# Vehimap meta v1`n"
         remindersContent := "# Vehimap reminders v1`n"
+    }
+
+    if (backupVersion = "# Vehimap backup v5") {
+        maintenanceContent := SubStr(payload, payloadOffset, maintenanceLength)
+    } else {
+        maintenanceContent := "# Vehimap maintenance v1`n"
     }
 
     return true
@@ -739,8 +779,73 @@ TryParseVehicleRemindersBackupContent(content, &loadedReminders, &errorMessage) 
     return true
 }
 
+TryParseVehicleMaintenancePlansBackupContent(content, &loadedPlans, &errorMessage) {
+    loadedPlans := []
+    errorMessage := ""
+    content := NormalizeTextForStorage(content)
+    lines := StrSplit(content, "`n")
+    firstNonEmptyLine := ""
+    dataStarted := false
+
+    for rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        firstNonEmptyLine := line
+        break
+    }
+
+    if (firstNonEmptyLine = "") {
+        return true
+    }
+
+    if (firstNonEmptyLine != "# Vehimap maintenance v1") {
+        errorMessage := "Soubor plánů údržby není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap maintenance v1'."
+        return false
+    }
+
+    for index, rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        if !dataStarted {
+            dataStarted := true
+            continue
+        }
+
+        if (SubStr(line, 1, 1) = "#") {
+            errorMessage := "Soubor plánů údržby obsahuje neplatnou hlavičku nebo komentář na řádku " index "."
+            return false
+        }
+
+        fields := StrSplit(line, "`t")
+        if (fields.Length != 9) {
+            errorMessage := "Soubor plánů údržby je poškozený. Řádek " index " musí obsahovat přesně 9 polí oddělených tabulátory."
+            return false
+        }
+
+        loadedPlans.Push({
+            id: UnescapeField(fields[1]),
+            vehicleId: UnescapeField(fields[2]),
+            title: UnescapeField(fields[3]),
+            intervalKm: NormalizePositiveIntegerText(UnescapeField(fields[4])),
+            intervalMonths: NormalizePositiveIntegerText(UnescapeField(fields[5])),
+            lastServiceDate: NormalizeEventDate(UnescapeField(fields[6])),
+            lastServiceOdometer: NormalizeOdometerText(UnescapeField(fields[7])),
+            isActive: (UnescapeField(fields[8]) = "0") ? 0 : 1,
+            note: UnescapeField(fields[9])
+        })
+    }
+
+    return true
+}
+
 BackupCurrentFilesBeforeImport() {
-    global DataDir, VehiclesFile, HistoryFile, FuelLogFile, RecordsFile, VehicleMetaFile, RemindersFile, SettingsFile
+    global DataDir, VehiclesFile, HistoryFile, FuelLogFile, RecordsFile, VehicleMetaFile, RemindersFile, MaintenancePlansFile, SettingsFile
 
     backupRoot := DataDir "\import-backups"
     if !InStr(FileExist(backupRoot), "D") {
@@ -768,6 +873,9 @@ BackupCurrentFilesBeforeImport() {
     if FileExist(RemindersFile) {
         FileCopy(RemindersFile, backupDir "\reminders.tsv", true)
     }
+    if FileExist(MaintenancePlansFile) {
+        FileCopy(MaintenancePlansFile, backupDir "\maintenance.tsv", true)
+    }
     if FileExist(SettingsFile) {
         FileCopy(SettingsFile, backupDir "\settings.ini", true)
     }
@@ -780,12 +888,16 @@ EnsureSettingsDefaults() {
 
     EnsureIniKeyExists(SettingsFile, "notifications", "technical_reminder_days", "31")
     EnsureIniKeyExists(SettingsFile, "notifications", "green_card_reminder_days", "31")
+    EnsureIniKeyExists(SettingsFile, "notifications", "maintenance_reminder_days", "31")
+    EnsureIniKeyExists(SettingsFile, "notifications", "maintenance_reminder_km", "1000")
     EnsureIniKeyExists(SettingsFile, "notifications", "last_alert_day", "")
     EnsureIniKeyExists(SettingsFile, "notifications", "last_alert_signature", "")
     EnsureIniKeyExists(SettingsFile, "notifications", "last_green_alert_day", "")
     EnsureIniKeyExists(SettingsFile, "notifications", "last_green_alert_signature", "")
     EnsureIniKeyExists(SettingsFile, "notifications", "last_reminder_alert_day", "")
     EnsureIniKeyExists(SettingsFile, "notifications", "last_reminder_alert_signature", "")
+    EnsureIniKeyExists(SettingsFile, "notifications", "last_maintenance_alert_day", "")
+    EnsureIniKeyExists(SettingsFile, "notifications", "last_maintenance_alert_signature", "")
     EnsureIniKeyExists(SettingsFile, "app", "run_at_startup", "0")
     EnsureIniKeyExists(SettingsFile, "app", "hide_on_launch", "0")
     EnsureIniKeyExists(SettingsFile, "app", "hide_inactive_vehicles", "0")
@@ -808,6 +920,8 @@ EnsureSettingsDefaults() {
     EnsureIniKeyExists(SettingsFile, "records_view", "sort_descending", "0")
     EnsureIniKeyExists(SettingsFile, "reminder_view", "sort_column", "2")
     EnsureIniKeyExists(SettingsFile, "reminder_view", "sort_descending", "0")
+    EnsureIniKeyExists(SettingsFile, "maintenance_view", "sort_column", "5")
+    EnsureIniKeyExists(SettingsFile, "maintenance_view", "sort_descending", "0")
 }
 
 EnsureIniKeyExists(path, section, key, defaultValue) {
@@ -1066,6 +1180,8 @@ CheckDueVehicles(showTrayNotification := true, forceMessageBox := false) {
     upcoming := GetUpcomingVehicles()
     greenCards := GetUpcomingGreenCards()
     reminders := GetUpcomingCustomReminders()
+    maintenance := GetUpcomingVehicleMaintenance()
+    maintenance := GetUpcomingVehicleMaintenance()
     SetupTrayMenu()
     UpdateStatusBar()
 
@@ -1096,7 +1212,13 @@ CheckDueVehicles(showTrayNotification := true, forceMessageBox := false) {
         showReminderAlert := ShouldShowAlert(signature, "reminder")
     }
 
-    message := BuildAutomaticReminderMessage(upcoming, greenCards, reminders, showTechnicalAlert, showGreenAlert, showReminderAlert)
+    showMaintenanceAlert := false
+    if (maintenance.Length > 0) {
+        signature := BuildMaintenanceAlertSignature(maintenance)
+        showMaintenanceAlert := ShouldShowAlert(signature, "maintenance")
+    }
+
+    message := BuildAutomaticReminderMessage(upcoming, greenCards, reminders, maintenance, showTechnicalAlert, showGreenAlert, showReminderAlert, showMaintenanceAlert)
     if (message != "") {
         TrayTip(message, AppTitle)
     }
@@ -1192,6 +1314,20 @@ BuildUpcomingOverviewEntries(includeMissingGreenCards := false, includeDataIssue
         })
     }
 
+    for item in GetUpcomingVehicleMaintenance() {
+        entries.Push({
+            kind: "maintenance",
+            kindLabel: "Plán údržby",
+            vehicle: item.vehicle,
+            dueStamp: item.dueStamp,
+            overviewSortKey: item.overviewSortKey,
+            term: item.term,
+            status: item.status,
+            isMissingGreen: false,
+            entryId: item.entryId
+        })
+    }
+
     if includeMissingGreenCards {
         for vehicle in Vehicles {
             if (vehicle.greenCardTo = "") {
@@ -1221,6 +1357,7 @@ BuildUpcomingOverviewSummary(entries, allEntries := "") {
     technicalCount := 0
     greenCount := 0
     customCount := 0
+    maintenanceCount := 0
     dataIssueCount := 0
     totalCount := IsObject(allEntries) ? allEntries.Length : entries.Length
 
@@ -1231,6 +1368,8 @@ BuildUpcomingOverviewSummary(entries, allEntries := "") {
             greenCount += 1
         } else if (entry.kind = "custom") {
             customCount += 1
+        } else if (entry.kind = "maintenance") {
+            maintenanceCount += 1
         } else if IsOverviewDataIssueEntry(entry) {
             dataIssueCount += 1
         }
@@ -1245,9 +1384,9 @@ BuildUpcomingOverviewSummary(entries, allEntries := "") {
             summary := "Momentálně není žádný blížící se ani propadlý termín, který by podle aktuálního nastavení vyžadoval pozornost."
         }
     } else if (entries.Length = totalCount) {
-        summary := "Celkem " entries.Length " položek k pozornosti: " technicalCount " technických kontrol, " greenCount " zelených karet a " customCount " vlastních připomínek"
+        summary := "Celkem " entries.Length " položek k pozornosti: " technicalCount " technických kontrol, " greenCount " zelených karet, " customCount " vlastních připomínek a " maintenanceCount " plánů údržby"
     } else {
-        summary := "Zobrazeno " entries.Length " z " totalCount " položek: " technicalCount " technických kontrol, " greenCount " zelených karet a " customCount " vlastních připomínek"
+        summary := "Zobrazeno " entries.Length " z " totalCount " položek: " technicalCount " technických kontrol, " greenCount " zelených karet, " customCount " vlastních připomínek a " maintenanceCount " plánů údržby"
     }
 
     if (totalCount > 0) {
@@ -1322,7 +1461,8 @@ ValidatePositiveIntegerSetting(ctrl, fieldLabel, minValue := 1, maxValue := 999)
     global AppTitle
 
     value := Trim(ctrl.Text)
-    if !RegExMatch(value, "^\d{1,3}$") {
+    maxDigits := StrLen(maxValue "")
+    if !RegExMatch(value, "^\d{1," maxDigits "}$") {
         MsgBox(fieldLabel " musí být celé číslo od " minValue " do " maxValue ".", AppTitle, 0x30)
         ctrl.Focus()
         return ""
@@ -1348,6 +1488,21 @@ GetTechnicalReminderDays() {
 
 GetGreenCardReminderDays() {
     return ReadReminderDaysSetting("green_card_reminder_days")
+}
+
+GetMaintenanceReminderDays() {
+    return ReadReminderDaysSetting("maintenance_reminder_days")
+}
+
+GetMaintenanceReminderKm() {
+    global SettingsFile
+
+    value := IniRead(SettingsFile, "notifications", "maintenance_reminder_km", "1000") + 0
+    if (value < 1 || value > 999999) {
+        return 1000
+    }
+
+    return value
 }
 
 ReadReminderDaysSetting(keyName) {
@@ -1467,6 +1622,8 @@ ResetAlertHistory() {
     IniWrite("", SettingsFile, "notifications", "last_green_alert_signature")
     IniWrite("", SettingsFile, "notifications", "last_reminder_alert_day")
     IniWrite("", SettingsFile, "notifications", "last_reminder_alert_signature")
+    IniWrite("", SettingsFile, "notifications", "last_maintenance_alert_day")
+    IniWrite("", SettingsFile, "notifications", "last_maintenance_alert_signature")
 }
 
 GetExpirationStatusText(monthYear, reminderDays) {
@@ -1567,7 +1724,7 @@ BuildCustomReminderMessage(upcoming) {
     return JoinLines(lines)
 }
 
-BuildAutomaticReminderMessage(upcoming, greenCards, reminders, showTechnicalAlert := false, showGreenAlert := false, showReminderAlert := false) {
+BuildAutomaticReminderMessage(upcoming, greenCards, reminders, maintenance, showTechnicalAlert := false, showGreenAlert := false, showReminderAlert := false, showMaintenanceAlert := false) {
     lines := []
 
     if (showTechnicalAlert && upcoming.Length > 0) {
@@ -1578,6 +1735,9 @@ BuildAutomaticReminderMessage(upcoming, greenCards, reminders, showTechnicalAler
     }
     if (showReminderAlert && reminders.Length > 0) {
         lines.Push(BuildCustomReminderSummaryLine(reminders))
+    }
+    if (showMaintenanceAlert && maintenance.Length > 0) {
+        lines.Push(BuildMaintenanceReminderSummaryLine(maintenance))
     }
     if ((showGreenAlert || showReminderAlert) && greenCards.Length > 0 && HasAnyMissingGreenCard()) {
         lines.Push("U některých vozidel zelená karta vyplněná není a můžete ji doplnit v editaci vozidla.")
@@ -1631,6 +1791,21 @@ BuildCustomReminderSummaryLine(upcoming) {
     return line
 }
 
+BuildMaintenanceReminderSummaryLine(upcoming) {
+    first := upcoming[1]
+    if IsVehicleMaintenanceSnapshotOverdue(first.snapshot) {
+        line := "Údržba po termínu: " first.vehicle.name " - " first.snapshot.title " (" first.snapshot.statusText ")."
+    } else {
+        line := "Blíží se údržba: " first.vehicle.name " - " first.snapshot.title " (" first.snapshot.statusText ")."
+    }
+
+    if (upcoming.Length > 1) {
+        line .= " Další servisní úkony: " (upcoming.Length - 1) " položek."
+    }
+
+    return line
+}
+
 BuildAlertSignature(upcoming) {
     signature := SubStr(A_Now, 1, 8) "|"
     maxList := upcoming.Length < 5 ? upcoming.Length : 5
@@ -1667,6 +1842,18 @@ BuildCustomReminderAlertSignature(upcoming) {
     return signature
 }
 
+BuildMaintenanceAlertSignature(upcoming) {
+    signature := SubStr(A_Now, 1, 8) "|"
+    maxList := upcoming.Length < 5 ? upcoming.Length : 5
+
+    Loop maxList {
+        item := upcoming[A_Index]
+        signature .= item.vehicle.id ":" item.plan.id ":" item.snapshot.statusText ";"
+    }
+
+    return signature
+}
+
 ShouldShowAlert(signature, kind := "technical") {
     global SettingsFile
 
@@ -1677,6 +1864,9 @@ ShouldShowAlert(signature, kind := "technical") {
     } else if (kind = "reminder") {
         dayKey := "last_reminder_alert_day"
         signatureKey := "last_reminder_alert_signature"
+    } else if (kind = "maintenance") {
+        dayKey := "last_maintenance_alert_day"
+        signatureKey := "last_maintenance_alert_signature"
     } else {
         dayKey := "last_alert_day"
         signatureKey := "last_alert_signature"
@@ -1780,6 +1970,7 @@ UpdateStatusBar() {
     upcoming := GetUpcomingVehicles()
     greenCards := GetUpcomingGreenCards()
     reminders := GetUpcomingCustomReminders()
+    maintenance := GetUpcomingVehicleMaintenance()
 
     if (upcoming.Length = 0) {
         tkText := "TK: nic nečeká"
@@ -1808,7 +1999,14 @@ UpdateStatusBar() {
         reminderText := prefix ": " reminders[1].vehicle.name " (" reminders[1].reminder.dueDate ")"
     }
 
-    StatusBar.SetText(tkText " | " greenText " | " reminderText, 2)
+    if (maintenance.Length = 0) {
+        maintenanceText := "Servis: nic nečeká"
+    } else {
+        prefix := IsVehicleMaintenanceSnapshotOverdue(maintenance[1].snapshot) ? "Servis po termínu" : "Servis"
+        maintenanceText := prefix ": " maintenance[1].vehicle.name " (" maintenance[1].snapshot.title ")"
+    }
+
+    StatusBar.SetText(tkText " | " greenText " | " reminderText " | " maintenanceText, 2)
 }
 
 GetVehicleStatusText(vehicle) {
@@ -1829,6 +2027,11 @@ GetVehicleStatusText(vehicle) {
     reminderStatus := GetVehicleReminderStateText(vehicle.id)
     if (reminderStatus != "") {
         parts.Push(reminderStatus)
+    }
+
+    maintenanceStatus := GetVehicleMaintenanceStateText(vehicle.id)
+    if (maintenanceStatus != "") {
+        parts.Push(maintenanceStatus)
     }
 
     if (parts.Length = 0) {
@@ -1860,9 +2063,11 @@ BuildTrayIconTip() {
         counts.overdueTechnical = 0
         && counts.overdueGreen = 0
         && counts.overdueReminders = 0
+        && counts.overdueMaintenance = 0
         && counts.upcomingTechnical = 0
         && counts.upcomingGreen = 0
         && counts.upcomingReminders = 0
+        && counts.upcomingMaintenance = 0
     ) {
         return AppTitle
     }
@@ -1874,6 +2079,9 @@ BuildTrayIconTip() {
         . counts.upcomingTechnical " TK / " counts.upcomingGreen " ZK"
     if (counts.overdueReminders > 0 || counts.upcomingReminders > 0) {
         tip .= ", připomínky " counts.overdueReminders " po termínu / " counts.upcomingReminders " brzy"
+    }
+    if (counts.overdueMaintenance > 0 || counts.upcomingMaintenance > 0) {
+        tip .= ", servis " counts.overdueMaintenance " po termínu / " counts.upcomingMaintenance " brzy"
     }
     return tip
 }
@@ -1887,7 +2095,9 @@ GetTrayAttentionCounts() {
         upcomingTechnical: 0,
         upcomingGreen: 0,
         overdueReminders: 0,
-        upcomingReminders: 0
+        upcomingReminders: 0,
+        overdueMaintenance: 0,
+        upcomingMaintenance: 0
     }
 
     technicalCutoff := DateAdd(A_Now, GetTechnicalReminderDays(), "Days")
@@ -1918,6 +2128,14 @@ GetTrayAttentionCounts() {
             counts.overdueReminders += 1
         } else {
             counts.upcomingReminders += 1
+        }
+    }
+
+    for item in GetUpcomingVehicleMaintenance() {
+        if IsVehicleMaintenanceSnapshotOverdue(item.snapshot) {
+            counts.overdueMaintenance += 1
+        } else {
+            counts.upcomingMaintenance += 1
         }
     }
 

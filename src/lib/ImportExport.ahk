@@ -17,7 +17,7 @@ ExportAppData(*) {
 }
 
 ImportAppData(*) {
-    global AppTitle, A_DefaultDialogTitle, SettingsFile, VehiclesFile, HistoryFile, FuelLogFile, RecordsFile, VehicleMetaFile, RemindersFile
+    global AppTitle, A_DefaultDialogTitle, SettingsFile, VehiclesFile, HistoryFile, FuelLogFile, RecordsFile, VehicleMetaFile, RemindersFile, MaintenancePlansFile
 
     A_DefaultDialogTitle := AppTitle
     backupPath := FileSelect(1, A_ScriptDir, "Import dat Vehimap", "Vehimap záloha (*.vehimapbak)")
@@ -26,7 +26,7 @@ ImportAppData(*) {
     }
 
     result := MsgBox(
-        "Import přepíše aktuální vozidla, historii událostí, kilometry a tankování, pojištění a doklady, stavy a štítky, vlastní připomínky i nastavení aplikace.`n`nPokračovat v importu?",
+        "Import přepíše aktuální vozidla, historii událostí, kilometry a tankování, pojištění a doklady, stavy a štítky, vlastní připomínky, plány údržby i nastavení aplikace.`n`nPokračovat v importu?",
         AppTitle,
         0x34
     )
@@ -48,8 +48,9 @@ ImportAppData(*) {
     recordsContent := ""
     metaContent := ""
     remindersContent := ""
+    maintenanceContent := ""
     errorMessage := ""
-    if !TryParseBackupContent(backupContent, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &errorMessage) {
+    if !TryParseBackupContent(backupContent, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &errorMessage) {
         MsgBox("Import se nepodařil.`n`n" errorMessage, AppTitle, 0x30)
         return
     }
@@ -90,6 +91,12 @@ ImportAppData(*) {
         return
     }
 
+    importedMaintenancePlans := []
+    if !TryParseVehicleMaintenancePlansBackupContent(maintenanceContent, &importedMaintenancePlans, &errorMessage) {
+        MsgBox("Import se nepodařil.`n`n" errorMessage, AppTitle, 0x30)
+        return
+    }
+
     backupDir := BackupCurrentFilesBeforeImport()
 
     try {
@@ -99,6 +106,7 @@ ImportAppData(*) {
         WriteTextFileUtf8(RecordsFile, recordsContent)
         WriteTextFileUtf8(VehicleMetaFile, metaContent)
         WriteTextFileUtf8(RemindersFile, remindersContent)
+        WriteTextFileUtf8(MaintenancePlansFile, maintenanceContent)
         WriteTextFileUtf8(SettingsFile, settingsContent)
         EnsureSettingsDefaults()
         SetRunAtStartupEnabled(IniRead(SettingsFile, "app", "run_at_startup", "0") = "1")
@@ -108,6 +116,7 @@ ImportAppData(*) {
         LoadVehicleRecords()
         LoadVehicleMeta()
         LoadVehicleReminders()
+        LoadVehicleMaintenancePlans()
         ResetAlertHistory()
         RefreshVehicleList()
         CheckDueVehicles(false, false)

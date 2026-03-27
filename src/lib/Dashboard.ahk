@@ -246,15 +246,17 @@ BuildDashboardTermSummaryText() {
         counts.overdueTechnical = 0
         && counts.overdueGreen = 0
         && counts.overdueReminders = 0
+        && counts.overdueMaintenance = 0
         && counts.upcomingTechnical = 0
         && counts.upcomingGreen = 0
         && counts.upcomingReminders = 0
+        && counts.upcomingMaintenance = 0
         && GetMissingGreenCardCount() = 0
     ) {
-        return "Momentálně není žádná technická kontrola, zelená karta ani vlastní připomínka, která by podle aktuálního nastavení vyžadovala pozornost."
+        return "Momentálně není žádná technická kontrola, zelená karta, vlastní připomínka ani plán údržby, který by podle aktuálního nastavení vyžadoval pozornost."
     }
 
-    return "Po termínu: " counts.overdueTechnical " TK, " counts.overdueGreen " ZK, " counts.overdueReminders " připomínek. Brzy vyprší: " counts.upcomingTechnical " TK, " counts.upcomingGreen " ZK, " counts.upcomingReminders " připomínek. Bez vyplněné ZK: " GetMissingGreenCardCount() "."
+    return "Po termínu: " counts.overdueTechnical " TK, " counts.overdueGreen " ZK, " counts.overdueReminders " připomínek, " counts.overdueMaintenance " servisních úkonů. Brzy vyprší: " counts.upcomingTechnical " TK, " counts.upcomingGreen " ZK, " counts.upcomingReminders " připomínek, " counts.upcomingMaintenance " servisních úkonů. Bez vyplněné ZK: " GetMissingGreenCardCount() "."
 }
 
 BuildDashboardCostSummaryText() {
@@ -559,6 +561,8 @@ BuildDashboardProblemHighlightText(entry) {
             detail := (entry.HasOwnProp("isMissingGreen") && entry.isMissingGreen) ? "ZK chybí" : "ZK " entry.status
         case "custom":
             detail := "Připomínka " entry.status
+        case "maintenance":
+            detail := "Servis " entry.status
         case "record_path":
             detail := "Doklad " entry.status
         case "vehicle_field":
@@ -799,6 +803,11 @@ OpenSelectedDashboardItem(*) {
         case "custom":
             if (entry.HasOwnProp("entryId") && entry.entryId != "") {
                 OpenVehicleReminderDialog(entry.vehicle, false, entry.entryId)
+                return
+            }
+        case "maintenance":
+            if (entry.HasOwnProp("entryId") && entry.entryId != "") {
+                OpenVehicleMaintenanceDialog(entry.vehicle, false, entry.entryId)
                 return
             }
         case "record_path":

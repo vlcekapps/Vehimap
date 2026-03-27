@@ -15,6 +15,8 @@ RunSmokeTests() {
         "SmokeTestUpdateHelperScript",
         "SmokeTestSemVerComparison",
         "SmokeTestGlobalSearch",
+        "SmokeTestMaintenancePlans",
+        "SmokeTestMaintenanceBackupRoundTrip",
         "SmokeTestRecordPathInfo",
         "SmokeTestFleetCostSummary",
         "SmokeTestDashboardCosts",
@@ -175,9 +177,13 @@ SmokeTestSemVerComparison() {
 }
 
 SmokeTestGlobalSearch() {
-    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleMetaEntries, VehicleReminders
+    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleMetaEntries, VehicleReminders, VehicleMaintenancePlans, SettingsFile
 
     ResetSmokeData()
+    tempSettings := A_Temp "\vehimap_smoke_global_search_settings.ini"
+    try FileDelete(tempSettings)
+    SettingsFile := tempSettings
+    EnsureSettingsDefaults()
     Vehicles := [
         {
             id: "veh_1",
@@ -200,6 +206,8 @@ SmokeTestGlobalSearch() {
     VehicleRecords := [{id: "record_1", vehicleId: "veh_1", recordType: "Doklad", title: "Alfa smlouva", provider: "Kooperativa", validFrom: "01/" FormatTime(A_Now, "yyyy"), validTo: "12/" FormatTime(A_Now, "yyyy"), price: "900", filePath: "C:\\Temp\\alfa.pdf", note: "archiv"}]
     VehicleReminders := [{id: "rem_1", vehicleId: "veh_1", title: "Alfa připomínka", dueDate: "12.01." FormatTime(A_Now, "yyyy"), reminderDays: "20", repeatMode: "Neopakovat", note: "zavolat"}]
 
+    VehicleMaintenancePlans := [{id: "mnt_1", vehicleId: "veh_1", title: "Alfa olej", intervalKm: "15000", intervalMonths: "12", lastServiceDate: "01.01." FormatTime(A_Now, "yyyy"), lastServiceOdometer: "10000", isActive: 1, note: "alfa interval"}]
+
     results := BuildGlobalSearchResults("alfa")
     AssertTrue(results.Length >= 5, "Globální hledání mělo vrátit alespoň 5 výsledků.")
     AssertSearchKindPresent(results, "vehicle")
@@ -207,6 +215,119 @@ SmokeTestGlobalSearch() {
     AssertSearchKindPresent(results, "fuel")
     AssertSearchKindPresent(results, "record")
     AssertSearchKindPresent(results, "reminder")
+    AssertSearchKindPresent(results, "maintenance")
+}
+
+SmokeTestMaintenancePlans() {
+    global Vehicles, VehicleFuelLog, VehicleMaintenancePlans, SettingsFile
+
+    ResetSmokeData()
+    tempSettings := A_Temp "\vehimap_smoke_maintenance_settings.ini"
+    try FileDelete(tempSettings)
+    SettingsFile := tempSettings
+    EnsureSettingsDefaults()
+    IniWrite("31", SettingsFile, "notifications", "maintenance_reminder_days")
+    IniWrite("1000", SettingsFile, "notifications", "maintenance_reminder_km")
+
+    currentYear := FormatTime(A_Now, "yyyy")
+    Vehicles := [
+        {
+            id: "veh_1",
+            name: "Servis test",
+            category: "Osobní vozidla",
+            vehicleType: "Kombi",
+            makeModel: "Skoda Octavia",
+            plate: "1AB2345",
+            year: "2020",
+            power: "110",
+            lastTk: "03/2024",
+            nextTk: "03/2028",
+            greenCardFrom: "04/2025",
+            greenCardTo: "04/2027"
+        }
+    ]
+    VehicleFuelLog := [
+        {id: "fuel_1", vehicleId: "veh_1", entryDate: "20.03." currentYear, odometer: "14650", liters: "35", totalCost: "1700", fullTank: 1, fuelType: "Benzin", note: ""}
+    ]
+    VehicleMaintenancePlans := [
+        {id: "mnt_1", vehicleId: "veh_1", title: "Motorový olej", intervalKm: "5000", intervalMonths: "12", lastServiceDate: "01.04." currentYear, lastServiceOdometer: "10000", isActive: 1, note: "Pravidelný servis"}
+    ]
+
+    snapshot := BuildVehicleMaintenancePlanSnapshot(VehicleMaintenancePlans[1], Vehicles[1])
+    AssertTrue((snapshot.nextOdometer + 0) = 15000, "Plán údržby má správně dopočítat příští limit tachometru.")
+    AssertTrue((snapshot.remainingKm + 0) = 350, "Plán údržby má správně dopočítat zbývající kilometry.")
+    AssertContains(snapshot.nextServiceText, FormatHistoryOdometer("15000"), "Další servis má obsahovat dopočítaný stav tachometru.")
+    AssertContains(snapshot.statusText, "350 km", "Stav servisního plánu má upozornit na blížící se limit kilometrů.")
+
+    summaryText := BuildVehicleMaintenanceSummaryText("veh_1")
+    AssertContains(summaryText, "Plánů údržby: 1. Aktivních: 1.", "Souhrn detailu vozidla má uvést počet servisních plánů.")
+    AssertContains(summaryText, "Motorový olej", "Souhrn detailu vozidla má zmínit nejbližší servisní úkon.")
+
+    upcoming := GetUpcomingVehicleMaintenance("veh_1")
+    AssertEqual(upcoming.Length, 1, "Vozidlo s blížícím se servisem má být v seznamu údržby právě jednou.")
+    AssertEqual(upcoming[1].kind, "maintenance", "Blížící se servis má být označen jako maintenance.")
+
+    overviewEntries := BuildUpcomingOverviewEntries(true, false)
+    maintenanceEntries := FilterUpcomingOverviewEntries(overviewEntries, "maintenance")
+    AssertEqual(maintenanceEntries.Length, 1, "Přehled termínů má zobrazit blížící se servisní úkon.")
+    AssertDashboardEntryPresent(maintenanceEntries, "maintenance", "veh_1")
+
+    dashboardText := BuildDashboardTermSummaryText()
+    AssertContains(dashboardText, "servisních úkonů", "Dashboard má v souhrnu termínů zohlednit údržbu.")
+}
+
+SmokeTestMaintenanceBackupRoundTrip() {
+    global Vehicles, VehicleMaintenancePlans, SettingsFile
+
+    ResetSmokeData()
+    tempSettings := A_Temp "\vehimap_smoke_maintenance_backup_settings.ini"
+    try FileDelete(tempSettings)
+    SettingsFile := tempSettings
+    EnsureSettingsDefaults()
+
+    Vehicles := [
+        {
+            id: "veh_1",
+            name: "Backup test",
+            category: "Osobní vozidla",
+            vehicleType: "",
+            makeModel: "Skoda Fabia",
+            plate: "1AB2345",
+            year: "",
+            power: "",
+            lastTk: "",
+            nextTk: "03/2028",
+            greenCardFrom: "",
+            greenCardTo: "04/2027"
+        }
+    ]
+    VehicleMaintenancePlans := [
+        {id: "mnt_1", vehicleId: "veh_1", title: "Motorový olej", intervalKm: "15000", intervalMonths: "12", lastServiceDate: "12.02.2026", lastServiceOdometer: "120000", isActive: 1, note: "Kontrola po zimě"}
+    ]
+
+    backupContent := BuildCurrentBackupContent()
+    AssertContains(backupContent, "# Vehimap backup v5", "Záloha s údržbou se má ukládat jako formát v5.")
+    AssertContains(backupContent, "# Vehimap maintenance v1", "Záloha má obsahovat sekci plánů údržby.")
+
+    settingsContent := ""
+    vehiclesContent := ""
+    historyContent := ""
+    fuelContent := ""
+    recordsContent := ""
+    metaContent := ""
+    remindersContent := ""
+    maintenanceContent := ""
+    errorMessage := ""
+    loadedPlans := []
+
+    AssertTrue(
+        TryParseBackupContent(backupContent, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &errorMessage),
+        "Zálohu s plány údržby musí jít znovu načíst."
+    )
+    AssertContains(maintenanceContent, "Motorový olej", "Načtená maintenance sekce má obsahovat uložený servisní úkon.")
+    AssertTrue(TryParseVehicleMaintenancePlansBackupContent(maintenanceContent, &loadedPlans, &errorMessage), "Maintenance sekce ze zálohy musí jít samostatně parseovat.")
+    AssertEqual(loadedPlans.Length, 1, "Ze zálohy se má načíst jeden servisní plán.")
+    AssertEqual(loadedPlans[1].title, "Motorový olej", "Název servisního plánu se musí v záloze zachovat.")
 }
 
 SmokeTestRecordPathInfo() {
@@ -452,8 +573,11 @@ SmokeTestSortSettings() {
     SaveFuelSortSettings(7, true)
     SaveRecordsSortSettings(6, true)
     SaveReminderSortSettings(4, true)
+    SaveMaintenanceSortSettings(3, true)
     SaveOverviewFilterSetting("data_issue")
     SaveOverviewIncludeDataIssuesSetting(true)
+    IniWrite("45", SettingsFile, "notifications", "maintenance_reminder_days")
+    IniWrite("1500", SettingsFile, "notifications", "maintenance_reminder_km")
 
     AssertEqual(GetHistorySortColumnSetting(), 5, "History sort column se neuložil.")
     AssertEqual(GetHistorySortDescendingSetting(), false, "History sort descending se neuložil.")
@@ -463,13 +587,17 @@ SmokeTestSortSettings() {
     AssertEqual(GetRecordsSortDescendingSetting(), true, "Records sort descending se neuložil.")
     AssertEqual(GetReminderSortColumnSetting(), 4, "Reminder sort column se neuložil.")
     AssertEqual(GetReminderSortDescendingSetting(), true, "Reminder sort descending se neuložil.")
+    AssertEqual(GetMaintenanceSortColumnSetting(), 3, "Maintenance sort column se neuložil.")
+    AssertEqual(GetMaintenanceSortDescendingSetting(), true, "Maintenance sort descending se neuložil.")
     AssertEqual(GetOverviewFilterSetting(), "data_issue", "Overview filter se neuložil.")
-    AssertEqual(GetOverviewFilterIndex(), 5, "Overview filter index pro datové nedostatky nesedí.")
+    AssertEqual(GetOverviewFilterIndex(), 6, "Overview filter index pro datové nedostatky nesedí.")
     AssertEqual(GetOverviewIncludeDataIssuesSetting(), 1, "Overview include_data_issues se neuložil.")
+    AssertEqual(GetMaintenanceReminderDays(), 45, "Počet dnů pro upozornění na údržbu se neuložil.")
+    AssertEqual(GetMaintenanceReminderKm(), 1500, "Kilometrový limit pro upozornění na údržbu se neuložil.")
 }
 
 ResetSmokeData() {
-    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleMetaEntries, VehicleReminders
+    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleMetaEntries, VehicleReminders, VehicleMaintenancePlans
 
     Vehicles := []
     VehicleHistory := []
@@ -477,6 +605,7 @@ ResetSmokeData() {
     VehicleRecords := []
     VehicleMetaEntries := []
     VehicleReminders := []
+    VehicleMaintenancePlans := []
 }
 
 AssertSearchKindPresent(results, expectedKind) {
@@ -543,5 +672,18 @@ AssertDashboardEntryPresent(entries, expectedKind, vehicleId, expectedStatus := 
 }
 
 WriteSmokeOutput(text) {
-    FileAppend(text "`n", "*")
+    static firstWrite := true
+
+    resultFile := FileOpen(GetSmokeResultPath(), firstWrite ? "w" : "a", "UTF-8")
+    if !IsObject(resultFile) {
+        throw Error("Nepodařilo se otevřít smoke result soubor pro zápis.")
+    }
+    resultFile.Write(text "`n")
+    resultFile.Close()
+    firstWrite := false
+    try FileAppend(text "`n", "*")
+}
+
+GetSmokeResultPath() {
+    return A_ScriptDir "\result.txt"
 }

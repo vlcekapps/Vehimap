@@ -96,9 +96,9 @@ OpenUpcomingOverviewDialog(*) {
 
     MainGui.Opt("+Disabled")
 
-    OverviewGui.AddText("x20 y20 w860", "Zde vidíte všechny blížící se a propadlé termíny technických kontrol, zelených karet a vlastních připomínek podle aktuálního nastavení upozornění. Volitelně můžete přidat i datové nedostatky k doplnění.")
+    OverviewGui.AddText("x20 y20 w860", "Zde vidíte všechny blížící se a propadlé termíny technických kontrol, zelených karet, vlastních připomínek i plánů údržby podle aktuálního nastavení upozornění. Volitelně můžete přidat i datové nedostatky k doplnění.")
     OverviewGui.AddText("x20 y55 w90", "Filtr zobrazení")
-    OverviewFilterCtrl := OverviewGui.AddDropDownList("x120 y52 w220 Choose1", ["Vše", "Jen technické kontroly", "Jen zelené karty", "Jen vlastní připomínky", "Jen datové nedostatky"])
+    OverviewFilterCtrl := OverviewGui.AddDropDownList("x120 y52 w220 Choose1", ["Vše", "Jen technické kontroly", "Jen zelené karty", "Jen vlastní připomínky", "Jen plány údržby", "Jen datové nedostatky"])
     OverviewFilterCtrl.Value := GetOverviewFilterIndex()
     OverviewFilterCtrl.OnEvent("Change", OnOverviewFilterChanged)
 
@@ -251,7 +251,7 @@ OpenOverdueDialog(*) {
 
     MainGui.Opt("+Disabled")
 
-    OverdueGui.AddText("x20 y20 w860", "Zde vidíte všechny už propadlé technické kontroly, zelené karty a vlastní připomínky.")
+    OverdueGui.AddText("x20 y20 w860", "Zde vidíte všechny už propadlé technické kontroly, zelené karty, vlastní připomínky i plány údržby.")
 
     refreshButton := OverdueGui.AddButton("x730 y50 w150 h28", "Obnovit")
     refreshButton.OnEvent("Click", RefreshOverdueDialog)
@@ -421,6 +421,10 @@ OpenSelectedOverdueItem(*) {
         OpenVehicleReminderDialog(entry.vehicle, false, entry.entryId)
         return
     }
+    if (entry.kind = "maintenance" && entry.HasOwnProp("entryId") && entry.entryId != "") {
+        OpenVehicleMaintenanceDialog(entry.vehicle, false, entry.entryId)
+        return
+    }
 
     OpenVehicleForm("edit", entry.vehicle)
 }
@@ -502,6 +506,21 @@ BuildOverdueEntries() {
         }
     }
 
+    for item in GetUpcomingVehicleMaintenance() {
+        if IsVehicleMaintenanceSnapshotOverdue(item.snapshot) {
+            entries.Push({
+                kind: "maintenance",
+                kindLabel: "Plán údržby",
+                vehicle: item.vehicle,
+                term: item.term,
+                status: item.status,
+                dueStamp: item.dueStamp,
+                overviewSortKey: item.overviewSortKey,
+                entryId: item.entryId
+            })
+        }
+    }
+
     SortUpcomingByDue(&entries)
     return entries
 }
@@ -511,6 +530,7 @@ BuildOverdueSummary(entries, allEntries) {
     overdueTechnical := 0
     overdueGreen := 0
     overdueCustom := 0
+    overdueMaintenance := 0
 
     for entry in allEntries {
         vehicleIds[entry.vehicle.id] := true
@@ -518,17 +538,19 @@ BuildOverdueSummary(entries, allEntries) {
             overdueTechnical += 1
         } else if (entry.kind = "green") {
             overdueGreen += 1
+        } else if (entry.kind = "maintenance") {
+            overdueMaintenance += 1
         } else {
             overdueCustom += 1
         }
     }
 
     if (allEntries.Length = 0) {
-        return "Momentálně nejsou žádné propadlé technické kontroly, zelené karty ani vlastní připomínky."
+        return "Momentálně nejsou žádné propadlé technické kontroly, zelené karty, vlastní připomínky ani plány údržby."
     }
 
     text := "Propadlých položek: " allEntries.Length " u " vehicleIds.Count " vozidel. "
-    text .= "TK po termínu: " overdueTechnical ". ZK po termínu: " overdueGreen ". Připomínek po termínu: " overdueCustom "."
+    text .= "TK po termínu: " overdueTechnical ". ZK po termínu: " overdueGreen ". Připomínek po termínu: " overdueCustom ". Úkonů údržby po termínu: " overdueMaintenance "."
     if (entries.Length != allEntries.Length) {
         text .= " Zobrazeno po hledání: " entries.Length "."
     }
@@ -647,6 +669,11 @@ OpenSelectedOverviewItem(*) {
         case "custom":
             if (entry.HasOwnProp("entryId") && entry.entryId != "") {
                 OpenVehicleReminderDialog(entry.vehicle, false, entry.entryId)
+                return
+            }
+        case "maintenance":
+            if (entry.HasOwnProp("entryId") && entry.entryId != "") {
+                OpenVehicleMaintenanceDialog(entry.vehicle, false, entry.entryId)
                 return
             }
         case "record_path":
@@ -870,6 +897,9 @@ GetOverviewFilterKind() {
     if (text = "Jen vlastní připomínky") {
         return "custom"
     }
+    if (text = "Jen plány údržby") {
+        return "maintenance"
+    }
     if (text = "Jen datové nedostatky") {
         return "data_issue"
     }
@@ -881,7 +911,7 @@ GetOverviewFilterSetting() {
     global SettingsFile
 
     value := IniRead(SettingsFile, "overview", "filter", "all")
-    if (value != "technical" && value != "green" && value != "custom" && value != "data_issue") {
+    if (value != "technical" && value != "green" && value != "custom" && value != "maintenance" && value != "data_issue") {
         return "all"
     }
 
@@ -899,8 +929,11 @@ GetOverviewFilterIndex() {
     if (filterKind = "custom") {
         return 4
     }
-    if (filterKind = "data_issue") {
+    if (filterKind = "maintenance") {
         return 5
+    }
+    if (filterKind = "data_issue") {
+        return 6
     }
 
     return 1
@@ -938,7 +971,7 @@ GetOverviewSortDescendingSetting() {
 SaveOverviewFilterSetting(filterKind) {
     global SettingsFile
 
-    if (filterKind != "technical" && filterKind != "green" && filterKind != "custom" && filterKind != "data_issue") {
+    if (filterKind != "technical" && filterKind != "green" && filterKind != "custom" && filterKind != "maintenance" && filterKind != "data_issue") {
         filterKind := "all"
     }
 
@@ -1042,6 +1075,18 @@ GetReminderSortDescendingSetting() {
 
 SaveReminderSortSettings(column, descending) {
     SaveListSortSettings("reminder_view", column, descending, 2, 6)
+}
+
+GetMaintenanceSortColumnSetting() {
+    return GetListSortColumnSetting("maintenance_view", 5, 6)
+}
+
+GetMaintenanceSortDescendingSetting() {
+    return GetListSortDescendingSetting("maintenance_view", false)
+}
+
+SaveMaintenanceSortSettings(column, descending) {
+    SaveListSortSettings("maintenance_view", column, descending, 5, 6)
 }
 
 FilterUpcomingOverviewEntries(entries, filterKind := "all") {
