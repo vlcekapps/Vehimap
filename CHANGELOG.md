@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-03-27
+
 Všechny významné změny ve Vehimapu budou zapisovány sem.
 
 - Opravena kontrola aktualizací ve zkompilované portable aplikaci, aby správně načítala veřejný release manifest.
