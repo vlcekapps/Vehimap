@@ -1,6 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
 Persistent
+#Include GeneratedBuildInfo.ahk
 
 global AppTitle := "Vehimap"
 global DataDir := A_ScriptDir "\data"
@@ -625,11 +626,17 @@ BuildMainMenuBar() {
     toolsMenu.Add("Nastavení", OpenSettingsDialog)
     toolsMenu.Add("Skrýt do lišty", HideMainWindow)
 
+    helpMenu := Menu()
+    helpMenu.Add("O programu", OpenAboutDialog)
+    helpMenu.Add()
+    helpMenu.Add("Zkontrolovat aktualizace", CheckForUpdates)
+
     mainMenuBar := MenuBar()
     mainMenuBar.Add("&Soubor", fileMenu)
     mainMenuBar.Add("&Vozidlo", vehicleMenu)
     mainMenuBar.Add("Pře&hled", overviewMenu)
     mainMenuBar.Add("&Nástroje", toolsMenu)
+    mainMenuBar.Add("&Nápověda", helpMenu)
     return mainMenuBar
 }
 
@@ -884,6 +891,85 @@ FocusReminderSearchShortcut() {
 
 OpenDashboard(*) {
     OpenDashboardDialog(false)
+}
+
+OpenAboutDialog(*) {
+    global AppTitle
+
+    MsgBox(BuildAboutProgramText(), AppTitle " - O programu", 0x40)
+}
+
+CheckForUpdates(*) {
+    global AppTitle
+
+    MsgBox(
+        "Samostatná kontrola aktualizací je připravená v menu a bude doplněna v dalším kroku.",
+        AppTitle,
+        0x40
+    )
+}
+
+GetAppVersion() {
+    global AppVersion
+
+    if IsSet(AppVersion) {
+        version := Trim(AppVersion)
+        if (version != "") {
+            return version
+        }
+    }
+
+    if A_IsCompiled {
+        try {
+            version := Trim(FileGetVersion(A_ScriptFullPath))
+            if (version != "") {
+                return version
+            }
+        }
+    }
+
+    return "Neznámá"
+}
+
+GetAppFileVersion() {
+    global AppFileVersion
+
+    if IsSet(AppFileVersion) {
+        version := Trim(AppFileVersion)
+        if (version != "") {
+            return version
+        }
+    }
+
+    if A_IsCompiled {
+        try {
+            version := Trim(FileGetVersion(A_ScriptFullPath))
+            if (version != "") {
+                return version
+            }
+        }
+    }
+
+    return ""
+}
+
+BuildAboutProgramText() {
+    global AppTitle, DataDir
+
+    lines := [
+        AppTitle,
+        "Verze: " GetAppVersion(),
+        "Režim spuštění: " (A_IsCompiled ? "samostatná aplikace" : "zdrojový skript"),
+        "Soubor aplikace: " A_ScriptFullPath,
+        "Datová složka: " DataDir
+    ]
+
+    fileVersion := GetAppFileVersion()
+    if (fileVersion != "" && fileVersion != GetAppVersion()) {
+        lines.Push("Souborová verze: " fileVersion)
+    }
+
+    return JoinLines(lines)
 }
 
 OpenStartupDashboard() {

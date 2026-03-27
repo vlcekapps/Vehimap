@@ -8,6 +8,7 @@ RunSmokeTests()
 RunSmokeTests() {
     failures := []
     tests := [
+        "SmokeTestBuildInfo",
         "SmokeTestGlobalSearch",
         "SmokeTestRecordPathInfo",
         "SmokeTestDashboardCosts",
@@ -35,6 +36,17 @@ RunSmokeTests() {
 
     WriteSmokeOutput("PASS " tests.Length " smoke tests passed.")
     ExitApp(0)
+}
+
+SmokeTestBuildInfo() {
+    global AppVersion, AppFileVersion, DataDir
+
+    AssertEqual(GetAppVersion(), AppVersion, "Verze aplikace se ma cist z generovaneho build info.")
+    AssertEqual(GetAppFileVersion(), AppFileVersion, "Souborova verze se ma cist z generovaneho build info.")
+
+    aboutText := BuildAboutProgramText()
+    AssertContains(aboutText, "Verze: " AppVersion, "O programu ma zobrazit aktualni verzi.")
+    AssertContains(aboutText, "Datová složka: " DataDir, "O programu ma zobrazit datovou slozku.")
 }
 
 SmokeTestGlobalSearch() {

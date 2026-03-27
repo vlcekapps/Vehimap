@@ -29,7 +29,7 @@ První verze jednoduché přístupné evidence vozidel v AutoHotkey v2.
 - pravidelné automatické zálohy do `data/auto-backups` se samostatným intervalem ve dnech a omezením počtu ponechaných souborů
 - samostatné nastavení počtu dnů pro upozornění na `TK` a `ZK`
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
-- horní menu `Soubor`, `Vozidlo`, `Přehled` a `Nástroje`
+- horní menu `Soubor`, `Vozidlo`, `Přehled`, `Nástroje` a `Nápověda`
 - tray menu pro rychlé otevření nejbližších termínů i dalších funkcí aplikace
 - automatickou kontrolu termínů každých 15 minut a znovu po probuzení počítače ze spánku
 
@@ -45,6 +45,7 @@ V hlavním okně:
 - zaškrtávátko `Skrýt archivovaná a odstavená vozidla` schová neaktivní vozidla jen z hlavního seznamu a svou volbu si pamatuje i po dalším spuštění
 - tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence otevřete i z menu `Vozidlo`
 - položky `Dashboard` a `Globální hledání` v menu `Přehled` otevřou rychlý souhrn termínů, nákladů a stavu evidencí nebo vyhledání napříč všemi evidencemi
+- v menu `Nápověda` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
@@ -141,6 +142,7 @@ V horním menu najdete tyto části:
 - `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování a pojištění a dokladů
 - `Přehled`: `Dashboard`, `Globální hledání`, `Přehled termínů`, `Propadlé termíny`
 - `Nástroje`: `Nastavení`, `Skrýt do lišty`
+- `Nápověda`: `O programu`, `Zkontrolovat aktualizace`
 
 ## Ukládání dat
 
