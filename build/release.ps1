@@ -471,6 +471,14 @@ function Compile-Vehimap {
     if ($LASTEXITCODE -ne 0) {
         throw "Ahk2Exe selhal pri kompilaci Vehimapu."
     }
+
+    for ($attempt = 0; $attempt -lt 50; $attempt++) {
+        if (Test-Path $OutPath) {
+            break
+        }
+        Start-Sleep -Milliseconds 200
+    }
+
     if (!(Test-Path $OutPath)) {
         throw "Kompilator nevyrobil vystupni soubor: $OutPath"
     }
