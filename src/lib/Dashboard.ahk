@@ -549,6 +549,25 @@ BuildDashboardProblemHighlightText(entry) {
     }
 
     vehicleName := ShortenText(entry.vehicle.name, 22)
+    if (entry.HasOwnProp("isAuditIssue") && entry.isAuditIssue) {
+        switch entry.kind {
+            case "record_path", "record_range":
+                detail := "Doklad " entry.status
+            case "vehicle_field":
+                detail := entry.term " chybí"
+            case "vehicle_green_range":
+                detail := "ZK " entry.status
+            case "history_odometer", "fuel_odometer":
+                detail := "Tachometr klesá"
+            case "maintenance_data":
+                detail := "Servis " entry.status
+            default:
+                detail := entry.sourceLabel " " entry.status
+        }
+
+        return vehicleName " (" detail ")"
+    }
+
     switch entry.kind {
         case "technical":
             detail := "TK " entry.status
@@ -570,32 +589,60 @@ BuildDashboardProblemHighlightText(entry) {
 }
 
 BuildDashboardDataSummaryText() {
-    global Vehicles, VehicleRecords
+    global Vehicles
 
-    missingPlateCount := 0
-    missingTechnicalCount := 0
-    missingPathCount := 0
-    emptyPathCount := 0
+    items := BuildVehimapAuditItems()
+    missingPlate := 0
+    missingNextTk := 0
+    missingGreen := 0
+    missingAttachment := 0
+    emptyAttachment := 0
+
+    for item in items {
+        switch item.kind {
+            case "vehicle_field":
+                if (item.term = "SPZ") {
+                    missingPlate += 1
+                } else if (item.term = "Příští TK") {
+                    missingNextTk += 1
+                }
+            case "record_path":
+                if (item.status = "Bez cesty") {
+                    emptyAttachment += 1
+                } else {
+                    missingAttachment += 1
+                }
+        }
+    }
 
     for vehicle in Vehicles {
-        if (Trim(vehicle.plate) = "") {
-            missingPlateCount += 1
-        }
-        if (Trim(vehicle.nextTk) = "") {
-            missingTechnicalCount += 1
+        if (Trim(vehicle.greenCardTo) = "") {
+            missingGreen += 1
         }
     }
 
-    for entry in VehicleRecords {
-        pathKind := GetVehicleRecordPathInfo(entry).kind
-        if (pathKind = "missing_file" || pathKind = "missing_folder") {
-            missingPathCount += 1
-        } else if (pathKind = "empty") {
-            emptyPathCount += 1
-        }
+    parts := []
+    if (missingPlate > 0) {
+        parts.Push("Bez SPZ: " missingPlate ".")
+    }
+    if (missingNextTk > 0) {
+        parts.Push("Bez příští TK: " missingNextTk ".")
+    }
+    if (missingGreen > 0) {
+        parts.Push("Bez vyplněné ZK: " missingGreen ".")
+    }
+    if (missingAttachment > 0) {
+        parts.Push("Dokladů s nedostupnou přílohou: " missingAttachment ".")
+    }
+    if (emptyAttachment > 0) {
+        parts.Push("Dokladů bez cesty: " emptyAttachment ".")
     }
 
-    return "Bez SPZ: " missingPlateCount ". Bez příští TK: " missingTechnicalCount ". Bez vyplněné ZK: " GetMissingGreenCardCount() ". Dokladů s nedostupnou přílohou: " missingPathCount ". Dokladů bez cesty: " emptyPathCount "."
+    if (parts.Length = 0) {
+        return "Evidence jsou v pořádku a nevyžadují doplnění."
+    }
+
+    return JoinInline(parts, " ")
 }
 
 BuildDashboardEntries() {
@@ -603,31 +650,9 @@ BuildDashboardEntries() {
 }
 
 BuildDashboardDataIssueEntries() {
-    global Vehicles, VehicleRecords
-
-    entries := []
-
-    for vehicle in Vehicles {
-        if (Trim(vehicle.plate) = "") {
-            entries.Push(BuildDashboardVehicleFieldIssueEntry(vehicle, "plate"))
-        }
-        if (Trim(vehicle.nextTk) = "") {
-            entries.Push(BuildDashboardVehicleFieldIssueEntry(vehicle, "next_tk"))
-        }
-    }
-
-    for entry in VehicleRecords {
-        pathInfo := GetVehicleRecordPathInfo(entry)
-        if (pathInfo.kind = "missing_file" || pathInfo.kind = "missing_folder" || pathInfo.kind = "empty") {
-            vehicle := FindVehicleById(entry.vehicleId)
-            if IsObject(vehicle) {
-                entries.Push(BuildDashboardRecordIssueEntry(vehicle, entry, pathInfo))
-            }
-        }
-    }
-
-    return entries
+    return BuildVehimapAuditItems()
 }
+
 
 BuildDashboardVehicleFieldIssueEntry(vehicle, fieldKind) {
     if (fieldKind = "plate") {

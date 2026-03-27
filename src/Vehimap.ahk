@@ -4,6 +4,7 @@ Persistent
 #Include GeneratedBuildInfo.ahk
 #Include lib\AppRuntime.ahk
 #Include lib\CoreHelpers.ahk
+#Include lib\AuditTools.ahk
 #Include lib\Dashboard.ahk
 #Include lib\HelpAndUpdates.ahk
 #Include lib\GlobalSearch.ahk
@@ -23,6 +24,7 @@ Persistent
 
 global AppTitle := "Vehimap"
 global DataDir := A_ScriptDir "\data"
+global AttachmentsDir := DataDir "\attachments"
 global VehiclesFile := DataDir "\vehicles.tsv"
 global HistoryFile := DataDir "\history.tsv"
 global FuelLogFile := DataDir "\fuel.tsv"
@@ -218,6 +220,14 @@ global DashboardSummaryTermsLabel := 0
 global DashboardSummaryCostsLabel := 0
 global DashboardSummaryDataLabel := 0
 global DashboardList := 0
+global AuditGui := 0
+global AuditList := 0
+global AuditSummaryLabel := 0
+global AuditSearchCtrl := 0
+global AuditItems := []
+global AuditOpenButton := 0
+global AuditVehicleButton := 0
+global AuditEditButton := 0
 global DashboardEntries := []
 global DashboardOpenButton := 0
 global DashboardItemButton := 0
