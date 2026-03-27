@@ -1,10 +1,11 @@
 # Changelog
+Všechny významné změny ve Vehimapu budou zapisovány sem.
+Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
+a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ## [Unreleased]
 
 ## [1.0.2] - 2026-03-27
-
-Všechny významné změny ve Vehimapu budou zapisovány sem.
 
 - Opravena kontrola aktualizací ve zkompilované portable aplikaci, aby správně načítala veřejný release manifest.
 - Doplněny smoke testy pro kontrolu aktualizací a načtení update manifestu.

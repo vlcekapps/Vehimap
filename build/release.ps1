@@ -390,10 +390,11 @@ function Ensure-ChangelogFile {
         "# Changelog",
         "",
         "Všechny významné změny ve Vehimapu budou zapisovány sem.",
+        "Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)",
+        "a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).",
         "",
         "## [Unreleased]",
-        "",
-        "- Zatím bez zapsaných změn."
+        ""
     ) -join "`n"
 
     Write-Utf8NoBom -Path $Path -Content $initial
@@ -409,27 +410,21 @@ function Update-Changelog {
 
     $content = Read-Utf8NoBom -Path $Path
     $today = (Get-Date).ToString("yyyy-MM-dd")
-    if ($content -notmatch '(?m)^## \[Unreleased\]') {
-        if ($content -match '(?m)^# .*$') {
-            $content = [regex]::Replace($content, '(?m)^(# .*)$', "`$1`n`n## [Unreleased]", 1)
-        } else {
-            $content = "## [Unreleased]`n`n" + $content.TrimStart()
-        }
+    $updated = $false
+
+    if ($content -match '(?m)^## \[Unreleased\]') {
+        $content = $content -replace '(?m)^## \[Unreleased\].*$', "## [$NewVersion] - $today"
+        $updated = $true
+    } elseif ($content -match ('(?m)^## \[' + [regex]::Escape($NewVersion) + '\]\s*$')) {
+        $content = $content -replace ('(?m)^## \[' + [regex]::Escape($NewVersion) + '\]\s*$'), "## [$NewVersion] - $today"
+        $updated = $true
     }
 
-    $releaseHeading = "## [$NewVersion] - $today"
-    $updated = [regex]::Replace($content, '(?m)^## \[Unreleased\].*$', [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $releaseHeading }, 1)
-
-    if ($updated -notmatch '(?m)^## \[Unreleased\]') {
-        if ($updated -match '(?m)^# .*$') {
-            $updated = [regex]::Replace($updated, '(?m)^(# .*)$', "`$1`n`n## [Unreleased]", 1)
-        } else {
-            $updated = "## [Unreleased]`n`n" + $updated.TrimStart()
-        }
+    if ($updated) {
+        Write-Utf8NoBom -Path $Path -Content $content
     }
 
-    Write-Utf8NoBom -Path $Path -Content $updated
-    return $true
+    return $updated
 }
 
 function Assert-CleanWorkingTree {
