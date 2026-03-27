@@ -1148,18 +1148,6 @@ SmokeTestSortSettings() {
     AssertEqual(GetMaintenanceReminderKm(), 1500, "Kilometrový limit pro upozornění na údržbu se neuložil.")
 }
 
-ResetSmokeData() {
-    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleMetaEntries, VehicleReminders, VehicleMaintenancePlans
-
-    Vehicles := []
-    VehicleHistory := []
-    VehicleFuelLog := []
-    VehicleRecords := []
-    VehicleMetaEntries := []
-    VehicleReminders := []
-    VehicleMaintenancePlans := []
-}
-
 HasMaintenanceTemplateWithTitle(items, title) {
     for item in items {
         if IsObject(item) && item.HasOwnProp("title") && item.title = title {

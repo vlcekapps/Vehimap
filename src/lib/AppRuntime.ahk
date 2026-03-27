@@ -12,6 +12,18 @@ GetVehimapTestHooks() {
     return 0
 }
 
+ResetSmokeData() {
+    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleMetaEntries, VehicleReminders, VehicleMaintenancePlans
+
+    Vehicles := []
+    VehicleHistory := []
+    VehicleFuelLog := []
+    VehicleRecords := []
+    VehicleMetaEntries := []
+    VehicleReminders := []
+    VehicleMaintenancePlans := []
+}
+
 AppMsgBox(text, title := "", options := 0) {
     hooks := GetVehimapTestHooks()
 
