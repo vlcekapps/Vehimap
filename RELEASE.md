@@ -11,9 +11,11 @@ Skript `build/release.ps1`:
 - vygeneruje `src/GeneratedBuildInfo.ahk` s embedded verzi pro runtime i EXE metadata
 - prepise `update/latest.ini` pro rucni kontrolu aktualizaci v aplikaci vcetne `asset_url`, `asset_sha256` a `asset_size`
 - aktualizuje `CHANGELOG.md` ze sekce `## [Unreleased]`
+- vygeneruje `src/readme.html` z root `README.md`
+- vygeneruje `src/changelog.html` z `CHANGELOG.md`
 - zkompiluje `src/Vehimap.ahk` do `dist/vehimap.exe`
 - vytvori asset `dist/vehimap-VERZE.zip`
-- do zipu prida jen `readme.txt` a `vehimap.exe`
+- do zipu prida jen `readme.html`, `changelog.html` a `vehimap.exe`
 - nevklada do assetu zadny `.ahk`
 - vytvori release commit a tag
 - pokud neni pouzite `-SkipPush`, pushne `main`, pushne tag a vytvori nebo upravi GitHub release
@@ -65,7 +67,8 @@ Po uspesnem buildu vzniknou v `dist`:
 
 Zip obsahuje jen:
 
-- `readme.txt`
+- `readme.html`
+- `changelog.html`
 - `vehimap.exe`
 
 ## Poznamky

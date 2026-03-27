@@ -71,6 +71,8 @@ SmokeTestUpdateHelperScript() {
     AssertContains(helperScript, "Expand-Archive", "Helper musi rozbalit release zip.")
     AssertContains(helperScript, "Wait-Process", "Helper musi pockat na ukonceni bezici aplikace.")
     AssertContains(helperScript, "Start-Process", "Helper musi po instalaci znovu spustit Vehimap.")
+    AssertContains(helperScript, "@('changelog.html', 'readme.html', 'vehimap.exe')", "Helper musi overovat novy obsah assetu.")
+    AssertContains(helperScript, "legacyReadmeText", "Helper ma po prechodu uklidit stary readme.txt.")
 }
 
 SmokeTestSemVerComparison() {

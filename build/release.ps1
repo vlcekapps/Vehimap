@@ -230,6 +230,155 @@ function Write-UpdateManifestFile {
     Write-Utf8NoBom -Path $Path -Content $content
 }
 
+function Convert-MarkdownInlineToHtml {
+    param([string]$Text)
+
+    $encoded = [System.Net.WebUtility]::HtmlEncode($Text)
+    $encoded = [regex]::Replace($encoded, '\*\*([^*]+)\*\*', '<strong>$1</strong>')
+    $encoded = [regex]::Replace($encoded, '`([^`]+)`', '<code>$1</code>')
+    return $encoded
+}
+
+function Convert-MarkdownToHtmlDocument {
+    param(
+        [string]$MarkdownPath,
+        [string]$Title,
+        [string]$OutPath
+    )
+
+    if (!(Test-Path $MarkdownPath)) {
+        throw "Markdown soubor nebyl nalezen: $MarkdownPath"
+    }
+
+    $markdown = Read-Utf8NoBom -Path $MarkdownPath
+    $lines = $markdown -split "\r?\n"
+    $htmlLines = @()
+    $paragraphLines = @()
+    $inList = $false
+    $inCode = $false
+    $codeLines = @()
+
+    foreach ($rawLine in $lines) {
+        $line = $rawLine.TrimEnd()
+        $trimmed = $line.Trim()
+
+        if ($inCode) {
+            if ($trimmed -match '^```') {
+                $encodedCode = [System.Net.WebUtility]::HtmlEncode(($codeLines -join "`n"))
+                $htmlLines += "<pre><code>$encodedCode</code></pre>"
+                $codeLines = @()
+                $inCode = $false
+            } else {
+                $codeLines += $line
+            }
+            continue
+        }
+
+        if ($trimmed -match '^```') {
+            if ($paragraphLines.Count -gt 0) {
+                $htmlLines += '<p>' + (Convert-MarkdownInlineToHtml -Text (($paragraphLines -join ' ').Trim())) + '</p>'
+                $paragraphLines = @()
+            }
+            if ($inList) {
+                $htmlLines += '</ul>'
+                $inList = $false
+            }
+            $inCode = $true
+            continue
+        }
+
+        if ($trimmed -eq '') {
+            if ($paragraphLines.Count -gt 0) {
+                $htmlLines += '<p>' + (Convert-MarkdownInlineToHtml -Text (($paragraphLines -join ' ').Trim())) + '</p>'
+                $paragraphLines = @()
+            }
+            if ($inList) {
+                $htmlLines += '</ul>'
+                $inList = $false
+            }
+            continue
+        }
+
+        if ($trimmed -match '^(#{1,6})\s+(.*)$') {
+            if ($paragraphLines.Count -gt 0) {
+                $htmlLines += '<p>' + (Convert-MarkdownInlineToHtml -Text (($paragraphLines -join ' ').Trim())) + '</p>'
+                $paragraphLines = @()
+            }
+            if ($inList) {
+                $htmlLines += '</ul>'
+                $inList = $false
+            }
+
+            $level = $Matches[1].Length
+            $headingText = Convert-MarkdownInlineToHtml -Text $Matches[2].Trim()
+            $htmlLines += "<h$level>$headingText</h$level>"
+            continue
+        }
+
+        if ($trimmed -match '^- (.*)$') {
+            if ($paragraphLines.Count -gt 0) {
+                $htmlLines += '<p>' + (Convert-MarkdownInlineToHtml -Text (($paragraphLines -join ' ').Trim())) + '</p>'
+                $paragraphLines = @()
+            }
+            if (-not $inList) {
+                $htmlLines += '<ul>'
+                $inList = $true
+            }
+
+            $htmlLines += '<li>' + (Convert-MarkdownInlineToHtml -Text $Matches[1].Trim()) + '</li>'
+            continue
+        }
+
+        if ($inList) {
+            $htmlLines += '</ul>'
+            $inList = $false
+        }
+
+        $paragraphLines += $trimmed
+    }
+
+    if ($inCode) {
+        $encodedCode = [System.Net.WebUtility]::HtmlEncode(($codeLines -join "`n"))
+        $htmlLines += "<pre><code>$encodedCode</code></pre>"
+    }
+    if ($paragraphLines.Count -gt 0) {
+        $htmlLines += '<p>' + (Convert-MarkdownInlineToHtml -Text (($paragraphLines -join ' ').Trim())) + '</p>'
+    }
+    if ($inList) {
+        $htmlLines += '</ul>'
+    }
+
+    $titleHtml = [System.Net.WebUtility]::HtmlEncode($Title)
+    $bodyHtml = $htmlLines -join "`n"
+    $document = @(
+        '<!DOCTYPE html>'
+        '<html lang="cs">'
+        '<head>'
+        '  <meta charset="utf-8">'
+        '  <meta name="viewport" content="width=device-width, initial-scale=1">'
+        "  <title>$titleHtml</title>"
+        '  <style>'
+        '    body { font-family: "Segoe UI", Arial, sans-serif; margin: 32px auto; max-width: 920px; padding: 0 20px 48px; line-height: 1.6; color: #1b1b1b; background: #ffffff; }'
+        '    h1, h2, h3, h4, h5, h6 { line-height: 1.25; margin-top: 1.6em; margin-bottom: 0.5em; }'
+        '    h1 { margin-top: 0; font-size: 2rem; }'
+        '    h2 { font-size: 1.45rem; border-bottom: 1px solid #d8d8d8; padding-bottom: 0.2em; }'
+        '    p { margin: 0 0 1em 0; }'
+        '    ul { margin: 0 0 1em 1.4em; padding: 0; }'
+        '    li { margin: 0.2em 0; }'
+        '    code { font-family: Consolas, "Courier New", monospace; background: #f4f4f4; padding: 0.12em 0.35em; border-radius: 4px; }'
+        '    pre { background: #f4f4f4; padding: 14px 16px; overflow: auto; border-radius: 8px; }'
+        '    pre code { background: transparent; padding: 0; border-radius: 0; }'
+        '  </style>'
+        '</head>'
+        '<body>'
+        $bodyHtml
+        '</body>'
+        '</html>'
+    ) -join "`n"
+
+    Write-Utf8NoBom -Path $OutPath -Content $document
+}
+
 function Ensure-ChangelogFile {
     param([string]$Path)
 
@@ -329,13 +478,17 @@ function Compile-Vehimap {
 
 function New-ReleaseZip {
     param(
-        [string]$ReadmePath,
+        [string]$ReadmeHtmlPath,
+        [string]$ChangelogHtmlPath,
         [string]$ExePath,
         [string]$OutPath
     )
 
-    if (!(Test-Path $ReadmePath)) {
-        throw "Soubor readme.txt nebyl nalezen: $ReadmePath"
+    if (!(Test-Path $ReadmeHtmlPath)) {
+        throw "Soubor readme.html nebyl nalezen: $ReadmeHtmlPath"
+    }
+    if (!(Test-Path $ChangelogHtmlPath)) {
+        throw "Soubor changelog.html nebyl nalezen: $ChangelogHtmlPath"
     }
     if (!(Test-Path $ExePath)) {
         throw "Vehimap.exe nebyl nalezen: $ExePath"
@@ -345,7 +498,8 @@ function New-ReleaseZip {
     New-Item -ItemType Directory -Path $tempDir | Out-Null
 
     try {
-        Copy-Item -Path $ReadmePath -Destination (Join-Path $tempDir "readme.txt") -Force
+        Copy-Item -Path $ReadmeHtmlPath -Destination (Join-Path $tempDir "readme.html") -Force
+        Copy-Item -Path $ChangelogHtmlPath -Destination (Join-Path $tempDir "changelog.html") -Force
         Copy-Item -Path $ExePath -Destination (Join-Path $tempDir "vehimap.exe") -Force
 
         if (Test-Path $OutPath) {
@@ -365,7 +519,9 @@ $versionPath = Join-Path $projectRoot "src\VERSION"
 $buildInfoPath = Join-Path $projectRoot "src\GeneratedBuildInfo.ahk"
 $updateManifestPath = Join-Path $projectRoot "update\latest.ini"
 $scriptPath = Join-Path $projectRoot "src\Vehimap.ahk"
-$readmePath = Join-Path $projectRoot "src\readme.txt"
+$readmeMarkdownPath = Join-Path $projectRoot "README.md"
+$readmeHtmlPath = Join-Path $projectRoot "src\readme.html"
+$changelogHtmlPath = Join-Path $projectRoot "src\changelog.html"
 $changelogPath = Join-Path $projectRoot "CHANGELOG.md"
 $distDir = Join-Path $projectRoot "dist"
 $compilerPath = "C:\Users\vlcek\AppData\Local\Programs\AutoHotkey\Compiler\Ahk2Exe.exe"
@@ -414,6 +570,9 @@ $changelogUpdated = Update-Changelog -Path $changelogPath -NewVersion $newVersio
 if ($changelogUpdated) {
     Write-Host "CHANGELOG.md aktualizovan."
 }
+Convert-MarkdownToHtmlDocument -MarkdownPath $readmeMarkdownPath -Title "Vehimap - Uživatelská příručka" -OutPath $readmeHtmlPath
+Convert-MarkdownToHtmlDocument -MarkdownPath $changelogPath -Title "Vehimap - Changelog" -OutPath $changelogHtmlPath
+Write-Host "HTML dokumentace aktualizovana."
 
 if (!(Test-Path $distDir)) {
     New-Item -ItemType Directory -Path $distDir | Out-Null
@@ -426,7 +585,7 @@ Write-Host "Kompiluji vehimap.exe ..."
 Compile-Vehimap -CompilerPath $compilerPath -ScriptPath $scriptPath -OutPath $exePath
 
 Write-Host "Vytvarim asset $zipPath ..."
-New-ReleaseZip -ReadmePath $readmePath -ExePath $exePath -OutPath $zipPath
+New-ReleaseZip -ReadmeHtmlPath $readmeHtmlPath -ChangelogHtmlPath $changelogHtmlPath -ExePath $exePath -OutPath $zipPath
 
 $zipHash = (Get-FileHash -Path $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
 $zipSize = (Get-Item $zipPath).Length
@@ -434,7 +593,7 @@ Write-UpdateManifestFile -Path $updateManifestPath -Version $newVersion -TagName
 $updateManifestLeaf = Split-Path -Leaf $updateManifestPath
 Write-Host "$updateManifestLeaf aktualizovan."
 
-Invoke-Git @("add", "src/VERSION", "src/GeneratedBuildInfo.ahk", "update/latest.ini", "CHANGELOG.md")
+Invoke-Git @("add", "src/VERSION", "src/GeneratedBuildInfo.ahk", "src/readme.html", "src/changelog.html", "update/latest.ini", "CHANGELOG.md")
 Invoke-Git @("commit", "-m", "chore(release): $newVersion")
 
 if (-not $SkipPush) {
