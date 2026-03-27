@@ -147,9 +147,12 @@ global CostSummaryPeriodList := 0
 global DashboardGui := 0
 global DashboardSummaryVehiclesLabel := 0
 global DashboardSummaryTermsLabel := 0
+global DashboardSummaryCostsLabel := 0
+global DashboardSummaryDataLabel := 0
 global DashboardList := 0
 global DashboardEntries := []
 global DashboardOpenButton := 0
+global DashboardItemButton := 0
 global DashboardEditButton := 0
 global DashboardShowOnLaunchCtrl := 0
 global DashboardShowMainOnClose := false
@@ -189,9 +192,11 @@ Enter::OpenSelectedGlobalSearchResult()
 
 #HotIf IsGuiWindowActive(DashboardGui)
 ^r::RefreshDashboardShortcut()
+^f::OpenGlobalSearchFromDashboard()
 ^u::EditSelectedDashboardVehicle()
 F2::EditSelectedDashboardVehicle()
 ^o::OpenSelectedDashboardVehicle()
+^p::OpenSelectedDashboardItem()
 ^t::OpenOverviewFromDashboard()
 ^+t::OpenOverdueFromDashboard()
 #HotIf
@@ -876,6 +881,11 @@ OpenStartupDashboard() {
 
 RefreshDashboardShortcut() {
     PopulateDashboardList(true)
+}
+
+OpenGlobalSearchFromDashboard(*) {
+    CloseDashboardDialog()
+    OpenGlobalSearchDialog()
 }
 
 SwitchOverviewToOverdueShortcut() {
@@ -1760,7 +1770,7 @@ CreateImmediateBackupFromSettings(*) {
 }
 
 OpenDashboardDialog(showMainOnClose := false) {
-    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose
     global OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui
 
     if IsObject(DashboardGui) {
@@ -1786,46 +1796,58 @@ OpenDashboardDialog(showMainOnClose := false) {
 
     MainGui.Opt("+Disabled")
 
-    DashboardGui.AddText("x20 y20 w820", "Dashboard nabízí rychlý přehled vozidel, nejbližších termínů a chybějících údajů, které teď stojí za pozornost.")
+    DashboardGui.AddText("x20 y20 w980", "Dashboard nabízí rychlý přehled vozidel, termínů, nákladů i kvality evidencí, které teď stojí za pozornost.")
 
-    DashboardGui.AddGroupBox("x20 y50 w820 h70", "Vozidla")
-    DashboardSummaryVehiclesLabel := DashboardGui.AddText("x35 y78 w790 h30", "")
+    DashboardGui.AddGroupBox("x20 y50 w980 h60", "Vozidla")
+    DashboardSummaryVehiclesLabel := DashboardGui.AddText("x35 y74 w950 h24", "")
 
-    DashboardGui.AddGroupBox("x20 y125 w820 h70", "Termíny")
-    DashboardSummaryTermsLabel := DashboardGui.AddText("x35 y153 w790 h30", "")
+    DashboardGui.AddGroupBox("x20 y115 w980 h60", "Termíny")
+    DashboardSummaryTermsLabel := DashboardGui.AddText("x35 y139 w950 h24", "")
 
-    DashboardGui.AddGroupBox("x20 y200 w820 h200", "Nejbližší položky a chybějící zelené karty")
-    DashboardList := DashboardGui.AddListView("x35 y225 w790 h160 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "SPZ", "Termín", "Stav"])
+    DashboardGui.AddGroupBox("x20 y180 w980 h60", "Náklady")
+    DashboardSummaryCostsLabel := DashboardGui.AddText("x35 y204 w950 h24", "")
+
+    DashboardGui.AddGroupBox("x20 y245 w980 h60", "Evidence")
+    DashboardSummaryDataLabel := DashboardGui.AddText("x35 y269 w950 h24", "")
+
+    DashboardGui.AddGroupBox("x20 y310 w980 h225", "Nejbližší položky a chybějící zelené karty")
+    DashboardList := DashboardGui.AddListView("x35 y335 w950 h185 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "SPZ", "Termín", "Stav"])
     DashboardList.OnEvent("DoubleClick", OpenSelectedDashboardVehicle)
-    DashboardList.ModifyCol(1, "145")
-    DashboardList.ModifyCol(2, "170")
-    DashboardList.ModifyCol(3, "150")
-    DashboardList.ModifyCol(4, "95")
+    DashboardList.ModifyCol(1, "155")
+    DashboardList.ModifyCol(2, "205")
+    DashboardList.ModifyCol(3, "170")
+    DashboardList.ModifyCol(4, "100")
     DashboardList.ModifyCol(5, "90")
-    DashboardList.ModifyCol(6, "120")
+    DashboardList.ModifyCol(6, "180")
 
-    DashboardGui.AddGroupBox("x20 y410 w820 h105", "Akce")
+    DashboardGui.AddGroupBox("x20 y545 w980 h110", "Akce")
 
-    overviewButton := DashboardGui.AddButton("x40 y438 w150 h30", "Přehled termínů")
+    overviewButton := DashboardGui.AddButton("x40 y573 w135 h30", "Přehled termínů")
     overviewButton.OnEvent("Click", OpenOverviewFromDashboard)
 
-    overdueButton := DashboardGui.AddButton("x200 y438 w150 h30", "Propadlé termíny")
+    overdueButton := DashboardGui.AddButton("x185 y573 w135 h30", "Propadlé termíny")
     overdueButton.OnEvent("Click", OpenOverdueFromDashboard)
 
-    DashboardEditButton := DashboardGui.AddButton("x390 y438 w150 h30", "Upravit vozidlo")
+    searchButton := DashboardGui.AddButton("x330 y573 w135 h30", "Globální hledání")
+    searchButton.OnEvent("Click", OpenGlobalSearchFromDashboard)
+
+    DashboardItemButton := DashboardGui.AddButton("x475 y573 w135 h30", "Otevřít položku")
+    DashboardItemButton.OnEvent("Click", OpenSelectedDashboardItem)
+
+    DashboardEditButton := DashboardGui.AddButton("x620 y573 w135 h30", "Upravit vozidlo")
     DashboardEditButton.OnEvent("Click", EditSelectedDashboardVehicle)
 
-    DashboardOpenButton := DashboardGui.AddButton("x550 y438 w150 h30 Default", "Zobrazit vozidlo")
+    DashboardOpenButton := DashboardGui.AddButton("x765 y573 w135 h30 Default", "Zobrazit vozidlo")
     DashboardOpenButton.OnEvent("Click", OpenSelectedDashboardVehicle)
 
-    closeButton := DashboardGui.AddButton("x710 y438 w100 h30", "Zavřít")
+    closeButton := DashboardGui.AddButton("x905 y573 w100 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseDashboardDialog)
 
-    DashboardShowOnLaunchCtrl := DashboardGui.AddCheckBox("x40 y476 w320", "Zobrazovat dashboard při startu")
+    DashboardShowOnLaunchCtrl := DashboardGui.AddCheckBox("x40 y615 w320", "Zobrazovat dashboard při startu")
     DashboardShowOnLaunchCtrl.Value := GetShowDashboardOnLaunchEnabled()
     DashboardShowOnLaunchCtrl.OnEvent("Click", OnDashboardShowOnLaunchChanged)
 
-    DashboardGui.Show("w860 h530")
+    DashboardGui.Show("w1020 h670")
     PopulateDashboardList(true)
     if (DashboardEntries.Length = 0) {
         closeButton.Focus()
@@ -1833,7 +1855,7 @@ OpenDashboardDialog(showMainOnClose := false) {
 }
 
 CloseDashboardDialog(*) {
-    global DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose, MainGui
+    global DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose, MainGui
 
     if IsObject(DashboardGui) {
         DashboardGui.Destroy()
@@ -1842,9 +1864,12 @@ CloseDashboardDialog(*) {
 
     DashboardSummaryVehiclesLabel := 0
     DashboardSummaryTermsLabel := 0
+    DashboardSummaryCostsLabel := 0
+    DashboardSummaryDataLabel := 0
     DashboardList := 0
     DashboardEntries := []
     DashboardOpenButton := 0
+    DashboardItemButton := 0
     DashboardEditButton := 0
     DashboardShowOnLaunchCtrl := 0
 
@@ -1862,7 +1887,7 @@ OnDashboardShowOnLaunchChanged(ctrl, *) {
 }
 
 PopulateDashboardList(focusList := false) {
-    global DashboardEntries, DashboardList, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardOpenButton, DashboardEditButton
+    global DashboardEntries, DashboardList, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardOpenButton, DashboardItemButton, DashboardEditButton
 
     if !IsObject(DashboardList) {
         return
@@ -1879,6 +1904,14 @@ PopulateDashboardList(focusList := false) {
         DashboardSummaryTermsLabel.Text := BuildDashboardTermSummaryText()
     }
 
+    if IsObject(DashboardSummaryCostsLabel) {
+        DashboardSummaryCostsLabel.Text := BuildDashboardCostSummaryText()
+    }
+
+    if IsObject(DashboardSummaryDataLabel) {
+        DashboardSummaryDataLabel.Text := BuildDashboardDataSummaryText()
+    }
+
     DashboardList.Opt("-Redraw")
     DashboardList.Delete()
 
@@ -1891,6 +1924,10 @@ PopulateDashboardList(focusList := false) {
 
     if IsObject(DashboardOpenButton) {
         DashboardOpenButton.Opt(DashboardEntries.Length = 0 ? "+Disabled" : "-Disabled")
+    }
+
+    if IsObject(DashboardItemButton) {
+        DashboardItemButton.Opt(DashboardEntries.Length = 0 ? "+Disabled" : "-Disabled")
     }
 
     if IsObject(DashboardEditButton) {
@@ -1956,6 +1993,163 @@ BuildDashboardTermSummaryText() {
     return "Po termínu: " counts.overdueTechnical " TK, " counts.overdueGreen " ZK, " counts.overdueReminders " připomínek. Brzy vyprší: " counts.upcomingTechnical " TK, " counts.upcomingGreen " ZK, " counts.upcomingReminders " připomínek. Bez vyplněné ZK: " GetMissingGreenCardCount() "."
 }
 
+BuildDashboardCostSummaryText() {
+    summary := BuildDashboardCurrentYearCostSummary()
+    total := summary.totalFuel + summary.totalHistory + summary.totalRecords
+    if (summary.parsedCount = 0) {
+        text := "Rok " summary.year ": zatím nejsou započítané žádné číselné náklady."
+        if (summary.skippedCount > 0) {
+            text .= " Položek s nečíselnou částkou: " summary.skippedCount "."
+        }
+        if (summary.undatedCount > 0) {
+            text .= " Položek bez použitelného data: " summary.undatedCount "."
+        }
+        return text
+    }
+
+    text := "Rok " summary.year ": celkem " FormatCostAmount(total) " u " summary.vehicleTotals.Count " vozidel."
+    text .= " Tankování: " FormatCostAmount(summary.totalFuel) "."
+    text .= " Historie a servis: " FormatCostAmount(summary.totalHistory) "."
+    text .= " Doklady a pojištění: " FormatCostAmount(summary.totalRecords) "."
+
+    if (summary.topVehicleId != "") {
+        vehicle := FindVehicleById(summary.topVehicleId)
+        if IsObject(vehicle) {
+            text .= " Nejvyšší zatím " vehicle.name " za " FormatCostAmount(summary.topVehicleTotal) "."
+        }
+    }
+
+    return text
+}
+
+BuildDashboardCurrentYearCostSummary() {
+    global VehicleFuelLog, VehicleHistory, VehicleRecords
+
+    yearLabel := FormatTime(A_Now, "yyyy")
+    yearValue := yearLabel + 0
+    summary := {
+        year: yearLabel,
+        totalFuel: 0.0,
+        totalHistory: 0.0,
+        totalRecords: 0.0,
+        parsedCount: 0,
+        skippedCount: 0,
+        undatedCount: 0,
+        vehicleTotals: Map(),
+        topVehicleId: "",
+        topVehicleTotal: 0.0
+    }
+
+    for entry in VehicleFuelLog {
+        if (Trim(entry.totalCost) = "") {
+            continue
+        }
+        if !TryGetEventYearMonth(entry.entryDate, &entryYear, &entryMonth) {
+            summary.undatedCount += 1
+            continue
+        }
+        if (entryYear != yearValue) {
+            continue
+        }
+
+        if TryParseMoneyAmount(entry.totalCost, &amount) {
+            summary.totalFuel += amount
+            summary.parsedCount += 1
+            AddDashboardVehicleCostTotal(&summary.vehicleTotals, entry.vehicleId, amount)
+        } else {
+            summary.skippedCount += 1
+        }
+    }
+
+    for entry in VehicleHistory {
+        if (Trim(entry.cost) = "") {
+            continue
+        }
+        if !TryGetEventYearMonth(entry.eventDate, &entryYear, &entryMonth) {
+            summary.undatedCount += 1
+            continue
+        }
+        if (entryYear != yearValue) {
+            continue
+        }
+
+        if TryParseMoneyAmount(entry.cost, &amount) {
+            summary.totalHistory += amount
+            summary.parsedCount += 1
+            AddDashboardVehicleCostTotal(&summary.vehicleTotals, entry.vehicleId, amount)
+        } else {
+            summary.skippedCount += 1
+        }
+    }
+
+    for entry in VehicleRecords {
+        if (Trim(entry.price) = "") {
+            continue
+        }
+        if !TryGetRecordYearMonth(entry, &entryYear, &entryMonth) {
+            summary.undatedCount += 1
+            continue
+        }
+        if (entryYear != yearValue) {
+            continue
+        }
+
+        if TryParseMoneyAmount(entry.price, &amount) {
+            summary.totalRecords += amount
+            summary.parsedCount += 1
+            AddDashboardVehicleCostTotal(&summary.vehicleTotals, entry.vehicleId, amount)
+        } else {
+            summary.skippedCount += 1
+        }
+    }
+
+    for vehicleId, total in summary.vehicleTotals {
+        if (summary.topVehicleId = "" || total > summary.topVehicleTotal) {
+            summary.topVehicleId := vehicleId
+            summary.topVehicleTotal := total
+        }
+    }
+
+    return summary
+}
+
+AddDashboardVehicleCostTotal(&vehicleTotals, vehicleId, amount) {
+    if !vehicleTotals.Has(vehicleId) {
+        vehicleTotals[vehicleId] := 0.0
+    }
+
+    vehicleTotals[vehicleId] += amount
+}
+
+BuildDashboardDataSummaryText() {
+    global Vehicles, VehicleRecords
+
+    missingPlateCount := 0
+    missingTechnicalCount := 0
+    missingPathCount := 0
+    emptyPathCount := 0
+
+    for vehicle in Vehicles {
+        if (Trim(vehicle.plate) = "") {
+            missingPlateCount += 1
+        }
+        if (Trim(vehicle.nextTk) = "") {
+            missingTechnicalCount += 1
+        }
+    }
+
+    for entry in VehicleRecords {
+        pathKind := GetVehicleRecordPathInfo(entry).kind
+        if (pathKind = "missing_file" || pathKind = "missing_folder") {
+            missingPathCount += 1
+        } else if (pathKind = "empty") {
+            emptyPathCount += 1
+        }
+    }
+
+    return "Bez SPZ: " missingPlateCount ". Bez příští TK: " missingTechnicalCount ". Bez vyplněné ZK: " GetMissingGreenCardCount() ". Dokladů s nedostupnou přílohou: " missingPathCount ". Dokladů bez cesty: " emptyPathCount "."
+}
+
 GetSelectedDashboardEntry() {
     global DashboardList, DashboardEntries
 
@@ -1979,6 +2173,24 @@ OpenOverviewFromDashboard(*) {
 OpenOverdueFromDashboard(*) {
     CloseDashboardDialog()
     OpenOverdueDialog()
+}
+
+OpenSelectedDashboardItem(*) {
+    global AppTitle
+
+    entry := GetSelectedDashboardEntry()
+    if !IsObject(entry) {
+        MsgBox("Nejprve vyberte položku, kterou chcete otevřít.", AppTitle, 0x40)
+        return
+    }
+
+    CloseDashboardDialog()
+    if (entry.kind = "custom" && entry.HasOwnProp("entryId") && entry.entryId != "") {
+        OpenVehicleReminderDialog(entry.vehicle, false, entry.entryId)
+        return
+    }
+
+    OpenVehicleForm("edit", entry.vehicle)
 }
 
 OpenSelectedDashboardVehicle(*) {
