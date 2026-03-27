@@ -1,2 +1,0 @@
-﻿backup_parse=ok
-history_parse=3
