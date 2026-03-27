@@ -7,12 +7,14 @@ První verze jednoduché přístupné evidence vozidel v AutoHotkey v2.
 - rozdělení vozidel do kategorií `Osobní vozidla`, `Motocykly`, `Nákladní vozidla`, `Autobusy`, `Ostatní`
 - přidání, úpravu a odstranění vozidla
 - vyhledávání v hlavním seznamu podle názvu, typu, značky nebo SPZ
+- globální hledání napříč vozidly, historií událostí, kilometry a tankováním, pojištěním a doklady i vlastními připomínkami
 - filtr hlavního seznamu na všechna vozidla, vozidla s blížícím se termínem, vozidla po termínu a vozidla bez vyplněné zelené karty
 - volitelné skrytí archivovaných a odstavených vozidel v hlavním seznamu, aniž by zmizela z dat a přehledů
 - detail vozidla se souhrnem údajů, stavem platností, posledními událostmi z historie a souhrnem tankování i dokladů
 - historii událostí pro každé vozidlo, včetně přidání, úpravy a odstranění servisních nebo jiných záznamů
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů
-- samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů a otevření navázaného souboru
+- rychlé hledání a řazení sloupců v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách
+- samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, otevření navázaného souboru i otevření jeho složky
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku
 - export nákladových přehledů do `TSV souhrnu`, `TSV detailu` a `HTML sestavy`
 - vlastní připomínky i s volbou opakování `Neopakovat`, `Každý rok`, `Každé 2 roky` a `Každých 5 let`
@@ -42,13 +44,14 @@ V hlavním okně:
 - pole `Filtr seznamu` rychle zobrazí jen vozidla, která právě vyžadují pozornost
 - zaškrtávátko `Skrýt archivovaná a odstavená vozidla` schová neaktivní vozidla jen z hlavního seznamu a svou volbu si pamatuje i po dalším spuštění
 - tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence otevřete i z menu `Vozidlo`
-- položka `Dashboard` v menu `Přehled` otevře rychlý souhrn termínů a stavů napříč všemi vozidly
+- položky `Dashboard` a `Globální hledání` v menu `Přehled` otevřou rychlý souhrn termínů a stavů nebo vyhledání napříč všemi evidencemi
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
 Klávesové zkratky v hlavním okně:
 
 - `Ctrl+N`: přidat vozidlo
 - `Ctrl+U` nebo `F2`: upravit vybrané vozidlo
 - `Ctrl+F`: přesunout fokus do hledání
+- `Ctrl+Shift+F`: otevřít globální hledání
 - `Ctrl+D`: otevřít dashboard
 - `Ctrl+T`: otevřít přehled termínů
 - `Ctrl+Shift+T`: otevřít propadlé termíny
@@ -62,6 +65,7 @@ Klávesové zkratky v hlavním okně:
 Klávesové zkratky v dashboardu a přehledech:
 
 - `Dashboard`: `Ctrl+R` obnoví seznam, `Ctrl+T` otevře přehled termínů, `Ctrl+Shift+T` otevře propadlé termíny, `Ctrl+O` zobrazí vybrané vozidlo a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
+- `Globální hledání`: `Ctrl+F` přesune fokus do hledání, `Ctrl+O` nebo `Enter` na seznamu otevře vybraný výsledek
 - `Přehled termínů`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+Shift+T` přepne do propadlých termínů
 - `Propadlé termíny`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+T` přepne zpět do přehledu termínů
 - v `Dashboardu`, `Přehledu termínů` i `Propadlých termínech` klávesa `Enter` otevře právě vybranou položku
@@ -69,9 +73,10 @@ Klávesové zkratky v dashboardu a přehledech:
 Klávesové zkratky v detailu a evidencích:
 
 - `Detail vozidla`: `Ctrl+U` nebo `F2` upraví vozidlo, `Ctrl+H` otevře historii, `Ctrl+R` připomínky, `Ctrl+K` kilometry a tankování a `Ctrl+P` pojištění a doklady
-- `Historie událostí`, `Kilometry a tankování`, `Pojištění a doklady` i `Vlastní připomínky`: `Ctrl+N` přidá záznam, `Ctrl+U` nebo `F2` upraví vybraný záznam a `Ctrl+D` otevře detail vozidla
+- `Historie událostí`, `Kilometry a tankování`, `Pojištění a doklady` i `Vlastní připomínky`: `Ctrl+F` přesune fokus do rychlého hledání, `Ctrl+N` přidá záznam, `Ctrl+U` nebo `F2` upraví vybraný záznam a `Ctrl+D` otevře detail vozidla
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní
-- v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu
+- kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce
+- v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu a `Ctrl+Shift+O` jeho složku
 - ve `Vlastních připomínkách` navíc `Ctrl+Shift+N` posune vybranou opakovanou připomínku na další termín
 - v `Nákladech a souhrnech` `Ctrl+R` obnoví vybrané období a `Ctrl+D` otevře detail vozidla
 
@@ -129,9 +134,9 @@ Pro upozornění aplikace používá pole `Příští TK` a `Zelená karta do`. 
 
 V horním menu najdete tyto části:
 
-- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování a pojištění a dokladů
 - `Soubor`: `Tiskový přehled`, `Export dat`, `Import dat`, `Konec`
-- `Přehled`: `Dashboard`, `Přehled termínů`, `Propadlé termíny`
+- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování a pojištění a dokladů
+- `Přehled`: `Dashboard`, `Globální hledání`, `Přehled termínů`, `Propadlé termíny`
 - `Nástroje`: `Nastavení`, `Skrýt do lišty`
 
 ## Ukládání dat

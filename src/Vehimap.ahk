@@ -68,11 +68,21 @@ global OverdueSummaryLabel := 0
 global OverdueSearchCtrl := 0
 global OverdueOpenButton := 0
 global OverdueEditButton := 0
+global GlobalSearchGui := 0
+global GlobalSearchList := 0
+global GlobalSearchResults := []
+global GlobalSearchSummaryLabel := 0
+global GlobalSearchSearchCtrl := 0
+global GlobalSearchOpenButton := 0
 global HistoryGui := 0
 global HistoryVehicleId := ""
 global HistoryList := 0
 global HistorySummaryLabel := 0
+global HistoryAllEntries := []
+global HistorySearchCtrl := 0
 global VisibleHistoryEventIds := []
+global HistorySortColumn := 1
+global HistorySortDescending := true
 global HistoryFormGui := 0
 global HistoryFormControls := {}
 global HistoryFormMode := ""
@@ -82,7 +92,11 @@ global FuelGui := 0
 global FuelVehicleId := ""
 global FuelList := 0
 global FuelSummaryLabel := 0
+global FuelAllEntries := []
+global FuelSearchCtrl := 0
 global VisibleFuelEntryIds := []
+global FuelSortColumn := 1
+global FuelSortDescending := true
 global FuelFormGui := 0
 global FuelFormControls := {}
 global FuelFormMode := ""
@@ -92,7 +106,11 @@ global RecordsGui := 0
 global RecordsVehicleId := ""
 global RecordsList := 0
 global RecordsSummaryLabel := 0
+global RecordsAllEntries := []
+global RecordsSearchCtrl := 0
 global VisibleRecordIds := []
+global RecordsSortColumn := 4
+global RecordsSortDescending := false
 global RecordFormGui := 0
 global RecordFormControls := {}
 global RecordFormMode := ""
@@ -102,7 +120,11 @@ global ReminderGui := 0
 global ReminderVehicleId := ""
 global ReminderList := 0
 global ReminderSummaryLabel := 0
+global ReminderAllEntries := []
+global ReminderSearchCtrl := 0
 global VisibleReminderIds := []
+global ReminderSortColumn := 2
+global ReminderSortDescending := false
 global ReminderFormGui := 0
 global ReminderFormControls := {}
 global ReminderFormMode := ""
@@ -137,6 +159,7 @@ global LastTrayIconTip := ""
 ^u::EditSelectedVehicle()
 F2::EditSelectedVehicle()
 ^f::FocusMainSearchShortcut()
+^+f::OpenGlobalSearchDialog()
 ^d::OpenDashboard()
 ^t::OpenUpcomingOverviewDialog()
 ^+t::OpenOverdueDialog()
@@ -149,6 +172,15 @@ F2::EditSelectedVehicle()
 
 #HotIf IsListViewFocusedInGui(MainGui)
 Enter::OpenSelectedVehicleDetail()
+#HotIf
+
+#HotIf IsGuiWindowActive(GlobalSearchGui)
+^f::FocusGlobalSearchShortcut()
+^o::OpenSelectedGlobalSearchResult()
+#HotIf
+
+#HotIf IsListViewFocusedInGui(GlobalSearchGui)
+Enter::OpenSelectedGlobalSearchResult()
 #HotIf
 
 #HotIf IsGuiWindowActive(DashboardGui)
@@ -200,6 +232,7 @@ F2::EditVehicleFromDetail()
 #HotIf
 
 #HotIf IsGuiWindowActive(HistoryGui)
+^f::FocusHistorySearchShortcut()
 ^n::AddVehicleHistoryEvent()
 ^u::EditSelectedVehicleHistoryEvent()
 F2::EditSelectedVehicleHistoryEvent()
@@ -212,6 +245,7 @@ Delete::DeleteSelectedVehicleHistoryEvent()
 #HotIf
 
 #HotIf IsGuiWindowActive(FuelGui)
+^f::FocusFuelSearchShortcut()
 ^n::AddVehicleFuelEntry()
 ^u::EditSelectedVehicleFuelEntry()
 F2::EditSelectedVehicleFuelEntry()
@@ -224,10 +258,12 @@ Delete::DeleteSelectedVehicleFuelEntry()
 #HotIf
 
 #HotIf IsGuiWindowActive(RecordsGui)
+^f::FocusRecordsSearchShortcut()
 ^n::AddVehicleRecord()
 ^u::EditSelectedVehicleRecord()
 F2::EditSelectedVehicleRecord()
 ^o::OpenSelectedVehicleRecordFile()
+^+o::OpenSelectedVehicleRecordFolder()
 ^d::OpenVehicleDetailFromRecords()
 #HotIf
 
@@ -237,6 +273,7 @@ Delete::DeleteSelectedVehicleRecord()
 #HotIf
 
 #HotIf IsGuiWindowActive(ReminderGui)
+^f::FocusReminderSearchShortcut()
 ^n::AddVehicleReminder()
 ^u::EditSelectedVehicleReminder()
 F2::EditSelectedVehicleReminder()
@@ -550,6 +587,7 @@ BuildMainMenuBar() {
 
     overviewMenu := Menu()
     overviewMenu.Add("Dashboard`tCtrl+D", OpenDashboard)
+    overviewMenu.Add("Globální hledání`tCtrl+Shift+F", OpenGlobalSearchDialog)
     overviewMenu.Add()
     overviewMenu.Add("Přehled termínů`tCtrl+T", OpenUpcomingOverviewDialog)
     overviewMenu.Add("Propadlé termíny`tCtrl+Shift+T", OpenOverdueDialog)
@@ -759,6 +797,14 @@ FocusMainSearchShortcut() {
     }
 }
 
+FocusGlobalSearchShortcut() {
+    global GlobalSearchSearchCtrl
+
+    if IsObject(GlobalSearchSearchCtrl) {
+        GlobalSearchSearchCtrl.Focus()
+    }
+}
+
 FocusOverviewSearchShortcut() {
     global OverviewSearchCtrl
 
@@ -772,6 +818,38 @@ FocusOverdueSearchShortcut() {
 
     if IsObject(OverdueSearchCtrl) {
         OverdueSearchCtrl.Focus()
+    }
+}
+
+FocusHistorySearchShortcut() {
+    global HistorySearchCtrl
+
+    if IsObject(HistorySearchCtrl) {
+        HistorySearchCtrl.Focus()
+    }
+}
+
+FocusFuelSearchShortcut() {
+    global FuelSearchCtrl
+
+    if IsObject(FuelSearchCtrl) {
+        FuelSearchCtrl.Focus()
+    }
+}
+
+FocusRecordsSearchShortcut() {
+    global RecordsSearchCtrl
+
+    if IsObject(RecordsSearchCtrl) {
+        RecordsSearchCtrl.Focus()
+    }
+}
+
+FocusReminderSearchShortcut() {
+    global ReminderSearchCtrl
+
+    if IsObject(ReminderSearchCtrl) {
+        ReminderSearchCtrl.Focus()
     }
 }
 
@@ -807,6 +885,589 @@ SwitchOverdueToOverviewShortcut() {
 
     CloseOverdueDialog()
     OpenUpcomingOverviewDialog()
+}
+
+OpenGlobalSearchDialog(*) {
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverdueGui, GlobalSearchGui, GlobalSearchList, GlobalSearchResults, GlobalSearchSummaryLabel, GlobalSearchSearchCtrl, GlobalSearchOpenButton, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui
+
+    if IsObject(GlobalSearchGui) {
+        WinActivate("ahk_id " GlobalSearchGui.Hwnd)
+        return
+    }
+
+    for guiRef in [DashboardGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui] {
+        if IsObject(guiRef) {
+            WinActivate("ahk_id " guiRef.Hwnd)
+            return
+        }
+    }
+
+    ShowMainWindow()
+
+    GlobalSearchResults := []
+    GlobalSearchGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Globální hledání")
+    GlobalSearchGui.SetFont("s10", "Segoe UI")
+    GlobalSearchGui.OnEvent("Close", CloseGlobalSearchDialog)
+    GlobalSearchGui.OnEvent("Escape", CloseGlobalSearchDialog)
+
+    MainGui.Opt("+Disabled")
+
+    GlobalSearchGui.AddText("x20 y20 w1000", "Zde můžete hledat napříč názvy vozidel, historií událostí, kilometry a tankováním, pojištěním a doklady i vlastními připomínkami.")
+    GlobalSearchGui.AddText("x20 y55 w210", "Hledat napříč celým Vehimapem")
+    GlobalSearchSearchCtrl := GlobalSearchGui.AddEdit("x240 y52 w430")
+    GlobalSearchSearchCtrl.OnEvent("Change", OnGlobalSearchChanged)
+
+    GlobalSearchSummaryLabel := GlobalSearchGui.AddText("x20 y86 w1000", "")
+
+    GlobalSearchList := GlobalSearchGui.AddListView("x20 y112 w1000 h255 Grid -Multi", ["Typ", "Vozidlo", "SPZ", "Položka", "Detail", "Datum / platnost"])
+    GlobalSearchList.OnEvent("DoubleClick", OpenSelectedGlobalSearchResult)
+    GlobalSearchList.ModifyCol(1, "90")
+    GlobalSearchList.ModifyCol(2, "175")
+    GlobalSearchList.ModifyCol(3, "95")
+    GlobalSearchList.ModifyCol(4, "205")
+    GlobalSearchList.ModifyCol(5, "340")
+    GlobalSearchList.ModifyCol(6, "95")
+
+    GlobalSearchOpenButton := GlobalSearchGui.AddButton("x650 y382 w160 h30", "Otevřít výsledek")
+    GlobalSearchOpenButton.OnEvent("Click", OpenSelectedGlobalSearchResult)
+    GlobalSearchOpenButton.Opt("+Disabled")
+
+    closeButton := GlobalSearchGui.AddButton("x820 y382 w110 h30", "Zavřít")
+    closeButton.OnEvent("Click", CloseGlobalSearchDialog)
+
+    GlobalSearchGui.Show("w1040 h432")
+    PopulateGlobalSearchList()
+    GlobalSearchSearchCtrl.Focus()
+}
+
+CloseGlobalSearchDialog(*) {
+    global GlobalSearchGui, GlobalSearchList, GlobalSearchResults, GlobalSearchSummaryLabel, GlobalSearchSearchCtrl, GlobalSearchOpenButton, MainGui
+
+    if IsObject(GlobalSearchGui) {
+        GlobalSearchGui.Destroy()
+        GlobalSearchGui := 0
+    }
+
+    GlobalSearchList := 0
+    GlobalSearchResults := []
+    GlobalSearchSummaryLabel := 0
+    GlobalSearchSearchCtrl := 0
+    GlobalSearchOpenButton := 0
+    MainGui.Opt("-Disabled")
+    ShowMainWindow()
+}
+
+OnGlobalSearchChanged(*) {
+    selectedKey := GetSelectedGlobalSearchResultKey()
+    PopulateGlobalSearchList(selectedKey)
+}
+
+PopulateGlobalSearchList(selectedKey := "", focusList := false) {
+    global GlobalSearchList, GlobalSearchResults, GlobalSearchSummaryLabel, GlobalSearchOpenButton
+
+    if !IsObject(GlobalSearchList) {
+        return
+    }
+
+    searchText := GetGlobalSearchText()
+    GlobalSearchResults := BuildGlobalSearchResults(searchText)
+
+    if IsObject(GlobalSearchSummaryLabel) {
+        GlobalSearchSummaryLabel.Text := BuildGlobalSearchSummaryText(GlobalSearchResults, searchText)
+    }
+
+    GlobalSearchList.Opt("-Redraw")
+    GlobalSearchList.Delete()
+
+    selectedRow := 0
+    for result in GlobalSearchResults {
+        row := GlobalSearchList.Add(
+            "",
+            result.kindLabel,
+            result.vehicle.name,
+            result.vehicle.plate,
+            result.itemText,
+            ShortenText(result.detailText, 78),
+            result.dateText
+        )
+        if (selectedKey != "" && BuildGlobalSearchResultKey(result) = selectedKey) {
+            selectedRow := row
+        }
+    }
+
+    GlobalSearchList.Opt("+Redraw")
+
+    if IsObject(GlobalSearchOpenButton) {
+        GlobalSearchOpenButton.Opt(GlobalSearchResults.Length = 0 ? "+Disabled" : "-Disabled")
+    }
+
+    if (GlobalSearchResults.Length = 0) {
+        return
+    }
+
+    if !selectedRow {
+        selectedRow := 1
+    }
+
+    mode := focusList ? "Select Focus Vis" : "Select Vis"
+    GlobalSearchList.Modify(selectedRow, mode)
+}
+
+GetGlobalSearchText() {
+    global GlobalSearchSearchCtrl
+
+    if !IsObject(GlobalSearchSearchCtrl) {
+        return ""
+    }
+
+    return Trim(GlobalSearchSearchCtrl.Text)
+}
+
+BuildGlobalSearchResults(searchText := "") {
+    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleReminders
+
+    results := []
+    needle := StrLower(Trim(searchText))
+    if (needle = "") {
+        return results
+    }
+
+    vehicleMap := Map()
+    for vehicle in Vehicles {
+        vehicleMap[vehicle.id] := vehicle
+    }
+
+    for vehicle in Vehicles {
+        meta := GetVehicleMeta(vehicle.id)
+        AddGlobalSearchResultIfMatch(
+            &results,
+            needle,
+            "vehicle",
+            "Vozidlo",
+            vehicle,
+            vehicle.id,
+            BuildGlobalSearchVehicleItemText(vehicle),
+            BuildGlobalSearchVehicleDetailText(vehicle, meta),
+            BuildGlobalSearchVehicleDateText(vehicle),
+            [vehicle.name, vehicle.vehicleType, vehicle.makeModel, vehicle.plate, vehicle.year, vehicle.power, vehicle.category, meta.state, meta.tags, vehicle.lastTk, vehicle.nextTk, vehicle.greenCardFrom, vehicle.greenCardTo, GetVehicleStatusText(vehicle)]
+        )
+    }
+
+    for event in VehicleHistory {
+        if !vehicleMap.Has(event.vehicleId) {
+            continue
+        }
+        vehicle := vehicleMap[event.vehicleId]
+        AddGlobalSearchResultIfMatch(
+            &results,
+            needle,
+            "history",
+            "Historie",
+            vehicle,
+            event.id,
+            Trim(event.eventType) != "" ? event.eventType : "Událost",
+            BuildGlobalSearchHistoryDetailText(event),
+            event.eventDate,
+            [vehicle.name, vehicle.plate, vehicle.makeModel, event.eventDate, event.eventType, event.odometer, event.cost, event.note]
+        )
+    }
+
+    for entry in VehicleFuelLog {
+        if !vehicleMap.Has(entry.vehicleId) {
+            continue
+        }
+        vehicle := vehicleMap[entry.vehicleId]
+        AddGlobalSearchResultIfMatch(
+            &results,
+            needle,
+            "fuel",
+            "Tankování",
+            vehicle,
+            entry.id,
+            BuildGlobalSearchFuelItemText(entry),
+            BuildGlobalSearchFuelDetailText(entry),
+            entry.entryDate,
+            [vehicle.name, vehicle.plate, vehicle.makeModel, entry.entryDate, entry.odometer, entry.liters, entry.totalCost, entry.fullTank ? "ano" : "ne", entry.fuelType, entry.note]
+        )
+    }
+
+    for entry in VehicleRecords {
+        if !vehicleMap.Has(entry.vehicleId) {
+            continue
+        }
+        vehicle := vehicleMap[entry.vehicleId]
+        AddGlobalSearchResultIfMatch(
+            &results,
+            needle,
+            "record",
+            "Doklad",
+            vehicle,
+            entry.id,
+            Trim(entry.title) != "" ? entry.title : entry.recordType,
+            BuildGlobalSearchRecordDetailText(entry),
+            Trim(entry.validTo) != "" ? entry.validTo : entry.validFrom,
+            [vehicle.name, vehicle.plate, vehicle.makeModel, entry.recordType, entry.title, entry.provider, entry.validFrom, entry.validTo, entry.price, entry.filePath, GetFileNameFromPath(entry.filePath), entry.note]
+        )
+    }
+
+    for entry in VehicleReminders {
+        if !vehicleMap.Has(entry.vehicleId) {
+            continue
+        }
+        vehicle := vehicleMap[entry.vehicleId]
+        AddGlobalSearchResultIfMatch(
+            &results,
+            needle,
+            "reminder",
+            "Připomínka",
+            vehicle,
+            entry.id,
+            Trim(entry.title) != "" ? entry.title : "Připomínka",
+            BuildGlobalSearchReminderDetailText(entry),
+            entry.dueDate,
+            [vehicle.name, vehicle.plate, vehicle.makeModel, entry.title, entry.dueDate, entry.reminderDays, GetReminderRepeatLabel(entry.HasOwnProp("repeatMode") ? entry.repeatMode : ""), GetReminderExpirationStatusText(entry.dueDate, entry.reminderDays + 0), entry.note]
+        )
+    }
+
+    SortGlobalSearchResults(&results)
+    return results
+}
+
+AddGlobalSearchResultIfMatch(&results, needle, kind, kindLabel, vehicle, itemId, itemText, detailText, dateText, searchTexts) {
+    matchRank := GetSearchTextMatchRank(needle, searchTexts)
+    if (matchRank >= 1000000) {
+        return
+    }
+
+    results.Push({
+        kind: kind,
+        kindLabel: kindLabel,
+        vehicle: vehicle,
+        itemId: itemId,
+        itemText: itemText,
+        detailText: detailText,
+        dateText: dateText,
+        matchRank: matchRank
+    })
+}
+
+GetSearchTextMatchRank(needle, texts) {
+    if (needle = "") {
+        return 1000000
+    }
+
+    bestRank := 1000000
+    for text in texts {
+        haystack := StrLower(Trim(text))
+        if (haystack = "") {
+            continue
+        }
+
+        if (haystack = needle) {
+            return 0
+        }
+
+        position := InStr(haystack, needle)
+        if !position {
+            continue
+        }
+
+        if (position = 1) {
+            rank := 100 + StrLen(haystack)
+        } else {
+            rank := 1000 + position + StrLen(haystack)
+        }
+
+        if (rank < bestRank) {
+            bestRank := rank
+        }
+    }
+
+    return bestRank
+}
+
+SortGlobalSearchResults(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareGlobalSearchResults(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareGlobalSearchResults(left, right) {
+    result := CompareNumberValues(left.matchRank, right.matchRank)
+    if (result != 0) {
+        return result
+    }
+
+    result := CompareNumberValues(GetGlobalSearchKindPriority(left.kind), GetGlobalSearchKindPriority(right.kind))
+    if (result != 0) {
+        return result
+    }
+
+    result := CompareTextValues(left.vehicle.name, right.vehicle.name)
+    if (result != 0) {
+        return result
+    }
+
+    result := CompareTextValues(left.vehicle.plate, right.vehicle.plate)
+    if (result != 0) {
+        return result
+    }
+
+    result := CompareTextValues(left.itemText, right.itemText)
+    if (result != 0) {
+        return result
+    }
+
+    return CompareTextValues(left.itemId, right.itemId)
+}
+
+GetGlobalSearchKindPriority(kind) {
+    switch kind {
+        case "vehicle":
+            return 1
+        case "reminder":
+            return 2
+        case "record":
+            return 3
+        case "history":
+            return 4
+        case "fuel":
+            return 5
+    }
+
+    return 99
+}
+
+BuildGlobalSearchSummaryText(results, searchText := "") {
+    needle := Trim(searchText)
+    if (needle = "") {
+        return "Zadejte hledaný text. Vehimap bude prohledávat vozidla, historii, tankování, doklady i připomínky."
+    }
+
+    if (results.Length = 0) {
+        return "Pro hledání " needle " nebyl nalezen žádný výsledek."
+    }
+
+    vehicleCount := 0
+    historyCount := 0
+    fuelCount := 0
+    recordCount := 0
+    reminderCount := 0
+
+    for result in results {
+        switch result.kind {
+            case "vehicle":
+                vehicleCount += 1
+            case "history":
+                historyCount += 1
+            case "fuel":
+                fuelCount += 1
+            case "record":
+                recordCount += 1
+            case "reminder":
+                reminderCount += 1
+        }
+    }
+
+    return "Nalezeno výsledků: " results.Length ". Vozidla: " vehicleCount ". Historie: " historyCount ". Tankování: " fuelCount ". Doklady: " recordCount ". Připomínky: " reminderCount "."
+}
+
+BuildGlobalSearchResultKey(result) {
+    return result.kind "|" result.vehicle.id "|" result.itemId
+}
+
+GetSelectedGlobalSearchResultKey() {
+    global GlobalSearchList, GlobalSearchResults
+
+    if !IsObject(GlobalSearchList) {
+        return ""
+    }
+
+    row := GlobalSearchList.GetNext(0)
+    if !row || row > GlobalSearchResults.Length {
+        return ""
+    }
+
+    return BuildGlobalSearchResultKey(GlobalSearchResults[row])
+}
+
+GetSelectedGlobalSearchResult(actionLabel := "otevřít") {
+    global AppTitle, GlobalSearchList, GlobalSearchResults
+
+    if !IsObject(GlobalSearchList) {
+        return ""
+    }
+
+    row := GlobalSearchList.GetNext(0)
+    if !row || row > GlobalSearchResults.Length {
+        MsgBox("Nejprve vyberte výsledek, který chcete " actionLabel ".", AppTitle, 0x40)
+        return ""
+    }
+
+    return GlobalSearchResults[row]
+}
+
+OpenSelectedGlobalSearchResult(*) {
+    result := GetSelectedGlobalSearchResult("otevřít")
+    if !IsObject(result) {
+        return
+    }
+
+    CloseGlobalSearchDialog()
+
+    switch result.kind {
+        case "vehicle":
+            OpenVehicleById(result.vehicle.id, true)
+        case "history":
+            OpenVehicleHistoryDialog(result.vehicle, false, result.itemId)
+        case "fuel":
+            OpenVehicleFuelDialog(result.vehicle, false, result.itemId)
+        case "record":
+            OpenVehicleRecordsDialog(result.vehicle, false, result.itemId)
+        case "reminder":
+            OpenVehicleReminderDialog(result.vehicle, false, result.itemId)
+    }
+}
+
+BuildGlobalSearchVehicleItemText(vehicle) {
+    if (Trim(vehicle.makeModel) != "") {
+        return vehicle.makeModel
+    }
+    if (Trim(vehicle.vehicleType) != "") {
+        return vehicle.vehicleType
+    }
+    return "Detail vozidla"
+}
+
+BuildGlobalSearchVehicleDetailText(vehicle, meta) {
+    parts := []
+    if (Trim(vehicle.category) != "") {
+        parts.Push(vehicle.category)
+    }
+    if (Trim(meta.state) != "") {
+        parts.Push("Stav: " meta.state)
+    }
+    if (Trim(meta.tags) != "") {
+        parts.Push("Štítky: " meta.tags)
+    }
+
+    statusText := GetVehicleStatusText(vehicle)
+    if (statusText != "") {
+        parts.Push(statusText)
+    }
+
+    return JoinInline(parts, " | ")
+}
+
+BuildGlobalSearchVehicleDateText(vehicle) {
+    parts := []
+    if (Trim(vehicle.nextTk) != "") {
+        parts.Push("TK " vehicle.nextTk)
+    }
+    if (Trim(vehicle.greenCardTo) != "") {
+        parts.Push("ZK " vehicle.greenCardTo)
+    }
+    return JoinInline(parts, " | ")
+}
+
+BuildGlobalSearchHistoryDetailText(event) {
+    parts := []
+    if (Trim(event.odometer) != "") {
+        parts.Push("Km " FormatHistoryOdometer(event.odometer))
+    }
+    if (Trim(event.cost) != "") {
+        parts.Push("Cena " event.cost)
+    }
+    if (Trim(event.note) != "") {
+        parts.Push(ShortenText(event.note, 55))
+    }
+    return JoinInline(parts, " | ")
+}
+
+BuildGlobalSearchFuelItemText(entry) {
+    if (Trim(entry.liters) != "" || Trim(entry.totalCost) != "") {
+        text := "Tankování"
+        if (Trim(entry.fuelType) != "") {
+            text .= " - " entry.fuelType
+        }
+        return text
+    }
+
+    return "Stav tachometru"
+}
+
+BuildGlobalSearchFuelDetailText(entry) {
+    parts := []
+    if (Trim(entry.odometer) != "") {
+        parts.Push("Km " FormatHistoryOdometer(entry.odometer))
+    }
+    if (Trim(entry.liters) != "") {
+        parts.Push(FormatFuelLiters(entry.liters))
+    }
+    if (Trim(entry.totalCost) != "") {
+        parts.Push(FormatFuelMoney(entry.totalCost))
+    }
+    if entry.fullTank {
+        parts.Push("Plná nádrž")
+    }
+    if (Trim(entry.note) != "") {
+        parts.Push(ShortenText(entry.note, 55))
+    }
+    return JoinInline(parts, " | ")
+}
+
+BuildGlobalSearchRecordDetailText(entry) {
+    parts := []
+    if (Trim(entry.recordType) != "") {
+        parts.Push(entry.recordType)
+    }
+    if (Trim(entry.provider) != "") {
+        parts.Push(entry.provider)
+    }
+
+    fileName := GetFileNameFromPath(entry.filePath)
+    if (fileName != "") {
+        parts.Push(fileName)
+    }
+
+    if (Trim(entry.note) != "") {
+        parts.Push(ShortenText(entry.note, 50))
+    }
+
+    return JoinInline(parts, " | ")
+}
+
+BuildGlobalSearchReminderDetailText(entry) {
+    parts := []
+
+    repeatLabel := GetReminderRepeatLabel(entry.HasOwnProp("repeatMode") ? entry.repeatMode : "")
+    if (repeatLabel != "" && repeatLabel != "Neopakovat") {
+        parts.Push(repeatLabel)
+    }
+
+    statusText := GetReminderExpirationStatusText(entry.dueDate, entry.reminderDays + 0)
+    if (statusText != "") {
+        parts.Push(statusText)
+    }
+
+    if (Trim(entry.note) != "") {
+        parts.Push(ShortenText(entry.note, 50))
+    }
+
+    return JoinInline(parts, " | ")
 }
 
 ExportAppData(*) {
@@ -2940,8 +3601,8 @@ SaveVehicleFromForm(*) {
     CheckDueVehicles(false, false)
 }
 
-OpenVehicleHistoryDialog(vehicle, openAddEvent := false) {
-    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryVehicleId, HistoryList, HistorySummaryLabel, VisibleHistoryEventIds, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
+OpenVehicleHistoryDialog(vehicle, openAddEvent := false, selectEventId := "") {
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryVehicleId, HistoryList, HistorySummaryLabel, HistoryAllEntries, HistorySearchCtrl, VisibleHistoryEventIds, HistorySortColumn, HistorySortDescending, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
 
     if IsObject(HistoryGui) {
         WinActivate("ahk_id " HistoryGui.Hwnd)
@@ -3001,7 +3662,11 @@ OpenVehicleHistoryDialog(vehicle, openAddEvent := false) {
     ShowMainWindow()
 
     HistoryVehicleId := vehicle.id
+    HistoryAllEntries := []
+    HistorySearchCtrl := 0
     VisibleHistoryEventIds := []
+    HistorySortColumn := 1
+    HistorySortDescending := true
     HistoryGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Historie událostí")
     HistoryGui.SetFont("s10", "Segoe UI")
     HistoryGui.OnEvent("Close", CloseVehicleHistoryDialog)
@@ -3011,32 +3676,36 @@ OpenVehicleHistoryDialog(vehicle, openAddEvent := false) {
 
     HistoryGui.AddText("x20 y20 w780", "Zde můžete vést servisní a další události k vozidlu " vehicle.name ". Datum události se zadává jako DD.MM.RRRR.")
     HistorySummaryLabel := HistoryGui.AddText("x20 y50 w780", "")
+    HistoryGui.AddText("x20 y82 w290", "Hledat datum, událost, km, cenu nebo poznámku")
+    HistorySearchCtrl := HistoryGui.AddEdit("x320 y79 w350")
+    HistorySearchCtrl.OnEvent("Change", OnHistorySearchChanged)
 
-    HistoryList := HistoryGui.AddListView("x20 y80 w780 h250 Grid -Multi", ["Datum", "Událost", "Km", "Cena", "Poznámka"])
+    HistoryList := HistoryGui.AddListView("x20 y112 w780 h250 Grid -Multi", ["Datum", "Událost", "Km", "Cena", "Poznámka"])
     HistoryList.OnEvent("DoubleClick", EditSelectedVehicleHistoryEvent)
+    HistoryList.OnEvent("ColClick", OnHistoryColumnClick)
     HistoryList.ModifyCol(1, "95")
     HistoryList.ModifyCol(2, "190")
     HistoryList.ModifyCol(3, "95")
     HistoryList.ModifyCol(4, "100")
     HistoryList.ModifyCol(5, "280")
 
-    addButton := HistoryGui.AddButton("x95 y345 w120 h30", "Přidat událost")
+    addButton := HistoryGui.AddButton("x95 y377 w120 h30", "Přidat událost")
     addButton.OnEvent("Click", AddVehicleHistoryEvent)
 
-    editButton := HistoryGui.AddButton("x225 y345 w120 h30", "Upravit událost")
+    editButton := HistoryGui.AddButton("x225 y377 w120 h30", "Upravit událost")
     editButton.OnEvent("Click", EditSelectedVehicleHistoryEvent)
 
-    deleteButton := HistoryGui.AddButton("x355 y345 w120 h30", "Odstranit událost")
+    deleteButton := HistoryGui.AddButton("x355 y377 w120 h30", "Odstranit událost")
     deleteButton.OnEvent("Click", DeleteSelectedVehicleHistoryEvent)
 
-    detailButton := HistoryGui.AddButton("x485 y345 w120 h30", "Detail vozidla")
+    detailButton := HistoryGui.AddButton("x485 y377 w120 h30", "Detail vozidla")
     detailButton.OnEvent("Click", OpenVehicleDetailFromHistory)
 
-    closeButton := HistoryGui.AddButton("x615 y345 w100 h30", "Zavřít")
+    closeButton := HistoryGui.AddButton("x615 y377 w100 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleHistoryDialog)
 
-    HistoryGui.Show("w820 h395")
-    PopulateVehicleHistoryList("", true)
+    HistoryGui.Show("w820 h427")
+    PopulateVehicleHistoryList(selectEventId, true)
 
     if openAddEvent {
         OpenVehicleHistoryEventForm("add")
@@ -3046,7 +3715,7 @@ OpenVehicleHistoryDialog(vehicle, openAddEvent := false) {
 }
 
 CloseVehicleHistoryDialog(*) {
-    global HistoryGui, HistoryVehicleId, HistoryList, HistorySummaryLabel, VisibleHistoryEventIds, MainGui
+    global HistoryGui, HistoryVehicleId, HistoryList, HistorySummaryLabel, HistoryAllEntries, HistorySearchCtrl, VisibleHistoryEventIds, HistorySortColumn, HistorySortDescending, MainGui
 
     if IsObject(HistoryGui) {
         HistoryGui.Destroy()
@@ -3056,20 +3725,26 @@ CloseVehicleHistoryDialog(*) {
     HistoryVehicleId := ""
     HistoryList := 0
     HistorySummaryLabel := 0
+    HistoryAllEntries := []
+    HistorySearchCtrl := 0
     VisibleHistoryEventIds := []
+    HistorySortColumn := 1
+    HistorySortDescending := true
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
 
 PopulateVehicleHistoryList(selectEventId := "", focusList := false) {
-    global HistoryGui, HistoryVehicleId, HistoryList, HistorySummaryLabel, VisibleHistoryEventIds
+    global HistoryGui, HistoryVehicleId, HistoryList, HistorySummaryLabel, HistoryAllEntries, VisibleHistoryEventIds
 
     if !IsObject(HistoryGui) || !IsObject(HistoryList) {
         return
     }
 
     vehicle := FindVehicleById(HistoryVehicleId)
-    events := GetVehicleHistoryEntries(HistoryVehicleId)
+    HistoryAllEntries := GetVehicleHistoryEntries(HistoryVehicleId)
+    events := FilterVehicleHistoryEntriesBySearch(HistoryAllEntries, GetHistorySearchText())
+    SortVisibleVehicleHistoryEntries(&events)
     VisibleHistoryEventIds := []
     selectedRow := 0
 
@@ -3097,6 +3772,109 @@ PopulateVehicleHistoryList(selectEventId := "", focusList := false) {
     }
 
     HistoryList.Modify(selectedRow, focusList ? "Select Focus Vis" : "Select Vis")
+}
+
+OnHistorySearchChanged(*) {
+    selectedEventId := ""
+    event := GetSelectedVehicleHistoryEvent()
+    if IsObject(event) {
+        selectedEventId := event.id
+    }
+
+    PopulateVehicleHistoryList(selectedEventId)
+}
+
+OnHistoryColumnClick(ctrl, column) {
+    global HistorySortColumn, HistorySortDescending
+
+    if (HistorySortColumn = column) {
+        HistorySortDescending := !HistorySortDescending
+    } else {
+        HistorySortColumn := column
+        HistorySortDescending := (column = 1)
+    }
+
+    selectedEventId := ""
+    event := GetSelectedVehicleHistoryEvent()
+    if IsObject(event) {
+        selectedEventId := event.id
+    }
+
+    PopulateVehicleHistoryList(selectedEventId, true)
+}
+
+GetHistorySearchText() {
+    global HistorySearchCtrl
+
+    if !IsObject(HistorySearchCtrl) {
+        return ""
+    }
+
+    return Trim(HistorySearchCtrl.Text)
+}
+
+FilterVehicleHistoryEntriesBySearch(entries, searchText := "") {
+    filtered := []
+    needle := StrLower(Trim(searchText))
+
+    for entry in entries {
+        haystack := StrLower(entry.eventDate " " entry.eventType " " entry.odometer " " entry.cost " " entry.note)
+        if (needle = "" || InStr(haystack, needle)) {
+            filtered.Push(entry)
+        }
+    }
+
+    return filtered
+}
+
+SortVisibleVehicleHistoryEntries(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareVisibleVehicleHistoryEntries(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareVisibleVehicleHistoryEntries(left, right) {
+    global HistorySortColumn, HistorySortDescending
+
+    result := CompareVisibleVehicleHistoryEntriesByColumn(left, right, HistorySortColumn)
+    if (result = 0 && HistorySortColumn != 1) {
+        result := CompareVisibleVehicleHistoryEntriesByColumn(left, right, 1)
+    }
+    if (result = 0) {
+        result := CompareTextValues(left.id, right.id)
+    }
+
+    return HistorySortDescending ? -result : result
+}
+
+CompareVisibleVehicleHistoryEntriesByColumn(left, right, column) {
+    switch column {
+        case 1:
+            return CompareOptionalStampValues(ParseEventDateStamp(left.eventDate), ParseEventDateStamp(right.eventDate))
+        case 2:
+            return CompareTextValues(left.eventType, right.eventType)
+        case 3:
+            return CompareOptionalIntegerTexts(left.odometer, right.odometer)
+        case 4:
+            return CompareOptionalMoneyTexts(left.cost, right.cost)
+        case 5:
+            return CompareTextValues(left.note, right.note)
+    }
+
+    return 0
 }
 
 GetSelectedVehicleHistoryEvent() {
@@ -3300,8 +4078,8 @@ SaveVehicleHistoryEventFromForm(*) {
     PopulateVehicleHistoryList(event.id, true)
 }
 
-OpenVehicleFuelDialog(vehicle, openAddEntry := false) {
-    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelVehicleId, FuelList, FuelSummaryLabel, VisibleFuelEntryIds, FuelFormGui, RecordsGui, RecordFormGui
+OpenVehicleFuelDialog(vehicle, openAddEntry := false, selectEntryId := "") {
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelVehicleId, FuelList, FuelSummaryLabel, FuelAllEntries, FuelSearchCtrl, VisibleFuelEntryIds, FuelSortColumn, FuelSortDescending, FuelFormGui, RecordsGui, RecordFormGui
 
     if IsObject(FuelGui) {
         WinActivate("ahk_id " FuelGui.Hwnd)
@@ -3361,7 +4139,11 @@ OpenVehicleFuelDialog(vehicle, openAddEntry := false) {
     ShowMainWindow()
 
     FuelVehicleId := vehicle.id
+    FuelAllEntries := []
+    FuelSearchCtrl := 0
     VisibleFuelEntryIds := []
+    FuelSortColumn := 1
+    FuelSortDescending := true
     FuelGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Kilometry a tankování")
     FuelGui.SetFont("s10", "Segoe UI")
     FuelGui.OnEvent("Close", CloseVehicleFuelDialog)
@@ -3371,9 +4153,13 @@ OpenVehicleFuelDialog(vehicle, openAddEntry := false) {
 
     FuelGui.AddText("x20 y20 w820", "Zde můžete evidovat stavy tachometru, tankování a orientační spotřebu vozidla " vehicle.name ". Datum zadejte jako DD.MM.RRRR.")
     FuelSummaryLabel := FuelGui.AddText("x20 y50 w820", "")
+    FuelGui.AddText("x20 y82 w320", "Hledat datum, tachometr, litry, cenu, palivo nebo poznámku")
+    FuelSearchCtrl := FuelGui.AddEdit("x350 y79 w350")
+    FuelSearchCtrl.OnEvent("Change", OnFuelSearchChanged)
 
-    FuelList := FuelGui.AddListView("x20 y80 w820 h255 Grid -Multi", ["Datum", "Tachometr", "Litry", "Cena", "Plná nádrž", "Palivo", "Poznámka"])
+    FuelList := FuelGui.AddListView("x20 y112 w820 h255 Grid -Multi", ["Datum", "Tachometr", "Litry", "Cena", "Plná nádrž", "Palivo", "Poznámka"])
     FuelList.OnEvent("DoubleClick", EditSelectedVehicleFuelEntry)
+    FuelList.OnEvent("ColClick", OnFuelColumnClick)
     FuelList.ModifyCol(1, "95")
     FuelList.ModifyCol(2, "100")
     FuelList.ModifyCol(3, "70")
@@ -3382,23 +4168,23 @@ OpenVehicleFuelDialog(vehicle, openAddEntry := false) {
     FuelList.ModifyCol(6, "95")
     FuelList.ModifyCol(7, "240")
 
-    addButton := FuelGui.AddButton("x80 y350 w120 h30", "Přidat záznam")
+    addButton := FuelGui.AddButton("x80 y382 w120 h30", "Přidat záznam")
     addButton.OnEvent("Click", AddVehicleFuelEntry)
 
-    editButton := FuelGui.AddButton("x210 y350 w120 h30", "Upravit záznam")
+    editButton := FuelGui.AddButton("x210 y382 w120 h30", "Upravit záznam")
     editButton.OnEvent("Click", EditSelectedVehicleFuelEntry)
 
-    deleteButton := FuelGui.AddButton("x340 y350 w130 h30", "Odstranit záznam")
+    deleteButton := FuelGui.AddButton("x340 y382 w130 h30", "Odstranit záznam")
     deleteButton.OnEvent("Click", DeleteSelectedVehicleFuelEntry)
 
-    detailButton := FuelGui.AddButton("x480 y350 w120 h30", "Detail vozidla")
+    detailButton := FuelGui.AddButton("x480 y382 w120 h30", "Detail vozidla")
     detailButton.OnEvent("Click", OpenVehicleDetailFromFuel)
 
-    closeButton := FuelGui.AddButton("x610 y350 w100 h30", "Zavřít")
+    closeButton := FuelGui.AddButton("x610 y382 w100 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleFuelDialog)
 
-    FuelGui.Show("w860 h400")
-    PopulateVehicleFuelList("", true)
+    FuelGui.Show("w860 h432")
+    PopulateVehicleFuelList(selectEntryId, true)
 
     if openAddEntry {
         OpenVehicleFuelEntryForm("add")
@@ -3408,7 +4194,7 @@ OpenVehicleFuelDialog(vehicle, openAddEntry := false) {
 }
 
 CloseVehicleFuelDialog(*) {
-    global FuelGui, FuelVehicleId, FuelList, FuelSummaryLabel, VisibleFuelEntryIds, MainGui
+    global FuelGui, FuelVehicleId, FuelList, FuelSummaryLabel, FuelAllEntries, FuelSearchCtrl, VisibleFuelEntryIds, FuelSortColumn, FuelSortDescending, MainGui
 
     if IsObject(FuelGui) {
         FuelGui.Destroy()
@@ -3418,19 +4204,25 @@ CloseVehicleFuelDialog(*) {
     FuelVehicleId := ""
     FuelList := 0
     FuelSummaryLabel := 0
+    FuelAllEntries := []
+    FuelSearchCtrl := 0
     VisibleFuelEntryIds := []
+    FuelSortColumn := 1
+    FuelSortDescending := true
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
 
 PopulateVehicleFuelList(selectEntryId := "", focusList := false) {
-    global FuelGui, FuelVehicleId, FuelList, FuelSummaryLabel, VisibleFuelEntryIds
+    global FuelGui, FuelVehicleId, FuelList, FuelSummaryLabel, FuelAllEntries, VisibleFuelEntryIds
 
     if !IsObject(FuelGui) || !IsObject(FuelList) {
         return
     }
 
-    entries := GetVehicleFuelEntries(FuelVehicleId)
+    FuelAllEntries := GetVehicleFuelEntries(FuelVehicleId)
+    entries := FilterVehicleFuelEntriesBySearch(FuelAllEntries, GetFuelSearchText())
+    SortVisibleVehicleFuelEntries(&entries)
     VisibleFuelEntryIds := []
     selectedRow := 0
 
@@ -3467,6 +4259,114 @@ PopulateVehicleFuelList(selectEntryId := "", focusList := false) {
     }
 
     FuelList.Modify(selectedRow, focusList ? "Select Focus Vis" : "Select Vis")
+}
+
+OnFuelSearchChanged(*) {
+    selectedEntryId := ""
+    entry := GetSelectedVehicleFuelEntry()
+    if IsObject(entry) {
+        selectedEntryId := entry.id
+    }
+
+    PopulateVehicleFuelList(selectedEntryId)
+}
+
+OnFuelColumnClick(ctrl, column) {
+    global FuelSortColumn, FuelSortDescending
+
+    if (FuelSortColumn = column) {
+        FuelSortDescending := !FuelSortDescending
+    } else {
+        FuelSortColumn := column
+        FuelSortDescending := (column = 1 || column = 2)
+    }
+
+    selectedEntryId := ""
+    entry := GetSelectedVehicleFuelEntry()
+    if IsObject(entry) {
+        selectedEntryId := entry.id
+    }
+
+    PopulateVehicleFuelList(selectedEntryId, true)
+}
+
+GetFuelSearchText() {
+    global FuelSearchCtrl
+
+    if !IsObject(FuelSearchCtrl) {
+        return ""
+    }
+
+    return Trim(FuelSearchCtrl.Text)
+}
+
+FilterVehicleFuelEntriesBySearch(entries, searchText := "") {
+    filtered := []
+    needle := StrLower(Trim(searchText))
+
+    for entry in entries {
+        fullTankText := entry.fullTank ? "ano" : "ne"
+        haystack := StrLower(entry.entryDate " " entry.odometer " " entry.liters " " entry.totalCost " " fullTankText " " entry.fuelType " " entry.note)
+        if (needle = "" || InStr(haystack, needle)) {
+            filtered.Push(entry)
+        }
+    }
+
+    return filtered
+}
+
+SortVisibleVehicleFuelEntries(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareVisibleVehicleFuelEntries(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareVisibleVehicleFuelEntries(left, right) {
+    global FuelSortColumn, FuelSortDescending
+
+    result := CompareVisibleVehicleFuelEntriesByColumn(left, right, FuelSortColumn)
+    if (result = 0 && FuelSortColumn != 1) {
+        result := CompareVisibleVehicleFuelEntriesByColumn(left, right, 1)
+    }
+    if (result = 0) {
+        result := CompareTextValues(left.id, right.id)
+    }
+
+    return FuelSortDescending ? -result : result
+}
+
+CompareVisibleVehicleFuelEntriesByColumn(left, right, column) {
+    switch column {
+        case 1:
+            return CompareOptionalStampValues(ParseEventDateStamp(left.entryDate), ParseEventDateStamp(right.entryDate))
+        case 2:
+            return CompareOptionalIntegerTexts(left.odometer, right.odometer)
+        case 3:
+            return CompareOptionalDecimalTexts(left.liters, right.liters)
+        case 4:
+            return CompareOptionalMoneyTexts(left.totalCost, right.totalCost)
+        case 5:
+            return CompareNumberValues(left.fullTank ? 1 : 0, right.fullTank ? 1 : 0)
+        case 6:
+            return CompareTextValues(left.fuelType, right.fuelType)
+        case 7:
+            return CompareTextValues(left.note, right.note)
+    }
+
+    return 0
 }
 
 GetSelectedVehicleFuelEntry() {
@@ -3688,8 +4588,8 @@ SaveVehicleFuelEntryFromForm(*) {
     PopulateVehicleFuelList(entry.id, true)
 }
 
-OpenVehicleRecordsDialog(vehicle, openAddEntry := false) {
-    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, VisibleRecordIds, RecordFormGui
+OpenVehicleRecordsDialog(vehicle, openAddEntry := false, selectEntryId := "") {
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, RecordsAllEntries, RecordsSearchCtrl, VisibleRecordIds, RecordsSortColumn, RecordsSortDescending, RecordFormGui
 
     if IsObject(RecordsGui) {
         WinActivate("ahk_id " RecordsGui.Hwnd)
@@ -3749,7 +4649,11 @@ OpenVehicleRecordsDialog(vehicle, openAddEntry := false) {
     ShowMainWindow()
 
     RecordsVehicleId := vehicle.id
+    RecordsAllEntries := []
+    RecordsSearchCtrl := 0
     VisibleRecordIds := []
+    RecordsSortColumn := 4
+    RecordsSortDescending := false
     RecordsGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Pojištění a doklady")
     RecordsGui.SetFont("s10", "Segoe UI")
     RecordsGui.OnEvent("Close", CloseVehicleRecordsDialog)
@@ -3759,36 +4663,43 @@ OpenVehicleRecordsDialog(vehicle, openAddEntry := false) {
 
     RecordsGui.AddText("x20 y20 w820", "Zde můžete evidovat pojištění, doklady a další soubory k vozidlu " vehicle.name ".")
     RecordsSummaryLabel := RecordsGui.AddText("x20 y50 w820", "")
+    RecordsGui.AddText("x20 y82 w280", "Hledat druh, název, poskytovatele, platnost nebo soubor")
+    RecordsSearchCtrl := RecordsGui.AddEdit("x310 y79 w360")
+    RecordsSearchCtrl.OnEvent("Change", OnRecordsSearchChanged)
 
-    RecordsList := RecordsGui.AddListView("x20 y80 w820 h255 Grid -Multi", ["Druh", "Název", "Poskytovatel", "Platné do", "Cena", "Soubor"])
+    RecordsList := RecordsGui.AddListView("x20 y112 w900 h255 Grid -Multi", ["Druh", "Název", "Poskytovatel", "Platné do", "Cena", "Soubor"])
     RecordsList.OnEvent("DoubleClick", EditSelectedVehicleRecord)
+    RecordsList.OnEvent("ColClick", OnRecordsColumnClick)
     RecordsList.ModifyCol(1, "130")
     RecordsList.ModifyCol(2, "180")
     RecordsList.ModifyCol(3, "150")
     RecordsList.ModifyCol(4, "85")
     RecordsList.ModifyCol(5, "95")
-    RecordsList.ModifyCol(6, "150")
+    RecordsList.ModifyCol(6, "230")
 
-    addButton := RecordsGui.AddButton("x45 y350 w120 h30", "Přidat záznam")
+    addButton := RecordsGui.AddButton("x25 y382 w120 h30", "Přidat záznam")
     addButton.OnEvent("Click", AddVehicleRecord)
 
-    editButton := RecordsGui.AddButton("x175 y350 w120 h30", "Upravit záznam")
+    editButton := RecordsGui.AddButton("x155 y382 w120 h30", "Upravit záznam")
     editButton.OnEvent("Click", EditSelectedVehicleRecord)
 
-    deleteButton := RecordsGui.AddButton("x305 y350 w130 h30", "Odstranit záznam")
+    deleteButton := RecordsGui.AddButton("x285 y382 w130 h30", "Odstranit záznam")
     deleteButton.OnEvent("Click", DeleteSelectedVehicleRecord)
 
-    openFileButton := RecordsGui.AddButton("x445 y350 w120 h30", "Otevřít soubor")
+    openFileButton := RecordsGui.AddButton("x425 y382 w120 h30", "Otevřít soubor")
     openFileButton.OnEvent("Click", OpenSelectedVehicleRecordFile)
 
-    detailButton := RecordsGui.AddButton("x575 y350 w120 h30", "Detail vozidla")
+    openFolderButton := RecordsGui.AddButton("x555 y382 w130 h30", "Otevřít složku")
+    openFolderButton.OnEvent("Click", OpenSelectedVehicleRecordFolder)
+
+    detailButton := RecordsGui.AddButton("x695 y382 w120 h30", "Detail vozidla")
     detailButton.OnEvent("Click", OpenVehicleDetailFromRecords)
 
-    closeButton := RecordsGui.AddButton("x705 y350 w100 h30", "Zavřít")
+    closeButton := RecordsGui.AddButton("x825 y382 w80 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleRecordsDialog)
 
-    RecordsGui.Show("w860 h400")
-    PopulateVehicleRecordsList("", true)
+    RecordsGui.Show("w940 h432")
+    PopulateVehicleRecordsList(selectEntryId, true)
 
     if openAddEntry {
         OpenVehicleRecordForm("add")
@@ -3798,7 +4709,7 @@ OpenVehicleRecordsDialog(vehicle, openAddEntry := false) {
 }
 
 CloseVehicleRecordsDialog(*) {
-    global RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, VisibleRecordIds, MainGui
+    global RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, RecordsAllEntries, RecordsSearchCtrl, VisibleRecordIds, RecordsSortColumn, RecordsSortDescending, MainGui
 
     if IsObject(RecordsGui) {
         RecordsGui.Destroy()
@@ -3808,19 +4719,25 @@ CloseVehicleRecordsDialog(*) {
     RecordsVehicleId := ""
     RecordsList := 0
     RecordsSummaryLabel := 0
+    RecordsAllEntries := []
+    RecordsSearchCtrl := 0
     VisibleRecordIds := []
+    RecordsSortColumn := 4
+    RecordsSortDescending := false
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
 
 PopulateVehicleRecordsList(selectEntryId := "", focusList := false) {
-    global RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, VisibleRecordIds
+    global RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, RecordsAllEntries, VisibleRecordIds
 
     if !IsObject(RecordsGui) || !IsObject(RecordsList) {
         return
     }
 
-    entries := GetVehicleRecords(RecordsVehicleId)
+    RecordsAllEntries := GetVehicleRecords(RecordsVehicleId)
+    entries := FilterVehicleRecordsBySearch(RecordsAllEntries, GetRecordsSearchText())
+    SortVisibleVehicleRecords(&entries)
     VisibleRecordIds := []
     selectedRow := 0
 
@@ -3856,6 +4773,111 @@ PopulateVehicleRecordsList(selectEntryId := "", focusList := false) {
     }
 
     RecordsList.Modify(selectedRow, focusList ? "Select Focus Vis" : "Select Vis")
+}
+
+OnRecordsSearchChanged(*) {
+    selectedEntryId := ""
+    entry := GetSelectedVehicleRecord()
+    if IsObject(entry) {
+        selectedEntryId := entry.id
+    }
+
+    PopulateVehicleRecordsList(selectedEntryId)
+}
+
+OnRecordsColumnClick(ctrl, column) {
+    global RecordsSortColumn, RecordsSortDescending
+
+    if (RecordsSortColumn = column) {
+        RecordsSortDescending := !RecordsSortDescending
+    } else {
+        RecordsSortColumn := column
+        RecordsSortDescending := false
+    }
+
+    selectedEntryId := ""
+    entry := GetSelectedVehicleRecord()
+    if IsObject(entry) {
+        selectedEntryId := entry.id
+    }
+
+    PopulateVehicleRecordsList(selectedEntryId, true)
+}
+
+GetRecordsSearchText() {
+    global RecordsSearchCtrl
+
+    if !IsObject(RecordsSearchCtrl) {
+        return ""
+    }
+
+    return Trim(RecordsSearchCtrl.Text)
+}
+
+FilterVehicleRecordsBySearch(entries, searchText := "") {
+    filtered := []
+    needle := StrLower(Trim(searchText))
+
+    for entry in entries {
+        haystack := StrLower(entry.recordType " " entry.title " " entry.provider " " entry.validFrom " " entry.validTo " " entry.price " " entry.filePath " " GetFileNameFromPath(entry.filePath) " " entry.note)
+        if (needle = "" || InStr(haystack, needle)) {
+            filtered.Push(entry)
+        }
+    }
+
+    return filtered
+}
+
+SortVisibleVehicleRecords(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareVisibleVehicleRecords(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareVisibleVehicleRecords(left, right) {
+    global RecordsSortColumn, RecordsSortDescending
+
+    result := CompareVisibleVehicleRecordsByColumn(left, right, RecordsSortColumn)
+    if (result = 0 && RecordsSortColumn != 4) {
+        result := CompareVisibleVehicleRecordsByColumn(left, right, 4)
+    }
+    if (result = 0) {
+        result := CompareTextValues(left.id, right.id)
+    }
+
+    return RecordsSortDescending ? -result : result
+}
+
+CompareVisibleVehicleRecordsByColumn(left, right, column) {
+    switch column {
+        case 1:
+            return CompareTextValues(left.recordType, right.recordType)
+        case 2:
+            return CompareTextValues(left.title, right.title)
+        case 3:
+            return CompareTextValues(left.provider, right.provider)
+        case 4:
+            return CompareOptionalStampValues(ParseDueStamp(left.validTo), ParseDueStamp(right.validTo))
+        case 5:
+            return CompareOptionalMoneyTexts(left.price, right.price)
+        case 6:
+            return CompareTextValues(GetFileNameFromPath(left.filePath), GetFileNameFromPath(right.filePath))
+    }
+
+    return 0
 }
 
 GetSelectedVehicleRecord() {
@@ -3931,6 +4953,39 @@ OpenSelectedVehicleRecordFile(*) {
         Run('"' entry.filePath '"')
     } catch as err {
         MsgBox("Soubor se nepodařilo otevřít.`n`n" err.Message, AppTitle, 0x30)
+    }
+}
+
+OpenSelectedVehicleRecordFolder(*) {
+    global AppTitle
+
+    entry := GetSelectedVehicleRecord()
+    if !IsObject(entry) {
+        MsgBox("Nejprve vyberte záznam, jehož složku chcete otevřít.", AppTitle, 0x40)
+        return
+    }
+
+    path := Trim(entry.filePath)
+    if (path = "") {
+        MsgBox("Vybraný záznam nemá vyplněnou cestu k souboru.", AppTitle, 0x40)
+        return
+    }
+
+    if DirExist(path) {
+        directoryPath := path
+    } else {
+        SplitPath(path, , &directoryPath)
+    }
+
+    if (directoryPath = "" || !DirExist(directoryPath)) {
+        MsgBox("Nepodařilo se najít existující složku pro vybraný záznam.", AppTitle, 0x30)
+        return
+    }
+
+    try {
+        Run('"' directoryPath '"')
+    } catch as err {
+        MsgBox("Složku se nepodařilo otevřít.`n`n" err.Message, AppTitle, 0x30)
     }
 }
 
@@ -4120,8 +5175,8 @@ SaveVehicleRecordFromForm(*) {
     PopulateVehicleRecordsList(entry.id, true)
 }
 
-OpenVehicleReminderDialog(vehicle, openAddEntry := false) {
-    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderVehicleId, ReminderList, ReminderSummaryLabel, VisibleReminderIds, ReminderFormGui, CostSummaryGui
+OpenVehicleReminderDialog(vehicle, openAddEntry := false, selectEntryId := "") {
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderVehicleId, ReminderList, ReminderSummaryLabel, ReminderAllEntries, ReminderSearchCtrl, VisibleReminderIds, ReminderSortColumn, ReminderSortDescending, ReminderFormGui, CostSummaryGui
 
     if IsObject(ReminderGui) {
         WinActivate("ahk_id " ReminderGui.Hwnd)
@@ -4138,7 +5193,11 @@ OpenVehicleReminderDialog(vehicle, openAddEntry := false) {
     ShowMainWindow()
 
     ReminderVehicleId := vehicle.id
+    ReminderAllEntries := []
+    ReminderSearchCtrl := 0
     VisibleReminderIds := []
+    ReminderSortColumn := 2
+    ReminderSortDescending := false
     ReminderGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Vlastní připomínky")
     ReminderGui.SetFont("s10", "Segoe UI")
     ReminderGui.OnEvent("Close", CloseVehicleReminderDialog)
@@ -4148,9 +5207,13 @@ OpenVehicleReminderDialog(vehicle, openAddEntry := false) {
 
     ReminderGui.AddText("x20 y20 w900", "Zde můžete evidovat vlastní termíny a připomínky pro vozidlo " vehicle.name ". Datum zadejte jako DD.MM.RRRR. U opakovaných připomínek můžete termín po vyřízení posunout tlačítkem na další cyklus.")
     ReminderSummaryLabel := ReminderGui.AddText("x20 y50 w900", "")
+    ReminderGui.AddText("x20 y82 w310", "Hledat název, termín, opakování, stav nebo poznámku")
+    ReminderSearchCtrl := ReminderGui.AddEdit("x340 y79 w360")
+    ReminderSearchCtrl.OnEvent("Change", OnReminderSearchChanged)
 
-    ReminderList := ReminderGui.AddListView("x20 y80 w900 h255 Grid -Multi", ["Název", "Termín", "Upozornit dnů předem", "Opakování", "Stav", "Poznámka"])
+    ReminderList := ReminderGui.AddListView("x20 y112 w900 h255 Grid -Multi", ["Název", "Termín", "Upozornit dnů předem", "Opakování", "Stav", "Poznámka"])
     ReminderList.OnEvent("DoubleClick", EditSelectedVehicleReminder)
+    ReminderList.OnEvent("ColClick", OnReminderColumnClick)
     ReminderList.ModifyCol(1, "190")
     ReminderList.ModifyCol(2, "95")
     ReminderList.ModifyCol(3, "125")
@@ -4158,26 +5221,26 @@ OpenVehicleReminderDialog(vehicle, openAddEntry := false) {
     ReminderList.ModifyCol(5, "90")
     ReminderList.ModifyCol(6, "245")
 
-    addButton := ReminderGui.AddButton("x70 y350 w120 h30", "Přidat záznam")
+    addButton := ReminderGui.AddButton("x70 y382 w120 h30", "Přidat záznam")
     addButton.OnEvent("Click", AddVehicleReminder)
 
-    editButton := ReminderGui.AddButton("x200 y350 w120 h30", "Upravit záznam")
+    editButton := ReminderGui.AddButton("x200 y382 w120 h30", "Upravit záznam")
     editButton.OnEvent("Click", EditSelectedVehicleReminder)
 
-    advanceButton := ReminderGui.AddButton("x330 y350 w160 h30", "Posunout na další")
+    advanceButton := ReminderGui.AddButton("x330 y382 w160 h30", "Posunout na další")
     advanceButton.OnEvent("Click", AdvanceSelectedVehicleReminder)
 
-    deleteButton := ReminderGui.AddButton("x500 y350 w130 h30", "Odstranit záznam")
+    deleteButton := ReminderGui.AddButton("x500 y382 w130 h30", "Odstranit záznam")
     deleteButton.OnEvent("Click", DeleteSelectedVehicleReminder)
 
-    detailButton := ReminderGui.AddButton("x640 y350 w120 h30", "Detail vozidla")
+    detailButton := ReminderGui.AddButton("x640 y382 w120 h30", "Detail vozidla")
     detailButton.OnEvent("Click", OpenVehicleDetailFromReminder)
 
-    closeButton := ReminderGui.AddButton("x770 y350 w100 h30", "Zavřít")
+    closeButton := ReminderGui.AddButton("x770 y382 w100 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleReminderDialog)
 
-    ReminderGui.Show("w940 h400")
-    PopulateVehicleReminderList("", true)
+    ReminderGui.Show("w940 h432")
+    PopulateVehicleReminderList(selectEntryId, true)
 
     if openAddEntry {
         OpenVehicleReminderForm("add")
@@ -4187,7 +5250,7 @@ OpenVehicleReminderDialog(vehicle, openAddEntry := false) {
 }
 
 CloseVehicleReminderDialog(*) {
-    global ReminderGui, ReminderVehicleId, ReminderList, ReminderSummaryLabel, VisibleReminderIds, MainGui
+    global ReminderGui, ReminderVehicleId, ReminderList, ReminderSummaryLabel, ReminderAllEntries, ReminderSearchCtrl, VisibleReminderIds, ReminderSortColumn, ReminderSortDescending, MainGui
 
     if IsObject(ReminderGui) {
         ReminderGui.Destroy()
@@ -4197,19 +5260,25 @@ CloseVehicleReminderDialog(*) {
     ReminderVehicleId := ""
     ReminderList := 0
     ReminderSummaryLabel := 0
+    ReminderAllEntries := []
+    ReminderSearchCtrl := 0
     VisibleReminderIds := []
+    ReminderSortColumn := 2
+    ReminderSortDescending := false
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
 
 PopulateVehicleReminderList(selectEntryId := "", focusList := false) {
-    global ReminderGui, ReminderVehicleId, ReminderList, ReminderSummaryLabel, VisibleReminderIds
+    global ReminderGui, ReminderVehicleId, ReminderList, ReminderSummaryLabel, ReminderAllEntries, VisibleReminderIds
 
     if !IsObject(ReminderGui) || !IsObject(ReminderList) {
         return
     }
 
-    entries := GetVehicleReminderEntries(ReminderVehicleId)
+    ReminderAllEntries := GetVehicleReminderEntries(ReminderVehicleId)
+    entries := FilterVehicleReminderEntriesBySearch(ReminderAllEntries, GetReminderSearchText())
+    SortVisibleVehicleReminderEntries(&entries)
     VisibleReminderIds := []
     selectedRow := 0
 
@@ -4245,6 +5314,113 @@ PopulateVehicleReminderList(selectEntryId := "", focusList := false) {
     }
 
     ReminderList.Modify(selectedRow, focusList ? "Select Focus Vis" : "Select Vis")
+}
+
+OnReminderSearchChanged(*) {
+    selectedEntryId := ""
+    entry := GetSelectedVehicleReminder()
+    if IsObject(entry) {
+        selectedEntryId := entry.id
+    }
+
+    PopulateVehicleReminderList(selectedEntryId)
+}
+
+OnReminderColumnClick(ctrl, column) {
+    global ReminderSortColumn, ReminderSortDescending
+
+    if (ReminderSortColumn = column) {
+        ReminderSortDescending := !ReminderSortDescending
+    } else {
+        ReminderSortColumn := column
+        ReminderSortDescending := false
+    }
+
+    selectedEntryId := ""
+    entry := GetSelectedVehicleReminder()
+    if IsObject(entry) {
+        selectedEntryId := entry.id
+    }
+
+    PopulateVehicleReminderList(selectedEntryId, true)
+}
+
+GetReminderSearchText() {
+    global ReminderSearchCtrl
+
+    if !IsObject(ReminderSearchCtrl) {
+        return ""
+    }
+
+    return Trim(ReminderSearchCtrl.Text)
+}
+
+FilterVehicleReminderEntriesBySearch(entries, searchText := "") {
+    filtered := []
+    needle := StrLower(Trim(searchText))
+
+    for entry in entries {
+        repeatLabel := GetReminderRepeatLabel(entry.HasOwnProp("repeatMode") ? entry.repeatMode : "")
+        statusText := GetReminderExpirationStatusText(entry.dueDate, entry.reminderDays + 0)
+        haystack := StrLower(entry.title " " entry.dueDate " " entry.reminderDays " " repeatLabel " " statusText " " entry.note)
+        if (needle = "" || InStr(haystack, needle)) {
+            filtered.Push(entry)
+        }
+    }
+
+    return filtered
+}
+
+SortVisibleVehicleReminderEntries(&items) {
+    count := items.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := items[i]
+        j := i - 1
+
+        while (j >= 1 && CompareVisibleVehicleReminderEntries(current, items[j]) < 0) {
+            items[j + 1] := items[j]
+            j -= 1
+        }
+        items[j + 1] := current
+    }
+}
+
+CompareVisibleVehicleReminderEntries(left, right) {
+    global ReminderSortColumn, ReminderSortDescending
+
+    result := CompareVisibleVehicleReminderEntriesByColumn(left, right, ReminderSortColumn)
+    if (result = 0 && ReminderSortColumn != 2) {
+        result := CompareVisibleVehicleReminderEntriesByColumn(left, right, 2)
+    }
+    if (result = 0) {
+        result := CompareTextValues(left.id, right.id)
+    }
+
+    return ReminderSortDescending ? -result : result
+}
+
+CompareVisibleVehicleReminderEntriesByColumn(left, right, column) {
+    switch column {
+        case 1:
+            return CompareTextValues(left.title, right.title)
+        case 2:
+            return CompareOptionalStampValues(ParseReminderDueStamp(left.dueDate), ParseReminderDueStamp(right.dueDate))
+        case 3:
+            return CompareOptionalIntegerTexts(left.reminderDays, right.reminderDays)
+        case 4:
+            return CompareTextValues(GetReminderRepeatLabel(left.HasOwnProp("repeatMode") ? left.repeatMode : ""), GetReminderRepeatLabel(right.HasOwnProp("repeatMode") ? right.repeatMode : ""))
+        case 5:
+            return CompareTextValues(GetReminderExpirationStatusText(left.dueDate, left.reminderDays + 0), GetReminderExpirationStatusText(right.dueDate, right.reminderDays + 0))
+        case 6:
+            return CompareTextValues(left.note, right.note)
+    }
+
+    return 0
 }
 
 GetSelectedVehicleReminder() {
@@ -9455,6 +10631,78 @@ CompareOverviewDueStamp(left, right) {
 
 CompareTextValues(leftText, rightText) {
     return StrCompare(StrLower(leftText), StrLower(rightText))
+}
+
+CompareNumberValues(leftValue, rightValue) {
+    if (leftValue < rightValue) {
+        return -1
+    }
+    if (leftValue > rightValue) {
+        return 1
+    }
+
+    return 0
+}
+
+CompareOptionalStampValues(leftStamp, rightStamp) {
+    if (leftStamp = "") {
+        leftStamp := "99999999999999"
+    }
+    if (rightStamp = "") {
+        rightStamp := "99999999999999"
+    }
+
+    if (leftStamp < rightStamp) {
+        return -1
+    }
+    if (leftStamp > rightStamp) {
+        return 1
+    }
+
+    return 0
+}
+
+CompareOptionalIntegerTexts(leftText, rightText) {
+    leftValue := (Trim(leftText) = "") ? 2147483647 : leftText + 0
+    rightValue := (Trim(rightText) = "") ? 2147483647 : rightText + 0
+    return CompareNumberValues(leftValue, rightValue)
+}
+
+CompareOptionalDecimalTexts(leftText, rightText) {
+    leftValue := 0.0
+    rightValue := 0.0
+    if !TryParseDecimalValue(leftText, &leftValue) {
+        leftValue := 9999999999999999.0
+    }
+    if !TryParseDecimalValue(rightText, &rightValue) {
+        rightValue := 9999999999999999.0
+    }
+
+    return CompareNumberValues(leftValue, rightValue)
+}
+
+CompareOptionalMoneyTexts(leftText, rightText) {
+    leftValue := 0.0
+    rightValue := 0.0
+    if !TryParseMoneyAmount(leftText, &leftValue) {
+        leftValue := 9999999999999999.0
+    }
+    if !TryParseMoneyAmount(rightText, &rightValue) {
+        rightValue := 9999999999999999.0
+    }
+
+    return CompareNumberValues(leftValue, rightValue)
+}
+
+TryParseDecimalValue(text, &value) {
+    value := 0.0
+    normalized := NormalizeDecimalText(text)
+    if (normalized = "") {
+        return false
+    }
+
+    value := StrReplace(normalized, ",", ".") + 0.0
+    return true
 }
 
 SortTextItemsDescending(&items) {
