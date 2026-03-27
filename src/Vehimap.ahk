@@ -953,20 +953,38 @@ GetAppFileVersion() {
     return ""
 }
 
+IsEquivalentAppAndFileVersion(appVersion, fileVersion) {
+    appVersion := Trim(appVersion)
+    fileVersion := Trim(fileVersion)
+
+    if (appVersion = "" || fileVersion = "") {
+        return false
+    }
+    if (appVersion = fileVersion) {
+        return true
+    }
+    if RegExMatch(appVersion, "^\d+\.\d+\.\d+$") && RegExMatch(fileVersion, "^\Q" appVersion "\E(?:\.0)+$") {
+        return true
+    }
+
+    return false
+}
+
 BuildAboutProgramText() {
     global AppTitle, DataDir
 
+    appVersion := GetAppVersion()
     lines := [
         AppTitle,
-        "Verze: " GetAppVersion(),
+        "Verze: " appVersion,
         "Režim spuštění: " (A_IsCompiled ? "samostatná aplikace" : "zdrojový skript"),
         "Soubor aplikace: " A_ScriptFullPath,
         "Datová složka: " DataDir
     ]
 
     fileVersion := GetAppFileVersion()
-    if (fileVersion != "" && fileVersion != GetAppVersion()) {
-        lines.Push("Souborová verze: " fileVersion)
+    if (fileVersion != "" && !IsEquivalentAppAndFileVersion(appVersion, fileVersion)) {
+        lines.Push("Souborová verze (Windows): " fileVersion)
     }
 
     return JoinLines(lines)

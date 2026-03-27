@@ -71,3 +71,4 @@ Zip obsahuje jen:
 
 - Root `README.md` ma zustat uzivatelsky a nema obsahovat release nebo vyvojarske pokyny.
 - `CHANGELOG.md` ma drzet sekci `## [Unreleased]`, ze ktere se pri release vytvori nova verze s datem.
+- `src/VERSION` je kanonicka semver verze aplikace pro release a update checker, zatimco EXE metadata pouzivaji odvozenou Windows file version, napr. `1.0.0` -> `1.0.0.0`.

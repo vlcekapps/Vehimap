@@ -47,6 +47,7 @@ SmokeTestBuildInfo() {
     aboutText := BuildAboutProgramText()
     AssertContains(aboutText, "Verze: " AppVersion, "O programu ma zobrazit aktualni verzi.")
     AssertContains(aboutText, "Datová složka: " DataDir, "O programu ma zobrazit datovou slozku.")
+    AssertTrue(!InStr(aboutText, "Souborová verze"), "Stabilni build nema zobrazovat redundantni windows file version.")
 }
 
 SmokeTestGlobalSearch() {
