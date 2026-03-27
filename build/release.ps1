@@ -204,7 +204,9 @@ function Write-UpdateManifestFile {
     param(
         [string]$Path,
         [string]$Version,
-        [string]$TagName
+        [string]$TagName,
+        [string]$AssetSha256,
+        [Int64]$AssetSize
     )
 
     $publishedAt = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
@@ -215,6 +217,8 @@ function Write-UpdateManifestFile {
         "version=$Version"
         "published_at=$publishedAt"
         "asset_url=$assetUrl"
+        "asset_sha256=$AssetSha256"
+        "asset_size=$AssetSize"
         "notes_url=$notesUrl"
     ) -join "`n"
 
@@ -404,11 +408,8 @@ if ($isPrerelease) {
 
 Write-Utf8NoBom -Path $versionPath -Content ($newVersion + "`n")
 Write-BuildInfoFile -Path $buildInfoPath -Version $newVersion -FileVersion $fileVersion
-Write-UpdateManifestFile -Path $updateManifestPath -Version $newVersion -TagName $tagName
 $buildInfoLeaf = Split-Path -Leaf $buildInfoPath
 Write-Host "$buildInfoLeaf aktualizovan."
-$updateManifestLeaf = Split-Path -Leaf $updateManifestPath
-Write-Host "$updateManifestLeaf aktualizovan."
 $changelogUpdated = Update-Changelog -Path $changelogPath -NewVersion $newVersion
 if ($changelogUpdated) {
     Write-Host "CHANGELOG.md aktualizovan."
@@ -426,6 +427,12 @@ Compile-Vehimap -CompilerPath $compilerPath -ScriptPath $scriptPath -OutPath $ex
 
 Write-Host "Vytvarim asset $zipPath ..."
 New-ReleaseZip -ReadmePath $readmePath -ExePath $exePath -OutPath $zipPath
+
+$zipHash = (Get-FileHash -Path $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
+$zipSize = (Get-Item $zipPath).Length
+Write-UpdateManifestFile -Path $updateManifestPath -Version $newVersion -TagName $tagName -AssetSha256 $zipHash -AssetSize $zipSize
+$updateManifestLeaf = Split-Path -Leaf $updateManifestPath
+Write-Host "$updateManifestLeaf aktualizovan."
 
 Invoke-Git @("add", "src/VERSION", "src/GeneratedBuildInfo.ahk", "update/latest.ini", "CHANGELOG.md")
 Invoke-Git @("commit", "-m", "chore(release): $newVersion")

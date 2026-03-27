@@ -10,6 +10,7 @@ RunSmokeTests() {
     tests := [
         "SmokeTestBuildInfo",
         "SmokeTestUpdateManifestFile",
+        "SmokeTestUpdateHelperScript",
         "SmokeTestSemVerComparison",
         "SmokeTestGlobalSearch",
         "SmokeTestRecordPathInfo",
@@ -58,6 +59,18 @@ SmokeTestUpdateManifestFile() {
     manifestPath := A_ScriptDir "\..\..\update\latest.ini"
     manifest := ReadLatestReleaseManifestFile(manifestPath)
     AssertEqual(manifest.version, AppVersion, "Lokalni update manifest ma odpovidat aktualni verzi aplikace.")
+    AssertContains(manifest.assetUrl, "releases/download/", "Manifest ma obsahovat odkaz na release asset.")
+    AssertContains(manifest.notesUrl, "releases/tag/", "Manifest ma obsahovat odkaz na release poznamky.")
+}
+
+SmokeTestUpdateHelperScript() {
+    helperScript := BuildUpdateHelperPowerShellScript()
+
+    AssertContains(helperScript, "Invoke-WebRequest", "Helper musi umet stahnout asset.")
+    AssertContains(helperScript, "Get-FileHash", "Helper musi overovat SHA-256 hash.")
+    AssertContains(helperScript, "Expand-Archive", "Helper musi rozbalit release zip.")
+    AssertContains(helperScript, "Wait-Process", "Helper musi pockat na ukonceni bezici aplikace.")
+    AssertContains(helperScript, "Start-Process", "Helper musi po instalaci znovu spustit Vehimap.")
 }
 
 SmokeTestSemVerComparison() {
