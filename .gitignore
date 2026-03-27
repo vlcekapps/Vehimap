@@ -1,6 +1,7 @@
 *
 !.gitignore
 !README.md
+!RELEASE.md
 !CHANGELOG.md
 !build/
 !build/**
