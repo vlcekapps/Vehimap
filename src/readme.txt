@@ -14,7 +14,7 @@ První verze jednoduché přístupné evidence vozidel v AutoHotkey v2.
 - historii událostí pro každé vozidlo, včetně přidání, úpravy a odstranění servisních nebo jiných záznamů
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů
 - rychlé hledání a řazení sloupců v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách
-- samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, otevření navázaného souboru i otevření jeho složky
+- samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, otevření navázaného souboru i otevření jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku
 - export nákladových přehledů do `TSV souhrnu`, `TSV detailu` a `HTML sestavy`
 - vlastní připomínky i s volbou opakování `Neopakovat`, `Každý rok`, `Každé 2 roky` a `Každých 5 let`
@@ -76,7 +76,7 @@ Klávesové zkratky v detailu a evidencích:
 - `Historie událostí`, `Kilometry a tankování`, `Pojištění a doklady` i `Vlastní připomínky`: `Ctrl+F` přesune fokus do rychlého hledání, `Ctrl+N` přidá záznam, `Ctrl+U` nebo `F2` upraví vybraný záznam a `Ctrl+D` otevře detail vozidla
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní
 - kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce
-- v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu a `Ctrl+Shift+O` jeho složku
+- v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu, `Ctrl+Shift+O` jeho složku a `Ctrl+Shift+C` zkopíruje uloženou cestu
 - ve `Vlastních připomínkách` navíc `Ctrl+Shift+N` posune vybranou opakovanou připomínku na další termín
 - v `Nákladech a souhrnech` `Ctrl+R` obnoví vybrané období a `Ctrl+D` otevře detail vozidla
 
@@ -108,6 +108,7 @@ V evidenci pojištění a dokladů:
 - `Druh záznamu` a `Název záznamu` jsou povinné
 - `Platné od` a `Platné do` se zadávají jako `MM/RRRR`, například `04/2026`
 - `Poskytovatel / vydavatel`, `Cena / částka`, `Soubor nebo cesta` a `Poznámka` jsou volitelné
+- seznam zobrazuje i stav cesty `Soubor`, `Složka`, `Chybí soubor`, `Chybí složka` nebo `Bez cesty`, takže hned poznáte nedostupnou přílohu
 
 V `Náklady a souhrny`:
 

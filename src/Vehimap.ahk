@@ -108,9 +108,13 @@ global RecordsList := 0
 global RecordsSummaryLabel := 0
 global RecordsAllEntries := []
 global RecordsSearchCtrl := 0
+global RecordsPathStatusLabel := 0
 global VisibleRecordIds := []
 global RecordsSortColumn := 4
 global RecordsSortDescending := false
+global RecordsOpenFileButton := 0
+global RecordsOpenFolderButton := 0
+global RecordsCopyPathButton := 0
 global RecordFormGui := 0
 global RecordFormControls := {}
 global RecordFormMode := ""
@@ -264,6 +268,7 @@ Delete::DeleteSelectedVehicleFuelEntry()
 F2::EditSelectedVehicleRecord()
 ^o::OpenSelectedVehicleRecordFile()
 ^+o::OpenSelectedVehicleRecordFolder()
+^+c::CopySelectedVehicleRecordPath()
 ^d::OpenVehicleDetailFromRecords()
 #HotIf
 
@@ -4589,7 +4594,7 @@ SaveVehicleFuelEntryFromForm(*) {
 }
 
 OpenVehicleRecordsDialog(vehicle, openAddEntry := false, selectEntryId := "") {
-    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, RecordsAllEntries, RecordsSearchCtrl, VisibleRecordIds, RecordsSortColumn, RecordsSortDescending, RecordFormGui
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, RecordsAllEntries, RecordsSearchCtrl, RecordsPathStatusLabel, VisibleRecordIds, RecordsSortColumn, RecordsSortDescending, RecordsOpenFileButton, RecordsOpenFolderButton, RecordsCopyPathButton, RecordFormGui
 
     if IsObject(RecordsGui) {
         WinActivate("ahk_id " RecordsGui.Hwnd)
@@ -4651,9 +4656,13 @@ OpenVehicleRecordsDialog(vehicle, openAddEntry := false, selectEntryId := "") {
     RecordsVehicleId := vehicle.id
     RecordsAllEntries := []
     RecordsSearchCtrl := 0
+    RecordsPathStatusLabel := 0
     VisibleRecordIds := []
     RecordsSortColumn := 4
     RecordsSortDescending := false
+    RecordsOpenFileButton := 0
+    RecordsOpenFolderButton := 0
+    RecordsCopyPathButton := 0
     RecordsGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Pojištění a doklady")
     RecordsGui.SetFont("s10", "Segoe UI")
     RecordsGui.OnEvent("Close", CloseVehicleRecordsDialog)
@@ -4667,38 +4676,45 @@ OpenVehicleRecordsDialog(vehicle, openAddEntry := false, selectEntryId := "") {
     RecordsSearchCtrl := RecordsGui.AddEdit("x310 y79 w360")
     RecordsSearchCtrl.OnEvent("Change", OnRecordsSearchChanged)
 
-    RecordsList := RecordsGui.AddListView("x20 y112 w900 h255 Grid -Multi", ["Druh", "Název", "Poskytovatel", "Platné do", "Cena", "Soubor"])
+    RecordsList := RecordsGui.AddListView("x20 y112 w980 h220 Grid -Multi", ["Druh", "Název", "Poskytovatel", "Platné do", "Cena", "Soubor", "Stav cesty"])
     RecordsList.OnEvent("DoubleClick", EditSelectedVehicleRecord)
+    RecordsList.OnEvent("ItemSelect", OnRecordsSelectionChanged)
     RecordsList.OnEvent("ColClick", OnRecordsColumnClick)
     RecordsList.ModifyCol(1, "130")
-    RecordsList.ModifyCol(2, "180")
+    RecordsList.ModifyCol(2, "170")
     RecordsList.ModifyCol(3, "150")
     RecordsList.ModifyCol(4, "85")
     RecordsList.ModifyCol(5, "95")
-    RecordsList.ModifyCol(6, "230")
+    RecordsList.ModifyCol(6, "210")
+    RecordsList.ModifyCol(7, "110")
 
-    addButton := RecordsGui.AddButton("x25 y382 w120 h30", "Přidat záznam")
+    RecordsPathStatusLabel := RecordsGui.AddText("x20 y345 w980 h38", "")
+
+    addButton := RecordsGui.AddButton("x25 y392 w120 h30", "Přidat záznam")
     addButton.OnEvent("Click", AddVehicleRecord)
 
-    editButton := RecordsGui.AddButton("x155 y382 w120 h30", "Upravit záznam")
+    editButton := RecordsGui.AddButton("x155 y392 w120 h30", "Upravit záznam")
     editButton.OnEvent("Click", EditSelectedVehicleRecord)
 
-    deleteButton := RecordsGui.AddButton("x285 y382 w130 h30", "Odstranit záznam")
+    deleteButton := RecordsGui.AddButton("x285 y392 w130 h30", "Odstranit záznam")
     deleteButton.OnEvent("Click", DeleteSelectedVehicleRecord)
 
-    openFileButton := RecordsGui.AddButton("x425 y382 w120 h30", "Otevřít soubor")
-    openFileButton.OnEvent("Click", OpenSelectedVehicleRecordFile)
+    RecordsOpenFileButton := RecordsGui.AddButton("x425 y392 w120 h30", "Otevřít soubor")
+    RecordsOpenFileButton.OnEvent("Click", OpenSelectedVehicleRecordFile)
 
-    openFolderButton := RecordsGui.AddButton("x555 y382 w130 h30", "Otevřít složku")
-    openFolderButton.OnEvent("Click", OpenSelectedVehicleRecordFolder)
+    RecordsOpenFolderButton := RecordsGui.AddButton("x555 y392 w130 h30", "Otevřít složku")
+    RecordsOpenFolderButton.OnEvent("Click", OpenSelectedVehicleRecordFolder)
 
-    detailButton := RecordsGui.AddButton("x695 y382 w120 h30", "Detail vozidla")
+    RecordsCopyPathButton := RecordsGui.AddButton("x695 y392 w130 h30", "Kopírovat cestu")
+    RecordsCopyPathButton.OnEvent("Click", CopySelectedVehicleRecordPath)
+
+    detailButton := RecordsGui.AddButton("x835 y392 w120 h30", "Detail vozidla")
     detailButton.OnEvent("Click", OpenVehicleDetailFromRecords)
 
-    closeButton := RecordsGui.AddButton("x825 y382 w80 h30", "Zavřít")
+    closeButton := RecordsGui.AddButton("x965 y392 w80 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleRecordsDialog)
 
-    RecordsGui.Show("w940 h432")
+    RecordsGui.Show("w1065 h442")
     PopulateVehicleRecordsList(selectEntryId, true)
 
     if openAddEntry {
@@ -4709,7 +4725,7 @@ OpenVehicleRecordsDialog(vehicle, openAddEntry := false, selectEntryId := "") {
 }
 
 CloseVehicleRecordsDialog(*) {
-    global RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, RecordsAllEntries, RecordsSearchCtrl, VisibleRecordIds, RecordsSortColumn, RecordsSortDescending, MainGui
+    global RecordsGui, RecordsVehicleId, RecordsList, RecordsSummaryLabel, RecordsAllEntries, RecordsSearchCtrl, RecordsPathStatusLabel, VisibleRecordIds, RecordsSortColumn, RecordsSortDescending, RecordsOpenFileButton, RecordsOpenFolderButton, RecordsCopyPathButton, MainGui
 
     if IsObject(RecordsGui) {
         RecordsGui.Destroy()
@@ -4721,9 +4737,13 @@ CloseVehicleRecordsDialog(*) {
     RecordsSummaryLabel := 0
     RecordsAllEntries := []
     RecordsSearchCtrl := 0
+    RecordsPathStatusLabel := 0
     VisibleRecordIds := []
     RecordsSortColumn := 4
     RecordsSortDescending := false
+    RecordsOpenFileButton := 0
+    RecordsOpenFolderButton := 0
+    RecordsCopyPathButton := 0
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
@@ -4755,7 +4775,8 @@ PopulateVehicleRecordsList(selectEntryId := "", focusList := false) {
             entry.provider,
             entry.validTo,
             entry.price,
-            ShortenText(GetFileNameFromPath(entry.filePath), 35)
+            ShortenText(GetFileNameFromPath(entry.filePath), 32),
+            GetVehicleRecordPathStateText(entry)
         )
         VisibleRecordIds.Push(entry.id)
         if (selectEntryId != "" && entry.id = selectEntryId) {
@@ -4765,6 +4786,7 @@ PopulateVehicleRecordsList(selectEntryId := "", focusList := false) {
     RecordsList.Opt("+Redraw")
 
     if (entries.Length = 0) {
+        UpdateVehicleRecordActionState()
         return
     }
 
@@ -4773,6 +4795,7 @@ PopulateVehicleRecordsList(selectEntryId := "", focusList := false) {
     }
 
     RecordsList.Modify(selectedRow, focusList ? "Select Focus Vis" : "Select Vis")
+    UpdateVehicleRecordActionState()
 }
 
 OnRecordsSearchChanged(*) {
@@ -4783,6 +4806,10 @@ OnRecordsSearchChanged(*) {
     }
 
     PopulateVehicleRecordsList(selectedEntryId)
+}
+
+OnRecordsSelectionChanged(*) {
+    UpdateVehicleRecordActionState()
 }
 
 OnRecordsColumnClick(ctrl, column) {
@@ -4875,9 +4902,164 @@ CompareVisibleVehicleRecordsByColumn(left, right, column) {
             return CompareOptionalMoneyTexts(left.price, right.price)
         case 6:
             return CompareTextValues(GetFileNameFromPath(left.filePath), GetFileNameFromPath(right.filePath))
+        case 7:
+            return CompareNumberValues(GetVehicleRecordPathStateSortValue(left), GetVehicleRecordPathStateSortValue(right))
     }
 
     return 0
+}
+
+UpdateVehicleRecordActionState() {
+    global RecordsPathStatusLabel, RecordsOpenFileButton, RecordsOpenFolderButton, RecordsCopyPathButton
+
+    entry := GetSelectedVehicleRecord()
+    if !IsObject(entry) {
+        if IsObject(RecordsPathStatusLabel) {
+            RecordsPathStatusLabel.Text := "Vyberte záznam, chcete-li zobrazit stav cesty k souboru nebo složce."
+        }
+        if IsObject(RecordsOpenFileButton) {
+            RecordsOpenFileButton.Opt("+Disabled")
+        }
+        if IsObject(RecordsOpenFolderButton) {
+            RecordsOpenFolderButton.Opt("+Disabled")
+        }
+        if IsObject(RecordsCopyPathButton) {
+            RecordsCopyPathButton.Opt("+Disabled")
+        }
+        return
+    }
+
+    pathInfo := GetVehicleRecordPathInfo(entry)
+    if IsObject(RecordsPathStatusLabel) {
+        RecordsPathStatusLabel.Text := BuildVehicleRecordPathStatusText(pathInfo)
+    }
+
+    if IsObject(RecordsOpenFileButton) {
+        RecordsOpenFileButton.Opt(pathInfo.kind = "file" ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(RecordsOpenFolderButton) {
+        RecordsOpenFolderButton.Opt(pathInfo.folderPath != "" ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(RecordsCopyPathButton) {
+        RecordsCopyPathButton.Opt(pathInfo.inputPath != "" ? "-Disabled" : "+Disabled")
+    }
+}
+
+GetVehicleRecordPathInfo(entry) {
+    path := Trim(entry.filePath)
+    resolvedPath := ResolveVehicleRecordPath(path)
+
+    if (path = "") {
+        return {
+            kind: "empty",
+            inputPath: "",
+            resolvedPath: "",
+            folderPath: "",
+            exists: false
+        }
+    }
+
+    if DirExist(resolvedPath) {
+        return {
+            kind: "folder",
+            inputPath: path,
+            resolvedPath: resolvedPath,
+            folderPath: resolvedPath,
+            exists: true
+        }
+    }
+
+    if FileExist(resolvedPath) {
+        SplitPath(resolvedPath, , &directoryPath)
+        return {
+            kind: "file",
+            inputPath: path,
+            resolvedPath: resolvedPath,
+            folderPath: directoryPath,
+            exists: true
+        }
+    }
+
+    SplitPath(resolvedPath, , &parentDirectory)
+    if (parentDirectory != "" && DirExist(parentDirectory)) {
+        return {
+            kind: "missing_file",
+            inputPath: path,
+            resolvedPath: resolvedPath,
+            folderPath: parentDirectory,
+            exists: false
+        }
+    }
+
+    return {
+        kind: "missing_folder",
+        inputPath: path,
+        resolvedPath: resolvedPath,
+        folderPath: "",
+        exists: false
+    }
+}
+
+ResolveVehicleRecordPath(path) {
+    path := Trim(path)
+    if (path = "") {
+        return ""
+    }
+
+    if RegExMatch(path, "i)^[a-z]:[\\/]" ) || RegExMatch(path, "^\\\\") || RegExMatch(path, "^[\\/]") {
+        return path
+    }
+
+    return A_ScriptDir "\" path
+}
+
+GetVehicleRecordPathStateText(entry) {
+    return GetVehicleRecordPathStateLabel(GetVehicleRecordPathInfo(entry).kind)
+}
+
+GetVehicleRecordPathStateLabel(kind) {
+    switch kind {
+        case "file":
+            return "Soubor"
+        case "folder":
+            return "Složka"
+        case "missing_file":
+            return "Chybí soubor"
+        case "missing_folder":
+            return "Chybí složka"
+        default:
+            return "Bez cesty"
+    }
+}
+
+GetVehicleRecordPathStateSortValue(entry) {
+    switch GetVehicleRecordPathInfo(entry).kind {
+        case "file":
+            return 1
+        case "folder":
+            return 2
+        case "missing_file":
+            return 3
+        case "missing_folder":
+            return 4
+        default:
+            return 5
+    }
+}
+
+BuildVehicleRecordPathStatusText(pathInfo) {
+    switch pathInfo.kind {
+        case "file":
+            return "Stav cesty: soubor je dostupný. Cesta: " pathInfo.inputPath
+        case "folder":
+            return "Stav cesty: záznam míří na existující složku. Cesta: " pathInfo.inputPath
+        case "missing_file":
+            return "Stav cesty: složka existuje, ale soubor chybí. Cesta: " pathInfo.inputPath
+        case "missing_folder":
+            return "Stav cesty: cílová složka ani soubor nejsou dostupné. Cesta: " pathInfo.inputPath
+        default:
+            return "Stav cesty: u vybraného záznamu není vyplněná cesta k souboru ani složce."
+    }
 }
 
 GetSelectedVehicleRecord() {
@@ -4944,13 +5126,24 @@ OpenSelectedVehicleRecordFile(*) {
         return
     }
 
-    if (Trim(entry.filePath) = "") {
-        MsgBox("Vybraný záznam nemá vyplněnou cestu k souboru.", AppTitle, 0x40)
-        return
+    pathInfo := GetVehicleRecordPathInfo(entry)
+    switch pathInfo.kind {
+        case "empty":
+            MsgBox("Vybraný záznam nemá vyplněnou cestu k souboru.", AppTitle, 0x40)
+            return
+        case "folder":
+            MsgBox("Vybraná cesta vede na složku. Pro ni použijte tlačítko nebo zkratku pro otevření složky.", AppTitle, 0x40)
+            return
+        case "missing_file":
+            MsgBox("Složka pro vybraný záznam existuje, ale soubor se na zadané cestě nenašel.`n`n" pathInfo.inputPath, AppTitle, 0x30)
+            return
+        case "missing_folder":
+            MsgBox("Zadaná cesta není dostupná, protože chybí cílová složka nebo soubor.`n`n" pathInfo.inputPath, AppTitle, 0x30)
+            return
     }
 
     try {
-        Run('"' entry.filePath '"')
+        Run('"' pathInfo.resolvedPath '"')
     } catch as err {
         MsgBox("Soubor se nepodařilo otevřít.`n`n" err.Message, AppTitle, 0x30)
     }
@@ -4965,28 +5158,41 @@ OpenSelectedVehicleRecordFolder(*) {
         return
     }
 
+    pathInfo := GetVehicleRecordPathInfo(entry)
+    if (pathInfo.kind = "empty") {
+        MsgBox("Vybraný záznam nemá vyplněnou cestu k souboru.", AppTitle, 0x40)
+        return
+    }
+
+    if (pathInfo.folderPath = "") {
+        MsgBox("Nepodařilo se najít existující složku pro vybraný záznam.`n`n" pathInfo.inputPath, AppTitle, 0x30)
+        return
+    }
+
+    try {
+        Run('"' pathInfo.folderPath '"')
+    } catch as err {
+        MsgBox("Složku se nepodařilo otevřít.`n`n" err.Message, AppTitle, 0x30)
+    }
+}
+
+CopySelectedVehicleRecordPath(*) {
+    global AppTitle
+
+    entry := GetSelectedVehicleRecord()
+    if !IsObject(entry) {
+        MsgBox("Nejprve vyberte záznam, jehož cestu chcete zkopírovat.", AppTitle, 0x40)
+        return
+    }
+
     path := Trim(entry.filePath)
     if (path = "") {
         MsgBox("Vybraný záznam nemá vyplněnou cestu k souboru.", AppTitle, 0x40)
         return
     }
 
-    if DirExist(path) {
-        directoryPath := path
-    } else {
-        SplitPath(path, , &directoryPath)
-    }
-
-    if (directoryPath = "" || !DirExist(directoryPath)) {
-        MsgBox("Nepodařilo se najít existující složku pro vybraný záznam.", AppTitle, 0x30)
-        return
-    }
-
-    try {
-        Run('"' directoryPath '"')
-    } catch as err {
-        MsgBox("Složku se nepodařilo otevřít.`n`n" err.Message, AppTitle, 0x30)
-    }
+    A_Clipboard := path
+    MsgBox("Cesta byla zkopírována do schránky.`n`n" path, AppTitle, 0x40)
 }
 
 OpenVehicleDetailFromRecords(*) {
@@ -7633,6 +7839,17 @@ BuildVehicleRecordsSummaryText(vehicleId) {
     }
 
     summary := "Záznamů: " entries.Length "."
+    missingPathCount := 0
+    emptyPathCount := 0
+    for entry in entries {
+        pathKind := GetVehicleRecordPathInfo(entry).kind
+        if (pathKind = "missing_file" || pathKind = "missing_folder") {
+            missingPathCount += 1
+        } else if (pathKind = "empty") {
+            emptyPathCount += 1
+        }
+    }
+
     nearestRecord := ""
     for entry in entries {
         if (Trim(entry.validTo) != "") {
@@ -7649,6 +7866,13 @@ BuildVehicleRecordsSummaryText(vehicleId) {
         summary .= " do " nearestRecord.validTo "."
     } else {
         summary .= " U žádného záznamu není vyplněné datum platnosti."
+    }
+
+    if (missingPathCount > 0) {
+        summary .= " Nedostupných cest: " missingPathCount "."
+    }
+    if (emptyPathCount > 0) {
+        summary .= " Bez vyplněné cesty: " emptyPathCount "."
     }
 
     return summary
