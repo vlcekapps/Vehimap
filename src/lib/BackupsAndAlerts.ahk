@@ -379,7 +379,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         remindersContent := SubStr(payload, payloadOffset, remindersLength)
         payloadOffset += remindersLength
     } else {
-        metaContent := "# Vehimap meta v1`n"
+        metaContent := "# Vehimap meta v2`n"
         remindersContent := "# Vehimap reminders v1`n"
     }
 
@@ -676,8 +676,8 @@ TryParseVehicleMetaBackupContent(content, &loadedMeta, &errorMessage) {
         return true
     }
 
-    if (firstNonEmptyLine != "# Vehimap meta v1") {
-        errorMessage := "Soubor stavů a štítků vozidel není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap meta v1'."
+    if (firstNonEmptyLine != "# Vehimap meta v1" && firstNonEmptyLine != "# Vehimap meta v2") {
+        errorMessage := "Soubor stavů, štítků a servisního profilu vozidel není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap meta v2'."
         return false
     }
 
@@ -693,21 +693,28 @@ TryParseVehicleMetaBackupContent(content, &loadedMeta, &errorMessage) {
         }
 
         if (SubStr(line, 1, 1) = "#") {
-            errorMessage := "Soubor stavů a štítků vozidel obsahuje neplatnou hlavičku nebo komentář na řádku " index "."
+            errorMessage := "Soubor stavů, štítků a servisního profilu vozidel obsahuje neplatnou hlavičku nebo komentář na řádku " index "."
             return false
         }
 
         fields := StrSplit(line, "`t")
-        if (fields.Length != 3) {
-            errorMessage := "Soubor stavů a štítků vozidel je poškozený. Řádek " index " musí obsahovat přesně 3 pole oddělená tabulátory."
+        if (
+            (firstNonEmptyLine = "# Vehimap meta v1" && fields.Length != 3)
+            || (firstNonEmptyLine = "# Vehimap meta v2" && fields.Length != 7)
+        ) {
+            errorMessage := "Soubor stavů, štítků a servisního profilu vozidel je poškozený. Řádek " index " musí odpovídat hlavičce souboru."
             return false
         }
 
-        loadedMeta.Push({
+        loadedMeta.Push(NormalizeVehicleMetaEntry({
             vehicleId: UnescapeField(fields[1]),
             state: UnescapeField(fields[2]),
-            tags: UnescapeField(fields[3])
-        })
+            tags: UnescapeField(fields[3]),
+            powertrain: (fields.Length >= 4) ? UnescapeField(fields[4]) : "",
+            climateProfile: (fields.Length >= 5) ? UnescapeField(fields[5]) : "",
+            timingDrive: (fields.Length >= 6) ? UnescapeField(fields[6]) : "",
+            transmission: (fields.Length >= 7) ? UnescapeField(fields[7]) : ""
+        }))
     }
 
     return true

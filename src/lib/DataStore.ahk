@@ -925,8 +925,8 @@ LoadVehicleMeta() {
         return
     }
 
-    if (firstNonEmptyLine != "# Vehimap meta v1") {
-        MsgBox("Soubor stavů a štítků vozidel není v podporovaném formátu.`n`nZkontrolujte soubor:`n" VehicleMetaFile, AppTitle, 0x30)
+    if (firstNonEmptyLine != "# Vehimap meta v1" && firstNonEmptyLine != "# Vehimap meta v2") {
+        MsgBox("Soubor stavů, štítků a servisního profilu vozidel není v podporovaném formátu.`n`nZkontrolujte soubor:`n" VehicleMetaFile, AppTitle, 0x30)
         return
     }
 
@@ -942,23 +942,30 @@ LoadVehicleMeta() {
         }
 
         if (SubStr(line, 1, 1) = "#") {
-            MsgBox("Soubor stavů a štítků vozidel obsahuje neplatnou hlavičku nebo komentář na řádku " index ".`n`nZkontrolujte soubor:`n" VehicleMetaFile, AppTitle, 0x30)
+            MsgBox("Soubor stavů, štítků a servisního profilu vozidel obsahuje neplatnou hlavičku nebo komentář na řádku " index ".`n`nZkontrolujte soubor:`n" VehicleMetaFile, AppTitle, 0x30)
             VehicleMetaEntries := []
             return
         }
 
         fields := StrSplit(line, "`t")
-        if (fields.Length != 3) {
-            MsgBox("Soubor stavů a štítků vozidel je poškozený. Řádek " index " musí obsahovat přesně 3 pole oddělená tabulátory.`n`nZkontrolujte soubor:`n" VehicleMetaFile, AppTitle, 0x30)
+        if (
+            (firstNonEmptyLine = "# Vehimap meta v1" && fields.Length != 3)
+            || (firstNonEmptyLine = "# Vehimap meta v2" && fields.Length != 7)
+        ) {
+            MsgBox("Soubor stavů, štítků a servisního profilu vozidel je poškozený. Řádek " index " musí odpovídat hlavičce souboru.`n`nZkontrolujte soubor:`n" VehicleMetaFile, AppTitle, 0x30)
             VehicleMetaEntries := []
             return
         }
 
-        VehicleMetaEntries.Push({
+        VehicleMetaEntries.Push(NormalizeVehicleMetaEntry({
             vehicleId: UnescapeField(fields[1]),
             state: UnescapeField(fields[2]),
-            tags: UnescapeField(fields[3])
-        })
+            tags: UnescapeField(fields[3]),
+            powertrain: (fields.Length >= 4) ? UnescapeField(fields[4]) : "",
+            climateProfile: (fields.Length >= 5) ? UnescapeField(fields[5]) : "",
+            timingDrive: (fields.Length >= 6) ? UnescapeField(fields[6]) : "",
+            transmission: (fields.Length >= 7) ? UnescapeField(fields[7]) : ""
+        }))
     }
 }
 
@@ -971,42 +978,45 @@ SaveVehicleMeta() {
 BuildVehicleMetaDataContent() {
     global VehicleMetaEntries
 
-    lines := ["# Vehimap meta v1"]
-    for entry in VehicleMetaEntries {
+    lines := ["# Vehimap meta v2"]
+    for rawEntry in VehicleMetaEntries {
+        entry := NormalizeVehicleMetaEntry(rawEntry)
         lines.Push(
-            EscapeField(entry.vehicleId) "`t"
-            EscapeField(entry.state) "`t"
-            EscapeField(entry.tags)
+            EscapeField(entry.vehicleId) "	"
+            EscapeField(entry.state) "	"
+            EscapeField(entry.tags) "	"
+            EscapeField(entry.powertrain) "	"
+            EscapeField(entry.climateProfile) "	"
+            EscapeField(entry.timingDrive) "	"
+            EscapeField(entry.transmission)
         )
     }
 
     return JoinLines(lines)
 }
-
 GetVehicleMeta(vehicleId) {
     global VehicleMetaEntries
 
     for entry in VehicleMetaEntries {
         if (entry.vehicleId = vehicleId) {
-            return entry
+            return NormalizeVehicleMetaEntry(entry)
         }
     }
 
-    return {
-        vehicleId: vehicleId,
-        state: "",
-        tags: ""
-    }
+    return BuildDefaultVehicleMeta(vehicleId)
 }
-
-SaveVehicleMetaEntry(vehicleId, state := "", tags := "") {
+SaveVehicleMetaEntry(vehicleId, state := "", tags := "", powertrain := "", climateProfile := "", timingDrive := "", transmission := "") {
     global VehicleMetaEntries
 
     state := NormalizeVehicleState(state)
     tags := NormalizeTagList(tags)
+    powertrain := NormalizeVehiclePowertrain(powertrain)
+    climateProfile := NormalizeVehicleClimateProfile(climateProfile)
+    timingDrive := NormalizeVehicleTimingDrive(timingDrive)
+    transmission := NormalizeVehicleTransmission(transmission)
     index := FindVehicleMetaIndex(vehicleId)
 
-    if (state = "" && tags = "") {
+    if (state = "" && tags = "" && powertrain = "" && climateProfile = "" && timingDrive = "" && transmission = "") {
         if index {
             VehicleMetaEntries.RemoveAt(index)
             SaveVehicleMeta()
@@ -1017,7 +1027,11 @@ SaveVehicleMetaEntry(vehicleId, state := "", tags := "") {
     entry := {
         vehicleId: vehicleId,
         state: state,
-        tags: tags
+        tags: tags,
+        powertrain: powertrain,
+        climateProfile: climateProfile,
+        timingDrive: timingDrive,
+        transmission: transmission
     }
 
     if index {
@@ -1028,7 +1042,6 @@ SaveVehicleMetaEntry(vehicleId, state := "", tags := "") {
 
     SaveVehicleMeta()
 }
-
 FindVehicleMetaIndex(vehicleId) {
     global VehicleMetaEntries
 
@@ -1053,23 +1066,72 @@ DeleteVehicleMeta(vehicleId) {
     SaveVehicleMeta()
 }
 
+BuildDefaultVehicleMeta(vehicleId := "") {
+    return {
+        vehicleId: vehicleId,
+        state: "",
+        tags: "",
+        powertrain: "",
+        climateProfile: "",
+        timingDrive: "",
+        transmission: ""
+    }
+}
+
+NormalizeVehicleMetaEntry(entry) {
+    normalized := BuildDefaultVehicleMeta(entry.HasOwnProp("vehicleId") ? entry.vehicleId : "")
+    normalized.state := NormalizeVehicleState(entry.HasOwnProp("state") ? entry.state : "")
+    normalized.tags := NormalizeTagList(entry.HasOwnProp("tags") ? entry.tags : "")
+    normalized.powertrain := NormalizeVehiclePowertrain(entry.HasOwnProp("powertrain") ? entry.powertrain : "")
+    normalized.climateProfile := NormalizeVehicleClimateProfile(entry.HasOwnProp("climateProfile") ? entry.climateProfile : "")
+    normalized.timingDrive := NormalizeVehicleTimingDrive(entry.HasOwnProp("timingDrive") ? entry.timingDrive : "")
+    normalized.transmission := NormalizeVehicleTransmission(entry.HasOwnProp("transmission") ? entry.transmission : "")
+    return normalized
+}
 NormalizeVehicleState(state) {
     global VehicleStateOptions
 
-    state := Trim(state)
-    if (state = "") {
+    return NormalizeVehicleMetaOption(state, VehicleStateOptions)
+}
+
+NormalizeVehiclePowertrain(powertrain) {
+    global VehiclePowertrainOptions
+
+    return NormalizeVehicleMetaOption(powertrain, VehiclePowertrainOptions)
+}
+
+NormalizeVehicleClimateProfile(profile) {
+    global VehicleClimateProfileOptions
+
+    return NormalizeVehicleMetaOption(profile, VehicleClimateProfileOptions)
+}
+
+NormalizeVehicleTimingDrive(timingDrive) {
+    global VehicleTimingDriveOptions
+
+    return NormalizeVehicleMetaOption(timingDrive, VehicleTimingDriveOptions)
+}
+
+NormalizeVehicleTransmission(transmission) {
+    global VehicleTransmissionOptions
+
+    return NormalizeVehicleMetaOption(transmission, VehicleTransmissionOptions)
+}
+
+NormalizeVehicleMetaOption(value, options) {
+    value := Trim(value)
+    if (value = "") {
         return ""
     }
 
-    for item in VehicleStateOptions {
-        if (item = state) {
+    for item in options {
+        if (item = value) {
             return item
         }
     }
 
-    return state
+    return value
 }
-
 NormalizeTagList(tags) {
     tags := Trim(tags)
     if (tags = "") {

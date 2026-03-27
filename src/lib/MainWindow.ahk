@@ -218,7 +218,11 @@ VehicleMatchesMainSearch(vehicle, searchText := "") {
         StrLower(vehicle.makeModel),
         StrLower(vehicle.plate),
         StrLower(meta.state),
-        StrLower(meta.tags)
+        StrLower(meta.tags),
+        StrLower(meta.powertrain),
+        StrLower(meta.climateProfile),
+        StrLower(meta.timingDrive),
+        StrLower(meta.transmission)
     ]
 
     for haystack in haystacks {

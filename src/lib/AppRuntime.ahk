@@ -195,7 +195,7 @@ EnsureDataFiles() {
     }
 
     if !FileExist(VehicleMetaFile) {
-        FileAppend("# Vehimap meta v1`n", VehicleMetaFile, "UTF-8")
+        FileAppend("# Vehimap meta v2`n", VehicleMetaFile, "UTF-8")
     }
 
     if !FileExist(RemindersFile) {

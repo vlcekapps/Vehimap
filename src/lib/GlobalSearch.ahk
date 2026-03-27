@@ -160,7 +160,7 @@ BuildGlobalSearchResults(searchText := "") {
             BuildGlobalSearchVehicleItemText(vehicle),
             BuildGlobalSearchVehicleDetailText(vehicle, meta),
             BuildGlobalSearchVehicleDateText(vehicle),
-            [vehicle.name, vehicle.vehicleNote, vehicle.makeModel, vehicle.plate, vehicle.year, vehicle.power, vehicle.category, meta.state, meta.tags, vehicle.lastTk, vehicle.nextTk, vehicle.greenCardFrom, vehicle.greenCardTo, GetVehicleStatusText(vehicle)]
+            [vehicle.name, vehicle.vehicleNote, vehicle.makeModel, vehicle.plate, vehicle.year, vehicle.power, vehicle.category, meta.state, meta.tags, meta.powertrain, meta.climateProfile, meta.timingDrive, meta.transmission, vehicle.lastTk, vehicle.nextTk, vehicle.greenCardFrom, vehicle.greenCardTo, GetVehicleStatusText(vehicle)]
         )
     }
 
@@ -504,6 +504,18 @@ BuildGlobalSearchVehicleDetailText(vehicle, meta) {
     if (Trim(meta.tags) != "") {
         parts.Push("Štítky: " meta.tags)
     }
+    if (Trim(meta.powertrain) != "") {
+        parts.Push("Pohon: " meta.powertrain)
+    }
+    if (Trim(meta.climateProfile) != "") {
+        parts.Push(meta.climateProfile)
+    }
+    if (Trim(meta.timingDrive) != "") {
+        parts.Push("Rozvody: " meta.timingDrive)
+    }
+    if (Trim(meta.transmission) != "") {
+        parts.Push("Převodovka: " meta.transmission)
+    }
 
     statusText := GetVehicleStatusText(vehicle)
     if (statusText != "") {
@@ -512,7 +524,6 @@ BuildGlobalSearchVehicleDetailText(vehicle, meta) {
 
     return JoinInline(parts, " | ")
 }
-
 BuildGlobalSearchVehicleDateText(vehicle) {
     parts := []
     if (Trim(vehicle.nextTk) != "") {

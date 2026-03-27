@@ -288,31 +288,41 @@ OpenVehicleDetailDialog(vehicle) {
     DetailRecordsSummaryLabel := DetailGui.AddText("x35 y591 w685", BuildVehicleRecordsSummaryText(vehicle.id))
     DetailMaintenanceSummaryLabel := DetailGui.AddText("x35 y614 w685", BuildVehicleMaintenanceSummaryText(vehicle.id))
 
-    editButton := DetailGui.AddButton("x35 y655 w120 h30", "Upravit vozidlo")
+    DetailGui.AddGroupBox("x20 y648 w720 h105", "Servisní profil")
+    DetailGui.AddText("x35 y678 w130", "Pohon")
+    DetailGui.AddText("x170 y678 w150", FormatDisplayValue(meta.powertrain))
+    DetailGui.AddText("x355 y678 w110", "Klimatizace")
+    DetailGui.AddText("x470 y678 w180", FormatDisplayValue(meta.climateProfile))
+    DetailGui.AddText("x35 y708 w130", "Rozvody")
+    DetailGui.AddText("x170 y708 w150", FormatDisplayValue(meta.timingDrive))
+    DetailGui.AddText("x355 y708 w110", "Převodovka")
+    DetailGui.AddText("x470 y708 w180", FormatDisplayValue(meta.transmission))
+
+    editButton := DetailGui.AddButton("x35 y770 w120 h30", "Upravit vozidlo")
     editButton.OnEvent("Click", EditVehicleFromDetail)
 
-    historyButton := DetailGui.AddButton("x165 y655 w110 h30", "Historie")
+    historyButton := DetailGui.AddButton("x165 y770 w110 h30", "Historie")
     historyButton.OnEvent("Click", OpenHistoryFromDetail)
 
-    remindersButton := DetailGui.AddButton("x285 y655 w120 h30", "Připomínky")
+    remindersButton := DetailGui.AddButton("x285 y770 w120 h30", "Připomínky")
     remindersButton.OnEvent("Click", OpenRemindersFromDetail)
 
-    fuelButton := DetailGui.AddButton("x415 y655 w120 h30", "Tankování")
+    fuelButton := DetailGui.AddButton("x415 y770 w120 h30", "Tankování")
     fuelButton.OnEvent("Click", OpenFuelFromDetail)
 
-    recordsButton := DetailGui.AddButton("x545 y655 w160 h30", "Pojištění a doklady")
+    recordsButton := DetailGui.AddButton("x545 y770 w160 h30", "Pojištění a doklady")
     recordsButton.OnEvent("Click", OpenRecordsFromDetail)
 
-    maintenanceButton := DetailGui.AddButton("x110 y690 w150 h30", "Plán údržby")
+    maintenanceButton := DetailGui.AddButton("x110 y805 w150 h30", "Plán údržby")
     maintenanceButton.OnEvent("Click", OpenMaintenanceFromDetail)
 
-    costsButton := DetailGui.AddButton("x270 y690 w150 h30", "Náklady a souhrny")
+    costsButton := DetailGui.AddButton("x270 y805 w150 h30", "Náklady a souhrny")
     costsButton.OnEvent("Click", OpenCostsFromDetail)
 
-    closeButton := DetailGui.AddButton("x430 y690 w100 h30", "Zavřít")
+    closeButton := DetailGui.AddButton("x430 y805 w100 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleDetailDialog)
 
-    DetailGui.Show("w760 h745")
+    DetailGui.Show("w760 h860")
     closeButton.Focus()
 }
 
@@ -434,7 +444,7 @@ PopulateVehicleDetailHistoryList(vehicleId) {
 }
 
 OpenVehicleForm(mode, vehicle := "") {
-    global AppTitle, Categories, VehicleStateOptions, FormGui, FormControls, FormMode, FormVehicleId, MainGui, TabsCtrl, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, MaintenanceGui, MaintenanceFormGui, MaintenanceCompleteGui
+    global AppTitle, Categories, VehicleStateOptions, VehiclePowertrainOptions, VehicleClimateProfileOptions, VehicleTimingDriveOptions, VehicleTransmissionOptions, FormGui, FormControls, FormMode, FormVehicleId, MainGui, TabsCtrl, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, MaintenanceGui, MaintenanceFormGui, MaintenanceCompleteGui
 
     if IsObject(FormGui) {
         WinActivate("ahk_id " FormGui.Hwnd)
@@ -576,8 +586,23 @@ OpenVehicleForm(mode, vehicle := "") {
 
     FormGui.AddText("x" labelX " y" rowY " w210", "Štítky (volitelné)")
     FormControls.vehicleTags := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
-    rowY += rowStep + 10
+    rowY += rowStep
 
+    FormGui.AddText("x" labelX " y" rowY " w210", "Pohon (volitelné)")
+    FormControls.powertrain := FormGui.AddDropDownList(Format("x{} y{} w{}", inputX, rowY - 3, inputW), VehiclePowertrainOptions)
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Klimatizace (volitelné)")
+    FormControls.climateProfile := FormGui.AddDropDownList(Format("x{} y{} w{}", inputX, rowY - 3, inputW), VehicleClimateProfileOptions)
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Rozvody (volitelné)")
+    FormControls.timingDrive := FormGui.AddDropDownList(Format("x{} y{} w{}", inputX, rowY - 3, inputW), VehicleTimingDriveOptions)
+    rowY += rowStep
+
+    FormGui.AddText("x" labelX " y" rowY " w210", "Převodovka (volitelné)")
+    FormControls.transmission := FormGui.AddDropDownList(Format("x{} y{} w{}", inputX, rowY - 3, inputW), VehicleTransmissionOptions)
+    rowY += rowStep + 10
     FormGui.AddText("x20 y" rowY " w500", "Datum zadávejte jako MM/RRRR, například 04/2026. Pro upozornění se používají pole Příští TK a Zelená karta do.")
 
     saveButton := FormGui.AddButton(Format("x185 y{} w140 h30 Default", rowY + 45), "Uložit")
@@ -601,11 +626,15 @@ OpenVehicleForm(mode, vehicle := "") {
         meta := GetVehicleMeta(vehicle.id)
         SetDropDownToText(FormControls.vehicleState, meta.state, VehicleStateOptions)
         FormControls.vehicleTags.Text := meta.tags
+        SetDropDownToText(FormControls.powertrain, meta.powertrain, VehiclePowertrainOptions)
+        SetDropDownToText(FormControls.climateProfile, meta.climateProfile, VehicleClimateProfileOptions)
+        SetDropDownToText(FormControls.timingDrive, meta.timingDrive, VehicleTimingDriveOptions)
+        SetDropDownToText(FormControls.transmission, meta.transmission, VehicleTransmissionOptions)
     } else {
         FormControls.category.Value := TabsCtrl.Value
     }
 
-    FormGui.Show("w550 h635")
+    FormGui.Show("w550 h775")
     FormControls.name.Focus()
 }
 
@@ -638,7 +667,10 @@ SaveVehicleFromForm(*) {
     greenCardTo := NormalizeMonthYear(FormControls.greenCardTo.Text)
     vehicleState := Trim(FormControls.vehicleState.Text)
     vehicleTags := Trim(FormControls.vehicleTags.Text)
-
+    powertrain := Trim(FormControls.powertrain.Text)
+    climateProfile := Trim(FormControls.climateProfile.Text)
+    timingDrive := Trim(FormControls.timingDrive.Text)
+    transmission := Trim(FormControls.transmission.Text)
     if (name = "") {
         MsgBox("Vyplňte prosím vlastní pojmenování vozidla.", AppTitle, 0x30)
         FormControls.name.Focus()
@@ -716,7 +748,7 @@ SaveVehicleFromForm(*) {
     }
 
     SaveVehicles()
-    SaveVehicleMetaEntry(vehicle.id, vehicleState, vehicleTags)
+    SaveVehicleMetaEntry(vehicle.id, vehicleState, vehicleTags, powertrain, climateProfile, timingDrive, transmission)
     CloseVehicleForm()
     OpenVehicleById(vehicle.id, true)
     CheckDueVehicles(false, false)

@@ -1623,6 +1623,16 @@ GetVehicleMaintenanceTemplateByLabel(label) {
     return ""
 }
 
+PushVehicleMaintenanceTemplateByLabel(&templates, label) {
+    template := GetVehicleMaintenanceTemplateByLabel(label)
+    if IsObject(template) {
+        templates.Push(template)
+        return true
+    }
+
+    return false
+}
+
 GetVehicleMaintenanceRecommendationPreview(vehicleId) {
     vehicle := FindVehicleById(vehicleId)
     if !IsObject(vehicle) {
@@ -1661,36 +1671,52 @@ GetVehicleMaintenanceRecommendationPreview(vehicleId) {
 GetRecommendedVehicleMaintenanceTemplates(vehicle) {
     category := NormalizeCategory(vehicle.category)
     labels := []
-    isElectric := IsElectricVehicleMaintenanceProfile(vehicle)
-    isDiesel := IsDieselVehicleMaintenanceProfile(vehicle)
+    powertrain := GetVehicleMaintenancePowertrain(vehicle)
+    isElectric := (powertrain = "Elektro")
+    isDiesel := (powertrain = "Nafta")
+    hasClimate := ShouldRecommendVehicleClimateMaintenance(vehicle)
+    shouldTiming := ShouldRecommendVehicleTimingMaintenance(vehicle)
+    shouldTransmission := ShouldRecommendVehicleTransmissionMaintenance(vehicle)
 
     switch category {
         case "Osobní vozidla":
             if isElectric {
-                labels := ["Kabinový filtr", "Brzdová kapalina", "Chladicí kapalina", "Klimatizace a dezinfekce"]
+                labels := ["Kabinový filtr", "Brzdová kapalina", "Chladicí kapalina"]
             } else {
-                labels := ["Motorový olej a filtr", "Vzduchový filtr", "Kabinový filtr", "Brzdová kapalina", "Chladicí kapalina", "Rozvody", "Převodový olej", "Klimatizace a dezinfekce"]
+                labels := ["Motorový olej a filtr", "Vzduchový filtr", "Kabinový filtr", "Brzdová kapalina", "Chladicí kapalina"]
+                if shouldTiming {
+                    labels.Push("Rozvody")
+                }
+                if shouldTransmission {
+                    labels.Push("Převodový olej")
+                }
             }
         case "Motocykly":
-            labels := isElectric
-                ? ["Brzdová kapalina"]
-                : ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina"]
+            labels := isElectric ? ["Brzdová kapalina"] : ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina"]
         case "Nákladní vozidla":
             if isElectric {
-                labels := ["Brzdová kapalina", "Chladicí kapalina", "Klimatizace a dezinfekce"]
+                labels := ["Brzdová kapalina", "Chladicí kapalina"]
             } else {
-                labels := ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina", "Převodový olej"]
+                labels := ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina"]
+                if shouldTransmission {
+                    labels.Push("Převodový olej")
+                }
             }
         case "Autobusy":
             if isElectric {
-                labels := ["Brzdová kapalina", "Chladicí kapalina", "Klimatizace a dezinfekce"]
+                labels := ["Brzdová kapalina", "Chladicí kapalina"]
             } else {
-                labels := ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina", "Převodový olej", "Klimatizace a dezinfekce"]
+                labels := ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina"]
+                if shouldTransmission {
+                    labels.Push("Převodový olej")
+                }
             }
         default:
-            labels := isElectric
-                ? ["Brzdová kapalina"]
-                : ["Brzdová kapalina", "Chladicí kapalina"]
+            labels := isElectric ? ["Brzdová kapalina"] : ["Brzdová kapalina", "Chladicí kapalina"]
+    }
+
+    if hasClimate {
+        labels.Push("Klimatizace a dezinfekce")
     }
 
     if (isDiesel && !isElectric) {
@@ -1704,7 +1730,6 @@ GetRecommendedVehicleMaintenanceTemplates(vehicle) {
 
     return templates
 }
-
 AddVehicleMaintenanceRecommendedTemplates(vehicleId, templates, persist := true) {
     global VehicleMaintenancePlans
 
@@ -1799,38 +1824,151 @@ BuildVehicleMaintenanceRecommendationResultText(result) {
 }
 
 BuildVehicleMaintenanceRecommendationProfileLabel(vehicle) {
+    meta := GetVehicleMeta(vehicle.id)
     parts := [NormalizeCategory(vehicle.category)]
-    if IsElectricVehicleMaintenanceProfile(vehicle) {
-        parts.Push("elektrický pohon")
-    } else if IsDieselVehicleMaintenanceProfile(vehicle) {
-        parts.Push("naftový pohon")
+    powertrain := GetVehicleMaintenancePowertrain(vehicle)
+    if (powertrain != "") {
+        parts.Push(BuildVehicleMaintenancePowertrainLabel(powertrain))
+    }
+    if (meta.climateProfile != "") {
+        parts.Push(StrLower(meta.climateProfile))
+    }
+    if (meta.timingDrive != "") {
+        parts.Push(BuildVehicleMaintenanceTimingLabel(meta.timingDrive))
+    }
+    if (meta.transmission != "") {
+        parts.Push(BuildVehicleMaintenanceTransmissionLabel(meta.transmission))
     }
 
     return JoinInline(parts, ", ")
 }
 
-PushVehicleMaintenanceTemplateByLabel(&templates, label) {
-    template := GetVehicleMaintenanceTemplateByLabel(label)
-    if !IsObject(template) {
-        return
+BuildVehicleMaintenancePowertrainLabel(powertrain) {
+    switch powertrain {
+        case "Benzín":
+            return "benzínový pohon"
+        case "Nafta":
+            return "naftový pohon"
+        case "Hybrid":
+            return "hybridní pohon"
+        case "Plug-in hybrid":
+            return "plug-in hybrid"
+        case "Elektro":
+            return "elektrický pohon"
+        case "LPG / CNG":
+            return "pohon LPG / CNG"
+        case "Jiné":
+            return "jiný pohon"
     }
 
-    wantedKey := NormalizeVehicleMaintenancePlanTitleKey(template.title)
-    for existing in templates {
-        if (NormalizeVehicleMaintenancePlanTitleKey(existing.title) = wantedKey) {
-            return
-        }
+    return StrLower(powertrain)
+}
+
+BuildVehicleMaintenanceTimingLabel(timingDrive) {
+    switch timingDrive {
+        case "Řemen":
+            return "rozvody řemenem"
+        case "Řetěz":
+            return "rozvody řetězem"
+        case "Není relevantní":
+            return "bez pravidelných rozvodů"
     }
 
-    templates.Push(template)
+    return "rozvody: " StrLower(timingDrive)
+}
+
+BuildVehicleMaintenanceTransmissionLabel(transmission) {
+    switch transmission {
+        case "Manuální":
+            return "manuální převodovka"
+        case "Automatická":
+            return "automatická převodovka"
+        case "Není relevantní":
+            return "bez klasické převodovky"
+    }
+
+    return "převodovka: " StrLower(transmission)
+}
+
+GetVehicleMaintenancePowertrain(vehicle) {
+    meta := GetVehicleMeta(vehicle.id)
+    if (meta.powertrain != "") {
+        return meta.powertrain
+    }
+
+    if VehicleMaintenanceProfileHasKeyword(vehicle, ["plug-in hybrid", "plug in hybrid", "phev"]) {
+        return "Plug-in hybrid"
+    }
+    if VehicleMaintenanceProfileHasKeyword(vehicle, ["hybrid", "hev"]) {
+        return "Hybrid"
+    }
+    if VehicleMaintenanceProfileHasKeyword(vehicle, ["elektro", "elektř", "electric", "bev", "tesla", "ev"]) {
+        return "Elektro"
+    }
+    if VehicleMaintenanceProfileHasKeyword(vehicle, ["diesel", "nafta", "tdi", "hdi", "dci", "cdi", "crdi", "multijet", "tdci"]) {
+        return "Nafta"
+    }
+    if VehicleMaintenanceProfileHasKeyword(vehicle, ["lpg", "cng", "gpl"]) {
+        return "LPG / CNG"
+    }
+    if VehicleMaintenanceProfileHasKeyword(vehicle, ["benzin", "benzín", "gasoline", "tsi", "tfsi", "mpi", "gdi", "fsi", "ecoboost"]) {
+        return "Benzín"
+    }
+
+    return ""
 }
 
 IsDieselVehicleMaintenanceProfile(vehicle) {
-    return VehicleMaintenanceProfileHasKeyword(vehicle, ["diesel", "nafta", "tdi", "hdi", "dci", "cdi", "crdi", "multijet", "tdci"])
+    return GetVehicleMaintenancePowertrain(vehicle) = "Nafta"
 }
 
 IsElectricVehicleMaintenanceProfile(vehicle) {
-    return VehicleMaintenanceProfileHasKeyword(vehicle, ["elektro", "elektř", "electric", "bev", "tesla"])
+    return GetVehicleMaintenancePowertrain(vehicle) = "Elektro"
+}
+
+ShouldRecommendVehicleClimateMaintenance(vehicle) {
+    meta := GetVehicleMeta(vehicle.id)
+    if (meta.climateProfile = "Má klimatizaci") {
+        return true
+    }
+    if (meta.climateProfile = "Bez klimatizace") {
+        return false
+    }
+
+    category := NormalizeCategory(vehicle.category)
+    return (category = "Osobní vozidla" || category = "Nákladní vozidla" || category = "Autobusy")
+}
+
+ShouldRecommendVehicleTimingMaintenance(vehicle) {
+    if IsElectricVehicleMaintenanceProfile(vehicle) {
+        return false
+    }
+
+    meta := GetVehicleMeta(vehicle.id)
+    if (meta.timingDrive = "Řemen") {
+        return true
+    }
+    if (meta.timingDrive = "Řetěz" || meta.timingDrive = "Není relevantní") {
+        return false
+    }
+
+    return true
+}
+
+ShouldRecommendVehicleTransmissionMaintenance(vehicle) {
+    if IsElectricVehicleMaintenanceProfile(vehicle) {
+        return false
+    }
+
+    meta := GetVehicleMeta(vehicle.id)
+    if (meta.transmission = "Automatická") {
+        return true
+    }
+    if (meta.transmission = "Manuální" || meta.transmission = "Není relevantní") {
+        return false
+    }
+
+    return true
 }
 
 VehicleMaintenanceProfileHasKeyword(vehicle, keywords) {
@@ -1848,7 +1986,6 @@ VehicleMaintenanceProfileHasKeyword(vehicle, keywords) {
 
     return false
 }
-
 RefreshMaintenanceDependentState(vehicleId) {
     if IsObject(MaintenanceGui) {
         PopulateVehicleMaintenanceList()

@@ -18,6 +18,7 @@ RunSmokeTests() {
         "SmokeTestMaintenancePlans",
         "SmokeTestMaintenanceRecommendations",
         "SmokeTestMaintenanceRecommendationAction",
+        "SmokeTestVehicleMetaProfiles",
         "SmokeTestMaintenanceBackupRoundTrip",
         "SmokeTestRecordPathInfo",
         "SmokeTestFleetCostSummary",
@@ -280,16 +281,16 @@ SmokeTestMaintenancePlans() {
 }
 
 SmokeTestMaintenanceRecommendations() {
-    global Vehicles, VehicleMaintenancePlans
+    global Vehicles, VehicleMetaEntries, VehicleMaintenancePlans
 
     ResetSmokeData()
     Vehicles := [
         {
             id: "veh_1",
-            name: "Doporučený diesel",
+            name: "Doporučený profil",
             category: "Osobní vozidla",
-            vehicleNote: "Rodinné diesel kombi",
-            makeModel: "Skoda Octavia 2.0 TDI",
+            vehicleNote: "Rodinné kombi",
+            makeModel: "Škoda Octavia",
             plate: "1AB2345",
             year: "2021",
             power: "110",
@@ -299,15 +300,23 @@ SmokeTestMaintenanceRecommendations() {
             greenCardTo: "04/2026"
         }
     ]
+    VehicleMetaEntries := [
+        {vehicleId: "veh_1", state: "Běžný provoz", tags: "rodina", powertrain: "Nafta", climateProfile: "Má klimatizaci", timingDrive: "Řetěz", transmission: "Manuální"}
+    ]
     VehicleMaintenancePlans := [
         {id: "mnt_1", vehicleId: "veh_1", title: "Motorový olej a filtr", intervalKm: "15000", intervalMonths: "12", lastServiceDate: "", lastServiceOdometer: "", isActive: 1, note: ""}
     ]
 
     preview := GetVehicleMaintenanceRecommendationPreview("veh_1")
     AssertContains(preview.profileLabel, "Osobní vozidla", "Profil doporučení má vycházet z kategorie vozidla.")
-    AssertContains(preview.profileLabel, "naftový pohon", "Profil doporučení má rozpoznat diesel podle modelu nebo poznámky.")
+    AssertContains(preview.profileLabel, "naftový pohon", "Profil doporučení má respektovat explicitně zadaný pohon.")
+    AssertContains(preview.profileLabel, "má klimatizaci", "Profil doporučení má ukázat i explicitně zadanou klimatizaci.")
+    AssertContains(preview.profileLabel, "rozvody řetězem", "Profil doporučení má ukázat i explicitní typ rozvodů.")
     AssertEqual(preview.existingCount, 1, "Už existující doporučený plán se má odfiltrovat.")
-    AssertTrue(HasMaintenanceTemplateWithTitle(preview.missing, "Palivový filtr"), "Diesel má mezi doporučenými šablonami dostat i palivový filtr.")
+    AssertTrue(HasMaintenanceTemplateWithTitle(preview.missing, "Palivový filtr"), "Nafta má mezi doporučenými šablonami dostat i palivový filtr.")
+    AssertTrue(HasMaintenanceTemplateWithTitle(preview.missing, "Klimatizace a dezinfekce"), "Vozidlo s klimatizací má dostat i klimatizační doporučení.")
+    AssertTrue(!HasMaintenanceTemplateWithTitle(preview.missing, "Rozvody"), "Řetězové rozvody se nemají znovu doporučovat jako pravidelný řemenový servis.")
+    AssertTrue(!HasMaintenanceTemplateWithTitle(preview.missing, "Převodový olej"), "Explicitně manuální převodovka nemá dostat automatické doporučení převodového oleje.")
     AssertTrue(!HasMaintenanceTemplateWithTitle(preview.missing, "Motorový olej a filtr"), "Už existující plán se nesmí znovu nabízet.")
 
     applied := AddVehicleMaintenanceRecommendedTemplates("veh_1", preview.missing, false)
@@ -317,9 +326,8 @@ SmokeTestMaintenanceRecommendations() {
     previewAfter := GetVehicleMaintenanceRecommendationPreview("veh_1")
     AssertEqual(previewAfter.missing.Length, 0, "Po doplnění doporučených plánů už nemají zbýt další chybějící šablony.")
 }
-
 SmokeTestMaintenanceRecommendationAction() {
-    global Vehicles, VehicleMaintenancePlans, MaintenanceVehicleId, MaintenancePlansFile, VehimapTestHooks
+    global Vehicles, VehicleMetaEntries, VehicleMaintenancePlans, MaintenanceVehicleId, MaintenancePlansFile, VehimapTestHooks
 
     ResetSmokeData()
     originalMaintenancePlansFile := MaintenancePlansFile
@@ -329,10 +337,10 @@ SmokeTestMaintenanceRecommendationAction() {
     Vehicles := [
         {
             id: "veh_1",
-            name: "Akční diesel",
+            name: "Akční profil",
             category: "Osobní vozidla",
-            vehicleNote: "Nafta",
-            makeModel: "Volkswagen Passat 2.0 TDI",
+            vehicleNote: "Rodinné auto",
+            makeModel: "Volkswagen Passat",
             plate: "2AB3456",
             year: "2022",
             power: "110",
@@ -341,6 +349,9 @@ SmokeTestMaintenanceRecommendationAction() {
             greenCardFrom: "05/2025",
             greenCardTo: "05/2026"
         }
+    ]
+    VehicleMetaEntries := [
+        {vehicleId: "veh_1", state: "Běžný provoz", tags: "test", powertrain: "Nafta", climateProfile: "Má klimatizaci", timingDrive: "Řemen", transmission: "Automatická"}
     ]
     VehicleMaintenancePlans := []
     MaintenanceVehicleId := "veh_1"
@@ -394,6 +405,32 @@ SmokeTestMaintenanceRecommendationAction() {
     }
 }
 
+SmokeTestVehicleMetaProfiles() {
+    global VehicleMetaEntries
+
+    ResetSmokeData()
+    VehicleMetaEntries := [
+        {vehicleId: "veh_1", state: "Běžný provoz", tags: "rodina, test", powertrain: "Nafta", climateProfile: "Má klimatizaci", timingDrive: "Řetěz", transmission: "Automatická"}
+    ]
+
+    metaContent := BuildVehicleMetaDataContent()
+    AssertContains(metaContent, "# Vehimap meta v2", "Servisní profil vozidla se má ukládat do meta formátu v2.")
+    AssertContains(metaContent, "Nafta", "Meta obsah má ukládat i pohon vozidla.")
+
+    loadedMeta := []
+    errorMessage := ""
+    AssertTrue(TryParseVehicleMetaBackupContent(metaContent, &loadedMeta, &errorMessage), "Meta sekce se musí umět znovu načíst.")
+    AssertEqual(loadedMeta.Length, 1, "Ze servisního profilu se má načíst jedna položka.")
+    AssertEqual(loadedMeta[1].powertrain, "Nafta", "Pohon se musí po round-tripu zachovat.")
+    AssertEqual(loadedMeta[1].climateProfile, "Má klimatizaci", "Klimatizace se musí po round-tripu zachovat.")
+    AssertEqual(loadedMeta[1].timingDrive, "Řetěz", "Typ rozvodů se musí po round-tripu zachovat.")
+    AssertEqual(loadedMeta[1].transmission, "Automatická", "Převodovka se musí po round-tripu zachovat.")
+
+    legacyMeta := "# Vehimap meta v1`nveh_2`tVeterán`tarchiv`n"
+    loadedLegacy := []
+    AssertTrue(TryParseVehicleMetaBackupContent(legacyMeta, &loadedLegacy, &errorMessage), "Starý meta formát v1 musí jít stále načíst.")
+    AssertEqual(loadedLegacy[1].powertrain, "", "Starý meta formát má doplnit nové servisní pole prázdnými hodnotami.")
+}
 SmokeTestMaintenanceBackupRoundTrip() {
     global Vehicles, VehicleMaintenancePlans, SettingsFile
 
