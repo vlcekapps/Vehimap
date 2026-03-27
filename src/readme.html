@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vehimap - UĹľivatelskĂˇ pĹ™Ă&#173;ru&#196;Ťka</title>
+  <style>
+    body { font-family: "Segoe UI", Arial, sans-serif; margin: 32px auto; max-width: 920px; padding: 0 20px 48px; line-height: 1.6; color: #1b1b1b; background: #ffffff; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1.25; margin-top: 1.6em; margin-bottom: 0.5em; }
+    h1 { margin-top: 0; font-size: 2rem; }
+    h2 { font-size: 1.45rem; border-bottom: 1px solid #d8d8d8; padding-bottom: 0.2em; }
+    p { margin: 0 0 1em 0; }
+    ul { margin: 0 0 1em 1.4em; padding: 0; }
+    li { margin: 0.2em 0; }
+    code { font-family: Consolas, "Courier New", monospace; background: #f4f4f4; padding: 0.12em 0.35em; border-radius: 4px; }
+    pre { background: #f4f4f4; padding: 14px 16px; overflow: auto; border-radius: 8px; }
+    pre code { background: transparent; padding: 0; border-radius: 0; }
+  </style>
+</head>
+<body>
+<h1>Vehimap</h1>
+<p>Komplexn&#237; řešen&#237; pro evidenci vašich vozidel.</p>
+<h2>Co um&#237;</h2>
+<ul>
+<li>rozdělen&#237; vozidel do kategori&#237; <code>Osobn&#237; vozidla</code>, <code>Motocykly</code>, <code>N&#225;kladn&#237; vozidla</code>, <code>Autobusy</code>, <code>Ostatn&#237;</code></li>
+<li>přid&#225;n&#237;, &#250;pravu a odstraněn&#237; vozidla</li>
+<li>vyhled&#225;v&#225;n&#237; v hlavn&#237;m seznamu podle n&#225;zvu, typu, značky nebo SPZ</li>
+<li>glob&#225;ln&#237; hled&#225;n&#237; např&#237;č vozidly, histori&#237; ud&#225;lost&#237;, kilometry a tankov&#225;n&#237;m, pojištěn&#237;m a doklady i vlastn&#237;mi připom&#237;nkami</li>
+<li>filtr hlavn&#237;ho seznamu na všechna vozidla, vozidla s bl&#237;ž&#237;c&#237;m se term&#237;nem, vozidla po term&#237;nu a vozidla bez vyplněn&#233; zelen&#233; karty</li>
+<li>voliteln&#233; skryt&#237; archivovan&#253;ch a odstaven&#253;ch vozidel v hlavn&#237;m seznamu, aniž by zmizela z dat a přehledů</li>
+<li>detail vozidla se souhrnem &#250;dajů, stavem platnost&#237;, posledn&#237;mi ud&#225;lostmi z historie a souhrnem tankov&#225;n&#237; i dokladů</li>
+<li>historii ud&#225;lost&#237; pro každ&#233; vozidlo, včetně přid&#225;n&#237;, &#250;pravy a odstraněn&#237; servisn&#237;ch nebo jin&#253;ch z&#225;znamů</li>
+<li>samostatnou evidenci <code>Kilometry a tankov&#225;n&#237;</code> pro každ&#233; vozidlo, včetně přid&#225;n&#237;, &#250;pravy a odstraněn&#237; z&#225;znamů</li>
+<li>rychl&#233; hled&#225;n&#237; a řazen&#237; sloupců v historii ud&#225;lost&#237;, kilometrech a tankov&#225;n&#237;, pojištěn&#237; a dokladech i vlastn&#237;ch připom&#237;nk&#225;ch, včetně zapamatov&#225;n&#237; posledn&#237;ho řazen&#237;</li>
+<li>samostatnou evidenci <code>Pojištěn&#237; a doklady</code> pro každ&#233; vozidlo, včetně přid&#225;n&#237;, &#250;pravy a odstraněn&#237; z&#225;znamů, otevřen&#237; nav&#225;zan&#233;ho souboru i otevřen&#237; jeho složky, kop&#237;rov&#225;n&#237; cesty a zobrazen&#237; stavu dostupnosti př&#237;lohy</li>
+<li><code>N&#225;klady a souhrny</code> pro každ&#233; vozidlo s přehledem podle roku i s v&#253;běrem vlastn&#237;ho obdob&#237; po měs&#237;c&#237;ch v r&#225;mci zvolen&#233;ho roku</li>
+<li>export n&#225;kladov&#253;ch přehledů do <code>TSV souhrnu</code>, <code>TSV detailu</code> a <code>HTML sestavy</code></li>
+<li>vlastn&#237; připom&#237;nky i s volbou opakov&#225;n&#237; <code>Neopakovat</code>, <code>Každ&#253; rok</code>, <code>Každ&#233; 2 roky</code> a <code>Každ&#253;ch 5 let</code></li>
+<li>upozorněn&#237; na bl&#237;ž&#237;c&#237; se nebo propadlou technickou kontrolu</li>
+<li>upozorněn&#237; na bl&#237;ž&#237;c&#237; se nebo propadlou zelenou kartu</li>
+<li>samostatn&#253; <code>Dashboard</code> s rychl&#253;m souhrnem vozidel, term&#237;nů, n&#225;kladů v aktu&#225;ln&#237;m roce, kvality evidenc&#237; a akčn&#237;m seznamem nejbližš&#237;ch term&#237;nů, chyběj&#237;c&#237;ch zelen&#253;ch karet, vozidel bez SPZ nebo př&#237;št&#237; TK i dokladů s nedostupnou nebo pr&#225;zdnou cestou</li>
+<li>samostatn&#253; dialog s přehledem všech bl&#237;ž&#237;c&#237;ch se a propadl&#253;ch term&#237;nů, filtrem, rychl&#253;m hled&#225;n&#237;m podle n&#225;zvu, SPZ nebo typu položky, ručn&#237; obnovou, řazen&#237;m podle sloupců, voliteln&#253;m zobrazen&#237;m datov&#253;ch nedostatků, př&#237;m&#253;m otevřen&#237;m řešen&#233; položky, otevřen&#237;m vozidla i editac&#237; vozidla a zapamatov&#225;n&#237;m posledn&#237;ho nastaven&#237; přehledu</li>
+<li>samostatn&#253; dialog <code>Propadl&#233; term&#237;ny</code> se seznamem všech už propadl&#253;ch <code>TK</code> a <code>ZK</code>, rychl&#253;m hled&#225;n&#237;m a př&#237;m&#253;m otevřen&#237;m řešen&#233; položky, otevřen&#237;m vozidla nebo editac&#237; vozidla</li>
+<li><code>Tiskov&#253; přehled</code> všech vozidel ve form&#225;tu HTML, kter&#253; se otevře v prohl&#237;žeči a d&#225; se vytisknout běžn&#253;m <code>Ctrl+P</code></li>
+<li><code>Export dat</code> do jednoho z&#225;ložn&#237;ho souboru <code>.vehimapbak</code></li>
+<li><code>Import dat</code> z dř&#237;ve vytvořen&#233; z&#225;lohy včetně automatick&#233; z&#225;lohy původn&#237;ch souborů před přeps&#225;n&#237;m</li>
+<li>pravideln&#233; automatick&#233; z&#225;lohy do <code>data/auto-backups</code> se samostatn&#253;m intervalem ve dnech a omezen&#237;m počtu ponechan&#253;ch souborů</li>
+<li>samostatn&#233; nastaven&#237; počtu dnů pro upozorněn&#237; na <code>TK</code> a <code>ZK</code></li>
+<li>volby <code>Spustit po startu poč&#237;tače</code>, <code>Automaticky skr&#253;t na lištu</code> a <code>Zobrazovat dashboard při startu</code></li>
+<li>horn&#237; menu <code>Soubor</code>, <code>Vozidlo</code>, <code>Přehled</code>, <code>N&#225;stroje</code> a <code>N&#225;pověda</code></li>
+<li>tray menu pro rychl&#233; otevřen&#237; nejbližš&#237;ch term&#237;nů i dalš&#237;ch funkc&#237; aplikace</li>
+<li>automatickou kontrolu term&#237;nů každ&#253;ch 15 minut a znovu po probuzen&#237; poč&#237;tače ze sp&#225;nku</li>
+</ul>
+<h2>Jak se použ&#237;v&#225;</h2>
+<p>Ve většině př&#237;padů stač&#237; spustit <code>Vehimap.exe</code>.</p>
+<p>V hlavn&#237;m okně:</p>
+<ul>
+<li>z&#225;ložky nahoře d&#225;l rozděluj&#237; vozidla podle kategori&#237;</li>
+<li>pole <code>Hledat n&#225;zev, značku nebo SPZ</code> filtruje jen aktu&#225;lně otevřenou kategorii</li>
+<li>pole <code>Filtr seznamu</code> rychle zobraz&#237; jen vozidla, kter&#225; pr&#225;vě vyžaduj&#237; pozornost</li>
+<li>zaškrt&#225;v&#225;tko <code>Skr&#253;t archivovan&#225; a odstaven&#225; vozidla</code> schov&#225; neaktivn&#237; vozidla jen z hlavn&#237;ho seznamu a svou volbu si pamatuje i po dalš&#237;m spuštěn&#237;</li>
+<li>tlač&#237;tka <code>Detail vozidla</code> a <code>Historie ud&#225;lost&#237;</code> pracuj&#237; s pr&#225;vě vybran&#253;m vozidlem, dalš&#237; evidence otevřete i z menu <code>Vozidlo</code></li>
+<li>položky <code>Dashboard</code> a <code>Glob&#225;ln&#237; hled&#225;n&#237;</code> v menu <code>Přehled</code> otevřou rychl&#253; souhrn term&#237;nů, n&#225;kladů a stavu evidenc&#237; nebo vyhled&#225;n&#237; např&#237;č všemi evidencemi</li>
+<li>v menu <code>N&#225;pověda</code> najdete <code>O programu</code> s přehledem verze, cesty k aplikaci a datov&#233; složky i samostatnou ručn&#237; kontrolu aktualizac&#237;</li>
+<li>v dashboardu se v seznamu zobrazuj&#237; nejen nejbližš&#237; term&#237;ny, ale i datov&#233; nedostatky jako chyběj&#237;c&#237; SPZ, chyběj&#237;c&#237; př&#237;št&#237; TK nebo probl&#233;mov&#233; dokladov&#233; př&#237;lohy</li>
+<li>v <code>Přehledu term&#237;nů</code> lze pod hled&#225;n&#237;m zapnout i datov&#233; nedostatky, takže se vedle term&#237;nů zobraz&#237; i chyběj&#237;c&#237; SPZ, př&#237;št&#237; TK nebo probl&#233;mov&#233; dokladov&#233; př&#237;lohy</li>
+<li>v dashboardu je i zaškrt&#225;v&#225;tko <code>Zobrazovat dashboard při startu</code>, kter&#233; změnu ulož&#237; ihned</li>
+</ul>
+<h2>Kl&#225;vesov&#233; zkratky v hlavn&#237;m okně:</h2>
+<ul>
+<li><code>Ctrl+N</code>: přidat vozidlo</li>
+<li><code>Ctrl+U</code> nebo <code>F2</code>: upravit vybran&#233; vozidlo</li>
+<li><code>Ctrl+F</code>: přesunout fokus do hled&#225;n&#237;</li>
+<li><code>Ctrl+Shift+F</code>: otevř&#237;t glob&#225;ln&#237; hled&#225;n&#237;</li>
+<li><code>Ctrl+D</code>: otevř&#237;t dashboard</li>
+<li><code>Ctrl+T</code>: otevř&#237;t přehled term&#237;nů</li>
+<li><code>Ctrl+Shift+T</code>: otevř&#237;t propadl&#233; term&#237;ny</li>
+<li><code>Ctrl+O</code>: zobrazit detail vybran&#233;ho vozidla</li>
+<li><code>Ctrl+H</code>: otevř&#237;t historii vybran&#233;ho vozidla</li>
+<li><code>Ctrl+K</code>: otevř&#237;t kilometry a tankov&#225;n&#237; vybran&#233;ho vozidla</li>
+<li><code>Ctrl+P</code>: otevř&#237;t pojištěn&#237; a doklady vybran&#233;ho vozidla</li>
+<li><code>Ctrl+R</code>: otevř&#237;t vlastn&#237; připom&#237;nky vybran&#233;ho vozidla</li>
+<li>v hlavn&#237;m seznamu kl&#225;vesa <code>Enter</code> otevře detail pr&#225;vě vybran&#233;ho vozidla</li>
+</ul>
+<h2>Kl&#225;vesov&#233; zkratky v dashboardu a přehledech:</h2>
+<ul>
+<li><code>Dashboard</code>: <code>Ctrl+R</code> obnov&#237; seznam, <code>Ctrl+F</code> otevře glob&#225;ln&#237; hled&#225;n&#237;, <code>Ctrl+T</code> otevře přehled term&#237;nů, <code>Ctrl+Shift+T</code> otevře propadl&#233; term&#237;ny, <code>Ctrl+P</code> otevře řešitelnou položku, <code>Ctrl+O</code> zobraz&#237; vybran&#233; vozidlo a <code>Ctrl+U</code> nebo <code>F2</code> uprav&#237; vybran&#233; vozidlo</li>
+<li><code>Glob&#225;ln&#237; hled&#225;n&#237;</code>: <code>Ctrl+F</code> přesune fokus do hled&#225;n&#237;, <code>Ctrl+O</code> nebo <code>Enter</code> na seznamu otevře vybran&#253; v&#253;sledek</li>
+<li><code>Přehled term&#237;nů</code>: <code>Ctrl+F</code> přesune fokus do hled&#225;n&#237;, <code>Ctrl+R</code> obnov&#237; seznam, <code>Ctrl+P</code> otevře vybranou položku, <code>Ctrl+O</code> zobraz&#237; vybran&#233; vozidlo, <code>Ctrl+U</code> nebo <code>F2</code> uprav&#237; vybran&#233; vozidlo a <code>Ctrl+Shift+T</code> přepne do propadl&#253;ch term&#237;nů</li>
+<li><code>Propadl&#233; term&#237;ny</code>: <code>Ctrl+F</code> přesune fokus do hled&#225;n&#237;, <code>Ctrl+R</code> obnov&#237; seznam, <code>Ctrl+P</code> otevře vybranou položku, <code>Ctrl+O</code> zobraz&#237; vybran&#233; vozidlo, <code>Ctrl+U</code> nebo <code>F2</code> uprav&#237; vybran&#233; vozidlo a <code>Ctrl+T</code> přepne zpět do přehledu term&#237;nů</li>
+<li>v <code>Dashboardu</code>, <code>Přehledu term&#237;nů</code> i <code>Propadl&#253;ch term&#237;nech</code> kl&#225;vesa <code>Enter</code> otevře pr&#225;vě vybranou položku; stejn&#233; chov&#225;n&#237; m&#225; i dvojklik na seznamu</li>
+</ul>
+<h2>Kl&#225;vesov&#233; zkratky v detailu a evidenc&#237;ch:</h2>
+<ul>
+<li><code>Detail vozidla</code>: <code>Ctrl+U</code> nebo <code>F2</code> uprav&#237; vozidlo, <code>Ctrl+H</code> otevře historii, <code>Ctrl+R</code> připom&#237;nky, <code>Ctrl+K</code> kilometry a tankov&#225;n&#237; a <code>Ctrl+P</code> pojištěn&#237; a doklady</li>
+<li><code>Historie ud&#225;lost&#237;</code>, <code>Kilometry a tankov&#225;n&#237;</code>, <code>Pojištěn&#237; a doklady</code> i <code>Vlastn&#237; připom&#237;nky</code>: <code>Ctrl+F</code> přesune fokus do rychl&#233;ho hled&#225;n&#237;, <code>Ctrl+N</code> přid&#225; z&#225;znam, <code>Ctrl+U</code> nebo <code>F2</code> uprav&#237; vybran&#253; z&#225;znam a <code>Ctrl+D</code> otevře detail vozidla</li>
+<li>v těchto čtyřech seznamech <code>Enter</code> uprav&#237; vybran&#253; z&#225;znam a <code>Delete</code> jej odstran&#237;</li>
+<li>kliknut&#237; na hlavičku sloupce v těchto čtyřech seznamech přep&#237;n&#225; řazen&#237; podle vybran&#233;ho sloupce a Vehimap si posledn&#237; volbu pamatuje i po dalš&#237;m otevřen&#237;</li>
+<li>v <code>Pojištěn&#237; a dokladech</code> nav&#237;c <code>Ctrl+O</code> otevře soubor u vybran&#233;ho z&#225;znamu, <code>Ctrl+Shift+O</code> jeho složku a <code>Ctrl+Shift+C</code> zkop&#237;ruje uloženou cestu</li>
+<li>ve <code>Vlastn&#237;ch připom&#237;nk&#225;ch</code> nav&#237;c <code>Ctrl+Shift+N</code> posune vybranou opakovanou připom&#237;nku na dalš&#237; term&#237;n</li>
+<li>v <code>N&#225;kladech a souhrnech</code> <code>Ctrl+R</code> obnov&#237; vybran&#233; obdob&#237; a <code>Ctrl+D</code> otevře detail vozidla</li>
+</ul>
+<h2>Kl&#225;vesov&#233; zkratky ve formul&#225;ř&#237;ch a nastaven&#237;:</h2>
+<ul>
+<li><code>Ctrl+S</code>: ulož&#237; aktu&#225;ln&#237; formul&#225;ř nebo nastaven&#237;</li>
+<li>v <code>Nastaven&#237;</code> nav&#237;c <code>Ctrl+B</code>: vytvoř&#237; z&#225;lohu ihned</li>
+</ul>
+<h2>Použ&#237;v&#225;n&#237; detailněji:</h2>
+<p>Ve formul&#225;ři pro vozidlo:</p>
+<ul>
+<li><code>Vlastn&#237; pojmenov&#225;n&#237;</code>, <code>Kategorie</code>, <code>Značka / model</code> a <code>Př&#237;št&#237; TK</code> jsou povinn&#233;</li>
+<li><code>Typ</code>, <code>SPZ</code>, <code>Rok v&#253;roby</code>, <code>V&#253;kon</code>, <code>Posledn&#237; TK</code>, <code>Zelen&#225; karta od</code> a <code>Zelen&#225; karta do</code> jsou voliteln&#233;</li>
+<li>datum technick&#233; i zelen&#233; karty se zad&#225;v&#225; jako <code>MM/RRRR</code>, např&#237;klad <code>04/2026</code></li>
+</ul>
+<p>V historii ud&#225;lost&#237;:</p>
+<ul>
+<li><code>Datum ud&#225;losti</code> a <code>N&#225;zev ud&#225;losti</code> jsou povinn&#233;</li>
+<li>datum ud&#225;losti se zad&#225;v&#225; jako <code>DD.MM.RRRR</code>, např&#237;klad <code>26.03.2026</code></li>
+<li><code>Stav tachometru</code>, <code>Cena nebo č&#225;stka</code> a <code>Pozn&#225;mka</code> jsou voliteln&#233;</li>
+</ul>
+<p>V evidenci kilometrů a tankov&#225;n&#237;:</p>
+<ul>
+<li><code>Datum z&#225;znamu</code> a <code>Stav tachometru</code> jsou povinn&#233;</li>
+<li>datum z&#225;znamu se zad&#225;v&#225; jako <code>DD.MM.RRRR</code>, např&#237;klad <code>26.03.2026</code></li>
+<li><code>Natankov&#225;no litrů</code>, <code>Cena celkem v Kč</code>, <code>Typ paliva</code>, <code>Pln&#225; n&#225;drž</code> a <code>Pozn&#225;mka</code> jsou voliteln&#233;</li>
+</ul>
+<p>V evidenci pojištěn&#237; a dokladů:</p>
+<ul>
+<li><code>Druh z&#225;znamu</code> a <code>N&#225;zev z&#225;znamu</code> jsou povinn&#233;</li>
+<li><code>Platn&#233; od</code> a <code>Platn&#233; do</code> se zad&#225;vaj&#237; jako <code>MM/RRRR</code>, např&#237;klad <code>04/2026</code></li>
+<li><code>Poskytovatel / vydavatel</code>, <code>Cena / č&#225;stka</code>, <code>Soubor nebo cesta</code> a <code>Pozn&#225;mka</code> jsou voliteln&#233;</li>
+<li>seznam zobrazuje i stav cesty <code>Soubor</code>, <code>Složka</code>, <code>Chyb&#237; soubor</code>, <code>Chyb&#237; složka</code> nebo <code>Bez cesty</code>, takže hned pozn&#225;te nedostupnou př&#237;lohu</li>
+</ul>
+<p>V <code>N&#225;klady a souhrny</code>:</p>
+<ul>
+<li>nahoře lze vybrat rok, předvolbu obdob&#237; a vlastn&#237; rozsah měs&#237;ců od 1 do 12</li>
+<li>předvolby pokr&#253;vaj&#237; 1, 2, 3, 6, 9 a 12 měs&#237;ců, ale můžete si nastavit i vlastn&#237; rozsah v r&#225;mci roku</li>
+<li>pod t&#237;m zůst&#225;v&#225; i dlouhodob&#253; přehled podle jednotliv&#253;ch let</li>
+<li>tlač&#237;tka <code>TSV souhrn</code>, <code>TSV detail</code> a <code>HTML sestava</code> um&#237; vyexportovat vybran&#233; obdob&#237; i dlouhodob&#253; přehled do souboru pro dalš&#237; pr&#225;ci, tisk nebo archivaci</li>
+</ul>
+<p>Ve vlastn&#237;ch připom&#237;nk&#225;ch:</p>
+<ul>
+<li><code>N&#225;zev připom&#237;nky</code>, <code>Term&#237;n</code> a <code>Upozornit dnů předem</code> jsou povinn&#233;</li>
+<li><code>Opakov&#225;n&#237;</code> může b&#253;t <code>Neopakovat</code>, <code>Každ&#253; rok</code>, <code>Každ&#233; 2 roky</code> nebo <code>Každ&#253;ch 5 let</code></li>
+<li>tlač&#237;tko <code>Posunout na dalš&#237;</code> přesune opakovanou připom&#237;nku na dalš&#237; term&#237;n bez nutnosti ručn&#237;ho přepisu data</li>
+</ul>
+<p>V nastaven&#237;:</p>
+<ul>
+<li>volba <code>Pravidelně vytv&#225;řet automatick&#233; z&#225;lohy</code> zapne intern&#237; z&#225;lohov&#225;n&#237; cel&#233; aplikace bez dotazu na n&#225;zev souboru</li>
+<li>pole <code>Interval automatick&#233; z&#225;lohy ve dnech</code> určuje, po kolika dnech m&#225; vzniknout nov&#225; automatick&#225; z&#225;loha</li>
+<li>pole <code>Ponechat posledn&#237;ch automatick&#253;ch z&#225;loh</code> určuje, kolik nejnovějš&#237;ch souborů si Vehimap ponech&#225; a starš&#237; automaticky smaže</li>
+<li>tlač&#237;tko <code>Z&#225;lohovat ihned</code> vytvoř&#237; novou z&#225;lohu okamžitě do stejn&#233; složky bez ček&#225;n&#237; na dalš&#237; automatick&#253; interval</li>
+<li>automatick&#233; z&#225;lohy se ukl&#225;daj&#237; do složky <code>data/auto-backups</code></li>
+</ul>
+<p>Pro upozorněn&#237; aplikace použ&#237;v&#225; pole <code>Př&#237;št&#237; TK</code> a <code>Zelen&#225; karta do</code>. Je to spolehlivějš&#237; než automaticky dopoč&#237;t&#225;vat intervaly jen podle druhu vozidla, protože se mohou lišit podle zvl&#225;štn&#237;ho režimu vozidla.</p>
+<p>V horn&#237;m menu najdete tyto č&#225;sti:</p>
+<ul>
+<li><code>Soubor</code>: <code>Tiskov&#253; přehled</code>, <code>Export dat</code>, <code>Import dat</code>, <code>Konec</code></li>
+<li><code>Vozidlo</code>: pr&#225;ce s vybran&#253;m vozidlem včetně detailu, historie, kilometrů a tankov&#225;n&#237; a pojištěn&#237; a dokladů</li>
+<li><code>Přehled</code>: <code>Dashboard</code>, <code>Glob&#225;ln&#237; hled&#225;n&#237;</code>, <code>Přehled term&#237;nů</code>, <code>Propadl&#233; term&#237;ny</code></li>
+<li><code>N&#225;stroje</code>: <code>Nastaven&#237;</code>, <code>Skr&#253;t do lišty</code></li>
+<li><code>N&#225;pověda</code>: <code>O programu</code>, <code>Zkontrolovat aktualizace</code></li>
+</ul>
+<h2>Ukl&#225;d&#225;n&#237; dat</h2>
+<ul>
+<li>vozidla se ukl&#225;daj&#237; do souboru <code>data/vehicles.tsv</code></li>
+<li>historie ud&#225;lost&#237; se ukl&#225;d&#225; do souboru <code>data/history.tsv</code></li>
+<li>kilometry a tankov&#225;n&#237; se ukl&#225;daj&#237; do souboru <code>data/fuel.tsv</code></li>
+<li>pojištěn&#237; a doklady se ukl&#225;daj&#237; do souboru <code>data/records.tsv</code></li>
+<li>nastaven&#237; upozorněn&#237; a chov&#225;n&#237; aplikace se ukl&#225;d&#225; do souboru <code>data/settings.ini</code></li>
+<li>automatick&#233; z&#225;lohy se ukl&#225;daj&#237; do složky <code>data/auto-backups</code></li>
+<li>při importu se původn&#237; soubory před přeps&#225;n&#237;m automaticky odlož&#237; do <code>data/import-backups</code></li>
+<li>oba soubory jsou ve složce <code>data</code> vedle aplikace</li>
+<li>Vehimap nač&#237;t&#225; vozidla jen ve form&#225;tu <code># Vehimap data v3</code></li>
+<li>historie použ&#237;v&#225; hlavičku <code># Vehimap history v1</code></li>
+<li>kilometry a tankov&#225;n&#237; použ&#237;vaj&#237; hlavičku <code># Vehimap fuel v1</code></li>
+<li>pojištěn&#237; a doklady použ&#237;vaj&#237; hlavičku <code># Vehimap records v1</code></li>
+<li>export vytv&#225;ř&#237; jeden soubor se z&#225;lohou ve form&#225;tu <code>.vehimapbak</code></li>
+</ul>
+<h2>Pozn&#225;mka k oznamovac&#237; oblasti</h2>
+<p>Zavřen&#237; hlavn&#237;ho okna aplikaci neukonč&#237;. Vehimap se schov&#225; do oznamovac&#237; oblasti a d&#225;l hl&#237;d&#225; technick&#233; kontroly i zelen&#233; karty. Kontrola běž&#237; průběžně na pozad&#237; každ&#253;ch 15 minut a znovu se vyvol&#225; i po probuzen&#237; poč&#237;tače ze sp&#225;nku. Stejn&#253;m způsobem se na pozad&#237; jednou za hodinu ověřuje i potřeba automatick&#233; z&#225;lohy. Pokud je vše v poř&#225;dku, tooltip tray ikony zůst&#225;v&#225; jen <code>Vehimap</code>; pokud ne, zobraz&#237; souhrn propadl&#253;ch a brzy konč&#237;c&#237;ch <code>TK</code> a <code>ZK</code>.</p>
+</body>
+</html>
