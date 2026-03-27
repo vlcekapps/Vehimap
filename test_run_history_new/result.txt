@@ -1,0 +1,7 @@
+﻿initial=2
+search=1
+missing_green=1
+detail=open
+history=open
+history_count=2
+history_backup_header=# Evicar history v
