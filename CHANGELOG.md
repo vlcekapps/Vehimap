@@ -4,7 +4,8 @@
 
 Všechny významné změny ve Vehimapu budou zapisovány sem.
 
-- Zatím bez zapsaných změn.
+- Opravena kontrola aktualizací ve zkompilované portable aplikaci, aby správně načítala veřejný release manifest.
+- Doplněny smoke testy pro kontrolu aktualizací a načtení update manifestu.
 
 ## [1.0.1] - 2026-03-27
 
