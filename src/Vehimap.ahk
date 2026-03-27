@@ -210,6 +210,8 @@ global DashboardList := 0
 global DashboardEntries := []
 global DashboardOpenButton := 0
 global DashboardItemButton := 0
+global DashboardHistoryButton := 0
+global DashboardCompleteButton := 0
 global DashboardVehicleCostsButton := 0
 global DashboardEditButton := 0
 global DashboardShowOnLaunchCtrl := 0
@@ -253,6 +255,8 @@ Enter::OpenSelectedGlobalSearchResult()
 #HotIf IsGuiWindowActive(DashboardGui)
 ^r::RefreshDashboardShortcut()
 ^f::OpenGlobalSearchFromDashboard()
+^h::OpenSelectedDashboardVehicleHistory()
+^l::CompleteSelectedDashboardMaintenance()
 ^u::EditSelectedDashboardVehicle()
 F2::EditSelectedDashboardVehicle()
 ^o::OpenSelectedDashboardVehicle()

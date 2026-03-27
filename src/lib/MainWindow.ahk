@@ -15,7 +15,7 @@ BuildMainGui() {
 
     VehicleListLabel := MainGui.AddText("xm y50 w930", "Seznam vozidel v kategorii Osobní vozidla")
 
-    MainGui.AddText("xm y78 w200", "Hledat název, značku, SPZ nebo štítek")
+    MainGui.AddText("xm y78 w250", "Hledat název, značku, SPZ, poznámku nebo štítek")
     MainSearchCtrl := MainGui.AddEdit("x185 y75 w255")
     MainSearchCtrl.OnEvent("Change", OnMainSearchChanged)
 
@@ -30,7 +30,7 @@ BuildMainGui() {
     MainHideInactiveCtrl.Value := GetHideInactiveVehiclesEnabled()
     MainHideInactiveCtrl.OnEvent("Click", OnMainHideInactiveChanged)
 
-    VehicleList := MainGui.AddListView("xm y134 w930 h219 Grid -Multi", ["Název", "Typ", "Značka / model", "SPZ", "Poslední TK", "Příští TK", "Zelená karta do", "Stav"])
+    VehicleList := MainGui.AddListView("xm y134 w930 h219 Grid -Multi", ["Název", "Poznámka", "Značka / model", "SPZ", "Poslední TK", "Příští TK", "Zelená karta do", "Stav"])
     VehicleList.OnEvent("DoubleClick", EditSelectedVehicle)
 
     vehicleGroup := MainGui.AddGroupBox("xm y365 w930 h95", "Vozidlo")
@@ -69,7 +69,7 @@ BuildMainGui() {
     StatusBar.SetText("Bez vozidel", 2)
 
     VehicleList.ModifyCol(1, "130")
-    VehicleList.ModifyCol(2, "100")
+    VehicleList.ModifyCol(2, "150")
     VehicleList.ModifyCol(3, "160")
     VehicleList.ModifyCol(4, "95")
     VehicleList.ModifyCol(5, "85")
@@ -214,7 +214,7 @@ VehicleMatchesMainSearch(vehicle, searchText := "") {
 
     haystacks := [
         StrLower(vehicle.name),
-        StrLower(vehicle.vehicleType),
+        StrLower(vehicle.vehicleNote),
         StrLower(vehicle.makeModel),
         StrLower(vehicle.plate),
         StrLower(meta.state),

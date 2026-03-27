@@ -26,8 +26,8 @@ LoadVehicles() {
         return
     }
 
-    if (firstNonEmptyLine != "# Vehimap data v3") {
-        ShowVehiclesFileFormatError("Soubor vozidel není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap data v3'.")
+    if (firstNonEmptyLine != "# Vehimap data v3" && firstNonEmptyLine != "# Vehimap data v4") {
+        ShowVehiclesFileFormatError("Soubor vozidel není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap data v4'.")
         return
     }
 
@@ -43,14 +43,14 @@ LoadVehicles() {
         }
 
         if (SubStr(line, 1, 1) = "#") {
-            ShowVehiclesFileFormatError("Soubor vozidel obsahuje neplatnou hlavičku nebo komentář na řádku " index ". Vehimap očekává jen jednu hlavičku '# Vehimap data v3'.")
+            ShowVehiclesFileFormatError("Soubor vozidel obsahuje neplatnou hlavičku nebo komentář na řádku " index ". Vehimap očekává jen jednu hlavičku '# Vehimap data v4'.")
             Vehicles := []
             return
         }
 
         fields := StrSplit(line, "`t")
         if (fields.Length != 12) {
-            ShowVehiclesFileFormatError("Soubor vozidel je poškozený nebo není ve formátu v3. Řádek " index " musí obsahovat přesně 12 polí oddělených tabulátory.")
+            ShowVehiclesFileFormatError("Soubor vozidel je poškozený nebo není ve formátu v4. Řádek " index " musí obsahovat přesně 12 polí oddělených tabulátory.")
             Vehicles := []
             return
         }
@@ -59,7 +59,7 @@ LoadVehicles() {
             id: UnescapeField(fields[1]),
             name: UnescapeField(fields[2]),
             category: NormalizeCategory(UnescapeField(fields[3])),
-            vehicleType: UnescapeField(fields[4]),
+            vehicleNote: UnescapeField(fields[4]),
             makeModel: UnescapeField(fields[5]),
             plate: UnescapeField(fields[6]),
             year: UnescapeField(fields[7]),
@@ -81,13 +81,13 @@ ShowVehiclesFileFormatError(message) {
 SaveVehicles() {
     global Vehicles, VehiclesFile
 
-    lines := ["# Vehimap data v3"]
+    lines := ["# Vehimap data v4"]
     for vehicle in Vehicles {
         lines.Push(
             EscapeField(vehicle.id) "`t"
             EscapeField(vehicle.name) "`t"
             EscapeField(vehicle.category) "`t"
-            EscapeField(vehicle.vehicleType) "`t"
+            EscapeField(vehicle.vehicleNote) "`t"
             EscapeField(vehicle.makeModel) "`t"
             EscapeField(vehicle.plate) "`t"
             EscapeField(vehicle.year) "`t"
@@ -1795,13 +1795,13 @@ BuildVehicleDetailStatusText(vehicle) {
 BuildVehiclesDataContent() {
     global Vehicles
 
-    lines := ["# Vehimap data v3"]
+    lines := ["# Vehimap data v4"]
     for vehicle in Vehicles {
         lines.Push(
             EscapeField(vehicle.id) "`t"
             EscapeField(vehicle.name) "`t"
             EscapeField(vehicle.category) "`t"
-            EscapeField(vehicle.vehicleType) "`t"
+            EscapeField(vehicle.vehicleNote) "`t"
             EscapeField(vehicle.makeModel) "`t"
             EscapeField(vehicle.plate) "`t"
             EscapeField(vehicle.year) "`t"

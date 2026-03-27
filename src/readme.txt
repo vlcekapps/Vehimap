@@ -6,7 +6,7 @@ První verze jednoduché přístupné evidence vozidel v AutoHotkey v2.
 
 - rozdělení vozidel do kategorií `Osobní vozidla`, `Motocykly`, `Nákladní vozidla`, `Autobusy`, `Ostatní`
 - přidání, úpravu a odstranění vozidla
-- vyhledávání v hlavním seznamu podle názvu, typu, značky nebo SPZ
+- vyhledávání v hlavním seznamu podle názvu, poznámky, značky nebo SPZ
 - globální hledání napříč vozidly, historií událostí, kilometry a tankováním, pojištěním a doklady, vlastními připomínkami i plány údržby
 - filtr hlavního seznamu na všechna vozidla, vozidla s blížícím se termínem, vozidla po termínu a vozidla bez vyplněné zelené karty
 - volitelné skrytí archivovaných a odstavených vozidel v hlavním seznamu, aniž by zmizela z dat a přehledů
@@ -42,7 +42,7 @@ Ve většině případů stačí spustit `Vehimap.exe`.
 V hlavním okně:
 
 - záložky nahoře dál rozdělují vozidla podle kategorií
-- pole `Hledat název, značku nebo SPZ` filtruje jen aktuálně otevřenou kategorii
+- pole `Hledat název, značku, SPZ, poznámku nebo štítek` filtruje jen aktuálně otevřenou kategorii
 - pole `Filtr seznamu` rychle zobrazí jen vozidla, která právě vyžadují pozornost
 - zaškrtávátko `Skrýt archivovaná a odstavená vozidla` schová neaktivní vozidla jen z hlavního seznamu a svou volbu si pamatuje i po dalším spuštění
 - tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence včetně `Plánu údržby` otevřete i z menu `Vozidlo`
@@ -53,6 +53,7 @@ V hlavním okně:
 - v dashboardu, `Přehledu termínů` i `Propadlých termínech` se vedle `TK`, `ZK` a vlastních připomínek zobrazují i blížící se nebo propadlé servisní úkony
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
 - v dashboardu přibyly i akce `Souhrn nákladů` a `Náklady vozidla`, takže jde rovnou otevřít globální přehled nákladů nebo náklady vybraného vozidla z právě řešeného problému
+- v dashboardu lze nově z vybraného servisního úkonu rovnou otevřít historii vozidla nebo servis přímo označit jako splněný bez ručního hledání správného plánu
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
 Klávesové zkratky v hlavním okně:
@@ -74,7 +75,7 @@ Klávesové zkratky v hlavním okně:
 
 Klávesové zkratky v dashboardu a přehledech:
 
-- `Dashboard`: `Ctrl+R` obnoví seznam, `Ctrl+F` otevře globální hledání, `Ctrl+T` otevře přehled termínů, `Ctrl+Shift+T` otevře propadlé termíny, `Ctrl+P` otevře řešitelnou položku, `Ctrl+O` zobrazí vybrané vozidlo a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
+- `Dashboard`: `Ctrl+R` obnoví seznam, `Ctrl+F` otevře globální hledání, `Ctrl+T` otevře přehled termínů, `Ctrl+Shift+T` otevře propadlé termíny, `Ctrl+P` otevře řešitelnou položku, `Ctrl+H` otevře historii vybraného vozidla, `Ctrl+L` označí vybraný servisní úkon jako splněný, `Ctrl+O` zobrazí vybrané vozidlo a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
 - `Globální hledání`: `Ctrl+F` přesune fokus do hledání, `Ctrl+O` nebo `Enter` na seznamu otevře vybraný výsledek
 - `Náklady napříč vozidly`: `Ctrl+R` obnoví období, `Ctrl+P` nebo `Enter` na seznamu otevře náklady vybraného vozidla, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
 - `Přehled termínů`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+Shift+T` přepne do propadlých termínů
@@ -101,7 +102,7 @@ Klávesové zkratky ve formulářích a nastavení:
 Ve formuláři pro vozidlo:
 
 - `Vlastní pojmenování`, `Kategorie`, `Značka / model` a `Příští TK` jsou povinné
-- `Typ`, `SPZ`, `Rok výroby`, `Výkon`, `Poslední TK`, `Zelená karta od` a `Zelená karta do` jsou volitelné
+- `Poznámka k vozidlu`, `SPZ`, `Rok výroby`, `Výkon`, `Poslední TK`, `Zelená karta od` a `Zelená karta do` jsou volitelné
 - datum technické i zelené karty se zadává jako `MM/RRRR`, například `04/2026`
 
 V historii událostí:
@@ -175,7 +176,7 @@ V horním menu najdete tyto části:
 - automatické zálohy se ukládají do složky `data/auto-backups`
 - při importu se původní soubory před přepsáním automaticky odloží do `data/import-backups`
 - oba soubory jsou ve složce `data` vedle aplikace
-- Vehimap načítá vozidla jen ve formátu `# Vehimap data v3`
+- Vehimap zapisuje vozidla ve formátu `# Vehimap data v4`
 - historie používá hlavičku `# Vehimap history v1`
 - kilometry a tankování používají hlavičku `# Vehimap fuel v1`
 - pojištění a doklady používají hlavičku `# Vehimap records v1`

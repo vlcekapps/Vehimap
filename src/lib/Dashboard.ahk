@@ -21,7 +21,7 @@ OpenFleetCostsFromDashboard(*) {
 }
 
 OpenDashboardDialog(showMainOnClose := false) {
-    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardHistoryButton, DashboardCompleteButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose
     global OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui, FleetCostGui
 
     if IsObject(DashboardGui) {
@@ -64,6 +64,7 @@ OpenDashboardDialog(showMainOnClose := false) {
     DashboardGui.AddGroupBox("x20 y350 w980 h185", "Položky k řešení a datové nedostatky")
     DashboardList := DashboardGui.AddListView("x35 y375 w950 h145 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "SPZ", "Položka / termín", "Stav"])
     DashboardList.OnEvent("DoubleClick", OpenSelectedDashboardItem)
+    DashboardList.OnEvent("ItemSelect", OnDashboardSelectionChanged)
     DashboardList.ModifyCol(1, "155")
     DashboardList.ModifyCol(2, "190")
     DashboardList.ModifyCol(3, "150")
@@ -88,16 +89,22 @@ OpenDashboardDialog(showMainOnClose := false) {
     DashboardItemButton := DashboardGui.AddButton("x40 y608 w135 h30", "Otevřít položku")
     DashboardItemButton.OnEvent("Click", OpenSelectedDashboardItem)
 
-    DashboardVehicleCostsButton := DashboardGui.AddButton("x185 y608 w135 h30", "Náklady vozidla")
+    DashboardHistoryButton := DashboardGui.AddButton("x180 y608 w130 h30", "Historie vozidla")
+    DashboardHistoryButton.OnEvent("Click", OpenSelectedDashboardVehicleHistory)
+
+    DashboardCompleteButton := DashboardGui.AddButton("x320 y608 w130 h30", "Dokončit servis")
+    DashboardCompleteButton.OnEvent("Click", CompleteSelectedDashboardMaintenance)
+
+    DashboardVehicleCostsButton := DashboardGui.AddButton("x460 y608 w130 h30", "Náklady vozidla")
     DashboardVehicleCostsButton.OnEvent("Click", OpenSelectedDashboardVehicleCosts)
 
-    DashboardEditButton := DashboardGui.AddButton("x330 y608 w135 h30", "Upravit vozidlo")
+    DashboardEditButton := DashboardGui.AddButton("x600 y608 w130 h30", "Upravit vozidlo")
     DashboardEditButton.OnEvent("Click", EditSelectedDashboardVehicle)
 
-    DashboardOpenButton := DashboardGui.AddButton("x475 y608 w135 h30 Default", "Zobrazit vozidlo")
+    DashboardOpenButton := DashboardGui.AddButton("x740 y608 w130 h30 Default", "Zobrazit vozidlo")
     DashboardOpenButton.OnEvent("Click", OpenSelectedDashboardVehicle)
 
-    closeButton := DashboardGui.AddButton("x620 y608 w110 h30", "Zavřít")
+    closeButton := DashboardGui.AddButton("x880 y608 w100 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseDashboardDialog)
 
     DashboardShowOnLaunchCtrl := DashboardGui.AddCheckBox("x40 y650 w320", "Zobrazovat dashboard při startu")
@@ -112,7 +119,7 @@ OpenDashboardDialog(showMainOnClose := false) {
 }
 
 CloseDashboardDialog(*) {
-    global DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose, MainGui
+    global DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardHistoryButton, DashboardCompleteButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose, MainGui
 
     if IsObject(DashboardGui) {
         DashboardGui.Destroy()
@@ -127,6 +134,8 @@ CloseDashboardDialog(*) {
     DashboardEntries := []
     DashboardOpenButton := 0
     DashboardItemButton := 0
+    DashboardHistoryButton := 0
+    DashboardCompleteButton := 0
     DashboardVehicleCostsButton := 0
     DashboardEditButton := 0
     DashboardShowOnLaunchCtrl := 0
@@ -145,7 +154,7 @@ OnDashboardShowOnLaunchChanged(ctrl, *) {
 }
 
 PopulateDashboardList(focusList := false) {
-    global DashboardEntries, DashboardList, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardOpenButton, DashboardItemButton, DashboardVehicleCostsButton, DashboardEditButton
+    global DashboardEntries, DashboardList, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel
 
     if !IsObject(DashboardList) {
         return
@@ -180,27 +189,13 @@ PopulateDashboardList(focusList := false) {
 
     DashboardList.Opt("+Redraw")
 
-    if IsObject(DashboardOpenButton) {
-        DashboardOpenButton.Opt(DashboardEntries.Length = 0 ? "+Disabled" : "-Disabled")
-    }
-
-    if IsObject(DashboardItemButton) {
-        DashboardItemButton.Opt(DashboardEntries.Length = 0 ? "+Disabled" : "-Disabled")
-    }
-
-    if IsObject(DashboardVehicleCostsButton) {
-        DashboardVehicleCostsButton.Opt(DashboardEntries.Length = 0 ? "+Disabled" : "-Disabled")
-    }
-
-    if IsObject(DashboardEditButton) {
-        DashboardEditButton.Opt(DashboardEntries.Length = 0 ? "+Disabled" : "-Disabled")
-    }
-
     if (DashboardEntries.Length = 0) {
+        UpdateDashboardActionState()
         return
     }
 
     DashboardList.Modify(1, focusList ? "Select Focus Vis" : "Select Vis")
+    UpdateDashboardActionState()
 }
 
 BuildDashboardVehicleSummaryText(dashboardEntries := "") {
@@ -779,6 +774,65 @@ GetSelectedDashboardEntry() {
     return DashboardEntries[row]
 }
 
+OnDashboardSelectionChanged(*) {
+    UpdateDashboardActionState()
+}
+
+UpdateDashboardActionState() {
+    global DashboardOpenButton, DashboardItemButton, DashboardHistoryButton, DashboardCompleteButton, DashboardVehicleCostsButton, DashboardEditButton
+
+    entry := GetSelectedDashboardEntry()
+    hasEntry := IsObject(entry)
+
+    if IsObject(DashboardOpenButton) {
+        DashboardOpenButton.Opt(hasEntry ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(DashboardItemButton) {
+        DashboardItemButton.Opt(hasEntry ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(DashboardHistoryButton) {
+        DashboardHistoryButton.Opt(CanOpenDashboardVehicleHistory(entry) ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(DashboardCompleteButton) {
+        DashboardCompleteButton.Opt(CanCompleteDashboardMaintenance(entry) ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(DashboardVehicleCostsButton) {
+        DashboardVehicleCostsButton.Opt(hasEntry ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(DashboardEditButton) {
+        DashboardEditButton.Opt(hasEntry ? "-Disabled" : "+Disabled")
+    }
+}
+
+CanOpenDashboardVehicleHistory(entry) {
+    return IsObject(entry) && entry.HasOwnProp("vehicle") && IsObject(entry.vehicle)
+}
+
+CanCompleteDashboardMaintenance(entry) {
+    if !IsObject(entry) || entry.kind != "maintenance" {
+        return false
+    }
+
+    plan := GetDashboardMaintenancePlan(entry)
+    return IsObject(plan) && plan.isActive
+}
+
+GetDashboardMaintenancePlan(entry) {
+    if !IsObject(entry) || entry.kind != "maintenance" {
+        return ""
+    }
+
+    if (entry.HasOwnProp("plan") && IsObject(entry.plan)) {
+        return entry.plan
+    }
+
+    if (entry.HasOwnProp("entryId") && entry.entryId != "") {
+        return FindVehicleMaintenancePlanById(entry.entryId)
+    }
+
+    return ""
+}
+
 OpenOverviewFromDashboard(*) {
     CloseDashboardDialog()
     OpenUpcomingOverviewDialog()
@@ -831,6 +885,39 @@ OpenSelectedDashboardVehicle(*) {
 
     CloseDashboardDialog()
     OpenVehicleDetailDialog(entry.vehicle)
+}
+
+OpenSelectedDashboardVehicleHistory(*) {
+    global AppTitle
+
+    entry := GetSelectedDashboardEntry()
+    if !CanOpenDashboardVehicleHistory(entry) {
+        MsgBox("Nejprve vyberte položku, jejíž historii chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    CloseDashboardDialog()
+    OpenVehicleHistoryDialog(entry.vehicle)
+}
+
+CompleteSelectedDashboardMaintenance(*) {
+    global AppTitle
+
+    entry := GetSelectedDashboardEntry()
+    if !CanCompleteDashboardMaintenance(entry) {
+        MsgBox("Vyberte servisní úkon, který chcete označit jako splněný.", AppTitle, 0x40)
+        return
+    }
+
+    plan := GetDashboardMaintenancePlan(entry)
+    if !IsObject(plan) {
+        MsgBox("Vybraný servisní úkon se nepodařilo načíst.", AppTitle, 0x30)
+        return
+    }
+
+    CloseDashboardDialog()
+    OpenVehicleMaintenanceDialog(entry.vehicle, false, plan.id)
+    OpenVehicleMaintenanceCompleteForm(plan)
 }
 
 OpenSelectedDashboardVehicleCosts(*) {

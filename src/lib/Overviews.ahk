@@ -627,7 +627,7 @@ BuildPrintableVehicleCategorySection(category) {
         rows.Push(
             "<tr>"
             "<td>" HtmlEscape(vehicle.name) "</td>"
-            "<td>" HtmlEscape(vehicle.vehicleType) "</td>"
+            "<td>" HtmlEscape(vehicle.vehicleNote) "</td>"
             "<td>" HtmlEscape(vehicle.makeModel) "</td>"
             "<td>" HtmlEscape(vehicle.plate) "</td>"
             "<td>" HtmlEscape(vehicle.year) "</td>"
@@ -644,7 +644,7 @@ BuildPrintableVehicleCategorySection(category) {
 
     html := title
     html .= "<table>"
-    html .= "<thead><tr><th>Název</th><th>Typ</th><th>Značka / model</th><th>SPZ</th><th>Rok výroby</th><th>Výkon</th><th>Stav vozidla</th><th>Štítky</th><th>Poslední TK</th><th>Příští TK</th><th>Zelená karta do</th><th>Stav</th></tr></thead>"
+    html .= "<thead><tr><th>Název</th><th>Poznámka</th><th>Značka / model</th><th>SPZ</th><th>Rok výroby</th><th>Výkon</th><th>Stav vozidla</th><th>Štítky</th><th>Poslední TK</th><th>Příští TK</th><th>Zelená karta do</th><th>Stav</th></tr></thead>"
     html .= "<tbody>" JoinLines(rows, "") "</tbody>"
     html .= "</table>"
     return html

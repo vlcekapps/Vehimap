@@ -21,6 +21,7 @@ RunSmokeTests() {
         "SmokeTestFleetCostSummary",
         "SmokeTestDashboardCosts",
         "SmokeTestDashboardProblemHighlights",
+        "SmokeTestDashboardMaintenanceActions",
         "SmokeTestDashboardDataSummary",
         "SmokeTestDashboardEntries",
         "SmokeTestOverviewDataIssues",
@@ -189,7 +190,7 @@ SmokeTestGlobalSearch() {
             id: "veh_1",
             name: "Alfa test",
             category: "Osobní vozidla",
-            vehicleType: "Hatchback",
+            vehicleNote: "Hatchback",
             makeModel: "Skoda Scala",
             plate: "1AB2345",
             year: "2021",
@@ -235,7 +236,7 @@ SmokeTestMaintenancePlans() {
             id: "veh_1",
             name: "Servis test",
             category: "Osobní vozidla",
-            vehicleType: "Kombi",
+            vehicleNote: "Kombi",
             makeModel: "Skoda Octavia",
             plate: "1AB2345",
             year: "2020",
@@ -290,7 +291,7 @@ SmokeTestMaintenanceBackupRoundTrip() {
             id: "veh_1",
             name: "Backup test",
             category: "Osobní vozidla",
-            vehicleType: "",
+                vehicleNote: "",
             makeModel: "Skoda Fabia",
             plate: "1AB2345",
             year: "",
@@ -355,10 +356,10 @@ SmokeTestFleetCostSummary() {
     ResetSmokeData()
     currentYear := FormatTime(A_Now, "yyyy")
     Vehicles := [
-        {id: "veh_1", name: "Skoda", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "1AB2345", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
-        {id: "veh_2", name: "Yamaha", category: "Motocykly", vehicleType: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
-        {id: "veh_3", name: "Transit", category: "Nákladní vozidla", vehicleType: "", makeModel: "", plate: "3AB4567", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
-        {id: "veh_4", name: "Bez nákladu", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""}
+        {id: "veh_1", name: "Skoda", category: "Osobní vozidla", vehicleNote: "", makeModel: "", plate: "1AB2345", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
+        {id: "veh_2", name: "Yamaha", category: "Motocykly", vehicleNote: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
+        {id: "veh_3", name: "Transit", category: "Nákladní vozidla", vehicleNote: "", makeModel: "", plate: "3AB4567", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
+        {id: "veh_4", name: "Bez nákladu", category: "Osobní vozidla", vehicleNote: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""}
     ]
     VehicleMetaEntries := [
         {vehicleId: "veh_3", state: "Archiv", tags: ""}
@@ -410,9 +411,9 @@ SmokeTestDashboardCosts() {
     ResetSmokeData()
     currentYear := FormatTime(A_Now, "yyyy")
     Vehicles := [
-        {id: "veh_1", name: "Skoda", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
-        {id: "veh_2", name: "Yamaha", category: "Motocykly", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
-        {id: "veh_3", name: "Transit", category: "Nákladní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"}
+        {id: "veh_1", name: "Skoda", category: "Osobní vozidla", vehicleNote: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
+        {id: "veh_2", name: "Yamaha", category: "Motocykly", vehicleNote: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
+        {id: "veh_3", name: "Transit", category: "Nákladní vozidla", vehicleNote: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"}
     ]
     VehicleFuelLog := [
         {id: "fuel_1", vehicleId: "veh_1", entryDate: "01.02." currentYear, odometer: "10000", liters: "40", totalCost: "1000", fullTank: 1, fuelType: "Benzin", note: ""}
@@ -451,9 +452,9 @@ SmokeTestDashboardProblemHighlights() {
     DirCreate(tempRoot)
 
     Vehicles := [
-        {id: "veh_1", name: "TK auto", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "1AB2345", year: "", power: "", lastTk: "", nextTk: "01/2000", greenCardFrom: "", greenCardTo: "12/2099"},
-        {id: "veh_2", name: "Doklad auto", category: "Motocykly", vehicleType: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: "12/2099", greenCardFrom: "", greenCardTo: "12/2099"},
-        {id: "veh_3", name: "Bez SPZ", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "12/2099", greenCardFrom: "", greenCardTo: "12/2099"}
+        {id: "veh_1", name: "TK auto", category: "Osobní vozidla", vehicleNote: "", makeModel: "", plate: "1AB2345", year: "", power: "", lastTk: "", nextTk: "01/2000", greenCardFrom: "", greenCardTo: "12/2099"},
+        {id: "veh_2", name: "Doklad auto", category: "Motocykly", vehicleNote: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: "12/2099", greenCardFrom: "", greenCardTo: "12/2099"},
+        {id: "veh_3", name: "Bez SPZ", category: "Osobní vozidla", vehicleNote: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "12/2099", greenCardFrom: "", greenCardTo: "12/2099"}
     ]
     VehicleRecords := [
         {id: "record_1", vehicleId: "veh_2", recordType: "Doklad", title: "Chybějící příloha", provider: "", validFrom: "", validTo: "", price: "", filePath: missingFile, note: ""}
@@ -469,6 +470,50 @@ SmokeTestDashboardProblemHighlights() {
     AssertContains(text, "Bez SPZ (SPZ chybí)", "Highlighty mají obsahovat i chybějící klíčové údaje vozidla.")
 }
 
+SmokeTestDashboardMaintenanceActions() {
+    global Vehicles, VehicleFuelLog, VehicleMaintenancePlans, SettingsFile
+
+    ResetSmokeData()
+    tempSettings := A_Temp "\vehimap_smoke_dashboard_maintenance_actions.ini"
+    try FileDelete(tempSettings)
+    SettingsFile := tempSettings
+    EnsureSettingsDefaults()
+    IniWrite("31", SettingsFile, "notifications", "maintenance_reminder_days")
+    IniWrite("1000", SettingsFile, "notifications", "maintenance_reminder_km")
+
+    currentYear := FormatTime(A_Now, "yyyy")
+    Vehicles := [
+        {id: "veh_1", name: "Servis auto", category: "Osobní vozidla", vehicleNote: "", makeModel: "Skoda Octavia", plate: "1AB2345", year: "", power: "", lastTk: "", nextTk: "03/2028", greenCardFrom: "", greenCardTo: "04/2027"},
+        {id: "veh_2", name: "TK auto", category: "Motocykly", vehicleNote: "", makeModel: "Honda", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: FormatTime(A_Now, "MM/yyyy"), greenCardFrom: "", greenCardTo: "12/2099"}
+    ]
+    VehicleFuelLog := [
+        {id: "fuel_1", vehicleId: "veh_1", entryDate: "20.03." currentYear, odometer: "14650", liters: "35", totalCost: "1700", fullTank: 1, fuelType: "Benzin", note: ""}
+    ]
+    VehicleMaintenancePlans := [
+        {id: "mnt_1", vehicleId: "veh_1", title: "Motorový olej", intervalKm: "5000", intervalMonths: "12", lastServiceDate: "01.04." currentYear, lastServiceOdometer: "10000", isActive: 1, note: ""}
+    ]
+
+    entries := BuildDashboardEntries()
+    maintenanceEntry := ""
+    technicalEntry := ""
+    for entry in entries {
+        if (entry.kind = "maintenance" && !IsObject(maintenanceEntry)) {
+            maintenanceEntry := entry
+        } else if (entry.kind = "technical" && !IsObject(technicalEntry)) {
+            technicalEntry := entry
+        }
+    }
+
+    AssertTrue(IsObject(maintenanceEntry), "Dashboard má nabídnout servisní položku pro akční centrum.")
+    AssertTrue(CanOpenDashboardVehicleHistory(maintenanceEntry), "Servisní položka má umožnit otevření historie vozidla.")
+    AssertTrue(CanCompleteDashboardMaintenance(maintenanceEntry), "Servisní položka má umožnit přímé dokončení servisu.")
+    AssertTrue(IsObject(GetDashboardMaintenancePlan(maintenanceEntry)), "Servisní položka má být navázaná na konkrétní plán údržby.")
+
+    AssertTrue(IsObject(technicalEntry), "Dashboard má stále obsahovat i technické termíny.")
+    AssertTrue(CanOpenDashboardVehicleHistory(technicalEntry), "I běžná dashboard položka má umožnit otevření historie vozidla.")
+    AssertTrue(!CanCompleteDashboardMaintenance(technicalEntry), "Dokončení servisu musí být vyhrazené jen servisním položkám.")
+}
+
 SmokeTestDashboardDataSummary() {
     global Vehicles, VehicleRecords
 
@@ -481,8 +526,8 @@ SmokeTestDashboardDataSummary() {
     DirCreate(tempRoot)
 
     Vehicles := [
-        {id: "veh_1", name: "Bez SPZ", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
-        {id: "veh_2", name: "OK", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: "05/2027", greenCardFrom: "", greenCardTo: "06/2026"}
+        {id: "veh_1", name: "Bez SPZ", category: "Osobní vozidla", vehicleNote: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
+        {id: "veh_2", name: "OK", category: "Osobní vozidla", vehicleNote: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: "05/2027", greenCardFrom: "", greenCardTo: "06/2026"}
     ]
     VehicleRecords := [
         {id: "record_1", vehicleId: "veh_1", recordType: "Doklad", title: "Bez cesty", provider: "", validFrom: "", validTo: "", price: "", filePath: "", note: ""},
@@ -509,8 +554,8 @@ SmokeTestDashboardEntries() {
     DirCreate(tempRoot)
 
     Vehicles := [
-        {id: "veh_1", name: "Bez dat", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
-        {id: "veh_2", name: "Brzká TK", category: "Motocykly", vehicleType: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: FormatTime(A_Now, "MM/yyyy"), greenCardFrom: "", greenCardTo: "12/2099"}
+        {id: "veh_1", name: "Bez dat", category: "Osobní vozidla", vehicleNote: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
+        {id: "veh_2", name: "Brzká TK", category: "Motocykly", vehicleNote: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: FormatTime(A_Now, "MM/yyyy"), greenCardFrom: "", greenCardTo: "12/2099"}
     ]
     VehicleRecords := [
         {id: "record_1", vehicleId: "veh_1", recordType: "Doklad", title: "Bez cesty", provider: "", validFrom: "", validTo: "", price: "", filePath: "", note: ""},
@@ -541,8 +586,8 @@ SmokeTestOverviewDataIssues() {
     DirCreate(tempRoot)
 
     Vehicles := [
-        {id: "veh_1", name: "Bez dat", category: "Osobní vozidla", vehicleType: "", makeModel: "Skoda", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
-        {id: "veh_2", name: "Aktivní", category: "Motocykly", vehicleType: "", makeModel: "Honda", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: FormatTime(A_Now, "MM/yyyy"), greenCardFrom: "", greenCardTo: "12/2099"}
+        {id: "veh_1", name: "Bez dat", category: "Osobní vozidla", vehicleNote: "", makeModel: "Skoda", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
+        {id: "veh_2", name: "Aktivní", category: "Motocykly", vehicleNote: "", makeModel: "Honda", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: FormatTime(A_Now, "MM/yyyy"), greenCardFrom: "", greenCardTo: "12/2099"}
     ]
     VehicleRecords := [
         {id: "record_1", vehicleId: "veh_1", recordType: "Doklad", title: "Bez cesty", provider: "", validFrom: "", validTo: "", price: "", filePath: "", note: ""},

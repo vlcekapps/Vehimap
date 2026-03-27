@@ -414,8 +414,8 @@ TryParseVehiclesBackupContent(content, &loadedVehicles, &errorMessage) {
         return true
     }
 
-    if (firstNonEmptyLine != "# Vehimap data v3") {
-        errorMessage := "Soubor vozidel není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap data v3'."
+    if (firstNonEmptyLine != "# Vehimap data v3" && firstNonEmptyLine != "# Vehimap data v4") {
+        errorMessage := "Soubor vozidel není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap data v4'."
         return false
     }
 
@@ -445,7 +445,7 @@ TryParseVehiclesBackupContent(content, &loadedVehicles, &errorMessage) {
             id: UnescapeField(fields[1]),
             name: UnescapeField(fields[2]),
             category: NormalizeCategory(UnescapeField(fields[3])),
-            vehicleType: UnescapeField(fields[4]),
+            vehicleNote: UnescapeField(fields[4]),
             makeModel: UnescapeField(fields[5]),
             plate: UnescapeField(fields[6]),
             year: UnescapeField(fields[7]),
@@ -972,7 +972,7 @@ RefreshVehicleList(selectVehicleId := "") {
     VehicleList.Opt("-Redraw")
     VehicleList.Delete()
     for vehicle in items {
-        row := VehicleList.Add("", vehicle.name, vehicle.vehicleType, vehicle.makeModel, vehicle.plate, vehicle.lastTk, vehicle.nextTk, vehicle.greenCardTo, GetVehicleStatusText(vehicle))
+        row := VehicleList.Add("", vehicle.name, vehicle.vehicleNote, vehicle.makeModel, vehicle.plate, vehicle.lastTk, vehicle.nextTk, vehicle.greenCardTo, GetVehicleStatusText(vehicle))
         VisibleVehicleIds.Push(vehicle.id)
         if (selectVehicleId != "" && vehicle.id = selectVehicleId) {
             VehicleList.Modify(row, "Select Focus Vis")

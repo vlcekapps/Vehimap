@@ -160,7 +160,7 @@ BuildGlobalSearchResults(searchText := "") {
             BuildGlobalSearchVehicleItemText(vehicle),
             BuildGlobalSearchVehicleDetailText(vehicle, meta),
             BuildGlobalSearchVehicleDateText(vehicle),
-            [vehicle.name, vehicle.vehicleType, vehicle.makeModel, vehicle.plate, vehicle.year, vehicle.power, vehicle.category, meta.state, meta.tags, vehicle.lastTk, vehicle.nextTk, vehicle.greenCardFrom, vehicle.greenCardTo, GetVehicleStatusText(vehicle)]
+            [vehicle.name, vehicle.vehicleNote, vehicle.makeModel, vehicle.plate, vehicle.year, vehicle.power, vehicle.category, meta.state, meta.tags, vehicle.lastTk, vehicle.nextTk, vehicle.greenCardFrom, vehicle.greenCardTo, GetVehicleStatusText(vehicle)]
         )
     }
 
@@ -484,8 +484,8 @@ BuildGlobalSearchVehicleItemText(vehicle) {
     if (Trim(vehicle.makeModel) != "") {
         return vehicle.makeModel
     }
-    if (Trim(vehicle.vehicleType) != "") {
-        return vehicle.vehicleType
+    if (Trim(vehicle.vehicleNote) != "") {
+        return vehicle.vehicleNote
     }
     return "Detail vozidla"
 }
@@ -494,6 +494,9 @@ BuildGlobalSearchVehicleDetailText(vehicle, meta) {
     parts := []
     if (Trim(vehicle.category) != "") {
         parts.Push(vehicle.category)
+    }
+    if (Trim(vehicle.vehicleNote) != "") {
+        parts.Push("Poznámka: " ShortenText(vehicle.vehicleNote, 45))
     }
     if (Trim(meta.state) != "") {
         parts.Push("Stav: " meta.state)

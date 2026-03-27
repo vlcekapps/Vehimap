@@ -242,8 +242,8 @@ OpenVehicleDetailDialog(vehicle) {
     DetailGui.AddText("x170 y80 w150", FormatDisplayValue(vehicle.name))
     DetailGui.AddText("x355 y80 w110", "Kategorie")
     DetailGui.AddText("x470 y80 w180", FormatDisplayValue(vehicle.category))
-    DetailGui.AddText("x35 y110 w130", "Typ")
-    DetailGui.AddText("x170 y110 w150", FormatDisplayValue(vehicle.vehicleType))
+    DetailGui.AddText("x35 y110 w130", "Poznámka")
+    DetailGui.AddText("x170 y110 w150", FormatDisplayValue(vehicle.vehicleNote))
     DetailGui.AddText("x355 y110 w110", "Značka / model")
     DetailGui.AddText("x470 y110 w180", FormatDisplayValue(vehicle.makeModel))
     DetailGui.AddText("x35 y140 w130", "SPZ")
@@ -534,8 +534,8 @@ OpenVehicleForm(mode, vehicle := "") {
     FormControls.category := FormGui.AddDropDownList(Format("x{} y{} w{}", inputX, rowY - 3, inputW), Categories)
     rowY += rowStep
 
-    FormGui.AddText("x" labelX " y" rowY " w210", "Typ (volitelné)")
-    FormControls.vehicleType := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
+    FormGui.AddText("x" labelX " y" rowY " w210", "Poznámka k vozidlu (volitelné)")
+    FormControls.vehicleNote := FormGui.AddEdit(Format("x{} y{} w{}", inputX, rowY - 3, inputW))
     rowY += rowStep
 
     FormGui.AddText("x" labelX " y" rowY " w210", "Značka / model (povinné)")
@@ -589,7 +589,7 @@ OpenVehicleForm(mode, vehicle := "") {
     if IsObject(vehicle) {
         FormControls.name.Text := vehicle.name
         SetDropDownToText(FormControls.category, vehicle.category, Categories)
-        FormControls.vehicleType.Text := vehicle.vehicleType
+        FormControls.vehicleNote.Text := vehicle.vehicleNote
         FormControls.makeModel.Text := vehicle.makeModel
         FormControls.plate.Text := vehicle.plate
         FormControls.year.Text := vehicle.year
@@ -627,7 +627,7 @@ SaveVehicleFromForm(*) {
 
     name := Trim(FormControls.name.Text)
     category := Trim(FormControls.category.Text)
-    vehicleType := Trim(FormControls.vehicleType.Text)
+    vehicleNote := Trim(FormControls.vehicleNote.Text)
     makeModel := Trim(FormControls.makeModel.Text)
     plate := StrUpper(Trim(FormControls.plate.Text))
     year := Trim(FormControls.year.Text)
@@ -697,7 +697,7 @@ SaveVehicleFromForm(*) {
         id: (FormMode = "edit") ? FormVehicleId : GenerateVehicleId(),
         name: name,
         category: NormalizeCategory(category),
-        vehicleType: vehicleType,
+        vehicleNote: vehicleNote,
         makeModel: makeModel,
         plate: plate,
         year: year,

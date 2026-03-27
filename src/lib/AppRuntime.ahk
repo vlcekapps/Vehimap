@@ -179,7 +179,7 @@ EnsureDataFiles() {
     }
 
     if !FileExist(VehiclesFile) {
-        FileAppend("# Vehimap data v3`n", VehiclesFile, "UTF-8")
+        FileAppend("# Vehimap data v4`n", VehiclesFile, "UTF-8")
     }
 
     if !FileExist(HistoryFile) {
