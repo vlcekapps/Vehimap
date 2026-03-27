@@ -389,11 +389,11 @@ function Ensure-ChangelogFile {
     $initial = @(
         "# Changelog",
         "",
-        "Vsechny vyznamne zmeny ve Vehimapu budou zapisovane sem.",
+        "Všechny významné změny ve Vehimapu budou zapisovány sem.",
         "",
         "## [Unreleased]",
         "",
-        "- Zatim bez zapsanych zmen."
+        "- Zatím bez zapsaných změn."
     ) -join "`n"
 
     Write-Utf8NoBom -Path $Path -Content $initial
@@ -409,8 +409,6 @@ function Update-Changelog {
 
     $content = Read-Utf8NoBom -Path $Path
     $today = (Get-Date).ToString("yyyy-MM-dd")
-    $dash = [char]0x2013
-
     if ($content -notmatch '(?m)^## \[Unreleased\]') {
         if ($content -match '(?m)^# .*$') {
             $content = [regex]::Replace($content, '(?m)^(# .*)$', "`$1`n`n## [Unreleased]", 1)
@@ -419,7 +417,7 @@ function Update-Changelog {
         }
     }
 
-    $releaseHeading = "## [$NewVersion] $dash $today"
+    $releaseHeading = "## [$NewVersion] - $today"
     $updated = [regex]::Replace($content, '(?m)^## \[Unreleased\].*$', [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $releaseHeading }, 1)
 
     if ($updated -notmatch '(?m)^## \[Unreleased\]') {
