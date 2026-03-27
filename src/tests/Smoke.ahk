@@ -10,6 +10,7 @@ RunSmokeTests() {
     tests := [
         "SmokeTestBuildInfo",
         "SmokeTestUpdateManifestFile",
+        "SmokeTestUpdateManifestRoundTrip",
         "SmokeTestUpdateCheckAction",
         "SmokeTestUpdateHelperScript",
         "SmokeTestSemVerComparison",
@@ -62,6 +63,26 @@ SmokeTestUpdateManifestFile() {
     AssertEqual(manifest.version, AppVersion, "Lokalni update manifest ma odpovidat aktualni verzi aplikace.")
     AssertContains(manifest.assetUrl, "releases/download/", "Manifest ma obsahovat odkaz na release asset.")
     AssertContains(manifest.notesUrl, "releases/tag/", "Manifest ma obsahovat odkaz na release poznamky.")
+}
+
+SmokeTestUpdateManifestRoundTrip() {
+    tempPath := A_Temp "\vehimap_manifest_roundtrip.ini"
+    content := "[release]`n"
+        . "version=1.2.3`n"
+        . "published_at=2026-03-27T10:00:59Z`n"
+        . "asset_url=https://example.com/releases/vehimap-1.2.3.zip`n"
+        . "asset_sha256=341890872be1df557a1a65159ac63734c53b4288f8aee98cfe5c7d154613f736`n"
+        . "asset_size=691749`n"
+        . "notes_url=https://example.com/releases/v1.2.3`n"
+
+    if FileExist(tempPath) {
+        FileDelete(tempPath)
+    }
+
+    WriteTextFileUtf8NoBom(tempPath, content)
+    manifest := ReadLatestReleaseManifestFile(tempPath)
+    AssertEqual(manifest.version, "1.2.3", "Manifest zapsany bez BOM musi jit znovu nacist pres IniRead.")
+    AssertEqual(manifest.assetSize, "691749", "Round-trip manifest ma zachovat velikost assetu.")
 }
 
 SmokeTestUpdateCheckAction() {

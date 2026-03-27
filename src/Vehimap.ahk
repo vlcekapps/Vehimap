@@ -1129,7 +1129,7 @@ LoadLatestReleaseManifest() {
             throw Error("Server vrátil HTTP " request.Status ".")
         }
 
-        WriteTextFileUtf8(tempPath, request.ResponseText)
+        WriteTextFileUtf8NoBom(tempPath, request.ResponseText)
         return ReadLatestReleaseManifestFile(tempPath)
     } catch as err {
         throw Error("Nepodařilo se načíst manifest aktualizací. " err.Message)
@@ -9940,6 +9940,16 @@ WriteTextFileUtf8(path, content) {
     }
 
     FileAppend(content, path, "UTF-8")
+}
+
+WriteTextFileUtf8NoBom(path, content) {
+    if FileExist(path) {
+        FileDelete(path)
+    }
+
+    file := FileOpen(path, "w", "UTF-8-RAW")
+    file.Write(content)
+    file.Close()
 }
 
 GetSettingsContentForBackup() {
