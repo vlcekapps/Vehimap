@@ -46,25 +46,28 @@ OpenVehicleMaintenanceDialog(vehicle, openAddPlan := false, selectPlanId := "") 
     MaintenanceList.ModifyCol(5, "150")
     MaintenanceList.ModifyCol(6, "230")
 
-    addButton := MaintenanceGui.AddButton("x50 y382 w120 h30", "Přidat úkon")
+    recommendButton := MaintenanceGui.AddButton("x40 y382 w170 h30", "Doporučené šablony")
+    recommendButton.OnEvent("Click", AddRecommendedVehicleMaintenancePlans)
+
+    addButton := MaintenanceGui.AddButton("x220 y382 w120 h30", "Přidat úkon")
     addButton.OnEvent("Click", AddVehicleMaintenancePlan)
 
-    editButton := MaintenanceGui.AddButton("x180 y382 w120 h30", "Upravit úkon")
+    editButton := MaintenanceGui.AddButton("x350 y382 w120 h30", "Upravit úkon")
     editButton.OnEvent("Click", EditSelectedVehicleMaintenancePlan)
 
-    MaintenanceCompleteButton := MaintenanceGui.AddButton("x310 y382 w140 h30", "Označit splněno")
+    MaintenanceCompleteButton := MaintenanceGui.AddButton("x480 y382 w140 h30", "Označit splněno")
     MaintenanceCompleteButton.OnEvent("Click", CompleteSelectedVehicleMaintenancePlan)
 
-    deleteButton := MaintenanceGui.AddButton("x460 y382 w130 h30", "Odstranit úkon")
+    deleteButton := MaintenanceGui.AddButton("x630 y382 w130 h30", "Odstranit úkon")
     deleteButton.OnEvent("Click", DeleteSelectedVehicleMaintenancePlan)
 
-    detailButton := MaintenanceGui.AddButton("x600 y382 w120 h30", "Detail vozidla")
+    detailButton := MaintenanceGui.AddButton("x260 y418 w160 h30", "Detail vozidla")
     detailButton.OnEvent("Click", OpenVehicleDetailFromMaintenance)
 
-    closeButton := MaintenanceGui.AddButton("x730 y382 w100 h30", "Zavřít")
+    closeButton := MaintenanceGui.AddButton("x480 y418 w140 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleMaintenanceDialog)
 
-    MaintenanceGui.Show("w900 h432")
+    MaintenanceGui.Show("w900 h468")
     PopulateVehicleMaintenanceList(selectPlanId, true)
 
     if openAddPlan {
@@ -299,6 +302,46 @@ GetSelectedVehicleMaintenanceSnapshot() {
 
 AddVehicleMaintenancePlan(*) {
     OpenVehicleMaintenancePlanForm("add")
+}
+
+AddRecommendedVehicleMaintenancePlans(*) {
+    global AppTitle, MaintenanceVehicleId
+
+    preview := GetVehicleMaintenanceRecommendationPreview(MaintenanceVehicleId)
+    if !preview.HasOwnProp("vehicle") || !IsObject(preview.vehicle) {
+        return
+    }
+
+    if (preview.recommended.Length = 0) {
+        AppMsgBox(
+            "Vehimap pro vybrané vozidlo zatím nemá připravené žádné doporučené servisní šablony.",
+            AppTitle,
+            0x40
+        )
+        return
+    }
+
+    if (preview.missing.Length = 0) {
+        AppMsgBox(
+            "Vehimap pro vozidlo " preview.vehicle.name " už nenašel žádné další doporučené servisní šablony.`n`n"
+            "Profil doporučení: " preview.profileLabel ".",
+            AppTitle,
+            0x40
+        )
+        return
+    }
+
+    result := AppMsgBox(BuildVehicleMaintenanceRecommendationPrompt(preview), AppTitle, 0x34)
+    if (result != "Yes") {
+        return
+    }
+
+    applied := AddVehicleMaintenanceRecommendedTemplates(preview.vehicle.id, preview.missing)
+    selectPlanId := (applied.addedPlans.Length > 0) ? applied.addedPlans[1].id : ""
+    RefreshMaintenanceDependentState(preview.vehicle.id)
+    PopulateVehicleMaintenanceList(selectPlanId, true)
+
+    AppMsgBox(BuildVehicleMaintenanceRecommendationResultText(applied), AppTitle, 0x40)
 }
 
 EditSelectedVehicleMaintenancePlan(*) {
@@ -1078,6 +1121,7 @@ GetVehicleMaintenanceTemplates() {
     static templates := [
         {label: "Vlastní položka", title: "", intervalKm: "", intervalMonths: "", note: ""},
         {label: "Motorový olej a filtr", title: "Motorový olej a filtr", intervalKm: "15000", intervalMonths: "12", note: "Pravidelná výměna oleje a olejového filtru."},
+        {label: "Palivový filtr", title: "Palivový filtr", intervalKm: "30000", intervalMonths: "24", note: "Výměna palivového filtru podle provozu a doporučení výrobce."},
         {label: "Vzduchový filtr", title: "Vzduchový filtr", intervalKm: "30000", intervalMonths: "24", note: "Zkontrolovat nebo vyměnit vzduchový filtr."},
         {label: "Kabinový filtr", title: "Kabinový filtr", intervalKm: "15000", intervalMonths: "12", note: "Pravidelná výměna pylového filtru."},
         {label: "Brzdová kapalina", title: "Brzdová kapalina", intervalKm: "", intervalMonths: "24", note: "Pravidelná výměna brzdové kapaliny."},
@@ -1105,6 +1149,232 @@ GetVehicleMaintenanceTemplateByLabel(label) {
         }
     }
     return ""
+}
+
+GetVehicleMaintenanceRecommendationPreview(vehicleId) {
+    vehicle := FindVehicleById(vehicleId)
+    if !IsObject(vehicle) {
+        return {
+            vehicle: "",
+            recommended: [],
+            missing: [],
+            existingCount: 0,
+            profileLabel: ""
+        }
+    }
+
+    recommended := GetRecommendedVehicleMaintenanceTemplates(vehicle)
+    existingTitles := BuildVehicleMaintenancePlanTitleMap(vehicleId)
+    missing := []
+    existingCount := 0
+
+    for template in recommended {
+        key := NormalizeVehicleMaintenancePlanTitleKey(template.title)
+        if (key != "" && existingTitles.Has(key)) {
+            existingCount += 1
+            continue
+        }
+        missing.Push(template)
+    }
+
+    return {
+        vehicle: vehicle,
+        recommended: recommended,
+        missing: missing,
+        existingCount: existingCount,
+        profileLabel: BuildVehicleMaintenanceRecommendationProfileLabel(vehicle)
+    }
+}
+
+GetRecommendedVehicleMaintenanceTemplates(vehicle) {
+    category := NormalizeCategory(vehicle.category)
+    labels := []
+    isElectric := IsElectricVehicleMaintenanceProfile(vehicle)
+    isDiesel := IsDieselVehicleMaintenanceProfile(vehicle)
+
+    switch category {
+        case "Osobní vozidla":
+            if isElectric {
+                labels := ["Kabinový filtr", "Brzdová kapalina", "Chladicí kapalina", "Klimatizace a dezinfekce"]
+            } else {
+                labels := ["Motorový olej a filtr", "Vzduchový filtr", "Kabinový filtr", "Brzdová kapalina", "Chladicí kapalina", "Rozvody", "Převodový olej", "Klimatizace a dezinfekce"]
+            }
+        case "Motocykly":
+            labels := isElectric
+                ? ["Brzdová kapalina"]
+                : ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina"]
+        case "Nákladní vozidla":
+            if isElectric {
+                labels := ["Brzdová kapalina", "Chladicí kapalina", "Klimatizace a dezinfekce"]
+            } else {
+                labels := ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina", "Převodový olej"]
+            }
+        case "Autobusy":
+            if isElectric {
+                labels := ["Brzdová kapalina", "Chladicí kapalina", "Klimatizace a dezinfekce"]
+            } else {
+                labels := ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina", "Převodový olej", "Klimatizace a dezinfekce"]
+            }
+        default:
+            labels := isElectric
+                ? ["Brzdová kapalina"]
+                : ["Brzdová kapalina", "Chladicí kapalina"]
+    }
+
+    if (isDiesel && !isElectric) {
+        labels.Push("Palivový filtr")
+    }
+
+    templates := []
+    for label in labels {
+        PushVehicleMaintenanceTemplateByLabel(&templates, label)
+    }
+
+    return templates
+}
+
+AddVehicleMaintenanceRecommendedTemplates(vehicleId, templates, persist := true) {
+    global VehicleMaintenancePlans
+
+    vehicle := FindVehicleById(vehicleId)
+    addedPlans := []
+    existingTitles := BuildVehicleMaintenancePlanTitleMap(vehicleId)
+    skippedCount := 0
+
+    for template in templates {
+        key := NormalizeVehicleMaintenancePlanTitleKey(template.title)
+        if (key != "" && existingTitles.Has(key)) {
+            skippedCount += 1
+            continue
+        }
+
+        plan := {
+            id: GenerateVehicleMaintenancePlanId(),
+            vehicleId: vehicleId,
+            title: template.title,
+            intervalKm: template.intervalKm,
+            intervalMonths: template.intervalMonths,
+            lastServiceDate: "",
+            lastServiceOdometer: "",
+            isActive: 1,
+            note: template.note
+        }
+        VehicleMaintenancePlans.Push(plan)
+        addedPlans.Push(plan)
+        if (key != "") {
+            existingTitles[key] := true
+        }
+    }
+
+    if (persist && addedPlans.Length > 0) {
+        SaveVehicleMaintenancePlans()
+    }
+
+    return {
+        vehicle: vehicle,
+        addedPlans: addedPlans,
+        skippedCount: skippedCount
+    }
+}
+
+BuildVehicleMaintenancePlanTitleMap(vehicleId) {
+    titles := Map()
+
+    for plan in GetVehicleMaintenancePlans(vehicleId, true) {
+        key := NormalizeVehicleMaintenancePlanTitleKey(plan.title)
+        if (key != "") {
+            titles[key] := true
+        }
+    }
+
+    return titles
+}
+
+NormalizeVehicleMaintenancePlanTitleKey(title) {
+    return StrLower(Trim(title))
+}
+
+BuildVehicleMaintenanceRecommendationPrompt(preview) {
+    text := "Vehimap pro vozidlo " preview.vehicle.name " doporučuje přidat tyto servisní šablony:`n`n"
+
+    for template in preview.missing {
+        intervalText := BuildVehicleMaintenanceIntervalText(template)
+        text .= "- " template.title
+        if (intervalText != "Nevyplněno") {
+            text .= " (" intervalText ")"
+        }
+        text .= "`n"
+    }
+
+    text .= "`nProfil doporučení: " preview.profileLabel "."
+    if (preview.existingCount > 0) {
+        text .= "`nUž založených doporučených plánů: " preview.existingCount "."
+    }
+    text .= "`n`nPřidat teď chybějící plány?"
+    return text
+}
+
+BuildVehicleMaintenanceRecommendationResultText(result) {
+    addedCount := result.addedPlans.Length
+    text := "Přidáno doporučených plánů: " addedCount "."
+    if (result.skippedCount > 0) {
+        text .= "`nUž existovalo: " result.skippedCount "."
+    }
+    if IsObject(result.vehicle) {
+        text .= "`nVozidlo: " result.vehicle.name "."
+    }
+    return text
+}
+
+BuildVehicleMaintenanceRecommendationProfileLabel(vehicle) {
+    parts := [NormalizeCategory(vehicle.category)]
+    if IsElectricVehicleMaintenanceProfile(vehicle) {
+        parts.Push("elektrický pohon")
+    } else if IsDieselVehicleMaintenanceProfile(vehicle) {
+        parts.Push("naftový pohon")
+    }
+
+    return JoinInline(parts, ", ")
+}
+
+PushVehicleMaintenanceTemplateByLabel(&templates, label) {
+    template := GetVehicleMaintenanceTemplateByLabel(label)
+    if !IsObject(template) {
+        return
+    }
+
+    wantedKey := NormalizeVehicleMaintenancePlanTitleKey(template.title)
+    for existing in templates {
+        if (NormalizeVehicleMaintenancePlanTitleKey(existing.title) = wantedKey) {
+            return
+        }
+    }
+
+    templates.Push(template)
+}
+
+IsDieselVehicleMaintenanceProfile(vehicle) {
+    return VehicleMaintenanceProfileHasKeyword(vehicle, ["diesel", "nafta", "tdi", "hdi", "dci", "cdi", "crdi", "multijet", "tdci"])
+}
+
+IsElectricVehicleMaintenanceProfile(vehicle) {
+    return VehicleMaintenanceProfileHasKeyword(vehicle, ["elektro", "elektř", "electric", "bev", "tesla"])
+}
+
+VehicleMaintenanceProfileHasKeyword(vehicle, keywords) {
+    haystack := StrLower(
+        NormalizeCategory(vehicle.category) " "
+        vehicle.makeModel " "
+        vehicle.vehicleNote
+    )
+
+    for keyword in keywords {
+        if InStr(haystack, StrLower(keyword)) {
+            return true
+        }
+    }
+
+    return false
 }
 
 RefreshMaintenanceDependentState(vehicleId) {

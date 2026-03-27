@@ -16,6 +16,8 @@ RunSmokeTests() {
         "SmokeTestSemVerComparison",
         "SmokeTestGlobalSearch",
         "SmokeTestMaintenancePlans",
+        "SmokeTestMaintenanceRecommendations",
+        "SmokeTestMaintenanceRecommendationAction",
         "SmokeTestMaintenanceBackupRoundTrip",
         "SmokeTestRecordPathInfo",
         "SmokeTestFleetCostSummary",
@@ -275,6 +277,97 @@ SmokeTestMaintenancePlans() {
 
     dashboardText := BuildDashboardTermSummaryText()
     AssertContains(dashboardText, "servisních úkonů", "Dashboard má v souhrnu termínů zohlednit údržbu.")
+}
+
+SmokeTestMaintenanceRecommendations() {
+    global Vehicles, VehicleMaintenancePlans
+
+    ResetSmokeData()
+    Vehicles := [
+        {
+            id: "veh_1",
+            name: "Doporučený diesel",
+            category: "Osobní vozidla",
+            vehicleNote: "Rodinné diesel kombi",
+            makeModel: "Skoda Octavia 2.0 TDI",
+            plate: "1AB2345",
+            year: "2021",
+            power: "110",
+            lastTk: "03/2025",
+            nextTk: "03/2027",
+            greenCardFrom: "04/2025",
+            greenCardTo: "04/2026"
+        }
+    ]
+    VehicleMaintenancePlans := [
+        {id: "mnt_1", vehicleId: "veh_1", title: "Motorový olej a filtr", intervalKm: "15000", intervalMonths: "12", lastServiceDate: "", lastServiceOdometer: "", isActive: 1, note: ""}
+    ]
+
+    preview := GetVehicleMaintenanceRecommendationPreview("veh_1")
+    AssertContains(preview.profileLabel, "Osobní vozidla", "Profil doporučení má vycházet z kategorie vozidla.")
+    AssertContains(preview.profileLabel, "naftový pohon", "Profil doporučení má rozpoznat diesel podle modelu nebo poznámky.")
+    AssertEqual(preview.existingCount, 1, "Už existující doporučený plán se má odfiltrovat.")
+    AssertTrue(HasMaintenanceTemplateWithTitle(preview.missing, "Palivový filtr"), "Diesel má mezi doporučenými šablonami dostat i palivový filtr.")
+    AssertTrue(!HasMaintenanceTemplateWithTitle(preview.missing, "Motorový olej a filtr"), "Už existující plán se nesmí znovu nabízet.")
+
+    applied := AddVehicleMaintenanceRecommendedTemplates("veh_1", preview.missing, false)
+    AssertTrue(applied.addedPlans.Length >= 1, "Doporučené šablony se mají umět přidat do paměti bez uložení.")
+    AssertEqual(CountMaintenancePlansByTitle("veh_1", "Palivový filtr"), 1, "Palivový filtr se má po přidání objevit mezi plány právě jednou.")
+
+    previewAfter := GetVehicleMaintenanceRecommendationPreview("veh_1")
+    AssertEqual(previewAfter.missing.Length, 0, "Po doplnění doporučených plánů už nemají zbýt další chybějící šablony.")
+}
+
+SmokeTestMaintenanceRecommendationAction() {
+    global Vehicles, VehicleMaintenancePlans, MaintenanceVehicleId, MaintenancePlansFile, VehimapTestHooks
+
+    ResetSmokeData()
+    originalMaintenancePlansFile := MaintenancePlansFile
+    tempMaintenanceFile := A_Temp "\vehimap_smoke_maintenance_recommend_action.tsv"
+    try FileDelete(tempMaintenanceFile)
+    MaintenancePlansFile := tempMaintenanceFile
+    Vehicles := [
+        {
+            id: "veh_1",
+            name: "Akční diesel",
+            category: "Osobní vozidla",
+            vehicleNote: "Nafta",
+            makeModel: "Volkswagen Passat 2.0 TDI",
+            plate: "2AB3456",
+            year: "2022",
+            power: "110",
+            lastTk: "05/2025",
+            nextTk: "05/2027",
+            greenCardFrom: "05/2025",
+            greenCardTo: "05/2026"
+        }
+    ]
+    VehicleMaintenancePlans := []
+    MaintenanceVehicleId := "veh_1"
+
+    try {
+        VehimapTestHooks := {
+            messages: [],
+            msgBoxResults: ["Yes"]
+        }
+
+        AddRecommendedVehicleMaintenancePlans()
+        AssertEqual(VehimapTestHooks.messages.Length, 2, "Akce doporučených šablon má zobrazit potvrzení a výsledek.")
+        AssertContains(VehimapTestHooks.messages[1].text, "Palivový filtr", "Potvrzovací dialog má vypsat doporučené servisní plány.")
+        AssertContains(VehimapTestHooks.messages[2].text, "Přidáno doporučených plánů", "Po doplnění má být zobrazen výsledek.")
+        AssertTrue(CountMaintenancePlansByTitle("veh_1", "Palivový filtr") = 1, "Akce doporučených šablon má plán opravdu přidat.")
+
+        VehimapTestHooks := {
+            messages: []
+        }
+        AddRecommendedVehicleMaintenancePlans()
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "Po doplnění všech doporučených šablon má zůstat jen informační hláška.")
+        AssertContains(VehimapTestHooks.messages[1].text, "už nenašel žádné další doporučené servisní šablony", "Informační hláška má vysvětlit, že už nic nechybí.")
+    } finally {
+        VehimapTestHooks := 0
+        MaintenanceVehicleId := ""
+        MaintenancePlansFile := originalMaintenancePlansFile
+    }
 }
 
 SmokeTestMaintenanceBackupRoundTrip() {
@@ -651,6 +744,28 @@ ResetSmokeData() {
     VehicleMetaEntries := []
     VehicleReminders := []
     VehicleMaintenancePlans := []
+}
+
+HasMaintenanceTemplateWithTitle(items, title) {
+    for item in items {
+        if IsObject(item) && item.HasOwnProp("title") && item.title = title {
+            return true
+        }
+    }
+
+    return false
+}
+
+CountMaintenancePlansByTitle(vehicleId, title) {
+    count := 0
+
+    for plan in VehicleMaintenancePlans {
+        if (plan.vehicleId = vehicleId && plan.title = title) {
+            count += 1
+        }
+    }
+
+    return count
 }
 
 AssertSearchKindPresent(results, expectedKind) {
