@@ -1188,7 +1188,6 @@ CheckDueVehicles(showTrayNotification := true, forceMessageBox := false) {
     greenCards := GetUpcomingGreenCards()
     reminders := GetUpcomingCustomReminders()
     maintenance := GetUpcomingVehicleMaintenance()
-    maintenance := GetUpcomingVehicleMaintenance()
     SetupTrayMenu()
     UpdateStatusBar()
 

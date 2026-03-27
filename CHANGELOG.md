@@ -5,15 +5,32 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ## [Unreleased]
 
+### Přidáno
+- explicitní servisní profil vozidla s poli `Pohon`, `Klimatizace`, `Rozvody` a `Převodovka`, který slouží jako základ pro doporučené servisní šablony
+- výběrový dialog doporučených servisních šablon, ve kterém lze návrhy před přidáním odškrtnout nebo upravit
+- automatická nabídka doporučených servisních šablon hned po založení nového vozidla
+- akce v dashboardu pro rychlé otevření historie vozidla a okamžité označení servisního úkonu jako splněného
+- samostatný přehled `Náklady napříč vozidly` pro porovnání vozidel v jednom období
+
+### Změněno
+- pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`
+- přehledy termínů a dashboard lépe zvýrazňují problémové stavy, datové nedostatky a servisní úkoly
+- Vehimap je interně rozdělený do menších modulů `#Include`, takže se aplikace lépe udržuje a rozvíjí
+
+### Opraveno
+- zpracování servisních doporučení, záloh a meta dat vozidel tak, aby správně fungoval nový servisní profil i smoke testy
+
 ## [1.0.2] - 2026-03-27
 
-- Opravena kontrola aktualizací ve zkompilované portable aplikaci, aby správně načítala veřejný release manifest.
-- Doplněny smoke testy pro kontrolu aktualizací a načtení update manifestu.
+### Opraveno
+- kontrola aktualizací ve zkompilované portable aplikaci teď správně načítá veřejný release manifest
+- doplněny smoke testy pro kontrolu aktualizací a načítání update manifestu
 
 ## [1.0.1] - 2026-03-27
 
-- První veřejné vydání aplikace Vehimap.
-- Přidána evidence vozidel, historie událostí, kilometrů a tankování, pojištění a dokladů i vlastních připomínek.
-- Přidán dashboard, přehled blížících se a propadlých termínů, globální hledání a rychlé filtrování v jednotlivých evidencích.
-- Přidány exporty, import dat, automatické zálohy, klávesové zkratky a další úpravy přístupnosti.
-- Přidána ruční kontrola aktualizací a portable aktualizace aplikace z GitHub release.
+### Přidáno
+- první veřejné vydání aplikace Vehimap
+- evidence vozidel, historie událostí, kilometrů a tankování, pojištění a dokladů i vlastních připomínek
+- dashboard, přehled blížících se a propadlých termínů, globální hledání a rychlé filtrování v jednotlivých evidencích
+- exporty, import dat, automatické zálohy, klávesové zkratky a další úpravy přístupnosti
+- ruční kontrola aktualizací a portable aktualizace aplikace z GitHub release

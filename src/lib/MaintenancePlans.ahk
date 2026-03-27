@@ -1,4 +1,4 @@
-OpenVehicleMaintenanceDialog(vehicle, openAddPlan := false, selectPlanId := "") {
+OpenVehicleMaintenanceDialog(vehicle, openAddPlan := false, selectPlanId := "", openRecommendations := false) {
     global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui, FleetCostGui, DashboardGui, GlobalSearchGui
     global MaintenanceGui, MaintenanceVehicleId, MaintenanceList, MaintenanceSummaryLabel, MaintenanceAllPlans, MaintenanceSearchCtrl, VisibleMaintenancePlanIds, MaintenanceSortColumn, MaintenanceSortDescending, MaintenanceCompleteButton
 
@@ -69,6 +69,14 @@ OpenVehicleMaintenanceDialog(vehicle, openAddPlan := false, selectPlanId := "") 
 
     MaintenanceGui.Show("w900 h468")
     PopulateVehicleMaintenanceList(selectPlanId, true)
+
+    if openRecommendations {
+        preview := GetVehicleMaintenanceRecommendationPreview(vehicle.id)
+        if (preview.missing.Length > 0) {
+            OpenVehicleMaintenanceRecommendationDialog(preview)
+            return
+        }
+    }
 
     if openAddPlan {
         OpenVehicleMaintenancePlanForm("add")
@@ -345,6 +353,38 @@ AddRecommendedVehicleMaintenancePlans(*) {
     }
 
     OpenVehicleMaintenanceRecommendationDialog(preview)
+}
+
+OfferVehicleMaintenanceRecommendationsAfterCreate(vehicleId) {
+    global AppTitle
+
+    preview := GetVehicleMaintenanceRecommendationPreview(vehicleId)
+    if !preview.HasOwnProp("vehicle") || !IsObject(preview.vehicle) || preview.missing.Length = 0 {
+        return false
+    }
+
+    text := "Vehimap pro nové vozidlo " preview.vehicle.name " našel " preview.missing.Length " doporučených servisních šablon.`n`n"
+        . "Profil doporučení: " preview.profileLabel ".`n`n"
+        . "Chcete je otevřít a případně rovnou přidat?"
+    result := AppMsgBox(text, AppTitle, 0x24)
+    if (result != "Yes") {
+        return false
+    }
+
+    hooks := GetVehimapTestHooks()
+    if IsObject(hooks) {
+        hooks.postCreateMaintenanceRecommendation := {
+            vehicleId: vehicleId,
+            profileLabel: preview.profileLabel,
+            missingCount: preview.missing.Length
+        }
+        if (hooks.HasOwnProp("skipPostCreateMaintenanceRecommendationOpen") && hooks.skipPostCreateMaintenanceRecommendationOpen) {
+            return true
+        }
+    }
+
+    OpenVehicleMaintenanceDialog(preview.vehicle, false, "", true)
+    return true
 }
 
 OpenVehicleMaintenanceRecommendationDialog(preview) {

@@ -50,6 +50,7 @@ DeleteSelectedVehicle(*) {
         return
     }
 
+    isNewVehicle := (FormMode != "edit")
     index := FindVehicleIndexById(vehicle.id)
     if !index {
         return
@@ -725,6 +726,8 @@ SaveVehicleFromForm(*) {
         return
     }
 
+    isNewVehicle := (FormMode != "edit")
+
     vehicle := {
         id: (FormMode = "edit") ? FormVehicleId : GenerateVehicleId(),
         name: name,
@@ -751,5 +754,8 @@ SaveVehicleFromForm(*) {
     SaveVehicleMetaEntry(vehicle.id, vehicleState, vehicleTags, powertrain, climateProfile, timingDrive, transmission)
     CloseVehicleForm()
     OpenVehicleById(vehicle.id, true)
+    if isNewVehicle {
+        OfferVehicleMaintenanceRecommendationsAfterCreate(vehicle.id)
+    }
     CheckDueVehicles(false, false)
 }

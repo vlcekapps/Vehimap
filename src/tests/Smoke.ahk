@@ -18,6 +18,7 @@ RunSmokeTests() {
         "SmokeTestMaintenancePlans",
         "SmokeTestMaintenanceRecommendations",
         "SmokeTestMaintenanceRecommendationAction",
+        "SmokeTestMaintenanceRecommendationOfferAfterCreate",
         "SmokeTestVehicleMetaProfiles",
         "SmokeTestMaintenanceBackupRoundTrip",
         "SmokeTestRecordPathInfo",
@@ -402,6 +403,62 @@ SmokeTestMaintenanceRecommendationAction() {
         VehimapTestHooks := 0
         MaintenanceVehicleId := ""
         MaintenancePlansFile := originalMaintenancePlansFile
+    }
+}
+
+SmokeTestMaintenanceRecommendationOfferAfterCreate() {
+    global Vehicles, VehicleMetaEntries, VehimapTestHooks
+
+    ResetSmokeData()
+    Vehicles := [
+        {
+            id: "veh_1",
+            name: "Nové vozidlo",
+            category: "Osobní vozidla",
+            vehicleNote: "Rodinné auto",
+            makeModel: "Volkswagen Passat",
+            plate: "2AB3456",
+            year: "2022",
+            power: "110",
+            lastTk: "05/2025",
+            nextTk: "05/2027",
+            greenCardFrom: "05/2025",
+            greenCardTo: "05/2026"
+        }
+    ]
+    VehicleMetaEntries := [
+        {vehicleId: "veh_1", state: "Běžný provoz", tags: "test", powertrain: "Nafta", climateProfile: "Má klimatizaci", timingDrive: "Řemen", transmission: "Automatická"}
+    ]
+
+    try {
+        VehimapTestHooks := {
+            messages: [],
+            msgBoxResults: ["Yes"],
+            skipPostCreateMaintenanceRecommendationOpen: true
+        }
+
+        AssertTrue(OfferVehicleMaintenanceRecommendationsAfterCreate("veh_1"), "Po vytvoření vozidla má jít otevřít nabídka doporučených servisních šablon.")
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "Po vytvoření vozidla se má zobrazit jedna nabídka doporučených šablon.")
+        AssertContains(VehimapTestHooks.messages[1].text, "doporučených servisních šablon", "Nabídka po vytvoření vozidla má vysvětlit další krok.")
+        AssertTrue(VehimapTestHooks.HasOwnProp("postCreateMaintenanceRecommendation"), "Kladná volba má otevřít doporučené šablony i z toku založení vozidla.")
+        AssertContains(VehimapTestHooks.postCreateMaintenanceRecommendation.profileLabel, "naftový pohon", "Nabídka po vytvoření vozidla má nést správný servisní profil.")
+
+        VehimapTestHooks := {
+            messages: [],
+            msgBoxResults: ["No"],
+            skipPostCreateMaintenanceRecommendationOpen: true
+        }
+        AssertTrue(!OfferVehicleMaintenanceRecommendationsAfterCreate("veh_1"), "Při odmítnutí nabídky se doporučené šablony nemají otevřít.")
+        AssertEqual(VehimapTestHooks.messages.Length, 1, "I odmítnutá nabídka má zobrazit jeden potvrzovací dialog.")
+        AssertTrue(!VehimapTestHooks.HasOwnProp("postCreateMaintenanceRecommendation"), "Záporná volba nesmí otevřít doporučené šablony.")
+
+        VehimapTestHooks := {
+            messages: []
+        }
+        AssertTrue(!OfferVehicleMaintenanceRecommendationsAfterCreate("missing"), "Neexistující vozidlo nesmí nabídku servisních šablon otevírat.")
+        AssertEqual(VehimapTestHooks.messages.Length, 0, "Pro neexistující vozidlo se nemá zobrazit žádná hláška.")
+    } finally {
+        VehimapTestHooks := 0
     }
 }
 
