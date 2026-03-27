@@ -148,6 +148,19 @@ global CostSummaryFromMonthCtrl := 0
 global CostSummaryToMonthCtrl := 0
 global CostSummaryPeriodSummaryLabel := 0
 global CostSummaryPeriodList := 0
+global FleetCostGui := 0
+global FleetCostRows := []
+global FleetCostSummaryLabel := 0
+global FleetCostList := 0
+global FleetCostPeriodYearCtrl := 0
+global FleetCostPresetCtrl := 0
+global FleetCostFromMonthCtrl := 0
+global FleetCostToMonthCtrl := 0
+global FleetCostPeriodSummaryLabel := 0
+global FleetCostPeriodList := 0
+global FleetCostVehicleCostsButton := 0
+global FleetCostOpenButton := 0
+global FleetCostEditButton := 0
 global DashboardGui := 0
 global DashboardSummaryVehiclesLabel := 0
 global DashboardSummaryTermsLabel := 0
@@ -157,6 +170,7 @@ global DashboardList := 0
 global DashboardEntries := []
 global DashboardOpenButton := 0
 global DashboardItemButton := 0
+global DashboardVehicleCostsButton := 0
 global DashboardEditButton := 0
 global DashboardShowOnLaunchCtrl := 0
 global DashboardShowMainOnClose := false
@@ -306,6 +320,18 @@ Delete::DeleteSelectedVehicleReminder()
 #HotIf IsGuiWindowActive(CostSummaryGui)
 ^r::RefreshVehicleCostPeriodSummary()
 ^d::OpenVehicleDetailFromCostSummary()
+#HotIf
+
+#HotIf IsGuiWindowActive(FleetCostGui)
+^r::RefreshFleetCostOverview()
+^p::OpenSelectedFleetVehicleCostSummary()
+^u::EditSelectedFleetCostVehicle()
+F2::EditSelectedFleetCostVehicle()
+^o::OpenSelectedFleetCostVehicleDetail()
+#HotIf
+
+#HotIf IsListViewFocusedInGui(FleetCostGui)
+Enter::OpenSelectedFleetVehicleCostSummary()
 #HotIf
 
 #HotIf IsGuiWindowActive(SettingsGui)
@@ -682,6 +708,7 @@ BuildMainMenuBar() {
 
     overviewMenu := Menu()
     overviewMenu.Add("Dashboard`tCtrl+D", OpenDashboard)
+    overviewMenu.Add("Náklady napříč vozidly", OpenFleetCostOverviewDialog)
     overviewMenu.Add("Globální hledání`tCtrl+Shift+F", OpenGlobalSearchDialog)
     overviewMenu.Add()
     overviewMenu.Add("Přehled termínů`tCtrl+T", OpenUpcomingOverviewDialog)
@@ -1565,6 +1592,11 @@ OpenGlobalSearchFromDashboard(*) {
     OpenGlobalSearchDialog()
 }
 
+OpenFleetCostsFromDashboard(*) {
+    CloseDashboardDialog()
+    OpenFleetCostOverviewDialog()
+}
+
 SwitchOverviewToOverdueShortcut() {
     global OverviewGui
 
@@ -1588,14 +1620,14 @@ SwitchOverdueToOverviewShortcut() {
 }
 
 OpenGlobalSearchDialog(*) {
-    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverdueGui, GlobalSearchGui, GlobalSearchList, GlobalSearchResults, GlobalSearchSummaryLabel, GlobalSearchSearchCtrl, GlobalSearchOpenButton, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverdueGui, GlobalSearchGui, GlobalSearchList, GlobalSearchResults, GlobalSearchSummaryLabel, GlobalSearchSearchCtrl, GlobalSearchOpenButton, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui, FleetCostGui
 
     if IsObject(GlobalSearchGui) {
         WinActivate("ahk_id " GlobalSearchGui.Hwnd)
         return
     }
 
-    for guiRef in [DashboardGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui] {
+    for guiRef in [DashboardGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui, FleetCostGui] {
         if IsObject(guiRef) {
             WinActivate("ahk_id " guiRef.Hwnd)
             return
@@ -2447,15 +2479,15 @@ CreateImmediateBackupFromSettings(*) {
 }
 
 OpenDashboardDialog(showMainOnClose := false) {
-    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose
-    global OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose
+    global OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui, FleetCostGui
 
     if IsObject(DashboardGui) {
         WinActivate("ahk_id " DashboardGui.Hwnd)
         return
     }
 
-    for guiRef in [FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui] {
+    for guiRef in [FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui, FleetCostGui] {
         if IsObject(guiRef) {
             WinActivate("ahk_id " guiRef.Hwnd)
             return
@@ -2497,7 +2529,7 @@ OpenDashboardDialog(showMainOnClose := false) {
     DashboardList.ModifyCol(5, "210")
     DashboardList.ModifyCol(6, "145")
 
-    DashboardGui.AddGroupBox("x20 y545 w980 h110", "Akce")
+    DashboardGui.AddGroupBox("x20 y545 w980 h145", "Akce")
 
     overviewButton := DashboardGui.AddButton("x40 y573 w135 h30", "Přehled termínů")
     overviewButton.OnEvent("Click", OpenOverviewFromDashboard)
@@ -2508,23 +2540,29 @@ OpenDashboardDialog(showMainOnClose := false) {
     searchButton := DashboardGui.AddButton("x330 y573 w135 h30", "Globální hledání")
     searchButton.OnEvent("Click", OpenGlobalSearchFromDashboard)
 
-    DashboardItemButton := DashboardGui.AddButton("x475 y573 w135 h30", "Otevřít položku")
+    fleetCostsButton := DashboardGui.AddButton("x475 y573 w135 h30", "Souhrn nákladů")
+    fleetCostsButton.OnEvent("Click", OpenFleetCostsFromDashboard)
+
+    DashboardItemButton := DashboardGui.AddButton("x40 y608 w135 h30", "Otevřít položku")
     DashboardItemButton.OnEvent("Click", OpenSelectedDashboardItem)
 
-    DashboardEditButton := DashboardGui.AddButton("x620 y573 w135 h30", "Upravit vozidlo")
+    DashboardVehicleCostsButton := DashboardGui.AddButton("x185 y608 w135 h30", "Náklady vozidla")
+    DashboardVehicleCostsButton.OnEvent("Click", OpenSelectedDashboardVehicleCosts)
+
+    DashboardEditButton := DashboardGui.AddButton("x330 y608 w135 h30", "Upravit vozidlo")
     DashboardEditButton.OnEvent("Click", EditSelectedDashboardVehicle)
 
-    DashboardOpenButton := DashboardGui.AddButton("x765 y573 w135 h30 Default", "Zobrazit vozidlo")
+    DashboardOpenButton := DashboardGui.AddButton("x475 y608 w135 h30 Default", "Zobrazit vozidlo")
     DashboardOpenButton.OnEvent("Click", OpenSelectedDashboardVehicle)
 
-    closeButton := DashboardGui.AddButton("x905 y573 w100 h30", "Zavřít")
+    closeButton := DashboardGui.AddButton("x620 y608 w110 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseDashboardDialog)
 
-    DashboardShowOnLaunchCtrl := DashboardGui.AddCheckBox("x40 y615 w320", "Zobrazovat dashboard při startu")
+    DashboardShowOnLaunchCtrl := DashboardGui.AddCheckBox("x40 y650 w320", "Zobrazovat dashboard při startu")
     DashboardShowOnLaunchCtrl.Value := GetShowDashboardOnLaunchEnabled()
     DashboardShowOnLaunchCtrl.OnEvent("Click", OnDashboardShowOnLaunchChanged)
 
-    DashboardGui.Show("w1020 h670")
+    DashboardGui.Show("w1020 h705")
     PopulateDashboardList(true)
     if (DashboardEntries.Length = 0) {
         closeButton.Focus()
@@ -2532,7 +2570,7 @@ OpenDashboardDialog(showMainOnClose := false) {
 }
 
 CloseDashboardDialog(*) {
-    global DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose, MainGui
+    global DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose, MainGui
 
     if IsObject(DashboardGui) {
         DashboardGui.Destroy()
@@ -2547,6 +2585,7 @@ CloseDashboardDialog(*) {
     DashboardEntries := []
     DashboardOpenButton := 0
     DashboardItemButton := 0
+    DashboardVehicleCostsButton := 0
     DashboardEditButton := 0
     DashboardShowOnLaunchCtrl := 0
 
@@ -2564,7 +2603,7 @@ OnDashboardShowOnLaunchChanged(ctrl, *) {
 }
 
 PopulateDashboardList(focusList := false) {
-    global DashboardEntries, DashboardList, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardOpenButton, DashboardItemButton, DashboardEditButton
+    global DashboardEntries, DashboardList, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardOpenButton, DashboardItemButton, DashboardVehicleCostsButton, DashboardEditButton
 
     if !IsObject(DashboardList) {
         return
@@ -2605,6 +2644,10 @@ PopulateDashboardList(focusList := false) {
 
     if IsObject(DashboardItemButton) {
         DashboardItemButton.Opt(DashboardEntries.Length = 0 ? "+Disabled" : "-Disabled")
+    }
+
+    if IsObject(DashboardVehicleCostsButton) {
+        DashboardVehicleCostsButton.Opt(DashboardEntries.Length = 0 ? "+Disabled" : "-Disabled")
     }
 
     if IsObject(DashboardEditButton) {
@@ -3237,6 +3280,19 @@ OpenSelectedDashboardVehicle(*) {
 
     CloseDashboardDialog()
     OpenVehicleDetailDialog(entry.vehicle)
+}
+
+OpenSelectedDashboardVehicleCosts(*) {
+    global AppTitle
+
+    entry := GetSelectedDashboardEntry()
+    if !IsObject(entry) {
+        MsgBox("Nejprve vyberte položku, jejíž náklady chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    CloseDashboardDialog()
+    OpenVehicleCostSummaryDialog(entry.vehicle)
 }
 
 EditSelectedDashboardVehicle(*) {
@@ -6830,14 +6886,14 @@ SaveVehicleRecordFromForm(*) {
 }
 
 OpenVehicleReminderDialog(vehicle, openAddEntry := false, selectEntryId := "") {
-    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderVehicleId, ReminderList, ReminderSummaryLabel, ReminderAllEntries, ReminderSearchCtrl, VisibleReminderIds, ReminderSortColumn, ReminderSortDescending, ReminderFormGui, CostSummaryGui
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderVehicleId, ReminderList, ReminderSummaryLabel, ReminderAllEntries, ReminderSearchCtrl, VisibleReminderIds, ReminderSortColumn, ReminderSortDescending, ReminderFormGui, CostSummaryGui, FleetCostGui
 
     if IsObject(ReminderGui) {
         WinActivate("ahk_id " ReminderGui.Hwnd)
         return
     }
 
-    for guiRef in [FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderFormGui, CostSummaryGui] {
+    for guiRef in [FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderFormGui, CostSummaryGui, FleetCostGui] {
         if IsObject(guiRef) {
             WinActivate("ahk_id " guiRef.Hwnd)
             return
@@ -7316,7 +7372,7 @@ SaveVehicleReminderFromForm(*) {
 }
 
 OpenVehicleCostSummaryDialog(vehicle) {
-    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, FleetCostGui
     global CostSummaryGui, CostSummaryVehicleId, CostSummarySummaryLabel, CostSummaryList, CostSummaryPeriodYearCtrl, CostSummaryPresetCtrl, CostSummaryFromMonthCtrl, CostSummaryToMonthCtrl, CostSummaryPeriodSummaryLabel, CostSummaryPeriodList
     global CostSummaryPresetOptions, MonthOptionLabels
 
@@ -7325,7 +7381,7 @@ OpenVehicleCostSummaryDialog(vehicle) {
         return
     }
 
-    for guiRef in [FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui] {
+    for guiRef in [FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, FleetCostGui] {
         if IsObject(guiRef) {
             WinActivate("ahk_id " guiRef.Hwnd)
             return
@@ -7432,6 +7488,253 @@ CloseVehicleCostSummaryDialog(*) {
     CostSummaryPeriodList := 0
     MainGui.Opt("-Disabled")
     ShowMainWindow()
+}
+
+OpenFleetCostOverviewDialog(*) {
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui
+    global FleetCostGui, FleetCostRows, FleetCostSummaryLabel, FleetCostList, FleetCostPeriodYearCtrl, FleetCostPresetCtrl, FleetCostFromMonthCtrl, FleetCostToMonthCtrl, FleetCostPeriodSummaryLabel, FleetCostPeriodList, FleetCostVehicleCostsButton, FleetCostOpenButton, FleetCostEditButton
+    global CostSummaryPresetOptions, MonthOptionLabels
+
+    if IsObject(FleetCostGui) {
+        WinActivate("ahk_id " FleetCostGui.Hwnd)
+        return
+    }
+
+    for guiRef in [DashboardGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui] {
+        if IsObject(guiRef) {
+            WinActivate("ahk_id " guiRef.Hwnd)
+            return
+        }
+    }
+
+    ShowMainWindow()
+
+    FleetCostRows := []
+    FleetCostGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Náklady napříč vozidly")
+    FleetCostGui.SetFont("s10", "Segoe UI")
+    FleetCostGui.OnEvent("Close", CloseFleetCostOverviewDialog)
+    FleetCostGui.OnEvent("Escape", CloseFleetCostOverviewDialog)
+
+    MainGui.Opt("+Disabled")
+
+    yearOptions := GetFleetCostSummaryYearOptions()
+
+    FleetCostGui.AddText("x20 y20 w980", "Zde vidíte náklady napříč všemi vozidly za vybrané období. Přehled ukazuje rozložení částek mezi vozidla, aktivní vozidla bez číselného nákladu i rychlé problémové stavy, které stojí za pozornost.")
+
+    FleetCostGui.AddGroupBox("x20 y55 w980 h225", "Vybrané období")
+    FleetCostGui.AddText("x35 y85 w55", "Rok")
+    FleetCostPeriodYearCtrl := FleetCostGui.AddDropDownList("x95 y82 w100", yearOptions)
+    SetDropDownToText(FleetCostPeriodYearCtrl, FormatTime(A_Now, "yyyy"), yearOptions)
+
+    FleetCostGui.AddText("x215 y85 w75", "Předvolba")
+    FleetCostPresetCtrl := FleetCostGui.AddDropDownList("x295 y82 w220", CostSummaryPresetOptions)
+    FleetCostPresetCtrl.Value := 7
+    FleetCostPresetCtrl.OnEvent("Change", OnFleetCostPresetChanged)
+
+    refreshPeriodButton := FleetCostGui.AddButton("x535 y80 w145 h28", "Obnovit období")
+    refreshPeriodButton.OnEvent("Click", RefreshFleetCostOverview)
+
+    FleetCostGui.AddText("x35 y120 w70", "Od měsíce")
+    FleetCostFromMonthCtrl := FleetCostGui.AddDropDownList("x110 y117 w170", MonthOptionLabels)
+    FleetCostFromMonthCtrl.Value := 1
+    FleetCostFromMonthCtrl.OnEvent("Change", OnFleetCostFromMonthChanged)
+
+    FleetCostGui.AddText("x300 y120 w70", "Do měsíce")
+    FleetCostToMonthCtrl := FleetCostGui.AddDropDownList("x375 y117 w170", MonthOptionLabels)
+    FleetCostToMonthCtrl.Value := 12
+    FleetCostToMonthCtrl.OnEvent("Change", OnFleetCostToMonthChanged)
+
+    FleetCostPeriodYearCtrl.OnEvent("Change", RefreshFleetCostOverview)
+
+    FleetCostPeriodSummaryLabel := FleetCostGui.AddText("x35 y155 w940 h32", "")
+
+    FleetCostPeriodList := FleetCostGui.AddListView("x35 y190 w940 h75 Grid -Multi", ["Skupina", "Počet položek", "Částka"])
+    FleetCostPeriodList.ModifyCol(1, "280")
+    FleetCostPeriodList.ModifyCol(2, "140")
+    FleetCostPeriodList.ModifyCol(3, "180")
+
+    FleetCostGui.AddGroupBox("x20 y295 w980 h250", "Vozidla a stavy v období")
+    FleetCostSummaryLabel := FleetCostGui.AddText("x35 y325 w940 h32", "")
+
+    FleetCostList := FleetCostGui.AddListView("x35 y360 w940 h145 Grid -Multi", ["Vozidlo", "Kategorie", "SPZ", "Tankování", "Historie", "Doklady", "Celkem", "Stav"])
+    FleetCostList.OnEvent("DoubleClick", OpenSelectedFleetVehicleCostSummary)
+    FleetCostList.ModifyCol(1, "185")
+    FleetCostList.ModifyCol(2, "135")
+    FleetCostList.ModifyCol(3, "90")
+    FleetCostList.ModifyCol(4, "120")
+    FleetCostList.ModifyCol(5, "120")
+    FleetCostList.ModifyCol(6, "120")
+    FleetCostList.ModifyCol(7, "120")
+    FleetCostList.ModifyCol(8, "270")
+
+    FleetCostVehicleCostsButton := FleetCostGui.AddButton("x130 y515 w150 h30", "Náklady vozidla")
+    FleetCostVehicleCostsButton.OnEvent("Click", OpenSelectedFleetVehicleCostSummary)
+
+    FleetCostOpenButton := FleetCostGui.AddButton("x290 y515 w150 h30", "Detail vozidla")
+    FleetCostOpenButton.OnEvent("Click", OpenSelectedFleetCostVehicleDetail)
+
+    FleetCostEditButton := FleetCostGui.AddButton("x450 y515 w150 h30", "Upravit vozidlo")
+    FleetCostEditButton.OnEvent("Click", EditSelectedFleetCostVehicle)
+
+    closeButton := FleetCostGui.AddButton("x760 y515 w110 h30", "Zavřít")
+    closeButton.OnEvent("Click", CloseFleetCostOverviewDialog)
+
+    FleetCostGui.Show("w1020 h575")
+    RefreshFleetCostOverview()
+    closeButton.Focus()
+}
+
+CloseFleetCostOverviewDialog(*) {
+    global FleetCostGui, FleetCostRows, FleetCostSummaryLabel, FleetCostList, FleetCostPeriodYearCtrl, FleetCostPresetCtrl, FleetCostFromMonthCtrl, FleetCostToMonthCtrl, FleetCostPeriodSummaryLabel, FleetCostPeriodList, FleetCostVehicleCostsButton, FleetCostOpenButton, FleetCostEditButton, MainGui
+
+    if IsObject(FleetCostGui) {
+        FleetCostGui.Destroy()
+        FleetCostGui := 0
+    }
+
+    FleetCostRows := []
+    FleetCostSummaryLabel := 0
+    FleetCostList := 0
+    FleetCostPeriodYearCtrl := 0
+    FleetCostPresetCtrl := 0
+    FleetCostFromMonthCtrl := 0
+    FleetCostToMonthCtrl := 0
+    FleetCostPeriodSummaryLabel := 0
+    FleetCostPeriodList := 0
+    FleetCostVehicleCostsButton := 0
+    FleetCostOpenButton := 0
+    FleetCostEditButton := 0
+
+    MainGui.Opt("-Disabled")
+    ShowMainWindow()
+}
+
+GetSelectedFleetCostRow() {
+    global FleetCostList, FleetCostRows
+
+    if !IsObject(FleetCostList) {
+        return ""
+    }
+
+    row := FleetCostList.GetNext(0)
+    if !row || row > FleetCostRows.Length {
+        return ""
+    }
+
+    return FleetCostRows[row]
+}
+
+OpenSelectedFleetVehicleCostSummary(*) {
+    global AppTitle
+
+    row := GetSelectedFleetCostRow()
+    if !IsObject(row) {
+        MsgBox("Nejprve vyberte vozidlo, jehož náklady chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    CloseFleetCostOverviewDialog()
+    OpenVehicleCostSummaryDialog(row.vehicle)
+}
+
+OpenSelectedFleetCostVehicleDetail(*) {
+    global AppTitle
+
+    row := GetSelectedFleetCostRow()
+    if !IsObject(row) {
+        MsgBox("Nejprve vyberte vozidlo, které chcete zobrazit.", AppTitle, 0x40)
+        return
+    }
+
+    CloseFleetCostOverviewDialog()
+    OpenVehicleDetailDialog(row.vehicle)
+}
+
+EditSelectedFleetCostVehicle(*) {
+    global AppTitle
+
+    row := GetSelectedFleetCostRow()
+    if !IsObject(row) {
+        MsgBox("Nejprve vyberte vozidlo, které chcete upravit.", AppTitle, 0x40)
+        return
+    }
+
+    CloseFleetCostOverviewDialog()
+    OpenVehicleForm("edit", row.vehicle)
+}
+
+RefreshFleetCostOverview(*) {
+    global FleetCostRows, FleetCostSummaryLabel, FleetCostList, FleetCostPeriodYearCtrl, FleetCostFromMonthCtrl, FleetCostToMonthCtrl, FleetCostPeriodSummaryLabel, FleetCostPeriodList, FleetCostVehicleCostsButton, FleetCostOpenButton, FleetCostEditButton
+
+    if !IsObject(FleetCostList) || !IsObject(FleetCostPeriodList) {
+        return
+    }
+
+    yearLabel := GetSelectedFleetCostYear()
+    fromMonth := GetSelectedMonthOptionValue(FleetCostFromMonthCtrl)
+    toMonth := GetSelectedMonthOptionValue(FleetCostToMonthCtrl)
+    NormalizeFleetCostMonthRange(&fromMonth, &toMonth)
+    SetFleetCostMonthControls(fromMonth, toMonth)
+
+    summary := BuildFleetCostPeriodSummary(yearLabel, fromMonth, toMonth)
+
+    FleetCostPeriodSummaryLabel.Text := BuildFleetCostPeriodSummaryText(summary)
+    FleetCostSummaryLabel.Text := BuildFleetCostRowsSummaryText(summary)
+
+    FleetCostPeriodList.Opt("-Redraw")
+    FleetCostPeriodList.Delete()
+    FleetCostPeriodList.Add("", "Tankování", summary.fuelCount, FormatCostAmount(summary.totalFuel))
+    FleetCostPeriodList.Add("", "Historie a servis", summary.historyCount, FormatCostAmount(summary.totalHistory))
+    FleetCostPeriodList.Add("", "Doklady a pojištění", summary.recordCount, FormatCostAmount(summary.totalRecords))
+    FleetCostPeriodList.Add("", "Celkem", summary.parsedCount, FormatCostAmount(summary.totalFuel + summary.totalHistory + summary.totalRecords))
+    FleetCostPeriodList.Opt("+Redraw")
+
+    FleetCostRows := summary.rows
+    FleetCostList.Opt("-Redraw")
+    FleetCostList.Delete()
+    for row in FleetCostRows {
+        plateText := Trim(row.vehicle.plate) = "" ? "-" : row.vehicle.plate
+        FleetCostList.Add("", row.vehicle.name, row.vehicle.category, plateText, FormatCostAmount(row.fuel), FormatCostAmount(row.history), FormatCostAmount(row.records), FormatCostAmount(row.total), row.status)
+    }
+    FleetCostList.Opt("+Redraw")
+
+    hasRows := FleetCostRows.Length > 0
+    if IsObject(FleetCostVehicleCostsButton) {
+        FleetCostVehicleCostsButton.Opt(hasRows ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(FleetCostOpenButton) {
+        FleetCostOpenButton.Opt(hasRows ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(FleetCostEditButton) {
+        FleetCostEditButton.Opt(hasRows ? "-Disabled" : "+Disabled")
+    }
+
+    if hasRows {
+        FleetCostList.Modify(1, "Select Focus Vis")
+    }
+}
+
+OnFleetCostPresetChanged(*) {
+    ApplyFleetCostPreset()
+    RefreshFleetCostOverview()
+}
+
+OnFleetCostFromMonthChanged(*) {
+    if (GetSelectedFleetCostPresetLength() > 0) {
+        ApplyFleetCostPreset()
+    }
+    NormalizeFleetCostMonthControls()
+    RefreshFleetCostOverview()
+}
+
+OnFleetCostToMonthChanged(*) {
+    global FleetCostPresetCtrl
+
+    if IsObject(FleetCostPresetCtrl) && FleetCostPresetCtrl.Value != 1 {
+        FleetCostPresetCtrl.Value := 1
+    }
+    NormalizeFleetCostMonthControls()
+    RefreshFleetCostOverview()
 }
 
 OpenVehicleDetailFromCostSummary(*) {
@@ -8070,6 +8373,522 @@ GetSelectedMonthOptionValue(ctrl) {
     }
 
     return 1
+}
+
+GetSelectedFleetCostPresetLength() {
+    global FleetCostPresetCtrl
+
+    if !IsObject(FleetCostPresetCtrl) {
+        return 12
+    }
+
+    switch FleetCostPresetCtrl.Value {
+        case 2:
+            return 1
+        case 3:
+            return 2
+        case 4:
+            return 3
+        case 5:
+            return 6
+        case 6:
+            return 9
+        case 7:
+            return 12
+        default:
+            return 0
+    }
+}
+
+GetSelectedFleetCostYear() {
+    global FleetCostPeriodYearCtrl
+
+    if !IsObject(FleetCostPeriodYearCtrl) {
+        return FormatTime(A_Now, "yyyy")
+    }
+
+    yearLabel := Trim(FleetCostPeriodYearCtrl.Text)
+    if RegExMatch(yearLabel, "^\d{4}$") {
+        return yearLabel
+    }
+
+    return FormatTime(A_Now, "yyyy")
+}
+
+ApplyFleetCostPreset() {
+    global FleetCostFromMonthCtrl
+
+    presetLength := GetSelectedFleetCostPresetLength()
+    if (presetLength < 1) {
+        NormalizeFleetCostMonthControls()
+        return
+    }
+
+    if (presetLength >= 12) {
+        SetFleetCostMonthControls(1, 12)
+        return
+    }
+
+    fromMonth := GetSelectedMonthOptionValue(FleetCostFromMonthCtrl)
+    toMonth := fromMonth + presetLength - 1
+    if (toMonth > 12) {
+        toMonth := 12
+        fromMonth := toMonth - presetLength + 1
+    }
+
+    SetFleetCostMonthControls(fromMonth, toMonth)
+}
+
+NormalizeFleetCostMonthControls() {
+    global FleetCostFromMonthCtrl, FleetCostToMonthCtrl
+
+    fromMonth := GetSelectedMonthOptionValue(FleetCostFromMonthCtrl)
+    toMonth := GetSelectedMonthOptionValue(FleetCostToMonthCtrl)
+    NormalizeFleetCostMonthRange(&fromMonth, &toMonth)
+    SetFleetCostMonthControls(fromMonth, toMonth)
+}
+
+NormalizeFleetCostMonthRange(&fromMonth, &toMonth) {
+    NormalizeCostSummaryMonthRange(&fromMonth, &toMonth)
+}
+
+SetFleetCostMonthControls(fromMonth, toMonth) {
+    global FleetCostFromMonthCtrl, FleetCostToMonthCtrl
+
+    if IsObject(FleetCostFromMonthCtrl) {
+        FleetCostFromMonthCtrl.Value := fromMonth
+    }
+    if IsObject(FleetCostToMonthCtrl) {
+        FleetCostToMonthCtrl.Value := toMonth
+    }
+}
+
+GetFleetCostSummaryYearOptions() {
+    global VehicleFuelLog, VehicleHistory, VehicleRecords
+
+    seen := Map()
+    items := []
+
+    AddCostSummaryYearOption(&items, &seen, FormatTime(A_Now, "yyyy"))
+
+    for entry in VehicleFuelLog {
+        AddCostSummaryYearOption(&items, &seen, GetYearFromEventDate(entry.entryDate))
+    }
+
+    for entry in VehicleHistory {
+        AddCostSummaryYearOption(&items, &seen, GetYearFromEventDate(entry.eventDate))
+    }
+
+    for entry in VehicleRecords {
+        yearLabel := GetYearFromMonthYear(entry.validTo)
+        if (yearLabel = "") {
+            yearLabel := GetYearFromMonthYear(entry.validFrom)
+        }
+        AddCostSummaryYearOption(&items, &seen, yearLabel)
+    }
+
+    SortYearLabelsDescending(&items)
+    if (items.Length = 0) {
+        items.Push(FormatTime(A_Now, "yyyy"))
+    }
+
+    return items
+}
+
+BuildFleetCostPeriodSummary(yearLabel, fromMonth, toMonth) {
+    global Vehicles, VehicleFuelLog, VehicleHistory, VehicleRecords
+
+    yearValue := yearLabel + 0
+    rowsMap := Map()
+    summary := {
+        year: yearLabel,
+        fromMonth: fromMonth,
+        toMonth: toMonth,
+        totalFuel: 0.0,
+        totalHistory: 0.0,
+        totalRecords: 0.0,
+        fuelCount: 0,
+        historyCount: 0,
+        recordCount: 0,
+        parsedCount: 0,
+        skippedCount: 0,
+        undatedCount: 0,
+        activeVehicleCount: 0,
+        activeWithoutCostCount: 0,
+        vehiclesWithCosts: 0,
+        rows: []
+    }
+
+    for vehicle in Vehicles {
+        if !IsVehicleInactive(vehicle) {
+            summary.activeVehicleCount += 1
+        }
+    }
+
+    for entry in VehicleFuelLog {
+        row := EnsureFleetCostRow(rowsMap, entry.vehicleId)
+        if !IsObject(row) || Trim(entry.totalCost) = "" {
+            continue
+        }
+        if !TryGetEventYearMonth(entry.entryDate, &entryYear, &entryMonth) {
+            summary.undatedCount += 1
+            row.undatedCount += 1
+            continue
+        }
+        if (entryYear != yearValue || entryMonth < fromMonth || entryMonth > toMonth) {
+            continue
+        }
+        if TryParseMoneyAmount(entry.totalCost, &amount) {
+            row.fuel += amount
+            row.total += amount
+            row.parsedCount += 1
+            summary.totalFuel += amount
+            summary.fuelCount += 1
+            summary.parsedCount += 1
+        } else {
+            row.skippedCount += 1
+            summary.skippedCount += 1
+        }
+    }
+
+    for entry in VehicleHistory {
+        row := EnsureFleetCostRow(rowsMap, entry.vehicleId)
+        if !IsObject(row) || Trim(entry.cost) = "" {
+            continue
+        }
+        if !TryGetEventYearMonth(entry.eventDate, &entryYear, &entryMonth) {
+            summary.undatedCount += 1
+            row.undatedCount += 1
+            continue
+        }
+        if (entryYear != yearValue || entryMonth < fromMonth || entryMonth > toMonth) {
+            continue
+        }
+        if TryParseMoneyAmount(entry.cost, &amount) {
+            row.history += amount
+            row.total += amount
+            row.parsedCount += 1
+            summary.totalHistory += amount
+            summary.historyCount += 1
+            summary.parsedCount += 1
+        } else {
+            row.skippedCount += 1
+            summary.skippedCount += 1
+        }
+    }
+
+    for entry in VehicleRecords {
+        row := EnsureFleetCostRow(rowsMap, entry.vehicleId)
+        if !IsObject(row) || Trim(entry.price) = "" {
+            continue
+        }
+        if !TryGetRecordYearMonth(entry, &entryYear, &entryMonth) {
+            summary.undatedCount += 1
+            row.undatedCount += 1
+            continue
+        }
+        if (entryYear != yearValue || entryMonth < fromMonth || entryMonth > toMonth) {
+            continue
+        }
+        if TryParseMoneyAmount(entry.price, &amount) {
+            row.records += amount
+            row.total += amount
+            row.parsedCount += 1
+            summary.totalRecords += amount
+            summary.recordCount += 1
+            summary.parsedCount += 1
+        } else {
+            row.skippedCount += 1
+            summary.skippedCount += 1
+        }
+    }
+
+    for vehicle in Vehicles {
+        if rowsMap.Has(vehicle.id) {
+            continue
+        }
+        if IsVehicleInactive(vehicle) {
+            continue
+        }
+
+        rowsMap[vehicle.id] := CreateFleetCostRow(vehicle)
+    }
+
+    rows := []
+    for _, row in rowsMap {
+        row.status := BuildFleetCostRowStatusText(row)
+        rows.Push(row)
+        if (row.total > 0) {
+            summary.vehiclesWithCosts += 1
+        } else if !IsVehicleInactive(row.vehicle) {
+            summary.activeWithoutCostCount += 1
+        }
+    }
+
+    SortFleetCostRows(&rows)
+    summary.rows := rows
+    return summary
+}
+
+EnsureFleetCostRow(rowsMap, vehicleId) {
+    if (vehicleId = "") {
+        return ""
+    }
+
+    if rowsMap.Has(vehicleId) {
+        return rowsMap[vehicleId]
+    }
+
+    rowsMap[vehicleId] := CreateFleetCostRow(GetFleetCostVehicle(vehicleId))
+    return rowsMap[vehicleId]
+}
+
+GetFleetCostVehicle(vehicleId) {
+    vehicle := FindVehicleById(vehicleId)
+    if IsObject(vehicle) {
+        return vehicle
+    }
+
+    return {
+        id: vehicleId,
+        name: "(neznámé vozidlo)",
+        category: "",
+        plate: "",
+        nextTk: "",
+        greenCardTo: ""
+    }
+}
+
+CreateFleetCostRow(vehicle) {
+    return {
+        vehicle: vehicle,
+        fuel: 0.0,
+        history: 0.0,
+        records: 0.0,
+        total: 0.0,
+        parsedCount: 0,
+        skippedCount: 0,
+        undatedCount: 0,
+        status: ""
+    }
+}
+
+BuildFleetCostPeriodSummaryText(summary) {
+    total := summary.totalFuel + summary.totalHistory + summary.totalRecords
+    periodLabel := BuildVehicleCostPeriodLabel(summary.year, summary.fromMonth, summary.toMonth)
+    if (summary.parsedCount = 0) {
+        text := "Období " periodLabel ": zatím nejsou započítané žádné číselné náklady."
+    } else {
+        text := "Období " periodLabel ": celkem " FormatCostAmount(total) " u " summary.vehiclesWithCosts " vozidel."
+        topText := BuildFleetCostTopVehiclesText(summary)
+        if (topText != "") {
+            text .= " Nejvýš: " topText "."
+        }
+    }
+
+    if (summary.activeWithoutCostCount > 0) {
+        text .= " Bez číselného nákladu: " summary.activeWithoutCostCount " z " summary.activeVehicleCount " aktivních vozidel."
+    }
+
+    if (summary.skippedCount > 0 || summary.undatedCount > 0) {
+        issueParts := []
+        if (summary.skippedCount > 0) {
+            issueParts.Push(summary.skippedCount " s nečíselnou částkou")
+        }
+        if (summary.undatedCount > 0) {
+            issueParts.Push(summary.undatedCount " bez použitelného data")
+        }
+        text .= " Nezapočteno: " JoinInline(issueParts, ", ") "."
+    }
+
+    return text
+}
+
+BuildFleetCostRowsSummaryText(summary) {
+    if (summary.rows.Length = 0) {
+        return "Momentálně tu nejsou žádná vozidla ani položky, které by šlo do přehledu zahrnout."
+    }
+
+    issueVehicleCount := CountFleetCostRowsWithIssues(summary.rows)
+    text := "Zobrazeno " summary.rows.Length " vozidel."
+    if (summary.vehiclesWithCosts > 0) {
+        text .= " Náklad v období má " summary.vehiclesWithCosts " vozidel."
+    }
+    if (summary.activeWithoutCostCount > 0) {
+        text .= " Bez nákladu zůstává " summary.activeWithoutCostCount " aktivních vozidel."
+    }
+    if (issueVehicleCount > 0) {
+        text .= " U " issueVehicleCount " vozidel je navíc stav k řešení."
+    }
+
+    highlights := BuildFleetCostRowHighlightsText(summary.rows)
+    if (highlights != "") {
+        text .= " Nejvíc pálí: " highlights "."
+    }
+
+    return text
+}
+
+BuildFleetCostTopVehiclesText(summary, limit := 3) {
+    parts := []
+    for row in summary.rows {
+        if (row.total <= 0) {
+            continue
+        }
+
+        parts.Push(ShortenText(row.vehicle.name, 24) " " FormatCostAmount(row.total))
+        if (parts.Length >= limit) {
+            break
+        }
+    }
+
+    return JoinInline(parts, ", ")
+}
+
+BuildFleetCostRowHighlightsText(rows, limit := 3) {
+    parts := []
+    for row in rows {
+        if !FleetCostRowHasActionableIssue(row) {
+            continue
+        }
+
+        detail := GetFirstFleetCostRowIssueText(row)
+        if (detail = "") {
+            continue
+        }
+
+        parts.Push(ShortenText(row.vehicle.name, 22) " (" detail ")")
+        if (parts.Length >= limit) {
+            break
+        }
+    }
+
+    return JoinInline(parts, ", ")
+}
+
+CountFleetCostRowsWithIssues(rows) {
+    count := 0
+    for row in rows {
+        if FleetCostRowHasActionableIssue(row) {
+            count += 1
+        }
+    }
+
+    return count
+}
+
+BuildFleetCostRowStatusText(row) {
+    parts := []
+    attentionText := GetVehicleStatusText(row.vehicle)
+    if (attentionText != "") {
+        parts.Push(attentionText)
+    }
+    if VehicleHasMissingGreenCard(row.vehicle) {
+        parts.Push("ZK chybí")
+    }
+
+    meta := GetVehicleMeta(row.vehicle.id)
+    state := NormalizeVehicleState(meta.state)
+    if (state != "" && state != "Běžný provoz") {
+        parts.Push(state)
+    }
+
+    if (row.total <= 0 && !IsVehicleInactive(row.vehicle)) {
+        parts.Push("Bez nákladu v období")
+    }
+    if (row.skippedCount > 0) {
+        parts.Push("Nečíselné částky: " row.skippedCount)
+    }
+    if (row.undatedCount > 0) {
+        parts.Push("Bez data: " row.undatedCount)
+    }
+    if (parts.Length = 0) {
+        return row.parsedCount > 0 ? "Započteno položek: " row.parsedCount : "V pořádku"
+    }
+
+    return JoinInline(parts, "; ")
+}
+
+FleetCostRowHasActionableIssue(row) {
+    return GetFleetCostRowIssueScore(row) > 0
+}
+
+GetFirstFleetCostRowIssueText(row) {
+    attentionText := GetVehicleStatusText(row.vehicle)
+    if (attentionText != "") {
+        return attentionText
+    }
+    if VehicleHasMissingGreenCard(row.vehicle) {
+        return "ZK chybí"
+    }
+    if (row.total <= 0 && !IsVehicleInactive(row.vehicle)) {
+        return "Bez nákladu v období"
+    }
+    if (row.skippedCount > 0) {
+        return "Nečíselné částky: " row.skippedCount
+    }
+    if (row.undatedCount > 0) {
+        return "Bez data: " row.undatedCount
+    }
+
+    return ""
+}
+
+GetFleetCostRowIssueScore(row) {
+    score := row.skippedCount + row.undatedCount
+    if (GetVehicleStatusText(row.vehicle) != "") {
+        score += 3
+    }
+    if VehicleHasMissingGreenCard(row.vehicle) {
+        score += 2
+    }
+    if (row.total <= 0 && !IsVehicleInactive(row.vehicle)) {
+        score += 1
+    }
+
+    return score
+}
+
+SortFleetCostRows(&rows) {
+    count := rows.Length
+    if (count < 2) {
+        return
+    }
+
+    Loop count - 1 {
+        i := A_Index + 1
+        current := rows[i]
+        j := i - 1
+
+        while (j >= 1 && CompareFleetCostRows(current, rows[j]) < 0) {
+            rows[j + 1] := rows[j]
+            j -= 1
+        }
+        rows[j + 1] := current
+    }
+}
+
+CompareFleetCostRows(left, right) {
+    if (left.total > right.total) {
+        return -1
+    }
+    if (left.total < right.total) {
+        return 1
+    }
+
+    result := CompareNumberValues(GetFleetCostRowIssueScore(right), GetFleetCostRowIssueScore(left))
+    if (result != 0) {
+        return result
+    }
+
+    leftInactive := IsVehicleInactive(left.vehicle) ? 1 : 0
+    rightInactive := IsVehicleInactive(right.vehicle) ? 1 : 0
+    result := CompareNumberValues(leftInactive, rightInactive)
+    if (result != 0) {
+        return result
+    }
+
+    return CompareVehicles(left.vehicle, right.vehicle)
 }
 
 BuildVehicleCostSummary(vehicleId) {

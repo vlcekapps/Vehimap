@@ -16,6 +16,7 @@ RunSmokeTests() {
         "SmokeTestSemVerComparison",
         "SmokeTestGlobalSearch",
         "SmokeTestRecordPathInfo",
+        "SmokeTestFleetCostSummary",
         "SmokeTestDashboardCosts",
         "SmokeTestDashboardProblemHighlights",
         "SmokeTestDashboardDataSummary",
@@ -225,6 +226,61 @@ SmokeTestRecordPathInfo() {
     AssertEqual(GetVehicleRecordPathInfo({filePath: missingFile}).kind, "missing_file", "Chybějící soubor ve známé složce má být rozpoznaný.")
     AssertEqual(GetVehicleRecordPathInfo({filePath: missingFolder}).kind, "missing_folder", "Chybějící složka má být rozpoznaná.")
     AssertEqual(GetVehicleRecordPathInfo({filePath: ""}).kind, "empty", "Prázdná cesta má být rozpoznaná jako empty.")
+}
+
+SmokeTestFleetCostSummary() {
+    global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords, VehicleMetaEntries
+
+    ResetSmokeData()
+    currentYear := FormatTime(A_Now, "yyyy")
+    Vehicles := [
+        {id: "veh_1", name: "Skoda", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "1AB2345", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
+        {id: "veh_2", name: "Yamaha", category: "Motocykly", vehicleType: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
+        {id: "veh_3", name: "Transit", category: "Nákladní vozidla", vehicleType: "", makeModel: "", plate: "3AB4567", year: "", power: "", lastTk: "", nextTk: "03/2027", greenCardFrom: "", greenCardTo: "04/2026"},
+        {id: "veh_4", name: "Bez nákladu", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""}
+    ]
+    VehicleMetaEntries := [
+        {vehicleId: "veh_3", state: "Archiv", tags: ""}
+    ]
+    VehicleFuelLog := [
+        {id: "fuel_1", vehicleId: "veh_1", entryDate: "01.02." currentYear, odometer: "10000", liters: "40", totalCost: "1000", fullTank: 1, fuelType: "Benzin", note: ""},
+        {id: "fuel_2", vehicleId: "veh_2", entryDate: "03.02." currentYear, odometer: "5000", liters: "15", totalCost: "nevim", fullTank: 1, fuelType: "Benzin", note: ""}
+    ]
+    VehicleHistory := [
+        {id: "hist_1", vehicleId: "veh_1", eventDate: "05.02." currentYear, eventType: "Servis", odometer: "10100", cost: "2000", note: ""}
+    ]
+    VehicleRecords := [
+        {id: "record_1", vehicleId: "veh_2", recordType: "Povinné ručení", title: "Pojistka", provider: "", validFrom: "02/" currentYear, validTo: "03/" currentYear, price: "1500", filePath: "", note: ""},
+        {id: "record_2", vehicleId: "veh_1", recordType: "Doklad", title: "Bez data", provider: "", validFrom: "", validTo: "", price: "900", filePath: "", note: ""}
+    ]
+
+    summary := BuildFleetCostPeriodSummary(currentYear, 1, 12)
+    AssertEqual(summary.parsedCount, 3, "Fleet cost summary měl započítat tři číselné položky.")
+    AssertEqual(summary.totalFuel, 1000.0, "Fleet součet tankování nesedí.")
+    AssertEqual(summary.totalHistory, 2000.0, "Fleet součet historie nesedí.")
+    AssertEqual(summary.totalRecords, 1500.0, "Fleet součet dokladů nesedí.")
+    AssertEqual(summary.skippedCount, 1, "Fleet summary měl zachytit jednu nečíselnou částku.")
+    AssertEqual(summary.undatedCount, 1, "Fleet summary měl zachytit jednu položku bez použitelného data.")
+    AssertEqual(summary.activeVehicleCount, 3, "Fleet summary má počítat jen aktivní vozidla.")
+    AssertEqual(summary.activeWithoutCostCount, 1, "Fleet summary má ukázat aktivní vozidla bez číselného nákladu.")
+    AssertEqual(summary.rows[1].vehicle.id, "veh_1", "Nejvýš má být ve fleet přehledu vozidlo s nejvyšším součtem.")
+
+    summaryText := BuildFleetCostPeriodSummaryText(summary)
+    AssertContains(summaryText, "Bez číselného nákladu: 1 z 3 aktivních vozidel.", "Fleet souhrn má upozornit na aktivní vozidla bez nákladu.")
+    AssertContains(summaryText, "Nezapočteno: 1 s nečíselnou částkou, 1 bez použitelného data.", "Fleet souhrn má zmínit přeskočené položky.")
+
+    rowSummaryText := BuildFleetCostRowsSummaryText(summary)
+    AssertContains(rowSummaryText, "Nejvíc pálí:", "Fleet přehled má vypsat i rychlé highlighty problémových stavů.")
+
+    zeroRow := ""
+    for row in summary.rows {
+        if (row.vehicle.id = "veh_4") {
+            zeroRow := row
+            break
+        }
+    }
+    AssertTrue(IsObject(zeroRow), "Vozidlo bez nákladů musí být ve fleet přehledu zachované.")
+    AssertContains(zeroRow.status, "Bez nákladu v období", "Řádek bez nákladů má mít jasný stav.")
 }
 
 SmokeTestDashboardCosts() {
