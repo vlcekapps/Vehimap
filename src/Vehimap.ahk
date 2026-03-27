@@ -55,9 +55,11 @@ global OverviewAllEntries := []
 global OverviewSummaryLabel := 0
 global OverviewFilterCtrl := 0
 global OverviewSearchCtrl := 0
+global OverviewItemButton := 0
 global OverviewOpenButton := 0
 global OverviewEditButton := 0
 global OverviewShowMissingGreenCtrl := 0
+global OverviewShowDataIssuesCtrl := 0
 global OverviewSortColumn := 6
 global OverviewSortDescending := false
 global OverdueGui := 0
@@ -66,6 +68,7 @@ global OverdueEntries := []
 global OverdueAllEntries := []
 global OverdueSummaryLabel := 0
 global OverdueSearchCtrl := 0
+global OverdueItemButton := 0
 global OverdueOpenButton := 0
 global OverdueEditButton := 0
 global GlobalSearchGui := 0
@@ -208,6 +211,7 @@ Enter::OpenSelectedDashboardItem()
 #HotIf IsGuiWindowActive(OverviewGui)
 ^f::FocusOverviewSearchShortcut()
 ^r::RefreshUpcomingOverviewDialog()
+^p::OpenSelectedOverviewItem()
 ^u::EditSelectedOverviewVehicle()
 F2::EditSelectedOverviewVehicle()
 ^o::OpenSelectedOverviewVehicle()
@@ -215,12 +219,13 @@ F2::EditSelectedOverviewVehicle()
 #HotIf
 
 #HotIf IsListViewFocusedInGui(OverviewGui)
-Enter::OpenSelectedOverviewVehicle()
+Enter::OpenSelectedOverviewItem()
 #HotIf
 
 #HotIf IsGuiWindowActive(OverdueGui)
 ^f::FocusOverdueSearchShortcut()
 ^r::RefreshOverdueDialog()
+^p::OpenSelectedOverdueItem()
 ^u::EditSelectedOverdueVehicle()
 F2::EditSelectedOverdueVehicle()
 ^o::OpenSelectedOverdueVehicle()
@@ -228,7 +233,7 @@ F2::EditSelectedOverdueVehicle()
 #HotIf
 
 #HotIf IsListViewFocusedInGui(OverdueGui)
-Enter::OpenSelectedOverdueVehicle()
+Enter::OpenSelectedOverdueItem()
 #HotIf
 
 #HotIf IsGuiWindowActive(DetailGui)
@@ -2061,7 +2066,7 @@ BuildDashboardCurrentYearCostSummary() {
         if TryParseMoneyAmount(entry.totalCost, &amount) {
             summary.totalFuel += amount
             summary.parsedCount += 1
-            AddDashboardVehicleCostTotal(&summary.vehicleTotals, entry.vehicleId, amount)
+            AddDashboardVehicleCostTotal(summary.vehicleTotals, entry.vehicleId, amount)
         } else {
             summary.skippedCount += 1
         }
@@ -2082,7 +2087,7 @@ BuildDashboardCurrentYearCostSummary() {
         if TryParseMoneyAmount(entry.cost, &amount) {
             summary.totalHistory += amount
             summary.parsedCount += 1
-            AddDashboardVehicleCostTotal(&summary.vehicleTotals, entry.vehicleId, amount)
+            AddDashboardVehicleCostTotal(summary.vehicleTotals, entry.vehicleId, amount)
         } else {
             summary.skippedCount += 1
         }
@@ -2103,7 +2108,7 @@ BuildDashboardCurrentYearCostSummary() {
         if TryParseMoneyAmount(entry.price, &amount) {
             summary.totalRecords += amount
             summary.parsedCount += 1
-            AddDashboardVehicleCostTotal(&summary.vehicleTotals, entry.vehicleId, amount)
+            AddDashboardVehicleCostTotal(summary.vehicleTotals, entry.vehicleId, amount)
         } else {
             summary.skippedCount += 1
         }
@@ -2119,7 +2124,7 @@ BuildDashboardCurrentYearCostSummary() {
     return summary
 }
 
-AddDashboardVehicleCostTotal(&vehicleTotals, vehicleId, amount) {
+AddDashboardVehicleCostTotal(vehicleTotals, vehicleId, amount) {
     if !vehicleTotals.Has(vehicleId) {
         vehicleTotals[vehicleId] := 0.0
     }
@@ -2157,13 +2162,7 @@ BuildDashboardDataSummaryText() {
 }
 
 BuildDashboardEntries() {
-    entries := BuildUpcomingOverviewEntries(true)
-
-    for entry in BuildDashboardDataIssueEntries() {
-        entries.Push(entry)
-    }
-
-    return entries
+    return BuildUpcomingOverviewEntries(true, true)
 }
 
 BuildDashboardDataIssueEntries() {
@@ -2401,7 +2400,7 @@ EditSelectedDashboardVehicle(*) {
 }
 
 OpenUpcomingOverviewDialog(*) {
-    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverviewList, OverviewEntries, OverviewAllEntries, OverviewSummaryLabel, OverviewFilterCtrl, OverviewSearchCtrl, OverviewOpenButton, OverviewEditButton, OverviewShowMissingGreenCtrl, OverviewSortColumn, OverviewSortDescending, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverviewList, OverviewEntries, OverviewAllEntries, OverviewSummaryLabel, OverviewFilterCtrl, OverviewSearchCtrl, OverviewItemButton, OverviewOpenButton, OverviewEditButton, OverviewShowMissingGreenCtrl, OverviewShowDataIssuesCtrl, OverviewSortColumn, OverviewSortDescending, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
 
     if IsObject(OverviewGui) {
         WinActivate("ahk_id " OverviewGui.Hwnd)
@@ -2467,7 +2466,7 @@ OpenUpcomingOverviewDialog(*) {
 
     OverviewSortColumn := GetOverviewSortColumnSetting()
     OverviewSortDescending := GetOverviewSortDescendingSetting()
-    OverviewAllEntries := BuildUpcomingOverviewEntries(GetOverviewIncludeMissingGreenSetting())
+    OverviewAllEntries := BuildUpcomingOverviewEntries(GetOverviewIncludeMissingGreenSetting(), GetOverviewIncludeDataIssuesSetting())
     OverviewEntries := []
     OverviewGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Přehled termínů")
     OverviewGui.SetFont("s10", "Segoe UI")
@@ -2476,9 +2475,9 @@ OpenUpcomingOverviewDialog(*) {
 
     MainGui.Opt("+Disabled")
 
-    OverviewGui.AddText("x20 y20 w780", "Zde vidíte všechny blížící se a propadlé termíny technických kontrol, zelených karet a vlastních připomínek podle aktuálního nastavení upozornění.")
+    OverviewGui.AddText("x20 y20 w860", "Zde vidíte všechny blížící se a propadlé termíny technických kontrol, zelených karet a vlastních připomínek podle aktuálního nastavení upozornění. Volitelně můžete přidat i datové nedostatky k doplnění.")
     OverviewGui.AddText("x20 y55 w90", "Filtr zobrazení")
-    OverviewFilterCtrl := OverviewGui.AddDropDownList("x120 y52 w220 Choose1", ["Vše", "Jen technické kontroly", "Jen zelené karty", "Jen vlastní připomínky"])
+    OverviewFilterCtrl := OverviewGui.AddDropDownList("x120 y52 w220 Choose1", ["Vše", "Jen technické kontroly", "Jen zelené karty", "Jen vlastní připomínky", "Jen datové nedostatky"])
     OverviewFilterCtrl.Value := GetOverviewFilterIndex()
     OverviewFilterCtrl.OnEvent("Change", OnOverviewFilterChanged)
 
@@ -2486,37 +2485,44 @@ OpenUpcomingOverviewDialog(*) {
     OverviewShowMissingGreenCtrl.Value := GetOverviewIncludeMissingGreenSetting()
     OverviewShowMissingGreenCtrl.OnEvent("Click", OnOverviewShowMissingGreenChanged)
 
-    refreshButton := OverviewGui.AddButton("x650 y50 w150 h28", "Obnovit")
+    refreshButton := OverviewGui.AddButton("x730 y50 w150 h28", "Obnovit")
     refreshButton.OnEvent("Click", RefreshUpcomingOverviewDialog)
 
-    OverviewGui.AddText("x20 y88 w140", "Hledat název nebo SPZ")
-    OverviewSearchCtrl := OverviewGui.AddEdit("x170 y85 w300")
+    OverviewGui.AddText("x20 y88 w140", "Hledat název, SPZ nebo položku")
+    OverviewSearchCtrl := OverviewGui.AddEdit("x170 y85 w250")
     OverviewSearchCtrl.OnEvent("Change", OnOverviewSearchChanged)
 
-    OverviewSummaryLabel := OverviewGui.AddText("x20 y118 w780", "")
+    OverviewShowDataIssuesCtrl := OverviewGui.AddCheckBox("x440 y87 w320", "Zobrazit i datové nedostatky")
+    OverviewShowDataIssuesCtrl.Value := GetOverviewIncludeDataIssuesSetting()
+    OverviewShowDataIssuesCtrl.OnEvent("Click", OnOverviewShowDataIssuesChanged)
 
-    OverviewList := OverviewGui.AddListView("x20 y148 w780 h187 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "Značka / model", "SPZ", "Termín", "Stav"])
-    OverviewList.OnEvent("DoubleClick", OpenSelectedOverviewVehicle)
+    OverviewSummaryLabel := OverviewGui.AddText("x20 y118 w860", "")
+
+    OverviewList := OverviewGui.AddListView("x20 y148 w860 h187 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "Značka / model", "SPZ", "Položka / termín", "Stav"])
+    OverviewList.OnEvent("DoubleClick", OpenSelectedOverviewItem)
     OverviewList.OnEvent("ColClick", OnOverviewColumnClick)
 
-    OverviewList.ModifyCol(1, "120")
-    OverviewList.ModifyCol(2, "145")
+    OverviewList.ModifyCol(1, "135")
+    OverviewList.ModifyCol(2, "155")
     OverviewList.ModifyCol(3, "120")
-    OverviewList.ModifyCol(4, "145")
-    OverviewList.ModifyCol(5, "85")
-    OverviewList.ModifyCol(6, "75")
-    OverviewList.ModifyCol(7, "90")
+    OverviewList.ModifyCol(4, "150")
+    OverviewList.ModifyCol(5, "90")
+    OverviewList.ModifyCol(6, "110")
+    OverviewList.ModifyCol(7, "100")
 
-    OverviewEditButton := OverviewGui.AddButton("x250 y350 w170 h30", "Upravit vozidlo")
+    OverviewItemButton := OverviewGui.AddButton("x170 y350 w150 h30", "Otevřít položku")
+    OverviewItemButton.OnEvent("Click", OpenSelectedOverviewItem)
+
+    OverviewEditButton := OverviewGui.AddButton("x330 y350 w150 h30", "Upravit vozidlo")
     OverviewEditButton.OnEvent("Click", EditSelectedOverviewVehicle)
 
-    OverviewOpenButton := OverviewGui.AddButton("x430 y350 w170 h30 Default", "Zobrazit vozidlo")
+    OverviewOpenButton := OverviewGui.AddButton("x490 y350 w150 h30 Default", "Zobrazit vozidlo")
     OverviewOpenButton.OnEvent("Click", OpenSelectedOverviewVehicle)
 
-    closeButton := OverviewGui.AddButton("x610 y350 w110 h30", "Zavřít")
+    closeButton := OverviewGui.AddButton("x650 y350 w150 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseUpcomingOverviewDialog)
 
-    OverviewGui.Show("w820 h405")
+    OverviewGui.Show("w900 h405")
     PopulateUpcomingOverviewList("", true)
     if (OverviewEntries.Length > 0) {
         ; selection and focus are handled by PopulateUpcomingOverviewList
@@ -2526,7 +2532,7 @@ OpenUpcomingOverviewDialog(*) {
 }
 
 CloseUpcomingOverviewDialog(*) {
-    global OverviewGui, OverviewList, OverviewEntries, OverviewAllEntries, OverviewSummaryLabel, OverviewFilterCtrl, OverviewSearchCtrl, OverviewOpenButton, OverviewEditButton, OverviewShowMissingGreenCtrl, OverviewSortColumn, OverviewSortDescending, MainGui
+    global OverviewGui, OverviewList, OverviewEntries, OverviewAllEntries, OverviewSummaryLabel, OverviewFilterCtrl, OverviewSearchCtrl, OverviewItemButton, OverviewOpenButton, OverviewEditButton, OverviewShowMissingGreenCtrl, OverviewShowDataIssuesCtrl, OverviewSortColumn, OverviewSortDescending, MainGui
 
     if IsObject(OverviewGui) {
         OverviewGui.Destroy()
@@ -2539,9 +2545,11 @@ CloseUpcomingOverviewDialog(*) {
     OverviewSummaryLabel := 0
     OverviewFilterCtrl := 0
     OverviewSearchCtrl := 0
+    OverviewItemButton := 0
     OverviewOpenButton := 0
     OverviewEditButton := 0
     OverviewShowMissingGreenCtrl := 0
+    OverviewShowDataIssuesCtrl := 0
     OverviewSortColumn := 6
     OverviewSortDescending := false
     MainGui.Opt("-Disabled")
@@ -2549,7 +2557,7 @@ CloseUpcomingOverviewDialog(*) {
 }
 
 OpenOverdueDialog(*) {
-    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverdueGui, OverdueList, OverdueEntries, OverdueAllEntries, OverdueSummaryLabel, OverdueSearchCtrl, OverdueOpenButton, OverdueEditButton, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverdueGui, OverdueList, OverdueEntries, OverdueAllEntries, OverdueSummaryLabel, OverdueSearchCtrl, OverdueItemButton, OverdueOpenButton, OverdueEditButton, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
 
     if IsObject(OverdueGui) {
         WinActivate("ahk_id " OverdueGui.Hwnd)
@@ -2622,37 +2630,40 @@ OpenOverdueDialog(*) {
 
     MainGui.Opt("+Disabled")
 
-    OverdueGui.AddText("x20 y20 w780", "Zde vidíte všechny už propadlé technické kontroly, zelené karty a vlastní připomínky.")
+    OverdueGui.AddText("x20 y20 w860", "Zde vidíte všechny už propadlé technické kontroly, zelené karty a vlastní připomínky.")
 
-    refreshButton := OverdueGui.AddButton("x650 y50 w150 h28", "Obnovit")
+    refreshButton := OverdueGui.AddButton("x730 y50 w150 h28", "Obnovit")
     refreshButton.OnEvent("Click", RefreshOverdueDialog)
 
-    OverdueGui.AddText("x20 y55 w140", "Hledat název nebo SPZ")
+    OverdueGui.AddText("x20 y55 w140", "Hledat název, SPZ nebo položku")
     OverdueSearchCtrl := OverdueGui.AddEdit("x170 y52 w300")
     OverdueSearchCtrl.OnEvent("Change", OnOverdueSearchChanged)
 
-    OverdueSummaryLabel := OverdueGui.AddText("x20 y90 w780", "")
+    OverdueSummaryLabel := OverdueGui.AddText("x20 y90 w860", "")
 
-    OverdueList := OverdueGui.AddListView("x20 y120 w780 h215 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "Značka / model", "SPZ", "Termín", "Stav"])
-    OverdueList.OnEvent("DoubleClick", OpenSelectedOverdueVehicle)
-    OverdueList.ModifyCol(1, "120")
-    OverdueList.ModifyCol(2, "145")
+    OverdueList := OverdueGui.AddListView("x20 y120 w860 h215 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "Značka / model", "SPZ", "Položka / termín", "Stav"])
+    OverdueList.OnEvent("DoubleClick", OpenSelectedOverdueItem)
+    OverdueList.ModifyCol(1, "135")
+    OverdueList.ModifyCol(2, "155")
     OverdueList.ModifyCol(3, "120")
-    OverdueList.ModifyCol(4, "145")
-    OverdueList.ModifyCol(5, "85")
-    OverdueList.ModifyCol(6, "75")
-    OverdueList.ModifyCol(7, "90")
+    OverdueList.ModifyCol(4, "150")
+    OverdueList.ModifyCol(5, "90")
+    OverdueList.ModifyCol(6, "110")
+    OverdueList.ModifyCol(7, "100")
 
-    OverdueEditButton := OverdueGui.AddButton("x250 y350 w170 h30", "Upravit vozidlo")
+    OverdueItemButton := OverdueGui.AddButton("x170 y350 w150 h30", "Otevřít položku")
+    OverdueItemButton.OnEvent("Click", OpenSelectedOverdueItem)
+
+    OverdueEditButton := OverdueGui.AddButton("x330 y350 w150 h30", "Upravit vozidlo")
     OverdueEditButton.OnEvent("Click", EditSelectedOverdueVehicle)
 
-    OverdueOpenButton := OverdueGui.AddButton("x430 y350 w170 h30 Default", "Zobrazit vozidlo")
+    OverdueOpenButton := OverdueGui.AddButton("x490 y350 w150 h30 Default", "Zobrazit vozidlo")
     OverdueOpenButton.OnEvent("Click", OpenSelectedOverdueVehicle)
 
-    closeButton := OverdueGui.AddButton("x610 y350 w110 h30", "Zavřít")
+    closeButton := OverdueGui.AddButton("x650 y350 w150 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseOverdueDialog)
 
-    OverdueGui.Show("w820 h405")
+    OverdueGui.Show("w900 h405")
     PopulateOverdueList("", true)
     if (OverdueEntries.Length = 0) {
         closeButton.Focus()
@@ -2660,7 +2671,7 @@ OpenOverdueDialog(*) {
 }
 
 CloseOverdueDialog(*) {
-    global OverdueGui, OverdueList, OverdueEntries, OverdueAllEntries, OverdueSummaryLabel, OverdueSearchCtrl, OverdueOpenButton, OverdueEditButton, MainGui
+    global OverdueGui, OverdueList, OverdueEntries, OverdueAllEntries, OverdueSummaryLabel, OverdueSearchCtrl, OverdueItemButton, OverdueOpenButton, OverdueEditButton, MainGui
 
     if IsObject(OverdueGui) {
         OverdueGui.Destroy()
@@ -2672,6 +2683,7 @@ CloseOverdueDialog(*) {
     OverdueAllEntries := []
     OverdueSummaryLabel := 0
     OverdueSearchCtrl := 0
+    OverdueItemButton := 0
     OverdueOpenButton := 0
     OverdueEditButton := 0
     MainGui.Opt("-Disabled")
@@ -2696,7 +2708,7 @@ OnOverdueSearchChanged(*) {
 }
 
 PopulateOverdueList(selectedKey := "", focusList := false) {
-    global OverdueAllEntries, OverdueEntries, OverdueList, OverdueSummaryLabel, OverdueOpenButton, OverdueEditButton
+    global OverdueAllEntries, OverdueEntries, OverdueList, OverdueSummaryLabel, OverdueItemButton, OverdueOpenButton, OverdueEditButton
 
     if !IsObject(OverdueList) {
         return
@@ -2721,6 +2733,10 @@ PopulateOverdueList(selectedKey := "", focusList := false) {
     }
 
     OverdueList.Opt("+Redraw")
+
+    if IsObject(OverdueItemButton) {
+        OverdueItemButton.Opt(OverdueEntries.Length = 0 ? "+Disabled" : "-Disabled")
+    }
 
     if IsObject(OverdueOpenButton) {
         OverdueOpenButton.Opt(OverdueEntries.Length = 0 ? "+Disabled" : "-Disabled")
@@ -2757,7 +2773,7 @@ GetSelectedOverdueEntryKey() {
     return BuildOverviewEntryKey(OverdueEntries[row])
 }
 
-GetSelectedOverdueVehicle(actionLabel := "otevřít") {
+GetSelectedOverdueEntry(actionLabel := "otevřít") {
     global AppTitle, OverdueList, OverdueEntries
 
     if !IsObject(OverdueList) {
@@ -2766,31 +2782,46 @@ GetSelectedOverdueVehicle(actionLabel := "otevřít") {
 
     row := OverdueList.GetNext(0)
     if !row || row > OverdueEntries.Length {
-        MsgBox("Nejprve vyberte propadlý termín, který chcete " actionLabel ".", AppTitle, 0x40)
+        MsgBox("Nejprve vyberte položku, kterou chcete " actionLabel ".", AppTitle, 0x40)
         return ""
     }
 
-    return OverdueEntries[row].vehicle
+    return OverdueEntries[row]
+}
+
+OpenSelectedOverdueItem(*) {
+    entry := GetSelectedOverdueEntry("otevřít")
+    if !IsObject(entry) {
+        return
+    }
+
+    CloseOverdueDialog()
+    if (entry.kind = "custom" && entry.HasOwnProp("entryId") && entry.entryId != "") {
+        OpenVehicleReminderDialog(entry.vehicle, false, entry.entryId)
+        return
+    }
+
+    OpenVehicleForm("edit", entry.vehicle)
 }
 
 OpenSelectedOverdueVehicle(*) {
-    vehicle := GetSelectedOverdueVehicle("otevřít")
-    if !IsObject(vehicle) {
+    entry := GetSelectedOverdueEntry("zobrazit")
+    if !IsObject(entry) {
         return
     }
 
     CloseOverdueDialog()
-    OpenVehicleById(vehicle.id, true)
+    OpenVehicleById(entry.vehicle.id, true)
 }
 
 EditSelectedOverdueVehicle(*) {
-    vehicle := GetSelectedOverdueVehicle("upravit")
-    if !IsObject(vehicle) {
+    entry := GetSelectedOverdueEntry("upravit")
+    if !IsObject(entry) {
         return
     }
 
     CloseOverdueDialog()
-    OpenVehicleForm("edit", vehicle)
+    OpenVehicleForm("edit", entry.vehicle)
 }
 
 GetOverdueSearchText() {
@@ -2984,24 +3015,47 @@ HtmlEscape(text) {
     return StrReplace(text, "'", "&#39;")
 }
 
-OpenSelectedOverviewVehicle(*) {
-    vehicle := GetSelectedOverviewVehicle("otevřít")
-    if !IsObject(vehicle) {
+OpenSelectedOverviewItem(*) {
+    entry := GetSelectedOverviewEntry("otevřít")
+    if !IsObject(entry) {
         return
     }
 
     CloseUpcomingOverviewDialog()
-    OpenVehicleById(vehicle.id, true)
+    switch entry.kind {
+        case "custom":
+            if (entry.HasOwnProp("entryId") && entry.entryId != "") {
+                OpenVehicleReminderDialog(entry.vehicle, false, entry.entryId)
+                return
+            }
+        case "record_path":
+            if (entry.HasOwnProp("entryId") && entry.entryId != "") {
+                OpenVehicleRecordsDialog(entry.vehicle, false, entry.entryId)
+                return
+            }
+    }
+
+    OpenVehicleForm("edit", entry.vehicle)
+}
+
+OpenSelectedOverviewVehicle(*) {
+    entry := GetSelectedOverviewEntry("zobrazit")
+    if !IsObject(entry) {
+        return
+    }
+
+    CloseUpcomingOverviewDialog()
+    OpenVehicleById(entry.vehicle.id, true)
 }
 
 EditSelectedOverviewVehicle(*) {
-    vehicle := GetSelectedOverviewVehicle("upravit")
-    if !IsObject(vehicle) {
+    entry := GetSelectedOverviewEntry("upravit")
+    if !IsObject(entry) {
         return
     }
 
     CloseUpcomingOverviewDialog()
-    OpenVehicleForm("edit", vehicle)
+    OpenVehicleForm("edit", entry.vehicle)
 }
 
 OnOverviewFilterChanged(*) {
@@ -3012,6 +3066,11 @@ OnOverviewFilterChanged(*) {
 
 OnOverviewShowMissingGreenChanged(*) {
     SaveOverviewIncludeMissingGreenSetting(ShouldShowMissingGreenCardsInOverview())
+    RefreshUpcomingOverviewDialog()
+}
+
+OnOverviewShowDataIssuesChanged(*) {
+    SaveOverviewIncludeDataIssuesSetting(ShouldShowDataIssuesInOverview())
     RefreshUpcomingOverviewDialog()
 }
 
@@ -3043,12 +3102,12 @@ RefreshUpcomingOverviewDialog(*) {
     }
 
     selectedKey := GetSelectedOverviewEntryKey()
-    OverviewAllEntries := BuildUpcomingOverviewEntries(ShouldShowMissingGreenCardsInOverview())
+    OverviewAllEntries := BuildUpcomingOverviewEntries(ShouldShowMissingGreenCardsInOverview(), ShouldShowDataIssuesInOverview())
     PopulateUpcomingOverviewList(selectedKey)
 }
 
 PopulateUpcomingOverviewList(selectedKey := "", focusList := false) {
-    global OverviewAllEntries, OverviewEntries, OverviewList, OverviewSummaryLabel, OverviewOpenButton, OverviewEditButton
+    global OverviewAllEntries, OverviewEntries, OverviewList, OverviewSummaryLabel, OverviewItemButton, OverviewOpenButton, OverviewEditButton
 
     if !IsObject(OverviewList) {
         return
@@ -3075,6 +3134,14 @@ PopulateUpcomingOverviewList(selectedKey := "", focusList := false) {
     }
 
     OverviewList.Opt("+Redraw")
+
+    if IsObject(OverviewItemButton) {
+        if (OverviewEntries.Length = 0) {
+            OverviewItemButton.Opt("+Disabled")
+        } else {
+            OverviewItemButton.Opt("-Disabled")
+        }
+    }
 
     if IsObject(OverviewOpenButton) {
         if (OverviewEntries.Length = 0) {
@@ -3119,7 +3186,7 @@ GetSelectedOverviewEntryKey() {
     return BuildOverviewEntryKey(OverviewEntries[row])
 }
 
-GetSelectedOverviewVehicle(actionLabel := "otevřít") {
+GetSelectedOverviewEntry(actionLabel := "otevřít") {
     global AppTitle, OverviewList, OverviewEntries
 
     if !IsObject(OverviewList) {
@@ -3128,11 +3195,11 @@ GetSelectedOverviewVehicle(actionLabel := "otevřít") {
 
     row := OverviewList.GetNext(0)
     if !row || row > OverviewEntries.Length {
-        MsgBox("Nejprve vyberte termín, který chcete " actionLabel ".", AppTitle, 0x40)
+        MsgBox("Nejprve vyberte položku, kterou chcete " actionLabel ".", AppTitle, 0x40)
         return ""
     }
 
-    return OverviewEntries[row].vehicle
+    return OverviewEntries[row]
 }
 
 ShouldShowMissingGreenCardsInOverview() {
@@ -3143,6 +3210,16 @@ ShouldShowMissingGreenCardsInOverview() {
     }
 
     return GetOverviewIncludeMissingGreenSetting()
+}
+
+ShouldShowDataIssuesInOverview() {
+    global OverviewShowDataIssuesCtrl
+
+    if IsObject(OverviewShowDataIssuesCtrl) {
+        return OverviewShowDataIssuesCtrl.Value = 1
+    }
+
+    return GetOverviewIncludeDataIssuesSetting()
 }
 
 GetOverviewSearchText() {
@@ -3172,6 +3249,9 @@ GetOverviewFilterKind() {
     if (text = "Jen vlastní připomínky") {
         return "custom"
     }
+    if (text = "Jen datové nedostatky") {
+        return "data_issue"
+    }
 
     return "all"
 }
@@ -3180,7 +3260,7 @@ GetOverviewFilterSetting() {
     global SettingsFile
 
     value := IniRead(SettingsFile, "overview", "filter", "all")
-    if (value != "technical" && value != "green" && value != "custom") {
+    if (value != "technical" && value != "green" && value != "custom" && value != "data_issue") {
         return "all"
     }
 
@@ -3198,6 +3278,9 @@ GetOverviewFilterIndex() {
     if (filterKind = "custom") {
         return 4
     }
+    if (filterKind = "data_issue") {
+        return 5
+    }
 
     return 1
 }
@@ -3206,6 +3289,12 @@ GetOverviewIncludeMissingGreenSetting() {
     global SettingsFile
 
     return IniRead(SettingsFile, "overview", "include_missing_green", "0") = "1" ? 1 : 0
+}
+
+GetOverviewIncludeDataIssuesSetting() {
+    global SettingsFile
+
+    return IniRead(SettingsFile, "overview", "include_data_issues", "0") = "1" ? 1 : 0
 }
 
 GetOverviewSortColumnSetting() {
@@ -3228,7 +3317,7 @@ GetOverviewSortDescendingSetting() {
 SaveOverviewFilterSetting(filterKind) {
     global SettingsFile
 
-    if (filterKind != "technical" && filterKind != "green" && filterKind != "custom") {
+    if (filterKind != "technical" && filterKind != "green" && filterKind != "custom" && filterKind != "data_issue") {
         filterKind := "all"
     }
 
@@ -3239,6 +3328,12 @@ SaveOverviewIncludeMissingGreenSetting(enabled) {
     global SettingsFile
 
     IniWrite(enabled ? "1" : "0", SettingsFile, "overview", "include_missing_green")
+}
+
+SaveOverviewIncludeDataIssuesSetting(enabled) {
+    global SettingsFile
+
+    IniWrite(enabled ? "1" : "0", SettingsFile, "overview", "include_data_issues")
 }
 
 SaveOverviewSortSettings(column, descending) {
@@ -3332,7 +3427,11 @@ FilterUpcomingOverviewEntries(entries, filterKind := "all") {
     filtered := []
 
     for entry in entries {
-        if (filterKind = "all" || entry.kind = filterKind) {
+        if (
+            filterKind = "all"
+            || entry.kind = filterKind
+            || (filterKind = "data_issue" && IsOverviewDataIssueEntry(entry))
+        ) {
             filtered.Push(entry)
         }
     }
@@ -3352,7 +3451,16 @@ FilterOverviewEntriesBySearch(entries, searchText := "") {
     }
 
     for entry in entries {
-        if (InStr(StrLower(entry.vehicle.name), needle) || InStr(StrLower(entry.vehicle.plate), needle)) {
+        haystack := StrLower(
+            entry.kindLabel " "
+            entry.vehicle.name " "
+            entry.vehicle.category " "
+            entry.vehicle.makeModel " "
+            entry.vehicle.plate " "
+            entry.term " "
+            entry.status
+        )
+        if InStr(haystack, needle) {
             filtered.Push(entry)
         }
     }
@@ -3366,6 +3474,10 @@ BuildOverviewEntryKey(entry) {
     }
 
     return entry.kind "|" entry.vehicle.id "|" entry.term
+}
+
+IsOverviewDataIssueEntry(entry) {
+    return entry.kind = "record_path" || entry.kind = "vehicle_field"
 }
 
 SaveSettingsFromDialog(*) {
@@ -9963,6 +10075,7 @@ EnsureSettingsDefaults() {
     EnsureIniKeyExists(SettingsFile, "backups", "last_automatic_backup_path", "")
     EnsureIniKeyExists(SettingsFile, "overview", "filter", "all")
     EnsureIniKeyExists(SettingsFile, "overview", "include_missing_green", "0")
+    EnsureIniKeyExists(SettingsFile, "overview", "include_data_issues", "0")
     EnsureIniKeyExists(SettingsFile, "overview", "sort_column", "6")
     EnsureIniKeyExists(SettingsFile, "overview", "sort_descending", "0")
     EnsureIniKeyExists(SettingsFile, "history_view", "sort_column", "1")
@@ -10313,7 +10426,7 @@ GetUpcomingGreenCards() {
     return upcoming
 }
 
-BuildUpcomingOverviewEntries(includeMissingGreenCards := false) {
+BuildUpcomingOverviewEntries(includeMissingGreenCards := false, includeDataIssues := false) {
     global Vehicles
 
     technicalReminderDays := GetTechnicalReminderDays()
@@ -10373,6 +10486,12 @@ BuildUpcomingOverviewEntries(includeMissingGreenCards := false) {
         }
     }
 
+    if includeDataIssues {
+        for entry in BuildDashboardDataIssueEntries() {
+            entries.Push(entry)
+        }
+    }
+
     return entries
 }
 
@@ -10380,6 +10499,7 @@ BuildUpcomingOverviewSummary(entries, allEntries := "") {
     technicalCount := 0
     greenCount := 0
     customCount := 0
+    dataIssueCount := 0
     totalCount := IsObject(allEntries) ? allEntries.Length : entries.Length
 
     for entry in entries {
@@ -10389,16 +10509,31 @@ BuildUpcomingOverviewSummary(entries, allEntries := "") {
             greenCount += 1
         } else if (entry.kind = "custom") {
             customCount += 1
+        } else if IsOverviewDataIssueEntry(entry) {
+            dataIssueCount += 1
         }
     }
 
     missingGreenCount := GetMissingGreenCardCount()
+    totalDataIssueCount := GetOverviewDataIssueCount()
     if (totalCount = 0) {
-        summary := "Momentálně není žádný blížící se ani propadlý termín, který by podle aktuálního nastavení vyžadoval pozornost."
+        if ShouldShowDataIssuesInOverview() {
+            summary := "Momentálně není žádný blížící se ani propadlý termín ani datový nedostatek, který by podle aktuálního nastavení vyžadoval pozornost."
+        } else {
+            summary := "Momentálně není žádný blížící se ani propadlý termín, který by podle aktuálního nastavení vyžadoval pozornost."
+        }
     } else if (entries.Length = totalCount) {
-        summary := "Celkem " entries.Length " termínů k pozornosti: " technicalCount " technických kontrol, " greenCount " zelených karet a " customCount " vlastních připomínek."
+        summary := "Celkem " entries.Length " položek k pozornosti: " technicalCount " technických kontrol, " greenCount " zelených karet a " customCount " vlastních připomínek"
     } else {
-        summary := "Zobrazeno " entries.Length " z " totalCount " termínů: " technicalCount " technických kontrol, " greenCount " zelených karet a " customCount " vlastních připomínek."
+        summary := "Zobrazeno " entries.Length " z " totalCount " položek: " technicalCount " technických kontrol, " greenCount " zelených karet a " customCount " vlastních připomínek"
+    }
+
+    if (totalCount > 0) {
+        if (dataIssueCount > 0) {
+            summary .= " a " dataIssueCount " datových nedostatků."
+        } else {
+            summary .= "."
+        }
     }
 
     if (missingGreenCount > 0) {
@@ -10409,7 +10544,19 @@ BuildUpcomingOverviewSummary(entries, allEntries := "") {
         }
     }
 
+    if (totalDataIssueCount > 0) {
+        if ShouldShowDataIssuesInOverview() {
+            summary .= " Je zapnuto i zobrazení datových nedostatků."
+        } else {
+            summary .= " Další datové nedostatky můžete zobrazit zapnutím volby pod hledáním."
+        }
+    }
+
     return summary
+}
+
+GetOverviewDataIssueCount() {
+    return BuildDashboardDataIssueEntries().Length
 }
 
 GetMissingGreenCardCount() {

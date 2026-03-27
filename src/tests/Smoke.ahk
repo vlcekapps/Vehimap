@@ -8,19 +8,20 @@ RunSmokeTests()
 RunSmokeTests() {
     failures := []
     tests := [
-        {name: "global search", fn: Func("SmokeTestGlobalSearch")},
-        {name: "record path info", fn: Func("SmokeTestRecordPathInfo")},
-        {name: "dashboard costs", fn: Func("SmokeTestDashboardCosts")},
-        {name: "dashboard data summary", fn: Func("SmokeTestDashboardDataSummary")},
-        {name: "dashboard entries", fn: Func("SmokeTestDashboardEntries")},
-        {name: "sort settings", fn: Func("SmokeTestSortSettings")}
+        "SmokeTestGlobalSearch",
+        "SmokeTestRecordPathInfo",
+        "SmokeTestDashboardCosts",
+        "SmokeTestDashboardDataSummary",
+        "SmokeTestDashboardEntries",
+        "SmokeTestOverviewDataIssues",
+        "SmokeTestSortSettings"
     ]
 
-    for test in tests {
+    for _, testName in tests {
         try {
-            test.fn.Call()
+            %testName%()
         } catch as err {
-            failures.Push(test.name ": " err.Message)
+            failures.Push(testName ": line " err.Line ": " err.Message)
         }
     }
 
@@ -158,24 +159,56 @@ SmokeTestDashboardEntries() {
     DirCreate(tempRoot)
 
     Vehicles := [
-        {id: "veh_1", name: "Bez dat", category: "OsobnĂ­ vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
-        {id: "veh_2", name: "BrzkĂˇ TK", category: "Motocykly", vehicleType: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: FormatTime(A_Now, "MM/yyyy"), greenCardFrom: "", greenCardTo: "12/2099"}
+        {id: "veh_1", name: "Bez dat", category: "Osobní vozidla", vehicleType: "", makeModel: "", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
+        {id: "veh_2", name: "Brzká TK", category: "Motocykly", vehicleType: "", makeModel: "", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: FormatTime(A_Now, "MM/yyyy"), greenCardFrom: "", greenCardTo: "12/2099"}
     ]
     VehicleRecords := [
         {id: "record_1", vehicleId: "veh_1", recordType: "Doklad", title: "Bez cesty", provider: "", validFrom: "", validTo: "", price: "", filePath: "", note: ""},
-        {id: "record_2", vehicleId: "veh_2", recordType: "Doklad", title: "ChybÄ›jĂ­cĂ­ soubor", provider: "", validFrom: "", validTo: "", price: "", filePath: missingFile, note: ""}
+        {id: "record_2", vehicleId: "veh_2", recordType: "Doklad", title: "Chybějící soubor", provider: "", validFrom: "", validTo: "", price: "", filePath: missingFile, note: ""}
     ]
 
     entries := BuildDashboardEntries()
     SortDashboardEntries(&entries)
 
-    AssertTrue(entries.Length >= 5, "Dashboard mÄ›l vrĂˇtit termĂ­ny i datovĂ© nedostatky.")
-    AssertEqual(entries[1].kind, "technical", "Dashboard mĂˇ Å™adit skuteÄŤnĂ© termĂ­ny pÅ™ed datovĂ© nedostatky.")
-    AssertDashboardEntryPresent(entries, "green", "veh_1", "ChybĂ­", "NevyplnÄ›no")
+    AssertTrue(entries.Length >= 5, "Dashboard měl vrátit termíny i datové nedostatky.")
+    AssertEqual(entries[1].kind, "technical", "Dashboard má řadit skutečné termíny před datové nedostatky.")
+    AssertDashboardEntryPresent(entries, "green", "veh_1", "Chybí", "Nevyplněno")
     AssertDashboardEntryPresent(entries, "vehicle_field", "veh_1", "Doplnit v editaci", "SPZ")
-    AssertDashboardEntryPresent(entries, "vehicle_field", "veh_1", "Doplnit v editaci", "PÅ™Ă­ĹˇtĂ­ TK")
+    AssertDashboardEntryPresent(entries, "vehicle_field", "veh_1", "Doplnit v editaci", "Příští TK")
     AssertDashboardEntryPresent(entries, "record_path", "veh_1", "Bez cesty", "Bez cesty")
-    AssertDashboardEntryPresent(entries, "record_path", "veh_2", "ChybĂ­ soubor", "ChybÄ›jĂ­cĂ­ soubor")
+    AssertDashboardEntryPresent(entries, "record_path", "veh_2", "Chybí soubor", "Chybějící soubor")
+}
+
+SmokeTestOverviewDataIssues() {
+    global Vehicles, VehicleRecords
+
+    ResetSmokeData()
+    tempRoot := A_Temp "\vehimap_smoke_overview_entries"
+    missingFile := tempRoot "\chybi.pdf"
+    if DirExist(tempRoot) {
+        DirDelete(tempRoot, true)
+    }
+    DirCreate(tempRoot)
+
+    Vehicles := [
+        {id: "veh_1", name: "Bez dat", category: "Osobní vozidla", vehicleType: "", makeModel: "Skoda", plate: "", year: "", power: "", lastTk: "", nextTk: "", greenCardFrom: "", greenCardTo: ""},
+        {id: "veh_2", name: "Aktivní", category: "Motocykly", vehicleType: "", makeModel: "Honda", plate: "2AB3456", year: "", power: "", lastTk: "", nextTk: FormatTime(A_Now, "MM/yyyy"), greenCardFrom: "", greenCardTo: "12/2099"}
+    ]
+    VehicleRecords := [
+        {id: "record_1", vehicleId: "veh_1", recordType: "Doklad", title: "Bez cesty", provider: "", validFrom: "", validTo: "", price: "", filePath: "", note: ""},
+        {id: "record_2", vehicleId: "veh_2", recordType: "Doklad", title: "Chybějící soubor", provider: "", validFrom: "", validTo: "", price: "", filePath: missingFile, note: ""}
+    ]
+
+    entries := BuildUpcomingOverviewEntries(true, true)
+    dataIssues := FilterUpcomingOverviewEntries(entries, "data_issue")
+
+    AssertTrue(entries.Length >= 5, "Přehled termínů měl obsahovat termíny i datové nedostatky.")
+    AssertEqual(dataIssues.Length, 4, "Filtr datových nedostatků měl vrátit čtyři položky.")
+    AssertContains(BuildUpcomingOverviewSummary(dataIssues, entries), "datových nedostatků", "Souhrn přehledu má zmínit datové nedostatky.")
+    AssertDashboardEntryPresent(dataIssues, "vehicle_field", "veh_1", "Doplnit v editaci", "SPZ")
+    AssertDashboardEntryPresent(dataIssues, "vehicle_field", "veh_1", "Doplnit v editaci", "Příští TK")
+    AssertDashboardEntryPresent(dataIssues, "record_path", "veh_1", "Bez cesty", "Bez cesty")
+    AssertDashboardEntryPresent(dataIssues, "record_path", "veh_2", "Chybí soubor", "Chybějící soubor")
 }
 
 SmokeTestSortSettings() {
@@ -190,6 +223,8 @@ SmokeTestSortSettings() {
     SaveFuelSortSettings(7, true)
     SaveRecordsSortSettings(6, true)
     SaveReminderSortSettings(4, true)
+    SaveOverviewFilterSetting("data_issue")
+    SaveOverviewIncludeDataIssuesSetting(true)
 
     AssertEqual(GetHistorySortColumnSetting(), 5, "History sort column se neuložil.")
     AssertEqual(GetHistorySortDescendingSetting(), false, "History sort descending se neuložil.")
@@ -199,6 +234,9 @@ SmokeTestSortSettings() {
     AssertEqual(GetRecordsSortDescendingSetting(), true, "Records sort descending se neuložil.")
     AssertEqual(GetReminderSortColumnSetting(), 4, "Reminder sort column se neuložil.")
     AssertEqual(GetReminderSortDescendingSetting(), true, "Reminder sort descending se neuložil.")
+    AssertEqual(GetOverviewFilterSetting(), "data_issue", "Overview filter se neuložil.")
+    AssertEqual(GetOverviewFilterIndex(), 5, "Overview filter index pro datové nedostatky nesedí.")
+    AssertEqual(GetOverviewIncludeDataIssuesSetting(), 1, "Overview include_data_issues se neuložil.")
 }
 
 ResetSmokeData() {
@@ -272,7 +310,7 @@ AssertDashboardEntryPresent(entries, expectedKind, vehicleId, expectedStatus := 
         return
     }
 
-    throw Error("V dashboardu chybĂ­ oÄŤekĂˇvanĂˇ poloĹľka typu " expectedKind " pro vozidlo " vehicleId ".")
+    throw Error("V přehledu chybí očekávaná položka typu " expectedKind " pro vozidlo " vehicleId ".")
 }
 
 WriteSmokeOutput(text) {
