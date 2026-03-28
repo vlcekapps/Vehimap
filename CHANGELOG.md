@@ -16,15 +16,21 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - výpočet `Ujeto km`, `Ceny / km` a srovnání proti předchozímu stejně dlouhému období v nákladech vozidla i v přehledu `Náklady napříč vozidly`
 - nová `Časová osa vozidla`, která spojuje historii, tankování, připomínky, expirace dokladů, TK, ZK i servisní úkoly s konkrétním datem
 - ruční export budoucích termínů do kalendářového souboru `.ics`
+- spravované přílohy dokladů s volbou mezi `Externí cestou` a `Spravovanou kopií`
+- interní složka `data/attachments/<id vozidla>/` pro portable uložení spravovaných příloh
+- rozšířený export a import `.vehimapbak`, který umí přenést i spravované přílohy dokladů
 
 ### Změněno
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`
 - přehledy termínů a dashboard lépe zvýrazňují problémové stavy, datové nedostatky a servisní úkoly
 - Vehimap je interně rozdělený do menších modulů `#Include`, takže se aplikace lépe udržuje a rozvíjí
+- evidence `Pojištění a doklady` nově pracuje s vyřešenou cestou k příloze napříč dialogy, auditem, hledáním, časovou osou i nákladovými přehledy
+- formát `records.tsv` byl posunut na `# Vehimap records v2` a backup na `# Vehimap backup v6`
 
 ### Opraveno
 - zpracování servisních doporučení, záloh a meta dat vozidel tak, aby správně fungoval nový servisní profil i smoke testy
 - výpočet ujetých kilometrů v nákladových souhrnech už nepřidává jednotku `km` dvakrát
+- spravované přílohy se po přepnutí zpět na externí cestu korektně uklidí a smoke testy nově hlídají i round-trip přes zálohu
 
 ## [1.0.2] - 2026-03-27
 

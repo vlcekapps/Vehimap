@@ -16,7 +16,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - samostatný `Plán údržby` pro každé vozidlo, včetně šablon běžných servisních úkonů, doporučených balíků podle kategorie a explicitního servisního profilu vozidla, intervalu podle kilometrů nebo měsíců, evidence posledního servisu a rychlého označení splnění s volitelným zapsáním do historie
 - samostatný `Balíček pro vozidlo`, který umí v jednom kroku nabídnout doporučené servisní plány, placeholdery dokladů i obecné připomínky podle kategorie a servisního profilu
 - rychlé hledání a řazení sloupců v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách, včetně zapamatování posledního řazení
-- samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, otevření navázaného souboru i otevření jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy
+- samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, volby mezi `Externí cestou` a `Spravovanou kopií`, přesunu přílohy do interní složky aplikace, znovu propojení chybějícího souboru, otevření navázaného souboru i jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku, včetně `Ujeto km`, `Ceny / km` a srovnání s předchozím stejně dlouhým obdobím
 - samostatný přehled `Náklady napříč vozidly` pro vybrané období s porovnáním vozidel, rozpadnutím částek podle skupin, `Ujeto km`, `Cenou / km`, upozorněním na aktivní vozidla bez číselného nákladu a se stavy k řešení přímo u jednotlivých vozidel
 - export nákladových přehledů do `TSV souhrnu`, `TSV detailu` a `HTML sestavy`
@@ -27,8 +27,8 @@ Komplexní řešení pro evidenci vašich vozidel.
 - samostatný dialog s přehledem všech blížících se a propadlých termínů, servisních úkonů a připomínek, filtrem, rychlým hledáním podle názvu, SPZ nebo typu položky, ruční obnovou, řazením podle sloupců, volitelným zobrazením datových nedostatků, přímým otevřením řešené položky, otevřením vozidla i editací vozidla a zapamatováním posledního nastavení přehledu
 - samostatný dialog `Propadlé termíny` se seznamem všech už propadlých `TK`, `ZK` a servisních úkonů, rychlým hledáním a přímým otevřením řešené položky, otevřením vozidla nebo editací vozidla
 - `Tiskový přehled` všech vozidel ve formátu HTML, který se otevře v prohlížeči a dá se vytisknout běžným `Ctrl+P`
-- `Export dat` do jednoho záložního souboru `.vehimapbak` včetně plánů údržby
-- `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním a obnovení plánů údržby
+- `Export dat` do jednoho záložního souboru `.vehimapbak` včetně plánů údržby a spravovaných příloh dokladů
+- `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním, obnovení plánů údržby i návratu spravovaných příloh dokladů
 - pravidelné automatické zálohy do `data/auto-backups` se samostatným intervalem ve dnech a omezením počtu ponechaných souborů
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
@@ -140,8 +140,11 @@ V evidenci pojištění a dokladů:
 
 - `Druh záznamu` a `Název záznamu` jsou povinné
 - `Platné od` a `Platné do` se zadávají jako `MM/RRRR`, například `04/2026`
-- `Poskytovatel / vydavatel`, `Cena / částka`, `Soubor nebo cesta` a `Poznámka` jsou volitelné
-- seznam zobrazuje i stav cesty `Soubor`, `Složka`, `Chybí soubor`, `Chybí složka` nebo `Bez cesty`, takže hned poznáte nedostupnou přílohu
+- `Poskytovatel / vydavatel`, `Cena / částka`, `Režim přílohy`, `Soubor nebo cesta` a `Poznámka` jsou volitelné
+- `Spravovaná kopie` uloží vybraný soubor relativně do `data/attachments/<id vozidla>/`, takže portable přesun celé aplikace přílohu nerozbije
+- `Externí cesta` ponechá doklad napojený na původní soubor mimo aplikaci bez automatického kopírování
+- tlačítko `Přesunout do příloh` umí převést existující externí cestu na spravovanou kopii a `Znovu propojit` opraví chybějící soubor v obou režimech
+- stav přílohy zobrazuje režim, uloženou cestu i skutečně vyřešenou cestu a seznam navíc rozlišuje `Soubor`, `Složka`, `Chybí soubor`, `Chybí složka` nebo `Bez cesty`, takže hned poznáte nedostupnou přílohu
 
 V `Náklady a souhrny`:
 
@@ -190,6 +193,7 @@ V horním menu najdete tyto části:
 - historie událostí se ukládá do souboru `data/history.tsv`
 - kilometry a tankování se ukládají do souboru `data/fuel.tsv`
 - pojištění a doklady se ukládají do souboru `data/records.tsv`
+- spravované přílohy dokladů se ukládají do složky `data/attachments/<id vozidla>/`
 - plány údržby se ukládají do souboru `data/maintenance.tsv`
 - nastavení upozornění a chování aplikace se ukládá do souboru `data/settings.ini`
 - automatické zálohy se ukládají do složky `data/auto-backups`
@@ -198,9 +202,9 @@ V horním menu najdete tyto části:
 - Vehimap zapisuje vozidla ve formátu `# Vehimap data v4`
 - historie používá hlavičku `# Vehimap history v1`
 - kilometry a tankování používají hlavičku `# Vehimap fuel v1`
-- pojištění a doklady používají hlavičku `# Vehimap records v1`
+- pojištění a doklady používají hlavičku `# Vehimap records v2`
 - plány údržby používají hlavičku `# Vehimap maintenance v1`
-- export vytváří jeden soubor se zálohou ve formátu `.vehimapbak`
+- export vytváří jeden soubor se zálohou ve formátu `.vehimapbak`, který nově zahrnuje i spravované přílohy dokladů
 
 ## Poznámka k oznamovací oblasti
 
