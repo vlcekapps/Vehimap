@@ -76,6 +76,30 @@ GetMaintenancePlansContentForBackup() {
     return BuildVehicleMaintenanceDataContent()
 }
 
+GetVehicleAttachmentsContentForBackup() {
+    return BuildVehicleAttachmentsBackupContent()
+}
+
+BuildVehicleAttachmentsBackupContent() {
+    global LastBackupAttachmentStats
+
+    backupItems := GetManagedVehicleAttachmentBackupItems()
+    lines := ["# Vehimap attachments v1"]
+    for item in backupItems.items {
+        lines.Push(
+            EscapeField(item.relativePath) "`t"
+            EscapeField(ReadBinaryFileAsBase64(item.absolutePath))
+        )
+    }
+
+    LastBackupAttachmentStats := {
+        includedCount: backupItems.items.Length,
+        missingCount: backupItems.missingCount,
+        restoredCount: 0
+    }
+    return JoinLines(lines)
+}
+
 BuildCurrentBackupContent() {
     return BuildBackupContent(
         GetSettingsContentForBackup(),
@@ -85,7 +109,8 @@ BuildCurrentBackupContent() {
         BuildRecordsDataContent(),
         BuildVehicleMetaDataContent(),
         BuildVehicleRemindersDataContent(),
-        BuildVehicleMaintenanceDataContent()
+        BuildVehicleMaintenanceDataContent(),
+        GetVehicleAttachmentsContentForBackup()
     )
 }
 
@@ -223,7 +248,7 @@ EnsureBackupExtension(path) {
     return path
 }
 
-BuildBackupContent(settingsContent, vehiclesContent, historyContent := "", fuelContent := "", recordsContent := "", metaContent := "", remindersContent := "", maintenanceContent := "") {
+BuildBackupContent(settingsContent, vehiclesContent, historyContent := "", fuelContent := "", recordsContent := "", metaContent := "", remindersContent := "", maintenanceContent := "", attachmentsContent := "") {
     settingsContent := NormalizeTextForStorage(settingsContent)
     vehiclesContent := NormalizeTextForStorage(vehiclesContent)
     historyContent := NormalizeTextForStorage(historyContent)
@@ -232,9 +257,10 @@ BuildBackupContent(settingsContent, vehiclesContent, historyContent := "", fuelC
     metaContent := NormalizeTextForStorage(metaContent)
     remindersContent := NormalizeTextForStorage(remindersContent)
     maintenanceContent := NormalizeTextForStorage(maintenanceContent)
+    attachmentsContent := NormalizeTextForStorage(attachmentsContent)
 
     header := JoinLines([
-        "# Vehimap backup v5",
+        "# Vehimap backup v6",
         "settings_length=" StrLen(settingsContent),
         "vehicles_length=" StrLen(vehiclesContent),
         "history_length=" StrLen(historyContent),
@@ -242,13 +268,14 @@ BuildBackupContent(settingsContent, vehiclesContent, historyContent := "", fuelC
         "records_length=" StrLen(recordsContent),
         "meta_length=" StrLen(metaContent),
         "reminders_length=" StrLen(remindersContent),
-        "maintenance_length=" StrLen(maintenanceContent)
+        "maintenance_length=" StrLen(maintenanceContent),
+        "attachments_length=" StrLen(attachmentsContent)
     ])
 
-    return header "`n`n" settingsContent vehiclesContent historyContent fuelContent recordsContent metaContent remindersContent maintenanceContent
+    return header "`n`n" settingsContent vehiclesContent historyContent fuelContent recordsContent metaContent remindersContent maintenanceContent attachmentsContent
 }
 
-TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &errorMessage) {
+TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &attachmentsContent, &errorMessage) {
     settingsContent := ""
     vehiclesContent := ""
     historyContent := ""
@@ -257,6 +284,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
     metaContent := ""
     remindersContent := ""
     maintenanceContent := ""
+    attachmentsContent := ""
     errorMessage := ""
     content := NormalizeTextForStorage(content)
 
@@ -275,7 +303,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
     }
 
     backupVersion := headerLines[1]
-    if (backupVersion != "# Vehimap backup v1" && backupVersion != "# Vehimap backup v2" && backupVersion != "# Vehimap backup v3" && backupVersion != "# Vehimap backup v4" && backupVersion != "# Vehimap backup v5") {
+    if (backupVersion != "# Vehimap backup v1" && backupVersion != "# Vehimap backup v2" && backupVersion != "# Vehimap backup v3" && backupVersion != "# Vehimap backup v4" && backupVersion != "# Vehimap backup v5" && backupVersion != "# Vehimap backup v6") {
         errorMessage := "Soubor není ve formátu zálohy Vehimap."
         return false
     }
@@ -298,11 +326,13 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
     metaLength := 0
     remindersLength := 0
     maintenanceLength := 0
+    attachmentsLength := 0
     if (
         backupVersion = "# Vehimap backup v2"
         || backupVersion = "# Vehimap backup v3"
         || backupVersion = "# Vehimap backup v4"
         || backupVersion = "# Vehimap backup v5"
+        || backupVersion = "# Vehimap backup v6"
     ) {
         if (headerLines.Length < 4 || !RegExMatch(headerLines[4], "^history_length=(\d+)$", &historyMatch)) {
             errorMessage := "Soubor zálohy neobsahuje délku historie."
@@ -311,7 +341,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         historyLength := historyMatch[1] + 0
     }
 
-    if (backupVersion = "# Vehimap backup v3" || backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5") {
+    if (backupVersion = "# Vehimap backup v3" || backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5" || backupVersion = "# Vehimap backup v6") {
         if (headerLines.Length < 6 || !RegExMatch(headerLines[5], "^fuel_length=(\d+)$", &fuelMatch) || !RegExMatch(headerLines[6], "^records_length=(\d+)$", &recordsMatch)) {
             errorMessage := "Soubor zálohy neobsahuje délky kilometrů a dokladů."
             return false
@@ -320,7 +350,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         recordsLength := recordsMatch[1] + 0
     }
 
-    if (backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5") {
+    if (backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5" || backupVersion = "# Vehimap backup v6") {
         if (headerLines.Length < 8 || !RegExMatch(headerLines[7], "^meta_length=(\d+)$", &metaMatch) || !RegExMatch(headerLines[8], "^reminders_length=(\d+)$", &remindersMatch)) {
             errorMessage := "Soubor zálohy neobsahuje délky stavů a připomínek."
             return false
@@ -329,7 +359,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         remindersLength := remindersMatch[1] + 0
     }
 
-    if (backupVersion = "# Vehimap backup v5") {
+    if (backupVersion = "# Vehimap backup v5" || backupVersion = "# Vehimap backup v6") {
         if (headerLines.Length < 9 || !RegExMatch(headerLines[9], "^maintenance_length=(\d+)$", &maintenanceMatch)) {
             errorMessage := "Soubor zálohy neobsahuje délku plánů údržby."
             return false
@@ -337,12 +367,20 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         maintenanceLength := maintenanceMatch[1] + 0
     }
 
-    if (settingsLength < 0 || vehiclesLength < 0 || historyLength < 0 || fuelLength < 0 || recordsLength < 0 || metaLength < 0 || remindersLength < 0 || maintenanceLength < 0) {
+    if (backupVersion = "# Vehimap backup v6") {
+        if (headerLines.Length < 10 || !RegExMatch(headerLines[10], "^attachments_length=(\d+)$", &attachmentsMatch)) {
+            errorMessage := "Soubor zálohy neobsahuje délku spravovaných příloh."
+            return false
+        }
+        attachmentsLength := attachmentsMatch[1] + 0
+    }
+
+    if (settingsLength < 0 || vehiclesLength < 0 || historyLength < 0 || fuelLength < 0 || recordsLength < 0 || metaLength < 0 || remindersLength < 0 || maintenanceLength < 0 || attachmentsLength < 0) {
         errorMessage := "Soubor zálohy obsahuje neplatné délky dat."
         return false
     }
 
-    if (StrLen(payload) != settingsLength + vehiclesLength + historyLength + fuelLength + recordsLength + metaLength + remindersLength + maintenanceLength) {
+    if (StrLen(payload) != settingsLength + vehiclesLength + historyLength + fuelLength + recordsLength + metaLength + remindersLength + maintenanceLength + attachmentsLength) {
         errorMessage := "Soubor zálohy je neúplný nebo poškozený."
         return false
     }
@@ -356,6 +394,7 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         || backupVersion = "# Vehimap backup v3"
         || backupVersion = "# Vehimap backup v4"
         || backupVersion = "# Vehimap backup v5"
+        || backupVersion = "# Vehimap backup v6"
     ) {
         historyContent := SubStr(payload, payloadOffset, historyLength)
         payloadOffset += historyLength
@@ -363,17 +402,17 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         historyContent := "# Vehimap history v1`n"
     }
 
-    if (backupVersion = "# Vehimap backup v3" || backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5") {
+    if (backupVersion = "# Vehimap backup v3" || backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5" || backupVersion = "# Vehimap backup v6") {
         fuelContent := SubStr(payload, payloadOffset, fuelLength)
         payloadOffset += fuelLength
         recordsContent := SubStr(payload, payloadOffset, recordsLength)
         payloadOffset += recordsLength
     } else {
         fuelContent := "# Vehimap fuel v1`n"
-        recordsContent := "# Vehimap records v1`n"
+        recordsContent := "# Vehimap records v2`n"
     }
 
-    if (backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5") {
+    if (backupVersion = "# Vehimap backup v4" || backupVersion = "# Vehimap backup v5" || backupVersion = "# Vehimap backup v6") {
         metaContent := SubStr(payload, payloadOffset, metaLength)
         payloadOffset += metaLength
         remindersContent := SubStr(payload, payloadOffset, remindersLength)
@@ -383,10 +422,17 @@ TryParseBackupContent(content, &settingsContent, &vehiclesContent, &historyConte
         remindersContent := "# Vehimap reminders v1`n"
     }
 
-    if (backupVersion = "# Vehimap backup v5") {
+    if (backupVersion = "# Vehimap backup v5" || backupVersion = "# Vehimap backup v6") {
         maintenanceContent := SubStr(payload, payloadOffset, maintenanceLength)
+        payloadOffset += maintenanceLength
     } else {
         maintenanceContent := "# Vehimap maintenance v1`n"
+    }
+
+    if (backupVersion = "# Vehimap backup v6") {
+        attachmentsContent := SubStr(payload, payloadOffset, attachmentsLength)
+    } else {
+        attachmentsContent := "# Vehimap attachments v1`n"
     }
 
     return true
@@ -610,8 +656,8 @@ TryParseRecordsBackupContent(content, &loadedRecords, &errorMessage) {
         return true
     }
 
-    if (firstNonEmptyLine != "# Vehimap records v1") {
-        errorMessage := "Soubor pojištění a dokladů není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap records v1'."
+    if (firstNonEmptyLine != "# Vehimap records v1" && firstNonEmptyLine != "# Vehimap records v2") {
+        errorMessage := "Soubor pojištění a dokladů není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap records v2'."
         return false
     }
 
@@ -632,12 +678,15 @@ TryParseRecordsBackupContent(content, &loadedRecords, &errorMessage) {
         }
 
         fields := StrSplit(line, "`t")
-        if (fields.Length != 10) {
-            errorMessage := "Soubor pojištění a dokladů je poškozený. Řádek " index " musí obsahovat přesně 10 polí oddělených tabulátory."
+        if (
+            (firstNonEmptyLine = "# Vehimap records v1" && fields.Length != 10)
+            || (firstNonEmptyLine = "# Vehimap records v2" && fields.Length != 11)
+        ) {
+            errorMessage := "Soubor pojištění a dokladů je poškozený. Řádek " index " musí odpovídat hlavičce souboru."
             return false
         }
 
-        loadedRecords.Push({
+        loadedRecords.Push(NormalizeVehicleRecordEntry({
             id: UnescapeField(fields[1]),
             vehicleId: UnescapeField(fields[2]),
             recordType: UnescapeField(fields[3]),
@@ -646,8 +695,73 @@ TryParseRecordsBackupContent(content, &loadedRecords, &errorMessage) {
             validFrom: UnescapeField(fields[6]),
             validTo: UnescapeField(fields[7]),
             price: UnescapeField(fields[8]),
-            filePath: UnescapeField(fields[9]),
-            note: UnescapeField(fields[10])
+            attachmentMode: (fields.Length >= 11) ? UnescapeField(fields[9]) : "external",
+            filePath: (fields.Length >= 11) ? UnescapeField(fields[10]) : UnescapeField(fields[9]),
+            note: (fields.Length >= 11) ? UnescapeField(fields[11]) : UnescapeField(fields[10])
+        }))
+    }
+
+    return true
+}
+
+TryParseVehicleAttachmentsBackupContent(content, &loadedAttachments, &errorMessage) {
+    loadedAttachments := []
+    errorMessage := ""
+    content := NormalizeTextForStorage(content)
+    lines := StrSplit(content, "`n")
+    firstNonEmptyLine := ""
+    dataStarted := false
+
+    for rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        firstNonEmptyLine := line
+        break
+    }
+
+    if (firstNonEmptyLine = "") {
+        return true
+    }
+
+    if (firstNonEmptyLine != "# Vehimap attachments v1") {
+        errorMessage := "Soubor spravovaných příloh není v podporovaném formátu. Vehimap očekává hlavičku '# Vehimap attachments v1'."
+        return false
+    }
+
+    for index, rawLine in lines {
+        line := Trim(rawLine, "`r`n")
+        if (line = "") {
+            continue
+        }
+
+        if !dataStarted {
+            dataStarted := true
+            continue
+        }
+
+        if (SubStr(line, 1, 1) = "#") {
+            errorMessage := "Soubor spravovaných příloh obsahuje neplatnou hlavičku nebo komentář na řádku " index "."
+            return false
+        }
+
+        fields := StrSplit(line, "`t")
+        if (fields.Length != 2) {
+            errorMessage := "Soubor spravovaných příloh je poškozený. Řádek " index " musí obsahovat přesně 2 pole oddělená tabulátory."
+            return false
+        }
+
+        relativePath := NormalizeVehicleAttachmentRelativePath(UnescapeField(fields[1]))
+        if (relativePath = "") {
+            errorMessage := "Soubor spravovaných příloh obsahuje prázdnou relativní cestu na řádku " index "."
+            return false
+        }
+
+        loadedAttachments.Push({
+            relativePath: relativePath,
+            base64: UnescapeField(fields[2])
         })
     }
 
@@ -852,7 +966,7 @@ TryParseVehicleMaintenancePlansBackupContent(content, &loadedPlans, &errorMessag
 }
 
 BackupCurrentFilesBeforeImport() {
-    global DataDir, VehiclesFile, HistoryFile, FuelLogFile, RecordsFile, VehicleMetaFile, RemindersFile, MaintenancePlansFile, SettingsFile
+    global DataDir, VehiclesFile, HistoryFile, FuelLogFile, RecordsFile, VehicleMetaFile, RemindersFile, MaintenancePlansFile, SettingsFile, AttachmentsDir
 
     backupRoot := DataDir "\import-backups"
     if !InStr(FileExist(backupRoot), "D") {
@@ -886,8 +1000,32 @@ BackupCurrentFilesBeforeImport() {
     if FileExist(SettingsFile) {
         FileCopy(SettingsFile, backupDir "\settings.ini", true)
     }
+    if InStr(FileExist(AttachmentsDir), "D") {
+        DirCopy(AttachmentsDir, backupDir "\attachments", true)
+    }
 
     return backupDir
+}
+
+RestoreManagedAttachmentsFromBackupItems(items) {
+    global AttachmentsDir, LastBackupAttachmentStats
+
+    if InStr(FileExist(AttachmentsDir), "D") {
+        DirDelete(AttachmentsDir, true)
+    }
+
+    restoredCount := 0
+    for item in items {
+        WriteBinaryFileFromBase64(GetManagedVehicleAttachmentAbsolutePath(item.relativePath), item.base64)
+        restoredCount += 1
+    }
+
+    LastBackupAttachmentStats := {
+        includedCount: 0,
+        missingCount: 0,
+        restoredCount: restoredCount
+    }
+    return restoredCount
 }
 
 EnsureSettingsDefaults() {

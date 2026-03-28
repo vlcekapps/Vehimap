@@ -575,17 +575,17 @@ IsEquivalentAppAndFileVersion(appVersion, fileVersion) {
 BuildAboutProgramText() {
     global AppTitle, DataDir
 
-    appVersion := GetAppVersion()
+    currentVersion := GetAppVersion()
     lines := [
         AppTitle,
-        "Verze: " appVersion,
+        "Verze: " currentVersion,
         "Režim spuštění: " (A_IsCompiled ? "samostatná aplikace" : "zdrojový skript"),
         "Soubor aplikace: " A_ScriptFullPath,
         "Datová složka: " DataDir
     ]
 
     fileVersion := GetAppFileVersion()
-    if (fileVersion != "" && !IsEquivalentAppAndFileVersion(appVersion, fileVersion)) {
+    if (fileVersion != "" && !IsEquivalentAppAndFileVersion(currentVersion, fileVersion)) {
         lines.Push("Souborová verze (Windows): " fileVersion)
     }
 

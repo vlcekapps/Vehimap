@@ -729,6 +729,7 @@ AddVehicleStarterBundleRecords(vehicleId, templates, persist := true) {
             validFrom: template.validFrom,
             validTo: template.validTo,
             price: template.price,
+            attachmentMode: "managed",
             filePath: "",
             note: template.note
         }

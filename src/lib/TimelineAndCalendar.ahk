@@ -417,6 +417,7 @@ BuildVehicleTimelineRecordDetail(record) {
     }
     if (Trim(record.filePath) != "") {
         parts.Push(GetVehicleRecordPathStateText(record))
+        parts.Push(GetVehicleRecordAttachmentModeLabel(record))
     }
     if (Trim(record.note) != "") {
         parts.Push(ShortenText(record.note, 60))

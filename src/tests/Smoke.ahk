@@ -24,6 +24,7 @@ RunSmokeTests() {
         "SmokeTestVehicleMetaProfiles",
         "SmokeTestMaintenanceBackupRoundTrip",
         "SmokeTestRecordPathInfo",
+        "SmokeTestManagedRecordAttachments",
         "SmokeTestFleetCostSummary",
         "SmokeTestVehicleCostComparison",
         "SmokeTestVehicleTimelineEntries",
@@ -662,7 +663,7 @@ SmokeTestMaintenanceBackupRoundTrip() {
     ]
 
     backupContent := BuildCurrentBackupContent()
-    AssertContains(backupContent, "# Vehimap backup v5", "Záloha s údržbou se má ukládat jako formát v5.")
+    AssertContains(backupContent, "# Vehimap backup v6", "Záloha s údržbou se má ukládat jako formát v6.")
     AssertContains(backupContent, "# Vehimap maintenance v1", "Záloha má obsahovat sekci plánů údržby.")
 
     settingsContent := ""
@@ -673,36 +674,180 @@ SmokeTestMaintenanceBackupRoundTrip() {
     metaContent := ""
     remindersContent := ""
     maintenanceContent := ""
+    attachmentsContent := ""
     errorMessage := ""
     loadedPlans := []
 
     AssertTrue(
-        TryParseBackupContent(backupContent, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &errorMessage),
+        TryParseBackupContent(backupContent, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &attachmentsContent, &errorMessage),
         "Zálohu s plány údržby musí jít znovu načíst."
     )
     AssertContains(maintenanceContent, "Motorový olej", "Načtená maintenance sekce má obsahovat uložený servisní úkon.")
+    AssertContains(attachmentsContent, "# Vehimap attachments v1", "Záloha má obsahovat i sekci spravovaných příloh.")
     AssertTrue(TryParseVehicleMaintenancePlansBackupContent(maintenanceContent, &loadedPlans, &errorMessage), "Maintenance sekce ze zálohy musí jít samostatně parseovat.")
     AssertEqual(loadedPlans.Length, 1, "Ze zálohy se má načíst jeden servisní plán.")
     AssertEqual(loadedPlans[1].title, "Motorový olej", "Název servisního plánu se musí v záloze zachovat.")
 }
 
 SmokeTestRecordPathInfo() {
+    global DataDir, AttachmentsDir
+
     tempRoot := A_Temp "\vehimap_smoke_paths"
     tempFile := tempRoot "\priloha.pdf"
     missingFile := tempRoot "\chybi.pdf"
     missingFolder := tempRoot "\neni\chybi.pdf"
+    managedRelativePath := "attachments/veh_1/managed.pdf"
+    originalDataDir := DataDir
+    originalAttachmentsDir := AttachmentsDir
 
-    if DirExist(tempRoot) {
-        DirDelete(tempRoot, true)
+    try {
+        if DirExist(tempRoot) {
+            DirDelete(tempRoot, true)
+        }
+        DirCreate(tempRoot)
+        FileAppend("ok", tempFile, "UTF-8")
+
+        DataDir := tempRoot "\data"
+        AttachmentsDir := DataDir "\attachments"
+        DirCreate(AttachmentsDir "\veh_1")
+        FileAppend("managed", GetManagedVehicleAttachmentAbsolutePath(managedRelativePath), "UTF-8")
+
+        AssertEqual(GetVehicleRecordPathInfo({filePath: tempFile}).kind, "file", "Existující soubor má být rozpoznaný jako soubor.")
+        AssertEqual(GetVehicleRecordPathInfo({filePath: tempRoot}).kind, "folder", "Existující složka má být rozpoznaná jako složka.")
+        AssertEqual(GetVehicleRecordPathInfo({filePath: missingFile}).kind, "missing_file", "Chybějící soubor ve známé složce má být rozpoznaný.")
+        AssertEqual(GetVehicleRecordPathInfo({filePath: missingFolder}).kind, "missing_folder", "Chybějící složka má být rozpoznaná.")
+        AssertEqual(GetVehicleRecordPathInfo({filePath: ""}).kind, "empty", "Prázdná cesta má být rozpoznaná jako empty.")
+        AssertEqual(GetVehicleRecordPathInfo({attachmentMode: "managed", filePath: managedRelativePath}).kind, "file", "Spravovaná příloha má být rozpoznaná jako soubor.")
+        AssertEqual(GetVehicleRecordPathInfo({attachmentMode: "managed", filePath: "attachments/veh_1/chybi.pdf"}).kind, "missing_file", "Chybějící spravovaná příloha má být rozpoznaná jako missing_file.")
+    } finally {
+        DataDir := originalDataDir
+        AttachmentsDir := originalAttachmentsDir
     }
-    DirCreate(tempRoot)
-    FileAppend("ok", tempFile, "UTF-8")
+}
 
-    AssertEqual(GetVehicleRecordPathInfo({filePath: tempFile}).kind, "file", "Existující soubor má být rozpoznaný jako soubor.")
-    AssertEqual(GetVehicleRecordPathInfo({filePath: tempRoot}).kind, "folder", "Existující složka má být rozpoznaná jako složka.")
-    AssertEqual(GetVehicleRecordPathInfo({filePath: missingFile}).kind, "missing_file", "Chybějící soubor ve známé složce má být rozpoznaný.")
-    AssertEqual(GetVehicleRecordPathInfo({filePath: missingFolder}).kind, "missing_folder", "Chybějící složka má být rozpoznaná.")
-    AssertEqual(GetVehicleRecordPathInfo({filePath: ""}).kind, "empty", "Prázdná cesta má být rozpoznaná jako empty.")
+SmokeTestManagedRecordAttachments() {
+    global DataDir, AttachmentsDir, VehiclesFile, HistoryFile, FuelLogFile, RecordsFile, VehicleMetaFile, RemindersFile, MaintenancePlansFile, SettingsFile, VehicleRecords, LastBackupAttachmentStats
+
+    ResetSmokeData()
+    tempRoot := A_Temp "\vehimap_smoke_managed_attachments"
+    sourceDir := tempRoot "\source"
+    sourceFile := sourceDir "\pojistka.pdf"
+    originalDataDir := DataDir
+    originalAttachmentsDir := AttachmentsDir
+    originalVehiclesFile := VehiclesFile
+    originalHistoryFile := HistoryFile
+    originalFuelLogFile := FuelLogFile
+    originalRecordsFile := RecordsFile
+    originalVehicleMetaFile := VehicleMetaFile
+    originalRemindersFile := RemindersFile
+    originalMaintenancePlansFile := MaintenancePlansFile
+    originalSettingsFile := SettingsFile
+
+    try {
+        if DirExist(tempRoot) {
+            DirDelete(tempRoot, true)
+        }
+        DirCreate(tempRoot)
+        DirCreate(sourceDir)
+        FileAppend("spravovana-priloha", sourceFile, "UTF-8")
+
+        DataDir := tempRoot "\data"
+        AttachmentsDir := DataDir "\attachments"
+        VehiclesFile := DataDir "\vehicles.tsv"
+        HistoryFile := DataDir "\history.tsv"
+        FuelLogFile := DataDir "\fuel.tsv"
+        RecordsFile := DataDir "\records.tsv"
+        VehicleMetaFile := DataDir "\vehicle_meta.tsv"
+        RemindersFile := DataDir "\reminders.tsv"
+        MaintenancePlansFile := DataDir "\maintenance.tsv"
+        SettingsFile := DataDir "\settings.ini"
+        EnsureDataFiles()
+
+        relativePath := CopySourceFileToManagedVehicleAttachment("veh_1", sourceFile)
+        AssertEqual(relativePath, "attachments/veh_1/pojistka.pdf", "Spravovaná příloha se má ukládat relativně pod data\\attachments.")
+
+        entry := NormalizeVehicleRecordEntry({
+            id: "record_1",
+            vehicleId: "veh_1",
+            recordType: "Doklad",
+            title: "Povinné ručení",
+            provider: "Pojišťovna",
+            validFrom: "01/2026",
+            validTo: "01/2027",
+            price: "",
+            attachmentMode: "managed",
+            filePath: relativePath,
+            note: ""
+        })
+        VehicleRecords := [entry]
+        SaveVehicleRecords()
+
+        VehicleRecords := []
+        LoadVehicleRecords()
+        AssertEqual(VehicleRecords.Length, 1, "Z records v2 se má načíst jeden doklad.")
+        AssertEqual(GetVehicleRecordAttachmentMode(VehicleRecords[1]), "managed", "Načtený doklad si má pamatovat režim managed.")
+        AssertEqual(GetVehicleRecordDisplayPath(VehicleRecords[1]), GetManagedVehicleAttachmentAbsolutePath(relativePath), "Spravovaná příloha se má resolvovat na absolutní cestu v data.")
+        AssertContains(FileRead(GetManagedVehicleAttachmentAbsolutePath(relativePath), "UTF-8"), "spravovana-priloha", "Obsah spravované přílohy se má po kopii zachovat.")
+
+        backupContent := BuildCurrentBackupContent()
+        AssertContains(backupContent, "# Vehimap backup v6", "Záloha spravovaných příloh se má ukládat jako formát v6.")
+        AssertContains(backupContent, "# Vehimap attachments v1", "Záloha se spravovanou přílohou má obsahovat attachment sekci.")
+        AssertEqual(LastBackupAttachmentStats.includedCount, 1, "Export má započítat jednu spravovanou přílohu.")
+        AssertEqual(LastBackupAttachmentStats.missingCount, 0, "Existující spravovaná příloha nemá být hlášena jako chybějící.")
+
+        settingsContent := ""
+        vehiclesContent := ""
+        historyContent := ""
+        fuelContent := ""
+        recordsContent := ""
+        metaContent := ""
+        remindersContent := ""
+        maintenanceContent := ""
+        attachmentsContent := ""
+        errorMessage := ""
+        loadedAttachments := []
+
+        AssertTrue(
+            TryParseBackupContent(backupContent, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &attachmentsContent, &errorMessage),
+            "Zálohu se spravovanou přílohou musí jít znovu načíst."
+        )
+        AssertTrue(TryParseVehicleAttachmentsBackupContent(attachmentsContent, &loadedAttachments, &errorMessage), "Attachment sekce ze zálohy musí jít samostatně parseovat.")
+        AssertEqual(loadedAttachments.Length, 1, "Ze zálohy se má načíst jedna spravovaná příloha.")
+        AssertEqual(loadedAttachments[1].relativePath, relativePath, "Relativní cesta spravované přílohy se má v záloze zachovat.")
+
+        DirDelete(AttachmentsDir, true)
+        restoredCount := RestoreManagedAttachmentsFromBackupItems(loadedAttachments)
+        AssertEqual(restoredCount, 1, "Import ze zálohy má obnovit jednu spravovanou přílohu.")
+        AssertContains(FileRead(GetManagedVehicleAttachmentAbsolutePath(relativePath), "UTF-8"), "spravovana-priloha", "Obnovená spravovaná příloha musí mít původní obsah.")
+
+        VehicleRecords[1] := NormalizeVehicleRecordEntry({
+            id: "record_1",
+            vehicleId: "veh_1",
+            recordType: "Doklad",
+            title: "Povinné ručení",
+            provider: "Pojišťovna",
+            validFrom: "01/2026",
+            validTo: "01/2027",
+            price: "",
+            attachmentMode: "external",
+            filePath: sourceFile,
+            note: ""
+        })
+        SaveVehicleRecords()
+        PruneVehicleManagedAttachments("veh_1")
+        AssertTrue(!FileExist(GetManagedVehicleAttachmentAbsolutePath(relativePath)), "Po migraci dokladu zpět na externí cestu se má orphan managed příloha uklidit.")
+    } finally {
+        DataDir := originalDataDir
+        AttachmentsDir := originalAttachmentsDir
+        VehiclesFile := originalVehiclesFile
+        HistoryFile := originalHistoryFile
+        FuelLogFile := originalFuelLogFile
+        RecordsFile := originalRecordsFile
+        VehicleMetaFile := originalVehicleMetaFile
+        RemindersFile := originalRemindersFile
+        MaintenancePlansFile := originalMaintenancePlansFile
+        SettingsFile := originalSettingsFile
+    }
 }
 
 SmokeTestFleetCostSummary() {

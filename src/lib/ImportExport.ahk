@@ -1,5 +1,5 @@
 ExportAppData(*) {
-    global AppTitle, A_DefaultDialogTitle
+    global AppTitle, A_DefaultDialogTitle, LastBackupAttachmentStats
 
     A_DefaultDialogTitle := AppTitle
     backupPath := FileSelect("S16", GetDefaultBackupPath(), "Export dat Vehimap", "Vehimap záloha (*.vehimapbak)")
@@ -10,7 +10,14 @@ ExportAppData(*) {
     backupPath := EnsureBackupExtension(backupPath)
     try {
         WriteTextFileUtf8(backupPath, BuildCurrentBackupContent())
-        MsgBox("Export dat byl dokončen.`n`nSoubor:`n" backupPath, AppTitle, 0x40)
+        message := "Export dat byl dokončen.`n`nSoubor:`n" backupPath
+        if (IsObject(LastBackupAttachmentStats) && LastBackupAttachmentStats.HasOwnProp("includedCount") && LastBackupAttachmentStats.includedCount > 0) {
+            message .= "`n`nSpravovaných příloh v záloze: " LastBackupAttachmentStats.includedCount "."
+        }
+        if (IsObject(LastBackupAttachmentStats) && LastBackupAttachmentStats.HasOwnProp("missingCount") && LastBackupAttachmentStats.missingCount > 0) {
+            message .= "`nPřeskočených chybějících spravovaných příloh: " LastBackupAttachmentStats.missingCount "."
+        }
+        MsgBox(message, AppTitle, 0x40)
     } catch as err {
         MsgBox("Export dat se nepodařil.`n`n" err.Message, AppTitle, 0x30)
     }
@@ -26,7 +33,7 @@ ImportAppData(*) {
     }
 
     result := MsgBox(
-        "Import přepíše aktuální vozidla, historii událostí, kilometry a tankování, pojištění a doklady, stavy a štítky, vlastní připomínky, plány údržby i nastavení aplikace.`n`nPokračovat v importu?",
+        "Import přepíše aktuální vozidla, historii událostí, kilometry a tankování, pojištění a doklady, spravované přílohy dokladů, stavy a štítky, vlastní připomínky, plány údržby i nastavení aplikace.`n`nPokračovat v importu?",
         AppTitle,
         0x34
     )
@@ -49,8 +56,9 @@ ImportAppData(*) {
     metaContent := ""
     remindersContent := ""
     maintenanceContent := ""
+    attachmentsContent := ""
     errorMessage := ""
-    if !TryParseBackupContent(backupContent, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &errorMessage) {
+    if !TryParseBackupContent(backupContent, &settingsContent, &vehiclesContent, &historyContent, &fuelContent, &recordsContent, &metaContent, &remindersContent, &maintenanceContent, &attachmentsContent, &errorMessage) {
         MsgBox("Import se nepodařil.`n`n" errorMessage, AppTitle, 0x30)
         return
     }
@@ -97,7 +105,14 @@ ImportAppData(*) {
         return
     }
 
+    importedAttachments := []
+    if !TryParseVehicleAttachmentsBackupContent(attachmentsContent, &importedAttachments, &errorMessage) {
+        MsgBox("Import se nepodařil.`n`n" errorMessage, AppTitle, 0x30)
+        return
+    }
+
     backupDir := BackupCurrentFilesBeforeImport()
+    restoredAttachmentCount := 0
 
     try {
         WriteTextFileUtf8(VehiclesFile, vehiclesContent)
@@ -108,6 +123,7 @@ ImportAppData(*) {
         WriteTextFileUtf8(RemindersFile, remindersContent)
         WriteTextFileUtf8(MaintenancePlansFile, maintenanceContent)
         WriteTextFileUtf8(SettingsFile, settingsContent)
+        restoredAttachmentCount := RestoreManagedAttachmentsFromBackupItems(importedAttachments)
         EnsureSettingsDefaults()
         SetRunAtStartupEnabled(IniRead(SettingsFile, "app", "run_at_startup", "0") = "1")
         LoadVehicles()
@@ -129,6 +145,9 @@ ImportAppData(*) {
     message := "Import dat byl dokončen."
     if (backupDir != "") {
         message .= "`n`nPůvodní soubory byly před importem zálohovány do:`n" backupDir
+    }
+    if (restoredAttachmentCount > 0) {
+        message .= "`n`nObnovených spravovaných příloh: " restoredAttachmentCount "."
     }
     MsgBox(message, AppTitle, 0x40)
 }

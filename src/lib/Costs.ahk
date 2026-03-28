@@ -722,7 +722,7 @@ BuildVehicleCostDetailEntries(vehicleId, yearLabel, fromMonth, toMonth) {
             extraParts.Push("Poskytovatel: " entry.provider)
         }
         if (Trim(entry.filePath) != "") {
-            extraParts.Push("Soubor: " entry.filePath)
+            extraParts.Push("Soubor: " GetVehicleRecordDisplayPath(entry))
         }
 
         entries.Push({

@@ -217,7 +217,7 @@ BuildGlobalSearchResults(searchText := "") {
             Trim(entry.title) != "" ? entry.title : entry.recordType,
             BuildGlobalSearchRecordDetailText(entry),
             Trim(entry.validTo) != "" ? entry.validTo : entry.validFrom,
-            [vehicle.name, vehicle.plate, vehicle.makeModel, entry.recordType, entry.title, entry.provider, entry.validFrom, entry.validTo, entry.price, entry.filePath, GetFileNameFromPath(entry.filePath), entry.note]
+            [vehicle.name, vehicle.plate, vehicle.makeModel, entry.recordType, entry.title, entry.provider, entry.validFrom, entry.validTo, entry.price, entry.filePath, GetVehicleRecordDisplayPath(entry), GetVehicleRecordResolvedFileName(entry), GetVehicleRecordAttachmentModeLabel(entry), entry.note]
         )
     }
 
@@ -590,10 +590,12 @@ BuildGlobalSearchRecordDetailText(entry) {
         parts.Push(entry.provider)
     }
 
-    fileName := GetFileNameFromPath(entry.filePath)
+    fileName := GetVehicleRecordResolvedFileName(entry)
     if (fileName != "") {
         parts.Push(fileName)
     }
+
+    parts.Push(GetVehicleRecordAttachmentModeLabel(entry))
 
     if (Trim(entry.note) != "") {
         parts.Push(ShortenText(entry.note, 50))

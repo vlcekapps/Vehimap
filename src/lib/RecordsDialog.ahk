@@ -180,7 +180,7 @@ PopulateVehicleRecordsList(selectEntryId := "", focusList := false) {
             entry.provider,
             entry.validTo,
             entry.price,
-            ShortenText(GetFileNameFromPath(entry.filePath), 32),
+            ShortenText(GetVehicleRecordResolvedFileName(entry), 32),
             GetVehicleRecordPathStateText(entry)
         )
         VisibleRecordIds.Push(entry.id)
@@ -253,7 +253,19 @@ FilterVehicleRecordsBySearch(entries, searchText := "") {
     needle := StrLower(Trim(searchText))
 
     for entry in entries {
-        haystack := StrLower(entry.recordType " " entry.title " " entry.provider " " entry.validFrom " " entry.validTo " " entry.price " " entry.filePath " " GetFileNameFromPath(entry.filePath) " " entry.note)
+        haystack := StrLower(
+            entry.recordType " "
+            entry.title " "
+            entry.provider " "
+            entry.validFrom " "
+            entry.validTo " "
+            entry.price " "
+            entry.filePath " "
+            GetVehicleRecordResolvedFileName(entry) " "
+            GetVehicleRecordDisplayPath(entry) " "
+            GetVehicleRecordAttachmentModeLabel(entry) " "
+            entry.note
+        )
         if (needle = "" || InStr(haystack, needle)) {
             filtered.Push(entry)
         }
@@ -308,7 +320,7 @@ CompareVisibleVehicleRecordsByColumn(left, right, column) {
         case 5:
             return CompareOptionalMoneyTexts(left.price, right.price)
         case 6:
-            return CompareTextValues(GetFileNameFromPath(left.filePath), GetFileNameFromPath(right.filePath))
+            return CompareTextValues(GetVehicleRecordResolvedFileName(left), GetVehicleRecordResolvedFileName(right))
         case 7:
             return CompareNumberValues(GetVehicleRecordPathStateSortValue(left), GetVehicleRecordPathStateSortValue(right))
     }
@@ -354,11 +366,14 @@ UpdateVehicleRecordActionState() {
 
 GetVehicleRecordPathInfo(entry) {
     path := Trim(entry.filePath)
-    resolvedPath := ResolveVehicleRecordPath(path)
+    mode := GetVehicleRecordAttachmentMode(entry)
+    resolvedPath := ResolveVehicleRecordFilePath(entry)
 
     if (path = "") {
         return {
             kind: "empty",
+            mode: mode,
+            modeLabel: GetVehicleRecordAttachmentModeLabel(mode),
             inputPath: "",
             resolvedPath: "",
             folderPath: "",
@@ -369,6 +384,8 @@ GetVehicleRecordPathInfo(entry) {
     if DirExist(resolvedPath) {
         return {
             kind: "folder",
+            mode: mode,
+            modeLabel: GetVehicleRecordAttachmentModeLabel(mode),
             inputPath: path,
             resolvedPath: resolvedPath,
             folderPath: resolvedPath,
@@ -380,6 +397,8 @@ GetVehicleRecordPathInfo(entry) {
         SplitPath(resolvedPath, , &directoryPath)
         return {
             kind: "file",
+            mode: mode,
+            modeLabel: GetVehicleRecordAttachmentModeLabel(mode),
             inputPath: path,
             resolvedPath: resolvedPath,
             folderPath: directoryPath,
@@ -391,6 +410,8 @@ GetVehicleRecordPathInfo(entry) {
     if (parentDirectory != "" && DirExist(parentDirectory)) {
         return {
             kind: "missing_file",
+            mode: mode,
+            modeLabel: GetVehicleRecordAttachmentModeLabel(mode),
             inputPath: path,
             resolvedPath: resolvedPath,
             folderPath: parentDirectory,
@@ -400,24 +421,13 @@ GetVehicleRecordPathInfo(entry) {
 
     return {
         kind: "missing_folder",
+        mode: mode,
+        modeLabel: GetVehicleRecordAttachmentModeLabel(mode),
         inputPath: path,
         resolvedPath: resolvedPath,
         folderPath: "",
         exists: false
     }
-}
-
-ResolveVehicleRecordPath(path) {
-    path := Trim(path)
-    if (path = "") {
-        return ""
-    }
-
-    if RegExMatch(path, "i)^[a-z]:[\\/]" ) || RegExMatch(path, "^\\\\") || RegExMatch(path, "^[\\/]") {
-        return path
-    }
-
-    return A_ScriptDir "\" path
 }
 
 GetVehicleRecordPathStateText(entry) {
@@ -455,17 +465,19 @@ GetVehicleRecordPathStateSortValue(entry) {
 }
 
 BuildVehicleRecordPathStatusText(pathInfo) {
+    prefix := "Režim: " pathInfo.modeLabel ". "
+
     switch pathInfo.kind {
         case "file":
-            return "Stav cesty: soubor je dostupný. Cesta: " pathInfo.inputPath
+            return prefix "Stav cesty: soubor je dostupný. Uložená cesta: " pathInfo.inputPath "`nVyřešená cesta: " pathInfo.resolvedPath
         case "folder":
-            return "Stav cesty: záznam míří na existující složku. Cesta: " pathInfo.inputPath
+            return prefix "Stav cesty: záznam míří na existující složku. Uložená cesta: " pathInfo.inputPath "`nVyřešená cesta: " pathInfo.resolvedPath
         case "missing_file":
-            return "Stav cesty: složka existuje, ale soubor chybí. Cesta: " pathInfo.inputPath
+            return prefix "Stav cesty: složka existuje, ale soubor chybí. Uložená cesta: " pathInfo.inputPath "`nVyřešená cesta: " pathInfo.resolvedPath
         case "missing_folder":
-            return "Stav cesty: cílová složka ani soubor nejsou dostupné. Cesta: " pathInfo.inputPath
+            return prefix "Stav cesty: cílová složka ani soubor nejsou dostupné. Uložená cesta: " pathInfo.inputPath "`nVyřešená cesta: " pathInfo.resolvedPath
         default:
-            return "Stav cesty: u vybraného záznamu není vyplněná cesta k souboru ani složce."
+            return prefix "Stav cesty: u vybraného záznamu není vyplněná uložená cesta k souboru ani složce."
     }
 }
 
@@ -521,6 +533,7 @@ DeleteSelectedVehicleRecord(*) {
 
     VehicleRecords.RemoveAt(index)
     SaveVehicleRecords()
+    PruneVehicleManagedAttachments(entry.vehicleId)
     PopulateVehicleRecordsList()
 }
 
@@ -592,7 +605,7 @@ CopySelectedVehicleRecordPath(*) {
         return
     }
 
-    path := Trim(entry.filePath)
+    path := GetVehicleRecordDisplayPath(entry)
     if (path = "") {
         MsgBox("Vybraný záznam nemá vyplněnou cestu k souboru.", AppTitle, 0x40)
         return
@@ -616,6 +629,7 @@ OpenVehicleDetailFromRecords(*) {
 
 OpenVehicleRecordForm(mode, entry := "") {
     global AppTitle, RecordFormGui, RecordFormControls, RecordFormMode, RecordFormEntryId, RecordFormVehicleId, RecordsGui, RecordsVehicleId, RecordTypeOptions
+    global RecordFormAttachmentSourcePath, RecordFormInitialAttachmentMode, RecordFormInitialFilePath, RecordFormStatusLabel, RecordFormMoveManagedButton, RecordFormRelinkButton
 
     if IsObject(RecordFormGui) {
         WinActivate("ahk_id " RecordFormGui.Hwnd)
@@ -629,6 +643,12 @@ OpenVehicleRecordForm(mode, entry := "") {
     RecordFormMode := mode
     RecordFormEntryId := IsObject(entry) ? entry.id : ""
     RecordFormVehicleId := IsObject(entry) ? entry.vehicleId : RecordsVehicleId
+    RecordFormAttachmentSourcePath := ""
+    RecordFormInitialAttachmentMode := IsObject(entry) ? GetVehicleRecordAttachmentMode(entry) : "managed"
+    RecordFormInitialFilePath := IsObject(entry) ? Trim(entry.filePath) : ""
+    RecordFormStatusLabel := 0
+    RecordFormMoveManagedButton := 0
+    RecordFormRelinkButton := 0
     RecordFormControls := {}
 
     title := (mode = "edit") ? "Upravit záznam" : "Přidat záznam"
@@ -659,18 +679,33 @@ OpenVehicleRecordForm(mode, entry := "") {
     RecordFormGui.AddText("x20 y200 w170", "Cena / částka (volitelné)")
     RecordFormControls.price := RecordFormGui.AddEdit("x210 y197 w240")
 
-    RecordFormGui.AddText("x20 y235 w170", "Soubor nebo cesta")
-    RecordFormControls.filePath := RecordFormGui.AddEdit("x20 y260 w435")
-    browseButton := RecordFormGui.AddButton("x465 y258 w85 h26", "Vybrat")
+    RecordFormGui.AddText("x20 y235 w170", "Režim přílohy")
+    RecordFormControls.attachmentModeManaged := RecordFormGui.AddRadio("x210 y233 w160 Checked", "Spravovaná kopie")
+    RecordFormControls.attachmentModeExternal := RecordFormGui.AddRadio("x380 y233 w140", "Externí cesta")
+    RecordFormControls.attachmentModeManaged.OnEvent("Click", OnVehicleRecordAttachmentModeChanged)
+    RecordFormControls.attachmentModeExternal.OnEvent("Click", OnVehicleRecordAttachmentModeChanged)
+
+    RecordFormGui.AddText("x20 y268 w170", "Uložená cesta")
+    RecordFormControls.filePath := RecordFormGui.AddEdit("x20 y293 w435")
+    browseButton := RecordFormGui.AddButton("x465 y291 w85 h26", "Importovat")
     browseButton.OnEvent("Click", SelectVehicleRecordFile)
+    RecordFormControls.browseButton := browseButton
 
-    RecordFormGui.AddText("x20 y295 w170", "Poznámka (volitelné)")
-    RecordFormControls.note := RecordFormGui.AddEdit("x20 y320 w530 h80 Multi")
+    RecordFormMoveManagedButton := RecordFormGui.AddButton("x20 y327 w140 h28", "Přesunout do příloh")
+    RecordFormMoveManagedButton.OnEvent("Click", MoveVehicleRecordAttachmentToManagedCopy)
 
-    saveButton := RecordFormGui.AddButton("x180 y415 w120 h30 Default", "Uložit")
+    RecordFormRelinkButton := RecordFormGui.AddButton("x170 y327 w110 h28", "Znovu propojit")
+    RecordFormRelinkButton.OnEvent("Click", RelinkVehicleRecordAttachment)
+
+    RecordFormStatusLabel := RecordFormGui.AddText("x20 y365 w530 h48", "")
+
+    RecordFormGui.AddText("x20 y423 w170", "Poznámka (volitelné)")
+    RecordFormControls.note := RecordFormGui.AddEdit("x20 y448 w530 h80 Multi")
+
+    saveButton := RecordFormGui.AddButton("x180 y540 w120 h30 Default", "Uložit")
     saveButton.OnEvent("Click", SaveVehicleRecordFromForm)
 
-    cancelButton := RecordFormGui.AddButton("x310 y415 w120 h30", "Zrušit")
+    cancelButton := RecordFormGui.AddButton("x310 y540 w120 h30", "Zrušit")
     cancelButton.OnEvent("Click", CloseVehicleRecordForm)
 
     if IsObject(entry) {
@@ -682,16 +717,20 @@ OpenVehicleRecordForm(mode, entry := "") {
         RecordFormControls.price.Text := entry.price
         RecordFormControls.filePath.Text := entry.filePath
         RecordFormControls.note.Text := entry.note
+        SetVehicleRecordFormAttachmentMode(GetVehicleRecordAttachmentMode(entry))
     } else {
         RecordFormControls.recordType.Value := 1
+        SetVehicleRecordFormAttachmentMode("managed")
     }
 
-    RecordFormGui.Show("w580 h460")
+    UpdateVehicleRecordFormAttachmentState()
+    RecordFormGui.Show("w580 h590")
     RecordFormControls.recordType.Focus()
 }
 
 CloseVehicleRecordForm(*) {
     global RecordFormGui, RecordFormControls, RecordFormMode, RecordFormEntryId, RecordFormVehicleId, RecordsGui
+    global RecordFormAttachmentSourcePath, RecordFormInitialAttachmentMode, RecordFormInitialFilePath, RecordFormStatusLabel, RecordFormMoveManagedButton, RecordFormRelinkButton
 
     if IsObject(RecordFormGui) {
         RecordFormGui.Destroy()
@@ -702,6 +741,12 @@ CloseVehicleRecordForm(*) {
     RecordFormMode := ""
     RecordFormEntryId := ""
     RecordFormVehicleId := ""
+    RecordFormAttachmentSourcePath := ""
+    RecordFormInitialAttachmentMode := ""
+    RecordFormInitialFilePath := ""
+    RecordFormStatusLabel := 0
+    RecordFormMoveManagedButton := 0
+    RecordFormRelinkButton := 0
 
     if IsObject(RecordsGui) {
         RecordsGui.Opt("-Disabled")
@@ -709,8 +754,78 @@ CloseVehicleRecordForm(*) {
     }
 }
 
+GetVehicleRecordFormAttachmentMode() {
+    global RecordFormControls
+
+    if IsObject(RecordFormControls) && RecordFormControls.Has("attachmentModeExternal") && RecordFormControls.attachmentModeExternal.Value {
+        return "external"
+    }
+
+    return "managed"
+}
+
+SetVehicleRecordFormAttachmentMode(mode) {
+    global RecordFormControls
+
+    mode := NormalizeVehicleRecordAttachmentMode(mode)
+    if !IsObject(RecordFormControls) || !RecordFormControls.Has("attachmentModeManaged") || !RecordFormControls.Has("attachmentModeExternal") {
+        return
+    }
+
+    RecordFormControls.attachmentModeManaged.Value := (mode = "managed")
+    RecordFormControls.attachmentModeExternal.Value := (mode = "external")
+}
+
+BuildVehicleRecordFormPathInfo() {
+    return GetVehicleRecordPathInfo({
+        attachmentMode: GetVehicleRecordFormAttachmentMode(),
+        filePath: IsObject(RecordFormControls) && RecordFormControls.Has("filePath") ? Trim(RecordFormControls.filePath.Text) : ""
+    })
+}
+
+UpdateVehicleRecordFormAttachmentState() {
+    global RecordFormControls, RecordFormStatusLabel, RecordFormMoveManagedButton, RecordFormRelinkButton, RecordFormAttachmentSourcePath
+
+    if !IsObject(RecordFormControls) {
+        return
+    }
+
+    mode := GetVehicleRecordFormAttachmentMode()
+    pathInfo := BuildVehicleRecordFormPathInfo()
+    browseText := (mode = "managed") ? "Importovat" : "Vybrat"
+    if RecordFormControls.Has("browseButton") {
+        RecordFormControls.browseButton.Text := browseText
+    }
+
+    if IsObject(RecordFormMoveManagedButton) {
+        canMove := (mode = "external" && pathInfo.kind = "file")
+        RecordFormMoveManagedButton.Opt(canMove ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(RecordFormRelinkButton) {
+        canRelink := (Trim(pathInfo.inputPath) != "" || mode = "managed")
+        RecordFormRelinkButton.Opt(canRelink ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(RecordFormStatusLabel) {
+        statusText := BuildVehicleRecordPathStatusText(pathInfo)
+        if (mode = "managed" && Trim(RecordFormAttachmentSourcePath) != "") {
+            statusText .= "`nZdroj pro import: " RecordFormAttachmentSourcePath
+        }
+        RecordFormStatusLabel.Text := statusText
+    }
+}
+
+OnVehicleRecordAttachmentModeChanged(*) {
+    global RecordFormAttachmentSourcePath
+
+    if (GetVehicleRecordFormAttachmentMode() = "external") {
+        RecordFormAttachmentSourcePath := ""
+    }
+
+    UpdateVehicleRecordFormAttachmentState()
+}
+
 SelectVehicleRecordFile(*) {
-    global AppTitle, A_DefaultDialogTitle, RecordFormControls
+    global AppTitle, A_DefaultDialogTitle, RecordFormControls, RecordFormVehicleId, RecordFormAttachmentSourcePath
 
     A_DefaultDialogTitle := AppTitle
     selectedPath := FileSelect(1, A_ScriptDir, "Vyberte soubor k záznamu")
@@ -718,11 +833,46 @@ SelectVehicleRecordFile(*) {
         return
     }
 
-    RecordFormControls.filePath.Text := selectedPath
+    if (GetVehicleRecordFormAttachmentMode() = "managed") {
+        preferredRelativePath := Trim(RecordFormControls.filePath.Text)
+        if (preferredRelativePath != "" && RecordFormAttachmentSourcePath = "") {
+            preferredRelativePath := NormalizeVehicleAttachmentRelativePath(preferredRelativePath)
+        }
+
+        RecordFormAttachmentSourcePath := selectedPath
+        RecordFormControls.filePath.Text := BuildManagedVehicleAttachmentRelativePath(RecordFormVehicleId, selectedPath, preferredRelativePath)
+    } else {
+        RecordFormAttachmentSourcePath := ""
+        RecordFormControls.filePath.Text := selectedPath
+    }
+
+    UpdateVehicleRecordFormAttachmentState()
+}
+
+MoveVehicleRecordAttachmentToManagedCopy(*) {
+    global AppTitle, RecordFormControls, RecordFormVehicleId, RecordFormAttachmentSourcePath
+
+    pathInfo := GetVehicleRecordPathInfo({
+        attachmentMode: "external",
+        filePath: IsObject(RecordFormControls) && RecordFormControls.Has("filePath") ? Trim(RecordFormControls.filePath.Text) : ""
+    })
+    if (pathInfo.kind != "file") {
+        MsgBox("Do spravovaných příloh lze přesunout jen existující soubor.", AppTitle, 0x30)
+        return
+    }
+
+    RecordFormAttachmentSourcePath := pathInfo.resolvedPath
+    RecordFormControls.filePath.Text := BuildManagedVehicleAttachmentRelativePath(RecordFormVehicleId, pathInfo.resolvedPath, NormalizeVehicleAttachmentRelativePath(RecordFormInitialFilePath))
+    SetVehicleRecordFormAttachmentMode("managed")
+    UpdateVehicleRecordFormAttachmentState()
+}
+
+RelinkVehicleRecordAttachment(*) {
+    SelectVehicleRecordFile()
 }
 
 SaveVehicleRecordFromForm(*) {
-    global AppTitle, VehicleRecords, RecordFormControls, RecordFormMode, RecordFormEntryId, RecordFormVehicleId
+    global AppTitle, VehicleRecords, RecordFormControls, RecordFormMode, RecordFormEntryId, RecordFormVehicleId, RecordFormAttachmentSourcePath
 
     recordType := Trim(RecordFormControls.recordType.Text)
     title := Trim(RecordFormControls.title.Text)
@@ -730,6 +880,7 @@ SaveVehicleRecordFromForm(*) {
     validFrom := NormalizeMonthYear(RecordFormControls.validFrom.Text)
     validTo := NormalizeMonthYear(RecordFormControls.validTo.Text)
     price := Trim(RecordFormControls.price.Text)
+    attachmentMode := GetVehicleRecordFormAttachmentMode()
     filePath := Trim(RecordFormControls.filePath.Text)
     note := Trim(RecordFormControls.note.Text)
 
@@ -763,7 +914,26 @@ SaveVehicleRecordFromForm(*) {
         return
     }
 
-    entry := {
+    if (attachmentMode = "managed" && filePath != "" && (RegExMatch(filePath, "i)^[a-z]:[\\/]") || RegExMatch(filePath, "^\\\\") || RegExMatch(filePath, "^[\\/]"))) {
+        if (Trim(RecordFormAttachmentSourcePath) = "") {
+            MsgBox("Spravovaná kopie musí být uložená relativně do složky data\\attachments. Použijte tlačítko Importovat nebo Znovu propojit.", AppTitle, 0x30)
+            RecordFormControls.filePath.Focus()
+            return
+        }
+    }
+
+    if (attachmentMode = "managed" && filePath != "" && Trim(RecordFormAttachmentSourcePath) != "") {
+        try {
+            filePath := CopySourceFileToManagedVehicleAttachment(RecordFormVehicleId, RecordFormAttachmentSourcePath, NormalizeVehicleAttachmentRelativePath(filePath))
+        } catch as err {
+            MsgBox("Spravovanou kopii se nepodařilo uložit.`n`n" err.Message, AppTitle, 0x30)
+            return
+        }
+    } else if (attachmentMode = "managed") {
+        filePath := NormalizeVehicleAttachmentRelativePath(filePath)
+    }
+
+    entry := NormalizeVehicleRecordEntry({
         id: (RecordFormMode = "edit") ? RecordFormEntryId : GenerateVehicleRecordId(),
         vehicleId: RecordFormVehicleId,
         recordType: recordType,
@@ -772,9 +942,10 @@ SaveVehicleRecordFromForm(*) {
         validFrom: validFrom,
         validTo: validTo,
         price: price,
+        attachmentMode: attachmentMode,
         filePath: filePath,
         note: note
-    }
+    })
 
     index := FindVehicleRecordIndexById(entry.id)
     if index {
@@ -784,6 +955,7 @@ SaveVehicleRecordFromForm(*) {
     }
 
     SaveVehicleRecords()
+    PruneVehicleManagedAttachments(entry.vehicleId)
     CloseVehicleRecordForm()
     PopulateVehicleRecordsList(entry.id, true)
 }

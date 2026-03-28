@@ -203,7 +203,7 @@ EnsureDataFiles() {
     }
 
     if !FileExist(RecordsFile) {
-        FileAppend("# Vehimap records v1`n", RecordsFile, "UTF-8")
+        FileAppend("# Vehimap records v2`n", RecordsFile, "UTF-8")
     }
 
     if !FileExist(VehicleMetaFile) {

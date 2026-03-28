@@ -650,7 +650,7 @@ LoadVehicleRecords() {
         return
     }
 
-    if (firstNonEmptyLine != "# Vehimap records v1") {
+    if (firstNonEmptyLine != "# Vehimap records v1" && firstNonEmptyLine != "# Vehimap records v2") {
         MsgBox("Soubor pojištění a dokladů není v podporovaném formátu.`n`nZkontrolujte soubor:`n" RecordsFile, AppTitle, 0x30)
         return
     }
@@ -673,13 +673,16 @@ LoadVehicleRecords() {
         }
 
         fields := StrSplit(line, "`t")
-        if (fields.Length != 10) {
-            MsgBox("Soubor pojištění a dokladů je poškozený. Řádek " index " musí obsahovat přesně 10 polí oddělených tabulátory.`n`nZkontrolujte soubor:`n" RecordsFile, AppTitle, 0x30)
+        if (
+            (firstNonEmptyLine = "# Vehimap records v1" && fields.Length != 10)
+            || (firstNonEmptyLine = "# Vehimap records v2" && fields.Length != 11)
+        ) {
+            MsgBox("Soubor pojištění a dokladů je poškozený. Řádek " index " musí odpovídat hlavičce souboru.`n`nZkontrolujte soubor:`n" RecordsFile, AppTitle, 0x30)
             VehicleRecords := []
             return
         }
 
-        VehicleRecords.Push({
+        VehicleRecords.Push(NormalizeVehicleRecordEntry({
             id: UnescapeField(fields[1]),
             vehicleId: UnescapeField(fields[2]),
             recordType: UnescapeField(fields[3]),
@@ -688,9 +691,10 @@ LoadVehicleRecords() {
             validFrom: UnescapeField(fields[6]),
             validTo: UnescapeField(fields[7]),
             price: UnescapeField(fields[8]),
-            filePath: UnescapeField(fields[9]),
-            note: UnescapeField(fields[10])
-        })
+            attachmentMode: (fields.Length >= 11) ? UnescapeField(fields[9]) : "external",
+            filePath: (fields.Length >= 11) ? UnescapeField(fields[10]) : UnescapeField(fields[9]),
+            note: (fields.Length >= 11) ? UnescapeField(fields[11]) : UnescapeField(fields[10])
+        }))
     }
 }
 
@@ -703,8 +707,9 @@ SaveVehicleRecords() {
 BuildRecordsDataContent() {
     global VehicleRecords
 
-    lines := ["# Vehimap records v1"]
-    for entry in VehicleRecords {
+    lines := ["# Vehimap records v2"]
+    for rawEntry in VehicleRecords {
+        entry := NormalizeVehicleRecordEntry(rawEntry)
         lines.Push(
             EscapeField(entry.id) "`t"
             EscapeField(entry.vehicleId) "`t"
@@ -714,6 +719,7 @@ BuildRecordsDataContent() {
             EscapeField(entry.validFrom) "`t"
             EscapeField(entry.validTo) "`t"
             EscapeField(entry.price) "`t"
+            EscapeField(entry.attachmentMode) "`t"
             EscapeField(entry.filePath) "`t"
             EscapeField(entry.note)
         )
@@ -738,6 +744,7 @@ DeleteVehicleRecords(vehicleId) {
     VehicleRecords := filtered
     if changed {
         SaveVehicleRecords()
+        DeleteManagedVehicleAttachmentDirectory(vehicleId)
     }
 }
 
@@ -836,6 +843,354 @@ FindVehicleRecordIndexById(entryId) {
     }
 
     return 0
+}
+
+NormalizeVehicleRecordEntry(entry) {
+    return {
+        id: entry.HasOwnProp("id") ? entry.id : "",
+        vehicleId: entry.HasOwnProp("vehicleId") ? entry.vehicleId : "",
+        recordType: entry.HasOwnProp("recordType") ? entry.recordType : "",
+        title: entry.HasOwnProp("title") ? entry.title : "",
+        provider: entry.HasOwnProp("provider") ? entry.provider : "",
+        validFrom: entry.HasOwnProp("validFrom") ? entry.validFrom : "",
+        validTo: entry.HasOwnProp("validTo") ? entry.validTo : "",
+        price: entry.HasOwnProp("price") ? entry.price : "",
+        attachmentMode: NormalizeVehicleRecordAttachmentMode(entry.HasOwnProp("attachmentMode") ? entry.attachmentMode : ""),
+        filePath: entry.HasOwnProp("filePath") ? entry.filePath : "",
+        note: entry.HasOwnProp("note") ? entry.note : ""
+    }
+}
+
+NormalizeVehicleRecordAttachmentMode(mode) {
+    mode := StrLower(Trim(mode))
+    if (mode = "managed") {
+        return "managed"
+    }
+
+    return "external"
+}
+
+GetVehicleRecordAttachmentMode(entry) {
+    if !IsObject(entry) {
+        return "external"
+    }
+
+    return NormalizeVehicleRecordAttachmentMode(entry.HasOwnProp("attachmentMode") ? entry.attachmentMode : "")
+}
+
+IsVehicleRecordManagedAttachment(entry) {
+    return GetVehicleRecordAttachmentMode(entry) = "managed"
+}
+
+NormalizeVehicleAttachmentRelativePath(path) {
+    path := StrReplace(Trim(path), "\", "/")
+    while (SubStr(path, 1, 2) = "./") {
+        path := SubStr(path, 3)
+    }
+    if (StrLower(SubStr(path, 1, 5)) = "data/") {
+        path := SubStr(path, 6)
+    }
+    while (SubStr(path, 1, 1) = "/") {
+        path := SubStr(path, 2)
+    }
+    return path
+}
+
+GetManagedVehicleAttachmentAbsolutePath(relativePath) {
+    global DataDir
+
+    relativePath := NormalizeVehicleAttachmentRelativePath(relativePath)
+    if (relativePath = "") {
+        return ""
+    }
+
+    return DataDir "\" StrReplace(relativePath, "/", "\")
+}
+
+GetManagedVehicleAttachmentsRootPath() {
+    global AttachmentsDir
+
+    return AttachmentsDir
+}
+
+ResolveVehicleRecordFilePath(entry) {
+    if !IsObject(entry) {
+        return ""
+    }
+
+    path := Trim(entry.filePath)
+    if (path = "") {
+        return ""
+    }
+
+    if IsVehicleRecordManagedAttachment(entry) {
+        if RegExMatch(path, "i)^[a-z]:[\\/]") || RegExMatch(path, "^\\\\") || RegExMatch(path, "^[\\/]") {
+            return path
+        }
+        return GetManagedVehicleAttachmentAbsolutePath(path)
+    }
+
+    if RegExMatch(path, "i)^[a-z]:[\\/]") || RegExMatch(path, "^\\\\") || RegExMatch(path, "^[\\/]") {
+        return path
+    }
+
+    return A_ScriptDir "\" path
+}
+
+GetVehicleRecordResolvedFileName(entry) {
+    resolvedPath := ResolveVehicleRecordFilePath(entry)
+    if (resolvedPath != "") {
+        fileName := GetFileNameFromPath(resolvedPath)
+        if (fileName != "") {
+            return fileName
+        }
+    }
+
+    return GetFileNameFromPath(IsObject(entry) && entry.HasOwnProp("filePath") ? entry.filePath : "")
+}
+
+GetVehicleRecordDisplayPath(entry) {
+    if !IsObject(entry) {
+        return ""
+    }
+
+    resolvedPath := ResolveVehicleRecordFilePath(entry)
+    return resolvedPath != "" ? resolvedPath : Trim(entry.filePath)
+}
+
+GetVehicleRecordAttachmentModeLabel(modeOrEntry) {
+    mode := IsObject(modeOrEntry) ? GetVehicleRecordAttachmentMode(modeOrEntry) : NormalizeVehicleRecordAttachmentMode(modeOrEntry)
+    return (mode = "managed") ? "Spravovaná kopie" : "Externí cesta"
+}
+
+BuildManagedVehicleAttachmentRelativePath(vehicleId, sourcePath, preferredRelativePath := "") {
+    fileName := MakeSafeAttachmentFileName(GetFileNameFromPath(sourcePath))
+    if (fileName = "") {
+        fileName := "priloha"
+    }
+
+    relativeDir := "attachments/" vehicleId
+    baseName := fileName
+    extension := ""
+    dotPos := InStr(fileName, ".", , -1)
+    if (dotPos > 1) {
+        baseName := SubStr(fileName, 1, dotPos - 1)
+        extension := SubStr(fileName, dotPos)
+    }
+
+    preferredRelativePath := NormalizeVehicleAttachmentRelativePath(preferredRelativePath)
+    attempt := 1
+    loop {
+        candidateName := (attempt = 1) ? (baseName extension) : (baseName "-" attempt extension)
+        candidate := relativeDir "/" candidateName
+        if (preferredRelativePath != "" && candidate = preferredRelativePath) {
+            return candidate
+        }
+
+        if !FileExist(GetManagedVehicleAttachmentAbsolutePath(candidate)) {
+            return candidate
+        }
+
+        attempt += 1
+    }
+}
+
+EnsureManagedVehicleAttachmentDirectory(vehicleId) {
+    directoryPath := GetManagedVehicleAttachmentAbsolutePath("attachments/" vehicleId)
+    if !InStr(FileExist(directoryPath), "D") {
+        DirCreate(directoryPath)
+    }
+    return directoryPath
+}
+
+CopySourceFileToManagedVehicleAttachment(vehicleId, sourcePath, targetRelativePath := "") {
+    sourcePath := Trim(sourcePath)
+    if (sourcePath = "") {
+        throw Error("Nebyl vybrán zdrojový soubor pro spravovanou kopii.")
+    }
+    if InStr(FileExist(sourcePath), "D") {
+        throw Error("Vybraný objekt je složka. Pro spravovanou kopii vyberte soubor.")
+    }
+    if !FileExist(sourcePath) {
+        throw Error("Vybraný soubor se nepodařilo najít.`n`n" sourcePath)
+    }
+
+    if (targetRelativePath = "") {
+        targetRelativePath := BuildManagedVehicleAttachmentRelativePath(vehicleId, sourcePath)
+    } else {
+        targetRelativePath := NormalizeVehicleAttachmentRelativePath(targetRelativePath)
+    }
+
+    targetPath := GetManagedVehicleAttachmentAbsolutePath(targetRelativePath)
+    SplitPath(targetPath, , &directoryPath)
+    if !InStr(FileExist(directoryPath), "D") {
+        DirCreate(directoryPath)
+    }
+
+    if !PathsPointToSameLocation(sourcePath, targetPath) {
+        FileCopy(sourcePath, targetPath, true)
+    }
+    return targetRelativePath
+}
+
+PathsPointToSameLocation(leftPath, rightPath) {
+    return StrLower(Trim(leftPath)) = StrLower(Trim(rightPath))
+}
+
+MakeSafeAttachmentFileName(fileName) {
+    fileName := Trim(fileName)
+    if (fileName = "") {
+        return ""
+    }
+
+    fileName := StrReplace(fileName, '"', "_")
+    fileName := RegExReplace(fileName, "[<>:/\\|?*]", "_")
+    fileName := RegExReplace(fileName, "[\x00-\x1F]", "_")
+    fileName := RegExReplace(fileName, "\s+", " ")
+    fileName := Trim(fileName, " .")
+    return fileName
+}
+
+DeleteManagedVehicleAttachmentDirectory(vehicleId) {
+    directoryPath := GetManagedVehicleAttachmentAbsolutePath("attachments/" vehicleId)
+    if InStr(FileExist(directoryPath), "D") {
+        DirDelete(directoryPath, true)
+    }
+}
+
+PruneVehicleManagedAttachments(vehicleId) {
+    attachmentDir := GetManagedVehicleAttachmentAbsolutePath("attachments/" vehicleId)
+    if !InStr(FileExist(attachmentDir), "D") {
+        return
+    }
+
+    referenced := Map()
+    for entry in VehicleRecords {
+        if (entry.vehicleId = vehicleId && IsVehicleRecordManagedAttachment(entry) && Trim(entry.filePath) != "") {
+            referenced[NormalizeVehicleAttachmentRelativePath(entry.filePath)] := true
+        }
+    }
+
+    Loop Files attachmentDir "\*", "FR" {
+        fullPath := A_LoopFileFullPath
+        if InStr(FileExist(fullPath), "D") {
+            continue
+        }
+
+        relativePath := NormalizeVehicleAttachmentRelativePath(SubStr(fullPath, StrLen(GetManagedVehicleAttachmentsRootPath()) + 2))
+        if !referenced.Has(relativePath) {
+            try FileDelete(fullPath)
+        }
+    }
+
+    if InStr(FileExist(attachmentDir), "D") {
+        try DirDelete(attachmentDir, false)
+    }
+}
+
+GetManagedVehicleAttachmentBackupItems() {
+    global VehicleRecords
+
+    items := []
+    seen := Map()
+    missingCount := 0
+
+    for entry in VehicleRecords {
+        if !IsVehicleRecordManagedAttachment(entry) {
+            continue
+        }
+
+        relativePath := NormalizeVehicleAttachmentRelativePath(entry.filePath)
+        if (relativePath = "" || seen.Has(relativePath)) {
+            continue
+        }
+
+        seen[relativePath] := true
+        absolutePath := GetManagedVehicleAttachmentAbsolutePath(relativePath)
+        if !FileExist(absolutePath) || InStr(FileExist(absolutePath), "D") {
+            missingCount += 1
+            continue
+        }
+
+        items.Push({
+            relativePath: relativePath,
+            absolutePath: absolutePath
+        })
+    }
+
+    return {items: items, missingCount: missingCount}
+}
+
+ReadBinaryFileAsBase64(path) {
+    file := FileOpen(path, "r")
+    if !IsObject(file) {
+        throw Error("Soubor se nepodařilo otevřít pro čtení.`n`n" path)
+    }
+
+    try {
+        length := file.Length
+        binaryData := Buffer(length)
+        if (length > 0) {
+            file.RawRead(binaryData, length)
+        }
+    } finally {
+        file.Close()
+    }
+
+    return Base64EncodeBuffer(binaryData, length)
+}
+
+WriteBinaryFileFromBase64(path, base64Text) {
+    bytes := Base64DecodeToBuffer(base64Text)
+    SplitPath(path, , &directoryPath)
+    if (directoryPath != "" && !InStr(FileExist(directoryPath), "D")) {
+        DirCreate(directoryPath)
+    }
+
+    file := FileOpen(path, "w")
+    if !IsObject(file) {
+        throw Error("Soubor se nepodařilo otevřít pro zápis.`n`n" path)
+    }
+
+    try {
+        if (bytes.Size > 0) {
+            file.RawWrite(bytes, bytes.Size)
+        }
+    } finally {
+        file.Close()
+    }
+}
+
+Base64EncodeBuffer(binaryData, byteCount := "") {
+    if (byteCount = "") {
+        byteCount := binaryData.Size
+    }
+
+    charsNeeded := 0
+    if !DllCall("Crypt32\CryptBinaryToStringW", "ptr", binaryData.Ptr, "uint", byteCount, "uint", 0x40000001, "ptr", 0, "uint*", &charsNeeded, "int") {
+        throw OSError()
+    }
+
+    output := Buffer(charsNeeded * 2, 0)
+    if !DllCall("Crypt32\CryptBinaryToStringW", "ptr", binaryData.Ptr, "uint", byteCount, "uint", 0x40000001, "ptr", output.Ptr, "uint*", &charsNeeded, "int") {
+        throw OSError()
+    }
+
+    return StrGet(output, charsNeeded - 1, "UTF-16")
+}
+
+Base64DecodeToBuffer(base64Text) {
+    byteCount := 0
+    if !DllCall("Crypt32\CryptStringToBinaryW", "str", base64Text, "uint", 0, "uint", 0x00000001, "ptr", 0, "uint*", &byteCount, "ptr", 0, "ptr", 0, "int") {
+        throw OSError()
+    }
+
+    output := Buffer(byteCount, 0)
+    if !DllCall("Crypt32\CryptStringToBinaryW", "str", base64Text, "uint", 0, "uint", 0x00000001, "ptr", output.Ptr, "uint*", &byteCount, "ptr", 0, "ptr", 0, "int") {
+        throw OSError()
+    }
+
+    return output
 }
 
 GenerateVehicleRecordId() {
