@@ -3,10 +3,15 @@
 !README.md
 !RELEASE.md
 !CHANGELOG.md
+!.github/
+!.github/workflows/
+!.github/workflows/dotnet-desktop.yml
 !update/
 !update/**
 !build/
 !build/**
+!dotnet/
+!dotnet/**
 !src/
 !src/**
 src/data/

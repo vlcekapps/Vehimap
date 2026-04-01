@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Vehimap.Application\Vehimap.Application.csproj" />
+    <ProjectReference Include="..\Vehimap.Domain\Vehimap.Domain.csproj" />
+  </ItemGroup>
+</Project>

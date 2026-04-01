@@ -1,0 +1,101 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Vehimap.Desktop.Views.MainWindow"
+        Width="1120"
+        Height="760"
+        MinWidth="920"
+        MinHeight="620"
+        Title="{Binding Title}">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*,Auto">
+    <StackPanel Spacing="4">
+      <TextBlock FontSize="28"
+                 FontWeight="SemiBold"
+                 Text="{Binding Title}" />
+      <TextBlock Opacity="0.75"
+                 Text="{Binding Subtitle}" />
+    </StackPanel>
+
+    <Grid Grid.Row="1"
+          Margin="0,18,0,0"
+          ColumnDefinitions="*,*"
+          RowDefinitions="Auto,Auto,Auto">
+      <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="SemiBold" Text="Režim dat" />
+      <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DataMode}" />
+      <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" Text="Datová složka" />
+      <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataPath}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Foreground="IndianRed" Text="{Binding LoadError}" TextWrapping="Wrap" />
+    </Grid>
+
+    <Grid Grid.Row="2"
+          Margin="0,18,0,0"
+          ColumnDefinitions="*,*,*,*,*,*">
+      <Border Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
+        <StackPanel>
+          <TextBlock FontWeight="SemiBold" Text="Vozidla" />
+          <TextBlock FontSize="22" Text="{Binding VehicleCount}" />
+        </StackPanel>
+      </Border>
+      <Border Grid.Column="1" Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
+        <StackPanel>
+          <TextBlock FontWeight="SemiBold" Text="Historie" />
+          <TextBlock FontSize="22" Text="{Binding HistoryCount}" />
+        </StackPanel>
+      </Border>
+      <Border Grid.Column="2" Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
+        <StackPanel>
+          <TextBlock FontWeight="SemiBold" Text="Tankování" />
+          <TextBlock FontSize="22" Text="{Binding FuelCount}" />
+        </StackPanel>
+      </Border>
+      <Border Grid.Column="3" Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
+        <StackPanel>
+          <TextBlock FontWeight="SemiBold" Text="Doklady" />
+          <TextBlock FontSize="22" Text="{Binding RecordsCount}" />
+        </StackPanel>
+      </Border>
+      <Border Grid.Column="4" Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
+        <StackPanel>
+          <TextBlock FontWeight="SemiBold" Text="Připomínky" />
+          <TextBlock FontSize="22" Text="{Binding RemindersCount}" />
+        </StackPanel>
+      </Border>
+      <Border Grid.Column="5" Padding="12" Background="#143A4A5A" CornerRadius="8">
+        <StackPanel>
+          <TextBlock FontWeight="SemiBold" Text="Údržba" />
+          <TextBlock FontSize="22" Text="{Binding MaintenanceCount}" />
+        </StackPanel>
+      </Border>
+    </Grid>
+
+    <Border Grid.Row="3" Margin="0,18,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
+      <Grid RowDefinitions="Auto,*">
+        <TextBlock FontSize="18"
+                   FontWeight="SemiBold"
+                   Text="Načtená vozidla z legacy dat" />
+        <ListBox Grid.Row="1"
+                 Margin="0,12,0,0"
+                 ItemsSource="{Binding Vehicles}"
+                 AutomationProperties.Name="Seznam načtených vozidel">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <Border Padding="10" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
+                <StackPanel Spacing="4">
+                  <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
+                  <TextBlock Opacity="0.8" Text="{Binding MakeModel}" />
+                  <TextBlock Opacity="0.8" Text="{Binding Category}" />
+                  <TextBlock Opacity="0.8" Text="{Binding Plate}" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Grid>
+    </Border>
+
+    <TextBlock Grid.Row="4"
+               Margin="0,16,0,0"
+               Opacity="0.75"
+               Text="Tato první verze zakládá řešení, načítá současná Vehimap data a připravuje místo pro další port obrazovek do Avalonie."
+               TextWrapping="Wrap" />
+  </Grid>
+</Window>

@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <RootNamespace>Vehimap</RootNamespace>
+    <Authors>vlcekapps</Authors>
+    <Company>vlcekapps</Company>
+    <Product>Vehimap</Product>
+    <RepositoryUrl>https://github.com/vlcekapps/Vehimap</RepositoryUrl>
+  </PropertyGroup>
+</Project>
