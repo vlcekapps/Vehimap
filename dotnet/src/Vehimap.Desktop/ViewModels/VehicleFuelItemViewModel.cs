@@ -1,6 +1,7 @@
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record VehicleFuelItemViewModel(
+    string Id,
     string Date,
     string FuelType,
     string Liters,

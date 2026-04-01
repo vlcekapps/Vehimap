@@ -15,6 +15,13 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel : ObservableObject
 {
+    private const int DetailTabIndex = 0;
+    private const int HistoryTabIndex = 1;
+    private const int FuelTabIndex = 2;
+    private const int ReminderTabIndex = 3;
+    private const int MaintenanceTabIndex = 4;
+    private const int RecordTabIndex = 6;
+
     private readonly LegacyVehimapBootstrapper _bootstrapper;
     private readonly IFileAttachmentService _attachmentService;
     private readonly IFileLauncher _fileLauncher;
@@ -129,7 +136,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string exportStatus = "Kalendářový export zatím nebyl spuštěn.";
 
     [ObservableProperty]
+    private int selectedVehicleTabIndex;
+
+    [ObservableProperty]
     private VehicleListItemViewModel? selectedVehicle;
+
+    [ObservableProperty]
+    private VehicleHistoryItemViewModel? selectedHistory;
 
     [ObservableProperty]
     private VehicleFuelItemViewModel? selectedFuel;
@@ -165,6 +178,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords { get; } = [];
 
     public IReadOnlyList<string> TimelineFilters { get; } = ["Vše", "Budoucí", "Minulé"];
+
+    public bool CanOpenSelectedTimelineItem => SelectedTimelineItem is not null;
 
     public MainWindowViewModel()
         : this(
@@ -222,11 +237,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleMaintenance.Clear();
             SelectedVehicleTimeline.Clear();
             SelectedVehicleRecords.Clear();
+            SelectedHistory = null;
             SelectedFuel = null;
             SelectedReminder = null;
             SelectedMaintenance = null;
             SelectedTimelineItem = null;
             SelectedRecord = null;
+            SelectedVehicleTabIndex = DetailTabIndex;
             return;
         }
 
@@ -273,6 +290,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedTimelineDetail = value is null
             ? "Vyberte položku časové osy a zobrazí se detail."
             : $"Datum: {value.Date}\nDruh: {value.KindLabel}\nPoložka: {value.Title}\nDetail: {FormatValue(value.Detail, "-")}\nStav: {FormatValue(value.Status, "-")}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
+
+        OpenSelectedTimelineItemCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnTimelineSearchTextChanged(string value)
@@ -326,6 +345,55 @@ public sealed partial class MainWindowViewModel : ObservableObject
         ExportStatus = export.SkippedMaintenanceCount > 0
             ? $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}. Přeskočené servisní úkoly bez data: {export.SkippedMaintenanceCount}."
             : $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}.";
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedTimelineItem))]
+    private void OpenSelectedTimelineItem()
+    {
+        if (SelectedTimelineItem is null)
+        {
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(SelectedTimelineItem.VehicleId)
+            && !string.Equals(SelectedVehicle?.Id, SelectedTimelineItem.VehicleId, StringComparison.Ordinal))
+        {
+            SelectedVehicle = Vehicles.FirstOrDefault(item => string.Equals(item.Id, SelectedTimelineItem.VehicleId, StringComparison.Ordinal));
+        }
+
+        switch (SelectedTimelineItem.Kind)
+        {
+            case "history":
+                SelectedVehicleTabIndex = HistoryTabIndex;
+                SelectedHistory = FindById(SelectedVehicleHistory, item => item.Id, SelectedTimelineItem.EntryId);
+                break;
+
+            case "fuel":
+                SelectedVehicleTabIndex = FuelTabIndex;
+                SelectedFuel = FindById(SelectedVehicleFuel, item => item.Id, SelectedTimelineItem.EntryId);
+                break;
+
+            case "custom":
+                SelectedVehicleTabIndex = ReminderTabIndex;
+                SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, SelectedTimelineItem.EntryId);
+                break;
+
+            case "maintenance":
+                SelectedVehicleTabIndex = MaintenanceTabIndex;
+                SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, SelectedTimelineItem.EntryId);
+                break;
+
+            case "record":
+                SelectedVehicleTabIndex = RecordTabIndex;
+                SelectedRecord = FindById(SelectedVehicleRecords, item => item.Id, SelectedTimelineItem.EntryId);
+                break;
+
+            case "technical":
+            case "green":
+            default:
+                SelectedVehicleTabIndex = DetailTabIndex;
+                break;
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedRecordFile))]
@@ -459,6 +527,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         foreach (var item in items)
         {
             SelectedVehicleHistory.Add(new VehicleHistoryItemViewModel(
+                item.Item.Id,
                 FormatValue(item.Item.EventDate, "bez data"),
                 FormatValue(item.Item.EventType, "bez typu"),
                 FormatValue(item.Item.Odometer, "bez tachometru"),
@@ -469,6 +538,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         HistorySummary = SelectedVehicleHistory.Count == 0
             ? "Vybrané vozidlo zatím nemá žádné záznamy v historii."
             : $"Vybrané vozidlo má {SelectedVehicleHistory.Count} historických záznamů.";
+
+        SelectedHistory = SelectedVehicleHistory.FirstOrDefault();
     }
 
     private void PopulateVehicleFuel(string vehicleId)
@@ -491,6 +562,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         foreach (var item in items)
         {
             SelectedVehicleFuel.Add(new VehicleFuelItemViewModel(
+                item.Item.Id,
                 FormatValue(item.Item.EntryDate, "bez data"),
                 FormatValue(item.Item.FuelType, "bez typu"),
                 FormatFuelLiters(item.Item.Liters),
@@ -532,6 +604,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         foreach (var item in items)
         {
             SelectedVehicleReminders.Add(new VehicleReminderItemViewModel(
+                item.Item.Id,
                 FormatValue(item.Item.Title, "Bez názvu"),
                 FormatValue(item.Item.DueDate, "bez termínu"),
                 BuildReminderStatus(item.Item, today),
@@ -567,6 +640,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         foreach (var item in items)
         {
             SelectedVehicleMaintenance.Add(new VehicleMaintenanceItemViewModel(
+                item.Id,
                 FormatValue(item.Title, "Bez názvu"),
                 BuildMaintenanceInterval(item),
                 BuildMaintenanceLastService(item),
@@ -977,6 +1051,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         return string.Join(" | ", parts);
+    }
+
+    private static TItem? FindById<TItem>(IEnumerable<TItem> items, Func<TItem, string> idSelector, string entryId)
+    {
+        if (string.IsNullOrWhiteSpace(entryId))
+        {
+            return items.FirstOrDefault();
+        }
+
+        return items.FirstOrDefault(item => string.Equals(idSelector(item), entryId, StringComparison.Ordinal))
+            ?? items.FirstOrDefault();
     }
 
     private bool MatchesTimelineFilter(VehicleTimelineItem item)

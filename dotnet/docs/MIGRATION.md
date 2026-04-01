@@ -28,12 +28,13 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - prvni C# nakladovy souhrn vcetne `Cena / km` a srovnani proti stejne dlouhemu obdobi loni
 - builder casove osy vozidla nad historii, tankovanim, pripominkami, doklady, TK/ZK a planem udrzby
 - manualni ICS export budouciho kalendare z nove C# vetve
+- akcni casovou osu, ktera umi otevrit souvisejici historii, doklad, pripominku nebo plan udrzby na spravne karte shellu
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
 - zaklad release workflow pro GitHub Actions
 
 ## Co je dalsi na rade
 
-1. Udelat z casove osy skutecne akcni workflow: otevrit souvisejici historii, doklad, pripominku nebo plan udrzby
-2. Port dashboardu a dalsich prehledovych obrazovek do `Vehimap.Desktop`
-3. Pridat klavesove workflow, fokus management a accessibility metadata
-4. Dopsat realne UI testy pres Appium a prvni smoke pro screen readery na Windows
+1. Port dashboardu a dalsich prehledovych obrazovek do `Vehimap.Desktop`
+2. Pridat klavesove workflow, fokus management a accessibility metadata
+3. Dopsat realne UI testy pres Appium a prvni smoke pro screen readery na Windows
+4. Zacit portovat editacni workflow, nejen cteci prehledy
