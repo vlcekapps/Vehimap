@@ -1131,6 +1131,7 @@ RefreshVehicleList(selectVehicleId := "") {
     }
 
     UpdateVehicleListLabel(items.Length, categoryItems.Length, category, hiddenInactiveCount, activeCategoryCount, hideInactive)
+    UpdateMainVehicleActionState()
     UpdateStatusBar()
     SetupTrayMenu()
 }

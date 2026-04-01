@@ -131,7 +131,7 @@ CloseSettingsDialog(*) {
 RefreshSettingsBackupStatusText() {
     global SettingsControls
 
-    if IsObject(SettingsControls) && SettingsControls.Has("backupStatusLabel") && IsObject(SettingsControls.backupStatusLabel) {
+    if IsObject(SettingsControls) && SettingsControls.HasOwnProp("backupStatusLabel") && IsObject(SettingsControls.backupStatusLabel) {
         SettingsControls.backupStatusLabel.Text := BuildAutomaticBackupStatusText()
     }
 }

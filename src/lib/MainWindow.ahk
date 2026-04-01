@@ -1,11 +1,14 @@
 BuildMainGui() {
-    global AppTitle, Categories, MainGui, TabsCtrl, VehicleListLabel, MainSearchCtrl, MainStatusFilterCtrl, MainHideInactiveCtrl, MainClearFiltersButton, VehicleList, StatusBar
+    global AppTitle, Categories, MainGui, TabsCtrl, VehicleListLabel, MainSearchCtrl, MainStatusFilterCtrl, MainHideInactiveCtrl, MainClearFiltersButton, VehicleList, StatusBar, MainLayout
 
-    MainGui := Gui("", AppTitle)
+    MainLayout := {}
+    MainGui := Gui("+Resize", AppTitle)
     MainGui.Title := AppTitle
     MainGui.SetFont("s10", "Segoe UI")
+    MainGui.Opt("+MinSize955x495")
     MainGui.OnEvent("Close", HideMainWindow)
     MainGui.OnEvent("Escape", HideMainWindow)
+    MainGui.OnEvent("Size", OnMainGuiSize)
     MainGui.MenuBar := BuildMainMenuBar()
 
     TabsCtrl := MainGui.AddTab3("xm ym w930 h30", Categories)
@@ -15,11 +18,11 @@ BuildMainGui() {
 
     VehicleListLabel := MainGui.AddText("xm y50 w930", "Seznam vozidel v kategorii Osobní vozidla")
 
-    MainGui.AddText("xm y78 w250", "Hledat název, značku, SPZ, poznámku nebo štítek")
+    searchLabel := MainGui.AddText("xm y78 w250", "Hledat název, značku, SPZ, poznámku nebo štítek")
     MainSearchCtrl := MainGui.AddEdit("x185 y75 w255")
     MainSearchCtrl.OnEvent("Change", OnMainSearchChanged)
 
-    MainGui.AddText("x455 y78 w85", "Filtr seznamu")
+    filterLabel := MainGui.AddText("x455 y78 w85", "Filtr seznamu")
     MainStatusFilterCtrl := MainGui.AddDropDownList("x545 y75 w210 Choose1", ["Všechna vozidla", "Jen s blížícím se termínem", "Jen po termínu", "Jen bez zelené karty"])
     MainStatusFilterCtrl.OnEvent("Change", OnMainVehicleFilterChanged)
 
@@ -32,8 +35,9 @@ BuildMainGui() {
 
     VehicleList := MainGui.AddListView("xm y134 w930 h219 Grid -Multi", ["Název", "Poznámka", "Značka / model", "SPZ", "Poslední TK", "Příští TK", "Zelená karta do", "Stav"])
     VehicleList.OnEvent("DoubleClick", EditSelectedVehicle)
+    VehicleList.OnEvent("ItemSelect", OnMainVehicleSelectionChanged)
 
-    vehicleGroup := MainGui.AddGroupBox("xm y365 w930 h95", "Vozidlo")
+    vehicleGroup := MainGui.AddGroupBox("xm y365 w930 h95", "Práce s vozidlem a rychlé akce")
     vehicleGroup.GetPos(&vehicleGroupX, &vehicleGroupY, &vehicleGroupW, &vehicleGroupH)
 
     addButton := MainGui.AddButton(Format("x{} y{} w95 h30", vehicleGroupX + 15, vehicleGroupY + 23), "Přidat")
@@ -42,26 +46,26 @@ BuildMainGui() {
     editButton := MainGui.AddButton(Format("x{} y{} w95 h30", vehicleGroupX + 120, vehicleGroupY + 23), "Upravit")
     editButton.OnEvent("Click", EditSelectedVehicle)
 
-    deleteButton := MainGui.AddButton(Format("x{} y{} w95 h30", vehicleGroupX + 225, vehicleGroupY + 23), "Odstranit")
-    deleteButton.OnEvent("Click", DeleteSelectedVehicle)
-
-    nextDueButton := MainGui.AddButton(Format("x{} y{} w150 h30", vehicleGroupX + 330, vehicleGroupY + 23), "Nejbližší TK")
-    nextDueButton.OnEvent("Click", OpenNearestDueVehicle)
-
-    checkButton := MainGui.AddButton(Format("x{} y{} w150 h30", vehicleGroupX + 490, vehicleGroupY + 23), "Zkontrolovat TK")
-    checkButton.OnEvent("Click", ManualDueCheck)
-
-    nextGreenCardButton := MainGui.AddButton(Format("x{} y{} w150 h30", vehicleGroupX + 15, vehicleGroupY + 58), "Nejbližší ZK")
-    nextGreenCardButton.OnEvent("Click", OpenNearestGreenCardVehicle)
-
-    checkGreenCardButton := MainGui.AddButton(Format("x{} y{} w160 h30", vehicleGroupX + 175, vehicleGroupY + 58), "Zkontrolovat ZK")
-    checkGreenCardButton.OnEvent("Click", ManualGreenCardCheck)
-
-    detailButton := MainGui.AddButton(Format("x{} y{} w150 h30", vehicleGroupX + 345, vehicleGroupY + 58), "Detail vozidla")
+    detailButton := MainGui.AddButton(Format("x{} y{} w150 h30", vehicleGroupX + 225, vehicleGroupY + 23), "Detail vozidla")
     detailButton.OnEvent("Click", OpenSelectedVehicleDetail)
 
-    historyButton := MainGui.AddButton(Format("x{} y{} w160 h30", vehicleGroupX + 505, vehicleGroupY + 58), "Historie událostí")
+    historyButton := MainGui.AddButton(Format("x{} y{} w160 h30", vehicleGroupX + 385, vehicleGroupY + 23), "Historie událostí")
     historyButton.OnEvent("Click", OpenSelectedVehicleHistory)
+
+    deleteButton := MainGui.AddButton(Format("x{} y{} w130 h30", vehicleGroupX + 555, vehicleGroupY + 23), "Odstranit")
+    deleteButton.OnEvent("Click", DeleteSelectedVehicle)
+
+    nextDueButton := MainGui.AddButton(Format("x{} y{} w150 h30", vehicleGroupX + 15, vehicleGroupY + 58), "Nejbližší TK")
+    nextDueButton.OnEvent("Click", OpenNearestDueVehicle)
+
+    checkButton := MainGui.AddButton(Format("x{} y{} w150 h30", vehicleGroupX + 175, vehicleGroupY + 58), "Zkontrolovat TK")
+    checkButton.OnEvent("Click", ManualDueCheck)
+
+    nextGreenCardButton := MainGui.AddButton(Format("x{} y{} w150 h30", vehicleGroupX + 335, vehicleGroupY + 58), "Nejbližší ZK")
+    nextGreenCardButton.OnEvent("Click", OpenNearestGreenCardVehicle)
+
+    checkGreenCardButton := MainGui.AddButton(Format("x{} y{} w160 h30", vehicleGroupX + 495, vehicleGroupY + 58), "Zkontrolovat ZK")
+    checkGreenCardButton.OnEvent("Click", ManualGreenCardCheck)
 
     StatusBar := MainGui.AddStatusBar()
     StatusBar.SetParts(420)
@@ -77,9 +81,25 @@ BuildMainGui() {
     VehicleList.ModifyCol(7, "110")
     VehicleList.ModifyCol(8, "180")
 
+    MainLayout := {
+        searchLabel: searchLabel,
+        filterLabel: filterLabel,
+        vehicleGroup: vehicleGroup,
+        addButton: addButton,
+        editButton: editButton,
+        detailButton: detailButton,
+        historyButton: historyButton,
+        deleteButton: deleteButton,
+        nextDueButton: nextDueButton,
+        checkButton: checkButton,
+        nextGreenCardButton: nextGreenCardButton,
+        checkGreenCardButton: checkGreenCardButton
+    }
+
     shouldHideMainWindow := GetHideOnLaunchEnabled() || GetShowDashboardOnLaunchEnabled()
     showOptions := shouldHideMainWindow ? "w955 h495 Hide" : "w955 h495"
     MainGui.Show(showOptions)
+    UpdateMainVehicleActionState()
 }
 
 BuildMainMenuBar() {
@@ -397,5 +417,80 @@ FocusMaintenanceSearchShortcut() {
 
     if IsObject(MaintenanceSearchCtrl) {
         MaintenanceSearchCtrl.Focus()
+    }
+}
+
+FocusAuditSearchShortcut() {
+    global AuditSearchCtrl
+
+    if IsObject(AuditSearchCtrl) {
+        AuditSearchCtrl.Focus()
+    }
+
+    hooks := GetVehimapTestHooks()
+    if IsObject(hooks) {
+        hooks.lastFocusTarget := "audit-search"
+    }
+}
+
+OnMainVehicleSelectionChanged(*) {
+    UpdateMainVehicleActionState()
+}
+
+UpdateMainVehicleActionState() {
+    global VehicleList, VisibleVehicleIds, MainLayout
+
+    hasSelection := false
+    if IsObject(VehicleList) {
+        row := VehicleList.GetNext(0)
+        hasSelection := (row > 0 && row <= VisibleVehicleIds.Length)
+    }
+
+    for controlName in ["editButton", "detailButton", "historyButton", "deleteButton"] {
+        if IsObject(MainLayout) && MainLayout.HasOwnProp(controlName) && IsObject(MainLayout.%controlName%) {
+            MainLayout.%controlName%.Opt(hasSelection ? "-Disabled" : "+Disabled")
+        }
+    }
+}
+
+OnMainGuiSize(guiObj, minMax, width, height) {
+    global TabsCtrl, VehicleListLabel, MainSearchCtrl, MainStatusFilterCtrl, MainHideInactiveCtrl, MainClearFiltersButton, VehicleList, MainLayout
+
+    if (minMax = -1) {
+        return
+    }
+
+    clearButtonX := width - 185
+    filterX := width - 410
+    filterLabelX := filterX - 90
+    searchWidth := filterLabelX - 15 - 185
+    groupY := height - 130
+    listHeight := groupY - 146
+
+    MoveGuiControl(TabsCtrl, 10, 10, width - 25, 30)
+    MoveGuiControl(VehicleListLabel, 10, 50, width - 25)
+    if IsObject(MainLayout) && MainLayout.HasOwnProp("searchLabel") {
+        MoveGuiControl(MainLayout.searchLabel, 10, 78, 250)
+    }
+    MoveGuiControl(MainSearchCtrl, 185, 75, searchWidth)
+    if IsObject(MainLayout) && MainLayout.HasOwnProp("filterLabel") {
+        MoveGuiControl(MainLayout.filterLabel, filterLabelX, 78, 85)
+    }
+    MoveGuiControl(MainStatusFilterCtrl, filterX, 75, 210)
+    MoveGuiControl(MainClearFiltersButton, clearButtonX, 74, 160, 28)
+    MoveGuiControl(MainHideInactiveCtrl, 10, 106, width - 25)
+    MoveGuiControl(VehicleList, 10, 134, width - 25, listHeight)
+
+    if IsObject(MainLayout) && MainLayout.HasOwnProp("vehicleGroup") {
+        MoveGuiControl(MainLayout.vehicleGroup, 10, groupY, width - 25, 95)
+        MoveGuiControl(MainLayout.addButton, 25, groupY + 23, 95, 30)
+        MoveGuiControl(MainLayout.editButton, 130, groupY + 23, 95, 30)
+        MoveGuiControl(MainLayout.detailButton, 235, groupY + 23, 150, 30)
+        MoveGuiControl(MainLayout.historyButton, 395, groupY + 23, 160, 30)
+        MoveGuiControl(MainLayout.deleteButton, 565, groupY + 23, 130, 30)
+        MoveGuiControl(MainLayout.nextDueButton, 25, groupY + 58, 150, 30)
+        MoveGuiControl(MainLayout.checkButton, 185, groupY + 58, 150, 30)
+        MoveGuiControl(MainLayout.nextGreenCardButton, 345, groupY + 58, 150, 30)
+        MoveGuiControl(MainLayout.checkGreenCardButton, 505, groupY + 58, 160, 30)
     }
 }

@@ -29,6 +29,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - `Tiskový přehled` všech vozidel ve formátu HTML, který se otevře v prohlížeči a dá se vytisknout běžným `Ctrl+P`
 - `Export dat` do jednoho záložního souboru `.vehimapbak` včetně plánů údržby a spravovaných příloh dokladů
 - `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním, obnovení plánů údržby i návratu spravovaných příloh dokladů
+- hlavní pracovní okna jako `Dashboard`, `Přehled termínů`, `Propadlé termíny`, `Audit dat`, `Časová osa vozidla`, `Pojištění a doklady`, `Plán údržby`, detail vozidla i hlavní seznam lze zvětšit, takže se seznamy natáhnou do šířky i výšky
 - pravidelné automatické zálohy do `data/auto-backups` se samostatným intervalem ve dnech a omezením počtu ponechaných souborů
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
@@ -60,6 +61,7 @@ V hlavním okně:
 - `Časová osa vozidla` spojuje do jednoho seznamu historii, tankování, připomínky, expirace dokladů, technickou kontrolu, zelenou kartu i servisní úkoly s konkrétním datem
 - v `Přehledu` lze nově ručně exportovat budoucí termíny do kalendářového souboru `.ics`, včetně TK, ZK, připomínek, expirací dokladů a servisních úkolů s datem
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
+- `Audit dat` teď funguje stejně klávesnicově jako ostatní přehledy: jde z něj rovnou otevřít řešenou položku, detail vozidla nebo přejít do úpravy
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
 
 ## Klávesové zkratky v hlavním okně:
@@ -86,6 +88,7 @@ V hlavním okně:
 - `Náklady napříč vozidly`: `Ctrl+R` obnoví období, `Ctrl+P` nebo `Enter` na seznamu otevře náklady vybraného vozidla, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
 - `Přehled termínů`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+Shift+T` přepne do propadlých termínů
 - `Propadlé termíny`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+T` přepne zpět do přehledu termínů
+- `Audit dat`: `Ctrl+F` přesune fokus do hledání, `Ctrl+P` nebo `Enter` na seznamu otevře řešenou položku, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` otevře nejbližší relevantní úpravu
 - v `Dashboardu`, `Přehledu termínů` i `Propadlých termínech` klávesa `Enter` otevře právě vybranou položku; stejné chování má i dvojklik na seznamu
 
 ## Klávesové zkratky v detailu a evidencích:
@@ -140,11 +143,11 @@ V evidenci pojištění a dokladů:
 
 - `Druh záznamu` a `Název záznamu` jsou povinné
 - `Platné od` a `Platné do` se zadávají jako `MM/RRRR`, například `04/2026`
-- `Poskytovatel / vydavatel`, `Cena / částka`, `Režim přílohy`, `Soubor nebo cesta` a `Poznámka` jsou volitelné
-- `Spravovaná kopie` uloží vybraný soubor relativně do `data/attachments/<id vozidla>/`, takže portable přesun celé aplikace přílohu nerozbije
+- `Poskytovatel / vydavatel`, `Cena / částka`, `Režim přílohy`, `Příloha` a `Poznámka` jsou volitelné
+- `Spravovaná kopie` uloží vybraný soubor relativně do `data/attachments/<id vozidla>/`, takže portable přesun celé aplikace přílohu nerozbije; uloženou interní cestu pak Vehimap ukazuje jen jako spravovanou hodnotu, ne jako běžně editovatelný technický vstup
 - `Externí cesta` ponechá doklad napojený na původní soubor mimo aplikaci bez automatického kopírování
 - tlačítko `Přesunout do příloh` umí převést existující externí cestu na spravovanou kopii a `Znovu propojit` opraví chybějící soubor v obou režimech
-- stav přílohy zobrazuje režim, uloženou cestu i skutečně vyřešenou cestu a seznam navíc rozlišuje `Soubor`, `Složka`, `Chybí soubor`, `Chybí složka` nebo `Bez cesty`, takže hned poznáte nedostupnou přílohu
+- stav přílohy zobrazuje režim, uloženou cestu, skutečně vyřešenou cestu i dostupnost a seznam navíc rozlišuje `Soubor`, `Složka`, `Chybí soubor`, `Chybí složka` nebo `Bez cesty`, takže hned poznáte nedostupnou přílohu
 
 V `Náklady a souhrny`:
 

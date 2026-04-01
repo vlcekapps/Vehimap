@@ -1,6 +1,6 @@
 OpenVehicleMaintenanceDialog(vehicle, openAddPlan := false, selectPlanId := "", openRecommendations := false) {
     global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui, FleetCostGui, DashboardGui, GlobalSearchGui
-    global MaintenanceGui, MaintenanceVehicleId, MaintenanceList, MaintenanceSummaryLabel, MaintenanceAllPlans, MaintenanceSearchCtrl, VisibleMaintenancePlanIds, MaintenanceSortColumn, MaintenanceSortDescending, MaintenanceCompleteButton
+    global MaintenanceGui, MaintenanceVehicleId, MaintenanceList, MaintenanceSummaryLabel, MaintenanceAllPlans, MaintenanceSearchCtrl, VisibleMaintenancePlanIds, MaintenanceSortColumn, MaintenanceSortDescending, MaintenanceCompleteButton, MaintenanceLayout
 
     if IsObject(MaintenanceGui) {
         WinActivate("ahk_id " MaintenanceGui.Hwnd)
@@ -22,16 +22,19 @@ OpenVehicleMaintenanceDialog(vehicle, openAddPlan := false, selectPlanId := "", 
     VisibleMaintenancePlanIds := []
     MaintenanceSortColumn := GetMaintenanceSortColumnSetting()
     MaintenanceSortDescending := GetMaintenanceSortDescendingSetting()
-    MaintenanceGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Plán údržby")
+    MaintenanceLayout := {}
+    MaintenanceGui := Gui("+Owner" MainGui.Hwnd " +Resize", AppTitle " - Plán údržby")
     MaintenanceGui.SetFont("s10", "Segoe UI")
+    MaintenanceGui.Opt("+MinSize900x468")
     MaintenanceGui.OnEvent("Close", CloseVehicleMaintenanceDialog)
     MaintenanceGui.OnEvent("Escape", CloseVehicleMaintenanceDialog)
+    MaintenanceGui.OnEvent("Size", OnVehicleMaintenanceDialogSize)
 
     MainGui.Opt("+Disabled")
 
-    MaintenanceGui.AddText("x20 y20 w860", "Zde můžete plánovat pravidelnou údržbu vozidla " vehicle.name ". Každý úkon může hlídat interval podle data, tachometru nebo obojího zároveň.")
+    introLabel := MaintenanceGui.AddText("x20 y20 w860", "Tady si nastavíte servisní úkony a hned uvidíte, co se blíží podle data, tachometru nebo obojího.")
     MaintenanceSummaryLabel := MaintenanceGui.AddText("x20 y50 w860", "")
-    MaintenanceGui.AddText("x20 y82 w290", "Hledat úkon, interval, stav nebo poznámku")
+    searchLabel := MaintenanceGui.AddText("x20 y82 w290", "Hledat úkon, interval, stav nebo poznámku")
     MaintenanceSearchCtrl := MaintenanceGui.AddEdit("x320 y79 w360")
     MaintenanceSearchCtrl.OnEvent("Change", OnMaintenanceSearchChanged)
 
@@ -67,6 +70,17 @@ OpenVehicleMaintenanceDialog(vehicle, openAddPlan := false, selectPlanId := "", 
     closeButton := MaintenanceGui.AddButton("x480 y418 w140 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleMaintenanceDialog)
 
+    MaintenanceLayout := {
+        introLabel: introLabel,
+        searchLabel: searchLabel,
+        recommendButton: recommendButton,
+        addButton: addButton,
+        editButton: editButton,
+        deleteButton: deleteButton,
+        detailButton: detailButton,
+        closeButton: closeButton
+    }
+
     MaintenanceGui.Show("w900 h468")
     PopulateVehicleMaintenanceList(selectPlanId, true)
 
@@ -86,7 +100,7 @@ OpenVehicleMaintenanceDialog(vehicle, openAddPlan := false, selectPlanId := "", 
 }
 
 CloseVehicleMaintenanceDialog(*) {
-    global MaintenanceGui, MaintenanceVehicleId, MaintenanceList, MaintenanceSummaryLabel, MaintenanceAllPlans, MaintenanceSearchCtrl, VisibleMaintenancePlanIds, MaintenanceSortColumn, MaintenanceSortDescending, MaintenanceCompleteButton
+    global MaintenanceGui, MaintenanceVehicleId, MaintenanceList, MaintenanceSummaryLabel, MaintenanceAllPlans, MaintenanceSearchCtrl, VisibleMaintenancePlanIds, MaintenanceSortColumn, MaintenanceSortDescending, MaintenanceCompleteButton, MaintenanceLayout
     global MaintenanceRecommendGui, MaintenanceRecommendList, MaintenanceRecommendSummaryLabel, MaintenanceRecommendControls, MaintenanceRecommendItems, MaintenanceRecommendVehicleId, MaintenanceRecommendSelectedIndex, MaintenanceRecommendLoading, MainGui
 
     if IsObject(MaintenanceRecommendGui) {
@@ -108,6 +122,7 @@ CloseVehicleMaintenanceDialog(*) {
     MaintenanceSortColumn := 5
     MaintenanceSortDescending := false
     MaintenanceCompleteButton := 0
+    MaintenanceLayout := {}
     MaintenanceRecommendList := 0
     MaintenanceRecommendSummaryLabel := 0
     MaintenanceRecommendControls := {}
@@ -284,7 +299,7 @@ CompareVisibleVehicleMaintenanceSnapshotsByColumn(left, right, column) {
 }
 
 UpdateVehicleMaintenanceActionState() {
-    global MaintenanceList, VisibleMaintenancePlanIds, MaintenanceCompleteButton
+    global MaintenanceList, VisibleMaintenancePlanIds, MaintenanceCompleteButton, MaintenanceLayout
 
     hasSelection := false
     if IsObject(MaintenanceList) {
@@ -295,6 +310,39 @@ UpdateVehicleMaintenanceActionState() {
     if IsObject(MaintenanceCompleteButton) {
         MaintenanceCompleteButton.Opt(hasSelection ? "-Disabled" : "+Disabled")
     }
+    for controlName in ["editButton", "deleteButton", "detailButton"] {
+        if IsObject(MaintenanceLayout) && MaintenanceLayout.HasOwnProp(controlName) && IsObject(MaintenanceLayout.%controlName%) {
+            MaintenanceLayout.%controlName%.Opt(hasSelection ? "-Disabled" : "+Disabled")
+        }
+    }
+}
+
+OnVehicleMaintenanceDialogSize(guiObj, minMax, width, height) {
+    global MaintenanceLayout, MaintenanceSummaryLabel, MaintenanceSearchCtrl, MaintenanceList, MaintenanceCompleteButton
+
+    if (minMax = -1) {
+        return
+    }
+
+    firstRowY := height - 86
+    secondRowY := height - 50
+    listHeight := firstRowY - 15 - 112
+
+    if IsObject(MaintenanceLayout) {
+        MoveGuiControl(MaintenanceLayout.introLabel, 20, 20, width - 40)
+        MoveGuiControl(MaintenanceLayout.searchLabel, 20, 82, 290)
+        MoveGuiControl(MaintenanceLayout.recommendButton, 40, firstRowY, 170, 30)
+        MoveGuiControl(MaintenanceLayout.addButton, 220, firstRowY, 120, 30)
+        MoveGuiControl(MaintenanceLayout.editButton, 350, firstRowY, 120, 30)
+        MoveGuiControl(MaintenanceCompleteButton, 480, firstRowY, 140, 30)
+        MoveGuiControl(MaintenanceLayout.deleteButton, 630, firstRowY, 130, 30)
+        MoveGuiControl(MaintenanceLayout.detailButton, 260, secondRowY, 160, 30)
+        MoveGuiControl(MaintenanceLayout.closeButton, width - 160, secondRowY, 140, 30)
+    }
+
+    MoveGuiControl(MaintenanceSummaryLabel, 20, 50, width - 40)
+    MoveGuiControl(MaintenanceSearchCtrl, 320, 79, Max(360, width - 540), 23)
+    MoveGuiControl(MaintenanceList, 20, 112, width - 40, listHeight)
 }
 
 GetSelectedVehicleMaintenancePlan() {
@@ -539,7 +587,7 @@ OnMaintenanceRecommendationListClicked(*) {
 LoadMaintenanceRecommendationDraftIntoControls(index) {
     global MaintenanceRecommendControls, MaintenanceRecommendItems, MaintenanceRecommendLoading
 
-    if !IsObject(MaintenanceRecommendControls) || !MaintenanceRecommendControls.Has("title") {
+    if !IsObject(MaintenanceRecommendControls) || !MaintenanceRecommendControls.HasOwnProp("title") {
         return
     }
 
@@ -667,7 +715,7 @@ SaveSelectedVehicleMaintenanceRecommendationsFromDialog(*) {
 FocusMaintenanceRecommendationField(fieldName) {
     global MaintenanceRecommendControls
 
-    if IsObject(MaintenanceRecommendControls) && MaintenanceRecommendControls.Has(fieldName) {
+    if IsObject(MaintenanceRecommendControls) && MaintenanceRecommendControls.HasOwnProp(fieldName) {
         MaintenanceRecommendControls.%fieldName%.Focus()
     }
 }
@@ -1000,7 +1048,7 @@ OpenVehicleMaintenancePlanForm(mode, plan := "") {
 OnMaintenanceTemplateChanged(*) {
     global MaintenanceFormControls
 
-    if !IsObject(MaintenanceFormControls) || !MaintenanceFormControls.Has("template") {
+    if !IsObject(MaintenanceFormControls) || !MaintenanceFormControls.HasOwnProp("template") {
         return
     }
 

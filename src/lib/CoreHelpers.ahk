@@ -151,6 +151,19 @@ JoinInline(parts, separator := " | ") {
     return output
 }
 
+MoveGuiControl(ctrl, x?, y?, w?, h?) {
+    if !IsObject(ctrl) {
+        return
+    }
+
+    ctrl.GetPos(&currentX, &currentY, &currentW, &currentH)
+    targetX := IsSet(x) ? x : currentX
+    targetY := IsSet(y) ? y : currentY
+    targetW := IsSet(w) ? w : currentW
+    targetH := IsSet(h) ? h : currentH
+    ctrl.Move(targetX, targetY, targetW, targetH)
+}
+
 SortVehiclesByDue(&items) {
     count := items.Length
     if (count < 2) {

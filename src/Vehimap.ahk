@@ -63,6 +63,7 @@ global MainHideInactiveCtrl := 0
 global MainClearFiltersButton := 0
 global VehicleList := 0
 global StatusBar := 0
+global MainLayout := {}
 global FormGui := 0
 global FormControls := {}
 global FormMode := ""
@@ -75,6 +76,7 @@ global DetailReminderSummaryLabel := 0
 global DetailFuelSummaryLabel := 0
 global DetailRecordsSummaryLabel := 0
 global DetailMaintenanceSummaryLabel := 0
+global DetailLayout := {}
 global SettingsGui := 0
 global SettingsControls := {}
 global OverviewGui := 0
@@ -91,6 +93,7 @@ global OverviewShowMissingGreenCtrl := 0
 global OverviewShowDataIssuesCtrl := 0
 global OverviewSortColumn := 6
 global OverviewSortDescending := false
+global OverviewLayout := {}
 global OverdueGui := 0
 global OverdueList := 0
 global OverdueEntries := []
@@ -100,6 +103,7 @@ global OverdueSearchCtrl := 0
 global OverdueItemButton := 0
 global OverdueOpenButton := 0
 global OverdueEditButton := 0
+global OverdueLayout := {}
 global GlobalSearchGui := 0
 global GlobalSearchList := 0
 global GlobalSearchResults := []
@@ -147,6 +151,7 @@ global RecordsSortDescending := false
 global RecordsOpenFileButton := 0
 global RecordsOpenFolderButton := 0
 global RecordsCopyPathButton := 0
+global RecordsLayout := {}
 global RecordFormGui := 0
 global RecordFormControls := {}
 global RecordFormMode := ""
@@ -158,6 +163,7 @@ global RecordFormInitialFilePath := ""
 global RecordFormStatusLabel := 0
 global RecordFormMoveManagedButton := 0
 global RecordFormRelinkButton := 0
+global RecordFormLayout := {}
 global LastBackupAttachmentStats := {includedCount: 0, missingCount: 0, restoredCount: 0}
 global ReminderGui := 0
 global ReminderVehicleId := ""
@@ -183,6 +189,7 @@ global VisibleMaintenancePlanIds := []
 global MaintenanceSortColumn := 5
 global MaintenanceSortDescending := false
 global MaintenanceCompleteButton := 0
+global MaintenanceLayout := {}
 global MaintenanceRecommendGui := 0
 global MaintenanceRecommendList := 0
 global MaintenanceRecommendSummaryLabel := 0
@@ -246,6 +253,7 @@ global AuditItems := []
 global AuditOpenButton := 0
 global AuditVehicleButton := 0
 global AuditEditButton := 0
+global AuditLayout := {}
 global TimelineGui := 0
 global TimelineVehicleId := ""
 global TimelineList := 0
@@ -256,6 +264,7 @@ global TimelineEntries := []
 global TimelineAllEntries := []
 global TimelineOpenButton := 0
 global TimelineVehicleButton := 0
+global TimelineLayout := {}
 global DashboardEntries := []
 global DashboardOpenButton := 0
 global DashboardItemButton := 0
@@ -265,6 +274,7 @@ global DashboardVehicleCostsButton := 0
 global DashboardEditButton := 0
 global DashboardShowOnLaunchCtrl := 0
 global DashboardShowMainOnClose := false
+global DashboardLayout := {}
 global DueCheckIntervalMs := 900000
 global AutoBackupCheckIntervalMs := 3600000
 global ResumeDueCheckDelayMs := 1500
@@ -344,6 +354,18 @@ F2::EditSelectedOverdueVehicle()
 
 #HotIf IsListViewFocusedInGui(OverdueGui)
 Enter::OpenSelectedOverdueItem()
+#HotIf
+
+#HotIf IsGuiWindowActive(AuditGui)
+^f::FocusAuditSearchShortcut()
+^p::OpenSelectedAuditItem()
+^u::EditSelectedAuditItem()
+F2::EditSelectedAuditItem()
+^o::OpenSelectedAuditVehicle()
+#HotIf
+
+#HotIf IsListViewFocusedInGui(AuditGui)
+Enter::OpenSelectedAuditItem()
 #HotIf
 
 #HotIf IsGuiWindowActive(DetailGui)

@@ -1,6 +1,6 @@
 OpenVehicleTimelineDialog(vehicle) {
     global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, MaintenanceGui, MaintenanceFormGui, MaintenanceCompleteGui, CostSummaryGui, FleetCostGui, AuditGui
-    global TimelineGui, TimelineVehicleId, TimelineList, TimelineSummaryLabel, TimelineFilterCtrl, TimelineSearchCtrl, TimelineEntries, TimelineAllEntries, TimelineOpenButton, TimelineVehicleButton
+    global TimelineGui, TimelineVehicleId, TimelineList, TimelineSummaryLabel, TimelineFilterCtrl, TimelineSearchCtrl, TimelineEntries, TimelineAllEntries, TimelineOpenButton, TimelineVehicleButton, TimelineLayout
 
     if IsObject(TimelineGui) {
         WinActivate("ahk_id " TimelineGui.Hwnd)
@@ -19,22 +19,25 @@ OpenVehicleTimelineDialog(vehicle) {
     TimelineVehicleId := vehicle.id
     TimelineAllEntries := BuildVehicleTimelineEntries(vehicle.id)
     TimelineEntries := []
-    TimelineGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Časová osa vozidla")
+    TimelineLayout := {}
+    TimelineGui := Gui("+Owner" MainGui.Hwnd " +Resize", AppTitle " - Časová osa vozidla")
     TimelineGui.SetFont("s10", "Segoe UI")
+    TimelineGui.Opt("+MinSize980x515")
     TimelineGui.OnEvent("Close", CloseVehicleTimelineDialog)
     TimelineGui.OnEvent("Escape", CloseVehicleTimelineDialog)
+    TimelineGui.OnEvent("Size", OnVehicleTimelineDialogSize)
 
     MainGui.Opt("+Disabled")
 
-    TimelineGui.AddText("x20 y20 w940", "Zde vidíte jednu časovou osu vozidla " vehicle.name " napříč historií, tankováním, připomínkami, expirací dokladů, technickou kontrolou, zelenou kartou i servisními úkoly s konkrétním datem.")
-    TimelineGui.AddText("x20 y55 w90", "Zobrazit")
+    introLabel := TimelineGui.AddText("x20 y20 w940", "Na jednom místě vidíte minulost i budoucí termíny vozidla " vehicle.name ", abyste mohli rovnou otevřít správnou evidenci.")
+    filterLabel := TimelineGui.AddText("x20 y55 w90", "Zobrazit")
     TimelineFilterCtrl := TimelineGui.AddDropDownList("x120 y52 w170 Choose1", ["Vše", "Budoucí", "Minulé"])
     TimelineFilterCtrl.OnEvent("Change", OnVehicleTimelineFilterChanged)
 
     refreshButton := TimelineGui.AddButton("x740 y50 w140 h28", "Obnovit")
     refreshButton.OnEvent("Click", RefreshVehicleTimelineDialog)
 
-    TimelineGui.AddText("x20 y88 w140", "Hledat položku nebo stav")
+    searchLabel := TimelineGui.AddText("x20 y88 w140", "Hledat položku nebo stav")
     TimelineSearchCtrl := TimelineGui.AddEdit("x170 y85 w360")
     TimelineSearchCtrl.OnEvent("Change", OnVehicleTimelineSearchChanged)
 
@@ -42,6 +45,7 @@ OpenVehicleTimelineDialog(vehicle) {
 
     TimelineList := TimelineGui.AddListView("x20 y148 w940 h300 Grid -Multi", ["Datum", "Druh", "Položka", "Detail", "Stav"])
     TimelineList.OnEvent("DoubleClick", OpenSelectedVehicleTimelineItem)
+    TimelineList.OnEvent("ItemSelect", OnVehicleTimelineSelectionChanged)
     TimelineList.ModifyCol(1, "105")
     TimelineList.ModifyCol(2, "135")
     TimelineList.ModifyCol(3, "215")
@@ -57,15 +61,23 @@ OpenVehicleTimelineDialog(vehicle) {
     closeButton := TimelineGui.AddButton("x570 y463 w110 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleTimelineDialog)
 
+    TimelineLayout := {
+        introLabel: introLabel,
+        filterLabel: filterLabel,
+        searchLabel: searchLabel,
+        refreshButton: refreshButton,
+        closeButton: closeButton
+    }
+
     TimelineGui.Show("w980 h515")
     PopulateVehicleTimelineList("", true)
     if (TimelineEntries.Length = 0) {
-        closeButton.Focus()
+        TimelineSearchCtrl.Focus()
     }
 }
 
 CloseVehicleTimelineDialog(*) {
-    global TimelineGui, TimelineVehicleId, TimelineList, TimelineSummaryLabel, TimelineFilterCtrl, TimelineSearchCtrl, TimelineEntries, TimelineAllEntries, TimelineOpenButton, TimelineVehicleButton, MainGui
+    global TimelineGui, TimelineVehicleId, TimelineList, TimelineSummaryLabel, TimelineFilterCtrl, TimelineSearchCtrl, TimelineEntries, TimelineAllEntries, TimelineOpenButton, TimelineVehicleButton, TimelineLayout, MainGui
 
     if IsObject(TimelineGui) {
         TimelineGui.Destroy()
@@ -81,6 +93,7 @@ CloseVehicleTimelineDialog(*) {
     TimelineAllEntries := []
     TimelineOpenButton := 0
     TimelineVehicleButton := 0
+    TimelineLayout := {}
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
@@ -138,6 +151,7 @@ PopulateVehicleTimelineList(selectEntryKey := "", focusList := false) {
     }
     TimelineList.Opt("+Redraw")
 
+    UpdateVehicleTimelineActionState()
     if (TimelineEntries.Length = 0) {
         return
     }
@@ -147,6 +161,7 @@ PopulateVehicleTimelineList(selectEntryKey := "", focusList := false) {
     }
 
     TimelineList.Modify(selectedRow, focusList ? "Select Focus Vis" : "Select Vis")
+    UpdateVehicleTimelineActionState()
 }
 
 GetVehicleTimelineFilterKind() {
@@ -526,6 +541,50 @@ GetSelectedVehicleTimelineEntry() {
 GetSelectedVehicleTimelineEntryKey() {
     entry := GetSelectedVehicleTimelineEntry()
     return IsObject(entry) ? BuildVehicleTimelineEntryKey(entry) : ""
+}
+
+OnVehicleTimelineSelectionChanged(*) {
+    UpdateVehicleTimelineActionState()
+}
+
+UpdateVehicleTimelineActionState() {
+    global TimelineOpenButton, TimelineVehicleButton
+
+    entry := GetSelectedVehicleTimelineEntry()
+    hasEntry := IsObject(entry)
+
+    if IsObject(TimelineOpenButton) {
+        TimelineOpenButton.Opt(hasEntry ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(TimelineVehicleButton) {
+        TimelineVehicleButton.Opt(hasEntry ? "-Disabled" : "+Disabled")
+    }
+}
+
+OnVehicleTimelineDialogSize(guiObj, minMax, width, height) {
+    global TimelineLayout, TimelineFilterCtrl, TimelineSearchCtrl, TimelineSummaryLabel, TimelineList, TimelineOpenButton, TimelineVehicleButton
+
+    if (minMax = -1) {
+        return
+    }
+
+    buttonY := height - 52
+    listHeight := buttonY - 15 - 148
+
+    if IsObject(TimelineLayout) {
+        MoveGuiControl(TimelineLayout.introLabel, 20, 20, width - 40)
+        MoveGuiControl(TimelineLayout.filterLabel, 20, 55, 90)
+        MoveGuiControl(TimelineLayout.searchLabel, 20, 88, 140)
+        MoveGuiControl(TimelineLayout.refreshButton, width - 160, 50, 140, 28)
+        MoveGuiControl(TimelineLayout.closeButton, width - 130, buttonY, 110, 30)
+    }
+
+    MoveGuiControl(TimelineFilterCtrl, 120, 52, 170, 23)
+    MoveGuiControl(TimelineSearchCtrl, 170, 85, Max(360, width - 390), 23)
+    MoveGuiControl(TimelineSummaryLabel, 20, 118, width - 40)
+    MoveGuiControl(TimelineList, 20, 148, width - 40, listHeight)
+    MoveGuiControl(TimelineOpenButton, 210, buttonY, 170, 30)
+    MoveGuiControl(TimelineVehicleButton, 390, buttonY, 170, 30)
 }
 
 BuildVehicleTimelineEntryKey(entry) {

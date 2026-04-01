@@ -29,6 +29,11 @@ RunSmokeTests() {
         "SmokeTestVehicleCostComparison",
         "SmokeTestVehicleTimelineEntries",
         "SmokeTestVehimapCalendarExport",
+        "SmokeTestMaintenanceActionState",
+        "SmokeTestAuditDialogActions",
+        "SmokeTestVehicleDetailInitialFocus",
+        "SmokeTestManagedAttachmentFormState",
+        "SmokeTestResponsiveGuiLayouts",
         "SmokeTestDashboardCosts",
         "SmokeTestDashboardProblemHighlights",
         "SmokeTestDashboardMaintenanceActions",
@@ -1057,6 +1062,222 @@ SmokeTestVehimapCalendarExport() {
     AssertContains(savedContent, "SUMMARY:Vehimap - Doklad - Export auto", "Zapsaný ICS soubor musí obsahovat i expiraci dokladu.")
 }
 
+SmokeTestMaintenanceActionState() {
+    global Vehicles, VehicleMaintenancePlans, MaintenanceLayout, MaintenanceCompleteButton
+
+    ResetSmokeData()
+    EnsureSmokeMainGui()
+    vehicle := {
+        id: "veh_1",
+        name: "Servisní test",
+        category: "Osobní vozidla",
+        vehicleNote: "",
+        makeModel: "Skoda Octavia",
+        plate: "1AB2345",
+        year: "2020",
+        power: "110",
+        lastTk: "03/2025",
+        nextTk: "03/2027",
+        greenCardFrom: "04/2025",
+        greenCardTo: "04/2026"
+    }
+    Vehicles := [vehicle]
+    VehicleMaintenancePlans := []
+
+    try {
+        OpenVehicleMaintenanceDialog(vehicle)
+        AssertControlEnabledState(MaintenanceCompleteButton, false, "Bez výběru musí být tlačítko dokončení servisu vypnuté.")
+        AssertControlEnabledState(MaintenanceLayout.editButton, false, "Bez výběru musí být tlačítko úpravy vypnuté.")
+        AssertControlEnabledState(MaintenanceLayout.deleteButton, false, "Bez výběru musí být tlačítko odstranění vypnuté.")
+        AssertControlEnabledState(MaintenanceLayout.detailButton, false, "Bez výběru musí být tlačítko detailu vypnuté.")
+        CloseVehicleMaintenanceDialog()
+
+        VehicleMaintenancePlans := [{
+            id: "mnt_1",
+            vehicleId: "veh_1",
+            title: "Motorový olej",
+            intervalKm: "15000",
+            intervalMonths: "12",
+            lastServiceDate: "01.01.2026",
+            lastServiceOdometer: "10000",
+            isActive: 1,
+            note: ""
+        }]
+
+        OpenVehicleMaintenanceDialog(vehicle)
+        PopulateVehicleMaintenanceList("", true)
+        AssertControlEnabledState(MaintenanceCompleteButton, true, "Po výběru plánu má být dokončení servisu dostupné.")
+        AssertControlEnabledState(MaintenanceLayout.editButton, true, "Po výběru plánu má být úprava dostupná.")
+        AssertControlEnabledState(MaintenanceLayout.deleteButton, true, "Po výběru plánu má být odstranění dostupné.")
+        AssertControlEnabledState(MaintenanceLayout.detailButton, true, "Po výběru plánu má být detail vozidla dostupný.")
+    } finally {
+        CloseVehicleMaintenanceDialog()
+    }
+}
+
+SmokeTestAuditDialogActions() {
+    global Vehicles, VehimapTestHooks, AuditGui, AuditSearchCtrl, AuditOpenButton
+
+    ResetSmokeData()
+    EnsureSmokeMainGui()
+    Vehicles := [{
+        id: "veh_1",
+        name: "Audit test",
+        category: "Osobní vozidla",
+        vehicleNote: "",
+        makeModel: "Skoda Fabia",
+        plate: "",
+        year: "2020",
+        power: "70",
+        lastTk: "03/2024",
+        nextTk: "",
+        greenCardFrom: "04/2026",
+        greenCardTo: "03/2026"
+    }]
+
+    VehimapTestHooks := {captureAuditActions: true, auditActions: []}
+    try {
+        OpenAuditDialog()
+        FocusAuditSearchShortcut()
+        AssertEqual(VehimapTestHooks.lastFocusTarget, "audit-search", "Ctrl+F akce v auditu má přesunout fokus do hledání.")
+        AssertControlEnabledState(AuditOpenButton, true, "Při vybrané auditní položce má být akce otevření dostupná.")
+
+        OpenSelectedAuditItem()
+        AssertEqual(VehimapTestHooks.auditActions[1].action, "open_item", "Audit má umět otevřít řešenou položku.")
+
+        OpenAuditDialog()
+        OpenSelectedAuditVehicle()
+        AssertEqual(VehimapTestHooks.auditActions[2].action, "open_vehicle", "Audit má umět otevřít detail vozidla.")
+        CloseAuditDialog()
+
+        OpenAuditDialog()
+        EditSelectedAuditItem()
+        AssertEqual(VehimapTestHooks.auditActions[3].action, "edit_item", "Audit má umět přejít i do úpravy řešené položky.")
+    } finally {
+        VehimapTestHooks := 0
+        CloseAuditDialog()
+    }
+}
+
+SmokeTestVehicleDetailInitialFocus() {
+    global Vehicles, VehimapTestHooks
+
+    ResetSmokeData()
+    EnsureSmokeMainGui()
+    Vehicles := [{
+        id: "veh_1",
+        name: "Detail test",
+        category: "Osobní vozidla",
+        vehicleNote: "Rodinné auto",
+        makeModel: "Volkswagen Passat",
+        plate: "2AB3456",
+        year: "2022",
+        power: "110",
+        lastTk: "05/2025",
+        nextTk: "05/2027",
+        greenCardFrom: "05/2025",
+        greenCardTo: "05/2026"
+    }]
+
+    VehimapTestHooks := {}
+    try {
+        OpenVehicleDetailDialog(Vehicles[1])
+        AssertEqual(VehimapTestHooks.detailInitialFocus, "edit", "Detail vozidla má po otevření fokusovat primární akci úpravy.")
+    } finally {
+        VehimapTestHooks := 0
+        CloseVehicleDetailDialog()
+    }
+}
+
+SmokeTestManagedAttachmentFormState() {
+    global Vehicles, VehimapTestHooks
+
+    ResetSmokeData()
+    EnsureSmokeMainGui()
+    Vehicles := [{
+        id: "veh_1",
+        name: "Doklad test",
+        category: "Osobní vozidla",
+        vehicleNote: "",
+        makeModel: "Skoda Superb",
+        plate: "3AB4567",
+        year: "2021",
+        power: "140",
+        lastTk: "03/2025",
+        nextTk: "03/2027",
+        greenCardFrom: "04/2025",
+        greenCardTo: "04/2026"
+    }]
+
+    VehimapTestHooks := {}
+    try {
+        OpenVehicleRecordsDialog(Vehicles[1])
+        OpenVehicleRecordForm("add")
+        AssertEqual(VehimapTestHooks.recordFormModeState.mode, "managed", "Nový doklad má výchozí režim spravované kopie.")
+        AssertTrue(VehimapTestHooks.recordFormModeState.filePathReadOnly, "Spravovaná příloha nemá vystavovat uloženou cestu jako běžně editovatelné pole.")
+        AssertContains(VehimapTestHooks.recordFormModeState.pathLabel, "Spravovaná cesta", "Managed režim má jasně pojmenovat spravovanou cestu.")
+        AssertContains(VehimapTestHooks.recordFormModeState.statusText, "Režim přílohy:", "Stavový blok dokladu má uvádět režim přílohy.")
+
+        SetVehicleRecordFormAttachmentMode("external")
+        UpdateVehicleRecordFormAttachmentState()
+        AssertEqual(VehimapTestHooks.recordFormModeState.mode, "external", "Přepnutí na externí cestu má změnit režim formuláře.")
+        AssertTrue(!VehimapTestHooks.recordFormModeState.filePathReadOnly, "Externí cesta má zůstat editovatelná.")
+        AssertContains(VehimapTestHooks.recordFormModeState.pathLabel, "Cesta k souboru nebo složce", "Externí režim má jasně popsat očekávanou cestu.")
+    } finally {
+        VehimapTestHooks := 0
+        CloseVehicleRecordForm()
+        CloseVehicleRecordsDialog()
+    }
+}
+
+SmokeTestResponsiveGuiLayouts() {
+    global Vehicles, MainGui, MainLayout, VehicleList, AuditGui, AuditList, RecordsGui, RecordsList, RecordsLayout
+
+    ResetSmokeData()
+    EnsureSmokeMainGui()
+    Vehicles := [{
+        id: "veh_1",
+        name: "Resize test",
+        category: "Osobní vozidla",
+        vehicleNote: "",
+        makeModel: "Hyundai i30",
+        plate: "",
+        year: "2020",
+        power: "88",
+        lastTk: "03/2024",
+        nextTk: "",
+        greenCardFrom: "",
+        greenCardTo: ""
+    }]
+
+    OnMainGuiSize(MainGui, 0, 1100, 560)
+    VehicleList.GetPos(,, &mainListW, &mainListH)
+    AssertTrue(mainListW > 930, "Hlavní seznam vozidel se má při zvětšení okna roztáhnout do šířky.")
+    AssertTrue(mainListH > 219, "Hlavní seznam vozidel se má při zvětšení okna roztáhnout i do výšky.")
+
+    try {
+        OpenAuditDialog()
+        OnAuditDialogSize(AuditGui, 0, 1160, 620)
+        AuditList.GetPos(,, &auditListW, &auditListH)
+        AssertTrue(auditListW > 980, "Audit má při zvětšení okna rozšiřovat hlavní seznam.")
+        AssertTrue(auditListH > 290, "Audit má při zvětšení okna zvyšovat i výšku seznamu.")
+    } finally {
+        CloseAuditDialog()
+    }
+
+    try {
+        OpenVehicleRecordsDialog(Vehicles[1])
+        OnVehicleRecordsDialogSize(RecordsGui, 0, 1180, 560)
+        RecordsList.GetPos(,, &recordsListW, &recordsListH)
+        RecordsLayout.closeButton.GetPos(&closeX)
+        AssertTrue(recordsListW > 980, "Evidence dokladů má při zvětšení okna rozšířit seznam.")
+        AssertTrue(recordsListH > 220, "Evidence dokladů má při zvětšení okna zvětšit i výšku seznamu.")
+        AssertTrue(closeX > 965, "Zavírací tlačítko dokladů má zůstat ukotvené u pravého okraje.")
+    } finally {
+        CloseVehicleRecordsDialog()
+    }
+}
+
 SmokeTestDashboardCosts() {
     global Vehicles, VehicleHistory, VehicleFuelLog, VehicleRecords
 
@@ -1291,6 +1512,54 @@ SmokeTestSortSettings() {
     AssertEqual(GetOverviewIncludeDataIssuesSetting(), 1, "Overview include_data_issues se neuložil.")
     AssertEqual(GetMaintenanceReminderDays(), 45, "Počet dnů pro upozornění na údržbu se neuložil.")
     AssertEqual(GetMaintenanceReminderKm(), 1500, "Kilometrový limit pro upozornění na údržbu se neuložil.")
+}
+
+EnsureSmokeMainGui() {
+    global MainGui
+
+    CloseSmokeDialogs()
+    if !IsObject(MainGui) {
+        BuildMainGui()
+    }
+}
+
+CloseSmokeDialogs() {
+    global DetailGui, AuditGui, RecordsGui, RecordFormGui, MaintenanceGui, TimelineGui
+
+    if IsObject(RecordFormGui) {
+        CloseVehicleRecordForm()
+    }
+    if IsObject(RecordsGui) {
+        CloseVehicleRecordsDialog()
+    }
+    if IsObject(MaintenanceGui) {
+        CloseVehicleMaintenanceDialog()
+    }
+    if IsObject(TimelineGui) {
+        CloseVehicleTimelineDialog()
+    }
+    if IsObject(AuditGui) {
+        CloseAuditDialog()
+    }
+    if IsObject(DetailGui) {
+        CloseVehicleDetailDialog()
+    }
+}
+
+AssertControlEnabledState(ctrl, expectedEnabled, message := "") {
+    if !IsObject(ctrl) {
+        throw Error("Kontrola pro ověření povolení neexistuje.")
+    }
+
+    actualEnabled := DllCall("IsWindowEnabled", "ptr", ctrl.Hwnd, "int") != 0
+    if (actualEnabled = expectedEnabled) {
+        return
+    }
+
+    if (message = "") {
+        message := "Stav povolení ovládacího prvku neodpovídá očekávání."
+    }
+    throw Error(message)
 }
 
 HasMaintenanceTemplateWithTitle(items, title) {

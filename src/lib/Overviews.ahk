@@ -21,7 +21,7 @@ SwitchOverdueToOverviewShortcut() {
 }
 
 OpenUpcomingOverviewDialog(*) {
-    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverviewList, OverviewEntries, OverviewAllEntries, OverviewSummaryLabel, OverviewFilterCtrl, OverviewSearchCtrl, OverviewItemButton, OverviewOpenButton, OverviewEditButton, OverviewShowMissingGreenCtrl, OverviewShowDataIssuesCtrl, OverviewSortColumn, OverviewSortDescending, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverviewList, OverviewEntries, OverviewAllEntries, OverviewSummaryLabel, OverviewFilterCtrl, OverviewSearchCtrl, OverviewItemButton, OverviewOpenButton, OverviewEditButton, OverviewShowMissingGreenCtrl, OverviewShowDataIssuesCtrl, OverviewSortColumn, OverviewSortDescending, OverviewLayout, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
 
     if IsObject(OverviewGui) {
         WinActivate("ahk_id " OverviewGui.Hwnd)
@@ -89,15 +89,18 @@ OpenUpcomingOverviewDialog(*) {
     OverviewSortDescending := GetOverviewSortDescendingSetting()
     OverviewAllEntries := BuildUpcomingOverviewEntries(GetOverviewIncludeMissingGreenSetting(), GetOverviewIncludeDataIssuesSetting())
     OverviewEntries := []
-    OverviewGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Přehled termínů")
+    OverviewLayout := {}
+    OverviewGui := Gui("+Owner" MainGui.Hwnd " +Resize", AppTitle " - Přehled termínů")
     OverviewGui.SetFont("s10", "Segoe UI")
+    OverviewGui.Opt("+MinSize900x405")
     OverviewGui.OnEvent("Close", CloseUpcomingOverviewDialog)
     OverviewGui.OnEvent("Escape", CloseUpcomingOverviewDialog)
+    OverviewGui.OnEvent("Size", OnUpcomingOverviewDialogSize)
 
     MainGui.Opt("+Disabled")
 
-    OverviewGui.AddText("x20 y20 w860", "Zde vidíte všechny blížící se a propadlé termíny technických kontrol, zelených karet, vlastních připomínek i plánů údržby podle aktuálního nastavení upozornění. Volitelně můžete přidat i datové nedostatky k doplnění.")
-    OverviewGui.AddText("x20 y55 w90", "Filtr zobrazení")
+    introLabel := OverviewGui.AddText("x20 y20 w860", "Tady rychle vyfiltrujete blížící se i propadlé termíny a případně si k nim přidáte i datové nedostatky k doplnění.")
+    filterLabel := OverviewGui.AddText("x20 y55 w90", "Filtr zobrazení")
     OverviewFilterCtrl := OverviewGui.AddDropDownList("x120 y52 w220 Choose1", ["Vše", "Jen technické kontroly", "Jen zelené karty", "Jen vlastní připomínky", "Jen plány údržby", "Jen datové nedostatky"])
     OverviewFilterCtrl.Value := GetOverviewFilterIndex()
     OverviewFilterCtrl.OnEvent("Change", OnOverviewFilterChanged)
@@ -109,7 +112,7 @@ OpenUpcomingOverviewDialog(*) {
     refreshButton := OverviewGui.AddButton("x730 y50 w150 h28", "Obnovit")
     refreshButton.OnEvent("Click", RefreshUpcomingOverviewDialog)
 
-    OverviewGui.AddText("x20 y88 w140", "Hledat název, SPZ nebo položku")
+    searchLabel := OverviewGui.AddText("x20 y88 w140", "Hledat název, SPZ nebo položku")
     OverviewSearchCtrl := OverviewGui.AddEdit("x170 y85 w250")
     OverviewSearchCtrl.OnEvent("Change", OnOverviewSearchChanged)
 
@@ -122,6 +125,7 @@ OpenUpcomingOverviewDialog(*) {
     OverviewList := OverviewGui.AddListView("x20 y148 w860 h187 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "Značka / model", "SPZ", "Položka / termín", "Stav"])
     OverviewList.OnEvent("DoubleClick", OpenSelectedOverviewItem)
     OverviewList.OnEvent("ColClick", OnOverviewColumnClick)
+    OverviewList.OnEvent("ItemSelect", OnOverviewSelectionChanged)
 
     OverviewList.ModifyCol(1, "135")
     OverviewList.ModifyCol(2, "155")
@@ -143,17 +147,25 @@ OpenUpcomingOverviewDialog(*) {
     closeButton := OverviewGui.AddButton("x650 y350 w150 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseUpcomingOverviewDialog)
 
+    OverviewLayout := {
+        introLabel: introLabel,
+        filterLabel: filterLabel,
+        searchLabel: searchLabel,
+        refreshButton: refreshButton,
+        closeButton: closeButton
+    }
+
     OverviewGui.Show("w900 h405")
     PopulateUpcomingOverviewList("", true)
     if (OverviewEntries.Length > 0) {
         ; selection and focus are handled by PopulateUpcomingOverviewList
     } else {
-        closeButton.Focus()
+        OverviewSearchCtrl.Focus()
     }
 }
 
 CloseUpcomingOverviewDialog(*) {
-    global OverviewGui, OverviewList, OverviewEntries, OverviewAllEntries, OverviewSummaryLabel, OverviewFilterCtrl, OverviewSearchCtrl, OverviewItemButton, OverviewOpenButton, OverviewEditButton, OverviewShowMissingGreenCtrl, OverviewShowDataIssuesCtrl, OverviewSortColumn, OverviewSortDescending, MainGui
+    global OverviewGui, OverviewList, OverviewEntries, OverviewAllEntries, OverviewSummaryLabel, OverviewFilterCtrl, OverviewSearchCtrl, OverviewItemButton, OverviewOpenButton, OverviewEditButton, OverviewShowMissingGreenCtrl, OverviewShowDataIssuesCtrl, OverviewSortColumn, OverviewSortDescending, OverviewLayout, MainGui
 
     if IsObject(OverviewGui) {
         OverviewGui.Destroy()
@@ -173,12 +185,13 @@ CloseUpcomingOverviewDialog(*) {
     OverviewShowDataIssuesCtrl := 0
     OverviewSortColumn := 6
     OverviewSortDescending := false
+    OverviewLayout := {}
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
 
 OpenOverdueDialog(*) {
-    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverdueGui, OverdueList, OverdueEntries, OverdueAllEntries, OverdueSummaryLabel, OverdueSearchCtrl, OverdueItemButton, OverdueOpenButton, OverdueEditButton, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, OverviewGui, OverdueGui, OverdueList, OverdueEntries, OverdueAllEntries, OverdueSummaryLabel, OverdueSearchCtrl, OverdueItemButton, OverdueOpenButton, OverdueEditButton, OverdueLayout, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui
 
     if IsObject(OverdueGui) {
         WinActivate("ahk_id " OverdueGui.Hwnd)
@@ -244,19 +257,22 @@ OpenOverdueDialog(*) {
 
     OverdueAllEntries := BuildOverdueEntries()
     OverdueEntries := []
-    OverdueGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Propadlé termíny")
+    OverdueLayout := {}
+    OverdueGui := Gui("+Owner" MainGui.Hwnd " +Resize", AppTitle " - Propadlé termíny")
     OverdueGui.SetFont("s10", "Segoe UI")
+    OverdueGui.Opt("+MinSize900x405")
     OverdueGui.OnEvent("Close", CloseOverdueDialog)
     OverdueGui.OnEvent("Escape", CloseOverdueDialog)
+    OverdueGui.OnEvent("Size", OnOverdueDialogSize)
 
     MainGui.Opt("+Disabled")
 
-    OverdueGui.AddText("x20 y20 w860", "Zde vidíte všechny už propadlé technické kontroly, zelené karty, vlastní připomínky i plány údržby.")
+    introLabel := OverdueGui.AddText("x20 y20 w860", "Tady rychle projdete všechno, co už je po termínu a vyžaduje zásah nebo opravu.")
 
     refreshButton := OverdueGui.AddButton("x730 y50 w150 h28", "Obnovit")
     refreshButton.OnEvent("Click", RefreshOverdueDialog)
 
-    OverdueGui.AddText("x20 y55 w140", "Hledat název, SPZ nebo položku")
+    searchLabel := OverdueGui.AddText("x20 y55 w140", "Hledat název, SPZ nebo položku")
     OverdueSearchCtrl := OverdueGui.AddEdit("x170 y52 w300")
     OverdueSearchCtrl.OnEvent("Change", OnOverdueSearchChanged)
 
@@ -264,6 +280,7 @@ OpenOverdueDialog(*) {
 
     OverdueList := OverdueGui.AddListView("x20 y120 w860 h215 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "Značka / model", "SPZ", "Položka / termín", "Stav"])
     OverdueList.OnEvent("DoubleClick", OpenSelectedOverdueItem)
+    OverdueList.OnEvent("ItemSelect", OnOverdueSelectionChanged)
     OverdueList.ModifyCol(1, "135")
     OverdueList.ModifyCol(2, "155")
     OverdueList.ModifyCol(3, "120")
@@ -284,15 +301,22 @@ OpenOverdueDialog(*) {
     closeButton := OverdueGui.AddButton("x650 y350 w150 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseOverdueDialog)
 
+    OverdueLayout := {
+        introLabel: introLabel,
+        searchLabel: searchLabel,
+        refreshButton: refreshButton,
+        closeButton: closeButton
+    }
+
     OverdueGui.Show("w900 h405")
     PopulateOverdueList("", true)
     if (OverdueEntries.Length = 0) {
-        closeButton.Focus()
+        OverdueSearchCtrl.Focus()
     }
 }
 
 CloseOverdueDialog(*) {
-    global OverdueGui, OverdueList, OverdueEntries, OverdueAllEntries, OverdueSummaryLabel, OverdueSearchCtrl, OverdueItemButton, OverdueOpenButton, OverdueEditButton, MainGui
+    global OverdueGui, OverdueList, OverdueEntries, OverdueAllEntries, OverdueSummaryLabel, OverdueSearchCtrl, OverdueItemButton, OverdueOpenButton, OverdueEditButton, OverdueLayout, MainGui
 
     if IsObject(OverdueGui) {
         OverdueGui.Destroy()
@@ -307,6 +331,7 @@ CloseOverdueDialog(*) {
     OverdueItemButton := 0
     OverdueOpenButton := 0
     OverdueEditButton := 0
+    OverdueLayout := {}
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
@@ -354,18 +379,7 @@ PopulateOverdueList(selectedKey := "", focusList := false) {
     }
 
     OverdueList.Opt("+Redraw")
-
-    if IsObject(OverdueItemButton) {
-        OverdueItemButton.Opt(OverdueEntries.Length = 0 ? "+Disabled" : "-Disabled")
-    }
-
-    if IsObject(OverdueOpenButton) {
-        OverdueOpenButton.Opt(OverdueEntries.Length = 0 ? "+Disabled" : "-Disabled")
-    }
-
-    if IsObject(OverdueEditButton) {
-        OverdueEditButton.Opt(OverdueEntries.Length = 0 ? "+Disabled" : "-Disabled")
-    }
+    UpdateOverdueActionState()
 
     if (OverdueEntries.Length = 0) {
         return
@@ -377,6 +391,7 @@ PopulateOverdueList(selectedKey := "", focusList := false) {
 
     mode := focusList ? "Select Focus Vis" : "Select Vis"
     OverdueList.Modify(selectedRow, mode)
+    UpdateOverdueActionState()
 }
 
 GetSelectedOverdueEntryKey() {
@@ -787,30 +802,7 @@ PopulateUpcomingOverviewList(selectedKey := "", focusList := false) {
     }
 
     OverviewList.Opt("+Redraw")
-
-    if IsObject(OverviewItemButton) {
-        if (OverviewEntries.Length = 0) {
-            OverviewItemButton.Opt("+Disabled")
-        } else {
-            OverviewItemButton.Opt("-Disabled")
-        }
-    }
-
-    if IsObject(OverviewOpenButton) {
-        if (OverviewEntries.Length = 0) {
-            OverviewOpenButton.Opt("+Disabled")
-        } else {
-            OverviewOpenButton.Opt("-Disabled")
-        }
-    }
-
-    if IsObject(OverviewEditButton) {
-        if (OverviewEntries.Length = 0) {
-            OverviewEditButton.Opt("+Disabled")
-        } else {
-            OverviewEditButton.Opt("-Disabled")
-        }
-    }
+    UpdateOverviewActionState()
 
     if (OverviewEntries.Length = 0) {
         return
@@ -822,6 +814,31 @@ PopulateUpcomingOverviewList(selectedKey := "", focusList := false) {
 
     mode := focusList ? "Select Focus Vis" : "Select Vis"
     OverviewList.Modify(selectedRow, mode)
+    UpdateOverviewActionState()
+}
+
+OnOverviewSelectionChanged(*) {
+    UpdateOverviewActionState()
+}
+
+UpdateOverviewActionState() {
+    global OverviewList, OverviewEntries, OverviewItemButton, OverviewOpenButton, OverviewEditButton
+
+    hasSelection := false
+    if IsObject(OverviewList) {
+        row := OverviewList.GetNext(0)
+        hasSelection := (row > 0 && row <= OverviewEntries.Length)
+    }
+
+    if IsObject(OverviewItemButton) {
+        OverviewItemButton.Opt(hasSelection ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(OverviewOpenButton) {
+        OverviewOpenButton.Opt(hasSelection ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(OverviewEditButton) {
+        OverviewEditButton.Opt(hasSelection ? "-Disabled" : "+Disabled")
+    }
 }
 
 GetSelectedOverviewEntryKey() {
@@ -853,6 +870,84 @@ GetSelectedOverviewEntry(actionLabel := "otevřít") {
     }
 
     return OverviewEntries[row]
+}
+
+OnOverdueSelectionChanged(*) {
+    UpdateOverdueActionState()
+}
+
+UpdateOverdueActionState() {
+    global OverdueList, OverdueEntries, OverdueItemButton, OverdueOpenButton, OverdueEditButton
+
+    hasSelection := false
+    if IsObject(OverdueList) {
+        row := OverdueList.GetNext(0)
+        hasSelection := (row > 0 && row <= OverdueEntries.Length)
+    }
+
+    if IsObject(OverdueItemButton) {
+        OverdueItemButton.Opt(hasSelection ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(OverdueOpenButton) {
+        OverdueOpenButton.Opt(hasSelection ? "-Disabled" : "+Disabled")
+    }
+    if IsObject(OverdueEditButton) {
+        OverdueEditButton.Opt(hasSelection ? "-Disabled" : "+Disabled")
+    }
+}
+
+OnUpcomingOverviewDialogSize(guiObj, minMax, width, height) {
+    global OverviewLayout, OverviewFilterCtrl, OverviewShowMissingGreenCtrl, OverviewSearchCtrl, OverviewShowDataIssuesCtrl, OverviewSummaryLabel, OverviewList, OverviewItemButton, OverviewEditButton, OverviewOpenButton
+
+    if (minMax = -1) {
+        return
+    }
+
+    buttonY := height - 55
+    listHeight := buttonY - 15 - 148
+
+    if IsObject(OverviewLayout) {
+        MoveGuiControl(OverviewLayout.introLabel, 20, 20, width - 40)
+        MoveGuiControl(OverviewLayout.filterLabel, 20, 55, 90)
+        MoveGuiControl(OverviewLayout.refreshButton, width - 170, 50, 150, 28)
+        MoveGuiControl(OverviewLayout.searchLabel, 20, 88, 140)
+        MoveGuiControl(OverviewLayout.closeButton, width - 170, buttonY, 150, 30)
+    }
+
+    MoveGuiControl(OverviewFilterCtrl, 120, 52, 220, 23)
+    MoveGuiControl(OverviewShowMissingGreenCtrl, 350, 54, width - 540, 23)
+    MoveGuiControl(OverviewSearchCtrl, 170, 85, Max(250, width - 650), 23)
+    MoveGuiControl(OverviewShowDataIssuesCtrl, 440, 87, width - 460, 23)
+    MoveGuiControl(OverviewSummaryLabel, 20, 118, width - 40)
+    MoveGuiControl(OverviewList, 20, 148, width - 40, listHeight)
+    MoveGuiControl(OverviewItemButton, 170, buttonY, 150, 30)
+    MoveGuiControl(OverviewEditButton, 330, buttonY, 150, 30)
+    MoveGuiControl(OverviewOpenButton, 490, buttonY, 150, 30)
+}
+
+OnOverdueDialogSize(guiObj, minMax, width, height) {
+    global OverdueLayout, OverdueSearchCtrl, OverdueSummaryLabel, OverdueList, OverdueItemButton, OverdueEditButton, OverdueOpenButton
+
+    if (minMax = -1) {
+        return
+    }
+
+    buttonY := height - 55
+    listHeight := buttonY - 15 - 120
+
+    if IsObject(OverdueLayout) {
+        MoveGuiControl(OverdueLayout.introLabel, 20, 20, width - 40)
+        MoveGuiControl(OverdueLayout.refreshButton, width - 170, 50, 150, 28)
+        MoveGuiControl(OverdueLayout.searchLabel, 20, 55, 140)
+        MoveGuiControl(OverdueLayout.closeButton, width - 170, buttonY, 150, 30)
+    }
+
+    MoveGuiControl(OverdueSearchCtrl, 170, 52, Max(300, width - 390), 23)
+    MoveGuiControl(OverdueSummaryLabel, 20, 90, width - 40)
+    MoveGuiControl(OverdueList, 20, 120, width - 40, listHeight)
+    MoveGuiControl(OverdueItemButton, 170, buttonY, 150, 30)
+    MoveGuiControl(OverdueEditButton, 330, buttonY, 150, 30)
+    MoveGuiControl(OverdueOpenButton, 490, buttonY, 150, 30)
 }
 
 ShouldShowMissingGreenCardsInOverview() {

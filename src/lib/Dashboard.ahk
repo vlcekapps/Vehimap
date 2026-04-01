@@ -21,7 +21,7 @@ OpenFleetCostsFromDashboard(*) {
 }
 
 OpenDashboardDialog(showMainOnClose := false) {
-    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardHistoryButton, DashboardCompleteButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose
+    global AppTitle, MainGui, FormGui, SettingsGui, DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardHistoryButton, DashboardCompleteButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose, DashboardLayout
     global OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui, FleetCostGui
 
     if IsObject(DashboardGui) {
@@ -40,28 +40,31 @@ OpenDashboardDialog(showMainOnClose := false) {
     DashboardShowMainOnClose := showMainOnClose || mainWasVisible
 
     DashboardEntries := []
-    DashboardGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Dashboard")
+    DashboardLayout := {}
+    DashboardGui := Gui("+Owner" MainGui.Hwnd " +Resize", AppTitle " - Dashboard")
     DashboardGui.SetFont("s10", "Segoe UI")
+    DashboardGui.Opt("+MinSize1020x705")
     DashboardGui.OnEvent("Close", CloseDashboardDialog)
     DashboardGui.OnEvent("Escape", CloseDashboardDialog)
+    DashboardGui.OnEvent("Size", OnDashboardDialogSize)
 
     MainGui.Opt("+Disabled")
 
-    DashboardGui.AddText("x20 y20 w980", "Dashboard nabízí rychlý přehled vozidel, termínů, nákladů i kvality evidencí, které teď stojí za pozornost nebo doplnění.")
+    introLabel := DashboardGui.AddText("x20 y20 w980", "Dashboard vám ukáže, co teď nejspíš chcete řešit jako první: termíny, náklady i datové nedostatky.")
 
-    DashboardGui.AddGroupBox("x20 y50 w980 h70", "Vozidla")
+    vehiclesGroup := DashboardGui.AddGroupBox("x20 y50 w980 h70", "Vozidla")
     DashboardSummaryVehiclesLabel := DashboardGui.AddText("x35 y74 w950 h34", "")
 
-    DashboardGui.AddGroupBox("x20 y125 w980 h70", "Termíny")
+    termsGroup := DashboardGui.AddGroupBox("x20 y125 w980 h70", "Termíny")
     DashboardSummaryTermsLabel := DashboardGui.AddText("x35 y149 w950 h34", "")
 
-    DashboardGui.AddGroupBox("x20 y200 w980 h70", "Náklady")
+    costsGroup := DashboardGui.AddGroupBox("x20 y200 w980 h70", "Náklady")
     DashboardSummaryCostsLabel := DashboardGui.AddText("x35 y224 w950 h34", "")
 
-    DashboardGui.AddGroupBox("x20 y275 w980 h70", "Evidence")
+    dataGroup := DashboardGui.AddGroupBox("x20 y275 w980 h70", "Evidence")
     DashboardSummaryDataLabel := DashboardGui.AddText("x35 y299 w950 h34", "")
 
-    DashboardGui.AddGroupBox("x20 y350 w980 h185", "Položky k řešení a datové nedostatky")
+    listGroup := DashboardGui.AddGroupBox("x20 y350 w980 h185", "Položky k řešení a datové nedostatky")
     DashboardList := DashboardGui.AddListView("x35 y375 w950 h145 Grid -Multi", ["Druh", "Vozidlo", "Kategorie", "SPZ", "Položka / termín", "Stav"])
     DashboardList.OnEvent("DoubleClick", OpenSelectedDashboardItem)
     DashboardList.OnEvent("ItemSelect", OnDashboardSelectionChanged)
@@ -72,7 +75,7 @@ OpenDashboardDialog(showMainOnClose := false) {
     DashboardList.ModifyCol(5, "210")
     DashboardList.ModifyCol(6, "145")
 
-    DashboardGui.AddGroupBox("x20 y545 w980 h145", "Akce")
+    actionGroup := DashboardGui.AddGroupBox("x20 y545 w980 h145", "Akce")
 
     overviewButton := DashboardGui.AddButton("x40 y573 w135 h30", "Přehled termínů")
     overviewButton.OnEvent("Click", OpenOverviewFromDashboard)
@@ -111,15 +114,30 @@ OpenDashboardDialog(showMainOnClose := false) {
     DashboardShowOnLaunchCtrl.Value := GetShowDashboardOnLaunchEnabled()
     DashboardShowOnLaunchCtrl.OnEvent("Click", OnDashboardShowOnLaunchChanged)
 
+    DashboardLayout := {
+        introLabel: introLabel,
+        vehiclesGroup: vehiclesGroup,
+        termsGroup: termsGroup,
+        costsGroup: costsGroup,
+        dataGroup: dataGroup,
+        listGroup: listGroup,
+        actionGroup: actionGroup,
+        overviewButton: overviewButton,
+        overdueButton: overdueButton,
+        searchButton: searchButton,
+        fleetCostsButton: fleetCostsButton,
+        closeButton: closeButton
+    }
+
     DashboardGui.Show("w1020 h705")
     PopulateDashboardList(true)
     if (DashboardEntries.Length = 0) {
-        closeButton.Focus()
+        overviewButton.Focus()
     }
 }
 
 CloseDashboardDialog(*) {
-    global DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardHistoryButton, DashboardCompleteButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose, MainGui
+    global DashboardGui, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardEntries, DashboardOpenButton, DashboardItemButton, DashboardHistoryButton, DashboardCompleteButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardShowOnLaunchCtrl, DashboardShowMainOnClose, DashboardLayout, MainGui
 
     if IsObject(DashboardGui) {
         DashboardGui.Destroy()
@@ -139,12 +157,56 @@ CloseDashboardDialog(*) {
     DashboardVehicleCostsButton := 0
     DashboardEditButton := 0
     DashboardShowOnLaunchCtrl := 0
+    DashboardLayout := {}
 
     MainGui.Opt("-Disabled")
     if DashboardShowMainOnClose {
         ShowMainWindow()
     }
     DashboardShowMainOnClose := false
+}
+
+OnDashboardDialogSize(guiObj, minMax, width, height) {
+    global DashboardLayout, DashboardSummaryVehiclesLabel, DashboardSummaryTermsLabel, DashboardSummaryCostsLabel, DashboardSummaryDataLabel, DashboardList, DashboardItemButton, DashboardHistoryButton, DashboardCompleteButton, DashboardVehicleCostsButton, DashboardEditButton, DashboardOpenButton, DashboardShowOnLaunchCtrl
+
+    if (minMax = -1) {
+        return
+    }
+
+    actionGroupY := height - 160
+    firstActionRowY := actionGroupY + 28
+    secondActionRowY := actionGroupY + 63
+    checkboxY := actionGroupY + 105
+    listGroupHeight := actionGroupY - 350 - 10
+    listHeight := actionGroupY - 400
+
+    if IsObject(DashboardLayout) {
+        MoveGuiControl(DashboardLayout.introLabel, 20, 20, width - 40)
+        MoveGuiControl(DashboardLayout.vehiclesGroup, 20, 50, width - 40, 70)
+        MoveGuiControl(DashboardLayout.termsGroup, 20, 125, width - 40, 70)
+        MoveGuiControl(DashboardLayout.costsGroup, 20, 200, width - 40, 70)
+        MoveGuiControl(DashboardLayout.dataGroup, 20, 275, width - 40, 70)
+        MoveGuiControl(DashboardLayout.listGroup, 20, 350, width - 40, listGroupHeight)
+        MoveGuiControl(DashboardLayout.actionGroup, 20, actionGroupY, width - 40, 145)
+        MoveGuiControl(DashboardLayout.overviewButton, 40, firstActionRowY, 135, 30)
+        MoveGuiControl(DashboardLayout.overdueButton, 185, firstActionRowY, 135, 30)
+        MoveGuiControl(DashboardLayout.searchButton, 330, firstActionRowY, 135, 30)
+        MoveGuiControl(DashboardLayout.fleetCostsButton, 475, firstActionRowY, 135, 30)
+        MoveGuiControl(DashboardLayout.closeButton, width - 140, secondActionRowY, 100, 30)
+    }
+
+    MoveGuiControl(DashboardSummaryVehiclesLabel, 35, 74, width - 70, 34)
+    MoveGuiControl(DashboardSummaryTermsLabel, 35, 149, width - 70, 34)
+    MoveGuiControl(DashboardSummaryCostsLabel, 35, 224, width - 70, 34)
+    MoveGuiControl(DashboardSummaryDataLabel, 35, 299, width - 70, 34)
+    MoveGuiControl(DashboardList, 35, 375, width - 70, listHeight)
+    MoveGuiControl(DashboardItemButton, 40, secondActionRowY, 135, 30)
+    MoveGuiControl(DashboardHistoryButton, 180, secondActionRowY, 130, 30)
+    MoveGuiControl(DashboardCompleteButton, 320, secondActionRowY, 130, 30)
+    MoveGuiControl(DashboardVehicleCostsButton, 460, secondActionRowY, 130, 30)
+    MoveGuiControl(DashboardEditButton, 600, secondActionRowY, 130, 30)
+    MoveGuiControl(DashboardOpenButton, 740, secondActionRowY, 130, 30)
+    MoveGuiControl(DashboardShowOnLaunchCtrl, 40, checkboxY, 320, 23)
 }
 
 OnDashboardShowOnLaunchChanged(ctrl, *) {

@@ -165,7 +165,7 @@ OpenSelectedVehicleCosts(*) {
 }
 
 OpenVehicleDetailDialog(vehicle) {
-    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, DetailMaintenanceSummaryLabel, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, MaintenanceGui, MaintenanceFormGui, MaintenanceCompleteGui
+    global AppTitle, MainGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, DetailMaintenanceSummaryLabel, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, MaintenanceGui, MaintenanceFormGui, MaintenanceCompleteGui, DetailLayout
 
     if IsObject(DetailGui) {
         WinActivate("ahk_id " DetailGui.Hwnd)
@@ -240,17 +240,20 @@ OpenVehicleDetailDialog(vehicle) {
     ShowMainWindow()
 
     DetailVehicleId := vehicle.id
+    DetailLayout := {}
     meta := GetVehicleMeta(vehicle.id)
-    DetailGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Detail vozidla")
+    DetailGui := Gui("+Owner" MainGui.Hwnd " +Resize", AppTitle " - Detail vozidla")
     DetailGui.SetFont("s10", "Segoe UI")
+    DetailGui.Opt("+MinSize760x860")
     DetailGui.OnEvent("Close", CloseVehicleDetailDialog)
     DetailGui.OnEvent("Escape", CloseVehicleDetailDialog)
+    DetailGui.OnEvent("Size", OnVehicleDetailDialogSize)
 
     MainGui.Opt("+Disabled")
 
-    DetailGui.AddText("x20 y20 w720", "Zde vidíte souhrn všech údajů o vybraném vozidle, poslední záznamy z historie, vlastní připomínky, orientační údaje o tankování a přehled pojištění, dokladů i nákladů.")
+    introLabel := DetailGui.AddText("x20 y20 w720", "Na jednom místě tu rychle zkontrolujete stav vozidla, poslední události, navazující evidence i servisní profil.")
 
-    DetailGui.AddGroupBox("x20 y50 w720 h180", "Základní údaje")
+    basicGroup := DetailGui.AddGroupBox("x20 y50 w720 h180", "Základní údaje")
     DetailGui.AddText("x35 y80 w130", "Vlastní pojmenování")
     DetailGui.AddText("x170 y80 w150", FormatDisplayValue(vehicle.name))
     DetailGui.AddText("x355 y80 w110", "Kategorie")
@@ -274,7 +277,7 @@ OpenVehicleDetailDialog(vehicle) {
     DetailGui.AddText("x35 y220 w130", "Štítky")
     DetailGui.AddText("x170 y220 w520", FormatDisplayValue(meta.tags, "Nevyplněno"))
 
-    DetailGui.AddGroupBox("x20 y240 w720 h110", "Platnost a termíny")
+    termsGroup := DetailGui.AddGroupBox("x20 y240 w720 h110", "Platnost a termíny")
     DetailGui.AddText("x35 y270 w130", "Poslední TK")
     DetailGui.AddText("x170 y270 w150", FormatDisplayValue(vehicle.lastTk))
     DetailGui.AddText("x355 y270 w110", "Příští TK")
@@ -286,7 +289,7 @@ OpenVehicleDetailDialog(vehicle) {
     DetailGui.AddText("x35 y330 w130", "Stav ZK")
     DetailGui.AddText("x170 y330 w520", FormatDisplayValue(GetExpirationStatusText(vehicle.greenCardTo, GetGreenCardReminderDays()), vehicle.greenCardTo = "" ? "Nevyplněno" : "V pořádku"))
 
-    DetailGui.AddGroupBox("x20 y360 w720 h150", "Poslední události")
+    historyGroup := DetailGui.AddGroupBox("x20 y360 w720 h150", "Poslední události")
     DetailHistorySummaryLabel := DetailGui.AddText("x35 y390 w685", BuildVehicleHistorySummaryText(vehicle.id))
     DetailRecentHistoryList := DetailGui.AddListView("x35 y418 w685 h60 Grid -Multi", ["Datum", "Událost", "Km", "Cena"])
     DetailRecentHistoryList.ModifyCol(1, "85")
@@ -295,13 +298,13 @@ OpenVehicleDetailDialog(vehicle) {
     DetailRecentHistoryList.ModifyCol(4, "190")
     PopulateVehicleDetailHistoryList(vehicle.id)
 
-    DetailGui.AddGroupBox("x20 y520 w720 h120", "Další evidence")
+    evidenceGroup := DetailGui.AddGroupBox("x20 y520 w720 h120", "Další evidence")
     DetailReminderSummaryLabel := DetailGui.AddText("x35 y545 w685", BuildVehicleReminderSummaryText(vehicle.id))
     DetailFuelSummaryLabel := DetailGui.AddText("x35 y568 w685", BuildVehicleFuelSummaryText(vehicle.id))
     DetailRecordsSummaryLabel := DetailGui.AddText("x35 y591 w685", BuildVehicleRecordsSummaryText(vehicle.id))
     DetailMaintenanceSummaryLabel := DetailGui.AddText("x35 y614 w685", BuildVehicleMaintenanceSummaryText(vehicle.id))
 
-    DetailGui.AddGroupBox("x20 y648 w720 h105", "Servisní profil")
+    serviceProfileGroup := DetailGui.AddGroupBox("x20 y648 w720 h105", "Servisní profil")
     DetailGui.AddText("x35 y678 w130", "Pohon")
     DetailGui.AddText("x170 y678 w150", FormatDisplayValue(meta.powertrain))
     DetailGui.AddText("x355 y678 w110", "Klimatizace")
@@ -338,12 +341,35 @@ OpenVehicleDetailDialog(vehicle) {
     closeButton := DetailGui.AddButton("x580 y805 w100 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseVehicleDetailDialog)
 
+    DetailLayout := {
+        introLabel: introLabel,
+        basicGroup: basicGroup,
+        termsGroup: termsGroup,
+        historyGroup: historyGroup,
+        evidenceGroup: evidenceGroup,
+        serviceProfileGroup: serviceProfileGroup,
+        editButton: editButton,
+        historyButton: historyButton,
+        remindersButton: remindersButton,
+        fuelButton: fuelButton,
+        recordsButton: recordsButton,
+        maintenanceButton: maintenanceButton,
+        timelineButton: timelineButton,
+        costsButton: costsButton,
+        closeButton: closeButton
+    }
+
     DetailGui.Show("w760 h860")
-    closeButton.Focus()
+    editButton.Focus()
+
+    hooks := GetVehimapTestHooks()
+    if IsObject(hooks) {
+        hooks.detailInitialFocus := "edit"
+    }
 }
 
 CloseVehicleDetailDialog(*) {
-    global DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, DetailMaintenanceSummaryLabel, MainGui
+    global DetailGui, DetailVehicleId, DetailRecentHistoryList, DetailHistorySummaryLabel, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, DetailMaintenanceSummaryLabel, DetailLayout, MainGui
 
     if IsObject(DetailGui) {
         DetailGui.Destroy()
@@ -357,8 +383,46 @@ CloseVehicleDetailDialog(*) {
     DetailFuelSummaryLabel := 0
     DetailRecordsSummaryLabel := 0
     DetailMaintenanceSummaryLabel := 0
+    DetailLayout := {}
     MainGui.Opt("-Disabled")
     ShowMainWindow()
+}
+
+OnVehicleDetailDialogSize(guiObj, minMax, width, height) {
+    global DetailLayout, DetailHistorySummaryLabel, DetailRecentHistoryList, DetailReminderSummaryLabel, DetailFuelSummaryLabel, DetailRecordsSummaryLabel, DetailMaintenanceSummaryLabel
+
+    if (minMax = -1) {
+        return
+    }
+
+    extraHeight := height - 860
+    groupWidth := width - 40
+    textWidth := width - 75
+
+    if IsObject(DetailLayout) {
+        MoveGuiControl(DetailLayout.introLabel, 20, 20, width - 40)
+        MoveGuiControl(DetailLayout.basicGroup, 20, 50, groupWidth, 180)
+        MoveGuiControl(DetailLayout.termsGroup, 20, 240, groupWidth, 110)
+        MoveGuiControl(DetailLayout.historyGroup, 20, 360, groupWidth, 150 + extraHeight)
+        MoveGuiControl(DetailLayout.evidenceGroup, 20, 520 + extraHeight, groupWidth, 120)
+        MoveGuiControl(DetailLayout.serviceProfileGroup, 20, 648 + extraHeight, groupWidth, 105)
+        MoveGuiControl(DetailLayout.editButton, 35, 770 + extraHeight, 120, 30)
+        MoveGuiControl(DetailLayout.historyButton, 165, 770 + extraHeight, 110, 30)
+        MoveGuiControl(DetailLayout.remindersButton, 285, 770 + extraHeight, 120, 30)
+        MoveGuiControl(DetailLayout.fuelButton, 415, 770 + extraHeight, 120, 30)
+        MoveGuiControl(DetailLayout.recordsButton, 545, 770 + extraHeight, 160, 30)
+        MoveGuiControl(DetailLayout.maintenanceButton, 110, 805 + extraHeight, 150, 30)
+        MoveGuiControl(DetailLayout.timelineButton, 270, 805 + extraHeight, 150, 30)
+        MoveGuiControl(DetailLayout.costsButton, 430, 805 + extraHeight, 140, 30)
+        MoveGuiControl(DetailLayout.closeButton, width - 180, 805 + extraHeight, 100, 30)
+    }
+
+    MoveGuiControl(DetailHistorySummaryLabel, 35, 390, textWidth)
+    MoveGuiControl(DetailRecentHistoryList, 35, 418, textWidth, 60 + extraHeight)
+    MoveGuiControl(DetailReminderSummaryLabel, 35, 545 + extraHeight, textWidth)
+    MoveGuiControl(DetailFuelSummaryLabel, 35, 568 + extraHeight, textWidth)
+    MoveGuiControl(DetailRecordsSummaryLabel, 35, 591 + extraHeight, textWidth)
+    MoveGuiControl(DetailMaintenanceSummaryLabel, 35, 614 + extraHeight, textWidth)
 }
 
 EditVehicleFromDetail(*) {

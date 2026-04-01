@@ -26,11 +26,15 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Vehimap je interně rozdělený do menších modulů `#Include`, takže se aplikace lépe udržuje a rozvíjí
 - evidence `Pojištění a doklady` nově pracuje s vyřešenou cestou k příloze napříč dialogy, auditem, hledáním, časovou osou i nákladovými přehledy
 - formát `records.tsv` byl posunut na `# Vehimap records v2` a backup na `# Vehimap backup v6`
+- hlavní pracovní okna jsou nově zvětšitelná a důležité seznamy se při změně velikosti roztahují do šířky i výšky
+- `Audit dat` dostal plné klávesové ovládání ve stylu ostatních přehledů a detail vozidla nově po otevření fokusuje primární akci úpravy
+- formulář dokladu v režimu `Spravovaná kopie` už nevystavuje interní relativní cestu jako běžně editovatelné pole a přehled dokladů nově jasně zobrazuje i režim přílohy
 
 ### Opraveno
 - zpracování servisních doporučení, záloh a meta dat vozidel tak, aby správně fungoval nový servisní profil i smoke testy
 - výpočet ujetých kilometrů v nákladových souhrnech už nepřidává jednotku `km` dvakrát
 - spravované přílohy se po přepnutí zpět na externí cestu korektně uklidí a smoke testy nově hlídají i round-trip přes zálohu
+- akční tlačítka v `Plánu údržby`, `Auditu dat`, `Časové ose`, přehledech a dokladech teď důsledně respektují skutečný výběr v seznamu
 
 ## [1.0.2] - 2026-03-27
 

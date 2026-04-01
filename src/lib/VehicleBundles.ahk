@@ -262,7 +262,7 @@ OnVehicleStarterBundleListClicked(*) {
 LoadVehicleStarterBundleDraftIntoControls(index) {
     global VehicleBundleControls, VehicleBundleItems, VehicleBundleLoading, RecordTypeOptions, ReminderRepeatOptions
 
-    if !IsObject(VehicleBundleControls) || !VehicleBundleControls.Has("note") {
+    if !IsObject(VehicleBundleControls) || !VehicleBundleControls.HasOwnProp("note") {
         return
     }
 
@@ -344,7 +344,7 @@ SetVehicleStarterBundleControlState(section) {
 SetVehicleStarterBundleControlEnabled(controlName, enabled) {
     global VehicleBundleControls
 
-    if !VehicleBundleControls.Has(controlName) {
+    if !VehicleBundleControls.HasOwnProp(controlName) {
         return
     }
 
@@ -484,7 +484,7 @@ SaveSelectedVehicleStarterBundleFromDialog(*) {
 FocusVehicleStarterBundleField(fieldName) {
     global VehicleBundleControls
 
-    if IsObject(VehicleBundleControls) && VehicleBundleControls.Has(fieldName) {
+    if IsObject(VehicleBundleControls) && VehicleBundleControls.HasOwnProp(fieldName) {
         VehicleBundleControls.%fieldName%.Focus()
     }
 }

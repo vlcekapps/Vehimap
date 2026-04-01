@@ -1,5 +1,5 @@
 OpenAuditDialog(*) {
-    global AppTitle, MainGui, AuditGui, AuditList, AuditSummaryLabel, AuditSearchCtrl, AuditItems, AuditOpenButton, AuditVehicleButton, AuditEditButton
+    global AppTitle, MainGui, AuditGui, AuditList, AuditSummaryLabel, AuditSearchCtrl, AuditItems, AuditOpenButton, AuditVehicleButton, AuditEditButton, AuditLayout
     global DashboardGui, FormGui, SettingsGui, OverviewGui, OverdueGui, DetailGui, HistoryGui, HistoryFormGui, FuelGui, FuelFormGui, RecordsGui, RecordFormGui, ReminderGui, ReminderFormGui, CostSummaryGui, FleetCostGui, MaintenanceGui, MaintenanceFormGui, MaintenanceCompleteGui
 
     if IsObject(AuditGui) {
@@ -17,20 +17,23 @@ OpenAuditDialog(*) {
     ShowMainWindow()
 
     AuditItems := []
-    AuditGui := Gui("+Owner" MainGui.Hwnd, AppTitle " - Audit dat")
+    AuditLayout := {}
+    AuditGui := Gui("+Owner" MainGui.Hwnd " +Resize", AppTitle " - Audit dat")
     AuditGui.SetFont("s10", "Segoe UI")
+    AuditGui.Opt("+MinSize1020x545")
     AuditGui.OnEvent("Close", CloseAuditDialog)
     AuditGui.OnEvent("Escape", CloseAuditDialog)
+    AuditGui.OnEvent("Size", OnAuditDialogSize)
 
     MainGui.Opt("+Disabled")
 
-    AuditGui.AddText("x20 y20 w980", "Audit dat hlĂ„â€šĂ‚Â­dĂ„â€šĂ‹â€ˇ chybÄ‚â€žĂ˘â‚¬ĹźjĂ„â€šĂ‚Â­cĂ„â€šĂ‚Â­ Ă„â€šÄąĹşdaje, neplatnĂ„â€šĂ‚Â© rozsahy, problematickĂ„â€šĂ‚Â© doklady, nekonzistentnĂ„â€šĂ‚Â­ tachometr i poloĂ„Ä…Ă„Äľky, kterĂ„â€šĂ‚Â© se kvĂ„Ä…ÄąÂ»li datĂ„Ä…ÄąÂ»m nedajĂ„â€šĂ‚Â­ spolehlivÄ‚â€žĂ˘â‚¬Ĺź zapoÄ‚â€žÄąÂ¤Ă„â€šĂ‚Â­tat.")
+    introLabel := AuditGui.AddText("x20 y20 w980", "Audit dat na jednom místě ukazuje chyby, chybějící údaje a problematické záznamy, které je dobré hned opravit.")
     AuditSummaryLabel := AuditGui.AddText("x20 y50 w980 h32", "")
-    AuditGui.AddText("x20 y88 w300", "Hledat evidenci, vozidlo, problĂ„â€šĂ‚Â©m nebo stav")
+    searchLabel := AuditGui.AddText("x20 y88 w300", "Hledat evidenci, vozidlo, problém nebo stav")
     AuditSearchCtrl := AuditGui.AddEdit("x330 y85 w320")
     AuditSearchCtrl.OnEvent("Change", OnAuditSearchChanged)
 
-    AuditList := AuditGui.AddListView("x20 y120 w980 h290 Grid -Multi", ["ZĂ„â€šĂ‹â€ˇvaĂ„Ä…Ă„Äľnost", "Evidence", "Vozidlo", "SPZ", "PoloĂ„Ä…Ă„Äľka", "Stav", "Popis"] )
+    AuditList := AuditGui.AddListView("x20 y120 w980 h290 Grid -Multi", ["Závažnost", "Evidence", "Vozidlo", "SPZ", "Položka", "Stav", "Popis"])
     AuditList.OnEvent("DoubleClick", OpenSelectedAuditItem)
     AuditList.OnEvent("ItemSelect", OnAuditSelectionChanged)
     AuditList.ModifyCol(1, "90")
@@ -41,9 +44,9 @@ OpenAuditDialog(*) {
     AuditList.ModifyCol(6, "125")
     AuditList.ModifyCol(7, "330")
 
-    AuditGui.AddGroupBox("x20 y425 w980 h100", "Akce")
+    actionGroup := AuditGui.AddGroupBox("x20 y425 w980 h100", "Akce")
 
-    AuditOpenButton := AuditGui.AddButton("x40 y455 w140 h30 Default", "OtevĂ„Ä…Ă˘â€žËĂ„â€šĂ‚Â­t poloĂ„Ä…Ă„Äľku")
+    AuditOpenButton := AuditGui.AddButton("x40 y455 w140 h30 Default", "Otevřít položku")
     AuditOpenButton.OnEvent("Click", OpenSelectedAuditItem)
 
     AuditVehicleButton := AuditGui.AddButton("x190 y455 w140 h30", "Zobrazit vozidlo")
@@ -52,18 +55,25 @@ OpenAuditDialog(*) {
     AuditEditButton := AuditGui.AddButton("x340 y455 w140 h30", "Upravit")
     AuditEditButton.OnEvent("Click", EditSelectedAuditItem)
 
-    closeButton := AuditGui.AddButton("x860 y455 w100 h30", "ZavĂ„Ä…Ă˘â€žËĂ„â€šĂ‚Â­t")
+    closeButton := AuditGui.AddButton("x900 y455 w80 h30", "Zavřít")
     closeButton.OnEvent("Click", CloseAuditDialog)
 
+    AuditLayout := {
+        introLabel: introLabel,
+        searchLabel: searchLabel,
+        actionGroup: actionGroup,
+        closeButton: closeButton
+    }
+
     AuditGui.Show("w1020 h545")
-    PopulateAuditList(true)
+    PopulateAuditList("", true)
     if (AuditItems.Length = 0) {
-        closeButton.Focus()
+        AuditSearchCtrl.Focus()
     }
 }
 
 CloseAuditDialog(*) {
-    global AuditGui, AuditList, AuditSummaryLabel, AuditSearchCtrl, AuditItems, AuditOpenButton, AuditVehicleButton, AuditEditButton, MainGui
+    global AuditGui, AuditList, AuditSummaryLabel, AuditSearchCtrl, AuditItems, AuditOpenButton, AuditVehicleButton, AuditEditButton, AuditLayout, MainGui
 
     if IsObject(AuditGui) {
         AuditGui.Destroy()
@@ -77,30 +87,35 @@ CloseAuditDialog(*) {
     AuditOpenButton := 0
     AuditVehicleButton := 0
     AuditEditButton := 0
+    AuditLayout := {}
     MainGui.Opt("-Disabled")
     ShowMainWindow()
 }
 
-PopulateAuditList(focusList := false) {
+PopulateAuditList(selectKey := "", focusList := false) {
     global AuditGui, AuditList, AuditSummaryLabel, AuditItems
 
     if !IsObject(AuditGui) || !IsObject(AuditList) {
         return
     }
 
-    AuditItems := BuildVehimapAuditItems()
-    AuditItems := FilterVehimapAuditItems(AuditItems, GetAuditSearchText())
+    allItems := BuildVehimapAuditItems()
+    AuditItems := FilterVehimapAuditItems(allItems, GetAuditSearchText())
     SortVehimapAuditItems(&AuditItems)
 
     if IsObject(AuditSummaryLabel) {
-        AuditSummaryLabel.Text := BuildVehimapAuditSummaryText(BuildVehimapAuditItems(), AuditItems)
+        AuditSummaryLabel.Text := BuildVehimapAuditSummaryText(allItems, AuditItems)
     }
 
     AuditList.Opt("-Redraw")
     AuditList.Delete()
+    selectedRow := 0
     for item in AuditItems {
         plateText := Trim(item.vehicle.plate) = "" ? "-" : item.vehicle.plate
-        AuditList.Add("", item.severityLabel, item.sourceLabel, item.vehicle.name, plateText, item.term, item.status, item.description)
+        row := AuditList.Add("", item.severityLabel, item.sourceLabel, item.vehicle.name, plateText, item.term, item.status, item.description)
+        if (selectKey != "" && BuildVehimapAuditItemKey(item) = selectKey) {
+            selectedRow := row
+        }
     }
     AuditList.Opt("+Redraw")
 
@@ -109,12 +124,16 @@ PopulateAuditList(focusList := false) {
         return
     }
 
-    AuditList.Modify(1, focusList ? "Select Focus Vis" : "Select Vis")
+    if !selectedRow {
+        selectedRow := 1
+    }
+
+    AuditList.Modify(selectedRow, focusList ? "Select Focus Vis" : "Select Vis")
     UpdateAuditActionState()
 }
 
 OnAuditSearchChanged(*) {
-    PopulateAuditList()
+    PopulateAuditList(GetSelectedAuditItemKey())
 }
 
 GetAuditSearchText() {
@@ -151,7 +170,17 @@ FilterVehimapAuditItems(items, searchText := "") {
     return filtered
 }
 
-GetSelectedAuditItem(actionLabel := "otevĂ„Ä…Ă˘â€žËĂ„â€šĂ‚Â­t") {
+GetSelectedAuditItemKey() {
+    item := GetSelectedAuditItemOrEmpty()
+    return IsObject(item) ? BuildVehimapAuditItemKey(item) : ""
+}
+
+BuildVehimapAuditItemKey(item) {
+    entryId := item.HasOwnProp("entryId") ? item.entryId : ""
+    return item.kind "|" item.actionKind "|" item.vehicle.id "|" entryId "|" item.term "|" item.status
+}
+
+GetSelectedAuditItem(actionLabel := "otevřít") {
     global AppTitle, AuditList, AuditItems
 
     if !IsObject(AuditList) {
@@ -160,7 +189,7 @@ GetSelectedAuditItem(actionLabel := "otevĂ„Ä…Ă˘â€žËĂ„â€šĂ
 
     row := AuditList.GetNext(0)
     if !row || row > AuditItems.Length {
-        MsgBox("Nejprve vyberte poloĂ„Ä…Ă„Äľku, kterou chcete " actionLabel ".", AppTitle, 0x40)
+        MsgBox("Nejprve vyberte položku, kterou chcete " actionLabel ".", AppTitle, 0x40)
         return ""
     }
 
@@ -203,8 +232,34 @@ GetSelectedAuditItemOrEmpty() {
     return AuditItems[row]
 }
 
+OnAuditDialogSize(guiObj, minMax, width, height) {
+    global AuditLayout, AuditSummaryLabel, AuditSearchCtrl, AuditList, AuditOpenButton, AuditVehicleButton, AuditEditButton
+
+    if (minMax = -1) {
+        return
+    }
+
+    actionGroupY := height - 120
+    buttonY := height - 90
+    listHeight := actionGroupY - 15 - 120
+
+    if IsObject(AuditLayout) {
+        MoveGuiControl(AuditLayout.introLabel, 20, 20, width - 40)
+        MoveGuiControl(AuditLayout.searchLabel, 20, 88, 300)
+        MoveGuiControl(AuditLayout.actionGroup, 20, actionGroupY, width - 40, 100)
+        MoveGuiControl(AuditLayout.closeButton, width - 120, buttonY, 80, 30)
+    }
+
+    MoveGuiControl(AuditSummaryLabel, 20, 50, width - 40, 32)
+    MoveGuiControl(AuditSearchCtrl, 330, 85, Max(320, width - 370), 23)
+    MoveGuiControl(AuditList, 20, 120, width - 40, listHeight)
+    MoveGuiControl(AuditOpenButton, 40, buttonY, 140, 30)
+    MoveGuiControl(AuditVehicleButton, 190, buttonY, 140, 30)
+    MoveGuiControl(AuditEditButton, 340, buttonY, 140, 30)
+}
+
 OpenSelectedAuditItem(*) {
-    item := GetSelectedAuditItem("otevĂ„Ä…Ă˘â€žËĂ„â€šĂ‚Â­t")
+    item := GetSelectedAuditItem("otevřít")
     if !IsObject(item) {
         return
     }
@@ -216,6 +271,15 @@ OpenSelectedAuditItem(*) {
 OpenSelectedAuditVehicle(*) {
     item := GetSelectedAuditItem("zobrazit")
     if !IsObject(item) {
+        return
+    }
+
+    hooks := GetVehimapTestHooks()
+    if IsObject(hooks) && hooks.HasOwnProp("captureAuditActions") && hooks.captureAuditActions {
+        if !hooks.HasOwnProp("auditActions") || !IsObject(hooks.auditActions) {
+            hooks.auditActions := []
+        }
+        hooks.auditActions.Push({action: "open_vehicle", vehicleId: item.vehicle.id, entryId: item.HasOwnProp("entryId") ? item.entryId : ""})
         return
     }
 
@@ -234,6 +298,20 @@ EditSelectedAuditItem(*) {
 }
 
 OpenVehimapAuditItem(item) {
+    hooks := GetVehimapTestHooks()
+    if IsObject(hooks) && hooks.HasOwnProp("captureAuditActions") && hooks.captureAuditActions {
+        if !hooks.HasOwnProp("auditActions") || !IsObject(hooks.auditActions) {
+            hooks.auditActions := []
+        }
+        hooks.auditActions.Push({
+            action: "open_item",
+            actionKind: item.actionKind,
+            vehicleId: item.vehicle.id,
+            entryId: item.HasOwnProp("entryId") ? item.entryId : ""
+        })
+        return
+    }
+
     switch item.actionKind {
         case "vehicle":
             OpenVehicleById(item.vehicle.id, true)
@@ -253,6 +331,20 @@ OpenVehimapAuditItem(item) {
 }
 
 EditVehimapAuditItem(item) {
+    hooks := GetVehimapTestHooks()
+    if IsObject(hooks) && hooks.HasOwnProp("captureAuditActions") && hooks.captureAuditActions {
+        if !hooks.HasOwnProp("auditActions") || !IsObject(hooks.auditActions) {
+            hooks.auditActions := []
+        }
+        hooks.auditActions.Push({
+            action: "edit_item",
+            actionKind: item.actionKind,
+            vehicleId: item.vehicle.id,
+            entryId: item.HasOwnProp("entryId") ? item.entryId : ""
+        })
+        return
+    }
+
     switch item.actionKind {
         case "record":
             entry := FindVehicleRecordById(item.entryId)
