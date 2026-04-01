@@ -12,6 +12,9 @@
 !build/**
 !dotnet/
 !dotnet/**
+dotnet/artifacts/
+dotnet/**/bin/
+dotnet/**/obj/
 !src/
 !src/**
 src/data/

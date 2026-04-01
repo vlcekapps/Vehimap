@@ -1,7 +1,11 @@
 namespace Vehimap.Application;
 
 public sealed record AuditItem(
-    string Severity,
+    AuditSeverity Severity,
     string Category,
     string VehicleId,
+    string VehicleName,
+    string EntityKind,
+    string EntityId,
+    string Title,
     string Message);

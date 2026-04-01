@@ -32,7 +32,7 @@ public sealed class LegacyDataStoreCompatibilityTests
             await store.SaveAsync(dataRoot, dataSet);
             var loaded = await store.LoadAsync(dataRoot);
 
-            Assert.Equal(1, loaded.Vehicles.Count);
+            Assert.Single(loaded.Vehicles);
             Assert.Equal(2, loaded.Records.Count);
             Assert.Equal(VehicleRecordAttachmentMode.External, loaded.Records[0].AttachmentMode);
             Assert.Equal(VehicleRecordAttachmentMode.Managed, loaded.Records[1].AttachmentMode);
