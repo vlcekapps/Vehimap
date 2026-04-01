@@ -26,12 +26,12 @@ Tato mapa drží první přepis v C# navázaný na současný Vehimap, místo ab
 - import/export `.vehimapbak` včetně spravovaných příloh
 - první C# audit engine nad legacy daty
 - první C# nákladový souhrn včetně `Cena / km` a srovnání proti stejně dlouhému období loni
-- desktopový shell, který už ukazuje vozidla, audit a náklady z reálných legacy dat
+- desktopový shell, který už ukazuje vozidla, detail vybraného vozidla, historii, doklady, audit a náklady z reálných legacy dat
 - základ release workflow pro GitHub Actions
 
 ## Co je další na řadě
 
-1. Port detailu vozidla, historie, tankování a dokladů do `Vehimap.Desktop`
+1. Port tankování, připomínek a plánu údržby do `Vehimap.Desktop`
 2. Rozšířit `Vehimap.Application` o timeline, ICS export a servisní doporučení
 3. Přidat klávesové workflow, fokus management a accessibility metadata
 4. Dopsat reálné UI testy přes Appium a první smoke pro screen readery na Windows

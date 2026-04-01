@@ -3,7 +3,7 @@ using Vehimap.Domain.Models;
 
 namespace Vehimap.Application.Services;
 
-internal static class VehimapValueParser
+public static class VehimapValueParser
 {
     private static readonly string[] EventDateFormats =
     [

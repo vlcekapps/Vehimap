@@ -27,7 +27,7 @@ Tato větev už není jen scaffold. Aktuálně umí:
 - vygenerovat desktopový preview build přes `dotnet publish`
 - přímo číst a zapisovat dnešní Vehimap data (`TSV`, `INI`, `.vehimapbak`, managed attachments)
 - skládat první sdílené C# use-cases pro audit a nákladové souhrny
-- zobrazit v Avalonia shellu seznam vozidel, auditní frontu a souhrn nákladů
+- zobrazit v Avalonia shellu seznam vozidel, detail vybraného vozidla, historii, doklady, auditní frontu a souhrn nákladů
 
 ## Lokální build
 

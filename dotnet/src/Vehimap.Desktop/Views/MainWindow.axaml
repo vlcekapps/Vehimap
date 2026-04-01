@@ -3,19 +3,30 @@
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Width="1240"
-        Height="840"
-        MinWidth="980"
-        MinHeight="700"
+        Width="1400"
+        Height="920"
+        MinWidth="1120"
+        MinHeight="760"
         Title="{Binding Title}">
   <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*,Auto">
-    <StackPanel Spacing="4">
-      <TextBlock FontSize="28"
-                 FontWeight="SemiBold"
-                 Text="{Binding Title}" />
-      <TextBlock Opacity="0.75"
-                 Text="{Binding Subtitle}" />
-    </StackPanel>
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="4">
+        <TextBlock FontSize="28"
+                   FontWeight="SemiBold"
+                   Text="{Binding Title}" />
+        <TextBlock Opacity="0.75"
+                   Text="{Binding Subtitle}" />
+      </StackPanel>
+
+      <Button Grid.Column="1"
+              Width="120"
+              Height="34"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              Command="{Binding ReloadCommand}"
+              Content="Načíst znovu"
+              AutomationProperties.Name="Znovu načíst legacy data" />
+    </Grid>
 
     <Grid Grid.Row="1"
           Margin="0,18,0,0"
@@ -75,104 +86,175 @@
       </Border>
     </Grid>
 
-    <Border Grid.Row="3" Margin="0,18,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
-      <TabControl>
-        <TabItem Header="Vozidla">
-          <Grid Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
-            <Grid RowDefinitions="Auto,*">
-              <TextBlock FontSize="18"
-                         FontWeight="SemiBold"
-                         Text="Načtená vozidla z legacy dat" />
+    <Grid Grid.Row="3" Margin="0,18,0,0" ColumnDefinitions="420,*">
+      <Border Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
+        <Grid RowDefinitions="Auto,*">
+          <TextBlock FontSize="18"
+                     FontWeight="SemiBold"
+                     Text="Načtená vozidla z legacy dat" />
+          <ListBox Grid.Row="1"
+                   Margin="0,12,0,0"
+                   ItemsSource="{Binding Vehicles}"
+                   SelectedItem="{Binding SelectedVehicle}"
+                   AutomationProperties.Name="Seznam načtených vozidel">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:VehicleListItemViewModel">
+                <Border Padding="10" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
+                  <StackPanel Spacing="4">
+                    <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
+                    <TextBlock Opacity="0.82" Text="{Binding MakeModel}" />
+                    <TextBlock Opacity="0.82" Text="{Binding Category}" />
+                    <TextBlock Opacity="0.82" Text="{Binding Plate}" />
+                    <TextBlock Opacity="0.72" Text="{Binding StatusSummary}" TextWrapping="Wrap" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+      </Border>
+
+      <Border Grid.Column="1" Margin="16,0,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
+        <TabControl>
+          <TabItem Header="Detail">
+            <Grid Margin="0,8,0,0" RowDefinitions="Auto,Auto,Auto,*">
+              <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
+              <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="{Binding SelectedVehicleOverview}" TextWrapping="Wrap" />
+              <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="{Binding SelectedVehicleDates}" TextWrapping="Wrap" />
+              <Border Grid.Row="3" Margin="0,16,0,0" Padding="14" Background="#10203040" CornerRadius="8">
+                <TextBlock Text="{Binding SelectedVehicleProfile}" TextWrapping="Wrap" />
+              </Border>
+            </Grid>
+          </TabItem>
+
+          <TabItem Header="Historie">
+            <Grid Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <TextBlock Text="{Binding HistorySummary}" TextWrapping="Wrap" />
               <ListBox Grid.Row="1"
-                       Margin="0,12,12,0"
-                       ItemsSource="{Binding Vehicles}"
-                       SelectedItem="{Binding SelectedVehicle}"
-                       AutomationProperties.Name="Seznam načtených vozidel">
+                       Margin="0,12,0,0"
+                       ItemsSource="{Binding SelectedVehicleHistory}"
+                       AutomationProperties.Name="Historie vybraného vozidla">
                 <ListBox.ItemTemplate>
-                  <DataTemplate x:DataType="vm:VehicleListItemViewModel">
-                    <Border Padding="10" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
+                  <DataTemplate x:DataType="vm:VehicleHistoryItemViewModel">
+                    <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
+                      <Grid ColumnDefinitions="120,160,130,120,*">
+                        <TextBlock Grid.Column="0" Text="{Binding Date}" />
+                        <TextBlock Grid.Column="1" Text="{Binding EventType}" />
+                        <TextBlock Grid.Column="2" Text="{Binding Odometer}" />
+                        <TextBlock Grid.Column="3" Text="{Binding Cost}" />
+                        <TextBlock Grid.Column="4" Text="{Binding Note}" TextWrapping="Wrap" />
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </Grid>
+          </TabItem>
+
+          <TabItem Header="Doklady">
+            <Grid Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
+              <Grid RowDefinitions="Auto,*">
+                <TextBlock Text="{Binding RecordSummary}" TextWrapping="Wrap" />
+                <ListBox Grid.Row="1"
+                         Margin="0,12,12,0"
+                         ItemsSource="{Binding SelectedVehicleRecords}"
+                         SelectedItem="{Binding SelectedRecord}"
+                         AutomationProperties.Name="Doklady vybraného vozidla">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:VehicleRecordItemViewModel">
+                      <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
+                        <StackPanel Spacing="4">
+                          <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+                          <TextBlock Opacity="0.82" Text="{Binding RecordType}" />
+                          <TextBlock Opacity="0.82" Text="{Binding Provider}" />
+                          <TextBlock Opacity="0.82" Text="{Binding Validity}" />
+                          <TextBlock Opacity="0.82" Text="{Binding AttachmentMode}" />
+                          <TextBlock Opacity="0.72" Text="{Binding AttachmentState}" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </Grid>
+
+              <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
+                <Grid RowDefinitions="Auto,Auto,*">
+                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail dokladu" />
+                  <StackPanel Grid.Row="1" Margin="0,12,0,0" Orientation="Horizontal" Spacing="10">
+                    <Button Width="150"
+                            Command="{Binding OpenSelectedRecordFileCommand}"
+                            Content="Otevřít soubor"
+                            AutomationProperties.Name="Otevřít soubor přílohy vybraného dokladu" />
+                    <Button Width="170"
+                            Command="{Binding OpenSelectedRecordFolderCommand}"
+                            Content="Otevřít složku"
+                            AutomationProperties.Name="Otevřít složku přílohy vybraného dokladu" />
+                  </StackPanel>
+                  <TextBlock Grid.Row="2" Margin="0,16,0,0" Text="{Binding SelectedRecordDetail}" TextWrapping="Wrap" />
+                </Grid>
+              </Border>
+            </Grid>
+          </TabItem>
+
+          <TabItem Header="Audit">
+            <Grid Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
+              <ListBox Grid.Row="1"
+                       Margin="0,12,0,0"
+                       ItemsSource="{Binding AuditItems}"
+                       AutomationProperties.Name="Seznam auditních položek">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:AuditItemViewModel">
+                    <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
                       <StackPanel Spacing="4">
-                        <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
-                        <TextBlock Opacity="0.82" Text="{Binding MakeModel}" />
-                        <TextBlock Opacity="0.82" Text="{Binding Category}" />
-                        <TextBlock Opacity="0.82" Text="{Binding Plate}" />
-                        <TextBlock Opacity="0.72" Text="{Binding StatusSummary}" TextWrapping="Wrap" />
+                        <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+                        <TextBlock Text="{Binding VehicleName}" />
+                        <TextBlock Opacity="0.8" Text="{Binding Severity}" />
+                        <TextBlock Opacity="0.8" Text="{Binding Category}" />
+                        <TextBlock Opacity="0.8" Text="{Binding Message}" TextWrapping="Wrap" />
                       </StackPanel>
                     </Border>
                   </DataTemplate>
                 </ListBox.ItemTemplate>
               </ListBox>
             </Grid>
+          </TabItem>
 
-            <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-              <StackPanel Spacing="12">
-                <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
-                <TextBlock Text="{Binding SelectedVehicleOverview}" TextWrapping="Wrap" />
-                <TextBlock Text="{Binding SelectedVehicleDates}" TextWrapping="Wrap" />
-                <TextBlock Text="{Binding SelectedVehicleProfile}" TextWrapping="Wrap" />
-              </StackPanel>
-            </Border>
-          </Grid>
-        </TabItem>
-
-        <TabItem Header="Audit">
-          <Grid Margin="0,8,0,0" RowDefinitions="Auto,*">
-            <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-            <ListBox Grid.Row="1"
-                     Margin="0,12,0,0"
-                     ItemsSource="{Binding AuditItems}"
-                     AutomationProperties.Name="Seznam auditních položek">
-              <ListBox.ItemTemplate>
-                <DataTemplate x:DataType="vm:AuditItemViewModel">
-                  <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
-                    <StackPanel Spacing="4">
-                      <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
-                      <TextBlock Text="{Binding VehicleName}" />
-                      <TextBlock Opacity="0.8" Text="{Binding Severity}" />
-                      <TextBlock Opacity="0.8" Text="{Binding Category}" />
-                      <TextBlock Opacity="0.8" Text="{Binding Message}" TextWrapping="Wrap" />
-                    </StackPanel>
-                  </Border>
-                </DataTemplate>
-              </ListBox.ItemTemplate>
-            </ListBox>
-          </Grid>
-        </TabItem>
-
-        <TabItem Header="Náklady">
-          <Grid Margin="0,8,0,0" RowDefinitions="Auto,Auto,*">
-            <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" />
-            <TextBlock Grid.Row="1" Margin="0,8,0,0" Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
-            <ListBox Grid.Row="2"
-                     Margin="0,12,0,0"
-                     ItemsSource="{Binding CostVehicles}"
-                     AutomationProperties.Name="Seznam nákladových souhrnů vozidel">
-              <ListBox.ItemTemplate>
-                <DataTemplate x:DataType="vm:CostVehicleItemViewModel">
-                  <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
-                    <Grid ColumnDefinitions="2*,1.2*,1.2*,1.2*,1.5*">
-                      <StackPanel>
-                        <TextBlock FontWeight="SemiBold" Text="{Binding VehicleName}" />
-                        <TextBlock Opacity="0.8" Text="{Binding Category}" />
-                      </StackPanel>
-                      <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding TotalCost}" />
-                      <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Distance}" />
-                      <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding CostPerKm}" />
-                      <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Status}" TextWrapping="Wrap" />
-                    </Grid>
-                  </Border>
-                </DataTemplate>
-              </ListBox.ItemTemplate>
-            </ListBox>
-          </Grid>
-        </TabItem>
-      </TabControl>
-    </Border>
+          <TabItem Header="Náklady">
+            <Grid Margin="0,8,0,0" RowDefinitions="Auto,Auto,*">
+              <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" />
+              <TextBlock Grid.Row="1" Margin="0,8,0,0" Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
+              <ListBox Grid.Row="2"
+                       Margin="0,12,0,0"
+                       ItemsSource="{Binding CostVehicles}"
+                       AutomationProperties.Name="Seznam nákladových souhrnů vozidel">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:CostVehicleItemViewModel">
+                    <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
+                      <Grid ColumnDefinitions="2*,1.2*,1.2*,1.2*,1.5*">
+                        <StackPanel>
+                          <TextBlock FontWeight="SemiBold" Text="{Binding VehicleName}" />
+                          <TextBlock Opacity="0.8" Text="{Binding Category}" />
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding TotalCost}" />
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Distance}" />
+                        <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding CostPerKm}" />
+                        <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Status}" TextWrapping="Wrap" />
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </Grid>
+          </TabItem>
+        </TabControl>
+      </Border>
+    </Grid>
 
     <TextBlock Grid.Row="4"
                Margin="0,16,0,0"
                Opacity="0.75"
-               Text="Tato větev už kromě načtení legacy dat skládá i první auditní a nákladové use-cases v C# vrstvě, aby na nich mohly vznikat další obrazovky bez přepisování logiky."
+               Text="C# větev už kromě auditů a nákladů ukazuje i detail vozidla, historii a doklady nad stejnými legacy daty jako AHK verze."
                TextWrapping="Wrap" />
   </Grid>
 </Window>
