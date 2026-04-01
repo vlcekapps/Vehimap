@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application;
@@ -85,13 +85,40 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string historySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
+    private string fuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
+
+    [ObservableProperty]
+    private string reminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
+
+    [ObservableProperty]
+    private string maintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
+
+    [ObservableProperty]
     private string recordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
-    private string selectedRecordDetail = string.Empty;
+    private string selectedFuelDetail = "Vyberte tankování a zobrazí se detail položky.";
+
+    [ObservableProperty]
+    private string selectedReminderDetail = "Vyberte připomínku a zobrazí se detail položky.";
+
+    [ObservableProperty]
+    private string selectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
+
+    [ObservableProperty]
+    private string selectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
 
     [ObservableProperty]
     private VehicleListItemViewModel? selectedVehicle;
+
+    [ObservableProperty]
+    private VehicleFuelItemViewModel? selectedFuel;
+
+    [ObservableProperty]
+    private VehicleReminderItemViewModel? selectedReminder;
+
+    [ObservableProperty]
+    private VehicleMaintenanceItemViewModel? selectedMaintenance;
 
     [ObservableProperty]
     private VehicleRecordItemViewModel? selectedRecord;
@@ -103,6 +130,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public ObservableCollection<CostVehicleItemViewModel> CostVehicles { get; } = [];
 
     public ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory { get; } = [];
+
+    public ObservableCollection<VehicleFuelItemViewModel> SelectedVehicleFuel { get; } = [];
+
+    public ObservableCollection<VehicleReminderItemViewModel> SelectedVehicleReminders { get; } = [];
+
+    public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance { get; } = [];
 
     public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords { get; } = [];
 
@@ -142,9 +175,18 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleDates = string.Empty;
             SelectedVehicleProfile = string.Empty;
             HistorySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
+            FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
+            ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
+            MaintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
             RecordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
             SelectedVehicleHistory.Clear();
+            SelectedVehicleFuel.Clear();
+            SelectedVehicleReminders.Clear();
+            SelectedVehicleMaintenance.Clear();
             SelectedVehicleRecords.Clear();
+            SelectedFuel = null;
+            SelectedReminder = null;
+            SelectedMaintenance = null;
             SelectedRecord = null;
             return;
         }
@@ -159,7 +201,31 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedVehicleProfile = $"Pohon a servisní profil: {powertrain}";
 
         PopulateVehicleHistory(value.Id);
+        PopulateVehicleFuel(value.Id);
+        PopulateVehicleReminders(value.Id);
+        PopulateVehicleMaintenance(value.Id);
         PopulateVehicleRecords(value.Id);
+    }
+
+    partial void OnSelectedFuelChanged(VehicleFuelItemViewModel? value)
+    {
+        SelectedFuelDetail = value is null
+            ? "Vyberte tankování a zobrazí se detail položky."
+            : $"Datum: {value.Date}\nPalivo: {value.FuelType}\nMnožství: {value.Liters}\nCena celkem: {value.TotalCost}\nTachometr: {value.Odometer}\nStav nádrže: {value.TankState}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
+    }
+
+    partial void OnSelectedReminderChanged(VehicleReminderItemViewModel? value)
+    {
+        SelectedReminderDetail = value is null
+            ? "Vyberte připomínku a zobrazí se detail položky."
+            : $"Název: {value.Title}\nTermín: {value.DueDate}\nStav: {value.Status}\nOpakování: {value.RepeatMode}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
+    }
+
+    partial void OnSelectedMaintenanceChanged(VehicleMaintenanceItemViewModel? value)
+    {
+        SelectedMaintenanceDetail = value is null
+            ? "Vyberte servisní úkon a zobrazí se detail položky."
+            : $"Úkon: {value.Title}\nInterval: {value.Interval}\nPoslední servis: {value.LastService}\nStav: {value.Status}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
     }
 
     partial void OnSelectedRecordChanged(VehicleRecordItemViewModel? value)
@@ -321,6 +387,120 @@ public sealed partial class MainWindowViewModel : ObservableObject
             : $"Vybrané vozidlo má {SelectedVehicleHistory.Count} historických záznamů.";
     }
 
+    private void PopulateVehicleFuel(string vehicleId)
+    {
+        SelectedVehicleFuel.Clear();
+
+        var items = _dataSet.FuelEntries
+            .Where(item => item.VehicleId == vehicleId)
+            .Select(item => new
+            {
+                Item = item,
+                HasDate = VehimapValueParser.TryParseEventDate(item.EntryDate, out var parsedDate),
+                Date = parsedDate
+            })
+            .OrderByDescending(item => item.HasDate)
+            .ThenByDescending(item => item.Date)
+            .ThenBy(item => item.Item.FuelType, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+
+        foreach (var item in items)
+        {
+            SelectedVehicleFuel.Add(new VehicleFuelItemViewModel(
+                FormatValue(item.Item.EntryDate, "bez data"),
+                FormatValue(item.Item.FuelType, "bez typu"),
+                FormatFuelLiters(item.Item.Liters),
+                FormatCostValue(item.Item.TotalCost),
+                FormatOdometerValue(item.Item.Odometer),
+                item.Item.FullTank ? "Plná nádrž" : "Částečné tankování",
+                FormatValue(item.Item.Note, "bez poznámky")));
+        }
+
+        FuelSummary = SelectedVehicleFuel.Count == 0
+            ? "Vybrané vozidlo zatím nemá žádné záznamy tankování."
+            : $"Vybrané vozidlo má {SelectedVehicleFuel.Count} záznamů tankování.";
+
+        SelectedFuel = SelectedVehicleFuel.FirstOrDefault();
+        if (SelectedFuel is null)
+        {
+            OnSelectedFuelChanged(null);
+        }
+    }
+
+    private void PopulateVehicleReminders(string vehicleId)
+    {
+        SelectedVehicleReminders.Clear();
+
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var items = _dataSet.Reminders
+            .Where(item => item.VehicleId == vehicleId)
+            .Select(item => new
+            {
+                Item = item,
+                HasDate = TryParseReminderDate(item.DueDate, out var parsedDate),
+                Date = parsedDate
+            })
+            .OrderByDescending(item => item.HasDate)
+            .ThenBy(item => item.Date)
+            .ThenBy(item => item.Item.Title, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+
+        foreach (var item in items)
+        {
+            SelectedVehicleReminders.Add(new VehicleReminderItemViewModel(
+                FormatValue(item.Item.Title, "Bez názvu"),
+                FormatValue(item.Item.DueDate, "bez termínu"),
+                BuildReminderStatus(item.Item, today),
+                FormatReminderRepeatMode(item.Item.RepeatMode),
+                FormatValue(item.Item.Note, "bez poznámky")));
+        }
+
+        ReminderSummary = SelectedVehicleReminders.Count == 0
+            ? "Vybrané vozidlo zatím nemá žádné připomínky."
+            : $"Vybrané vozidlo má {SelectedVehicleReminders.Count} připomínek.";
+
+        SelectedReminder = SelectedVehicleReminders.FirstOrDefault();
+        if (SelectedReminder is null)
+        {
+            OnSelectedReminderChanged(null);
+        }
+    }
+
+    private void PopulateVehicleMaintenance(string vehicleId)
+    {
+        SelectedVehicleMaintenance.Clear();
+
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var currentOdometerByVehicleId = BuildCurrentOdometerLookup();
+        var currentOdometer = currentOdometerByVehicleId.GetValueOrDefault(vehicleId);
+
+        var items = _dataSet.MaintenancePlans
+            .Where(item => item.VehicleId == vehicleId)
+            .OrderByDescending(item => item.IsActive)
+            .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+
+        foreach (var item in items)
+        {
+            SelectedVehicleMaintenance.Add(new VehicleMaintenanceItemViewModel(
+                FormatValue(item.Title, "Bez názvu"),
+                BuildMaintenanceInterval(item),
+                BuildMaintenanceLastService(item),
+                BuildMaintenanceStatus(item, today, currentOdometer),
+                FormatValue(item.Note, "bez poznámky")));
+        }
+
+        MaintenanceSummary = SelectedVehicleMaintenance.Count == 0
+            ? "Vybrané vozidlo zatím nemá žádné servisní plány."
+            : $"Vybrané vozidlo má {SelectedVehicleMaintenance.Count} servisních plánů.";
+
+        SelectedMaintenance = SelectedVehicleMaintenance.FirstOrDefault();
+        if (SelectedMaintenance is null)
+        {
+            OnSelectedMaintenanceChanged(null);
+        }
+    }
+
     private void PopulateVehicleRecords(string vehicleId)
     {
         SelectedVehicleRecords.Clear();
@@ -359,7 +539,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             FormatValue(record.Title, "Bez názvu"),
             FormatValue(record.Provider, "Bez poskytovatele"),
             BuildRecordValidity(record),
-            FormatValue(record.Price, "bez ceny"),
+            FormatCostValue(record.Price),
             record.AttachmentMode == VehicleRecordAttachmentMode.Managed ? "Spravovaná kopie" : "Externí cesta",
             BuildAttachmentState(record, resolvedPath, fileExists),
             record.FilePath,
@@ -429,6 +609,165 @@ public sealed partial class MainWindowViewModel : ObservableObject
         return null;
     }
 
+    private Dictionary<string, int?> BuildCurrentOdometerLookup()
+    {
+        var result = new Dictionary<string, int?>(StringComparer.Ordinal);
+
+        foreach (var vehicle in _dataSet.Vehicles)
+        {
+            result[vehicle.Id] = null;
+        }
+
+        foreach (var item in _dataSet.HistoryEntries)
+        {
+            if (!VehimapValueParser.TryParseOdometer(item.Odometer, out var odometer))
+            {
+                continue;
+            }
+
+            var current = result.GetValueOrDefault(item.VehicleId);
+            if (!current.HasValue || odometer > current.Value)
+            {
+                result[item.VehicleId] = odometer;
+            }
+        }
+
+        foreach (var item in _dataSet.FuelEntries)
+        {
+            if (!VehimapValueParser.TryParseOdometer(item.Odometer, out var odometer))
+            {
+                continue;
+            }
+
+            var current = result.GetValueOrDefault(item.VehicleId);
+            if (!current.HasValue || odometer > current.Value)
+            {
+                result[item.VehicleId] = odometer;
+            }
+        }
+
+        return result;
+    }
+
+    private static string BuildReminderStatus(VehicleReminder reminder, DateOnly today)
+    {
+        if (!TryParseReminderDate(reminder.DueDate, out var dueDate))
+        {
+            return "Bez použitelného termínu";
+        }
+
+        var delta = dueDate.DayNumber - today.DayNumber;
+        if (delta < 0)
+        {
+            return $"Po termínu o {Math.Abs(delta)} dnů";
+        }
+
+        if (delta == 0)
+        {
+            return "Dnes";
+        }
+
+        return delta == 1 ? "Zítra" : $"Za {delta} dnů";
+    }
+
+    private static bool TryParseReminderDate(string? text, out DateOnly value)
+    {
+        return VehimapValueParser.TryParseEventDate(text, out value)
+            || VehimapValueParser.TryParseMonthYear(text, out value);
+    }
+
+    private static string BuildMaintenanceInterval(MaintenancePlan plan)
+    {
+        var parts = new List<string>();
+        if (TryParsePositiveInteger(plan.IntervalKm, out var intervalKm))
+        {
+            parts.Add($"{intervalKm} km");
+        }
+
+        if (TryParsePositiveInteger(plan.IntervalMonths, out var intervalMonths))
+        {
+            parts.Add(intervalMonths == 1 ? "1 měsíc" : $"{intervalMonths} měsíců");
+        }
+
+        return parts.Count == 0 ? "Bez intervalu" : string.Join(" / ", parts);
+    }
+
+    private static string BuildMaintenanceLastService(MaintenancePlan plan)
+    {
+        var date = string.IsNullOrWhiteSpace(plan.LastServiceDate) ? "bez data" : plan.LastServiceDate;
+        return $"{date} | {FormatOdometerValue(plan.LastServiceOdometer)}";
+    }
+
+    private static string BuildMaintenanceStatus(MaintenancePlan plan, DateOnly today, int? currentOdometer)
+    {
+        if (!plan.IsActive)
+        {
+            return "Neaktivní";
+        }
+
+        var parts = new List<string>();
+
+        if (TryParsePositiveInteger(plan.IntervalMonths, out var intervalMonths))
+        {
+            if (TryParseReminderDate(plan.LastServiceDate, out var lastServiceDate))
+            {
+                var nextDate = lastServiceDate.AddMonths(intervalMonths);
+                var delta = nextDate.DayNumber - today.DayNumber;
+                if (delta < 0)
+                {
+                    parts.Add($"Po termínu o {Math.Abs(delta)} dnů");
+                }
+                else if (delta == 0)
+                {
+                    parts.Add("Servis dnes");
+                }
+                else
+                {
+                    parts.Add(delta == 1 ? "Za 1 den" : $"Za {delta} dnů");
+                }
+            }
+            else
+            {
+                parts.Add("Chybí datum posledního servisu");
+            }
+        }
+
+        if (TryParsePositiveInteger(plan.IntervalKm, out var intervalKm))
+        {
+            if (VehimapValueParser.TryParseOdometer(plan.LastServiceOdometer, out var lastServiceOdometer) && currentOdometer.HasValue)
+            {
+                var remainingKm = (lastServiceOdometer + intervalKm) - currentOdometer.Value;
+                if (remainingKm < 0)
+                {
+                    parts.Add($"Po limitu o {Math.Abs(remainingKm)} km");
+                }
+                else if (remainingKm == 0)
+                {
+                    parts.Add("Servis nyní");
+                }
+                else
+                {
+                    parts.Add($"Za {remainingKm} km");
+                }
+            }
+            else
+            {
+                parts.Add("Chybí tachometr pro výpočet");
+            }
+        }
+
+        return parts.Count == 0 ? "Bez aktivního intervalu" : string.Join(" | ", parts);
+    }
+
+    private static bool TryParsePositiveInteger(string? text, out int value)
+    {
+        value = 0;
+        return int.TryParse((text ?? string.Empty).Trim(), out value) && value > 0;
+    }
+
+    private static string FormatReminderRepeatMode(string? repeatMode) =>
+        string.IsNullOrWhiteSpace(repeatMode) ? "bez opakování" : repeatMode;
+
     private static string BuildAuditSummary(IReadOnlyCollection<AuditItem> audit)
     {
         if (audit.Count == 0)
@@ -483,6 +822,38 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         return string.Join(" | ", parts);
+    }
+
+    private static string FormatCostValue(string? value)
+    {
+        if (VehimapValueParser.TryParseMoney(value, out var parsed))
+        {
+            return FormatMoney(parsed);
+        }
+
+        return FormatValue(value, "bez ceny");
+    }
+
+    private static string FormatFuelLiters(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return "bez množství";
+        }
+
+        return value.Contains('l', StringComparison.OrdinalIgnoreCase)
+            ? value
+            : $"{value} l";
+    }
+
+    private static string FormatOdometerValue(string? value)
+    {
+        if (!VehimapValueParser.TryParseOdometer(value, out var parsed))
+        {
+            return FormatValue(value, "bez tachometru");
+        }
+
+        return $"{parsed} km";
     }
 
     private static string FormatMoney(decimal value) => $"{value:0.00} Kč";
