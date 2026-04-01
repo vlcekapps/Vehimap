@@ -3,7 +3,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
@@ -18,6 +20,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly IFileLauncher _fileLauncher;
     private readonly IAuditService _auditService;
     private readonly ICostAnalysisService _costAnalysisService;
+    private readonly ITimelineService _timelineService;
+    private readonly ICalendarExportService _calendarExportService;
+    private readonly ITextFileSaveService _fileSaveService;
     private readonly Dictionary<string, VehicleMeta> _metaByVehicleId = new(StringComparer.Ordinal);
 
     private VehimapDataRoot? _dataRoot;
@@ -94,6 +99,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string maintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
+    private string timelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
+
+    [ObservableProperty]
     private string recordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
@@ -106,7 +114,19 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string selectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
 
     [ObservableProperty]
+    private string selectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
+
+    [ObservableProperty]
     private string selectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
+
+    [ObservableProperty]
+    private string timelineSearchText = string.Empty;
+
+    [ObservableProperty]
+    private string selectedTimelineFilter = "Vše";
+
+    [ObservableProperty]
+    private string exportStatus = "Kalendářový export zatím nebyl spuštěn.";
 
     [ObservableProperty]
     private VehicleListItemViewModel? selectedVehicle;
@@ -119,6 +139,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     [ObservableProperty]
     private VehicleMaintenanceItemViewModel? selectedMaintenance;
+
+    [ObservableProperty]
+    private VehicleTimelineItemViewModel? selectedTimelineItem;
 
     [ObservableProperty]
     private VehicleRecordItemViewModel? selectedRecord;
@@ -137,26 +160,39 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance { get; } = [];
 
+    public ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline { get; } = [];
+
     public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords { get; } = [];
+
+    public IReadOnlyList<string> TimelineFilters { get; } = ["Vše", "Budoucí", "Minulé"];
 
     public MainWindowViewModel()
         : this(
             new LegacyVehimapBootstrapper(new LegacyDataRootLocator(), new LegacyVehimapDataStore()),
             new ManagedAttachmentPathService(),
-            new ProcessFileLauncher())
+            new ProcessFileLauncher(),
+            new LegacyTimelineService(),
+            new LegacyCalendarExportService(),
+            new AvaloniaTextFileSaveService())
     {
     }
 
     internal MainWindowViewModel(
         LegacyVehimapBootstrapper bootstrapper,
         IFileAttachmentService attachmentService,
-        IFileLauncher fileLauncher)
+        IFileLauncher fileLauncher,
+        ITimelineService timelineService,
+        ICalendarExportService calendarExportService,
+        ITextFileSaveService fileSaveService)
     {
         _bootstrapper = bootstrapper;
         _attachmentService = attachmentService;
         _fileLauncher = fileLauncher;
         _auditService = new LegacyAuditService(_attachmentService);
         _costAnalysisService = new LegacyCostAnalysisService();
+        _timelineService = timelineService;
+        _calendarExportService = calendarExportService;
+        _fileSaveService = fileSaveService;
         Load();
     }
 
@@ -178,15 +214,18 @@ public sealed partial class MainWindowViewModel : ObservableObject
             FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
             ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
             MaintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
+            TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
             RecordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
             SelectedVehicleHistory.Clear();
             SelectedVehicleFuel.Clear();
             SelectedVehicleReminders.Clear();
             SelectedVehicleMaintenance.Clear();
+            SelectedVehicleTimeline.Clear();
             SelectedVehicleRecords.Clear();
             SelectedFuel = null;
             SelectedReminder = null;
             SelectedMaintenance = null;
+            SelectedTimelineItem = null;
             SelectedRecord = null;
             return;
         }
@@ -204,6 +243,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         PopulateVehicleFuel(value.Id);
         PopulateVehicleReminders(value.Id);
         PopulateVehicleMaintenance(value.Id);
+        PopulateVehicleTimeline(value.Id);
         PopulateVehicleRecords(value.Id);
     }
 
@@ -228,6 +268,23 @@ public sealed partial class MainWindowViewModel : ObservableObject
             : $"Úkon: {value.Title}\nInterval: {value.Interval}\nPoslední servis: {value.LastService}\nStav: {value.Status}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
     }
 
+    partial void OnSelectedTimelineItemChanged(VehicleTimelineItemViewModel? value)
+    {
+        SelectedTimelineDetail = value is null
+            ? "Vyberte položku časové osy a zobrazí se detail."
+            : $"Datum: {value.Date}\nDruh: {value.KindLabel}\nPoložka: {value.Title}\nDetail: {FormatValue(value.Detail, "-")}\nStav: {FormatValue(value.Status, "-")}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
+    }
+
+    partial void OnTimelineSearchTextChanged(string value)
+    {
+        RefreshTimeline();
+    }
+
+    partial void OnSelectedTimelineFilterChanged(string value)
+    {
+        RefreshTimeline();
+    }
+
     partial void OnSelectedRecordChanged(VehicleRecordItemViewModel? value)
     {
         SelectedRecordDetail = value is null
@@ -242,6 +299,33 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void Reload()
     {
         Load();
+    }
+
+    [RelayCommand]
+    private async Task ExportCalendarAsync()
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var export = _calendarExportService.BuildUpcomingCalendar(_dataSet, today, DateTimeOffset.UtcNow);
+        if (export.Items.Count == 0)
+        {
+            ExportStatus = "Kalendář zatím neobsahuje žádné budoucí položky s konkrétním datem.";
+            return;
+        }
+
+        var suggestedFileName = $"vehimap-kalendar-{today:yyyy-MM-dd}.ics";
+        var savedPath = await _fileSaveService
+            .SaveTextAsync("Export termínů do kalendáře", suggestedFileName, export.IcsContent)
+            .ConfigureAwait(false);
+
+        if (string.IsNullOrWhiteSpace(savedPath))
+        {
+            ExportStatus = "Export kalendáře byl zrušen.";
+            return;
+        }
+
+        ExportStatus = export.SkippedMaintenanceCount > 0
+            ? $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}. Přeskočené servisní úkoly bez data: {export.SkippedMaintenanceCount}."
+            : $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}.";
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedRecordFile))]
@@ -501,6 +585,29 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
     }
 
+    private void PopulateVehicleTimeline(string vehicleId)
+    {
+        SelectedVehicleTimeline.Clear();
+
+        foreach (var item in _timelineService.BuildVehicleTimeline(_dataSet, vehicleId, DateOnly.FromDateTime(DateTime.Today)))
+        {
+            SelectedVehicleTimeline.Add(new VehicleTimelineItemViewModel(
+                item.Kind,
+                item.KindLabel,
+                item.DateText,
+                item.Title,
+                item.Detail,
+                item.Status,
+                item.VehicleName,
+                item.VehicleId,
+                item.EntryId,
+                item.IsFuture,
+                item.Note));
+        }
+
+        RefreshTimeline();
+    }
+
     private void PopulateVehicleRecords(string vehicleId)
     {
         SelectedVehicleRecords.Clear();
@@ -525,6 +632,54 @@ public sealed partial class MainWindowViewModel : ObservableObject
         if (SelectedRecord is null)
         {
             OnSelectedRecordChanged(null);
+        }
+    }
+
+    private void RefreshTimeline()
+    {
+        if (SelectedVehicle is null)
+        {
+            TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
+            SelectedTimelineItem = null;
+            return;
+        }
+
+        var allItems = _timelineService.BuildVehicleTimeline(_dataSet, SelectedVehicle.Id, DateOnly.FromDateTime(DateTime.Today));
+        var filteredItems = allItems
+            .Where(MatchesTimelineFilter)
+            .Where(MatchesTimelineSearch)
+            .Select(item => new VehicleTimelineItemViewModel(
+                item.Kind,
+                item.KindLabel,
+                item.DateText,
+                item.Title,
+                item.Detail,
+                item.Status,
+                item.VehicleName,
+                item.VehicleId,
+                item.EntryId,
+                item.IsFuture,
+                item.Note))
+            .ToList();
+
+        SelectedVehicleTimeline.Clear();
+        foreach (var item in filteredItems)
+        {
+            SelectedVehicleTimeline.Add(item);
+        }
+
+        var futureCount = allItems.Count(item => item.IsFuture);
+        var pastCount = allItems.Count - futureCount;
+        TimelineSummary = allItems.Count == 0
+            ? "Pro toto vozidlo zatím nejsou žádné časové položky s datem."
+            : filteredItems.Count == allItems.Count
+                ? $"Celkem položek: {allItems.Count}. Budoucí: {futureCount}. Minulé: {pastCount}."
+                : $"Celkem položek: {allItems.Count}. Budoucí: {futureCount}. Minulé: {pastCount}. Po filtru zobrazeno: {filteredItems.Count}.";
+
+        SelectedTimelineItem = SelectedVehicleTimeline.FirstOrDefault();
+        if (SelectedTimelineItem is null)
+        {
+            OnSelectedTimelineItemChanged(null);
         }
     }
 
@@ -822,6 +977,38 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         return string.Join(" | ", parts);
+    }
+
+    private bool MatchesTimelineFilter(VehicleTimelineItem item)
+    {
+        return SelectedTimelineFilter switch
+        {
+            "Budoucí" => item.IsFuture,
+            "Minulé" => !item.IsFuture,
+            _ => true
+        };
+    }
+
+    private bool MatchesTimelineSearch(VehicleTimelineItem item)
+    {
+        var needle = TimelineSearchText?.Trim();
+        if (string.IsNullOrWhiteSpace(needle))
+        {
+            return true;
+        }
+
+        var haystack = string.Join(' ', new[]
+        {
+            item.DateText,
+            item.KindLabel,
+            item.Title,
+            item.Detail,
+            item.Status,
+            item.Note,
+            item.VehicleName
+        });
+
+        return haystack.Contains(needle, StringComparison.CurrentCultureIgnoreCase);
     }
 
     private static string FormatCostValue(string? value)

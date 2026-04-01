@@ -1,35 +1,36 @@
 # Vehimap .NET rewrite
 
-Tato složka obsahuje novou C# codebase pro multiplatformní desktopový Vehimap.
+Tato slozka obsahuje novou C# codebase pro multiplatformni desktopovy Vehimap.
 
-Aktuální záměr:
+Aktualni zamer:
 
-- zachovat současný AHK Vehimap funkční beze změn
-- vedle něj vybudovat kompatibilní `.NET + Avalonia` aplikaci
-- první priorita je přímé čtení dnešních `TSV`, `INI`, `.vehimapbak` a `data/attachments`
+- zachovat soucasny AHK Vehimap funkcni beze zmen
+- vedle nej vybudovat kompatibilni `.NET + Avalonia` aplikaci
+- prvni priorita je prime cteni dnesnich `TSV`, `INI`, `.vehimapbak` a `data/attachments`
 
 ## Struktura
 
-- `src/Vehimap.Domain` - čisté doménové modely
-- `src/Vehimap.Application` - use cases a interní rozhraní
-- `src/Vehimap.Storage.Legacy` - kompatibilita se současnými AHK daty
-- `src/Vehimap.Platform` - platform-specific adaptéry
+- `src/Vehimap.Domain` - ciste domenove modely
+- `src/Vehimap.Application` - use cases a interni rozhrani
+- `src/Vehimap.Storage.Legacy` - kompatibilita se soucasnymi AHK daty
+- `src/Vehimap.Platform` - platform-specific adaptery
 - `src/Vehimap.Desktop` - Avalonia desktop shell
-- `src/Vehimap.Updater` - separátní helper pro update
+- `src/Vehimap.Updater` - separatni helper pro update
 - `tests/*` - unit, compat a UI testy
 
-## Aktuální stav
+## Aktualni stav
 
-Tato větev už není jen scaffold. Aktuálně umí:
+Tato vetev uz neni jen scaffold. Aktualne umi:
 
-- postavit celou solution přes `dotnet build`
-- spustit unit a kompatibilitní testy přes `dotnet test`
-- vygenerovat desktopový preview build přes `dotnet publish`
-- přímo číst a zapisovat dnešní Vehimap data (`TSV`, `INI`, `.vehimapbak`, managed attachments)
-- skládat první sdílené C# use-cases pro audit a nákladové souhrny
-- zobrazit v Avalonia shellu seznam vozidel, detail vybraného vozidla, historii, doklady, auditní frontu a souhrn nákladů
+- postavit celou solution pres `dotnet build`
+- spustit unit a kompatibilitni testy pres `dotnet test`
+- vygenerovat desktopovy preview build pres `dotnet publish`
+- primo cist a zapisovat dnesni Vehimap data (`TSV`, `INI`, `.vehimapbak`, managed attachments)
+- skladat sdilene C# use-cases pro audit, nakladove souhrny, cenu za kilometr, casovou osu vozidla a ICS export
+- zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych legacy dat
+- vyexportovat budouci terminy do `.ics` primo z nove C# vetve
 
-## Lokální build
+## Lokalni build
 
 ```powershell
 cd dotnet
