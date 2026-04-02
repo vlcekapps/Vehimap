@@ -82,7 +82,7 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "10.0.x"
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Restore
@@ -141,7 +141,7 @@ jobs:
           }
       - name: Upload Appium logs
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: vehimap-desktop-ui-smoke-logs
           path: |
@@ -189,7 +189,7 @@ jobs:
           -Version "${{ needs.metadata.outputs.version }}"
           -OutputDirectory "artifacts/${{ matrix.rid }}/release"
       - name: Upload packaged artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact }}
           path: dotnet/artifacts/${{ matrix.rid }}/release/*
@@ -202,7 +202,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download packaged artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: release-artifacts
           pattern: vehimap-desktop-preview-*
@@ -215,8 +215,8 @@ jobs:
           tag="${{ needs.metadata.outputs.release_tag }}"
           name="${{ needs.metadata.outputs.release_name }}"
 
-          if gh release view "$tag" >/dev/null 2>&1; then
-            gh release delete "$tag" --yes
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release delete "$tag" --repo "$GITHUB_REPOSITORY" --yes
           fi
 
           notes_file="$(mktemp)"
@@ -230,6 +230,7 @@ jobs:
           EOF
 
           gh release create "$tag" release-artifacts/* \
+            --repo "$GITHUB_REPOSITORY" \
             --title "$name" \
             --draft \
             --generate-notes \
@@ -247,7 +248,7 @@ jobs:
           ref: main
           fetch-depth: 0
       - name: Download packaged artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: release-artifacts
           pattern: vehimap-desktop-preview-*
