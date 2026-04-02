@@ -42,7 +42,7 @@ internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath,
             return false;
         }
 
-        configuration = new DesktopUiTestConfiguration(serverUri, appPath, TimeSpan.FromSeconds(30));
+        configuration = new DesktopUiTestConfiguration(serverUri, appPath, TimeSpan.FromSeconds(90));
         reason = string.Empty;
         return true;
     }

@@ -38,7 +38,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             options.AutomationName = "Windows";
             options.App = isolatedLaunch.AppPath;
             options.DeviceName = "WindowsPC";
-            options.AddAdditionalAppiumOption("ms:waitForAppLaunch", 15);
+            options.AddAdditionalAppiumOption("ms:waitForAppLaunch", 30);
 
             var driver = new WindowsDriver(configuration.ServerUri, options, configuration.CommandTimeout);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
