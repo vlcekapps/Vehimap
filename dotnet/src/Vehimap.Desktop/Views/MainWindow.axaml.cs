@@ -129,11 +129,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (this.FindControl<TabControl>("VehicleTabControl") is { } tabControl)
-        {
-            e.Handled = tabControl.Focus(NavigationMethod.Tab, KeyModifiers.Shift)
-                || tabControl.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
-        }
+        e.Handled = FocusSelectedTabHeader();
     }
 
     private static bool FocusListBox(ListBox listBox)
@@ -158,6 +154,29 @@ public partial class MainWindow : Window
         }
 
         return listBox.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+    }
+
+    private bool FocusSelectedTabHeader()
+    {
+        if (this.FindControl<TabControl>("VehicleTabControl") is not { } tabControl)
+        {
+            return false;
+        }
+
+        var selectedIndex = tabControl.SelectedIndex;
+        if (selectedIndex < 0)
+        {
+            selectedIndex = 0;
+        }
+
+        if (tabControl.ContainerFromIndex(selectedIndex) is Control selectedTab)
+        {
+            return selectedTab.Focus(NavigationMethod.Tab, KeyModifiers.Shift)
+                || selectedTab.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+        }
+
+        return tabControl.Focus(NavigationMethod.Tab, KeyModifiers.Shift)
+            || tabControl.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
     }
 
     private Control? ResolveFocusTarget(DesktopFocusTarget target)
