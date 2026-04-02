@@ -28,7 +28,7 @@ public sealed class AppShellServicesTests : IDisposable
     {
         var provider = new AssemblyAppBuildInfoProvider();
         var appInfo = provider.GetCurrent();
-        var expectedVersion = File.ReadAllText(Path.Combine("C:\\Users\\vlcek\\vehimap", "src", "VERSION")).Trim();
+        var expectedVersion = File.ReadAllText(Path.Combine(FindRepositoryRoot(), "src", "VERSION")).Trim();
         var expectedManifestName = $"latest-dotnet-preview-{ResolveExpectedRuntimeIdentifier()}.ini";
 
         Assert.Equal(expectedVersion, appInfo.AppVersion);
@@ -278,5 +278,23 @@ public sealed class AppShellServicesTests : IDisposable
         }
 
         return "win-x64";
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var current = new DirectoryInfo(AppContext.BaseDirectory);
+        while (current is not null)
+        {
+            var versionFile = Path.Combine(current.FullName, "src", "VERSION");
+            var dotnetFolder = Path.Combine(current.FullName, "dotnet");
+            if (File.Exists(versionFile) && Directory.Exists(dotnetFolder))
+            {
+                return current.FullName;
+            }
+
+            current = current.Parent;
+        }
+
+        throw new DirectoryNotFoundException("Nepodarilo se najit koren repozitare Vehimap.");
     }
 }
