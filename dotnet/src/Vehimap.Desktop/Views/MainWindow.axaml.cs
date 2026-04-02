@@ -205,8 +205,29 @@ public partial class MainWindow : Window
             return;
         }
 
-        _viewModel?.SelectVehicleTabCommand.Execute(nextIndex);
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = nextIndex;
         e.Handled = FocusSelectedTabHeader();
+    }
+
+    private void OnTabHeaderClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null || sender is not Control { Tag: { } tagValue })
+        {
+            return;
+        }
+
+        if (!int.TryParse(tagValue.ToString(), out var tabIndex))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = tabIndex;
+        FocusSelectedTabHeader();
     }
 
     private static bool FocusListBox(ListBox listBox)

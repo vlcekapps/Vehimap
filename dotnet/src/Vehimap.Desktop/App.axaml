@@ -4,7 +4,7 @@
              x:Class="Vehimap.Desktop.App">
   <Application.Styles>
     <themes:FluentTheme />
-    <Style Selector="Button.tab-header">
+    <Style Selector="RadioButton.tab-header">
       <Setter Property="Margin" Value="0,0,8,8" />
       <Setter Property="Padding" Value="12,8" />
       <Setter Property="MinWidth" Value="96" />
@@ -14,13 +14,10 @@
       <Setter Property="CornerRadius" Value="6" />
       <Setter Property="HorizontalContentAlignment" Value="Center" />
     </Style>
-    <Style Selector="Button.tab-header.selected">
+    <Style Selector="RadioButton.tab-header:checked">
       <Setter Property="Background" Value="#2A57708C" />
       <Setter Property="BorderBrush" Value="#6AA4D8" />
       <Setter Property="FontWeight" Value="SemiBold" />
-    </Style>
-    <Style Selector="TabControl.headerless /template/ TabStrip">
-      <Setter Property="IsVisible" Value="False" />
     </Style>
   </Application.Styles>
 </Application>

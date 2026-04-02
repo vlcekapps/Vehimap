@@ -73,6 +73,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", xaml);
         Assert.Contains("x:Name=\"DashboardTabButton\"", xaml);
         Assert.Contains("IsTabStop=\"{Binding IsDashboardTabSelected}\"", xaml);
-        Assert.Contains("Classes=\"headerless\"", xaml);
+        Assert.Contains("<RadioButton x:Name=\"DashboardTabButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Karta Dashboard\"", xaml);
     }
 }
