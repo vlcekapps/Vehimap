@@ -1,7 +1,9 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Avalonia.Markup.Xaml;
 using Vehimap.Desktop.ViewModels;
 
@@ -167,6 +169,13 @@ public partial class MainWindow : Window
         if (selectedIndex < 0)
         {
             selectedIndex = 0;
+        }
+
+        if (tabControl.FindDescendantOfType<TabStrip>() is { } tabStrip
+            && tabStrip.ContainerFromIndex(selectedIndex) is Control selectedTabHeader)
+        {
+            return selectedTabHeader.Focus(NavigationMethod.Tab, KeyModifiers.Shift)
+                || selectedTabHeader.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
         }
 
         if (tabControl.ContainerFromIndex(selectedIndex) is Control selectedTab)
