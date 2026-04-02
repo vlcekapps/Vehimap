@@ -157,5 +157,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CreateRecordButton\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"RecordEditorTitleBox\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"RecordAttachmentModeComboBox\"", recordXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CreateHistoryButton\"", historyXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"HistoryEditorDateBox\"", historyXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CreateFuelButton\"", fuelXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorDateBox\"", fuelXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CreateMaintenanceButton\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceEditorTitleBox\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CreateVehicleButton\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorNameBox\"", vehicleDetailXaml);
     }
 }

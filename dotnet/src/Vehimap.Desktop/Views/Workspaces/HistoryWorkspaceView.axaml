@@ -52,21 +52,26 @@
                    ItemHeight="34">
           <Button Command="{Binding CreateHistoryCommand}"
                   Content="Nový záznam"
-                  AutomationProperties.Name="Vytvořit nový historický záznam" />
+                  AutomationProperties.Name="Vytvořit nový historický záznam"
+                  AutomationProperties.AutomationId="CreateHistoryButton" />
           <Button Command="{Binding EditSelectedHistoryCommand}"
                   Content="Upravit"
-                  AutomationProperties.Name="Upravit vybraný historický záznam" />
+                  AutomationProperties.Name="Upravit vybraný historický záznam"
+                  AutomationProperties.AutomationId="EditHistoryButton" />
           <Button Command="{Binding DeleteSelectedHistoryCommand}"
                   Content="Odstranit"
-                  AutomationProperties.Name="Odstranit vybraný historický záznam" />
+                  AutomationProperties.Name="Odstranit vybraný historický záznam"
+                  AutomationProperties.AutomationId="DeleteHistoryButton" />
           <Button Command="{Binding SaveHistoryCommand}"
                   Content="Uložit"
                   IsVisible="{Binding IsEditingHistory}"
-                  AutomationProperties.Name="Uložit historický záznam" />
+                  AutomationProperties.Name="Uložit historický záznam"
+                  AutomationProperties.AutomationId="SaveHistoryButton" />
           <Button Command="{Binding CancelHistoryEditCommand}"
                   Content="Zrušit"
                   IsVisible="{Binding IsEditingHistory}"
-                  AutomationProperties.Name="Zrušit úpravu historického záznamu" />
+                  AutomationProperties.Name="Zrušit úpravu historického záznamu"
+                  AutomationProperties.AutomationId="CancelHistoryButton" />
         </WrapPanel>
         <TextBlock Grid.Row="2"
                    Margin="0,12,0,0"
@@ -83,7 +88,8 @@
                    Margin="0,6,0,0"
                    Text="{Binding HistoryEditorDate}"
                    PlaceholderText="Například 15.06.2026"
-                   AutomationProperties.Name="Datum historického záznamu" />
+                   AutomationProperties.Name="Datum historického záznamu"
+                   AutomationProperties.AutomationId="HistoryEditorDateBox" />
           <Grid Grid.Row="2"
                 Margin="0,14,0,0"
                 ColumnDefinitions="*,160">
@@ -91,13 +97,15 @@
               <TextBlock FontWeight="SemiBold" Text="Typ události" />
               <TextBox Text="{Binding HistoryEditorType}"
                        PlaceholderText="Například Servis"
-                       AutomationProperties.Name="Typ historické události" />
+                       AutomationProperties.Name="Typ historické události"
+                       AutomationProperties.AutomationId="HistoryEditorTypeBox" />
             </StackPanel>
             <StackPanel Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Tachometr" />
               <TextBox Text="{Binding HistoryEditorOdometer}"
                        PlaceholderText="Například 123456"
-                       AutomationProperties.Name="Tachometr historického záznamu" />
+                       AutomationProperties.Name="Tachometr historického záznamu"
+                       AutomationProperties.AutomationId="HistoryEditorOdometerBox" />
             </StackPanel>
           </Grid>
           <TextBlock Grid.Row="3"
@@ -108,7 +116,8 @@
                    Margin="0,6,0,0"
                    Text="{Binding HistoryEditorCost}"
                    PlaceholderText="Například 2500"
-                   AutomationProperties.Name="Cena historického záznamu" />
+                   AutomationProperties.Name="Cena historického záznamu"
+                   AutomationProperties.AutomationId="HistoryEditorCostBox" />
           <TextBlock Grid.Row="5"
                      Margin="0,14,0,0"
                      FontWeight="SemiBold"
@@ -120,7 +129,8 @@
                    TextWrapping="Wrap"
                    VerticalContentAlignment="Top"
                    Text="{Binding HistoryEditorNote}"
-                   AutomationProperties.Name="Poznámka k historickému záznamu" />
+                   AutomationProperties.Name="Poznámka k historickému záznamu"
+                   AutomationProperties.AutomationId="HistoryEditorNoteBox" />
         </Grid>
         <TextBlock Grid.Row="3"
                    Margin="0,16,0,0"
