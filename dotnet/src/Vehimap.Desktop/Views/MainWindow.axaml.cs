@@ -23,7 +23,9 @@ public partial class MainWindow : Window
         "AuditTabButton",
         "CostTabButton",
         "DashboardTabButton",
-        "SearchTabButton"
+        "SearchTabButton",
+        "UpcomingOverviewTabButton",
+        "OverdueOverviewTabButton"
     ];
 
     private MainWindowViewModel? _viewModel;
@@ -139,6 +141,10 @@ public partial class MainWindow : Window
         RegisterShiftTabBackNavigation("DashboardTimelineOpenButton");
         RegisterShiftTabBackNavigation("GlobalSearchTextBox");
         RegisterShiftTabBackNavigation("SearchResultsListBox");
+        RegisterShiftTabBackNavigation("UpcomingOverviewSearchBox");
+        RegisterShiftTabBackNavigation("UpcomingOverviewListBox");
+        RegisterShiftTabBackNavigation("OverdueOverviewSearchBox");
+        RegisterShiftTabBackNavigation("OverdueOverviewListBox");
     }
 
     private void RegisterTabHeaderNavigation()
@@ -464,6 +470,10 @@ public partial class MainWindow : Window
             DesktopFocusTarget.TimelineList => this.FindControl<ListBox>("TimelineListBox"),
             DesktopFocusTarget.GlobalSearchBox => this.FindControl<TextBox>("GlobalSearchTextBox"),
             DesktopFocusTarget.GlobalSearchList => this.FindControl<ListBox>("SearchResultsListBox"),
+            DesktopFocusTarget.UpcomingOverviewSearch => this.FindControl<TextBox>("UpcomingOverviewSearchBox"),
+            DesktopFocusTarget.UpcomingOverviewList => this.FindControl<ListBox>("UpcomingOverviewListBox"),
+            DesktopFocusTarget.OverdueOverviewSearch => this.FindControl<TextBox>("OverdueOverviewSearchBox"),
+            DesktopFocusTarget.OverdueOverviewList => this.FindControl<ListBox>("OverdueOverviewListBox"),
             DesktopFocusTarget.RecordList => this.FindControl<ListBox>("RecordListBox"),
             DesktopFocusTarget.RecordEditorTitle => this.FindControl<TextBox>("RecordEditorTitleBox"),
             DesktopFocusTarget.AuditList => this.FindControl<ListBox>("AuditListBox"),

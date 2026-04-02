@@ -15,6 +15,8 @@
     <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportCalendarCommand}" />
     <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusTimelineSearchCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+F" Command="{Binding FocusGlobalSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+T" Command="{Binding FocusUpcomingOverviewCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+D" Command="{Binding FocusOverdueOverviewCommand}" />
   </Window.KeyBindings>
   <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*,Auto">
     <Grid ColumnDefinitions="*,Auto">
@@ -270,6 +272,24 @@
                       Click="OnTabHeaderClick"
                       Content="Hledání"
                       AutomationProperties.Name="Karta Hledání" />
+              <RadioButton x:Name="UpcomingOverviewTabButton"
+                      Classes="tab-header"
+                      GroupName="VehicleTabs"
+                      IsChecked="{Binding IsUpcomingOverviewTabSelected}"
+                      IsTabStop="{Binding IsUpcomingOverviewTabSelected}"
+                      Tag="11"
+                      Click="OnTabHeaderClick"
+                      Content="Termíny"
+                      AutomationProperties.Name="Karta Termíny" />
+              <RadioButton x:Name="OverdueOverviewTabButton"
+                      Classes="tab-header"
+                      GroupName="VehicleTabs"
+                      IsChecked="{Binding IsOverdueOverviewTabSelected}"
+                      IsTabStop="{Binding IsOverdueOverviewTabSelected}"
+                      Tag="12"
+                      Click="OnTabHeaderClick"
+                      Content="Propadlé"
+                      AutomationProperties.Name="Karta Propadlé termíny" />
             </WrapPanel>
           </Grid>
 
@@ -1318,6 +1338,198 @@
                 </Grid>
               </Border>
             </Grid>
+
+            <Grid IsVisible="{Binding IsUpcomingOverviewTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.25*,*">
+              <TextBlock Grid.ColumnSpan="2"
+                         Text="{Binding UpcomingOverviewSummary}"
+                         TextWrapping="Wrap" />
+              <Grid Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Margin="0,12,0,0"
+                    ColumnDefinitions="100,*,130,170,150">
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Text="Hledat" />
+                <TextBox x:Name="UpcomingOverviewSearchBox"
+                         Grid.Column="1"
+                         Margin="12,0,0,0"
+                         Text="{Binding UpcomingOverviewSearchText}"
+                         PlaceholderText="Vozidlo, SPZ, termín nebo položka..."
+                         AutomationProperties.Name="Hledání v přehledu blížících se termínů" />
+                <TextBlock Grid.Column="2"
+                           Margin="12,0,0,0"
+                           VerticalAlignment="Center"
+                           Text="Filtrovat" />
+                <ComboBox x:Name="UpcomingOverviewFilterComboBox"
+                          Grid.Column="3"
+                          Margin="12,0,0,0"
+                          ItemsSource="{Binding OverviewFilters}"
+                          SelectedItem="{Binding SelectedUpcomingOverviewFilter}"
+                          AutomationProperties.Name="Filtr přehledu blížících se termínů" />
+                <Button Grid.Column="4"
+                        x:Name="UpcomingOverviewOpenButton"
+                        Margin="12,0,0,0"
+                        Width="150"
+                        Command="{Binding OpenSelectedUpcomingOverviewItemCommand}"
+                        Content="Otevřít položku"
+                        AutomationProperties.Name="Otevřít vybraný blížící se termín" />
+              </Grid>
+
+              <ListBox x:Name="UpcomingOverviewListBox"
+                       Grid.Row="2"
+                       Margin="0,12,12,0"
+                       ItemsSource="{Binding UpcomingOverviewItems}"
+                       SelectedItem="{Binding SelectedUpcomingOverviewItem}"
+                       AutomationProperties.Name="Přehled blížících se termínů napříč vozidly">
+                <ListBox.KeyBindings>
+                  <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedUpcomingOverviewItemCommand}" />
+                </ListBox.KeyBindings>
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:VehicleTimelineItemViewModel">
+                    <Border Padding="12"
+                            Margin="0,0,0,8"
+                            Background="#10203040"
+                            CornerRadius="6"
+                            AutomationProperties.Name="{Binding AccessibleLabel}">
+                      <Grid ColumnDefinitions="110,140,150,*">
+                        <TextBlock Grid.Column="0" Text="{Binding Date}" />
+                        <TextBlock Grid.Column="1" Text="{Binding KindLabel}" />
+                        <TextBlock Grid.Column="2" Text="{Binding VehicleName}" />
+                        <StackPanel Grid.Column="3" Spacing="4">
+                          <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+                          <TextBlock Opacity="0.82" Text="{Binding Detail}" TextWrapping="Wrap" />
+                          <TextBlock Opacity="0.72" Text="{Binding Status}" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+
+              <Border Grid.Row="2"
+                      Grid.Column="1"
+                      Margin="12,12,0,0"
+                      Padding="16"
+                      Background="#10203040"
+                      CornerRadius="8">
+                <Grid RowDefinitions="Auto,Auto,Auto,*">
+                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail termínu" />
+                  <WrapPanel Grid.Row="1" Margin="0,12,0,0" ItemWidth="150" ItemHeight="34">
+                    <Button Command="{Binding OpenSelectedUpcomingOverviewVehicleCommand}"
+                            Content="Zobrazit vozidlo"
+                            AutomationProperties.Name="Zobrazit vozidlo k vybranému blížícímu se termínu" />
+                    <Button Command="{Binding OpenSelectedUpcomingOverviewItemCommand}"
+                            Content="Otevřít položku"
+                            AutomationProperties.Name="Otevřít evidenci vybraného blížícího se termínu" />
+                  </WrapPanel>
+                  <TextBlock Grid.Row="2"
+                             Margin="0,12,0,0"
+                             Opacity="0.75"
+                             Text="Přehled termínů ukazuje všechny blížící se technické kontroly, zelené karty, připomínky, doklady a servisní úkoly s datem."
+                             TextWrapping="Wrap" />
+                  <TextBlock Grid.Row="3"
+                             Margin="0,16,0,0"
+                             Text="{Binding SelectedUpcomingOverviewDetail}"
+                             TextWrapping="Wrap" />
+                </Grid>
+              </Border>
+            </Grid>
+
+            <Grid IsVisible="{Binding IsOverdueOverviewTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.25*,*">
+              <TextBlock Grid.ColumnSpan="2"
+                         Text="{Binding OverdueOverviewSummary}"
+                         TextWrapping="Wrap" />
+              <Grid Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Margin="0,12,0,0"
+                    ColumnDefinitions="100,*,130,170,150">
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Text="Hledat" />
+                <TextBox x:Name="OverdueOverviewSearchBox"
+                         Grid.Column="1"
+                         Margin="12,0,0,0"
+                         Text="{Binding OverdueOverviewSearchText}"
+                         PlaceholderText="Vozidlo, SPZ, termín nebo položka..."
+                         AutomationProperties.Name="Hledání v přehledu propadlých termínů" />
+                <TextBlock Grid.Column="2"
+                           Margin="12,0,0,0"
+                           VerticalAlignment="Center"
+                           Text="Filtrovat" />
+                <ComboBox x:Name="OverdueOverviewFilterComboBox"
+                          Grid.Column="3"
+                          Margin="12,0,0,0"
+                          ItemsSource="{Binding OverviewFilters}"
+                          SelectedItem="{Binding SelectedOverdueOverviewFilter}"
+                          AutomationProperties.Name="Filtr přehledu propadlých termínů" />
+                <Button Grid.Column="4"
+                        x:Name="OverdueOverviewOpenButton"
+                        Margin="12,0,0,0"
+                        Width="150"
+                        Command="{Binding OpenSelectedOverdueOverviewItemCommand}"
+                        Content="Otevřít položku"
+                        AutomationProperties.Name="Otevřít vybraný propadlý termín" />
+              </Grid>
+
+              <ListBox x:Name="OverdueOverviewListBox"
+                       Grid.Row="2"
+                       Margin="0,12,12,0"
+                       ItemsSource="{Binding OverdueOverviewItems}"
+                       SelectedItem="{Binding SelectedOverdueOverviewItem}"
+                       AutomationProperties.Name="Přehled propadlých termínů napříč vozidly">
+                <ListBox.KeyBindings>
+                  <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedOverdueOverviewItemCommand}" />
+                </ListBox.KeyBindings>
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:VehicleTimelineItemViewModel">
+                    <Border Padding="12"
+                            Margin="0,0,0,8"
+                            Background="#10203040"
+                            CornerRadius="6"
+                            AutomationProperties.Name="{Binding AccessibleLabel}">
+                      <Grid ColumnDefinitions="110,140,150,*">
+                        <TextBlock Grid.Column="0" Text="{Binding Date}" />
+                        <TextBlock Grid.Column="1" Text="{Binding KindLabel}" />
+                        <TextBlock Grid.Column="2" Text="{Binding VehicleName}" />
+                        <StackPanel Grid.Column="3" Spacing="4">
+                          <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+                          <TextBlock Opacity="0.82" Text="{Binding Detail}" TextWrapping="Wrap" />
+                          <TextBlock Opacity="0.72" Text="{Binding Status}" TextWrapping="Wrap" />
+                        </StackPanel>
+                      </Grid>
+                    </Border>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+
+              <Border Grid.Row="2"
+                      Grid.Column="1"
+                      Margin="12,12,0,0"
+                      Padding="16"
+                      Background="#10203040"
+                      CornerRadius="8">
+                <Grid RowDefinitions="Auto,Auto,Auto,*">
+                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail propadlého termínu" />
+                  <WrapPanel Grid.Row="1" Margin="0,12,0,0" ItemWidth="150" ItemHeight="34">
+                    <Button Command="{Binding OpenSelectedOverdueOverviewVehicleCommand}"
+                            Content="Zobrazit vozidlo"
+                            AutomationProperties.Name="Zobrazit vozidlo k vybranému propadlému termínu" />
+                    <Button Command="{Binding OpenSelectedOverdueOverviewItemCommand}"
+                            Content="Otevřít položku"
+                            AutomationProperties.Name="Otevřít evidenci vybraného propadlého termínu" />
+                  </WrapPanel>
+                  <TextBlock Grid.Row="2"
+                             Margin="0,12,0,0"
+                             Opacity="0.75"
+                             Text="Propadlé termíny vám pomohou rychle projít všechny záznamy, které už jsou po termínu a vyžadují zásah."
+                             TextWrapping="Wrap" />
+                  <TextBlock Grid.Row="3"
+                             Margin="0,16,0,0"
+                             Text="{Binding SelectedOverdueOverviewDetail}"
+                             TextWrapping="Wrap" />
+                </Grid>
+              </Border>
+            </Grid>
           </Grid>
         </Grid>
       </Border>
@@ -1326,7 +1538,7 @@
     <TextBlock Grid.Row="4"
                Margin="0,16,0,0"
                Opacity="0.75"
-               Text="C# větev už nad stejnými legacy daty jako AHK verze zobrazuje detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard i globální hledání. Připomínky, doklady, historii, tankování i plán údržby už lze také přímo upravovat."
+               Text="C# větev už nad stejnými legacy daty jako AHK verze zobrazuje detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard, globální hledání i přehled termínů. Připomínky, doklady, historii, tankování i plán údržby už lze také přímo upravovat."
                TextWrapping="Wrap" />
   </Grid>
 </Window>

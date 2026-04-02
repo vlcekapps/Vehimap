@@ -26,6 +26,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private const int CostTabIndex = 8;
     private const int DashboardTabIndex = 9;
     private const int SearchTabIndex = 10;
+    private const int UpcomingOverviewTabIndex = 11;
+    private const int OverdueOverviewTabIndex = 12;
 
     private readonly LegacyVehimapBootstrapper _bootstrapper;
     private readonly ILegacyDataStore _legacyDataStore;
@@ -261,6 +263,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool IsSearchTabSelected => SelectedVehicleTabIndex == SearchTabIndex;
 
+    public bool IsUpcomingOverviewTabSelected => SelectedVehicleTabIndex == UpcomingOverviewTabIndex;
+
+    public bool IsOverdueOverviewTabSelected => SelectedVehicleTabIndex == OverdueOverviewTabIndex;
+
     public bool CanOpenSelectedSearchResult => SelectedSearchResult is not null;
 
     public MainWindowViewModel()
@@ -335,6 +341,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(IsCostTabSelected));
         OnPropertyChanged(nameof(IsDashboardTabSelected));
         OnPropertyChanged(nameof(IsSearchTabSelected));
+        OnPropertyChanged(nameof(IsUpcomingOverviewTabSelected));
+        OnPropertyChanged(nameof(IsOverdueOverviewTabSelected));
     }
 
     partial void OnSelectedVehicleChanged(VehicleListItemViewModel? value)
@@ -521,9 +529,23 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void FocusUpcomingOverview()
+    {
+        SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
+        RequestFocus(DesktopFocusTarget.UpcomingOverviewSearch);
+    }
+
+    [RelayCommand]
+    private void FocusOverdueOverview()
+    {
+        SelectedVehicleTabIndex = OverdueOverviewTabIndex;
+        RequestFocus(DesktopFocusTarget.OverdueOverviewSearch);
+    }
+
+    [RelayCommand]
     private void SelectVehicleTab(int tabIndex)
     {
-        if (tabIndex < DetailTabIndex || tabIndex > SearchTabIndex)
+        if (tabIndex < DetailTabIndex || tabIndex > OverdueOverviewTabIndex)
         {
             return;
         }
@@ -717,6 +739,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             }
 
             PopulateDashboardTimeline();
+            RefreshFleetOverviews();
             RefreshGlobalSearch();
             SelectedDashboardAuditItem = AuditItems.FirstOrDefault();
             SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault();
@@ -734,7 +757,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             {
                 SelectedVehicleTabIndex = DashboardTabIndex;
             }
-            else if (preferredTabIndex.HasValue && preferredTabIndex.Value >= DetailTabIndex && preferredTabIndex.Value <= SearchTabIndex)
+            else if (preferredTabIndex.HasValue && preferredTabIndex.Value >= DetailTabIndex && preferredTabIndex.Value <= OverdueOverviewTabIndex)
             {
                 SelectedVehicleTabIndex = preferredTabIndex.Value;
             }
