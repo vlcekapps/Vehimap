@@ -25,7 +25,7 @@ jobs:
       release_name: ${{ steps.version.outputs.release_name }}
       should_release: ${{ steps.version.outputs.should_release }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - id: version
         shell: bash
         run: |
@@ -53,8 +53,8 @@ jobs:
       run:
         working-directory: dotnet
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "10.0.x"
       - name: Restore
@@ -78,11 +78,11 @@ jobs:
       VEHIMAP_UI_APP: ${{ github.workspace }}\dotnet\artifacts\desktop-preview\Vehimap.Desktop.exe
       VEHIMAP_UI_REQUIRE_APPIUM: "1"
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "10.0.x"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
       - name: Restore
@@ -141,7 +141,7 @@ jobs:
           }
       - name: Upload Appium logs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: vehimap-desktop-ui-smoke-logs
           path: |
@@ -174,8 +174,8 @@ jobs:
       run:
         working-directory: dotnet
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: "10.0.x"
       - name: Publish desktop shell
@@ -189,7 +189,7 @@ jobs:
           -Version "${{ needs.metadata.outputs.version }}"
           -OutputDirectory "artifacts/${{ matrix.rid }}/release"
       - name: Upload packaged artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.artifact }}
           path: dotnet/artifacts/${{ matrix.rid }}/release/*
@@ -202,27 +202,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download packaged artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: release-artifacts
           pattern: vehimap-desktop-preview-*
           merge-multiple: true
       - name: Publish draft release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.metadata.outputs.release_tag }}
-          name: ${{ needs.metadata.outputs.release_name }}
-          draft: true
-          generate_release_notes: true
-          body: |
-            Desktop preview build pro .NET/Avalonia vetev Vehimapu.
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ needs.metadata.outputs.release_tag }}"
+          name="${{ needs.metadata.outputs.release_name }}"
 
-            Artefakty:
-            - Windows: ZIP portable slozky
-            - Linux: tar.gz portable slozky
-            - macOS: ZIP s `.app` bundle
-          files: |
-            release-artifacts/*
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release delete "$tag" --yes
+          fi
+
+          notes_file="$(mktemp)"
+          cat > "$notes_file" <<'EOF'
+          Desktop preview build pro .NET/Avalonia vetev Vehimapu.
+
+          Artefakty:
+          - Windows: ZIP portable slozky
+          - Linux: tar.gz portable slozky
+          - macOS: ZIP s `.app` bundle
+          EOF
+
+          gh release create "$tag" release-artifacts/* \
+            --title "$name" \
+            --draft \
+            --generate-notes \
+            --notes-file "$notes_file"
 
   update-manifests:
     if: needs.metadata.outputs.should_release == 'true'
@@ -231,12 +242,12 @@ jobs:
       - release
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0
       - name: Download packaged artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: release-artifacts
           pattern: vehimap-desktop-preview-*
