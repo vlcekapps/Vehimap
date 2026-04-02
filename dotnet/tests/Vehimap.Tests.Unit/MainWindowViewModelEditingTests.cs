@@ -2,6 +2,7 @@ using Vehimap.Application.Abstractions;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
 using Xunit;
@@ -67,13 +68,92 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         var savedRecord = Assert.Single(dataStore.CurrentDataSet.Records);
         Assert.Equal("Kooperativa 2026", savedRecord.Title);
-        Assert.Equal(Domain.Enums.VehicleRecordAttachmentMode.Managed, savedRecord.AttachmentMode);
+        Assert.Equal(VehicleRecordAttachmentMode.Managed, savedRecord.AttachmentMode);
         Assert.StartsWith("attachments/veh_1/", savedRecord.FilePath, StringComparison.Ordinal);
 
         var importedPath = Path.Combine(dataRoot.DataPath, savedRecord.FilePath.Replace('/', Path.DirectorySeparatorChar));
         Assert.True(File.Exists(importedPath));
         Assert.Equal("Nový doklad byl uložen.", viewModel.RecordEditorStatus);
         Assert.Equal("Spravovaná kopie", viewModel.SelectedRecord?.AttachmentMode);
+    }
+
+    [Fact]
+    public async Task Save_history_command_adds_new_history_entry_and_restores_selection()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateHistoryCommand.Execute(null);
+        viewModel.HistoryEditorDate = "15.10.2026";
+        viewModel.HistoryEditorType = "Servis";
+        viewModel.HistoryEditorOdometer = "123456";
+        viewModel.HistoryEditorCost = "2500";
+        viewModel.HistoryEditorNote = "Vyměněný olej a filtry";
+
+        await viewModel.SaveHistoryCommand.ExecuteAsync(null);
+
+        Assert.NotNull(viewModel.SelectedHistory);
+        Assert.Equal("Servis", viewModel.SelectedHistory!.EventType);
+        Assert.Contains(dataStore.CurrentDataSet.HistoryEntries, item => item.EventType == "Servis" && item.VehicleId == "veh_1");
+        Assert.Equal("Nový historický záznam byl uložen.", viewModel.HistoryEditorStatus);
+    }
+
+    [Fact]
+    public async Task Save_fuel_command_adds_new_fuel_entry_and_restores_selection()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateFuelCommand.Execute(null);
+        viewModel.FuelEditorDate = "20.10.2026";
+        viewModel.FuelEditorFuelType = "Natural 95";
+        viewModel.FuelEditorLiters = "38.5";
+        viewModel.FuelEditorTotalCost = "1890";
+        viewModel.FuelEditorOdometer = "123789";
+        viewModel.FuelEditorFullTank = false;
+        viewModel.FuelEditorNote = "Dálnice";
+
+        await viewModel.SaveFuelCommand.ExecuteAsync(null);
+
+        Assert.NotNull(viewModel.SelectedFuel);
+        Assert.Equal("Natural 95", viewModel.SelectedFuel!.FuelType);
+        Assert.Contains(dataStore.CurrentDataSet.FuelEntries, item => item.FuelType == "Natural 95" && item.VehicleId == "veh_1");
+        Assert.Equal("Nové tankování bylo uloženo.", viewModel.FuelEditorStatus);
+    }
+
+    [Fact]
+    public async Task Save_maintenance_command_adds_new_plan_and_restores_selection()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateMaintenanceCommand.Execute(null);
+        viewModel.MaintenanceEditorTitle = "Motorový olej";
+        viewModel.MaintenanceEditorIntervalKm = "15000";
+        viewModel.MaintenanceEditorIntervalMonths = "12";
+        viewModel.MaintenanceEditorLastServiceDate = "01.04.2026";
+        viewModel.MaintenanceEditorLastServiceOdometer = "120000";
+        viewModel.MaintenanceEditorIsActive = true;
+        viewModel.MaintenanceEditorNote = "Každoroční servis";
+
+        await viewModel.SaveMaintenanceCommand.ExecuteAsync(null);
+
+        Assert.NotNull(viewModel.SelectedMaintenance);
+        Assert.Equal("Motorový olej", viewModel.SelectedMaintenance!.Title);
+        Assert.Contains(dataStore.CurrentDataSet.MaintenancePlans, item => item.Title == "Motorový olej" && item.VehicleId == "veh_1");
+        Assert.Equal("Nový servisní plán byl uložen.", viewModel.MaintenanceEditorStatus);
     }
 
     public void Dispose()

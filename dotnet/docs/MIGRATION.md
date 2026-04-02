@@ -33,12 +33,13 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - globalni hledani napric vozidly a hlavnimi evidencemi s otevrenim na spravnou kartu a polozku
 - prvni keyboard-first vrstvu shellu s focus managementem, shortcuty a enter-akcemi na hlavnich seznamech
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
-- prvni editacni workflow pro pripominky a doklady, vcetne importu spravovanych priloh
+- editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh
+- vlastni focusovatelnou listu hlavnim karet, aby shell sel rozumne obsluhovat i se cteckami obrazovky
 - zaklad release workflow pro GitHub Actions
 
 ## Co je dalsi na rade
 
 1. Dopsat realne UI testy pres Appium a prvni smoke pro screen readery na Windows
 2. Rozsirit accessibility metadata a focus chovani z hlavniho shellu i do dalsich budoucich dialogu
-3. Portovat dalsi editacni workflow, hlavne historii, tankovani a plan udrzby
-4. Dodelat settings, help/about a update check v desktop shellu
+3. Dodelat settings, help/about a update check v desktop shellu
+4. Rozdelit hlavni shell na mensi dialogy nebo routed stranky, aby dalsi a11y a testy uz nevisely na jednom obrim okne

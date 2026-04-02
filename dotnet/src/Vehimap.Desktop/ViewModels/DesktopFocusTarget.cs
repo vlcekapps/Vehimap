@@ -4,10 +4,13 @@ public enum DesktopFocusTarget
 {
     VehicleList,
     HistoryList,
+    HistoryEditorDate,
     FuelList,
+    FuelEditorDate,
     ReminderList,
     ReminderEditorTitle,
     MaintenanceList,
+    MaintenanceEditorTitle,
     TimelineSearch,
     TimelineList,
     GlobalSearchBox,

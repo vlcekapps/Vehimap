@@ -122,6 +122,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string recordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
+    private string selectedHistoryDetail = "Vyberte historický záznam a zobrazí se detail položky.";
+
+    [ObservableProperty]
     private string selectedFuelDetail = "Vyberte tankování a zobrazí se detail položky.";
 
     [ObservableProperty]
@@ -373,6 +376,19 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedFuelDetail = value is null
             ? "Vyberte tankování a zobrazí se detail položky."
             : $"Datum: {value.Date}\nPalivo: {value.FuelType}\nMnožství: {value.Liters}\nCena celkem: {value.TotalCost}\nTachometr: {value.Odometer}\nStav nádrže: {value.TankState}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
+
+        EditSelectedFuelCommand.NotifyCanExecuteChanged();
+        DeleteSelectedFuelCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnSelectedHistoryChanged(VehicleHistoryItemViewModel? value)
+    {
+        SelectedHistoryDetail = value is null
+            ? "Vyberte historický záznam a zobrazí se detail položky."
+            : $"Datum: {value.Date}\nTyp události: {value.EventType}\nTachometr: {value.Odometer}\nCena: {value.Cost}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
+
+        EditSelectedHistoryCommand.NotifyCanExecuteChanged();
+        DeleteSelectedHistoryCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnSelectedReminderChanged(VehicleReminderItemViewModel? value)
@@ -390,6 +406,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedMaintenanceDetail = value is null
             ? "Vyberte servisní úkon a zobrazí se detail položky."
             : $"Úkon: {value.Title}\nInterval: {value.Interval}\nPoslední servis: {value.LastService}\nStav: {value.Status}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
+
+        EditSelectedMaintenanceCommand.NotifyCanExecuteChanged();
+        DeleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnSelectedTimelineItemChanged(VehicleTimelineItemViewModel? value)
@@ -725,6 +744,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
             : $"Vybrané vozidlo má {SelectedVehicleHistory.Count} historických záznamů.";
 
         SelectedHistory = SelectedVehicleHistory.FirstOrDefault();
+        if (SelectedHistory is null)
+        {
+            OnSelectedHistoryChanged(null);
+        }
     }
 
     private void PopulateVehicleFuel(string vehicleId)

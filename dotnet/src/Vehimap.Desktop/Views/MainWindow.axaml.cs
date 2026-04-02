@@ -118,10 +118,13 @@ public partial class MainWindow : Window
         RegisterForwardTabToHeaders("VehicleListBox");
         RegisterTabHeaderNavigation();
         RegisterShiftTabBackNavigation("HistoryListBox");
+        RegisterShiftTabBackNavigation("HistoryEditorDateBox");
         RegisterShiftTabBackNavigation("FuelListBox");
+        RegisterShiftTabBackNavigation("FuelEditorDateBox");
         RegisterShiftTabBackNavigation("ReminderListBox");
         RegisterShiftTabBackNavigation("ReminderEditorTitleBox");
         RegisterShiftTabBackNavigation("MaintenanceListBox");
+        RegisterShiftTabBackNavigation("MaintenanceEditorTitleBox");
         RegisterShiftTabBackNavigation("TimelineFilterComboBox");
         RegisterShiftTabBackNavigation("TimelineSearchBox");
         RegisterShiftTabBackNavigation("TimelineOpenButton");
@@ -288,10 +291,13 @@ public partial class MainWindow : Window
         {
             DesktopFocusTarget.VehicleList => this.FindControl<ListBox>("VehicleListBox"),
             DesktopFocusTarget.HistoryList => this.FindControl<ListBox>("HistoryListBox"),
+            DesktopFocusTarget.HistoryEditorDate => this.FindControl<TextBox>("HistoryEditorDateBox"),
             DesktopFocusTarget.FuelList => this.FindControl<ListBox>("FuelListBox"),
+            DesktopFocusTarget.FuelEditorDate => this.FindControl<TextBox>("FuelEditorDateBox"),
             DesktopFocusTarget.ReminderList => this.FindControl<ListBox>("ReminderListBox"),
             DesktopFocusTarget.ReminderEditorTitle => this.FindControl<TextBox>("ReminderEditorTitleBox"),
             DesktopFocusTarget.MaintenanceList => this.FindControl<ListBox>("MaintenanceListBox"),
+            DesktopFocusTarget.MaintenanceEditorTitle => this.FindControl<TextBox>("MaintenanceEditorTitleBox"),
             DesktopFocusTarget.TimelineSearch => this.FindControl<TextBox>("TimelineSearchBox"),
             DesktopFocusTarget.TimelineList => this.FindControl<ListBox>("TimelineListBox"),
             DesktopFocusTarget.GlobalSearchBox => this.FindControl<TextBox>("GlobalSearchTextBox"),

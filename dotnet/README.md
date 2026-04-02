@@ -35,6 +35,10 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - ovladat shell vice klavesnici: `Ctrl+R` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+F` pro fokus do hledani v casove ose, `Ctrl+Shift+F` pro globalni hledani a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech, dashboardu i ve vysledcich hledani
 - primo vytvaret, upravovat a mazat `pripominky`
 - primo vytvaret, upravovat a mazat `doklady`, vcetne volby `Spravovana kopie` vs `Externi cesta` a importu souboru do spravovanych priloh
+- primo vytvaret, upravovat a mazat `historii`
+- primo vytvaret, upravovat a mazat `tankovani`
+- primo vytvaret, upravovat a mazat `plan udrzby`
+- drzet keyboard-first a11y i v hlavnim shellu, vcetne vlastni focusovatelne listy karet a konzistentniho focusu pro ctecky obrazovky
 
 ## Lokalni build
 

@@ -171,9 +171,15 @@ public sealed partial class MainWindowViewModel
 
     internal void HandleVehicleSelectionChanged()
     {
+        CancelHistoryEditCore(clearStatus: true);
+        CancelFuelEditCore(clearStatus: true);
         CancelReminderEditCore(clearStatus: true);
+        CancelMaintenanceEditCore(clearStatus: true);
         CancelRecordEditCore(clearStatus: true);
+        CreateHistoryCommand.NotifyCanExecuteChanged();
+        CreateFuelCommand.NotifyCanExecuteChanged();
         CreateReminderCommand.NotifyCanExecuteChanged();
+        CreateMaintenanceCommand.NotifyCanExecuteChanged();
         CreateRecordCommand.NotifyCanExecuteChanged();
     }
 
@@ -245,11 +251,12 @@ public sealed partial class MainWindowViewModel
             (ReminderEditorNote ?? string.Empty).Trim());
 
         UpsertReminder(updatedReminder);
+        var wasNew = _editingReminderId is null;
 
         await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, ReminderTabIndex, reminderId: reminderId);
 
         CancelReminderEditCore(clearStatus: false);
-        ReminderEditorStatus = _editingReminderId is null
+        ReminderEditorStatus = wasNew
             ? "Nová připomínka byla uložena."
             : "Připomínka byla upravena.";
         SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, reminderId);
@@ -493,7 +500,14 @@ public sealed partial class MainWindowViewModel
         }
     }
 
-    private async Task PersistDataAndRestoreSelectionAsync(string vehicleId, int tabIndex, string? reminderId = null, string? recordId = null)
+    private async Task PersistDataAndRestoreSelectionAsync(
+        string vehicleId,
+        int tabIndex,
+        string? historyId = null,
+        string? fuelId = null,
+        string? reminderId = null,
+        string? maintenanceId = null,
+        string? recordId = null)
     {
         if (_dataRoot is null)
         {
@@ -515,6 +529,21 @@ public sealed partial class MainWindowViewModel
         {
             PopulateVehicleReminders(vehicleId);
             SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, reminderId ?? string.Empty);
+        }
+        else if (tabIndex == HistoryTabIndex)
+        {
+            PopulateVehicleHistory(vehicleId);
+            SelectedHistory = FindById(SelectedVehicleHistory, item => item.Id, historyId ?? string.Empty);
+        }
+        else if (tabIndex == FuelTabIndex)
+        {
+            PopulateVehicleFuel(vehicleId);
+            SelectedFuel = FindById(SelectedVehicleFuel, item => item.Id, fuelId ?? string.Empty);
+        }
+        else if (tabIndex == MaintenanceTabIndex)
+        {
+            PopulateVehicleMaintenance(vehicleId);
+            SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, maintenanceId ?? string.Empty);
         }
         else if (tabIndex == RecordTabIndex)
         {
