@@ -5,14 +5,49 @@ on:
     paths:
       - "dotnet/**"
       - ".github/workflows/dotnet-desktop.yml"
+    tags:
+      - "dotnet-preview-v*"
   pull_request:
     paths:
       - "dotnet/**"
       - ".github/workflows/dotnet-desktop.yml"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      release_tag: ${{ steps.version.outputs.release_tag }}
+      release_name: ${{ steps.version.outputs.release_name }}
+      should_release: ${{ steps.version.outputs.should_release }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: version
+        shell: bash
+        run: |
+          version="$(tr -d '\r\n' < src/VERSION)"
+          release_tag="dotnet-preview-v${version}"
+          release_name="Vehimap Desktop Preview ${version}"
+          should_release="false"
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            if [[ "${GITHUB_REF_NAME}" != "${release_tag}" ]]; then
+              echo "Tag ${GITHUB_REF_NAME} neodpovídá očekávané verzi ${release_tag}." >&2
+              exit 1
+            fi
+            should_release="true"
+          fi
+
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "release_tag=${release_tag}" >> "$GITHUB_OUTPUT"
+          echo "release_name=${release_name}" >> "$GITHUB_OUTPUT"
+          echo "should_release=${should_release}" >> "$GITHUB_OUTPUT"
+
   test:
+    needs: metadata
     runs-on: windows-latest
     defaults:
       run:
@@ -24,11 +59,15 @@ jobs:
           dotnet-version: "10.0.x"
       - name: Restore
         run: dotnet restore Vehimap.sln
+      - name: Build
+        run: dotnet build Vehimap.sln --no-restore --configuration Release -p:UseSharedCompilation=false
       - name: Test
-        run: dotnet test Vehimap.sln --no-restore --configuration Release
+        run: dotnet test Vehimap.sln --no-build --configuration Release -p:UseSharedCompilation=false
 
   publish:
-    needs: test
+    needs:
+      - metadata
+      - test
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -36,16 +75,16 @@ jobs:
         include:
           - os: windows-latest
             rid: win-x64
-            artifact: vehimap-desktop-win-x64
+            artifact: vehimap-desktop-preview-win-x64
           - os: ubuntu-latest
             rid: linux-x64
-            artifact: vehimap-desktop-linux-x64
+            artifact: vehimap-desktop-preview-linux-x64
           - os: macos-13
             rid: osx-x64
-            artifact: vehimap-desktop-osx-x64
+            artifact: vehimap-desktop-preview-osx-x64
           - os: macos-14
             rid: osx-arm64
-            artifact: vehimap-desktop-osx-arm64
+            artifact: vehimap-desktop-preview-osx-arm64
     defaults:
       run:
         working-directory: dotnet
@@ -55,11 +94,47 @@ jobs:
         with:
           dotnet-version: "10.0.x"
       - name: Publish desktop shell
-        run: dotnet publish src/Vehimap.Desktop/Vehimap.Desktop.csproj -c Release -r ${{ matrix.rid }} --self-contained true -o artifacts/${{ matrix.rid }}/desktop
-      - name: Publish updater
-        run: dotnet publish src/Vehimap.Updater/Vehimap.Updater.csproj -c Release -r ${{ matrix.rid }} --self-contained true -o artifacts/${{ matrix.rid }}/updater
-      - name: Upload artifact
+        run: dotnet publish src/Vehimap.Desktop/Vehimap.Desktop.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:UseSharedCompilation=false -o artifacts/${{ matrix.rid }}/desktop
+      - name: Package release artifact
+        shell: pwsh
+        run: >
+          ./build/Package-DesktopRelease.ps1
+          -PublishDirectory "artifacts/${{ matrix.rid }}/desktop"
+          -RuntimeIdentifier "${{ matrix.rid }}"
+          -Version "${{ needs.metadata.outputs.version }}"
+          -OutputDirectory "artifacts/${{ matrix.rid }}/release"
+      - name: Upload packaged artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: dotnet/artifacts/${{ matrix.rid }}
+          path: dotnet/artifacts/${{ matrix.rid }}/release/*
+
+  release:
+    if: needs.metadata.outputs.should_release == 'true'
+    needs:
+      - metadata
+      - publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download packaged artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          pattern: vehimap-desktop-preview-*
+          merge-multiple: true
+      - name: Publish draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.metadata.outputs.release_tag }}
+          name: ${{ needs.metadata.outputs.release_name }}
+          draft: true
+          generate_release_notes: true
+          body: |
+            Desktop preview build pro .NET/Avalonia větev Vehimapu.
+
+            Artefakty:
+            - Windows: ZIP portable složky
+            - Linux: tar.gz portable složky
+            - macOS: ZIP s `.app` bundle
+          files: |
+            release-artifacts/*

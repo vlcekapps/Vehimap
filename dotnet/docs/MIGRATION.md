@@ -30,25 +30,25 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - manualni ICS export budouciho kalendare z nove C# vetve
 - akcni casovou osu, ktera umi otevrit souvisejici historii, doklad, pripominku nebo plan udrzby na spravne karte shellu
 - prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
-- globalni hledani napric vozidly a hlavnimi evidencemi s otevrenim na spravnou kartu a polozku
+- globalni hledani napric vozidly a hlavnim evidencemi s otevrenim na spravnou kartu a polozku
 - flotilovy `Prehled terminu` a `Propadle terminy`, ktere umi otevrit spravne vozidlo nebo souvisejici evidenci
-- prvni keyboard-first vrstvu shellu s focus managementem, shortcuty a enter-akcemi na hlavnich seznamech
+- keyboard-first vrstvu shellu s focus managementem, shortcuty a enter-akcemi na hlavnich seznamech
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh
 - editacni workflow pro zakladni udaje vozidla, vcetne stavu vozidla a pohonu pro servisni profil
-- prvni samostatna desktopova okna pro `Historii`, `Tankovani`, `Připomínky`, `Údržbu` a `Doklady`, ktera uz znovu pouzivaji stejnou business logiku jako hlavni shell
-- dalsi samostatna desktopova okna pro `Detail vozidla`, `Audit` a `Dashboard`, aby se hlavni shell dal postupne ztenčovat bez prepisu use-casu
-- vlastni focusovatelnou listu hlavnim karet, aby shell sel rozumne obsluhovat i se cteckami obrazovky
+- samostatna desktopova okna pro `Historii`, `Tankovani`, `Pripominky`, `Udrzbu`, `Doklady`, `Detail vozidla`, `Audit` a `Dashboard`
 - app-level dialogy `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`
-- typed vrstvu nad podporovanymi hodnotami ze `settings.ini`, ktera uz umi menit reminder thresholdy a `show_dashboard_on_launch`
+- typed vrstvu nad podporovanymi hodnotami ze `settings.ini`, ktera umi menit reminder thresholdy a `show_dashboard_on_launch`
 - centralizovane build info z root `src/VERSION`, ktere desktop vetvi dava stejnou semver a file version jako AHK release tok
 - kompatibilni parser `update/latest.ini` a Windows pripravu automaticke instalace pres `Vehimap.Updater`
 - modalni workflow pro `Export dat` a `Obnovit data`, ktere pouziva stejny `.vehimapbak` format jako AHK verze
-- zaklad release workflow pro GitHub Actions
+- Appium harness a zivy Windows UI smoke nad publish buildem
+- multiplatformni publish matrix pro `.NET` desktop preview
+- draft release workflow pro tagy `dotnet-preview-v<verze>` s verzovanymi balicky a checksumy
 
 ## Co je dalsi na rade
 
-1. Dopsat realne UI testy pres Appium a prvni smoke pro screen readery na Windows
+1. Dopsat dalsi Appium smoke pro release buildy a zaclenit je do CI, az bude pripraveny runner s Appium serverem
 2. Rozsirit accessibility metadata a focus chovani z hlavniho shellu i do dalsich budoucich dialogu
 3. Portovat zbytek aplikacovych toku, ktere jeste v .NET vetvi chybi proti AHK verzi
-4. Vyseknout dalsi evidence z hlavniho shellu do mensich desktopovych oken nebo routed stranek a postupne ztenčit jedno velké preview okno
+4. Rozhodnout, kdy se `.NET` preview release tok napoji i na skutecny update manifest misto dnesni AHK-only distribuce

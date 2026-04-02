@@ -48,6 +48,8 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - reportovat stejnou verzi jako root `src/VERSION`, vcetne file version pro desktop buildy
 - kontrolovat `update/latest.ini` kompatibilne s AHK vetvi a na Windows pripravit automatickou instalaci pres `Vehimap.Updater`
 - otevrit modalni export a obnovu dat a pracovat se stejnym `.vehimapbak` formatem jako AHK vetev
+- generovat verzovane release balicky pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`
+- pripravit draft release pro `.NET` preview tag `dotnet-preview-v<verze>` pres GitHub Actions
 
 ## Lokalni build
 
@@ -58,3 +60,25 @@ dotnet test
 dotnet build
 dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -o .\artifacts\desktop-preview
 ```
+
+## Release balicky
+
+Lokalni packaging publish vystupu:
+
+```powershell
+cd dotnet
+dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -o .\artifacts\win-x64\desktop
+.\build\Package-DesktopRelease.ps1 -PublishDirectory .\artifacts\win-x64\desktop -RuntimeIdentifier win-x64 -Version (Get-Content ..\src\VERSION).Trim() -OutputDirectory .\artifacts\win-x64\release
+```
+
+CI workflow `.github/workflows/dotnet-desktop.yml` umi:
+
+- otestovat `.NET` vetev na Windows
+- publikovat self-contained desktop buildy pro Windows, Linux a macOS
+- zabalit je do verzovanych artefaktu:
+  - `vehimap-desktop-preview-<verze>-win-x64.zip`
+  - `vehimap-desktop-preview-<verze>-linux-x64.tar.gz`
+  - `vehimap-desktop-preview-<verze>-osx-x64.zip`
+  - `vehimap-desktop-preview-<verze>-osx-arm64.zip`
+- pridat ke kazdemu balicku `.sha256` a `.json` metadata
+- pri pushi tagu `dotnet-preview-v<verze>` vytvorit draft GitHub release
