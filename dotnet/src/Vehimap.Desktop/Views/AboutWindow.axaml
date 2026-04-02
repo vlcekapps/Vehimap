@@ -50,11 +50,14 @@
               MinWidth="170"
               Click="OnReleaseNotesClick"
               Content="Release poznámky"
-              AutomationProperties.Name="Otevřít release poznámky" />
-      <Button MinWidth="110"
+              AutomationProperties.Name="Otevřít release poznámky"
+              AutomationProperties.AutomationId="ReleaseNotesButton" />
+      <Button x:Name="CloseAboutButton"
+              MinWidth="110"
               Click="OnCloseClick"
               Content="Zavřít"
-              AutomationProperties.Name="Zavřít dialog O programu" />
+              AutomationProperties.Name="Zavřít dialog O programu"
+              AutomationProperties.AutomationId="CloseAboutButton" />
     </StackPanel>
   </Grid>
 </Window>

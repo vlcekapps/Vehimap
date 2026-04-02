@@ -140,6 +140,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults { get; } = [];
 
+    internal DesktopAppShellController AppShellController { get; }
+
     public bool CanOpenReminderWindow => SelectedVehicle is not null;
 
     public bool CanOpenRecordWindow => SelectedVehicle is not null;
@@ -229,7 +231,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new AssemblyAppBuildInfoProvider(),
             null,
             new DesktopProjectionService(),
-            new DesktopNavigationCoordinator())
+            new DesktopNavigationCoordinator(),
+            new AvaloniaAppShellDialogService(),
+            new ProcessUpdateInstallLauncher())
     {
     }
 
@@ -249,7 +253,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IAppBuildInfoProvider? appBuildInfoProvider = null,
         IUpdateService? updateService = null,
         DesktopProjectionService? projectionService = null,
-        DesktopNavigationCoordinator? navigationCoordinator = null)
+        DesktopNavigationCoordinator? navigationCoordinator = null,
+        IAppShellDialogService? appShellDialogService = null,
+        IUpdateInstallLauncher? updateInstallLauncher = null)
     {
         var sessionBackupService = backupService ?? new LegacyBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
@@ -275,6 +281,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
         _projectionService = projectionService ?? new DesktopProjectionService();
         _navigationCoordinator = navigationCoordinator ?? new DesktopNavigationCoordinator();
+        AppShellController = new DesktopAppShellController(
+            appShellDialogService ?? new AvaloniaAppShellDialogService(),
+            updateInstallLauncher ?? new ProcessUpdateInstallLauncher());
         InitializeWorkspaces();
         Load(applyLaunchTabPreference: true);
     }

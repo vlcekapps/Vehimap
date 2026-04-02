@@ -1,0 +1,53 @@
+using Avalonia.Controls;
+using Vehimap.Application.Models;
+using Vehimap.Desktop.ViewModels;
+using Vehimap.Desktop.Views;
+
+namespace Vehimap.Desktop.Services;
+
+internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
+{
+    public async Task<DesktopSupportedSettingsSnapshot?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot)
+    {
+        var dialog = new SettingsWindow
+        {
+            DataContext = SettingsDialogViewModel.FromSnapshot(snapshot)
+        };
+
+        return await dialog.ShowDialog<DesktopSupportedSettingsSnapshot?>(owner);
+    }
+
+    public async Task<bool> ConfirmBackupImportAsync(Window owner, string backupPath)
+    {
+        var confirmation = new ConfirmationWindow
+        {
+            DataContext = new ConfirmationDialogViewModel(
+                "Obnovit data ze zálohy",
+                $"Opravdu chcete nahradit aktuální načtená data obsahem zálohy?\n\n{backupPath}\n\nTento krok přepíše aktuální pracovní data v desktopové větvi.",
+                "Obnovit data",
+                "Zrušit")
+        };
+
+        return await confirmation.ShowDialog<bool>(owner);
+    }
+
+    public async Task<bool> ShowAboutAsync(Window owner, AboutDialogViewModel model)
+    {
+        var dialog = new AboutWindow
+        {
+            DataContext = model
+        };
+
+        return await dialog.ShowDialog<bool>(owner);
+    }
+
+    public async Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model)
+    {
+        var dialog = new UpdateCheckWindow
+        {
+            DataContext = model
+        };
+
+        return await dialog.ShowDialog<UpdateDialogAction>(owner);
+    }
+}

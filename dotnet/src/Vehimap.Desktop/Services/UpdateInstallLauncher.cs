@@ -3,9 +3,9 @@ using Vehimap.Application.Models;
 
 namespace Vehimap.Desktop.Services;
 
-public static class UpdateInstallLauncher
+internal sealed class ProcessUpdateInstallLauncher : IUpdateInstallLauncher
 {
-    public static void Launch(UpdateInstallPlan plan)
+    public void Launch(UpdateInstallPlan plan)
     {
         var startInfo = new ProcessStartInfo
         {

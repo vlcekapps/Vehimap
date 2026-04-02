@@ -21,22 +21,39 @@
 
     <Grid Grid.Row="2" Margin="0,18,0,0" ColumnDefinitions="260,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
       <TextBlock Grid.Row="0" Text="Upozornění na TK (dny)" VerticalAlignment="Center" />
-      <TextBox x:Name="TechnicalReminderDaysBox" Grid.Row="0" Grid.Column="1" Text="{Binding TechnicalReminderDays}" />
+      <TextBox x:Name="TechnicalReminderDaysBox"
+               Grid.Row="0"
+               Grid.Column="1"
+               Text="{Binding TechnicalReminderDays}"
+               AutomationProperties.AutomationId="TechnicalReminderDaysBox" />
 
       <TextBlock Grid.Row="1" Text="Upozornění na zelenou kartu (dny)" VerticalAlignment="Center" Margin="0,12,0,0" />
-      <TextBox Grid.Row="1" Grid.Column="1" Margin="0,12,0,0" Text="{Binding GreenCardReminderDays}" />
+      <TextBox Grid.Row="1"
+               Grid.Column="1"
+               Margin="0,12,0,0"
+               Text="{Binding GreenCardReminderDays}"
+               AutomationProperties.AutomationId="GreenCardReminderDaysBox" />
 
       <TextBlock Grid.Row="2" Text="Upozornění na údržbu (dny)" VerticalAlignment="Center" Margin="0,12,0,0" />
-      <TextBox Grid.Row="2" Grid.Column="1" Margin="0,12,0,0" Text="{Binding MaintenanceReminderDays}" />
+      <TextBox Grid.Row="2"
+               Grid.Column="1"
+               Margin="0,12,0,0"
+               Text="{Binding MaintenanceReminderDays}"
+               AutomationProperties.AutomationId="MaintenanceReminderDaysBox" />
 
       <TextBlock Grid.Row="3" Text="Upozornění na údržbu (km)" VerticalAlignment="Center" Margin="0,12,0,0" />
-      <TextBox Grid.Row="3" Grid.Column="1" Margin="0,12,0,0" Text="{Binding MaintenanceReminderKm}" />
+      <TextBox Grid.Row="3"
+               Grid.Column="1"
+               Margin="0,12,0,0"
+               Text="{Binding MaintenanceReminderKm}"
+               AutomationProperties.AutomationId="MaintenanceReminderKmBox" />
 
       <CheckBox Grid.Row="4"
                 Grid.ColumnSpan="2"
                 Margin="0,18,0,0"
                 IsChecked="{Binding ShowDashboardOnLaunch}"
-                Content="Po spuštění otevřít Dashboard místo Detailu" />
+                Content="Po spuštění otevřít Dashboard místo Detailu"
+                AutomationProperties.AutomationId="ShowDashboardOnLaunchCheckBox" />
     </Grid>
 
     <Border Grid.Row="6"
@@ -52,14 +69,18 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
                 Spacing="10">
-      <Button MinWidth="110"
+      <Button x:Name="SaveSettingsButton"
+              MinWidth="110"
               Click="OnSaveClick"
               Content="Uložit"
-              AutomationProperties.Name="Uložit nastavení" />
-      <Button MinWidth="110"
+              AutomationProperties.Name="Uložit nastavení"
+              AutomationProperties.AutomationId="SaveSettingsButton" />
+      <Button x:Name="CancelSettingsButton"
+              MinWidth="110"
               Click="OnCancelClick"
               Content="Zrušit"
-              AutomationProperties.Name="Zavřít dialog nastavení" />
+              AutomationProperties.Name="Zavřít dialog nastavení"
+              AutomationProperties.AutomationId="CancelSettingsButton" />
     </StackPanel>
   </Grid>
 </Window>

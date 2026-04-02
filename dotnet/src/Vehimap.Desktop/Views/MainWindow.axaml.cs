@@ -248,18 +248,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var dialog = new SettingsWindow
-        {
-            DataContext = SettingsDialogViewModel.FromSnapshot(_viewModel.GetSupportedSettingsSnapshot())
-        };
-        var result = await dialog.ShowDialog<DesktopSupportedSettingsSnapshot?>(this);
-        if (result is null)
-        {
-            RequestFocus(DesktopFocusTarget.VehicleList);
-            return;
-        }
-
-        await _viewModel.SaveSupportedSettingsAsync(result);
+        await _viewModel.AppShellController.OpenSettingsAsync(this, _viewModel);
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
@@ -270,14 +259,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var backupPath = await _viewModel.PickBackupExportPathAsync();
-        if (string.IsNullOrWhiteSpace(backupPath))
-        {
-            RequestFocus(DesktopFocusTarget.VehicleList);
-            return;
-        }
-
-        await _viewModel.ExportBackupAsync(backupPath);
+        await _viewModel.AppShellController.ExportBackupAsync(this, _viewModel);
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
@@ -288,29 +270,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var backupPath = await _viewModel.PickBackupImportPathAsync();
-        if (string.IsNullOrWhiteSpace(backupPath))
-        {
-            RequestFocus(DesktopFocusTarget.VehicleList);
-            return;
-        }
-
-        var confirmation = new ConfirmationWindow
-        {
-            DataContext = new ConfirmationDialogViewModel(
-                "Obnovit data ze zálohy",
-                $"Opravdu chcete nahradit aktuální načtená data obsahem zálohy?\n\n{backupPath}\n\nTento krok přepíše aktuální pracovní data v desktopové větvi.",
-                "Obnovit data",
-                "Zrušit")
-        };
-        var confirmed = await confirmation.ShowDialog<bool>(this);
-        if (!confirmed)
-        {
-            RequestFocus(DesktopFocusTarget.VehicleList);
-            return;
-        }
-
-        await _viewModel.ImportBackupAsync(backupPath);
+        await _viewModel.AppShellController.ImportBackupAsync(this, _viewModel);
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
@@ -321,16 +281,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var dialog = new AboutWindow
-        {
-            DataContext = _viewModel.BuildAboutDialogModel()
-        };
-        var openReleaseNotes = await dialog.ShowDialog<bool>(this);
-        if (openReleaseNotes && dialog.DataContext is AboutDialogViewModel aboutViewModel)
-        {
-            await _viewModel.OpenExternalAsync(aboutViewModel.ReleaseNotesUrl);
-        }
-
+        await _viewModel.AppShellController.OpenAboutAsync(this, _viewModel);
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
@@ -341,62 +292,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        var result = await _viewModel.CheckForUpdatesAsync();
-        var dialog = new UpdateCheckWindow
+        if (await _viewModel.AppShellController.CheckForUpdatesAsync(this, _viewModel))
         {
-            DataContext = new UpdateDialogViewModel(result)
-        };
-        var action = await dialog.ShowDialog<UpdateDialogAction>(this);
-
-        switch (action)
-        {
-            case UpdateDialogAction.PrimaryAction:
-                if (result.IsUpdateAvailable && result.CanInstallAutomatically)
-                {
-                    var installResult = await _viewModel.PrepareUpdateInstallAsync(result);
-                    if (installResult.IsReady && installResult.InstallPlan is not null)
-                    {
-                        UpdateInstallLauncher.Launch(installResult.InstallPlan);
-                        Close();
-                        return;
-                    }
-
-                    var failureDialog = new UpdateCheckWindow
-                    {
-                        DataContext = new UpdateDialogViewModel(new Vehimap.Application.UpdateCheckResult(
-                            result.CurrentVersion,
-                            result.LatestVersion,
-                            false,
-                            result.PublishedAt,
-                            result.NotesUrl,
-                            result.AssetUrl,
-                            result.Sha256,
-                            result.AssetSize,
-                            false,
-                            installResult.Message,
-                            installResult.Message))
-                    };
-                    await failureDialog.ShowDialog<UpdateDialogAction>(this);
-                }
-                else if (!string.IsNullOrWhiteSpace(result.NotesUrl))
-                {
-                    await _viewModel.OpenExternalAsync(result.NotesUrl);
-                }
-                else if (!string.IsNullOrWhiteSpace(result.AssetUrl))
-                {
-                    await _viewModel.OpenExternalAsync(result.AssetUrl);
-                }
-
-                break;
-            case UpdateDialogAction.OpenAsset:
-                if (!string.IsNullOrWhiteSpace(result.AssetUrl))
-                {
-                    await _viewModel.OpenExternalAsync(result.AssetUrl);
-                }
-
-                break;
+            Close();
+            return;
         }
-
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 

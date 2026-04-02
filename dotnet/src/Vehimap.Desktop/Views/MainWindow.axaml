@@ -35,40 +35,54 @@
                   HorizontalAlignment="Right"
                   VerticalAlignment="Center">
         <Button Width="135"
+                x:Name="BackupExportButton"
                 Height="34"
                 Click="OnBackupExportClick"
                 Content="Export dat"
-                AutomationProperties.Name="Exportovat data aplikace do zálohy" />
+                AutomationProperties.Name="Exportovat data aplikace do zálohy"
+                AutomationProperties.AutomationId="BackupExportButton" />
         <Button Width="135"
+                x:Name="BackupImportButton"
                 Height="34"
                 Click="OnBackupImportClick"
                 Content="Obnovit data"
-                AutomationProperties.Name="Obnovit data aplikace ze zálohy" />
+                AutomationProperties.Name="Obnovit data aplikace ze zálohy"
+                AutomationProperties.AutomationId="BackupImportButton" />
         <Button Width="110"
+                x:Name="SettingsButton"
                 Height="34"
                 Click="OnSettingsClick"
                 Content="Nastavení"
-                AutomationProperties.Name="Otevřít nastavení aplikace" />
+                AutomationProperties.Name="Otevřít nastavení aplikace"
+                AutomationProperties.AutomationId="SettingsButton" />
         <Button Width="120"
+                x:Name="AboutButton"
                 Height="34"
                 Click="OnAboutClick"
                 Content="O programu"
-                AutomationProperties.Name="Otevřít dialog O programu" />
+                AutomationProperties.Name="Otevřít dialog O programu"
+                AutomationProperties.AutomationId="AboutButton" />
         <Button Width="140"
+                x:Name="UpdateCheckButton"
                 Height="34"
                 Click="OnUpdateCheckClick"
                 Content="Aktualizace"
-                AutomationProperties.Name="Zkontrolovat aktualizace aplikace" />
+                AutomationProperties.Name="Zkontrolovat aktualizace aplikace"
+                AutomationProperties.AutomationId="UpdateCheckButton" />
         <Button Width="150"
+                x:Name="CalendarExportButton"
                 Height="34"
                 Command="{Binding ExportCalendarCommand}"
                 Content="Exportovat .ics"
-                AutomationProperties.Name="Exportovat budoucí termíny do kalendáře" />
+                AutomationProperties.Name="Exportovat budoucí termíny do kalendáře"
+                AutomationProperties.AutomationId="CalendarExportButton" />
         <Button Width="120"
+                x:Name="ReloadButton"
                 Height="34"
                 Command="{Binding ReloadCommand}"
                 Content="Načíst znovu"
-                AutomationProperties.Name="Znovu načíst legacy data" />
+                AutomationProperties.Name="Znovu načíst legacy data"
+                AutomationProperties.AutomationId="ReloadButton" />
       </StackPanel>
     </Grid>
 
@@ -143,6 +157,7 @@
                    ItemsSource="{Binding Vehicles}"
                    SelectedItem="{Binding SelectedVehicle}"
                    AutomationProperties.Name="Seznam načtených vozidel"
+                   AutomationProperties.AutomationId="VehicleListBox"
                    AutomationProperties.HelpText="Šipkami vyberte vozidlo. Detail a související evidence se zobrazí vpravo.">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:VehicleListItemViewModel">
@@ -182,7 +197,8 @@
                       Tag="0"
                       Click="OnTabHeaderClick"
                       Content="Detail"
-                      AutomationProperties.Name="Karta Detail" />
+                      AutomationProperties.Name="Karta Detail"
+                      AutomationProperties.AutomationId="DetailTabButton" />
               <RadioButton x:Name="HistoryTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -191,7 +207,8 @@
                       Tag="1"
                       Click="OnTabHeaderClick"
                       Content="Historie"
-                      AutomationProperties.Name="Karta Historie" />
+                      AutomationProperties.Name="Karta Historie"
+                      AutomationProperties.AutomationId="HistoryTabButton" />
               <RadioButton x:Name="FuelTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -200,7 +217,8 @@
                       Tag="2"
                       Click="OnTabHeaderClick"
                       Content="Tankování"
-                      AutomationProperties.Name="Karta Tankování" />
+                      AutomationProperties.Name="Karta Tankování"
+                      AutomationProperties.AutomationId="FuelTabButton" />
               <RadioButton x:Name="ReminderTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -209,7 +227,8 @@
                       Tag="3"
                       Click="OnTabHeaderClick"
                       Content="Připomínky"
-                      AutomationProperties.Name="Karta Připomínky" />
+                      AutomationProperties.Name="Karta Připomínky"
+                      AutomationProperties.AutomationId="ReminderTabButton" />
               <RadioButton x:Name="MaintenanceTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -218,7 +237,8 @@
                       Tag="4"
                       Click="OnTabHeaderClick"
                       Content="Údržba"
-                      AutomationProperties.Name="Karta Údržba" />
+                      AutomationProperties.Name="Karta Údržba"
+                      AutomationProperties.AutomationId="MaintenanceTabButton" />
               <RadioButton x:Name="TimelineTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -227,7 +247,8 @@
                       Tag="5"
                       Click="OnTabHeaderClick"
                       Content="Časová osa"
-                      AutomationProperties.Name="Karta Časová osa" />
+                      AutomationProperties.Name="Karta Časová osa"
+                      AutomationProperties.AutomationId="TimelineTabButton" />
               <RadioButton x:Name="RecordTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -236,7 +257,8 @@
                       Tag="6"
                       Click="OnTabHeaderClick"
                       Content="Doklady"
-                      AutomationProperties.Name="Karta Doklady" />
+                      AutomationProperties.Name="Karta Doklady"
+                      AutomationProperties.AutomationId="RecordTabButton" />
               <RadioButton x:Name="AuditTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -245,7 +267,8 @@
                       Tag="7"
                       Click="OnTabHeaderClick"
                       Content="Audit"
-                      AutomationProperties.Name="Karta Audit" />
+                      AutomationProperties.Name="Karta Audit"
+                      AutomationProperties.AutomationId="AuditTabButton" />
               <RadioButton x:Name="CostTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -254,7 +277,8 @@
                       Tag="8"
                       Click="OnTabHeaderClick"
                       Content="Náklady"
-                      AutomationProperties.Name="Karta Náklady" />
+                      AutomationProperties.Name="Karta Náklady"
+                      AutomationProperties.AutomationId="CostTabButton" />
               <RadioButton x:Name="DashboardTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -263,7 +287,8 @@
                       Tag="9"
                       Click="OnTabHeaderClick"
                       Content="Dashboard"
-                      AutomationProperties.Name="Karta Dashboard" />
+                      AutomationProperties.Name="Karta Dashboard"
+                      AutomationProperties.AutomationId="DashboardTabButton" />
               <RadioButton x:Name="SearchTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -272,7 +297,8 @@
                       Tag="10"
                       Click="OnTabHeaderClick"
                       Content="Hledání"
-                      AutomationProperties.Name="Karta Hledání" />
+                      AutomationProperties.Name="Karta Hledání"
+                      AutomationProperties.AutomationId="SearchTabButton" />
               <RadioButton x:Name="UpcomingOverviewTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -281,7 +307,8 @@
                       Tag="11"
                       Click="OnTabHeaderClick"
                       Content="Termíny"
-                      AutomationProperties.Name="Karta Termíny" />
+                      AutomationProperties.Name="Karta Termíny"
+                      AutomationProperties.AutomationId="UpcomingOverviewTabButton" />
               <RadioButton x:Name="OverdueOverviewTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -290,7 +317,8 @@
                       Tag="12"
                       Click="OnTabHeaderClick"
                       Content="Propadlé"
-                      AutomationProperties.Name="Karta Propadlé termíny" />
+                      AutomationProperties.Name="Karta Propadlé termíny"
+                      AutomationProperties.AutomationId="OverdueOverviewTabButton" />
             </WrapPanel>
           </Grid>
 

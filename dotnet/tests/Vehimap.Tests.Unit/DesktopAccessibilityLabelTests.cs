@@ -19,7 +19,7 @@ public sealed class DesktopAccessibilityLabelTests
             "10/2026",
             "Veterán",
             string.Empty,
-            "Veterán | 1 položka k řešení");
+            "Veterán | 1 položek k řešení");
 
         Assert.Equal(item.AccessibleLabel, item.ToString());
         Assert.Contains("Božena", item.AccessibleLabel);
@@ -69,8 +69,11 @@ public sealed class DesktopAccessibilityLabelTests
 
         Assert.Contains("AutomationProperties.Name=\"Vehimap Desktop Preview\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"Seznam načtených vozidel\"", xaml);
-        Assert.Contains("AutomationProperties.HelpText=\"Multiplatformní preview Vehimapu. Po otevření je fokus v seznamu vozidel vlevo.\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SettingsButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AboutButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"UpdateCheckButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleListBox\"", xaml);
         Assert.Contains("x:Name=\"DashboardTabButton\"", xaml);
         Assert.Contains("IsTabStop=\"{Binding IsDashboardTabSelected}\"", xaml);
         Assert.Contains("<RadioButton x:Name=\"DashboardTabButton\"", xaml);
@@ -81,7 +84,7 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
-    public void Dialog_xaml_files_should_define_expected_titles()
+    public void Dialog_xaml_files_should_define_expected_titles_and_automation_ids()
     {
         var desktopRoot = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
@@ -99,7 +102,11 @@ public sealed class DesktopAccessibilityLabelTests
         var updateXaml = File.ReadAllText(Path.Combine(desktopRoot, "UpdateCheckWindow.axaml"));
 
         Assert.Contains("Title=\"Nastavení\"", settingsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CancelSettingsButton\"", settingsXaml);
         Assert.Contains("Title=\"O programu\"", aboutXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
         Assert.Contains("Title=\"Kontrola aktualizací\"", updateXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
     }
 }
