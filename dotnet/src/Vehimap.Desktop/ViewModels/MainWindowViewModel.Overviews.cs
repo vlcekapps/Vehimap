@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
 
@@ -7,36 +6,6 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    [ObservableProperty]
-    private string upcomingOverviewSearchText = string.Empty;
-
-    [ObservableProperty]
-    private string overdueOverviewSearchText = string.Empty;
-
-    [ObservableProperty]
-    private string selectedUpcomingOverviewFilter = "Vše";
-
-    [ObservableProperty]
-    private string selectedOverdueOverviewFilter = "Vše";
-
-    [ObservableProperty]
-    private string upcomingOverviewSummary = "Blížící se termíny napříč vozidly se zobrazí po načtení dat.";
-
-    [ObservableProperty]
-    private string overdueOverviewSummary = "Propadlé termíny napříč vozidly se zobrazí po načtení dat.";
-
-    [ObservableProperty]
-    private string selectedUpcomingOverviewDetail = "Vyberte termín a můžete přejít na související vozidlo nebo evidenci.";
-
-    [ObservableProperty]
-    private string selectedOverdueOverviewDetail = "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci.";
-
-    [ObservableProperty]
-    private VehicleTimelineItemViewModel? selectedUpcomingOverviewItem;
-
-    [ObservableProperty]
-    private VehicleTimelineItemViewModel? selectedOverdueOverviewItem;
-
     public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems { get; } = [];
 
     public ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems { get; } = [];
@@ -50,54 +19,6 @@ public sealed partial class MainWindowViewModel
         "Doklady",
         "Údržba"
     ];
-
-    public bool CanOpenSelectedUpcomingOverviewItem => SelectedUpcomingOverviewItem is not null;
-
-    public bool CanOpenSelectedUpcomingOverviewVehicle => SelectedUpcomingOverviewItem is not null;
-
-    public bool CanOpenSelectedOverdueOverviewItem => SelectedOverdueOverviewItem is not null;
-
-    public bool CanOpenSelectedOverdueOverviewVehicle => SelectedOverdueOverviewItem is not null;
-
-    partial void OnUpcomingOverviewSearchTextChanged(string value)
-    {
-        RefreshUpcomingOverview();
-    }
-
-    partial void OnOverdueOverviewSearchTextChanged(string value)
-    {
-        RefreshOverdueOverview();
-    }
-
-    partial void OnSelectedUpcomingOverviewFilterChanged(string value)
-    {
-        RefreshUpcomingOverview();
-    }
-
-    partial void OnSelectedOverdueOverviewFilterChanged(string value)
-    {
-        RefreshOverdueOverview();
-    }
-
-    partial void OnSelectedUpcomingOverviewItemChanged(VehicleTimelineItemViewModel? value)
-    {
-        SelectedUpcomingOverviewDetail = value is null
-            ? "Vyberte termín a můžete přejít na související vozidlo nebo evidenci."
-            : $"{value.VehicleName}\n{value.Date} | {value.KindLabel}\n{value.Title}\n{value.Detail}\nStav: {value.Status}";
-
-        OpenSelectedUpcomingOverviewItemCommand.NotifyCanExecuteChanged();
-        OpenSelectedUpcomingOverviewVehicleCommand.NotifyCanExecuteChanged();
-    }
-
-    partial void OnSelectedOverdueOverviewItemChanged(VehicleTimelineItemViewModel? value)
-    {
-        SelectedOverdueOverviewDetail = value is null
-            ? "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci."
-            : $"{value.VehicleName}\n{value.Date} | {value.KindLabel}\n{value.Title}\n{value.Detail}\nStav: {value.Status}";
-
-        OpenSelectedOverdueOverviewItemCommand.NotifyCanExecuteChanged();
-        OpenSelectedOverdueOverviewVehicleCommand.NotifyCanExecuteChanged();
-    }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewItem))]
     private void OpenSelectedUpcomingOverviewItem()
@@ -167,7 +88,8 @@ public sealed partial class MainWindowViewModel
         SelectedUpcomingOverviewItem = FindById(UpcomingOverviewItems, BuildOverviewSelectionKey, previousKey) ?? UpcomingOverviewItems.FirstOrDefault();
         if (SelectedUpcomingOverviewItem is null)
         {
-            OnSelectedUpcomingOverviewItemChanged(null);
+            SelectedUpcomingOverviewDetail = "Vyberte termín a můžete přejít na související vozidlo nebo evidenci.";
+            NotifyUpcomingOverviewWorkspaceSelectionChanged();
         }
     }
 
@@ -189,7 +111,8 @@ public sealed partial class MainWindowViewModel
         SelectedOverdueOverviewItem = FindById(OverdueOverviewItems, BuildOverviewSelectionKey, previousKey) ?? OverdueOverviewItems.FirstOrDefault();
         if (SelectedOverdueOverviewItem is null)
         {
-            OnSelectedOverdueOverviewItemChanged(null);
+            SelectedOverdueOverviewDetail = "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci.";
+            NotifyOverdueOverviewWorkspaceSelectionChanged();
         }
     }
 

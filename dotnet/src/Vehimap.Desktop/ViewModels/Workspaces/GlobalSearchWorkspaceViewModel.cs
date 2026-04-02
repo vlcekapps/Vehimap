@@ -1,32 +1,43 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
-public sealed class GlobalSearchWorkspaceViewModel : WorkspaceViewModelBase
+public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelBase
 {
     public GlobalSearchWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
     {
     }
 
-    public string GlobalSearchSummary => Root.GlobalSearchSummary;
+    [ObservableProperty]
+    private string globalSearchSummary = "Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.";
 
-    public string GlobalSearchText
-    {
-        get => Root.GlobalSearchText;
-        set => Root.GlobalSearchText = value;
-    }
+    [ObservableProperty]
+    private string globalSearchText = string.Empty;
+
+    [ObservableProperty]
+    private GlobalSearchResultItemViewModel? selectedSearchResult;
+
+    [ObservableProperty]
+    private string selectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
 
     public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults => Root.GlobalSearchResults;
 
-    public GlobalSearchResultItemViewModel? SelectedSearchResult
+    public ICommand OpenSelectedSearchResultCommand => Root.OpenSelectedSearchResultCommand;
+
+    partial void OnGlobalSearchTextChanged(string value)
     {
-        get => Root.SelectedSearchResult;
-        set => Root.SelectedSearchResult = value;
+        Root.HandleGlobalSearchWorkspaceSearchChanged();
     }
 
-    public string SelectedSearchResultDetail => Root.SelectedSearchResultDetail;
+    partial void OnSelectedSearchResultChanged(GlobalSearchResultItemViewModel? value)
+    {
+        SelectedSearchResultDetail = value is null
+            ? "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci."
+            : $"{value.SectionLabel}: {value.Title}\nVozidlo: {value.VehicleName}\n{value.Summary}";
 
-    public ICommand OpenSelectedSearchResultCommand => Root.OpenSelectedSearchResultCommand;
+        Root.NotifyGlobalSearchWorkspaceSelectionChanged();
+    }
 }

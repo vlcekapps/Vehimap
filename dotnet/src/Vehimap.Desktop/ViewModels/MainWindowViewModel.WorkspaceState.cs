@@ -414,6 +414,187 @@ public sealed partial class MainWindowViewModel
     public string RecordEditorPathInputLabel => RecordWorkspace.RecordEditorPathInputLabel;
     public string RecordEditorPathInputHelp => RecordWorkspace.RecordEditorPathInputHelp;
 
+    public string AuditSummary
+    {
+        get => AuditWorkspace.AuditSummary;
+        set => AuditWorkspace.AuditSummary = value;
+    }
+
+    public AuditItemViewModel? SelectedDashboardAuditItem
+    {
+        get => AuditWorkspace.SelectedDashboardAuditItem;
+        set => AuditWorkspace.SelectedDashboardAuditItem = value;
+    }
+
+    public string CostSummary
+    {
+        get => CostWorkspace.CostSummary;
+        set => CostWorkspace.CostSummary = value;
+    }
+
+    public string CostComparison
+    {
+        get => CostWorkspace.CostComparison;
+        set => CostWorkspace.CostComparison = value;
+    }
+
+    public CostVehicleItemViewModel? SelectedDashboardCostVehicle
+    {
+        get => CostWorkspace.SelectedDashboardCostVehicle;
+        set => CostWorkspace.SelectedDashboardCostVehicle = value;
+    }
+
+    public string DashboardTimelineSummary
+    {
+        get => DashboardWorkspace.DashboardTimelineSummary;
+        set => DashboardWorkspace.DashboardTimelineSummary = value;
+    }
+
+    public string SelectedDashboardTimelineDetail
+    {
+        get => DashboardWorkspace.SelectedDashboardTimelineDetail;
+        set => DashboardWorkspace.SelectedDashboardTimelineDetail = value;
+    }
+
+    public VehicleTimelineItemViewModel? SelectedDashboardTimelineItem
+    {
+        get => DashboardWorkspace.SelectedDashboardTimelineItem;
+        set => DashboardWorkspace.SelectedDashboardTimelineItem = value;
+    }
+
+    public string TimelineSummary
+    {
+        get => TimelineWorkspace.TimelineSummary;
+        set => TimelineWorkspace.TimelineSummary = value;
+    }
+
+    public string TimelineSearchText
+    {
+        get => TimelineWorkspace.TimelineSearchText;
+        set => TimelineWorkspace.TimelineSearchText = value;
+    }
+
+    public string SelectedTimelineFilter
+    {
+        get => TimelineWorkspace.SelectedTimelineFilter;
+        set => TimelineWorkspace.SelectedTimelineFilter = value;
+    }
+
+    public VehicleTimelineItemViewModel? SelectedTimelineItem
+    {
+        get => TimelineWorkspace.SelectedTimelineItem;
+        set => TimelineWorkspace.SelectedTimelineItem = value;
+    }
+
+    public string SelectedTimelineDetail
+    {
+        get => TimelineWorkspace.SelectedTimelineDetail;
+        set => TimelineWorkspace.SelectedTimelineDetail = value;
+    }
+
+    public string ExportStatus
+    {
+        get => TimelineWorkspace.ExportStatus;
+        set => TimelineWorkspace.ExportStatus = value;
+    }
+
+    public IReadOnlyList<string> TimelineFilters => TimelineWorkspace.TimelineFilters;
+    public bool CanOpenSelectedTimelineItem => SelectedTimelineItem is not null;
+    public bool CanOpenSelectedDashboardAuditItem => SelectedDashboardAuditItem is not null;
+    public bool CanOpenSelectedDashboardCostVehicle => SelectedDashboardCostVehicle is not null;
+    public bool CanOpenSelectedDashboardTimelineItem => SelectedDashboardTimelineItem is not null;
+
+    public string GlobalSearchSummary
+    {
+        get => GlobalSearchWorkspace.GlobalSearchSummary;
+        set => GlobalSearchWorkspace.GlobalSearchSummary = value;
+    }
+
+    public string GlobalSearchText
+    {
+        get => GlobalSearchWorkspace.GlobalSearchText;
+        set => GlobalSearchWorkspace.GlobalSearchText = value;
+    }
+
+    public GlobalSearchResultItemViewModel? SelectedSearchResult
+    {
+        get => GlobalSearchWorkspace.SelectedSearchResult;
+        set => GlobalSearchWorkspace.SelectedSearchResult = value;
+    }
+
+    public string SelectedSearchResultDetail
+    {
+        get => GlobalSearchWorkspace.SelectedSearchResultDetail;
+        set => GlobalSearchWorkspace.SelectedSearchResultDetail = value;
+    }
+
+    public bool CanOpenSelectedSearchResult => SelectedSearchResult is not null;
+
+    public string UpcomingOverviewSearchText
+    {
+        get => UpcomingOverviewWorkspace.UpcomingOverviewSearchText;
+        set => UpcomingOverviewWorkspace.UpcomingOverviewSearchText = value;
+    }
+
+    public string OverdueOverviewSearchText
+    {
+        get => OverdueOverviewWorkspace.OverdueOverviewSearchText;
+        set => OverdueOverviewWorkspace.OverdueOverviewSearchText = value;
+    }
+
+    public string SelectedUpcomingOverviewFilter
+    {
+        get => UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter;
+        set => UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = value;
+    }
+
+    public string SelectedOverdueOverviewFilter
+    {
+        get => OverdueOverviewWorkspace.SelectedOverdueOverviewFilter;
+        set => OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = value;
+    }
+
+    public string UpcomingOverviewSummary
+    {
+        get => UpcomingOverviewWorkspace.UpcomingOverviewSummary;
+        set => UpcomingOverviewWorkspace.UpcomingOverviewSummary = value;
+    }
+
+    public string OverdueOverviewSummary
+    {
+        get => OverdueOverviewWorkspace.OverdueOverviewSummary;
+        set => OverdueOverviewWorkspace.OverdueOverviewSummary = value;
+    }
+
+    public string SelectedUpcomingOverviewDetail
+    {
+        get => UpcomingOverviewWorkspace.SelectedUpcomingOverviewDetail;
+        set => UpcomingOverviewWorkspace.SelectedUpcomingOverviewDetail = value;
+    }
+
+    public string SelectedOverdueOverviewDetail
+    {
+        get => OverdueOverviewWorkspace.SelectedOverdueOverviewDetail;
+        set => OverdueOverviewWorkspace.SelectedOverdueOverviewDetail = value;
+    }
+
+    public VehicleTimelineItemViewModel? SelectedUpcomingOverviewItem
+    {
+        get => UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem;
+        set => UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = value;
+    }
+
+    public VehicleTimelineItemViewModel? SelectedOverdueOverviewItem
+    {
+        get => OverdueOverviewWorkspace.SelectedOverdueOverviewItem;
+        set => OverdueOverviewWorkspace.SelectedOverdueOverviewItem = value;
+    }
+
+    public bool CanOpenSelectedUpcomingOverviewItem => SelectedUpcomingOverviewItem is not null;
+    public bool CanOpenSelectedUpcomingOverviewVehicle => SelectedUpcomingOverviewItem is not null;
+    public bool CanOpenSelectedOverdueOverviewItem => SelectedOverdueOverviewItem is not null;
+    public bool CanOpenSelectedOverdueOverviewVehicle => SelectedOverdueOverviewItem is not null;
+
     internal string? GetEditingHistoryId() => _editingHistoryId;
     internal string? GetEditingFuelId() => _editingFuelId;
     internal string? GetEditingReminderId() => _editingReminderId;
@@ -511,5 +692,77 @@ public sealed partial class MainWindowViewModel
     internal void HandleRecordAttachmentPathChanged()
     {
         RefreshRecordEditorAttachmentPreview();
+    }
+
+    internal void NotifyTimelineWorkspaceSelectionChanged()
+    {
+        OpenSelectedTimelineItemCommand.NotifyCanExecuteChanged();
+    }
+
+    internal void HandleTimelineWorkspaceSearchChanged()
+    {
+        RefreshTimeline();
+    }
+
+    internal void HandleTimelineWorkspaceFilterChanged()
+    {
+        RefreshTimeline();
+    }
+
+    internal void NotifyAuditWorkspaceSelectionChanged()
+    {
+        OpenSelectedDashboardAuditItemCommand.NotifyCanExecuteChanged();
+    }
+
+    internal void NotifyCostWorkspaceSelectionChanged()
+    {
+        OpenSelectedDashboardCostVehicleCommand.NotifyCanExecuteChanged();
+    }
+
+    internal void NotifyDashboardWorkspaceTimelineSelectionChanged()
+    {
+        OpenSelectedDashboardTimelineItemCommand.NotifyCanExecuteChanged();
+    }
+
+    internal void HandleGlobalSearchWorkspaceSearchChanged()
+    {
+        RefreshGlobalSearch();
+    }
+
+    internal void NotifyGlobalSearchWorkspaceSelectionChanged()
+    {
+        OpenSelectedSearchResultCommand.NotifyCanExecuteChanged();
+    }
+
+    internal void HandleUpcomingOverviewWorkspaceSearchChanged()
+    {
+        RefreshUpcomingOverview();
+    }
+
+    internal void HandleUpcomingOverviewWorkspaceFilterChanged()
+    {
+        RefreshUpcomingOverview();
+    }
+
+    internal void NotifyUpcomingOverviewWorkspaceSelectionChanged()
+    {
+        OpenSelectedUpcomingOverviewItemCommand.NotifyCanExecuteChanged();
+        OpenSelectedUpcomingOverviewVehicleCommand.NotifyCanExecuteChanged();
+    }
+
+    internal void HandleOverdueOverviewWorkspaceSearchChanged()
+    {
+        RefreshOverdueOverview();
+    }
+
+    internal void HandleOverdueOverviewWorkspaceFilterChanged()
+    {
+        RefreshOverdueOverview();
+    }
+
+    internal void NotifyOverdueOverviewWorkspaceSelectionChanged()
+    {
+        OpenSelectedOverdueOverviewItemCommand.NotifyCanExecuteChanged();
+        OpenSelectedOverdueOverviewVehicleCommand.NotifyCanExecuteChanged();
     }
 }

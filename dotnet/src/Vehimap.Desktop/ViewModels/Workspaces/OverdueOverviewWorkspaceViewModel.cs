@@ -1,42 +1,55 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
-public sealed class OverdueOverviewWorkspaceViewModel : WorkspaceViewModelBase
+public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewModelBase
 {
     public OverdueOverviewWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
     {
     }
 
-    public string OverdueOverviewSummary => Root.OverdueOverviewSummary;
+    [ObservableProperty]
+    private string overdueOverviewSearchText = string.Empty;
 
-    public string OverdueOverviewSearchText
-    {
-        get => Root.OverdueOverviewSearchText;
-        set => Root.OverdueOverviewSearchText = value;
-    }
+    [ObservableProperty]
+    private string selectedOverdueOverviewFilter = "Vše";
 
-    public IReadOnlyList<string> OverviewFilters => Root.OverviewFilters;
+    [ObservableProperty]
+    private string overdueOverviewSummary = "Propadlé termíny napříč vozidly se zobrazí po načtení dat.";
 
-    public string SelectedOverdueOverviewFilter
-    {
-        get => Root.SelectedOverdueOverviewFilter;
-        set => Root.SelectedOverdueOverviewFilter = value;
-    }
+    [ObservableProperty]
+    private string selectedOverdueOverviewDetail = "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci.";
+
+    [ObservableProperty]
+    private VehicleTimelineItemViewModel? selectedOverdueOverviewItem;
 
     public ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems => Root.OverdueOverviewItems;
 
-    public VehicleTimelineItemViewModel? SelectedOverdueOverviewItem
-    {
-        get => Root.SelectedOverdueOverviewItem;
-        set => Root.SelectedOverdueOverviewItem = value;
-    }
-
-    public string SelectedOverdueOverviewDetail => Root.SelectedOverdueOverviewDetail;
+    public IReadOnlyList<string> OverviewFilters => Root.OverviewFilters;
 
     public ICommand OpenSelectedOverdueOverviewItemCommand => Root.OpenSelectedOverdueOverviewItemCommand;
 
     public ICommand OpenSelectedOverdueOverviewVehicleCommand => Root.OpenSelectedOverdueOverviewVehicleCommand;
+
+    partial void OnOverdueOverviewSearchTextChanged(string value)
+    {
+        Root.HandleOverdueOverviewWorkspaceSearchChanged();
+    }
+
+    partial void OnSelectedOverdueOverviewFilterChanged(string value)
+    {
+        Root.HandleOverdueOverviewWorkspaceFilterChanged();
+    }
+
+    partial void OnSelectedOverdueOverviewItemChanged(VehicleTimelineItemViewModel? value)
+    {
+        SelectedOverdueOverviewDetail = value is null
+            ? "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci."
+            : $"{value.VehicleName}\n{value.Date} | {value.KindLabel}\n{value.Title}\n{value.Detail}\nStav: {value.Status}";
+
+        Root.NotifyOverdueOverviewWorkspaceSelectionChanged();
+    }
 }

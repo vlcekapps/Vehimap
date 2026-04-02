@@ -1,42 +1,56 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
-public sealed class TimelineWorkspaceViewModel : WorkspaceViewModelBase
+public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
 {
     public TimelineWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
     {
     }
 
-    public string TimelineSummary => Root.TimelineSummary;
+    [ObservableProperty]
+    private string timelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
 
-    public IReadOnlyList<string> TimelineFilters => Root.TimelineFilters;
+    [ObservableProperty]
+    private string timelineSearchText = string.Empty;
 
-    public string SelectedTimelineFilter
-    {
-        get => Root.SelectedTimelineFilter;
-        set => Root.SelectedTimelineFilter = value;
-    }
+    [ObservableProperty]
+    private string selectedTimelineFilter = "Vše";
 
-    public string TimelineSearchText
-    {
-        get => Root.TimelineSearchText;
-        set => Root.TimelineSearchText = value;
-    }
+    [ObservableProperty]
+    private VehicleTimelineItemViewModel? selectedTimelineItem;
+
+    [ObservableProperty]
+    private string selectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
+
+    [ObservableProperty]
+    private string exportStatus = "Kalendářový export zatím nebyl spuštěn.";
+
+    public IReadOnlyList<string> TimelineFilters { get; } = ["Vše", "Budoucí", "Minulé"];
 
     public ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline => Root.SelectedVehicleTimeline;
 
-    public VehicleTimelineItemViewModel? SelectedTimelineItem
+    public ICommand OpenSelectedTimelineItemCommand => Root.OpenSelectedTimelineItemCommand;
+
+    partial void OnSelectedTimelineItemChanged(VehicleTimelineItemViewModel? value)
     {
-        get => Root.SelectedTimelineItem;
-        set => Root.SelectedTimelineItem = value;
+        SelectedTimelineDetail = value is null
+            ? "Vyberte položku časové osy a zobrazí se detail."
+            : $"Datum: {value.Date}\nDruh: {value.KindLabel}\nPoložka: {value.Title}\nDetail: {Root.FormatWorkspaceValue(value.Detail, "-")}\nStav: {Root.FormatWorkspaceValue(value.Status, "-")}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+
+        Root.NotifyTimelineWorkspaceSelectionChanged();
     }
 
-    public string SelectedTimelineDetail => Root.SelectedTimelineDetail;
+    partial void OnTimelineSearchTextChanged(string value)
+    {
+        Root.HandleTimelineWorkspaceSearchChanged();
+    }
 
-    public string ExportStatus => Root.ExportStatus;
-
-    public ICommand OpenSelectedTimelineItemCommand => Root.OpenSelectedTimelineItemCommand;
+    partial void OnSelectedTimelineFilterChanged(string value)
+    {
+        Root.HandleTimelineWorkspaceFilterChanged();
+    }
 }

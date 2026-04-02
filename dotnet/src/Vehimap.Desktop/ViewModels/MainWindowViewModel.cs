@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application;
@@ -83,15 +83,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private int auditCount;
 
     [ObservableProperty]
-    private string auditSummary = string.Empty;
-
-    [ObservableProperty]
-    private string costSummary = string.Empty;
-
-    [ObservableProperty]
-    private string costComparison = string.Empty;
-
-    [ObservableProperty]
     private string selectedVehicleHeading = "Nevybrané vozidlo";
 
     [ObservableProperty]
@@ -116,61 +107,16 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string maintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
-    private string timelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
-
-    [ObservableProperty]
     private string recordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
-    private string selectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
-
-    [ObservableProperty]
-    private string globalSearchText = string.Empty;
-
-    [ObservableProperty]
-    private string globalSearchSummary = "Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.";
-
-    [ObservableProperty]
-    private string selectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
-
-    [ObservableProperty]
-    private string timelineSearchText = string.Empty;
-
-    [ObservableProperty]
-    private string selectedTimelineFilter = "Vše";
-
-    [ObservableProperty]
-    private string exportStatus = "Kalendářový export zatím nebyl spuštěn.";
-
-    [ObservableProperty]
     private string shellStatus = "Desktopová větev je připravená.";
-
-    [ObservableProperty]
-    private string dashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
-
-    [ObservableProperty]
-    private string selectedDashboardTimelineDetail = "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.";
 
     [ObservableProperty]
     private int selectedVehicleTabIndex;
 
     [ObservableProperty]
     private VehicleListItemViewModel? selectedVehicle;
-
-    [ObservableProperty]
-    private VehicleTimelineItemViewModel? selectedTimelineItem;
-
-    [ObservableProperty]
-    private AuditItemViewModel? selectedDashboardAuditItem;
-
-    [ObservableProperty]
-    private CostVehicleItemViewModel? selectedDashboardCostVehicle;
-
-    [ObservableProperty]
-    private VehicleTimelineItemViewModel? selectedDashboardTimelineItem;
-
-    [ObservableProperty]
-    private GlobalSearchResultItemViewModel? selectedSearchResult;
 
     public ObservableCollection<VehicleListItemViewModel> Vehicles { get; } = [];
 
@@ -193,16 +139,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords { get; } = [];
 
     public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults { get; } = [];
-
-    public IReadOnlyList<string> TimelineFilters { get; } = ["Vše", "Budoucí", "Minulé"];
-
-    public bool CanOpenSelectedTimelineItem => SelectedTimelineItem is not null;
-
-    public bool CanOpenSelectedDashboardAuditItem => SelectedDashboardAuditItem is not null;
-
-    public bool CanOpenSelectedDashboardCostVehicle => SelectedDashboardCostVehicle is not null;
-
-    public bool CanOpenSelectedDashboardTimelineItem => SelectedDashboardTimelineItem is not null;
 
     public bool CanOpenReminderWindow => SelectedVehicle is not null;
 
@@ -275,8 +211,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool IsUpcomingOverviewTabSelected => SelectedVehicleTabIndex == UpcomingOverviewTabIndex;
 
     public bool IsOverdueOverviewTabSelected => SelectedVehicleTabIndex == OverdueOverviewTabIndex;
-
-    public bool CanOpenSelectedSearchResult => SelectedSearchResult is not null;
 
     public MainWindowViewModel()
         : this(
@@ -433,58 +367,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
         PopulateVehicleMaintenance(value.Id);
         PopulateVehicleTimeline(value.Id);
         PopulateVehicleRecords(value.Id);
-    }
-
-    partial void OnSelectedTimelineItemChanged(VehicleTimelineItemViewModel? value)
-    {
-        SelectedTimelineDetail = value is null
-            ? "Vyberte položku časové osy a zobrazí se detail."
-            : $"Datum: {value.Date}\nDruh: {value.KindLabel}\nPoložka: {value.Title}\nDetail: {FormatValue(value.Detail, "-")}\nStav: {FormatValue(value.Status, "-")}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
-
-        OpenSelectedTimelineItemCommand.NotifyCanExecuteChanged();
-    }
-
-    partial void OnSelectedDashboardAuditItemChanged(AuditItemViewModel? value)
-    {
-        OpenSelectedDashboardAuditItemCommand.NotifyCanExecuteChanged();
-    }
-
-    partial void OnSelectedDashboardCostVehicleChanged(CostVehicleItemViewModel? value)
-    {
-        OpenSelectedDashboardCostVehicleCommand.NotifyCanExecuteChanged();
-    }
-
-    partial void OnSelectedDashboardTimelineItemChanged(VehicleTimelineItemViewModel? value)
-    {
-        SelectedDashboardTimelineDetail = value is null
-            ? "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci."
-            : $"Vozidlo: {value.VehicleName}\nDatum: {value.Date}\nDruh: {value.KindLabel}\nPoložka: {value.Title}\nStav: {FormatValue(value.Status, "-")}\nDetail: {FormatValue(value.Detail, "-")}";
-
-        OpenSelectedDashboardTimelineItemCommand.NotifyCanExecuteChanged();
-    }
-
-    partial void OnTimelineSearchTextChanged(string value)
-    {
-        RefreshTimeline();
-    }
-
-    partial void OnGlobalSearchTextChanged(string value)
-    {
-        RefreshGlobalSearch();
-    }
-
-    partial void OnSelectedTimelineFilterChanged(string value)
-    {
-        RefreshTimeline();
-    }
-
-    partial void OnSelectedSearchResultChanged(GlobalSearchResultItemViewModel? value)
-    {
-        SelectedSearchResultDetail = value is null
-            ? "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci."
-            : $"{value.SectionLabel}: {value.Title}\nVozidlo: {value.VehicleName}\n{value.Summary}";
-
-        OpenSelectedSearchResultCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -802,7 +684,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedTimelineItem = SelectedVehicleTimeline.FirstOrDefault();
         if (SelectedTimelineItem is null)
         {
-            OnSelectedTimelineItemChanged(null);
+            SelectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
+            NotifyTimelineWorkspaceSelectionChanged();
         }
     }
 
@@ -854,7 +737,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
             : FindTimelineItem(SelectedVehicleTimeline, previousSelection);
         if (SelectedTimelineItem is null)
         {
-            OnSelectedTimelineItemChanged(null);
+            SelectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
+            NotifyTimelineWorkspaceSelectionChanged();
         }
     }
 
@@ -893,7 +777,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedSearchResult = FindById(GlobalSearchResults, item => $"{item.EntityKind}|{item.EntityId}|{item.VehicleId}", previousKey);
         if (SelectedSearchResult is null)
         {
-            OnSelectedSearchResultChanged(null);
+            SelectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
+            NotifyGlobalSearchWorkspaceSelectionChanged();
         }
     }
 

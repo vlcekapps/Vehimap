@@ -1,24 +1,30 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
-public sealed class AuditWorkspaceViewModel : WorkspaceViewModelBase
+public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
 {
     public AuditWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
     {
     }
 
+    [ObservableProperty]
+    private string auditSummary = string.Empty;
+
+    [ObservableProperty]
+    private AuditItemViewModel? selectedDashboardAuditItem;
+
     public string WindowTitle => Root.AuditWindowTitle;
-    public string AuditSummary => Root.AuditSummary;
+
     public ObservableCollection<AuditItemViewModel> AuditItems => Root.AuditItems;
-    public AuditItemViewModel? SelectedDashboardAuditItem
-    {
-        get => Root.SelectedDashboardAuditItem;
-        set => Root.SelectedDashboardAuditItem = value;
-    }
 
     public ICommand OpenSelectedDashboardAuditItemCommand => Root.OpenSelectedDashboardAuditItemCommand;
-}
 
+    partial void OnSelectedDashboardAuditItemChanged(AuditItemViewModel? value)
+    {
+        Root.NotifyAuditWorkspaceSelectionChanged();
+    }
+}
