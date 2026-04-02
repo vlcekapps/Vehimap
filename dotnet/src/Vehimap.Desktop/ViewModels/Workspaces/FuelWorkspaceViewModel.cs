@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
-public sealed class FuelWorkspaceViewModel : WorkspaceViewModelBase
+public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
 {
     public FuelWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
@@ -13,63 +14,67 @@ public sealed class FuelWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.FuelWindowTitle;
     public string FuelSummary => Root.FuelSummary;
     public ObservableCollection<VehicleFuelItemViewModel> SelectedVehicleFuel => Root.SelectedVehicleFuel;
-    public VehicleFuelItemViewModel? SelectedFuel
-    {
-        get => Root.SelectedFuel;
-        set => Root.SelectedFuel = value;
-    }
 
-    public string SelectedFuelDetail => Root.SelectedFuelDetail;
-    public string FuelPanelHeading => Root.FuelPanelHeading;
-    public bool IsEditingFuel => Root.IsEditingFuel;
-    public bool IsFuelDetailVisible => Root.IsFuelDetailVisible;
-    public string FuelEditorStatus => Root.FuelEditorStatus;
-    public string FuelEditorDate
-    {
-        get => Root.FuelEditorDate;
-        set => Root.FuelEditorDate = value;
-    }
+    [ObservableProperty]
+    private VehicleFuelItemViewModel? selectedFuel;
 
-    public string FuelEditorFuelType
-    {
-        get => Root.FuelEditorFuelType;
-        set => Root.FuelEditorFuelType = value;
-    }
+    [ObservableProperty]
+    private string selectedFuelDetail = "Vyberte tankování a zobrazí se detail položky.";
 
-    public string FuelEditorLiters
-    {
-        get => Root.FuelEditorLiters;
-        set => Root.FuelEditorLiters = value;
-    }
+    [ObservableProperty]
+    private string fuelPanelHeading = "Detail tankování";
 
-    public string FuelEditorTotalCost
-    {
-        get => Root.FuelEditorTotalCost;
-        set => Root.FuelEditorTotalCost = value;
-    }
+    [ObservableProperty]
+    private bool isEditingFuel;
 
-    public string FuelEditorOdometer
-    {
-        get => Root.FuelEditorOdometer;
-        set => Root.FuelEditorOdometer = value;
-    }
+    [ObservableProperty]
+    private string fuelEditorStatus = string.Empty;
 
-    public bool FuelEditorFullTank
-    {
-        get => Root.FuelEditorFullTank;
-        set => Root.FuelEditorFullTank = value;
-    }
+    [ObservableProperty]
+    private string fuelEditorDate = string.Empty;
 
-    public string FuelEditorNote
-    {
-        get => Root.FuelEditorNote;
-        set => Root.FuelEditorNote = value;
-    }
+    [ObservableProperty]
+    private string fuelEditorFuelType = string.Empty;
+
+    [ObservableProperty]
+    private string fuelEditorLiters = string.Empty;
+
+    [ObservableProperty]
+    private string fuelEditorTotalCost = string.Empty;
+
+    [ObservableProperty]
+    private string fuelEditorOdometer = string.Empty;
+
+    [ObservableProperty]
+    private bool fuelEditorFullTank = true;
+
+    [ObservableProperty]
+    private string fuelEditorNote = string.Empty;
+
+    public bool IsFuelDetailVisible => !IsEditingFuel;
 
     public ICommand CreateFuelCommand => Root.CreateFuelCommand;
     public ICommand EditSelectedFuelCommand => Root.EditSelectedFuelCommand;
     public ICommand DeleteSelectedFuelCommand => Root.DeleteSelectedFuelCommand;
     public ICommand SaveFuelCommand => Root.SaveFuelCommand;
     public ICommand CancelFuelEditCommand => Root.CancelFuelEditCommand;
-}
 
+    partial void OnSelectedFuelChanged(VehicleFuelItemViewModel? value)
+    {
+        SelectedFuelDetail = value is null
+            ? "Vyberte tankování a zobrazí se detail položky."
+            : $"Datum: {value.Date}\nPalivo: {value.FuelType}\nMnožství: {value.Liters}\nCena celkem: {value.TotalCost}\nTachometr: {value.Odometer}\nStav nádrže: {value.TankState}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+
+        Root.NotifyFuelWorkspaceSelectionChanged();
+    }
+
+    partial void OnIsEditingFuelChanged(bool value)
+    {
+        FuelPanelHeading = value
+            ? (Root.GetEditingFuelId() is null ? "Nové tankování" : "Upravit tankování")
+            : "Detail tankování";
+
+        OnPropertyChanged(nameof(IsFuelDetailVisible));
+        Root.NotifyFuelWorkspaceEditingChanged();
+    }
+}

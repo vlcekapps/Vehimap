@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
-public sealed class ReminderWorkspaceViewModel : WorkspaceViewModelBase
+public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
 {
     public ReminderWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
@@ -13,51 +14,61 @@ public sealed class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.ReminderWindowTitle;
     public string ReminderSummary => Root.ReminderSummary;
     public ObservableCollection<VehicleReminderItemViewModel> SelectedVehicleReminders => Root.SelectedVehicleReminders;
-    public VehicleReminderItemViewModel? SelectedReminder
-    {
-        get => Root.SelectedReminder;
-        set => Root.SelectedReminder = value;
-    }
 
-    public string SelectedReminderDetail => Root.SelectedReminderDetail;
-    public string ReminderPanelHeading => Root.ReminderPanelHeading;
-    public bool IsEditingReminder => Root.IsEditingReminder;
-    public bool IsReminderDetailVisible => Root.IsReminderDetailVisible;
-    public string ReminderEditorStatus => Root.ReminderEditorStatus;
-    public string ReminderEditorTitle
-    {
-        get => Root.ReminderEditorTitle;
-        set => Root.ReminderEditorTitle = value;
-    }
+    [ObservableProperty]
+    private VehicleReminderItemViewModel? selectedReminder;
 
-    public string ReminderEditorDueDate
-    {
-        get => Root.ReminderEditorDueDate;
-        set => Root.ReminderEditorDueDate = value;
-    }
+    [ObservableProperty]
+    private string selectedReminderDetail = "Vyberte připomínku a zobrazí se detail položky.";
 
-    public string ReminderEditorDays
-    {
-        get => Root.ReminderEditorDays;
-        set => Root.ReminderEditorDays = value;
-    }
+    [ObservableProperty]
+    private string reminderPanelHeading = "Detail připomínky";
 
-    public string ReminderEditorRepeatMode
-    {
-        get => Root.ReminderEditorRepeatMode;
-        set => Root.ReminderEditorRepeatMode = value;
-    }
+    [ObservableProperty]
+    private bool isEditingReminder;
 
-    public string ReminderEditorNote
-    {
-        get => Root.ReminderEditorNote;
-        set => Root.ReminderEditorNote = value;
-    }
+    [ObservableProperty]
+    private string reminderEditorStatus = string.Empty;
+
+    [ObservableProperty]
+    private string reminderEditorTitle = string.Empty;
+
+    [ObservableProperty]
+    private string reminderEditorDueDate = string.Empty;
+
+    [ObservableProperty]
+    private string reminderEditorDays = string.Empty;
+
+    [ObservableProperty]
+    private string reminderEditorRepeatMode = string.Empty;
+
+    [ObservableProperty]
+    private string reminderEditorNote = string.Empty;
+
+    public bool IsReminderDetailVisible => !IsEditingReminder;
 
     public ICommand CreateReminderCommand => Root.CreateReminderCommand;
     public ICommand EditSelectedReminderCommand => Root.EditSelectedReminderCommand;
     public ICommand DeleteSelectedReminderCommand => Root.DeleteSelectedReminderCommand;
     public ICommand SaveReminderCommand => Root.SaveReminderCommand;
     public ICommand CancelReminderEditCommand => Root.CancelReminderEditCommand;
-}
 
+    partial void OnSelectedReminderChanged(VehicleReminderItemViewModel? value)
+    {
+        SelectedReminderDetail = value is null
+            ? "Vyberte připomínku a zobrazí se detail položky."
+            : $"Název: {value.Title}\nTermín: {value.DueDate}\nStav: {value.Status}\nOpakování: {value.RepeatMode}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+
+        Root.NotifyReminderWorkspaceSelectionChanged();
+    }
+
+    partial void OnIsEditingReminderChanged(bool value)
+    {
+        ReminderPanelHeading = value
+            ? (Root.GetEditingReminderId() is null ? "Nová připomínka" : "Upravit připomínku")
+            : "Detail připomínky";
+
+        OnPropertyChanged(nameof(IsReminderDetailVisible));
+        Root.NotifyReminderWorkspaceEditingChanged();
+    }
+}

@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
-public sealed class RecordWorkspaceViewModel : WorkspaceViewModelBase
+public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
 {
     public RecordWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
@@ -13,79 +14,65 @@ public sealed class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.RecordWindowTitle;
     public string RecordSummary => Root.RecordSummary;
     public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords => Root.SelectedVehicleRecords;
-    public VehicleRecordItemViewModel? SelectedRecord
-    {
-        get => Root.SelectedRecord;
-        set => Root.SelectedRecord = value;
-    }
 
-    public string SelectedRecordDetail => Root.SelectedRecordDetail;
-    public string RecordPanelHeading => Root.RecordPanelHeading;
-    public bool IsEditingRecord => Root.IsEditingRecord;
-    public bool IsRecordDetailVisible => Root.IsRecordDetailVisible;
-    public string RecordEditorStatus => Root.RecordEditorStatus;
-    public string RecordEditorRecordType
-    {
-        get => Root.RecordEditorRecordType;
-        set => Root.RecordEditorRecordType = value;
-    }
+    [ObservableProperty]
+    private VehicleRecordItemViewModel? selectedRecord;
 
-    public string RecordEditorTitle
-    {
-        get => Root.RecordEditorTitle;
-        set => Root.RecordEditorTitle = value;
-    }
+    [ObservableProperty]
+    private string selectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
 
-    public string RecordEditorProvider
-    {
-        get => Root.RecordEditorProvider;
-        set => Root.RecordEditorProvider = value;
-    }
+    [ObservableProperty]
+    private string recordPanelHeading = "Detail dokladu";
 
-    public string RecordEditorValidFrom
-    {
-        get => Root.RecordEditorValidFrom;
-        set => Root.RecordEditorValidFrom = value;
-    }
+    [ObservableProperty]
+    private bool isEditingRecord;
 
-    public string RecordEditorValidTo
-    {
-        get => Root.RecordEditorValidTo;
-        set => Root.RecordEditorValidTo = value;
-    }
+    [ObservableProperty]
+    private string recordEditorStatus = string.Empty;
 
-    public string RecordEditorPrice
-    {
-        get => Root.RecordEditorPrice;
-        set => Root.RecordEditorPrice = value;
-    }
+    [ObservableProperty]
+    private string recordEditorRecordType = string.Empty;
 
-    public IReadOnlyList<string> RecordAttachmentModes => Root.RecordAttachmentModes;
+    [ObservableProperty]
+    private string recordEditorTitle = string.Empty;
 
-    public string SelectedRecordEditorAttachmentMode
-    {
-        get => Root.SelectedRecordEditorAttachmentMode;
-        set => Root.SelectedRecordEditorAttachmentMode = value;
-    }
+    [ObservableProperty]
+    private string recordEditorProvider = string.Empty;
 
-    public string RecordEditorPathInput
-    {
-        get => Root.RecordEditorPathInput;
-        set => Root.RecordEditorPathInput = value;
-    }
+    [ObservableProperty]
+    private string recordEditorValidFrom = string.Empty;
 
-    public string RecordEditorStoredPath => Root.RecordEditorStoredPath;
-    public string RecordEditorResolvedPath => Root.RecordEditorResolvedPath;
-    public string RecordEditorAvailability => Root.RecordEditorAvailability;
-    public string RecordEditorNote
-    {
-        get => Root.RecordEditorNote;
-        set => Root.RecordEditorNote = value;
-    }
+    [ObservableProperty]
+    private string recordEditorValidTo = string.Empty;
 
-    public bool IsRecordEditorManaged => Root.IsRecordEditorManaged;
-    public string RecordEditorPathInputLabel => Root.RecordEditorPathInputLabel;
-    public string RecordEditorPathInputHelp => Root.RecordEditorPathInputHelp;
+    [ObservableProperty]
+    private string recordEditorPrice = string.Empty;
+
+    [ObservableProperty]
+    private string selectedRecordEditorAttachmentMode = "Spravovaná kopie";
+
+    [ObservableProperty]
+    private string recordEditorPathInput = string.Empty;
+
+    [ObservableProperty]
+    private string recordEditorStoredPath = string.Empty;
+
+    [ObservableProperty]
+    private string recordEditorResolvedPath = string.Empty;
+
+    [ObservableProperty]
+    private string recordEditorAvailability = "Vyberte soubor nebo zadejte cestu přílohy.";
+
+    [ObservableProperty]
+    private string recordEditorNote = string.Empty;
+
+    public IReadOnlyList<string> RecordAttachmentModes { get; } = ["Spravovaná kopie", "Externí cesta"];
+    public bool IsRecordDetailVisible => !IsEditingRecord;
+    public bool IsRecordEditorManaged => string.Equals(SelectedRecordEditorAttachmentMode, "Spravovaná kopie", StringComparison.CurrentCulture);
+    public string RecordEditorPathInputLabel => IsRecordEditorManaged ? "Zdroj souboru pro import" : "Externí cesta k souboru";
+    public string RecordEditorPathInputHelp => IsRecordEditorManaged
+        ? "Vybraný soubor se po uložení zkopíruje do spravovaných příloh."
+        : "Zadejte nebo vyberte externí cestu, která se nebude kopírovat.";
 
     public ICommand CreateRecordCommand => Root.CreateRecordCommand;
     public ICommand EditSelectedRecordCommand => Root.EditSelectedRecordCommand;
@@ -96,5 +83,36 @@ public sealed class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public ICommand MoveSelectedRecordToManagedCommand => Root.MoveSelectedRecordToManagedCommand;
     public ICommand OpenSelectedRecordFileCommand => Root.OpenSelectedRecordFileCommand;
     public ICommand OpenSelectedRecordFolderCommand => Root.OpenSelectedRecordFolderCommand;
-}
 
+    partial void OnSelectedRecordChanged(VehicleRecordItemViewModel? value)
+    {
+        SelectedRecordDetail = value is null
+            ? "Vyberte doklad a zobrazí se detail přílohy."
+            : $"Typ: {value.RecordType}\nPlatnost: {value.Validity}\nCena: {value.Price}\nRežim přílohy: {value.AttachmentMode}\nStav přílohy: {value.AttachmentState}\nUložená cesta: {Root.FormatWorkspaceValue(value.StoredPath, "nevyplněno")}\nVyřešená cesta: {Root.FormatWorkspaceValue(value.ResolvedPath, "nevyplněno")}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+
+        Root.NotifyRecordWorkspaceSelectionChanged();
+    }
+
+    partial void OnIsEditingRecordChanged(bool value)
+    {
+        RecordPanelHeading = value
+            ? (Root.GetEditingRecordId() is null ? "Nový doklad" : "Upravit doklad")
+            : "Detail dokladu";
+
+        OnPropertyChanged(nameof(IsRecordDetailVisible));
+        Root.NotifyRecordWorkspaceEditingChanged();
+    }
+
+    partial void OnSelectedRecordEditorAttachmentModeChanged(string value)
+    {
+        Root.HandleRecordAttachmentModeChanged();
+        OnPropertyChanged(nameof(IsRecordEditorManaged));
+        OnPropertyChanged(nameof(RecordEditorPathInputLabel));
+        OnPropertyChanged(nameof(RecordEditorPathInputHelp));
+    }
+
+    partial void OnRecordEditorPathInputChanged(string value)
+    {
+        Root.HandleRecordAttachmentPathChanged();
+    }
+}

@@ -122,22 +122,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string recordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
-    private string selectedHistoryDetail = "Vyberte historický záznam a zobrazí se detail položky.";
-
-    [ObservableProperty]
-    private string selectedFuelDetail = "Vyberte tankování a zobrazí se detail položky.";
-
-    [ObservableProperty]
-    private string selectedReminderDetail = "Vyberte připomínku a zobrazí se detail položky.";
-
-    [ObservableProperty]
-    private string selectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
-
-    [ObservableProperty]
     private string selectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
-
-    [ObservableProperty]
-    private string selectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
 
     [ObservableProperty]
     private string globalSearchText = string.Empty;
@@ -173,18 +158,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private VehicleListItemViewModel? selectedVehicle;
 
     [ObservableProperty]
-    private VehicleHistoryItemViewModel? selectedHistory;
-
-    [ObservableProperty]
-    private VehicleFuelItemViewModel? selectedFuel;
-
-    [ObservableProperty]
-    private VehicleReminderItemViewModel? selectedReminder;
-
-    [ObservableProperty]
-    private VehicleMaintenanceItemViewModel? selectedMaintenance;
-
-    [ObservableProperty]
     private VehicleTimelineItemViewModel? selectedTimelineItem;
 
     [ObservableProperty]
@@ -195,9 +168,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     [ObservableProperty]
     private VehicleTimelineItemViewModel? selectedDashboardTimelineItem;
-
-    [ObservableProperty]
-    private VehicleRecordItemViewModel? selectedRecord;
 
     [ObservableProperty]
     private GlobalSearchResultItemViewModel? selectedSearchResult;
@@ -465,46 +435,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
         PopulateVehicleRecords(value.Id);
     }
 
-    partial void OnSelectedFuelChanged(VehicleFuelItemViewModel? value)
-    {
-        SelectedFuelDetail = value is null
-            ? "Vyberte tankování a zobrazí se detail položky."
-            : $"Datum: {value.Date}\nPalivo: {value.FuelType}\nMnožství: {value.Liters}\nCena celkem: {value.TotalCost}\nTachometr: {value.Odometer}\nStav nádrže: {value.TankState}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
-
-        EditSelectedFuelCommand.NotifyCanExecuteChanged();
-        DeleteSelectedFuelCommand.NotifyCanExecuteChanged();
-    }
-
-    partial void OnSelectedHistoryChanged(VehicleHistoryItemViewModel? value)
-    {
-        SelectedHistoryDetail = value is null
-            ? "Vyberte historický záznam a zobrazí se detail položky."
-            : $"Datum: {value.Date}\nTyp události: {value.EventType}\nTachometr: {value.Odometer}\nCena: {value.Cost}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
-
-        EditSelectedHistoryCommand.NotifyCanExecuteChanged();
-        DeleteSelectedHistoryCommand.NotifyCanExecuteChanged();
-    }
-
-    partial void OnSelectedReminderChanged(VehicleReminderItemViewModel? value)
-    {
-        SelectedReminderDetail = value is null
-            ? "Vyberte připomínku a zobrazí se detail položky."
-            : $"Název: {value.Title}\nTermín: {value.DueDate}\nStav: {value.Status}\nOpakování: {value.RepeatMode}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
-
-        EditSelectedReminderCommand.NotifyCanExecuteChanged();
-        DeleteSelectedReminderCommand.NotifyCanExecuteChanged();
-    }
-
-    partial void OnSelectedMaintenanceChanged(VehicleMaintenanceItemViewModel? value)
-    {
-        SelectedMaintenanceDetail = value is null
-            ? "Vyberte servisní úkon a zobrazí se detail položky."
-            : $"Úkon: {value.Title}\nInterval: {value.Interval}\nPoslední servis: {value.LastService}\nStav: {value.Status}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
-
-        EditSelectedMaintenanceCommand.NotifyCanExecuteChanged();
-        DeleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();
-    }
-
     partial void OnSelectedTimelineItemChanged(VehicleTimelineItemViewModel? value)
     {
         SelectedTimelineDetail = value is null
@@ -546,19 +476,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
     partial void OnSelectedTimelineFilterChanged(string value)
     {
         RefreshTimeline();
-    }
-
-    partial void OnSelectedRecordChanged(VehicleRecordItemViewModel? value)
-    {
-        SelectedRecordDetail = value is null
-            ? "Vyberte doklad a zobrazí se detail přílohy."
-            : $"Typ: {value.RecordType}\nPlatnost: {value.Validity}\nCena: {value.Price}\nRežim přílohy: {value.AttachmentMode}\nStav přílohy: {value.AttachmentState}\nUložená cesta: {FormatValue(value.StoredPath, "nevyplněno")}\nVyřešená cesta: {FormatValue(value.ResolvedPath, "nevyplněno")}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
-
-        OpenSelectedRecordFileCommand.NotifyCanExecuteChanged();
-        OpenSelectedRecordFolderCommand.NotifyCanExecuteChanged();
-        EditSelectedRecordCommand.NotifyCanExecuteChanged();
-        DeleteSelectedRecordCommand.NotifyCanExecuteChanged();
-        MoveSelectedRecordToManagedCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnSelectedSearchResultChanged(GlobalSearchResultItemViewModel? value)
@@ -804,7 +721,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedHistory = SelectedVehicleHistory.FirstOrDefault();
         if (SelectedHistory is null)
         {
-            OnSelectedHistoryChanged(null);
+            SelectedHistoryDetail = "Vyberte historický záznam a zobrazí se detail položky.";
+            NotifyHistoryWorkspaceSelectionChanged();
         }
     }
 
@@ -822,7 +740,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedFuel = SelectedVehicleFuel.FirstOrDefault();
         if (SelectedFuel is null)
         {
-            OnSelectedFuelChanged(null);
+            SelectedFuelDetail = "Vyberte tankování a zobrazí se detail položky.";
+            NotifyFuelWorkspaceSelectionChanged();
         }
     }
 
@@ -840,7 +759,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedReminder = SelectedVehicleReminders.FirstOrDefault();
         if (SelectedReminder is null)
         {
-            OnSelectedReminderChanged(null);
+            SelectedReminderDetail = "Vyberte připomínku a zobrazí se detail položky.";
+            NotifyReminderWorkspaceSelectionChanged();
         }
     }
 
@@ -858,7 +778,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedMaintenance = SelectedVehicleMaintenance.FirstOrDefault();
         if (SelectedMaintenance is null)
         {
-            OnSelectedMaintenanceChanged(null);
+            SelectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
+            NotifyMaintenanceWorkspaceSelectionChanged();
         }
     }
 
@@ -899,7 +820,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedRecord = SelectedVehicleRecords.FirstOrDefault();
         if (SelectedRecord is null)
         {
-            OnSelectedRecordChanged(null);
+            SelectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
+            NotifyRecordWorkspaceSelectionChanged();
         }
     }
 

@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
-public sealed class HistoryWorkspaceViewModel : WorkspaceViewModelBase
+public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
 {
     public HistoryWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
@@ -13,51 +14,61 @@ public sealed class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.HistoryWindowTitle;
     public string HistorySummary => Root.HistorySummary;
     public ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory => Root.SelectedVehicleHistory;
-    public VehicleHistoryItemViewModel? SelectedHistory
-    {
-        get => Root.SelectedHistory;
-        set => Root.SelectedHistory = value;
-    }
 
-    public string SelectedHistoryDetail => Root.SelectedHistoryDetail;
-    public string HistoryPanelHeading => Root.HistoryPanelHeading;
-    public bool IsEditingHistory => Root.IsEditingHistory;
-    public bool IsHistoryDetailVisible => Root.IsHistoryDetailVisible;
-    public string HistoryEditorStatus => Root.HistoryEditorStatus;
-    public string HistoryEditorDate
-    {
-        get => Root.HistoryEditorDate;
-        set => Root.HistoryEditorDate = value;
-    }
+    [ObservableProperty]
+    private VehicleHistoryItemViewModel? selectedHistory;
 
-    public string HistoryEditorType
-    {
-        get => Root.HistoryEditorType;
-        set => Root.HistoryEditorType = value;
-    }
+    [ObservableProperty]
+    private string selectedHistoryDetail = "Vyberte historický záznam a zobrazí se detail položky.";
 
-    public string HistoryEditorOdometer
-    {
-        get => Root.HistoryEditorOdometer;
-        set => Root.HistoryEditorOdometer = value;
-    }
+    [ObservableProperty]
+    private string historyPanelHeading = "Detail historie";
 
-    public string HistoryEditorCost
-    {
-        get => Root.HistoryEditorCost;
-        set => Root.HistoryEditorCost = value;
-    }
+    [ObservableProperty]
+    private bool isEditingHistory;
 
-    public string HistoryEditorNote
-    {
-        get => Root.HistoryEditorNote;
-        set => Root.HistoryEditorNote = value;
-    }
+    [ObservableProperty]
+    private string historyEditorStatus = string.Empty;
+
+    [ObservableProperty]
+    private string historyEditorDate = string.Empty;
+
+    [ObservableProperty]
+    private string historyEditorType = string.Empty;
+
+    [ObservableProperty]
+    private string historyEditorOdometer = string.Empty;
+
+    [ObservableProperty]
+    private string historyEditorCost = string.Empty;
+
+    [ObservableProperty]
+    private string historyEditorNote = string.Empty;
+
+    public bool IsHistoryDetailVisible => !IsEditingHistory;
 
     public ICommand CreateHistoryCommand => Root.CreateHistoryCommand;
     public ICommand EditSelectedHistoryCommand => Root.EditSelectedHistoryCommand;
     public ICommand DeleteSelectedHistoryCommand => Root.DeleteSelectedHistoryCommand;
     public ICommand SaveHistoryCommand => Root.SaveHistoryCommand;
     public ICommand CancelHistoryEditCommand => Root.CancelHistoryEditCommand;
-}
 
+    partial void OnSelectedHistoryChanged(VehicleHistoryItemViewModel? value)
+    {
+        SelectedHistoryDetail = value is null
+            ? "Vyberte historický záznam a zobrazí se detail položky."
+            : $"Datum: {value.Date}\nTyp události: {value.EventType}\nTachometr: {value.Odometer}\nCena: {value.Cost}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+
+        Root.NotifyHistoryWorkspaceSelectionChanged();
+    }
+
+    partial void OnIsEditingHistoryChanged(bool value)
+    {
+        HistoryPanelHeading = value
+            ? (Root.GetEditingHistoryId() is null ? "Nový záznam historie" : "Upravit historii")
+            : "Detail historie";
+
+        OnPropertyChanged(nameof(IsHistoryDetailVisible));
+        Root.NotifyHistoryWorkspaceEditingChanged();
+    }
+}
