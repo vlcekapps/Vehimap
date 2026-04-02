@@ -517,7 +517,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        await _legacyDataStore.SaveAsync(_dataRoot, _dataSet);
+        await _session.PersistAsync();
         Load();
 
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
@@ -834,12 +834,7 @@ public sealed partial class MainWindowViewModel
 
     private string ResolveManagedAttachmentAbsolutePath(string relativePath)
     {
-        if (_dataRoot is null)
-        {
-            return string.Empty;
-        }
-
-        return _attachmentService.ResolveManagedAttachmentPath(_dataRoot, relativePath);
+        return _session.ResolveManagedAttachmentPath(relativePath);
     }
 
     private string ResolvePotentialPath(string path)

@@ -29,27 +29,18 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private const int UpcomingOverviewTabIndex = 11;
     private const int OverdueOverviewTabIndex = 12;
 
-    private readonly LegacyVehimapBootstrapper _bootstrapper;
-    private readonly ILegacyDataStore _legacyDataStore;
-    private readonly IFileAttachmentService _attachmentService;
+    private readonly DesktopSessionController _session;
     private readonly IFileLauncher _fileLauncher;
     private readonly IFilePickerService _filePickerService;
-    private readonly IAuditService _auditService;
-    private readonly ICostAnalysisService _costAnalysisService;
     private readonly IGlobalSearchService _globalSearchService;
     private readonly ITimelineService _timelineService;
     private readonly ICalendarExportService _calendarExportService;
     private readonly ITextFileSaveService _fileSaveService;
-    private readonly IBackupService _backupService;
     private readonly IFileDialogService _fileDialogService;
-    private readonly DesktopSupportedSettingsService _supportedSettingsService;
-    private readonly IAppBuildInfoProvider _appBuildInfoProvider;
-    private readonly IUpdateService _updateService;
-    private readonly Dictionary<string, VehicleMeta> _metaByVehicleId = new(StringComparer.Ordinal);
-
-    private VehimapDataRoot? _dataRoot;
-    private VehimapDataSet _dataSet = new();
-    private IReadOnlyList<AuditItem> _auditItems = [];
+    private VehimapDataRoot? _dataRoot => _session.DataRoot;
+    private VehimapDataSet _dataSet => _session.DataSet;
+    private IReadOnlyList<AuditItem> _auditItems => _session.AuditItems;
+    private IReadOnlyDictionary<string, VehicleMeta> _metaByVehicleId => _session.MetaByVehicleId;
 
     public event Action<DesktopFocusTarget>? FocusRequested;
 
@@ -349,22 +340,28 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IAppBuildInfoProvider? appBuildInfoProvider = null,
         IUpdateService? updateService = null)
     {
-        _legacyDataStore = legacyDataStore;
-        _bootstrapper = bootstrapper;
-        _attachmentService = attachmentService;
+        var sessionBackupService = backupService ?? new LegacyBackupService();
+        var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
+        var sessionAppBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider();
+        var sessionUpdateService = updateService ?? new LegacyUpdateService(sessionAppBuildInfoProvider);
+
+        _session = new DesktopSessionController(
+            bootstrapper,
+            legacyDataStore,
+            attachmentService,
+            new LegacyAuditService(attachmentService),
+            new LegacyCostAnalysisService(),
+            sessionBackupService,
+            sessionSupportedSettingsService,
+            sessionAppBuildInfoProvider,
+            sessionUpdateService);
         _fileLauncher = fileLauncher;
         _filePickerService = filePickerService;
-        _auditService = new LegacyAuditService(_attachmentService);
-        _costAnalysisService = new LegacyCostAnalysisService();
         _globalSearchService = globalSearchService;
         _timelineService = timelineService;
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
-        _backupService = backupService ?? new LegacyBackupService();
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
-        _supportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
-        _appBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider();
-        _updateService = updateService ?? new LegacyUpdateService(_appBuildInfoProvider);
         InitializeWorkspaces();
         Load(applyLaunchTabPreference: true);
     }
@@ -721,11 +718,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         try
         {
-            var result = _bootstrapper.LoadAsync(AppContext.BaseDirectory).GetAwaiter().GetResult();
-            _dataRoot = result.DataRoot;
-            _dataSet = result.DataSet;
-            _auditItems = _auditService.BuildAudit(result.DataRoot, result.DataSet);
-            var costSummary = _costAnalysisService.BuildYearToDateSummary(result.DataSet, DateOnly.FromDateTime(DateTime.Today));
+            var result = _session.LoadAsync(AppContext.BaseDirectory).GetAwaiter().GetResult();
+            var costSummary = result.CostSummary;
 
             LoadError = string.Empty;
             DataMode = result.DataRoot.IsPortable ? "Portable data vedle aplikace" : "Systémová datová složka";
@@ -740,12 +734,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
             AuditSummary = BuildAuditSummary(_auditItems);
             CostSummary = BuildCostSummary(costSummary);
             CostComparison = BuildCostComparison(costSummary);
-
-            _metaByVehicleId.Clear();
-            foreach (var meta in result.DataSet.VehicleMetaEntries.GroupBy(item => item.VehicleId, StringComparer.Ordinal))
-            {
-                _metaByVehicleId[meta.Key] = meta.First();
-            }
 
             Vehicles.Clear();
             foreach (var vehicle in result.DataSet.Vehicles.OrderBy(item => item.Name, StringComparer.CurrentCultureIgnoreCase))
@@ -812,7 +800,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 OnSelectedVehicleChanged(null);
             }
 
-            if (applyLaunchTabPreference && _supportedSettingsService.Read(result.DataSet.Settings).ShowDashboardOnLaunch)
+            if (applyLaunchTabPreference && result.SupportedSettings.ShowDashboardOnLaunch)
             {
                 SelectedVehicleTabIndex = DashboardTabIndex;
             }
@@ -1184,7 +1172,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         if (record.AttachmentMode == VehicleRecordAttachmentMode.Managed)
         {
-            return _attachmentService.ResolveManagedAttachmentPath(_dataRoot, record.FilePath);
+            return _session.ResolveManagedAttachmentPath(record.FilePath);
         }
 
         return Path.IsPathRooted(record.FilePath)
