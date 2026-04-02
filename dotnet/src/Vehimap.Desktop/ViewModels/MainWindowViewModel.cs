@@ -20,6 +20,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private const int FuelTabIndex = 2;
     private const int ReminderTabIndex = 3;
     private const int MaintenanceTabIndex = 4;
+    private const int TimelineTabIndex = 5;
     private const int RecordTabIndex = 6;
 
     private readonly LegacyVehimapBootstrapper _bootstrapper;
@@ -35,6 +36,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private VehimapDataRoot? _dataRoot;
     private VehimapDataSet _dataSet = new();
     private IReadOnlyList<AuditItem> _auditItems = [];
+
+    public event Action<DesktopFocusTarget>? FocusRequested;
 
     [ObservableProperty]
     private string title = "Vehimap Desktop Preview";
@@ -273,6 +276,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             DashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
             SelectedDashboardTimelineDetail = "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.";
             SelectedVehicleTabIndex = DetailTabIndex;
+            RequestFocus(DesktopFocusTarget.VehicleList);
             return;
         }
 
@@ -366,6 +370,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void Reload()
     {
         Load();
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    [RelayCommand]
+    private void FocusTimelineSearch()
+    {
+        SelectedVehicleTabIndex = TimelineTabIndex;
+        RequestFocus(DesktopFocusTarget.TimelineSearch);
     }
 
     [RelayCommand]
@@ -1182,32 +1194,38 @@ public sealed partial class MainWindowViewModel : ObservableObject
             case "history":
                 SelectedVehicleTabIndex = HistoryTabIndex;
                 SelectedHistory = FindById(SelectedVehicleHistory, historyItem => historyItem.Id, item.EntryId);
+                RequestFocus(DesktopFocusTarget.HistoryList);
                 break;
 
             case "fuel":
                 SelectedVehicleTabIndex = FuelTabIndex;
                 SelectedFuel = FindById(SelectedVehicleFuel, fuelItem => fuelItem.Id, item.EntryId);
+                RequestFocus(DesktopFocusTarget.FuelList);
                 break;
 
             case "custom":
                 SelectedVehicleTabIndex = ReminderTabIndex;
                 SelectedReminder = FindById(SelectedVehicleReminders, reminderItem => reminderItem.Id, item.EntryId);
+                RequestFocus(DesktopFocusTarget.ReminderList);
                 break;
 
             case "maintenance":
                 SelectedVehicleTabIndex = MaintenanceTabIndex;
                 SelectedMaintenance = FindById(SelectedVehicleMaintenance, maintenanceItem => maintenanceItem.Id, item.EntryId);
+                RequestFocus(DesktopFocusTarget.MaintenanceList);
                 break;
 
             case "record":
                 SelectedVehicleTabIndex = RecordTabIndex;
                 SelectedRecord = FindById(SelectedVehicleRecords, recordItem => recordItem.Id, item.EntryId);
+                RequestFocus(DesktopFocusTarget.RecordList);
                 break;
 
             case "technical":
             case "green":
             default:
                 SelectedVehicleTabIndex = DetailTabIndex;
+                RequestFocus(DesktopFocusTarget.VehicleList);
                 break;
         }
     }
@@ -1229,33 +1247,44 @@ public sealed partial class MainWindowViewModel : ObservableObject
             case "Historie":
                 SelectedVehicleTabIndex = HistoryTabIndex;
                 SelectedHistory = FindById(SelectedVehicleHistory, item => item.Id, entityId);
+                RequestFocus(DesktopFocusTarget.HistoryList);
                 break;
 
             case "Tankování":
                 SelectedVehicleTabIndex = FuelTabIndex;
                 SelectedFuel = FindById(SelectedVehicleFuel, item => item.Id, entityId);
+                RequestFocus(DesktopFocusTarget.FuelList);
                 break;
 
             case "Doklad":
                 SelectedVehicleTabIndex = RecordTabIndex;
                 SelectedRecord = FindById(SelectedVehicleRecords, item => item.Id, entityId);
+                RequestFocus(DesktopFocusTarget.RecordList);
                 break;
 
             case "Údržba":
                 SelectedVehicleTabIndex = MaintenanceTabIndex;
                 SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, entityId);
+                RequestFocus(DesktopFocusTarget.MaintenanceList);
                 break;
 
             case "Připomínka":
                 SelectedVehicleTabIndex = ReminderTabIndex;
                 SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, entityId);
+                RequestFocus(DesktopFocusTarget.ReminderList);
                 break;
 
             case "Vozidlo":
             default:
                 SelectedVehicleTabIndex = DetailTabIndex;
+                RequestFocus(DesktopFocusTarget.VehicleList);
                 break;
         }
+    }
+
+    private void RequestFocus(DesktopFocusTarget target)
+    {
+        FocusRequested?.Invoke(target);
     }
 
     private bool MatchesTimelineFilter(VehicleTimelineItem item)

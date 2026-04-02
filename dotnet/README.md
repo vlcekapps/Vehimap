@@ -31,6 +31,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - vyexportovat budouci terminy do `.ics` primo z nove C# vetve
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu
 - pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
+- ovladat shell vice klavesnici: `Ctrl+R` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+F` pro fokus do hledani v casove ose a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech a dashboardu
 
 ## Lokalni build
 

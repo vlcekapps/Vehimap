@@ -8,6 +8,11 @@
         MinWidth="1120"
         MinHeight="760"
         Title="{Binding Title}">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Ctrl+R" Command="{Binding ReloadCommand}" />
+    <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportCalendarCommand}" />
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusTimelineSearchCommand}" />
+  </Window.KeyBindings>
   <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*,Auto">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">
@@ -100,7 +105,8 @@
           <TextBlock FontSize="18"
                      FontWeight="SemiBold"
                      Text="NaÄŤtenĂˇ vozidla z legacy dat" />
-          <ListBox Grid.Row="1"
+          <ListBox x:Name="VehicleListBox"
+                   Grid.Row="1"
                    Margin="0,12,0,0"
                    ItemsSource="{Binding Vehicles}"
                    SelectedItem="{Binding SelectedVehicle}"
@@ -123,7 +129,9 @@
       </Border>
 
       <Border Grid.Column="1" Margin="16,0,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
-        <TabControl SelectedIndex="{Binding SelectedVehicleTabIndex}">
+        <TabControl x:Name="VehicleTabControl"
+                    SelectedIndex="{Binding SelectedVehicleTabIndex}"
+                    AutomationProperties.Name="Hlavní pracovní karty vybraného vozidla">
           <TabItem Header="Detail">
             <Grid Margin="0,8,0,0" RowDefinitions="Auto,Auto,Auto,*">
               <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
@@ -138,7 +146,8 @@
           <TabItem Header="Historie">
             <Grid Margin="0,8,0,0" RowDefinitions="Auto,*">
               <TextBlock Text="{Binding HistorySummary}" TextWrapping="Wrap" />
-              <ListBox Grid.Row="1"
+              <ListBox x:Name="HistoryListBox"
+                       Grid.Row="1"
                        Margin="0,12,0,0"
                        ItemsSource="{Binding SelectedVehicleHistory}"
                        SelectedItem="{Binding SelectedHistory}"
@@ -164,7 +173,8 @@
             <Grid Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
               <Grid RowDefinitions="Auto,*">
                 <TextBlock Text="{Binding FuelSummary}" TextWrapping="Wrap" />
-                <ListBox Grid.Row="1"
+                <ListBox x:Name="FuelListBox"
+                         Grid.Row="1"
                          Margin="0,12,12,0"
                          ItemsSource="{Binding SelectedVehicleFuel}"
                          SelectedItem="{Binding SelectedFuel}"
@@ -199,7 +209,8 @@
             <Grid Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
               <Grid RowDefinitions="Auto,*">
                 <TextBlock Text="{Binding ReminderSummary}" TextWrapping="Wrap" />
-                <ListBox Grid.Row="1"
+                <ListBox x:Name="ReminderListBox"
+                         Grid.Row="1"
                          Margin="0,12,12,0"
                          ItemsSource="{Binding SelectedVehicleReminders}"
                          SelectedItem="{Binding SelectedReminder}"
@@ -233,7 +244,8 @@
             <Grid Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
               <Grid RowDefinitions="Auto,*">
                 <TextBlock Text="{Binding MaintenanceSummary}" TextWrapping="Wrap" />
-                <ListBox Grid.Row="1"
+                <ListBox x:Name="MaintenanceListBox"
+                         Grid.Row="1"
                          Margin="0,12,12,0"
                          ItemsSource="{Binding SelectedVehicleMaintenance}"
                          SelectedItem="{Binding SelectedMaintenance}"
@@ -277,18 +289,23 @@
                           SelectedItem="{Binding SelectedTimelineFilter}"
                           AutomationProperties.Name="Filtr časové osy" />
                 <TextBlock Grid.Column="2" Margin="16,0,0,0" VerticalAlignment="Center" Text="Hledat" />
-                <TextBox Grid.Column="3"
+                <TextBox x:Name="TimelineSearchBox"
+                         Grid.Column="3"
                          Margin="12,0,0,0"
                          Text="{Binding TimelineSearchText}"
                          PlaceholderText="Položka, stav nebo poznámka"
                          AutomationProperties.Name="Hledání v časové ose" />
               </Grid>
 
-              <ListBox Grid.Row="2"
+              <ListBox x:Name="TimelineListBox"
+                       Grid.Row="2"
                        Margin="0,12,12,0"
                        ItemsSource="{Binding SelectedVehicleTimeline}"
                        SelectedItem="{Binding SelectedTimelineItem}"
                        AutomationProperties.Name="Časová osa vybraného vozidla">
+                <ListBox.KeyBindings>
+                  <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedTimelineItemCommand}" />
+                </ListBox.KeyBindings>
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="vm:VehicleTimelineItemViewModel">
                     <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
@@ -334,11 +351,15 @@
             <Grid Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
               <Grid RowDefinitions="Auto,*">
                 <TextBlock Text="{Binding RecordSummary}" TextWrapping="Wrap" />
-                <ListBox Grid.Row="1"
+                <ListBox x:Name="RecordListBox"
+                         Grid.Row="1"
                          Margin="0,12,12,0"
                          ItemsSource="{Binding SelectedVehicleRecords}"
                          SelectedItem="{Binding SelectedRecord}"
                          AutomationProperties.Name="Doklady vybranĂ©ho vozidla">
+                  <ListBox.KeyBindings>
+                    <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedRecordFileCommand}" />
+                  </ListBox.KeyBindings>
                   <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="vm:VehicleRecordItemViewModel">
                       <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
@@ -378,11 +399,15 @@
           <TabItem Header="Audit">
             <Grid Margin="0,8,0,0" RowDefinitions="Auto,*">
               <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-              <ListBox Grid.Row="1"
+              <ListBox x:Name="AuditListBox"
+                       Grid.Row="1"
                        Margin="0,12,0,0"
                        ItemsSource="{Binding AuditItems}"
                        SelectedItem="{Binding SelectedDashboardAuditItem}"
                        AutomationProperties.Name="Seznam auditnĂ­ch poloĹľek">
+                <ListBox.KeyBindings>
+                  <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
+                </ListBox.KeyBindings>
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="vm:AuditItemViewModel">
                     <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
@@ -404,11 +429,15 @@
             <Grid Margin="0,8,0,0" RowDefinitions="Auto,Auto,*">
               <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" />
               <TextBlock Grid.Row="1" Margin="0,8,0,0" Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
-              <ListBox Grid.Row="2"
+              <ListBox x:Name="CostListBox"
+                       Grid.Row="2"
                        Margin="0,12,0,0"
                        ItemsSource="{Binding CostVehicles}"
                        SelectedItem="{Binding SelectedDashboardCostVehicle}"
                        AutomationProperties.Name="Seznam nĂˇkladovĂ˝ch souhrnĹŻ vozidel">
+                <ListBox.KeyBindings>
+                  <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" />
+                </ListBox.KeyBindings>
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="vm:CostVehicleItemViewModel">
                     <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
@@ -448,11 +477,15 @@
                           Command="{Binding OpenSelectedDashboardAuditItemCommand}"
                           Content="Otevřít vozidlo"
                           AutomationProperties.Name="Otevřít vozidlo nebo evidenci z vybrané auditní položky" />
-                  <ListBox Grid.Row="2"
+                  <ListBox x:Name="DashboardAuditListBox"
+                           Grid.Row="2"
                            Margin="0,12,0,0"
                            ItemsSource="{Binding AuditItems}"
                            SelectedItem="{Binding SelectedDashboardAuditItem}"
                            AutomationProperties.Name="Přehled auditních položek na dashboardu">
+                    <ListBox.KeyBindings>
+                      <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
+                    </ListBox.KeyBindings>
                     <ListBox.ItemTemplate>
                       <DataTemplate x:DataType="vm:AuditItemViewModel">
                         <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6">
@@ -479,11 +512,15 @@
                           Command="{Binding OpenSelectedDashboardCostVehicleCommand}"
                           Content="Vybrat vozidlo"
                           AutomationProperties.Name="Vybrat vozidlo z nákladového přehledu" />
-                  <ListBox Grid.Row="2"
+                  <ListBox x:Name="DashboardCostListBox"
+                           Grid.Row="2"
                            Margin="0,12,0,0"
                            ItemsSource="{Binding CostVehicles}"
                            SelectedItem="{Binding SelectedDashboardCostVehicle}"
                            AutomationProperties.Name="Přehled nákladových položek na dashboardu">
+                    <ListBox.KeyBindings>
+                      <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" />
+                    </ListBox.KeyBindings>
                     <ListBox.ItemTemplate>
                       <DataTemplate x:DataType="vm:CostVehicleItemViewModel">
                         <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6">
@@ -516,11 +553,15 @@
                              Opacity="0.75"
                              Text="{Binding SelectedDashboardTimelineDetail}"
                              TextWrapping="Wrap" />
-                  <ListBox Grid.Row="3"
+                  <ListBox x:Name="DashboardTimelineListBox"
+                           Grid.Row="3"
                            Margin="0,12,0,0"
                            ItemsSource="{Binding DashboardUpcomingTimeline}"
                            SelectedItem="{Binding SelectedDashboardTimelineItem}"
                            AutomationProperties.Name="Nejbližší termíny napříč vozidly">
+                    <ListBox.KeyBindings>
+                      <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" />
+                    </ListBox.KeyBindings>
                     <ListBox.ItemTemplate>
                       <DataTemplate x:DataType="vm:VehicleTimelineItemViewModel">
                         <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6">
