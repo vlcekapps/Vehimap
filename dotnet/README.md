@@ -38,6 +38,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo vytvaret, upravovat a mazat `historii`
 - primo vytvaret, upravovat a mazat `tankovani`
 - primo vytvaret, upravovat a mazat `plan udrzby`
+- primo vytvaret a upravovat `vozidla`, vcetne zakladniho servisniho profilu a stavu vozidla
 - drzet keyboard-first a11y i v hlavnim shellu, vcetne vlastni focusovatelne listy karet a konzistentniho focusu pro ctecky obrazovky
 
 ## Lokalni build

@@ -156,6 +156,70 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Nový servisní plán byl uložen.", viewModel.MaintenanceEditorStatus);
     }
 
+    [Fact]
+    public async Task Save_vehicle_command_adds_new_vehicle_and_restores_selection()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateVehicleCommand.Execute(null);
+        viewModel.VehicleEditorName = "Božena";
+        viewModel.VehicleEditorCategory = "Osobní vozidla";
+        viewModel.VehicleEditorMakeModel = "Škoda 100";
+        viewModel.VehicleEditorPlate = "2AB3456";
+        viewModel.VehicleEditorYear = "1973";
+        viewModel.VehicleEditorPower = "35";
+        viewModel.VehicleEditorNote = "Srazové";
+        viewModel.VehicleEditorNextTk = "09/2026";
+        viewModel.VehicleEditorGreenCardTo = "10/2026";
+        viewModel.VehicleEditorState = "Veterán";
+        viewModel.VehicleEditorPowertrain = "benzín";
+
+        await viewModel.SaveVehicleCommand.ExecuteAsync(null);
+
+        Assert.NotNull(viewModel.SelectedVehicle);
+        Assert.Equal("Božena", viewModel.SelectedVehicle!.Name);
+        Assert.Contains(dataStore.CurrentDataSet.Vehicles, item => item.Name == "Božena");
+        Assert.Contains(dataStore.CurrentDataSet.VehicleMetaEntries, item => item.VehicleId == viewModel.SelectedVehicle.Id && item.State == "Veterán" && item.Powertrain == "benzín");
+        Assert.Equal("Nové vozidlo bylo uloženo.", viewModel.VehicleEditorStatus);
+    }
+
+    [Fact]
+    public async Task Save_vehicle_command_updates_existing_vehicle_and_meta()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_1", "Běžný provoz", "test", "benzín", "ano", "řemen", "manuál"));
+
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.EditSelectedVehicleCommand.Execute(null);
+        viewModel.VehicleEditorName = "Milena po servisu";
+        viewModel.VehicleEditorPowertrain = "diesel";
+        viewModel.VehicleEditorState = "Odstaveno";
+
+        await viewModel.SaveVehicleCommand.ExecuteAsync(null);
+
+        Assert.Equal("Milena po servisu", viewModel.SelectedVehicle?.Name);
+        var savedVehicle = Assert.Single(dataStore.CurrentDataSet.Vehicles.Where(item => item.Id == "veh_1"));
+        Assert.Equal("Milena po servisu", savedVehicle.Name);
+        var savedMeta = Assert.Single(dataStore.CurrentDataSet.VehicleMetaEntries.Where(item => item.VehicleId == "veh_1"));
+        Assert.Equal("Odstaveno", savedMeta.State);
+        Assert.Equal("diesel", savedMeta.Powertrain);
+        Assert.Equal("test", savedMeta.Tags);
+        Assert.Equal("ano", savedMeta.ClimateProfile);
+        Assert.Equal("řemen", savedMeta.TimingDrive);
+        Assert.Equal("manuál", savedMeta.Transmission);
+        Assert.Equal("Vozidlo bylo upraveno.", viewModel.VehicleEditorStatus);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_tempRoot))

@@ -318,6 +318,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     partial void OnSelectedVehicleChanged(VehicleListItemViewModel? value)
     {
         HandleVehicleSelectionChanged();
+        EditSelectedVehicleCommand.NotifyCanExecuteChanged();
 
         if (value is null)
         {

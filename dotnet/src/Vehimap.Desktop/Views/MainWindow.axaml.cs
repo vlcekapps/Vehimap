@@ -117,6 +117,7 @@ public partial class MainWindow : Window
     {
         RegisterForwardTabToHeaders("VehicleListBox");
         RegisterTabHeaderNavigation();
+        RegisterShiftTabBackNavigation("VehicleEditorNameBox");
         RegisterShiftTabBackNavigation("HistoryListBox");
         RegisterShiftTabBackNavigation("HistoryEditorDateBox");
         RegisterShiftTabBackNavigation("FuelListBox");
@@ -290,6 +291,7 @@ public partial class MainWindow : Window
         return target switch
         {
             DesktopFocusTarget.VehicleList => this.FindControl<ListBox>("VehicleListBox"),
+            DesktopFocusTarget.VehicleEditorName => this.FindControl<TextBox>("VehicleEditorNameBox"),
             DesktopFocusTarget.HistoryList => this.FindControl<ListBox>("HistoryListBox"),
             DesktopFocusTarget.HistoryEditorDate => this.FindControl<TextBox>("HistoryEditorDateBox"),
             DesktopFocusTarget.FuelList => this.FindControl<ListBox>("FuelListBox"),

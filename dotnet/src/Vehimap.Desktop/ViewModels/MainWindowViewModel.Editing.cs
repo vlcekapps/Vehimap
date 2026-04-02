@@ -171,11 +171,14 @@ public sealed partial class MainWindowViewModel
 
     internal void HandleVehicleSelectionChanged()
     {
+        CancelVehicleEditCore(clearStatus: true);
         CancelHistoryEditCore(clearStatus: true);
         CancelFuelEditCore(clearStatus: true);
         CancelReminderEditCore(clearStatus: true);
         CancelMaintenanceEditCore(clearStatus: true);
         CancelRecordEditCore(clearStatus: true);
+        CreateVehicleCommand.NotifyCanExecuteChanged();
+        EditSelectedVehicleCommand.NotifyCanExecuteChanged();
         CreateHistoryCommand.NotifyCanExecuteChanged();
         CreateFuelCommand.NotifyCanExecuteChanged();
         CreateReminderCommand.NotifyCanExecuteChanged();

@@ -252,12 +252,122 @@
                 AutomationProperties.Name="Obsah vybrané hlavní pracovní karty"
                 AutomationProperties.HelpText="Obsah se mění podle zvolené karty nahoře.">
             <Grid IsVisible="{Binding IsDetailTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,Auto,Auto,*">
-              <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
-              <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="{Binding SelectedVehicleOverview}" TextWrapping="Wrap" />
-              <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="{Binding SelectedVehicleDates}" TextWrapping="Wrap" />
-              <Border Grid.Row="3" Margin="0,16,0,0" Padding="14" Background="#10203040" CornerRadius="8">
-                <TextBlock Text="{Binding SelectedVehicleProfile}" TextWrapping="Wrap" />
-              </Border>
+              <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding VehiclePanelHeading}" />
+              <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="128" ItemHeight="34">
+                <Button Command="{Binding CreateVehicleCommand}"
+                        Content="Nové vozidlo"
+                        AutomationProperties.Name="Vytvořit nové vozidlo" />
+                <Button Command="{Binding EditSelectedVehicleCommand}"
+                        Content="Upravit"
+                        AutomationProperties.Name="Upravit vybrané vozidlo" />
+                <Button Command="{Binding SaveVehicleCommand}"
+                        Content="Uložit"
+                        IsVisible="{Binding IsEditingVehicle}"
+                        AutomationProperties.Name="Uložit údaje vozidla" />
+                <Button Command="{Binding CancelVehicleEditCommand}"
+                        Content="Zrušit"
+                        IsVisible="{Binding IsEditingVehicle}"
+                        AutomationProperties.Name="Zrušit úpravu vozidla" />
+              </WrapPanel>
+              <TextBlock Grid.Row="2"
+                         Margin="0,12,0,0"
+                         Opacity="0.82"
+                         Text="{Binding VehicleEditorStatus}"
+                         TextWrapping="Wrap" />
+              <Grid Grid.Row="3"
+                    Margin="0,16,0,0"
+                    IsVisible="{Binding IsEditingVehicle}"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                <Grid ColumnDefinitions="*,180">
+                  <StackPanel Margin="0,0,12,0" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Název vozidla" />
+                    <TextBox x:Name="VehicleEditorNameBox"
+                             Text="{Binding VehicleEditorName}"
+                             PlaceholderText="Například Milena" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Kategorie" />
+                    <TextBox Text="{Binding VehicleEditorCategory}"
+                             PlaceholderText="Například Osobní vozidla" />
+                  </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="*,200">
+                  <StackPanel Margin="0,0,12,0" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Značka a model" />
+                    <TextBox Text="{Binding VehicleEditorMakeModel}"
+                             PlaceholderText="Například Škoda 120L" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="SPZ" />
+                    <TextBox Text="{Binding VehicleEditorPlate}"
+                             PlaceholderText="Například 1AB2345" />
+                  </StackPanel>
+                </Grid>
+                <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="160,160,*">
+                  <StackPanel Margin="0,0,12,0" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Rok" />
+                    <TextBox Text="{Binding VehicleEditorYear}" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Výkon" />
+                    <TextBox Text="{Binding VehicleEditorPower}" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="2" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Stav vozidla" />
+                    <TextBox Text="{Binding VehicleEditorState}"
+                             PlaceholderText="Například Běžný provoz" />
+                  </StackPanel>
+                </Grid>
+                <Grid Grid.Row="3" Margin="0,14,0,0" ColumnDefinitions="*,*">
+                  <StackPanel Margin="0,0,12,0" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Poslední TK" />
+                    <TextBox Text="{Binding VehicleEditorLastTk}" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Příští TK" />
+                    <TextBox Text="{Binding VehicleEditorNextTk}" />
+                  </StackPanel>
+                </Grid>
+                <Grid Grid.Row="4" Margin="0,14,0,0" ColumnDefinitions="*,*">
+                  <StackPanel Margin="0,0,12,0" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Zelená karta od" />
+                    <TextBox Text="{Binding VehicleEditorGreenCardFrom}" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Zelená karta do" />
+                    <TextBox Text="{Binding VehicleEditorGreenCardTo}" />
+                  </StackPanel>
+                </Grid>
+                <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Pohon a servisní profil" />
+                <TextBox Grid.Row="6"
+                         Margin="0,6,0,0"
+                         Text="{Binding VehicleEditorPowertrain}"
+                         PlaceholderText="Například benzín, diesel nebo elektro" />
+                <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka k vozidlu" />
+                <TextBox Grid.Row="8"
+                         Margin="0,6,0,0"
+                         Height="110"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         VerticalContentAlignment="Top"
+                         Text="{Binding VehicleEditorNote}" />
+                <TextBlock Grid.Row="9"
+                           Margin="0,14,0,0"
+                           Opacity="0.72"
+                           Text="Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu."
+                           TextWrapping="Wrap" />
+              </Grid>
+              <Grid Grid.Row="3"
+                    Margin="0,16,0,0"
+                    IsVisible="{Binding IsVehicleDetailVisible}"
+                    RowDefinitions="Auto,Auto,Auto,*">
+                <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
+                <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="{Binding SelectedVehicleOverview}" TextWrapping="Wrap" />
+                <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="{Binding SelectedVehicleDates}" TextWrapping="Wrap" />
+                <Border Grid.Row="3" Margin="0,16,0,0" Padding="14" Background="#10203040" CornerRadius="8">
+                  <TextBlock Text="{Binding SelectedVehicleProfile}" TextWrapping="Wrap" />
+                </Border>
+              </Grid>
             </Grid>
 
             <Grid IsVisible="{Binding IsHistoryTabSelected}" Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
