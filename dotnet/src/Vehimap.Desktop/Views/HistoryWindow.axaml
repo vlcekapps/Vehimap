@@ -23,13 +23,15 @@
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"
+              x:Name="CloseHistoryWindowButton"
               Width="120"
               Height="34"
               HorizontalAlignment="Right"
               VerticalAlignment="Top"
               Click="OnCloseClick"
               Content="Zavřít"
-              AutomationProperties.Name="Zavřít okno historie" />
+              AutomationProperties.Name="Zavřít okno historie"
+              AutomationProperties.AutomationId="CloseHistoryWindowButton" />
     </Grid>
 
     <workspaces:HistoryWorkspaceView x:Name="HistoryWorkspaceHost"

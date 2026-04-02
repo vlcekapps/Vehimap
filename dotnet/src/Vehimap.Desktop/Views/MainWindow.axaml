@@ -328,11 +328,13 @@
                 AutomationProperties.HelpText="Obsah se mění podle zvolené karty nahoře.">
             <Grid IsVisible="{Binding IsDetailTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
               <Button Width="128"
+                      x:Name="OpenVehicleDetailWindowButton"
                       HorizontalAlignment="Left"
                       Click="OnOpenVehicleDetailWindowClick"
                       IsEnabled="{Binding CanOpenVehicleDetailWindow}"
                       Content="V okně"
-                      AutomationProperties.Name="Otevřít detail vozidla v samostatném okně" />
+                      AutomationProperties.Name="Otevřít detail vozidla v samostatném okně"
+                      AutomationProperties.AutomationId="OpenVehicleDetailWindowButton" />
               <workspaces:VehicleDetailWorkspaceView Grid.Row="1"
                                                     Margin="0,16,0,0"
                                                     DataContext="{Binding VehicleDetailWorkspace}" />
@@ -340,11 +342,13 @@
 
             <Grid IsVisible="{Binding IsHistoryTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
               <Button Width="128"
+                      x:Name="OpenHistoryWindowButton"
                       HorizontalAlignment="Left"
                       Click="OnOpenHistoryWindowClick"
                       IsEnabled="{Binding CanOpenHistoryWindow}"
                       Content="V okně"
-                      AutomationProperties.Name="Otevřít historii v samostatném okně" />
+                      AutomationProperties.Name="Otevřít historii v samostatném okně"
+                      AutomationProperties.AutomationId="OpenHistoryWindowButton" />
               <workspaces:HistoryWorkspaceView Grid.Row="1"
                                               Margin="0,16,0,0"
                                               DataContext="{Binding HistoryWorkspace}" />
@@ -352,11 +356,13 @@
 
             <Grid IsVisible="{Binding IsFuelTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
               <Button Width="128"
+                      x:Name="OpenFuelWindowButton"
                       HorizontalAlignment="Left"
                       Click="OnOpenFuelWindowClick"
                       IsEnabled="{Binding CanOpenFuelWindow}"
                       Content="V okně"
-                      AutomationProperties.Name="Otevřít tankování v samostatném okně" />
+                      AutomationProperties.Name="Otevřít tankování v samostatném okně"
+                      AutomationProperties.AutomationId="OpenFuelWindowButton" />
               <workspaces:FuelWorkspaceView Grid.Row="1"
                                            Margin="0,16,0,0"
                                            DataContext="{Binding FuelWorkspace}" />
@@ -364,11 +370,13 @@
 
             <Grid IsVisible="{Binding IsReminderTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
               <Button Width="128"
+                      x:Name="OpenReminderWindowButton"
                       HorizontalAlignment="Left"
                       Click="OnOpenRemindersWindowClick"
                       IsEnabled="{Binding CanOpenReminderWindow}"
                       Content="V okně"
-                      AutomationProperties.Name="Otevřít připomínky v samostatném okně" />
+                      AutomationProperties.Name="Otevřít připomínky v samostatném okně"
+                      AutomationProperties.AutomationId="OpenReminderWindowButton" />
               <workspaces:ReminderWorkspaceView Grid.Row="1"
                                                Margin="0,16,0,0"
                                                DataContext="{Binding ReminderWorkspace}" />
@@ -376,11 +384,13 @@
 
             <Grid IsVisible="{Binding IsMaintenanceTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
               <Button Width="128"
+                      x:Name="OpenMaintenanceWindowButton"
                       HorizontalAlignment="Left"
                       Click="OnOpenMaintenanceWindowClick"
                       IsEnabled="{Binding CanOpenMaintenanceWindow}"
                       Content="V okně"
-                      AutomationProperties.Name="Otevřít plán údržby v samostatném okně" />
+                      AutomationProperties.Name="Otevřít plán údržby v samostatném okně"
+                      AutomationProperties.AutomationId="OpenMaintenanceWindowButton" />
               <workspaces:MaintenanceWorkspaceView Grid.Row="1"
                                                   Margin="0,16,0,0"
                                                   DataContext="{Binding MaintenanceWorkspace}" />
@@ -392,11 +402,13 @@
 
             <Grid IsVisible="{Binding IsRecordTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
               <Button Width="128"
+                      x:Name="OpenRecordWindowButton"
                       HorizontalAlignment="Left"
                       Click="OnOpenRecordsWindowClick"
                       IsEnabled="{Binding CanOpenRecordWindow}"
                       Content="V okně"
-                      AutomationProperties.Name="Otevřít doklady v samostatném okně" />
+                      AutomationProperties.Name="Otevřít doklady v samostatném okně"
+                      AutomationProperties.AutomationId="OpenRecordWindowButton" />
               <workspaces:RecordWorkspaceView Grid.Row="1"
                                              Margin="0,16,0,0"
                                              DataContext="{Binding RecordWorkspace}" />
@@ -404,10 +416,12 @@
 
             <Grid IsVisible="{Binding IsAuditTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
               <Button Width="128"
+                      x:Name="OpenAuditWindowButton"
                       HorizontalAlignment="Left"
                       Click="OnOpenAuditWindowClick"
                       Content="V okně"
-                      AutomationProperties.Name="Otevřít audit v samostatném okně" />
+                      AutomationProperties.Name="Otevřít audit v samostatném okně"
+                      AutomationProperties.AutomationId="OpenAuditWindowButton" />
               <workspaces:AuditWorkspaceView Grid.Row="1"
                                             Margin="0,16,0,0"
                                             DataContext="{Binding AuditWorkspace}" />
@@ -419,10 +433,12 @@
 
             <Grid IsVisible="{Binding IsDashboardTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
               <Button Width="128"
+                      x:Name="OpenDashboardWindowButton"
                       HorizontalAlignment="Left"
                       Click="OnOpenDashboardWindowClick"
                       Content="V okně"
-                      AutomationProperties.Name="Otevřít dashboard v samostatném okně" />
+                      AutomationProperties.Name="Otevřít dashboard v samostatném okně"
+                      AutomationProperties.AutomationId="OpenDashboardWindowButton" />
               <workspaces:DashboardWorkspaceView Grid.Row="1"
                                                 Margin="0,16,0,0"
                                                 DataContext="{Binding DashboardWorkspace}" />

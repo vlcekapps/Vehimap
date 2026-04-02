@@ -74,6 +74,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"AboutButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCheckButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleListBox\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenHistoryWindowButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDashboardWindowButton\"", xaml);
         Assert.Contains("x:Name=\"DashboardTabButton\"", xaml);
         Assert.Contains("IsTabStop=\"{Binding IsDashboardTabSelected}\"", xaml);
         Assert.Contains("<RadioButton x:Name=\"DashboardTabButton\"", xaml);
@@ -100,6 +102,8 @@ public sealed class DesktopAccessibilityLabelTests
         var settingsXaml = File.ReadAllText(Path.Combine(desktopRoot, "SettingsWindow.axaml"));
         var aboutXaml = File.ReadAllText(Path.Combine(desktopRoot, "AboutWindow.axaml"));
         var updateXaml = File.ReadAllText(Path.Combine(desktopRoot, "UpdateCheckWindow.axaml"));
+        var historyXaml = File.ReadAllText(Path.Combine(desktopRoot, "HistoryWindow.axaml"));
+        var dashboardXaml = File.ReadAllText(Path.Combine(desktopRoot, "DashboardWindow.axaml"));
 
         Assert.Contains("Title=\"Nastavení\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
@@ -108,5 +112,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
         Assert.Contains("Title=\"Kontrola aktualizací\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseHistoryWindowButton\"", historyXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseDashboardWindowButton\"", dashboardXaml);
     }
 }

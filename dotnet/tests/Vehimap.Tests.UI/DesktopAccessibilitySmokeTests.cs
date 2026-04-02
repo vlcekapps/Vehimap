@@ -47,4 +47,27 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("UpdateCloseButton");
         }
     }
+
+    [Fact]
+    public void Workspace_windows_open_from_selected_tabs_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("HistoryTabButton");
+            session.ClickByAccessibilityId("OpenHistoryWindowButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseHistoryWindowButton"));
+            session.ClickByAccessibilityId("CloseHistoryWindowButton");
+
+            session.ClickByAccessibilityId("DashboardTabButton");
+            session.ClickByAccessibilityId("OpenDashboardWindowButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseDashboardWindowButton"));
+            session.ClickByAccessibilityId("CloseDashboardWindowButton");
+        }
+    }
 }

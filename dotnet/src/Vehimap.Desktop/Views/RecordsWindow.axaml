@@ -23,13 +23,15 @@
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"
+              x:Name="CloseRecordsWindowButton"
               Width="120"
               Height="34"
               HorizontalAlignment="Right"
               VerticalAlignment="Top"
               Click="OnCloseClick"
               Content="Zavřít"
-              AutomationProperties.Name="Zavřít okno dokladů" />
+              AutomationProperties.Name="Zavřít okno dokladů"
+              AutomationProperties.AutomationId="CloseRecordsWindowButton" />
     </Grid>
 
     <workspaces:RecordWorkspaceView x:Name="RecordWorkspaceHost"

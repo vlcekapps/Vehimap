@@ -23,13 +23,15 @@
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"
+              x:Name="CloseRemindersWindowButton"
               Width="120"
               Height="34"
               HorizontalAlignment="Right"
               VerticalAlignment="Top"
               Click="OnCloseClick"
               Content="Zavřít"
-              AutomationProperties.Name="Zavřít okno připomínek" />
+              AutomationProperties.Name="Zavřít okno připomínek"
+              AutomationProperties.AutomationId="CloseRemindersWindowButton" />
     </Grid>
 
     <workspaces:ReminderWorkspaceView x:Name="ReminderWorkspaceHost"
