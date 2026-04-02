@@ -251,6 +251,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool CanOpenMaintenanceWindow => SelectedVehicle is not null;
 
+    public bool CanOpenVehicleDetailWindow => SelectedVehicle is not null;
+
     public string HistoryWindowTitle =>
         SelectedVehicle is null
             ? "Historie vozidla"
@@ -275,6 +277,15 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedVehicle is null
             ? "Doklady a přílohy"
             : $"Doklady a přílohy - {SelectedVehicle.Name}";
+
+    public string VehicleDetailWindowTitle =>
+        SelectedVehicle is null
+            ? "Detail vozidla"
+            : $"Detail - {SelectedVehicle.Name}";
+
+    public string AuditWindowTitle => "Audit dat";
+
+    public string DashboardWindowTitle => "Dashboard";
 
     public bool IsDetailTabSelected => SelectedVehicleTabIndex == DetailTabIndex;
 
@@ -384,11 +395,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         HandleVehicleSelectionChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanOpenVehicleDetailWindow));
         OnPropertyChanged(nameof(CanOpenHistoryWindow));
         OnPropertyChanged(nameof(CanOpenFuelWindow));
         OnPropertyChanged(nameof(CanOpenReminderWindow));
         OnPropertyChanged(nameof(CanOpenMaintenanceWindow));
         OnPropertyChanged(nameof(CanOpenRecordWindow));
+        OnPropertyChanged(nameof(VehicleDetailWindowTitle));
         OnPropertyChanged(nameof(HistoryWindowTitle));
         OnPropertyChanged(nameof(FuelWindowTitle));
         OnPropertyChanged(nameof(ReminderWindowTitle));

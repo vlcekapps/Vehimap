@@ -298,11 +298,15 @@
                 AutomationProperties.Name="Obsah vybrané hlavní pracovní karty"
                 AutomationProperties.HelpText="Obsah se mění podle zvolené karty nahoře.">
             <Grid IsVisible="{Binding IsDetailTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,Auto,Auto,*">
-              <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding VehiclePanelHeading}" />
-              <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="128" ItemHeight="34">
-                <Button Command="{Binding CreateVehicleCommand}"
-                        Content="Nové vozidlo"
-                        AutomationProperties.Name="Vytvořit nové vozidlo" />
+                <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding VehiclePanelHeading}" />
+                <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="128" ItemHeight="34">
+                  <Button Click="OnOpenVehicleDetailWindowClick"
+                          IsEnabled="{Binding CanOpenVehicleDetailWindow}"
+                          Content="V okně"
+                          AutomationProperties.Name="Otevřít detail vozidla v samostatném okně" />
+                  <Button Command="{Binding CreateVehicleCommand}"
+                          Content="Nové vozidlo"
+                          AutomationProperties.Name="Vytvořit nové vozidlo" />
                 <Button Command="{Binding EditSelectedVehicleCommand}"
                         Content="Upravit"
                         AutomationProperties.Name="Upravit vybrané vozidlo" />
@@ -1083,11 +1087,19 @@
               </Border>
             </Grid>
 
-            <Grid IsVisible="{Binding IsAuditTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
-              <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-              <ListBox x:Name="AuditListBox"
-                       Grid.Row="1"
-                       Margin="0,12,0,0"
+              <Grid IsVisible="{Binding IsAuditTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+                <Grid ColumnDefinitions="*,140">
+                  <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
+                  <Button Grid.Column="1"
+                          Width="128"
+                          HorizontalAlignment="Right"
+                          Click="OnOpenAuditWindowClick"
+                          Content="V okně"
+                          AutomationProperties.Name="Otevřít audit v samostatném okně" />
+                </Grid>
+                <ListBox x:Name="AuditListBox"
+                         Grid.Row="1"
+                         Margin="0,12,0,0"
                        ItemsSource="{Binding AuditItems}"
                        SelectedItem="{Binding SelectedDashboardAuditItem}"
                        AutomationProperties.Name="Seznam auditních položek">
@@ -1149,15 +1161,24 @@
               </ListBox>
             </Grid>
 
-            <Grid IsVisible="{Binding IsDashboardTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
-              <StackPanel Grid.ColumnSpan="3" Spacing="8">
-                <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-                <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" />
-                <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
-                <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" />
-              </StackPanel>
+              <Grid IsVisible="{Binding IsDashboardTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
+                <Grid Grid.ColumnSpan="3" ColumnDefinitions="*,150">
+                  <StackPanel Spacing="8">
+                    <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
+                    <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" />
+                    <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
+                    <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" />
+                  </StackPanel>
+                  <Button Grid.Column="1"
+                          Width="128"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Top"
+                          Click="OnOpenDashboardWindowClick"
+                          Content="V okně"
+                          AutomationProperties.Name="Otevřít dashboard v samostatném okně" />
+                </Grid>
 
-              <Border Grid.Row="1" Grid.Column="0" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
+                <Border Grid.Row="1" Grid.Column="0" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
                 <Grid RowDefinitions="Auto,Auto,*">
                   <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejdůležitější audit" />
                   <Button Grid.Row="1"

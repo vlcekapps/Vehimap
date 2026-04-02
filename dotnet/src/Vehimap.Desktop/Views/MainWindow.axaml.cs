@@ -11,11 +11,14 @@ namespace Vehimap.Desktop.Views;
 
 public partial class MainWindow : Window
 {
+    private const int DetailTabIndex = 0;
     private const int HistoryTabIndex = 1;
     private const int FuelTabIndex = 2;
     private const int ReminderTabIndex = 3;
     private const int MaintenanceTabIndex = 4;
     private const int RecordTabIndex = 6;
+    private const int AuditTabIndex = 7;
+    private const int DashboardTabIndex = 9;
 
     private static readonly string[] TabHeaderButtonNames =
     [
@@ -518,6 +521,57 @@ public partial class MainWindow : Window
 
         await dialog.ShowDialog(this);
         RequestFocus(DesktopFocusTarget.MaintenanceList);
+    }
+
+    private async void OnOpenVehicleDetailWindowClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = DetailTabIndex;
+        var dialog = new VehicleDetailWindow
+        {
+            DataContext = _viewModel
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private async void OnOpenAuditWindowClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = AuditTabIndex;
+        var dialog = new AuditWindow
+        {
+            DataContext = _viewModel
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.AuditList);
+    }
+
+    private async void OnOpenDashboardWindowClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = DashboardTabIndex;
+        var dialog = new DashboardWindow
+        {
+            DataContext = _viewModel
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.DashboardAuditList);
     }
 
     private bool FocusSelectedTabHeader()
