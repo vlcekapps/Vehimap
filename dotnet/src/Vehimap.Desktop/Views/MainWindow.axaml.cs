@@ -101,6 +101,7 @@ public partial class MainWindow : Window
 
     private void RegisterTabBoundaryNavigation()
     {
+        RegisterForwardTabToHeaders("VehicleListBox");
         RegisterShiftTabBackNavigation("HistoryListBox");
         RegisterShiftTabBackNavigation("FuelListBox");
         RegisterShiftTabBackNavigation("ReminderListBox");
@@ -116,12 +117,30 @@ public partial class MainWindow : Window
         RegisterShiftTabBackNavigation("DashboardTimelineOpenButton");
     }
 
+    private void RegisterForwardTabToHeaders(string controlName)
+    {
+        if (this.FindControl<Control>(controlName) is { } control)
+        {
+            control.AddHandler(InputElement.KeyDownEvent, OnForwardTabToHeadersKeyDown, RoutingStrategies.Tunnel);
+        }
+    }
+
     private void RegisterShiftTabBackNavigation(string controlName)
     {
         if (this.FindControl<Control>(controlName) is { } control)
         {
             control.AddHandler(InputElement.KeyDownEvent, OnTabBoundaryKeyDown, RoutingStrategies.Tunnel);
         }
+    }
+
+    private void OnForwardTabToHeadersKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Tab || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            return;
+        }
+
+        e.Handled = FocusSelectedTabHeader();
     }
 
     private void OnTabBoundaryKeyDown(object? sender, KeyEventArgs e)

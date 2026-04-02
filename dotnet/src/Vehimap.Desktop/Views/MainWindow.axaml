@@ -138,7 +138,6 @@
       <Border Grid.Column="1" Margin="16,0,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
         <TabControl x:Name="VehicleTabControl"
                     SelectedIndex="{Binding SelectedVehicleTabIndex}"
-                    IsTabStop="True"
                     AutomationProperties.Name="Hlavní pracovní karty vybraného vozidla"
                     AutomationProperties.HelpText="Karty Detail, Historie, Tankování, Připomínky, Údržba, Časová osa, Doklady, Audit, Náklady a Dashboard.">
           <TabItem Header="Detail">
