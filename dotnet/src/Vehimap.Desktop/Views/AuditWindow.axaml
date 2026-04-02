@@ -1,63 +1,39 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+        xmlns:workspaces="using:Vehimap.Desktop.Views.Workspaces"
         x:Class="Vehimap.Desktop.Views.AuditWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Width="1080"
+        x:DataType="vm:AuditWorkspaceViewModel"
+        Width="1180"
         Height="760"
-        MinWidth="920"
+        MinWidth="980"
         MinHeight="620"
         WindowStartupLocation="CenterOwner"
-        Title="{Binding AuditWindowTitle}"
+        Title="{Binding WindowTitle}"
         AutomationProperties.Name="Audit dat"
-        AutomationProperties.HelpText="Samostatné okno pro přehled auditních položek.">
-  <Grid Margin="20" RowDefinitions="Auto,Auto,*">
-    <TextBlock FontSize="24"
-               FontWeight="SemiBold"
-               Text="{Binding AuditWindowTitle}" />
-    <TextBlock Grid.Row="1"
-               Margin="0,8,0,0"
-               Opacity="0.78"
-               Text="{Binding AuditSummary}"
-               TextWrapping="Wrap" />
-    <Grid Grid.Row="2"
-          Margin="0,18,0,0"
-          RowDefinitions="Auto,*">
-      <WrapPanel ItemWidth="150" ItemHeight="34">
-        <Button Command="{Binding OpenSelectedDashboardAuditItemCommand}"
-                Content="Otevřít položku"
-                AutomationProperties.Name="Otevřít vybranou auditní položku" />
-        <Button Click="OnCloseClick"
-                Content="Zavřít"
-                AutomationProperties.Name="Zavřít okno auditu" />
-      </WrapPanel>
-      <ListBox x:Name="AuditWindowListBox"
-               Grid.Row="1"
-               Margin="0,12,0,0"
-               ItemsSource="{Binding AuditItems}"
-               SelectedItem="{Binding SelectedDashboardAuditItem}"
-               AutomationProperties.Name="Seznam auditních položek v samostatném okně">
-        <ListBox.KeyBindings>
-          <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
-        </ListBox.KeyBindings>
-        <ListBox.ItemTemplate>
-          <DataTemplate x:DataType="vm:AuditItemViewModel">
-            <Border Padding="12"
-                    Margin="0,0,0,8"
-                    Background="#10203040"
-                    CornerRadius="6"
-                    AutomationProperties.Name="{Binding AccessibleLabel}">
-              <StackPanel Spacing="4">
-                <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
-                <TextBlock Text="{Binding VehicleName}" />
-                <TextBlock Opacity="0.8" Text="{Binding Severity}" />
-                <TextBlock Opacity="0.8" Text="{Binding Category}" />
-                <TextBlock Opacity="0.8" Text="{Binding Message}" TextWrapping="Wrap" />
-              </StackPanel>
-            </Border>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
+        AutomationProperties.HelpText="Samostatné okno pro audit dat a problémových stavů.">
+  <Grid Margin="20" RowDefinitions="Auto,*">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="4">
+        <TextBlock FontSize="24"
+                   FontWeight="SemiBold"
+                   Text="{Binding WindowTitle}" />
+        <TextBlock Opacity="0.78"
+                   Text="{Binding AuditSummary}"
+                   TextWrapping="Wrap" />
+      </StackPanel>
+      <Button Grid.Column="1"
+              Width="120"
+              Height="34"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít okno auditu" />
     </Grid>
+
+    <workspaces:AuditWorkspaceView x:Name="AuditWorkspaceHost"
+                                   Grid.Row="1"
+                                   Margin="0,18,0,0" />
   </Grid>
 </Window>

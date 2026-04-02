@@ -1,214 +1,39 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+        xmlns:workspaces="using:Vehimap.Desktop.Views.Workspaces"
         x:Class="Vehimap.Desktop.Views.RecordsWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Width="1360"
-        Height="820"
+        x:DataType="vm:RecordWorkspaceViewModel"
+        Width="1380"
+        Height="840"
         MinWidth="1120"
         MinHeight="700"
         WindowStartupLocation="CenterOwner"
-        Title="{Binding RecordWindowTitle}"
-        AutomationProperties.Name="Doklady a přílohy vozidla"
+        Title="{Binding WindowTitle}"
+        AutomationProperties.Name="Doklady vozidla"
         AutomationProperties.HelpText="Samostatné okno pro práci s doklady a přílohami vybraného vozidla.">
-  <Grid Margin="20" RowDefinitions="Auto,Auto,*">
-    <TextBlock FontSize="24"
-               FontWeight="SemiBold"
-               Text="{Binding RecordWindowTitle}" />
-    <TextBlock Grid.Row="1"
-               Margin="0,8,0,0"
-               Opacity="0.78"
-               Text="{Binding RecordSummary}"
-               TextWrapping="Wrap" />
-
-    <Grid Grid.Row="2"
-          Margin="0,18,0,0"
-          ColumnDefinitions="1.1*,*">
-      <Grid RowDefinitions="Auto,*">
-        <TextBlock FontWeight="SemiBold"
-                   Text="Seznam dokladů a příloh vybraného vozidla" />
-        <ListBox x:Name="RecordWindowListBox"
-                 Grid.Row="1"
-                 Margin="0,12,12,0"
-                 ItemsSource="{Binding SelectedVehicleRecords}"
-                 SelectedItem="{Binding SelectedRecord}"
-                 AutomationProperties.Name="Doklady vybraného vozidla v samostatném okně">
-          <ListBox.KeyBindings>
-            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedRecordFileCommand}" />
-          </ListBox.KeyBindings>
-          <ListBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:VehicleRecordItemViewModel">
-              <Border Padding="12"
-                      Margin="0,0,0,8"
-                      Background="#10203040"
-                      CornerRadius="6"
-                      AutomationProperties.Name="{Binding AccessibleLabel}">
-                <StackPanel Spacing="4">
-                  <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
-                  <TextBlock Opacity="0.82" Text="{Binding RecordType}" />
-                  <TextBlock Opacity="0.82" Text="{Binding Provider}" />
-                  <TextBlock Opacity="0.82" Text="{Binding Validity}" />
-                  <TextBlock Opacity="0.82" Text="{Binding AttachmentMode}" />
-                  <TextBlock Opacity="0.72" Text="{Binding AttachmentState}" TextWrapping="Wrap" />
-                </StackPanel>
-              </Border>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-      </Grid>
-
-      <Border Grid.Column="1"
-              Margin="12,0,0,0"
-              Padding="16"
-              Background="#10203040"
-              CornerRadius="8">
-        <Grid RowDefinitions="Auto,Auto,Auto,*">
-          <TextBlock FontSize="18"
-                     FontWeight="SemiBold"
-                     Text="{Binding RecordPanelHeading}" />
-          <WrapPanel Grid.Row="1"
-                     Margin="0,14,0,0"
-                     ItemWidth="138"
-                     ItemHeight="34">
-            <Button Command="{Binding CreateRecordCommand}"
-                    Content="Nový doklad"
-                    AutomationProperties.Name="Vytvořit nový doklad" />
-            <Button Command="{Binding EditSelectedRecordCommand}"
-                    Content="Upravit"
-                    AutomationProperties.Name="Upravit vybraný doklad" />
-            <Button Command="{Binding DeleteSelectedRecordCommand}"
-                    Content="Odstranit"
-                    AutomationProperties.Name="Odstranit vybraný doklad" />
-            <Button Command="{Binding MoveSelectedRecordToManagedCommand}"
-                    Content="Přesunout do příloh"
-                    AutomationProperties.Name="Převést vybraný doklad na spravovanou kopii" />
-            <Button Command="{Binding OpenSelectedRecordFileCommand}"
-                    Content="Otevřít soubor"
-                    IsVisible="{Binding IsRecordDetailVisible}"
-                    AutomationProperties.Name="Otevřít soubor přílohy vybraného dokladu" />
-            <Button Command="{Binding OpenSelectedRecordFolderCommand}"
-                    Content="Otevřít složku"
-                    IsVisible="{Binding IsRecordDetailVisible}"
-                    AutomationProperties.Name="Otevřít složku přílohy vybraného dokladu" />
-            <Button Command="{Binding SaveRecordCommand}"
-                    Content="Uložit"
-                    IsVisible="{Binding IsEditingRecord}"
-                    AutomationProperties.Name="Uložit doklad" />
-            <Button Command="{Binding CancelRecordEditCommand}"
-                    Content="Zrušit"
-                    IsVisible="{Binding IsEditingRecord}"
-                    AutomationProperties.Name="Zrušit úpravu dokladu" />
-            <Button Click="OnCloseClick"
-                    Content="Zavřít"
-                    AutomationProperties.Name="Zavřít okno dokladů" />
-          </WrapPanel>
-          <TextBlock Grid.Row="2"
-                     Margin="0,12,0,0"
-                     Opacity="0.82"
-                     Text="{Binding RecordEditorStatus}"
-                     TextWrapping="Wrap" />
-          <Grid Grid.Row="3"
-                Margin="0,16,0,0"
-                IsVisible="{Binding IsEditingRecord}"
-                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-            <Grid ColumnDefinitions="1.1*,1.4*">
-              <StackPanel Margin="0,0,12,0" Spacing="6">
-                <TextBlock FontWeight="SemiBold" Text="Typ dokladu" />
-                <TextBox Text="{Binding RecordEditorRecordType}"
-                         PlaceholderText="Například Povinné ručení" />
-              </StackPanel>
-              <StackPanel Grid.Column="1" Spacing="6">
-                <TextBlock FontWeight="SemiBold" Text="Název" />
-                <TextBox x:Name="RecordWindowTitleBox"
-                         Text="{Binding RecordEditorTitle}"
-                         PlaceholderText="Například Allianz 2026" />
-              </StackPanel>
-            </Grid>
-            <Grid Grid.Row="1"
-                  Margin="0,14,0,0"
-                  ColumnDefinitions="1.2*,*,*">
-              <StackPanel Margin="0,0,12,0" Spacing="6">
-                <TextBlock FontWeight="SemiBold" Text="Poskytovatel" />
-                <TextBox Text="{Binding RecordEditorProvider}" />
-              </StackPanel>
-              <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-                <TextBlock FontWeight="SemiBold" Text="Platí od" />
-                <TextBox Text="{Binding RecordEditorValidFrom}" />
-              </StackPanel>
-              <StackPanel Grid.Column="2" Spacing="6">
-                <TextBlock FontWeight="SemiBold" Text="Platí do" />
-                <TextBox Text="{Binding RecordEditorValidTo}" />
-              </StackPanel>
-            </Grid>
-            <Grid Grid.Row="2"
-                  Margin="0,14,0,0"
-                  ColumnDefinitions="180,*">
-              <StackPanel Margin="0,0,12,0" Spacing="6">
-                <TextBlock FontWeight="SemiBold" Text="Cena" />
-                <TextBox Text="{Binding RecordEditorPrice}" />
-              </StackPanel>
-              <StackPanel Spacing="6">
-                <TextBlock FontWeight="SemiBold" Text="Režim přílohy" />
-                <ComboBox ItemsSource="{Binding RecordAttachmentModes}"
-                          SelectedItem="{Binding SelectedRecordEditorAttachmentMode}" />
-              </StackPanel>
-            </Grid>
-            <TextBlock Grid.Row="3"
-                       Margin="0,14,0,0"
-                       FontWeight="SemiBold"
-                       Text="{Binding RecordEditorPathInputLabel}" />
-            <Grid Grid.Row="4"
-                  Margin="0,6,0,0"
-                  ColumnDefinitions="*,150">
-              <TextBox Text="{Binding RecordEditorPathInput}"
-                       PlaceholderText="{Binding RecordEditorPathInputHelp}" />
-              <Button Grid.Column="1"
-                      Margin="12,0,0,0"
-                      Command="{Binding BrowseRecordAttachmentCommand}"
-                      Content="Vybrat soubor"
-                      AutomationProperties.Name="Vybrat soubor pro doklad" />
-            </Grid>
-            <TextBlock Grid.Row="5"
-                       Margin="0,8,0,0"
-                       Opacity="0.74"
-                       Text="{Binding RecordEditorPathInputHelp}"
-                       TextWrapping="Wrap" />
-            <TextBlock Grid.Row="6"
-                       Margin="0,14,0,0"
-                       FontWeight="SemiBold"
-                       Text="Uložená cesta" />
-            <SelectableTextBlock Grid.Row="7"
-                                 Margin="0,6,0,0"
-                                 Text="{Binding RecordEditorStoredPath}" />
-            <TextBlock Grid.Row="8"
-                       Margin="0,14,0,0"
-                       FontWeight="SemiBold"
-                       Text="Vyřešená cesta" />
-            <SelectableTextBlock Grid.Row="9"
-                                 Margin="0,6,0,0"
-                                 Text="{Binding RecordEditorResolvedPath}" />
-            <TextBlock Grid.Row="10"
-                       Margin="0,14,0,0"
-                       Text="{Binding RecordEditorAvailability}"
-                       TextWrapping="Wrap" />
-            <StackPanel Grid.Row="11"
-                        Margin="0,14,0,0"
-                        Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Poznámka" />
-              <TextBox Height="100"
-                       AcceptsReturn="True"
-                       TextWrapping="Wrap"
-                       VerticalContentAlignment="Top"
-                       Text="{Binding RecordEditorNote}" />
-            </StackPanel>
-          </Grid>
-          <TextBlock Grid.Row="3"
-                     Margin="0,16,0,0"
-                     IsVisible="{Binding IsRecordDetailVisible}"
-                     Text="{Binding SelectedRecordDetail}"
-                     TextWrapping="Wrap" />
-        </Grid>
-      </Border>
+  <Grid Margin="20" RowDefinitions="Auto,*">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="4">
+        <TextBlock FontSize="24"
+                   FontWeight="SemiBold"
+                   Text="{Binding WindowTitle}" />
+        <TextBlock Opacity="0.78"
+                   Text="{Binding RecordSummary}"
+                   TextWrapping="Wrap" />
+      </StackPanel>
+      <Button Grid.Column="1"
+              Width="120"
+              Height="34"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít okno dokladů" />
     </Grid>
+
+    <workspaces:RecordWorkspaceView x:Name="RecordWorkspaceHost"
+                                    Grid.Row="1"
+                                    Margin="0,18,0,0" />
   </Grid>
 </Window>

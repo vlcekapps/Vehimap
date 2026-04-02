@@ -365,6 +365,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _supportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
         _appBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider();
         _updateService = updateService ?? new LegacyUpdateService(_appBuildInfoProvider);
+        InitializeWorkspaces();
         Load(applyLaunchTabPreference: true);
     }
 

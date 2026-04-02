@@ -1,148 +1,39 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+        xmlns:workspaces="using:Vehimap.Desktop.Views.Workspaces"
         x:Class="Vehimap.Desktop.Views.RemindersWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Width="1280"
-        Height="760"
-        MinWidth="1040"
-        MinHeight="640"
+        x:DataType="vm:ReminderWorkspaceViewModel"
+        Width="1320"
+        Height="780"
+        MinWidth="1080"
+        MinHeight="660"
         WindowStartupLocation="CenterOwner"
-        Title="{Binding ReminderWindowTitle}"
+        Title="{Binding WindowTitle}"
         AutomationProperties.Name="Připomínky vozidla"
         AutomationProperties.HelpText="Samostatné okno pro práci s připomínkami vybraného vozidla.">
-  <Grid Margin="20" RowDefinitions="Auto,Auto,*">
-    <TextBlock FontSize="24"
-               FontWeight="SemiBold"
-               Text="{Binding ReminderWindowTitle}" />
-    <TextBlock Grid.Row="1"
-               Margin="0,8,0,0"
-               Opacity="0.78"
-               Text="{Binding ReminderSummary}"
-               TextWrapping="Wrap" />
-
-    <Grid Grid.Row="2"
-          Margin="0,18,0,0"
-          ColumnDefinitions="1.15*,*">
-      <Grid RowDefinitions="Auto,*">
-        <TextBlock FontWeight="SemiBold"
-                   Text="Seznam připomínek vybraného vozidla" />
-        <ListBox x:Name="ReminderWindowListBox"
-                 Grid.Row="1"
-                 Margin="0,12,12,0"
-                 ItemsSource="{Binding SelectedVehicleReminders}"
-                 SelectedItem="{Binding SelectedReminder}"
-                 AutomationProperties.Name="Připomínky vybraného vozidla v samostatném okně">
-          <ListBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:VehicleReminderItemViewModel">
-              <Border Padding="12"
-                      Margin="0,0,0,8"
-                      Background="#10203040"
-                      CornerRadius="6"
-                      AutomationProperties.Name="{Binding AccessibleLabel}">
-                <Grid ColumnDefinitions="2*,130,130,130,*">
-                  <TextBlock Grid.Column="0" Text="{Binding Title}" TextWrapping="Wrap" />
-                  <TextBlock Grid.Column="1" Text="{Binding DueDate}" />
-                  <TextBlock Grid.Column="2" Text="{Binding Status}" TextWrapping="Wrap" />
-                  <TextBlock Grid.Column="3" Text="{Binding RepeatMode}" TextWrapping="Wrap" />
-                  <TextBlock Grid.Column="4" Text="{Binding Note}" TextWrapping="Wrap" />
-                </Grid>
-              </Border>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-      </Grid>
-
-      <Border Grid.Column="1"
-              Margin="12,0,0,0"
-              Padding="16"
-              Background="#10203040"
-              CornerRadius="8">
-        <Grid RowDefinitions="Auto,Auto,Auto,*">
-          <TextBlock FontSize="18"
-                     FontWeight="SemiBold"
-                     Text="{Binding ReminderPanelHeading}" />
-          <WrapPanel Grid.Row="1"
-                     Margin="0,14,0,0"
-                     ItemWidth="122"
-                     ItemHeight="34">
-            <Button Command="{Binding CreateReminderCommand}"
-                    Content="Nová"
-                    AutomationProperties.Name="Vytvořit novou připomínku" />
-            <Button Command="{Binding EditSelectedReminderCommand}"
-                    Content="Upravit"
-                    AutomationProperties.Name="Upravit vybranou připomínku" />
-            <Button Command="{Binding DeleteSelectedReminderCommand}"
-                    Content="Odstranit"
-                    AutomationProperties.Name="Odstranit vybranou připomínku" />
-            <Button Command="{Binding SaveReminderCommand}"
-                    Content="Uložit"
-                    IsVisible="{Binding IsEditingReminder}"
-                    AutomationProperties.Name="Uložit připomínku" />
-            <Button Command="{Binding CancelReminderEditCommand}"
-                    Content="Zrušit"
-                    IsVisible="{Binding IsEditingReminder}"
-                    AutomationProperties.Name="Zrušit úpravu připomínky" />
-            <Button Click="OnCloseClick"
-                    Content="Zavřít"
-                    AutomationProperties.Name="Zavřít okno připomínek" />
-          </WrapPanel>
-          <TextBlock Grid.Row="2"
-                     Margin="0,12,0,0"
-                     Opacity="0.82"
-                     Text="{Binding ReminderEditorStatus}"
-                     TextWrapping="Wrap" />
-          <Grid Grid.Row="3"
-                Margin="0,16,0,0"
-                IsVisible="{Binding IsEditingReminder}"
-                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-            <TextBlock FontWeight="SemiBold" Text="Název připomínky" />
-            <TextBox x:Name="ReminderWindowTitleBox"
-                     Grid.Row="1"
-                     Margin="0,6,0,0"
-                     Text="{Binding ReminderEditorTitle}"
-                     PlaceholderText="Například objednat servis" />
-            <Grid Grid.Row="2"
-                  Margin="0,14,0,0"
-                  ColumnDefinitions="*,140">
-              <StackPanel Margin="0,0,12,0" Spacing="6">
-                <TextBlock FontWeight="SemiBold" Text="Termín" />
-                <TextBox Text="{Binding ReminderEditorDueDate}"
-                         PlaceholderText="Například 15.06.2026 nebo 06/2026" />
-              </StackPanel>
-              <StackPanel Grid.Column="1" Spacing="6">
-                <TextBlock FontWeight="SemiBold" Text="Předstih dnů" />
-                <TextBox Text="{Binding ReminderEditorDays}"
-                         PlaceholderText="Například 30" />
-              </StackPanel>
-            </Grid>
-            <TextBlock Grid.Row="3"
-                       Margin="0,14,0,0"
-                       FontWeight="SemiBold"
-                       Text="Opakování" />
-            <TextBox Grid.Row="4"
-                     Margin="0,6,0,0"
-                     Text="{Binding ReminderEditorRepeatMode}"
-                     PlaceholderText="Například Ročně nebo bez opakování" />
-            <TextBlock Grid.Row="5"
-                       Margin="0,14,0,0"
-                       FontWeight="SemiBold"
-                       Text="Poznámka" />
-            <TextBox Grid.Row="6"
-                     Margin="0,6,0,0"
-                     Height="120"
-                     AcceptsReturn="True"
-                     TextWrapping="Wrap"
-                     VerticalContentAlignment="Top"
-                     Text="{Binding ReminderEditorNote}" />
-          </Grid>
-          <TextBlock Grid.Row="3"
-                     Margin="0,16,0,0"
-                     IsVisible="{Binding IsReminderDetailVisible}"
-                     Text="{Binding SelectedReminderDetail}"
-                     TextWrapping="Wrap" />
-        </Grid>
-      </Border>
+  <Grid Margin="20" RowDefinitions="Auto,*">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="4">
+        <TextBlock FontSize="24"
+                   FontWeight="SemiBold"
+                   Text="{Binding WindowTitle}" />
+        <TextBlock Opacity="0.78"
+                   Text="{Binding ReminderSummary}"
+                   TextWrapping="Wrap" />
+      </StackPanel>
+      <Button Grid.Column="1"
+              Width="120"
+              Height="34"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít okno připomínek" />
     </Grid>
+
+    <workspaces:ReminderWorkspaceView x:Name="ReminderWorkspaceHost"
+                                      Grid.Row="1"
+                                      Margin="0,18,0,0" />
   </Grid>
 </Window>

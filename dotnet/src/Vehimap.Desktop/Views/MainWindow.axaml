@@ -1,6 +1,7 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        xmlns:workspaces="using:Vehimap.Desktop.Views.Workspaces"
         x:Class="Vehimap.Desktop.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Width="1400"
@@ -297,560 +298,64 @@
                 Margin="0,16,0,0"
                 AutomationProperties.Name="Obsah vybrané hlavní pracovní karty"
                 AutomationProperties.HelpText="Obsah se mění podle zvolené karty nahoře.">
-            <Grid IsVisible="{Binding IsDetailTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,Auto,Auto,*">
-                <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding VehiclePanelHeading}" />
-                <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="128" ItemHeight="34">
-                  <Button Click="OnOpenVehicleDetailWindowClick"
-                          IsEnabled="{Binding CanOpenVehicleDetailWindow}"
-                          Content="V okně"
-                          AutomationProperties.Name="Otevřít detail vozidla v samostatném okně" />
-                  <Button Command="{Binding CreateVehicleCommand}"
-                          Content="Nové vozidlo"
-                          AutomationProperties.Name="Vytvořit nové vozidlo" />
-                <Button Command="{Binding EditSelectedVehicleCommand}"
-                        Content="Upravit"
-                        AutomationProperties.Name="Upravit vybrané vozidlo" />
-                <Button Command="{Binding SaveVehicleCommand}"
-                        Content="Uložit"
-                        IsVisible="{Binding IsEditingVehicle}"
-                        AutomationProperties.Name="Uložit údaje vozidla" />
-                <Button Command="{Binding CancelVehicleEditCommand}"
-                        Content="Zrušit"
-                        IsVisible="{Binding IsEditingVehicle}"
-                        AutomationProperties.Name="Zrušit úpravu vozidla" />
-              </WrapPanel>
-              <TextBlock Grid.Row="2"
-                         Margin="0,12,0,0"
-                         Opacity="0.82"
-                         Text="{Binding VehicleEditorStatus}"
-                         TextWrapping="Wrap" />
-              <Grid Grid.Row="3"
-                    Margin="0,16,0,0"
-                    IsVisible="{Binding IsEditingVehicle}"
-                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                <Grid ColumnDefinitions="*,180">
-                  <StackPanel Margin="0,0,12,0" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Název vozidla" />
-                    <TextBox x:Name="VehicleEditorNameBox"
-                             Text="{Binding VehicleEditorName}"
-                             PlaceholderText="Například Milena" />
-                  </StackPanel>
-                  <StackPanel Grid.Column="1" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Kategorie" />
-                    <TextBox Text="{Binding VehicleEditorCategory}"
-                             PlaceholderText="Například Osobní vozidla" />
-                  </StackPanel>
-                </Grid>
-                <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="*,200">
-                  <StackPanel Margin="0,0,12,0" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Značka a model" />
-                    <TextBox Text="{Binding VehicleEditorMakeModel}"
-                             PlaceholderText="Například Škoda 120L" />
-                  </StackPanel>
-                  <StackPanel Grid.Column="1" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="SPZ" />
-                    <TextBox Text="{Binding VehicleEditorPlate}"
-                             PlaceholderText="Například 1AB2345" />
-                  </StackPanel>
-                </Grid>
-                <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="160,160,*">
-                  <StackPanel Margin="0,0,12,0" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Rok" />
-                    <TextBox Text="{Binding VehicleEditorYear}" />
-                  </StackPanel>
-                  <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Výkon" />
-                    <TextBox Text="{Binding VehicleEditorPower}" />
-                  </StackPanel>
-                  <StackPanel Grid.Column="2" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Stav vozidla" />
-                    <TextBox Text="{Binding VehicleEditorState}"
-                             PlaceholderText="Například Běžný provoz" />
-                  </StackPanel>
-                </Grid>
-                <Grid Grid.Row="3" Margin="0,14,0,0" ColumnDefinitions="*,*">
-                  <StackPanel Margin="0,0,12,0" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Poslední TK" />
-                    <TextBox Text="{Binding VehicleEditorLastTk}" />
-                  </StackPanel>
-                  <StackPanel Grid.Column="1" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Příští TK" />
-                    <TextBox Text="{Binding VehicleEditorNextTk}" />
-                  </StackPanel>
-                </Grid>
-                <Grid Grid.Row="4" Margin="0,14,0,0" ColumnDefinitions="*,*">
-                  <StackPanel Margin="0,0,12,0" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Zelená karta od" />
-                    <TextBox Text="{Binding VehicleEditorGreenCardFrom}" />
-                  </StackPanel>
-                  <StackPanel Grid.Column="1" Spacing="6">
-                    <TextBlock FontWeight="SemiBold" Text="Zelená karta do" />
-                    <TextBox Text="{Binding VehicleEditorGreenCardTo}" />
-                  </StackPanel>
-                </Grid>
-                <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Pohon a servisní profil" />
-                <TextBox Grid.Row="6"
-                         Margin="0,6,0,0"
-                         Text="{Binding VehicleEditorPowertrain}"
-                         PlaceholderText="Například benzín, diesel nebo elektro" />
-                <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka k vozidlu" />
-                <TextBox Grid.Row="8"
-                         Margin="0,6,0,0"
-                         Height="110"
-                         AcceptsReturn="True"
-                         TextWrapping="Wrap"
-                         VerticalContentAlignment="Top"
-                         Text="{Binding VehicleEditorNote}" />
-                <TextBlock Grid.Row="9"
-                           Margin="0,14,0,0"
-                           Opacity="0.72"
-                           Text="Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu."
-                           TextWrapping="Wrap" />
-              </Grid>
-              <Grid Grid.Row="3"
-                    Margin="0,16,0,0"
-                    IsVisible="{Binding IsVehicleDetailVisible}"
-                    RowDefinitions="Auto,Auto,Auto,*">
-                <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
-                <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="{Binding SelectedVehicleOverview}" TextWrapping="Wrap" />
-                <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="{Binding SelectedVehicleDates}" TextWrapping="Wrap" />
-                <Border Grid.Row="3" Margin="0,16,0,0" Padding="14" Background="#10203040" CornerRadius="8">
-                  <TextBlock Text="{Binding SelectedVehicleProfile}" TextWrapping="Wrap" />
-                </Border>
-              </Grid>
+            <Grid IsVisible="{Binding IsDetailTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <Button Width="128"
+                      HorizontalAlignment="Left"
+                      Click="OnOpenVehicleDetailWindowClick"
+                      IsEnabled="{Binding CanOpenVehicleDetailWindow}"
+                      Content="V okně"
+                      AutomationProperties.Name="Otevřít detail vozidla v samostatném okně" />
+              <workspaces:VehicleDetailWorkspaceView Grid.Row="1"
+                                                    Margin="0,16,0,0"
+                                                    DataContext="{Binding VehicleDetailWorkspace}" />
             </Grid>
 
-            <Grid IsVisible="{Binding IsHistoryTabSelected}" Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
-              <Grid RowDefinitions="Auto,*">
-                <TextBlock Text="{Binding HistorySummary}" TextWrapping="Wrap" />
-                <ListBox x:Name="HistoryListBox"
-                         Grid.Row="1"
-                         Margin="0,12,12,0"
-                         ItemsSource="{Binding SelectedVehicleHistory}"
-                         SelectedItem="{Binding SelectedHistory}"
-                         AutomationProperties.Name="Historie vybraného vozidla">
-                  <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="vm:VehicleHistoryItemViewModel">
-                      <Border Padding="12"
-                              Margin="0,0,0,8"
-                              Background="#10203040"
-                              CornerRadius="6"
-                              AutomationProperties.Name="{Binding AccessibleLabel}">
-                        <Grid ColumnDefinitions="120,160,130,120,*">
-                          <TextBlock Grid.Column="0" Text="{Binding Date}" />
-                          <TextBlock Grid.Column="1" Text="{Binding EventType}" />
-                          <TextBlock Grid.Column="2" Text="{Binding Odometer}" />
-                          <TextBlock Grid.Column="3" Text="{Binding Cost}" />
-                          <TextBlock Grid.Column="4" Text="{Binding Note}" TextWrapping="Wrap" />
-                        </Grid>
-                      </Border>
-                    </DataTemplate>
-                  </ListBox.ItemTemplate>
-                </ListBox>
-              </Grid>
-
-              <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,Auto,Auto,*">
-                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding HistoryPanelHeading}" />
-                    <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="128" ItemHeight="34">
-                      <Button Click="OnOpenHistoryWindowClick"
-                              IsEnabled="{Binding CanOpenHistoryWindow}"
-                              Content="V okně"
-                              AutomationProperties.Name="Otevřít historii v samostatném okně" />
-                      <Button Command="{Binding CreateHistoryCommand}"
-                              Content="Nový záznam"
-                              AutomationProperties.Name="Vytvořit nový historický záznam" />
-                    <Button Command="{Binding EditSelectedHistoryCommand}"
-                            Content="Upravit"
-                            AutomationProperties.Name="Upravit vybraný historický záznam" />
-                    <Button Command="{Binding DeleteSelectedHistoryCommand}"
-                            Content="Odstranit"
-                            AutomationProperties.Name="Odstranit vybraný historický záznam" />
-                    <Button Command="{Binding SaveHistoryCommand}"
-                            Content="Uložit"
-                            IsVisible="{Binding IsEditingHistory}"
-                            AutomationProperties.Name="Uložit historický záznam" />
-                    <Button Command="{Binding CancelHistoryEditCommand}"
-                            Content="Zrušit"
-                            IsVisible="{Binding IsEditingHistory}"
-                            AutomationProperties.Name="Zrušit úpravu historického záznamu" />
-                  </WrapPanel>
-                  <TextBlock Grid.Row="2"
-                             Margin="0,12,0,0"
-                             Opacity="0.82"
-                             Text="{Binding HistoryEditorStatus}"
-                             TextWrapping="Wrap" />
-                  <Grid Grid.Row="3"
-                        Margin="0,16,0,0"
-                        IsVisible="{Binding IsEditingHistory}"
-                        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                    <TextBlock FontWeight="SemiBold" Text="Datum" />
-                    <TextBox x:Name="HistoryEditorDateBox"
-                             Grid.Row="1"
-                             Margin="0,6,0,0"
-                             Text="{Binding HistoryEditorDate}"
-                             PlaceholderText="Například 15.06.2026" />
-                    <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="*,160">
-                      <StackPanel Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Typ události" />
-                        <TextBox Text="{Binding HistoryEditorType}" PlaceholderText="Například Servis" />
-                      </StackPanel>
-                      <StackPanel Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Tachometr" />
-                        <TextBox Text="{Binding HistoryEditorOdometer}" PlaceholderText="Například 123456" />
-                      </StackPanel>
-                    </Grid>
-                    <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="Cena" />
-                    <TextBox Grid.Row="4"
-                             Margin="0,6,0,0"
-                             Text="{Binding HistoryEditorCost}"
-                             PlaceholderText="Například 2500" />
-                    <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
-                    <TextBox Grid.Row="6"
-                             Margin="0,6,0,0"
-                             Height="120"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             VerticalContentAlignment="Top"
-                             Text="{Binding HistoryEditorNote}" />
-                  </Grid>
-                  <TextBlock Grid.Row="3"
-                             Margin="0,16,0,0"
-                             IsVisible="{Binding IsHistoryDetailVisible}"
-                             Text="{Binding SelectedHistoryDetail}"
-                             TextWrapping="Wrap" />
-                </Grid>
-              </Border>
+            <Grid IsVisible="{Binding IsHistoryTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <Button Width="128"
+                      HorizontalAlignment="Left"
+                      Click="OnOpenHistoryWindowClick"
+                      IsEnabled="{Binding CanOpenHistoryWindow}"
+                      Content="V okně"
+                      AutomationProperties.Name="Otevřít historii v samostatném okně" />
+              <workspaces:HistoryWorkspaceView Grid.Row="1"
+                                              Margin="0,16,0,0"
+                                              DataContext="{Binding HistoryWorkspace}" />
             </Grid>
 
-            <Grid IsVisible="{Binding IsFuelTabSelected}" Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
-              <Grid RowDefinitions="Auto,*">
-                <TextBlock Text="{Binding FuelSummary}" TextWrapping="Wrap" />
-                <ListBox x:Name="FuelListBox"
-                         Grid.Row="1"
-                         Margin="0,12,12,0"
-                         ItemsSource="{Binding SelectedVehicleFuel}"
-                         SelectedItem="{Binding SelectedFuel}"
-                         AutomationProperties.Name="Tankování vybraného vozidla">
-                  <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="vm:VehicleFuelItemViewModel">
-                      <Border Padding="12"
-                              Margin="0,0,0,8"
-                              Background="#10203040"
-                              CornerRadius="6"
-                              AutomationProperties.Name="{Binding AccessibleLabel}">
-                        <Grid ColumnDefinitions="110,120,110,120,140,*">
-                          <TextBlock Grid.Column="0" Text="{Binding Date}" />
-                          <TextBlock Grid.Column="1" Text="{Binding FuelType}" />
-                          <TextBlock Grid.Column="2" Text="{Binding Liters}" />
-                          <TextBlock Grid.Column="3" Text="{Binding TotalCost}" />
-                          <TextBlock Grid.Column="4" Text="{Binding Odometer}" />
-                          <TextBlock Grid.Column="5" Text="{Binding TankState}" TextWrapping="Wrap" />
-                        </Grid>
-                      </Border>
-                    </DataTemplate>
-                  </ListBox.ItemTemplate>
-                </ListBox>
-              </Grid>
-
-              <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,Auto,Auto,*">
-                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding FuelPanelHeading}" />
-                    <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
-                      <Button Click="OnOpenFuelWindowClick"
-                              IsEnabled="{Binding CanOpenFuelWindow}"
-                              Content="V okně"
-                              AutomationProperties.Name="Otevřít tankování v samostatném okně" />
-                      <Button Command="{Binding CreateFuelCommand}"
-                              Content="Nové"
-                              AutomationProperties.Name="Vytvořit nové tankování" />
-                    <Button Command="{Binding EditSelectedFuelCommand}"
-                            Content="Upravit"
-                            AutomationProperties.Name="Upravit vybrané tankování" />
-                    <Button Command="{Binding DeleteSelectedFuelCommand}"
-                            Content="Odstranit"
-                            AutomationProperties.Name="Odstranit vybrané tankování" />
-                    <Button Command="{Binding SaveFuelCommand}"
-                            Content="Uložit"
-                            IsVisible="{Binding IsEditingFuel}"
-                            AutomationProperties.Name="Uložit tankování" />
-                    <Button Command="{Binding CancelFuelEditCommand}"
-                            Content="Zrušit"
-                            IsVisible="{Binding IsEditingFuel}"
-                            AutomationProperties.Name="Zrušit úpravu tankování" />
-                  </WrapPanel>
-                  <TextBlock Grid.Row="2"
-                             Margin="0,12,0,0"
-                             Opacity="0.82"
-                             Text="{Binding FuelEditorStatus}"
-                             TextWrapping="Wrap" />
-                  <Grid Grid.Row="3"
-                        Margin="0,16,0,0"
-                        IsVisible="{Binding IsEditingFuel}"
-                        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                    <Grid ColumnDefinitions="*,170">
-                      <StackPanel Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Datum" />
-                        <TextBox x:Name="FuelEditorDateBox"
-                                 Text="{Binding FuelEditorDate}"
-                                 PlaceholderText="Například 15.06.2026" />
-                      </StackPanel>
-                      <StackPanel Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Palivo" />
-                        <TextBox Text="{Binding FuelEditorFuelType}" PlaceholderText="Například Benzín" />
-                      </StackPanel>
-                    </Grid>
-                    <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="*,*,*">
-                      <StackPanel Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Litry" />
-                        <TextBox Text="{Binding FuelEditorLiters}" PlaceholderText="Například 35.6" />
-                      </StackPanel>
-                      <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Cena celkem" />
-                        <TextBox Text="{Binding FuelEditorTotalCost}" PlaceholderText="Například 1450" />
-                      </StackPanel>
-                      <StackPanel Grid.Column="2" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Tachometr" />
-                        <TextBox Text="{Binding FuelEditorOdometer}" PlaceholderText="Například 123456" />
-                      </StackPanel>
-                    </Grid>
-                    <CheckBox Grid.Row="2"
-                              Margin="0,14,0,0"
-                              IsChecked="{Binding FuelEditorFullTank}"
-                              Content="Plná nádrž"
-                              AutomationProperties.Name="Při tomto tankování byla plná nádrž" />
-                    <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
-                    <TextBox Grid.Row="4"
-                             Margin="0,6,0,0"
-                             Height="120"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             VerticalContentAlignment="Top"
-                             Text="{Binding FuelEditorNote}" />
-                  </Grid>
-                  <TextBlock Grid.Row="3"
-                             Margin="0,16,0,0"
-                             IsVisible="{Binding IsFuelDetailVisible}"
-                             Text="{Binding SelectedFuelDetail}"
-                             TextWrapping="Wrap" />
-                </Grid>
-              </Border>
+            <Grid IsVisible="{Binding IsFuelTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <Button Width="128"
+                      HorizontalAlignment="Left"
+                      Click="OnOpenFuelWindowClick"
+                      IsEnabled="{Binding CanOpenFuelWindow}"
+                      Content="V okně"
+                      AutomationProperties.Name="Otevřít tankování v samostatném okně" />
+              <workspaces:FuelWorkspaceView Grid.Row="1"
+                                           Margin="0,16,0,0"
+                                           DataContext="{Binding FuelWorkspace}" />
             </Grid>
 
-            <Grid IsVisible="{Binding IsReminderTabSelected}" Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
-              <Grid RowDefinitions="Auto,*">
-                <TextBlock Text="{Binding ReminderSummary}" TextWrapping="Wrap" />
-                <ListBox x:Name="ReminderListBox"
-                         Grid.Row="1"
-                         Margin="0,12,12,0"
-                         ItemsSource="{Binding SelectedVehicleReminders}"
-                         SelectedItem="{Binding SelectedReminder}"
-                         AutomationProperties.Name="Připomínky vybraného vozidla">
-                  <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="vm:VehicleReminderItemViewModel">
-                      <Border Padding="12"
-                              Margin="0,0,0,8"
-                              Background="#10203040"
-                              CornerRadius="6"
-                              AutomationProperties.Name="{Binding AccessibleLabel}">
-                        <Grid ColumnDefinitions="2*,130,130,130,*">
-                          <TextBlock Grid.Column="0" Text="{Binding Title}" TextWrapping="Wrap" />
-                          <TextBlock Grid.Column="1" Text="{Binding DueDate}" />
-                          <TextBlock Grid.Column="2" Text="{Binding Status}" TextWrapping="Wrap" />
-                          <TextBlock Grid.Column="3" Text="{Binding RepeatMode}" TextWrapping="Wrap" />
-                          <TextBlock Grid.Column="4" Text="{Binding Note}" TextWrapping="Wrap" />
-                        </Grid>
-                      </Border>
-                    </DataTemplate>
-                  </ListBox.ItemTemplate>
-                </ListBox>
-              </Grid>
-
-              <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,Auto,Auto,*">
-                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding ReminderPanelHeading}" />
-                    <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
-                      <Button Click="OnOpenRemindersWindowClick"
-                              IsEnabled="{Binding CanOpenReminderWindow}"
-                              Content="V okně"
-                              AutomationProperties.Name="Otevřít připomínky v samostatném okně" />
-                      <Button Command="{Binding CreateReminderCommand}"
-                              Content="Nová"
-                              AutomationProperties.Name="Vytvořit novou připomínku" />
-                    <Button Command="{Binding EditSelectedReminderCommand}"
-                            Content="Upravit"
-                            AutomationProperties.Name="Upravit vybranou připomínku" />
-                    <Button Command="{Binding DeleteSelectedReminderCommand}"
-                            Content="Odstranit"
-                            AutomationProperties.Name="Odstranit vybranou připomínku" />
-                    <Button Command="{Binding SaveReminderCommand}"
-                            Content="Uložit"
-                            IsVisible="{Binding IsEditingReminder}"
-                            AutomationProperties.Name="Uložit připomínku" />
-                    <Button Command="{Binding CancelReminderEditCommand}"
-                            Content="Zrušit"
-                            IsVisible="{Binding IsEditingReminder}"
-                            AutomationProperties.Name="Zrušit úpravu připomínky" />
-                  </WrapPanel>
-                  <TextBlock Grid.Row="2"
-                             Margin="0,12,0,0"
-                             Opacity="0.82"
-                             Text="{Binding ReminderEditorStatus}"
-                             TextWrapping="Wrap" />
-                  <Grid Grid.Row="3"
-                        Margin="0,16,0,0"
-                        IsVisible="{Binding IsEditingReminder}"
-                        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                    <TextBlock FontWeight="SemiBold" Text="Název připomínky" />
-                    <TextBox x:Name="ReminderEditorTitleBox"
-                             Grid.Row="1"
-                             Margin="0,6,0,0"
-                             Text="{Binding ReminderEditorTitle}"
-                             PlaceholderText="Například objednat servis" />
-                    <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="*,140">
-                      <StackPanel Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Termín" />
-                        <TextBox Text="{Binding ReminderEditorDueDate}" PlaceholderText="Například 15.06.2026 nebo 06/2026" />
-                      </StackPanel>
-                      <StackPanel Grid.Column="1" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Předstih dnů" />
-                        <TextBox Text="{Binding ReminderEditorDays}" PlaceholderText="Například 30" />
-                      </StackPanel>
-                    </Grid>
-                    <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="Opakování" />
-                    <TextBox Grid.Row="4"
-                             Margin="0,6,0,0"
-                             Text="{Binding ReminderEditorRepeatMode}"
-                             PlaceholderText="Například Ročně nebo bez opakování" />
-                    <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
-                    <TextBox Grid.Row="6"
-                             Margin="0,6,0,0"
-                             Height="120"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             VerticalContentAlignment="Top"
-                             Text="{Binding ReminderEditorNote}" />
-                  </Grid>
-                  <TextBlock Grid.Row="3"
-                             Margin="0,16,0,0"
-                             IsVisible="{Binding IsReminderDetailVisible}"
-                             Text="{Binding SelectedReminderDetail}"
-                             TextWrapping="Wrap" />
-                </Grid>
-              </Border>
+            <Grid IsVisible="{Binding IsReminderTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <Button Width="128"
+                      HorizontalAlignment="Left"
+                      Click="OnOpenRemindersWindowClick"
+                      IsEnabled="{Binding CanOpenReminderWindow}"
+                      Content="V okně"
+                      AutomationProperties.Name="Otevřít připomínky v samostatném okně" />
+              <workspaces:ReminderWorkspaceView Grid.Row="1"
+                                               Margin="0,16,0,0"
+                                               DataContext="{Binding ReminderWorkspace}" />
             </Grid>
 
-            <Grid IsVisible="{Binding IsMaintenanceTabSelected}" Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
-              <Grid RowDefinitions="Auto,*">
-                <TextBlock Text="{Binding MaintenanceSummary}" TextWrapping="Wrap" />
-                <ListBox x:Name="MaintenanceListBox"
-                         Grid.Row="1"
-                         Margin="0,12,12,0"
-                         ItemsSource="{Binding SelectedVehicleMaintenance}"
-                         SelectedItem="{Binding SelectedMaintenance}"
-                         AutomationProperties.Name="Plán údržby vybraného vozidla">
-                  <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="vm:VehicleMaintenanceItemViewModel">
-                      <Border Padding="12"
-                              Margin="0,0,0,8"
-                              Background="#10203040"
-                              CornerRadius="6"
-                              AutomationProperties.Name="{Binding AccessibleLabel}">
-                        <Grid ColumnDefinitions="2*,170,170,180,*">
-                          <TextBlock Grid.Column="0" FontWeight="SemiBold" Text="{Binding Title}" TextWrapping="Wrap" />
-                          <TextBlock Grid.Column="1" Text="{Binding Interval}" TextWrapping="Wrap" />
-                          <TextBlock Grid.Column="2" Text="{Binding LastService}" TextWrapping="Wrap" />
-                          <TextBlock Grid.Column="3" Text="{Binding Status}" TextWrapping="Wrap" />
-                          <TextBlock Grid.Column="4" Text="{Binding Note}" TextWrapping="Wrap" />
-                        </Grid>
-                      </Border>
-                    </DataTemplate>
-                  </ListBox.ItemTemplate>
-                </ListBox>
-              </Grid>
-
-              <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,Auto,Auto,*">
-                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding MaintenancePanelHeading}" />
-                    <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="132" ItemHeight="34">
-                      <Button Click="OnOpenMaintenanceWindowClick"
-                              IsEnabled="{Binding CanOpenMaintenanceWindow}"
-                              Content="V okně"
-                              AutomationProperties.Name="Otevřít plán údržby v samostatném okně" />
-                      <Button Command="{Binding CreateMaintenanceCommand}"
-                              Content="Nový plán"
-                              AutomationProperties.Name="Vytvořit nový servisní plán" />
-                    <Button Command="{Binding EditSelectedMaintenanceCommand}"
-                            Content="Upravit"
-                            AutomationProperties.Name="Upravit vybraný servisní plán" />
-                    <Button Command="{Binding DeleteSelectedMaintenanceCommand}"
-                            Content="Odstranit"
-                            AutomationProperties.Name="Odstranit vybraný servisní plán" />
-                    <Button Command="{Binding SaveMaintenanceCommand}"
-                            Content="Uložit"
-                            IsVisible="{Binding IsEditingMaintenance}"
-                            AutomationProperties.Name="Uložit servisní plán" />
-                    <Button Command="{Binding CancelMaintenanceEditCommand}"
-                            Content="Zrušit"
-                            IsVisible="{Binding IsEditingMaintenance}"
-                            AutomationProperties.Name="Zrušit úpravu servisního plánu" />
-                  </WrapPanel>
-                  <TextBlock Grid.Row="2"
-                             Margin="0,12,0,0"
-                             Opacity="0.82"
-                             Text="{Binding MaintenanceEditorStatus}"
-                             TextWrapping="Wrap" />
-                  <Grid Grid.Row="3"
-                        Margin="0,16,0,0"
-                        IsVisible="{Binding IsEditingMaintenance}"
-                        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                    <TextBlock FontWeight="SemiBold" Text="Název úkonu" />
-                    <TextBox x:Name="MaintenanceEditorTitleBox"
-                             Grid.Row="1"
-                             Margin="0,6,0,0"
-                             Text="{Binding MaintenanceEditorTitle}"
-                             PlaceholderText="Například Motorový olej" />
-                    <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="*,*">
-                      <StackPanel Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Interval km" />
-                        <TextBox Text="{Binding MaintenanceEditorIntervalKm}" PlaceholderText="Například 15000" />
-                      </StackPanel>
-                      <StackPanel Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Interval měsíců" />
-                        <TextBox Text="{Binding MaintenanceEditorIntervalMonths}" PlaceholderText="Například 12" />
-                      </StackPanel>
-                    </Grid>
-                    <Grid Grid.Row="3" Margin="0,14,0,0" ColumnDefinitions="*,*">
-                      <StackPanel Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Poslední servis - datum" />
-                        <TextBox Text="{Binding MaintenanceEditorLastServiceDate}" PlaceholderText="Například 15.06.2026" />
-                      </StackPanel>
-                      <StackPanel Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Poslední servis - tachometr" />
-                        <TextBox Text="{Binding MaintenanceEditorLastServiceOdometer}" PlaceholderText="Například 123456" />
-                      </StackPanel>
-                    </Grid>
-                    <CheckBox Grid.Row="4"
-                              Margin="0,14,0,0"
-                              IsChecked="{Binding MaintenanceEditorIsActive}"
-                              Content="Aktivní servisní plán"
-                              AutomationProperties.Name="Servisní plán je aktivní" />
-                    <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
-                    <TextBox Grid.Row="6"
-                             Margin="0,6,0,0"
-                             Height="120"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             VerticalContentAlignment="Top"
-                             Text="{Binding MaintenanceEditorNote}" />
-                  </Grid>
-                  <TextBlock Grid.Row="3"
-                             Margin="0,16,0,0"
-                             IsVisible="{Binding IsMaintenanceDetailVisible}"
-                             Text="{Binding SelectedMaintenanceDetail}"
-                             TextWrapping="Wrap" />
-                </Grid>
-              </Border>
+            <Grid IsVisible="{Binding IsMaintenanceTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <Button Width="128"
+                      HorizontalAlignment="Left"
+                      Click="OnOpenMaintenanceWindowClick"
+                      IsEnabled="{Binding CanOpenMaintenanceWindow}"
+                      Content="V okně"
+                      AutomationProperties.Name="Otevřít plán údržby v samostatném okně" />
+              <workspaces:MaintenanceWorkspaceView Grid.Row="1"
+                                                  Margin="0,16,0,0"
+                                                  DataContext="{Binding MaintenanceWorkspace}" />
             </Grid>
 
             <Grid IsVisible="{Binding IsTimelineTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.35*,*">
@@ -929,201 +434,27 @@
               </Border>
             </Grid>
 
-            <Grid IsVisible="{Binding IsRecordTabSelected}" Margin="0,8,0,0" ColumnDefinitions="1.2*,*">
-              <Grid RowDefinitions="Auto,*">
-                <TextBlock Text="{Binding RecordSummary}" TextWrapping="Wrap" />
-                <ListBox x:Name="RecordListBox"
-                         Grid.Row="1"
-                         Margin="0,12,12,0"
-                         ItemsSource="{Binding SelectedVehicleRecords}"
-                         SelectedItem="{Binding SelectedRecord}"
-                         AutomationProperties.Name="Doklady vybraného vozidla">
-                  <ListBox.KeyBindings>
-                    <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedRecordFileCommand}" />
-                  </ListBox.KeyBindings>
-                  <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="vm:VehicleRecordItemViewModel">
-                      <Border Padding="12"
-                              Margin="0,0,0,8"
-                              Background="#10203040"
-                              CornerRadius="6"
-                              AutomationProperties.Name="{Binding AccessibleLabel}">
-                        <StackPanel Spacing="4">
-                          <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
-                          <TextBlock Opacity="0.82" Text="{Binding RecordType}" />
-                          <TextBlock Opacity="0.82" Text="{Binding Provider}" />
-                          <TextBlock Opacity="0.82" Text="{Binding Validity}" />
-                          <TextBlock Opacity="0.82" Text="{Binding AttachmentMode}" />
-                          <TextBlock Opacity="0.72" Text="{Binding AttachmentState}" TextWrapping="Wrap" />
-                        </StackPanel>
-                      </Border>
-                    </DataTemplate>
-                  </ListBox.ItemTemplate>
-                </ListBox>
-              </Grid>
-
-              <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,Auto,Auto,*">
-                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding RecordPanelHeading}" />
-                    <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="138" ItemHeight="34">
-                      <Button Click="OnOpenRecordsWindowClick"
-                              IsEnabled="{Binding CanOpenRecordWindow}"
-                              Content="V okně"
-                              AutomationProperties.Name="Otevřít doklady v samostatném okně" />
-                      <Button Command="{Binding CreateRecordCommand}"
-                              Content="Nový doklad"
-                              AutomationProperties.Name="Vytvořit nový doklad" />
-                    <Button Command="{Binding EditSelectedRecordCommand}"
-                            Content="Upravit"
-                            AutomationProperties.Name="Upravit vybraný doklad" />
-                    <Button Command="{Binding DeleteSelectedRecordCommand}"
-                            Content="Odstranit"
-                            AutomationProperties.Name="Odstranit vybraný doklad" />
-                    <Button Command="{Binding MoveSelectedRecordToManagedCommand}"
-                            Content="Přesunout do příloh"
-                            AutomationProperties.Name="Převést vybraný doklad na spravovanou kopii" />
-                    <Button Command="{Binding OpenSelectedRecordFileCommand}"
-                            Content="Otevřít soubor"
-                            IsVisible="{Binding IsRecordDetailVisible}"
-                            AutomationProperties.Name="Otevřít soubor přílohy vybraného dokladu" />
-                    <Button Command="{Binding OpenSelectedRecordFolderCommand}"
-                            Content="Otevřít složku"
-                            IsVisible="{Binding IsRecordDetailVisible}"
-                            AutomationProperties.Name="Otevřít složku přílohy vybraného dokladu" />
-                    <Button Command="{Binding SaveRecordCommand}"
-                            Content="Uložit"
-                            IsVisible="{Binding IsEditingRecord}"
-                            AutomationProperties.Name="Uložit doklad" />
-                    <Button Command="{Binding CancelRecordEditCommand}"
-                            Content="Zrušit"
-                            IsVisible="{Binding IsEditingRecord}"
-                            AutomationProperties.Name="Zrušit úpravu dokladu" />
-                  </WrapPanel>
-                  <TextBlock Grid.Row="2"
-                             Margin="0,12,0,0"
-                             Opacity="0.82"
-                             Text="{Binding RecordEditorStatus}"
-                             TextWrapping="Wrap" />
-                  <Grid Grid.Row="3"
-                        Margin="0,16,0,0"
-                        IsVisible="{Binding IsEditingRecord}"
-                        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                    <Grid ColumnDefinitions="1.1*,1.4*">
-                      <StackPanel Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Typ dokladu" />
-                        <TextBox Text="{Binding RecordEditorRecordType}" PlaceholderText="Například Povinné ručení" />
-                      </StackPanel>
-                      <StackPanel Grid.Column="1" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Název" />
-                        <TextBox x:Name="RecordEditorTitleBox" Text="{Binding RecordEditorTitle}" PlaceholderText="Například Allianz 2026" />
-                      </StackPanel>
-                    </Grid>
-                    <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="1.2*,*,*">
-                      <StackPanel Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Poskytovatel" />
-                        <TextBox Text="{Binding RecordEditorProvider}" />
-                      </StackPanel>
-                      <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Platí od" />
-                        <TextBox Text="{Binding RecordEditorValidFrom}" />
-                      </StackPanel>
-                      <StackPanel Grid.Column="2" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Platí do" />
-                        <TextBox Text="{Binding RecordEditorValidTo}" />
-                      </StackPanel>
-                    </Grid>
-                    <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="180,*">
-                      <StackPanel Margin="0,0,12,0" Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Cena" />
-                        <TextBox Text="{Binding RecordEditorPrice}" />
-                      </StackPanel>
-                      <StackPanel Spacing="6">
-                        <TextBlock FontWeight="SemiBold" Text="Režim přílohy" />
-                        <ComboBox ItemsSource="{Binding RecordAttachmentModes}"
-                                  SelectedItem="{Binding SelectedRecordEditorAttachmentMode}" />
-                      </StackPanel>
-                    </Grid>
-                    <TextBlock Grid.Row="3"
-                               Margin="0,14,0,0"
-                               FontWeight="SemiBold"
-                               Text="{Binding RecordEditorPathInputLabel}" />
-                    <Grid Grid.Row="4" Margin="0,6,0,0" ColumnDefinitions="*,150">
-                      <TextBox Text="{Binding RecordEditorPathInput}"
-                               PlaceholderText="{Binding RecordEditorPathInputHelp}" />
-                      <Button Grid.Column="1"
-                              Margin="12,0,0,0"
-                              Command="{Binding BrowseRecordAttachmentCommand}"
-                              Content="Vybrat soubor"
-                              AutomationProperties.Name="Vybrat soubor pro doklad" />
-                    </Grid>
-                    <TextBlock Grid.Row="5"
-                               Margin="0,8,0,0"
-                               Opacity="0.74"
-                               Text="{Binding RecordEditorPathInputHelp}"
-                               TextWrapping="Wrap" />
-                    <TextBlock Grid.Row="6" Margin="0,14,0,0" FontWeight="SemiBold" Text="Uložená cesta" />
-                    <SelectableTextBlock Grid.Row="7" Margin="0,6,0,0" Text="{Binding RecordEditorStoredPath}" />
-                    <TextBlock Grid.Row="8" Margin="0,14,0,0" FontWeight="SemiBold" Text="Vyřešená cesta" />
-                    <SelectableTextBlock Grid.Row="9" Margin="0,6,0,0" Text="{Binding RecordEditorResolvedPath}" />
-                    <TextBlock Grid.Row="10"
-                               Margin="0,14,0,0"
-                               Text="{Binding RecordEditorAvailability}"
-                               TextWrapping="Wrap" />
-                    <StackPanel Grid.Row="11" Margin="0,14,0,0" Spacing="6">
-                      <TextBlock FontWeight="SemiBold" Text="Poznámka" />
-                      <TextBox Height="100"
-                               AcceptsReturn="True"
-                               TextWrapping="Wrap"
-                               VerticalContentAlignment="Top"
-                               Text="{Binding RecordEditorNote}" />
-                    </StackPanel>
-                  </Grid>
-                  <TextBlock Grid.Row="3"
-                             Margin="0,16,0,0"
-                             IsVisible="{Binding IsRecordDetailVisible}"
-                             Text="{Binding SelectedRecordDetail}"
-                             TextWrapping="Wrap" />
-                </Grid>
-              </Border>
+            <Grid IsVisible="{Binding IsRecordTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <Button Width="128"
+                      HorizontalAlignment="Left"
+                      Click="OnOpenRecordsWindowClick"
+                      IsEnabled="{Binding CanOpenRecordWindow}"
+                      Content="V okně"
+                      AutomationProperties.Name="Otevřít doklady v samostatném okně" />
+              <workspaces:RecordWorkspaceView Grid.Row="1"
+                                             Margin="0,16,0,0"
+                                             DataContext="{Binding RecordWorkspace}" />
             </Grid>
 
-              <Grid IsVisible="{Binding IsAuditTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
-                <Grid ColumnDefinitions="*,140">
-                  <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-                  <Button Grid.Column="1"
-                          Width="128"
-                          HorizontalAlignment="Right"
-                          Click="OnOpenAuditWindowClick"
-                          Content="V okně"
-                          AutomationProperties.Name="Otevřít audit v samostatném okně" />
-                </Grid>
-                <ListBox x:Name="AuditListBox"
-                         Grid.Row="1"
-                         Margin="0,12,0,0"
-                       ItemsSource="{Binding AuditItems}"
-                       SelectedItem="{Binding SelectedDashboardAuditItem}"
-                       AutomationProperties.Name="Seznam auditních položek">
-                <ListBox.KeyBindings>
-                  <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
-                </ListBox.KeyBindings>
-                <ListBox.ItemTemplate>
-                  <DataTemplate x:DataType="vm:AuditItemViewModel">
-                    <Border Padding="12"
-                            Margin="0,0,0,8"
-                            Background="#10203040"
-                            CornerRadius="6"
-                            AutomationProperties.Name="{Binding AccessibleLabel}">
-                      <StackPanel Spacing="4">
-                        <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
-                        <TextBlock Text="{Binding VehicleName}" />
-                        <TextBlock Opacity="0.8" Text="{Binding Severity}" />
-                        <TextBlock Opacity="0.8" Text="{Binding Category}" />
-                        <TextBlock Opacity="0.8" Text="{Binding Message}" TextWrapping="Wrap" />
-                      </StackPanel>
-                    </Border>
-                  </DataTemplate>
-                </ListBox.ItemTemplate>
-              </ListBox>
+            <Grid IsVisible="{Binding IsAuditTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <Button Width="128"
+                      HorizontalAlignment="Left"
+                      Click="OnOpenAuditWindowClick"
+                      Content="V okně"
+                      AutomationProperties.Name="Otevřít audit v samostatném okně" />
+              <workspaces:AuditWorkspaceView Grid.Row="1"
+                                            Margin="0,16,0,0"
+                                            DataContext="{Binding AuditWorkspace}" />
             </Grid>
 
             <Grid IsVisible="{Binding IsCostTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,Auto,*">
@@ -1161,149 +492,15 @@
               </ListBox>
             </Grid>
 
-              <Grid IsVisible="{Binding IsDashboardTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
-                <Grid Grid.ColumnSpan="3" ColumnDefinitions="*,150">
-                  <StackPanel Spacing="8">
-                    <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-                    <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" />
-                    <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
-                    <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" />
-                  </StackPanel>
-                  <Button Grid.Column="1"
-                          Width="128"
-                          HorizontalAlignment="Right"
-                          VerticalAlignment="Top"
-                          Click="OnOpenDashboardWindowClick"
-                          Content="V okně"
-                          AutomationProperties.Name="Otevřít dashboard v samostatném okně" />
-                </Grid>
-
-                <Border Grid.Row="1" Grid.Column="0" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,Auto,*">
-                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejdůležitější audit" />
-                  <Button Grid.Row="1"
-                          x:Name="DashboardAuditOpenButton"
-                          Margin="0,12,0,0"
-                          Width="150"
-                          HorizontalAlignment="Left"
-                          Command="{Binding OpenSelectedDashboardAuditItemCommand}"
-                          Content="Otevřít vozidlo"
-                          AutomationProperties.Name="Otevřít vozidlo nebo evidenci z vybrané auditní položky" />
-                  <ListBox x:Name="DashboardAuditListBox"
-                           Grid.Row="2"
-                           Margin="0,12,0,0"
-                           ItemsSource="{Binding AuditItems}"
-                           SelectedItem="{Binding SelectedDashboardAuditItem}"
-                           AutomationProperties.Name="Přehled auditních položek na dashboardu">
-                    <ListBox.KeyBindings>
-                      <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
-                    </ListBox.KeyBindings>
-                    <ListBox.ItemTemplate>
-                      <DataTemplate x:DataType="vm:AuditItemViewModel">
-                        <Border Padding="12"
-                                Margin="0,0,0,8"
-                                Background="#143A4A5A"
-                                CornerRadius="6"
-                                AutomationProperties.Name="{Binding AccessibleLabel}">
-                          <StackPanel Spacing="4">
-                            <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
-                            <TextBlock Text="{Binding VehicleName}" />
-                            <TextBlock Opacity="0.8" Text="{Binding Severity}" />
-                            <TextBlock Opacity="0.8" Text="{Binding Message}" TextWrapping="Wrap" />
-                          </StackPanel>
-                        </Border>
-                      </DataTemplate>
-                    </ListBox.ItemTemplate>
-                  </ListBox>
-                </Grid>
-              </Border>
-
-              <Border Grid.Row="1" Grid.Column="1" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,Auto,*">
-                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="Náklady vozidel" />
-                  <Button Grid.Row="1"
-                          x:Name="DashboardCostOpenButton"
-                          Margin="0,12,0,0"
-                          Width="150"
-                          HorizontalAlignment="Left"
-                          Command="{Binding OpenSelectedDashboardCostVehicleCommand}"
-                          Content="Vybrat vozidlo"
-                          AutomationProperties.Name="Vybrat vozidlo z nákladového přehledu" />
-                  <ListBox x:Name="DashboardCostListBox"
-                           Grid.Row="2"
-                           Margin="0,12,0,0"
-                           ItemsSource="{Binding CostVehicles}"
-                           SelectedItem="{Binding SelectedDashboardCostVehicle}"
-                           AutomationProperties.Name="Přehled nákladových položek na dashboardu">
-                    <ListBox.KeyBindings>
-                      <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" />
-                    </ListBox.KeyBindings>
-                    <ListBox.ItemTemplate>
-                      <DataTemplate x:DataType="vm:CostVehicleItemViewModel">
-                        <Border Padding="12"
-                                Margin="0,0,0,8"
-                                Background="#143A4A5A"
-                                CornerRadius="6"
-                                AutomationProperties.Name="{Binding AccessibleLabel}">
-                          <StackPanel Spacing="4">
-                            <TextBlock FontWeight="SemiBold" Text="{Binding VehicleName}" />
-                            <TextBlock Opacity="0.8" Text="{Binding Category}" />
-                            <TextBlock Opacity="0.8" Text="{Binding TotalCost}" />
-                            <TextBlock Opacity="0.8" Text="{Binding CostPerKm}" />
-                            <TextBlock Opacity="0.8" Text="{Binding Status}" TextWrapping="Wrap" />
-                          </StackPanel>
-                        </Border>
-                      </DataTemplate>
-                    </ListBox.ItemTemplate>
-                  </ListBox>
-                </Grid>
-              </Border>
-
-              <Border Grid.Row="1" Grid.Column="2" Margin="0,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,Auto,Auto,*">
-                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejbližší termíny" />
-                  <Button Grid.Row="1"
-                          x:Name="DashboardTimelineOpenButton"
-                          Margin="0,12,0,0"
-                          Width="150"
-                          HorizontalAlignment="Left"
-                          Command="{Binding OpenSelectedDashboardTimelineItemCommand}"
-                          Content="Otevřít položku"
-                          AutomationProperties.Name="Otevřít vybraný termín z dashboardu" />
-                  <TextBlock Grid.Row="2"
-                             Margin="0,12,0,0"
-                             Opacity="0.75"
-                             Text="{Binding SelectedDashboardTimelineDetail}"
-                             TextWrapping="Wrap" />
-                  <ListBox x:Name="DashboardTimelineListBox"
-                           Grid.Row="3"
-                           Margin="0,12,0,0"
-                           ItemsSource="{Binding DashboardUpcomingTimeline}"
-                           SelectedItem="{Binding SelectedDashboardTimelineItem}"
-                           AutomationProperties.Name="Nejbližší termíny napříč vozidly">
-                    <ListBox.KeyBindings>
-                      <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" />
-                    </ListBox.KeyBindings>
-                    <ListBox.ItemTemplate>
-                      <DataTemplate x:DataType="vm:VehicleTimelineItemViewModel">
-                        <Border Padding="12"
-                                Margin="0,0,0,8"
-                                Background="#143A4A5A"
-                                CornerRadius="6"
-                                AutomationProperties.Name="{Binding AccessibleLabel}">
-                          <StackPanel Spacing="4">
-                            <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
-                            <TextBlock Text="{Binding VehicleName}" />
-                            <TextBlock Opacity="0.8" Text="{Binding Date}" />
-                            <TextBlock Opacity="0.8" Text="{Binding KindLabel}" />
-                            <TextBlock Opacity="0.8" Text="{Binding Status}" TextWrapping="Wrap" />
-                          </StackPanel>
-                        </Border>
-                      </DataTemplate>
-                    </ListBox.ItemTemplate>
-                  </ListBox>
-                </Grid>
-              </Border>
+            <Grid IsVisible="{Binding IsDashboardTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <Button Width="128"
+                      HorizontalAlignment="Left"
+                      Click="OnOpenDashboardWindowClick"
+                      Content="V okně"
+                      AutomationProperties.Name="Otevřít dashboard v samostatném okně" />
+              <workspaces:DashboardWorkspaceView Grid.Row="1"
+                                                Margin="0,16,0,0"
+                                                DataContext="{Binding DashboardWorkspace}" />
             </Grid>
 
             <Grid IsVisible="{Binding IsSearchTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.25*,*">

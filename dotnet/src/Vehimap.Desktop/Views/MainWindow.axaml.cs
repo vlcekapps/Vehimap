@@ -111,6 +111,11 @@ public partial class MainWindow : Window
 
     private bool TryFocusTarget(DesktopFocusTarget target)
     {
+        if (target == DesktopFocusTarget.SelectedVehicleTabHeader)
+        {
+            return FocusSelectedTabHeader();
+        }
+
         var control = ResolveFocusTarget(target);
         if (control is null)
         {
@@ -129,25 +134,10 @@ public partial class MainWindow : Window
     {
         RegisterForwardTabToHeaders("VehicleListBox");
         RegisterTabHeaderNavigation();
-        RegisterShiftTabBackNavigation("VehicleEditorNameBox");
-        RegisterShiftTabBackNavigation("HistoryListBox");
-        RegisterShiftTabBackNavigation("HistoryEditorDateBox");
-        RegisterShiftTabBackNavigation("FuelListBox");
-        RegisterShiftTabBackNavigation("FuelEditorDateBox");
-        RegisterShiftTabBackNavigation("ReminderListBox");
-        RegisterShiftTabBackNavigation("ReminderEditorTitleBox");
-        RegisterShiftTabBackNavigation("MaintenanceListBox");
-        RegisterShiftTabBackNavigation("MaintenanceEditorTitleBox");
         RegisterShiftTabBackNavigation("TimelineFilterComboBox");
         RegisterShiftTabBackNavigation("TimelineSearchBox");
         RegisterShiftTabBackNavigation("TimelineOpenButton");
-        RegisterShiftTabBackNavigation("RecordListBox");
-        RegisterShiftTabBackNavigation("RecordEditorTitleBox");
-        RegisterShiftTabBackNavigation("AuditListBox");
         RegisterShiftTabBackNavigation("CostListBox");
-        RegisterShiftTabBackNavigation("DashboardAuditOpenButton");
-        RegisterShiftTabBackNavigation("DashboardCostOpenButton");
-        RegisterShiftTabBackNavigation("DashboardTimelineOpenButton");
         RegisterShiftTabBackNavigation("GlobalSearchTextBox");
         RegisterShiftTabBackNavigation("SearchResultsListBox");
         RegisterShiftTabBackNavigation("UpcomingOverviewSearchBox");
@@ -160,7 +150,7 @@ public partial class MainWindow : Window
     {
         foreach (var controlName in TabHeaderButtonNames)
         {
-            if (this.FindControl<Button>(controlName) is { } button)
+            if (this.FindControl<Control>(controlName) is { } button)
             {
                 button.AddHandler(InputElement.KeyDownEvent, OnTabHeaderKeyDown, RoutingStrategies.Tunnel);
             }
@@ -448,7 +438,7 @@ public partial class MainWindow : Window
         _viewModel.SelectedVehicleTabIndex = ReminderTabIndex;
         var dialog = new RemindersWindow
         {
-            DataContext = _viewModel
+            DataContext = _viewModel.ReminderWorkspace
         };
 
         await dialog.ShowDialog(this);
@@ -465,7 +455,7 @@ public partial class MainWindow : Window
         _viewModel.SelectedVehicleTabIndex = RecordTabIndex;
         var dialog = new RecordsWindow
         {
-            DataContext = _viewModel
+            DataContext = _viewModel.RecordWorkspace
         };
 
         await dialog.ShowDialog(this);
@@ -482,7 +472,7 @@ public partial class MainWindow : Window
         _viewModel.SelectedVehicleTabIndex = HistoryTabIndex;
         var dialog = new HistoryWindow
         {
-            DataContext = _viewModel
+            DataContext = _viewModel.HistoryWorkspace
         };
 
         await dialog.ShowDialog(this);
@@ -499,7 +489,7 @@ public partial class MainWindow : Window
         _viewModel.SelectedVehicleTabIndex = FuelTabIndex;
         var dialog = new FuelWindow
         {
-            DataContext = _viewModel
+            DataContext = _viewModel.FuelWorkspace
         };
 
         await dialog.ShowDialog(this);
@@ -516,7 +506,7 @@ public partial class MainWindow : Window
         _viewModel.SelectedVehicleTabIndex = MaintenanceTabIndex;
         var dialog = new MaintenanceWindow
         {
-            DataContext = _viewModel
+            DataContext = _viewModel.MaintenanceWorkspace
         };
 
         await dialog.ShowDialog(this);
@@ -533,7 +523,7 @@ public partial class MainWindow : Window
         _viewModel.SelectedVehicleTabIndex = DetailTabIndex;
         var dialog = new VehicleDetailWindow
         {
-            DataContext = _viewModel
+            DataContext = _viewModel.VehicleDetailWorkspace
         };
 
         await dialog.ShowDialog(this);
@@ -550,7 +540,7 @@ public partial class MainWindow : Window
         _viewModel.SelectedVehicleTabIndex = AuditTabIndex;
         var dialog = new AuditWindow
         {
-            DataContext = _viewModel
+            DataContext = _viewModel.AuditWorkspace
         };
 
         await dialog.ShowDialog(this);
@@ -567,7 +557,7 @@ public partial class MainWindow : Window
         _viewModel.SelectedVehicleTabIndex = DashboardTabIndex;
         var dialog = new DashboardWindow
         {
-            DataContext = _viewModel
+            DataContext = _viewModel.DashboardWorkspace
         };
 
         await dialog.ShowDialog(this);
@@ -587,7 +577,7 @@ public partial class MainWindow : Window
             selectedIndex = 0;
         }
 
-        var selectedButton = this.FindControl<Button>(TabHeaderButtonNames[selectedIndex]);
+        var selectedButton = this.FindControl<Control>(TabHeaderButtonNames[selectedIndex]);
         if (selectedButton is not null)
         {
             return selectedButton.Focus(NavigationMethod.Tab, KeyModifiers.None)
@@ -602,15 +592,6 @@ public partial class MainWindow : Window
         return target switch
         {
             DesktopFocusTarget.VehicleList => this.FindControl<ListBox>("VehicleListBox"),
-            DesktopFocusTarget.VehicleEditorName => this.FindControl<TextBox>("VehicleEditorNameBox"),
-            DesktopFocusTarget.HistoryList => this.FindControl<ListBox>("HistoryListBox"),
-            DesktopFocusTarget.HistoryEditorDate => this.FindControl<TextBox>("HistoryEditorDateBox"),
-            DesktopFocusTarget.FuelList => this.FindControl<ListBox>("FuelListBox"),
-            DesktopFocusTarget.FuelEditorDate => this.FindControl<TextBox>("FuelEditorDateBox"),
-            DesktopFocusTarget.ReminderList => this.FindControl<ListBox>("ReminderListBox"),
-            DesktopFocusTarget.ReminderEditorTitle => this.FindControl<TextBox>("ReminderEditorTitleBox"),
-            DesktopFocusTarget.MaintenanceList => this.FindControl<ListBox>("MaintenanceListBox"),
-            DesktopFocusTarget.MaintenanceEditorTitle => this.FindControl<TextBox>("MaintenanceEditorTitleBox"),
             DesktopFocusTarget.TimelineSearch => this.FindControl<TextBox>("TimelineSearchBox"),
             DesktopFocusTarget.TimelineList => this.FindControl<ListBox>("TimelineListBox"),
             DesktopFocusTarget.GlobalSearchBox => this.FindControl<TextBox>("GlobalSearchTextBox"),
@@ -619,14 +600,8 @@ public partial class MainWindow : Window
             DesktopFocusTarget.UpcomingOverviewList => this.FindControl<ListBox>("UpcomingOverviewListBox"),
             DesktopFocusTarget.OverdueOverviewSearch => this.FindControl<TextBox>("OverdueOverviewSearchBox"),
             DesktopFocusTarget.OverdueOverviewList => this.FindControl<ListBox>("OverdueOverviewListBox"),
-            DesktopFocusTarget.RecordList => this.FindControl<ListBox>("RecordListBox"),
-            DesktopFocusTarget.RecordEditorTitle => this.FindControl<TextBox>("RecordEditorTitleBox"),
-            DesktopFocusTarget.AuditList => this.FindControl<ListBox>("AuditListBox"),
             DesktopFocusTarget.CostList => this.FindControl<ListBox>("CostListBox"),
-            DesktopFocusTarget.DashboardAuditList => this.FindControl<ListBox>("DashboardAuditListBox"),
-            DesktopFocusTarget.DashboardCostList => this.FindControl<ListBox>("DashboardCostListBox"),
-            DesktopFocusTarget.DashboardTimelineList => this.FindControl<ListBox>("DashboardTimelineListBox"),
-            _ => this.FindControl<ListBox>("VehicleListBox")
+            _ => null
         };
     }
 }

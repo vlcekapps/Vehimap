@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+             xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
+             x:Class="Vehimap.Desktop.Views.Workspaces.AuditWorkspaceView"
+             x:DataType="vm:AuditWorkspaceViewModel">
+  <Grid RowDefinitions="Auto,Auto,*">
+    <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
+    <Button Grid.Row="1" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardAuditItemCommand}" Content="Otevřít položku" AutomationProperties.Name="Otevřít vybranou auditní položku" />
+    <ListBox x:Name="AuditListBox"
+             Grid.Row="2"
+             Margin="0,12,0,0"
+             ItemsSource="{Binding AuditItems}"
+             SelectedItem="{Binding SelectedDashboardAuditItem}"
+             AutomationProperties.Name="Seznam auditních položek">
+      <ListBox.KeyBindings>
+        <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
+      </ListBox.KeyBindings>
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="itemvm:AuditItemViewModel">
+          <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+            <StackPanel Spacing="4">
+              <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+              <TextBlock Text="{Binding VehicleName}" />
+              <TextBlock Opacity="0.8" Text="{Binding Severity}" />
+              <TextBlock Opacity="0.8" Text="{Binding Category}" />
+              <TextBlock Opacity="0.8" Text="{Binding Message}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </Grid>
+</UserControl>

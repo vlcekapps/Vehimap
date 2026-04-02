@@ -1,0 +1,102 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+             xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
+             x:Class="Vehimap.Desktop.Views.Workspaces.DashboardWorkspaceView"
+             x:DataType="vm:DashboardWorkspaceViewModel">
+  <Grid RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
+    <StackPanel Grid.ColumnSpan="3" Spacing="8">
+      <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
+      <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" />
+      <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
+      <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" />
+    </StackPanel>
+    <Border Grid.Row="1" Grid.Column="0" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
+      <Grid RowDefinitions="Auto,Auto,*">
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejdůležitější audit" />
+        <Button Grid.Row="1" x:Name="DashboardAuditOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardAuditItemCommand}" Content="Otevřít vozidlo" AutomationProperties.Name="Otevřít vozidlo nebo evidenci z vybrané auditní položky" />
+        <ListBox x:Name="DashboardAuditListBox"
+                 Grid.Row="2"
+                 Margin="0,12,0,0"
+                 ItemsSource="{Binding AuditItems}"
+                 SelectedItem="{Binding SelectedDashboardAuditItem}"
+                 AutomationProperties.Name="Přehled auditních položek na dashboardu">
+          <ListBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
+          </ListBox.KeyBindings>
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="itemvm:AuditItemViewModel">
+              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+                <StackPanel Spacing="4">
+                  <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+                  <TextBlock Text="{Binding VehicleName}" />
+                  <TextBlock Opacity="0.8" Text="{Binding Severity}" />
+                  <TextBlock Opacity="0.8" Text="{Binding Message}" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Grid>
+    </Border>
+    <Border Grid.Row="1" Grid.Column="1" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
+      <Grid RowDefinitions="Auto,Auto,*">
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Náklady vozidel" />
+        <Button Grid.Row="1" x:Name="DashboardCostOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" Content="Vybrat vozidlo" AutomationProperties.Name="Vybrat vozidlo z nákladového přehledu" />
+        <ListBox x:Name="DashboardCostListBox"
+                 Grid.Row="2"
+                 Margin="0,12,0,0"
+                 ItemsSource="{Binding CostVehicles}"
+                 SelectedItem="{Binding SelectedDashboardCostVehicle}"
+                 AutomationProperties.Name="Přehled nákladových položek na dashboardu">
+          <ListBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" />
+          </ListBox.KeyBindings>
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="itemvm:CostVehicleItemViewModel">
+              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+                <StackPanel Spacing="4">
+                  <TextBlock FontWeight="SemiBold" Text="{Binding VehicleName}" />
+                  <TextBlock Opacity="0.8" Text="{Binding Category}" />
+                  <TextBlock Opacity="0.8" Text="{Binding TotalCost}" />
+                  <TextBlock Opacity="0.8" Text="{Binding CostPerKm}" />
+                  <TextBlock Opacity="0.8" Text="{Binding Status}" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Grid>
+    </Border>
+    <Border Grid.Row="1" Grid.Column="2" Margin="0,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
+      <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejbližší termíny" />
+        <Button Grid.Row="1" x:Name="DashboardTimelineOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" Content="Otevřít položku" AutomationProperties.Name="Otevřít vybraný termín z dashboardu" />
+        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.75" Text="{Binding SelectedDashboardTimelineDetail}" TextWrapping="Wrap" />
+        <ListBox x:Name="DashboardTimelineListBox"
+                 Grid.Row="3"
+                 Margin="0,12,0,0"
+                 ItemsSource="{Binding DashboardUpcomingTimeline}"
+                 SelectedItem="{Binding SelectedDashboardTimelineItem}"
+                 AutomationProperties.Name="Nejbližší termíny napříč vozidly">
+          <ListBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" />
+          </ListBox.KeyBindings>
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="itemvm:VehicleTimelineItemViewModel">
+              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+                <StackPanel Spacing="4">
+                  <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
+                  <TextBlock Text="{Binding VehicleName}" />
+                  <TextBlock Opacity="0.8" Text="{Binding Date}" />
+                  <TextBlock Opacity="0.8" Text="{Binding KindLabel}" />
+                  <TextBlock Opacity="0.8" Text="{Binding Status}" TextWrapping="Wrap" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

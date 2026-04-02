@@ -1,0 +1,134 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+             xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
+             x:Class="Vehimap.Desktop.Views.Workspaces.FuelWorkspaceView"
+             x:DataType="vm:FuelWorkspaceViewModel">
+  <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
+    <TextBlock Grid.ColumnSpan="2"
+               Text="{Binding FuelSummary}"
+               TextWrapping="Wrap" />
+    <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">
+      <TextBlock FontWeight="SemiBold"
+                 Text="Tankování vybraného vozidla" />
+      <ListBox x:Name="FuelListBox"
+               Grid.Row="1"
+               Margin="0,12,12,0"
+               ItemsSource="{Binding SelectedVehicleFuel}"
+               SelectedItem="{Binding SelectedFuel}"
+               AutomationProperties.Name="Tankování vybraného vozidla">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="itemvm:VehicleFuelItemViewModel">
+            <Border Padding="12"
+                    Margin="0,0,0,8"
+                    Background="#10203040"
+                    CornerRadius="6"
+                    AutomationProperties.Name="{Binding AccessibleLabel}">
+              <Grid ColumnDefinitions="120,120,120,120,120,*">
+                <TextBlock Grid.Column="0" Text="{Binding Date}" />
+                <TextBlock Grid.Column="1" Text="{Binding FuelType}" />
+                <TextBlock Grid.Column="2" Text="{Binding Liters}" />
+                <TextBlock Grid.Column="3" Text="{Binding TotalCost}" />
+                <TextBlock Grid.Column="4" Text="{Binding Odometer}" />
+                <TextBlock Grid.Column="5" Text="{Binding TankState}" TextWrapping="Wrap" />
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Grid>
+    <Border Grid.Row="1"
+            Grid.Column="1"
+            Margin="12,16,0,0"
+            Padding="16"
+            Background="#10203040"
+            CornerRadius="8">
+      <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <TextBlock FontSize="18"
+                   FontWeight="SemiBold"
+                   Text="{Binding FuelPanelHeading}" />
+        <WrapPanel Grid.Row="1"
+                   Margin="0,14,0,0"
+                   ItemWidth="122"
+                   ItemHeight="34">
+          <Button Command="{Binding CreateFuelCommand}"
+                  Content="Nové"
+                  AutomationProperties.Name="Vytvořit nové tankování" />
+          <Button Command="{Binding EditSelectedFuelCommand}"
+                  Content="Upravit"
+                  AutomationProperties.Name="Upravit vybrané tankování" />
+          <Button Command="{Binding DeleteSelectedFuelCommand}"
+                  Content="Odstranit"
+                  AutomationProperties.Name="Odstranit vybrané tankování" />
+          <Button Command="{Binding SaveFuelCommand}"
+                  Content="Uložit"
+                  IsVisible="{Binding IsEditingFuel}"
+                  AutomationProperties.Name="Uložit tankování" />
+          <Button Command="{Binding CancelFuelEditCommand}"
+                  Content="Zrušit"
+                  IsVisible="{Binding IsEditingFuel}"
+                  AutomationProperties.Name="Zrušit úpravu tankování" />
+        </WrapPanel>
+        <TextBlock Grid.Row="2"
+                   Margin="0,12,0,0"
+                   Opacity="0.82"
+                   Text="{Binding FuelEditorStatus}"
+                   TextWrapping="Wrap" />
+        <Grid Grid.Row="3"
+              Margin="0,16,0,0"
+              IsVisible="{Binding IsEditingFuel}"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+          <Grid ColumnDefinitions="*,160">
+            <StackPanel Margin="0,0,12,0" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Datum" />
+              <TextBox x:Name="FuelEditorDateBox"
+                       Text="{Binding FuelEditorDate}"
+                       PlaceholderText="Například 15.06.2026" />
+            </StackPanel>
+            <StackPanel Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Typ paliva" />
+              <TextBox Text="{Binding FuelEditorFuelType}"
+                       PlaceholderText="Například Natural 95" />
+            </StackPanel>
+          </Grid>
+          <Grid Grid.Row="1"
+                Margin="0,14,0,0"
+                ColumnDefinitions="*,*,*">
+            <StackPanel Margin="0,0,12,0" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Množství" />
+              <TextBox Text="{Binding FuelEditorLiters}" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Cena celkem" />
+              <TextBox Text="{Binding FuelEditorTotalCost}" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Tachometr" />
+              <TextBox Text="{Binding FuelEditorOdometer}" />
+            </StackPanel>
+          </Grid>
+          <CheckBox Grid.Row="2"
+                    Margin="0,14,0,0"
+                    IsChecked="{Binding FuelEditorFullTank}"
+                    Content="Plná nádrž" />
+          <TextBlock Grid.Row="3"
+                     Margin="0,14,0,0"
+                     FontWeight="SemiBold"
+                     Text="Poznámka" />
+          <TextBox Grid.Row="4"
+                   Margin="0,6,0,0"
+                   Height="120"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   VerticalContentAlignment="Top"
+                   Text="{Binding FuelEditorNote}" />
+        </Grid>
+        <TextBlock Grid.Row="3"
+                   Margin="0,16,0,0"
+                   IsVisible="{Binding IsFuelDetailVisible}"
+                   Text="{Binding SelectedFuelDetail}"
+                   TextWrapping="Wrap" />
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

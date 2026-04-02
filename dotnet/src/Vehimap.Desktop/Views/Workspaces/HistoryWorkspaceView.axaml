@@ -1,0 +1,128 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+             xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
+             x:Class="Vehimap.Desktop.Views.Workspaces.HistoryWorkspaceView"
+             x:DataType="vm:HistoryWorkspaceViewModel">
+  <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
+    <TextBlock Grid.ColumnSpan="2"
+               Text="{Binding HistorySummary}"
+               TextWrapping="Wrap" />
+    <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">
+      <TextBlock FontWeight="SemiBold"
+                 Text="Historické záznamy vybraného vozidla" />
+      <ListBox x:Name="HistoryListBox"
+               Grid.Row="1"
+               Margin="0,12,12,0"
+               ItemsSource="{Binding SelectedVehicleHistory}"
+               SelectedItem="{Binding SelectedHistory}"
+               AutomationProperties.Name="Historie vybraného vozidla">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="itemvm:VehicleHistoryItemViewModel">
+            <Border Padding="12"
+                    Margin="0,0,0,8"
+                    Background="#10203040"
+                    CornerRadius="6"
+                    AutomationProperties.Name="{Binding AccessibleLabel}">
+              <Grid ColumnDefinitions="120,160,130,120,*">
+                <TextBlock Grid.Column="0" Text="{Binding Date}" />
+                <TextBlock Grid.Column="1" Text="{Binding EventType}" />
+                <TextBlock Grid.Column="2" Text="{Binding Odometer}" />
+                <TextBlock Grid.Column="3" Text="{Binding Cost}" />
+                <TextBlock Grid.Column="4" Text="{Binding Note}" TextWrapping="Wrap" />
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Grid>
+    <Border Grid.Row="1"
+            Grid.Column="1"
+            Margin="12,16,0,0"
+            Padding="16"
+            Background="#10203040"
+            CornerRadius="8">
+      <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <TextBlock FontSize="18"
+                   FontWeight="SemiBold"
+                   Text="{Binding HistoryPanelHeading}" />
+        <WrapPanel Grid.Row="1"
+                   Margin="0,14,0,0"
+                   ItemWidth="128"
+                   ItemHeight="34">
+          <Button Command="{Binding CreateHistoryCommand}"
+                  Content="Nový záznam"
+                  AutomationProperties.Name="Vytvořit nový historický záznam" />
+          <Button Command="{Binding EditSelectedHistoryCommand}"
+                  Content="Upravit"
+                  AutomationProperties.Name="Upravit vybraný historický záznam" />
+          <Button Command="{Binding DeleteSelectedHistoryCommand}"
+                  Content="Odstranit"
+                  AutomationProperties.Name="Odstranit vybraný historický záznam" />
+          <Button Command="{Binding SaveHistoryCommand}"
+                  Content="Uložit"
+                  IsVisible="{Binding IsEditingHistory}"
+                  AutomationProperties.Name="Uložit historický záznam" />
+          <Button Command="{Binding CancelHistoryEditCommand}"
+                  Content="Zrušit"
+                  IsVisible="{Binding IsEditingHistory}"
+                  AutomationProperties.Name="Zrušit úpravu historického záznamu" />
+        </WrapPanel>
+        <TextBlock Grid.Row="2"
+                   Margin="0,12,0,0"
+                   Opacity="0.82"
+                   Text="{Binding HistoryEditorStatus}"
+                   TextWrapping="Wrap" />
+        <Grid Grid.Row="3"
+              Margin="0,16,0,0"
+              IsVisible="{Binding IsEditingHistory}"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+          <TextBlock FontWeight="SemiBold" Text="Datum" />
+          <TextBox x:Name="HistoryEditorDateBox"
+                   Grid.Row="1"
+                   Margin="0,6,0,0"
+                   Text="{Binding HistoryEditorDate}"
+                   PlaceholderText="Například 15.06.2026" />
+          <Grid Grid.Row="2"
+                Margin="0,14,0,0"
+                ColumnDefinitions="*,160">
+            <StackPanel Margin="0,0,12,0" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Typ události" />
+              <TextBox Text="{Binding HistoryEditorType}"
+                       PlaceholderText="Například Servis" />
+            </StackPanel>
+            <StackPanel Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Tachometr" />
+              <TextBox Text="{Binding HistoryEditorOdometer}"
+                       PlaceholderText="Například 123456" />
+            </StackPanel>
+          </Grid>
+          <TextBlock Grid.Row="3"
+                     Margin="0,14,0,0"
+                     FontWeight="SemiBold"
+                     Text="Cena" />
+          <TextBox Grid.Row="4"
+                   Margin="0,6,0,0"
+                   Text="{Binding HistoryEditorCost}"
+                   PlaceholderText="Například 2500" />
+          <TextBlock Grid.Row="5"
+                     Margin="0,14,0,0"
+                     FontWeight="SemiBold"
+                     Text="Poznámka" />
+          <TextBox Grid.Row="6"
+                   Margin="0,6,0,0"
+                   Height="120"
+                   AcceptsReturn="True"
+                   TextWrapping="Wrap"
+                   VerticalContentAlignment="Top"
+                   Text="{Binding HistoryEditorNote}" />
+        </Grid>
+        <TextBlock Grid.Row="3"
+                   Margin="0,16,0,0"
+                   IsVisible="{Binding IsHistoryDetailVisible}"
+                   Text="{Binding SelectedHistoryDetail}"
+                   TextWrapping="Wrap" />
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

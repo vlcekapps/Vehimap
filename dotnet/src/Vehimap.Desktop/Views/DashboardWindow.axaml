@@ -1,156 +1,40 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+        xmlns:workspaces="using:Vehimap.Desktop.Views.Workspaces"
         x:Class="Vehimap.Desktop.Views.DashboardWindow"
-        x:DataType="vm:MainWindowViewModel"
+        x:DataType="vm:DashboardWorkspaceViewModel"
         Width="1460"
         Height="860"
         MinWidth="1180"
         MinHeight="720"
         WindowStartupLocation="CenterOwner"
-        Title="{Binding DashboardWindowTitle}"
+        Title="{Binding WindowTitle}"
         AutomationProperties.Name="Dashboard"
         AutomationProperties.HelpText="Samostatné okno pro dashboard napříč vozidly.">
-  <Grid Margin="20" RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
-    <StackPanel Grid.ColumnSpan="3" Spacing="8">
-      <TextBlock FontSize="24" FontWeight="SemiBold" Text="{Binding DashboardWindowTitle}" />
-      <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-      <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" />
-      <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
-      <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" />
-    </StackPanel>
+  <Grid Margin="20" RowDefinitions="Auto,*">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="4">
+        <TextBlock FontSize="24"
+                   FontWeight="SemiBold"
+                   Text="{Binding WindowTitle}" />
+        <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
+        <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" />
+        <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
+        <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" />
+      </StackPanel>
+      <Button Grid.Column="1"
+              Width="120"
+              Height="34"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít okno dashboardu" />
+    </Grid>
 
-    <Border Grid.Row="1" Grid.Column="0" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
-      <Grid RowDefinitions="Auto,Auto,*">
-        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejdůležitější audit" />
-        <Button Grid.Row="1"
-                x:Name="DashboardWindowAuditOpenButton"
-                Margin="0,12,0,0"
-                Width="150"
-                HorizontalAlignment="Left"
-                Command="{Binding OpenSelectedDashboardAuditItemCommand}"
-                Content="Otevřít vozidlo"
-                AutomationProperties.Name="Otevřít vozidlo nebo evidenci z vybrané auditní položky" />
-        <ListBox x:Name="DashboardWindowAuditListBox"
-                 Grid.Row="2"
-                 Margin="0,12,0,0"
-                 ItemsSource="{Binding AuditItems}"
-                 SelectedItem="{Binding SelectedDashboardAuditItem}"
-                 AutomationProperties.Name="Přehled auditních položek na dashboardu v samostatném okně">
-          <ListBox.KeyBindings>
-            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
-          </ListBox.KeyBindings>
-          <ListBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:AuditItemViewModel">
-              <Border Padding="12"
-                      Margin="0,0,0,8"
-                      Background="#143A4A5A"
-                      CornerRadius="6"
-                      AutomationProperties.Name="{Binding AccessibleLabel}">
-                <StackPanel Spacing="4">
-                  <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
-                  <TextBlock Text="{Binding VehicleName}" />
-                  <TextBlock Opacity="0.8" Text="{Binding Severity}" />
-                  <TextBlock Opacity="0.8" Text="{Binding Message}" TextWrapping="Wrap" />
-                </StackPanel>
-              </Border>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-      </Grid>
-    </Border>
-
-    <Border Grid.Row="1" Grid.Column="1" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
-      <Grid RowDefinitions="Auto,Auto,*">
-        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Náklady vozidel" />
-        <Button Grid.Row="1"
-                x:Name="DashboardWindowCostOpenButton"
-                Margin="0,12,0,0"
-                Width="150"
-                HorizontalAlignment="Left"
-                Command="{Binding OpenSelectedDashboardCostVehicleCommand}"
-                Content="Vybrat vozidlo"
-                AutomationProperties.Name="Vybrat vozidlo z nákladového přehledu" />
-        <ListBox x:Name="DashboardWindowCostListBox"
-                 Grid.Row="2"
-                 Margin="0,12,0,0"
-                 ItemsSource="{Binding CostVehicles}"
-                 SelectedItem="{Binding SelectedDashboardCostVehicle}"
-                 AutomationProperties.Name="Přehled nákladových položek na dashboardu v samostatném okně">
-          <ListBox.KeyBindings>
-            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" />
-          </ListBox.KeyBindings>
-          <ListBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:CostVehicleItemViewModel">
-              <Border Padding="12"
-                      Margin="0,0,0,8"
-                      Background="#143A4A5A"
-                      CornerRadius="6"
-                      AutomationProperties.Name="{Binding AccessibleLabel}">
-                <StackPanel Spacing="4">
-                  <TextBlock FontWeight="SemiBold" Text="{Binding VehicleName}" />
-                  <TextBlock Opacity="0.8" Text="{Binding Category}" />
-                  <TextBlock Opacity="0.8" Text="{Binding TotalCost}" />
-                  <TextBlock Opacity="0.8" Text="{Binding CostPerKm}" />
-                  <TextBlock Opacity="0.8" Text="{Binding Status}" TextWrapping="Wrap" />
-                </StackPanel>
-              </Border>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-      </Grid>
-    </Border>
-
-    <Border Grid.Row="1" Grid.Column="2" Margin="0,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-      <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
-        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejbližší termíny" />
-        <Button Grid.Row="1"
-                x:Name="DashboardWindowTimelineOpenButton"
-                Margin="0,12,0,0"
-                Width="150"
-                HorizontalAlignment="Left"
-                Command="{Binding OpenSelectedDashboardTimelineItemCommand}"
-                Content="Otevřít položku"
-                AutomationProperties.Name="Otevřít vybraný termín z dashboardu" />
-        <TextBlock Grid.Row="2"
-                   Margin="0,12,0,0"
-                   Opacity="0.75"
-                   Text="{Binding SelectedDashboardTimelineDetail}"
-                   TextWrapping="Wrap" />
-        <ListBox x:Name="DashboardWindowTimelineListBox"
-                 Grid.Row="3"
-                 Margin="0,12,0,0"
-                 ItemsSource="{Binding DashboardUpcomingTimeline}"
-                 SelectedItem="{Binding SelectedDashboardTimelineItem}"
-                 AutomationProperties.Name="Nejbližší termíny napříč vozidly v samostatném okně">
-          <ListBox.KeyBindings>
-            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" />
-          </ListBox.KeyBindings>
-          <ListBox.ItemTemplate>
-            <DataTemplate x:DataType="vm:VehicleTimelineItemViewModel">
-              <Border Padding="12"
-                      Margin="0,0,0,8"
-                      Background="#143A4A5A"
-                      CornerRadius="6"
-                      AutomationProperties.Name="{Binding AccessibleLabel}">
-                <StackPanel Spacing="4">
-                  <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
-                  <TextBlock Text="{Binding VehicleName}" />
-                  <TextBlock Opacity="0.8" Text="{Binding Date}" />
-                  <TextBlock Opacity="0.8" Text="{Binding KindLabel}" />
-                  <TextBlock Opacity="0.8" Text="{Binding Status}" TextWrapping="Wrap" />
-                </StackPanel>
-              </Border>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-        <Button Grid.Row="4"
-                Margin="0,12,0,0"
-                HorizontalAlignment="Right"
-                Click="OnCloseClick"
-                Content="Zavřít"
-                AutomationProperties.Name="Zavřít okno dashboardu" />
-      </Grid>
-    </Border>
+    <workspaces:DashboardWorkspaceView x:Name="DashboardWorkspaceHost"
+                                       Grid.Row="1"
+                                       Margin="0,18,0,0" />
   </Grid>
 </Window>
