@@ -134,16 +134,6 @@ public partial class MainWindow : Window
     {
         RegisterForwardTabToHeaders("VehicleListBox");
         RegisterTabHeaderNavigation();
-        RegisterShiftTabBackNavigation("TimelineFilterComboBox");
-        RegisterShiftTabBackNavigation("TimelineSearchBox");
-        RegisterShiftTabBackNavigation("TimelineOpenButton");
-        RegisterShiftTabBackNavigation("CostListBox");
-        RegisterShiftTabBackNavigation("GlobalSearchTextBox");
-        RegisterShiftTabBackNavigation("SearchResultsListBox");
-        RegisterShiftTabBackNavigation("UpcomingOverviewSearchBox");
-        RegisterShiftTabBackNavigation("UpcomingOverviewListBox");
-        RegisterShiftTabBackNavigation("OverdueOverviewSearchBox");
-        RegisterShiftTabBackNavigation("OverdueOverviewListBox");
     }
 
     private void RegisterTabHeaderNavigation()
@@ -165,27 +155,9 @@ public partial class MainWindow : Window
         }
     }
 
-    private void RegisterShiftTabBackNavigation(string controlName)
-    {
-        if (this.FindControl<Control>(controlName) is { } control)
-        {
-            control.AddHandler(InputElement.KeyDownEvent, OnTabBoundaryKeyDown, RoutingStrategies.Tunnel);
-        }
-    }
-
     private void OnForwardTabToHeadersKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key != Key.Tab || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
-        {
-            return;
-        }
-
-        e.Handled = FocusSelectedTabHeader();
-    }
-
-    private void OnTabBoundaryKeyDown(object? sender, KeyEventArgs e)
-    {
-        if (e.Key != Key.Tab || !e.KeyModifiers.HasFlag(KeyModifiers.Shift))
         {
             return;
         }
@@ -592,15 +564,6 @@ public partial class MainWindow : Window
         return target switch
         {
             DesktopFocusTarget.VehicleList => this.FindControl<ListBox>("VehicleListBox"),
-            DesktopFocusTarget.TimelineSearch => this.FindControl<TextBox>("TimelineSearchBox"),
-            DesktopFocusTarget.TimelineList => this.FindControl<ListBox>("TimelineListBox"),
-            DesktopFocusTarget.GlobalSearchBox => this.FindControl<TextBox>("GlobalSearchTextBox"),
-            DesktopFocusTarget.GlobalSearchList => this.FindControl<ListBox>("SearchResultsListBox"),
-            DesktopFocusTarget.UpcomingOverviewSearch => this.FindControl<TextBox>("UpcomingOverviewSearchBox"),
-            DesktopFocusTarget.UpcomingOverviewList => this.FindControl<ListBox>("UpcomingOverviewListBox"),
-            DesktopFocusTarget.OverdueOverviewSearch => this.FindControl<TextBox>("OverdueOverviewSearchBox"),
-            DesktopFocusTarget.OverdueOverviewList => this.FindControl<ListBox>("OverdueOverviewListBox"),
-            DesktopFocusTarget.CostList => this.FindControl<ListBox>("CostListBox"),
             _ => null
         };
     }

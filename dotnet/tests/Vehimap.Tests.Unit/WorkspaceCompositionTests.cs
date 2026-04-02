@@ -20,9 +20,14 @@ public sealed class WorkspaceCompositionTests
         Assert.NotNull(viewModel.FuelWorkspace);
         Assert.NotNull(viewModel.ReminderWorkspace);
         Assert.NotNull(viewModel.MaintenanceWorkspace);
+        Assert.NotNull(viewModel.TimelineWorkspace);
         Assert.NotNull(viewModel.RecordWorkspace);
         Assert.NotNull(viewModel.AuditWorkspace);
+        Assert.NotNull(viewModel.CostWorkspace);
         Assert.NotNull(viewModel.DashboardWorkspace);
+        Assert.NotNull(viewModel.GlobalSearchWorkspace);
+        Assert.NotNull(viewModel.UpcomingOverviewWorkspace);
+        Assert.NotNull(viewModel.OverdueOverviewWorkspace);
         Assert.Equal(viewModel.HistoryWindowTitle, viewModel.HistoryWorkspace.WindowTitle);
         Assert.Equal(viewModel.RecordWindowTitle, viewModel.RecordWorkspace.WindowTitle);
     }
@@ -45,26 +50,36 @@ public sealed class WorkspaceCompositionTests
         Assert.Equal("Upravená připomínka", viewModel.ReminderEditorTitle);
     }
 
+    [Fact]
+    public void Timeline_and_search_workspaces_share_root_state()
+    {
+        var viewModel = CreateViewModel();
+
+        viewModel.TimelineWorkspace.TimelineSearchText = "technická";
+        viewModel.GlobalSearchWorkspace.GlobalSearchText = "Octavia";
+
+        Assert.Equal("technická", viewModel.TimelineSearchText);
+        Assert.Equal("Octavia", viewModel.GlobalSearchText);
+        Assert.Same(viewModel.SelectedVehicleTimeline, viewModel.TimelineWorkspace.SelectedVehicleTimeline);
+        Assert.Same(viewModel.GlobalSearchResults, viewModel.GlobalSearchWorkspace.GlobalSearchResults);
+    }
+
     [Theory]
     [InlineData("HistoryWorkspaceView")]
+    [InlineData("TimelineWorkspaceView")]
     [InlineData("ReminderWorkspaceView")]
     [InlineData("RecordWorkspaceView")]
+    [InlineData("GlobalSearchWorkspaceView")]
+    [InlineData("UpcomingOverviewWorkspaceView")]
+    [InlineData("OverdueOverviewWorkspaceView")]
+    [InlineData("CostWorkspaceView")]
     [InlineData("DashboardWorkspaceView")]
-    public void Main_window_and_standalone_windows_host_same_workspace_controls(string workspaceViewName)
+    public void Main_window_hosts_shared_workspace_controls(string workspaceViewName)
     {
         var root = FindRepositoryRoot();
         var mainWindowXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "MainWindow.axaml"));
 
         Assert.Contains($"workspaces:{workspaceViewName}", mainWindowXaml, StringComparison.Ordinal);
-
-        var matchingWindowFiles = Directory.GetFiles(
-            Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views"),
-            "*.axaml",
-            SearchOption.TopDirectoryOnly);
-
-        Assert.Contains(
-            matchingWindowFiles,
-            file => File.ReadAllText(file).Contains($"workspaces:{workspaceViewName}", StringComparison.Ordinal));
     }
 
     private static MainWindowViewModel CreateViewModel()
