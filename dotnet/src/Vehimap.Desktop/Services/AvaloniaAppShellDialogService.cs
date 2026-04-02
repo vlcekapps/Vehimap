@@ -7,14 +7,14 @@ namespace Vehimap.Desktop.Services;
 
 internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
 {
-    public async Task<DesktopSupportedSettingsSnapshot?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot)
+    public async Task<SettingsDialogResult?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot, string automaticBackupStatus)
     {
         var dialog = new SettingsWindow
         {
-            DataContext = SettingsDialogViewModel.FromSnapshot(snapshot)
+            DataContext = SettingsDialogViewModel.FromSnapshot(snapshot, automaticBackupStatus)
         };
 
-        return await dialog.ShowDialog<DesktopSupportedSettingsSnapshot?>(owner);
+        return await dialog.ShowDialog<SettingsDialogResult?>(owner);
     }
 
     public async Task<bool> ConfirmBackupImportAsync(Window owner, string backupPath)

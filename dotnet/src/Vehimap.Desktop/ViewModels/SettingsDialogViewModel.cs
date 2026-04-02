@@ -18,12 +18,30 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
     private string maintenanceReminderKm = string.Empty;
 
     [ObservableProperty]
+    private bool runAtStartup;
+
+    [ObservableProperty]
+    private bool hideOnLaunch;
+
+    [ObservableProperty]
     private bool showDashboardOnLaunch;
+
+    [ObservableProperty]
+    private bool automaticBackupsEnabled;
+
+    [ObservableProperty]
+    private string automaticBackupIntervalDays = string.Empty;
+
+    [ObservableProperty]
+    private string automaticBackupKeepCount = string.Empty;
+
+    [ObservableProperty]
+    private string automaticBackupStatus = string.Empty;
 
     [ObservableProperty]
     private string statusMessage = "Upravte podporované volby a potvrďte je tlačítkem Uložit.";
 
-    public static SettingsDialogViewModel FromSnapshot(DesktopSupportedSettingsSnapshot snapshot)
+    public static SettingsDialogViewModel FromSnapshot(DesktopSupportedSettingsSnapshot snapshot, string automaticBackupStatus)
     {
         return new SettingsDialogViewModel
         {
@@ -31,7 +49,13 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             GreenCardReminderDays = snapshot.GreenCardReminderDays.ToString(),
             MaintenanceReminderDays = snapshot.MaintenanceReminderDays.ToString(),
             MaintenanceReminderKm = snapshot.MaintenanceReminderKm.ToString(),
-            ShowDashboardOnLaunch = snapshot.ShowDashboardOnLaunch
+            RunAtStartup = snapshot.RunAtStartup,
+            HideOnLaunch = snapshot.HideOnLaunch,
+            ShowDashboardOnLaunch = snapshot.ShowDashboardOnLaunch,
+            AutomaticBackupsEnabled = snapshot.AutomaticBackupsEnabled,
+            AutomaticBackupIntervalDays = snapshot.AutomaticBackupIntervalDays.ToString(),
+            AutomaticBackupKeepCount = snapshot.AutomaticBackupKeepCount.ToString(),
+            AutomaticBackupStatus = automaticBackupStatus
         };
     }
 
@@ -40,7 +64,9 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
         if (!TryParseBoundedInt(TechnicalReminderDays, 0, 3650, "Upozornění na TK", out var technicalReminderDays, out errorMessage)
             || !TryParseBoundedInt(GreenCardReminderDays, 0, 3650, "Upozornění na zelenou kartu", out var greenCardReminderDays, out errorMessage)
             || !TryParseBoundedInt(MaintenanceReminderDays, 0, 3650, "Upozornění na údržbu podle dnů", out var maintenanceReminderDays, out errorMessage)
-            || !TryParseBoundedInt(MaintenanceReminderKm, 1, 999999, "Upozornění na údržbu podle km", out var maintenanceReminderKm, out errorMessage))
+            || !TryParseBoundedInt(MaintenanceReminderKm, 1, 999999, "Upozornění na údržbu podle km", out var maintenanceReminderKm, out errorMessage)
+            || !TryParseBoundedInt(AutomaticBackupIntervalDays, 1, 999, "Interval automatické zálohy ve dnech", out var automaticBackupIntervalDays, out errorMessage)
+            || !TryParseBoundedInt(AutomaticBackupKeepCount, 1, 999, "Počet ponechaných automatických záloh", out var automaticBackupKeepCount, out errorMessage))
         {
             snapshot = default!;
             return false;
@@ -51,7 +77,12 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             greenCardReminderDays,
             maintenanceReminderDays,
             maintenanceReminderKm,
-            ShowDashboardOnLaunch);
+            RunAtStartup,
+            HideOnLaunch,
+            ShowDashboardOnLaunch,
+            AutomaticBackupsEnabled,
+            automaticBackupIntervalDays,
+            automaticBackupKeepCount);
         errorMessage = string.Empty;
         return true;
     }

@@ -1,13 +1,16 @@
-using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Platform;
 using Vehimap.Desktop.Views;
 
 namespace Vehimap.Desktop;
 
 public partial class App : Avalonia.Application
 {
+    private DesktopAppRuntimeController? _runtimeController;
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -17,12 +20,37 @@ public partial class App : Avalonia.Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
+            var mainWindowViewModel = new MainWindowViewModel();
+            var mainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel()
+                DataContext = mainWindowViewModel
             };
+
+            desktop.MainWindow = mainWindow;
+            _runtimeController = new DesktopAppRuntimeController(
+                desktop,
+                mainWindow,
+                mainWindowViewModel,
+                new AvaloniaTrayService(new AssemblyAppBuildInfoProvider()),
+                new DesktopNotificationService());
+            desktop.Exit += OnDesktopExit;
+            _ = _runtimeController.InitializeAsync();
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private async void OnDesktopExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
+    {
+        if (_runtimeController is not null)
+        {
+            await _runtimeController.DisposeAsync().ConfigureAwait(false);
+            _runtimeController = null;
+        }
+
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.Exit -= OnDesktopExit;
+        }
     }
 }

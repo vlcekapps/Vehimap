@@ -21,15 +21,19 @@ internal sealed class DesktopAppShellController
 
     public async Task OpenSettingsAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
-        var snapshot = await _dialogService
-            .ShowSettingsAsync(owner, shell.GetSupportedSettingsSnapshot())
+        var result = await _dialogService
+            .ShowSettingsAsync(owner, shell.GetSupportedSettingsSnapshot(), shell.GetAutomaticBackupStatusText())
             .ConfigureAwait(true);
-        if (snapshot is null)
+        if (result is null)
         {
             return;
         }
 
-        await shell.SaveSupportedSettingsAsync(snapshot).ConfigureAwait(true);
+        await shell.SaveSupportedSettingsAsync(result.Snapshot).ConfigureAwait(true);
+        if (result.CreateBackupNow)
+        {
+            await shell.CreateAutomaticBackupNowAsync(cancellationToken).ConfigureAwait(true);
+        }
     }
 
     public async Task ExportBackupAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)

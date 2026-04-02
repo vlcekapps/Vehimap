@@ -7,7 +7,7 @@ namespace Vehimap.Desktop.Services;
 
 internal interface IAppShellDialogService
 {
-    Task<DesktopSupportedSettingsSnapshot?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot);
+    Task<SettingsDialogResult?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot, string automaticBackupStatus);
 
     Task<bool> ConfirmBackupImportAsync(Window owner, string backupPath);
 

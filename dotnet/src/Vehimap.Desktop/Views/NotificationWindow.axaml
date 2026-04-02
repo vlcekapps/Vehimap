@@ -1,0 +1,18 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Vehimap.Desktop.Views.NotificationWindow"
+        Width="380"
+        Height="140"
+        ShowInTaskbar="False"
+        CanResize="False"
+        WindowDecorations="None"
+        WindowStartupLocation="CenterScreen"
+        Topmost="True"
+        Title="Vehimap upozornění">
+  <Border Margin="12" Padding="16" Background="#1C2B38" CornerRadius="10">
+    <StackPanel Spacing="10">
+      <TextBlock x:Name="NotificationTitleTextBlock" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" />
+      <TextBlock x:Name="NotificationMessageTextBlock" TextWrapping="Wrap" />
+    </StackPanel>
+  </Border>
+</Window>

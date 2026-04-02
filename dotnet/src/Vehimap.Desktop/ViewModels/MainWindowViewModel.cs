@@ -229,6 +229,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new AvaloniaFileDialogService(),
             new DesktopSupportedSettingsService(),
             new AssemblyAppBuildInfoProvider(),
+            new PlatformAutostartService(),
             null,
             new DesktopProjectionService(),
             new DesktopNavigationCoordinator(),
@@ -251,6 +252,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IFileDialogService? fileDialogService = null,
         DesktopSupportedSettingsService? supportedSettingsService = null,
         IAppBuildInfoProvider? appBuildInfoProvider = null,
+        IAutostartService? autostartService = null,
         IUpdateService? updateService = null,
         DesktopProjectionService? projectionService = null,
         DesktopNavigationCoordinator? navigationCoordinator = null,
@@ -260,6 +262,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         var sessionBackupService = backupService ?? new LegacyBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
         var sessionAppBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider();
+        var sessionAutostartService = autostartService ?? new PlatformAutostartService();
         var sessionUpdateService = updateService ?? new LegacyUpdateService(sessionAppBuildInfoProvider);
 
         _session = new DesktopSessionController(
@@ -269,6 +272,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new LegacyAuditService(attachmentService),
             new LegacyCostAnalysisService(),
             sessionBackupService,
+            sessionAutostartService,
             sessionSupportedSettingsService,
             sessionAppBuildInfoProvider,
             sessionUpdateService);
@@ -583,7 +587,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 OnSelectedVehicleChanged(null);
             }
 
-            if (applyLaunchTabPreference && result.SupportedSettings.ShowDashboardOnLaunch)
+            if (applyLaunchTabPreference && result.SupportedSettings.ShowDashboardOnLaunch && !result.SupportedSettings.HideOnLaunch)
             {
                 SelectedVehicleTabIndex = DashboardTabIndex;
             }

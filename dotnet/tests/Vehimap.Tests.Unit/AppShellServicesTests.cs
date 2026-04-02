@@ -49,7 +49,7 @@ public sealed class AppShellServicesTests : IDisposable
         settings.SetValue("custom", "untouched_key", "keep-me");
 
         var service = new DesktopSupportedSettingsService();
-        service.Apply(settings, new DesktopSupportedSettingsSnapshot(45, 20, 7, 750, true));
+        service.Apply(settings, new DesktopSupportedSettingsSnapshot(45, 20, 7, 750, false, true, true, true, 3, 21));
 
         Assert.Equal("45", settings.GetValue("notifications", "technical_reminder_days"));
         Assert.Equal("20", settings.GetValue("notifications", "green_card_reminder_days"));
@@ -58,6 +58,8 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Equal("1", settings.GetValue("app", "show_dashboard_on_launch"));
         Assert.Equal("1", settings.GetValue("app", "hide_on_launch"));
         Assert.Equal("1", settings.GetValue("backups", "automatic_backups_enabled"));
+        Assert.Equal("3", settings.GetValue("backups", "automatic_backup_interval_days"));
+        Assert.Equal("21", settings.GetValue("backups", "automatic_backup_keep_count"));
         Assert.Equal("keep-me", settings.GetValue("custom", "untouched_key"));
     }
 

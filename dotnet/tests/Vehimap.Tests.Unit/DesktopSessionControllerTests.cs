@@ -86,7 +86,7 @@ public sealed class DesktopSessionControllerTests
         var session = CreateSessionController(dataRoot, dataStore);
         await session.LoadAsync(dataRoot.AppBasePath);
 
-        await session.ApplySupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(45, 21, 14, 1500, true));
+        await session.ApplySupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(45, 21, 14, 1500, false, true, true, true, 2, 10));
 
         Assert.Equal("45", dataStore.CurrentDataSet.Settings.GetValue("notifications", "technical_reminder_days"));
         Assert.Equal("21", dataStore.CurrentDataSet.Settings.GetValue("notifications", "green_card_reminder_days"));
@@ -94,6 +94,9 @@ public sealed class DesktopSessionControllerTests
         Assert.Equal("1500", dataStore.CurrentDataSet.Settings.GetValue("notifications", "maintenance_reminder_km"));
         Assert.Equal("1", dataStore.CurrentDataSet.Settings.GetValue("app", "show_dashboard_on_launch"));
         Assert.Equal("1", dataStore.CurrentDataSet.Settings.GetValue("app", "hide_on_launch"));
+        Assert.Equal("1", dataStore.CurrentDataSet.Settings.GetValue("backups", "automatic_backups_enabled"));
+        Assert.Equal("2", dataStore.CurrentDataSet.Settings.GetValue("backups", "automatic_backup_interval_days"));
+        Assert.Equal("10", dataStore.CurrentDataSet.Settings.GetValue("backups", "automatic_backup_keep_count"));
     }
 
     [Fact]
@@ -166,6 +169,55 @@ public sealed class DesktopSessionControllerTests
         Assert.Equal(@"attachments/veh_1/pojisteni.pdf", attachmentService.LastRelativePath);
     }
 
+    [Fact]
+    public async Task Load_async_prefers_autostart_runtime_state_over_stored_value()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        dataSet.Settings.SetValue("app", "run_at_startup", "0");
+        var autostartService = new StubAutostartService { IsEnabledResult = true };
+        var session = CreateSessionController(dataRoot, new StubLegacyDataStore(dataSet), autostartService: autostartService);
+
+        var result = await session.LoadAsync(dataRoot.AppBasePath);
+
+        Assert.True(result.SupportedSettings.RunAtStartup);
+        Assert.True(session.ReadSupportedSettings().RunAtStartup);
+    }
+
+    [Fact]
+    public async Task Create_automatic_backup_async_exports_file_and_updates_settings()
+    {
+        var dataRoot = new VehimapDataRoot(Path.Combine(Path.GetTempPath(), "vehimap-session-test", Guid.NewGuid().ToString("N")), Path.Combine(Path.GetTempPath(), "vehimap-session-test", Guid.NewGuid().ToString("N"), "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var backupService = new StubBackupService();
+        var dataStore = new StubLegacyDataStore(dataSet);
+        var session = CreateSessionController(dataRoot, dataStore, backupService: backupService);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        var result = await session.CreateAutomaticBackupAsync();
+
+        Assert.True(result.Created);
+        Assert.False(result.IsError);
+        Assert.Equal(result.BackupPath, backupService.ExportedPath);
+        Assert.False(string.IsNullOrWhiteSpace(dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_stamp")));
+        Assert.Equal(result.BackupPath, dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_path"));
+    }
+
     private static DesktopSessionController CreateSessionController(
         VehimapDataRoot dataRoot,
         StubLegacyDataStore dataStore,
@@ -173,6 +225,7 @@ public sealed class DesktopSessionControllerTests
         IAuditService? auditService = null,
         ICostAnalysisService? costAnalysisService = null,
         IBackupService? backupService = null,
+        IAutostartService? autostartService = null,
         IAppBuildInfoProvider? appBuildInfoProvider = null,
         IUpdateService? updateService = null)
     {
@@ -184,6 +237,7 @@ public sealed class DesktopSessionControllerTests
             auditService ?? new StubAuditService([]),
             costAnalysisService ?? new StubCostAnalysisService(new CostAnalysisSummary("2026", new DateOnly(2026, 1, 1), new DateOnly(2026, 12, 31), 0m, null, null, 0m, null, 0m, null, 0, 0, 0, [])),
             backupService ?? new StubBackupService(),
+            autostartService ?? new StubAutostartService(),
             new DesktopSupportedSettingsService(),
             appBuildInfoProvider ?? new StubBuildInfoProvider(new AppBuildInfo("Vehimap", "1.0.0", "1.0.0.0", "Test", @"C:\vehimap\Vehimap.Desktop.exe", "Windows", ".NET 10", "https://example.com/latest.ini", "https://example.com/release", @"C:\vehimap\Vehimap.Updater.exe", false)),
             updateService ?? new StubUpdateService(
@@ -262,8 +316,14 @@ public sealed class DesktopSessionControllerTests
 
     private sealed class StubBackupService : IBackupService
     {
+        public string? ExportedPath { get; private set; }
+
         public Task ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
+        {
+            ExportedPath = backupPath;
+            Directory.CreateDirectory(Path.GetDirectoryName(backupPath)!);
+            return File.WriteAllTextAsync(backupPath, "backup", cancellationToken);
+        }
 
         public Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
             => Task.FromResult(new VehimapBackupBundle(new VehimapDataSet(), []));
@@ -305,5 +365,14 @@ public sealed class DesktopSessionControllerTests
 
         public Task<UpdateInstallResult> PrepareInstallAsync(UpdateCheckResult update, CancellationToken cancellationToken = default)
             => Task.FromResult(_installResult);
+    }
+
+    private sealed class StubAutostartService : IAutostartService
+    {
+        public bool IsEnabledResult { get; set; }
+
+        public Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default) => Task.FromResult(IsEnabledResult);
+
+        public Task SetEnabledAsync(bool enabled, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

@@ -31,6 +31,27 @@ public sealed class MainWindowViewModelAppShellTests
     }
 
     [Fact]
+    public void Hide_on_launch_suppresses_dashboard_auto_open()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        dataSet.Settings.SetValue("app", "show_dashboard_on_launch", "1");
+        dataSet.Settings.SetValue("app", "hide_on_launch", "1");
+
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet));
+
+        Assert.False(viewModel.IsDashboardTabSelected);
+        Assert.True(viewModel.IsDetailTabSelected);
+    }
+
+    [Fact]
     public async Task Saving_supported_settings_persists_values_and_keeps_other_keys()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -46,7 +67,7 @@ public sealed class MainWindowViewModelAppShellTests
         var dataStore = new StubLegacyDataStore(dataSet);
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
-        await viewModel.SaveSupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(60, 25, 14, 1500, true));
+        await viewModel.SaveSupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(60, 25, 14, 1500, false, true, true, false, 1, 30));
 
         Assert.Equal("60", dataStore.CurrentDataSet.Settings.GetValue("notifications", "technical_reminder_days"));
         Assert.Equal("25", dataStore.CurrentDataSet.Settings.GetValue("notifications", "green_card_reminder_days"));
@@ -134,7 +155,8 @@ public sealed class MainWindowViewModelAppShellTests
             backupService ?? new StubBackupService(),
             new StubFileDialogService(),
             new DesktopSupportedSettingsService(),
-            new StubBuildInfoProvider());
+            new StubBuildInfoProvider(),
+            new StubAutostartService());
     }
 
     private sealed class StubDataRootLocator : IDataRootLocator
@@ -210,6 +232,13 @@ public sealed class MainWindowViewModelAppShellTests
             "https://example.com/release",
             @"C:\vehimap\Vehimap.Updater.exe",
             false);
+    }
+
+    private sealed class StubAutostartService : IAutostartService
+    {
+        public Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default) => Task.FromResult(false);
+
+        public Task SetEnabledAsync(bool enabled, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     private sealed class StubBackupService : IBackupService

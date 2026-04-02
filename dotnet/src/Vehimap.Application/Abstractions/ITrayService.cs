@@ -1,6 +1,12 @@
+using Vehimap.Application.Models;
+
 namespace Vehimap.Application.Abstractions;
 
-public interface ITrayService
+public interface ITrayService : IAsyncDisposable
 {
-    Task InitializeAsync(CancellationToken cancellationToken = default);
+    bool IsSupported { get; }
+
+    Task InitializeAsync(TrayServiceConfiguration configuration, CancellationToken cancellationToken = default);
+
+    Task UpdateToolTipAsync(string toolTipText, CancellationToken cancellationToken = default);
 }

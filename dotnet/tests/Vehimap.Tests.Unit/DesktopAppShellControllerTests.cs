@@ -19,7 +19,9 @@ public sealed class DesktopAppShellControllerTests
     {
         var dialogService = new StubAppShellDialogService
         {
-            SettingsResult = new DesktopSupportedSettingsSnapshot(45, 20, 10, 900, true)
+            SettingsResult = new SettingsDialogResult(
+                new DesktopSupportedSettingsSnapshot(45, 20, 10, 900, false, false, true, true, 2, 14),
+                false)
         };
         var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -30,6 +32,7 @@ public sealed class DesktopAppShellControllerTests
 
         Assert.Equal("45", dataStore.CurrentDataSet.Settings.GetValue("notifications", "technical_reminder_days"));
         Assert.Equal("20", dataStore.CurrentDataSet.Settings.GetValue("notifications", "green_card_reminder_days"));
+        Assert.Equal("1", dataStore.CurrentDataSet.Settings.GetValue("backups", "automatic_backups_enabled"));
         Assert.True(dialogService.ShowSettingsCalled);
     }
 
@@ -95,6 +98,7 @@ public sealed class DesktopAppShellControllerTests
             new StubFileDialogService(),
             new DesktopSupportedSettingsService(),
             new StubBuildInfoProvider(),
+            new StubAutostartService(),
             updateService,
             new DesktopProjectionService(),
             new DesktopNavigationCoordinator(),
@@ -243,12 +247,12 @@ public sealed class DesktopAppShellControllerTests
 
     private sealed class StubAppShellDialogService : IAppShellDialogService
     {
-        public DesktopSupportedSettingsSnapshot? SettingsResult { get; set; }
+        public SettingsDialogResult? SettingsResult { get; set; }
         public bool AboutResult { get; set; }
         public UpdateDialogAction UpdateResult { get; set; }
         public bool ShowSettingsCalled { get; private set; }
 
-        public Task<DesktopSupportedSettingsSnapshot?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot)
+        public Task<SettingsDialogResult?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot, string automaticBackupStatus)
         {
             ShowSettingsCalled = true;
             return Task.FromResult(SettingsResult);
@@ -269,5 +273,12 @@ public sealed class DesktopAppShellControllerTests
         {
             LastPlan = plan;
         }
+    }
+
+    private sealed class StubAutostartService : IAutostartService
+    {
+        public Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default) => Task.FromResult(false);
+
+        public Task SetEnabledAsync(bool enabled, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }

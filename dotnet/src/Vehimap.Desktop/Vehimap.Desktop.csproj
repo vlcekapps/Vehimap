@@ -18,6 +18,10 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
   <Target Name="CopyUpdaterToBuildOutput" AfterTargets="Build">
     <MSBuild Projects="..\Vehimap.Updater\Vehimap.Updater.csproj"
              Targets="Build"

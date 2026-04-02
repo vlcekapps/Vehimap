@@ -3,65 +3,119 @@
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.SettingsWindow"
         x:DataType="vm:SettingsDialogViewModel"
-        Width="560"
-        Height="430"
-        MinWidth="520"
-        MinHeight="390"
+        Width="620"
+        Height="700"
+        MinWidth="580"
+        MinHeight="660"
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="Nastavení">
-  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="Nastavení Vehimapu" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
                Opacity="0.78"
-               Text="V této etapě jsou dostupné jen volby, které už mají v Avalonia větvi reálný efekt."
+               Text="Zde nastavíte upozornění, chování aplikace po spuštění a automatické zálohy desktopové větve."
                TextWrapping="Wrap" />
 
-    <Grid Grid.Row="2" Margin="0,18,0,0" ColumnDefinitions="260,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-      <TextBlock Grid.Row="0" Text="Upozornění na TK (dny)" VerticalAlignment="Center" />
-      <TextBox x:Name="TechnicalReminderDaysBox"
-               Grid.Row="0"
-               Grid.Column="1"
-               Text="{Binding TechnicalReminderDays}"
-               AutomationProperties.Name="Upozornění na technickou kontrolu ve dnech"
-               AutomationProperties.AutomationId="TechnicalReminderDaysBox" />
+    <StackPanel Grid.Row="2" Margin="0,18,0,0" Spacing="18">
+      <Border Padding="14" Background="#143A4A5A" CornerRadius="8">
+        <Grid ColumnDefinitions="280,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+          <TextBlock Grid.Row="0" Text="Upozornění na TK (dny)" VerticalAlignment="Center" />
+          <TextBox x:Name="TechnicalReminderDaysBox"
+                   Grid.Row="0"
+                   Grid.Column="1"
+                   Text="{Binding TechnicalReminderDays}"
+                   AutomationProperties.Name="Upozornění na technickou kontrolu ve dnech"
+                   AutomationProperties.AutomationId="TechnicalReminderDaysBox" />
 
-      <TextBlock Grid.Row="1" Text="Upozornění na zelenou kartu (dny)" VerticalAlignment="Center" Margin="0,12,0,0" />
-      <TextBox Grid.Row="1"
-               Grid.Column="1"
-               Margin="0,12,0,0"
-               Text="{Binding GreenCardReminderDays}"
-               AutomationProperties.Name="Upozornění na zelenou kartu ve dnech"
-               AutomationProperties.AutomationId="GreenCardReminderDaysBox" />
+          <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="Upozornění na zelenou kartu (dny)" VerticalAlignment="Center" />
+          <TextBox Grid.Row="1"
+                   Grid.Column="1"
+                   Margin="0,12,0,0"
+                   Text="{Binding GreenCardReminderDays}"
+                   AutomationProperties.Name="Upozornění na zelenou kartu ve dnech"
+                   AutomationProperties.AutomationId="GreenCardReminderDaysBox" />
 
-      <TextBlock Grid.Row="2" Text="Upozornění na údržbu (dny)" VerticalAlignment="Center" Margin="0,12,0,0" />
-      <TextBox Grid.Row="2"
-               Grid.Column="1"
-               Margin="0,12,0,0"
-               Text="{Binding MaintenanceReminderDays}"
-               AutomationProperties.Name="Upozornění na údržbu ve dnech"
-               AutomationProperties.AutomationId="MaintenanceReminderDaysBox" />
+          <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="Upozornění na údržbu (dny)" VerticalAlignment="Center" />
+          <TextBox Grid.Row="2"
+                   Grid.Column="1"
+                   Margin="0,12,0,0"
+                   Text="{Binding MaintenanceReminderDays}"
+                   AutomationProperties.Name="Upozornění na údržbu ve dnech"
+                   AutomationProperties.AutomationId="MaintenanceReminderDaysBox" />
 
-      <TextBlock Grid.Row="3" Text="Upozornění na údržbu (km)" VerticalAlignment="Center" Margin="0,12,0,0" />
-      <TextBox Grid.Row="3"
-               Grid.Column="1"
-               Margin="0,12,0,0"
-               Text="{Binding MaintenanceReminderKm}"
-               AutomationProperties.Name="Upozornění na údržbu v kilometrech"
-               AutomationProperties.AutomationId="MaintenanceReminderKmBox" />
+          <TextBlock Grid.Row="3" Margin="0,12,0,0" Text="Upozornění na údržbu (km)" VerticalAlignment="Center" />
+          <TextBox Grid.Row="3"
+                   Grid.Column="1"
+                   Margin="0,12,0,0"
+                   Text="{Binding MaintenanceReminderKm}"
+                   AutomationProperties.Name="Upozornění na údržbu v kilometrech"
+                   AutomationProperties.AutomationId="MaintenanceReminderKmBox" />
 
-      <CheckBox Grid.Row="4"
-                Grid.ColumnSpan="2"
-                Margin="0,18,0,0"
-                IsChecked="{Binding ShowDashboardOnLaunch}"
-                Content="Po spuštění otevřít Dashboard místo Detailu"
-                AutomationProperties.Name="Po spuštění otevřít Dashboard místo Detailu"
-                AutomationProperties.AutomationId="ShowDashboardOnLaunchCheckBox" />
-    </Grid>
+          <CheckBox Grid.Row="4"
+                    Grid.ColumnSpan="2"
+                    Margin="0,18,0,0"
+                    IsChecked="{Binding ShowDashboardOnLaunch}"
+                    Content="Po spuštění otevřít Dashboard místo Detailu"
+                    AutomationProperties.Name="Po spuštění otevřít Dashboard místo Detailu"
+                    AutomationProperties.AutomationId="ShowDashboardOnLaunchCheckBox" />
+        </Grid>
+      </Border>
 
-    <Border Grid.Row="6"
+      <Border Padding="14" Background="#143A4A5A" CornerRadius="8">
+        <StackPanel Spacing="10">
+          <CheckBox x:Name="RunAtStartupCheckBox"
+                    IsChecked="{Binding RunAtStartup}"
+                    Content="Spustit po startu počítače"
+                    AutomationProperties.Name="Spustit po startu počítače"
+                    AutomationProperties.AutomationId="RunAtStartupCheckBox" />
+          <CheckBox IsChecked="{Binding HideOnLaunch}"
+                    Content="Po spuštění automaticky skrýt do lišty"
+                    AutomationProperties.Name="Po spuštění automaticky skrýt do lišty"
+                    AutomationProperties.AutomationId="HideOnLaunchCheckBox" />
+          <TextBlock Opacity="0.76"
+                     Text="Pokud je zapnuté automatické skrytí, Dashboard se při startu neotevře."
+                     TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <Border Padding="14" Background="#143A4A5A" CornerRadius="8">
+        <Grid ColumnDefinitions="280,*" RowDefinitions="Auto,Auto,Auto,Auto">
+          <CheckBox Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    IsChecked="{Binding AutomaticBackupsEnabled}"
+                    Content="Pravidelně vytvářet automatické zálohy"
+                    AutomationProperties.Name="Pravidelně vytvářet automatické zálohy"
+                    AutomationProperties.AutomationId="AutomaticBackupsEnabledCheckBox" />
+
+          <TextBlock Grid.Row="1" Margin="0,14,0,0" Text="Interval automatické zálohy ve dnech" VerticalAlignment="Center" />
+          <TextBox Grid.Row="1"
+                   Grid.Column="1"
+                   Margin="0,14,0,0"
+                   Text="{Binding AutomaticBackupIntervalDays}"
+                   AutomationProperties.Name="Interval automatické zálohy ve dnech"
+                   AutomationProperties.AutomationId="AutomaticBackupIntervalDaysBox" />
+
+          <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="Ponechat posledních automatických záloh" VerticalAlignment="Center" />
+          <TextBox Grid.Row="2"
+                   Grid.Column="1"
+                   Margin="0,12,0,0"
+                   Text="{Binding AutomaticBackupKeepCount}"
+                   AutomationProperties.Name="Počet ponechaných automatických záloh"
+                   AutomationProperties.AutomationId="AutomaticBackupKeepCountBox" />
+
+          <TextBlock Grid.Row="3"
+                     Grid.ColumnSpan="2"
+                     Margin="0,16,0,0"
+                     Text="{Binding AutomaticBackupStatus}"
+                     TextWrapping="Wrap" />
+        </Grid>
+      </Border>
+    </StackPanel>
+
+    <Border Grid.Row="4"
             Margin="0,18,0,0"
             Padding="12"
             Background="#143A4A5A"
@@ -69,11 +123,17 @@
       <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" />
     </Border>
 
-    <StackPanel Grid.Row="7"
+    <StackPanel Grid.Row="5"
                 Margin="0,18,0,0"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
                 Spacing="10">
+      <Button x:Name="CreateAutomaticBackupButton"
+              MinWidth="150"
+              Click="OnBackupNowClick"
+              Content="Zálohovat ihned"
+              AutomationProperties.Name="Vytvořit automatickou zálohu ihned"
+              AutomationProperties.AutomationId="CreateAutomaticBackupButton" />
       <Button x:Name="SaveSettingsButton"
               MinWidth="110"
               Click="OnSaveClick"

@@ -5,4 +5,9 @@ public sealed record DesktopSupportedSettingsSnapshot(
     int GreenCardReminderDays,
     int MaintenanceReminderDays,
     int MaintenanceReminderKm,
-    bool ShowDashboardOnLaunch);
+    bool RunAtStartup,
+    bool HideOnLaunch,
+    bool ShowDashboardOnLaunch,
+    bool AutomaticBackupsEnabled,
+    int AutomaticBackupIntervalDays,
+    int AutomaticBackupKeepCount);
