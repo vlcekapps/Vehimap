@@ -138,6 +138,7 @@
       <Border Grid.Column="1" Margin="16,0,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
         <TabControl x:Name="VehicleTabControl"
                     SelectedIndex="{Binding SelectedVehicleTabIndex}"
+                    IsTabStop="True"
                     AutomationProperties.Name="Hlavní pracovní karty vybraného vozidla"
                     AutomationProperties.HelpText="Karty Detail, Historie, Tankování, Připomínky, Údržba, Časová osa, Doklady, Audit, Náklady a Dashboard.">
           <TabItem Header="Detail">
@@ -308,7 +309,8 @@
                     Margin="0,12,0,0"
                     ColumnDefinitions="100,170,100,*">
                 <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Zobrazit" />
-                <ComboBox Grid.Column="1"
+                <ComboBox x:Name="TimelineFilterComboBox"
+                          Grid.Column="1"
                           ItemsSource="{Binding TimelineFilters}"
                           SelectedItem="{Binding SelectedTimelineFilter}"
                           AutomationProperties.Name="Filtr časové osy" />
@@ -353,6 +355,7 @@
                 <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
                   <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail časové osy" />
                   <Button Grid.Row="1"
+                          x:Name="TimelineOpenButton"
                           Margin="0,12,0,0"
                           Width="150"
                           HorizontalAlignment="Left"
@@ -511,6 +514,7 @@
                 <Grid RowDefinitions="Auto,Auto,*">
                   <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejdůležitější audit" />
                   <Button Grid.Row="1"
+                          x:Name="DashboardAuditOpenButton"
                           Margin="0,12,0,0"
                           Width="150"
                           HorizontalAlignment="Left"
@@ -550,6 +554,7 @@
                 <Grid RowDefinitions="Auto,Auto,*">
                   <TextBlock FontSize="18" FontWeight="SemiBold" Text="Náklady vozidel" />
                   <Button Grid.Row="1"
+                          x:Name="DashboardCostOpenButton"
                           Margin="0,12,0,0"
                           Width="150"
                           HorizontalAlignment="Left"
@@ -590,6 +595,7 @@
                 <Grid RowDefinitions="Auto,Auto,Auto,*">
                   <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejbližší termíny" />
                   <Button Grid.Row="1"
+                          x:Name="DashboardTimelineOpenButton"
                           Margin="0,12,0,0"
                           Width="150"
                           HorizontalAlignment="Left"

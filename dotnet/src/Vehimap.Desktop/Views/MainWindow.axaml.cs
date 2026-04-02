@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.Markup.Xaml;
 using Vehimap.Desktop.ViewModels;
@@ -15,6 +16,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        RegisterTabBoundaryNavigation();
         Opened += OnOpened;
         Activated += OnActivated;
         DataContextChanged += OnDataContextChanged;
@@ -93,6 +95,45 @@ public partial class MainWindow : Window
         }
 
         return control.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+    }
+
+    private void RegisterTabBoundaryNavigation()
+    {
+        RegisterShiftTabBackNavigation("HistoryListBox");
+        RegisterShiftTabBackNavigation("FuelListBox");
+        RegisterShiftTabBackNavigation("ReminderListBox");
+        RegisterShiftTabBackNavigation("MaintenanceListBox");
+        RegisterShiftTabBackNavigation("TimelineFilterComboBox");
+        RegisterShiftTabBackNavigation("TimelineSearchBox");
+        RegisterShiftTabBackNavigation("TimelineOpenButton");
+        RegisterShiftTabBackNavigation("RecordListBox");
+        RegisterShiftTabBackNavigation("AuditListBox");
+        RegisterShiftTabBackNavigation("CostListBox");
+        RegisterShiftTabBackNavigation("DashboardAuditOpenButton");
+        RegisterShiftTabBackNavigation("DashboardCostOpenButton");
+        RegisterShiftTabBackNavigation("DashboardTimelineOpenButton");
+    }
+
+    private void RegisterShiftTabBackNavigation(string controlName)
+    {
+        if (this.FindControl<Control>(controlName) is { } control)
+        {
+            control.AddHandler(InputElement.KeyDownEvent, OnTabBoundaryKeyDown, RoutingStrategies.Tunnel);
+        }
+    }
+
+    private void OnTabBoundaryKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Tab || !e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            return;
+        }
+
+        if (this.FindControl<TabControl>("VehicleTabControl") is { } tabControl)
+        {
+            e.Handled = tabControl.Focus(NavigationMethod.Tab, KeyModifiers.Shift)
+                || tabControl.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+        }
     }
 
     private static bool FocusListBox(ListBox listBox)
