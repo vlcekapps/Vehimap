@@ -104,6 +104,7 @@ public sealed class DesktopAccessibilityLabelTests
         var updateXaml = File.ReadAllText(Path.Combine(desktopRoot, "UpdateCheckWindow.axaml"));
         var historyXaml = File.ReadAllText(Path.Combine(desktopRoot, "HistoryWindow.axaml"));
         var dashboardXaml = File.ReadAllText(Path.Combine(desktopRoot, "DashboardWindow.axaml"));
+        var bundleXaml = File.ReadAllText(Path.Combine(desktopRoot, "VehicleStarterBundleWindow.axaml"));
 
         Assert.Contains("Title=\"Nastavení\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
@@ -114,6 +115,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseHistoryWindowButton\"", historyXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseDashboardWindowButton\"", dashboardXaml);
+        Assert.Contains("Title=\"Balíček pro vozidlo\"", bundleXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"BundleItemsListBox\"", bundleXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ApplyBundleButton\"", bundleXaml);
     }
 
     [Fact]
@@ -157,6 +161,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.Name=\"Termín připomínky\"", reminderXaml);
         Assert.Contains("AutomationProperties.Name=\"Název vozidla\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.Name=\"Kategorie vozidla\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.Name=\"Klimatizace vozidla\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.Name=\"Typ rozvodů vozidla\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.Name=\"Převodovka vozidla\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateReminderButton\"", reminderXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReminderEditorTitleBox\"", reminderXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateRecordButton\"", recordXaml);
@@ -179,8 +186,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateVehicleButton\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorNameBox\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleStarterBundleButton\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorClimateProfileBox\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTimingDriveBox\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTransmissionBox\"", vehicleDetailXaml);
         Assert.Contains("x:Name=\"CancelVehicleButton\"", vehicleDetailXaml);
         Assert.Contains("ItemsSource=\"{Binding VehicleCategoryOptions}\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding VehicleStateOptions}\"", vehicleDetailXaml);
         Assert.Contains("<ComboBox x:Name=\"VehicleEditorCategoryBox\"", vehicleDetailXaml);
     }
 }

@@ -1,4 +1,5 @@
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
@@ -177,15 +178,26 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.VehicleEditorNextTk = "09/2026";
         viewModel.VehicleEditorGreenCardTo = "10/2026";
         viewModel.VehicleEditorState = "Veterán";
-        viewModel.VehicleEditorPowertrain = "benzín";
+        viewModel.VehicleEditorPowertrain = "Benzín";
+        viewModel.VehicleEditorClimateProfile = "Má klimatizaci";
+        viewModel.VehicleEditorTimingDrive = "Řemen";
+        viewModel.VehicleEditorTransmission = "Manuální";
 
         await viewModel.SaveVehicleCommand.ExecuteAsync(null);
 
         Assert.NotNull(viewModel.SelectedVehicle);
         Assert.Equal("Božena", viewModel.SelectedVehicle!.Name);
         Assert.Contains(dataStore.CurrentDataSet.Vehicles, item => item.Name == "Božena");
-        Assert.Contains(dataStore.CurrentDataSet.VehicleMetaEntries, item => item.VehicleId == viewModel.SelectedVehicle.Id && item.State == "Veterán" && item.Powertrain == "benzín");
+        Assert.Contains(
+            dataStore.CurrentDataSet.VehicleMetaEntries,
+            item => item.VehicleId == viewModel.SelectedVehicle.Id
+                && item.State == "Veterán"
+                && item.Powertrain == "Benzín"
+                && item.ClimateProfile == "Má klimatizaci"
+                && item.TimingDrive == "Řemen"
+                && item.Transmission == "Manuální");
         Assert.Equal("Nové vozidlo bylo uloženo.", viewModel.VehicleEditorStatus);
+        Assert.True(viewModel.TryConsumePendingVehicleStarterBundleOffer(viewModel.SelectedVehicle.Id));
     }
 
     [Fact]
@@ -195,15 +207,18 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Directory.CreateDirectory(dataRoot.DataPath);
 
         var dataSet = BuildBaseDataSet();
-        dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_1", "Běžný provoz", "test", "benzín", "ano", "řemen", "manuál"));
+        dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_1", "Běžný provoz", "test", "Benzín", "Má klimatizaci", "Řemen", "Manuální"));
 
         var dataStore = new MutableStubLegacyDataStore(dataSet);
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
         viewModel.EditSelectedVehicleCommand.Execute(null);
         viewModel.VehicleEditorName = "Milena po servisu";
-        viewModel.VehicleEditorPowertrain = "diesel";
+        viewModel.VehicleEditorPowertrain = "Nafta";
         viewModel.VehicleEditorState = "Odstaveno";
+        viewModel.VehicleEditorClimateProfile = "Bez klimatizace";
+        viewModel.VehicleEditorTimingDrive = "Řetěz";
+        viewModel.VehicleEditorTransmission = "Automatická";
 
         await viewModel.SaveVehicleCommand.ExecuteAsync(null);
 
@@ -212,12 +227,42 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Milena po servisu", savedVehicle.Name);
         var savedMeta = Assert.Single(dataStore.CurrentDataSet.VehicleMetaEntries.Where(item => item.VehicleId == "veh_1"));
         Assert.Equal("Odstaveno", savedMeta.State);
-        Assert.Equal("diesel", savedMeta.Powertrain);
+        Assert.Equal("Nafta", savedMeta.Powertrain);
         Assert.Equal("test", savedMeta.Tags);
-        Assert.Equal("ano", savedMeta.ClimateProfile);
-        Assert.Equal("řemen", savedMeta.TimingDrive);
-        Assert.Equal("manuál", savedMeta.Transmission);
+        Assert.Equal("Bez klimatizace", savedMeta.ClimateProfile);
+        Assert.Equal("Řetěz", savedMeta.TimingDrive);
+        Assert.Equal("Automatická", savedMeta.Transmission);
         Assert.Equal("Vozidlo bylo upraveno.", viewModel.VehicleEditorStatus);
+    }
+
+    [Fact]
+    public async Task Vehicle_starter_bundle_preview_and_apply_adds_missing_items_without_duplicates()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_1", "Běžný provoz", string.Empty, "Nafta", "Má klimatizaci", "Řemen", "Automatická"));
+
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        var preview = viewModel.BuildVehicleStarterBundlePreview("veh_1");
+
+        Assert.True(preview.TotalMissingCount >= 5);
+        Assert.Contains(preview.Items, item => item.Section == VehicleStarterBundleSection.Maintenance && item.Title == "Motorový olej a filtr");
+        Assert.Contains(preview.Items, item => item.Section == VehicleStarterBundleSection.Record && item.Title == "Povinné ručení");
+        Assert.Contains(preview.Items, item => item.Section == VehicleStarterBundleSection.Reminder && item.Title.Contains("kontrola", StringComparison.CurrentCultureIgnoreCase));
+
+        var message = await viewModel.ApplyVehicleStarterBundleAsync("veh_1", preview.Items);
+
+        Assert.Contains("Balíček pro vozidlo přidal", message);
+        Assert.Contains(dataStore.CurrentDataSet.MaintenancePlans, item => item.VehicleId == "veh_1" && item.Title == "Motorový olej a filtr");
+        Assert.Contains(dataStore.CurrentDataSet.Records, item => item.VehicleId == "veh_1" && item.Title == "Povinné ručení" && item.AttachmentMode == VehicleRecordAttachmentMode.Managed);
+        Assert.Contains(dataStore.CurrentDataSet.Reminders, item => item.VehicleId == "veh_1" && item.Title.Contains("kontrola", StringComparison.CurrentCultureIgnoreCase));
+
+        var secondMessage = await viewModel.ApplyVehicleStarterBundleAsync("veh_1", preview.Items);
+        Assert.Equal("Balíček pro vozidlo už neměl žádné nové položky k doplnění.", secondMessage);
     }
 
     public void Dispose()

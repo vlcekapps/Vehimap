@@ -1,4 +1,6 @@
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using Vehimap.Application.Models;
 using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
@@ -20,6 +22,12 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public bool IsVehicleDetailVisible => Root.IsVehicleDetailVisible;
     public string VehicleEditorStatus => Root.VehicleEditorStatus;
     public IReadOnlyList<string> VehicleCategoryOptions => LegacyKnownValues.Categories;
+    public IReadOnlyList<string> VehicleStateOptions => LegacyKnownValues.VehicleStates;
+    public IReadOnlyList<string> VehiclePowertrainOptions => LegacyKnownValues.VehiclePowertrains;
+    public IReadOnlyList<string> VehicleClimateProfileOptions => LegacyKnownValues.VehicleClimateProfiles;
+    public IReadOnlyList<string> VehicleTimingDriveOptions => LegacyKnownValues.VehicleTimingDrives;
+    public IReadOnlyList<string> VehicleTransmissionOptions => LegacyKnownValues.VehicleTransmissions;
+    public bool CanOpenVehicleStarterBundle => Root.CanOpenVehicleStarterBundle;
 
     public string VehicleEditorName
     {
@@ -99,8 +107,51 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
         set => Root.VehicleEditorPowertrain = value;
     }
 
+    public string VehicleEditorClimateProfile
+    {
+        get => Root.VehicleEditorClimateProfile;
+        set => Root.VehicleEditorClimateProfile = value;
+    }
+
+    public string VehicleEditorTimingDrive
+    {
+        get => Root.VehicleEditorTimingDrive;
+        set => Root.VehicleEditorTimingDrive = value;
+    }
+
+    public string VehicleEditorTransmission
+    {
+        get => Root.VehicleEditorTransmission;
+        set => Root.VehicleEditorTransmission = value;
+    }
+
     public ICommand CreateVehicleCommand => Root.CreateVehicleCommand;
     public ICommand EditSelectedVehicleCommand => Root.EditSelectedVehicleCommand;
-    public ICommand SaveVehicleCommand => Root.SaveVehicleCommand;
+    public IAsyncRelayCommand SaveVehicleCommand => Root.SaveVehicleCommand;
     public ICommand CancelVehicleEditCommand => Root.CancelVehicleEditCommand;
+
+    public VehicleStarterBundlePreview BuildVehicleStarterBundlePreview()
+    {
+        return Root.SelectedVehicle is null
+            ? new VehicleStarterBundlePreview(string.Empty, string.Empty, string.Empty, [])
+            : Root.BuildVehicleStarterBundlePreview(Root.SelectedVehicle.Id);
+    }
+
+    public Task<string> ApplyVehicleStarterBundleAsync(IReadOnlyList<VehicleStarterBundleTemplate> items)
+    {
+        return Root.SelectedVehicle is null
+            ? Task.FromResult("Nejprve vyberte vozidlo.")
+            : Root.ApplyVehicleStarterBundleAsync(Root.SelectedVehicle.Id, items);
+    }
+
+    public bool TryConsumePendingVehicleStarterBundleOffer()
+    {
+        return Root.SelectedVehicle is not null && Root.TryConsumePendingVehicleStarterBundleOffer(Root.SelectedVehicle.Id);
+    }
+
+    public void SetVehicleStarterBundleStatus(string message)
+    {
+        Root.SetVehicleStarterBundleStatus(message);
+        OnPropertyChanged(nameof(VehicleEditorStatus));
+    }
 }

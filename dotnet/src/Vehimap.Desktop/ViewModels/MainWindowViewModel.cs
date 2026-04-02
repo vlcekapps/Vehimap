@@ -319,6 +319,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         HandleVehicleSelectionChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         OnPropertyChanged(nameof(CanOpenVehicleDetailWindow));
         OnPropertyChanged(nameof(CanOpenHistoryWindow));
         OnPropertyChanged(nameof(CanOpenFuelWindow));
@@ -368,7 +369,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        var detailProjection = _projectionService.BuildVehicleDetail(value);
+        var detailProjection = _projectionService.BuildVehicleDetail(value, _metaByVehicleId.GetValueOrDefault(value.Id));
         SelectedVehicleHeading = detailProjection.Heading;
         SelectedVehicleOverview = detailProjection.Overview;
         SelectedVehicleDates = detailProjection.Dates;

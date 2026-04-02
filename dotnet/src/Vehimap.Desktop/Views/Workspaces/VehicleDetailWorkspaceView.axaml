@@ -12,7 +12,7 @@
                TextWrapping="Wrap" />
     <WrapPanel Grid.Row="2"
                Margin="0,14,0,0"
-               ItemWidth="126"
+               ItemWidth="138"
                ItemHeight="34">
       <Button x:Name="CreateVehicleButton"
               Command="{Binding CreateVehicleCommand}"
@@ -24,8 +24,15 @@
               Content="Upravit"
               AutomationProperties.Name="Upravit vybrané vozidlo"
               AutomationProperties.AutomationId="EditVehicleButton" />
+      <Button x:Name="OpenVehicleStarterBundleButton"
+              Click="OnOpenVehicleStarterBundleClick"
+              Content="Balíček"
+              IsVisible="{Binding IsVehicleDetailVisible}"
+              IsEnabled="{Binding CanOpenVehicleStarterBundle}"
+              AutomationProperties.Name="Otevřít balíček pro vybrané vozidlo"
+              AutomationProperties.AutomationId="OpenVehicleStarterBundleButton" />
       <Button x:Name="SaveVehicleButton"
-              Command="{Binding SaveVehicleCommand}"
+              Click="OnSaveVehicleClick"
               Content="Uložit"
               IsVisible="{Binding IsEditingVehicle}"
               AutomationProperties.Name="Uložit vozidlo"
@@ -37,11 +44,12 @@
               AutomationProperties.Name="Zrušit úpravu vozidla"
               AutomationProperties.AutomationId="CancelVehicleButton" />
     </WrapPanel>
+
     <Grid Grid.Row="3"
           Margin="0,16,0,0"
           IsVisible="{Binding IsEditingVehicle}"
           RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-      <Grid ColumnDefinitions="*,180">
+      <Grid ColumnDefinitions="*,200">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Název vozidla" />
           <TextBox x:Name="VehicleEditorNameBox"
@@ -59,6 +67,7 @@
                     AutomationProperties.AutomationId="VehicleEditorCategoryBox" />
         </StackPanel>
       </Grid>
+
       <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="*,200">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Značka a model" />
@@ -75,6 +84,7 @@
                    AutomationProperties.AutomationId="VehicleEditorPlateBox" />
         </StackPanel>
       </Grid>
+
       <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="160,160,*">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Rok" />
@@ -90,12 +100,13 @@
         </StackPanel>
         <StackPanel Grid.Column="2" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Stav vozidla" />
-          <TextBox Text="{Binding VehicleEditorState}"
-                   PlaceholderText="Například Běžný provoz"
-                   AutomationProperties.Name="Stav vozidla"
-                   AutomationProperties.AutomationId="VehicleEditorStateBox" />
+          <ComboBox ItemsSource="{Binding VehicleStateOptions}"
+                    SelectedItem="{Binding VehicleEditorState}"
+                    AutomationProperties.Name="Stav vozidla"
+                    AutomationProperties.AutomationId="VehicleEditorStateBox" />
         </StackPanel>
       </Grid>
+
       <Grid Grid.Row="3" Margin="0,14,0,0" ColumnDefinitions="*,*">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Poslední TK" />
@@ -110,6 +121,7 @@
                    AutomationProperties.AutomationId="VehicleEditorNextTkBox" />
         </StackPanel>
       </Grid>
+
       <Grid Grid.Row="4" Margin="0,14,0,0" ColumnDefinitions="*,*">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Zelená karta od" />
@@ -124,13 +136,39 @@
                    AutomationProperties.AutomationId="VehicleEditorGreenCardToBox" />
         </StackPanel>
       </Grid>
-      <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Pohon a servisní profil" />
-      <TextBox Grid.Row="6"
-               Margin="0,6,0,0"
-               Text="{Binding VehicleEditorPowertrain}"
-               PlaceholderText="Například benzín, diesel nebo elektro"
-               AutomationProperties.Name="Pohon a servisní profil vozidla"
-               AutomationProperties.AutomationId="VehicleEditorPowertrainBox" />
+
+      <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Servisní profil" />
+      <Grid Grid.Row="6" Margin="0,6,0,0" ColumnDefinitions="*,*,*,*">
+        <StackPanel Margin="0,0,12,0" Spacing="6">
+          <TextBlock FontWeight="SemiBold" Text="Pohon" />
+          <ComboBox ItemsSource="{Binding VehiclePowertrainOptions}"
+                    SelectedItem="{Binding VehicleEditorPowertrain}"
+                    AutomationProperties.Name="Pohon vozidla"
+                    AutomationProperties.AutomationId="VehicleEditorPowertrainBox" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
+          <TextBlock FontWeight="SemiBold" Text="Klimatizace" />
+          <ComboBox ItemsSource="{Binding VehicleClimateProfileOptions}"
+                    SelectedItem="{Binding VehicleEditorClimateProfile}"
+                    AutomationProperties.Name="Klimatizace vozidla"
+                    AutomationProperties.AutomationId="VehicleEditorClimateProfileBox" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Margin="0,0,12,0" Spacing="6">
+          <TextBlock FontWeight="SemiBold" Text="Rozvody" />
+          <ComboBox ItemsSource="{Binding VehicleTimingDriveOptions}"
+                    SelectedItem="{Binding VehicleEditorTimingDrive}"
+                    AutomationProperties.Name="Typ rozvodů vozidla"
+                    AutomationProperties.AutomationId="VehicleEditorTimingDriveBox" />
+        </StackPanel>
+        <StackPanel Grid.Column="3" Spacing="6">
+          <TextBlock FontWeight="SemiBold" Text="Převodovka" />
+          <ComboBox ItemsSource="{Binding VehicleTransmissionOptions}"
+                    SelectedItem="{Binding VehicleEditorTransmission}"
+                    AutomationProperties.Name="Převodovka vozidla"
+                    AutomationProperties.AutomationId="VehicleEditorTransmissionBox" />
+        </StackPanel>
+      </Grid>
+
       <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka k vozidlu" />
       <TextBox Grid.Row="8"
                Margin="0,6,0,0"
@@ -147,6 +185,7 @@
                  Text="Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu."
                  TextWrapping="Wrap" />
     </Grid>
+
     <Grid Grid.Row="3"
           Margin="0,16,0,0"
           IsVisible="{Binding IsVehicleDetailVisible}"

@@ -69,7 +69,7 @@ internal sealed class DesktopProjectionService
                 row.Status))
             .ToList();
 
-    public DesktopVehicleDetailProjection BuildVehicleDetail(VehicleListItemViewModel? vehicle)
+    public DesktopVehicleDetailProjection BuildVehicleDetail(VehicleListItemViewModel? vehicle, VehicleMeta? meta = null)
     {
         if (vehicle is null)
         {
@@ -82,13 +82,16 @@ internal sealed class DesktopProjectionService
 
         var state = string.IsNullOrWhiteSpace(vehicle.State) ? "Běžný provoz" : vehicle.State;
         var note = string.IsNullOrWhiteSpace(vehicle.VehicleNote) ? "Bez poznámky" : vehicle.VehicleNote;
-        var powertrain = string.IsNullOrWhiteSpace(vehicle.Powertrain) ? "Servisní profil zatím nevyplněn" : vehicle.Powertrain;
+        var powertrain = string.IsNullOrWhiteSpace(meta?.Powertrain) ? "nevyplněno" : meta.Powertrain;
+        var climate = string.IsNullOrWhiteSpace(meta?.ClimateProfile) ? "nevyplněno" : meta.ClimateProfile;
+        var timingDrive = string.IsNullOrWhiteSpace(meta?.TimingDrive) ? "nevyplněno" : meta.TimingDrive;
+        var transmission = string.IsNullOrWhiteSpace(meta?.Transmission) ? "nevyplněno" : meta.Transmission;
 
         return new DesktopVehicleDetailProjection(
             vehicle.Name,
             $"{vehicle.MakeModel} | {vehicle.Category} | {vehicle.Plate}\nStav: {state}\nPoznámka: {note}",
             $"Příští TK: {FormatValue(vehicle.NextTk, "nevyplněno")}\nZelená karta do: {FormatValue(vehicle.GreenCardTo, "nevyplněno")}\nSouhrnný stav: {FormatValue(vehicle.StatusSummary, "bez upozornění")}",
-            $"Pohon a servisní profil: {powertrain}");
+            $"Pohon: {powertrain}\nKlimatizace: {climate}\nRozvody: {timingDrive}\nPřevodovka: {transmission}");
     }
 
     public DesktopListProjection<VehicleHistoryItemViewModel> BuildHistory(VehimapDataSet dataSet, string vehicleId)
