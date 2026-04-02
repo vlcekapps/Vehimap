@@ -15,19 +15,19 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel : ObservableObject
 {
-    private const int DetailTabIndex = 0;
-    private const int HistoryTabIndex = 1;
-    private const int FuelTabIndex = 2;
-    private const int ReminderTabIndex = 3;
-    private const int MaintenanceTabIndex = 4;
-    private const int TimelineTabIndex = 5;
-    private const int RecordTabIndex = 6;
-    private const int AuditTabIndex = 7;
-    private const int CostTabIndex = 8;
-    private const int DashboardTabIndex = 9;
-    private const int SearchTabIndex = 10;
-    private const int UpcomingOverviewTabIndex = 11;
-    private const int OverdueOverviewTabIndex = 12;
+    private const int DetailTabIndex = DesktopTabIndexes.Detail;
+    private const int HistoryTabIndex = DesktopTabIndexes.History;
+    private const int FuelTabIndex = DesktopTabIndexes.Fuel;
+    private const int ReminderTabIndex = DesktopTabIndexes.Reminder;
+    private const int MaintenanceTabIndex = DesktopTabIndexes.Maintenance;
+    private const int TimelineTabIndex = DesktopTabIndexes.Timeline;
+    private const int RecordTabIndex = DesktopTabIndexes.Record;
+    private const int AuditTabIndex = DesktopTabIndexes.Audit;
+    private const int CostTabIndex = DesktopTabIndexes.Cost;
+    private const int DashboardTabIndex = DesktopTabIndexes.Dashboard;
+    private const int SearchTabIndex = DesktopTabIndexes.Search;
+    private const int UpcomingOverviewTabIndex = DesktopTabIndexes.UpcomingOverview;
+    private const int OverdueOverviewTabIndex = DesktopTabIndexes.OverdueOverview;
 
     private readonly DesktopSessionController _session;
     private readonly IFileLauncher _fileLauncher;
@@ -37,6 +37,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly ICalendarExportService _calendarExportService;
     private readonly ITextFileSaveService _fileSaveService;
     private readonly IFileDialogService _fileDialogService;
+    private readonly DesktopProjectionService _projectionService;
+    private readonly DesktopNavigationCoordinator _navigationCoordinator;
     private VehimapDataRoot? _dataRoot => _session.DataRoot;
     private VehimapDataSet _dataSet => _session.DataSet;
     private IReadOnlyList<AuditItem> _auditItems => _session.AuditItems;
@@ -320,7 +322,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new LegacyBackupService(),
             new AvaloniaFileDialogService(),
             new DesktopSupportedSettingsService(),
-            new AssemblyAppBuildInfoProvider())
+            new AssemblyAppBuildInfoProvider(),
+            null,
+            new DesktopProjectionService(),
+            new DesktopNavigationCoordinator())
     {
     }
 
@@ -338,7 +343,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IFileDialogService? fileDialogService = null,
         DesktopSupportedSettingsService? supportedSettingsService = null,
         IAppBuildInfoProvider? appBuildInfoProvider = null,
-        IUpdateService? updateService = null)
+        IUpdateService? updateService = null,
+        DesktopProjectionService? projectionService = null,
+        DesktopNavigationCoordinator? navigationCoordinator = null)
     {
         var sessionBackupService = backupService ?? new LegacyBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
@@ -362,6 +369,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
+        _projectionService = projectionService ?? new DesktopProjectionService();
+        _navigationCoordinator = navigationCoordinator ?? new DesktopNavigationCoordinator();
         InitializeWorkspaces();
         Load(applyLaunchTabPreference: true);
     }
@@ -408,10 +417,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         if (value is null)
         {
-            SelectedVehicleHeading = "Nevybrané vozidlo";
-            SelectedVehicleOverview = "Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.";
-            SelectedVehicleDates = string.Empty;
-            SelectedVehicleProfile = string.Empty;
+            var projection = _projectionService.BuildVehicleDetail(null);
+            SelectedVehicleHeading = projection.Heading;
+            SelectedVehicleOverview = projection.Overview;
+            SelectedVehicleDates = projection.Dates;
+            SelectedVehicleProfile = projection.Profile;
             HistorySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
             FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
             ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
@@ -441,14 +451,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        var state = string.IsNullOrWhiteSpace(value.State) ? "Běžný provoz" : value.State;
-        var note = string.IsNullOrWhiteSpace(value.VehicleNote) ? "Bez poznámky" : value.VehicleNote;
-        var powertrain = string.IsNullOrWhiteSpace(value.Powertrain) ? "Servisní profil zatím nevyplněn" : value.Powertrain;
-
-        SelectedVehicleHeading = value.Name;
-        SelectedVehicleOverview = $"{value.MakeModel} | {value.Category} | {value.Plate}\nStav: {state}\nPoznámka: {note}";
-        SelectedVehicleDates = $"Příští TK: {FormatValue(value.NextTk, "nevyplněno")}\nZelená karta do: {FormatValue(value.GreenCardTo, "nevyplněno")}\nSouhrnný stav: {FormatValue(value.StatusSummary, "bez upozornění")}";
-        SelectedVehicleProfile = $"Pohon a servisní profil: {powertrain}";
+        var detailProjection = _projectionService.BuildVehicleDetail(value);
+        SelectedVehicleHeading = detailProjection.Heading;
+        SelectedVehicleOverview = detailProjection.Overview;
+        SelectedVehicleDates = detailProjection.Dates;
+        SelectedVehicleProfile = detailProjection.Profile;
 
         PopulateVehicleHistory(value.Id);
         PopulateVehicleFuel(value.Id);
@@ -731,58 +738,26 @@ public sealed partial class MainWindowViewModel : ObservableObject
             RemindersCount = result.DataSet.Reminders.Count;
             MaintenanceCount = result.DataSet.MaintenancePlans.Count;
             AuditCount = _auditItems.Count;
-            AuditSummary = BuildAuditSummary(_auditItems);
-            CostSummary = BuildCostSummary(costSummary);
-            CostComparison = BuildCostComparison(costSummary);
+            AuditSummary = _projectionService.BuildAuditSummary(_auditItems);
+            CostSummary = _projectionService.BuildCostSummary(costSummary);
+            CostComparison = _projectionService.BuildCostComparison(costSummary);
 
             Vehicles.Clear();
-            foreach (var vehicle in result.DataSet.Vehicles.OrderBy(item => item.Name, StringComparer.CurrentCultureIgnoreCase))
+            foreach (var vehicle in _projectionService.BuildVehicleList(result.DataSet, _metaByVehicleId, _auditItems))
             {
-                var meta = _metaByVehicleId.GetValueOrDefault(vehicle.Id);
-                Vehicles.Add(new VehicleListItemViewModel(
-                    vehicle.Id,
-                    vehicle.Name,
-                    vehicle.Category,
-                    FormatValue(vehicle.Plate, "Bez SPZ"),
-                    FormatValue(vehicle.MakeModel, "Bez značky / modelu"),
-                    vehicle.VehicleNote,
-                    vehicle.NextTk,
-                    vehicle.GreenCardTo,
-                    meta?.State ?? string.Empty,
-                    meta?.Powertrain ?? string.Empty,
-                    BuildVehicleStatusSummary(vehicle, meta, _auditItems)));
+                Vehicles.Add(vehicle);
             }
 
             AuditItems.Clear();
-            foreach (var item in _auditItems.Take(8))
+            foreach (var item in _projectionService.BuildDashboardAuditItems(_auditItems))
             {
-                AuditItems.Add(new AuditItemViewModel(
-                    item.VehicleId,
-                    item.EntityKind,
-                    item.EntityId,
-                    item.Severity switch
-                    {
-                        AuditSeverity.Error => "Chyba",
-                        AuditSeverity.Warning => "Upozornění",
-                        _ => "Info"
-                    },
-                    item.Category,
-                    item.VehicleName,
-                    item.Title,
-                    item.Message));
+                AuditItems.Add(item);
             }
 
             CostVehicles.Clear();
-            foreach (var row in costSummary.Vehicles.Where(item => item.TotalCost > 0m || item.Status != "Neaktivní").Take(8))
+            foreach (var row in _projectionService.BuildDashboardCostVehicles(costSummary))
             {
-                CostVehicles.Add(new CostVehicleItemViewModel(
-                    row.VehicleId,
-                    row.VehicleName,
-                    row.Category,
-                    FormatMoney(row.TotalCost),
-                    row.DistanceKm.HasValue ? $"{row.DistanceKm.Value} km" : "nedostupné",
-                    row.CostPerKm.HasValue ? $"{row.CostPerKm.Value:0.00} Kč/km" : "nedostupné",
-                    row.Status));
+                CostVehicles.Add(row);
             }
 
             PopulateDashboardTimeline();
@@ -818,34 +793,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void PopulateVehicleHistory(string vehicleId)
     {
         SelectedVehicleHistory.Clear();
-
-        var items = _dataSet.HistoryEntries
-            .Where(item => item.VehicleId == vehicleId)
-            .Select(item => new
-            {
-                Item = item,
-                HasDate = VehimapValueParser.TryParseEventDate(item.EventDate, out var parsedDate),
-                Date = parsedDate
-            })
-            .OrderByDescending(item => item.HasDate)
-            .ThenByDescending(item => item.Date)
-            .ThenBy(item => item.Item.EventType, StringComparer.CurrentCultureIgnoreCase)
-            .ToList();
-
-        foreach (var item in items)
+        var projection = _projectionService.BuildHistory(_dataSet, vehicleId);
+        foreach (var item in projection.Items)
         {
-            SelectedVehicleHistory.Add(new VehicleHistoryItemViewModel(
-                item.Item.Id,
-                FormatValue(item.Item.EventDate, "bez data"),
-                FormatValue(item.Item.EventType, "bez typu"),
-                FormatValue(item.Item.Odometer, "bez tachometru"),
-                FormatValue(item.Item.Cost, "bez ceny"),
-                FormatValue(item.Item.Note, "bez poznámky")));
+            SelectedVehicleHistory.Add(item);
         }
 
-        HistorySummary = SelectedVehicleHistory.Count == 0
-            ? "Vybrané vozidlo zatím nemá žádné záznamy v historii."
-            : $"Vybrané vozidlo má {SelectedVehicleHistory.Count} historických záznamů.";
+        HistorySummary = projection.Summary;
 
         SelectedHistory = SelectedVehicleHistory.FirstOrDefault();
         if (SelectedHistory is null)
@@ -857,36 +811,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void PopulateVehicleFuel(string vehicleId)
     {
         SelectedVehicleFuel.Clear();
-
-        var items = _dataSet.FuelEntries
-            .Where(item => item.VehicleId == vehicleId)
-            .Select(item => new
-            {
-                Item = item,
-                HasDate = VehimapValueParser.TryParseEventDate(item.EntryDate, out var parsedDate),
-                Date = parsedDate
-            })
-            .OrderByDescending(item => item.HasDate)
-            .ThenByDescending(item => item.Date)
-            .ThenBy(item => item.Item.FuelType, StringComparer.CurrentCultureIgnoreCase)
-            .ToList();
-
-        foreach (var item in items)
+        var projection = _projectionService.BuildFuel(_dataSet, vehicleId);
+        foreach (var item in projection.Items)
         {
-            SelectedVehicleFuel.Add(new VehicleFuelItemViewModel(
-                item.Item.Id,
-                FormatValue(item.Item.EntryDate, "bez data"),
-                FormatValue(item.Item.FuelType, "bez typu"),
-                FormatFuelLiters(item.Item.Liters),
-                FormatCostValue(item.Item.TotalCost),
-                FormatOdometerValue(item.Item.Odometer),
-                item.Item.FullTank ? "Plná nádrž" : "Částečné tankování",
-                FormatValue(item.Item.Note, "bez poznámky")));
+            SelectedVehicleFuel.Add(item);
         }
 
-        FuelSummary = SelectedVehicleFuel.Count == 0
-            ? "Vybrané vozidlo zatím nemá žádné záznamy tankování."
-            : $"Vybrané vozidlo má {SelectedVehicleFuel.Count} záznamů tankování.";
+        FuelSummary = projection.Summary;
 
         SelectedFuel = SelectedVehicleFuel.FirstOrDefault();
         if (SelectedFuel is null)
@@ -898,35 +829,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void PopulateVehicleReminders(string vehicleId)
     {
         SelectedVehicleReminders.Clear();
-
-        var today = DateOnly.FromDateTime(DateTime.Today);
-        var items = _dataSet.Reminders
-            .Where(item => item.VehicleId == vehicleId)
-            .Select(item => new
-            {
-                Item = item,
-                HasDate = TryParseReminderDate(item.DueDate, out var parsedDate),
-                Date = parsedDate
-            })
-            .OrderByDescending(item => item.HasDate)
-            .ThenBy(item => item.Date)
-            .ThenBy(item => item.Item.Title, StringComparer.CurrentCultureIgnoreCase)
-            .ToList();
-
-        foreach (var item in items)
+        var projection = _projectionService.BuildReminders(_dataSet, vehicleId, DateOnly.FromDateTime(DateTime.Today));
+        foreach (var item in projection.Items)
         {
-            SelectedVehicleReminders.Add(new VehicleReminderItemViewModel(
-                item.Item.Id,
-                FormatValue(item.Item.Title, "Bez názvu"),
-                FormatValue(item.Item.DueDate, "bez termínu"),
-                BuildReminderStatus(item.Item, today),
-                FormatReminderRepeatMode(item.Item.RepeatMode),
-                FormatValue(item.Item.Note, "bez poznámky")));
+            SelectedVehicleReminders.Add(item);
         }
 
-        ReminderSummary = SelectedVehicleReminders.Count == 0
-            ? "Vybrané vozidlo zatím nemá žádné připomínky."
-            : $"Vybrané vozidlo má {SelectedVehicleReminders.Count} připomínek.";
+        ReminderSummary = projection.Summary;
 
         SelectedReminder = SelectedVehicleReminders.FirstOrDefault();
         if (SelectedReminder is null)
@@ -938,31 +847,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void PopulateVehicleMaintenance(string vehicleId)
     {
         SelectedVehicleMaintenance.Clear();
-
-        var today = DateOnly.FromDateTime(DateTime.Today);
-        var currentOdometerByVehicleId = BuildCurrentOdometerLookup();
-        var currentOdometer = currentOdometerByVehicleId.GetValueOrDefault(vehicleId);
-
-        var items = _dataSet.MaintenancePlans
-            .Where(item => item.VehicleId == vehicleId)
-            .OrderByDescending(item => item.IsActive)
-            .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
-            .ToList();
-
-        foreach (var item in items)
+        var projection = _projectionService.BuildMaintenance(_dataSet, vehicleId, DateOnly.FromDateTime(DateTime.Today));
+        foreach (var item in projection.Items)
         {
-            SelectedVehicleMaintenance.Add(new VehicleMaintenanceItemViewModel(
-                item.Id,
-                FormatValue(item.Title, "Bez názvu"),
-                BuildMaintenanceInterval(item),
-                BuildMaintenanceLastService(item),
-                BuildMaintenanceStatus(item, today, currentOdometer),
-                FormatValue(item.Note, "bez poznámky")));
+            SelectedVehicleMaintenance.Add(item);
         }
 
-        MaintenanceSummary = SelectedVehicleMaintenance.Count == 0
-            ? "Vybrané vozidlo zatím nemá žádné servisní plány."
-            : $"Vybrané vozidlo má {SelectedVehicleMaintenance.Count} servisních plánů.";
+        MaintenanceSummary = projection.Summary;
 
         SelectedMaintenance = SelectedVehicleMaintenance.FirstOrDefault();
         if (SelectedMaintenance is null)
@@ -974,45 +865,36 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void PopulateVehicleTimeline(string vehicleId)
     {
         SelectedVehicleTimeline.Clear();
-
-        foreach (var item in _timelineService.BuildVehicleTimeline(_dataSet, vehicleId, DateOnly.FromDateTime(DateTime.Today)))
+        var projection = _projectionService.BuildTimeline(
+            _dataSet,
+            _timelineService,
+            vehicleId,
+            DateOnly.FromDateTime(DateTime.Today),
+            SelectedTimelineFilter,
+            TimelineSearchText);
+        foreach (var item in projection.Items)
         {
-            SelectedVehicleTimeline.Add(new VehicleTimelineItemViewModel(
-                item.Kind,
-                item.KindLabel,
-                item.DateText,
-                item.Title,
-                item.Detail,
-                item.Status,
-                item.VehicleName,
-                item.VehicleId,
-                item.EntryId,
-                item.IsFuture,
-                item.Note));
+            SelectedVehicleTimeline.Add(item);
         }
 
-        RefreshTimeline();
+        TimelineSummary = projection.Summary;
+        SelectedTimelineItem = SelectedVehicleTimeline.FirstOrDefault();
+        if (SelectedTimelineItem is null)
+        {
+            OnSelectedTimelineItemChanged(null);
+        }
     }
 
     private void PopulateVehicleRecords(string vehicleId)
     {
         SelectedVehicleRecords.Clear();
-
-        var items = _dataSet.Records
-            .Where(item => item.VehicleId == vehicleId)
-            .Select(item => BuildVehicleRecordItem(item))
-            .OrderBy(item => item.Validity, StringComparer.CurrentCultureIgnoreCase)
-            .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
-            .ToList();
-
-        foreach (var item in items)
+        var projection = _projectionService.BuildRecords(_dataRoot, _dataSet, vehicleId, ResolveManagedAttachmentAbsolutePath);
+        foreach (var item in projection.Items)
         {
             SelectedVehicleRecords.Add(item);
         }
 
-        RecordSummary = SelectedVehicleRecords.Count == 0
-            ? "Vybrané vozidlo zatím nemá žádné doklady."
-            : $"Vybrané vozidlo má {SelectedVehicleRecords.Count} dokladů. Vyberte záznam a můžete otevřít soubor nebo jeho složku.";
+        RecordSummary = projection.Summary;
 
         SelectedRecord = SelectedVehicleRecords.FirstOrDefault();
         if (SelectedRecord is null)
@@ -1030,39 +912,24 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        var allItems = _timelineService.BuildVehicleTimeline(_dataSet, SelectedVehicle.Id, DateOnly.FromDateTime(DateTime.Today));
-        var filteredItems = allItems
-            .Where(MatchesTimelineFilter)
-            .Where(MatchesTimelineSearch)
-            .Select(item => new VehicleTimelineItemViewModel(
-                item.Kind,
-                item.KindLabel,
-                item.DateText,
-                item.Title,
-                item.Detail,
-                item.Status,
-                item.VehicleName,
-                item.VehicleId,
-                item.EntryId,
-                item.IsFuture,
-                item.Note))
-            .ToList();
-
+        var previousSelection = SelectedTimelineItem;
+        var projection = _projectionService.BuildTimeline(
+            _dataSet,
+            _timelineService,
+            SelectedVehicle.Id,
+            DateOnly.FromDateTime(DateTime.Today),
+            SelectedTimelineFilter,
+            TimelineSearchText);
         SelectedVehicleTimeline.Clear();
-        foreach (var item in filteredItems)
+        foreach (var item in projection.Items)
         {
             SelectedVehicleTimeline.Add(item);
         }
 
-        var futureCount = allItems.Count(item => item.IsFuture);
-        var pastCount = allItems.Count - futureCount;
-        TimelineSummary = allItems.Count == 0
-            ? "Pro toto vozidlo zatím nejsou žádné časové položky s datem."
-            : filteredItems.Count == allItems.Count
-                ? $"Celkem položek: {allItems.Count}. Budoucí: {futureCount}. Minulé: {pastCount}."
-                : $"Celkem položek: {allItems.Count}. Budoucí: {futureCount}. Minulé: {pastCount}. Po filtru zobrazeno: {filteredItems.Count}.";
-
-        SelectedTimelineItem = SelectedVehicleTimeline.FirstOrDefault();
+        TimelineSummary = projection.Summary;
+        SelectedTimelineItem = previousSelection is null
+            ? SelectedVehicleTimeline.FirstOrDefault()
+            : FindTimelineItem(SelectedVehicleTimeline, previousSelection);
         if (SelectedTimelineItem is null)
         {
             OnSelectedTimelineItemChanged(null);
@@ -1111,332 +978,18 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void PopulateDashboardTimeline()
     {
         DashboardUpcomingTimeline.Clear();
-
-        var allUpcoming = _dataSet.Vehicles
-            .SelectMany(vehicle => _timelineService.BuildVehicleTimeline(_dataSet, vehicle.Id, DateOnly.FromDateTime(DateTime.Today)))
-            .Where(item => item.IsFuture)
-            .OrderBy(item => item.Date)
-            .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)
-            .ThenBy(item => item.KindLabel, StringComparer.CurrentCultureIgnoreCase)
-            .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
-            .Take(10)
-            .ToList();
-
-        foreach (var item in allUpcoming)
+        var projection = _projectionService.BuildDashboardTimeline(_dataSet, _timelineService, DateOnly.FromDateTime(DateTime.Today));
+        foreach (var item in projection.Items)
         {
-            DashboardUpcomingTimeline.Add(new VehicleTimelineItemViewModel(
-                item.Kind,
-                item.KindLabel,
-                item.DateText,
-                item.Title,
-                item.Detail,
-                item.Status,
-                item.VehicleName,
-                item.VehicleId,
-                item.EntryId,
-                item.IsFuture,
-                item.Note));
+            DashboardUpcomingTimeline.Add(item);
         }
 
-        DashboardTimelineSummary = DashboardUpcomingTimeline.Count == 0
-            ? "V dostupných legacy datech zatím nejsou žádné budoucí termíny s konkrétním datem."
-            : $"Napříč všemi vozidly je nejbližších {DashboardUpcomingTimeline.Count} budoucích termínů připravených k otevření.";
-    }
-
-    private VehicleRecordItemViewModel BuildVehicleRecordItem(VehicleRecord record)
-    {
-        var resolvedPath = ResolveRecordPath(record);
-        var fileExists = !string.IsNullOrWhiteSpace(resolvedPath) && File.Exists(resolvedPath);
-
-        return new VehicleRecordItemViewModel(
-            record.Id,
-            FormatValue(record.RecordType, "Doklad"),
-            FormatValue(record.Title, "Bez názvu"),
-            FormatValue(record.Provider, "Bez poskytovatele"),
-            BuildRecordValidity(record),
-            FormatCostValue(record.Price),
-            record.AttachmentMode == VehicleRecordAttachmentMode.Managed ? "Spravovaná kopie" : "Externí cesta",
-            BuildAttachmentState(record, resolvedPath, fileExists),
-            record.FilePath,
-            resolvedPath,
-            fileExists,
-            record.Note);
-    }
-
-    private string ResolveRecordPath(VehicleRecord record)
-    {
-        if (_dataRoot is null || string.IsNullOrWhiteSpace(record.FilePath))
-        {
-            return string.Empty;
-        }
-
-        if (record.AttachmentMode == VehicleRecordAttachmentMode.Managed)
-        {
-            return _session.ResolveManagedAttachmentPath(record.FilePath);
-        }
-
-        return Path.IsPathRooted(record.FilePath)
-            ? record.FilePath
-            : Path.GetFullPath(Path.Combine(_dataRoot.AppBasePath, record.FilePath));
-    }
-
-    private static string BuildRecordValidity(VehicleRecord record)
-    {
-        var from = string.IsNullOrWhiteSpace(record.ValidFrom) ? "od nevyplněno" : $"od {record.ValidFrom}";
-        var to = string.IsNullOrWhiteSpace(record.ValidTo) ? "do nevyplněno" : $"do {record.ValidTo}";
-        return $"{from} | {to}";
-    }
-
-    private static string BuildAttachmentState(VehicleRecord record, string resolvedPath, bool fileExists)
-    {
-        if (string.IsNullOrWhiteSpace(record.FilePath))
-        {
-            return "Bez cesty";
-        }
-
-        if (fileExists)
-        {
-            return "Soubor dostupný";
-        }
-
-        return record.AttachmentMode == VehicleRecordAttachmentMode.Managed
-            ? "Chybí spravovaná příloha"
-            : string.IsNullOrWhiteSpace(resolvedPath) ? "Cesta nevyřešena" : "Chybí externí příloha";
+        DashboardTimelineSummary = projection.Summary;
     }
 
     private string? GetSelectedRecordFolderPath()
     {
-        if (SelectedRecord is null)
-        {
-            return null;
-        }
-
-        if (SelectedRecord.FileExists)
-        {
-            return Path.GetDirectoryName(SelectedRecord.ResolvedPath);
-        }
-
-        if (!string.IsNullOrWhiteSpace(SelectedRecord.ResolvedPath))
-        {
-            return Path.GetDirectoryName(SelectedRecord.ResolvedPath);
-        }
-
-        return null;
-    }
-
-    private Dictionary<string, int?> BuildCurrentOdometerLookup()
-    {
-        var result = new Dictionary<string, int?>(StringComparer.Ordinal);
-
-        foreach (var vehicle in _dataSet.Vehicles)
-        {
-            result[vehicle.Id] = null;
-        }
-
-        foreach (var item in _dataSet.HistoryEntries)
-        {
-            if (!VehimapValueParser.TryParseOdometer(item.Odometer, out var odometer))
-            {
-                continue;
-            }
-
-            var current = result.GetValueOrDefault(item.VehicleId);
-            if (!current.HasValue || odometer > current.Value)
-            {
-                result[item.VehicleId] = odometer;
-            }
-        }
-
-        foreach (var item in _dataSet.FuelEntries)
-        {
-            if (!VehimapValueParser.TryParseOdometer(item.Odometer, out var odometer))
-            {
-                continue;
-            }
-
-            var current = result.GetValueOrDefault(item.VehicleId);
-            if (!current.HasValue || odometer > current.Value)
-            {
-                result[item.VehicleId] = odometer;
-            }
-        }
-
-        return result;
-    }
-
-    private static string BuildReminderStatus(VehicleReminder reminder, DateOnly today)
-    {
-        if (!TryParseReminderDate(reminder.DueDate, out var dueDate))
-        {
-            return "Bez použitelného termínu";
-        }
-
-        var delta = dueDate.DayNumber - today.DayNumber;
-        if (delta < 0)
-        {
-            return $"Po termínu o {Math.Abs(delta)} dnů";
-        }
-
-        if (delta == 0)
-        {
-            return "Dnes";
-        }
-
-        return delta == 1 ? "Zítra" : $"Za {delta} dnů";
-    }
-
-    private static bool TryParseReminderDate(string? text, out DateOnly value)
-    {
-        return VehimapValueParser.TryParseEventDate(text, out value)
-            || VehimapValueParser.TryParseMonthYear(text, out value);
-    }
-
-    private static string BuildMaintenanceInterval(MaintenancePlan plan)
-    {
-        var parts = new List<string>();
-        if (TryParsePositiveInteger(plan.IntervalKm, out var intervalKm))
-        {
-            parts.Add($"{intervalKm} km");
-        }
-
-        if (TryParsePositiveInteger(plan.IntervalMonths, out var intervalMonths))
-        {
-            parts.Add(intervalMonths == 1 ? "1 měsíc" : $"{intervalMonths} měsíců");
-        }
-
-        return parts.Count == 0 ? "Bez intervalu" : string.Join(" / ", parts);
-    }
-
-    private static string BuildMaintenanceLastService(MaintenancePlan plan)
-    {
-        var date = string.IsNullOrWhiteSpace(plan.LastServiceDate) ? "bez data" : plan.LastServiceDate;
-        return $"{date} | {FormatOdometerValue(plan.LastServiceOdometer)}";
-    }
-
-    private static string BuildMaintenanceStatus(MaintenancePlan plan, DateOnly today, int? currentOdometer)
-    {
-        if (!plan.IsActive)
-        {
-            return "Neaktivní";
-        }
-
-        var parts = new List<string>();
-
-        if (TryParsePositiveInteger(plan.IntervalMonths, out var intervalMonths))
-        {
-            if (TryParseReminderDate(plan.LastServiceDate, out var lastServiceDate))
-            {
-                var nextDate = lastServiceDate.AddMonths(intervalMonths);
-                var delta = nextDate.DayNumber - today.DayNumber;
-                if (delta < 0)
-                {
-                    parts.Add($"Po termínu o {Math.Abs(delta)} dnů");
-                }
-                else if (delta == 0)
-                {
-                    parts.Add("Servis dnes");
-                }
-                else
-                {
-                    parts.Add(delta == 1 ? "Za 1 den" : $"Za {delta} dnů");
-                }
-            }
-            else
-            {
-                parts.Add("Chybí datum posledního servisu");
-            }
-        }
-
-        if (TryParsePositiveInteger(plan.IntervalKm, out var intervalKm))
-        {
-            if (VehimapValueParser.TryParseOdometer(plan.LastServiceOdometer, out var lastServiceOdometer) && currentOdometer.HasValue)
-            {
-                var remainingKm = (lastServiceOdometer + intervalKm) - currentOdometer.Value;
-                if (remainingKm < 0)
-                {
-                    parts.Add($"Po limitu o {Math.Abs(remainingKm)} km");
-                }
-                else if (remainingKm == 0)
-                {
-                    parts.Add("Servis nyní");
-                }
-                else
-                {
-                    parts.Add($"Za {remainingKm} km");
-                }
-            }
-            else
-            {
-                parts.Add("Chybí tachometr pro výpočet");
-            }
-        }
-
-        return parts.Count == 0 ? "Bez aktivního intervalu" : string.Join(" | ", parts);
-    }
-
-    private static bool TryParsePositiveInteger(string? text, out int value)
-    {
-        value = 0;
-        return int.TryParse((text ?? string.Empty).Trim(), out value) && value > 0;
-    }
-
-    private static string FormatReminderRepeatMode(string? repeatMode) =>
-        string.IsNullOrWhiteSpace(repeatMode) ? "bez opakování" : repeatMode;
-
-    private static string BuildAuditSummary(IReadOnlyCollection<AuditItem> audit)
-    {
-        if (audit.Count == 0)
-        {
-            return "Audit zatím nenašel žádné problémy, které by potřebovaly zásah.";
-        }
-
-        var errorCount = audit.Count(item => item.Severity == AuditSeverity.Error);
-        var warningCount = audit.Count(item => item.Severity == AuditSeverity.Warning);
-        return $"K řešení je {audit.Count} položek: {errorCount} chyb a {warningCount} upozornění.";
-    }
-
-    private static string BuildCostSummary(CostAnalysisSummary summary)
-    {
-        var costPerKmText = summary.CostPerKm.HasValue ? $"{summary.CostPerKm.Value:0.00} Kč/km" : "nedostupné";
-        var distanceText = summary.DistanceKm.HasValue ? $"{summary.DistanceKm.Value} km" : "nedostupné";
-        return $"{summary.PeriodLabel}\nCelkem: {FormatMoney(summary.TotalCost)} | Ujeto: {distanceText} | Cena / km: {costPerKmText}\nBez číselného nákladu: {summary.ActiveWithoutCostCount} z {summary.ActiveVehicleCount} aktivních vozidel.";
-    }
-
-    private static string BuildCostComparison(CostAnalysisSummary summary)
-    {
-        var totalDelta = summary.TotalCostDifference >= 0m
-            ? $"+{summary.TotalCostDifference:0.00} Kč"
-            : $"{summary.TotalCostDifference:0.00} Kč";
-
-        var costDelta = summary.CostPerKmDifference.HasValue
-            ? (summary.CostPerKmDifference.Value >= 0m
-                ? $"+{summary.CostPerKmDifference.Value:0.00} Kč/km"
-                : $"{summary.CostPerKmDifference.Value:0.00} Kč/km")
-            : "nedostupné";
-
-        return $"Proti stejně dlouhému období loni: náklady {totalDelta}, cena / km {costDelta}. U {summary.CostPerKmUnavailableCount} vozidel s náklady zatím chybí spolehlivý výpočet ceny za kilometr.";
-    }
-
-    private static string BuildVehicleStatusSummary(Vehicle vehicle, VehicleMeta? meta, IReadOnlyCollection<AuditItem> audit)
-    {
-        var parts = new List<string>();
-        if (!string.IsNullOrWhiteSpace(meta?.State))
-        {
-            parts.Add(meta.State);
-        }
-
-        var attentionCount = audit.Count(item => item.VehicleId == vehicle.Id);
-        if (attentionCount > 0)
-        {
-            parts.Add($"{attentionCount} položek k řešení");
-        }
-
-        if (parts.Count == 0)
-        {
-            return "V pořádku";
-        }
-
-        return string.Join(" | ", parts);
+        return _projectionService.GetRecordFolderPath(SelectedRecord);
     }
 
     private static TItem? FindById<TItem>(IEnumerable<TItem> items, Func<TItem, string> idSelector, string entryId)
@@ -1468,53 +1021,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     private void OpenTimelineItem(VehicleTimelineItemViewModel item)
     {
-        if (!string.IsNullOrWhiteSpace(item.VehicleId)
-            && !string.Equals(SelectedVehicle?.Id, item.VehicleId, StringComparison.Ordinal))
-        {
-            SelectedVehicle = Vehicles.FirstOrDefault(vehicle => string.Equals(vehicle.Id, item.VehicleId, StringComparison.Ordinal));
-        }
-
-        SelectedTimelineItem = FindTimelineItem(SelectedVehicleTimeline, item);
-
-        switch (item.Kind)
-        {
-            case "history":
-                SelectedVehicleTabIndex = HistoryTabIndex;
-                SelectedHistory = FindById(SelectedVehicleHistory, historyItem => historyItem.Id, item.EntryId);
-                RequestFocus(DesktopFocusTarget.HistoryList);
-                break;
-
-            case "fuel":
-                SelectedVehicleTabIndex = FuelTabIndex;
-                SelectedFuel = FindById(SelectedVehicleFuel, fuelItem => fuelItem.Id, item.EntryId);
-                RequestFocus(DesktopFocusTarget.FuelList);
-                break;
-
-            case "custom":
-                SelectedVehicleTabIndex = ReminderTabIndex;
-                SelectedReminder = FindById(SelectedVehicleReminders, reminderItem => reminderItem.Id, item.EntryId);
-                RequestFocus(DesktopFocusTarget.ReminderList);
-                break;
-
-            case "maintenance":
-                SelectedVehicleTabIndex = MaintenanceTabIndex;
-                SelectedMaintenance = FindById(SelectedVehicleMaintenance, maintenanceItem => maintenanceItem.Id, item.EntryId);
-                RequestFocus(DesktopFocusTarget.MaintenanceList);
-                break;
-
-            case "record":
-                SelectedVehicleTabIndex = RecordTabIndex;
-                SelectedRecord = FindById(SelectedVehicleRecords, recordItem => recordItem.Id, item.EntryId);
-                RequestFocus(DesktopFocusTarget.RecordList);
-                break;
-
-            case "technical":
-            case "green":
-            default:
-                SelectedVehicleTabIndex = DetailTabIndex;
-                RequestFocus(DesktopFocusTarget.VehicleList);
-                break;
-        }
+        var plan = _navigationCoordinator.BuildForTimeline(item);
+        ApplyNavigationPlan(plan, item);
     }
 
     private void SelectVehicleAndOpenEntity(string vehicleId, string entityKind, string entityId)
@@ -1524,86 +1032,49 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!string.Equals(SelectedVehicle?.Id, vehicleId, StringComparison.Ordinal))
+        var plan = _navigationCoordinator.BuildForEntity(vehicleId, entityKind, entityId);
+        ApplyNavigationPlan(plan);
+    }
+
+    private void ApplyNavigationPlan(DesktopNavigationPlan plan, VehicleTimelineItemViewModel? timelineSelection = null)
+    {
+        if (!string.IsNullOrWhiteSpace(plan.VehicleId)
+            && !string.Equals(SelectedVehicle?.Id, plan.VehicleId, StringComparison.Ordinal))
         {
-            SelectedVehicle = Vehicles.FirstOrDefault(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal));
+            SelectedVehicle = Vehicles.FirstOrDefault(vehicle => string.Equals(vehicle.Id, plan.VehicleId, StringComparison.Ordinal));
         }
 
-        switch (entityKind)
+        if (timelineSelection is not null)
         {
-            case "Historie":
-                SelectedVehicleTabIndex = HistoryTabIndex;
-                SelectedHistory = FindById(SelectedVehicleHistory, item => item.Id, entityId);
-                RequestFocus(DesktopFocusTarget.HistoryList);
-                break;
+            SelectedTimelineItem = FindTimelineItem(SelectedVehicleTimeline, timelineSelection);
+        }
 
-            case "Tankování":
-                SelectedVehicleTabIndex = FuelTabIndex;
-                SelectedFuel = FindById(SelectedVehicleFuel, item => item.Id, entityId);
-                RequestFocus(DesktopFocusTarget.FuelList);
+        SelectedVehicleTabIndex = plan.TabIndex;
+        switch (plan.SelectionKind)
+        {
+            case DesktopNavigationSelectionKind.History:
+                SelectedHistory = FindById(SelectedVehicleHistory, item => item.Id, plan.EntityId ?? string.Empty);
                 break;
-
-            case "Doklad":
-                SelectedVehicleTabIndex = RecordTabIndex;
-                SelectedRecord = FindById(SelectedVehicleRecords, item => item.Id, entityId);
-                RequestFocus(DesktopFocusTarget.RecordList);
+            case DesktopNavigationSelectionKind.Fuel:
+                SelectedFuel = FindById(SelectedVehicleFuel, item => item.Id, plan.EntityId ?? string.Empty);
                 break;
-
-            case "Údržba":
-                SelectedVehicleTabIndex = MaintenanceTabIndex;
-                SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, entityId);
-                RequestFocus(DesktopFocusTarget.MaintenanceList);
+            case DesktopNavigationSelectionKind.Reminder:
+                SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, plan.EntityId ?? string.Empty);
                 break;
-
-            case "Připomínka":
-                SelectedVehicleTabIndex = ReminderTabIndex;
-                SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, entityId);
-                RequestFocus(DesktopFocusTarget.ReminderList);
+            case DesktopNavigationSelectionKind.Maintenance:
+                SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, plan.EntityId ?? string.Empty);
                 break;
-
-            case "Vozidlo":
-            default:
-                SelectedVehicleTabIndex = DetailTabIndex;
-                RequestFocus(DesktopFocusTarget.VehicleList);
+            case DesktopNavigationSelectionKind.Record:
+                SelectedRecord = FindById(SelectedVehicleRecords, item => item.Id, plan.EntityId ?? string.Empty);
                 break;
         }
+
+        RequestFocus(plan.FocusTarget);
     }
 
     private void RequestFocus(DesktopFocusTarget target)
     {
         FocusRequested?.Invoke(target);
-    }
-
-    private bool MatchesTimelineFilter(VehicleTimelineItem item)
-    {
-        return SelectedTimelineFilter switch
-        {
-            "Budoucí" => item.IsFuture,
-            "Minulé" => !item.IsFuture,
-            _ => true
-        };
-    }
-
-    private bool MatchesTimelineSearch(VehicleTimelineItem item)
-    {
-        var needle = TimelineSearchText?.Trim();
-        if (string.IsNullOrWhiteSpace(needle))
-        {
-            return true;
-        }
-
-        var haystack = string.Join(' ', new[]
-        {
-            item.DateText,
-            item.KindLabel,
-            item.Title,
-            item.Detail,
-            item.Status,
-            item.Note,
-            item.VehicleName
-        });
-
-        return haystack.Contains(needle, StringComparison.CurrentCultureIgnoreCase);
     }
 
     private static string FormatCostValue(string? value)
