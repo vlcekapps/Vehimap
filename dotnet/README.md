@@ -50,6 +50,8 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit modalni export a obnovu dat a pracovat se stejnym `.vehimapbak` formatem jako AHK vetev
 - generovat verzovane release balicky pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`
 - pripravit draft release pro `.NET` preview tag `dotnet-preview-v<verze>` pres GitHub Actions
+- publikovat runtime-specific preview manifesty `update/latest-dotnet-preview-<rid>.ini`
+- spoustet Windows Appium smoke i v CI nad publish buildem desktop preview
 
 ## Lokalni build
 
@@ -82,3 +84,5 @@ CI workflow `.github/workflows/dotnet-desktop.yml` umi:
   - `vehimap-desktop-preview-<verze>-osx-arm64.zip`
 - pridat ke kazdemu balicku `.sha256` a `.json` metadata
 - pri pushi tagu `dotnet-preview-v<verze>` vytvorit draft GitHub release
+- po draft release zapsat runtime-specific preview manifesty do `update/`
+- na Windows runneru spustit Appium smoke nad publish buildem desktop preview

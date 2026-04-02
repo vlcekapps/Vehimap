@@ -45,10 +45,12 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - Appium harness a zivy Windows UI smoke nad publish buildem
 - multiplatformni publish matrix pro `.NET` desktop preview
 - draft release workflow pro tagy `dotnet-preview-v<verze>` s verzovanymi balicky a checksumy
+- runtime-specific preview update manifesty `update/latest-dotnet-preview-<rid>.ini`
+- Windows CI Appium smoke nad publish buildem desktop preview
 
 ## Co je dalsi na rade
 
-1. Dopsat dalsi Appium smoke pro release buildy a zaclenit je do CI, az bude pripraveny runner s Appium serverem
+1. Rozsirit Appium smoke z hlavniho shellu i na dalsi samostatna okna a dalsi editacni workflow
 2. Rozsirit accessibility metadata a focus chovani z hlavniho shellu i do dalsich budoucich dialogu
 3. Portovat zbytek aplikacovych toku, ktere jeste v .NET vetvi chybi proti AHK verzi
-4. Rozhodnout, kdy se `.NET` preview release tok napoji i na skutecny update manifest misto dnesni AHK-only distribuce
+4. Rozhodnout, kdy se `.NET` desktop preview kanal zmeni z preview manifestu na plnohodnotny release kanal

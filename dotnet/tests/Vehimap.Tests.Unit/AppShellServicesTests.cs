@@ -1,6 +1,7 @@
 using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
@@ -28,9 +29,12 @@ public sealed class AppShellServicesTests : IDisposable
         var provider = new AssemblyAppBuildInfoProvider();
         var appInfo = provider.GetCurrent();
         var expectedVersion = File.ReadAllText(Path.Combine("C:\\Users\\vlcek\\vehimap", "src", "VERSION")).Trim();
+        var expectedManifestName = $"latest-dotnet-preview-{ResolveExpectedRuntimeIdentifier()}.ini";
 
         Assert.Equal(expectedVersion, appInfo.AppVersion);
         Assert.Equal(SemVersionService.NormalizeToFileVersion(expectedVersion), appInfo.FileVersion);
+        Assert.EndsWith(expectedManifestName, appInfo.UpdateManifestUrl, StringComparison.OrdinalIgnoreCase);
+        Assert.StartsWith(AssemblyAppBuildInfoProvider.DefaultReleaseNotesUrl, appInfo.ReleaseNotesUrl, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -146,6 +150,33 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.True(File.Exists(Path.Combine(result.InstallPlan.SourceDirectory, "vehimap.exe")));
     }
 
+    [Fact]
+    public async Task Missing_preview_manifest_returns_friendly_message()
+    {
+        var buildInfo = new StubBuildInfoProvider(
+            new AppBuildInfo(
+                "Vehimap",
+                "1.0.2",
+                "1.0.2.0",
+                "samostatna desktopova aplikace",
+                Path.Combine(_tempRoot, "Vehimap.Desktop.exe"),
+                "Windows",
+                ".NET 10",
+                "https://raw.githubusercontent.com/vlcekapps/Vehimap/main/update/latest-dotnet-preview-win-x64.ini",
+                "https://github.com/vlcekapps/Vehimap/releases",
+                Path.Combine(_tempRoot, "Vehimap.Updater.exe"),
+                true));
+
+        using var httpClient = new HttpClient(new StubStatusHttpMessageHandler(HttpStatusCode.NotFound));
+        var service = new LegacyUpdateService(buildInfo, httpClient);
+
+        var result = await service.CheckForUpdatesAsync("1.0.2");
+
+        Assert.False(result.IsUpdateAvailable);
+        Assert.Null(result.FailureReason);
+        Assert.Contains("zatim neni publikovany", result.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_tempRoot))
@@ -195,5 +226,57 @@ public sealed class AppShellServicesTests : IDisposable
             };
             return Task.FromResult(response);
         }
+    }
+
+    private sealed class StubStatusHttpMessageHandler : HttpMessageHandler
+    {
+        private readonly HttpStatusCode _statusCode;
+
+        public StubStatusHttpMessageHandler(HttpStatusCode statusCode)
+        {
+            _statusCode = statusCode;
+        }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(new HttpResponseMessage(_statusCode)
+            {
+                Content = new StringContent(string.Empty)
+            });
+        }
+    }
+
+    private static string ResolveExpectedRuntimeIdentifier()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return RuntimeInformation.ProcessArchitecture switch
+            {
+                Architecture.X86 => "win-x86",
+                Architecture.Arm64 => "win-arm64",
+                _ => "win-x64"
+            };
+        }
+
+        if (OperatingSystem.IsMacOS())
+        {
+            return RuntimeInformation.ProcessArchitecture switch
+            {
+                Architecture.Arm64 => "osx-arm64",
+                _ => "osx-x64"
+            };
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            return RuntimeInformation.ProcessArchitecture switch
+            {
+                Architecture.Arm64 => "linux-arm64",
+                Architecture.Arm => "linux-arm",
+                _ => "linux-x64"
+            };
+        }
+
+        return "win-x64";
     }
 }

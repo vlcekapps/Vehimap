@@ -4,6 +4,9 @@ namespace Vehimap.Tests.UI;
 
 internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath, TimeSpan CommandTimeout)
 {
+    public static bool RequireAvailability =>
+        string.Equals(Environment.GetEnvironmentVariable("VEHIMAP_UI_REQUIRE_APPIUM"), "1", StringComparison.Ordinal);
+
     public static bool TryCreate(out DesktopUiTestConfiguration configuration, out string reason)
     {
         configuration = null!;

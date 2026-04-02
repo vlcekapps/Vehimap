@@ -21,6 +21,11 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         session = null;
         if (!DesktopUiTestConfiguration.TryCreate(out var configuration, out reason))
         {
+            if (DesktopUiTestConfiguration.RequireAvailability)
+            {
+                throw new InvalidOperationException(reason);
+            }
+
             return false;
         }
 
@@ -46,6 +51,11 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             reason = ex.Message;
             session?.Dispose();
             session = null;
+            if (DesktopUiTestConfiguration.RequireAvailability)
+            {
+                throw new InvalidOperationException("Appium UI session se nepodarilo spustit.", ex);
+            }
+
             return false;
         }
     }

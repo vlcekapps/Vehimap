@@ -35,7 +35,7 @@ jobs:
           should_release="false"
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             if [[ "${GITHUB_REF_NAME}" != "${release_tag}" ]]; then
-              echo "Tag ${GITHUB_REF_NAME} neodpovídá očekávané verzi ${release_tag}." >&2
+              echo "Tag ${GITHUB_REF_NAME} neodpovida ocekavane verzi ${release_tag}." >&2
               exit 1
             fi
             should_release="true"
@@ -64,10 +64,86 @@ jobs:
       - name: Test
         run: dotnet test Vehimap.sln --no-build --configuration Release -p:UseSharedCompilation=false
 
+  ui-smoke:
+    needs:
+      - metadata
+      - test
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: dotnet
+    env:
+      APPIUM_HOME: ${{ github.workspace }}\dotnet\artifacts\appium-home-ci
+      VEHIMAP_APPIUM_SERVER_URL: http://127.0.0.1:4723/
+      VEHIMAP_UI_APP: ${{ github.workspace }}\dotnet\artifacts\desktop-preview\Vehimap.Desktop.exe
+      VEHIMAP_UI_REQUIRE_APPIUM: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Restore
+        run: dotnet restore Vehimap.sln
+      - name: Build
+        run: dotnet build Vehimap.sln --no-restore --configuration Release -p:UseSharedCompilation=false
+      - name: Publish desktop preview for UI smoke
+        run: dotnet publish src/Vehimap.Desktop/Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -p:UseSharedCompilation=false -o artifacts/desktop-preview
+      - name: Install Appium Windows driver and WinAppDriver
+        shell: pwsh
+        run: |
+          npm install -g appium
+          appium driver install windows
+          appium driver run windows install-wad
+      - name: Start Appium server
+        shell: pwsh
+        run: |
+          $stdoutLog = Join-Path $env:GITHUB_WORKSPACE "dotnet\\artifacts\\appium-server.log"
+          $stderrLog = Join-Path $env:GITHUB_WORKSPACE "dotnet\\artifacts\\appium-server.err.log"
+          Start-Process -FilePath "appium.cmd" -ArgumentList @("--address", "127.0.0.1", "--port", "4723") -PassThru -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog | Out-Null
+          $deadline = (Get-Date).AddMinutes(2)
+          $ready = $false
+          while ((Get-Date) -lt $deadline) {
+            try {
+              $response = Invoke-WebRequest -Uri "http://127.0.0.1:4723/status" -UseBasicParsing -TimeoutSec 5
+              if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 300) {
+                $ready = $true
+                break
+              }
+            }
+            catch {
+            }
+
+            Start-Sleep -Seconds 2
+          }
+
+          if (-not $ready) {
+            throw "Appium server se v limitu nespustil."
+          }
+      - name: Verify UI smoke prerequisites
+        shell: pwsh
+        run: |
+          if (-not (Test-Path -LiteralPath $env:VEHIMAP_UI_APP)) {
+            throw "Chybi publish build pro UI smoke: $env:VEHIMAP_UI_APP"
+          }
+      - name: Run Appium UI smoke
+        run: dotnet test tests/Vehimap.Tests.UI/Vehimap.Tests.UI.csproj --no-build --configuration Release -p:UseSharedCompilation=false
+      - name: Upload Appium logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vehimap-desktop-ui-smoke-logs
+          path: |
+            dotnet/artifacts/appium-server.log
+            dotnet/artifacts/appium-server.err.log
+
   publish:
     needs:
       - metadata
       - test
+      - ui-smoke
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -130,11 +206,65 @@ jobs:
           draft: true
           generate_release_notes: true
           body: |
-            Desktop preview build pro .NET/Avalonia větev Vehimapu.
+            Desktop preview build pro .NET/Avalonia vetev Vehimapu.
 
             Artefakty:
-            - Windows: ZIP portable složky
-            - Linux: tar.gz portable složky
+            - Windows: ZIP portable slozky
+            - Linux: tar.gz portable slozky
             - macOS: ZIP s `.app` bundle
           files: |
             release-artifacts/*
+
+  update-manifests:
+    if: needs.metadata.outputs.should_release == 'true'
+    needs:
+      - metadata
+      - release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Download packaged artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          pattern: vehimap-desktop-preview-*
+          merge-multiple: true
+      - name: Generate runtime-specific preview manifests
+        shell: pwsh
+        run: |
+          $metadataFiles = Get-ChildItem -Path "release-artifacts" -Filter "*.json" | Sort-Object Name
+          if ($metadataFiles.Count -eq 0) {
+            throw "Nebyla nalezena zadna package metadata."
+          }
+
+          foreach ($metadataFile in $metadataFiles) {
+            $metadata = Get-Content -Raw -LiteralPath $metadataFile.FullName | ConvertFrom-Json
+            $rid = $metadata.runtimeIdentifier
+            if ([string]::IsNullOrWhiteSpace($rid)) {
+              throw "Metadata '$($metadataFile.Name)' neobsahuji runtimeIdentifier."
+            }
+
+            $outputPath = Join-Path "update" ("latest-dotnet-preview-" + $rid + ".ini")
+            .\dotnet\build\Write-DotnetPreviewUpdateManifest.ps1 `
+              -PackageMetadataPath $metadataFile.FullName `
+              -ArtifactsDirectory "release-artifacts" `
+              -ReleaseTag "${{ needs.metadata.outputs.release_tag }}" `
+              -OutputPath $outputPath
+          }
+      - name: Commit preview manifests
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          $status = git status --porcelain -- update
+          if ([string]::IsNullOrWhiteSpace($status)) {
+            Write-Host "Preview manifests jsou aktualni."
+            exit 0
+          }
+
+          git add update/latest-dotnet-preview-*.ini
+          git commit -m "chore(dotnet): update desktop preview manifests for ${{ needs.metadata.outputs.version }}"
+          git push origin HEAD:main

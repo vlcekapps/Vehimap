@@ -34,7 +34,7 @@ public sealed class LegacyUpdateService : IUpdateService
 
             if (comparison < 0)
             {
-                var sizeText = manifest.AssetSize is > 0 ? $" Velikost balíčku: {FormatSize(manifest.AssetSize.Value)}." : string.Empty;
+                var sizeText = manifest.AssetSize is > 0 ? $" Velikost balicku: {FormatSize(manifest.AssetSize.Value)}." : string.Empty;
                 return new UpdateCheckResult(
                     currentVersion,
                     manifest.Version,
@@ -45,7 +45,7 @@ public sealed class LegacyUpdateService : IUpdateService
                     manifest.AssetSha256,
                     manifest.AssetSize,
                     canInstallAutomatically,
-                    $"Je dostupná novější verze Vehimap ({manifest.Version}).{sizeText}");
+                    $"Je dostupna novejsi verze Vehimap ({manifest.Version}).{sizeText}");
             }
 
             if (comparison > 0)
@@ -60,7 +60,7 @@ public sealed class LegacyUpdateService : IUpdateService
                     manifest.AssetSha256,
                     manifest.AssetSize,
                     false,
-                    $"Používáte novější lokální verzi ({currentVersion}) než je v manifestu ({manifest.Version}).");
+                    $"Pouzivate novejsi lokalni verzi ({currentVersion}) nez je v manifestu ({manifest.Version}).");
             }
 
             return new UpdateCheckResult(
@@ -73,7 +73,21 @@ public sealed class LegacyUpdateService : IUpdateService
                 manifest.AssetSha256,
                 manifest.AssetSize,
                 false,
-                $"Používáte aktuální verzi Vehimap ({currentVersion}).");
+                $"Pouzivate aktualni verzi Vehimap ({currentVersion}).");
+        }
+        catch (PreviewManifestUnavailableException ex)
+        {
+            return new UpdateCheckResult(
+                currentVersion,
+                currentVersion,
+                false,
+                null,
+                appInfo.ReleaseNotesUrl,
+                null,
+                null,
+                null,
+                false,
+                ex.Message);
         }
         catch (Exception ex)
         {
@@ -87,7 +101,7 @@ public sealed class LegacyUpdateService : IUpdateService
                 null,
                 null,
                 false,
-                "Kontrolu aktualizací se nepodařilo dokončit.",
+                "Kontrolu aktualizaci se nepodarilo dokoncit.",
                 ex.Message);
         }
     }
@@ -98,17 +112,17 @@ public sealed class LegacyUpdateService : IUpdateService
 
         if (!OperatingSystem.IsWindows())
         {
-            return new UpdateInstallResult(false, "Automatická instalace je v této etapě dostupná jen na Windows.", null);
+            return new UpdateInstallResult(false, "Automaticka instalace je v teto etape dostupna jen na Windows.", null);
         }
 
         if (!update.IsUpdateAvailable)
         {
-            return new UpdateInstallResult(false, "Pro instalaci není připravená žádná novější verze.", null);
+            return new UpdateInstallResult(false, "Pro instalaci neni pripravena zadna novejsi verze.", null);
         }
 
         if (!update.CanInstallAutomatically)
         {
-            return new UpdateInstallResult(false, "Aktualizaci lze zatím otevřít jen ručně přes release stránku nebo asset.", null);
+            return new UpdateInstallResult(false, "Aktualizaci lze zatim otevrit jen rucne pres release stranku nebo asset.", null);
         }
 
         if (!ValidateInstallMetadata(update, out var validationError))
@@ -118,7 +132,7 @@ public sealed class LegacyUpdateService : IUpdateService
 
         if (!File.Exists(appInfo.UpdaterPath))
         {
-            return new UpdateInstallResult(false, "Vedle aplikace chybí Vehimap.Updater, automatickou instalaci proto nelze připravit.", null);
+            return new UpdateInstallResult(false, "Vedle aplikace chybi Vehimap.Updater, automatickou instalaci proto nelze pripravit.", null);
         }
 
         var tempRoot = Path.Combine(Path.GetTempPath(), $"VehimapDesktopUpdate_{Guid.NewGuid():N}");
@@ -142,18 +156,19 @@ public sealed class LegacyUpdateService : IUpdateService
                 Process.GetCurrentProcess().Id,
                 update.LatestVersion);
 
-            return new UpdateInstallResult(true, "Aktualizace je připravená k instalaci.", installPlan);
+            return new UpdateInstallResult(true, "Aktualizace je pripravena k instalaci.", installPlan);
         }
         catch (Exception ex)
         {
             TryDeleteDirectory(tempRoot);
-            return new UpdateInstallResult(false, $"Aktualizaci se nepodařilo připravit. {ex.Message}", null);
+            return new UpdateInstallResult(false, $"Aktualizaci se nepodarilo pripravit. {ex.Message}", null);
         }
     }
 
     private async Task<LegacyUpdateManifest> LoadManifestAsync(AppBuildInfo appInfo, CancellationToken cancellationToken)
     {
-        var localManifestPath = FindLocalManifestPath(AppContext.BaseDirectory);
+        var manifestFileName = GetManifestFileName(appInfo.UpdateManifestUrl);
+        var localManifestPath = FindLocalManifestPath(AppContext.BaseDirectory, manifestFileName);
         if (!string.IsNullOrWhiteSpace(localManifestPath))
         {
             return LegacyUpdateManifestParser.Parse(await File.ReadAllTextAsync(localManifestPath, cancellationToken).ConfigureAwait(false));
@@ -164,19 +179,24 @@ public sealed class LegacyUpdateService : IUpdateService
         using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
-            throw new InvalidOperationException($"Server vrátil HTTP {(int)response.StatusCode}.");
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound && IsPreviewManifestFileName(manifestFileName))
+            {
+                throw new PreviewManifestUnavailableException("Preview kanal aktualizaci pro desktopovou .NET vetev zatim neni publikovany.");
+            }
+
+            throw new InvalidOperationException($"Server vratil HTTP {(int)response.StatusCode}.");
         }
 
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         return LegacyUpdateManifestParser.Parse(content);
     }
 
-    private static string? FindLocalManifestPath(string startPath)
+    private static string? FindLocalManifestPath(string startPath, string manifestFileName)
     {
         var current = new DirectoryInfo(startPath);
         while (current is not null)
         {
-            var candidate = Path.Combine(current.FullName, "update", "latest.ini");
+            var candidate = Path.Combine(current.FullName, "update", manifestFileName);
             if (File.Exists(candidate))
             {
                 return candidate;
@@ -188,6 +208,24 @@ public sealed class LegacyUpdateService : IUpdateService
         return null;
     }
 
+    private static string GetManifestFileName(string updateManifestUrl)
+    {
+        if (Uri.TryCreate(updateManifestUrl, UriKind.Absolute, out var manifestUri))
+        {
+            var manifestName = Path.GetFileName(manifestUri.AbsolutePath);
+            if (!string.IsNullOrWhiteSpace(manifestName))
+            {
+                return manifestName;
+            }
+        }
+
+        var fallbackName = Path.GetFileName(updateManifestUrl);
+        return string.IsNullOrWhiteSpace(fallbackName) ? "latest.ini" : fallbackName;
+    }
+
+    private static bool IsPreviewManifestFileName(string manifestFileName) =>
+        manifestFileName.Contains("latest-dotnet-preview-", StringComparison.OrdinalIgnoreCase);
+
     private static bool ValidateInstallMetadata(UpdateCheckResult update, out string error)
     {
         if (string.IsNullOrWhiteSpace(update.AssetUrl))
@@ -198,7 +236,7 @@ public sealed class LegacyUpdateService : IUpdateService
 
         if (string.IsNullOrWhiteSpace(update.Sha256) || update.Sha256.Length != 64)
         {
-            error = "Manifest neobsahuje platný SHA-256 hash assetu.";
+            error = "Manifest neobsahuje platny SHA-256 hash assetu.";
             return false;
         }
 
@@ -234,7 +272,7 @@ public sealed class LegacyUpdateService : IUpdateService
         using var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
-            throw new InvalidOperationException($"Stažení assetu selhalo (HTTP {(int)response.StatusCode}).");
+            throw new InvalidOperationException($"Stazeni assetu selhalo (HTTP {(int)response.StatusCode}).");
         }
 
         await using var sourceStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
@@ -247,7 +285,7 @@ public sealed class LegacyUpdateService : IUpdateService
         var fileInfo = new FileInfo(archivePath);
         if (fileInfo.Length != expectedSize)
         {
-            throw new InvalidOperationException("Stažený archiv má jinou velikost, než očekává manifest.");
+            throw new InvalidOperationException("Stazeny archiv ma jinou velikost, nez ocekava manifest.");
         }
 
         using var stream = File.OpenRead(archivePath);
@@ -255,7 +293,7 @@ public sealed class LegacyUpdateService : IUpdateService
         var actualSha256 = Convert.ToHexString(sha.ComputeHash(stream)).ToLowerInvariant();
         if (!string.Equals(actualSha256, expectedSha256, StringComparison.OrdinalIgnoreCase))
         {
-            throw new InvalidOperationException("Stažený archiv neodpovídá očekávanému SHA-256 hashi.");
+            throw new InvalidOperationException("Stazeny archiv neodpovida ocekavanemu SHA-256 hashi.");
         }
     }
 
@@ -304,6 +342,14 @@ public sealed class LegacyUpdateService : IUpdateService
             }
         }
         catch
+        {
+        }
+    }
+
+    private sealed class PreviewManifestUnavailableException : Exception
+    {
+        public PreviewManifestUnavailableException(string message)
+            : base(message)
         {
         }
     }
