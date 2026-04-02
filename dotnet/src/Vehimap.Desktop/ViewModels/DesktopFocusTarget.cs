@@ -9,6 +9,8 @@ public enum DesktopFocusTarget
     MaintenanceList,
     TimelineSearch,
     TimelineList,
+    GlobalSearchBox,
+    GlobalSearchList,
     RecordList,
     AuditList,
     CostList,

@@ -56,6 +56,23 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal(DesktopFocusTarget.TimelineSearch, requestedFocus);
     }
 
+    [Fact]
+    public void Global_search_result_opens_matching_record_and_requests_focus()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        viewModel.GlobalSearchText = "Asistence";
+        viewModel.SelectedSearchResult = viewModel.GlobalSearchResults.Single(item => item.EntityId == "rec_2");
+
+        viewModel.OpenSelectedSearchResultCommand.Execute(null);
+
+        Assert.Equal(6, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("rec_2", viewModel.SelectedRecord?.Id);
+        Assert.Equal(DesktopFocusTarget.RecordList, requestedFocus);
+    }
+
     private static MainWindowViewModel CreateViewModel()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -100,6 +117,7 @@ public sealed class MainWindowViewModelNavigationTests
             bootstrapper,
             new ManagedAttachmentPathService(),
             new StubFileLauncher(),
+            new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
             new StubTextFileSaveService());

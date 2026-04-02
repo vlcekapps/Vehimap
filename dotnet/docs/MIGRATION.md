@@ -30,6 +30,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - manualni ICS export budouciho kalendare z nove C# vetve
 - akcni casovou osu, ktera umi otevrit souvisejici historii, doklad, pripominku nebo plan udrzby na spravne karte shellu
 - prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
+- globalni hledani napric vozidly a hlavnimi evidencemi s otevrenim na spravnou kartu a polozku
 - prvni keyboard-first vrstvu shellu s focus managementem, shortcuty a enter-akcemi na hlavnich seznamech
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
 - zaklad release workflow pro GitHub Actions
@@ -39,4 +40,5 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 1. Dopsat realne UI testy pres Appium a prvni smoke pro screen readery na Windows
 2. Rozsirit accessibility metadata a focus chovani z hlavniho shellu i do dalsich budoucich dialogu
 3. Zacit portovat editacni workflow, nejen cteci prehledy
-4. Dodelat dalsi prehledove obrazovky a globalni hledani
+4. Zacit portovat editacni workflow, nejen cteci prehledy
+5. Dodelat settings, help/about a update check v desktop shellu

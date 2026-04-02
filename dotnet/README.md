@@ -28,10 +28,11 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo cist a zapisovat dnesni Vehimap data (`TSV`, `INI`, `.vehimapbak`, managed attachments)
 - skladat sdilene C# use-cases pro audit, nakladove souhrny, cenu za kilometr, casovou osu vozidla a ICS export
 - zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych legacy dat
+- vyhledavat napric vozidly, historii, tankovanim, doklady, pripominkami a planem udrzby v nove karte `Hledani`
 - vyexportovat budouci terminy do `.ics` primo z nove C# vetve
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu
 - pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
-- ovladat shell vice klavesnici: `Ctrl+R` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+F` pro fokus do hledani v casove ose a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech a dashboardu
+- ovladat shell vice klavesnici: `Ctrl+R` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+F` pro fokus do hledani v casove ose, `Ctrl+Shift+F` pro globalni hledani a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech, dashboardu i ve vysledcich hledani
 
 ## Lokalni build
 

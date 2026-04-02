@@ -21,7 +21,8 @@ public partial class MainWindow : Window
         "RecordTabButton",
         "AuditTabButton",
         "CostTabButton",
-        "DashboardTabButton"
+        "DashboardTabButton",
+        "SearchTabButton"
     ];
 
     private MainWindowViewModel? _viewModel;
@@ -129,6 +130,8 @@ public partial class MainWindow : Window
         RegisterShiftTabBackNavigation("DashboardAuditOpenButton");
         RegisterShiftTabBackNavigation("DashboardCostOpenButton");
         RegisterShiftTabBackNavigation("DashboardTimelineOpenButton");
+        RegisterShiftTabBackNavigation("GlobalSearchTextBox");
+        RegisterShiftTabBackNavigation("SearchResultsListBox");
     }
 
     private void RegisterTabHeaderNavigation()
@@ -288,6 +291,8 @@ public partial class MainWindow : Window
             DesktopFocusTarget.MaintenanceList => this.FindControl<ListBox>("MaintenanceListBox"),
             DesktopFocusTarget.TimelineSearch => this.FindControl<TextBox>("TimelineSearchBox"),
             DesktopFocusTarget.TimelineList => this.FindControl<ListBox>("TimelineListBox"),
+            DesktopFocusTarget.GlobalSearchBox => this.FindControl<TextBox>("GlobalSearchTextBox"),
+            DesktopFocusTarget.GlobalSearchList => this.FindControl<ListBox>("SearchResultsListBox"),
             DesktopFocusTarget.RecordList => this.FindControl<ListBox>("RecordListBox"),
             DesktopFocusTarget.AuditList => this.FindControl<ListBox>("AuditListBox"),
             DesktopFocusTarget.CostList => this.FindControl<ListBox>("CostListBox"),

@@ -22,12 +22,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private const int MaintenanceTabIndex = 4;
     private const int TimelineTabIndex = 5;
     private const int RecordTabIndex = 6;
+    private const int AuditTabIndex = 7;
+    private const int CostTabIndex = 8;
+    private const int DashboardTabIndex = 9;
+    private const int SearchTabIndex = 10;
 
     private readonly LegacyVehimapBootstrapper _bootstrapper;
     private readonly IFileAttachmentService _attachmentService;
     private readonly IFileLauncher _fileLauncher;
     private readonly IAuditService _auditService;
     private readonly ICostAnalysisService _costAnalysisService;
+    private readonly IGlobalSearchService _globalSearchService;
     private readonly ITimelineService _timelineService;
     private readonly ICalendarExportService _calendarExportService;
     private readonly ITextFileSaveService _fileSaveService;
@@ -130,6 +135,15 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string selectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
 
     [ObservableProperty]
+    private string globalSearchText = string.Empty;
+
+    [ObservableProperty]
+    private string globalSearchSummary = "Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.";
+
+    [ObservableProperty]
+    private string selectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
+
+    [ObservableProperty]
     private string timelineSearchText = string.Empty;
 
     [ObservableProperty]
@@ -177,6 +191,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private VehicleRecordItemViewModel? selectedRecord;
 
+    [ObservableProperty]
+    private GlobalSearchResultItemViewModel? selectedSearchResult;
+
     public ObservableCollection<VehicleListItemViewModel> Vehicles { get; } = [];
 
     public ObservableCollection<AuditItemViewModel> AuditItems { get; } = [];
@@ -196,6 +213,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline { get; } = [];
 
     public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords { get; } = [];
+
+    public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults { get; } = [];
 
     public IReadOnlyList<string> TimelineFilters { get; } = ["Vše", "Budoucí", "Minulé"];
 
@@ -221,17 +240,22 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool IsRecordTabSelected => SelectedVehicleTabIndex == RecordTabIndex;
 
-    public bool IsAuditTabSelected => SelectedVehicleTabIndex == 7;
+    public bool IsAuditTabSelected => SelectedVehicleTabIndex == AuditTabIndex;
 
-    public bool IsCostTabSelected => SelectedVehicleTabIndex == 8;
+    public bool IsCostTabSelected => SelectedVehicleTabIndex == CostTabIndex;
 
-    public bool IsDashboardTabSelected => SelectedVehicleTabIndex == 9;
+    public bool IsDashboardTabSelected => SelectedVehicleTabIndex == DashboardTabIndex;
+
+    public bool IsSearchTabSelected => SelectedVehicleTabIndex == SearchTabIndex;
+
+    public bool CanOpenSelectedSearchResult => SelectedSearchResult is not null;
 
     public MainWindowViewModel()
         : this(
             new LegacyVehimapBootstrapper(new LegacyDataRootLocator(), new LegacyVehimapDataStore()),
             new ManagedAttachmentPathService(),
             new ProcessFileLauncher(),
+            new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
             new AvaloniaTextFileSaveService())
@@ -242,6 +266,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         LegacyVehimapBootstrapper bootstrapper,
         IFileAttachmentService attachmentService,
         IFileLauncher fileLauncher,
+        IGlobalSearchService globalSearchService,
         ITimelineService timelineService,
         ICalendarExportService calendarExportService,
         ITextFileSaveService fileSaveService)
@@ -251,6 +276,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _fileLauncher = fileLauncher;
         _auditService = new LegacyAuditService(_attachmentService);
         _costAnalysisService = new LegacyCostAnalysisService();
+        _globalSearchService = globalSearchService;
         _timelineService = timelineService;
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
@@ -275,6 +301,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(IsAuditTabSelected));
         OnPropertyChanged(nameof(IsCostTabSelected));
         OnPropertyChanged(nameof(IsDashboardTabSelected));
+        OnPropertyChanged(nameof(IsSearchTabSelected));
     }
 
     partial void OnSelectedVehicleChanged(VehicleListItemViewModel? value)
@@ -385,6 +412,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
         RefreshTimeline();
     }
 
+    partial void OnGlobalSearchTextChanged(string value)
+    {
+        RefreshGlobalSearch();
+    }
+
     partial void OnSelectedTimelineFilterChanged(string value)
     {
         RefreshTimeline();
@@ -398,6 +430,15 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         OpenSelectedRecordFileCommand.NotifyCanExecuteChanged();
         OpenSelectedRecordFolderCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnSelectedSearchResultChanged(GlobalSearchResultItemViewModel? value)
+    {
+        SelectedSearchResultDetail = value is null
+            ? "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci."
+            : $"{value.SectionLabel}: {value.Title}\nVozidlo: {value.VehicleName}\n{value.Summary}";
+
+        OpenSelectedSearchResultCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
@@ -415,9 +456,16 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void FocusGlobalSearch()
+    {
+        SelectedVehicleTabIndex = SearchTabIndex;
+        RequestFocus(DesktopFocusTarget.GlobalSearchBox);
+    }
+
+    [RelayCommand]
     private void SelectVehicleTab(int tabIndex)
     {
-        if (tabIndex < DetailTabIndex || tabIndex > 9)
+        if (tabIndex < DetailTabIndex || tabIndex > SearchTabIndex)
         {
             return;
         }
@@ -519,6 +567,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OpenTimelineItem(SelectedDashboardTimelineItem);
     }
 
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedSearchResult))]
+    private void OpenSelectedSearchResult()
+    {
+        if (SelectedSearchResult is null)
+        {
+            return;
+        }
+
+        SelectVehicleAndOpenEntity(SelectedSearchResult.VehicleId, SelectedSearchResult.EntityKind, SelectedSearchResult.EntityId);
+    }
+
     private void Load()
     {
         try
@@ -600,6 +659,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             }
 
             PopulateDashboardTimeline();
+            RefreshGlobalSearch();
             SelectedDashboardAuditItem = AuditItems.FirstOrDefault();
             SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault();
             SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
@@ -863,6 +923,45 @@ public sealed partial class MainWindowViewModel : ObservableObject
         if (SelectedTimelineItem is null)
         {
             OnSelectedTimelineItemChanged(null);
+        }
+    }
+
+    private void RefreshGlobalSearch()
+    {
+        var previousSelection = SelectedSearchResult;
+        GlobalSearchResults.Clear();
+
+        if (_dataRoot is null || string.IsNullOrWhiteSpace(GlobalSearchText))
+        {
+            GlobalSearchSummary = "Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.";
+            SelectedSearchResult = null;
+            return;
+        }
+
+        var results = _globalSearchService.Search(_dataRoot, _dataSet, GlobalSearchText);
+        foreach (var result in results)
+        {
+            GlobalSearchResults.Add(new GlobalSearchResultItemViewModel(
+                result.VehicleId,
+                result.EntityKind,
+                result.EntityId,
+                result.VehicleName,
+                result.SectionLabel,
+                result.Title,
+                result.Summary));
+        }
+
+        GlobalSearchSummary = results.Count == 0
+            ? $"Pro dotaz „{GlobalSearchText.Trim()}“ nebyly nalezeny žádné výsledky."
+            : $"Dotaz „{GlobalSearchText.Trim()}“: {results.Count} výsledků. Enter otevře vybranou položku.";
+
+        var previousKey = previousSelection is null
+            ? string.Empty
+            : $"{previousSelection.EntityKind}|{previousSelection.EntityId}|{previousSelection.VehicleId}";
+        SelectedSearchResult = FindById(GlobalSearchResults, item => $"{item.EntityKind}|{item.EntityId}|{item.VehicleId}", previousKey);
+        if (SelectedSearchResult is null)
+        {
+            OnSelectedSearchResultChanged(null);
         }
     }
 
