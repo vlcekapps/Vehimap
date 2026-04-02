@@ -97,39 +97,48 @@ jobs:
           npm install -g appium
           appium driver install windows
           appium driver run windows install-wad
-      - name: Start Appium server
+      - name: Run Appium UI smoke
         shell: pwsh
         run: |
           $stdoutLog = Join-Path $env:GITHUB_WORKSPACE "dotnet\\artifacts\\appium-server.log"
           $stderrLog = Join-Path $env:GITHUB_WORKSPACE "dotnet\\artifacts\\appium-server.err.log"
-          Start-Process -FilePath "appium.cmd" -ArgumentList @("--address", "127.0.0.1", "--port", "4723") -PassThru -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog | Out-Null
-          $deadline = (Get-Date).AddMinutes(2)
-          $ready = $false
-          while ((Get-Date) -lt $deadline) {
-            try {
-              $response = Invoke-WebRequest -Uri "http://127.0.0.1:4723/status" -UseBasicParsing -TimeoutSec 5
-              if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 300) {
-                $ready = $true
-                break
-              }
-            }
-            catch {
-            }
 
-            Start-Sleep -Seconds 2
-          }
-
-          if (-not $ready) {
-            throw "Appium server se v limitu nespustil."
-          }
-      - name: Verify UI smoke prerequisites
-        shell: pwsh
-        run: |
           if (-not (Test-Path -LiteralPath $env:VEHIMAP_UI_APP)) {
             throw "Chybi publish build pro UI smoke: $env:VEHIMAP_UI_APP"
           }
-      - name: Run Appium UI smoke
-        run: dotnet test tests/Vehimap.Tests.UI/Vehimap.Tests.UI.csproj --no-build --configuration Release -p:UseSharedCompilation=false
+
+          $appiumProcess = Start-Process -FilePath "appium.cmd" -ArgumentList @("--address", "127.0.0.1", "--port", "4723") -PassThru -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog
+          try {
+            $deadline = (Get-Date).AddMinutes(2)
+            $ready = $false
+            while ((Get-Date) -lt $deadline) {
+              try {
+                $response = Invoke-WebRequest -Uri "http://127.0.0.1:4723/status" -UseBasicParsing -TimeoutSec 5
+                if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 300) {
+                  $ready = $true
+                  break
+                }
+              }
+              catch {
+              }
+
+              Start-Sleep -Seconds 2
+            }
+
+            if (-not $ready) {
+              throw "Appium server se v limitu nespustil."
+            }
+
+            dotnet test tests/Vehimap.Tests.UI/Vehimap.Tests.UI.csproj --no-build --configuration Release -p:UseSharedCompilation=false
+            if ($LASTEXITCODE -ne 0) {
+              exit $LASTEXITCODE
+            }
+          }
+          finally {
+            if ($appiumProcess -and -not $appiumProcess.HasExited) {
+              Stop-Process -Id $appiumProcess.Id -Force
+            }
+          }
       - name: Upload Appium logs
         if: always()
         uses: actions/upload-artifact@v4
