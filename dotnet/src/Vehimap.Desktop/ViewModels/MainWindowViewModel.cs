@@ -136,6 +136,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string exportStatus = "Kalendářový export zatím nebyl spuštěn.";
 
     [ObservableProperty]
+    private string dashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
+
+    [ObservableProperty]
+    private string selectedDashboardTimelineDetail = "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.";
+
+    [ObservableProperty]
     private int selectedVehicleTabIndex;
 
     [ObservableProperty]
@@ -157,6 +163,15 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private VehicleTimelineItemViewModel? selectedTimelineItem;
 
     [ObservableProperty]
+    private AuditItemViewModel? selectedDashboardAuditItem;
+
+    [ObservableProperty]
+    private CostVehicleItemViewModel? selectedDashboardCostVehicle;
+
+    [ObservableProperty]
+    private VehicleTimelineItemViewModel? selectedDashboardTimelineItem;
+
+    [ObservableProperty]
     private VehicleRecordItemViewModel? selectedRecord;
 
     public ObservableCollection<VehicleListItemViewModel> Vehicles { get; } = [];
@@ -164,6 +179,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public ObservableCollection<AuditItemViewModel> AuditItems { get; } = [];
 
     public ObservableCollection<CostVehicleItemViewModel> CostVehicles { get; } = [];
+
+    public ObservableCollection<VehicleTimelineItemViewModel> DashboardUpcomingTimeline { get; } = [];
 
     public ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory { get; } = [];
 
@@ -180,6 +197,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public IReadOnlyList<string> TimelineFilters { get; } = ["Vše", "Budoucí", "Minulé"];
 
     public bool CanOpenSelectedTimelineItem => SelectedTimelineItem is not null;
+
+    public bool CanOpenSelectedDashboardAuditItem => SelectedDashboardAuditItem is not null;
+
+    public bool CanOpenSelectedDashboardCostVehicle => SelectedDashboardCostVehicle is not null;
+
+    public bool CanOpenSelectedDashboardTimelineItem => SelectedDashboardTimelineItem is not null;
 
     public MainWindowViewModel()
         : this(
@@ -237,12 +260,18 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleMaintenance.Clear();
             SelectedVehicleTimeline.Clear();
             SelectedVehicleRecords.Clear();
+            DashboardUpcomingTimeline.Clear();
             SelectedHistory = null;
             SelectedFuel = null;
             SelectedReminder = null;
             SelectedMaintenance = null;
             SelectedTimelineItem = null;
+            SelectedDashboardAuditItem = null;
+            SelectedDashboardCostVehicle = null;
+            SelectedDashboardTimelineItem = null;
             SelectedRecord = null;
+            DashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
+            SelectedDashboardTimelineDetail = "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.";
             SelectedVehicleTabIndex = DetailTabIndex;
             return;
         }
@@ -292,6 +321,25 @@ public sealed partial class MainWindowViewModel : ObservableObject
             : $"Datum: {value.Date}\nDruh: {value.KindLabel}\nPoložka: {value.Title}\nDetail: {FormatValue(value.Detail, "-")}\nStav: {FormatValue(value.Status, "-")}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
 
         OpenSelectedTimelineItemCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnSelectedDashboardAuditItemChanged(AuditItemViewModel? value)
+    {
+        OpenSelectedDashboardAuditItemCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnSelectedDashboardCostVehicleChanged(CostVehicleItemViewModel? value)
+    {
+        OpenSelectedDashboardCostVehicleCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnSelectedDashboardTimelineItemChanged(VehicleTimelineItemViewModel? value)
+    {
+        SelectedDashboardTimelineDetail = value is null
+            ? "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci."
+            : $"Vozidlo: {value.VehicleName}\nDatum: {value.Date}\nDruh: {value.KindLabel}\nPoložka: {value.Title}\nStav: {FormatValue(value.Status, "-")}\nDetail: {FormatValue(value.Detail, "-")}";
+
+        OpenSelectedDashboardTimelineItemCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnTimelineSearchTextChanged(string value)
@@ -355,45 +403,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(SelectedTimelineItem.VehicleId)
-            && !string.Equals(SelectedVehicle?.Id, SelectedTimelineItem.VehicleId, StringComparison.Ordinal))
-        {
-            SelectedVehicle = Vehicles.FirstOrDefault(item => string.Equals(item.Id, SelectedTimelineItem.VehicleId, StringComparison.Ordinal));
-        }
-
-        switch (SelectedTimelineItem.Kind)
-        {
-            case "history":
-                SelectedVehicleTabIndex = HistoryTabIndex;
-                SelectedHistory = FindById(SelectedVehicleHistory, item => item.Id, SelectedTimelineItem.EntryId);
-                break;
-
-            case "fuel":
-                SelectedVehicleTabIndex = FuelTabIndex;
-                SelectedFuel = FindById(SelectedVehicleFuel, item => item.Id, SelectedTimelineItem.EntryId);
-                break;
-
-            case "custom":
-                SelectedVehicleTabIndex = ReminderTabIndex;
-                SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, SelectedTimelineItem.EntryId);
-                break;
-
-            case "maintenance":
-                SelectedVehicleTabIndex = MaintenanceTabIndex;
-                SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, SelectedTimelineItem.EntryId);
-                break;
-
-            case "record":
-                SelectedVehicleTabIndex = RecordTabIndex;
-                SelectedRecord = FindById(SelectedVehicleRecords, item => item.Id, SelectedTimelineItem.EntryId);
-                break;
-
-            case "technical":
-            case "green":
-            default:
-                SelectedVehicleTabIndex = DetailTabIndex;
-                break;
-        }
+        OpenTimelineItem(SelectedTimelineItem);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedRecordFile))]
@@ -417,6 +427,39 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         await _fileLauncher.OpenFolderAsync(folderPath).ConfigureAwait(false);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardAuditItem))]
+    private void OpenSelectedDashboardAuditItem()
+    {
+        if (SelectedDashboardAuditItem is null)
+        {
+            return;
+        }
+
+        SelectVehicleAndOpenEntity(SelectedDashboardAuditItem.VehicleId, SelectedDashboardAuditItem.EntityKind, SelectedDashboardAuditItem.EntityId);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardCostVehicle))]
+    private void OpenSelectedDashboardCostVehicle()
+    {
+        if (SelectedDashboardCostVehicle is null)
+        {
+            return;
+        }
+
+        SelectVehicleAndOpenEntity(SelectedDashboardCostVehicle.VehicleId, "Vozidlo", SelectedDashboardCostVehicle.VehicleId);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardTimelineItem))]
+    private void OpenSelectedDashboardTimelineItem()
+    {
+        if (SelectedDashboardTimelineItem is null)
+        {
+            return;
+        }
+
+        OpenTimelineItem(SelectedDashboardTimelineItem);
     }
 
     private void Load()
@@ -471,6 +514,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             foreach (var item in _auditItems.Take(8))
             {
                 AuditItems.Add(new AuditItemViewModel(
+                    item.VehicleId,
+                    item.EntityKind,
+                    item.EntityId,
                     item.Severity switch
                     {
                         AuditSeverity.Error => "Chyba",
@@ -487,6 +533,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             foreach (var row in costSummary.Vehicles.Where(item => item.TotalCost > 0m || item.Status != "Neaktivní").Take(8))
             {
                 CostVehicles.Add(new CostVehicleItemViewModel(
+                    row.VehicleId,
                     row.VehicleName,
                     row.Category,
                     FormatMoney(row.TotalCost),
@@ -494,6 +541,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
                     row.CostPerKm.HasValue ? $"{row.CostPerKm.Value:0.00} Kč/km" : "nedostupné",
                     row.Status));
             }
+
+            PopulateDashboardTimeline();
+            SelectedDashboardAuditItem = AuditItems.FirstOrDefault();
+            SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault();
+            SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
 
             SelectedVehicle = Vehicles.FirstOrDefault();
             if (SelectedVehicle is null)
@@ -755,6 +807,41 @@ public sealed partial class MainWindowViewModel : ObservableObject
         {
             OnSelectedTimelineItemChanged(null);
         }
+    }
+
+    private void PopulateDashboardTimeline()
+    {
+        DashboardUpcomingTimeline.Clear();
+
+        var allUpcoming = _dataSet.Vehicles
+            .SelectMany(vehicle => _timelineService.BuildVehicleTimeline(_dataSet, vehicle.Id, DateOnly.FromDateTime(DateTime.Today)))
+            .Where(item => item.IsFuture)
+            .OrderBy(item => item.Date)
+            .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(item => item.KindLabel, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
+            .Take(10)
+            .ToList();
+
+        foreach (var item in allUpcoming)
+        {
+            DashboardUpcomingTimeline.Add(new VehicleTimelineItemViewModel(
+                item.Kind,
+                item.KindLabel,
+                item.DateText,
+                item.Title,
+                item.Detail,
+                item.Status,
+                item.VehicleName,
+                item.VehicleId,
+                item.EntryId,
+                item.IsFuture,
+                item.Note));
+        }
+
+        DashboardTimelineSummary = DashboardUpcomingTimeline.Count == 0
+            ? "V dostupných legacy datech zatím nejsou žádné budoucí termíny s konkrétním datem."
+            : $"Napříč všemi vozidly je nejbližších {DashboardUpcomingTimeline.Count} budoucích termínů připravených k otevření.";
     }
 
     private VehicleRecordItemViewModel BuildVehicleRecordItem(VehicleRecord record)
@@ -1062,6 +1149,113 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         return items.FirstOrDefault(item => string.Equals(idSelector(item), entryId, StringComparison.Ordinal))
             ?? items.FirstOrDefault();
+    }
+
+    private static VehicleTimelineItemViewModel? FindTimelineItem(IEnumerable<VehicleTimelineItemViewModel> items, VehicleTimelineItemViewModel target)
+    {
+        if (!string.IsNullOrWhiteSpace(target.EntryId))
+        {
+            return items.FirstOrDefault(item => string.Equals(item.EntryId, target.EntryId, StringComparison.Ordinal))
+                ?? items.FirstOrDefault();
+        }
+
+        return items.FirstOrDefault(item =>
+                   string.Equals(item.Kind, target.Kind, StringComparison.Ordinal)
+                   && string.Equals(item.Date, target.Date, StringComparison.Ordinal)
+                   && string.Equals(item.Title, target.Title, StringComparison.Ordinal)
+                   && string.Equals(item.VehicleId, target.VehicleId, StringComparison.Ordinal))
+               ?? items.FirstOrDefault();
+    }
+
+    private void OpenTimelineItem(VehicleTimelineItemViewModel item)
+    {
+        if (!string.IsNullOrWhiteSpace(item.VehicleId)
+            && !string.Equals(SelectedVehicle?.Id, item.VehicleId, StringComparison.Ordinal))
+        {
+            SelectedVehicle = Vehicles.FirstOrDefault(vehicle => string.Equals(vehicle.Id, item.VehicleId, StringComparison.Ordinal));
+        }
+
+        SelectedTimelineItem = FindTimelineItem(SelectedVehicleTimeline, item);
+
+        switch (item.Kind)
+        {
+            case "history":
+                SelectedVehicleTabIndex = HistoryTabIndex;
+                SelectedHistory = FindById(SelectedVehicleHistory, historyItem => historyItem.Id, item.EntryId);
+                break;
+
+            case "fuel":
+                SelectedVehicleTabIndex = FuelTabIndex;
+                SelectedFuel = FindById(SelectedVehicleFuel, fuelItem => fuelItem.Id, item.EntryId);
+                break;
+
+            case "custom":
+                SelectedVehicleTabIndex = ReminderTabIndex;
+                SelectedReminder = FindById(SelectedVehicleReminders, reminderItem => reminderItem.Id, item.EntryId);
+                break;
+
+            case "maintenance":
+                SelectedVehicleTabIndex = MaintenanceTabIndex;
+                SelectedMaintenance = FindById(SelectedVehicleMaintenance, maintenanceItem => maintenanceItem.Id, item.EntryId);
+                break;
+
+            case "record":
+                SelectedVehicleTabIndex = RecordTabIndex;
+                SelectedRecord = FindById(SelectedVehicleRecords, recordItem => recordItem.Id, item.EntryId);
+                break;
+
+            case "technical":
+            case "green":
+            default:
+                SelectedVehicleTabIndex = DetailTabIndex;
+                break;
+        }
+    }
+
+    private void SelectVehicleAndOpenEntity(string vehicleId, string entityKind, string entityId)
+    {
+        if (string.IsNullOrWhiteSpace(vehicleId))
+        {
+            return;
+        }
+
+        if (!string.Equals(SelectedVehicle?.Id, vehicleId, StringComparison.Ordinal))
+        {
+            SelectedVehicle = Vehicles.FirstOrDefault(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal));
+        }
+
+        switch (entityKind)
+        {
+            case "Historie":
+                SelectedVehicleTabIndex = HistoryTabIndex;
+                SelectedHistory = FindById(SelectedVehicleHistory, item => item.Id, entityId);
+                break;
+
+            case "Tankování":
+                SelectedVehicleTabIndex = FuelTabIndex;
+                SelectedFuel = FindById(SelectedVehicleFuel, item => item.Id, entityId);
+                break;
+
+            case "Doklad":
+                SelectedVehicleTabIndex = RecordTabIndex;
+                SelectedRecord = FindById(SelectedVehicleRecords, item => item.Id, entityId);
+                break;
+
+            case "Údržba":
+                SelectedVehicleTabIndex = MaintenanceTabIndex;
+                SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, entityId);
+                break;
+
+            case "Připomínka":
+                SelectedVehicleTabIndex = ReminderTabIndex;
+                SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, entityId);
+                break;
+
+            case "Vozidlo":
+            default:
+                SelectedVehicleTabIndex = DetailTabIndex;
+                break;
+        }
     }
 
     private bool MatchesTimelineFilter(VehicleTimelineItem item)

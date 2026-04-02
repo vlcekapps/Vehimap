@@ -30,6 +30,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych legacy dat
 - vyexportovat budouci terminy do `.ics` primo z nove C# vetve
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu
+- pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
 
 ## Lokalni build
 
