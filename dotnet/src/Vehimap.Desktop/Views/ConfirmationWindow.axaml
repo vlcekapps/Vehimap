@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.ConfirmationWindow"
+        x:DataType="vm:ConfirmationDialogViewModel"
+        Width="560"
+        Height="280"
+        MinWidth="520"
+        MinHeight="240"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding Title}">
+  <Grid Margin="20" RowDefinitions="Auto,*,Auto">
+    <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
+    <TextBlock Grid.Row="1"
+               Margin="0,16,0,0"
+               Text="{Binding Message}"
+               TextWrapping="Wrap" />
+    <StackPanel Grid.Row="2"
+                Margin="0,18,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="10">
+      <Button x:Name="ConfirmButton"
+              MinWidth="140"
+              Click="OnConfirmClick"
+              Content="{Binding ConfirmLabel}" />
+      <Button MinWidth="120"
+              Click="OnCancelClick"
+              Content="{Binding CancelLabel}" />
+    </StackPanel>
+  </Grid>
+</Window>

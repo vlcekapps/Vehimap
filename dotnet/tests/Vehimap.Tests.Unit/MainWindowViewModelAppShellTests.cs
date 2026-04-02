@@ -56,7 +56,69 @@ public sealed class MainWindowViewModelAppShellTests
         Assert.Equal("1", dataStore.CurrentDataSet.Settings.GetValue("app", "hide_on_launch"));
     }
 
-    private static MainWindowViewModel CreateViewModel(VehimapDataRoot dataRoot, StubLegacyDataStore dataStore)
+    [Fact]
+    public async Task Export_backup_uses_backup_service_and_reports_status()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var backupService = new StubBackupService();
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet), backupService: backupService);
+
+        var status = await viewModel.ExportBackupAsync(@"C:\backups\vehimap.vehimapbak");
+
+        Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.ExportedPath);
+        Assert.Contains("Záloha byla uložena", status);
+        Assert.Equal(status, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Import_backup_restores_bundle_and_reports_status()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var importedData = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_9", "Božena", "Osobní vozidla", "Srazové", "Škoda 100", "2AB3456", "1973", "35", "", "09/2026", "", "10/2026")
+            ]
+        };
+        var dataStore = new StubLegacyDataStore(dataSet);
+        var backupService = new StubBackupService
+        {
+            ImportBundle = new VehimapBackupBundle(importedData, []),
+            RestoreCallback = bundle => dataStore.CurrentDataSet = bundle.Data
+        };
+        var viewModel = CreateViewModel(dataRoot, dataStore, backupService: backupService);
+
+        var status = await viewModel.ImportBackupAsync(@"C:\backups\vehimap.vehimapbak");
+
+        Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.ImportedPath);
+        Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.RestoredFromPath);
+        Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
+        Assert.Contains("Data byla obnovena ze zálohy", status);
+        Assert.Equal(status, viewModel.ShellStatus);
+    }
+
+    private static MainWindowViewModel CreateViewModel(
+        VehimapDataRoot dataRoot,
+        StubLegacyDataStore dataStore,
+        IBackupService? backupService = null)
     {
         var bootstrapper = new LegacyVehimapBootstrapper(new StubDataRootLocator(dataRoot), dataStore);
         return new MainWindowViewModel(
@@ -69,6 +131,8 @@ public sealed class MainWindowViewModelAppShellTests
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
             new StubTextFileSaveService(),
+            backupService ?? new StubBackupService(),
+            new StubFileDialogService(),
             new DesktopSupportedSettingsService(),
             new StubBuildInfoProvider());
     }
@@ -92,7 +156,7 @@ public sealed class MainWindowViewModelAppShellTests
             CurrentDataSet = dataSet;
         }
 
-        public VehimapDataSet CurrentDataSet { get; private set; }
+        public VehimapDataSet CurrentDataSet { get; set; }
 
         public Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
             => Task.FromResult(CurrentDataSet);
@@ -123,6 +187,15 @@ public sealed class MainWindowViewModelAppShellTests
             => Task.FromResult<string?>(null);
     }
 
+    private sealed class StubFileDialogService : IFileDialogService
+    {
+        public Task<string?> PickOpenFileAsync(string title, string fileTypeName, string defaultExtension, CancellationToken cancellationToken = default)
+            => Task.FromResult<string?>(null);
+
+        public Task<string?> PickSaveFileAsync(string title, string suggestedFileName, string fileTypeName, string defaultExtension, CancellationToken cancellationToken = default)
+            => Task.FromResult<string?>(null);
+    }
+
     private sealed class StubBuildInfoProvider : IAppBuildInfoProvider
     {
         public AppBuildInfo GetCurrent() => new(
@@ -137,5 +210,33 @@ public sealed class MainWindowViewModelAppShellTests
             "https://example.com/release",
             @"C:\vehimap\Vehimap.Updater.exe",
             false);
+    }
+
+    private sealed class StubBackupService : IBackupService
+    {
+        public string? ExportedPath { get; private set; }
+        public string? ImportedPath { get; private set; }
+        public string? RestoredFromPath { get; private set; }
+        public VehimapBackupBundle ImportBundle { get; set; } = new(new VehimapDataSet(), []);
+        public Action<VehimapBackupBundle>? RestoreCallback { get; set; }
+
+        public Task ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
+        {
+            ExportedPath = backupPath;
+            return Task.CompletedTask;
+        }
+
+        public Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
+        {
+            ImportedPath = backupPath;
+            return Task.FromResult(ImportBundle);
+        }
+
+        public Task RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
+        {
+            RestoredFromPath = ImportedPath;
+            RestoreCallback?.Invoke(backupBundle);
+            return Task.CompletedTask;
+        }
     }
 }

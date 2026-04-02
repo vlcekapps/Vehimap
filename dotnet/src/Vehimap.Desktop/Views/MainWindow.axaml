@@ -31,6 +31,16 @@
                   Spacing="10"
                   HorizontalAlignment="Right"
                   VerticalAlignment="Center">
+        <Button Width="135"
+                Height="34"
+                Click="OnBackupExportClick"
+                Content="Export dat"
+                AutomationProperties.Name="Exportovat data aplikace do zálohy" />
+        <Button Width="135"
+                Height="34"
+                Click="OnBackupImportClick"
+                Content="Obnovit data"
+                AutomationProperties.Name="Obnovit data aplikace ze zálohy" />
         <Button Width="110"
                 Height="34"
                 Click="OnSettingsClick"
@@ -62,12 +72,13 @@
     <Grid Grid.Row="1"
           Margin="0,18,0,0"
           ColumnDefinitions="180,*"
-          RowDefinitions="Auto,Auto,Auto">
+          RowDefinitions="Auto,Auto,Auto,Auto">
       <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="SemiBold" Text="Režim dat" />
       <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DataMode}" />
       <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" Text="Datová složka" />
       <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataPath}" TextWrapping="Wrap" />
       <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Foreground="IndianRed" Text="{Binding LoadError}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="0,8,0,0" Text="{Binding ShellStatus}" TextWrapping="Wrap" />
     </Grid>
 
     <Grid Grid.Row="2"

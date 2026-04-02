@@ -1,12 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.VisualTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Vehimap.Application.Models;
-using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Services;
+using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.Views;
 
@@ -284,6 +283,57 @@ public partial class MainWindow : Window
         }
 
         await _viewModel.SaveSupportedSettingsAsync(result);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private async void OnBackupExportClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        var backupPath = await _viewModel.PickBackupExportPathAsync();
+        if (string.IsNullOrWhiteSpace(backupPath))
+        {
+            RequestFocus(DesktopFocusTarget.VehicleList);
+            return;
+        }
+
+        await _viewModel.ExportBackupAsync(backupPath);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private async void OnBackupImportClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        var backupPath = await _viewModel.PickBackupImportPathAsync();
+        if (string.IsNullOrWhiteSpace(backupPath))
+        {
+            RequestFocus(DesktopFocusTarget.VehicleList);
+            return;
+        }
+
+        var confirmation = new ConfirmationWindow
+        {
+            DataContext = new ConfirmationDialogViewModel(
+                "Obnovit data ze zálohy",
+                $"Opravdu chcete nahradit aktuální načtená data obsahem zálohy?\n\n{backupPath}\n\nTento krok přepíše aktuální pracovní data v desktopové větvi.",
+                "Obnovit data",
+                "Zrušit")
+        };
+        var confirmed = await confirmation.ShowDialog<bool>(this);
+        if (!confirmed)
+        {
+            RequestFocus(DesktopFocusTarget.VehicleList);
+            return;
+        }
+
+        await _viewModel.ImportBackupAsync(backupPath);
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 

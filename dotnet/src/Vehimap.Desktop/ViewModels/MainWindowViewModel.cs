@@ -38,6 +38,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly ITimelineService _timelineService;
     private readonly ICalendarExportService _calendarExportService;
     private readonly ITextFileSaveService _fileSaveService;
+    private readonly IBackupService _backupService;
+    private readonly IFileDialogService _fileDialogService;
     private readonly DesktopSupportedSettingsService _supportedSettingsService;
     private readonly IAppBuildInfoProvider _appBuildInfoProvider;
     private readonly IUpdateService _updateService;
@@ -161,6 +163,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string exportStatus = "Kalendářový export zatím nebyl spuštěn.";
 
     [ObservableProperty]
+    private string shellStatus = "Desktopová větev je připravená.";
+
+    [ObservableProperty]
     private string dashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
 
     [ObservableProperty]
@@ -269,6 +274,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
             new AvaloniaTextFileSaveService(),
+            new LegacyBackupService(),
+            new AvaloniaFileDialogService(),
             new DesktopSupportedSettingsService(),
             new AssemblyAppBuildInfoProvider())
     {
@@ -284,6 +291,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         ITimelineService timelineService,
         ICalendarExportService calendarExportService,
         ITextFileSaveService fileSaveService,
+        IBackupService? backupService = null,
+        IFileDialogService? fileDialogService = null,
         DesktopSupportedSettingsService? supportedSettingsService = null,
         IAppBuildInfoProvider? appBuildInfoProvider = null,
         IUpdateService? updateService = null)
@@ -299,6 +308,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _timelineService = timelineService;
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
+        _backupService = backupService ?? new LegacyBackupService();
+        _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
         _supportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
         _appBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider();
         _updateService = updateService ?? new LegacyUpdateService(_appBuildInfoProvider);
