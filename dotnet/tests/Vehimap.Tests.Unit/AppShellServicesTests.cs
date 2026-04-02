@@ -162,7 +162,7 @@ public sealed class AppShellServicesTests : IDisposable
                 Path.Combine(_tempRoot, "Vehimap.Desktop.exe"),
                 "Windows",
                 ".NET 10",
-                "https://raw.githubusercontent.com/vlcekapps/Vehimap/main/update/latest-dotnet-preview-win-x64.ini",
+                "https://raw.githubusercontent.com/vlcekapps/Vehimap/main/update/latest-dotnet-preview-missing-test-rid.ini",
                 "https://github.com/vlcekapps/Vehimap/releases",
                 Path.Combine(_tempRoot, "Vehimap.Updater.exe"),
                 true));
