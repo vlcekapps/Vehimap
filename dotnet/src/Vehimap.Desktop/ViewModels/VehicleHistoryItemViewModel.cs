@@ -6,4 +6,10 @@ public sealed record VehicleHistoryItemViewModel(
     string EventType,
     string Odometer,
     string Cost,
-    string Note);
+    string Note)
+{
+    public string AccessibleLabel =>
+        $"{Date}, {EventType}, tachometr {Odometer}, cena {Cost}, poznámka {Note}";
+
+    public override string ToString() => AccessibleLabel;
+}

@@ -12,4 +12,10 @@ public sealed record VehicleRecordItemViewModel(
     string StoredPath,
     string ResolvedPath,
     bool FileExists,
-    string Note);
+    string Note)
+{
+    public string AccessibleLabel =>
+        $"{Title}, {RecordType}, platnost {Validity}, režim {AttachmentMode}, stav přílohy {AttachmentState}, poznámka {Note}";
+
+    public override string ToString() => AccessibleLabel;
+}

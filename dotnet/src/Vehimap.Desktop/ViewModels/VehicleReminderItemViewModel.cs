@@ -6,4 +6,10 @@ public sealed record VehicleReminderItemViewModel(
     string DueDate,
     string Status,
     string RepeatMode,
-    string Note);
+    string Note)
+{
+    public string AccessibleLabel =>
+        $"{Title}, termín {DueDate}, stav {Status}, opakování {RepeatMode}, poznámka {Note}";
+
+    public override string ToString() => AccessibleLabel;
+}

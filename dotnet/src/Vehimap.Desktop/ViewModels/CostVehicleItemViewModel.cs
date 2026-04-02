@@ -7,4 +7,10 @@ public sealed record CostVehicleItemViewModel(
     string TotalCost,
     string Distance,
     string CostPerKm,
-    string Status);
+    string Status)
+{
+    public string AccessibleLabel =>
+        $"{VehicleName}, {Category}, náklady {TotalCost}, ujeto {Distance}, cena za kilometr {CostPerKm}, stav {Status}";
+
+    public override string ToString() => AccessibleLabel;
+}

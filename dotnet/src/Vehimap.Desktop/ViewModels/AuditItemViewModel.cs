@@ -8,4 +8,10 @@ public sealed record AuditItemViewModel(
     string Category,
     string VehicleName,
     string Title,
-    string Message);
+    string Message)
+{
+    public string AccessibleLabel =>
+        $"{Severity}, {VehicleName}, {Title}, {Category}, {Message}";
+
+    public override string ToString() => AccessibleLabel;
+}

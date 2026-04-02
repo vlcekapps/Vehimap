@@ -11,4 +11,10 @@ public sealed record VehicleTimelineItemViewModel(
     string VehicleId,
     string EntryId,
     bool IsFuture,
-    string Note);
+    string Note)
+{
+    public string AccessibleLabel =>
+        $"{VehicleName}, {Date}, {KindLabel}, {Title}, stav {Status}, detail {Detail}";
+
+    public override string ToString() => AccessibleLabel;
+}

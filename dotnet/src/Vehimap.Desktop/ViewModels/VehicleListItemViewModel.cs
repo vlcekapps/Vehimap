@@ -11,4 +11,12 @@ public sealed record VehicleListItemViewModel(
     string GreenCardTo,
     string State,
     string Powertrain,
-    string StatusSummary);
+    string StatusSummary)
+{
+    public string AccessibleLabel =>
+        $"{Name}, {MakeModel}, {Category}, SPZ {Plate}, stav {StateOrFallback}, {StatusSummary}";
+
+    private string StateOrFallback => string.IsNullOrWhiteSpace(State) ? "bez stavu" : State;
+
+    public override string ToString() => AccessibleLabel;
+}
