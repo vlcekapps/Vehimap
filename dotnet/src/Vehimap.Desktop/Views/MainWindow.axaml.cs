@@ -1,16 +1,29 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.Views;
 
 public partial class MainWindow : Window
 {
+    private static readonly string[] TabHeaderButtonNames =
+    [
+        "DetailTabButton",
+        "HistoryTabButton",
+        "FuelTabButton",
+        "ReminderTabButton",
+        "MaintenanceTabButton",
+        "TimelineTabButton",
+        "RecordTabButton",
+        "AuditTabButton",
+        "CostTabButton",
+        "DashboardTabButton"
+    ];
+
     private MainWindowViewModel? _viewModel;
     private bool _initialFocusCompleted;
     private bool _initialFocusScheduled;
@@ -102,6 +115,7 @@ public partial class MainWindow : Window
     private void RegisterTabBoundaryNavigation()
     {
         RegisterForwardTabToHeaders("VehicleListBox");
+        RegisterTabHeaderNavigation();
         RegisterShiftTabBackNavigation("HistoryListBox");
         RegisterShiftTabBackNavigation("FuelListBox");
         RegisterShiftTabBackNavigation("ReminderListBox");
@@ -115,6 +129,17 @@ public partial class MainWindow : Window
         RegisterShiftTabBackNavigation("DashboardAuditOpenButton");
         RegisterShiftTabBackNavigation("DashboardCostOpenButton");
         RegisterShiftTabBackNavigation("DashboardTimelineOpenButton");
+    }
+
+    private void RegisterTabHeaderNavigation()
+    {
+        foreach (var controlName in TabHeaderButtonNames)
+        {
+            if (this.FindControl<Button>(controlName) is { } button)
+            {
+                button.AddHandler(InputElement.KeyDownEvent, OnTabHeaderKeyDown, RoutingStrategies.Tunnel);
+            }
+        }
     }
 
     private void RegisterForwardTabToHeaders(string controlName)
@@ -153,6 +178,37 @@ public partial class MainWindow : Window
         e.Handled = FocusSelectedTabHeader();
     }
 
+    private void OnTabHeaderKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (sender is not Control source)
+        {
+            return;
+        }
+
+        var currentIndex = Array.IndexOf(TabHeaderButtonNames, source.Name);
+        if (currentIndex < 0)
+        {
+            return;
+        }
+
+        var nextIndex = e.Key switch
+        {
+            Key.Left => Math.Max(0, currentIndex - 1),
+            Key.Right => Math.Min(TabHeaderButtonNames.Length - 1, currentIndex + 1),
+            Key.Home => 0,
+            Key.End => TabHeaderButtonNames.Length - 1,
+            _ => -1
+        };
+
+        if (nextIndex < 0 || nextIndex == currentIndex)
+        {
+            return;
+        }
+
+        _viewModel?.SelectVehicleTabCommand.Execute(nextIndex);
+        e.Handled = FocusSelectedTabHeader();
+    }
+
     private static bool FocusListBox(ListBox listBox)
     {
         if (listBox.ItemCount <= 0)
@@ -179,32 +235,25 @@ public partial class MainWindow : Window
 
     private bool FocusSelectedTabHeader()
     {
-        if (this.FindControl<TabControl>("VehicleTabControl") is not { } tabControl)
+        if (_viewModel is null)
         {
             return false;
         }
 
-        var selectedIndex = tabControl.SelectedIndex;
-        if (selectedIndex < 0)
+        var selectedIndex = _viewModel.SelectedVehicleTabIndex;
+        if (selectedIndex < 0 || selectedIndex >= TabHeaderButtonNames.Length)
         {
             selectedIndex = 0;
         }
 
-        if (tabControl.FindDescendantOfType<TabStrip>() is { } tabStrip
-            && tabStrip.ContainerFromIndex(selectedIndex) is Control selectedTabHeader)
+        var selectedButton = this.FindControl<Button>(TabHeaderButtonNames[selectedIndex]);
+        if (selectedButton is not null)
         {
-            return selectedTabHeader.Focus(NavigationMethod.Tab, KeyModifiers.Shift)
-                || selectedTabHeader.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+            return selectedButton.Focus(NavigationMethod.Tab, KeyModifiers.None)
+                || selectedButton.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
         }
 
-        if (tabControl.ContainerFromIndex(selectedIndex) is Control selectedTab)
-        {
-            return selectedTab.Focus(NavigationMethod.Tab, KeyModifiers.Shift)
-                || selectedTab.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
-        }
-
-        return tabControl.Focus(NavigationMethod.Tab, KeyModifiers.Shift)
-            || tabControl.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+        return false;
     }
 
     private Control? ResolveFocusTarget(DesktopFocusTarget target)

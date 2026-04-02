@@ -71,5 +71,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.Name=\"Seznam načtených vozidel\"", xaml);
         Assert.Contains("AutomationProperties.HelpText=\"Multiplatformní preview Vehimapu. Po otevření je fokus v seznamu vozidel vlevo.\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", xaml);
+        Assert.Contains("x:Name=\"DashboardTabButton\"", xaml);
+        Assert.Contains("IsTabStop=\"{Binding IsDashboardTabSelected}\"", xaml);
+        Assert.Contains("Classes=\"headerless\"", xaml);
     }
 }

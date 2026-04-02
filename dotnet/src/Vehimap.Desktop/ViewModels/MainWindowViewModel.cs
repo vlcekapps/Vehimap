@@ -207,6 +207,26 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool CanOpenSelectedDashboardTimelineItem => SelectedDashboardTimelineItem is not null;
 
+    public bool IsDetailTabSelected => SelectedVehicleTabIndex == DetailTabIndex;
+
+    public bool IsHistoryTabSelected => SelectedVehicleTabIndex == HistoryTabIndex;
+
+    public bool IsFuelTabSelected => SelectedVehicleTabIndex == FuelTabIndex;
+
+    public bool IsReminderTabSelected => SelectedVehicleTabIndex == ReminderTabIndex;
+
+    public bool IsMaintenanceTabSelected => SelectedVehicleTabIndex == MaintenanceTabIndex;
+
+    public bool IsTimelineTabSelected => SelectedVehicleTabIndex == TimelineTabIndex;
+
+    public bool IsRecordTabSelected => SelectedVehicleTabIndex == RecordTabIndex;
+
+    public bool IsAuditTabSelected => SelectedVehicleTabIndex == 7;
+
+    public bool IsCostTabSelected => SelectedVehicleTabIndex == 8;
+
+    public bool IsDashboardTabSelected => SelectedVehicleTabIndex == 9;
+
     public MainWindowViewModel()
         : this(
             new LegacyVehimapBootstrapper(new LegacyDataRootLocator(), new LegacyVehimapDataStore()),
@@ -242,6 +262,20 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool CanOpenSelectedRecordFolder =>
         SelectedRecord is not null
         && !string.IsNullOrWhiteSpace(GetSelectedRecordFolderPath());
+
+    partial void OnSelectedVehicleTabIndexChanged(int value)
+    {
+        OnPropertyChanged(nameof(IsDetailTabSelected));
+        OnPropertyChanged(nameof(IsHistoryTabSelected));
+        OnPropertyChanged(nameof(IsFuelTabSelected));
+        OnPropertyChanged(nameof(IsReminderTabSelected));
+        OnPropertyChanged(nameof(IsMaintenanceTabSelected));
+        OnPropertyChanged(nameof(IsTimelineTabSelected));
+        OnPropertyChanged(nameof(IsRecordTabSelected));
+        OnPropertyChanged(nameof(IsAuditTabSelected));
+        OnPropertyChanged(nameof(IsCostTabSelected));
+        OnPropertyChanged(nameof(IsDashboardTabSelected));
+    }
 
     partial void OnSelectedVehicleChanged(VehicleListItemViewModel? value)
     {
@@ -378,6 +412,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         SelectedVehicleTabIndex = TimelineTabIndex;
         RequestFocus(DesktopFocusTarget.TimelineSearch);
+    }
+
+    [RelayCommand]
+    private void SelectVehicleTab(int tabIndex)
+    {
+        if (tabIndex < DetailTabIndex || tabIndex > 9)
+        {
+            return;
+        }
+
+        SelectedVehicleTabIndex = tabIndex;
     }
 
     [RelayCommand]

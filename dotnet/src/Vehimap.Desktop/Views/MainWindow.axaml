@@ -136,10 +136,105 @@
       </Border>
 
       <Border Grid.Column="1" Margin="16,0,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
-        <TabControl x:Name="VehicleTabControl"
-                    SelectedIndex="{Binding SelectedVehicleTabIndex}"
-                    AutomationProperties.Name="Hlavní pracovní karty vybraného vozidla"
-                    AutomationProperties.HelpText="Karty Detail, Historie, Tankování, Připomínky, Údržba, Časová osa, Doklady, Audit, Náklady a Dashboard.">
+        <Grid RowDefinitions="Auto,*">
+          <Grid RowDefinitions="Auto,Auto">
+            <TextBlock FontWeight="SemiBold"
+                       Text="Hlavní pracovní karty vybraného vozidla" />
+            <WrapPanel Grid.Row="1"
+                       Margin="0,12,0,0"
+                       AutomationProperties.Name="Hlavní pracovní karty vybraného vozidla"
+                       AutomationProperties.HelpText="Tabem přejdete na právě vybranou kartu. Šipkami vlevo a vpravo můžete změnit kartu.">
+              <Button x:Name="DetailTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsDetailTabSelected}"
+                      IsTabStop="{Binding IsDetailTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="0"
+                      Content="Detail"
+                      AutomationProperties.Name="Karta Detail" />
+              <Button x:Name="HistoryTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsHistoryTabSelected}"
+                      IsTabStop="{Binding IsHistoryTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="1"
+                      Content="Historie"
+                      AutomationProperties.Name="Karta Historie" />
+              <Button x:Name="FuelTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsFuelTabSelected}"
+                      IsTabStop="{Binding IsFuelTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="2"
+                      Content="Tankování"
+                      AutomationProperties.Name="Karta Tankování" />
+              <Button x:Name="ReminderTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsReminderTabSelected}"
+                      IsTabStop="{Binding IsReminderTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="3"
+                      Content="Připomínky"
+                      AutomationProperties.Name="Karta Připomínky" />
+              <Button x:Name="MaintenanceTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsMaintenanceTabSelected}"
+                      IsTabStop="{Binding IsMaintenanceTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="4"
+                      Content="Údržba"
+                      AutomationProperties.Name="Karta Údržba" />
+              <Button x:Name="TimelineTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsTimelineTabSelected}"
+                      IsTabStop="{Binding IsTimelineTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="5"
+                      Content="Časová osa"
+                      AutomationProperties.Name="Karta Časová osa" />
+              <Button x:Name="RecordTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsRecordTabSelected}"
+                      IsTabStop="{Binding IsRecordTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="6"
+                      Content="Doklady"
+                      AutomationProperties.Name="Karta Doklady" />
+              <Button x:Name="AuditTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsAuditTabSelected}"
+                      IsTabStop="{Binding IsAuditTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="7"
+                      Content="Audit"
+                      AutomationProperties.Name="Karta Audit" />
+              <Button x:Name="CostTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsCostTabSelected}"
+                      IsTabStop="{Binding IsCostTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="8"
+                      Content="Náklady"
+                      AutomationProperties.Name="Karta Náklady" />
+              <Button x:Name="DashboardTabButton"
+                      Classes="tab-header"
+                      Classes.selected="{Binding IsDashboardTabSelected}"
+                      IsTabStop="{Binding IsDashboardTabSelected}"
+                      Command="{Binding SelectVehicleTabCommand}"
+                      CommandParameter="9"
+                      Content="Dashboard"
+                      AutomationProperties.Name="Karta Dashboard" />
+            </WrapPanel>
+          </Grid>
+
+          <TabControl x:Name="VehicleTabControl"
+                      Grid.Row="1"
+                      Margin="0,16,0,0"
+                      Classes="headerless"
+                      IsTabStop="False"
+                      SelectedIndex="{Binding SelectedVehicleTabIndex}"
+                      AutomationProperties.Name="Obsah vybrané hlavní pracovní karty"
+                      AutomationProperties.HelpText="Obsah se mění podle zvolené karty nahoře.">
           <TabItem Header="Detail">
             <Grid Margin="0,8,0,0" RowDefinitions="Auto,Auto,Auto,*">
               <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
@@ -637,7 +732,8 @@
               </Border>
             </Grid>
           </TabItem>
-        </TabControl>
+          </TabControl>
+        </Grid>
       </Border>
     </Grid>
 
