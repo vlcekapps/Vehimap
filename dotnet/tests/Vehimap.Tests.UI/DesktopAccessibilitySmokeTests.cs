@@ -70,4 +70,51 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("CloseDashboardWindowButton");
         }
     }
+
+    [Fact]
+    public void Reminder_editor_exposes_accessible_names_and_can_save_new_item_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("ReminderTabButton");
+            session.ClickByAccessibilityId("CreateReminderButton");
+
+            Assert.Equal("Název připomínky", session.GetNameByAccessibilityId("ReminderEditorTitleBox"));
+            Assert.Equal("Termín připomínky", session.GetNameByAccessibilityId("ReminderEditorDueDateBox"));
+
+            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Appium připomínka");
+            session.SendKeysByAccessibilityId("ReminderEditorDueDateBox", "12/2026");
+            session.ClickByAccessibilityId("SaveReminderButton");
+            session.WaitForElementToDisappearByAccessibilityId("SaveReminderButton");
+        }
+    }
+
+    [Fact]
+    public void Record_editor_exposes_accessible_names_and_can_save_new_item_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("RecordTabButton");
+            session.ClickByAccessibilityId("CreateRecordButton");
+
+            Assert.Equal("Název dokladu", session.GetNameByAccessibilityId("RecordEditorTitleBox"));
+            Assert.Equal("Režim přílohy dokladu", session.GetNameByAccessibilityId("RecordAttachmentModeComboBox"));
+
+            session.SendKeysByAccessibilityId("RecordEditorTitleBox", "Appium doklad");
+            session.ClickByAccessibilityId("SaveRecordButton");
+            session.WaitForElementToDisappearByAccessibilityId("SaveRecordButton");
+        }
+    }
 }

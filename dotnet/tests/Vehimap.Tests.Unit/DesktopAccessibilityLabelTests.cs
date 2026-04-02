@@ -152,5 +152,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.Name=\"Termín připomínky\"", reminderXaml);
         Assert.Contains("AutomationProperties.Name=\"Název vozidla\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.Name=\"Kategorie vozidla\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CreateReminderButton\"", reminderXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReminderEditorTitleBox\"", reminderXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CreateRecordButton\"", recordXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"RecordEditorTitleBox\"", recordXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"RecordAttachmentModeComboBox\"", recordXaml);
     }
 }

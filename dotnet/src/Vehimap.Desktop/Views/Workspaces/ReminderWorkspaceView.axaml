@@ -33,30 +33,30 @@
       <Grid RowDefinitions="Auto,Auto,Auto,*">
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding ReminderPanelHeading}" />
         <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
-          <Button Command="{Binding CreateReminderCommand}" Content="Nová" AutomationProperties.Name="Vytvořit novou připomínku" />
-          <Button Command="{Binding EditSelectedReminderCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybranou připomínku" />
-          <Button Command="{Binding DeleteSelectedReminderCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybranou připomínku" />
-          <Button Command="{Binding SaveReminderCommand}" Content="Uložit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Uložit připomínku" />
-          <Button Command="{Binding CancelReminderEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Zrušit úpravu připomínky" />
+          <Button Command="{Binding CreateReminderCommand}" Content="Nová" AutomationProperties.Name="Vytvořit novou připomínku" AutomationProperties.AutomationId="CreateReminderButton" />
+          <Button Command="{Binding EditSelectedReminderCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybranou připomínku" AutomationProperties.AutomationId="EditReminderButton" />
+          <Button Command="{Binding DeleteSelectedReminderCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybranou připomínku" AutomationProperties.AutomationId="DeleteReminderButton" />
+          <Button Command="{Binding SaveReminderCommand}" Content="Uložit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Uložit připomínku" AutomationProperties.AutomationId="SaveReminderButton" />
+          <Button Command="{Binding CancelReminderEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Zrušit úpravu připomínky" AutomationProperties.AutomationId="CancelReminderButton" />
         </WrapPanel>
         <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding ReminderEditorStatus}" TextWrapping="Wrap" />
         <Grid Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsEditingReminder}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
           <TextBlock FontWeight="SemiBold" Text="Název připomínky" />
-          <TextBox x:Name="ReminderEditorTitleBox" Grid.Row="1" Margin="0,6,0,0" Text="{Binding ReminderEditorTitle}" PlaceholderText="Například objednat servis" AutomationProperties.Name="Název připomínky" />
+          <TextBox x:Name="ReminderEditorTitleBox" Grid.Row="1" Margin="0,6,0,0" Text="{Binding ReminderEditorTitle}" PlaceholderText="Například objednat servis" AutomationProperties.Name="Název připomínky" AutomationProperties.AutomationId="ReminderEditorTitleBox" />
           <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="*,140">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Termín" />
-              <TextBox Text="{Binding ReminderEditorDueDate}" PlaceholderText="Například 15.06.2026 nebo 06/2026" AutomationProperties.Name="Termín připomínky" />
+              <TextBox Text="{Binding ReminderEditorDueDate}" PlaceholderText="Například 15.06.2026 nebo 06/2026" AutomationProperties.Name="Termín připomínky" AutomationProperties.AutomationId="ReminderEditorDueDateBox" />
             </StackPanel>
             <StackPanel Grid.Column="1" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Předstih dnů" />
-              <TextBox Text="{Binding ReminderEditorDays}" PlaceholderText="Například 30" AutomationProperties.Name="Předstih připomínky ve dnech" />
+              <TextBox Text="{Binding ReminderEditorDays}" PlaceholderText="Například 30" AutomationProperties.Name="Předstih připomínky ve dnech" AutomationProperties.AutomationId="ReminderEditorDaysBox" />
             </StackPanel>
           </Grid>
           <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="Opakování" />
-          <TextBox Grid.Row="4" Margin="0,6,0,0" Text="{Binding ReminderEditorRepeatMode}" PlaceholderText="Například Ročně nebo bez opakování" AutomationProperties.Name="Opakování připomínky" />
+          <TextBox Grid.Row="4" Margin="0,6,0,0" Text="{Binding ReminderEditorRepeatMode}" PlaceholderText="Například Ročně nebo bez opakování" AutomationProperties.Name="Opakování připomínky" AutomationProperties.AutomationId="ReminderEditorRepeatModeBox" />
           <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
-          <TextBox Grid.Row="6" Margin="0,6,0,0" Height="120" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding ReminderEditorNote}" AutomationProperties.Name="Poznámka k připomínce" />
+          <TextBox Grid.Row="6" Margin="0,6,0,0" Height="120" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding ReminderEditorNote}" AutomationProperties.Name="Poznámka k připomínce" AutomationProperties.AutomationId="ReminderEditorNoteBox" />
         </Grid>
         <TextBlock Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsReminderDetailVisible}" Text="{Binding SelectedReminderDetail}" TextWrapping="Wrap" />
       </Grid>

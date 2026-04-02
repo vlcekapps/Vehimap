@@ -58,6 +58,30 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         WaitForElementByAccessibilityId(automationId, timeoutSeconds).Click();
     }
 
+    public IWebElement WaitForElementByName(string name, int timeoutSeconds = 12)
+    {
+        return WaitUntil(
+            () => _driver.FindElement(By.Name(name)),
+            timeoutSeconds);
+    }
+
+    public string GetNameByAccessibilityId(string automationId, int timeoutSeconds = 12)
+    {
+        return WaitForElementByAccessibilityId(automationId, timeoutSeconds).GetAttribute("Name") ?? string.Empty;
+    }
+
+    public void SendKeysByAccessibilityId(string automationId, string text, int timeoutSeconds = 12)
+    {
+        WaitForElementByAccessibilityId(automationId, timeoutSeconds).SendKeys(text);
+    }
+
+    public void WaitForElementToDisappearByAccessibilityId(string automationId, int timeoutSeconds = 12)
+    {
+        WaitUntilMissing(
+            () => _driver.FindElements(MobileBy.AccessibilityId(automationId)).Any(element => element.Displayed),
+            timeoutSeconds);
+    }
+
     public void Dispose()
     {
         try
@@ -93,5 +117,29 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         }
 
         throw new TimeoutException("Požadovaný UI prvek se v Appium session neobjevil.", lastError);
+    }
+
+    private static void WaitUntilMissing(Func<bool> predicate, int timeoutSeconds)
+    {
+        var timeoutAt = DateTime.UtcNow.AddSeconds(timeoutSeconds);
+
+        while (DateTime.UtcNow < timeoutAt)
+        {
+            try
+            {
+                if (!predicate())
+                {
+                    return;
+                }
+            }
+            catch (Exception ex) when (ex is WebDriverException or InvalidOperationException)
+            {
+                return;
+            }
+
+            Thread.Sleep(250);
+        }
+
+        throw new TimeoutException("Požadovaný UI prvek nezmizel ve stanoveném čase.");
     }
 }
