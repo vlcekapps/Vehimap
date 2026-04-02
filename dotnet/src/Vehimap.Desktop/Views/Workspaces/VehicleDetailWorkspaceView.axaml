@@ -14,20 +14,24 @@
                Margin="0,14,0,0"
                ItemWidth="126"
                ItemHeight="34">
-      <Button Command="{Binding CreateVehicleCommand}"
+      <Button x:Name="CreateVehicleButton"
+              Command="{Binding CreateVehicleCommand}"
               Content="Nové vozidlo"
               AutomationProperties.Name="Vytvořit nové vozidlo"
               AutomationProperties.AutomationId="CreateVehicleButton" />
-      <Button Command="{Binding EditSelectedVehicleCommand}"
+      <Button x:Name="EditVehicleButton"
+              Command="{Binding EditSelectedVehicleCommand}"
               Content="Upravit"
               AutomationProperties.Name="Upravit vybrané vozidlo"
               AutomationProperties.AutomationId="EditVehicleButton" />
-      <Button Command="{Binding SaveVehicleCommand}"
+      <Button x:Name="SaveVehicleButton"
+              Command="{Binding SaveVehicleCommand}"
               Content="Uložit"
               IsVisible="{Binding IsEditingVehicle}"
               AutomationProperties.Name="Uložit vozidlo"
               AutomationProperties.AutomationId="SaveVehicleButton" />
-      <Button Command="{Binding CancelVehicleEditCommand}"
+      <Button x:Name="CancelVehicleButton"
+              Command="{Binding CancelVehicleEditCommand}"
               Content="Zrušit"
               IsVisible="{Binding IsEditingVehicle}"
               AutomationProperties.Name="Zrušit úpravu vozidla"
@@ -48,10 +52,11 @@
         </StackPanel>
         <StackPanel Grid.Column="1" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Kategorie" />
-          <TextBox Text="{Binding VehicleEditorCategory}"
-                   PlaceholderText="Například Osobní vozidla"
-                   AutomationProperties.Name="Kategorie vozidla"
-                   AutomationProperties.AutomationId="VehicleEditorCategoryBox" />
+          <ComboBox x:Name="VehicleEditorCategoryBox"
+                    ItemsSource="{Binding VehicleCategoryOptions}"
+                    SelectedItem="{Binding VehicleEditorCategory}"
+                    AutomationProperties.Name="Kategorie vozidla"
+                    AutomationProperties.AutomationId="VehicleEditorCategoryBox" />
         </StackPanel>
       </Grid>
       <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="*,200">

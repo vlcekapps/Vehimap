@@ -5,6 +5,7 @@ public enum DesktopFocusTarget
     VehicleList,
     SelectedVehicleTabHeader,
     VehicleEditorName,
+    VehicleEditorCancel,
     HistoryList,
     HistoryEditorDate,
     FuelList,

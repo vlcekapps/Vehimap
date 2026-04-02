@@ -1,6 +1,6 @@
 namespace Vehimap.Storage.Legacy;
 
-internal static class LegacyKnownValues
+public static class LegacyKnownValues
 {
     public static readonly string[] Categories =
     [

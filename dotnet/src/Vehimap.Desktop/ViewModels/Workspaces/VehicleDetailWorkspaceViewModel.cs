@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -18,6 +19,7 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public bool IsEditingVehicle => Root.IsEditingVehicle;
     public bool IsVehicleDetailVisible => Root.IsVehicleDetailVisible;
     public string VehicleEditorStatus => Root.VehicleEditorStatus;
+    public IReadOnlyList<string> VehicleCategoryOptions => LegacyKnownValues.Categories;
 
     public string VehicleEditorName
     {
@@ -102,4 +104,3 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public ICommand SaveVehicleCommand => Root.SaveVehicleCommand;
     public ICommand CancelVehicleEditCommand => Root.CancelVehicleEditCommand;
 }
-

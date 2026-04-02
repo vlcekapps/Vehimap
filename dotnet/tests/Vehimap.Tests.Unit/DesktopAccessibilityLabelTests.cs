@@ -179,5 +179,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateVehicleButton\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorNameBox\"", vehicleDetailXaml);
+        Assert.Contains("x:Name=\"CancelVehicleButton\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding VehicleCategoryOptions}\"", vehicleDetailXaml);
+        Assert.Contains("<ComboBox x:Name=\"VehicleEditorCategoryBox\"", vehicleDetailXaml);
     }
 }

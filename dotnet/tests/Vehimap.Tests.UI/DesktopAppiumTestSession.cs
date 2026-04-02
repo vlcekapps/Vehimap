@@ -79,6 +79,11 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         WaitForElementByAccessibilityId(automationId, timeoutSeconds).SendKeys(text);
     }
 
+    public string GetFocusedAutomationId()
+    {
+        return _driver.SwitchTo().ActiveElement().GetAttribute("AutomationId") ?? string.Empty;
+    }
+
     public void WaitForElementToDisappearByAccessibilityId(string automationId, int timeoutSeconds = 12)
     {
         WaitUntilMissing(

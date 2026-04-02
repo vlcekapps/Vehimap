@@ -34,13 +34,19 @@ public abstract class WorkspaceViewBase<TViewModel> : UserControl
 
     protected abstract Control? ResolveFocusTarget(DesktopFocusTarget target);
 
-    protected void RegisterShiftTabBackNavigation(params string[] controlNames)
+    protected void RegisterShiftTabBackNavigation(params string[] controlNames) =>
+        RegisterShiftTabBackNavigation(DesktopFocusTarget.SelectedVehicleTabHeader, controlNames);
+
+    protected void RegisterShiftTabBackNavigation(DesktopFocusTarget target, params string[] controlNames)
     {
         foreach (var controlName in controlNames)
         {
             if (this.FindControl<Control>(controlName) is { } control)
             {
-                control.AddHandler(InputElement.KeyDownEvent, OnTabBoundaryKeyDown, RoutingStrategies.Tunnel);
+                control.AddHandler(
+                    InputElement.KeyDownEvent,
+                    (_, e) => OnTabBoundaryKeyDown(target, e),
+                    RoutingStrategies.Tunnel);
             }
         }
     }
@@ -86,14 +92,14 @@ public abstract class WorkspaceViewBase<TViewModel> : UserControl
         }
     }
 
-    private void OnTabBoundaryKeyDown(object? sender, KeyEventArgs e)
+    private void OnTabBoundaryKeyDown(DesktopFocusTarget target, KeyEventArgs e)
     {
         if (e.Key != Key.Tab || !e.KeyModifiers.HasFlag(KeyModifiers.Shift) || _viewModel is null)
         {
             return;
         }
 
-        _viewModel.RequestWorkspaceFocus(DesktopFocusTarget.SelectedVehicleTabHeader);
+        _viewModel.RequestWorkspaceFocus(target);
         e.Handled = true;
     }
 }

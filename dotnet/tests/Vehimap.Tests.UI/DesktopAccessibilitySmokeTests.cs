@@ -230,6 +230,26 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Vehicle_detail_editor_shift_tab_from_name_returns_focus_to_cancel_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("DetailTabButton");
+            session.ClickByAccessibilityId("CreateVehicleButton");
+            session.ClickByAccessibilityId("VehicleEditorNameBox");
+            session.SendKeysByAccessibilityId("VehicleEditorNameBox", Keys.Shift + Keys.Tab);
+
+            Assert.Equal("CancelVehicleButton", session.GetFocusedAutomationId());
+        }
+    }
+
+    [Fact]
     public void Global_search_can_open_matching_record_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

@@ -10,16 +10,20 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
     public VehicleDetailWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
-        RegisterShiftTabBackNavigation("VehicleEditorNameBox");
+        RegisterShiftTabBackNavigation(DesktopFocusTarget.VehicleEditorCancel, "VehicleEditorNameBox");
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
         ViewModel?.IsEditingVehicle == true ? DesktopFocusTarget.VehicleEditorName : null;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target == DesktopFocusTarget.VehicleEditorName;
+        target is DesktopFocusTarget.VehicleEditorName or DesktopFocusTarget.VehicleEditorCancel;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
-        target == DesktopFocusTarget.VehicleEditorName ? this.FindControl<TextBox>("VehicleEditorNameBox") : null;
+        target switch
+        {
+            DesktopFocusTarget.VehicleEditorName => this.FindControl<TextBox>("VehicleEditorNameBox"),
+            DesktopFocusTarget.VehicleEditorCancel => this.FindControl<Button>("CancelVehicleButton"),
+            _ => null
+        };
 }
-
