@@ -114,9 +114,11 @@ public sealed class MainWindowViewModelNavigationTests
             new StubLegacyDataStore(dataSet));
 
         return new MainWindowViewModel(
+            new StubLegacyDataStore(dataSet),
             bootstrapper,
             new ManagedAttachmentPathService(),
             new StubFileLauncher(),
+            new StubFilePickerService(),
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
@@ -161,6 +163,12 @@ public sealed class MainWindowViewModelNavigationTests
     private sealed class StubTextFileSaveService : ITextFileSaveService
     {
         public Task<string?> SaveTextAsync(string title, string suggestedFileName, string content, CancellationToken cancellationToken = default)
+            => Task.FromResult<string?>(null);
+    }
+
+    private sealed class StubFilePickerService : IFilePickerService
+    {
+        public Task<string?> PickFileAsync(string title, CancellationToken cancellationToken = default)
             => Task.FromResult<string?>(null);
     }
 }

@@ -120,11 +120,13 @@ public partial class MainWindow : Window
         RegisterShiftTabBackNavigation("HistoryListBox");
         RegisterShiftTabBackNavigation("FuelListBox");
         RegisterShiftTabBackNavigation("ReminderListBox");
+        RegisterShiftTabBackNavigation("ReminderEditorTitleBox");
         RegisterShiftTabBackNavigation("MaintenanceListBox");
         RegisterShiftTabBackNavigation("TimelineFilterComboBox");
         RegisterShiftTabBackNavigation("TimelineSearchBox");
         RegisterShiftTabBackNavigation("TimelineOpenButton");
         RegisterShiftTabBackNavigation("RecordListBox");
+        RegisterShiftTabBackNavigation("RecordEditorTitleBox");
         RegisterShiftTabBackNavigation("AuditListBox");
         RegisterShiftTabBackNavigation("CostListBox");
         RegisterShiftTabBackNavigation("DashboardAuditOpenButton");
@@ -288,12 +290,14 @@ public partial class MainWindow : Window
             DesktopFocusTarget.HistoryList => this.FindControl<ListBox>("HistoryListBox"),
             DesktopFocusTarget.FuelList => this.FindControl<ListBox>("FuelListBox"),
             DesktopFocusTarget.ReminderList => this.FindControl<ListBox>("ReminderListBox"),
+            DesktopFocusTarget.ReminderEditorTitle => this.FindControl<TextBox>("ReminderEditorTitleBox"),
             DesktopFocusTarget.MaintenanceList => this.FindControl<ListBox>("MaintenanceListBox"),
             DesktopFocusTarget.TimelineSearch => this.FindControl<TextBox>("TimelineSearchBox"),
             DesktopFocusTarget.TimelineList => this.FindControl<ListBox>("TimelineListBox"),
             DesktopFocusTarget.GlobalSearchBox => this.FindControl<TextBox>("GlobalSearchTextBox"),
             DesktopFocusTarget.GlobalSearchList => this.FindControl<ListBox>("SearchResultsListBox"),
             DesktopFocusTarget.RecordList => this.FindControl<ListBox>("RecordListBox"),
+            DesktopFocusTarget.RecordEditorTitle => this.FindControl<TextBox>("RecordEditorTitleBox"),
             DesktopFocusTarget.AuditList => this.FindControl<ListBox>("AuditListBox"),
             DesktopFocusTarget.CostList => this.FindControl<ListBox>("CostListBox"),
             DesktopFocusTarget.DashboardAuditList => this.FindControl<ListBox>("DashboardAuditListBox"),

@@ -33,6 +33,8 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu
 - pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
 - ovladat shell vice klavesnici: `Ctrl+R` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+F` pro fokus do hledani v casove ose, `Ctrl+Shift+F` pro globalni hledani a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech, dashboardu i ve vysledcich hledani
+- primo vytvaret, upravovat a mazat `pripominky`
+- primo vytvaret, upravovat a mazat `doklady`, vcetne volby `Spravovana kopie` vs `Externi cesta` a importu souboru do spravovanych priloh
 
 ## Lokalni build
 

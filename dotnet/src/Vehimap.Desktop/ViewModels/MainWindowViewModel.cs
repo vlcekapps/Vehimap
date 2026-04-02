@@ -28,8 +28,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private const int SearchTabIndex = 10;
 
     private readonly LegacyVehimapBootstrapper _bootstrapper;
+    private readonly ILegacyDataStore _legacyDataStore;
     private readonly IFileAttachmentService _attachmentService;
     private readonly IFileLauncher _fileLauncher;
+    private readonly IFilePickerService _filePickerService;
     private readonly IAuditService _auditService;
     private readonly ICostAnalysisService _costAnalysisService;
     private readonly IGlobalSearchService _globalSearchService;
@@ -252,9 +254,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel()
         : this(
+            new LegacyVehimapDataStore(),
             new LegacyVehimapBootstrapper(new LegacyDataRootLocator(), new LegacyVehimapDataStore()),
             new ManagedAttachmentPathService(),
             new ProcessFileLauncher(),
+            new AvaloniaFilePickerService(),
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
@@ -263,17 +267,21 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     internal MainWindowViewModel(
+        ILegacyDataStore legacyDataStore,
         LegacyVehimapBootstrapper bootstrapper,
         IFileAttachmentService attachmentService,
         IFileLauncher fileLauncher,
+        IFilePickerService filePickerService,
         IGlobalSearchService globalSearchService,
         ITimelineService timelineService,
         ICalendarExportService calendarExportService,
         ITextFileSaveService fileSaveService)
     {
+        _legacyDataStore = legacyDataStore;
         _bootstrapper = bootstrapper;
         _attachmentService = attachmentService;
         _fileLauncher = fileLauncher;
+        _filePickerService = filePickerService;
         _auditService = new LegacyAuditService(_attachmentService);
         _costAnalysisService = new LegacyCostAnalysisService();
         _globalSearchService = globalSearchService;
@@ -306,6 +314,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     partial void OnSelectedVehicleChanged(VehicleListItemViewModel? value)
     {
+        HandleVehicleSelectionChanged();
+
         if (value is null)
         {
             SelectedVehicleHeading = "Nevybrané vozidlo";
@@ -370,6 +380,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectedReminderDetail = value is null
             ? "Vyberte připomínku a zobrazí se detail položky."
             : $"Název: {value.Title}\nTermín: {value.DueDate}\nStav: {value.Status}\nOpakování: {value.RepeatMode}\nPoznámka: {FormatValue(value.Note, "bez poznámky")}";
+
+        EditSelectedReminderCommand.NotifyCanExecuteChanged();
+        DeleteSelectedReminderCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnSelectedMaintenanceChanged(VehicleMaintenanceItemViewModel? value)
@@ -430,6 +443,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         OpenSelectedRecordFileCommand.NotifyCanExecuteChanged();
         OpenSelectedRecordFolderCommand.NotifyCanExecuteChanged();
+        EditSelectedRecordCommand.NotifyCanExecuteChanged();
+        DeleteSelectedRecordCommand.NotifyCanExecuteChanged();
+        MoveSelectedRecordToManagedCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnSelectedSearchResultChanged(GlobalSearchResultItemViewModel? value)

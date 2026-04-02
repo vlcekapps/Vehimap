@@ -356,9 +356,71 @@
               </Grid>
 
               <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,*">
-                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail připomínky" />
-                  <TextBlock Grid.Row="1" Margin="0,16,0,0" Text="{Binding SelectedReminderDetail}" TextWrapping="Wrap" />
+                <Grid RowDefinitions="Auto,Auto,Auto,*">
+                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding ReminderPanelHeading}" />
+                  <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
+                    <Button Command="{Binding CreateReminderCommand}"
+                            Content="Nová"
+                            AutomationProperties.Name="Vytvořit novou připomínku" />
+                    <Button Command="{Binding EditSelectedReminderCommand}"
+                            Content="Upravit"
+                            AutomationProperties.Name="Upravit vybranou připomínku" />
+                    <Button Command="{Binding DeleteSelectedReminderCommand}"
+                            Content="Odstranit"
+                            AutomationProperties.Name="Odstranit vybranou připomínku" />
+                    <Button Command="{Binding SaveReminderCommand}"
+                            Content="Uložit"
+                            IsVisible="{Binding IsEditingReminder}"
+                            AutomationProperties.Name="Uložit připomínku" />
+                    <Button Command="{Binding CancelReminderEditCommand}"
+                            Content="Zrušit"
+                            IsVisible="{Binding IsEditingReminder}"
+                            AutomationProperties.Name="Zrušit úpravu připomínky" />
+                  </WrapPanel>
+                  <TextBlock Grid.Row="2"
+                             Margin="0,12,0,0"
+                             Opacity="0.82"
+                             Text="{Binding ReminderEditorStatus}"
+                             TextWrapping="Wrap" />
+                  <Grid Grid.Row="3"
+                        Margin="0,16,0,0"
+                        IsVisible="{Binding IsEditingReminder}"
+                        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                    <TextBlock FontWeight="SemiBold" Text="Název připomínky" />
+                    <TextBox x:Name="ReminderEditorTitleBox"
+                             Grid.Row="1"
+                             Margin="0,6,0,0"
+                             Text="{Binding ReminderEditorTitle}"
+                             PlaceholderText="Například objednat servis" />
+                    <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="*,140">
+                      <StackPanel Margin="0,0,12,0" Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Termín" />
+                        <TextBox Text="{Binding ReminderEditorDueDate}" PlaceholderText="Například 15.06.2026 nebo 06/2026" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="1" Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Předstih dnů" />
+                        <TextBox Text="{Binding ReminderEditorDays}" PlaceholderText="Například 30" />
+                      </StackPanel>
+                    </Grid>
+                    <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="Opakování" />
+                    <TextBox Grid.Row="4"
+                             Margin="0,6,0,0"
+                             Text="{Binding ReminderEditorRepeatMode}"
+                             PlaceholderText="Například Ročně nebo bez opakování" />
+                    <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
+                    <TextBox Grid.Row="6"
+                             Margin="0,6,0,0"
+                             Height="120"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalContentAlignment="Top"
+                             Text="{Binding ReminderEditorNote}" />
+                  </Grid>
+                  <TextBlock Grid.Row="3"
+                             Margin="0,16,0,0"
+                             IsVisible="{Binding IsReminderDetailVisible}"
+                             Text="{Binding SelectedReminderDetail}"
+                             TextWrapping="Wrap" />
                 </Grid>
               </Border>
             </Grid>
@@ -510,19 +572,122 @@
               </Grid>
 
               <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
-                <Grid RowDefinitions="Auto,Auto,*">
-                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail dokladu" />
-                  <StackPanel Grid.Row="1" Margin="0,12,0,0" Orientation="Horizontal" Spacing="10">
-                    <Button Width="150"
-                            Command="{Binding OpenSelectedRecordFileCommand}"
+                <Grid RowDefinitions="Auto,Auto,Auto,*">
+                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding RecordPanelHeading}" />
+                  <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="138" ItemHeight="34">
+                    <Button Command="{Binding CreateRecordCommand}"
+                            Content="Nový doklad"
+                            AutomationProperties.Name="Vytvořit nový doklad" />
+                    <Button Command="{Binding EditSelectedRecordCommand}"
+                            Content="Upravit"
+                            AutomationProperties.Name="Upravit vybraný doklad" />
+                    <Button Command="{Binding DeleteSelectedRecordCommand}"
+                            Content="Odstranit"
+                            AutomationProperties.Name="Odstranit vybraný doklad" />
+                    <Button Command="{Binding MoveSelectedRecordToManagedCommand}"
+                            Content="Přesunout do příloh"
+                            AutomationProperties.Name="Převést vybraný doklad na spravovanou kopii" />
+                    <Button Command="{Binding OpenSelectedRecordFileCommand}"
                             Content="Otevřít soubor"
+                            IsVisible="{Binding IsRecordDetailVisible}"
                             AutomationProperties.Name="Otevřít soubor přílohy vybraného dokladu" />
-                    <Button Width="170"
-                            Command="{Binding OpenSelectedRecordFolderCommand}"
+                    <Button Command="{Binding OpenSelectedRecordFolderCommand}"
                             Content="Otevřít složku"
+                            IsVisible="{Binding IsRecordDetailVisible}"
                             AutomationProperties.Name="Otevřít složku přílohy vybraného dokladu" />
-                  </StackPanel>
-                  <TextBlock Grid.Row="2" Margin="0,16,0,0" Text="{Binding SelectedRecordDetail}" TextWrapping="Wrap" />
+                    <Button Command="{Binding SaveRecordCommand}"
+                            Content="Uložit"
+                            IsVisible="{Binding IsEditingRecord}"
+                            AutomationProperties.Name="Uložit doklad" />
+                    <Button Command="{Binding CancelRecordEditCommand}"
+                            Content="Zrušit"
+                            IsVisible="{Binding IsEditingRecord}"
+                            AutomationProperties.Name="Zrušit úpravu dokladu" />
+                  </WrapPanel>
+                  <TextBlock Grid.Row="2"
+                             Margin="0,12,0,0"
+                             Opacity="0.82"
+                             Text="{Binding RecordEditorStatus}"
+                             TextWrapping="Wrap" />
+                  <Grid Grid.Row="3"
+                        Margin="0,16,0,0"
+                        IsVisible="{Binding IsEditingRecord}"
+                        RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                    <Grid ColumnDefinitions="1.1*,1.4*">
+                      <StackPanel Margin="0,0,12,0" Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Typ dokladu" />
+                        <TextBox Text="{Binding RecordEditorRecordType}" PlaceholderText="Například Povinné ručení" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="1" Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Název" />
+                        <TextBox x:Name="RecordEditorTitleBox" Text="{Binding RecordEditorTitle}" PlaceholderText="Například Allianz 2026" />
+                      </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="1.2*,*,*">
+                      <StackPanel Margin="0,0,12,0" Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Poskytovatel" />
+                        <TextBox Text="{Binding RecordEditorProvider}" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Platí od" />
+                        <TextBox Text="{Binding RecordEditorValidFrom}" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="2" Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Platí do" />
+                        <TextBox Text="{Binding RecordEditorValidTo}" />
+                      </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="180,*">
+                      <StackPanel Margin="0,0,12,0" Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Cena" />
+                        <TextBox Text="{Binding RecordEditorPrice}" />
+                      </StackPanel>
+                      <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Režim přílohy" />
+                        <ComboBox ItemsSource="{Binding RecordAttachmentModes}"
+                                  SelectedItem="{Binding SelectedRecordEditorAttachmentMode}" />
+                      </StackPanel>
+                    </Grid>
+                    <TextBlock Grid.Row="3"
+                               Margin="0,14,0,0"
+                               FontWeight="SemiBold"
+                               Text="{Binding RecordEditorPathInputLabel}" />
+                    <Grid Grid.Row="4" Margin="0,6,0,0" ColumnDefinitions="*,150">
+                      <TextBox Text="{Binding RecordEditorPathInput}"
+                               PlaceholderText="{Binding RecordEditorPathInputHelp}" />
+                      <Button Grid.Column="1"
+                              Margin="12,0,0,0"
+                              Command="{Binding BrowseRecordAttachmentCommand}"
+                              Content="Vybrat soubor"
+                              AutomationProperties.Name="Vybrat soubor pro doklad" />
+                    </Grid>
+                    <TextBlock Grid.Row="5"
+                               Margin="0,8,0,0"
+                               Opacity="0.74"
+                               Text="{Binding RecordEditorPathInputHelp}"
+                               TextWrapping="Wrap" />
+                    <TextBlock Grid.Row="6" Margin="0,14,0,0" FontWeight="SemiBold" Text="Uložená cesta" />
+                    <SelectableTextBlock Grid.Row="7" Margin="0,6,0,0" Text="{Binding RecordEditorStoredPath}" />
+                    <TextBlock Grid.Row="8" Margin="0,14,0,0" FontWeight="SemiBold" Text="Vyřešená cesta" />
+                    <SelectableTextBlock Grid.Row="9" Margin="0,6,0,0" Text="{Binding RecordEditorResolvedPath}" />
+                    <TextBlock Grid.Row="10"
+                               Margin="0,14,0,0"
+                               Text="{Binding RecordEditorAvailability}"
+                               TextWrapping="Wrap" />
+                    <StackPanel Grid.Row="11" Margin="0,14,0,0" Spacing="6">
+                      <TextBlock FontWeight="SemiBold" Text="Poznámka" />
+                      <TextBox Height="100"
+                               AcceptsReturn="True"
+                               TextWrapping="Wrap"
+                               VerticalContentAlignment="Top"
+                               Text="{Binding RecordEditorNote}" />
+                    </StackPanel>
+                  </Grid>
+                  <TextBlock Grid.Row="3"
+                             Margin="0,16,0,0"
+                             IsVisible="{Binding IsRecordDetailVisible}"
+                             Text="{Binding SelectedRecordDetail}"
+                             TextWrapping="Wrap" />
                 </Grid>
               </Border>
             </Grid>
@@ -810,7 +975,7 @@
     <TextBlock Grid.Row="4"
                Margin="0,16,0,0"
                Opacity="0.75"
-               Text="C# větev už nad stejnými legacy daty jako AHK verze zobrazuje detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady i první dashboard."
+               Text="C# větev už nad stejnými legacy daty jako AHK verze zobrazuje detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard i globální hledání. Doklady a připomínky už lze také přímo upravovat."
                TextWrapping="Wrap" />
   </Grid>
 </Window>
