@@ -11,6 +11,9 @@ namespace Vehimap.Desktop.Views;
 
 public partial class MainWindow : Window
 {
+    private const int ReminderTabIndex = 3;
+    private const int RecordTabIndex = 6;
+
     private static readonly string[] TabHeaderButtonNames =
     [
         "DetailTabButton",
@@ -427,6 +430,40 @@ public partial class MainWindow : Window
         }
 
         RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private async void OnOpenRemindersWindowClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = ReminderTabIndex;
+        var dialog = new RemindersWindow
+        {
+            DataContext = _viewModel
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.ReminderList);
+    }
+
+    private async void OnOpenRecordsWindowClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = RecordTabIndex;
+        var dialog = new RecordsWindow
+        {
+            DataContext = _viewModel
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.RecordList);
     }
 
     private bool FocusSelectedTabHeader()

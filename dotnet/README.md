@@ -40,6 +40,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo vytvaret, upravovat a mazat `tankovani`
 - primo vytvaret, upravovat a mazat `plan udrzby`
 - primo vytvaret a upravovat `vozidla`, vcetne zakladniho servisniho profilu a stavu vozidla
+- otevrit `Připomínky` a `Doklady` i v samostatnych desktopovych oknech nad stejnou editační logikou jako hlavni shell
 - drzet keyboard-first a11y i v hlavnim shellu, vcetne vlastni focusovatelne listy karet a konzistentniho focusu pro ctecky obrazovky
 - otevrit modalni `Nastaveni`, `O programu` a `Zkontrolovat aktualizace` primo z desktop shellu
 - cist a zapisovat podporovane reminder volby do stejneho `settings.ini` jako AHK verze a respektovat `show_dashboard_on_launch`

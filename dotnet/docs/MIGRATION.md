@@ -36,6 +36,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh
 - editacni workflow pro zakladni udaje vozidla, vcetne stavu vozidla a pohonu pro servisni profil
+- prvni samostatna desktopova okna pro `Připomínky` a `Doklady`, ktera uz znovu pouzivaji stejnou business logiku jako hlavni shell
 - vlastni focusovatelnou listu hlavnim karet, aby shell sel rozumne obsluhovat i se cteckami obrazovky
 - app-level dialogy `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`
 - typed vrstvu nad podporovanymi hodnotami ze `settings.ini`, ktera uz umi menit reminder thresholdy a `show_dashboard_on_launch`
@@ -49,4 +50,4 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 1. Dopsat realne UI testy pres Appium a prvni smoke pro screen readery na Windows
 2. Rozsirit accessibility metadata a focus chovani z hlavniho shellu i do dalsich budoucich dialogu
 3. Portovat zbytek aplikacovych toku, ktere jeste v .NET vetvi chybi proti AHK verzi
-4. Rozdelit hlavni shell na mensi dialogy nebo routed stranky, aby dalsi a11y a testy uz nevisely na jednom obrim okne
+4. Vyseknout dalsi evidence z hlavniho shellu do mensich desktopovych oken nebo routed stranek a postupne ztenčit jedno velké preview okno

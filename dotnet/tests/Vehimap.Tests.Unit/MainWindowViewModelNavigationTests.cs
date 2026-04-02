@@ -73,6 +73,24 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal(DesktopFocusTarget.RecordList, requestedFocus);
     }
 
+    [Fact]
+    public void Window_titles_and_open_flags_follow_selected_vehicle()
+    {
+        var viewModel = CreateViewModel();
+
+        Assert.True(viewModel.CanOpenReminderWindow);
+        Assert.True(viewModel.CanOpenRecordWindow);
+        Assert.Equal("Připomínky - Octavia", viewModel.ReminderWindowTitle);
+        Assert.Equal("Doklady a přílohy - Octavia", viewModel.RecordWindowTitle);
+
+        viewModel.SelectedVehicle = null;
+
+        Assert.False(viewModel.CanOpenReminderWindow);
+        Assert.False(viewModel.CanOpenRecordWindow);
+        Assert.Equal("Připomínky vozidla", viewModel.ReminderWindowTitle);
+        Assert.Equal("Doklady a přílohy", viewModel.RecordWindowTitle);
+    }
+
     private static MainWindowViewModel CreateViewModel()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);

@@ -241,6 +241,20 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool CanOpenSelectedDashboardTimelineItem => SelectedDashboardTimelineItem is not null;
 
+    public bool CanOpenReminderWindow => SelectedVehicle is not null;
+
+    public bool CanOpenRecordWindow => SelectedVehicle is not null;
+
+    public string ReminderWindowTitle =>
+        SelectedVehicle is null
+            ? "Připomínky vozidla"
+            : $"Připomínky - {SelectedVehicle.Name}";
+
+    public string RecordWindowTitle =>
+        SelectedVehicle is null
+            ? "Doklady a přílohy"
+            : $"Doklady a přílohy - {SelectedVehicle.Name}";
+
     public bool IsDetailTabSelected => SelectedVehicleTabIndex == DetailTabIndex;
 
     public bool IsHistoryTabSelected => SelectedVehicleTabIndex == HistoryTabIndex;
@@ -349,6 +363,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         HandleVehicleSelectionChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanOpenReminderWindow));
+        OnPropertyChanged(nameof(CanOpenRecordWindow));
+        OnPropertyChanged(nameof(ReminderWindowTitle));
+        OnPropertyChanged(nameof(RecordWindowTitle));
 
         if (value is null)
         {
