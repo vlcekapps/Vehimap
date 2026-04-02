@@ -447,11 +447,15 @@
 
               <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
                 <Grid RowDefinitions="Auto,Auto,Auto,*">
-                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding HistoryPanelHeading}" />
-                  <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="128" ItemHeight="34">
-                    <Button Command="{Binding CreateHistoryCommand}"
-                            Content="Nový záznam"
-                            AutomationProperties.Name="Vytvořit nový historický záznam" />
+                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding HistoryPanelHeading}" />
+                    <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="128" ItemHeight="34">
+                      <Button Click="OnOpenHistoryWindowClick"
+                              IsEnabled="{Binding CanOpenHistoryWindow}"
+                              Content="V okně"
+                              AutomationProperties.Name="Otevřít historii v samostatném okně" />
+                      <Button Command="{Binding CreateHistoryCommand}"
+                              Content="Nový záznam"
+                              AutomationProperties.Name="Vytvořit nový historický záznam" />
                     <Button Command="{Binding EditSelectedHistoryCommand}"
                             Content="Upravit"
                             AutomationProperties.Name="Upravit vybraný historický záznam" />
@@ -547,11 +551,15 @@
 
               <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
                 <Grid RowDefinitions="Auto,Auto,Auto,*">
-                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding FuelPanelHeading}" />
-                  <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
-                    <Button Command="{Binding CreateFuelCommand}"
-                            Content="Nové"
-                            AutomationProperties.Name="Vytvořit nové tankování" />
+                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding FuelPanelHeading}" />
+                    <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
+                      <Button Click="OnOpenFuelWindowClick"
+                              IsEnabled="{Binding CanOpenFuelWindow}"
+                              Content="V okně"
+                              AutomationProperties.Name="Otevřít tankování v samostatném okně" />
+                      <Button Command="{Binding CreateFuelCommand}"
+                              Content="Nové"
+                              AutomationProperties.Name="Vytvořit nové tankování" />
                     <Button Command="{Binding EditSelectedFuelCommand}"
                             Content="Upravit"
                             AutomationProperties.Name="Upravit vybrané tankování" />
@@ -759,11 +767,15 @@
 
               <Border Grid.Column="1" Margin="12,0,0,0" Padding="16" Background="#10203040" CornerRadius="8">
                 <Grid RowDefinitions="Auto,Auto,Auto,*">
-                  <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding MaintenancePanelHeading}" />
-                  <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="132" ItemHeight="34">
-                    <Button Command="{Binding CreateMaintenanceCommand}"
-                            Content="Nový plán"
-                            AutomationProperties.Name="Vytvořit nový servisní plán" />
+                    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding MaintenancePanelHeading}" />
+                    <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="132" ItemHeight="34">
+                      <Button Click="OnOpenMaintenanceWindowClick"
+                              IsEnabled="{Binding CanOpenMaintenanceWindow}"
+                              Content="V okně"
+                              AutomationProperties.Name="Otevřít plán údržby v samostatném okně" />
+                      <Button Command="{Binding CreateMaintenanceCommand}"
+                              Content="Nový plán"
+                              AutomationProperties.Name="Vytvořit nový servisní plán" />
                     <Button Command="{Binding EditSelectedMaintenanceCommand}"
                             Content="Upravit"
                             AutomationProperties.Name="Upravit vybraný servisní plán" />

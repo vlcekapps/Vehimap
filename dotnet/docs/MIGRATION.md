@@ -36,7 +36,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh
 - editacni workflow pro zakladni udaje vozidla, vcetne stavu vozidla a pohonu pro servisni profil
-- prvni samostatna desktopova okna pro `Připomínky` a `Doklady`, ktera uz znovu pouzivaji stejnou business logiku jako hlavni shell
+- prvni samostatna desktopova okna pro `Historii`, `Tankovani`, `Připomínky`, `Údržbu` a `Doklady`, ktera uz znovu pouzivaji stejnou business logiku jako hlavni shell
 - vlastni focusovatelnou listu hlavnim karet, aby shell sel rozumne obsluhovat i se cteckami obrazovky
 - app-level dialogy `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`
 - typed vrstvu nad podporovanymi hodnotami ze `settings.ini`, ktera uz umi menit reminder thresholdy a `show_dashboard_on_launch`

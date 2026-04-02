@@ -11,7 +11,10 @@ namespace Vehimap.Desktop.Views;
 
 public partial class MainWindow : Window
 {
+    private const int HistoryTabIndex = 1;
+    private const int FuelTabIndex = 2;
     private const int ReminderTabIndex = 3;
+    private const int MaintenanceTabIndex = 4;
     private const int RecordTabIndex = 6;
 
     private static readonly string[] TabHeaderButtonNames =
@@ -464,6 +467,57 @@ public partial class MainWindow : Window
 
         await dialog.ShowDialog(this);
         RequestFocus(DesktopFocusTarget.RecordList);
+    }
+
+    private async void OnOpenHistoryWindowClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = HistoryTabIndex;
+        var dialog = new HistoryWindow
+        {
+            DataContext = _viewModel
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.HistoryList);
+    }
+
+    private async void OnOpenFuelWindowClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = FuelTabIndex;
+        var dialog = new FuelWindow
+        {
+            DataContext = _viewModel
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.FuelList);
+    }
+
+    private async void OnOpenMaintenanceWindowClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = MaintenanceTabIndex;
+        var dialog = new MaintenanceWindow
+        {
+            DataContext = _viewModel
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.MaintenanceList);
     }
 
     private bool FocusSelectedTabHeader()

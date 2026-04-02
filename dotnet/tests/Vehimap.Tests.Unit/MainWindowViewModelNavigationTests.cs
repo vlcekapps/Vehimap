@@ -80,14 +80,26 @@ public sealed class MainWindowViewModelNavigationTests
 
         Assert.True(viewModel.CanOpenReminderWindow);
         Assert.True(viewModel.CanOpenRecordWindow);
+        Assert.True(viewModel.CanOpenHistoryWindow);
+        Assert.True(viewModel.CanOpenFuelWindow);
+        Assert.True(viewModel.CanOpenMaintenanceWindow);
+        Assert.Equal("Historie - Octavia", viewModel.HistoryWindowTitle);
+        Assert.Equal("Tankování - Octavia", viewModel.FuelWindowTitle);
         Assert.Equal("Připomínky - Octavia", viewModel.ReminderWindowTitle);
+        Assert.Equal("Údržba - Octavia", viewModel.MaintenanceWindowTitle);
         Assert.Equal("Doklady a přílohy - Octavia", viewModel.RecordWindowTitle);
 
         viewModel.SelectedVehicle = null;
 
+        Assert.False(viewModel.CanOpenHistoryWindow);
+        Assert.False(viewModel.CanOpenFuelWindow);
         Assert.False(viewModel.CanOpenReminderWindow);
+        Assert.False(viewModel.CanOpenMaintenanceWindow);
         Assert.False(viewModel.CanOpenRecordWindow);
+        Assert.Equal("Historie vozidla", viewModel.HistoryWindowTitle);
+        Assert.Equal("Tankování vozidla", viewModel.FuelWindowTitle);
         Assert.Equal("Připomínky vozidla", viewModel.ReminderWindowTitle);
+        Assert.Equal("Plán údržby vozidla", viewModel.MaintenanceWindowTitle);
         Assert.Equal("Doklady a přílohy", viewModel.RecordWindowTitle);
     }
 

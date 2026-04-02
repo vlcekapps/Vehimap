@@ -1,0 +1,158 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.FuelWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="1320"
+        Height="780"
+        MinWidth="1080"
+        MinHeight="660"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding FuelWindowTitle}"
+        AutomationProperties.Name="Tankování vozidla"
+        AutomationProperties.HelpText="Samostatné okno pro práci s tankováním vybraného vozidla.">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,*">
+    <TextBlock FontSize="24"
+               FontWeight="SemiBold"
+               Text="{Binding FuelWindowTitle}" />
+    <TextBlock Grid.Row="1"
+               Margin="0,8,0,0"
+               Opacity="0.78"
+               Text="{Binding FuelSummary}"
+               TextWrapping="Wrap" />
+
+    <Grid Grid.Row="2"
+          Margin="0,18,0,0"
+          ColumnDefinitions="1.15*,*">
+      <Grid RowDefinitions="Auto,*">
+        <TextBlock FontWeight="SemiBold"
+                   Text="Tankování vybraného vozidla" />
+        <ListBox x:Name="FuelWindowListBox"
+                 Grid.Row="1"
+                 Margin="0,12,12,0"
+                 ItemsSource="{Binding SelectedVehicleFuel}"
+                 SelectedItem="{Binding SelectedFuel}"
+                 AutomationProperties.Name="Tankování vybraného vozidla v samostatném okně">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:VehicleFuelItemViewModel">
+              <Border Padding="12"
+                      Margin="0,0,0,8"
+                      Background="#10203040"
+                      CornerRadius="6"
+                      AutomationProperties.Name="{Binding AccessibleLabel}">
+                <Grid ColumnDefinitions="110,120,110,120,140,*">
+                  <TextBlock Grid.Column="0" Text="{Binding Date}" />
+                  <TextBlock Grid.Column="1" Text="{Binding FuelType}" />
+                  <TextBlock Grid.Column="2" Text="{Binding Liters}" />
+                  <TextBlock Grid.Column="3" Text="{Binding TotalCost}" />
+                  <TextBlock Grid.Column="4" Text="{Binding Odometer}" />
+                  <TextBlock Grid.Column="5" Text="{Binding TankState}" TextWrapping="Wrap" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Grid>
+
+      <Border Grid.Column="1"
+              Margin="12,0,0,0"
+              Padding="16"
+              Background="#10203040"
+              CornerRadius="8">
+        <Grid RowDefinitions="Auto,Auto,Auto,*">
+          <TextBlock FontSize="18"
+                     FontWeight="SemiBold"
+                     Text="{Binding FuelPanelHeading}" />
+          <WrapPanel Grid.Row="1"
+                     Margin="0,14,0,0"
+                     ItemWidth="122"
+                     ItemHeight="34">
+            <Button Command="{Binding CreateFuelCommand}"
+                    Content="Nové"
+                    AutomationProperties.Name="Vytvořit nové tankování" />
+            <Button Command="{Binding EditSelectedFuelCommand}"
+                    Content="Upravit"
+                    AutomationProperties.Name="Upravit vybrané tankování" />
+            <Button Command="{Binding DeleteSelectedFuelCommand}"
+                    Content="Odstranit"
+                    AutomationProperties.Name="Odstranit vybrané tankování" />
+            <Button Command="{Binding SaveFuelCommand}"
+                    Content="Uložit"
+                    IsVisible="{Binding IsEditingFuel}"
+                    AutomationProperties.Name="Uložit tankování" />
+            <Button Command="{Binding CancelFuelEditCommand}"
+                    Content="Zrušit"
+                    IsVisible="{Binding IsEditingFuel}"
+                    AutomationProperties.Name="Zrušit úpravu tankování" />
+            <Button Click="OnCloseClick"
+                    Content="Zavřít"
+                    AutomationProperties.Name="Zavřít okno tankování" />
+          </WrapPanel>
+          <TextBlock Grid.Row="2"
+                     Margin="0,12,0,0"
+                     Opacity="0.82"
+                     Text="{Binding FuelEditorStatus}"
+                     TextWrapping="Wrap" />
+          <Grid Grid.Row="3"
+                Margin="0,16,0,0"
+                IsVisible="{Binding IsEditingFuel}"
+                RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+            <Grid ColumnDefinitions="*,170">
+              <StackPanel Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Datum" />
+                <TextBox x:Name="FuelWindowDateBox"
+                         Text="{Binding FuelEditorDate}"
+                         PlaceholderText="Například 15.06.2026" />
+              </StackPanel>
+              <StackPanel Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Palivo" />
+                <TextBox Text="{Binding FuelEditorFuelType}"
+                         PlaceholderText="Například Benzín" />
+              </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1"
+                  Margin="0,14,0,0"
+                  ColumnDefinitions="*,*,*">
+              <StackPanel Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Litry" />
+                <TextBox Text="{Binding FuelEditorLiters}"
+                         PlaceholderText="Například 35.6" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Cena celkem" />
+                <TextBox Text="{Binding FuelEditorTotalCost}"
+                         PlaceholderText="Například 1450" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Tachometr" />
+                <TextBox Text="{Binding FuelEditorOdometer}"
+                         PlaceholderText="Například 123456" />
+              </StackPanel>
+            </Grid>
+            <CheckBox Grid.Row="2"
+                      Margin="0,14,0,0"
+                      IsChecked="{Binding FuelEditorFullTank}"
+                      Content="Plná nádrž"
+                      AutomationProperties.Name="Při tomto tankování byla plná nádrž" />
+            <TextBlock Grid.Row="3"
+                       Margin="0,14,0,0"
+                       FontWeight="SemiBold"
+                       Text="Poznámka" />
+            <TextBox Grid.Row="4"
+                     Margin="0,6,0,0"
+                     Height="120"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalContentAlignment="Top"
+                     Text="{Binding FuelEditorNote}" />
+          </Grid>
+          <TextBlock Grid.Row="3"
+                     Margin="0,16,0,0"
+                     IsVisible="{Binding IsFuelDetailVisible}"
+                     Text="{Binding SelectedFuelDetail}"
+                     TextWrapping="Wrap" />
+        </Grid>
+      </Border>
+    </Grid>
+  </Grid>
+</Window>

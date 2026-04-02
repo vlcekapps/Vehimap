@@ -245,10 +245,31 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool CanOpenRecordWindow => SelectedVehicle is not null;
 
+    public bool CanOpenHistoryWindow => SelectedVehicle is not null;
+
+    public bool CanOpenFuelWindow => SelectedVehicle is not null;
+
+    public bool CanOpenMaintenanceWindow => SelectedVehicle is not null;
+
+    public string HistoryWindowTitle =>
+        SelectedVehicle is null
+            ? "Historie vozidla"
+            : $"Historie - {SelectedVehicle.Name}";
+
+    public string FuelWindowTitle =>
+        SelectedVehicle is null
+            ? "Tankování vozidla"
+            : $"Tankování - {SelectedVehicle.Name}";
+
     public string ReminderWindowTitle =>
         SelectedVehicle is null
             ? "Připomínky vozidla"
             : $"Připomínky - {SelectedVehicle.Name}";
+
+    public string MaintenanceWindowTitle =>
+        SelectedVehicle is null
+            ? "Plán údržby vozidla"
+            : $"Údržba - {SelectedVehicle.Name}";
 
     public string RecordWindowTitle =>
         SelectedVehicle is null
@@ -363,9 +384,15 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         HandleVehicleSelectionChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanOpenHistoryWindow));
+        OnPropertyChanged(nameof(CanOpenFuelWindow));
         OnPropertyChanged(nameof(CanOpenReminderWindow));
+        OnPropertyChanged(nameof(CanOpenMaintenanceWindow));
         OnPropertyChanged(nameof(CanOpenRecordWindow));
+        OnPropertyChanged(nameof(HistoryWindowTitle));
+        OnPropertyChanged(nameof(FuelWindowTitle));
         OnPropertyChanged(nameof(ReminderWindowTitle));
+        OnPropertyChanged(nameof(MaintenanceWindowTitle));
         OnPropertyChanged(nameof(RecordWindowTitle));
 
         if (value is null)
