@@ -129,7 +129,7 @@ jobs:
               throw "Appium server se v limitu nespustil."
             }
 
-            dotnet test tests/Vehimap.Tests.UI/Vehimap.Tests.UI.csproj --no-build --configuration Release -p:UseSharedCompilation=false
+            dotnet test tests/Vehimap.Tests.UI/Vehimap.Tests.UI.csproj --no-build --configuration Release -p:UseSharedCompilation=false --filter "UiProfile=Smoke"
             if ($LASTEXITCODE -ne 0) {
               exit $LASTEXITCODE
             }

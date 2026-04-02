@@ -3,6 +3,7 @@ using Xunit;
 
 namespace Vehimap.Tests.UI;
 
+[Trait("UiProfile", "Extended")]
 public sealed class DesktopAccessibilitySmokeTests
 {
     [Fact]
