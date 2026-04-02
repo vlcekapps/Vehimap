@@ -38,6 +38,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly ITimelineService _timelineService;
     private readonly ICalendarExportService _calendarExportService;
     private readonly ITextFileSaveService _fileSaveService;
+    private readonly DesktopSupportedSettingsService _supportedSettingsService;
+    private readonly IAppBuildInfoProvider _appBuildInfoProvider;
+    private readonly IUpdateService _updateService;
     private readonly Dictionary<string, VehicleMeta> _metaByVehicleId = new(StringComparer.Ordinal);
 
     private VehimapDataRoot? _dataRoot;
@@ -265,7 +268,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
-            new AvaloniaTextFileSaveService())
+            new AvaloniaTextFileSaveService(),
+            new DesktopSupportedSettingsService(),
+            new AssemblyAppBuildInfoProvider())
     {
     }
 
@@ -278,7 +283,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IGlobalSearchService globalSearchService,
         ITimelineService timelineService,
         ICalendarExportService calendarExportService,
-        ITextFileSaveService fileSaveService)
+        ITextFileSaveService fileSaveService,
+        DesktopSupportedSettingsService? supportedSettingsService = null,
+        IAppBuildInfoProvider? appBuildInfoProvider = null,
+        IUpdateService? updateService = null)
     {
         _legacyDataStore = legacyDataStore;
         _bootstrapper = bootstrapper;
@@ -291,7 +299,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _timelineService = timelineService;
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
-        Load();
+        _supportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
+        _appBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider();
+        _updateService = updateService ?? new LegacyUpdateService(_appBuildInfoProvider);
+        Load(applyLaunchTabPreference: true);
     }
 
     public bool CanOpenSelectedRecordFile => SelectedRecord is { FileExists: true } && !string.IsNullOrWhiteSpace(SelectedRecord.ResolvedPath);
@@ -480,7 +491,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void Reload()
     {
-        Load();
+        Load(SelectedVehicle?.Id, SelectedVehicleTabIndex, applyLaunchTabPreference: false);
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
@@ -614,7 +625,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectVehicleAndOpenEntity(SelectedSearchResult.VehicleId, SelectedSearchResult.EntityKind, SelectedSearchResult.EntityId);
     }
 
-    private void Load()
+    private void Load(string? preferredVehicleId = null, int? preferredTabIndex = null, bool applyLaunchTabPreference = false)
     {
         try
         {
@@ -700,10 +711,21 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault();
             SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
 
-            SelectedVehicle = Vehicles.FirstOrDefault();
+            SelectedVehicle = string.IsNullOrWhiteSpace(preferredVehicleId)
+                ? Vehicles.FirstOrDefault()
+                : FindById(Vehicles, item => item.Id, preferredVehicleId) ?? Vehicles.FirstOrDefault();
             if (SelectedVehicle is null)
             {
                 OnSelectedVehicleChanged(null);
+            }
+
+            if (applyLaunchTabPreference && _supportedSettingsService.Read(result.DataSet.Settings).ShowDashboardOnLaunch)
+            {
+                SelectedVehicleTabIndex = DashboardTabIndex;
+            }
+            else if (preferredTabIndex.HasValue && preferredTabIndex.Value >= DetailTabIndex && preferredTabIndex.Value <= SearchTabIndex)
+            {
+                SelectedVehicleTabIndex = preferredTabIndex.Value;
             }
         }
         catch (Exception ex)

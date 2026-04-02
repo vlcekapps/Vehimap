@@ -36,11 +36,15 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh
 - editacni workflow pro zakladni udaje vozidla, vcetne stavu vozidla a pohonu pro servisni profil
 - vlastni focusovatelnou listu hlavnim karet, aby shell sel rozumne obsluhovat i se cteckami obrazovky
+- app-level dialogy `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`
+- typed vrstvu nad podporovanymi hodnotami ze `settings.ini`, ktera uz umi menit reminder thresholdy a `show_dashboard_on_launch`
+- centralizovane build info z root `src/VERSION`, ktere desktop vetvi dava stejnou semver a file version jako AHK release tok
+- kompatibilni parser `update/latest.ini` a Windows pripravu automaticke instalace pres `Vehimap.Updater`
 - zaklad release workflow pro GitHub Actions
 
 ## Co je dalsi na rade
 
 1. Dopsat realne UI testy pres Appium a prvni smoke pro screen readery na Windows
 2. Rozsirit accessibility metadata a focus chovani z hlavniho shellu i do dalsich budoucich dialogu
-3. Dodelat settings, help/about a update check v desktop shellu
+3. Portovat zbytek aplikacovych toku, ktere jeste v .NET vetvi chybi proti AHK verzi
 4. Rozdelit hlavni shell na mensi dialogy nebo routed stranky, aby dalsi a11y a testy uz nevisely na jednom obrim okne

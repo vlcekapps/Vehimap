@@ -1,0 +1,65 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.SettingsWindow"
+        x:DataType="vm:SettingsDialogViewModel"
+        Width="560"
+        Height="430"
+        MinWidth="520"
+        MinHeight="390"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Nastavení">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
+    <TextBlock FontSize="22" FontWeight="SemiBold" Text="Nastavení Vehimapu" />
+    <TextBlock Grid.Row="1"
+               Margin="0,8,0,0"
+               Opacity="0.78"
+               Text="V této etapě jsou dostupné jen volby, které už mají v Avalonia větvi reálný efekt."
+               TextWrapping="Wrap" />
+
+    <Grid Grid.Row="2" Margin="0,18,0,0" ColumnDefinitions="260,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+      <TextBlock Grid.Row="0" Text="Upozornění na TK (dny)" VerticalAlignment="Center" />
+      <TextBox x:Name="TechnicalReminderDaysBox" Grid.Row="0" Grid.Column="1" Text="{Binding TechnicalReminderDays}" />
+
+      <TextBlock Grid.Row="1" Text="Upozornění na zelenou kartu (dny)" VerticalAlignment="Center" Margin="0,12,0,0" />
+      <TextBox Grid.Row="1" Grid.Column="1" Margin="0,12,0,0" Text="{Binding GreenCardReminderDays}" />
+
+      <TextBlock Grid.Row="2" Text="Upozornění na údržbu (dny)" VerticalAlignment="Center" Margin="0,12,0,0" />
+      <TextBox Grid.Row="2" Grid.Column="1" Margin="0,12,0,0" Text="{Binding MaintenanceReminderDays}" />
+
+      <TextBlock Grid.Row="3" Text="Upozornění na údržbu (km)" VerticalAlignment="Center" Margin="0,12,0,0" />
+      <TextBox Grid.Row="3" Grid.Column="1" Margin="0,12,0,0" Text="{Binding MaintenanceReminderKm}" />
+
+      <CheckBox Grid.Row="4"
+                Grid.ColumnSpan="2"
+                Margin="0,18,0,0"
+                IsChecked="{Binding ShowDashboardOnLaunch}"
+                Content="Po spuštění otevřít Dashboard místo Detailu" />
+    </Grid>
+
+    <Border Grid.Row="6"
+            Margin="0,18,0,0"
+            Padding="12"
+            Background="#143A4A5A"
+            CornerRadius="8">
+      <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" />
+    </Border>
+
+    <StackPanel Grid.Row="7"
+                Margin="0,18,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="10">
+      <Button MinWidth="110"
+              Click="OnSaveClick"
+              Content="Uložit"
+              AutomationProperties.Name="Uložit nastavení" />
+      <Button MinWidth="110"
+              Click="OnCancelClick"
+              Content="Zrušit"
+              AutomationProperties.Name="Zavřít dialog nastavení" />
+    </StackPanel>
+  </Grid>
+</Window>

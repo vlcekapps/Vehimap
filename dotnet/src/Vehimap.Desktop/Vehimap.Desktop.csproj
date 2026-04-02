@@ -8,6 +8,7 @@
     <ProjectReference Include="..\Vehimap.Application\Vehimap.Application.csproj" />
     <ProjectReference Include="..\Vehimap.Platform\Vehimap.Platform.csproj" />
     <ProjectReference Include="..\Vehimap.Storage.Legacy\Vehimap.Storage.Legacy.csproj" />
+    <ProjectReference Include="..\Vehimap.Updater\Vehimap.Updater.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,4 +17,34 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-rc2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
   </ItemGroup>
+
+  <Target Name="CopyUpdaterToBuildOutput" AfterTargets="Build">
+    <MSBuild Projects="..\Vehimap.Updater\Vehimap.Updater.csproj"
+             Targets="Build"
+             Properties="Configuration=$(Configuration);TargetFramework=$(TargetFramework)" />
+    <ItemGroup>
+      <UpdaterBuildFiles Include="$(MSBuildProjectDirectory)\..\Vehimap.Updater\bin\$(Configuration)\$(TargetFramework)\Vehimap.Updater*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(UpdaterBuildFiles)"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true"
+          Condition="'@(UpdaterBuildFiles)' != ''" />
+  </Target>
+
+  <Target Name="CopyUpdaterToPublishOutput" AfterTargets="Publish">
+    <PropertyGroup>
+      <UpdaterPublishDir>$(PublishDir)updater-temp\</UpdaterPublishDir>
+    </PropertyGroup>
+    <MSBuild Projects="..\Vehimap.Updater\Vehimap.Updater.csproj"
+             Targets="Publish"
+             Properties="Configuration=$(Configuration);TargetFramework=$(TargetFramework);RuntimeIdentifier=$(RuntimeIdentifier);SelfContained=$(SelfContained);PublishDir=$(UpdaterPublishDir)" />
+    <ItemGroup>
+      <UpdaterPublishFiles Include="$(UpdaterPublishDir)**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(UpdaterPublishFiles)"
+          DestinationFiles="@(UpdaterPublishFiles->Replace('$(UpdaterPublishDir)', '$(PublishDir)'))"
+          SkipUnchangedFiles="true"
+          Condition="'@(UpdaterPublishFiles)' != ''" />
+    <RemoveDir Directories="$(UpdaterPublishDir)" />
+  </Target>
 </Project>

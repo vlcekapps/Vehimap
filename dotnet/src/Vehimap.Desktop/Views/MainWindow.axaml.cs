@@ -4,7 +4,9 @@ using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Vehimap.Application.Models;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Desktop.Services;
 
 namespace Vehimap.Desktop.Views;
 
@@ -261,6 +263,114 @@ public partial class MainWindow : Window
         }
 
         return listBox.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+    }
+
+    private async void OnSettingsClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        var dialog = new SettingsWindow
+        {
+            DataContext = SettingsDialogViewModel.FromSnapshot(_viewModel.GetSupportedSettingsSnapshot())
+        };
+        var result = await dialog.ShowDialog<DesktopSupportedSettingsSnapshot?>(this);
+        if (result is null)
+        {
+            RequestFocus(DesktopFocusTarget.VehicleList);
+            return;
+        }
+
+        await _viewModel.SaveSupportedSettingsAsync(result);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private async void OnAboutClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        var dialog = new AboutWindow
+        {
+            DataContext = _viewModel.BuildAboutDialogModel()
+        };
+        var openReleaseNotes = await dialog.ShowDialog<bool>(this);
+        if (openReleaseNotes && dialog.DataContext is AboutDialogViewModel aboutViewModel)
+        {
+            await _viewModel.OpenExternalAsync(aboutViewModel.ReleaseNotesUrl);
+        }
+
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private async void OnUpdateCheckClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        var result = await _viewModel.CheckForUpdatesAsync();
+        var dialog = new UpdateCheckWindow
+        {
+            DataContext = new UpdateDialogViewModel(result)
+        };
+        var action = await dialog.ShowDialog<UpdateDialogAction>(this);
+
+        switch (action)
+        {
+            case UpdateDialogAction.PrimaryAction:
+                if (result.IsUpdateAvailable && result.CanInstallAutomatically)
+                {
+                    var installResult = await _viewModel.PrepareUpdateInstallAsync(result);
+                    if (installResult.IsReady && installResult.InstallPlan is not null)
+                    {
+                        UpdateInstallLauncher.Launch(installResult.InstallPlan);
+                        Close();
+                        return;
+                    }
+
+                    var failureDialog = new UpdateCheckWindow
+                    {
+                        DataContext = new UpdateDialogViewModel(new Vehimap.Application.UpdateCheckResult(
+                            result.CurrentVersion,
+                            result.LatestVersion,
+                            false,
+                            result.PublishedAt,
+                            result.NotesUrl,
+                            result.AssetUrl,
+                            result.Sha256,
+                            result.AssetSize,
+                            false,
+                            installResult.Message,
+                            installResult.Message))
+                    };
+                    await failureDialog.ShowDialog<UpdateDialogAction>(this);
+                }
+                else if (!string.IsNullOrWhiteSpace(result.NotesUrl))
+                {
+                    await _viewModel.OpenExternalAsync(result.NotesUrl);
+                }
+                else if (!string.IsNullOrWhiteSpace(result.AssetUrl))
+                {
+                    await _viewModel.OpenExternalAsync(result.AssetUrl);
+                }
+
+                break;
+            case UpdateDialogAction.OpenAsset:
+                if (!string.IsNullOrWhiteSpace(result.AssetUrl))
+                {
+                    await _viewModel.OpenExternalAsync(result.AssetUrl);
+                }
+
+                break;
+        }
+
+        RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
     private bool FocusSelectedTabHeader()

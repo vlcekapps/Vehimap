@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.AboutWindow"
+        x:DataType="vm:AboutDialogViewModel"
+        Width="620"
+        Height="430"
+        MinWidth="560"
+        MinHeight="390"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="O programu">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
+    <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
+    <TextBlock Grid.Row="1"
+               Margin="0,8,0,0"
+               Opacity="0.78"
+               Text="Informace o běhu desktopové větve Vehimapu."
+               TextWrapping="Wrap" />
+
+    <Grid Grid.Row="2"
+          Margin="0,18,0,0"
+          ColumnDefinitions="170,*"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+      <TextBlock Grid.Row="0" Text="Verze aplikace" FontWeight="SemiBold" />
+      <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AppVersion}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="1" Text="Souborová verze" FontWeight="SemiBold" />
+      <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FileVersion}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="2" Text="Režim spuštění" FontWeight="SemiBold" />
+      <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding RuntimeMode}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="3" Text="Datová složka" FontWeight="SemiBold" />
+      <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding DataPath}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="4" Text="Režim dat" FontWeight="SemiBold" />
+      <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding DataMode}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="5" Text="Platforma" FontWeight="SemiBold" />
+      <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding PlatformDescription}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="6" Text=".NET runtime" FontWeight="SemiBold" />
+      <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding FrameworkDescription}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="7" Text="Soubor aplikace" FontWeight="SemiBold" />
+      <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ApplicationPath}" TextWrapping="Wrap" />
+    </Grid>
+
+    <StackPanel Grid.Row="3"
+                Margin="0,18,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="10">
+      <Button x:Name="ReleaseNotesButton"
+              MinWidth="170"
+              Click="OnReleaseNotesClick"
+              Content="Release poznámky"
+              AutomationProperties.Name="Otevřít release poznámky" />
+      <Button MinWidth="110"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít dialog O programu" />
+    </StackPanel>
+  </Grid>
+</Window>

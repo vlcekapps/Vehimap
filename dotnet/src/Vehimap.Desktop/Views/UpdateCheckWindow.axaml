@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.UpdateCheckWindow"
+        x:DataType="vm:UpdateDialogViewModel"
+        Width="620"
+        Height="420"
+        MinWidth="560"
+        MinHeight="360"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Kontrola aktualizací">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
+    <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Heading}" />
+    <TextBlock Grid.Row="1" Margin="0,10,0,0" Text="{Binding Summary}" TextWrapping="Wrap" />
+    <Border Grid.Row="2"
+            Margin="0,18,0,0"
+            Padding="12"
+            Background="#143A4A5A"
+            CornerRadius="8">
+      <TextBlock Text="{Binding Details}" TextWrapping="Wrap" />
+    </Border>
+    <StackPanel Grid.Row="3"
+                Margin="0,18,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="10">
+      <Button x:Name="PrimaryActionButton"
+              MinWidth="170"
+              IsVisible="{Binding ShowPrimaryAction}"
+              Click="OnPrimaryActionClick"
+              Content="{Binding PrimaryActionLabel}" />
+      <Button MinWidth="170"
+              IsVisible="{Binding ShowSecondaryAssetAction}"
+              Click="OnAssetActionClick"
+              Content="Stáhnout asset" />
+      <Button x:Name="CloseButton"
+              MinWidth="110"
+              Click="OnCloseClick"
+              Content="Zavřít" />
+    </StackPanel>
+  </Grid>
+</Window>

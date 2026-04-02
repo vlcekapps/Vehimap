@@ -75,5 +75,31 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("IsTabStop=\"{Binding IsDashboardTabSelected}\"", xaml);
         Assert.Contains("<RadioButton x:Name=\"DashboardTabButton\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"Karta Dashboard\"", xaml);
+        Assert.Contains("Click=\"OnSettingsClick\"", xaml);
+        Assert.Contains("Click=\"OnAboutClick\"", xaml);
+        Assert.Contains("Click=\"OnUpdateCheckClick\"", xaml);
+    }
+
+    [Fact]
+    public void Dialog_xaml_files_should_define_expected_titles()
+    {
+        var desktopRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "Vehimap.Desktop",
+            "Views"));
+
+        var settingsXaml = File.ReadAllText(Path.Combine(desktopRoot, "SettingsWindow.axaml"));
+        var aboutXaml = File.ReadAllText(Path.Combine(desktopRoot, "AboutWindow.axaml"));
+        var updateXaml = File.ReadAllText(Path.Combine(desktopRoot, "UpdateCheckWindow.axaml"));
+
+        Assert.Contains("Title=\"Nastavení\"", settingsXaml);
+        Assert.Contains("Title=\"O programu\"", aboutXaml);
+        Assert.Contains("Title=\"Kontrola aktualizací\"", updateXaml);
     }
 }

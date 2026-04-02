@@ -1,9 +1,14 @@
 namespace Vehimap.Application;
 
 public sealed record UpdateCheckResult(
-    bool IsUpdateAvailable,
     string CurrentVersion,
     string LatestVersion,
-    string? ManifestUrl,
+    bool IsUpdateAvailable,
+    string? PublishedAt,
+    string? NotesUrl,
     string? AssetUrl,
-    string? Sha256);
+    string? Sha256,
+    long? AssetSize,
+    bool CanInstallAutomatically,
+    string Message,
+    string? FailureReason = null);

@@ -1,5 +1,8 @@
 <Project>
   <PropertyGroup>
+    <VehimapVersionFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\src\VERSION'))</VehimapVersionFile>
+    <VehimapVersion>$([System.IO.File]::ReadAllText('$(VehimapVersionFile)').Trim())</VehimapVersion>
+    <VehimapNumericVersion>$([System.Text.RegularExpressions.Regex]::Match('$(VehimapVersion)', '^(\d+\.\d+\.\d+)').Groups[1].Value)</VehimapNumericVersion>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -11,5 +14,10 @@
     <Company>vlcekapps</Company>
     <Product>Vehimap</Product>
     <RepositoryUrl>https://github.com/vlcekapps/Vehimap</RepositoryUrl>
+    <Version>$(VehimapVersion)</Version>
+    <AssemblyVersion>$(VehimapNumericVersion).0</AssemblyVersion>
+    <FileVersion>$(VehimapNumericVersion).0</FileVersion>
+    <InformationalVersion>$(VehimapVersion)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 </Project>
