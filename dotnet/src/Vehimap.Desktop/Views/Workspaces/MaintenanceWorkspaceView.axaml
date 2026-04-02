@@ -42,30 +42,30 @@
         <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding MaintenanceEditorStatus}" TextWrapping="Wrap" />
         <Grid Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsEditingMaintenance}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
           <TextBlock FontWeight="SemiBold" Text="Název úkonu" />
-          <TextBox x:Name="MaintenanceEditorTitleBox" Grid.Row="1" Margin="0,6,0,0" Text="{Binding MaintenanceEditorTitle}" PlaceholderText="Například Motorový olej" />
+          <TextBox x:Name="MaintenanceEditorTitleBox" Grid.Row="1" Margin="0,6,0,0" Text="{Binding MaintenanceEditorTitle}" PlaceholderText="Například Motorový olej" AutomationProperties.Name="Název servisního úkonu" />
           <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="*,*">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Interval km" />
-              <TextBox Text="{Binding MaintenanceEditorIntervalKm}" PlaceholderText="Například 15000" />
+              <TextBox Text="{Binding MaintenanceEditorIntervalKm}" PlaceholderText="Například 15000" AutomationProperties.Name="Interval údržby v kilometrech" />
             </StackPanel>
             <StackPanel Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Interval měsíců" />
-              <TextBox Text="{Binding MaintenanceEditorIntervalMonths}" PlaceholderText="Například 12" />
+              <TextBox Text="{Binding MaintenanceEditorIntervalMonths}" PlaceholderText="Například 12" AutomationProperties.Name="Interval údržby v měsících" />
             </StackPanel>
           </Grid>
           <Grid Grid.Row="3" Margin="0,14,0,0" ColumnDefinitions="*,*">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Poslední servis - datum" />
-              <TextBox Text="{Binding MaintenanceEditorLastServiceDate}" PlaceholderText="Například 15.06.2026" />
+              <TextBox Text="{Binding MaintenanceEditorLastServiceDate}" PlaceholderText="Například 15.06.2026" AutomationProperties.Name="Datum posledního servisu" />
             </StackPanel>
             <StackPanel Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Poslední servis - tachometr" />
-              <TextBox Text="{Binding MaintenanceEditorLastServiceOdometer}" PlaceholderText="Například 123456" />
+              <TextBox Text="{Binding MaintenanceEditorLastServiceOdometer}" PlaceholderText="Například 123456" AutomationProperties.Name="Tachometr při posledním servisu" />
             </StackPanel>
           </Grid>
           <CheckBox Grid.Row="4" Margin="0,14,0,0" IsChecked="{Binding MaintenanceEditorIsActive}" Content="Aktivní servisní plán" AutomationProperties.Name="Servisní plán je aktivní" />
           <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
-          <TextBox Grid.Row="6" Margin="0,6,0,0" Height="120" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding MaintenanceEditorNote}" />
+          <TextBox Grid.Row="6" Margin="0,6,0,0" Height="120" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding MaintenanceEditorNote}" AutomationProperties.Name="Poznámka k servisnímu plánu" />
         </Grid>
         <TextBlock Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsMaintenanceDetailVisible}" Text="{Binding SelectedMaintenanceDetail}" TextWrapping="Wrap" />
       </Grid>

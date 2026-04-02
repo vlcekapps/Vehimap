@@ -115,4 +115,42 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CloseHistoryWindowButton\"", historyXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseDashboardWindowButton\"", dashboardXaml);
     }
+
+    [Fact]
+    public void Editor_fields_should_define_explicit_accessibility_names()
+    {
+        var desktopRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "Vehimap.Desktop",
+            "Views"));
+
+        var settingsXaml = File.ReadAllText(Path.Combine(desktopRoot, "SettingsWindow.axaml"));
+        var fuelXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "FuelWorkspaceView.axaml"));
+        var historyXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "HistoryWorkspaceView.axaml"));
+        var maintenanceXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "MaintenanceWorkspaceView.axaml"));
+        var recordXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "RecordWorkspaceView.axaml"));
+        var reminderXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "ReminderWorkspaceView.axaml"));
+        var vehicleDetailXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "VehicleDetailWorkspaceView.axaml"));
+
+        Assert.Contains("AutomationProperties.Name=\"Upozornění na technickou kontrolu ve dnech\"", settingsXaml);
+        Assert.Contains("AutomationProperties.Name=\"Upozornění na zelenou kartu ve dnech\"", settingsXaml);
+        Assert.Contains("AutomationProperties.Name=\"Datum tankování\"", fuelXaml);
+        Assert.Contains("AutomationProperties.Name=\"Typ paliva\"", fuelXaml);
+        Assert.Contains("AutomationProperties.Name=\"Datum historického záznamu\"", historyXaml);
+        Assert.Contains("AutomationProperties.Name=\"Typ historické události\"", historyXaml);
+        Assert.Contains("AutomationProperties.Name=\"Název servisního úkonu\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.Name=\"Interval údržby v kilometrech\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.Name=\"Typ dokladu\"", recordXaml);
+        Assert.Contains("AutomationProperties.Name=\"Režim přílohy dokladu\"", recordXaml);
+        Assert.Contains("AutomationProperties.Name=\"Název připomínky\"", reminderXaml);
+        Assert.Contains("AutomationProperties.Name=\"Termín připomínky\"", reminderXaml);
+        Assert.Contains("AutomationProperties.Name=\"Název vozidla\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.Name=\"Kategorie vozidla\"", vehicleDetailXaml);
+    }
 }

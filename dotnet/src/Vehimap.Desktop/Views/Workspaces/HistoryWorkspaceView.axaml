@@ -82,19 +82,22 @@
                    Grid.Row="1"
                    Margin="0,6,0,0"
                    Text="{Binding HistoryEditorDate}"
-                   PlaceholderText="Například 15.06.2026" />
+                   PlaceholderText="Například 15.06.2026"
+                   AutomationProperties.Name="Datum historického záznamu" />
           <Grid Grid.Row="2"
                 Margin="0,14,0,0"
                 ColumnDefinitions="*,160">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Typ události" />
               <TextBox Text="{Binding HistoryEditorType}"
-                       PlaceholderText="Například Servis" />
+                       PlaceholderText="Například Servis"
+                       AutomationProperties.Name="Typ historické události" />
             </StackPanel>
             <StackPanel Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Tachometr" />
               <TextBox Text="{Binding HistoryEditorOdometer}"
-                       PlaceholderText="Například 123456" />
+                       PlaceholderText="Například 123456"
+                       AutomationProperties.Name="Tachometr historického záznamu" />
             </StackPanel>
           </Grid>
           <TextBlock Grid.Row="3"
@@ -104,7 +107,8 @@
           <TextBox Grid.Row="4"
                    Margin="0,6,0,0"
                    Text="{Binding HistoryEditorCost}"
-                   PlaceholderText="Například 2500" />
+                   PlaceholderText="Například 2500"
+                   AutomationProperties.Name="Cena historického záznamu" />
           <TextBlock Grid.Row="5"
                      Margin="0,14,0,0"
                      FontWeight="SemiBold"
@@ -115,7 +119,8 @@
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
                    VerticalContentAlignment="Top"
-                   Text="{Binding HistoryEditorNote}" />
+                   Text="{Binding HistoryEditorNote}"
+                   AutomationProperties.Name="Poznámka k historickému záznamu" />
         </Grid>
         <TextBlock Grid.Row="3"
                    Margin="0,16,0,0"

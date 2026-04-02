@@ -83,12 +83,14 @@
               <TextBlock FontWeight="SemiBold" Text="Datum" />
               <TextBox x:Name="FuelEditorDateBox"
                        Text="{Binding FuelEditorDate}"
-                       PlaceholderText="Například 15.06.2026" />
+                       PlaceholderText="Například 15.06.2026"
+                       AutomationProperties.Name="Datum tankování" />
             </StackPanel>
             <StackPanel Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Typ paliva" />
               <TextBox Text="{Binding FuelEditorFuelType}"
-                       PlaceholderText="Například Natural 95" />
+                       PlaceholderText="Například Natural 95"
+                       AutomationProperties.Name="Typ paliva" />
             </StackPanel>
           </Grid>
           <Grid Grid.Row="1"
@@ -96,21 +98,25 @@
                 ColumnDefinitions="*,*,*">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Množství" />
-              <TextBox Text="{Binding FuelEditorLiters}" />
+              <TextBox Text="{Binding FuelEditorLiters}"
+                       AutomationProperties.Name="Množství tankovaného paliva" />
             </StackPanel>
             <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Cena celkem" />
-              <TextBox Text="{Binding FuelEditorTotalCost}" />
+              <TextBox Text="{Binding FuelEditorTotalCost}"
+                       AutomationProperties.Name="Cena tankování celkem" />
             </StackPanel>
             <StackPanel Grid.Column="2" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Tachometr" />
-              <TextBox Text="{Binding FuelEditorOdometer}" />
+              <TextBox Text="{Binding FuelEditorOdometer}"
+                       AutomationProperties.Name="Tachometr při tankování" />
             </StackPanel>
           </Grid>
           <CheckBox Grid.Row="2"
                     Margin="0,14,0,0"
                     IsChecked="{Binding FuelEditorFullTank}"
-                    Content="Plná nádrž" />
+                    Content="Plná nádrž"
+                    AutomationProperties.Name="Tankování do plné nádrže" />
           <TextBlock Grid.Row="3"
                      Margin="0,14,0,0"
                      FontWeight="SemiBold"
@@ -121,7 +127,8 @@
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
                    VerticalContentAlignment="Top"
-                   Text="{Binding FuelEditorNote}" />
+                   Text="{Binding FuelEditorNote}"
+                   AutomationProperties.Name="Poznámka k tankování" />
         </Grid>
         <TextBlock Grid.Row="3"
                    Margin="0,16,0,0"

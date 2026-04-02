@@ -25,6 +25,7 @@
                Grid.Row="0"
                Grid.Column="1"
                Text="{Binding TechnicalReminderDays}"
+               AutomationProperties.Name="Upozornění na technickou kontrolu ve dnech"
                AutomationProperties.AutomationId="TechnicalReminderDaysBox" />
 
       <TextBlock Grid.Row="1" Text="Upozornění na zelenou kartu (dny)" VerticalAlignment="Center" Margin="0,12,0,0" />
@@ -32,6 +33,7 @@
                Grid.Column="1"
                Margin="0,12,0,0"
                Text="{Binding GreenCardReminderDays}"
+               AutomationProperties.Name="Upozornění na zelenou kartu ve dnech"
                AutomationProperties.AutomationId="GreenCardReminderDaysBox" />
 
       <TextBlock Grid.Row="2" Text="Upozornění na údržbu (dny)" VerticalAlignment="Center" Margin="0,12,0,0" />
@@ -39,6 +41,7 @@
                Grid.Column="1"
                Margin="0,12,0,0"
                Text="{Binding MaintenanceReminderDays}"
+               AutomationProperties.Name="Upozornění na údržbu ve dnech"
                AutomationProperties.AutomationId="MaintenanceReminderDaysBox" />
 
       <TextBlock Grid.Row="3" Text="Upozornění na údržbu (km)" VerticalAlignment="Center" Margin="0,12,0,0" />
@@ -46,6 +49,7 @@
                Grid.Column="1"
                Margin="0,12,0,0"
                Text="{Binding MaintenanceReminderKm}"
+               AutomationProperties.Name="Upozornění na údržbu v kilometrech"
                AutomationProperties.AutomationId="MaintenanceReminderKmBox" />
 
       <CheckBox Grid.Row="4"
@@ -53,6 +57,7 @@
                 Margin="0,18,0,0"
                 IsChecked="{Binding ShowDashboardOnLaunch}"
                 Content="Po spuštění otevřít Dashboard místo Detailu"
+                AutomationProperties.Name="Po spuštění otevřít Dashboard místo Detailu"
                 AutomationProperties.AutomationId="ShowDashboardOnLaunchCheckBox" />
     </Grid>
 
