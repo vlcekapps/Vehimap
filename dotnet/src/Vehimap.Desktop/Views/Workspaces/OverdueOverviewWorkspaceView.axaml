@@ -20,7 +20,8 @@
                Margin="12,0,0,0"
                Text="{Binding OverdueOverviewSearchText}"
                PlaceholderText="Vozidlo, SPZ, termín nebo položka..."
-               AutomationProperties.Name="Hledání v přehledu propadlých termínů" />
+               AutomationProperties.Name="Hledání v přehledu propadlých termínů"
+               AutomationProperties.AutomationId="OverdueOverviewSearchBox" />
       <TextBlock Grid.Column="2"
                  Margin="12,0,0,0"
                  VerticalAlignment="Center"
@@ -30,14 +31,16 @@
                 Margin="12,0,0,0"
                 ItemsSource="{Binding OverviewFilters}"
                 SelectedItem="{Binding SelectedOverdueOverviewFilter}"
-                AutomationProperties.Name="Filtr přehledu propadlých termínů" />
+                AutomationProperties.Name="Filtr přehledu propadlých termínů"
+                AutomationProperties.AutomationId="OverdueOverviewFilterComboBox" />
       <Button Grid.Column="4"
               x:Name="OverdueOverviewOpenButton"
               Margin="12,0,0,0"
               Width="150"
               Command="{Binding OpenSelectedOverdueOverviewItemCommand}"
               Content="Otevřít položku"
-              AutomationProperties.Name="Otevřít vybraný propadlý termín" />
+              AutomationProperties.Name="Otevřít vybraný propadlý termín"
+              AutomationProperties.AutomationId="OverdueOverviewOpenButton" />
     </Grid>
 
     <ListBox x:Name="OverdueOverviewListBox"
@@ -45,7 +48,8 @@
              Margin="0,12,12,0"
              ItemsSource="{Binding OverdueOverviewItems}"
              SelectedItem="{Binding SelectedOverdueOverviewItem}"
-             AutomationProperties.Name="Přehled propadlých termínů napříč vozidly">
+             AutomationProperties.Name="Přehled propadlých termínů napříč vozidly"
+             AutomationProperties.AutomationId="OverdueOverviewListBox">
       <ListBox.KeyBindings>
         <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedOverdueOverviewItemCommand}" />
       </ListBox.KeyBindings>
@@ -82,10 +86,12 @@
         <WrapPanel Grid.Row="1" Margin="0,12,0,0" ItemWidth="150" ItemHeight="34">
           <Button Command="{Binding OpenSelectedOverdueOverviewVehicleCommand}"
                   Content="Zobrazit vozidlo"
-                  AutomationProperties.Name="Zobrazit vozidlo k vybranému propadlému termínu" />
+                  AutomationProperties.Name="Zobrazit vozidlo k vybranému propadlému termínu"
+                  AutomationProperties.AutomationId="OverdueOverviewOpenVehicleButton" />
           <Button Command="{Binding OpenSelectedOverdueOverviewItemCommand}"
                   Content="Otevřít položku"
-                  AutomationProperties.Name="Otevřít evidenci vybraného propadlého termínu" />
+                  AutomationProperties.Name="Otevřít evidenci vybraného propadlého termínu"
+                  AutomationProperties.AutomationId="OverdueOverviewOpenItemButton" />
         </WrapPanel>
         <TextBlock Grid.Row="2"
                    Margin="0,12,0,0"

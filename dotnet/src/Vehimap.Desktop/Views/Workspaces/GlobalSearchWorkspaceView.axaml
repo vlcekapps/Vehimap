@@ -20,14 +20,16 @@
                Margin="12,0,0,0"
                Text="{Binding GlobalSearchText}"
                PlaceholderText="Vozidlo, SPZ, doklad, připomínka, údržba..."
-               AutomationProperties.Name="Globální hledání ve Vehimapu" />
+               AutomationProperties.Name="Globální hledání ve Vehimapu"
+               AutomationProperties.AutomationId="GlobalSearchTextBox" />
       <Button Grid.Column="2"
               x:Name="SearchOpenButton"
               Margin="12,0,0,0"
               Width="150"
               Command="{Binding OpenSelectedSearchResultCommand}"
               Content="Otevřít položku"
-              AutomationProperties.Name="Otevřít vybraný výsledek hledání" />
+              AutomationProperties.Name="Otevřít vybraný výsledek hledání"
+              AutomationProperties.AutomationId="SearchOpenButton" />
     </Grid>
 
     <ListBox x:Name="SearchResultsListBox"
@@ -35,7 +37,8 @@
              Margin="0,12,12,0"
              ItemsSource="{Binding GlobalSearchResults}"
              SelectedItem="{Binding SelectedSearchResult}"
-             AutomationProperties.Name="Výsledky globálního hledání">
+             AutomationProperties.Name="Výsledky globálního hledání"
+             AutomationProperties.AutomationId="SearchResultsListBox">
       <ListBox.KeyBindings>
         <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedSearchResultCommand}" />
       </ListBox.KeyBindings>

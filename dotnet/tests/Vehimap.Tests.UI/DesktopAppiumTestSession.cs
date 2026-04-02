@@ -148,9 +148,16 @@ internal sealed class DesktopAppiumTestSession : IDisposable
 
         Directory.CreateDirectory(dataPath);
 
+        var now = DateTime.Now;
+        var currentYear = now.Year;
+        var futureDate = now.AddMonths(2);
+        var pastDate = now.AddMonths(-2);
+        var historyDate = now.AddDays(-30);
+        var fuelDate = now.AddDays(-15);
+
         File.WriteAllText(Path.Combine(dataPath, "vehicles.tsv"), """
 # Vehimap data v4
-veh_1	Milena	Osobní vozidla	Rodinné auto	Škoda 120L	1AB2345	1988	43		08/2026	05/2025	06/2026
+veh_1	Milena	Osobní vozidla	Rodinné auto	Škoda 120L	1AB2345	1988	43		08/2099	05/2025	06/2099
 """);
 
         File.WriteAllText(Path.Combine(dataPath, "vehicle_meta.tsv"), """
@@ -158,11 +165,28 @@ veh_1	Milena	Osobní vozidla	Rodinné auto	Škoda 120L	1AB2345	1988	43		08/2026	
 veh_1	Běžný provoz		benzín			
 """);
 
-        File.WriteAllText(Path.Combine(dataPath, "history.tsv"), "# Vehimap history v1\n");
-        File.WriteAllText(Path.Combine(dataPath, "fuel.tsv"), "# Vehimap fuel v1\n");
-        File.WriteAllText(Path.Combine(dataPath, "records.tsv"), "# Vehimap records v2\n");
-        File.WriteAllText(Path.Combine(dataPath, "reminders.tsv"), "# Vehimap reminders v2\n");
-        File.WriteAllText(Path.Combine(dataPath, "maintenance.tsv"), "# Vehimap maintenance v1\n");
+        File.WriteAllText(Path.Combine(dataPath, "history.tsv"), $$"""
+# Vehimap history v1
+hist_1	veh_1	{{historyDate:dd.MM.yyyy}}	Servis	123000	2500	Výměna oleje
+""");
+        File.WriteAllText(Path.Combine(dataPath, "fuel.tsv"), $$"""
+# Vehimap fuel v1
+fuel_1	veh_1	{{fuelDate:dd.MM.yyyy}}	123450	38.5	1890	0	Natural 95	Dálnice
+""");
+        File.WriteAllText(Path.Combine(dataPath, "records.tsv"), $$"""
+# Vehimap records v2
+rec_1	veh_1	Povinné ručení	Kooperativa {{currentYear}}	Kooperativa	01/{{currentYear}}	{{futureDate:MM/yyyy}}	2000	external		Platná smlouva
+rec_2	veh_1	Doklad	Propadlá pojistka	Test	01/{{pastDate.Year}}	{{pastDate:MM/yyyy}}	500	external		Původní smlouva
+""");
+        File.WriteAllText(Path.Combine(dataPath, "reminders.tsv"), $$"""
+# Vehimap reminders v2
+rem_1	veh_1	Objednat servis	{{futureDate:dd.MM.yyyy}}	14	Neopakovat	Běžná servisní kontrola
+rem_2	veh_1	Propadlá připomínka	{{pastDate:dd.MM.yyyy}}	7	Neopakovat	Kontrola starého termínu
+""");
+        File.WriteAllText(Path.Combine(dataPath, "maintenance.tsv"), $$"""
+# Vehimap maintenance v1
+mnt_1	veh_1	Motorový olej	15000	12	{{historyDate:dd.MM.yyyy}}	123000	1	Každoroční servis
+""");
         File.WriteAllText(Path.Combine(dataPath, "settings.ini"), """
 [app]
 technical_reminder_days=30

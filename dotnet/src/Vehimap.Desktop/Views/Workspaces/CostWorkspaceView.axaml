@@ -16,7 +16,8 @@
              Margin="0,12,0,0"
              ItemsSource="{Binding CostVehicles}"
              SelectedItem="{Binding SelectedDashboardCostVehicle}"
-             AutomationProperties.Name="Seznam nákladových souhrnů vozidel">
+             AutomationProperties.Name="Seznam nákladových souhrnů vozidel"
+             AutomationProperties.AutomationId="CostListBox">
       <ListBox.KeyBindings>
         <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" />
       </ListBox.KeyBindings>

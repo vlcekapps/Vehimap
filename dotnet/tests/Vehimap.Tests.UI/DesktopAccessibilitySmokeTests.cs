@@ -1,3 +1,4 @@
+using OpenQA.Selenium;
 using Xunit;
 
 namespace Vehimap.Tests.UI;
@@ -225,6 +226,95 @@ public sealed class DesktopAccessibilitySmokeTests
             session.SendKeysByAccessibilityId("VehicleEditorNoteBox", "Vytvořeno UI testem");
             session.ClickByAccessibilityId("SaveVehicleButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveVehicleButton");
+        }
+    }
+
+    [Fact]
+    public void Global_search_can_open_matching_record_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("SearchTabButton");
+            session.SendKeysByAccessibilityId("GlobalSearchTextBox", "Kooperativa");
+            session.ClickByAccessibilityId("SearchOpenButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateRecordButton"));
+        }
+    }
+
+    [Fact]
+    public void Timeline_can_open_matching_reminder_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("TimelineTabButton");
+            session.SendKeysByAccessibilityId("TimelineSearchBox", "Objednat servis");
+            session.ClickByAccessibilityId("TimelineOpenButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateReminderButton"));
+        }
+    }
+
+    [Fact]
+    public void Upcoming_overview_can_open_matching_item_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("UpcomingOverviewTabButton");
+            session.SendKeysByAccessibilityId("UpcomingOverviewSearchBox", "Objednat servis");
+            session.ClickByAccessibilityId("UpcomingOverviewOpenButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateReminderButton"));
+        }
+    }
+
+    [Fact]
+    public void Overdue_overview_can_open_matching_item_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("OverdueOverviewTabButton");
+            session.SendKeysByAccessibilityId("OverdueOverviewSearchBox", "Propadlá pojistka");
+            session.ClickByAccessibilityId("OverdueOverviewOpenButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateRecordButton"));
+        }
+    }
+
+    [Fact]
+    public void Cost_workspace_can_open_selected_vehicle_with_enter_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("CostTabButton");
+            session.SendKeysByAccessibilityId("CostListBox", Keys.Enter);
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateVehicleButton"));
         }
     }
 }

@@ -20,7 +20,8 @@
                Margin="12,0,0,0"
                Text="{Binding UpcomingOverviewSearchText}"
                PlaceholderText="Vozidlo, SPZ, termín nebo položka..."
-               AutomationProperties.Name="Hledání v přehledu blížících se termínů" />
+               AutomationProperties.Name="Hledání v přehledu blížících se termínů"
+               AutomationProperties.AutomationId="UpcomingOverviewSearchBox" />
       <TextBlock Grid.Column="2"
                  Margin="12,0,0,0"
                  VerticalAlignment="Center"
@@ -30,14 +31,16 @@
                 Margin="12,0,0,0"
                 ItemsSource="{Binding OverviewFilters}"
                 SelectedItem="{Binding SelectedUpcomingOverviewFilter}"
-                AutomationProperties.Name="Filtr přehledu blížících se termínů" />
+                AutomationProperties.Name="Filtr přehledu blížících se termínů"
+                AutomationProperties.AutomationId="UpcomingOverviewFilterComboBox" />
       <Button Grid.Column="4"
               x:Name="UpcomingOverviewOpenButton"
               Margin="12,0,0,0"
               Width="150"
               Command="{Binding OpenSelectedUpcomingOverviewItemCommand}"
               Content="Otevřít položku"
-              AutomationProperties.Name="Otevřít vybraný blížící se termín" />
+              AutomationProperties.Name="Otevřít vybraný blížící se termín"
+              AutomationProperties.AutomationId="UpcomingOverviewOpenButton" />
     </Grid>
 
     <ListBox x:Name="UpcomingOverviewListBox"
@@ -45,7 +48,8 @@
              Margin="0,12,12,0"
              ItemsSource="{Binding UpcomingOverviewItems}"
              SelectedItem="{Binding SelectedUpcomingOverviewItem}"
-             AutomationProperties.Name="Přehled blížících se termínů napříč vozidly">
+             AutomationProperties.Name="Přehled blížících se termínů napříč vozidly"
+             AutomationProperties.AutomationId="UpcomingOverviewListBox">
       <ListBox.KeyBindings>
         <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedUpcomingOverviewItemCommand}" />
       </ListBox.KeyBindings>
@@ -82,10 +86,12 @@
         <WrapPanel Grid.Row="1" Margin="0,12,0,0" ItemWidth="150" ItemHeight="34">
           <Button Command="{Binding OpenSelectedUpcomingOverviewVehicleCommand}"
                   Content="Zobrazit vozidlo"
-                  AutomationProperties.Name="Zobrazit vozidlo k vybranému blížícímu se termínu" />
+                  AutomationProperties.Name="Zobrazit vozidlo k vybranému blížícímu se termínu"
+                  AutomationProperties.AutomationId="UpcomingOverviewOpenVehicleButton" />
           <Button Command="{Binding OpenSelectedUpcomingOverviewItemCommand}"
                   Content="Otevřít položku"
-                  AutomationProperties.Name="Otevřít evidenci vybraného blížícího se termínu" />
+                  AutomationProperties.Name="Otevřít evidenci vybraného blížícího se termínu"
+                  AutomationProperties.AutomationId="UpcomingOverviewOpenItemButton" />
         </WrapPanel>
         <TextBlock Grid.Row="2"
                    Margin="0,12,0,0"

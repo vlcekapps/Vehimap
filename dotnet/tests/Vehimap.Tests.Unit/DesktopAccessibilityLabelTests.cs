@@ -136,6 +136,11 @@ public sealed class DesktopAccessibilityLabelTests
         var maintenanceXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "MaintenanceWorkspaceView.axaml"));
         var recordXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "RecordWorkspaceView.axaml"));
         var reminderXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "ReminderWorkspaceView.axaml"));
+        var timelineXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "TimelineWorkspaceView.axaml"));
+        var globalSearchXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "GlobalSearchWorkspaceView.axaml"));
+        var upcomingOverviewXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "UpcomingOverviewWorkspaceView.axaml"));
+        var overdueOverviewXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "OverdueOverviewWorkspaceView.axaml"));
+        var costXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "CostWorkspaceView.axaml"));
         var vehicleDetailXaml = File.ReadAllText(Path.Combine(desktopRoot, "Workspaces", "VehicleDetailWorkspaceView.axaml"));
 
         Assert.Contains("AutomationProperties.Name=\"Upozornění na technickou kontrolu ve dnech\"", settingsXaml);
@@ -163,6 +168,15 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorDateBox\"", fuelXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateMaintenanceButton\"", maintenanceXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceEditorTitleBox\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"TimelineSearchBox\"", timelineXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"TimelineOpenButton\"", timelineXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"GlobalSearchTextBox\"", globalSearchXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SearchOpenButton\"", globalSearchXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"UpcomingOverviewSearchBox\"", upcomingOverviewXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"UpcomingOverviewOpenButton\"", upcomingOverviewXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewSearchBox\"", overdueOverviewXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewOpenButton\"", overdueOverviewXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateVehicleButton\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorNameBox\"", vehicleDetailXaml);
     }
