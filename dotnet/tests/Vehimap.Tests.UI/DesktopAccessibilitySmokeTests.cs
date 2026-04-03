@@ -69,8 +69,9 @@ public sealed class DesktopAccessibilitySmokeTests
         {
             session.ClickByAccessibilityId("VehicleListBox");
             session.SendKeysToActiveElement(Keys.F10);
-            var focusedId = session.WaitForFocusedAutomationId(12, "FileMenuRoot", "BackupExportButton");
-            Assert.Contains(focusedId, new[] { "FileMenuRoot", "BackupExportButton" });
+            var focusedId = session.WaitForFocusedAutomationId(12, "FileMenuRoot", "PrintableReportButton");
+            Assert.Contains(focusedId, new[] { "FileMenuRoot", "PrintableReportButton" });
+            Assert.NotNull(session.WaitForElementByAccessibilityId("PrintableReportButton"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("ExitAppButton"));
         }
     }

@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text;
 using Vehimap.Application;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.Services;
@@ -97,6 +99,42 @@ public sealed partial class MainWindowViewModel
 
     internal void ReloadForBackgroundMonitoring() =>
         Load(SelectedVehicle?.Id, SelectedVehicleTabIndex, applyLaunchTabPreference: false);
+
+    internal async Task<string> OpenPrintableVehicleReportAsync(CancellationToken cancellationToken = default)
+    {
+        if (!_session.IsLoaded)
+        {
+            ShellStatus = "Tiskový přehled nelze otevřít bez načtených dat.";
+            return ShellStatus;
+        }
+
+        try
+        {
+            var now = DateTime.Now;
+            var html = _printableVehicleReportService.BuildHtml(
+                _dataSet,
+                _metaByVehicleId,
+                _timelineService,
+                DateOnly.FromDateTime(now),
+                now);
+            var reportPath = Path.Combine(
+                Path.GetTempPath(),
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Vehimap_tiskovy_prehled_{0:yyyyMMdd_HHmmss_fff}.html",
+                    now));
+
+            await File.WriteAllTextAsync(reportPath, html, new UTF8Encoding(false), cancellationToken).ConfigureAwait(false);
+            await _fileLauncher.OpenAsync(reportPath, cancellationToken).ConfigureAwait(false);
+            ShellStatus = $"Tiskový přehled byl otevřen z dočasného souboru {reportPath}.";
+        }
+        catch (Exception ex)
+        {
+            ShellStatus = $"Tiskový přehled se nepodařilo otevřít: {ex.Message}";
+        }
+
+        return ShellStatus;
+    }
 
     internal DesktopBackgroundSnapshot BuildBackgroundSnapshot()
     {

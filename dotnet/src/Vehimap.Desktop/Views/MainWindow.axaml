@@ -40,6 +40,12 @@
                   Header="_Soubor"
                   AutomationProperties.Name="Nabídka Soubor"
                   AutomationProperties.AutomationId="FileMenuRoot">
+          <MenuItem x:Name="PrintableReportButton"
+                    Header="Tiskový přehled"
+                    Click="OnPrintableReportClick"
+                    AutomationProperties.Name="Otevřít tiskový přehled vozidel"
+                    AutomationProperties.AutomationId="PrintableReportButton" />
+          <Separator />
           <MenuItem x:Name="BackupExportButton"
                     Header="Export dat do zálohy"
                     Click="OnBackupExportClick"

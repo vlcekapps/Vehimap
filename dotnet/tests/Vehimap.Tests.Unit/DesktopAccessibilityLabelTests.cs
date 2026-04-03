@@ -62,6 +62,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"QuickActionsMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppMenuRoot\"", xaml);
         Assert.Contains("IsTabStop=\"False\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MinimizeToTrayButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SettingsButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutButton\"", xaml);
@@ -96,6 +97,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Click=\"OnUpdateCheckClick\"", xaml);
         Assert.Contains("Click=\"OnMinimizeToTrayClick\"", xaml);
         Assert.Contains("Click=\"OnExitClick\"", xaml);
+        Assert.Contains("Click=\"OnPrintableReportClick\"", xaml);
         Assert.Contains("Click=\"OnCalendarExportClick\"", xaml);
         Assert.Contains("Click=\"OnReloadClick\"", xaml);
         Assert.Contains("Click=\"OnCreateVehicleMenuClick\"", xaml);

@@ -39,6 +39,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly IFileDialogService _fileDialogService;
     private readonly DesktopProjectionService _projectionService;
     private readonly DesktopNavigationCoordinator _navigationCoordinator;
+    private readonly DesktopPrintableVehicleReportService _printableVehicleReportService;
     private VehimapDataRoot? _dataRoot => _session.DataRoot;
     private VehimapDataSet _dataSet => _session.DataSet;
     private IReadOnlyList<AuditItem> _auditItems => _session.AuditItems;
@@ -233,6 +234,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             null,
             new DesktopProjectionService(),
             new DesktopNavigationCoordinator(),
+            new DesktopPrintableVehicleReportService(),
             new AvaloniaAppShellDialogService(),
             new ProcessUpdateInstallLauncher())
     {
@@ -256,6 +258,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IUpdateService? updateService = null,
         DesktopProjectionService? projectionService = null,
         DesktopNavigationCoordinator? navigationCoordinator = null,
+        DesktopPrintableVehicleReportService? printableVehicleReportService = null,
         IAppShellDialogService? appShellDialogService = null,
         IUpdateInstallLauncher? updateInstallLauncher = null)
     {
@@ -285,6 +288,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
         _projectionService = projectionService ?? new DesktopProjectionService();
         _navigationCoordinator = navigationCoordinator ?? new DesktopNavigationCoordinator();
+        _printableVehicleReportService = printableVehicleReportService ?? new DesktopPrintableVehicleReportService();
         AppShellController = new DesktopAppShellController(
             appShellDialogService ?? new AvaloniaAppShellDialogService(),
             updateInstallLauncher ?? new ProcessUpdateInstallLauncher());

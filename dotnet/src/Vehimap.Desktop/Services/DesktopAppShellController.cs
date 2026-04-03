@@ -47,6 +47,9 @@ internal sealed class DesktopAppShellController
         await shell.ExportBackupAsync(backupPath, cancellationToken).ConfigureAwait(true);
     }
 
+    public Task OpenPrintableReportAsync(MainWindowViewModel shell, CancellationToken cancellationToken = default) =>
+        shell.OpenPrintableVehicleReportAsync(cancellationToken);
+
     public async Task ImportBackupAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
         if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "obnovit data ze zálohy").ConfigureAwait(true))

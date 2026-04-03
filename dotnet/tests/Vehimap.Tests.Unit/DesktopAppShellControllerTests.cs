@@ -56,6 +56,27 @@ public sealed class DesktopAppShellControllerTests
     }
 
     [Fact]
+    public async Task Open_printable_report_async_creates_html_and_opens_it()
+    {
+        var controller = new DesktopAppShellController(new StubAppShellDialogService(), new StubUpdateInstallLauncher());
+        var fileLauncher = new StubFileLauncher();
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            fileLauncher: fileLauncher);
+
+        await controller.OpenPrintableReportAsync(viewModel);
+
+        Assert.NotNull(fileLauncher.LastOpenedPath);
+        Assert.EndsWith(".html", fileLauncher.LastOpenedPath, StringComparison.OrdinalIgnoreCase);
+        Assert.True(File.Exists(fileLauncher.LastOpenedPath));
+        var content = File.ReadAllText(fileLauncher.LastOpenedPath);
+        Assert.Contains("Vehimap - Tiskový přehled vozidel", content);
+
+        File.Delete(fileLauncher.LastOpenedPath);
+    }
+
+    [Fact]
     public async Task Check_for_updates_async_launches_installer_and_requests_close_when_install_is_ready()
     {
         var dialogService = new StubAppShellDialogService
@@ -147,6 +168,7 @@ public sealed class DesktopAppShellControllerTests
             updateService,
             new DesktopProjectionService(),
             new DesktopNavigationCoordinator(),
+            new DesktopPrintableVehicleReportService(),
             new StubAppShellDialogService(),
             new StubUpdateInstallLauncher());
     }

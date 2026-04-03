@@ -425,6 +425,17 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
+    private async void OnPrintableReportClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.AppShellController.OpenPrintableReportAsync(_viewModel).ConfigureAwait(true);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
     private void OnReloadClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel?.ReloadCommand.CanExecute(null) == true)
