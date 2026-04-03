@@ -31,6 +31,7 @@ internal sealed class AvaloniaTrayService : ITrayService
         if (_trayIcon is not null)
         {
             _trayIcon.ToolTipText = configuration.ToolTipText;
+            _trayIcon.Menu = BuildTrayMenu(configuration);
             IsSupported = true;
             return Task.CompletedTask;
         }
@@ -39,7 +40,8 @@ internal sealed class AvaloniaTrayService : ITrayService
         {
             ToolTipText = configuration.ToolTipText,
             IsVisible = true,
-            Command = new AsyncRelayCommand(configuration.OpenTrayActionsAsync)
+            Command = new AsyncRelayCommand(configuration.OpenTrayActionsAsync),
+            Menu = BuildTrayMenu(configuration)
         };
 
         var icon = TryLoadIcon();
@@ -47,22 +49,6 @@ internal sealed class AvaloniaTrayService : ITrayService
         {
             _trayIcon.Icon = icon;
         }
-
-        var showItem = new NativeMenuItem("Zobrazit Vehimap");
-        showItem.Click += async (_, _) => await configuration.ShowMainWindowAsync().ConfigureAwait(false);
-
-        var dashboardItem = new NativeMenuItem("Otevřít Dashboard");
-        dashboardItem.Click += async (_, _) => await configuration.ShowDashboardAsync().ConfigureAwait(false);
-
-        var exitItem = new NativeMenuItem("Ukončit");
-        exitItem.Click += async (_, _) => await configuration.ExitApplicationAsync().ConfigureAwait(false);
-
-        var menu = new NativeMenu();
-        menu.Add(showItem);
-        menu.Add(dashboardItem);
-        menu.Add(new NativeMenuItemSeparator());
-        menu.Add(exitItem);
-        _trayIcon.Menu = menu;
 
         _trayIcons = [];
         _trayIcons.Add(_trayIcon);
@@ -98,6 +84,30 @@ internal sealed class AvaloniaTrayService : ITrayService
         _trayIcons = null;
         IsSupported = false;
         return ValueTask.CompletedTask;
+    }
+
+    private static NativeMenu BuildTrayMenu(TrayServiceConfiguration configuration)
+    {
+        var menu = new NativeMenu();
+        menu.Add(new NativeMenuItem("Akce Vehimapu…")
+        {
+            Command = new AsyncRelayCommand(configuration.OpenTrayActionsAsync)
+        });
+        menu.Add(new NativeMenuItemSeparator());
+        menu.Add(new NativeMenuItem("Zobrazit Vehimap")
+        {
+            Command = new AsyncRelayCommand(configuration.ShowMainWindowAsync)
+        });
+        menu.Add(new NativeMenuItem("Otevřít dashboard")
+        {
+            Command = new AsyncRelayCommand(configuration.ShowDashboardAsync)
+        });
+        menu.Add(new NativeMenuItemSeparator());
+        menu.Add(new NativeMenuItem("Ukončit Vehimap")
+        {
+            Command = new AsyncRelayCommand(configuration.ExitApplicationAsync)
+        });
+        return menu;
     }
 
     private WindowIcon? TryLoadIcon()

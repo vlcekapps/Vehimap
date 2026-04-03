@@ -136,6 +136,33 @@ public sealed class MainWindowViewModelAppShellTests
         Assert.Equal(status, viewModel.ShellStatus);
     }
 
+    [Fact]
+    public void Background_snapshot_reports_overdue_technical_control_even_without_future_dashboard_items()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "03/2026", "05/2025", "06/2026")
+            ]
+        };
+        dataSet.Settings.SetValue("notifications", "technical_reminder_days", "30");
+        dataSet.Settings.SetValue("notifications", "green_card_reminder_days", "30");
+        dataSet.Settings.SetValue("notifications", "maintenance_reminder_days", "31");
+        dataSet.Settings.SetValue("notifications", "maintenance_reminder_km", "1000");
+
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet));
+
+        var snapshot = viewModel.BuildBackgroundSnapshot();
+
+        Assert.True(snapshot.HasNotification);
+        Assert.StartsWith("timeline|", snapshot.NotificationKey, StringComparison.Ordinal);
+        Assert.Contains("Milena", snapshot.NotificationMessage, StringComparison.Ordinal);
+        Assert.Contains("Po termínu", snapshot.NotificationMessage, StringComparison.Ordinal);
+    }
+
     private static MainWindowViewModel CreateViewModel(
         VehimapDataRoot dataRoot,
         StubLegacyDataStore dataStore,

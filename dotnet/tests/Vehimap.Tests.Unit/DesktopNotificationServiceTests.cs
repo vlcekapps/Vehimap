@@ -1,3 +1,5 @@
+using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Desktop.Services;
 using Xunit;
 
@@ -6,39 +8,75 @@ namespace Vehimap.Tests.Unit;
 public sealed class DesktopNotificationServiceTests
 {
     [Fact]
-    public void Windows_notification_process_info_uses_powershell_and_encoded_command()
+    public async Task Show_async_uses_windows_presenter_before_falling_back()
     {
-        var startInfo = DesktopNotificationService.BuildWindowsNotificationProcessStartInfo(
-            "Vehimap: propadlá technická kontrola",
-            "Božena: technická kontrola je po termínu.",
-            @"C:\vehimap\Vehimap.Desktop.exe");
+        var provider = new StubBuildInfoProvider();
+        var service = new DesktopNotificationService(provider);
+        var invoked = false;
 
-        Assert.Contains("powershell.exe", startInfo.FileName, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("-EncodedCommand", startInfo.Arguments, StringComparison.Ordinal);
-        Assert.True(startInfo.CreateNoWindow);
-        Assert.False(startInfo.UseShellExecute);
+        service.WindowsNotificationPresenter = (title, message, _) =>
+        {
+            invoked = true;
+            Assert.Equal("Vehimap upozornění", title);
+            Assert.Equal("Propadlá technická kontrola", message);
+            return Task.FromResult(true);
+        };
+
+        service.InlineNotificationPresenter = (_, _, _) =>
+        {
+            Assert.Fail("Inline notifikace se nemá použít, pokud se podaří spustit Windows presenter.");
+            return Task.CompletedTask;
+        };
+
+        await service.ShowAsync("Vehimap upozornění", "Propadlá technická kontrola");
+
+        Assert.True(invoked);
     }
 
     [Fact]
-    public void Normalize_balloon_text_truncates_and_flattens_multiline_content()
+    public async Task Show_async_falls_back_to_inline_notification_when_windows_presenter_returns_false()
     {
-        var value = DesktopNotificationService.NormalizeBalloonText("První řádek\r\nDruhý řádek s delším obsahem", 18);
+        var provider = new StubBuildInfoProvider();
+        var service = new DesktopNotificationService(provider);
+        var inlineInvoked = false;
+
+        service.WindowsNotificationPresenter = (_, _, _) => Task.FromResult(false);
+        service.InlineNotificationPresenter = (title, message, _) =>
+        {
+            inlineInvoked = true;
+            Assert.Equal("Vehimap upozornění", title);
+            Assert.Equal("Propadlá technická kontrola", message);
+            return Task.CompletedTask;
+        };
+
+        await service.ShowAsync("Vehimap upozornění", "Propadlá technická kontrola");
+
+        Assert.True(inlineInvoked);
+    }
+
+    [Fact]
+    public void Normalize_notification_text_truncates_and_flattens_multiline_content()
+    {
+        var value = DesktopNotificationService.NormalizeNotificationText("První řádek\r\nDruhý řádek s delším obsahem", 18);
 
         Assert.DoesNotContain('\r', value);
         Assert.DoesNotContain('\n', value);
         Assert.True(value.Length <= 18);
     }
 
-    [Fact]
-    public void Windows_notification_script_contains_expected_balloon_api_calls()
+    private sealed class StubBuildInfoProvider : IAppBuildInfoProvider
     {
-        var script = DesktopNotificationService.BuildWindowsNotificationScript(
+        public AppBuildInfo GetCurrent() => new(
             "Vehimap",
-            "Propadlá technická kontrola",
-            @"C:\vehimap\Vehimap.Desktop.exe");
-
-        Assert.Contains("System.Windows.Forms.NotifyIcon", script, StringComparison.Ordinal);
-        Assert.Contains("ShowBalloonTip", script, StringComparison.Ordinal);
-        Assert.Contains("ExtractAssociatedIcon", script, StringComparison.Ordinal);
+            "1.0.2",
+            "1.0.2.0",
+            "vývojový Avalonia shell",
+            @"C:\vehimap\Vehimap.Desktop.exe",
+            "Windows",
+            ".NET 10",
+            "https://example.com/latest.ini",
+            "https://example.com/release",
+            @"C:\vehimap\Vehimap.Updater.exe",
+            true);
     }
 }

@@ -1,5 +1,6 @@
-using System.Diagnostics;
-using System.Text;
+using System.Runtime.InteropServices;
+using Avalonia.Controls;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using Vehimap.Application.Abstractions;
 using Vehimap.Desktop.Views;
@@ -8,89 +9,60 @@ namespace Vehimap.Desktop.Services;
 
 internal sealed class DesktopNotificationService : INotificationService
 {
-    private readonly IAppBuildInfoProvider _appBuildInfoProvider;
+    private const uint NifMessage = 0x00000001;
+    private const uint NifIcon = 0x00000002;
+    private const uint NifTip = 0x00000004;
+    private const uint NifInfo = 0x00000010;
 
-    internal Func<ProcessStartInfo, Process?> ProcessStarter { get; set; } = static startInfo => Process.Start(startInfo);
+    private const uint NimAdd = 0x00000000;
+    private const uint NimModify = 0x00000001;
+    private const uint NimDelete = 0x00000002;
+    private const uint NimSetVersion = 0x00000004;
+    private const uint NotifyIconVersion4 = 4;
+    private const uint NiifInfo = 0x00000001;
+
+    private readonly IAppBuildInfoProvider _appBuildInfoProvider;
+    private Func<nint>? _hostWindowHandleProvider;
+    private uint _notificationId = 1001;
+
+    internal Func<string, string, CancellationToken, Task<bool>> WindowsNotificationPresenter { get; set; }
+    internal Func<string, string, CancellationToken, Task> InlineNotificationPresenter { get; set; } =
+        ShowVehimapNotificationWindowAsync;
 
     public DesktopNotificationService(IAppBuildInfoProvider appBuildInfoProvider)
     {
         _appBuildInfoProvider = appBuildInfoProvider;
+        WindowsNotificationPresenter = ShowWindowsBalloonAsync;
+    }
+
+    public void BindHostWindow(Window window)
+    {
+        _hostWindowHandleProvider = () => window.TryGetPlatformHandle()?.Handle ?? nint.Zero;
     }
 
     public async Task ShowAsync(string title, string message, CancellationToken cancellationToken = default)
     {
         if (OperatingSystem.IsWindows())
         {
-            var startInfo = BuildWindowsNotificationProcessStartInfo(title, message, _appBuildInfoProvider.GetCurrent().ApplicationPath);
-            if (TryStartWindowsNotificationProcess(startInfo))
+            var shown = await WindowsNotificationPresenter(
+                    NormalizeNotificationText(title, 63),
+                    NormalizeNotificationText(message, 255),
+                    cancellationToken)
+                .ConfigureAwait(false);
+            if (shown)
             {
                 return;
             }
         }
 
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            var notification = new NotificationWindow(title, message);
-            notification.Show();
-        }).GetTask().ConfigureAwait(false);
+        await InlineNotificationPresenter(
+                NormalizeNotificationText(title, 96),
+                NormalizeNotificationText(message, 512),
+                cancellationToken)
+            .ConfigureAwait(false);
     }
 
-    internal static ProcessStartInfo BuildWindowsNotificationProcessStartInfo(string title, string message, string applicationPath)
-    {
-        var normalizedTitle = NormalizeBalloonText(title, 63);
-        var normalizedMessage = NormalizeBalloonText(message, 255);
-        var normalizedPath = applicationPath ?? string.Empty;
-        var powershellPath = ResolvePowerShellPath();
-        var encodedCommand = EncodePowerShellScript(BuildWindowsNotificationScript(normalizedTitle, normalizedMessage, normalizedPath));
-
-        return new ProcessStartInfo
-        {
-            FileName = powershellPath,
-            Arguments = $"-NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand {encodedCommand}",
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
-    }
-
-    internal static string BuildWindowsNotificationScript(string title, string message, string applicationPath)
-    {
-        var titlePayload = Convert.ToBase64String(Encoding.UTF8.GetBytes(title));
-        var messagePayload = Convert.ToBase64String(Encoding.UTF8.GetBytes(message));
-        var pathPayload = Convert.ToBase64String(Encoding.UTF8.GetBytes(applicationPath));
-
-        return $$"""
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
-$title = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('{{titlePayload}}'))
-$message = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('{{messagePayload}}'))
-$applicationPath = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String('{{pathPayload}}'))
-$notify = New-Object System.Windows.Forms.NotifyIcon
-try {
-    $icon = $null
-    if ($applicationPath -and (Test-Path $applicationPath)) {
-        try {
-            $icon = [System.Drawing.Icon]::ExtractAssociatedIcon($applicationPath)
-        } catch {
-            $icon = $null
-        }
-    }
-    if (-not $icon) {
-        $icon = [System.Drawing.SystemIcons]::Information
-    }
-    $notify.Icon = $icon
-    $notify.Visible = $true
-    $notify.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info
-    $notify.BalloonTipTitle = $title
-    $notify.BalloonTipText = $message
-    $notify.ShowBalloonTip(6000)
-    Start-Sleep -Milliseconds 6500
-} finally {
-    $notify.Dispose()
-}
-""";
-    }
-
-    internal static string NormalizeBalloonText(string value, int maxLength)
+    internal static string NormalizeNotificationText(string value, int maxLength)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -113,29 +85,108 @@ try {
             : normalized[..(maxLength - 1)].TrimEnd() + "…";
     }
 
-    private bool TryStartWindowsNotificationProcess(ProcessStartInfo startInfo)
+    private async Task<bool> ShowWindowsBalloonAsync(string title, string message, CancellationToken cancellationToken)
     {
-        try
-        {
-            return ProcessStarter(startInfo) is not null;
-        }
-        catch
+        var hostHandle = await Dispatcher.UIThread.InvokeAsync(() => _hostWindowHandleProvider?.Invoke() ?? nint.Zero).GetTask();
+        if (hostHandle == nint.Zero)
         {
             return false;
         }
+
+        return await Task.Run(async () =>
+        {
+            var notifyIcon = CreateNotifyIconData(hostHandle, title, message);
+            if (!Shell_NotifyIcon(NimAdd, ref notifyIcon))
+            {
+                return false;
+            }
+
+            try
+            {
+                notifyIcon.uVersionOrTimeout = NotifyIconVersion4;
+                Shell_NotifyIcon(NimSetVersion, ref notifyIcon);
+
+                notifyIcon.uFlags = NifInfo;
+                if (!Shell_NotifyIcon(NimModify, ref notifyIcon))
+                {
+                    return false;
+                }
+
+                try
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(6500), cancellationToken).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+
+                return true;
+            }
+            finally
+            {
+                Shell_NotifyIcon(NimDelete, ref notifyIcon);
+            }
+        }, cancellationToken).ConfigureAwait(false);
     }
 
-    private static string ResolvePowerShellPath()
+    private NotifyIconData CreateNotifyIconData(nint hostHandle, string title, string message)
     {
-        var systemPowerShell = Path.Combine(Environment.SystemDirectory, "WindowsPowerShell", "v1.0", "powershell.exe");
-        return File.Exists(systemPowerShell)
-            ? systemPowerShell
-            : "powershell.exe";
+        var toolTipText = NormalizeNotificationText(_appBuildInfoProvider.GetCurrent().ApplicationName, 63);
+        if (string.IsNullOrWhiteSpace(toolTipText))
+        {
+            toolTipText = "Vehimap";
+        }
+
+        return new NotifyIconData
+        {
+            cbSize = (uint)Marshal.SizeOf<NotifyIconData>(),
+            hWnd = hostHandle,
+            uID = _notificationId++,
+            uFlags = NifMessage | NifIcon | NifTip,
+            hIcon = LoadIcon(nint.Zero, new nint(32512)),
+            szTip = toolTipText,
+            szInfo = message,
+            szInfoTitle = title,
+            dwInfoFlags = NiifInfo,
+            uVersionOrTimeout = 6500
+        };
     }
 
-    private static string EncodePowerShellScript(string script)
+    private static Task ShowVehimapNotificationWindowAsync(string title, string message, CancellationToken cancellationToken)
     {
-        var bytes = Encoding.Unicode.GetBytes(script);
-        return Convert.ToBase64String(bytes);
+        return Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            var notification = new NotificationWindow(title, message);
+            notification.Show();
+        }).GetTask();
+    }
+
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+    private static extern bool Shell_NotifyIcon(uint dwMessage, ref NotifyIconData pnid);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern nint LoadIcon(nint hInstance, nint lpIconName);
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    private struct NotifyIconData
+    {
+        public uint cbSize;
+        public nint hWnd;
+        public uint uID;
+        public uint uFlags;
+        public uint uCallbackMessage;
+        public nint hIcon;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+        public string szTip;
+        public uint dwState;
+        public uint dwStateMask;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string szInfo;
+        public uint uVersionOrTimeout;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+        public string szInfoTitle;
+        public uint dwInfoFlags;
+        public Guid guidItem;
+        public nint hBalloonIcon;
     }
 }

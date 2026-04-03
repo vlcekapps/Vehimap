@@ -6,7 +6,8 @@
         ShowInTaskbar="False"
         CanResize="False"
         WindowDecorations="None"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="Manual"
+        ShowActivated="False"
         Topmost="True"
         Title="Vehimap upozornění">
   <Border Margin="12" Padding="16" Background="#1C2B38" CornerRadius="10">

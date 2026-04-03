@@ -26,6 +26,8 @@ public partial class App : Avalonia.Application
             {
                 DataContext = mainWindowViewModel
             };
+            var notificationService = new DesktopNotificationService(buildInfoProvider);
+            notificationService.BindHostWindow(mainWindow);
 
             desktop.MainWindow = mainWindow;
             var dialogService = new AvaloniaAppShellDialogService();
@@ -34,7 +36,7 @@ public partial class App : Avalonia.Application
                 mainWindow,
                 mainWindowViewModel,
                 new AvaloniaTrayService(buildInfoProvider),
-                new DesktopNotificationService(buildInfoProvider),
+                notificationService,
                 dialogService);
             mainWindow.ExitApplicationRequested = _runtimeController.RequestExitAsync;
             mainWindow.MinimizeToTrayRequested = _runtimeController.RequestMinimizeToTrayAsync;

@@ -138,8 +138,16 @@ public sealed partial class MainWindowViewModel
 
     internal DesktopBackgroundSnapshot BuildBackgroundSnapshot()
     {
-        var upcomingAttentionItems = DashboardUpcomingTimeline
-            .Where(item => !string.IsNullOrWhiteSpace(item.Status) && !string.Equals(item.Status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase))
+        var attentionTimelineItems = _dataSet.Vehicles
+            .SelectMany(vehicle => _timelineService.BuildVehicleTimeline(_dataSet, vehicle.Id, DateOnly.FromDateTime(DateTime.Today)))
+            .Where(item =>
+                !string.IsNullOrWhiteSpace(item.Status)
+                && !string.Equals(item.Status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase))
+            .OrderBy(item => item.IsFuture)
+            .ThenBy(item => item.Date)
+            .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(item => item.KindLabel, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
             .ToList();
 
         var toolTipLines = new List<string>
@@ -165,13 +173,13 @@ public sealed partial class MainWindowViewModel
                 true);
         }
 
-        if (upcomingAttentionItems.Count > 0)
+        if (attentionTimelineItems.Count > 0)
         {
-            var firstAttention = upcomingAttentionItems[0];
+            var firstAttention = attentionTimelineItems[0];
             return new DesktopBackgroundSnapshot(
                 string.Join(Environment.NewLine, toolTipLines),
-                $"timeline|{upcomingAttentionItems.Count}|{firstAttention.VehicleId}|{firstAttention.Kind}|{firstAttention.EntryId}|{firstAttention.Date}",
-                $"Vehimap: {upcomingAttentionItems.Count} blížících se termínů",
+                $"timeline|{attentionTimelineItems.Count}|{firstAttention.VehicleId}|{firstAttention.Kind}|{firstAttention.EntryId}|{firstAttention.Date}",
+                $"Vehimap: {attentionTimelineItems.Count} termínů k řešení",
                 $"{firstAttention.VehicleName}: {firstAttention.Title} ({firstAttention.Date}). {firstAttention.Status}",
                 true);
         }
