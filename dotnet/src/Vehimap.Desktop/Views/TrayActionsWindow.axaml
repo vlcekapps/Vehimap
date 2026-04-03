@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.TrayActionsWindow"
+        x:DataType="vm:TrayActionsDialogViewModel"
+        Width="460"
+        Height="260"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen"
+        Title="{Binding Title}"
+        AutomationProperties.Name="Akce Vehimapu na liště"
+        AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace.">
+  <Border Margin="16" Padding="20" Background="#1C2B38" CornerRadius="10">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14">
+      <TextBlock FontSize="22"
+                 FontWeight="SemiBold"
+                 Text="{Binding Title}"
+                 TextWrapping="Wrap" />
+      <TextBlock Grid.Row="1"
+                 Opacity="0.82"
+                 Text="{Binding Description}"
+                 TextWrapping="Wrap" />
+      <StackPanel Grid.Row="2" Spacing="10">
+        <Button x:Name="ShowMainWindowTrayActionButton"
+                Click="OnShowMainWindowClick"
+                Content="{Binding ShowMainWindowLabel}"
+                AutomationProperties.Name="Zobrazit hlavní okno Vehimapu"
+                AutomationProperties.AutomationId="ShowMainWindowTrayActionButton" />
+        <Button x:Name="ShowDashboardTrayActionButton"
+                Click="OnShowDashboardClick"
+                Content="{Binding ShowDashboardLabel}"
+                AutomationProperties.Name="Otevřít dashboard Vehimapu"
+                AutomationProperties.AutomationId="ShowDashboardTrayActionButton" />
+        <Button x:Name="ExitTrayActionButton"
+                Click="OnExitClick"
+                Content="{Binding ExitLabel}"
+                AutomationProperties.Name="Ukončit Vehimap"
+                AutomationProperties.AutomationId="ExitTrayActionButton" />
+      </StackPanel>
+      <Button Grid.Row="3"
+              x:Name="CloseTrayActionsButton"
+              HorizontalAlignment="Right"
+              MinWidth="120"
+              Click="OnCloseClick"
+              Content="{Binding CancelLabel}"
+              AutomationProperties.Name="Zavřít akce lišty bez provedení změny"
+              AutomationProperties.AutomationId="CloseTrayActionsButton" />
+    </Grid>
+  </Border>
+</Window>

@@ -39,7 +39,7 @@ internal sealed class AvaloniaTrayService : ITrayService
         {
             ToolTipText = configuration.ToolTipText,
             IsVisible = true,
-            Command = new AsyncRelayCommand(configuration.ShowMainWindowAsync)
+            Command = new AsyncRelayCommand(configuration.OpenTrayActionsAsync)
         };
 
         var icon = TryLoadIcon();

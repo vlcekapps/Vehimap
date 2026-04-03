@@ -71,4 +71,29 @@ internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
 
         return await dialog.ShowDialog<UpdateDialogAction>(owner);
     }
+
+    public async Task<TrayActionsDialogAction> ShowTrayActionsAsync(Window? owner, TrayActionsDialogViewModel model)
+    {
+        var dialog = new TrayActionsWindow
+        {
+            DataContext = model
+        };
+
+        if (owner is not null && owner.IsVisible)
+        {
+            await dialog.ShowDialog(owner);
+            return dialog.Result;
+        }
+
+        var completion = new TaskCompletionSource<TrayActionsDialogAction>();
+        void OnClosed(object? sender, EventArgs e)
+        {
+            dialog.Closed -= OnClosed;
+            completion.TrySetResult(dialog.Result);
+        }
+
+        dialog.Closed += OnClosed;
+        dialog.Show();
+        return await completion.Task.ConfigureAwait(true);
+    }
 }

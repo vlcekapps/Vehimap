@@ -129,6 +129,7 @@ public sealed class DesktopAccessibilityLabelTests
         var dashboardXaml = ReadViewFile("DashboardWindow.axaml");
         var bundleXaml = ReadViewFile("VehicleStarterBundleWindow.axaml");
         var confirmationXaml = ReadViewFile("ConfirmationWindow.axaml");
+        var trayActionsXaml = ReadViewFile("TrayActionsWindow.axaml");
 
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CancelSettingsButton\"", settingsXaml);
@@ -142,6 +143,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ApplyBundleButton\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationConfirmButton\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationCancelButton\"", confirmationXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ShowMainWindowTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ShowDashboardTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
     }
 
     [Fact]

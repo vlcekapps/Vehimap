@@ -343,6 +343,9 @@ public sealed class DesktopAppShellControllerTests
         public Task<bool> ShowAboutAsync(Window owner, AboutDialogViewModel model) => Task.FromResult(AboutResult);
 
         public Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model) => Task.FromResult(UpdateResult);
+
+        public Task<TrayActionsDialogAction> ShowTrayActionsAsync(Window? owner, TrayActionsDialogViewModel model)
+            => Task.FromResult(TrayActionsDialogAction.None);
     }
 
     private sealed class StubUpdateInstallLauncher : IUpdateInstallLauncher

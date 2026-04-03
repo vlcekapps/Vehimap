@@ -16,4 +16,6 @@ internal interface IAppShellDialogService
     Task<bool> ShowAboutAsync(Window owner, AboutDialogViewModel model);
 
     Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model);
+
+    Task<TrayActionsDialogAction> ShowTrayActionsAsync(Window? owner, TrayActionsDialogViewModel model);
 }

@@ -60,6 +60,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         await _trayService.InitializeAsync(
                 new TrayServiceConfiguration(
                     _shell.BuildBackgroundSnapshot().ToolTipText,
+                    OpenTrayActionsAsync,
                     ShowMainWindowAsync,
                     ShowDashboardAsync,
                     ExitApplicationAsync),
@@ -190,6 +191,26 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             _mainWindow.Activate();
             _shell.ShowDashboardFromTray();
         }).GetTask();
+    }
+
+    private async Task OpenTrayActionsAsync()
+    {
+        var action = await _dialogService
+            .ShowTrayActionsAsync(_mainWindow.IsVisible ? _mainWindow : null, TrayActionsDialogViewModel.CreateDefault())
+            .ConfigureAwait(true);
+
+        switch (action)
+        {
+            case TrayActionsDialogAction.ShowMainWindow:
+                await ShowMainWindowAsync().ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.ShowDashboard:
+                await ShowDashboardAsync().ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.ExitApplication:
+                await ExitApplicationAsync().ConfigureAwait(true);
+                break;
+        }
     }
 
     private Task ExitApplicationAsync()
