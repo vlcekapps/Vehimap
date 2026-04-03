@@ -71,7 +71,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
 
         DispatcherTimer.RunOnce(async () =>
         {
-            if (_shell.ShouldHideOnLaunch())
+            if (DesktopBackgroundRuntimePolicy.CanHideOnLaunch(_trayService.IsSupported, _shell.ShouldHideOnLaunch()))
             {
                 HideMainWindow();
                 await RefreshBackgroundStateAsync(notifyWhenHidden: true, runAutomaticBackup: true).ConfigureAwait(false);
@@ -126,11 +126,16 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
 
     private async Task RefreshBackgroundStateAsync(bool notifyWhenHidden, bool runAutomaticBackup)
     {
-        _shell.ReloadForBackgroundMonitoring();
+        var hasPendingEdits = _shell.HasPendingEdits;
+        if (DesktopBackgroundRuntimePolicy.CanReloadInBackground(hasPendingEdits))
+        {
+            _shell.ReloadForBackgroundMonitoring();
+        }
+
         var background = _shell.BuildBackgroundSnapshot();
         await _trayService.UpdateToolTipAsync(background.ToolTipText).ConfigureAwait(false);
 
-        if (runAutomaticBackup)
+        if (DesktopBackgroundRuntimePolicy.CanRunAutomaticBackup(runAutomaticBackup, hasPendingEdits))
         {
             var backupResult = await _shell.RunAutomaticBackupCheckAsync().ConfigureAwait(false);
             if (notifyWhenHidden && (backupResult.Created || backupResult.IsError))

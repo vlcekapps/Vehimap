@@ -100,6 +100,27 @@ public sealed class DesktopSessionControllerTests
     }
 
     [Fact]
+    public async Task Apply_supported_settings_updates_autostart_service()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var autostartService = new StubAutostartService();
+        var session = CreateSessionController(dataRoot, new StubLegacyDataStore(dataSet), autostartService: autostartService);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        await session.ApplySupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(30, 30, 31, 1000, true, false, false, false, 1, 30));
+
+        Assert.True(autostartService.LastSetEnabled);
+    }
+
+    [Fact]
     public async Task Update_and_build_info_are_delegated_through_session_controller()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -216,6 +237,49 @@ public sealed class DesktopSessionControllerTests
         Assert.Equal(result.BackupPath, backupService.ExportedPath);
         Assert.False(string.IsNullOrWhiteSpace(dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_stamp")));
         Assert.Equal(result.BackupPath, dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_path"));
+    }
+
+    [Fact]
+    public async Task Run_automatic_backup_check_trims_old_files_when_backup_is_not_due()
+    {
+        var rootPath = Path.Combine(Path.GetTempPath(), "vehimap-session-test", Guid.NewGuid().ToString("N"));
+        var dataRoot = new VehimapDataRoot(rootPath, Path.Combine(rootPath, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+        var backupDirectory = Path.Combine(dataRoot.DataPath, "auto-backups");
+        Directory.CreateDirectory(backupDirectory);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        dataSet.Settings.SetValue("backups", "last_automatic_backup_stamp", DateTime.Now.ToString("yyyyMMddHHmmss"));
+        File.WriteAllText(Path.Combine(backupDirectory, "Vehimap_auto_2026-04-01_10-00-00.vehimapbak"), "one");
+        File.WriteAllText(Path.Combine(backupDirectory, "Vehimap_auto_2026-04-02_10-00-00.vehimapbak"), "two");
+        File.WriteAllText(Path.Combine(backupDirectory, "Vehimap_auto_2026-04-03_10-00-00.vehimapbak"), "three");
+
+        var session = CreateSessionController(dataRoot, new StubLegacyDataStore(dataSet));
+        await session.LoadAsync(dataRoot.AppBasePath);
+        await session.ApplySupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(30, 30, 31, 1000, false, false, false, true, 7, 2));
+
+        var result = await session.RunAutomaticBackupCheckAsync();
+
+        Assert.False(result.Created);
+        Assert.False(result.IsError);
+        var remainingFiles = Directory.GetFiles(backupDirectory, "*.vehimapbak")
+            .Select(Path.GetFileName)
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        Assert.Equal(
+            new[]
+            {
+                "Vehimap_auto_2026-04-02_10-00-00.vehimapbak",
+                "Vehimap_auto_2026-04-03_10-00-00.vehimapbak"
+            },
+            remainingFiles);
     }
 
     private static DesktopSessionController CreateSessionController(
@@ -371,8 +435,14 @@ public sealed class DesktopSessionControllerTests
     {
         public bool IsEnabledResult { get; set; }
 
+        public bool LastSetEnabled { get; private set; }
+
         public Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default) => Task.FromResult(IsEnabledResult);
 
-        public Task SetEnabledAsync(bool enabled, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task SetEnabledAsync(bool enabled, CancellationToken cancellationToken = default)
+        {
+            LastSetEnabled = enabled;
+            return Task.CompletedTask;
+        }
     }
 }
