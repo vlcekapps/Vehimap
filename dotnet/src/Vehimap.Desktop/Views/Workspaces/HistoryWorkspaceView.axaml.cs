@@ -11,6 +11,7 @@ public partial class HistoryWorkspaceView : WorkspaceViewBase<HistoryWorkspaceVi
     {
         AvaloniaXamlLoader.Load(this);
         RegisterShiftTabBackNavigation("HistoryListBox", "HistoryEditorDateBox");
+        ApplyHostMode();
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
@@ -26,5 +27,22 @@ public partial class HistoryWorkspaceView : WorkspaceViewBase<HistoryWorkspaceVi
             DesktopFocusTarget.HistoryEditorDate => this.FindControl<TextBox>("HistoryEditorDateBox"),
             _ => null
         };
-}
 
+    protected override void OnAllowEditingChanged()
+    {
+        ApplyHostMode();
+    }
+
+    private void ApplyHostMode()
+    {
+        if (this.FindControl<Control>("HistoryActionPanel") is { } actionPanel)
+        {
+            actionPanel.IsVisible = AllowEditing;
+        }
+
+        if (this.FindControl<Control>("HistoryEditorHost") is { } editorHost)
+        {
+            editorHost.IsVisible = AllowEditing;
+        }
+    }
+}

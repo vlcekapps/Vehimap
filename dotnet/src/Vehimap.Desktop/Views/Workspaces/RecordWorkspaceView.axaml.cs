@@ -11,6 +11,7 @@ public partial class RecordWorkspaceView : WorkspaceViewBase<RecordWorkspaceView
     {
         AvaloniaXamlLoader.Load(this);
         RegisterShiftTabBackNavigation("RecordListBox", "RecordEditorTitleBox", "RecordEditorPathInputBox");
+        ApplyHostMode();
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
@@ -26,4 +27,22 @@ public partial class RecordWorkspaceView : WorkspaceViewBase<RecordWorkspaceView
             DesktopFocusTarget.RecordEditorTitle => this.FindControl<TextBox>("RecordEditorTitleBox"),
             _ => null
         };
+
+    protected override void OnAllowEditingChanged()
+    {
+        ApplyHostMode();
+    }
+
+    private void ApplyHostMode()
+    {
+        if (this.FindControl<Control>("RecordEditActionPanel") is { } editActions)
+        {
+            editActions.IsVisible = AllowEditing;
+        }
+
+        if (this.FindControl<Control>("RecordEditorHost") is { } editorHost)
+        {
+            editorHost.IsVisible = AllowEditing;
+        }
+    }
 }

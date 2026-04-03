@@ -32,7 +32,7 @@
     <Border Grid.Row="1" Grid.Column="1" Margin="12,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
       <Grid RowDefinitions="Auto,Auto,Auto,*">
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding MaintenancePanelHeading}" />
-        <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="132" ItemHeight="34">
+        <WrapPanel x:Name="MaintenanceActionPanel" Grid.Row="1" Margin="0,14,0,0" ItemWidth="132" ItemHeight="34">
           <Button Command="{Binding CreateMaintenanceCommand}" Content="Nový plán" AutomationProperties.Name="Vytvořit nový servisní plán" AutomationProperties.AutomationId="CreateMaintenanceButton" />
           <Button Command="{Binding EditSelectedMaintenanceCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybraný servisní plán" AutomationProperties.AutomationId="EditMaintenanceButton" />
           <Button Command="{Binding DeleteSelectedMaintenanceCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybraný servisní plán" AutomationProperties.AutomationId="DeleteMaintenanceButton" />
@@ -40,7 +40,8 @@
           <Button Command="{Binding CancelMaintenanceEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingMaintenance}" AutomationProperties.Name="Zrušit úpravu servisního plánu" AutomationProperties.AutomationId="CancelMaintenanceButton" />
         </WrapPanel>
         <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding MaintenanceEditorStatus}" TextWrapping="Wrap" />
-        <Grid Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsEditingMaintenance}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+        <Border x:Name="MaintenanceEditorHost" Grid.Row="3" Margin="0,16,0,0">
+          <Grid IsVisible="{Binding IsEditingMaintenance}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
           <TextBlock FontWeight="SemiBold" Text="Název úkonu" />
           <TextBox x:Name="MaintenanceEditorTitleBox" Grid.Row="1" Margin="0,6,0,0" Text="{Binding MaintenanceEditorTitle}" PlaceholderText="Například Motorový olej" AutomationProperties.Name="Název servisního úkonu" AutomationProperties.AutomationId="MaintenanceEditorTitleBox" />
           <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="*,*">
@@ -66,7 +67,8 @@
           <CheckBox Grid.Row="4" Margin="0,14,0,0" IsChecked="{Binding MaintenanceEditorIsActive}" Content="Aktivní servisní plán" AutomationProperties.Name="Servisní plán je aktivní" AutomationProperties.AutomationId="MaintenanceEditorIsActiveCheckBox" />
           <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
           <TextBox Grid.Row="6" Margin="0,6,0,0" Height="120" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding MaintenanceEditorNote}" AutomationProperties.Name="Poznámka k servisnímu plánu" AutomationProperties.AutomationId="MaintenanceEditorNoteBox" />
-        </Grid>
+          </Grid>
+        </Border>
         <TextBlock Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsMaintenanceDetailVisible}" Text="{Binding SelectedMaintenanceDetail}" TextWrapping="Wrap" />
       </Grid>
     </Border>

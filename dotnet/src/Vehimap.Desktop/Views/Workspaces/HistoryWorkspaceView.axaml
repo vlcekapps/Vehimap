@@ -46,7 +46,8 @@
         <TextBlock FontSize="18"
                    FontWeight="SemiBold"
                    Text="{Binding HistoryPanelHeading}" />
-        <WrapPanel Grid.Row="1"
+        <WrapPanel x:Name="HistoryActionPanel"
+                   Grid.Row="1"
                    Margin="0,14,0,0"
                    ItemWidth="128"
                    ItemHeight="34">
@@ -78,10 +79,11 @@
                    Opacity="0.82"
                    Text="{Binding HistoryEditorStatus}"
                    TextWrapping="Wrap" />
-        <Grid Grid.Row="3"
-              Margin="0,16,0,0"
-              IsVisible="{Binding IsEditingHistory}"
-              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+        <Border x:Name="HistoryEditorHost"
+                Grid.Row="3"
+                Margin="0,16,0,0">
+          <Grid IsVisible="{Binding IsEditingHistory}"
+                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
           <TextBlock FontWeight="SemiBold" Text="Datum" />
           <TextBox x:Name="HistoryEditorDateBox"
                    Grid.Row="1"
@@ -131,7 +133,8 @@
                    Text="{Binding HistoryEditorNote}"
                    AutomationProperties.Name="Poznámka k historickému záznamu"
                    AutomationProperties.AutomationId="HistoryEditorNoteBox" />
-        </Grid>
+          </Grid>
+        </Border>
         <TextBlock Grid.Row="3"
                    Margin="0,16,0,0"
                    IsVisible="{Binding IsHistoryDetailVisible}"

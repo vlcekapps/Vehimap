@@ -11,8 +11,24 @@ public abstract class WorkspaceViewBase<TViewModel> : UserControl
     where TViewModel : WorkspaceViewModelBase
 {
     private TViewModel? _viewModel;
+    private bool _allowEditing = true;
 
     protected TViewModel? ViewModel => _viewModel;
+
+    public bool AllowEditing
+    {
+        get => _allowEditing;
+        set
+        {
+            if (_allowEditing == value)
+            {
+                return;
+            }
+
+            _allowEditing = value;
+            OnAllowEditingChanged();
+        }
+    }
 
     protected WorkspaceViewBase()
     {
@@ -33,6 +49,10 @@ public abstract class WorkspaceViewBase<TViewModel> : UserControl
     protected abstract bool SupportsFocusTarget(DesktopFocusTarget target);
 
     protected abstract Control? ResolveFocusTarget(DesktopFocusTarget target);
+
+    protected virtual void OnAllowEditingChanged()
+    {
+    }
 
     protected void RegisterShiftTabBackNavigation(params string[] controlNames) =>
         RegisterShiftTabBackNavigation(DesktopFocusTarget.SelectedVehicleTabHeader, controlNames);

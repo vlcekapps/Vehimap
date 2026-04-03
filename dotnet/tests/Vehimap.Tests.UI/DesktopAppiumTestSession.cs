@@ -71,6 +71,12 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         WaitForElementByAccessibilityId(automationId, timeoutSeconds).Click();
     }
 
+    public void ClickMenuItem(string menuAutomationId, string itemAutomationId, int timeoutSeconds = 12)
+    {
+        ClickByAccessibilityId(menuAutomationId, timeoutSeconds);
+        ClickByAccessibilityId(itemAutomationId, timeoutSeconds);
+    }
+
     public void ClickByName(string name, int timeoutSeconds = 12)
     {
         WaitForElementByName(name, timeoutSeconds).Click();
@@ -96,6 +102,37 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     public string GetFocusedAutomationId()
     {
         return _driver.SwitchTo().ActiveElement().GetAttribute("AutomationId") ?? string.Empty;
+    }
+
+    public string WaitForFocusedAutomationId(int timeoutSeconds = 12, params string[] automationIds)
+    {
+        var expected = automationIds
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .ToHashSet(StringComparer.Ordinal);
+
+        if (expected.Count == 0)
+        {
+            throw new ArgumentException("Je potřeba zadat alespoň jedno automation id.", nameof(automationIds));
+        }
+
+        var timeoutAt = DateTime.UtcNow.AddSeconds(timeoutSeconds);
+        while (DateTime.UtcNow < timeoutAt)
+        {
+            var current = GetFocusedAutomationId();
+            if (expected.Contains(current))
+            {
+                return current;
+            }
+
+            Thread.Sleep(150);
+        }
+
+        throw new TimeoutException("Fokus se nepřesunul na očekávaný UI prvek.");
+    }
+
+    public void SendKeysToActiveElement(string text)
+    {
+        _driver.SwitchTo().ActiveElement().SendKeys(text);
     }
 
     public void WaitForElementToDisappearByAccessibilityId(string automationId, int timeoutSeconds = 12)

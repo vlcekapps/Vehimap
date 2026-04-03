@@ -14,8 +14,20 @@ public sealed record VehicleRecordItemViewModel(
     bool FileExists,
     string Note)
 {
-    public string AccessibleLabel =>
-        $"{Title}, {RecordType}, platnost {Validity}, režim {AttachmentMode}, stav přílohy {AttachmentState}, poznámka {Note}";
+    public string AccessibleLabel
+    {
+        get
+        {
+            var providerPart = string.IsNullOrWhiteSpace(Provider)
+                ? string.Empty
+                : $", poskytovatel {Provider}";
+            var notePart = string.IsNullOrWhiteSpace(Note)
+                ? string.Empty
+                : $", poznámka {Note}";
+
+            return $"{Title}, {RecordType}{providerPart}, platnost {Validity}, režim {AttachmentMode}, stav přílohy {AttachmentState}{notePart}";
+        }
+    }
 
     public override string ToString() => AccessibleLabel;
 }

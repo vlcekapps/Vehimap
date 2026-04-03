@@ -13,6 +13,8 @@ public abstract class WorkspaceViewModelBase : ObservableObject, IDisposable
 
     protected MainWindowViewModel Root { get; }
 
+    internal bool HasPendingEdits => Root.HasPendingEdits;
+
     public event Action<DesktopFocusTarget>? FocusRequested
     {
         add => Root.FocusRequested += value;
@@ -32,6 +34,16 @@ public abstract class WorkspaceViewModelBase : ObservableObject, IDisposable
     public void RequestWorkspaceFocus(DesktopFocusTarget target)
     {
         RequestFocus(target);
+    }
+
+    internal Task<bool> ConfirmDiscardPendingEditsAsync(string actionDescription)
+    {
+        return Root.ConfirmDiscardPendingEditsAsync(actionDescription);
+    }
+
+    internal void DiscardPendingEdits(bool clearStatus = true)
+    {
+        Root.DiscardPendingEdits(clearStatus);
     }
 
     private void OnRootPropertyChanged(object? sender, PropertyChangedEventArgs e)

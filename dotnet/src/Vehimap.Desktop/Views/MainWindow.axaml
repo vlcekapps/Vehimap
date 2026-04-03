@@ -12,7 +12,7 @@
         AutomationProperties.Name="Vehimap Desktop Preview"
         AutomationProperties.HelpText="Multiplatformní preview Vehimapu. Po otevření je fokus v seznamu vozidel vlevo.">
   <Window.KeyBindings>
-    <KeyBinding Gesture="Ctrl+R" Command="{Binding ReloadCommand}" />
+    <KeyBinding Gesture="F5" Command="{Binding ReloadCommand}" />
     <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportCalendarCommand}" />
     <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusTimelineSearchCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+F" Command="{Binding FocusGlobalSearchCommand}" />
@@ -29,61 +29,157 @@
                    Text="{Binding Subtitle}" />
       </StackPanel>
 
-      <StackPanel Grid.Column="1"
-                  Orientation="Horizontal"
-                  Spacing="10"
-                  HorizontalAlignment="Right"
-                  VerticalAlignment="Center">
-        <Button Width="135"
-                x:Name="BackupExportButton"
-                Height="34"
-                Click="OnBackupExportClick"
-                Content="Export dat"
-                AutomationProperties.Name="Exportovat data aplikace do zálohy"
-                AutomationProperties.AutomationId="BackupExportButton" />
-        <Button Width="135"
-                x:Name="BackupImportButton"
-                Height="34"
-                Click="OnBackupImportClick"
-                Content="Obnovit data"
-                AutomationProperties.Name="Obnovit data aplikace ze zálohy"
-                AutomationProperties.AutomationId="BackupImportButton" />
-        <Button Width="110"
-                x:Name="SettingsButton"
-                Height="34"
-                Click="OnSettingsClick"
-                Content="Nastavení"
-                AutomationProperties.Name="Otevřít nastavení aplikace"
-                AutomationProperties.AutomationId="SettingsButton" />
-        <Button Width="120"
-                x:Name="AboutButton"
-                Height="34"
-                Click="OnAboutClick"
-                Content="O programu"
-                AutomationProperties.Name="Otevřít dialog O programu"
-                AutomationProperties.AutomationId="AboutButton" />
-        <Button Width="140"
-                x:Name="UpdateCheckButton"
-                Height="34"
-                Click="OnUpdateCheckClick"
-                Content="Aktualizace"
-                AutomationProperties.Name="Zkontrolovat aktualizace aplikace"
-                AutomationProperties.AutomationId="UpdateCheckButton" />
-        <Button Width="150"
-                x:Name="CalendarExportButton"
-                Height="34"
-                Command="{Binding ExportCalendarCommand}"
-                Content="Exportovat .ics"
-                AutomationProperties.Name="Exportovat budoucí termíny do kalendáře"
-                AutomationProperties.AutomationId="CalendarExportButton" />
-        <Button Width="120"
-                x:Name="ReloadButton"
-                Height="34"
-                Command="{Binding ReloadCommand}"
-                Content="Načíst znovu"
-                AutomationProperties.Name="Znovu načíst legacy data"
-                AutomationProperties.AutomationId="ReloadButton" />
-      </StackPanel>
+      <Menu Grid.Column="1"
+            x:Name="AppMenuBar"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            IsTabStop="False"
+            AutomationProperties.Name="Hlavní nabídka aplikace"
+            AutomationProperties.AutomationId="AppMenuBar">
+        <MenuItem x:Name="FileMenuRoot"
+                  Header="_Soubor"
+                  AutomationProperties.Name="Nabídka Soubor"
+                  AutomationProperties.AutomationId="FileMenuRoot">
+          <MenuItem x:Name="BackupExportButton"
+                    Header="Export dat do zálohy"
+                    Click="OnBackupExportClick"
+                    AutomationProperties.Name="Exportovat data aplikace do zálohy"
+                    AutomationProperties.AutomationId="BackupExportButton" />
+          <MenuItem x:Name="BackupImportButton"
+                    Header="Obnovit data ze zálohy"
+                    Click="OnBackupImportClick"
+                    AutomationProperties.Name="Obnovit data aplikace ze zálohy"
+                    AutomationProperties.AutomationId="BackupImportButton" />
+          <Separator />
+          <MenuItem x:Name="CalendarExportButton"
+                    Header="Exportovat budoucí termíny do kalendáře"
+                    Click="OnCalendarExportClick"
+                    AutomationProperties.Name="Exportovat budoucí termíny do kalendáře"
+                    AutomationProperties.AutomationId="CalendarExportButton" />
+          <MenuItem x:Name="ReloadButton"
+                    Header="Načíst data znovu"
+                    Click="OnReloadClick"
+                    AutomationProperties.Name="Znovu načíst legacy data"
+                    AutomationProperties.AutomationId="ReloadButton" />
+        </MenuItem>
+        <MenuItem x:Name="VehicleMenuRoot"
+                  Header="_Vozidlo"
+                  AutomationProperties.Name="Nabídka Vozidlo"
+                  AutomationProperties.AutomationId="VehicleMenuRoot">
+          <MenuItem x:Name="CreateVehicleMenuItem"
+                    Header="Přidat vozidlo"
+                    Click="OnCreateVehicleMenuClick"
+                    IsEnabled="{Binding CanCreateVehicle}"
+                    AutomationProperties.Name="Přidat nové vozidlo"
+                    AutomationProperties.AutomationId="CreateVehicleMenuItem" />
+          <MenuItem x:Name="EditVehicleMenuItem"
+                    Header="Upravit vybrané vozidlo"
+                    Click="OnEditVehicleMenuClick"
+                    IsEnabled="{Binding CanEditSelectedVehicle}"
+                    AutomationProperties.Name="Upravit vybrané vozidlo"
+                    AutomationProperties.AutomationId="EditVehicleMenuItem" />
+          <MenuItem x:Name="OpenVehicleDetailMenuItem"
+                    Header="Detail vybraného vozidla"
+                    Click="OnOpenVehicleDetailMenuClick"
+                    IsEnabled="{Binding CanOpenVehicleDetailWindow}"
+                    AutomationProperties.Name="Otevřít detail vybraného vozidla"
+                    AutomationProperties.AutomationId="OpenVehicleDetailMenuItem" />
+          <MenuItem x:Name="OpenHistoryMenuItem"
+                    Header="Historie vybraného vozidla"
+                    Click="OnOpenHistoryMenuClick"
+                    IsEnabled="{Binding CanOpenHistoryWindow}"
+                    AutomationProperties.Name="Otevřít historii vybraného vozidla"
+                    AutomationProperties.AutomationId="OpenHistoryMenuItem" />
+          <MenuItem x:Name="OpenFuelMenuItem"
+                    Header="Kilometry a tankování"
+                    Click="OnOpenFuelMenuClick"
+                    IsEnabled="{Binding CanOpenFuelWindow}"
+                    AutomationProperties.Name="Otevřít tankování vybraného vozidla"
+                    AutomationProperties.AutomationId="OpenFuelMenuItem" />
+          <MenuItem x:Name="OpenRecordsMenuItem"
+                    Header="Pojištění a doklady"
+                    Click="OnOpenRecordsMenuClick"
+                    IsEnabled="{Binding CanOpenRecordWindow}"
+                    AutomationProperties.Name="Otevřít doklady vybraného vozidla"
+                    AutomationProperties.AutomationId="OpenRecordsMenuItem" />
+          <MenuItem x:Name="OpenRemindersMenuItem"
+                    Header="Vlastní připomínky"
+                    Click="OnOpenRemindersMenuClick"
+                    IsEnabled="{Binding CanOpenReminderWindow}"
+                    AutomationProperties.Name="Otevřít připomínky vybraného vozidla"
+                    AutomationProperties.AutomationId="OpenRemindersMenuItem" />
+          <MenuItem x:Name="OpenMaintenanceMenuItem"
+                    Header="Plán údržby"
+                    Click="OnOpenMaintenanceMenuClick"
+                    IsEnabled="{Binding CanOpenMaintenanceWindow}"
+                    AutomationProperties.Name="Otevřít plán údržby vybraného vozidla"
+                    AutomationProperties.AutomationId="OpenMaintenanceMenuItem" />
+          <MenuItem x:Name="OpenVehicleStarterBundleMenuItem"
+                    Header="Balíček pro vozidlo"
+                    Click="OnOpenVehicleStarterBundleMenuClick"
+                    IsEnabled="{Binding CanOpenVehicleStarterBundle}"
+                    AutomationProperties.Name="Otevřít balíček pro vybrané vozidlo"
+                    AutomationProperties.AutomationId="OpenVehicleStarterBundleMenuItem" />
+        </MenuItem>
+        <MenuItem x:Name="QuickActionsMenuRoot"
+                  Header="_Rychlé akce"
+                  AutomationProperties.Name="Nabídka Rychlé akce"
+                  AutomationProperties.AutomationId="QuickActionsMenuRoot">
+          <MenuItem x:Name="OpenNearestTechnicalMenuItem"
+                    Header="Nejbližší TK"
+                    Click="OnOpenNearestTechnicalMenuClick"
+                    AutomationProperties.Name="Otevřít nejbližší technickou kontrolu"
+                    AutomationProperties.AutomationId="OpenNearestTechnicalMenuItem" />
+          <MenuItem x:Name="ReviewTechnicalMenuItem"
+                    Header="Zkontrolovat TK"
+                    Click="OnReviewTechnicalMenuClick"
+                    AutomationProperties.Name="Zkontrolovat technické kontroly"
+                    AutomationProperties.AutomationId="ReviewTechnicalMenuItem" />
+          <MenuItem x:Name="OpenNearestGreenCardMenuItem"
+                    Header="Nejbližší ZK"
+                    Click="OnOpenNearestGreenCardMenuClick"
+                    AutomationProperties.Name="Otevřít nejbližší zelenou kartu"
+                    AutomationProperties.AutomationId="OpenNearestGreenCardMenuItem" />
+          <MenuItem x:Name="ReviewGreenCardsMenuItem"
+                    Header="Zkontrolovat ZK"
+                    Click="OnReviewGreenCardsMenuClick"
+                    AutomationProperties.Name="Zkontrolovat zelené karty"
+                    AutomationProperties.AutomationId="ReviewGreenCardsMenuItem" />
+        </MenuItem>
+        <MenuItem x:Name="AppMenuRoot"
+                  Header="_Aplikace"
+                  AutomationProperties.Name="Nabídka Aplikace"
+                  AutomationProperties.AutomationId="AppMenuRoot">
+          <MenuItem x:Name="MinimizeToTrayButton"
+                    Header="Minimalizovat na lištu"
+                    Click="OnMinimizeToTrayClick"
+                    IsEnabled="False"
+                    AutomationProperties.Name="Minimalizovat aplikaci na lištu"
+                    AutomationProperties.AutomationId="MinimizeToTrayButton" />
+          <Separator />
+          <MenuItem x:Name="SettingsButton"
+                    Header="Nastavení"
+                    Click="OnSettingsClick"
+                    AutomationProperties.Name="Otevřít nastavení aplikace"
+                    AutomationProperties.AutomationId="SettingsButton" />
+          <MenuItem x:Name="AboutButton"
+                    Header="O programu"
+                    Click="OnAboutClick"
+                    AutomationProperties.Name="Otevřít dialog O programu"
+                    AutomationProperties.AutomationId="AboutButton" />
+          <MenuItem x:Name="UpdateCheckButton"
+                    Header="Zkontrolovat aktualizace"
+                    Click="OnUpdateCheckClick"
+                    AutomationProperties.Name="Zkontrolovat aktualizace aplikace"
+                    AutomationProperties.AutomationId="UpdateCheckButton" />
+          <Separator />
+          <MenuItem x:Name="ExitAppButton"
+                    Header="Ukončit aplikaci"
+                    Click="OnExitClick"
+                    AutomationProperties.Name="Ukončit aplikaci"
+                    AutomationProperties.AutomationId="ExitAppButton" />
+        </MenuItem>
+      </Menu>
     </Grid>
 
     <Grid Grid.Row="1"
@@ -147,12 +243,55 @@
 
     <Grid Grid.Row="3" Margin="0,18,0,0" ColumnDefinitions="420,*">
       <Border Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
-        <Grid RowDefinitions="Auto,*">
+        <Grid RowDefinitions="Auto,Auto,*">
           <TextBlock FontSize="18"
                      FontWeight="SemiBold"
-                     Text="Načtená vozidla z legacy dat" />
+                     Text="{Binding VehicleListSummary}" />
+          <Grid Grid.Row="1"
+                Margin="0,12,0,0"
+                ColumnDefinitions="170,*,220,Auto"
+                RowDefinitions="Auto,Auto">
+            <StackPanel Margin="0,0,12,0" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Kategorie" />
+              <ComboBox x:Name="VehicleCategoryFilterBox"
+                        ItemsSource="{Binding VehicleCategoryFilters}"
+                        SelectedItem="{Binding SelectedVehicleCategoryFilter}"
+                        AutomationProperties.Name="Filtr kategorie vozidel"
+                        AutomationProperties.AutomationId="VehicleCategoryFilterBox" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Hledání v seznamu vozidel" />
+              <TextBox x:Name="VehicleSearchBox"
+                       Text="{Binding VehicleSearchText}"
+                       PlaceholderText="Název, značka, SPZ, poznámka nebo štítek"
+                       AutomationProperties.Name="Hledání v seznamu vozidel"
+                       AutomationProperties.AutomationId="VehicleSearchBox" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" Margin="0,0,12,0" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Filtr seznamu" />
+              <ComboBox x:Name="VehicleStatusFilterBox"
+                        ItemsSource="{Binding VehicleStatusFilters}"
+                        SelectedItem="{Binding SelectedVehicleStatusFilter}"
+                        AutomationProperties.Name="Filtr stavu vozidel"
+                        AutomationProperties.AutomationId="VehicleStatusFilterBox" />
+            </StackPanel>
+            <Button Grid.Column="3"
+                    Margin="0,24,0,0"
+                    MinWidth="120"
+                    Command="{Binding ClearVehicleFiltersCommand}"
+                    Content="Vymazat filtry"
+                    AutomationProperties.Name="Vymazat filtry seznamu vozidel"
+                    AutomationProperties.AutomationId="ClearVehicleFiltersButton" />
+            <CheckBox Grid.Row="1"
+                      Grid.ColumnSpan="4"
+                      Margin="0,12,0,0"
+                      IsChecked="{Binding HideInactiveVehicles}"
+                      Content="Skrýt archivovaná a odstavená vozidla"
+                      AutomationProperties.Name="Skrýt archivovaná a odstavená vozidla"
+                      AutomationProperties.AutomationId="HideInactiveVehiclesCheckBox" />
+          </Grid>
           <ListBox x:Name="VehicleListBox"
-                   Grid.Row="1"
+                   Grid.Row="2"
                    Margin="0,12,0,0"
                    ItemsSource="{Binding Vehicles}"
                    SelectionChanged="OnVehicleSelectionChanged"
@@ -337,6 +476,7 @@
                       AutomationProperties.AutomationId="OpenVehicleDetailWindowButton" />
               <workspaces:VehicleDetailWorkspaceView Grid.Row="1"
                                                     Margin="0,16,0,0"
+                                                    AllowEditing="False"
                                                     DataContext="{Binding VehicleDetailWorkspace}" />
             </Grid>
 
@@ -351,6 +491,7 @@
                       AutomationProperties.AutomationId="OpenHistoryWindowButton" />
               <workspaces:HistoryWorkspaceView Grid.Row="1"
                                               Margin="0,16,0,0"
+                                              AllowEditing="False"
                                               DataContext="{Binding HistoryWorkspace}" />
             </Grid>
 
@@ -365,6 +506,7 @@
                       AutomationProperties.AutomationId="OpenFuelWindowButton" />
               <workspaces:FuelWorkspaceView Grid.Row="1"
                                            Margin="0,16,0,0"
+                                           AllowEditing="False"
                                            DataContext="{Binding FuelWorkspace}" />
             </Grid>
 
@@ -379,6 +521,7 @@
                       AutomationProperties.AutomationId="OpenReminderWindowButton" />
               <workspaces:ReminderWorkspaceView Grid.Row="1"
                                                Margin="0,16,0,0"
+                                               AllowEditing="False"
                                                DataContext="{Binding ReminderWorkspace}" />
             </Grid>
 
@@ -393,6 +536,7 @@
                       AutomationProperties.AutomationId="OpenMaintenanceWindowButton" />
               <workspaces:MaintenanceWorkspaceView Grid.Row="1"
                                                   Margin="0,16,0,0"
+                                                  AllowEditing="False"
                                                   DataContext="{Binding MaintenanceWorkspace}" />
             </Grid>
 
@@ -411,6 +555,7 @@
                       AutomationProperties.AutomationId="OpenRecordWindowButton" />
               <workspaces:RecordWorkspaceView Grid.Row="1"
                                              Margin="0,16,0,0"
+                                             AllowEditing="False"
                                              DataContext="{Binding RecordWorkspace}" />
             </Grid>
 
@@ -463,7 +608,7 @@
     <TextBlock Grid.Row="4"
                Margin="0,16,0,0"
                Opacity="0.75"
-               Text="C# větev už nad stejnými legacy daty jako AHK verze zobrazuje detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard, globální hledání i přehled termínů. Připomínky, doklady, historii, tankování i plán údržby už lze také přímo upravovat."
+               Text="C# větev už nad stejnými legacy daty jako AHK verze zobrazuje detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard, globální hledání i přehled termínů. Editace se otevírá v samostatných oknech s dotaženou přístupností a návratem přes Zrušit."
                TextWrapping="Wrap" />
   </Grid>
 </Window>

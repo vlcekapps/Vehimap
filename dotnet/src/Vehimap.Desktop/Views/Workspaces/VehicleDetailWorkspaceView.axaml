@@ -10,7 +10,8 @@
                Opacity="0.82"
                Text="{Binding VehicleEditorStatus}"
                TextWrapping="Wrap" />
-    <WrapPanel Grid.Row="2"
+    <WrapPanel x:Name="VehicleActionPanel"
+               Grid.Row="2"
                Margin="0,14,0,0"
                ItemWidth="138"
                ItemHeight="34">
@@ -45,10 +46,11 @@
               AutomationProperties.AutomationId="CancelVehicleButton" />
     </WrapPanel>
 
-    <Grid Grid.Row="3"
-          Margin="0,16,0,0"
-          IsVisible="{Binding IsEditingVehicle}"
-          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+    <Border x:Name="VehicleEditorHost"
+            Grid.Row="3"
+            Margin="0,16,0,0">
+      <Grid IsVisible="{Binding IsEditingVehicle}"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
       <Grid ColumnDefinitions="*,200">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Název vozidla" />
@@ -184,7 +186,8 @@
                  Opacity="0.72"
                  Text="Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu."
                  TextWrapping="Wrap" />
-    </Grid>
+      </Grid>
+    </Border>
 
     <Grid Grid.Row="3"
           Margin="0,16,0,0"

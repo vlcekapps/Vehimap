@@ -20,6 +20,7 @@ public partial class App : Avalonia.Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            var buildInfoProvider = new AssemblyAppBuildInfoProvider();
             var mainWindowViewModel = new MainWindowViewModel();
             var mainWindow = new MainWindow
             {
@@ -32,9 +33,11 @@ public partial class App : Avalonia.Application
                 desktop,
                 mainWindow,
                 mainWindowViewModel,
-                new AvaloniaTrayService(new AssemblyAppBuildInfoProvider()),
-                new DesktopNotificationService(),
+                new AvaloniaTrayService(buildInfoProvider),
+                new DesktopNotificationService(buildInfoProvider),
                 dialogService);
+            mainWindow.ExitApplicationRequested = _runtimeController.RequestExitAsync;
+            mainWindow.MinimizeToTrayRequested = _runtimeController.RequestMinimizeToTrayAsync;
             desktop.Exit += OnDesktopExit;
             _ = _runtimeController.InitializeAsync();
         }

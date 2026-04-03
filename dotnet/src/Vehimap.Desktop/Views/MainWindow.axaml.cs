@@ -43,10 +43,14 @@ public partial class MainWindow : Window
     private bool _initialFocusScheduled;
     private bool _syncingVehicleSelection;
 
+    public Func<Task>? ExitApplicationRequested { get; set; }
+    public Func<Task>? MinimizeToTrayRequested { get; set; }
+
     public MainWindow()
     {
         AvaloniaXamlLoader.Load(this);
         RegisterTabBoundaryNavigation();
+        AddHandler(InputElement.KeyDownEvent, OnWindowKeyDown, RoutingStrategies.Tunnel);
         Opened += OnOpened;
         Activated += OnActivated;
         DataContextChanged += OnDataContextChanged;
@@ -180,6 +184,56 @@ public partial class MainWindow : Window
         }
 
         e.Handled = FocusSelectedTabHeader();
+    }
+
+    private void OnWindowKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = FocusAndOpenMainMenu();
+            return;
+        }
+
+        if (e.KeyModifiers != KeyModifiers.Control)
+        {
+            return;
+        }
+
+        switch (e.Key)
+        {
+            case Key.N:
+                _ = OpenVehicleDetailWindowAsync(startCreate: true);
+                e.Handled = true;
+                break;
+            case Key.U:
+                _ = OpenVehicleDetailWindowAsync(startEdit: true);
+                e.Handled = true;
+                break;
+            case Key.O:
+                _ = OpenVehicleDetailWindowAsync();
+                e.Handled = true;
+                break;
+            case Key.H:
+                _ = OpenHistoryWindowAsync();
+                e.Handled = true;
+                break;
+            case Key.K:
+                _ = OpenFuelWindowAsync();
+                e.Handled = true;
+                break;
+            case Key.P:
+                _ = OpenRecordsWindowAsync();
+                e.Handled = true;
+                break;
+            case Key.R:
+                _ = OpenRemindersWindowAsync();
+                e.Handled = true;
+                break;
+            case Key.M:
+                _ = OpenMaintenanceWindowAsync();
+                e.Handled = true;
+                break;
+        }
     }
 
     private void OnTabHeaderKeyDown(object? sender, KeyEventArgs e)
@@ -340,106 +394,152 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
-    private async void OnOpenRemindersWindowClick(object? sender, RoutedEventArgs e)
+    private async void OnExitClick(object? sender, RoutedEventArgs e)
     {
-        if (_viewModel?.SelectedVehicle is null)
+        if (ExitApplicationRequested is null)
+        {
+            Close();
+            return;
+        }
+
+        await ExitApplicationRequested().ConfigureAwait(true);
+    }
+
+    private async void OnMinimizeToTrayClick(object? sender, RoutedEventArgs e)
+    {
+        if (MinimizeToTrayRequested is null)
         {
             return;
         }
 
-        _viewModel.SelectedVehicleTabIndex = ReminderTabIndex;
-        var dialog = new RemindersWindow
-        {
-            DataContext = _viewModel.ReminderWorkspace
-        };
+        await MinimizeToTrayRequested().ConfigureAwait(true);
+    }
 
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.ReminderList);
+    private void OnCalendarExportClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.ExportCalendarCommand.CanExecute(null) == true)
+        {
+            _viewModel.ExportCalendarCommand.Execute(null);
+        }
+
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private void OnReloadClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.ReloadCommand.CanExecute(null) == true)
+        {
+            _viewModel.ReloadCommand.Execute(null);
+        }
+
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private async void OnCreateVehicleMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenVehicleDetailWindowAsync(startCreate: true);
+    }
+
+    private async void OnEditVehicleMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenVehicleDetailWindowAsync(startEdit: true);
+    }
+
+    private async void OnOpenVehicleDetailMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenVehicleDetailWindowAsync();
+    }
+
+    private async void OnOpenHistoryMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenHistoryWindowAsync();
+    }
+
+    private async void OnOpenFuelMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenFuelWindowAsync();
+    }
+
+    private async void OnOpenRecordsMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenRecordsWindowAsync();
+    }
+
+    private async void OnOpenRemindersMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenRemindersWindowAsync();
+    }
+
+    private async void OnOpenMaintenanceMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenMaintenanceWindowAsync();
+    }
+
+    private async void OnOpenVehicleStarterBundleMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenVehicleStarterBundleDialogAsync();
+    }
+
+    private async void OnOpenNearestTechnicalMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.OpenNearestTechnicalCommand is { } command)
+        {
+            await command.ExecuteAsync(null);
+        }
+    }
+
+    private async void OnReviewTechnicalMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.ReviewTechnicalCommand is { } command)
+        {
+            await command.ExecuteAsync(null);
+        }
+    }
+
+    private async void OnOpenNearestGreenCardMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.OpenNearestGreenCardCommand is { } command)
+        {
+            await command.ExecuteAsync(null);
+        }
+    }
+
+    private async void OnReviewGreenCardsMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.ReviewGreenCardsCommand is { } command)
+        {
+            await command.ExecuteAsync(null);
+        }
+    }
+
+    private async void OnOpenRemindersWindowClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenRemindersWindowAsync();
     }
 
     private async void OnOpenRecordsWindowClick(object? sender, RoutedEventArgs e)
     {
-        if (_viewModel?.SelectedVehicle is null)
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = RecordTabIndex;
-        var dialog = new RecordsWindow
-        {
-            DataContext = _viewModel.RecordWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.RecordList);
+        await OpenRecordsWindowAsync();
     }
 
     private async void OnOpenHistoryWindowClick(object? sender, RoutedEventArgs e)
     {
-        if (_viewModel?.SelectedVehicle is null)
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = HistoryTabIndex;
-        var dialog = new HistoryWindow
-        {
-            DataContext = _viewModel.HistoryWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.HistoryList);
+        await OpenHistoryWindowAsync();
     }
 
     private async void OnOpenFuelWindowClick(object? sender, RoutedEventArgs e)
     {
-        if (_viewModel?.SelectedVehicle is null)
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = FuelTabIndex;
-        var dialog = new FuelWindow
-        {
-            DataContext = _viewModel.FuelWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.FuelList);
+        await OpenFuelWindowAsync();
     }
 
     private async void OnOpenMaintenanceWindowClick(object? sender, RoutedEventArgs e)
     {
-        if (_viewModel?.SelectedVehicle is null)
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = MaintenanceTabIndex;
-        var dialog = new MaintenanceWindow
-        {
-            DataContext = _viewModel.MaintenanceWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.MaintenanceList);
+        await OpenMaintenanceWindowAsync();
     }
 
     private async void OnOpenVehicleDetailWindowClick(object? sender, RoutedEventArgs e)
     {
-        if (_viewModel?.SelectedVehicle is null)
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = DetailTabIndex;
-        var dialog = new VehicleDetailWindow
-        {
-            DataContext = _viewModel.VehicleDetailWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.VehicleList);
+        await OpenVehicleDetailWindowAsync();
     }
 
     private async void OnOpenAuditWindowClick(object? sender, RoutedEventArgs e)
@@ -499,6 +599,19 @@ public partial class MainWindow : Window
         return false;
     }
 
+    private bool FocusAndOpenMainMenu()
+    {
+        if (this.FindControl<MenuItem>("FileMenuRoot") is not { } fileMenu)
+        {
+            return false;
+        }
+
+        var focused = fileMenu.Focus(NavigationMethod.Tab, KeyModifiers.None)
+            || fileMenu.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+        fileMenu.IsSubMenuOpen = true;
+        return focused || fileMenu.IsSubMenuOpen;
+    }
+
     private Control? ResolveFocusTarget(DesktopFocusTarget target)
     {
         return target switch
@@ -524,5 +637,221 @@ public partial class MainWindow : Window
         {
             _syncingVehicleSelection = false;
         }
+    }
+
+    public void SetMinimizeToTrayAvailability(bool isAvailable)
+    {
+        if (this.FindControl<MenuItem>("MinimizeToTrayButton") is { } button)
+        {
+            button.IsEnabled = isAvailable;
+        }
+    }
+
+    private async Task<bool> ConfirmDiscardPendingEditsForWindowAsync(string actionDescription)
+    {
+        if (_viewModel is null || !_viewModel.HasPendingEdits)
+        {
+            return true;
+        }
+
+        if (!await _viewModel.ConfirmDiscardPendingEditsAsync(actionDescription).ConfigureAwait(true))
+        {
+            RequestFocus(_viewModel.GetPendingEditFocusTarget());
+            return false;
+        }
+
+        _viewModel.DiscardPendingEdits();
+        return true;
+    }
+
+    private async Task OpenVehicleDetailWindowAsync(bool startCreate = false, bool startEdit = false)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        if (startCreate)
+        {
+            if (_viewModel.CreateVehicleCommand.CanExecute(null) != true)
+            {
+                return;
+            }
+
+            _viewModel.CreateVehicleCommand.Execute(null);
+        }
+        else if (startEdit)
+        {
+            if (_viewModel.EditSelectedVehicleCommand.CanExecute(null) != true)
+            {
+                return;
+            }
+
+            _viewModel.EditSelectedVehicleCommand.Execute(null);
+        }
+        else
+        {
+            if (_viewModel.SelectedVehicle is null)
+            {
+                return;
+            }
+
+            if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít detail vybraného vozidla").ConfigureAwait(true))
+            {
+                return;
+            }
+        }
+
+        _viewModel.SelectedVehicleTabIndex = DetailTabIndex;
+        var dialog = new VehicleDetailWindow
+        {
+            DataContext = _viewModel.VehicleDetailWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.VehicleList);
+    }
+
+    private async Task OpenHistoryWindowAsync()
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít historii vybraného vozidla").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = HistoryTabIndex;
+        var dialog = new HistoryWindow
+        {
+            DataContext = _viewModel.HistoryWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.HistoryList);
+    }
+
+    private async Task OpenFuelWindowAsync()
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít tankování vybraného vozidla").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = FuelTabIndex;
+        var dialog = new FuelWindow
+        {
+            DataContext = _viewModel.FuelWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.FuelList);
+    }
+
+    private async Task OpenRemindersWindowAsync()
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít připomínky vybraného vozidla").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = ReminderTabIndex;
+        var dialog = new RemindersWindow
+        {
+            DataContext = _viewModel.ReminderWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.ReminderList);
+    }
+
+    private async Task OpenMaintenanceWindowAsync()
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít plán údržby vybraného vozidla").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = MaintenanceTabIndex;
+        var dialog = new MaintenanceWindow
+        {
+            DataContext = _viewModel.MaintenanceWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.MaintenanceList);
+    }
+
+    private async Task OpenRecordsWindowAsync()
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít doklady vybraného vozidla").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = RecordTabIndex;
+        var dialog = new RecordsWindow
+        {
+            DataContext = _viewModel.RecordWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.RecordList);
+    }
+
+    private async Task OpenVehicleStarterBundleDialogAsync()
+    {
+        if (_viewModel?.SelectedVehicle is null || !_viewModel.CanOpenVehicleStarterBundle)
+        {
+            return;
+        }
+
+        var workspace = _viewModel.VehicleDetailWorkspace;
+        var preview = workspace.BuildVehicleStarterBundlePreview();
+        if (preview.TotalMissingCount == 0)
+        {
+            workspace.SetVehicleStarterBundleStatus("Balíček pro vozidlo už nemá žádné chybějící položky.");
+            RequestFocus(DesktopFocusTarget.VehicleList);
+            return;
+        }
+
+        var dialog = new VehicleStarterBundleWindow
+        {
+            DataContext = new VehicleStarterBundleDialogViewModel(preview)
+        };
+
+        var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(this);
+        if (result is null)
+        {
+            RequestFocus(DesktopFocusTarget.VehicleList);
+            return;
+        }
+
+        var message = await workspace.ApplyVehicleStarterBundleAsync(result.SelectedItems).ConfigureAwait(true);
+        workspace.SetVehicleStarterBundleStatus(message);
+        RequestFocus(DesktopFocusTarget.VehicleList);
     }
 }

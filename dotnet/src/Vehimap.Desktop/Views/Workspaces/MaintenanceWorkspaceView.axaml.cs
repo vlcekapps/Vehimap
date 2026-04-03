@@ -11,6 +11,7 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
     {
         AvaloniaXamlLoader.Load(this);
         RegisterShiftTabBackNavigation("MaintenanceListBox", "MaintenanceEditorTitleBox");
+        ApplyHostMode();
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
@@ -26,4 +27,22 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
             DesktopFocusTarget.MaintenanceEditorTitle => this.FindControl<TextBox>("MaintenanceEditorTitleBox"),
             _ => null
         };
+
+    protected override void OnAllowEditingChanged()
+    {
+        ApplyHostMode();
+    }
+
+    private void ApplyHostMode()
+    {
+        if (this.FindControl<Control>("MaintenanceActionPanel") is { } actionPanel)
+        {
+            actionPanel.IsVisible = AllowEditing;
+        }
+
+        if (this.FindControl<Control>("MaintenanceEditorHost") is { } editorHost)
+        {
+            editorHost.IsVisible = AllowEditing;
+        }
+    }
 }

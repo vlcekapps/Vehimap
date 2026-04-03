@@ -10,16 +10,22 @@ namespace Vehimap.Desktop.Services;
 
 internal sealed class DesktopProjectionService
 {
-    public IReadOnlyList<VehicleListItemViewModel> BuildVehicleList(
+    public DesktopListProjection<VehicleListItemViewModel> BuildVehicleList(
         VehimapDataSet dataSet,
         IReadOnlyDictionary<string, VehicleMeta> metaByVehicleId,
-        IReadOnlyCollection<AuditItem> auditItems)
+        IReadOnlyCollection<AuditItem> auditItems,
+        ITimelineService timelineService,
+        DesktopVehicleListFilters filters,
+        DateOnly today)
     {
-        return dataSet.Vehicles
-            .OrderBy(item => item.Name, StringComparer.CurrentCultureIgnoreCase)
+        var projectedVehicles = dataSet.Vehicles
             .Select(vehicle =>
             {
                 var meta = metaByVehicleId.GetValueOrDefault(vehicle.Id);
+                var timelineItems = timelineService
+                    .BuildVehicleTimeline(dataSet, vehicle.Id, today)
+                    .ToList();
+
                 return new VehicleListItemViewModel(
                     vehicle.Id,
                     vehicle.Name,
@@ -31,9 +37,29 @@ internal sealed class DesktopProjectionService
                     vehicle.GreenCardTo,
                     meta?.State ?? string.Empty,
                     meta?.Powertrain ?? string.Empty,
-                    BuildVehicleStatusSummary(vehicle, meta, auditItems));
+                    BuildVehicleStatusSummary(vehicle, meta, auditItems, timelineItems));
             })
             .ToList();
+
+        var filteredVehicles = dataSet.Vehicles
+            .Select((vehicle, index) => new
+            {
+                Vehicle = vehicle,
+                Meta = metaByVehicleId.GetValueOrDefault(vehicle.Id),
+                Projection = projectedVehicles[index],
+                Timeline = timelineService.BuildVehicleTimeline(dataSet, vehicle.Id, today).ToList()
+            })
+            .Where(item => MatchesVehicleCategory(item.Vehicle, filters.SelectedCategory))
+            .Where(item => MatchesVehicleSearch(item.Vehicle, item.Meta, item.Projection.StatusSummary, filters.SearchText))
+            .Where(item => MatchesVehicleStatusFilter(item.Vehicle, item.Timeline, filters.StatusFilter))
+            .Where(item => !filters.HideInactiveVehicles || !IsVehicleInactive(item.Meta))
+            .OrderBy(item => item.Vehicle.Name, StringComparer.CurrentCultureIgnoreCase)
+            .Select(item => item.Projection)
+            .ToList();
+
+        return new DesktopListProjection<VehicleListItemViewModel>(
+            filteredVehicles,
+            BuildVehicleListSummary(filteredVehicles.Count, dataSet.Vehicles.Count, filters));
     }
 
     public IReadOnlyList<AuditItemViewModel> BuildDashboardAuditItems(IReadOnlyList<AuditItem> auditItems) =>
@@ -611,12 +637,42 @@ internal sealed class DesktopProjectionService
         return haystack.Contains(needle, StringComparison.CurrentCultureIgnoreCase);
     }
 
-    private static string BuildVehicleStatusSummary(Vehicle vehicle, VehicleMeta? meta, IReadOnlyCollection<AuditItem> audit)
+    private static string BuildVehicleStatusSummary(
+        Vehicle vehicle,
+        VehicleMeta? meta,
+        IReadOnlyCollection<AuditItem> audit,
+        IReadOnlyList<VehicleTimelineItem> timelineItems)
     {
         var parts = new List<string>();
-        if (!string.IsNullOrWhiteSpace(meta?.State))
+        var normalizedState = NormalizeVehicleState(meta?.State);
+        if (!string.IsNullOrWhiteSpace(normalizedState) && !string.Equals(normalizedState, "Běžný provoz", StringComparison.CurrentCulture))
         {
-            parts.Add(meta.State);
+            parts.Add(normalizedState);
+        }
+
+        if (TryGetTimelineAttention(timelineItems, "technical", out var technicalStatus))
+        {
+            parts.Add($"TK: {technicalStatus}");
+        }
+
+        if (TryGetTimelineAttention(timelineItems, "green", out var greenCardStatus))
+        {
+            parts.Add($"ZK: {greenCardStatus}");
+        }
+
+        if (TryGetTimelineAttention(timelineItems, "custom", out var reminderStatus))
+        {
+            parts.Add($"Připomínka: {reminderStatus}");
+        }
+
+        if (TryGetTimelineAttention(timelineItems, "maintenance", out var maintenanceStatus))
+        {
+            parts.Add($"Údržba: {maintenanceStatus}");
+        }
+
+        if (string.IsNullOrWhiteSpace(vehicle.GreenCardTo))
+        {
+            parts.Add("ZK chybí");
         }
 
         var attentionCount = audit.Count(item => item.VehicleId == vehicle.Id);
@@ -664,6 +720,135 @@ internal sealed class DesktopProjectionService
 
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;
+
+    private static string BuildVehicleListSummary(int visibleCount, int totalCount, DesktopVehicleListFilters filters)
+    {
+        if (totalCount == 0)
+        {
+            return "Seznam vozidel: v datech zatím nejsou žádná vozidla.";
+        }
+
+        var filterParts = new List<string>();
+        if (!string.IsNullOrWhiteSpace(filters.SelectedCategory)
+            && !string.Equals(filters.SelectedCategory, MainWindowViewModel.AllVehicleCategoriesLabel, StringComparison.Ordinal))
+        {
+            filterParts.Add($"kategorie {filters.SelectedCategory}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(filters.StatusFilter)
+            && !string.Equals(filters.StatusFilter, MainWindowViewModel.AllVehicleStatusFilterLabel, StringComparison.Ordinal))
+        {
+            filterParts.Add(filters.StatusFilter);
+        }
+
+        if (filters.HideInactiveVehicles)
+        {
+            filterParts.Add("bez archivovaných a odstavených");
+        }
+
+        if (!string.IsNullOrWhiteSpace(filters.SearchText))
+        {
+            filterParts.Add($"hledání „{filters.SearchText.Trim()}“");
+        }
+
+        return filterParts.Count == 0
+            ? $"Seznam vozidel: {visibleCount} vozidel."
+            : $"Seznam vozidel: zobrazeno {visibleCount} z {totalCount}. {string.Join(" | ", filterParts)}";
+    }
+
+    private static bool MatchesVehicleCategory(Vehicle vehicle, string? selectedCategory)
+    {
+        return string.IsNullOrWhiteSpace(selectedCategory)
+            || string.Equals(selectedCategory, MainWindowViewModel.AllVehicleCategoriesLabel, StringComparison.Ordinal)
+            || string.Equals(vehicle.Category, selectedCategory, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    private static bool MatchesVehicleSearch(Vehicle vehicle, VehicleMeta? meta, string statusSummary, string? searchText)
+    {
+        var needle = (searchText ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(needle))
+        {
+            return true;
+        }
+
+        var haystacks = new[]
+        {
+            vehicle.Name,
+            vehicle.VehicleNote,
+            vehicle.MakeModel,
+            vehicle.Plate,
+            vehicle.Category,
+            vehicle.LastTk,
+            vehicle.NextTk,
+            vehicle.GreenCardFrom,
+            vehicle.GreenCardTo,
+            meta?.State,
+            meta?.Tags,
+            meta?.Powertrain,
+            meta?.ClimateProfile,
+            meta?.TimingDrive,
+            meta?.Transmission,
+            statusSummary
+        };
+
+        return haystacks.Any(haystack =>
+            !string.IsNullOrWhiteSpace(haystack)
+            && haystack.Contains(needle, StringComparison.CurrentCultureIgnoreCase));
+    }
+
+    private static bool MatchesVehicleStatusFilter(Vehicle vehicle, IReadOnlyList<VehicleTimelineItem> timelineItems, string? statusFilter)
+    {
+        return statusFilter switch
+        {
+            MainWindowViewModel.AttentionVehicleStatusFilterLabel => HasVehicleAttention(timelineItems),
+            MainWindowViewModel.OverdueVehicleStatusFilterLabel => HasVehicleOverdueTerm(timelineItems),
+            MainWindowViewModel.MissingGreenVehicleStatusFilterLabel => string.IsNullOrWhiteSpace(vehicle.GreenCardTo),
+            _ => true
+        };
+    }
+
+    private static bool HasVehicleAttention(IReadOnlyList<VehicleTimelineItem> timelineItems)
+    {
+        return timelineItems.Any(item =>
+            IsVehicleStatusTimelineItem(item.Kind)
+            && !string.IsNullOrWhiteSpace(item.Status)
+            && !string.Equals(item.Status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase));
+    }
+
+    private static bool HasVehicleOverdueTerm(IReadOnlyList<VehicleTimelineItem> timelineItems)
+    {
+        return timelineItems.Any(item =>
+            IsVehicleStatusTimelineItem(item.Kind)
+            && !item.IsFuture
+            && !string.IsNullOrWhiteSpace(item.Status)
+            && item.Status.Contains("Po termínu", StringComparison.CurrentCultureIgnoreCase));
+    }
+
+    private static bool TryGetTimelineAttention(IReadOnlyList<VehicleTimelineItem> timelineItems, string kind, out string status)
+    {
+        status = timelineItems
+            .Where(item => string.Equals(item.Kind, kind, StringComparison.Ordinal))
+            .Select(item => item.Status)
+            .FirstOrDefault(item =>
+                !string.IsNullOrWhiteSpace(item)
+                && !string.Equals(item, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase))
+            ?? string.Empty;
+
+        return !string.IsNullOrWhiteSpace(status);
+    }
+
+    private static bool IsVehicleStatusTimelineItem(string kind) =>
+        kind is "technical" or "green" or "custom" or "maintenance";
+
+    private static bool IsVehicleInactive(VehicleMeta? meta)
+    {
+        var normalizedState = NormalizeVehicleState(meta?.State);
+        return string.Equals(normalizedState, "Archiv", StringComparison.CurrentCultureIgnoreCase)
+            || string.Equals(normalizedState, "Odstaveno", StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    private static string NormalizeVehicleState(string? state) =>
+        string.IsNullOrWhiteSpace(state) ? "Běžný provoz" : state.Trim();
 }
 
 internal sealed record DesktopVehicleDetailProjection(
@@ -675,3 +860,9 @@ internal sealed record DesktopVehicleDetailProjection(
 internal sealed record DesktopListProjection<TItem>(
     IReadOnlyList<TItem> Items,
     string Summary);
+
+internal sealed record DesktopVehicleListFilters(
+    string SearchText,
+    string SelectedCategory,
+    string StatusFilter,
+    bool HideInactiveVehicles);

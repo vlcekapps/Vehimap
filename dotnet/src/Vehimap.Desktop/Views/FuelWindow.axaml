@@ -23,6 +23,7 @@
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"
+              x:Name="CloseFuelWindowButton"
               Width="120"
               Height="34"
               HorizontalAlignment="Right"

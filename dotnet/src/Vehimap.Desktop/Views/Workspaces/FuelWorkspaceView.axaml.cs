@@ -11,6 +11,7 @@ public partial class FuelWorkspaceView : WorkspaceViewBase<FuelWorkspaceViewMode
     {
         AvaloniaXamlLoader.Load(this);
         RegisterShiftTabBackNavigation("FuelListBox", "FuelEditorDateBox");
+        ApplyHostMode();
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
@@ -26,4 +27,22 @@ public partial class FuelWorkspaceView : WorkspaceViewBase<FuelWorkspaceViewMode
             DesktopFocusTarget.FuelEditorDate => this.FindControl<TextBox>("FuelEditorDateBox"),
             _ => null
         };
+
+    protected override void OnAllowEditingChanged()
+    {
+        ApplyHostMode();
+    }
+
+    private void ApplyHostMode()
+    {
+        if (this.FindControl<Control>("FuelActionPanel") is { } actionPanel)
+        {
+            actionPanel.IsVisible = AllowEditing;
+        }
+
+        if (this.FindControl<Control>("FuelEditorHost") is { } editorHost)
+        {
+            editorHost.IsVisible = AllowEditing;
+        }
+    }
 }

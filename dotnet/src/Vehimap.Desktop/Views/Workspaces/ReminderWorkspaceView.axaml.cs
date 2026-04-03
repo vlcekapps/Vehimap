@@ -11,6 +11,7 @@ public partial class ReminderWorkspaceView : WorkspaceViewBase<ReminderWorkspace
     {
         AvaloniaXamlLoader.Load(this);
         RegisterShiftTabBackNavigation("ReminderListBox", "ReminderEditorTitleBox");
+        ApplyHostMode();
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
@@ -26,5 +27,22 @@ public partial class ReminderWorkspaceView : WorkspaceViewBase<ReminderWorkspace
             DesktopFocusTarget.ReminderEditorTitle => this.FindControl<TextBox>("ReminderEditorTitleBox"),
             _ => null
         };
-}
 
+    protected override void OnAllowEditingChanged()
+    {
+        ApplyHostMode();
+    }
+
+    private void ApplyHostMode()
+    {
+        if (this.FindControl<Control>("ReminderActionPanel") is { } actionPanel)
+        {
+            actionPanel.IsVisible = AllowEditing;
+        }
+
+        if (this.FindControl<Control>("ReminderEditorHost") is { } editorHost)
+        {
+            editorHost.IsVisible = AllowEditing;
+        }
+    }
+}

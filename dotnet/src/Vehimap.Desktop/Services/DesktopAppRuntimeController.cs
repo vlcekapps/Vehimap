@@ -65,6 +65,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
                     ExitApplicationAsync),
                 cancellationToken)
             .ConfigureAwait(false);
+        _mainWindow.SetMinimizeToTrayAvailability(_trayService.IsSupported);
 
         _dueTimer.Start();
         _backupTimer.Start();
@@ -81,6 +82,24 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
                 await RefreshBackgroundStateAsync(notifyWhenHidden: false, runAutomaticBackup: true).ConfigureAwait(false);
             }
         }, InitialBackgroundDelay);
+    }
+
+    public Task RequestExitAsync()
+    {
+        return ExitApplicationAsync();
+    }
+
+    public Task RequestMinimizeToTrayAsync()
+    {
+        if (!_trayService.IsSupported)
+        {
+            return Task.CompletedTask;
+        }
+
+        return Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            HideMainWindow();
+        }).GetTask();
     }
 
     public async ValueTask DisposeAsync()
@@ -138,13 +157,13 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         if (DesktopBackgroundRuntimePolicy.CanRunAutomaticBackup(runAutomaticBackup, hasPendingEdits))
         {
             var backupResult = await _shell.RunAutomaticBackupCheckAsync().ConfigureAwait(false);
-            if (notifyWhenHidden && (backupResult.Created || backupResult.IsError))
+            if (DesktopBackgroundRuntimePolicy.CanShowAutomaticBackupNotification(notifyWhenHidden, backupResult.Created, backupResult.IsError))
             {
                 await _notificationService.ShowAsync("Vehimap - automatická záloha", backupResult.Message).ConfigureAwait(false);
             }
         }
 
-        if (notifyWhenHidden && background.HasNotification && !string.Equals(_lastNotificationKey, background.NotificationKey, StringComparison.Ordinal))
+        if (DesktopBackgroundRuntimePolicy.CanShowDueNotification(background.HasNotification, background.NotificationKey, _lastNotificationKey))
         {
             _lastNotificationKey = background.NotificationKey;
             await _notificationService.ShowAsync(background.NotificationTitle, background.NotificationMessage).ConfigureAwait(false);
@@ -158,6 +177,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             _mainWindow.Show();
             _mainWindow.WindowState = WindowState.Normal;
             _mainWindow.Activate();
+            _shell.RequestWorkspaceFocus(DesktopFocusTarget.VehicleList);
         }).GetTask();
     }
 

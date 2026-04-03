@@ -7,13 +7,13 @@
   <Grid ColumnDefinitions="1.1*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding RecordSummary}" TextWrapping="Wrap" />
     <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">
-      <TextBlock FontWeight="SemiBold" Text="Seznam dokladů a příloh vybraného vozidla" />
+      <TextBlock FontWeight="SemiBold" Text="Seznam dokladĹŻ a pĹ™Ă­loh vybranĂ©ho vozidla" />
       <ListBox x:Name="RecordListBox"
                Grid.Row="1"
                Margin="0,12,12,0"
                ItemsSource="{Binding SelectedVehicleRecords}"
                SelectedItem="{Binding SelectedRecord}"
-               AutomationProperties.Name="Doklady vybraného vozidla">
+               AutomationProperties.Name="Doklady vybranĂ©ho vozidla">
         <ListBox.KeyBindings>
           <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedRecordFileCommand}" />
         </ListBox.KeyBindings>
@@ -36,68 +36,74 @@
     <Border Grid.Row="1" Grid.Column="1" Margin="12,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
       <Grid RowDefinitions="Auto,Auto,Auto,*">
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding RecordPanelHeading}" />
-        <WrapPanel Grid.Row="1" Margin="0,14,0,0" ItemWidth="138" ItemHeight="34">
-          <Button Command="{Binding CreateRecordCommand}" Content="Nový doklad" AutomationProperties.Name="Vytvořit nový doklad" AutomationProperties.AutomationId="CreateRecordButton" />
-          <Button Command="{Binding EditSelectedRecordCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybraný doklad" AutomationProperties.AutomationId="EditRecordButton" />
-          <Button Command="{Binding DeleteSelectedRecordCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybraný doklad" AutomationProperties.AutomationId="DeleteRecordButton" />
-          <Button Command="{Binding MoveSelectedRecordToManagedCommand}" Content="Přesunout do příloh" AutomationProperties.Name="Převést vybraný doklad na spravovanou kopii" AutomationProperties.AutomationId="MoveRecordToManagedButton" />
-          <Button Command="{Binding OpenSelectedRecordFileCommand}" Content="Otevřít soubor" IsVisible="{Binding IsRecordDetailVisible}" AutomationProperties.Name="Otevřít soubor přílohy vybraného dokladu" AutomationProperties.AutomationId="OpenRecordFileButton" />
-          <Button Command="{Binding OpenSelectedRecordFolderCommand}" Content="Otevřít složku" IsVisible="{Binding IsRecordDetailVisible}" AutomationProperties.Name="Otevřít složku přílohy vybraného dokladu" AutomationProperties.AutomationId="OpenRecordFolderButton" />
-          <Button Command="{Binding SaveRecordCommand}" Content="Uložit" IsVisible="{Binding IsEditingRecord}" AutomationProperties.Name="Uložit doklad" AutomationProperties.AutomationId="SaveRecordButton" />
-          <Button Command="{Binding CancelRecordEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingRecord}" AutomationProperties.Name="Zrušit úpravu dokladu" AutomationProperties.AutomationId="CancelRecordButton" />
-        </WrapPanel>
+        <StackPanel Grid.Row="1" Margin="0,14,0,0" Spacing="8">
+          <WrapPanel x:Name="RecordEditActionPanel" ItemWidth="138" ItemHeight="34">
+            <Button Command="{Binding CreateRecordCommand}" Content="NovĂ˝ doklad" AutomationProperties.Name="VytvoĹ™it novĂ˝ doklad" AutomationProperties.AutomationId="CreateRecordButton" />
+            <Button Command="{Binding EditSelectedRecordCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybranĂ˝ doklad" AutomationProperties.AutomationId="EditRecordButton" />
+            <Button Command="{Binding DeleteSelectedRecordCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybranĂ˝ doklad" AutomationProperties.AutomationId="DeleteRecordButton" />
+            <Button Command="{Binding MoveSelectedRecordToManagedCommand}" Content="PĹ™esunout do pĹ™Ă­loh" AutomationProperties.Name="PĹ™evĂ©st vybranĂ˝ doklad na spravovanou kopii" AutomationProperties.AutomationId="MoveRecordToManagedButton" />
+            <Button Command="{Binding SaveRecordCommand}" Content="UloĹľit" IsVisible="{Binding IsEditingRecord}" AutomationProperties.Name="UloĹľit doklad" AutomationProperties.AutomationId="SaveRecordButton" />
+            <Button Command="{Binding CancelRecordEditCommand}" Content="ZruĹˇit" IsVisible="{Binding IsEditingRecord}" AutomationProperties.Name="ZruĹˇit Ăşpravu dokladu" AutomationProperties.AutomationId="CancelRecordButton" />
+          </WrapPanel>
+          <WrapPanel x:Name="RecordFileActionPanel" ItemWidth="138" ItemHeight="34">
+            <Button Command="{Binding OpenSelectedRecordFileCommand}" Content="OtevĹ™Ă­t soubor" IsVisible="{Binding IsRecordDetailVisible}" AutomationProperties.Name="OtevĹ™Ă­t soubor pĹ™Ă­lohy vybranĂ©ho dokladu" AutomationProperties.AutomationId="OpenRecordFileButton" />
+            <Button Command="{Binding OpenSelectedRecordFolderCommand}" Content="OtevĹ™Ă­t sloĹľku" IsVisible="{Binding IsRecordDetailVisible}" AutomationProperties.Name="OtevĹ™Ă­t sloĹľku pĹ™Ă­lohy vybranĂ©ho dokladu" AutomationProperties.AutomationId="OpenRecordFolderButton" />
+          </WrapPanel>
+        </StackPanel>
         <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding RecordEditorStatus}" TextWrapping="Wrap" />
-        <Grid Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsEditingRecord}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-          <Grid ColumnDefinitions="1.1*,1.4*">
-            <StackPanel Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Typ dokladu" />
-              <TextBox Text="{Binding RecordEditorRecordType}" PlaceholderText="Například Povinné ručení" AutomationProperties.Name="Typ dokladu" AutomationProperties.AutomationId="RecordEditorTypeBox" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Název" />
-              <TextBox x:Name="RecordEditorTitleBox" Text="{Binding RecordEditorTitle}" PlaceholderText="Například Allianz 2026" AutomationProperties.Name="Název dokladu" AutomationProperties.AutomationId="RecordEditorTitleBox" />
+        <Border x:Name="RecordEditorHost" Grid.Row="3" Margin="0,16,0,0">
+          <Grid IsVisible="{Binding IsEditingRecord}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            <Grid ColumnDefinitions="1.1*,1.4*">
+              <StackPanel Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Typ dokladu" />
+                <TextBox Text="{Binding RecordEditorRecordType}" PlaceholderText="NapĹ™Ă­klad PovinnĂ© ruÄŤenĂ­" AutomationProperties.Name="Typ dokladu" AutomationProperties.AutomationId="RecordEditorTypeBox" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="NĂˇzev" />
+                <TextBox x:Name="RecordEditorTitleBox" Text="{Binding RecordEditorTitle}" PlaceholderText="NapĹ™Ă­klad Allianz 2026" AutomationProperties.Name="NĂˇzev dokladu" AutomationProperties.AutomationId="RecordEditorTitleBox" />
+              </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="1.2*,*,*">
+              <StackPanel Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Poskytovatel" />
+                <TextBox Text="{Binding RecordEditorProvider}" AutomationProperties.Name="Poskytovatel dokladu" AutomationProperties.AutomationId="RecordEditorProviderBox" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="PlatĂ­ od" />
+                <TextBox Text="{Binding RecordEditorValidFrom}" AutomationProperties.Name="Platnost dokladu od" AutomationProperties.AutomationId="RecordEditorValidFromBox" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="PlatĂ­ do" />
+                <TextBox Text="{Binding RecordEditorValidTo}" AutomationProperties.Name="Platnost dokladu do" AutomationProperties.AutomationId="RecordEditorValidToBox" />
+              </StackPanel>
+            </Grid>
+            <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="180,*">
+              <StackPanel Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Cena" />
+                <TextBox Text="{Binding RecordEditorPrice}" AutomationProperties.Name="Cena dokladu" AutomationProperties.AutomationId="RecordEditorPriceBox" />
+              </StackPanel>
+              <StackPanel Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="ReĹľim pĹ™Ă­lohy" />
+                <ComboBox ItemsSource="{Binding RecordAttachmentModes}" SelectedItem="{Binding SelectedRecordEditorAttachmentMode}" AutomationProperties.Name="ReĹľim pĹ™Ă­lohy dokladu" AutomationProperties.AutomationId="RecordAttachmentModeComboBox" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="{Binding RecordEditorPathInputLabel}" />
+            <Grid Grid.Row="4" Margin="0,6,0,0" ColumnDefinitions="*,150">
+              <TextBox x:Name="RecordEditorPathInputBox" IsReadOnly="{Binding IsRecordEditorManaged}" Text="{Binding RecordEditorPathInput}" PlaceholderText="{Binding RecordEditorPathInputHelp}" AutomationProperties.Name="{Binding RecordEditorPathInputLabel}" AutomationProperties.AutomationId="RecordEditorPathInputBox" />
+              <Button Grid.Column="1" Margin="12,0,0,0" Command="{Binding BrowseRecordAttachmentCommand}" Content="Vybrat soubor" AutomationProperties.Name="Vybrat soubor pro doklad" AutomationProperties.AutomationId="BrowseRecordAttachmentButton" />
+            </Grid>
+            <TextBlock Grid.Row="5" Margin="0,8,0,0" Opacity="0.74" Text="{Binding RecordEditorPathInputHelp}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="6" Margin="0,14,0,0" FontWeight="SemiBold" Text="UloĹľenĂˇ cesta" />
+            <SelectableTextBlock Grid.Row="7" Margin="0,6,0,0" Text="{Binding RecordEditorStoredPath}" AutomationProperties.Name="UloĹľenĂˇ cesta pĹ™Ă­lohy" />
+            <TextBlock Grid.Row="8" Margin="0,14,0,0" FontWeight="SemiBold" Text="VyĹ™eĹˇenĂˇ cesta" />
+            <SelectableTextBlock Grid.Row="9" Margin="0,6,0,0" Text="{Binding RecordEditorResolvedPath}" AutomationProperties.Name="VyĹ™eĹˇenĂˇ cesta pĹ™Ă­lohy" />
+            <TextBlock Grid.Row="10" Margin="0,14,0,0" Text="{Binding RecordEditorAvailability}" TextWrapping="Wrap" />
+            <StackPanel Grid.Row="11" Margin="0,14,0,0" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="PoznĂˇmka" />
+              <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding RecordEditorNote}" AutomationProperties.Name="PoznĂˇmka k dokladu" AutomationProperties.AutomationId="RecordEditorNoteBox" />
             </StackPanel>
           </Grid>
-          <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="1.2*,*,*">
-            <StackPanel Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Poskytovatel" />
-              <TextBox Text="{Binding RecordEditorProvider}" AutomationProperties.Name="Poskytovatel dokladu" AutomationProperties.AutomationId="RecordEditorProviderBox" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Platí od" />
-              <TextBox Text="{Binding RecordEditorValidFrom}" AutomationProperties.Name="Platnost dokladu od" AutomationProperties.AutomationId="RecordEditorValidFromBox" />
-            </StackPanel>
-            <StackPanel Grid.Column="2" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Platí do" />
-              <TextBox Text="{Binding RecordEditorValidTo}" AutomationProperties.Name="Platnost dokladu do" AutomationProperties.AutomationId="RecordEditorValidToBox" />
-            </StackPanel>
-          </Grid>
-          <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="180,*">
-            <StackPanel Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Cena" />
-              <TextBox Text="{Binding RecordEditorPrice}" AutomationProperties.Name="Cena dokladu" AutomationProperties.AutomationId="RecordEditorPriceBox" />
-            </StackPanel>
-            <StackPanel Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Režim přílohy" />
-              <ComboBox ItemsSource="{Binding RecordAttachmentModes}" SelectedItem="{Binding SelectedRecordEditorAttachmentMode}" AutomationProperties.Name="Režim přílohy dokladu" AutomationProperties.AutomationId="RecordAttachmentModeComboBox" />
-            </StackPanel>
-          </Grid>
-          <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="{Binding RecordEditorPathInputLabel}" />
-          <Grid Grid.Row="4" Margin="0,6,0,0" ColumnDefinitions="*,150">
-            <TextBox x:Name="RecordEditorPathInputBox" IsReadOnly="{Binding IsRecordEditorManaged}" Text="{Binding RecordEditorPathInput}" PlaceholderText="{Binding RecordEditorPathInputHelp}" AutomationProperties.Name="{Binding RecordEditorPathInputLabel}" AutomationProperties.AutomationId="RecordEditorPathInputBox" />
-            <Button Grid.Column="1" Margin="12,0,0,0" Command="{Binding BrowseRecordAttachmentCommand}" Content="Vybrat soubor" AutomationProperties.Name="Vybrat soubor pro doklad" AutomationProperties.AutomationId="BrowseRecordAttachmentButton" />
-          </Grid>
-          <TextBlock Grid.Row="5" Margin="0,8,0,0" Opacity="0.74" Text="{Binding RecordEditorPathInputHelp}" TextWrapping="Wrap" />
-          <TextBlock Grid.Row="6" Margin="0,14,0,0" FontWeight="SemiBold" Text="Uložená cesta" />
-            <SelectableTextBlock Grid.Row="7" Margin="0,6,0,0" Text="{Binding RecordEditorStoredPath}" AutomationProperties.Name="Uložená cesta přílohy" />
-          <TextBlock Grid.Row="8" Margin="0,14,0,0" FontWeight="SemiBold" Text="Vyřešená cesta" />
-            <SelectableTextBlock Grid.Row="9" Margin="0,6,0,0" Text="{Binding RecordEditorResolvedPath}" AutomationProperties.Name="Vyřešená cesta přílohy" />
-          <TextBlock Grid.Row="10" Margin="0,14,0,0" Text="{Binding RecordEditorAvailability}" TextWrapping="Wrap" />
-          <StackPanel Grid.Row="11" Margin="0,14,0,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Poznámka" />
-            <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding RecordEditorNote}" AutomationProperties.Name="Poznámka k dokladu" AutomationProperties.AutomationId="RecordEditorNoteBox" />
-          </StackPanel>
-        </Grid>
+        </Border>
         <TextBlock Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsRecordDetailVisible}" Text="{Binding SelectedRecordDetail}" TextWrapping="Wrap" />
       </Grid>
     </Border>

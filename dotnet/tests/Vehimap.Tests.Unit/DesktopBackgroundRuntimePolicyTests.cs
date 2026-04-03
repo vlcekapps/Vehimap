@@ -38,4 +38,26 @@ public sealed class DesktopBackgroundRuntimePolicyTests
 
         Assert.Equal(expected, actual);
     }
+
+    [Theory]
+    [InlineData(true, true, false, true)]
+    [InlineData(false, true, false, false)]
+    [InlineData(true, false, true, true)]
+    public void Can_show_automatic_backup_notification_requires_hidden_mode_and_result(bool notifyWhenHidden, bool backupCreated, bool backupErrored, bool expected)
+    {
+        var actual = DesktopBackgroundRuntimePolicy.CanShowAutomaticBackupNotification(notifyWhenHidden, backupCreated, backupErrored);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData(true, "audit|1|veh_1", "", true)]
+    [InlineData(true, "audit|1|veh_1", "audit|1|veh_1", false)]
+    [InlineData(false, "audit|1|veh_1", "", false)]
+    public void Can_show_due_notification_depends_on_content_and_deduplication(bool hasNotification, string notificationKey, string lastNotificationKey, bool expected)
+    {
+        var actual = DesktopBackgroundRuntimePolicy.CanShowDueNotification(hasNotification, notificationKey, lastNotificationKey);
+
+        Assert.Equal(expected, actual);
+    }
 }

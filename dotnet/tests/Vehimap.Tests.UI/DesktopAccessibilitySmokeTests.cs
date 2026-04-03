@@ -7,7 +7,7 @@ namespace Vehimap.Tests.UI;
 public sealed class DesktopAccessibilitySmokeTests
 {
     [Fact]
-    public void Main_shell_exposes_vehicle_list_and_app_shell_actions_when_appium_is_available()
+    public void Main_shell_exposes_vehicle_list_and_menu_actions_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -18,15 +18,21 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleListBox"));
-            Assert.NotNull(session.WaitForElementByAccessibilityId("SettingsButton"));
-            Assert.NotNull(session.WaitForElementByAccessibilityId("AboutButton"));
-            Assert.NotNull(session.WaitForElementByAccessibilityId("UpdateCheckButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("AppMenuBar"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("FileMenuRoot"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleMenuRoot"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("QuickActionsMenuRoot"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("AppMenuRoot"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleCategoryFilterBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleSearchBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleStatusFilterBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("HideInactiveVehiclesCheckBox"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("DashboardTabButton"));
         }
     }
 
     [Fact]
-    public void App_shell_dialogs_open_and_close_from_main_window_when_appium_is_available()
+    public void App_shell_dialogs_open_and_close_from_menu_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -36,17 +42,36 @@ public sealed class DesktopAccessibilitySmokeTests
         var session = startedSession!;
         using (session)
         {
-            session.ClickByAccessibilityId("SettingsButton");
+            session.ClickMenuItem("AppMenuRoot", "SettingsButton");
             Assert.NotNull(session.WaitForElementByAccessibilityId("TechnicalReminderDaysBox"));
             session.ClickByAccessibilityId("CancelSettingsButton");
 
-            session.ClickByAccessibilityId("AboutButton");
+            session.ClickMenuItem("AppMenuRoot", "AboutButton");
             Assert.NotNull(session.WaitForElementByAccessibilityId("ReleaseNotesButton"));
             session.ClickByAccessibilityId("CloseAboutButton");
 
-            session.ClickByAccessibilityId("UpdateCheckButton");
+            session.ClickMenuItem("AppMenuRoot", "UpdateCheckButton");
             Assert.NotNull(session.WaitForElementByAccessibilityId("UpdateCloseButton"));
             session.ClickByAccessibilityId("UpdateCloseButton");
+        }
+    }
+
+    [Fact]
+    public void Main_menu_can_be_invoked_with_f10_without_entering_regular_tab_order_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("VehicleListBox");
+            session.SendKeysToActiveElement(Keys.F10);
+            var focusedId = session.WaitForFocusedAutomationId(12, "FileMenuRoot", "BackupExportButton");
+            Assert.Contains(focusedId, new[] { "FileMenuRoot", "BackupExportButton" });
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ExitAppButton"));
         }
     }
 
@@ -74,7 +99,7 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
-    public void Reminder_editor_exposes_accessible_names_and_can_save_new_item_when_appium_is_available()
+    public void Reminder_editor_runs_in_standalone_window_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -85,12 +110,14 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("ReminderTabButton");
+            session.ClickByAccessibilityId("OpenReminderWindowButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseRemindersWindowButton"));
+
             session.ClickByAccessibilityId("CreateReminderButton");
+            Assert.Equal("NĂˇzev pĹ™ipomĂ­nky", session.GetNameByAccessibilityId("ReminderEditorTitleBox"));
+            Assert.Equal("TermĂ­n pĹ™ipomĂ­nky", session.GetNameByAccessibilityId("ReminderEditorDueDateBox"));
 
-            Assert.Equal("Název připomínky", session.GetNameByAccessibilityId("ReminderEditorTitleBox"));
-            Assert.Equal("Termín připomínky", session.GetNameByAccessibilityId("ReminderEditorDueDateBox"));
-
-            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Appium připomínka");
+            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Appium pĹ™ipomĂ­nka");
             session.SendKeysByAccessibilityId("ReminderEditorDueDateBox", "12/2026");
             session.ClickByAccessibilityId("SaveReminderButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveReminderButton");
@@ -98,7 +125,7 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
-    public void Record_editor_exposes_accessible_names_and_can_save_new_item_when_appium_is_available()
+    public void Record_editor_runs_in_standalone_window_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -109,10 +136,12 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("RecordTabButton");
-            session.ClickByAccessibilityId("CreateRecordButton");
+            session.ClickByAccessibilityId("OpenRecordWindowButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseRecordsWindowButton"));
 
-            Assert.Equal("Název dokladu", session.GetNameByAccessibilityId("RecordEditorTitleBox"));
-            Assert.Equal("Režim přílohy dokladu", session.GetNameByAccessibilityId("RecordAttachmentModeComboBox"));
+            session.ClickByAccessibilityId("CreateRecordButton");
+            Assert.Equal("NĂˇzev dokladu", session.GetNameByAccessibilityId("RecordEditorTitleBox"));
+            Assert.Equal("ReĹľim pĹ™Ă­lohy dokladu", session.GetNameByAccessibilityId("RecordAttachmentModeComboBox"));
 
             session.SendKeysByAccessibilityId("RecordEditorTitleBox", "Appium doklad");
             session.ClickByAccessibilityId("SaveRecordButton");
@@ -121,7 +150,7 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
-    public void History_editor_exposes_accessible_names_and_can_save_new_item_when_appium_is_available()
+    public void History_editor_runs_in_standalone_window_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -132,23 +161,25 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("HistoryTabButton");
-            session.ClickByAccessibilityId("CreateHistoryButton");
+            session.ClickByAccessibilityId("OpenHistoryWindowButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseHistoryWindowButton"));
 
-            Assert.Equal("Datum historického záznamu", session.GetNameByAccessibilityId("HistoryEditorDateBox"));
-            Assert.Equal("Typ historické události", session.GetNameByAccessibilityId("HistoryEditorTypeBox"));
+            session.ClickByAccessibilityId("CreateHistoryButton");
+            Assert.Equal("Datum historickĂ©ho zĂˇznamu", session.GetNameByAccessibilityId("HistoryEditorDateBox"));
+            Assert.Equal("Typ historickĂ© udĂˇlosti", session.GetNameByAccessibilityId("HistoryEditorTypeBox"));
 
             session.SendKeysByAccessibilityId("HistoryEditorDateBox", "15.10.2026");
             session.SendKeysByAccessibilityId("HistoryEditorTypeBox", "Servis");
             session.SendKeysByAccessibilityId("HistoryEditorOdometerBox", "123456");
             session.SendKeysByAccessibilityId("HistoryEditorCostBox", "2500");
-            session.SendKeysByAccessibilityId("HistoryEditorNoteBox", "Appium historický záznam");
+            session.SendKeysByAccessibilityId("HistoryEditorNoteBox", "Appium historickĂ˝ zĂˇznam");
             session.ClickByAccessibilityId("SaveHistoryButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveHistoryButton");
         }
     }
 
     [Fact]
-    public void Fuel_editor_exposes_accessible_names_and_can_save_new_item_when_appium_is_available()
+    public void Fuel_editor_runs_in_standalone_window_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -159,9 +190,10 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("FuelTabButton");
+            session.ClickByAccessibilityId("OpenFuelWindowButton");
             session.ClickByAccessibilityId("CreateFuelButton");
 
-            Assert.Equal("Datum tankování", session.GetNameByAccessibilityId("FuelEditorDateBox"));
+            Assert.Equal("Datum tankovĂˇnĂ­", session.GetNameByAccessibilityId("FuelEditorDateBox"));
             Assert.Equal("Typ paliva", session.GetNameByAccessibilityId("FuelEditorFuelTypeBox"));
 
             session.SendKeysByAccessibilityId("FuelEditorDateBox", "20.10.2026");
@@ -169,14 +201,14 @@ public sealed class DesktopAccessibilitySmokeTests
             session.SendKeysByAccessibilityId("FuelEditorLitersBox", "38.5");
             session.SendKeysByAccessibilityId("FuelEditorTotalCostBox", "1890");
             session.SendKeysByAccessibilityId("FuelEditorOdometerBox", "123789");
-            session.SendKeysByAccessibilityId("FuelEditorNoteBox", "Appium tankování");
+            session.SendKeysByAccessibilityId("FuelEditorNoteBox", "Appium tankovĂˇnĂ­");
             session.ClickByAccessibilityId("SaveFuelButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveFuelButton");
         }
     }
 
     [Fact]
-    public void Maintenance_editor_exposes_accessible_names_and_can_save_new_item_when_appium_is_available()
+    public void Maintenance_editor_runs_in_standalone_window_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -187,24 +219,25 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("MaintenanceTabButton");
+            session.ClickByAccessibilityId("OpenMaintenanceWindowButton");
             session.ClickByAccessibilityId("CreateMaintenanceButton");
 
-            Assert.Equal("Název servisního úkonu", session.GetNameByAccessibilityId("MaintenanceEditorTitleBox"));
-            Assert.Equal("Interval údržby v kilometrech", session.GetNameByAccessibilityId("MaintenanceEditorIntervalKmBox"));
+            Assert.Equal("NĂˇzev servisnĂ­ho Ăşkonu", session.GetNameByAccessibilityId("MaintenanceEditorTitleBox"));
+            Assert.Equal("Interval ĂşdrĹľby v kilometrech", session.GetNameByAccessibilityId("MaintenanceEditorIntervalKmBox"));
 
-            session.SendKeysByAccessibilityId("MaintenanceEditorTitleBox", "Motorový olej");
+            session.SendKeysByAccessibilityId("MaintenanceEditorTitleBox", "MotorovĂ˝ olej");
             session.SendKeysByAccessibilityId("MaintenanceEditorIntervalKmBox", "15000");
             session.SendKeysByAccessibilityId("MaintenanceEditorIntervalMonthsBox", "12");
             session.SendKeysByAccessibilityId("MaintenanceEditorLastServiceDateBox", "01.04.2026");
             session.SendKeysByAccessibilityId("MaintenanceEditorLastServiceOdometerBox", "120000");
-            session.SendKeysByAccessibilityId("MaintenanceEditorNoteBox", "Appium servisní plán");
+            session.SendKeysByAccessibilityId("MaintenanceEditorNoteBox", "Appium servisnĂ­ plĂˇn");
             session.ClickByAccessibilityId("SaveMaintenanceButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveMaintenanceButton");
         }
     }
 
     [Fact]
-    public void Vehicle_detail_editor_exposes_accessible_names_and_can_save_new_vehicle_when_appium_is_available()
+    public void Vehicle_detail_editor_runs_in_standalone_window_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -215,16 +248,17 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("DetailTabButton");
+            session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
             session.ClickByAccessibilityId("CreateVehicleButton");
 
-            Assert.Equal("Název vozidla", session.GetNameByAccessibilityId("VehicleEditorNameBox"));
+            Assert.Equal("NĂˇzev vozidla", session.GetNameByAccessibilityId("VehicleEditorNameBox"));
             Assert.Equal("Kategorie vozidla", session.GetNameByAccessibilityId("VehicleEditorCategoryBox"));
 
             session.SendKeysByAccessibilityId("VehicleEditorNameBox", "Appium vozidlo");
             session.SendKeysByAccessibilityId("VehicleEditorMakeModelBox", "Test model");
-            session.SendKeysByAccessibilityId("VehicleEditorStateBox", "Běžný provoz");
-            session.SendKeysByAccessibilityId("VehicleEditorPowertrainBox", "benzín");
-            session.SendKeysByAccessibilityId("VehicleEditorNoteBox", "Vytvořeno UI testem");
+            session.SendKeysByAccessibilityId("VehicleEditorStateBox", "BÄ›ĹľnĂ˝ provoz");
+            session.SendKeysByAccessibilityId("VehicleEditorPowertrainBox", "benzĂ­n");
+            session.SendKeysByAccessibilityId("VehicleEditorNoteBox", "VytvoĹ™eno UI testem");
             session.ClickByAccessibilityId("SaveVehicleButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveVehicleButton");
         }
@@ -242,6 +276,7 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("DetailTabButton");
+            session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
             session.ClickByAccessibilityId("CreateVehicleButton");
             session.ClickByAccessibilityId("VehicleEditorNameBox");
             session.SendKeysByAccessibilityId("VehicleEditorNameBox", Keys.Shift + Keys.Tab);
@@ -251,7 +286,7 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
-    public void Vehicle_selection_change_prompts_before_discarding_pending_edits_when_appium_is_available()
+    public void Closing_standalone_editor_with_pending_changes_prompts_for_discard_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -262,10 +297,11 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("ReminderTabButton");
+            session.ClickByAccessibilityId("OpenReminderWindowButton");
             session.ClickByAccessibilityId("CreateReminderButton");
-            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Rozpracovaná připomínka");
+            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "RozpracovanĂˇ pĹ™ipomĂ­nka");
 
-            session.ClickByName("Božena, Škoda 100, Osobní vozidla, SPZ 2AB3456, stav Veterán, Veterán");
+            session.ClickByAccessibilityId("CloseRemindersWindowButton");
             Assert.NotNull(session.WaitForElementByAccessibilityId("ConfirmationCancelButton"));
             session.ClickByAccessibilityId("ConfirmationCancelButton");
 
@@ -288,7 +324,7 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("SearchTabButton");
             session.SendKeysByAccessibilityId("GlobalSearchTextBox", "Kooperativa");
             session.ClickByAccessibilityId("SearchOpenButton");
-            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateRecordButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenRecordWindowButton"));
         }
     }
 
@@ -306,7 +342,7 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("TimelineTabButton");
             session.SendKeysByAccessibilityId("TimelineSearchBox", "Objednat servis");
             session.ClickByAccessibilityId("TimelineOpenButton");
-            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateReminderButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenReminderWindowButton"));
         }
     }
 
@@ -324,7 +360,7 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("UpcomingOverviewTabButton");
             session.SendKeysByAccessibilityId("UpcomingOverviewSearchBox", "Objednat servis");
             session.ClickByAccessibilityId("UpcomingOverviewOpenButton");
-            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateReminderButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenReminderWindowButton"));
         }
     }
 
@@ -340,9 +376,9 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("OverdueOverviewTabButton");
-            session.SendKeysByAccessibilityId("OverdueOverviewSearchBox", "Propadlá pojistka");
+            session.SendKeysByAccessibilityId("OverdueOverviewSearchBox", "PropadlĂˇ pojistka");
             session.ClickByAccessibilityId("OverdueOverviewOpenButton");
-            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateRecordButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenRecordWindowButton"));
         }
     }
 
@@ -359,7 +395,7 @@ public sealed class DesktopAccessibilitySmokeTests
         {
             session.ClickByAccessibilityId("CostTabButton");
             session.SendKeysByAccessibilityId("CostListBox", Keys.Enter);
-            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateVehicleButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenVehicleDetailWindowButton"));
         }
     }
 }

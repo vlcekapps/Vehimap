@@ -580,11 +580,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
             CostSummary = _projectionService.BuildCostSummary(costSummary);
             CostComparison = _projectionService.BuildCostComparison(costSummary);
 
-            Vehicles.Clear();
-            foreach (var vehicle in _projectionService.BuildVehicleList(result.DataSet, _metaByVehicleId, _auditItems))
-            {
-                Vehicles.Add(vehicle);
-            }
+            ApplyVehicleListFilterPreferences();
+            RefreshVehicleList(preferredVehicleId);
 
             AuditItems.Clear();
             foreach (var item in _projectionService.BuildDashboardAuditItems(_auditItems))
@@ -604,14 +601,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedDashboardAuditItem = AuditItems.FirstOrDefault();
             SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault();
             SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
-
-            SelectedVehicle = string.IsNullOrWhiteSpace(preferredVehicleId)
-                ? Vehicles.FirstOrDefault()
-                : FindById(Vehicles, item => item.Id, preferredVehicleId) ?? Vehicles.FirstOrDefault();
-            if (SelectedVehicle is null)
-            {
-                OnSelectedVehicleChanged(null);
-            }
 
             if (applyLaunchTabPreference && result.SupportedSettings.ShowDashboardOnLaunch && !result.SupportedSettings.HideOnLaunch)
             {
