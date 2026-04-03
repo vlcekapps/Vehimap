@@ -77,6 +77,31 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Main_menu_roots_are_skipped_by_regular_tab_navigation_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("HideInactiveVehiclesCheckBox");
+            session.SendKeysToActiveElement(Keys.Tab);
+            Assert.DoesNotContain(
+                session.GetFocusedAutomationId(),
+                new[] { "FileMenuRoot", "VehicleMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" });
+
+            session.ClickByAccessibilityId("VehicleCategoryFilterBox");
+            session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+            Assert.DoesNotContain(
+                session.GetFocusedAutomationId(),
+                new[] { "FileMenuRoot", "VehicleMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" });
+        }
+    }
+
+    [Fact]
     public void Workspace_windows_open_from_selected_tabs_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

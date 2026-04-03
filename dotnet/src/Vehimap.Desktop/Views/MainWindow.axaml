@@ -38,6 +38,7 @@
             AutomationProperties.AutomationId="AppMenuBar">
         <MenuItem x:Name="FileMenuRoot"
                   Header="_Soubor"
+                  IsTabStop="False"
                   AutomationProperties.Name="Nabídka Soubor"
                   AutomationProperties.AutomationId="FileMenuRoot">
           <MenuItem x:Name="PrintableReportButton"
@@ -70,6 +71,7 @@
         </MenuItem>
         <MenuItem x:Name="VehicleMenuRoot"
                   Header="_Vozidlo"
+                  IsTabStop="False"
                   AutomationProperties.Name="Nabídka Vozidlo"
                   AutomationProperties.AutomationId="VehicleMenuRoot">
           <MenuItem x:Name="CreateVehicleMenuItem"
@@ -129,6 +131,7 @@
         </MenuItem>
         <MenuItem x:Name="QuickActionsMenuRoot"
                   Header="_Rychlé akce"
+                  IsTabStop="False"
                   AutomationProperties.Name="Nabídka Rychlé akce"
                   AutomationProperties.AutomationId="QuickActionsMenuRoot">
           <MenuItem x:Name="OpenNearestTechnicalMenuItem"
@@ -154,6 +157,7 @@
         </MenuItem>
         <MenuItem x:Name="AppMenuRoot"
                   Header="_Aplikace"
+                  IsTabStop="False"
                   AutomationProperties.Name="Nabídka Aplikace"
                   AutomationProperties.AutomationId="AppMenuRoot">
           <MenuItem x:Name="MinimizeToTrayButton"

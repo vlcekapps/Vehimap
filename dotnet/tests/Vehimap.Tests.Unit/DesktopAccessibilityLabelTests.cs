@@ -1,5 +1,6 @@
 using Vehimap.Desktop.ViewModels;
 using Xunit;
+using System.Text.RegularExpressions;
 
 namespace Vehimap.Tests.Unit;
 
@@ -54,6 +55,7 @@ public sealed class DesktopAccessibilityLabelTests
     public void Main_window_xaml_should_define_accessible_shell_metadata()
     {
         var xaml = ReadViewFile("MainWindow.axaml");
+        var normalizedXaml = Regex.Replace(xaml, "\\s+", " ");
 
         Assert.Contains("AutomationProperties.Name=\"Vehimap Desktop Preview\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppMenuBar\"", xaml);
@@ -61,7 +63,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"QuickActionsMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppMenuRoot\"", xaml);
-        Assert.Contains("IsTabStop=\"False\"", xaml);
+        Assert.Contains("x:Name=\"AppMenuBar\"", xaml);
+        Assert.Contains("x:Name=\"FileMenuRoot\" Header=\"_Soubor\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"VehicleMenuRoot\" Header=\"_Vozidlo\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"QuickActionsMenuRoot\" Header=\"_Rychlé akce\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"_Aplikace\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MinimizeToTrayButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SettingsButton\"", xaml);
