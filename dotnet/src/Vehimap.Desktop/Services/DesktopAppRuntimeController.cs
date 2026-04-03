@@ -19,10 +19,12 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
     private readonly MainWindowViewModel _shell;
     private readonly ITrayService _trayService;
     private readonly INotificationService _notificationService;
+    private readonly IAppShellDialogService _dialogService;
     private readonly DispatcherTimer _dueTimer;
     private readonly DispatcherTimer _backupTimer;
     private bool _allowClose;
     private bool _initialized;
+    private bool _closeConfirmationInProgress;
     private string _lastNotificationKey = string.Empty;
 
     public DesktopAppRuntimeController(
@@ -30,13 +32,15 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         MainWindow mainWindow,
         MainWindowViewModel shell,
         ITrayService trayService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IAppShellDialogService dialogService)
     {
         _desktopLifetime = desktopLifetime;
         _mainWindow = mainWindow;
         _shell = shell;
         _trayService = trayService;
         _notificationService = notificationService;
+        _dialogService = dialogService;
         _dueTimer = new DispatcherTimer { Interval = DueCheckInterval };
         _backupTimer = new DispatcherTimer { Interval = BackupCheckInterval };
         _dueTimer.Tick += OnDueTimerTick;
@@ -99,13 +103,25 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
 
     private void OnMainWindowClosing(object? sender, WindowClosingEventArgs e)
     {
-        if (_allowClose || !_trayService.IsSupported)
+        if (_allowClose)
+        {
+            return;
+        }
+
+        if (_trayService.IsSupported)
+        {
+            e.Cancel = true;
+            HideMainWindow();
+            return;
+        }
+
+        if (!_shell.HasPendingEdits || _closeConfirmationInProgress)
         {
             return;
         }
 
         e.Cancel = true;
-        HideMainWindow();
+        _ = ConfirmAndCloseMainWindowAsync();
     }
 
     private async Task RefreshBackgroundStateAsync(bool notifyWhenHidden, bool runAutomaticBackup)
@@ -153,16 +169,78 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
 
     private Task ExitApplicationAsync()
     {
-        return Dispatcher.UIThread.InvokeAsync(() =>
+        var completion = new TaskCompletionSource();
+        Dispatcher.UIThread.Post(async () =>
         {
-            _allowClose = true;
-            _mainWindow.Close();
-            _desktopLifetime.Shutdown();
-        }).GetTask();
+            try
+            {
+                await ExitApplicationCoreAsync().ConfigureAwait(true);
+                completion.SetResult();
+            }
+            catch (Exception ex)
+            {
+                completion.SetException(ex);
+            }
+        });
+
+        return completion.Task;
     }
 
     private void HideMainWindow()
     {
         _mainWindow.Hide();
+    }
+
+    private async Task ConfirmAndCloseMainWindowAsync()
+    {
+        _closeConfirmationInProgress = true;
+        try
+        {
+            var confirmed = await _dialogService
+                .ConfirmDiscardPendingChangesAsync(_mainWindow, _shell.GetPendingEditLabel(), "ukončit aplikaci")
+                .ConfigureAwait(true);
+            if (!confirmed)
+            {
+                _shell.RequestWorkspaceFocus(_shell.GetPendingEditFocusTarget());
+                return;
+            }
+
+            _shell.DiscardPendingEdits();
+            _allowClose = true;
+            _mainWindow.Close();
+            _desktopLifetime.Shutdown();
+        }
+        finally
+        {
+            _closeConfirmationInProgress = false;
+        }
+    }
+
+    private async Task ExitApplicationCoreAsync()
+    {
+        if (_shell.HasPendingEdits)
+        {
+            if (!_mainWindow.IsVisible)
+            {
+                _mainWindow.Show();
+                _mainWindow.WindowState = WindowState.Normal;
+                _mainWindow.Activate();
+            }
+
+            var confirmed = await _dialogService
+                .ConfirmDiscardPendingChangesAsync(_mainWindow, _shell.GetPendingEditLabel(), "ukončit aplikaci")
+                .ConfigureAwait(true);
+            if (!confirmed)
+            {
+                _shell.RequestWorkspaceFocus(_shell.GetPendingEditFocusTarget());
+                return;
+            }
+
+            _shell.DiscardPendingEdits();
+        }
+
+        _allowClose = true;
+        _mainWindow.Close();
+        _desktopLifetime.Shutdown();
     }
 }

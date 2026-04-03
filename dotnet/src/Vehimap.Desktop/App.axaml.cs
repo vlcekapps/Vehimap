@@ -27,12 +27,14 @@ public partial class App : Avalonia.Application
             };
 
             desktop.MainWindow = mainWindow;
+            var dialogService = new AvaloniaAppShellDialogService();
             _runtimeController = new DesktopAppRuntimeController(
                 desktop,
                 mainWindow,
                 mainWindowViewModel,
                 new AvaloniaTrayService(new AssemblyAppBuildInfoProvider()),
-                new DesktopNotificationService());
+                new DesktopNotificationService(),
+                dialogService);
             desktop.Exit += OnDesktopExit;
             _ = _runtimeController.InitializeAsync();
         }

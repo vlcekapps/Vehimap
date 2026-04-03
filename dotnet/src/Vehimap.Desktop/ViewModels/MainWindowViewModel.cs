@@ -457,9 +457,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedTimelineItem))]
-    private void OpenSelectedTimelineItem()
+    private async Task OpenSelectedTimelineItemAsync()
     {
         if (SelectedTimelineItem is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít vybranou položku časové osy").ConfigureAwait(true))
         {
             return;
         }
@@ -491,9 +496,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardAuditItem))]
-    private void OpenSelectedDashboardAuditItem()
+    private async Task OpenSelectedDashboardAuditItemAsync()
     {
         if (SelectedDashboardAuditItem is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít položku z auditu").ConfigureAwait(true))
         {
             return;
         }
@@ -502,9 +512,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardCostVehicle))]
-    private void OpenSelectedDashboardCostVehicle()
+    private async Task OpenSelectedDashboardCostVehicleAsync()
     {
         if (SelectedDashboardCostVehicle is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít vozidlo z nákladů").ConfigureAwait(true))
         {
             return;
         }
@@ -513,9 +528,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardTimelineItem))]
-    private void OpenSelectedDashboardTimelineItem()
+    private async Task OpenSelectedDashboardTimelineItemAsync()
     {
         if (SelectedDashboardTimelineItem is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít položku z dashboardu").ConfigureAwait(true))
         {
             return;
         }
@@ -524,9 +544,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedSearchResult))]
-    private void OpenSelectedSearchResult()
+    private async Task OpenSelectedSearchResultAsync()
     {
         if (SelectedSearchResult is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít výsledek hledání").ConfigureAwait(true))
         {
             return;
         }
@@ -934,4 +959,21 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;
+
+    private async Task<bool> ConfirmDiscardPendingEditsBeforeNavigationAsync(string actionDescription)
+    {
+        if (!HasPendingEdits)
+        {
+            return true;
+        }
+
+        if (!await ConfirmDiscardPendingEditsAsync(actionDescription).ConfigureAwait(true))
+        {
+            RequestFocus(GetPendingEditFocusTarget());
+            return false;
+        }
+
+        DiscardPendingEdits();
+        return true;
+    }
 }

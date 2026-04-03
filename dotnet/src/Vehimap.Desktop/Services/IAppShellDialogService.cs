@@ -11,6 +11,8 @@ internal interface IAppShellDialogService
 
     Task<bool> ConfirmBackupImportAsync(Window owner, string backupPath);
 
+    Task<bool> ConfirmDiscardPendingChangesAsync(Window owner, string pendingEditLabel, string actionDescription);
+
     Task<bool> ShowAboutAsync(Window owner, AboutDialogViewModel model);
 
     Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model);

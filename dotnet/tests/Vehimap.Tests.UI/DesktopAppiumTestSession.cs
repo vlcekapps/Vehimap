@@ -1,4 +1,3 @@
-using System.Net.Http;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
@@ -53,7 +52,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             session = null;
             if (DesktopUiTestConfiguration.RequireAvailability)
             {
-                throw new InvalidOperationException("Appium UI session se nepodarilo spustit.", ex);
+                throw new InvalidOperationException("Appium UI session se nepodařilo spustit.", ex);
             }
 
             return false;
@@ -70,6 +69,11 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     public void ClickByAccessibilityId(string automationId, int timeoutSeconds = 12)
     {
         WaitForElementByAccessibilityId(automationId, timeoutSeconds).Click();
+    }
+
+    public void ClickByName(string name, int timeoutSeconds = 12)
+    {
+        WaitForElementByName(name, timeoutSeconds).Click();
     }
 
     public IWebElement WaitForElementByName(string name, int timeoutSeconds = 12)
@@ -173,11 +177,13 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         File.WriteAllText(Path.Combine(dataPath, "vehicles.tsv"), """
 # Vehimap data v4
 veh_1	Milena	Osobní vozidla	Rodinné auto	Škoda 120L	1AB2345	1988	43		08/2099	05/2025	06/2099
+veh_2	Božena	Osobní vozidla	Srazové	Škoda 100	2AB3456	1976	38		09/2099	07/2025	10/2099
 """);
 
         File.WriteAllText(Path.Combine(dataPath, "vehicle_meta.tsv"), """
 # Vehimap meta v2
 veh_1	Běžný provoz		benzín			
+veh_2	Veterán		benzín			
 """);
 
         File.WriteAllText(Path.Combine(dataPath, "history.tsv"), $$"""

@@ -60,7 +60,8 @@ public sealed class DesktopAppShellControllerTests
     {
         var dialogService = new StubAppShellDialogService
         {
-            UpdateResult = UpdateDialogAction.PrimaryAction
+            UpdateResult = UpdateDialogAction.PrimaryAction,
+            ConfirmDiscardResult = true
         };
         var launcher = new StubUpdateInstallLauncher();
         var updateService = new StubUpdateService();
@@ -75,6 +76,50 @@ public sealed class DesktopAppShellControllerTests
         Assert.True(shouldClose);
         Assert.NotNull(launcher.LastPlan);
         Assert.Equal("1.0.9", launcher.LastPlan!.ExpectedVersion);
+    }
+
+    [Fact]
+    public async Task Import_backup_async_stops_when_pending_edits_are_not_discarded()
+    {
+        var dialogService = new StubAppShellDialogService
+        {
+            ConfirmDiscardResult = false
+        };
+        var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()));
+
+        viewModel.CreateReminderCommand.Execute(null);
+
+        await controller.ImportBackupAsync(null!, viewModel);
+
+        Assert.True(dialogService.ConfirmDiscardPendingChangesCalled);
+        Assert.False(dialogService.ConfirmBackupImportCalled);
+    }
+
+    [Fact]
+    public async Task Check_for_updates_async_does_not_install_when_pending_edits_are_not_discarded()
+    {
+        var dialogService = new StubAppShellDialogService
+        {
+            UpdateResult = UpdateDialogAction.PrimaryAction,
+            ConfirmDiscardResult = false
+        };
+        var launcher = new StubUpdateInstallLauncher();
+        var controller = new DesktopAppShellController(dialogService, launcher);
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            updateService: new StubUpdateService());
+
+        viewModel.CreateReminderCommand.Execute(null);
+
+        var shouldClose = await controller.CheckForUpdatesAsync(null!, viewModel);
+
+        Assert.False(shouldClose);
+        Assert.True(dialogService.ConfirmDiscardPendingChangesCalled);
+        Assert.Null(launcher.LastPlan);
     }
 
     private static MainWindowViewModel CreateViewModel(
@@ -250,7 +295,10 @@ public sealed class DesktopAppShellControllerTests
         public SettingsDialogResult? SettingsResult { get; set; }
         public bool AboutResult { get; set; }
         public UpdateDialogAction UpdateResult { get; set; }
+        public bool ConfirmDiscardResult { get; set; } = true;
         public bool ShowSettingsCalled { get; private set; }
+        public bool ConfirmBackupImportCalled { get; private set; }
+        public bool ConfirmDiscardPendingChangesCalled { get; private set; }
 
         public Task<SettingsDialogResult?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot, string automaticBackupStatus)
         {
@@ -258,7 +306,17 @@ public sealed class DesktopAppShellControllerTests
             return Task.FromResult(SettingsResult);
         }
 
-        public Task<bool> ConfirmBackupImportAsync(Window owner, string backupPath) => Task.FromResult(true);
+        public Task<bool> ConfirmBackupImportAsync(Window owner, string backupPath)
+        {
+            ConfirmBackupImportCalled = true;
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> ConfirmDiscardPendingChangesAsync(Window owner, string pendingEditLabel, string actionDescription)
+        {
+            ConfirmDiscardPendingChangesCalled = true;
+            return Task.FromResult(ConfirmDiscardResult);
+        }
 
         public Task<bool> ShowAboutAsync(Window owner, AboutDialogViewModel model) => Task.FromResult(AboutResult);
 

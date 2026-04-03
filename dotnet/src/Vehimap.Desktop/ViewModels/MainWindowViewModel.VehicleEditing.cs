@@ -72,15 +72,15 @@ public sealed partial class MainWindowViewModel
 
     public bool IsVehicleDetailVisible => !IsEditingVehicle;
 
-    public bool CanCreateVehicle => !IsEditingVehicle;
+    public bool CanCreateVehicle => !HasPendingEdits;
 
-    public bool CanEditSelectedVehicle => SelectedVehicle is not null && !IsEditingVehicle;
+    public bool CanEditSelectedVehicle => SelectedVehicle is not null && !HasPendingEdits;
 
     public bool CanSaveVehicle => IsEditingVehicle;
 
     public bool CanCancelVehicleEdit => IsEditingVehicle;
 
-    public bool CanOpenVehicleStarterBundle => SelectedVehicle is not null && !IsEditingVehicle;
+    public bool CanOpenVehicleStarterBundle => SelectedVehicle is not null && !HasPendingEdits;
 
     partial void OnIsEditingVehicleChanged(bool value)
     {
@@ -94,6 +94,7 @@ public sealed partial class MainWindowViewModel
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
         SaveVehicleCommand.NotifyCanExecuteChanged();
         CancelVehicleEditCommand.NotifyCanExecuteChanged();
+        NotifyPendingEditStateChanged();
     }
 
     [RelayCommand(CanExecute = nameof(CanCreateVehicle))]

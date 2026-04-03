@@ -31,6 +31,27 @@ internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
         return await confirmation.ShowDialog<bool>(owner);
     }
 
+    public async Task<bool> ConfirmDiscardPendingChangesAsync(Window owner, string pendingEditLabel, string actionDescription)
+    {
+        var subject = string.IsNullOrWhiteSpace(pendingEditLabel)
+            ? "rozpracované změny"
+            : pendingEditLabel.Trim();
+        var actionText = string.IsNullOrWhiteSpace(actionDescription)
+            ? "pokračovat"
+            : actionDescription.Trim();
+
+        var confirmation = new ConfirmationWindow
+        {
+            DataContext = new ConfirmationDialogViewModel(
+                "Neuložené změny",
+                $"Máte rozpracované změny v části „{subject}“.\n\nPokud budete pokračovat a zvolíte akci „{actionText}“, všechny neuložené změny se zahodí.\n\nOpravdu chcete pokračovat?",
+                "Zahodit změny",
+                "Pokračovat v úpravách")
+        };
+
+        return await confirmation.ShowDialog<bool>(owner);
+    }
+
     public async Task<bool> ShowAboutAsync(Window owner, AboutDialogViewModel model)
     {
         var dialog = new AboutWindow

@@ -105,6 +105,7 @@ public sealed class DesktopAccessibilityLabelTests
         var historyXaml = File.ReadAllText(Path.Combine(desktopRoot, "HistoryWindow.axaml"));
         var dashboardXaml = File.ReadAllText(Path.Combine(desktopRoot, "DashboardWindow.axaml"));
         var bundleXaml = File.ReadAllText(Path.Combine(desktopRoot, "VehicleStarterBundleWindow.axaml"));
+        var confirmationXaml = File.ReadAllText(Path.Combine(desktopRoot, "ConfirmationWindow.axaml"));
 
         Assert.Contains("Title=\"Nastavení\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
@@ -118,6 +119,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Title=\"Balíček pro vozidlo\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"BundleItemsListBox\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ApplyBundleButton\"", bundleXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationConfirmButton\"", confirmationXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationCancelButton\"", confirmationXaml);
     }
 
     [Fact]

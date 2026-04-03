@@ -49,6 +49,12 @@ internal sealed class DesktopAppShellController
 
     public async Task ImportBackupAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
+        if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "obnovit data ze zálohy").ConfigureAwait(true))
+        {
+            shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
+            return;
+        }
+
         var backupPath = await shell.PickBackupImportPathAsync(cancellationToken).ConfigureAwait(true);
         if (string.IsNullOrWhiteSpace(backupPath))
         {
@@ -91,6 +97,12 @@ internal sealed class DesktopAppShellController
             case UpdateDialogAction.PrimaryAction:
                 if (result.IsUpdateAvailable && result.CanInstallAutomatically)
                 {
+                    if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "stáhnout a nainstalovat aktualizaci").ConfigureAwait(true))
+                    {
+                        shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
+                        return false;
+                    }
+
                     var installResult = await shell.PrepareUpdateInstallAsync(result, cancellationToken).ConfigureAwait(true);
                     if (installResult.IsReady && installResult.InstallPlan is not null)
                     {
@@ -136,5 +148,17 @@ internal sealed class DesktopAppShellController
             default:
                 return false;
         }
+    }
+
+    public async Task<bool> ConfirmDiscardPendingChangesAsync(Window owner, MainWindowViewModel shell, string actionDescription)
+    {
+        if (!shell.HasPendingEdits)
+        {
+            return true;
+        }
+
+        return await _dialogService
+            .ConfirmDiscardPendingChangesAsync(owner, shell.GetPendingEditLabel(), actionDescription)
+            .ConfigureAwait(true);
     }
 }

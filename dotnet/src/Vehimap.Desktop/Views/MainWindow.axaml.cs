@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using System.ComponentModel;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
@@ -40,6 +41,7 @@ public partial class MainWindow : Window
     private MainWindowViewModel? _viewModel;
     private bool _initialFocusCompleted;
     private bool _initialFocusScheduled;
+    private bool _syncingVehicleSelection;
 
     public MainWindow()
     {
@@ -65,12 +67,27 @@ public partial class MainWindow : Window
         if (_viewModel is not null)
         {
             _viewModel.FocusRequested -= OnFocusRequested;
+            _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+            _viewModel.ConfirmPendingEditsHandler = null;
         }
 
         _viewModel = DataContext as MainWindowViewModel;
         if (_viewModel is not null)
         {
-            _viewModel.FocusRequested += OnFocusRequested;
+            var viewModel = _viewModel;
+            viewModel.FocusRequested += OnFocusRequested;
+            viewModel.PropertyChanged += OnViewModelPropertyChanged;
+            viewModel.ConfirmPendingEditsHandler = actionDescription =>
+                viewModel.AppShellController.ConfirmDiscardPendingChangesAsync(this, viewModel, actionDescription);
+            SyncVehicleSelectionFromViewModel();
+        }
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (string.Equals(e.PropertyName, nameof(MainWindowViewModel.SelectedVehicle), StringComparison.Ordinal))
+        {
+            SyncVehicleSelectionFromViewModel();
         }
     }
 
@@ -215,6 +232,29 @@ public partial class MainWindow : Window
 
         _viewModel.SelectedVehicleTabIndex = tabIndex;
         FocusSelectedTabHeader();
+    }
+
+    private async void OnVehicleSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_syncingVehicleSelection || _viewModel is null || sender is not ListBox listBox)
+        {
+            return;
+        }
+
+        var selectedVehicle = listBox.SelectedItem as VehicleListItemViewModel;
+        if (string.Equals(selectedVehicle?.Id, _viewModel.SelectedVehicle?.Id, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        if (!await _viewModel.ConfirmDiscardPendingEditsAsync("přejít na jiné vozidlo").ConfigureAwait(true))
+        {
+            SyncVehicleSelectionFromViewModel();
+            RequestFocus(_viewModel.GetPendingEditFocusTarget());
+            return;
+        }
+
+        _viewModel.SelectedVehicle = selectedVehicle;
     }
 
     private static bool FocusListBox(ListBox listBox)
@@ -466,5 +506,23 @@ public partial class MainWindow : Window
             DesktopFocusTarget.VehicleList => this.FindControl<ListBox>("VehicleListBox"),
             _ => null
         };
+    }
+
+    private void SyncVehicleSelectionFromViewModel()
+    {
+        if (this.FindControl<ListBox>("VehicleListBox") is not { } listBox)
+        {
+            return;
+        }
+
+        _syncingVehicleSelection = true;
+        try
+        {
+            listBox.SelectedItem = _viewModel?.SelectedVehicle;
+        }
+        finally
+        {
+            _syncingVehicleSelection = false;
+        }
     }
 }

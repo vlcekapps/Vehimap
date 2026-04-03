@@ -21,9 +21,14 @@ public sealed partial class MainWindowViewModel
     ];
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewItem))]
-    private void OpenSelectedUpcomingOverviewItem()
+    private async Task OpenSelectedUpcomingOverviewItemAsync()
     {
         if (SelectedUpcomingOverviewItem is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít blížící se termín").ConfigureAwait(true))
         {
             return;
         }
@@ -32,9 +37,14 @@ public sealed partial class MainWindowViewModel
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewVehicle))]
-    private void OpenSelectedUpcomingOverviewVehicle()
+    private async Task OpenSelectedUpcomingOverviewVehicleAsync()
     {
         if (SelectedUpcomingOverviewItem is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít vozidlo z přehledu termínů").ConfigureAwait(true))
         {
             return;
         }
@@ -43,9 +53,14 @@ public sealed partial class MainWindowViewModel
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedOverdueOverviewItem))]
-    private void OpenSelectedOverdueOverviewItem()
+    private async Task OpenSelectedOverdueOverviewItemAsync()
     {
         if (SelectedOverdueOverviewItem is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít propadlý termín").ConfigureAwait(true))
         {
             return;
         }
@@ -54,9 +69,14 @@ public sealed partial class MainWindowViewModel
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedOverdueOverviewVehicle))]
-    private void OpenSelectedOverdueOverviewVehicle()
+    private async Task OpenSelectedOverdueOverviewVehicleAsync()
     {
         if (SelectedOverdueOverviewItem is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít vozidlo z propadlých termínů").ConfigureAwait(true))
         {
             return;
         }

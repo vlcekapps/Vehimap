@@ -25,10 +25,14 @@
       <Button x:Name="ConfirmButton"
               MinWidth="140"
               Click="OnConfirmClick"
-              Content="{Binding ConfirmLabel}" />
+              Content="{Binding ConfirmLabel}"
+              AutomationProperties.Name="{Binding ConfirmLabel}"
+              AutomationProperties.AutomationId="ConfirmationConfirmButton" />
       <Button MinWidth="120"
               Click="OnCancelClick"
-              Content="{Binding CancelLabel}" />
+              Content="{Binding CancelLabel}"
+              AutomationProperties.Name="{Binding CancelLabel}"
+              AutomationProperties.AutomationId="ConfirmationCancelButton" />
     </StackPanel>
   </Grid>
 </Window>

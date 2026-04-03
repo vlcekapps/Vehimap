@@ -63,9 +63,9 @@ public sealed partial class MainWindowViewModel
     }
 
     public bool IsHistoryDetailVisible => HistoryWorkspace.IsHistoryDetailVisible;
-    public bool CanCreateHistory => SelectedVehicle is not null && !IsEditingHistory;
-    public bool CanEditSelectedHistory => SelectedHistory is not null && !IsEditingHistory;
-    public bool CanDeleteSelectedHistory => SelectedHistory is not null && !IsEditingHistory;
+    public bool CanCreateHistory => SelectedVehicle is not null && !HasPendingEdits;
+    public bool CanEditSelectedHistory => SelectedHistory is not null && !HasPendingEdits;
+    public bool CanDeleteSelectedHistory => SelectedHistory is not null && !HasPendingEdits;
     public bool CanSaveHistory => SelectedVehicle is not null && IsEditingHistory;
     public bool CanCancelHistoryEdit => IsEditingHistory;
 
@@ -142,9 +142,9 @@ public sealed partial class MainWindowViewModel
     }
 
     public bool IsFuelDetailVisible => FuelWorkspace.IsFuelDetailVisible;
-    public bool CanCreateFuel => SelectedVehicle is not null && !IsEditingFuel;
-    public bool CanEditSelectedFuel => SelectedFuel is not null && !IsEditingFuel;
-    public bool CanDeleteSelectedFuel => SelectedFuel is not null && !IsEditingFuel;
+    public bool CanCreateFuel => SelectedVehicle is not null && !HasPendingEdits;
+    public bool CanEditSelectedFuel => SelectedFuel is not null && !HasPendingEdits;
+    public bool CanDeleteSelectedFuel => SelectedFuel is not null && !HasPendingEdits;
     public bool CanSaveFuel => SelectedVehicle is not null && IsEditingFuel;
     public bool CanCancelFuelEdit => IsEditingFuel;
 
@@ -209,9 +209,9 @@ public sealed partial class MainWindowViewModel
     }
 
     public bool IsReminderDetailVisible => ReminderWorkspace.IsReminderDetailVisible;
-    public bool CanCreateReminder => SelectedVehicle is not null && !IsEditingReminder;
-    public bool CanEditSelectedReminder => SelectedReminder is not null && !IsEditingReminder;
-    public bool CanDeleteSelectedReminder => SelectedReminder is not null && !IsEditingReminder;
+    public bool CanCreateReminder => SelectedVehicle is not null && !HasPendingEdits;
+    public bool CanEditSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
+    public bool CanDeleteSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
     public bool CanSaveReminder => SelectedVehicle is not null && IsEditingReminder;
     public bool CanCancelReminderEdit => IsEditingReminder;
 
@@ -288,9 +288,9 @@ public sealed partial class MainWindowViewModel
     }
 
     public bool IsMaintenanceDetailVisible => MaintenanceWorkspace.IsMaintenanceDetailVisible;
-    public bool CanCreateMaintenance => SelectedVehicle is not null && !IsEditingMaintenance;
-    public bool CanEditSelectedMaintenance => SelectedMaintenance is not null && !IsEditingMaintenance;
-    public bool CanDeleteSelectedMaintenance => SelectedMaintenance is not null && !IsEditingMaintenance;
+    public bool CanCreateMaintenance => SelectedVehicle is not null && !HasPendingEdits;
+    public bool CanEditSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
+    public bool CanDeleteSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
     public bool CanSaveMaintenance => SelectedVehicle is not null && IsEditingMaintenance;
     public bool CanCancelMaintenanceEdit => IsEditingMaintenance;
 
@@ -399,15 +399,15 @@ public sealed partial class MainWindowViewModel
     }
 
     public bool IsRecordDetailVisible => RecordWorkspace.IsRecordDetailVisible;
-    public bool CanCreateRecord => SelectedVehicle is not null && !IsEditingRecord;
-    public bool CanEditSelectedRecord => SelectedRecord is not null && !IsEditingRecord;
-    public bool CanDeleteSelectedRecord => SelectedRecord is not null && !IsEditingRecord;
+    public bool CanCreateRecord => SelectedVehicle is not null && !HasPendingEdits;
+    public bool CanEditSelectedRecord => SelectedRecord is not null && !HasPendingEdits;
+    public bool CanDeleteSelectedRecord => SelectedRecord is not null && !HasPendingEdits;
     public bool CanSaveRecord => SelectedVehicle is not null && IsEditingRecord;
     public bool CanCancelRecordEdit => IsEditingRecord;
     public bool CanBrowseRecordAttachment => IsEditingRecord;
     public bool CanMoveSelectedRecordToManaged =>
         SelectedRecord is not null
-        && !IsEditingRecord
+        && !HasPendingEdits
         && !string.Equals(SelectedRecord.AttachmentMode, "Spravovaná kopie", StringComparison.CurrentCulture)
         && !string.IsNullOrWhiteSpace(SelectedRecord.ResolvedPath);
     public bool IsRecordEditorManaged => RecordWorkspace.IsRecordEditorManaged;
@@ -616,6 +616,7 @@ public sealed partial class MainWindowViewModel
         DeleteSelectedHistoryCommand.NotifyCanExecuteChanged();
         SaveHistoryCommand.NotifyCanExecuteChanged();
         CancelHistoryEditCommand.NotifyCanExecuteChanged();
+        NotifyPendingEditStateChanged();
     }
 
     internal void NotifyFuelWorkspaceSelectionChanged()
@@ -631,6 +632,7 @@ public sealed partial class MainWindowViewModel
         DeleteSelectedFuelCommand.NotifyCanExecuteChanged();
         SaveFuelCommand.NotifyCanExecuteChanged();
         CancelFuelEditCommand.NotifyCanExecuteChanged();
+        NotifyPendingEditStateChanged();
     }
 
     internal void NotifyReminderWorkspaceSelectionChanged()
@@ -646,6 +648,7 @@ public sealed partial class MainWindowViewModel
         DeleteSelectedReminderCommand.NotifyCanExecuteChanged();
         SaveReminderCommand.NotifyCanExecuteChanged();
         CancelReminderEditCommand.NotifyCanExecuteChanged();
+        NotifyPendingEditStateChanged();
     }
 
     internal void NotifyMaintenanceWorkspaceSelectionChanged()
@@ -661,6 +664,7 @@ public sealed partial class MainWindowViewModel
         DeleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();
         SaveMaintenanceCommand.NotifyCanExecuteChanged();
         CancelMaintenanceEditCommand.NotifyCanExecuteChanged();
+        NotifyPendingEditStateChanged();
     }
 
     internal void NotifyRecordWorkspaceSelectionChanged()
@@ -681,6 +685,7 @@ public sealed partial class MainWindowViewModel
         CancelRecordEditCommand.NotifyCanExecuteChanged();
         BrowseRecordAttachmentCommand.NotifyCanExecuteChanged();
         MoveSelectedRecordToManagedCommand.NotifyCanExecuteChanged();
+        NotifyPendingEditStateChanged();
     }
 
     internal void HandleRecordAttachmentModeChanged()

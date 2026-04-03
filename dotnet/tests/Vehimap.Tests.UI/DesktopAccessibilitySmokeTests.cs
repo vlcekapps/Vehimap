@@ -251,6 +251,30 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Vehicle_selection_change_prompts_before_discarding_pending_edits_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("ReminderTabButton");
+            session.ClickByAccessibilityId("CreateReminderButton");
+            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Rozpracovaná připomínka");
+
+            session.ClickByName("Božena, Škoda 100, Osobní vozidla, SPZ 2AB3456, stav Veterán, Veterán");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ConfirmationCancelButton"));
+            session.ClickByAccessibilityId("ConfirmationCancelButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("SaveReminderButton"));
+            Assert.Equal("ReminderEditorTitleBox", session.GetFocusedAutomationId());
+        }
+    }
+
+    [Fact]
     public void Global_search_can_open_matching_record_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

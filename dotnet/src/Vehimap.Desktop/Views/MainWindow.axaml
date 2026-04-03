@@ -155,7 +155,7 @@
                    Grid.Row="1"
                    Margin="0,12,0,0"
                    ItemsSource="{Binding Vehicles}"
-                   SelectedItem="{Binding SelectedVehicle}"
+                   SelectionChanged="OnVehicleSelectionChanged"
                    AutomationProperties.Name="Seznam načtených vozidel"
                    AutomationProperties.AutomationId="VehicleListBox"
                    AutomationProperties.HelpText="Šipkami vyberte vozidlo. Detail a související evidence se zobrazí vpravo.">
