@@ -102,7 +102,7 @@ public sealed partial class MainWindowViewModel
         }
 
         UpcomingOverviewSummary = items.Count == 0
-            ? "V dostupných legacy datech zatím nejsou žádné blížící se termíny s konkrétním datem."
+            ? "V dostupných datech zatím nejsou žádné blížící se termíny s konkrétním datem."
             : $"Blížících se termínů: {items.Count}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.";
 
         SelectedUpcomingOverviewItem = FindById(UpcomingOverviewItems, BuildOverviewSelectionKey, previousKey) ?? UpcomingOverviewItems.FirstOrDefault();
@@ -125,7 +125,7 @@ public sealed partial class MainWindowViewModel
         }
 
         OverdueOverviewSummary = items.Count == 0
-            ? "V dostupných legacy datech zatím nejsou žádné propadlé termíny s konkrétním datem."
+            ? "V dostupných datech zatím nejsou žádné propadlé termíny s konkrétním datem."
             : $"Propadlých termínů: {items.Count}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.";
 
         SelectedOverdueOverviewItem = FindById(OverdueOverviewItems, BuildOverviewSelectionKey, previousKey) ?? OverdueOverviewItems.FirstOrDefault();

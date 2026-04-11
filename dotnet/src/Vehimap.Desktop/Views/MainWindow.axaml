@@ -66,7 +66,7 @@
           <MenuItem x:Name="ReloadButton"
                     Header="Načíst data znovu"
                     Click="OnReloadClick"
-                    AutomationProperties.Name="Znovu načíst legacy data"
+                    AutomationProperties.Name="Znovu načíst data"
                     AutomationProperties.AutomationId="ReloadButton" />
         </MenuItem>
         <MenuItem x:Name="VehicleMenuRoot"

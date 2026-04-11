@@ -319,7 +319,7 @@ internal sealed class DesktopProjectionService
             .ToList();
 
         var summary = items.Count == 0
-            ? "V dostupných legacy datech zatím nejsou žádné budoucí termíny s konkrétním datem."
+            ? "V dostupných datech zatím nejsou žádné budoucí termíny s konkrétním datem."
             : $"Napříč všemi vozidly je nejbližších {items.Count} budoucích termínů připravených k otevření.";
 
         return new DesktopListProjection<VehicleTimelineItemViewModel>(items, summary);
