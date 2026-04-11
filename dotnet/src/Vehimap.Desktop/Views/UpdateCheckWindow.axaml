@@ -10,7 +10,9 @@
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="Kontrola aktualizací">
+        Title="Kontrola aktualizací"
+        AutomationProperties.Name="Kontrola aktualizací"
+        AutomationProperties.AutomationId="UpdateCheckWindow">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Heading}" />
     <TextBlock Grid.Row="1"
@@ -37,17 +39,20 @@
               IsVisible="{Binding ShowPrimaryAction}"
               Click="OnPrimaryActionClick"
               Content="{Binding PrimaryActionLabel}"
+              AutomationProperties.Name="{Binding PrimaryActionLabel}"
               AutomationProperties.AutomationId="PrimaryActionButton" />
       <Button x:Name="AssetActionButton"
               MinWidth="170"
               IsVisible="{Binding ShowSecondaryAssetAction}"
               Click="OnAssetActionClick"
               Content="Stáhnout asset"
+              AutomationProperties.Name="Stáhnout aktualizační asset"
               AutomationProperties.AutomationId="AssetActionButton" />
       <Button x:Name="CloseButton"
               MinWidth="110"
               Click="OnCloseClick"
               Content="Zavřít"
+              AutomationProperties.Name="Zavřít kontrolu aktualizací"
               AutomationProperties.AutomationId="UpdateCloseButton" />
     </StackPanel>
   </Grid>

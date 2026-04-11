@@ -146,6 +146,7 @@ public sealed class DesktopAccessibilityLabelTests
         var settingsXaml = ReadViewFile("SettingsWindow.axaml");
         var aboutXaml = ReadViewFile("AboutWindow.axaml");
         var updateXaml = ReadViewFile("UpdateCheckWindow.axaml");
+        var notificationXaml = ReadViewFile("NotificationWindow.axaml");
         var historyXaml = ReadViewFile("HistoryWindow.axaml");
         var remindersXaml = ReadViewFile("RemindersWindow.axaml");
         var recordsXaml = ReadViewFile("RecordsWindow.axaml");
@@ -163,6 +164,12 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CancelSettingsButton\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
+        Assert.Contains("AutomationProperties.Name=\"Kontrola aktualizací\"", updateXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"UpdateCheckWindow\"", updateXaml);
+        Assert.Contains("AutomationProperties.Name=\"{Binding PrimaryActionLabel}\"", updateXaml);
+        Assert.Contains("AutomationProperties.Name=\"Zavřít kontrolu aktualizací\"", updateXaml);
+        Assert.Contains("AutomationProperties.Name=\"Upozornění Vehimapu\"", notificationXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"NotificationWindow\"", notificationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseHistoryWindowButton\"", historyXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseRemindersWindowButton\"", remindersXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseRecordsWindowButton\"", recordsXaml);
