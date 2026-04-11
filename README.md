@@ -67,6 +67,7 @@ V hlavním okně:
 
 ## Klávesové zkratky v hlavním okně:
 
+- `F10` nebo samostatná klávesa `Alt`: otevře horní menu bez zařazení menu do běžného pořadí `Tab` / `Shift+Tab`
 - `Ctrl+N`: přidat vozidlo
 - `Ctrl+U` nebo `F2`: upravit vybrané vozidlo
 - `Ctrl+F`: přesunout fokus do hledání

@@ -193,7 +193,7 @@ public partial class MainWindow : Window
 
     private void OnWindowKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None)
+        if (IsMainMenuInvocationKey(e))
         {
             e.Handled = FocusAndOpenMainMenu();
             return;
@@ -275,6 +275,13 @@ public partial class MainWindow : Window
 
         _viewModel.SelectedVehicleTabIndex = nextIndex;
         e.Handled = FocusSelectedTabHeader();
+    }
+
+    private static bool IsMainMenuInvocationKey(KeyEventArgs e)
+    {
+        return (e.Key == Key.F10 && e.KeyModifiers == KeyModifiers.None)
+            || (e.Key is Key.LeftAlt or Key.RightAlt
+                && (e.KeyModifiers == KeyModifiers.None || e.KeyModifiers == KeyModifiers.Alt));
     }
 
     private void OnTabHeaderClick(object? sender, RoutedEventArgs e)

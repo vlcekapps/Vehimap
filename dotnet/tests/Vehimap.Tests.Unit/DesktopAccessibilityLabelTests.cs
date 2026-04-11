@@ -67,7 +67,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"AppMenuBar\"", xaml);
         Assert.Contains("x:Name=\"FileMenuRoot\" Header=\"_Soubor\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"VehicleMenuRoot\" Header=\"_Vozidlo\" IsTabStop=\"False\"", normalizedXaml);
-        Assert.Contains("x:Name=\"OverviewMenuRoot\"", normalizedXaml);
+        Assert.Contains("x:Name=\"OverviewMenuRoot\" Header=\"_Přehledy\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"QuickActionsMenuRoot\" Header=\"_Rychlé akce\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"_Aplikace\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
@@ -132,6 +132,8 @@ public sealed class DesktopAccessibilityLabelTests
 
         var codeBehind = ReadViewCodeBehind("MainWindow.axaml.cs");
         Assert.Contains("Key.F10", codeBehind);
+        Assert.Contains("Key.LeftAlt", codeBehind);
+        Assert.Contains("Key.RightAlt", codeBehind);
         Assert.Contains("FocusAndOpenMainMenu()", codeBehind);
         Assert.Contains("case Key.N", codeBehind);
         Assert.Contains("case Key.R", codeBehind);

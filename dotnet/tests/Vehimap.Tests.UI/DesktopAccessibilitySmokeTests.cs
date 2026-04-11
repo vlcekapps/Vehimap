@@ -21,6 +21,7 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("AppMenuBar"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("FileMenuRoot"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleMenuRoot"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OverviewMenuRoot"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("QuickActionsMenuRoot"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("AppMenuRoot"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleCategoryFilterBox"));
@@ -91,13 +92,13 @@ public sealed class DesktopAccessibilitySmokeTests
             session.SendKeysToActiveElement(Keys.Tab);
             Assert.DoesNotContain(
                 session.GetFocusedAutomationId(),
-                new[] { "FileMenuRoot", "VehicleMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" });
+                new[] { "FileMenuRoot", "VehicleMenuRoot", "OverviewMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" });
 
             session.ClickByAccessibilityId("VehicleCategoryFilterBox");
             session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
             Assert.DoesNotContain(
                 session.GetFocusedAutomationId(),
-                new[] { "FileMenuRoot", "VehicleMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" });
+                new[] { "FileMenuRoot", "VehicleMenuRoot", "OverviewMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" });
         }
     }
 
