@@ -34,7 +34,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - pravidelné automatické zálohy do `data/auto-backups` se samostatným intervalem ve dnech a omezením počtu ponechaných souborů
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
-- horní menu `Soubor`, `Vozidlo`, `Přehled`, `Nástroje` a `Nápověda`
+- horní menu; v AHK aplikaci `Soubor`, `Vozidlo`, `Přehled`, `Nástroje` a `Nápověda`, v C# Avalonia větvi `Soubor`, `Vozidlo`, `Přehledy`, `Rychlé akce` a `Aplikace`
 - tray menu pro rychlé otevření nejbližších termínů i dalších funkcí aplikace
 - automatickou kontrolu termínů, připomínek a servisních plánů každých 15 minut a znovu po probuzení počítače ze spánku
 
@@ -49,9 +49,9 @@ V hlavním okně:
 - pole `Filtr seznamu` rychle zobrazí jen vozidla, která právě vyžadují pozornost
 - zaškrtávátko `Skrýt archivovaná a odstavená vozidla` schová neaktivní vozidla jen z hlavního seznamu a svou volbu si pamatuje i po dalším spuštění
 - tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence včetně `Plánu údržby` otevřete i z menu `Vozidlo`
-- položky `Dashboard` a `Globální hledání` v menu `Přehled` otevřou rychlý souhrn termínů, servisních úkonů, nákladů, problémových stavů a stavu evidencí nebo vyhledání napříč všemi evidencemi
-- položka `Náklady napříč vozidly` v menu `Přehled` otevře porovnání nákladů za zvolené období mezi všemi vozidly a umožní z přehledu rovnou přejít na detail nákladů, detail vozidla nebo editaci
-- v menu `Nápověda` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky i samostatnou ruční kontrolu aktualizací
+- položky `Dashboard` a `Globální hledání` v menu `Přehled` nebo `Přehledy` otevřou rychlý souhrn termínů, servisních úkonů, nákladů, problémových stavů a stavu evidencí nebo vyhledání napříč všemi evidencemi
+- položka `Náklady napříč vozidly` v menu `Přehled` nebo `Přehledy` otevře porovnání nákladů za zvolené období mezi všemi vozidly a umožní z přehledu rovnou přejít na detail nákladů, detail vozidla nebo editaci
+- v AHK menu `Nápověda` a v C# Avalonia menu `Aplikace` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky i samostatnou ruční kontrolu aktualizací
 - v dashboardu souhrn vozidel vypisuje i nejpalčivější problémové stavy podle priority a nákladový souhrn ukazuje nejdražší vozidla i aktivní vozidla bez číselného nákladu v aktuálním roce
 - v dashboardu, `Přehledu termínů` i `Propadlých termínech` se vedle `TK`, `ZK` a vlastních připomínek zobrazují i blížící se nebo propadlé servisní úkony
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
@@ -186,11 +186,12 @@ Pro upozornění aplikace používá pole `Příští TK`, `Zelená karta do` a 
 
 V horním menu najdete tyto části:
 
-- `Soubor`: `Tiskový přehled`, `Export dat`, `Import dat`, `Konec`
-- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, `Časové osy vozidla`, plánu údržby, `Balíčku pro vozidlo` a pojištění a dokladů
-- `Přehled`: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Přehled termínů`, `Propadlé termíny`, `Audit dat`, `Export termínů do kalendáře (.ics)`
-- `Nástroje`: `Nastavení`, `Skrýt do lišty`
-- `Nápověda`: `O programu`, `Zkontrolovat aktualizace`
+- `Soubor`: tiskový přehled, export a import zálohy, export budoucích termínů do kalendáře a znovunačtení dat; v AHK aplikaci také ukončení
+- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby, `Balíčku pro vozidlo` a pojištění a dokladů
+- `Přehled` v AHK nebo `Přehledy` v C# Avalonia větvi: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Časová osa vozidla`, blížící se a propadlé termíny a `Audit dat`
+- `Rychlé akce` v C# Avalonia větvi: nejbližší TK, kontrola TK, nejbližší zelená karta a kontrola zelených karet
+- `Nástroje` v AHK aplikaci: `Nastavení`, `Skrýt do lišty`
+- `Nápověda` v AHK aplikaci nebo `Aplikace` v C# Avalonia větvi: `Nastavení`, minimalizace na lištu, `O programu`, kontrola aktualizací a ukončení aplikace
 
 ## Ukládání dat
 
