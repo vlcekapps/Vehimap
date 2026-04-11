@@ -30,7 +30,8 @@
               VerticalAlignment="Top"
               Click="OnCloseClick"
               Content="Zavřít"
-              AutomationProperties.Name="Zavřít okno detailu vozidla" />
+              AutomationProperties.Name="Zavřít okno detailu vozidla"
+              AutomationProperties.AutomationId="CloseVehicleDetailWindowButton" />
     </Grid>
 
     <workspaces:VehicleDetailWorkspaceView x:Name="VehicleDetailWorkspaceHost"

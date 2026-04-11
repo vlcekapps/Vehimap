@@ -147,9 +147,13 @@ public sealed class DesktopAccessibilityLabelTests
         var aboutXaml = ReadViewFile("AboutWindow.axaml");
         var updateXaml = ReadViewFile("UpdateCheckWindow.axaml");
         var notificationXaml = ReadViewFile("NotificationWindow.axaml");
+        var vehicleDetailXaml = ReadViewFile("VehicleDetailWindow.axaml");
         var historyXaml = ReadViewFile("HistoryWindow.axaml");
+        var fuelXaml = ReadViewFile("FuelWindow.axaml");
         var remindersXaml = ReadViewFile("RemindersWindow.axaml");
+        var maintenanceXaml = ReadViewFile("MaintenanceWindow.axaml");
         var recordsXaml = ReadViewFile("RecordsWindow.axaml");
+        var auditXaml = ReadViewFile("AuditWindow.axaml");
         var dashboardXaml = ReadViewFile("DashboardWindow.axaml");
         var timelineXaml = ReadViewFile("TimelineWindow.axaml");
         var costXaml = ReadViewFile("CostWindow.axaml");
@@ -170,9 +174,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.Name=\"Zavřít kontrolu aktualizací\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"Upozornění Vehimapu\"", notificationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"NotificationWindow\"", notificationXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseVehicleDetailWindowButton\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseHistoryWindowButton\"", historyXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseFuelWindowButton\"", fuelXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseRemindersWindowButton\"", remindersXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseMaintenanceWindowButton\"", maintenanceXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseRecordsWindowButton\"", recordsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseAuditWindowButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseDashboardWindowButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTimelineWindowButton\"", timelineXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseCostWindowButton\"", costXaml);

@@ -30,7 +30,8 @@
               VerticalAlignment="Top"
               Click="OnCloseClick"
               Content="Zavřít"
-              AutomationProperties.Name="Zavřít okno tankování" />
+              AutomationProperties.Name="Zavřít okno tankování"
+              AutomationProperties.AutomationId="CloseFuelWindowButton" />
     </Grid>
 
     <workspaces:FuelWorkspaceView x:Name="FuelWorkspaceHost"

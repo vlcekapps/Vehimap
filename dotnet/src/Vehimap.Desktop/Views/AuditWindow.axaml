@@ -29,7 +29,8 @@
               VerticalAlignment="Top"
               Click="OnCloseClick"
               Content="Zavřít"
-              AutomationProperties.Name="Zavřít okno auditu" />
+              AutomationProperties.Name="Zavřít okno auditu"
+              AutomationProperties.AutomationId="CloseAuditWindowButton" />
     </Grid>
 
     <workspaces:AuditWorkspaceView x:Name="AuditWorkspaceHost"

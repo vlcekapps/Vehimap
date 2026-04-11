@@ -113,15 +113,71 @@ public sealed class DesktopAccessibilitySmokeTests
         var session = startedSession!;
         using (session)
         {
-            session.ClickByAccessibilityId("HistoryTabButton");
-            session.ClickByAccessibilityId("OpenHistoryWindowButton");
-            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseHistoryWindowButton"));
-            session.ClickByAccessibilityId("CloseHistoryWindowButton");
-
-            session.ClickByAccessibilityId("DashboardTabButton");
-            session.ClickByAccessibilityId("OpenDashboardWindowButton");
-            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseDashboardWindowButton"));
-            session.ClickByAccessibilityId("CloseDashboardWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "DetailTabButton",
+                "OpenVehicleDetailWindowButton",
+                "CloseVehicleDetailWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "HistoryTabButton",
+                "OpenHistoryWindowButton",
+                "CloseHistoryWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "FuelTabButton",
+                "OpenFuelWindowButton",
+                "CloseFuelWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "ReminderTabButton",
+                "OpenReminderWindowButton",
+                "CloseRemindersWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "MaintenanceTabButton",
+                "OpenMaintenanceWindowButton",
+                "CloseMaintenanceWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "TimelineTabButton",
+                "OpenTimelineWindowButton",
+                "CloseTimelineWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "RecordTabButton",
+                "OpenRecordWindowButton",
+                "CloseRecordsWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "AuditTabButton",
+                "OpenAuditWindowButton",
+                "CloseAuditWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "CostTabButton",
+                "OpenCostWindowButton",
+                "CloseCostWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "DashboardTabButton",
+                "OpenDashboardWindowButton",
+                "CloseDashboardWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "SearchTabButton",
+                "OpenGlobalSearchWindowButton",
+                "CloseGlobalSearchWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "UpcomingOverviewTabButton",
+                "OpenUpcomingOverviewWindowButton",
+                "CloseUpcomingOverviewWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "OverdueOverviewTabButton",
+                "OpenOverdueOverviewWindowButton",
+                "CloseOverdueOverviewWindowButton");
         }
     }
 
@@ -424,5 +480,18 @@ public sealed class DesktopAccessibilitySmokeTests
             session.SendKeysByAccessibilityId("CostListBox", Keys.Enter);
             Assert.NotNull(session.WaitForElementByAccessibilityId("OpenVehicleDetailWindowButton"));
         }
+    }
+
+    private static void OpenAndCloseWorkspaceWindow(
+        DesktopAppiumTestSession session,
+        string tabButtonAutomationId,
+        string openButtonAutomationId,
+        string closeButtonAutomationId)
+    {
+        session.ClickByAccessibilityId(tabButtonAutomationId);
+        session.ClickByAccessibilityId(openButtonAutomationId);
+        Assert.NotNull(session.WaitForElementByAccessibilityId(closeButtonAutomationId));
+        session.ClickByAccessibilityId(closeButtonAutomationId);
+        session.WaitForElementToDisappearByAccessibilityId(closeButtonAutomationId);
     }
 }

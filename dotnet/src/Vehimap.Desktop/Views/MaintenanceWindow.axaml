@@ -29,7 +29,8 @@
               VerticalAlignment="Top"
               Click="OnCloseClick"
               Content="Zavřít"
-              AutomationProperties.Name="Zavřít okno plánu údržby" />
+              AutomationProperties.Name="Zavřít okno plánu údržby"
+              AutomationProperties.AutomationId="CloseMaintenanceWindowButton" />
     </Grid>
 
     <workspaces:MaintenanceWorkspaceView x:Name="MaintenanceWorkspaceHost"
