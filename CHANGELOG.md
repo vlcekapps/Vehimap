@@ -38,6 +38,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - spravované přílohy se po přepnutí zpět na externí cestu korektně uklidí a smoke testy nově hlídají i round-trip přes zálohu
 - akční tlačítka v `Plánu údržby`, `Auditu dat`, `Časové ose`, přehledech a dokladech teď důsledně respektují skutečný výběr v seznamu
 - horní menu v Avalonia shellu jde vyvolat klávesou `F10` i samostatným `Alt`, ale zůstává mimo běžné pořadí `Tab` / `Shift+Tab`
+- otevírání souborů a složek v C# větvi nově používá explicitní platformní strategii: shell execute na Windows, `open` na macOS a `xdg-open` na Linuxu
 
 ## [1.0.2] - 2026-03-27
 
