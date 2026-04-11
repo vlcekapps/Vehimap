@@ -45,6 +45,10 @@ public sealed class DesktopAccessibilitySmokeTests
         {
             session.ClickMenuItem("AppMenuRoot", "SettingsButton");
             Assert.NotNull(session.WaitForElementByAccessibilityId("TechnicalReminderDaysBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("RunAtStartupCheckBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("HideOnLaunchCheckBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("AutomaticBackupsEnabledCheckBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateAutomaticBackupButton"));
             session.ClickByAccessibilityId("CancelSettingsButton");
 
             session.ClickMenuItem("AppMenuRoot", "AboutButton");

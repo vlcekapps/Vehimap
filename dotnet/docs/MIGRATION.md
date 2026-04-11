@@ -43,6 +43,9 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - kompatibilni parser `update/latest.ini` a Windows pripravu automaticke instalace pres `Vehimap.Updater`
 - modalni workflow pro `Export dat` a `Obnovit data`, ktere pouziva stejny `.vehimapbak` format jako AHK verze
 - Appium harness a zivy Windows UI smoke nad publish buildem
+- rozsireny Appium smoke pro samostatna workflow okna a hlavni app-level dialogy vcetne nastaveni, o programu a kontroly aktualizaci
+- sjednocena korenova accessibility metadata hlavniho shellu, workspace oken a app-level dialogu pro stabilnejsi screen-reader diagnostiku a UI automatizaci
+- nastaveni `run_at_startup`, `hide_on_launch` a automatickych zaloh vcetne rucni akce `Zalohovat ihned`
 - multiplatformni publish matrix pro `.NET` desktop preview
 - draft release workflow pro tagy `dotnet-preview-v<verze>` s verzovanymi balicky a checksumy
 - runtime-specific preview update manifesty `update/latest-dotnet-preview-<rid>.ini`
@@ -50,7 +53,6 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 
 ## Co je dalsi na rade
 
-1. Rozsirit Appium smoke z hlavniho shellu i na dalsi samostatna okna a dalsi editacni workflow
-2. Rozsirit accessibility metadata a focus chovani z hlavniho shellu i do dalsich budoucich dialogu
-3. Portovat zbytek aplikacovych toku, ktere jeste v .NET vetvi chybi proti AHK verzi
-4. Rozhodnout, kdy se `.NET` desktop preview kanal zmeni z preview manifestu na plnohodnotny release kanal
+1. Portovat zbytek aplikacovych toku, ktere jeste v .NET vetvi chybi proti AHK verzi
+2. Rozsirovat Appium smoke a accessibility kontrakty vzdy s kazdym novym dialogem nebo workflow
+3. Rozhodnout, kdy se `.NET` desktop preview kanal zmeni z preview manifestu na plnohodnotny release kanal
