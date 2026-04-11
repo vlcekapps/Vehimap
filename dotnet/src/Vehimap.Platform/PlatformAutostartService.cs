@@ -153,7 +153,7 @@ public sealed class PlatformAutostartService : IAutostartService
         }
     }
 
-    private static string BuildLinuxDesktopEntryContent(LaunchCommand command)
+    internal static string BuildLinuxDesktopEntryContent(LaunchCommand command)
     {
         var exec = string.Join(' ', new[] { QuoteCommandArgument(command.ExecutablePath) }.Concat(command.Arguments.Select(QuoteCommandArgument)));
         return $$"""
@@ -161,7 +161,7 @@ public sealed class PlatformAutostartService : IAutostartService
 Type=Application
 Version=1.0
 Name=Vehimap Desktop
-Comment=Vehimap desktop preview
+Comment=Vehimap desktop
 Exec={{exec}}
 Terminal=false
 X-GNOME-Autostart-enabled=true
@@ -207,7 +207,7 @@ X-GNOME-Autostart-enabled=true
             : value;
     }
 
-    private sealed record LaunchCommand(
+    internal sealed record LaunchCommand(
         string ExecutablePath,
         IReadOnlyList<string> Arguments);
 }
