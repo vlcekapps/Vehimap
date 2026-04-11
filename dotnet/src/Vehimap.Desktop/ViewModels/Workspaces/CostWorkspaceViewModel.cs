@@ -20,6 +20,8 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private CostVehicleItemViewModel? selectedDashboardCostVehicle;
 
+    public string WindowTitle => Root.CostWindowTitle;
+
     public ObservableCollection<CostVehicleItemViewModel> CostVehicles => Root.CostVehicles;
 
     public ICommand OpenSelectedDashboardCostVehicleCommand => Root.OpenSelectedDashboardCostVehicleCommand;

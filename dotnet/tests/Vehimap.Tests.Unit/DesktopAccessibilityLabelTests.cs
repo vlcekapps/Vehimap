@@ -57,15 +57,17 @@ public sealed class DesktopAccessibilityLabelTests
         var xaml = ReadViewFile("MainWindow.axaml");
         var normalizedXaml = Regex.Replace(xaml, "\\s+", " ");
 
-        Assert.Contains("AutomationProperties.Name=\"Vehimap Desktop Preview\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Vehimap\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppMenuBar\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FileMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleMenuRoot\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OverviewMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"QuickActionsMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppMenuRoot\"", xaml);
         Assert.Contains("x:Name=\"AppMenuBar\"", xaml);
         Assert.Contains("x:Name=\"FileMenuRoot\" Header=\"_Soubor\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"VehicleMenuRoot\" Header=\"_Vozidlo\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"OverviewMenuRoot\"", normalizedXaml);
         Assert.Contains("x:Name=\"QuickActionsMenuRoot\" Header=\"_Rychlé akce\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"_Aplikace\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
@@ -83,6 +85,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenRemindersMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenMaintenanceMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleStarterBundleMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenTimelineMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenGlobalSearchMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenAuditMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDashboardMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenCostMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenUpcomingOverviewMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenOverdueOverviewMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestTechnicalMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewTechnicalMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestGreenCardMenuItem\"", xaml);
@@ -96,7 +105,12 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"HideInactiveVehiclesCheckBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleListBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenHistoryWindowButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenTimelineWindowButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenCostWindowButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDashboardWindowButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenGlobalSearchWindowButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenUpcomingOverviewWindowButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenOverdueOverviewWindowButton\"", xaml);
         Assert.Contains("AllowEditing=\"False\"", xaml);
         Assert.Contains("Click=\"OnSettingsClick\"", xaml);
         Assert.Contains("Click=\"OnAboutClick\"", xaml);
@@ -107,6 +121,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Click=\"OnCalendarExportClick\"", xaml);
         Assert.Contains("Click=\"OnReloadClick\"", xaml);
         Assert.Contains("Click=\"OnCreateVehicleMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenTimelineMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenGlobalSearchMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenAuditMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenDashboardMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenCostMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenUpcomingOverviewMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenOverdueOverviewMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenNearestTechnicalMenuClick\"", xaml);
 
         var codeBehind = ReadViewCodeBehind("MainWindow.axaml.cs");
@@ -127,6 +148,11 @@ public sealed class DesktopAccessibilityLabelTests
         var remindersXaml = ReadViewFile("RemindersWindow.axaml");
         var recordsXaml = ReadViewFile("RecordsWindow.axaml");
         var dashboardXaml = ReadViewFile("DashboardWindow.axaml");
+        var timelineXaml = ReadViewFile("TimelineWindow.axaml");
+        var costXaml = ReadViewFile("CostWindow.axaml");
+        var globalSearchXaml = ReadViewFile("GlobalSearchWindow.axaml");
+        var upcomingOverviewXaml = ReadViewFile("UpcomingOverviewWindow.axaml");
+        var overdueOverviewXaml = ReadViewFile("OverdueOverviewWindow.axaml");
         var bundleXaml = ReadViewFile("VehicleStarterBundleWindow.axaml");
         var confirmationXaml = ReadViewFile("ConfirmationWindow.axaml");
         var trayActionsXaml = ReadViewFile("TrayActionsWindow.axaml");
@@ -139,6 +165,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CloseRemindersWindowButton\"", remindersXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseRecordsWindowButton\"", recordsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseDashboardWindowButton\"", dashboardXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseTimelineWindowButton\"", timelineXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseCostWindowButton\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseGlobalSearchWindowButton\"", globalSearchXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseUpcomingOverviewWindowButton\"", upcomingOverviewXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseOverdueOverviewWindowButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"BundleItemsListBox\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ApplyBundleButton\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationConfirmButton\"", confirmationXaml);

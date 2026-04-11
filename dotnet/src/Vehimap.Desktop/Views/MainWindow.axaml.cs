@@ -12,14 +12,19 @@ namespace Vehimap.Desktop.Views;
 
 public partial class MainWindow : Window
 {
-    private const int DetailTabIndex = 0;
-    private const int HistoryTabIndex = 1;
-    private const int FuelTabIndex = 2;
-    private const int ReminderTabIndex = 3;
-    private const int MaintenanceTabIndex = 4;
-    private const int RecordTabIndex = 6;
-    private const int AuditTabIndex = 7;
-    private const int DashboardTabIndex = 9;
+    private const int DetailTabIndex = DesktopTabIndexes.Detail;
+    private const int HistoryTabIndex = DesktopTabIndexes.History;
+    private const int FuelTabIndex = DesktopTabIndexes.Fuel;
+    private const int ReminderTabIndex = DesktopTabIndexes.Reminder;
+    private const int MaintenanceTabIndex = DesktopTabIndexes.Maintenance;
+    private const int TimelineTabIndex = DesktopTabIndexes.Timeline;
+    private const int RecordTabIndex = DesktopTabIndexes.Record;
+    private const int AuditTabIndex = DesktopTabIndexes.Audit;
+    private const int CostTabIndex = DesktopTabIndexes.Cost;
+    private const int DashboardTabIndex = DesktopTabIndexes.Dashboard;
+    private const int SearchTabIndex = DesktopTabIndexes.Search;
+    private const int UpcomingOverviewTabIndex = DesktopTabIndexes.UpcomingOverview;
+    private const int OverdueOverviewTabIndex = DesktopTabIndexes.OverdueOverview;
 
     private static readonly string[] TabHeaderButtonNames =
     [
@@ -491,6 +496,41 @@ public partial class MainWindow : Window
         await OpenVehicleStarterBundleDialogAsync();
     }
 
+    private async void OnOpenTimelineMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenTimelineWindowAsync();
+    }
+
+    private async void OnOpenGlobalSearchMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenGlobalSearchWindowAsync();
+    }
+
+    private async void OnOpenAuditMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenAuditWindowAsync();
+    }
+
+    private async void OnOpenDashboardMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenDashboardWindowAsync();
+    }
+
+    private async void OnOpenCostMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenCostWindowAsync();
+    }
+
+    private async void OnOpenUpcomingOverviewMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenUpcomingOverviewWindowAsync();
+    }
+
+    private async void OnOpenOverdueOverviewMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenOverdueOverviewWindowAsync();
+    }
+
     private async void OnOpenNearestTechnicalMenuClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel?.OpenNearestTechnicalCommand is { } command)
@@ -553,39 +593,19 @@ public partial class MainWindow : Window
         await OpenVehicleDetailWindowAsync();
     }
 
-    private async void OnOpenAuditWindowClick(object? sender, RoutedEventArgs e)
-    {
-        if (_viewModel is null)
-        {
-            return;
-        }
+    private async void OnOpenTimelineWindowClick(object? sender, RoutedEventArgs e) => await OpenTimelineWindowAsync();
 
-        _viewModel.SelectedVehicleTabIndex = AuditTabIndex;
-        var dialog = new AuditWindow
-        {
-            DataContext = _viewModel.AuditWorkspace
-        };
+    private async void OnOpenAuditWindowClick(object? sender, RoutedEventArgs e) => await OpenAuditWindowAsync();
 
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.AuditList);
-    }
+    private async void OnOpenCostWindowClick(object? sender, RoutedEventArgs e) => await OpenCostWindowAsync();
 
-    private async void OnOpenDashboardWindowClick(object? sender, RoutedEventArgs e)
-    {
-        if (_viewModel is null)
-        {
-            return;
-        }
+    private async void OnOpenDashboardWindowClick(object? sender, RoutedEventArgs e) => await OpenDashboardWindowAsync();
 
-        _viewModel.SelectedVehicleTabIndex = DashboardTabIndex;
-        var dialog = new DashboardWindow
-        {
-            DataContext = _viewModel.DashboardWorkspace
-        };
+    private async void OnOpenGlobalSearchWindowClick(object? sender, RoutedEventArgs e) => await OpenGlobalSearchWindowAsync();
 
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.DashboardAuditList);
-    }
+    private async void OnOpenUpcomingOverviewWindowClick(object? sender, RoutedEventArgs e) => await OpenUpcomingOverviewWindowAsync();
+
+    private async void OnOpenOverdueOverviewWindowClick(object? sender, RoutedEventArgs e) => await OpenOverdueOverviewWindowAsync();
 
     private bool FocusSelectedTabHeader()
     {
@@ -809,6 +829,160 @@ public partial class MainWindow : Window
 
         await dialog.ShowDialog(this);
         RequestFocus(DesktopFocusTarget.MaintenanceList);
+    }
+
+    private async Task OpenTimelineWindowAsync()
+    {
+        if (_viewModel?.SelectedVehicle is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít časovou osu vybraného vozidla").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = TimelineTabIndex;
+        var dialog = new TimelineWindow
+        {
+            DataContext = _viewModel.TimelineWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.TimelineSearch);
+    }
+
+    private async Task OpenAuditWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít audit dat").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = AuditTabIndex;
+        var dialog = new AuditWindow
+        {
+            DataContext = _viewModel.AuditWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.AuditList);
+    }
+
+    private async Task OpenCostWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít náklady napříč vozidly").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = CostTabIndex;
+        var dialog = new CostWindow
+        {
+            DataContext = _viewModel.CostWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.CostList);
+    }
+
+    private async Task OpenDashboardWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít dashboard").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = DashboardTabIndex;
+        var dialog = new DashboardWindow
+        {
+            DataContext = _viewModel.DashboardWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.DashboardAuditList);
+    }
+
+    private async Task OpenGlobalSearchWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít globální hledání").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = SearchTabIndex;
+        var dialog = new GlobalSearchWindow
+        {
+            DataContext = _viewModel.GlobalSearchWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.GlobalSearchBox);
+    }
+
+    private async Task OpenUpcomingOverviewWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít blížící se termíny").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
+        var dialog = new UpcomingOverviewWindow
+        {
+            DataContext = _viewModel.UpcomingOverviewWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.UpcomingOverviewSearch);
+    }
+
+    private async Task OpenOverdueOverviewWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít propadlé termíny").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = OverdueOverviewTabIndex;
+        var dialog = new OverdueOverviewWindow
+        {
+            DataContext = _viewModel.OverdueOverviewWorkspace
+        };
+
+        await dialog.ShowDialog(this);
+        RequestFocus(DesktopFocusTarget.OverdueOverviewSearch);
     }
 
     private async Task OpenRecordsWindowAsync()

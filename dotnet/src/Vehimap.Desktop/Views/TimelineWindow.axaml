@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+        xmlns:workspaces="using:Vehimap.Desktop.Views.Workspaces"
+        x:Class="Vehimap.Desktop.Views.TimelineWindow"
+        x:DataType="vm:TimelineWorkspaceViewModel"
+        Width="1180"
+        Height="760"
+        MinWidth="980"
+        MinHeight="620"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding WindowTitle}"
+        AutomationProperties.Name="Časová osa vozidla"
+        AutomationProperties.HelpText="Samostatné okno pro časovou osu vybraného vozidla.">
+  <Grid Margin="20" RowDefinitions="Auto,*">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="4">
+        <TextBlock FontSize="24"
+                   FontWeight="SemiBold"
+                   Text="{Binding WindowTitle}" />
+        <TextBlock Opacity="0.78"
+                   Text="{Binding TimelineSummary}"
+                   TextWrapping="Wrap" />
+      </StackPanel>
+      <Button Grid.Column="1"
+              x:Name="CloseTimelineWindowButton"
+              Width="120"
+              Height="34"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít okno časové osy"
+              AutomationProperties.AutomationId="CloseTimelineWindowButton" />
+    </Grid>
+
+    <workspaces:TimelineWorkspaceView x:Name="TimelineWorkspaceHost"
+                                      Grid.Row="1"
+                                      Margin="0,18,0,0" />
+  </Grid>
+</Window>

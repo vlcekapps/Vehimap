@@ -33,6 +33,8 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
 
     public ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline => Root.SelectedVehicleTimeline;
 
+    public string WindowTitle => Root.TimelineWindowTitle;
+
     public ICommand OpenSelectedTimelineItemCommand => Root.OpenSelectedTimelineItemCommand;
 
     partial void OnSelectedTimelineItemChanged(VehicleTimelineItemViewModel? value)

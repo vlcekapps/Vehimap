@@ -90,8 +90,13 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("Údržba - Octavia", viewModel.MaintenanceWindowTitle);
         Assert.Equal("Doklady a přílohy - Octavia", viewModel.RecordWindowTitle);
         Assert.Equal("Detail - Octavia", viewModel.VehicleDetailWindowTitle);
+        Assert.Equal("Časová osa - Octavia", viewModel.TimelineWindowTitle);
         Assert.Equal("Audit dat", viewModel.AuditWindowTitle);
+        Assert.Equal("Náklady napříč vozidly", viewModel.CostWindowTitle);
         Assert.Equal("Dashboard", viewModel.DashboardWindowTitle);
+        Assert.Equal("Globální hledání", viewModel.GlobalSearchWindowTitle);
+        Assert.Equal("Blížící se termíny", viewModel.UpcomingOverviewWindowTitle);
+        Assert.Equal("Propadlé termíny", viewModel.OverdueOverviewWindowTitle);
 
         viewModel.SelectedVehicle = null;
 
@@ -107,6 +112,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("Připomínky vozidla", viewModel.ReminderWindowTitle);
         Assert.Equal("Plán údržby vozidla", viewModel.MaintenanceWindowTitle);
         Assert.Equal("Doklady a přílohy", viewModel.RecordWindowTitle);
+        Assert.Equal("Časová osa vozidla", viewModel.TimelineWindowTitle);
     }
 
     private static MainWindowViewModel CreateViewModel()

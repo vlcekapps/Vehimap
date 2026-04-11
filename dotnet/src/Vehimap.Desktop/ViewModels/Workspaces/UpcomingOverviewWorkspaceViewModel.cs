@@ -26,6 +26,8 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     [ObservableProperty]
     private VehicleTimelineItemViewModel? selectedUpcomingOverviewItem;
 
+    public string WindowTitle => Root.UpcomingOverviewWindowTitle;
+
     public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems => Root.UpcomingOverviewItems;
 
     public IReadOnlyList<string> OverviewFilters => Root.OverviewFilters;

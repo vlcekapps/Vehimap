@@ -48,10 +48,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public event Action<DesktopFocusTarget>? FocusRequested;
 
     [ObservableProperty]
-    private string title = "Vehimap Desktop Preview";
+    private string title = "Vehimap";
 
     [ObservableProperty]
-    private string subtitle = "První Avalonia shell nad legacy daty Vehimap.";
+    private string subtitle = "Multiplatformní desktop nad daty Vehimapu.";
 
     [ObservableProperty]
     private string dataMode = string.Empty;
@@ -185,9 +185,22 @@ public sealed partial class MainWindowViewModel : ObservableObject
             ? "Detail vozidla"
             : $"Detail - {SelectedVehicle.Name}";
 
+    public string TimelineWindowTitle =>
+        SelectedVehicle is null
+            ? "Časová osa vozidla"
+            : $"Časová osa - {SelectedVehicle.Name}";
+
     public string AuditWindowTitle => "Audit dat";
 
+    public string CostWindowTitle => "Náklady napříč vozidly";
+
     public string DashboardWindowTitle => "Dashboard";
+
+    public string GlobalSearchWindowTitle => "Globální hledání";
+
+    public string UpcomingOverviewWindowTitle => "Blížící se termíny";
+
+    public string OverdueOverviewWindowTitle => "Propadlé termíny";
 
     public bool IsDetailTabSelected => SelectedVehicleTabIndex == DetailTabIndex;
 
@@ -336,6 +349,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(ReminderWindowTitle));
         OnPropertyChanged(nameof(MaintenanceWindowTitle));
         OnPropertyChanged(nameof(RecordWindowTitle));
+        OnPropertyChanged(nameof(TimelineWindowTitle));
 
         if (value is null)
         {

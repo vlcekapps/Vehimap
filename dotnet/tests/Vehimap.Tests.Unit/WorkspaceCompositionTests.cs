@@ -30,6 +30,12 @@ public sealed class WorkspaceCompositionTests
         Assert.NotNull(viewModel.OverdueOverviewWorkspace);
         Assert.Equal(viewModel.HistoryWindowTitle, viewModel.HistoryWorkspace.WindowTitle);
         Assert.Equal(viewModel.RecordWindowTitle, viewModel.RecordWorkspace.WindowTitle);
+        Assert.Equal(viewModel.TimelineWindowTitle, viewModel.TimelineWorkspace.WindowTitle);
+        Assert.Equal(viewModel.CostWindowTitle, viewModel.CostWorkspace.WindowTitle);
+        Assert.Equal(viewModel.DashboardWindowTitle, viewModel.DashboardWorkspace.WindowTitle);
+        Assert.Equal(viewModel.GlobalSearchWindowTitle, viewModel.GlobalSearchWorkspace.WindowTitle);
+        Assert.Equal(viewModel.UpcomingOverviewWindowTitle, viewModel.UpcomingOverviewWorkspace.WindowTitle);
+        Assert.Equal(viewModel.OverdueOverviewWindowTitle, viewModel.OverdueOverviewWorkspace.WindowTitle);
     }
 
     [Fact]
@@ -80,6 +86,22 @@ public sealed class WorkspaceCompositionTests
         var mainWindowXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "MainWindow.axaml"));
 
         Assert.Contains($"workspaces:{workspaceViewName}", mainWindowXaml, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("TimelineWindow", "TimelineWorkspaceView")]
+    [InlineData("CostWindow", "CostWorkspaceView")]
+    [InlineData("GlobalSearchWindow", "GlobalSearchWorkspaceView")]
+    [InlineData("UpcomingOverviewWindow", "UpcomingOverviewWorkspaceView")]
+    [InlineData("OverdueOverviewWindow", "OverdueOverviewWorkspaceView")]
+    public void Overview_windows_host_shared_workspace_controls(string windowName, string workspaceViewName)
+    {
+        var root = FindRepositoryRoot();
+        var windowXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", $"{windowName}.axaml"));
+        var codeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", $"{windowName}.axaml.cs"));
+
+        Assert.Contains($"workspaces:{workspaceViewName}", windowXaml, StringComparison.Ordinal);
+        Assert.Contains("FocusDefaultControl", codeBehind, StringComparison.Ordinal);
     }
 
     private static MainWindowViewModel CreateViewModel()

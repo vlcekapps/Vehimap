@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
@@ -90,28 +91,36 @@ public sealed class MainWindowViewModelOverviewTests
 
     private static VehimapDataSet BuildOverviewDataSet()
     {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var upcomingTechnicalControl = today.AddMonths(1).ToString("MM/yyyy", CultureInfo.InvariantCulture);
+        var overdueGreenCard = today.AddMonths(-1).ToString("MM/yyyy", CultureInfo.InvariantCulture);
+        var recentHistory = today.AddDays(-14).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+        var recentFuel = today.AddDays(-10).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+        var upcomingReminder = today.AddDays(7).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+        var overdueRecord = today.AddMonths(-1).ToString("MM/yyyy", CultureInfo.InvariantCulture);
+
         var dataSet = new VehimapDataSet
         {
             Settings = new VehimapSettings(),
             Vehicles =
             [
-                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "05/2026", "01/2026", "03/2026")
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", upcomingTechnicalControl, "01/2026", overdueGreenCard)
             ],
             HistoryEntries =
             [
-                new VehicleHistoryEntry("hist_1", "veh_1", "10.03.2026", "Servis", "12000", "100", "Kontrola")
+                new VehicleHistoryEntry("hist_1", "veh_1", recentHistory, "Servis", "12000", "100", "Kontrola")
             ],
             FuelEntries =
             [
-                new FuelEntry("fuel_1", "veh_1", "28.03.2026", "12450", "40", "300", true, "Natural 95", "")
+                new FuelEntry("fuel_1", "veh_1", recentFuel, "12450", "40", "300", true, "Natural 95", "")
             ],
             Reminders =
             [
-                new VehicleReminder("rem_1", "veh_1", "Přezutí", "10.04.2026", "7", "ročně", "Objednat pneuservis")
+                new VehicleReminder("rem_1", "veh_1", "Přezutí", upcomingReminder, "7", "ročně", "Objednat pneuservis")
             ],
             Records =
             [
-                new VehicleRecord("rec_1", "veh_1", "Doklad", "Povinné ručení", "", "", "03/2026", "2000", VehicleRecordAttachmentMode.External, "", "")
+                new VehicleRecord("rec_1", "veh_1", "Doklad", "Povinné ručení", "", "", overdueRecord, "2000", VehicleRecordAttachmentMode.External, "", "")
             ]
         };
 

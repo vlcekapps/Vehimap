@@ -23,6 +23,8 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
     [ObservableProperty]
     private string selectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
 
+    public string WindowTitle => Root.GlobalSearchWindowTitle;
+
     public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults => Root.GlobalSearchResults;
 
     public ICommand OpenSelectedSearchResultCommand => Root.OpenSelectedSearchResultCommand;

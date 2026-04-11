@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+        xmlns:workspaces="using:Vehimap.Desktop.Views.Workspaces"
+        x:Class="Vehimap.Desktop.Views.UpcomingOverviewWindow"
+        x:DataType="vm:UpcomingOverviewWorkspaceViewModel"
+        Width="1180"
+        Height="760"
+        MinWidth="980"
+        MinHeight="620"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding WindowTitle}"
+        AutomationProperties.Name="Blížící se termíny"
+        AutomationProperties.HelpText="Samostatné okno pro blížící se termíny napříč vozidly.">
+  <Grid Margin="20" RowDefinitions="Auto,*">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="4">
+        <TextBlock FontSize="24"
+                   FontWeight="SemiBold"
+                   Text="{Binding WindowTitle}" />
+        <TextBlock Opacity="0.78"
+                   Text="{Binding UpcomingOverviewSummary}"
+                   TextWrapping="Wrap" />
+      </StackPanel>
+      <Button Grid.Column="1"
+              x:Name="CloseUpcomingOverviewWindowButton"
+              Width="120"
+              Height="34"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít okno blížících se termínů"
+              AutomationProperties.AutomationId="CloseUpcomingOverviewWindowButton" />
+    </Grid>
+
+    <workspaces:UpcomingOverviewWorkspaceView x:Name="UpcomingOverviewWorkspaceHost"
+                                              Grid.Row="1"
+                                              Margin="0,18,0,0" />
+  </Grid>
+</Window>

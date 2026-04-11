@@ -19,6 +19,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - spravované přílohy dokladů s volbou mezi `Externí cestou` a `Spravovanou kopií`
 - interní složka `data/attachments/<id vozidla>/` pro portable uložení spravovaných příloh
 - rozšířený export a import `.vehimapbak`, který umí přenést i spravované přílohy dokladů
+- v Avalonia větvi samostatná okna pro `Časovou osu`, `Globální hledání`, `Náklady napříč vozidly`, `Blížící se termíny` a `Propadlé termíny`, postavená nad stejnými workspace views jako hlavní karty
 
 ### Změněno
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`
@@ -29,6 +30,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - hlavní pracovní okna jsou nově zvětšitelná a důležité seznamy se při změně velikosti roztahují do šířky i výšky
 - `Audit dat` dostal plné klávesové ovládání ve stylu ostatních přehledů a detail vozidla nově po otevření fokusuje primární akci úpravy
 - formulář dokladu v režimu `Spravovaná kopie` už nevystavuje interní relativní cestu jako běžně editovatelné pole a přehled dokladů nově jasně zobrazuje i režim přílohy
+- Avalonia shell už se v titulku a přístupném názvu neprezentuje jako preview a dostal samostatnou nabídku `Přehledy` pro otevření hlavních přehledových oken
 
 ### Opraveno
 - zpracování servisních doporučení, záloh a meta dat vozidel tak, aby správně fungoval nový servisní profil i smoke testy
