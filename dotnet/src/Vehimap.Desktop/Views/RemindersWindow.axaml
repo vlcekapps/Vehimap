@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Připomínky vozidla"
+        AutomationProperties.AutomationId="RemindersWindow"
         AutomationProperties.HelpText="Samostatné okno pro práci s připomínkami vybraného vozidla.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">

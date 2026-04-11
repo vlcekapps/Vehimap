@@ -10,7 +10,9 @@
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="Nastavení">
+        Title="Nastavení"
+        AutomationProperties.Name="Nastavení Vehimapu"
+        AutomationProperties.AutomationId="SettingsWindow">
   <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="Nastavení Vehimapu" />
     <TextBlock Grid.Row="1"

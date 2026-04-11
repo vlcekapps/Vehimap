@@ -198,6 +198,42 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Window_roots_should_define_accessible_name_and_automation_id()
+    {
+        var windowFiles = new[]
+        {
+            "AboutWindow.axaml",
+            "AuditWindow.axaml",
+            "ConfirmationWindow.axaml",
+            "CostWindow.axaml",
+            "DashboardWindow.axaml",
+            "FuelWindow.axaml",
+            "GlobalSearchWindow.axaml",
+            "HistoryWindow.axaml",
+            "MaintenanceWindow.axaml",
+            "MainWindow.axaml",
+            "NotificationWindow.axaml",
+            "OverdueOverviewWindow.axaml",
+            "RecordsWindow.axaml",
+            "RemindersWindow.axaml",
+            "SettingsWindow.axaml",
+            "TimelineWindow.axaml",
+            "TrayActionsWindow.axaml",
+            "UpcomingOverviewWindow.axaml",
+            "UpdateCheckWindow.axaml",
+            "VehicleDetailWindow.axaml",
+            "VehicleStarterBundleWindow.axaml",
+        };
+
+        foreach (var fileName in windowFiles)
+        {
+            var root = ReadWindowRootElement(fileName);
+            Assert.Contains("AutomationProperties.Name=", root);
+            Assert.Contains("AutomationProperties.AutomationId=", root);
+        }
+    }
+
+    [Fact]
     public void Editor_fields_should_define_explicit_accessibility_automation_ids()
     {
         var settingsXaml = ReadWorkspaceOrView("SettingsWindow.axaml", false);
@@ -258,6 +294,19 @@ public sealed class DesktopAccessibilityLabelTests
             "Views"));
 
         return File.ReadAllText(Path.Combine(desktopRoot, fileName));
+    }
+
+    private static string ReadWindowRootElement(string fileName)
+    {
+        var xaml = ReadViewFile(fileName);
+        var rootEnd = xaml.IndexOf(">\r\n", StringComparison.Ordinal);
+        if (rootEnd < 0)
+        {
+            rootEnd = xaml.IndexOf(">\n", StringComparison.Ordinal);
+        }
+
+        Assert.True(rootEnd > 0, $"Soubor {fileName} nemá čitelný kořenový Window element.");
+        return xaml[..rootEnd];
     }
 
     private static string ReadWorkspaceOrView(string fileName, bool workspace)

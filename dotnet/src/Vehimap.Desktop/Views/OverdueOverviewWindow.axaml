@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Propadlé termíny"
+        AutomationProperties.AutomationId="OverdueOverviewWindow"
         AutomationProperties.HelpText="Samostatné okno pro propadlé termíny napříč vozidly.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">

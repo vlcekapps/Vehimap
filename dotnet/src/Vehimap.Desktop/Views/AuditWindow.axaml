@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Audit dat"
+        AutomationProperties.AutomationId="AuditWindow"
         AutomationProperties.HelpText="Samostatné okno pro audit dat a problémových stavů.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">

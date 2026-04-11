@@ -10,7 +10,9 @@
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="{Binding Title}">
+        Title="{Binding Title}"
+        AutomationProperties.Name="{Binding Title}"
+        AutomationProperties.AutomationId="ConfirmationWindow">
   <Grid Margin="20" RowDefinitions="Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
     <TextBlock Grid.Row="1"

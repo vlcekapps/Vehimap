@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Blížící se termíny"
+        AutomationProperties.AutomationId="UpcomingOverviewWindow"
         AutomationProperties.HelpText="Samostatné okno pro blížící se termíny napříč vozidly.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">

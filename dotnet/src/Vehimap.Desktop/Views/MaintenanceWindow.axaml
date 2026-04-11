@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Plán údržby vozidla"
+        AutomationProperties.AutomationId="MaintenanceWindow"
         AutomationProperties.HelpText="Samostatné okno pro práci s plánem údržby vybraného vozidla.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">

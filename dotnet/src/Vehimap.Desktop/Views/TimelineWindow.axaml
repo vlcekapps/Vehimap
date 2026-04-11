@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Časová osa vozidla"
+        AutomationProperties.AutomationId="TimelineWindow"
         AutomationProperties.HelpText="Samostatné okno pro časovou osu vybraného vozidla.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">

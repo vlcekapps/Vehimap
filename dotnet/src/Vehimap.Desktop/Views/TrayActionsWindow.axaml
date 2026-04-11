@@ -10,6 +10,7 @@
         WindowStartupLocation="CenterScreen"
         Title="{Binding Title}"
         AutomationProperties.Name="Akce Vehimapu na liště"
+        AutomationProperties.AutomationId="TrayActionsWindow"
         AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace.">
   <Border Margin="16" Padding="20" Background="#1C2B38" CornerRadius="10">
     <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14">

@@ -8,7 +8,9 @@
         MinWidth="920"
         MinHeight="620"
         Title="Balíček pro vozidlo"
-        AutomationProperties.Name="Balíček pro vozidlo">
+        AutomationProperties.Name="Balíček pro vozidlo"
+        AutomationProperties.AutomationId="VehicleStarterBundleWindow"
+        AutomationProperties.HelpText="Dialog pro výběr servisních plánů, dokladů a připomínek pro vozidlo.">
   <Grid Margin="18" RowDefinitions="Auto,Auto,*,Auto">
     <StackPanel Spacing="4">
       <TextBlock FontSize="24" FontWeight="SemiBold" Text="Balíček pro vozidlo" />

@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Náklady napříč vozidly"
+        AutomationProperties.AutomationId="CostWindow"
         AutomationProperties.HelpText="Samostatné okno pro přehled nákladů napříč vozidly.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">

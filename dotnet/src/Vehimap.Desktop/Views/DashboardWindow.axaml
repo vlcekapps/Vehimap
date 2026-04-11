@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Dashboard"
+        AutomationProperties.AutomationId="DashboardWindow"
         AutomationProperties.HelpText="Samostatné okno pro dashboard napříč vozidly.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">

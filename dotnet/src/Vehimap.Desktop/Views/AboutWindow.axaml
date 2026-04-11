@@ -10,7 +10,9 @@
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="O programu">
+        Title="O programu"
+        AutomationProperties.Name="O programu"
+        AutomationProperties.AutomationId="AboutWindow">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
     <TextBlock Grid.Row="1"

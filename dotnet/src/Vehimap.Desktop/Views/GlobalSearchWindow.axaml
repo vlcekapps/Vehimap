@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Globální hledání"
+        AutomationProperties.AutomationId="GlobalSearchWindow"
         AutomationProperties.HelpText="Samostatné okno pro hledání napříč vozidly a evidencemi.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">

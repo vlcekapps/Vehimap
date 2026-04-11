@@ -10,6 +10,7 @@
         MinHeight="760"
         Title="{Binding Title}"
         AutomationProperties.Name="Vehimap"
+        AutomationProperties.AutomationId="MainWindow"
         AutomationProperties.HelpText="Multiplatformní Vehimap. Po otevření je fokus v seznamu vozidel vlevo.">
   <Window.KeyBindings>
     <KeyBinding Gesture="F5" Command="{Binding ReloadCommand}" />

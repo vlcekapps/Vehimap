@@ -41,6 +41,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - otevírání souborů a složek v C# větvi nově používá explicitní platformní strategii: shell execute na Windows, `open` na macOS a `xdg-open` na Linuxu
 - Linux autostart záznam v C# větvi už se v popisu neoznačuje jako `preview`
 - samostatná Avalonia workspace okna mají sjednocené zavírací `AutomationId` a UI smoke test nově ověřuje jejich otevření i zavření napříč hlavními workflow
+- Avalonia okna mají sjednocené kořenové přístupné názvy a `AutomationId`, aby šla spolehlivěji testovat a diagnostikovat pomocí UI automatizace
 
 ## [1.0.2] - 2026-03-27
 

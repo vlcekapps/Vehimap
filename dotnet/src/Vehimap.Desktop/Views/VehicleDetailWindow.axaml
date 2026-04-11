@@ -11,6 +11,7 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Detail vozidla"
+        AutomationProperties.AutomationId="VehicleDetailWindow"
         AutomationProperties.HelpText="Samostatné okno pro detail a úpravu vybraného vozidla.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
