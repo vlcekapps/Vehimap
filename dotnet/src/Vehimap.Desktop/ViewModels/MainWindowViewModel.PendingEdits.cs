@@ -155,6 +155,7 @@ public sealed partial class MainWindowViewModel
         EditSelectedMaintenanceCommand.NotifyCanExecuteChanged();
         DeleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();
         CompleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();
+        MaintenanceWorkspace.NotifyMaintenanceCompletionStateChanged();
         CreateRecordCommand.NotifyCanExecuteChanged();
         EditSelectedRecordCommand.NotifyCanExecuteChanged();
         DeleteSelectedRecordCommand.NotifyCanExecuteChanged();

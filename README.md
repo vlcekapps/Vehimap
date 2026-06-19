@@ -104,7 +104,7 @@ V hlavním okně:
 - `Plán údržby`: `Ctrl+F` přesune fokus do hledání, `Ctrl+N` přidá úkon, `Ctrl+Shift+N` nabídne doporučené šablony, `Ctrl+U` nebo `F2` upraví vybraný úkon, `Ctrl+L` jej označí jako splněný a `Ctrl+D` otevře detail vozidla
 - v C# Avalonia větvi má editor údržby rozbalovací `Šablonu úkonu`, která při ručním přidání rychle předvyplní název, intervaly a poznámku běžného servisu
 - v C# Avalonia větvi je výběr doporučených servisních šablon dostupný i tlačítkem `Doporučené` ve sdíleném workspace údržby a funguje stejně v hlavní kartě i samostatném okně
-- v C# Avalonia větvi je označení servisu jako splněného dostupné i tlačítkem `Splněno`; doplní dnešní datum a pokud je v historii nebo tankování známý aktuální tachometr, použije i ten
+- v C# Avalonia větvi je označení servisu jako splněného dostupné i tlačítkem `Splněno`; otevře potvrzovací dialog s datem, tachometrem a volitelným zápisem stejné události do historie vozidla
 - `Výběr doporučených šablon`: `Ctrl+S` přidá vybrané položky, `Ctrl+A` vybere vše a `Ctrl+Shift+A` výběr vymaže
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní
 - v `Plánu údržby` klávesa `Enter` upraví vybraný úkon a `Delete` jej odstraní

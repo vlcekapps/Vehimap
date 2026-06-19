@@ -1,0 +1,99 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.MaintenanceCompletionWindow"
+        x:DataType="vm:MaintenanceCompletionDialogViewModel"
+        Width="620"
+        Height="560"
+        MinWidth="580"
+        MinHeight="520"
+        CanResize="False"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Označit servisní úkon jako splněný"
+        AutomationProperties.Name="Označit servisní úkon jako splněný"
+        AutomationProperties.AutomationId="MaintenanceCompletionWindow"
+        AutomationProperties.HelpText="Dialog pro potvrzení dokončeného servisního úkonu. Ctrl+S uloží, Escape zavře bez změn.">
+  <Grid Margin="20" RowDefinitions="Auto,*,Auto">
+    <StackPanel Spacing="6">
+      <TextBlock FontSize="22" FontWeight="SemiBold" Text="Označit servisní úkon jako splněný" />
+      <TextBlock Text="{Binding VehicleName}" />
+      <TextBlock FontWeight="SemiBold" Text="{Binding PlanTitle}" />
+      <TextBlock Opacity="0.78" Text="{Binding CurrentStatus}" TextWrapping="Wrap" />
+      <TextBlock Opacity="0.78"
+                 Text="Potvrďte datum a tachometr, od kterých se má plán počítat znovu. Volitelně lze záznam rovnou uložit i do historie událostí."
+                 TextWrapping="Wrap" />
+    </StackPanel>
+
+    <Grid Grid.Row="1" Margin="0,18,0,0" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+      <TextBlock FontWeight="SemiBold" Text="Datum provedení" />
+      <TextBox x:Name="MaintenanceCompletionDateBox"
+               Grid.Row="1"
+               Margin="0,6,0,0"
+               Text="{Binding CompletedDate}"
+               AutomationProperties.Name="Datum provedení servisního úkonu"
+               AutomationProperties.AutomationId="MaintenanceCompletionDateBox" />
+
+      <TextBlock Grid.Row="2" Margin="0,14,0,0" FontWeight="SemiBold" Text="Tachometr při provedení" />
+      <TextBox x:Name="MaintenanceCompletionOdometerBox"
+               Grid.Row="3"
+               Margin="0,6,0,0"
+               Text="{Binding CompletedOdometer}"
+               AutomationProperties.Name="Tachometr při provedení servisního úkonu"
+               AutomationProperties.AutomationId="MaintenanceCompletionOdometerBox" />
+
+      <CheckBox Grid.Row="4"
+                Margin="0,16,0,0"
+                IsChecked="{Binding AddHistory}"
+                Content="Současně zapsat i do historie událostí"
+                AutomationProperties.Name="Současně zapsat servisní úkon do historie událostí"
+                AutomationProperties.AutomationId="MaintenanceCompletionAddHistoryCheckBox" />
+
+      <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Cena do historie" />
+      <TextBox x:Name="MaintenanceCompletionHistoryCostBox"
+               Grid.Row="6"
+               Margin="0,6,0,0"
+               Text="{Binding HistoryCost}"
+               AutomationProperties.Name="Cena servisního úkonu do historie"
+               AutomationProperties.AutomationId="MaintenanceCompletionHistoryCostBox" />
+
+      <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka do historie" />
+      <TextBox x:Name="MaintenanceCompletionHistoryNoteBox"
+               Grid.Row="8"
+               Margin="0,6,0,0"
+               Height="90"
+               AcceptsReturn="True"
+               TextWrapping="Wrap"
+               VerticalContentAlignment="Top"
+               Text="{Binding HistoryNote}"
+               AutomationProperties.Name="Poznámka servisního úkonu do historie"
+               AutomationProperties.AutomationId="MaintenanceCompletionHistoryNoteBox" />
+
+      <TextBlock Grid.Row="9"
+                 Margin="0,12,0,0"
+                 Foreground="#B00020"
+                 Text="{Binding ErrorMessage}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.Name="{Binding ErrorMessage}"
+                 AutomationProperties.AutomationId="MaintenanceCompletionStatusText" />
+    </Grid>
+
+    <StackPanel Grid.Row="2"
+                Margin="0,18,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="10">
+      <Button x:Name="SaveMaintenanceCompletionButton"
+              MinWidth="140"
+              Click="OnSaveClick"
+              Content="Uložit"
+              AutomationProperties.Name="Uložit dokončení servisního úkonu"
+              AutomationProperties.AutomationId="SaveMaintenanceCompletionButton" />
+      <Button MinWidth="120"
+              Click="OnCancelClick"
+              Content="Zrušit"
+              AutomationProperties.Name="Zrušit dokončení servisního úkonu"
+              AutomationProperties.AutomationId="CancelMaintenanceCompletionButton" />
+    </StackPanel>
+  </Grid>
+</Window>

@@ -260,6 +260,71 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
+    public async Task Maintenance_completion_can_add_history_entry()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.MaintenancePlans.Add(new MaintenancePlan("mnt_1", "veh_1", "Motorový olej", "15000", "12", "01.04.2025", "100000", true, "Roční servis"));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        var dialogViewModel = viewModel.BuildMaintenanceCompletionDialogViewModel();
+        Assert.NotNull(dialogViewModel);
+        Assert.Equal("Motorový olej", dialogViewModel!.PlanTitle);
+        Assert.True(dialogViewModel.RequiresOdometer);
+
+        var message = await viewModel.ApplyMaintenanceCompletionAsync(new MaintenanceCompletionDialogResult(
+            "15.06.2026",
+            "123456",
+            AddHistory: true,
+            HistoryCost: "2500,50",
+            HistoryNote: string.Empty));
+
+        var savedPlan = Assert.Single(dataStore.CurrentDataSet.MaintenancePlans);
+        Assert.Equal("15.06.2026", savedPlan.LastServiceDate);
+        Assert.Equal("123456", savedPlan.LastServiceOdometer);
+        var history = Assert.Single(dataStore.CurrentDataSet.HistoryEntries);
+        Assert.Equal("15.06.2026", history.EventDate);
+        Assert.Equal("Motorový olej", history.EventType);
+        Assert.Equal("123456", history.Odometer);
+        Assert.Equal("2500.5", history.Cost);
+        Assert.Equal("Zapsáno z plánu údržby.", history.Note);
+        Assert.Contains("historie", message);
+        Assert.Equal("mnt_1", viewModel.SelectedMaintenance?.Id);
+    }
+
+    [Fact]
+    public void Maintenance_completion_dialog_validates_required_fields()
+    {
+        var dialog = new MaintenanceCompletionDialogViewModel(
+            "Milena",
+            "Motorový olej",
+            "Blíží se servis",
+            requiresOdometer: true,
+            completedDate: "15.06.2026",
+            completedOdometer: string.Empty);
+
+        Assert.False(dialog.TryBuildResult(out var missingOdometerResult));
+        Assert.Null(missingOdometerResult);
+        Assert.Equal("MaintenanceCompletionOdometerBox", dialog.ErrorFocusTarget);
+
+        dialog.CompletedOdometer = "123456";
+        dialog.HistoryCost = "abc";
+        Assert.False(dialog.TryBuildResult(out var invalidCostResult));
+        Assert.Null(invalidCostResult);
+        Assert.Equal("MaintenanceCompletionHistoryCostBox", dialog.ErrorFocusTarget);
+
+        dialog.HistoryCost = "2500,50";
+        Assert.True(dialog.TryBuildResult(out var result));
+        Assert.NotNull(result);
+        Assert.Equal("15.06.2026", result!.CompletedDate);
+        Assert.Equal("123456", result.CompletedOdometer);
+        Assert.Equal("2500.5", result.HistoryCost);
+    }
+
+    [Fact]
     public void Complete_selected_maintenance_is_disabled_without_selection_or_during_editing()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);

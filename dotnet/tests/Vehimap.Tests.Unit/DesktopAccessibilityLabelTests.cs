@@ -170,6 +170,8 @@ public sealed class DesktopAccessibilityLabelTests
         var updateCodeBehind = ReadViewCodeBehind("UpdateCheckWindow.axaml.cs");
         var notificationXaml = ReadViewFile("NotificationWindow.axaml");
         var notificationCodeBehind = ReadViewCodeBehind("NotificationWindow.axaml.cs");
+        var maintenanceCompletionXaml = ReadViewFile("MaintenanceCompletionWindow.axaml");
+        var maintenanceCompletionCodeBehind = ReadViewCodeBehind("MaintenanceCompletionWindow.axaml.cs");
         var vehicleDetailXaml = ReadViewFile("VehicleDetailWindow.axaml");
         var historyXaml = ReadViewFile("HistoryWindow.axaml");
         var fuelXaml = ReadViewFile("FuelWindow.axaml");
@@ -213,6 +215,17 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"NotificationWindow\"", notificationXaml);
         Assert.Contains("Zavře se samo; při aktivaci ho lze zavřít klávesou Escape.", notificationXaml);
         Assert.Contains("Key.Escape", notificationCodeBehind);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionWindow\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionDateBox\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionOdometerBox\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionAddHistoryCheckBox\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionHistoryCostBox\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionHistoryNoteBox\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SaveMaintenanceCompletionButton\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CancelMaintenanceCompletionButton\"", maintenanceCompletionXaml);
+        Assert.Contains("Ctrl+S uloží, Escape zavře bez změn.", maintenanceCompletionXaml);
+        Assert.Contains("Key.Escape", maintenanceCompletionCodeBehind);
+        Assert.Contains("Key.S", maintenanceCompletionCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseVehicleDetailWindowButton\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseHistoryWindowButton\"", historyXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseFuelWindowButton\"", fuelXaml);
@@ -255,6 +268,7 @@ public sealed class DesktopAccessibilityLabelTests
             "HistoryWindow.axaml",
             "MaintenanceWindow.axaml",
             "MainWindow.axaml",
+            "MaintenanceCompletionWindow.axaml",
             "NotificationWindow.axaml",
             "OverdueOverviewWindow.axaml",
             "RecordsWindow.axaml",

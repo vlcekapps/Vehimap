@@ -56,12 +56,14 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
         if (_subscribedViewModel is not null)
         {
             _subscribedViewModel.MaintenanceTemplatesRequested -= OnMaintenanceTemplatesRequested;
+            _subscribedViewModel.MaintenanceCompletionRequested -= OnMaintenanceCompletionRequested;
         }
 
         _subscribedViewModel = DataContext as MaintenanceWorkspaceViewModel;
         if (_subscribedViewModel is not null)
         {
             _subscribedViewModel.MaintenanceTemplatesRequested += OnMaintenanceTemplatesRequested;
+            _subscribedViewModel.MaintenanceCompletionRequested += OnMaintenanceCompletionRequested;
         }
     }
 
@@ -102,5 +104,44 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
 
         var message = await ViewModel.ApplyMaintenanceTemplatesAsync(result.SelectedItems);
         ViewModel.SetMaintenanceTemplateStatus(message);
+    }
+
+    private async void OnMaintenanceCompletionRequested(object? sender, EventArgs e)
+    {
+        await OpenMaintenanceCompletionDialogAsync();
+    }
+
+    private async Task OpenMaintenanceCompletionDialogAsync()
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        var dialogViewModel = ViewModel.BuildMaintenanceCompletionDialogViewModel();
+        if (dialogViewModel is null)
+        {
+            ViewModel.SetMaintenanceStatus("Nejprve vyberte servisní plán.");
+            return;
+        }
+
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+        {
+            return;
+        }
+
+        var dialog = new MaintenanceCompletionWindow
+        {
+            DataContext = dialogViewModel
+        };
+
+        var result = await dialog.ShowDialog<MaintenanceCompletionDialogResult?>(owner);
+        if (result is null)
+        {
+            return;
+        }
+
+        var message = await ViewModel.ApplyMaintenanceCompletionAsync(result);
+        ViewModel.SetMaintenanceStatus(message);
     }
 }

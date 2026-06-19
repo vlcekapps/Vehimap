@@ -21,6 +21,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public string MaintenanceSummary => Root.MaintenanceSummary;
     public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance => Root.SelectedVehicleMaintenance;
     public bool CanOpenMaintenanceRecommendations => Root.CanOpenMaintenanceRecommendations;
+    public bool CanCompleteSelectedMaintenance => Root.CanCompleteSelectedMaintenance;
     public IReadOnlyList<string> MaintenanceTemplateOptions { get; } =
     [
         CustomMaintenanceTemplateLabel,
@@ -28,6 +29,8 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     ];
 
     public event EventHandler? MaintenanceTemplatesRequested;
+
+    public event EventHandler? MaintenanceCompletionRequested;
 
     [ObservableProperty]
     private VehicleMaintenanceItemViewModel? selectedMaintenance;
@@ -73,7 +76,6 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public ICommand CreateMaintenanceCommand => Root.CreateMaintenanceCommand;
     public ICommand EditSelectedMaintenanceCommand => Root.EditSelectedMaintenanceCommand;
     public ICommand DeleteSelectedMaintenanceCommand => Root.DeleteSelectedMaintenanceCommand;
-    public ICommand CompleteSelectedMaintenanceCommand => Root.CompleteSelectedMaintenanceCommand;
     public ICommand SaveMaintenanceCommand => Root.SaveMaintenanceCommand;
     public ICommand CancelMaintenanceEditCommand => Root.CancelMaintenanceEditCommand;
 
@@ -91,7 +93,22 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
             : Root.ApplyMaintenanceTemplatesAsync(Root.SelectedVehicle.Id, items);
     }
 
+    public MaintenanceCompletionDialogViewModel? BuildMaintenanceCompletionDialogViewModel()
+    {
+        return Root.BuildMaintenanceCompletionDialogViewModel();
+    }
+
+    public Task<string> ApplyMaintenanceCompletionAsync(MaintenanceCompletionDialogResult result)
+    {
+        return Root.ApplyMaintenanceCompletionAsync(result);
+    }
+
     public void SetMaintenanceTemplateStatus(string message)
+    {
+        MaintenanceEditorStatus = message;
+    }
+
+    public void SetMaintenanceStatus(string message)
     {
         MaintenanceEditorStatus = message;
     }
@@ -109,10 +126,22 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         OpenMaintenanceTemplatesCommand.NotifyCanExecuteChanged();
     }
 
+    internal void NotifyMaintenanceCompletionStateChanged()
+    {
+        OnPropertyChanged(nameof(CanCompleteSelectedMaintenance));
+        CompleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();
+    }
+
     [RelayCommand(CanExecute = nameof(CanOpenMaintenanceRecommendations))]
     private void OpenMaintenanceTemplates()
     {
         MaintenanceTemplatesRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCompleteSelectedMaintenance))]
+    private void CompleteSelectedMaintenance()
+    {
+        MaintenanceCompletionRequested?.Invoke(this, EventArgs.Empty);
     }
 
     partial void OnSelectedMaintenanceChanged(VehicleMaintenanceItemViewModel? value)

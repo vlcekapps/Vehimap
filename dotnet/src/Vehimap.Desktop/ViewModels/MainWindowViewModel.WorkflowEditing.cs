@@ -307,13 +307,8 @@ public sealed partial class MainWindowViewModel
     [RelayCommand(CanExecute = nameof(CanCompleteSelectedMaintenance))]
     private async Task CompleteSelectedMaintenanceAsync()
     {
-        if (SelectedVehicle is null)
-        {
-            return;
-        }
-
         var plan = GetSelectedMaintenanceModel();
-        if (plan is null)
+        if (SelectedVehicle is null || plan is null)
         {
             return;
         }
@@ -323,21 +318,119 @@ public sealed partial class MainWindowViewModel
             ? odometer.ToString(CultureInfo.InvariantCulture)
             : plan.LastServiceOdometer;
 
+        var message = await ApplyMaintenanceCompletionAsync(new MaintenanceCompletionDialogResult(
+            todayText,
+            currentOdometer,
+            AddHistory: false,
+            HistoryCost: string.Empty,
+            HistoryNote: string.Empty));
+        MaintenanceEditorStatus = message;
+    }
+
+    internal MaintenanceCompletionDialogViewModel? BuildMaintenanceCompletionDialogViewModel()
+    {
+        var plan = GetSelectedMaintenanceModel();
+        if (SelectedVehicle is null || plan is null)
+        {
+            return null;
+        }
+
+        var completedDate = FormatMaintenanceServiceDate(DateOnly.FromDateTime(DateTime.Today));
+        var completedOdometer = TryGetCurrentVehicleOdometer(SelectedVehicle.Id, out var odometer)
+            ? odometer.ToString(CultureInfo.InvariantCulture)
+            : plan.LastServiceOdometer;
+
+        return new MaintenanceCompletionDialogViewModel(
+            SelectedVehicle.Name,
+            plan.Title,
+            SelectedMaintenance?.Status ?? "Aktuální stav není k dispozici.",
+            !string.IsNullOrWhiteSpace(plan.IntervalKm),
+            completedDate,
+            completedOdometer);
+    }
+
+    internal async Task<string> ApplyMaintenanceCompletionAsync(MaintenanceCompletionDialogResult completion)
+    {
+        var plan = GetSelectedMaintenanceModel();
+        if (SelectedVehicle is null || plan is null)
+        {
+            return "Nejprve vyberte servisní plán.";
+        }
+
+        if (!plan.IsActive)
+        {
+            return "Pozastavený plán nejdříve znovu aktivujte v úpravě úkonu.";
+        }
+
+        if (!VehimapValueParser.TryParseEventDate(completion.CompletedDate, out var completedDate))
+        {
+            return "Datum provedení musí být ve formátu DD.MM.RRRR.";
+        }
+
+        var completedOdometer = (completion.CompletedOdometer ?? string.Empty).Trim();
+        if (!string.IsNullOrWhiteSpace(completedOdometer))
+        {
+            if (!VehimapValueParser.TryParseOdometer(completedOdometer, out var parsedOdometer))
+            {
+                return "Tachometr při provedení zadejte jako celé číslo.";
+            }
+
+            completedOdometer = parsedOdometer.ToString(CultureInfo.InvariantCulture);
+        }
+        else if (!string.IsNullOrWhiteSpace(plan.IntervalKm))
+        {
+            return "Pro kilometrický interval vyplňte i stav tachometru při provedení úkonu.";
+        }
+
+        var historyCost = (completion.HistoryCost ?? string.Empty).Trim();
+        if (!string.IsNullOrWhiteSpace(historyCost))
+        {
+            if (!VehimapValueParser.TryParseMoney(historyCost, out var parsedCost))
+            {
+                return "Cenu do historie zadejte jako číslo, například 2500.";
+            }
+
+            historyCost = parsedCost.ToString("0.##", CultureInfo.InvariantCulture);
+        }
+
+        var completedDateText = FormatMaintenanceServiceDate(completedDate);
         var updatedPlan = plan with
         {
-            LastServiceDate = todayText,
-            LastServiceOdometer = currentOdometer
+            LastServiceDate = completedDateText,
+            LastServiceOdometer = string.IsNullOrWhiteSpace(completedOdometer) ? plan.LastServiceOdometer : completedOdometer,
+            IsActive = true
         };
 
         UpsertMaintenancePlan(updatedPlan);
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, MaintenanceTabIndex, maintenanceId: updatedPlan.Id);
 
-        var odometerMessage = string.IsNullOrWhiteSpace(currentOdometer)
-            ? "Aktuální tachometr v datech zatím není, proto zůstal prázdný."
-            : $"Tachometr: {currentOdometer} km.";
-        MaintenanceEditorStatus = $"Servisní úkon byl označen jako splněný k {todayText}. {odometerMessage}";
+        if (completion.AddHistory)
+        {
+            var historyNote = string.IsNullOrWhiteSpace(completion.HistoryNote)
+                ? "Zapsáno z plánu údržby."
+                : completion.HistoryNote.Trim();
+            UpsertHistoryEntry(new VehicleHistoryEntry(
+                GenerateLegacyId(_dataSet.HistoryEntries.Select(item => item.Id)),
+                updatedPlan.VehicleId,
+                completedDateText,
+                updatedPlan.Title,
+                completedOdometer,
+                historyCost,
+                historyNote));
+        }
+
+        await PersistDataAndRestoreSelectionAsync(updatedPlan.VehicleId, MaintenanceTabIndex, maintenanceId: updatedPlan.Id);
+
+        var odometerMessage = string.IsNullOrWhiteSpace(updatedPlan.LastServiceOdometer)
+            ? "Tachometr zůstal prázdný."
+            : $"Tachometr: {updatedPlan.LastServiceOdometer} km.";
+        var historyMessage = completion.AddHistory
+            ? " Událost byla zapsána i do historie."
+            : string.Empty;
+        var message = $"Servisní úkon byl označen jako splněný k {completedDateText}. {odometerMessage}{historyMessage}";
+        MaintenanceEditorStatus = message;
         SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, updatedPlan.Id);
         RequestFocus(DesktopFocusTarget.MaintenanceList);
+        return message;
     }
 
     private VehicleHistoryEntry? GetSelectedHistoryModel()
