@@ -116,6 +116,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string shellStatus = "Desktopová větev je připravená.";
 
     [ObservableProperty]
+    private bool isMinimizeToTrayAvailable;
+
+    [ObservableProperty]
     private int selectedVehicleTabIndex;
 
     [ObservableProperty]

@@ -41,6 +41,8 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
     [ObservableProperty]
     private string statusMessage = "Upravte podporované volby a potvrďte je tlačítkem Uložit.";
 
+    public bool CanConfigureAutomaticBackups => AutomaticBackupsEnabled;
+
     public static SettingsDialogViewModel FromSnapshot(DesktopSupportedSettingsSnapshot snapshot, string automaticBackupStatus)
     {
         return new SettingsDialogViewModel
@@ -64,12 +66,33 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
         if (!TryParseBoundedInt(TechnicalReminderDays, 0, 3650, "Upozornění na TK", out var technicalReminderDays, out errorMessage)
             || !TryParseBoundedInt(GreenCardReminderDays, 0, 3650, "Upozornění na zelenou kartu", out var greenCardReminderDays, out errorMessage)
             || !TryParseBoundedInt(MaintenanceReminderDays, 0, 3650, "Upozornění na údržbu podle dnů", out var maintenanceReminderDays, out errorMessage)
-            || !TryParseBoundedInt(MaintenanceReminderKm, 1, 999999, "Upozornění na údržbu podle km", out var maintenanceReminderKm, out errorMessage)
-            || !TryParseBoundedInt(AutomaticBackupIntervalDays, 1, 999, "Interval automatické zálohy ve dnech", out var automaticBackupIntervalDays, out errorMessage)
-            || !TryParseBoundedInt(AutomaticBackupKeepCount, 1, 999, "Počet ponechaných automatických záloh", out var automaticBackupKeepCount, out errorMessage))
+            || !TryParseBoundedInt(MaintenanceReminderKm, 1, 999999, "Upozornění na údržbu podle km", out var maintenanceReminderKm, out errorMessage))
         {
             snapshot = default!;
             return false;
+        }
+
+        var automaticBackupIntervalDays = 1;
+        var automaticBackupKeepCount = 30;
+        if (AutomaticBackupsEnabled
+            && (!TryParseBoundedInt(AutomaticBackupIntervalDays, 1, 999, "Interval automatické zálohy ve dnech", out automaticBackupIntervalDays, out errorMessage)
+                || !TryParseBoundedInt(AutomaticBackupKeepCount, 1, 999, "Počet ponechaných automatických záloh", out automaticBackupKeepCount, out errorMessage)))
+        {
+            snapshot = default!;
+            return false;
+        }
+
+        if (!AutomaticBackupsEnabled)
+        {
+            if (TryParseBoundedInt(AutomaticBackupIntervalDays, 1, 999, "Interval automatické zálohy ve dnech", out var parsedIntervalDays, out _))
+            {
+                automaticBackupIntervalDays = parsedIntervalDays;
+            }
+
+            if (TryParseBoundedInt(AutomaticBackupKeepCount, 1, 999, "Počet ponechaných automatických záloh", out var parsedKeepCount, out _))
+            {
+                automaticBackupKeepCount = parsedKeepCount;
+            }
         }
 
         snapshot = new DesktopSupportedSettingsSnapshot(
@@ -85,6 +108,11 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             automaticBackupKeepCount);
         errorMessage = string.Empty;
         return true;
+    }
+
+    partial void OnAutomaticBackupsEnabledChanged(bool value)
+    {
+        OnPropertyChanged(nameof(CanConfigureAutomaticBackups));
     }
 
     private static bool TryParseBoundedInt(string value, int minValue, int maxValue, string label, out int parsedValue, out string errorMessage)

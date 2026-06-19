@@ -76,6 +76,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"OverviewMenuRoot\" Header=\"_Přehledy\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"QuickActionsMenuRoot\" Header=\"_Rychlé akce\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"_Aplikace\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"MinimizeToTrayButton\" Header=\"Minimalizovat na lištu\" Click=\"OnMinimizeToTrayClick\" IsEnabled=\"{Binding IsMinimizeToTrayAvailable}\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MinimizeToTrayButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SettingsButton\"", xaml);
@@ -183,6 +184,9 @@ public sealed class DesktopAccessibilityLabelTests
         var trayActionsXaml = ReadViewFile("TrayActionsWindow.axaml");
 
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
+        Assert.Contains("IsEnabled=\"{Binding CanConfigureAutomaticBackups}\"", settingsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupButton\"", settingsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SaveSettingsButton\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CancelSettingsButton\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);

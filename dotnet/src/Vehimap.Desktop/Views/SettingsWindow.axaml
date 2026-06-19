@@ -92,19 +92,29 @@
                     AutomationProperties.Name="Pravidelně vytvářet automatické zálohy"
                     AutomationProperties.AutomationId="AutomaticBackupsEnabledCheckBox" />
 
-          <TextBlock Grid.Row="1" Margin="0,14,0,0" Text="Interval automatické zálohy ve dnech" VerticalAlignment="Center" />
+          <TextBlock Grid.Row="1"
+                     Margin="0,14,0,0"
+                     Text="Interval automatické zálohy ve dnech"
+                     VerticalAlignment="Center"
+                     IsEnabled="{Binding CanConfigureAutomaticBackups}" />
           <TextBox Grid.Row="1"
                    Grid.Column="1"
                    Margin="0,14,0,0"
                    Text="{Binding AutomaticBackupIntervalDays}"
+                   IsEnabled="{Binding CanConfigureAutomaticBackups}"
                    AutomationProperties.Name="Interval automatické zálohy ve dnech"
                    AutomationProperties.AutomationId="AutomaticBackupIntervalDaysBox" />
 
-          <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="Ponechat posledních automatických záloh" VerticalAlignment="Center" />
+          <TextBlock Grid.Row="2"
+                     Margin="0,12,0,0"
+                     Text="Ponechat posledních automatických záloh"
+                     VerticalAlignment="Center"
+                     IsEnabled="{Binding CanConfigureAutomaticBackups}" />
           <TextBox Grid.Row="2"
                    Grid.Column="1"
                    Margin="0,12,0,0"
                    Text="{Binding AutomaticBackupKeepCount}"
+                   IsEnabled="{Binding CanConfigureAutomaticBackups}"
                    AutomationProperties.Name="Počet ponechaných automatických záloh"
                    AutomationProperties.AutomationId="AutomaticBackupKeepCountBox" />
 

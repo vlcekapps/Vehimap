@@ -762,14 +762,6 @@ public partial class MainWindow : Window
         }
     }
 
-    public void SetMinimizeToTrayAvailability(bool isAvailable)
-    {
-        if (this.FindControl<MenuItem>("MinimizeToTrayButton") is { } button)
-        {
-            button.IsEnabled = isAvailable;
-        }
-    }
-
     private async Task<bool> ConfirmDiscardPendingEditsForWindowAsync(string actionDescription)
     {
         if (_viewModel is null || !_viewModel.HasPendingEdits)

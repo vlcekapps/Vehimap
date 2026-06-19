@@ -66,7 +66,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
                     ExitApplicationAsync),
                 cancellationToken)
             .ConfigureAwait(false);
-        _mainWindow.SetMinimizeToTrayAvailability(_trayService.IsSupported);
+        _shell.IsMinimizeToTrayAvailable = _trayService.IsSupported;
 
         _dueTimer.Start();
         _backupTimer.Start();

@@ -181,6 +181,7 @@ V nastavení:
 - volba `Pravidelně vytvářet automatické zálohy` zapne interní zálohování celé aplikace bez dotazu na název souboru
 - pole `Interval automatické zálohy ve dnech` určuje, po kolika dnech má vzniknout nová automatická záloha
 - pole `Ponechat posledních automatických záloh` určuje, kolik nejnovějších souborů si Vehimap ponechá a starší automaticky smaže
+- pokud je volba pravidelných automatických záloh vypnutá, pole pro interval a počet ponechaných záloh jsou v C# dialogu Nastavení neaktivní a neblokují uložení ostatních voleb
 - tlačítko `Zálohovat ihned` vytvoří novou zálohu okamžitě do stejné složky bez čekání na další automatický interval
 - pole `Upozornit na údržbu dnů předem` určuje, jak brzy má Vehimap začít hlásit blížící se servis podle data
 - pole `Upozornit na údržbu kilometrů předem` určuje, jak brzy má Vehimap začít hlásit blížící se servis podle tachometru

@@ -12,6 +12,27 @@ namespace Vehimap.Tests.Unit;
 public sealed class MainWindowViewModelAppShellTests
 {
     [Fact]
+    public void Minimize_to_tray_menu_state_is_exposed_by_view_model()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet));
+
+        Assert.False(viewModel.IsMinimizeToTrayAvailable);
+
+        viewModel.IsMinimizeToTrayAvailable = true;
+
+        Assert.True(viewModel.IsMinimizeToTrayAvailable);
+    }
+
+    [Fact]
     public void Show_dashboard_on_launch_opens_dashboard_tab_after_load()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);

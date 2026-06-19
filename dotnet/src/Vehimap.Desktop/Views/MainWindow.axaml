@@ -222,7 +222,7 @@
           <MenuItem x:Name="MinimizeToTrayButton"
                     Header="Minimalizovat na lištu"
                     Click="OnMinimizeToTrayClick"
-                    IsEnabled="False"
+                    IsEnabled="{Binding IsMinimizeToTrayAvailable}"
                     AutomationProperties.Name="Minimalizovat aplikaci na lištu"
                     AutomationProperties.AutomationId="MinimizeToTrayButton" />
           <Separator />
