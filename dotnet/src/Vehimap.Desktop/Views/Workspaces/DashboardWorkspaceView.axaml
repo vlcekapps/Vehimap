@@ -4,12 +4,22 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.DashboardWorkspaceView"
              x:DataType="vm:DashboardWorkspaceViewModel">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+R" Command="{Binding RefreshDashboardCommand}" />
+  </UserControl.KeyBindings>
   <Grid RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
     <StackPanel Grid.ColumnSpan="3" Spacing="8">
       <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
       <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" />
       <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
       <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" />
+      <Button x:Name="DashboardRefreshButton"
+              Width="120"
+              HorizontalAlignment="Left"
+              Command="{Binding RefreshDashboardCommand}"
+              Content="Obnovit"
+              AutomationProperties.Name="Obnovit dashboard"
+              AutomationProperties.AutomationId="DashboardRefreshButton" />
     </StackPanel>
     <Border Grid.Row="1" Grid.Column="0" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
       <Grid RowDefinitions="Auto,Auto,*">

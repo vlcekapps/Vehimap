@@ -7,6 +7,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ### Přidáno
 - Avalonia dokladový workspace umí zkopírovat vyřešenou cestu přílohy tlačítkem `Kopírovat cestu` nebo zkratkou `Ctrl+Shift+C`
+- Avalonia dashboard má tlačítko `Obnovit` a zkratku `Ctrl+R`, které přepočítají audit, náklady i nejbližší termíny bez ztráty výběru
 - Avalonia přehled `Blížící se termíny` umí volitelně přimíchat vozidla bez zelené karty a datové nedostatky z auditu včetně navigace na správnou evidenci
 - Avalonia přehledy `Blížící se termíny` a `Propadlé termíny` mají tlačítko `Obnovit` a zkratku `Ctrl+R`, které zachovávají výběr a vrací fokus na seznam
 - nový přehled `Audit dat`, který sjednocuje chybějící povinné údaje, neplatné rozsahy, problematické doklady, podezřelé tachometry, nákladové nesrovnalosti i servisní plány bez použitelného odometru

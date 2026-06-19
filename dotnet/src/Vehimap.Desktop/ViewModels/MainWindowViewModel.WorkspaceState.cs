@@ -763,6 +763,69 @@ public sealed partial class MainWindowViewModel
         OpenSelectedDashboardTimelineItemCommand.NotifyCanExecuteChanged();
     }
 
+    internal void RefreshDashboardWorkspace()
+    {
+        var previousAuditKey = BuildDashboardAuditSelectionKey(SelectedDashboardAuditItem);
+        var previousCostVehicleId = SelectedDashboardCostVehicle?.VehicleId ?? string.Empty;
+        var previousTimelineItem = SelectedDashboardTimelineItem;
+
+        AuditSummary = _projectionService.BuildAuditSummary(_auditItems);
+        if (_currentCostSummary is not null)
+        {
+            CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);
+            CostComparison = _projectionService.BuildCostComparison(_currentCostSummary);
+        }
+
+        DashboardAuditItems.Clear();
+        foreach (var item in _projectionService.BuildDashboardAuditItems(_auditItems))
+        {
+            DashboardAuditItems.Add(item);
+        }
+
+        CostVehicles.Clear();
+        if (_currentCostSummary is not null)
+        {
+            foreach (var row in _projectionService.BuildDashboardCostVehicles(_currentCostSummary))
+            {
+                CostVehicles.Add(row);
+            }
+        }
+
+        PopulateDashboardTimeline();
+
+        SelectedDashboardAuditItem = FindById(DashboardAuditItems, BuildDashboardAuditSelectionKey, previousAuditKey);
+        SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, previousCostVehicleId);
+        SelectedDashboardTimelineItem = previousTimelineItem is null
+            ? DashboardUpcomingTimeline.FirstOrDefault()
+            : FindTimelineItem(DashboardUpcomingTimeline, previousTimelineItem);
+
+        DashboardWorkspace.NotifyDashboardSummariesChanged();
+        ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
+        ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
+        ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
+
+        ShellStatus = "Dashboard byl obnoven.";
+        RequestFocus(GetDashboardRefreshFocusTarget());
+    }
+
+    private DesktopFocusTarget GetDashboardRefreshFocusTarget()
+    {
+        if (DashboardAuditItems.Count > 0)
+        {
+            return DesktopFocusTarget.DashboardAuditList;
+        }
+
+        if (CostVehicles.Count > 0)
+        {
+            return DesktopFocusTarget.DashboardCostList;
+        }
+
+        return DesktopFocusTarget.DashboardTimelineList;
+    }
+
+    private static string BuildDashboardAuditSelectionKey(AuditItemViewModel? item) =>
+        item is null ? string.Empty : $"{item.VehicleId}|{item.EntityKind}|{item.EntityId}";
+
     internal void HandleGlobalSearchWorkspaceSearchChanged()
     {
         RefreshGlobalSearch();

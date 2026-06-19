@@ -908,6 +908,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             AuditSummary = _projectionService.BuildAuditSummary(_auditItems);
             CostSummary = _projectionService.BuildCostSummary(costSummary);
             CostComparison = _projectionService.BuildCostComparison(costSummary);
+            DashboardWorkspace.NotifyDashboardSummariesChanged();
 
             ApplyVehicleListFilterPreferences();
             ApplyOverviewPreferences();

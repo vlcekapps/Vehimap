@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -51,6 +52,19 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
     public ICommand OpenSelectedDashboardCostVehicleCommand => Root.OpenSelectedDashboardCostVehicleCommand;
 
     public ICommand OpenSelectedDashboardTimelineItemCommand => Root.OpenSelectedDashboardTimelineItemCommand;
+
+    [RelayCommand]
+    private void RefreshDashboard()
+    {
+        Root.RefreshDashboardWorkspace();
+    }
+
+    internal void NotifyDashboardSummariesChanged()
+    {
+        OnPropertyChanged(nameof(AuditSummary));
+        OnPropertyChanged(nameof(CostSummary));
+        OnPropertyChanged(nameof(CostComparison));
+    }
 
     partial void OnSelectedDashboardTimelineItemChanged(VehicleTimelineItemViewModel? value)
     {

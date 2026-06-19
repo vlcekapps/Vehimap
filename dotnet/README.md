@@ -35,6 +35,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - vyexportovat budouci terminy do `.ics` primo z nove C# vetve
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu
 - pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
+- v dashboardu pouzit `Obnovit` nebo `Ctrl+R`; refresh prepocita auditni vyrez, naklady i nejblizsi terminy a zachova aktualni vyber
 - pouzit plny auditni workspace se samostatnym hledanim, zkratkami `Ctrl+F`, `Ctrl+O`, `Ctrl+P`, `Ctrl+U` / `F2` a oddelenym dashboardovym top vyrezem
 - pouzit nakladovy workspace se zkratkami `Ctrl+P` pro precteni rozpadu nakladu, `Ctrl+O` nebo `Enter` pro otevreni vozidla a `Ctrl+U` / `F2` pro upravu vozidla
 - ovladat shell vice klavesnici: `F5` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+D` pro dashboard, `Ctrl+T` pro blizici se terminy, `Ctrl+Shift+T` pro propadle terminy, kontextove `Ctrl+F` pro hledani v aktivni pracovni plose, `Ctrl+Shift+F` pro globalni hledani a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech, dashboardu i ve vysledcich hledani

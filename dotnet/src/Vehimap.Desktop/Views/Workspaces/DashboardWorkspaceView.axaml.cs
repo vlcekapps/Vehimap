@@ -10,7 +10,7 @@ public partial class DashboardWorkspaceView : WorkspaceViewBase<DashboardWorkspa
     public DashboardWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
-        RegisterShiftTabBackNavigation("DashboardAuditOpenButton", "DashboardCostOpenButton", "DashboardTimelineOpenButton");
+        RegisterShiftTabBackNavigation("DashboardRefreshButton", "DashboardAuditOpenButton", "DashboardCostOpenButton", "DashboardTimelineOpenButton");
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() => DesktopFocusTarget.DashboardAuditList;

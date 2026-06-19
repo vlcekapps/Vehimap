@@ -102,6 +102,30 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Refresh_dashboard_command_preserves_panel_selection_and_requests_dashboard_focus()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        var selectedAudit = viewModel.DashboardAuditItems.First();
+        var selectedCost = viewModel.CostVehicles.First();
+        var selectedTimeline = viewModel.DashboardUpcomingTimeline.First();
+
+        viewModel.SelectedDashboardAuditItem = selectedAudit;
+        viewModel.SelectedDashboardCostVehicle = selectedCost;
+        viewModel.SelectedDashboardTimelineItem = selectedTimeline;
+
+        viewModel.DashboardWorkspace.RefreshDashboardCommand.Execute(null);
+
+        Assert.Equal(selectedAudit.EntityId, viewModel.SelectedDashboardAuditItem?.EntityId);
+        Assert.Equal(selectedCost.VehicleId, viewModel.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.Equal(selectedTimeline.EntryId, viewModel.SelectedDashboardTimelineItem?.EntryId);
+        Assert.Equal(DesktopFocusTarget.DashboardAuditList, requestedFocus);
+        Assert.Contains("Dashboard byl obnoven", viewModel.ShellStatus, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
     public async Task Contextual_primary_open_shortcut_opens_search_result_and_handles_empty_search_selection()
     {
         var viewModel = CreateViewModel();

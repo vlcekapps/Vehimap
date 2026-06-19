@@ -481,6 +481,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"AuditEditItemButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditSearchBox\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditListBox\"", auditXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DashboardRefreshButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardAuditOpenButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardAuditListBox\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardCostOpenButton\"", dashboardXaml);
@@ -528,6 +529,7 @@ public sealed class DesktopAccessibilityLabelTests
         var maintenanceXaml = ReadWorkspaceOrView("MaintenanceWorkspaceView.axaml", true);
         var recordXaml = ReadWorkspaceOrView("RecordWorkspaceView.axaml", true);
         var costXaml = ReadWorkspaceOrView("CostWorkspaceView.axaml", true);
+        var dashboardXaml = ReadWorkspaceOrView("DashboardWorkspaceView.axaml", true);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", timelineXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedTimelineItemCommand}\"", timelineXaml);
@@ -587,6 +589,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedCostVehicleCommand}\"", costXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedCostVehicleCommand}\"", costXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedCostVehicleCommand}\"", costXaml);
+
+        Assert.Contains("Gesture=\"Ctrl+R\" Command=\"{Binding RefreshDashboardCommand}\"", dashboardXaml);
     }
 
     [Fact]
