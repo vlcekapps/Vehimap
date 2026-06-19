@@ -201,10 +201,10 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("CloseRemindersWindowButton"));
 
             session.ClickByAccessibilityId("CreateReminderButton");
-            Assert.Equal("NĂˇzev pĹ™ipomĂ­nky", session.GetNameByAccessibilityId("ReminderEditorTitleBox"));
-            Assert.Equal("TermĂ­n pĹ™ipomĂ­nky", session.GetNameByAccessibilityId("ReminderEditorDueDateBox"));
+            Assert.Equal("Název připomínky", session.GetNameByAccessibilityId("ReminderEditorTitleBox"));
+            Assert.Equal("Termín připomínky", session.GetNameByAccessibilityId("ReminderEditorDueDateBox"));
 
-            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Appium pĹ™ipomĂ­nka");
+            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Appium připomínka");
             session.SendKeysByAccessibilityId("ReminderEditorDueDateBox", "12/2026");
             session.ClickByAccessibilityId("SaveReminderButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveReminderButton");
@@ -227,8 +227,8 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("CloseRecordsWindowButton"));
 
             session.ClickByAccessibilityId("CreateRecordButton");
-            Assert.Equal("NĂˇzev dokladu", session.GetNameByAccessibilityId("RecordEditorTitleBox"));
-            Assert.Equal("ReĹľim pĹ™Ă­lohy dokladu", session.GetNameByAccessibilityId("RecordAttachmentModeComboBox"));
+            Assert.Equal("Název dokladu", session.GetNameByAccessibilityId("RecordEditorTitleBox"));
+            Assert.Equal("Režim přílohy dokladu", session.GetNameByAccessibilityId("RecordAttachmentModeComboBox"));
 
             session.SendKeysByAccessibilityId("RecordEditorTitleBox", "Appium doklad");
             session.ClickByAccessibilityId("SaveRecordButton");
@@ -252,14 +252,14 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("CloseHistoryWindowButton"));
 
             session.ClickByAccessibilityId("CreateHistoryButton");
-            Assert.Equal("Datum historickĂ©ho zĂˇznamu", session.GetNameByAccessibilityId("HistoryEditorDateBox"));
-            Assert.Equal("Typ historickĂ© udĂˇlosti", session.GetNameByAccessibilityId("HistoryEditorTypeBox"));
+            Assert.Equal("Datum historického záznamu", session.GetNameByAccessibilityId("HistoryEditorDateBox"));
+            Assert.Equal("Typ historické události", session.GetNameByAccessibilityId("HistoryEditorTypeBox"));
 
             session.SendKeysByAccessibilityId("HistoryEditorDateBox", "15.10.2026");
             session.SendKeysByAccessibilityId("HistoryEditorTypeBox", "Servis");
             session.SendKeysByAccessibilityId("HistoryEditorOdometerBox", "123456");
             session.SendKeysByAccessibilityId("HistoryEditorCostBox", "2500");
-            session.SendKeysByAccessibilityId("HistoryEditorNoteBox", "Appium historickĂ˝ zĂˇznam");
+            session.SendKeysByAccessibilityId("HistoryEditorNoteBox", "Appium historický záznam");
             session.ClickByAccessibilityId("SaveHistoryButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveHistoryButton");
         }
@@ -280,7 +280,7 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("OpenFuelWindowButton");
             session.ClickByAccessibilityId("CreateFuelButton");
 
-            Assert.Equal("Datum tankovĂˇnĂ­", session.GetNameByAccessibilityId("FuelEditorDateBox"));
+            Assert.Equal("Datum tankování", session.GetNameByAccessibilityId("FuelEditorDateBox"));
             Assert.Equal("Typ paliva", session.GetNameByAccessibilityId("FuelEditorFuelTypeBox"));
 
             session.SendKeysByAccessibilityId("FuelEditorDateBox", "20.10.2026");
@@ -288,7 +288,7 @@ public sealed class DesktopAccessibilitySmokeTests
             session.SendKeysByAccessibilityId("FuelEditorLitersBox", "38.5");
             session.SendKeysByAccessibilityId("FuelEditorTotalCostBox", "1890");
             session.SendKeysByAccessibilityId("FuelEditorOdometerBox", "123789");
-            session.SendKeysByAccessibilityId("FuelEditorNoteBox", "Appium tankovĂˇnĂ­");
+            session.SendKeysByAccessibilityId("FuelEditorNoteBox", "Appium tankování");
             session.ClickByAccessibilityId("SaveFuelButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveFuelButton");
         }
@@ -309,15 +309,15 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("OpenMaintenanceWindowButton");
             session.ClickByAccessibilityId("CreateMaintenanceButton");
 
-            Assert.Equal("NĂˇzev servisnĂ­ho Ăşkonu", session.GetNameByAccessibilityId("MaintenanceEditorTitleBox"));
-            Assert.Equal("Interval ĂşdrĹľby v kilometrech", session.GetNameByAccessibilityId("MaintenanceEditorIntervalKmBox"));
+            Assert.Equal("Název servisního úkonu", session.GetNameByAccessibilityId("MaintenanceEditorTitleBox"));
+            Assert.Equal("Interval údržby v kilometrech", session.GetNameByAccessibilityId("MaintenanceEditorIntervalKmBox"));
 
-            session.SendKeysByAccessibilityId("MaintenanceEditorTitleBox", "MotorovĂ˝ olej");
+            session.SendKeysByAccessibilityId("MaintenanceEditorTitleBox", "Motorový olej");
             session.SendKeysByAccessibilityId("MaintenanceEditorIntervalKmBox", "15000");
             session.SendKeysByAccessibilityId("MaintenanceEditorIntervalMonthsBox", "12");
             session.SendKeysByAccessibilityId("MaintenanceEditorLastServiceDateBox", "01.04.2026");
             session.SendKeysByAccessibilityId("MaintenanceEditorLastServiceOdometerBox", "120000");
-            session.SendKeysByAccessibilityId("MaintenanceEditorNoteBox", "Appium servisnĂ­ plĂˇn");
+            session.SendKeysByAccessibilityId("MaintenanceEditorNoteBox", "Appium servisní plán");
             session.ClickByAccessibilityId("SaveMaintenanceButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveMaintenanceButton");
         }
@@ -338,14 +338,14 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
             session.ClickByAccessibilityId("CreateVehicleButton");
 
-            Assert.Equal("NĂˇzev vozidla", session.GetNameByAccessibilityId("VehicleEditorNameBox"));
+            Assert.Equal("Název vozidla", session.GetNameByAccessibilityId("VehicleEditorNameBox"));
             Assert.Equal("Kategorie vozidla", session.GetNameByAccessibilityId("VehicleEditorCategoryBox"));
 
             session.SendKeysByAccessibilityId("VehicleEditorNameBox", "Appium vozidlo");
             session.SendKeysByAccessibilityId("VehicleEditorMakeModelBox", "Test model");
-            session.SendKeysByAccessibilityId("VehicleEditorStateBox", "BÄ›ĹľnĂ˝ provoz");
-            session.SendKeysByAccessibilityId("VehicleEditorPowertrainBox", "benzĂ­n");
-            session.SendKeysByAccessibilityId("VehicleEditorNoteBox", "VytvoĹ™eno UI testem");
+            session.SendKeysByAccessibilityId("VehicleEditorStateBox", "Běžný provoz");
+            session.SendKeysByAccessibilityId("VehicleEditorPowertrainBox", "benzín");
+            session.SendKeysByAccessibilityId("VehicleEditorNoteBox", "Vytvořeno UI testem");
             session.ClickByAccessibilityId("SaveVehicleButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveVehicleButton");
         }
@@ -386,7 +386,7 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("ReminderTabButton");
             session.ClickByAccessibilityId("OpenReminderWindowButton");
             session.ClickByAccessibilityId("CreateReminderButton");
-            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "RozpracovanĂˇ pĹ™ipomĂ­nka");
+            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Rozpracovaná připomínka");
 
             session.ClickByAccessibilityId("CloseRemindersWindowButton");
             Assert.NotNull(session.WaitForElementByAccessibilityId("ConfirmationCancelButton"));
@@ -463,7 +463,7 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             session.ClickByAccessibilityId("OverdueOverviewTabButton");
-            session.SendKeysByAccessibilityId("OverdueOverviewSearchBox", "PropadlĂˇ pojistka");
+            session.SendKeysByAccessibilityId("OverdueOverviewSearchBox", "Propadlá pojistka");
             session.ClickByAccessibilityId("OverdueOverviewOpenButton");
             Assert.NotNull(session.WaitForElementByAccessibilityId("OpenRecordWindowButton"));
         }

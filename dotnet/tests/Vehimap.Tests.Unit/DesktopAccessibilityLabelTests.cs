@@ -581,6 +581,53 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedCostVehicleCommand}\"", costXaml);
     }
 
+    [Fact]
+    public void Desktop_ui_sources_should_not_contain_common_mojibake_markers()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var scannedRoots = new[]
+        {
+            Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Desktop"),
+            Path.Combine(repositoryRoot, "dotnet", "tests", "Vehimap.Tests.UI")
+        };
+        var scannedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ".axaml",
+            ".cs"
+        };
+        var suspiciousCharacters = new[]
+        {
+            '\u00c2',
+            '\u00c3',
+            '\u00c4',
+            '\u00c5',
+            '\u00e2',
+            '\u0102',
+            '\u0139',
+            '\ufffd'
+        };
+        var failures = new List<string>();
+
+        foreach (var root in scannedRoots)
+        {
+            foreach (var file in Directory.EnumerateFiles(root, "*", SearchOption.AllDirectories)
+                         .Where(path => scannedExtensions.Contains(Path.GetExtension(path))))
+            {
+                var content = File.ReadAllText(file);
+                var badIndex = content.IndexOfAny(suspiciousCharacters);
+                if (badIndex < 0)
+                {
+                    continue;
+                }
+
+                var badCharacter = content[badIndex];
+                failures.Add($"{Path.GetRelativePath(repositoryRoot, file)} obsahuje podezřelý znak U+{(int)badCharacter:X4}.");
+            }
+        }
+
+        Assert.True(failures.Count == 0, "UI zdroje obsahují znaky typické pro rozbitou UTF-8 diakritiku:" + Environment.NewLine + string.Join(Environment.NewLine, failures));
+    }
+
     private static string ReadViewFile(string fileName)
     {
         var desktopRoot = Path.GetFullPath(Path.Combine(
@@ -662,5 +709,22 @@ public sealed class DesktopAccessibilityLabelTests
             "Services"));
 
         return File.ReadAllText(Path.Combine(servicesRoot, fileName));
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var current = new DirectoryInfo(AppContext.BaseDirectory);
+        while (current is not null)
+        {
+            if (File.Exists(Path.Combine(current.FullName, "src", "VERSION"))
+                && Directory.Exists(Path.Combine(current.FullName, "dotnet")))
+            {
+                return current.FullName;
+            }
+
+            current = current.Parent;
+        }
+
+        throw new DirectoryNotFoundException("Nepodařilo se najít kořen repozitáře Vehimapu.");
     }
 }
