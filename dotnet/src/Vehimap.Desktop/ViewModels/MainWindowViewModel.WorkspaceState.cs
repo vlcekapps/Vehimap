@@ -246,6 +246,14 @@ public sealed partial class MainWindowViewModel
         set => MaintenanceWorkspace.MaintenanceEditorStatus = value;
     }
 
+    public IReadOnlyList<string> MaintenanceTemplateOptions => MaintenanceWorkspace.MaintenanceTemplateOptions;
+
+    public string SelectedMaintenanceTemplate
+    {
+        get => MaintenanceWorkspace.SelectedMaintenanceTemplate;
+        set => MaintenanceWorkspace.SelectedMaintenanceTemplate = value;
+    }
+
     public string MaintenanceEditorTitle
     {
         get => MaintenanceWorkspace.MaintenanceEditorTitle;

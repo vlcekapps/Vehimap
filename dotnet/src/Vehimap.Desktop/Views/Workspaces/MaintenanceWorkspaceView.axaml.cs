@@ -13,21 +13,22 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
     public MaintenanceWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
-        RegisterShiftTabBackNavigation("MaintenanceListBox", "MaintenanceEditorTitleBox");
+        RegisterShiftTabBackNavigation("MaintenanceListBox", "MaintenanceTemplateComboBox");
         DataContextChanged += OnMaintenanceDataContextChanged;
         ApplyHostMode();
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
-        ViewModel?.IsEditingMaintenance == true ? DesktopFocusTarget.MaintenanceEditorTitle : DesktopFocusTarget.MaintenanceList;
+        ViewModel?.IsEditingMaintenance == true ? DesktopFocusTarget.MaintenanceEditorTemplate : DesktopFocusTarget.MaintenanceList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.MaintenanceList or DesktopFocusTarget.MaintenanceEditorTitle;
+        target is DesktopFocusTarget.MaintenanceList or DesktopFocusTarget.MaintenanceEditorTemplate or DesktopFocusTarget.MaintenanceEditorTitle;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
             DesktopFocusTarget.MaintenanceList => this.FindControl<ListBox>("MaintenanceListBox"),
+            DesktopFocusTarget.MaintenanceEditorTemplate => this.FindControl<ComboBox>("MaintenanceTemplateComboBox"),
             DesktopFocusTarget.MaintenanceEditorTitle => this.FindControl<TextBox>("MaintenanceEditorTitleBox"),
             _ => null
         };

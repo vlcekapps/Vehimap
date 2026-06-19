@@ -90,7 +90,7 @@ public sealed partial class MainWindowViewModel
 
         if (IsEditingMaintenance)
         {
-            return DesktopFocusTarget.MaintenanceEditorTitle;
+            return DesktopFocusTarget.MaintenanceEditorTemplate;
         }
 
         if (IsEditingRecord)

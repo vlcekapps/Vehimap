@@ -15,6 +15,7 @@ public enum DesktopFocusTarget
     ReminderList,
     ReminderEditorTitle,
     MaintenanceList,
+    MaintenanceEditorTemplate,
     MaintenanceEditorTitle,
     TimelineSearch,
     TimelineList,

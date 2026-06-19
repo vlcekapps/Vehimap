@@ -30,6 +30,9 @@ public sealed class VehicleStarterBundleService
         new(VehicleStarterBundleSection.Record, "Doklad", "Obecný doklad", string.Empty, string.Empty, "Doklad", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Doplňte název dokladu, platnost a případnou přílohu.")
     ];
 
+    public static IReadOnlyList<VehicleStarterBundleTemplate> GetMaintenanceTemplateCatalog() =>
+        MaintenanceTemplates;
+
     public VehicleStarterBundlePreview BuildPreview(VehimapDataSet dataSet, string vehicleId, DateOnly today)
     {
         var vehicle = dataSet.Vehicles.FirstOrDefault(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal));

@@ -218,7 +218,7 @@ public sealed partial class MainWindowViewModel
         MaintenanceEditorStatus = "Vyplňte servisní plán a uložte jej.";
         IsEditingMaintenance = true;
         SelectedVehicleTabIndex = MaintenanceTabIndex;
-        RequestFocus(DesktopFocusTarget.MaintenanceEditorTitle);
+        RequestFocus(DesktopFocusTarget.MaintenanceEditorTemplate);
     }
 
     [RelayCommand(CanExecute = nameof(CanEditSelectedMaintenance))]

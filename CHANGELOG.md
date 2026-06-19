@@ -26,6 +26,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - připomínkový workspace v Avalonia větvi umí tlačítkem `Další termín` nebo zkratkou `Ctrl+Shift+N` posunout opakovanou připomínku podle nastaveného intervalu
 - servisní workspace v Avalonia větvi umí tlačítkem `Splněno` nebo zkratkou `Ctrl+L` označit vybraný plán údržby jako splněný a doplnit dnešní datum i aktuální tachometr z dostupných dat
 - servisní workspace v Avalonia větvi umí tlačítkem `Doporučené` nebo zkratkou `Ctrl+Shift+N` otevřít výběr chybějících servisních šablon podle kategorie a servisního profilu vozidla
+- editor plánu údržby v Avalonia větvi má výběr běžné servisní šablony, který předvyplní název úkonu, intervaly a poznámku
 
 ### Změněno
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`

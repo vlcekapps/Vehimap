@@ -206,6 +206,34 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
+    public void Selecting_maintenance_editor_template_prefills_plan_fields()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateMaintenanceCommand.Execute(null);
+
+        Assert.Contains("Kabinový filtr", viewModel.MaintenanceTemplateOptions);
+        Assert.Equal("Vlastní položka", viewModel.SelectedMaintenanceTemplate);
+
+        viewModel.SelectedMaintenanceTemplate = "Kabinový filtr";
+
+        Assert.Equal("Kabinový filtr", viewModel.MaintenanceEditorTitle);
+        Assert.Equal("15000", viewModel.MaintenanceEditorIntervalKm);
+        Assert.Equal("12", viewModel.MaintenanceEditorIntervalMonths);
+        Assert.Equal("Pravidelná výměna pylového filtru.", viewModel.MaintenanceEditorNote);
+        Assert.Contains("předvyplnila", viewModel.MaintenanceEditorStatus);
+
+        viewModel.CancelMaintenanceEditCommand.Execute(null);
+
+        Assert.Equal("Vlastní položka", viewModel.SelectedMaintenanceTemplate);
+    }
+
+    [Fact]
     public async Task Complete_selected_maintenance_updates_last_service_from_current_vehicle_data()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);

@@ -3,11 +3,15 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
 public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBase
 {
+    private const string CustomMaintenanceTemplateLabel = "Vlastní položka";
+    private bool _suppressMaintenanceTemplateApply;
+
     public MaintenanceWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
     {
@@ -17,6 +21,11 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public string MaintenanceSummary => Root.MaintenanceSummary;
     public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance => Root.SelectedVehicleMaintenance;
     public bool CanOpenMaintenanceRecommendations => Root.CanOpenMaintenanceRecommendations;
+    public IReadOnlyList<string> MaintenanceTemplateOptions { get; } =
+    [
+        CustomMaintenanceTemplateLabel,
+        .. VehicleStarterBundleService.GetMaintenanceTemplateCatalog().Select(item => item.Title)
+    ];
 
     public event EventHandler? MaintenanceTemplatesRequested;
 
@@ -34,6 +43,9 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
 
     [ObservableProperty]
     private string maintenanceEditorStatus = string.Empty;
+
+    [ObservableProperty]
+    private string selectedMaintenanceTemplate = CustomMaintenanceTemplateLabel;
 
     [ObservableProperty]
     private string maintenanceEditorTitle = string.Empty;
@@ -84,6 +96,13 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         MaintenanceEditorStatus = message;
     }
 
+    public void ResetMaintenanceTemplateSelection()
+    {
+        _suppressMaintenanceTemplateApply = true;
+        SelectedMaintenanceTemplate = CustomMaintenanceTemplateLabel;
+        _suppressMaintenanceTemplateApply = false;
+    }
+
     internal void NotifyMaintenanceRecommendationStateChanged()
     {
         OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
@@ -105,11 +124,38 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         Root.NotifyMaintenanceWorkspaceSelectionChanged();
     }
 
+    partial void OnSelectedMaintenanceTemplateChanged(string value)
+    {
+        if (_suppressMaintenanceTemplateApply || !IsEditingMaintenance)
+        {
+            return;
+        }
+
+        var template = VehicleStarterBundleService.GetMaintenanceTemplateCatalog()
+            .FirstOrDefault(item => string.Equals(item.Title, value, StringComparison.Ordinal));
+        if (template is null)
+        {
+            return;
+        }
+
+        MaintenanceEditorTitle = template.Title;
+        MaintenanceEditorIntervalKm = template.IntervalKm;
+        MaintenanceEditorIntervalMonths = template.IntervalMonths;
+        MaintenanceEditorNote = template.Note;
+        MaintenanceEditorStatus = $"Šablona {template.Title} předvyplnila název, intervaly a poznámku.";
+        RequestFocus(DesktopFocusTarget.MaintenanceEditorTitle);
+    }
+
     partial void OnIsEditingMaintenanceChanged(bool value)
     {
         MaintenancePanelHeading = value
             ? (Root.GetEditingMaintenanceId() is null ? "Nový servisní plán" : "Upravit údržbu")
             : "Detail údržby";
+
+        if (!value)
+        {
+            ResetMaintenanceTemplateSelection();
+        }
 
         OnPropertyChanged(nameof(IsMaintenanceDetailVisible));
         Root.NotifyMaintenanceWorkspaceEditingChanged();
