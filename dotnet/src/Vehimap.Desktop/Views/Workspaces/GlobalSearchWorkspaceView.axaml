@@ -4,6 +4,11 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.GlobalSearchWorkspaceView"
              x:DataType="vm:GlobalSearchWorkspaceViewModel">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedSearchResultCommand}" />
+    <KeyBinding Gesture="Ctrl+P" Command="{Binding OpenSelectedSearchResultCommand}" />
+  </UserControl.KeyBindings>
   <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.25*,*">
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding GlobalSearchSummary}"

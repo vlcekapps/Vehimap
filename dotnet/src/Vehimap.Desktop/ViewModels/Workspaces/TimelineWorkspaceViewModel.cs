@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -36,6 +37,12 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.TimelineWindowTitle;
 
     public ICommand OpenSelectedTimelineItemCommand => Root.OpenSelectedTimelineItemCommand;
+
+    [RelayCommand]
+    private void FocusSearch()
+    {
+        RequestFocus(DesktopFocusTarget.TimelineSearch);
+    }
 
     partial void OnSelectedTimelineItemChanged(VehicleTimelineItemViewModel? value)
     {

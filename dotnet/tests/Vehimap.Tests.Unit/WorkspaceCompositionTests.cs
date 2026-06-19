@@ -70,6 +70,28 @@ public sealed class WorkspaceCompositionTests
         Assert.Same(viewModel.GlobalSearchResults, viewModel.GlobalSearchWorkspace.GlobalSearchResults);
     }
 
+    [Fact]
+    public void Searchable_workspace_focus_commands_request_matching_search_fields()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.TimelineWorkspace.FocusSearchCommand.Execute(null);
+        viewModel.GlobalSearchWorkspace.FocusSearchCommand.Execute(null);
+        viewModel.UpcomingOverviewWorkspace.FocusSearchCommand.Execute(null);
+        viewModel.OverdueOverviewWorkspace.FocusSearchCommand.Execute(null);
+
+        Assert.Equal(
+            [
+                DesktopFocusTarget.TimelineSearch,
+                DesktopFocusTarget.GlobalSearchBox,
+                DesktopFocusTarget.UpcomingOverviewSearch,
+                DesktopFocusTarget.OverdueOverviewSearch
+            ],
+            requestedTargets);
+    }
+
     [Theory]
     [InlineData("HistoryWorkspaceView")]
     [InlineData("TimelineWorkspaceView")]

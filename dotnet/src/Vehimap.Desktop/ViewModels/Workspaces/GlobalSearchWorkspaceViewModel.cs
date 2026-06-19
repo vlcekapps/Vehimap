@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -28,6 +29,12 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
     public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults => Root.GlobalSearchResults;
 
     public ICommand OpenSelectedSearchResultCommand => Root.OpenSelectedSearchResultCommand;
+
+    [RelayCommand]
+    private void FocusSearch()
+    {
+        RequestFocus(DesktopFocusTarget.GlobalSearchBox);
+    }
 
     partial void OnGlobalSearchTextChanged(string value)
     {

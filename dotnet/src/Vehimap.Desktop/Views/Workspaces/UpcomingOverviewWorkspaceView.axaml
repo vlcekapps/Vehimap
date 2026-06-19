@@ -4,6 +4,11 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.UpcomingOverviewWorkspaceView"
              x:DataType="vm:UpcomingOverviewWorkspaceViewModel">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedUpcomingOverviewVehicleCommand}" />
+    <KeyBinding Gesture="Ctrl+P" Command="{Binding OpenSelectedUpcomingOverviewItemCommand}" />
+  </UserControl.KeyBindings>
   <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.25*,*">
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding UpcomingOverviewSummary}"

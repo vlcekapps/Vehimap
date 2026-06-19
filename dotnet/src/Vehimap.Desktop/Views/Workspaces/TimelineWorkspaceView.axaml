@@ -4,6 +4,10 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.TimelineWorkspaceView"
              x:DataType="vm:TimelineWorkspaceViewModel">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+P" Command="{Binding OpenSelectedTimelineItemCommand}" />
+  </UserControl.KeyBindings>
   <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.35*,*">
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding TimelineSummary}"
