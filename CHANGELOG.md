@@ -44,6 +44,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - dostupnost akce `Minimalizovat na lištu` v Avalonia shellu je nově řízená viewmodelem podle podpory tray a nastavení automatických záloh vypíná intervalová pole, pokud nejsou pravidelné zálohy zapnuté
 - dialog `Nastavení` v Avalonia větvi má vlastní klávesové ovládání `Ctrl+S`, `Ctrl+B` a `Esc` i přístupný help text s těmito zkratkami
 - app-level dialogy v Avalonia větvi mají sjednocené bezpečné zavření klávesou `Esc`; `O programu` navíc nabízí `Ctrl+O` pro otevření release poznámek a všechny tyto dialogy popisují zkratky v přístupném help textu
+- `Tiskový přehled` v Avalonia větvi se nově ukládá přes standardní exportní dialog jako HTML soubor a po uložení se otevře, místo aby vznikal jen jako dočasný soubor
 
 ### Opraveno
 - zpracování servisních doporučení, záloh a meta dat vozidel tak, aby správně fungoval nový servisní profil i smoke testy

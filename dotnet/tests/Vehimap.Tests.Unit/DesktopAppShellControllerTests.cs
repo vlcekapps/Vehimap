@@ -60,6 +60,32 @@ public sealed class DesktopAppShellControllerTests
     {
         var controller = new DesktopAppShellController(new StubAppShellDialogService(), new StubUpdateInstallLauncher());
         var fileLauncher = new StubFileLauncher();
+        var reportPath = Path.Combine(Path.GetTempPath(), $"vehimap-report-{Guid.NewGuid():N}.html");
+        var textFileSaveService = new CapturingTextFileSaveService(reportPath);
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            fileLauncher: fileLauncher,
+            textFileSaveService: textFileSaveService);
+
+        await controller.OpenPrintableReportAsync(viewModel);
+
+        Assert.Equal(reportPath, fileLauncher.LastOpenedPath);
+        Assert.Equal("Uložit tiskový přehled vozidel", textFileSaveService.LastTitle);
+        Assert.Equal("HTML soubor", textFileSaveService.LastFileTypeName);
+        Assert.Equal("html", textFileSaveService.LastDefaultExtension);
+        Assert.Contains("*.html", textFileSaveService.LastPatterns);
+        Assert.Contains("vehimap-tiskovy-prehled-", textFileSaveService.LastSuggestedFileName);
+        Assert.EndsWith(".html", textFileSaveService.LastSuggestedFileName, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Vehimap - Tiskový přehled vozidel", textFileSaveService.LastContent);
+        Assert.Contains(reportPath, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Open_printable_report_async_reports_cancelled_save()
+    {
+        var controller = new DesktopAppShellController(new StubAppShellDialogService(), new StubUpdateInstallLauncher());
+        var fileLauncher = new StubFileLauncher();
         var viewModel = CreateViewModel(
             new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
             new StubLegacyDataStore(CreateDataSet()),
@@ -67,13 +93,8 @@ public sealed class DesktopAppShellControllerTests
 
         await controller.OpenPrintableReportAsync(viewModel);
 
-        Assert.NotNull(fileLauncher.LastOpenedPath);
-        Assert.EndsWith(".html", fileLauncher.LastOpenedPath, StringComparison.OrdinalIgnoreCase);
-        Assert.True(File.Exists(fileLauncher.LastOpenedPath));
-        var content = File.ReadAllText(fileLauncher.LastOpenedPath);
-        Assert.Contains("Vehimap - Tiskový přehled vozidel", content);
-
-        File.Delete(fileLauncher.LastOpenedPath);
+        Assert.Null(fileLauncher.LastOpenedPath);
+        Assert.Equal("Uložení tiskového přehledu bylo zrušeno.", viewModel.ShellStatus);
     }
 
     [Fact]
@@ -147,6 +168,7 @@ public sealed class DesktopAppShellControllerTests
         VehimapDataRoot dataRoot,
         StubLegacyDataStore dataStore,
         StubFileLauncher? fileLauncher = null,
+        ITextFileSaveService? textFileSaveService = null,
         IUpdateService? updateService = null)
     {
         var bootstrapper = new LegacyVehimapBootstrapper(new StubDataRootLocator(dataRoot), dataStore);
@@ -159,7 +181,7 @@ public sealed class DesktopAppShellControllerTests
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
-            new StubTextFileSaveService(),
+            textFileSaveService ?? new StubTextFileSaveService(),
             new StubBackupService(),
             new StubFileDialogService(),
             new DesktopSupportedSettingsService(),
@@ -245,6 +267,54 @@ public sealed class DesktopAppShellControllerTests
     {
         public Task<string?> SaveTextAsync(string title, string suggestedFileName, string content, CancellationToken cancellationToken = default)
             => Task.FromResult<string?>(null);
+    }
+
+    private sealed class CapturingTextFileSaveService : ITextFileSaveService
+    {
+        private readonly string _savedPath;
+
+        public CapturingTextFileSaveService(string savedPath)
+        {
+            _savedPath = savedPath;
+        }
+
+        public string LastTitle { get; private set; } = string.Empty;
+
+        public string LastSuggestedFileName { get; private set; } = string.Empty;
+
+        public string LastContent { get; private set; } = string.Empty;
+
+        public string LastFileTypeName { get; private set; } = string.Empty;
+
+        public string LastDefaultExtension { get; private set; } = string.Empty;
+
+        public IReadOnlyList<string> LastPatterns { get; private set; } = [];
+
+        public Task<string?> SaveTextAsync(string title, string suggestedFileName, string content, CancellationToken cancellationToken = default)
+        {
+            LastTitle = title;
+            LastSuggestedFileName = suggestedFileName;
+            LastContent = content;
+            return Task.FromResult<string?>(_savedPath);
+        }
+
+        public Task<string?> SaveTextAsync(
+            string title,
+            string suggestedFileName,
+            string content,
+            string fileTypeName,
+            string defaultExtension,
+            IReadOnlyList<string> patterns,
+            CancellationToken cancellationToken = default)
+        {
+            LastTitle = title;
+            LastSuggestedFileName = suggestedFileName;
+            LastContent = content;
+            LastFileTypeName = fileTypeName;
+            LastDefaultExtension = defaultExtension;
+            LastPatterns = patterns;
+            return Task.FromResult<string?>(_savedPath);
+        }
     }
 
     private sealed class StubFileDialogService : IFileDialogService

@@ -1,5 +1,3 @@
-using System.Globalization;
-using System.Text;
 using Vehimap.Application;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.Services;
@@ -117,20 +115,30 @@ public sealed partial class MainWindowViewModel
                 _timelineService,
                 DateOnly.FromDateTime(now),
                 now);
-            var reportPath = Path.Combine(
-                Path.GetTempPath(),
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Vehimap_tiskovy_prehled_{0:yyyyMMdd_HHmmss_fff}.html",
-                    now));
+            var fileName = _printableVehicleReportService.BuildFileName(now);
+            var reportPath = await _fileSaveService
+                .SaveTextAsync(
+                    "Uložit tiskový přehled vozidel",
+                    fileName,
+                    html,
+                    "HTML soubor",
+                    "html",
+                    ["*.html", "*.htm"],
+                    cancellationToken)
+                .ConfigureAwait(false);
 
-            await File.WriteAllTextAsync(reportPath, html, new UTF8Encoding(false), cancellationToken).ConfigureAwait(false);
+            if (string.IsNullOrWhiteSpace(reportPath))
+            {
+                ShellStatus = "Uložení tiskového přehledu bylo zrušeno.";
+                return ShellStatus;
+            }
+
             await _fileLauncher.OpenAsync(reportPath, cancellationToken).ConfigureAwait(false);
-            ShellStatus = $"Tiskový přehled byl otevřen z dočasného souboru {reportPath}.";
+            ShellStatus = $"Tiskový přehled byl uložen do {reportPath} a otevřen.";
         }
         catch (Exception ex)
         {
-            ShellStatus = $"Tiskový přehled se nepodařilo otevřít: {ex.Message}";
+            ShellStatus = $"Tiskový přehled se nepodařilo uložit nebo otevřít: {ex.Message}";
         }
 
         return ShellStatus;

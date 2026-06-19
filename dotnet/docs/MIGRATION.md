@@ -62,6 +62,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - runtime-specific preview update manifesty `update/latest-dotnet-preview-<rid>.ini`
 - regresni testy packaging skriptu a generatoru manifestu, vcetne kontroly, ze `.sha256`, metadata a fyzicky balicek souhlasi
 - Windows CI Appium smoke nad publish buildem desktop preview
+- ulozeni `Tiskoveho prehledu` vozidel jako HTML souboru pres sdilenou exportni sluzbu a otevreni ulozeneho souboru
 
 ## Co je dalsi na rade
 

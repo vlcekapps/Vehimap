@@ -9,6 +9,16 @@ namespace Vehimap.Tests.Unit;
 public sealed class DesktopPrintableVehicleReportServiceTests
 {
     [Fact]
+    public void Build_file_name_should_be_stable_and_html()
+    {
+        var service = new DesktopPrintableVehicleReportService();
+
+        var fileName = service.BuildFileName(new DateTime(2026, 4, 3, 9, 15, 0));
+
+        Assert.Equal("vehimap-tiskovy-prehled-2026-04-03.html", fileName);
+    }
+
+    [Fact]
     public void Build_html_should_include_title_counts_sections_and_sorted_rows()
     {
         var service = new DesktopPrintableVehicleReportService();

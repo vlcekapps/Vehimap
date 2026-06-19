@@ -11,6 +11,12 @@ namespace Vehimap.Desktop.Services;
 
 internal sealed class DesktopPrintableVehicleReportService
 {
+    public string BuildFileName(DateTime generatedAt) =>
+        string.Format(
+            CultureInfo.InvariantCulture,
+            "vehimap-tiskovy-prehled-{0:yyyy-MM-dd}.html",
+            generatedAt);
+
     public string BuildHtml(
         VehimapDataSet dataSet,
         IReadOnlyDictionary<string, VehicleMeta> metaByVehicleId,
