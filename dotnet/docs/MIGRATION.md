@@ -63,7 +63,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - regresni testy packaging skriptu a generatoru manifestu, vcetne kontroly, ze `.sha256`, metadata a fyzicky balicek souhlasi
 - Windows CI Appium smoke nad publish buildem desktop preview
 - ulozeni `Tiskoveho prehledu` vozidel jako HTML souboru pres sdilenou exportni sluzbu a otevreni ulozeneho souboru
-- rychle akce v Avalonia menu pro nejblizsi TK, zelenou kartu, vlastni pripominku a servisni udrzbu i pro filtrovanou kontrolu techto terminu
+- rychle akce v Avalonia menu pro nejblizsi TK, zelenou kartu, vlastni pripominku, servisni udrzbu a doklad i pro filtrovanou kontrolu techto terminu
 
 ## Co je dalsi na rade
 

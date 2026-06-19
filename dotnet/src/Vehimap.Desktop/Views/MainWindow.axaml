@@ -235,6 +235,17 @@
                     Click="OnReviewMaintenanceMenuClick"
                     AutomationProperties.Name="Zkontrolovat plán údržby"
                     AutomationProperties.AutomationId="ReviewMaintenanceMenuItem" />
+          <Separator />
+          <MenuItem x:Name="OpenNearestRecordMenuItem"
+                    Header="Nejbližší doklad"
+                    Click="OnOpenNearestRecordMenuClick"
+                    AutomationProperties.Name="Otevřít nejbližší doklad"
+                    AutomationProperties.AutomationId="OpenNearestRecordMenuItem" />
+          <MenuItem x:Name="ReviewRecordsMenuItem"
+                    Header="Zkontrolovat doklady"
+                    Click="OnReviewRecordsMenuClick"
+                    AutomationProperties.Name="Zkontrolovat doklady"
+                    AutomationProperties.AutomationId="ReviewRecordsMenuItem" />
         </MenuItem>
         <MenuItem x:Name="AppMenuRoot"
                   Header="_Aplikace"

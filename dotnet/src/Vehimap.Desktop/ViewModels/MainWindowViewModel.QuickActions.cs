@@ -157,6 +157,40 @@ public sealed partial class MainWindowViewModel
             "Žádné servisní úkony teď nevyžadují upozornění.");
     }
 
+    [RelayCommand]
+    private async Task OpenNearestRecordAsync()
+    {
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít nejbližší doklad").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        var items = BuildQuickActionItems("record");
+        if (items.Count == 0)
+        {
+            ShellStatus = "Momentálně není žádný doklad s blížící se nebo propadlou platností.";
+            return;
+        }
+
+        ShellStatus = $"Nejbližší doklad: {items[0].VehicleName} - {items[0].Title} ({items[0].Date}).";
+        OpenTimelineItem(items[0]);
+    }
+
+    [RelayCommand]
+    private async Task ReviewRecordsAsync()
+    {
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zkontrolovat doklady").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        OpenQuickActionOverview(
+            "record",
+            AttentionVehicleStatusFilterLabel,
+            "Doklady",
+            "Žádné doklady teď nevyžadují upozornění.");
+    }
+
     private List<VehicleTimelineItemViewModel> BuildQuickActionItems(string kind)
     {
         return _dataSet.Vehicles
@@ -224,6 +258,7 @@ public sealed partial class MainWindowViewModel
             "green" => $"Zelené karty k prověření: {items.Count}. Otevřen je příslušný přehled.",
             "custom" => $"Připomínky k prověření: {items.Count}. Otevřen je příslušný přehled.",
             "maintenance" => $"Údržba k prověření: {items.Count}. Otevřen je příslušný přehled.",
+            "record" => $"Doklady k prověření: {items.Count}. Otevřen je příslušný přehled.",
             _ => emptyFilterStatusMessage
         };
     }

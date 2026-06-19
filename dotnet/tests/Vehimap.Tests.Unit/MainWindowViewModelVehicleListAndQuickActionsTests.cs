@@ -145,6 +145,38 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Contains("Údržba k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
+    [Fact]
+    public async Task Open_nearest_record_quick_action_selects_matching_record()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        await viewModel.OpenNearestRecordCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.IsRecordTabSelected);
+        Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
+        Assert.Equal("rec_1", viewModel.SelectedRecord?.Id);
+        Assert.Equal(DesktopFocusTarget.RecordList, requestedFocus);
+        Assert.Contains("Nejbližší doklad", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Review_records_quick_action_opens_matching_overview_filter()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        await viewModel.ReviewRecordsCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.IsOverdueOverviewTabSelected);
+        Assert.Equal("Doklady", viewModel.SelectedOverdueOverviewFilter);
+        Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
+        Assert.NotEmpty(viewModel.OverdueOverviewItems);
+        Assert.Contains("Doklady k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+    }
+
     private static MainWindowViewModel CreateViewModel(VehimapDataSet dataSet)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -184,6 +216,10 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             MaintenancePlans =
             [
                 new MaintenancePlan("mnt_1", "veh_2", "Motorový olej", "", "12", "01.01.1999", "", true, "Roční servis")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_1", "veh_2", "Doklad", "Asistence", "Pomoc na cestách", "", "01/2000", "1200", VehicleRecordAttachmentMode.External, "", "Prověřit smlouvu")
             ],
             VehicleMetaEntries =
             [
