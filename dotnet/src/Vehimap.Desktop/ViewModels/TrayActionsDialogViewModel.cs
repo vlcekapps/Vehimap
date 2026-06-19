@@ -5,6 +5,8 @@ public sealed record TrayActionsDialogViewModel(
     string Description,
     string ShowMainWindowLabel,
     string ShowDashboardLabel,
+    string ShowUpcomingOverviewLabel,
+    string ShowOverdueOverviewLabel,
     string ExitLabel,
     string CancelLabel)
 {
@@ -13,6 +15,8 @@ public sealed record TrayActionsDialogViewModel(
         "Vyberte akci pro běžící Vehimap. Toto okno nahrazuje nativní menu lišty pro přístupnější ovládání přes klávesnici a čtečku obrazovky.",
         "Zobrazit Vehimap",
         "Otevřít Dashboard",
+        "Blížící se termíny",
+        "Propadlé termíny",
         "Ukončit aplikaci",
         "Zavřít");
 }

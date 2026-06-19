@@ -4,7 +4,7 @@
         x:Class="Vehimap.Desktop.Views.TrayActionsWindow"
         x:DataType="vm:TrayActionsDialogViewModel"
         Width="460"
-        Height="260"
+        Height="350"
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen"
@@ -33,6 +33,16 @@
                 Content="{Binding ShowDashboardLabel}"
                 AutomationProperties.Name="Otevřít dashboard Vehimapu"
                 AutomationProperties.AutomationId="ShowDashboardTrayActionButton" />
+        <Button x:Name="ShowUpcomingOverviewTrayActionButton"
+                Click="OnShowUpcomingOverviewClick"
+                Content="{Binding ShowUpcomingOverviewLabel}"
+                AutomationProperties.Name="Otevřít přehled blížících se termínů"
+                AutomationProperties.AutomationId="ShowUpcomingOverviewTrayActionButton" />
+        <Button x:Name="ShowOverdueOverviewTrayActionButton"
+                Click="OnShowOverdueOverviewClick"
+                Content="{Binding ShowOverdueOverviewLabel}"
+                AutomationProperties.Name="Otevřít přehled propadlých termínů"
+                AutomationProperties.AutomationId="ShowOverdueOverviewTrayActionButton" />
         <Button x:Name="ExitTrayActionButton"
                 Click="OnExitClick"
                 Content="{Binding ExitLabel}"

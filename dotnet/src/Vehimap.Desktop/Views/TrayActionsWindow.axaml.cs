@@ -32,6 +32,18 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnShowUpcomingOverviewClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ShowUpcomingOverview;
+        Close();
+    }
+
+    private void OnShowOverdueOverviewClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ShowOverdueOverview;
+        Close();
+    }
+
     private void OnExitClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.ExitApplication;

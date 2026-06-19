@@ -52,6 +52,18 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Tray_actions_dialog_defaults_should_expose_overview_actions()
+    {
+        var model = TrayActionsDialogViewModel.CreateDefault();
+
+        Assert.Equal("Zobrazit Vehimap", model.ShowMainWindowLabel);
+        Assert.Equal("Otevřít Dashboard", model.ShowDashboardLabel);
+        Assert.Equal("Blížící se termíny", model.ShowUpcomingOverviewLabel);
+        Assert.Equal("Propadlé termíny", model.ShowOverdueOverviewLabel);
+        Assert.Equal("Ukončit aplikaci", model.ExitLabel);
+    }
+
+    [Fact]
     public void Main_window_xaml_should_define_accessible_shell_metadata()
     {
         var xaml = ReadViewFile("MainWindow.axaml");
@@ -259,9 +271,15 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.Escape", confirmationCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowMainWindowTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowDashboardTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ShowUpcomingOverviewTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ShowOverdueOverviewTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
         Assert.Contains("Escape okno zavře bez akce.", trayActionsXaml);
+        Assert.Contains("OnShowUpcomingOverviewClick", trayActionsCodeBehind);
+        Assert.Contains("OnShowOverdueOverviewClick", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ShowUpcomingOverview", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ShowOverdueOverview", trayActionsCodeBehind);
         Assert.Contains("Key.Escape", trayActionsCodeBehind);
     }
 

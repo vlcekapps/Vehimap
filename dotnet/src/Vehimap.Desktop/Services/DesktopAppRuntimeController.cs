@@ -193,6 +193,30 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         }).GetTask();
     }
 
+    private Task ShowUpcomingOverviewAsync()
+    {
+        return Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            _mainWindow.Show();
+            _mainWindow.WindowState = WindowState.Normal;
+            _mainWindow.Activate();
+            _shell.SelectedVehicleTabIndex = DesktopTabIndexes.UpcomingOverview;
+            _shell.RequestWorkspaceFocus(DesktopFocusTarget.UpcomingOverviewSearch);
+        }).GetTask();
+    }
+
+    private Task ShowOverdueOverviewAsync()
+    {
+        return Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            _mainWindow.Show();
+            _mainWindow.WindowState = WindowState.Normal;
+            _mainWindow.Activate();
+            _shell.SelectedVehicleTabIndex = DesktopTabIndexes.OverdueOverview;
+            _shell.RequestWorkspaceFocus(DesktopFocusTarget.OverdueOverviewSearch);
+        }).GetTask();
+    }
+
     private async Task OpenTrayActionsAsync()
     {
         var action = await _dialogService
@@ -206,6 +230,12 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
                 break;
             case TrayActionsDialogAction.ShowDashboard:
                 await ShowDashboardAsync().ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.ShowUpcomingOverview:
+                await ShowUpcomingOverviewAsync().ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.ShowOverdueOverview:
+                await ShowOverdueOverviewAsync().ConfigureAwait(true);
                 break;
             case TrayActionsDialogAction.ExitApplication:
                 await ExitApplicationAsync().ConfigureAwait(true);
