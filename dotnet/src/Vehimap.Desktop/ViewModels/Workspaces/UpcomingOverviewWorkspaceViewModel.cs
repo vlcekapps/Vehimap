@@ -49,6 +49,12 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
         RequestFocus(DesktopFocusTarget.UpcomingOverviewSearch);
     }
 
+    [RelayCommand]
+    private void RefreshUpcomingOverview()
+    {
+        Root.RefreshUpcomingOverviewWorkspace();
+    }
+
     partial void OnUpcomingOverviewSearchTextChanged(string value)
     {
         Root.HandleUpcomingOverviewWorkspaceSearchChanged();

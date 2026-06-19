@@ -43,6 +43,12 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
         RequestFocus(DesktopFocusTarget.OverdueOverviewSearch);
     }
 
+    [RelayCommand]
+    private void RefreshOverdueOverview()
+    {
+        Root.RefreshOverdueOverviewWorkspace();
+    }
+
     partial void OnOverdueOverviewSearchTextChanged(string value)
     {
         Root.HandleOverdueOverviewWorkspaceSearchChanged();

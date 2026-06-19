@@ -6,6 +6,7 @@
              x:DataType="vm:UpcomingOverviewWorkspaceViewModel">
   <UserControl.KeyBindings>
     <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+R" Command="{Binding RefreshUpcomingOverviewCommand}" />
     <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedUpcomingOverviewVehicleCommand}" />
     <KeyBinding Gesture="Ctrl+P" Command="{Binding OpenSelectedUpcomingOverviewItemCommand}" />
   </UserControl.KeyBindings>
@@ -17,7 +18,7 @@
           Grid.ColumnSpan="2"
           Margin="0,12,0,0"
           RowDefinitions="Auto,Auto"
-          ColumnDefinitions="100,*,130,170,150">
+          ColumnDefinitions="100,*,110,160,130,130">
       <TextBlock Grid.Column="0"
                  VerticalAlignment="Center"
                  Text="Hledat" />
@@ -40,9 +41,17 @@
                 AutomationProperties.Name="Filtr přehledu blížících se termínů"
                 AutomationProperties.AutomationId="UpcomingOverviewFilterComboBox" />
       <Button Grid.Column="4"
+              x:Name="UpcomingOverviewRefreshButton"
+              Margin="12,0,0,0"
+              Width="120"
+              Command="{Binding RefreshUpcomingOverviewCommand}"
+              Content="Obnovit"
+              AutomationProperties.Name="Obnovit přehled blížících se termínů"
+              AutomationProperties.AutomationId="UpcomingOverviewRefreshButton" />
+      <Button Grid.Column="5"
               x:Name="UpcomingOverviewOpenButton"
               Margin="12,0,0,0"
-              Width="150"
+              Width="120"
               Command="{Binding OpenSelectedUpcomingOverviewItemCommand}"
               Content="Otevřít položku"
               AutomationProperties.Name="Otevřít vybraný blížící se termín"
@@ -56,7 +65,7 @@
                 AutomationProperties.AutomationId="UpcomingOverviewIncludeMissingGreenCardsCheckBox" />
       <CheckBox Grid.Row="1"
                 Grid.Column="3"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 Margin="12,8,0,0"
                 Content="Zobrazit i datové nedostatky"
                 IsChecked="{Binding IncludeDataIssuesInUpcomingOverview}"

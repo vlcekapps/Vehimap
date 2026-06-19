@@ -68,6 +68,32 @@ public sealed class MainWindowViewModelOverviewTests
     }
 
     [Fact]
+    public void Refresh_overview_commands_preserve_selection_and_request_list_focus()
+    {
+        var requestedFocus = DesktopFocusTarget.VehicleList;
+        var viewModel = CreateViewModel(BuildOverviewDataSet());
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        var selectedUpcoming = viewModel.UpcomingOverviewItems.First(item => item.Kind == "custom");
+        viewModel.SelectedUpcomingOverviewItem = selectedUpcoming;
+
+        viewModel.UpcomingOverviewWorkspace.RefreshUpcomingOverviewCommand.Execute(null);
+
+        Assert.Equal(selectedUpcoming.EntryId, viewModel.SelectedUpcomingOverviewItem?.EntryId);
+        Assert.Equal(DesktopFocusTarget.UpcomingOverviewList, requestedFocus);
+        Assert.Contains("blížících se termínů byl obnoven", viewModel.ShellStatus, StringComparison.CurrentCulture);
+
+        var selectedOverdue = viewModel.OverdueOverviewItems.First(item => item.Kind == "record");
+        viewModel.SelectedOverdueOverviewItem = selectedOverdue;
+
+        viewModel.OverdueOverviewWorkspace.RefreshOverdueOverviewCommand.Execute(null);
+
+        Assert.Equal(selectedOverdue.EntryId, viewModel.SelectedOverdueOverviewItem?.EntryId);
+        Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
+        Assert.Contains("propadlých termínů byl obnoven", viewModel.ShellStatus, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
     public void Upcoming_overview_can_include_missing_green_cards_and_audit_data_issues()
     {
         var dataSet = BuildOverviewDataSet();

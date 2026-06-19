@@ -794,6 +794,13 @@ public sealed partial class MainWindowViewModel
         PersistOverviewPreferencesAsync();
     }
 
+    internal void RefreshUpcomingOverviewWorkspace()
+    {
+        RefreshUpcomingOverview();
+        ShellStatus = "Přehled blížících se termínů byl obnoven.";
+        RequestFocus(UpcomingOverviewItems.Count == 0 ? DesktopFocusTarget.UpcomingOverviewSearch : DesktopFocusTarget.UpcomingOverviewList);
+    }
+
     internal void NotifyUpcomingOverviewWorkspaceSelectionChanged()
     {
         OpenSelectedUpcomingOverviewItemCommand.NotifyCanExecuteChanged();
@@ -808,6 +815,13 @@ public sealed partial class MainWindowViewModel
     internal void HandleOverdueOverviewWorkspaceFilterChanged()
     {
         RefreshOverdueOverview();
+    }
+
+    internal void RefreshOverdueOverviewWorkspace()
+    {
+        RefreshOverdueOverview();
+        ShellStatus = "Přehled propadlých termínů byl obnoven.";
+        RequestFocus(OverdueOverviewItems.Count == 0 ? DesktopFocusTarget.OverdueOverviewSearch : DesktopFocusTarget.OverdueOverviewList);
     }
 
     internal void NotifyOverdueOverviewWorkspaceSelectionChanged()
