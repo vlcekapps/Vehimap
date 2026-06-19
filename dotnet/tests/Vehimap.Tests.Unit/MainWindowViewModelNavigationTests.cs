@@ -57,6 +57,21 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public async Task Selected_vehicle_cost_command_opens_cost_tab_and_selects_current_vehicle()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        await viewModel.OpenSelectedVehicleCostsCommand.ExecuteAsync(null);
+
+        Assert.Equal(DesktopTabIndexes.Cost, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("veh_1", viewModel.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.Contains("Palivo:", viewModel.CostWorkspace.SelectedCostVehicleDetail);
+        Assert.Equal(DesktopFocusTarget.CostList, requestedFocus);
+    }
+
+    [Fact]
     public void Global_search_result_opens_matching_record_and_requests_focus()
     {
         var viewModel = CreateViewModel();

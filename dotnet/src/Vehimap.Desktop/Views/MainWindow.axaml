@@ -136,6 +136,12 @@
                     IsEnabled="{Binding CanOpenVehicleStarterBundle}"
                     AutomationProperties.Name="Otevřít balíček pro vybrané vozidlo"
                     AutomationProperties.AutomationId="OpenVehicleStarterBundleMenuItem" />
+          <MenuItem x:Name="OpenSelectedVehicleCostsMenuItem"
+                    Header="Náklady a souhrny"
+                    Click="OnOpenSelectedVehicleCostsMenuClick"
+                    IsEnabled="{Binding CanOpenSelectedVehicleCosts}"
+                    AutomationProperties.Name="Otevřít náklady a souhrny vybraného vozidla"
+                    AutomationProperties.AutomationId="OpenSelectedVehicleCostsMenuItem" />
         </MenuItem>
         <MenuItem x:Name="OverviewMenuRoot"
                   Header="_Přehledy"

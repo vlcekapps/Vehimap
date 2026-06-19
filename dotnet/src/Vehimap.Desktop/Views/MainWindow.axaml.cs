@@ -515,6 +515,14 @@ public partial class MainWindow : Window
         await OpenVehicleStarterBundleDialogAsync();
     }
 
+    private async void OnOpenSelectedVehicleCostsMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.OpenSelectedVehicleCostsCommand.CanExecute(null) == true)
+        {
+            await _viewModel.OpenSelectedVehicleCostsCommand.ExecuteAsync(null);
+        }
+    }
+
     private async void OnOpenTimelineMenuClick(object? sender, RoutedEventArgs e)
     {
         await OpenTimelineWindowAsync();

@@ -86,6 +86,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenRemindersMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenMaintenanceMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleStarterBundleMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenSelectedVehicleCostsMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenTimelineMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenGlobalSearchMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenAuditMenuItem\"", xaml);
@@ -123,6 +124,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Click=\"OnReloadClick\"", xaml);
         Assert.Contains("Click=\"OnCreateVehicleMenuClick\"", xaml);
         Assert.Contains("Click=\"OnDeleteVehicleMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenSelectedVehicleCostsMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenTimelineMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenGlobalSearchMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenAuditMenuClick\"", xaml);
@@ -277,6 +279,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewSearchBox\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewOpenButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SelectedCostVehicleDetailText\"", costXaml);
         Assert.Contains("AllowEditing=\"False\"", ReadViewFile("MainWindow.axaml"));
         Assert.Contains("x:Name=\"CancelVehicleButton\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DeleteVehicleButton\"", vehicleDetailXaml);

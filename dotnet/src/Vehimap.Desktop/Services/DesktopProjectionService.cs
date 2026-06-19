@@ -84,11 +84,13 @@ internal sealed class DesktopProjectionService
     public IReadOnlyList<CostVehicleItemViewModel> BuildDashboardCostVehicles(CostAnalysisSummary costSummary) =>
         costSummary.Vehicles
             .Where(item => item.TotalCost > 0m || item.Status != "Neaktivní")
-            .Take(8)
             .Select(row => new CostVehicleItemViewModel(
                 row.VehicleId,
                 row.VehicleName,
                 row.Category,
+                FormatMoney(row.FuelCost),
+                FormatMoney(row.HistoryCost),
+                FormatMoney(row.RecordCost),
                 FormatMoney(row.TotalCost),
                 row.DistanceKm.HasValue ? $"{row.DistanceKm.Value} km" : "nedostupné",
                 row.CostPerKm.HasValue ? $"{row.CostPerKm.Value:0.00} Kč/km" : "nedostupné",

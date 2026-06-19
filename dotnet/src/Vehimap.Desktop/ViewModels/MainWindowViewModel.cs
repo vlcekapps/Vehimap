@@ -155,6 +155,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool CanOpenVehicleDetailWindow => SelectedVehicle is not null;
 
+    public bool CanOpenSelectedVehicleCosts => SelectedVehicle is not null && !HasPendingEdits;
+
     public string HistoryWindowTitle =>
         SelectedVehicle is null
             ? "Historie vozidla"
@@ -337,8 +339,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
         HandleVehicleSelectionChanged();
         OnPropertyChanged(nameof(CanEditSelectedVehicle));
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
+        OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
         DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
+        OpenSelectedVehicleCostsCommand.NotifyCanExecuteChanged();
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         OnPropertyChanged(nameof(CanOpenVehicleDetailWindow));
         OnPropertyChanged(nameof(CanOpenHistoryWindow));
@@ -546,6 +550,24 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         SelectVehicleAndOpenEntity(SelectedDashboardCostVehicle.VehicleId, "Vozidlo", SelectedDashboardCostVehicle.VehicleId);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedVehicleCosts))]
+    private async Task OpenSelectedVehicleCostsAsync()
+    {
+        if (SelectedVehicle is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít náklady vybraného vozidla").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, SelectedVehicle.Id);
+        SelectedVehicleTabIndex = CostTabIndex;
+        RequestFocus(DesktopFocusTarget.CostList);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardTimelineItem))]

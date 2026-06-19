@@ -20,6 +20,9 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private CostVehicleItemViewModel? selectedDashboardCostVehicle;
 
+    [ObservableProperty]
+    private string selectedCostVehicleDetail = "Vyberte vozidlo v seznamu a zobrazí se rozpad nákladů.";
+
     public string WindowTitle => Root.CostWindowTitle;
 
     public ObservableCollection<CostVehicleItemViewModel> CostVehicles => Root.CostVehicles;
@@ -28,6 +31,9 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnSelectedDashboardCostVehicleChanged(CostVehicleItemViewModel? value)
     {
+        SelectedCostVehicleDetail = value is null
+            ? "Vyberte vozidlo v seznamu a zobrazí se rozpad nákladů."
+            : $"Vozidlo: {value.VehicleName}\nKategorie: {value.Category}\nPalivo: {value.FuelCost}\nHistorie: {value.HistoryCost}\nDoklady: {value.RecordCost}\nCelkem: {value.TotalCost}\nUjeto: {value.Distance}\nCena / km: {value.CostPerKm}\nStav výpočtu: {value.Status}";
         Root.NotifyCostWorkspaceSelectionChanged();
     }
 }

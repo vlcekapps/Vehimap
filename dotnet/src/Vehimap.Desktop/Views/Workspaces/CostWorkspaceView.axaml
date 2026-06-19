@@ -4,15 +4,25 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.CostWorkspaceView"
              x:DataType="vm:CostWorkspaceViewModel">
-  <Grid RowDefinitions="Auto,Auto,*">
+  <Grid RowDefinitions="Auto,Auto,Auto,*">
     <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
                Opacity="0.75"
                Text="{Binding CostComparison}"
                TextWrapping="Wrap" />
+    <Border Grid.Row="2"
+            Margin="0,12,0,0"
+            Padding="12"
+            Background="#10203040"
+            CornerRadius="6">
+      <TextBlock Text="{Binding SelectedCostVehicleDetail}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.Name="{Binding SelectedCostVehicleDetail}"
+                 AutomationProperties.AutomationId="SelectedCostVehicleDetailText" />
+    </Border>
     <ListBox x:Name="CostListBox"
-             Grid.Row="2"
+             Grid.Row="3"
              Margin="0,12,0,0"
              ItemsSource="{Binding CostVehicles}"
              SelectedItem="{Binding SelectedDashboardCostVehicle}"

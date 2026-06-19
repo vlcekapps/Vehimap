@@ -132,11 +132,13 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanCreateVehicle));
         OnPropertyChanged(nameof(CanEditSelectedVehicle));
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
+        OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
 
         CreateVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
         DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
+        OpenSelectedVehicleCostsCommand.NotifyCanExecuteChanged();
         CreateHistoryCommand.NotifyCanExecuteChanged();
         EditSelectedHistoryCommand.NotifyCanExecuteChanged();
         DeleteSelectedHistoryCommand.NotifyCanExecuteChanged();
