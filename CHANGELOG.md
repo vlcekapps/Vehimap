@@ -38,6 +38,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - C# desktop větev používá Avalonia `12.0.4` místo původní release-candidate verze a NuGet restore už nehlásí zranitelný `Tmds.DBus.Protocol`
 - preview release tooling C# větve zapisuje do package metadat i SHA-256 a velikost balíčku a generátor update manifestu ověřuje shodu metadat, `.sha256` souboru i fyzického artefaktu
 - dostupnost akce `Minimalizovat na lištu` v Avalonia shellu je nově řízená viewmodelem podle podpory tray a nastavení automatických záloh vypíná intervalová pole, pokud nejsou pravidelné zálohy zapnuté
+- dialog `Nastavení` v Avalonia větvi má vlastní klávesové ovládání `Ctrl+S`, `Ctrl+B` a `Esc` i přístupný help text s těmito zkratkami
 
 ### Opraveno
 - zpracování servisních doporučení, záloh a meta dat vozidel tak, aby správně fungoval nový servisní profil i smoke testy

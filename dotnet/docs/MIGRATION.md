@@ -51,6 +51,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - plny auditni workspace s vlastnim hledanim, vsemi auditnimi polozkami a oddelenym dashboardovym top vyrezem
 - nastaveni `run_at_startup`, `hide_on_launch` a automatickych zaloh vcetne rucni akce `Zalohovat ihned`
 - settings UX pro automaticke zalohy: interval a pocet ponechanych zaloh jsou aktivni jen pri zapnutych pravidelnych zalohach a vypnuta sekce neblokuje ulozeni ostatnich voleb
+- klavesove ovladani dialogu `Nastaveni`: `Ctrl+S`, `Ctrl+B` a `Esc`
 - multiplatformni publish matrix pro `.NET` desktop preview
 - draft release workflow pro tagy `dotnet-preview-v<verze>` s verzovanymi balicky a checksumy
 - runtime-specific preview update manifesty `update/latest-dotnet-preview-<rid>.ini`

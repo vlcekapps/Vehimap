@@ -163,6 +163,7 @@ public sealed class DesktopAccessibilityLabelTests
     public void Dialog_xaml_files_should_define_expected_automation_ids()
     {
         var settingsXaml = ReadViewFile("SettingsWindow.axaml");
+        var settingsCodeBehind = ReadViewCodeBehind("SettingsWindow.axaml.cs");
         var aboutXaml = ReadViewFile("AboutWindow.axaml");
         var updateXaml = ReadViewFile("UpdateCheckWindow.axaml");
         var notificationXaml = ReadViewFile("NotificationWindow.axaml");
@@ -184,10 +185,14 @@ public sealed class DesktopAccessibilityLabelTests
         var trayActionsXaml = ReadViewFile("TrayActionsWindow.axaml");
 
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
+        Assert.Contains("Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.", settingsXaml);
         Assert.Contains("IsEnabled=\"{Binding CanConfigureAutomaticBackups}\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupButton\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SaveSettingsButton\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CancelSettingsButton\"", settingsXaml);
+        Assert.Contains("Key.Escape", settingsCodeBehind);
+        Assert.Contains("case Key.S", settingsCodeBehind);
+        Assert.Contains("case Key.B", settingsCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"Kontrola aktualizací\"", updateXaml);

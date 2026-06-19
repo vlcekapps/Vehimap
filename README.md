@@ -114,6 +114,7 @@ V hlavním okně:
 
 - `Ctrl+S`: uloží aktuální formulář nebo nastavení
 - v `Nastavení` navíc `Ctrl+B`: vytvoří zálohu ihned
+- v `Nastavení` klávesa `Esc` zavře dialog bez uložení
 
 ## Používání detailněji: 
 
