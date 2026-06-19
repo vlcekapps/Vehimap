@@ -36,7 +36,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
 - horní menu; v AHK aplikaci `Soubor`, `Vozidlo`, `Přehled`, `Nástroje` a `Nápověda`, v C# Avalonia větvi `Soubor`, `Vozidlo`, `Přehledy`, `Rychlé akce` a `Aplikace`
-- přístupné tray okno pro rychlé zobrazení hlavního okna, dashboardu, blížících se termínů, propadlých termínů, nejbližší TK/ZK/připomínky/servisu/dokladu, filtrovaných kontrol, tiskového přehledu, záloh, nastavení a ukončení aplikace
+- přístupné tray okno pro rychlé zobrazení hlavního okna, dashboardu, blížících se termínů, propadlých termínů, nejbližší TK/ZK/připomínky/servisu/dokladu, filtrovaných kontrol, tiskového přehledu, záloh, exportu kalendáře, znovunačtení dat, nastavení, dialogu `O programu`, kontroly aktualizací a ukončení aplikace
 - automatickou kontrolu termínů, připomínek a servisních plánů každých 15 minut a znovu po probuzení počítače ze spánku
 
 ## Jak se používá
@@ -228,6 +228,6 @@ V horním menu najdete tyto části:
 
 Zavření hlavního okna aplikaci neukončí. Vehimap se schová do oznamovací oblasti a dál hlídá technické kontroly, zelené karty, vlastní připomínky i plány údržby. Kontrola běží průběžně na pozadí každých 15 minut a znovu se vyvolá i po probuzení počítače ze spánku. Stejným způsobem se na pozadí jednou za hodinu ověřuje i potřeba automatické zálohy. Pokud je vše v pořádku, tooltip tray ikony zůstává jen `Vehimap`; pokud ne, zobrazí souhrn propadlých a brzy končících `TK`, `ZK`, připomínek i servisních úkonů.
 
-V C# Avalonia větvi nativní menu lišty otevírá vlastní přístupné okno `Akce Vehimapu na liště`. Z něj lze klávesnicí a čtečkou obrazovky zobrazit hlavní okno, otevřít `Dashboard`, přejít rovnou do `Blížících se termínů` nebo `Propadlých termínů`, otevřít nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrovanou kontrolu těchto oblastí, uložit tiskový přehled, exportovat nebo obnovit zálohu, otevřít nastavení, případně aplikaci ukončit.
+V C# Avalonia větvi nativní menu lišty otevírá vlastní přístupné okno `Akce Vehimapu na liště`. Z něj lze klávesnicí a čtečkou obrazovky zobrazit hlavní okno, otevřít `Dashboard`, přejít rovnou do `Blížících se termínů` nebo `Propadlých termínů`, otevřít nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrovanou kontrolu těchto oblastí, uložit tiskový přehled, exportovat nebo obnovit zálohu, exportovat budoucí termíny do kalendáře, znovu načíst data, otevřít nastavení, zobrazit `O programu`, zkontrolovat aktualizace, případně aplikaci ukončit.
 
 

@@ -21,5 +21,9 @@ public enum TrayActionsDialogAction
     OpenPrintableReport = 16,
     ExportBackup = 17,
     ImportBackup = 18,
-    OpenSettings = 19
+    OpenSettings = 19,
+    ExportCalendar = 20,
+    ReloadData = 21,
+    OpenAbout = 22,
+    CheckForUpdates = 23
 }

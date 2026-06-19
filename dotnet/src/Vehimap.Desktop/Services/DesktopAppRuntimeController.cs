@@ -301,6 +301,31 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             case TrayActionsDialogAction.OpenSettings:
                 await ExecuteShellQuickActionAsync(() => _shell.AppShellController.OpenSettingsAsync(_mainWindow, _shell)).ConfigureAwait(true);
                 break;
+            case TrayActionsDialogAction.ExportCalendar:
+                await ExecuteShellQuickActionAsync(() => _shell.ExportCalendarCommand.ExecuteAsync(null)).ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.ReloadData:
+                await ExecuteShellQuickActionAsync(() =>
+                {
+                    _shell.ReloadCommand.Execute(null);
+                    return Task.CompletedTask;
+                }).ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.OpenAbout:
+                await ExecuteShellQuickActionAsync(() => _shell.AppShellController.OpenAboutAsync(_mainWindow, _shell)).ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.CheckForUpdates:
+                var shouldExit = false;
+                await ExecuteShellQuickActionAsync(async () =>
+                {
+                    shouldExit = await _shell.AppShellController.CheckForUpdatesAsync(_mainWindow, _shell).ConfigureAwait(true);
+                }).ConfigureAwait(true);
+                if (shouldExit)
+                {
+                    await ExitApplicationAsync().ConfigureAwait(true);
+                }
+
+                break;
             case TrayActionsDialogAction.ExitApplication:
                 await ExitApplicationAsync().ConfigureAwait(true);
                 break;

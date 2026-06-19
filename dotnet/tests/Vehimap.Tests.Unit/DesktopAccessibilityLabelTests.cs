@@ -74,6 +74,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Equal("Export dat do zálohy", model.ExportBackupLabel);
         Assert.Equal("Obnovit data ze zálohy", model.ImportBackupLabel);
         Assert.Equal("Nastavení", model.OpenSettingsLabel);
+        Assert.Equal("Export termínů do kalendáře", model.ExportCalendarLabel);
+        Assert.Equal("Načíst data znovu", model.ReloadDataLabel);
+        Assert.Equal("O programu", model.OpenAboutLabel);
+        Assert.Equal("Zkontrolovat aktualizace", model.CheckForUpdatesLabel);
         Assert.Equal("Ukončit aplikaci", model.ExitLabel);
     }
 
@@ -301,6 +305,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ExportBackupTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ImportBackupTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenSettingsTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ExportCalendarTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReloadDataTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenAboutTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CheckForUpdatesTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
         Assert.Contains("Escape okno zavře bez akce.", trayActionsXaml);
@@ -320,6 +328,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OnExportBackupClick", trayActionsCodeBehind);
         Assert.Contains("OnImportBackupClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenSettingsClick", trayActionsCodeBehind);
+        Assert.Contains("OnExportCalendarClick", trayActionsCodeBehind);
+        Assert.Contains("OnReloadDataClick", trayActionsCodeBehind);
+        Assert.Contains("OnOpenAboutClick", trayActionsCodeBehind);
+        Assert.Contains("OnCheckForUpdatesClick", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowUpcomingOverview", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowOverdueOverview", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenNearestTechnical", trayActionsCodeBehind);
@@ -336,6 +348,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("TrayActionsDialogAction.ExportBackup", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ImportBackup", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenSettings", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ExportCalendar", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ReloadData", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.OpenAbout", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.CheckForUpdates", trayActionsCodeBehind);
         Assert.Contains("Key.Escape", trayActionsCodeBehind);
     }
 
@@ -372,6 +388,14 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("_shell.AppShellController.ImportBackupAsync(_mainWindow, _shell)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenSettings", runtimeController);
         Assert.Contains("_shell.AppShellController.OpenSettingsAsync(_mainWindow, _shell)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ExportCalendar", runtimeController);
+        Assert.Contains("_shell.ExportCalendarCommand.ExecuteAsync(null)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ReloadData", runtimeController);
+        Assert.Contains("_shell.ReloadCommand.Execute(null)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.OpenAbout", runtimeController);
+        Assert.Contains("_shell.AppShellController.OpenAboutAsync(_mainWindow, _shell)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.CheckForUpdates", runtimeController);
+        Assert.Contains("_shell.AppShellController.CheckForUpdatesAsync(_mainWindow, _shell)", runtimeController);
     }
 
     [Fact]

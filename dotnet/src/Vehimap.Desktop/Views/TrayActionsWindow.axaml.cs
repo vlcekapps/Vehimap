@@ -128,6 +128,30 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnExportCalendarClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ExportCalendar;
+        Close();
+    }
+
+    private void OnReloadDataClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ReloadData;
+        Close();
+    }
+
+    private void OnOpenAboutClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenAbout;
+        Close();
+    }
+
+    private void OnCheckForUpdatesClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.CheckForUpdates;
+        Close();
+    }
+
     private void OnExitClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.ExitApplication;

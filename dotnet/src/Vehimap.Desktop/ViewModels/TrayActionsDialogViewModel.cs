@@ -21,6 +21,10 @@ public sealed record TrayActionsDialogViewModel(
     string ExportBackupLabel,
     string ImportBackupLabel,
     string OpenSettingsLabel,
+    string ExportCalendarLabel,
+    string ReloadDataLabel,
+    string OpenAboutLabel,
+    string CheckForUpdatesLabel,
     string ExitLabel,
     string CancelLabel)
 {
@@ -45,6 +49,10 @@ public sealed record TrayActionsDialogViewModel(
         "Export dat do zálohy",
         "Obnovit data ze zálohy",
         "Nastavení",
+        "Export termínů do kalendáře",
+        "Načíst data znovu",
+        "O programu",
+        "Zkontrolovat aktualizace",
         "Ukončit aplikaci",
         "Zavřít");
 }
