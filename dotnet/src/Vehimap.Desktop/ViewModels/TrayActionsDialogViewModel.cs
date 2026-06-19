@@ -17,6 +17,10 @@ public sealed record TrayActionsDialogViewModel(
     string ReviewRemindersLabel,
     string ReviewMaintenanceLabel,
     string ReviewRecordsLabel,
+    string OpenPrintableReportLabel,
+    string ExportBackupLabel,
+    string ImportBackupLabel,
+    string OpenSettingsLabel,
     string ExitLabel,
     string CancelLabel)
 {
@@ -37,6 +41,10 @@ public sealed record TrayActionsDialogViewModel(
         "Zkontrolovat připomínky",
         "Zkontrolovat údržbu",
         "Zkontrolovat doklady",
+        "Tiskový přehled",
+        "Export dat do zálohy",
+        "Obnovit data ze zálohy",
+        "Nastavení",
         "Ukončit aplikaci",
         "Zavřít");
 }

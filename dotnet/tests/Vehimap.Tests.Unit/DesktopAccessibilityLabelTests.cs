@@ -70,6 +70,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Equal("Zkontrolovat připomínky", model.ReviewRemindersLabel);
         Assert.Equal("Zkontrolovat údržbu", model.ReviewMaintenanceLabel);
         Assert.Equal("Zkontrolovat doklady", model.ReviewRecordsLabel);
+        Assert.Equal("Tiskový přehled", model.OpenPrintableReportLabel);
+        Assert.Equal("Export dat do zálohy", model.ExportBackupLabel);
+        Assert.Equal("Obnovit data ze zálohy", model.ImportBackupLabel);
+        Assert.Equal("Nastavení", model.OpenSettingsLabel);
         Assert.Equal("Ukončit aplikaci", model.ExitLabel);
     }
 
@@ -293,6 +297,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewRemindersTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewMaintenanceTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewRecordsTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenPrintableReportTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ExportBackupTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ImportBackupTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenSettingsTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
         Assert.Contains("Escape okno zavře bez akce.", trayActionsXaml);
@@ -308,6 +316,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OnReviewRemindersClick", trayActionsCodeBehind);
         Assert.Contains("OnReviewMaintenanceClick", trayActionsCodeBehind);
         Assert.Contains("OnReviewRecordsClick", trayActionsCodeBehind);
+        Assert.Contains("OnOpenPrintableReportClick", trayActionsCodeBehind);
+        Assert.Contains("OnExportBackupClick", trayActionsCodeBehind);
+        Assert.Contains("OnImportBackupClick", trayActionsCodeBehind);
+        Assert.Contains("OnOpenSettingsClick", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowUpcomingOverview", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowOverdueOverview", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenNearestTechnical", trayActionsCodeBehind);
@@ -320,6 +332,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("TrayActionsDialogAction.ReviewReminders", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ReviewMaintenance", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ReviewRecords", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.OpenPrintableReport", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ExportBackup", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ImportBackup", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.OpenSettings", trayActionsCodeBehind);
         Assert.Contains("Key.Escape", trayActionsCodeBehind);
     }
 
@@ -348,6 +364,14 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("_shell.ReviewMaintenanceCommand.ExecuteAsync(null)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.ReviewRecords", runtimeController);
         Assert.Contains("_shell.ReviewRecordsCommand.ExecuteAsync(null)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.OpenPrintableReport", runtimeController);
+        Assert.Contains("_shell.AppShellController.OpenPrintableReportAsync(_shell)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ExportBackup", runtimeController);
+        Assert.Contains("_shell.AppShellController.ExportBackupAsync(_mainWindow, _shell)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ImportBackup", runtimeController);
+        Assert.Contains("_shell.AppShellController.ImportBackupAsync(_mainWindow, _shell)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.OpenSettings", runtimeController);
+        Assert.Contains("_shell.AppShellController.OpenSettingsAsync(_mainWindow, _shell)", runtimeController);
     }
 
     [Fact]

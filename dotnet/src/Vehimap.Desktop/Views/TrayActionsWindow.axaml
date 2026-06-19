@@ -11,7 +11,7 @@
         Title="{Binding Title}"
         AutomationProperties.Name="Akce Vehimapu na liště"
         AutomationProperties.AutomationId="TrayActionsWindow"
-        AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; další tlačítka otevřou přehledy, nejbližší termíny nebo filtrované kontroly. Escape okno zavře bez akce.">
+        AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; další tlačítka otevřou přehledy, nejbližší termíny, filtrované kontroly nebo souborové akce. Escape okno zavře bez akce.">
   <Border Margin="16" Padding="20" Background="#1C2B38" CornerRadius="10">
     <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14">
       <TextBlock FontSize="22"
@@ -97,6 +97,27 @@
                   Content="{Binding ReviewRecordsLabel}"
                   AutomationProperties.Name="Zkontrolovat doklady"
                   AutomationProperties.AutomationId="ReviewRecordsTrayActionButton" />
+          <TextBlock Margin="0,8,0,0" FontWeight="SemiBold" Text="Soubor a nastavení" />
+          <Button x:Name="OpenPrintableReportTrayActionButton"
+                  Click="OnOpenPrintableReportClick"
+                  Content="{Binding OpenPrintableReportLabel}"
+                  AutomationProperties.Name="Otevřít tiskový přehled vozidel"
+                  AutomationProperties.AutomationId="OpenPrintableReportTrayActionButton" />
+          <Button x:Name="ExportBackupTrayActionButton"
+                  Click="OnExportBackupClick"
+                  Content="{Binding ExportBackupLabel}"
+                  AutomationProperties.Name="Exportovat data aplikace do zálohy"
+                  AutomationProperties.AutomationId="ExportBackupTrayActionButton" />
+          <Button x:Name="ImportBackupTrayActionButton"
+                  Click="OnImportBackupClick"
+                  Content="{Binding ImportBackupLabel}"
+                  AutomationProperties.Name="Obnovit data aplikace ze zálohy"
+                  AutomationProperties.AutomationId="ImportBackupTrayActionButton" />
+          <Button x:Name="OpenSettingsTrayActionButton"
+                  Click="OnOpenSettingsClick"
+                  Content="{Binding OpenSettingsLabel}"
+                  AutomationProperties.Name="Otevřít nastavení aplikace"
+                  AutomationProperties.AutomationId="OpenSettingsTrayActionButton" />
           <Button x:Name="ExitTrayActionButton"
                   Margin="0,8,0,0"
                   Click="OnExitClick"

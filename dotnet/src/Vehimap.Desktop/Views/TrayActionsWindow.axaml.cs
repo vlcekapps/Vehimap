@@ -104,6 +104,30 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnOpenPrintableReportClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenPrintableReport;
+        Close();
+    }
+
+    private void OnExportBackupClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ExportBackup;
+        Close();
+    }
+
+    private void OnImportBackupClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ImportBackup;
+        Close();
+    }
+
+    private void OnOpenSettingsClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenSettings;
+        Close();
+    }
+
     private void OnExitClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.ExitApplication;

@@ -17,5 +17,9 @@ public enum TrayActionsDialogAction
     ReviewGreenCards = 12,
     ReviewReminders = 13,
     ReviewMaintenance = 14,
-    ReviewRecords = 15
+    ReviewRecords = 15,
+    OpenPrintableReport = 16,
+    ExportBackup = 17,
+    ImportBackup = 18,
+    OpenSettings = 19
 }

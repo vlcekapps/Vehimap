@@ -58,7 +58,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - ovladat `Nastaveni` klavesnici: `Ctrl+S` ulozi, `Ctrl+B` ulozi a vytvori zalohu ihned, `Esc` zavre dialog bez ulozeni
 - ovladat app-level dialogy konzistentne klavesnici: `O programu` ma `Ctrl+O` pro release poznamky a `Esc` pro zavreni, potvrzovaci dialogy, kontrola aktualizaci, upozorneni i tray akce maji `Esc` pro bezpecne zavreni bez nove akce
 - pouzivat `Rychle akce` pro nejblizsi TK, zelenou kartu, vlastni pripominku, servisni udrzbu a doklady i pro filtrovanou kontrolu techto terminu v prehledech
-- otevrit z pristupneho tray okna hlavni okno, dashboard, blizici se terminy, propadle terminy, nejblizsi TK/ZK/pripominku/servis/doklad, filtrovanou kontrolu techto oblasti nebo ukoncit aplikaci bez nativniho focus problemu tray menu
+- otevrit z pristupneho tray okna hlavni okno, dashboard, blizici se terminy, propadle terminy, nejblizsi TK/ZK/pripominku/servis/doklad, filtrovanou kontrolu techto oblasti, tiskovy prehled, export/import zalohy, nastaveni nebo ukoncit aplikaci bez nativniho focus problemu tray menu
 - cist a zapisovat podporovane reminder volby do stejneho `settings.ini` jako AHK verze a respektovat `show_dashboard_on_launch`
 - reportovat stejnou verzi jako root `src/VERSION`, vcetne file version pro desktop buildy
 - kontrolovat `update/latest.ini` kompatibilne s AHK vetvi a na Windows pripravit automatickou instalaci pres `Vehimap.Updater`
