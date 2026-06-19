@@ -56,6 +56,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public ICommand CreateMaintenanceCommand => Root.CreateMaintenanceCommand;
     public ICommand EditSelectedMaintenanceCommand => Root.EditSelectedMaintenanceCommand;
     public ICommand DeleteSelectedMaintenanceCommand => Root.DeleteSelectedMaintenanceCommand;
+    public ICommand CompleteSelectedMaintenanceCommand => Root.CompleteSelectedMaintenanceCommand;
     public ICommand SaveMaintenanceCommand => Root.SaveMaintenanceCommand;
     public ICommand CancelMaintenanceEditCommand => Root.CancelMaintenanceEditCommand;
 

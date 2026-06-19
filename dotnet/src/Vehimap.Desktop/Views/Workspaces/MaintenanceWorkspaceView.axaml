@@ -8,6 +8,7 @@
     <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateMaintenanceCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedMaintenanceCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedMaintenanceCommand}" />
+    <KeyBinding Gesture="Ctrl+L" Command="{Binding CompleteSelectedMaintenanceCommand}" />
     <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveMaintenanceCommand}" />
   </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
@@ -42,6 +43,7 @@
           <Button Command="{Binding CreateMaintenanceCommand}" Content="Nový plán" AutomationProperties.Name="Vytvořit nový servisní plán" AutomationProperties.AutomationId="CreateMaintenanceButton" />
           <Button Command="{Binding EditSelectedMaintenanceCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybraný servisní plán" AutomationProperties.AutomationId="EditMaintenanceButton" />
           <Button Command="{Binding DeleteSelectedMaintenanceCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybraný servisní plán" AutomationProperties.AutomationId="DeleteMaintenanceButton" />
+          <Button Command="{Binding CompleteSelectedMaintenanceCommand}" Content="Splněno" AutomationProperties.Name="Označit vybraný servisní úkon jako splněný" AutomationProperties.AutomationId="CompleteMaintenanceButton" />
           <Button Command="{Binding SaveMaintenanceCommand}" Content="Uložit" IsVisible="{Binding IsEditingMaintenance}" AutomationProperties.Name="Uložit servisní plán" AutomationProperties.AutomationId="SaveMaintenanceButton" />
           <Button Command="{Binding CancelMaintenanceEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingMaintenance}" AutomationProperties.Name="Zrušit úpravu servisního plánu" AutomationProperties.AutomationId="CancelMaintenanceButton" />
         </WrapPanel>

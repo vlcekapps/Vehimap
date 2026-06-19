@@ -28,6 +28,7 @@ public sealed partial class MainWindowViewModel
         CreateReminderCommand.NotifyCanExecuteChanged();
         AdvanceSelectedReminderCommand.NotifyCanExecuteChanged();
         CreateMaintenanceCommand.NotifyCanExecuteChanged();
+        CompleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();
         CreateRecordCommand.NotifyCanExecuteChanged();
     }
 

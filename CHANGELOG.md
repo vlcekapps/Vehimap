@@ -24,6 +24,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - v Avalonia větvi lze z menu vybraného vozidla otevřít `Náklady a souhrny` s detailem rozpadu nákladů
 - nákladový workspace v Avalonia větvi umí exportovat flotilový souhrn TSV, detail vybraného vozidla TSV a HTML sestavu
 - připomínkový workspace v Avalonia větvi umí tlačítkem `Další termín` nebo zkratkou `Ctrl+Shift+N` posunout opakovanou připomínku podle nastaveného intervalu
+- servisní workspace v Avalonia větvi umí tlačítkem `Splněno` nebo zkratkou `Ctrl+L` označit vybraný plán údržby jako splněný a doplnit dnešní datum i aktuální tachometr z dostupných dat
 
 ### Změněno
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`

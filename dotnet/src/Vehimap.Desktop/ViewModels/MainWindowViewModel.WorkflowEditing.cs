@@ -1,4 +1,6 @@
 using CommunityToolkit.Mvvm.Input;
+using System.Globalization;
+using Vehimap.Application.Services;
 using Vehimap.Domain.Models;
 
 namespace Vehimap.Desktop.ViewModels;
@@ -302,6 +304,42 @@ public sealed partial class MainWindowViewModel
         RequestFocus(DesktopFocusTarget.MaintenanceList);
     }
 
+    [RelayCommand(CanExecute = nameof(CanCompleteSelectedMaintenance))]
+    private async Task CompleteSelectedMaintenanceAsync()
+    {
+        if (SelectedVehicle is null)
+        {
+            return;
+        }
+
+        var plan = GetSelectedMaintenanceModel();
+        if (plan is null)
+        {
+            return;
+        }
+
+        var todayText = FormatMaintenanceServiceDate(DateOnly.FromDateTime(DateTime.Today));
+        var currentOdometer = TryGetCurrentVehicleOdometer(SelectedVehicle.Id, out var odometer)
+            ? odometer.ToString(CultureInfo.InvariantCulture)
+            : plan.LastServiceOdometer;
+
+        var updatedPlan = plan with
+        {
+            LastServiceDate = todayText,
+            LastServiceOdometer = currentOdometer
+        };
+
+        UpsertMaintenancePlan(updatedPlan);
+        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, MaintenanceTabIndex, maintenanceId: updatedPlan.Id);
+
+        var odometerMessage = string.IsNullOrWhiteSpace(currentOdometer)
+            ? "Aktuální tachometr v datech zatím není, proto zůstal prázdný."
+            : $"Tachometr: {currentOdometer} km.";
+        MaintenanceEditorStatus = $"Servisní úkon byl označen jako splněný k {todayText}. {odometerMessage}";
+        SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, updatedPlan.Id);
+        RequestFocus(DesktopFocusTarget.MaintenanceList);
+    }
+
     private VehicleHistoryEntry? GetSelectedHistoryModel()
     {
         if (SelectedHistory is null)
@@ -331,6 +369,35 @@ public sealed partial class MainWindowViewModel
 
         return _dataSet.MaintenancePlans.FirstOrDefault(item => string.Equals(item.Id, SelectedMaintenance.Id, StringComparison.Ordinal));
     }
+
+    private bool TryGetCurrentVehicleOdometer(string vehicleId, out int odometer)
+    {
+        odometer = 0;
+        var found = false;
+
+        foreach (var entry in _dataSet.HistoryEntries.Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal)))
+        {
+            if (VehimapValueParser.TryParseOdometer(entry.Odometer, out var parsed) && (!found || parsed > odometer))
+            {
+                odometer = parsed;
+                found = true;
+            }
+        }
+
+        foreach (var entry in _dataSet.FuelEntries.Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal)))
+        {
+            if (VehimapValueParser.TryParseOdometer(entry.Odometer, out var parsed) && (!found || parsed > odometer))
+            {
+                odometer = parsed;
+                found = true;
+            }
+        }
+
+        return found;
+    }
+
+    private static string FormatMaintenanceServiceDate(DateOnly date) =>
+        date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 
     private void UpsertHistoryEntry(VehicleHistoryEntry updatedEntry)
     {

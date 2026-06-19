@@ -6,6 +6,7 @@ using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
+using System.Globalization;
 using Xunit;
 
 namespace Vehimap.Tests.Unit;
@@ -202,6 +203,53 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Motorový olej", viewModel.SelectedMaintenance!.Title);
         Assert.Contains(dataStore.CurrentDataSet.MaintenancePlans, item => item.Title == "Motorový olej" && item.VehicleId == "veh_1");
         Assert.Equal("Nový servisní plán byl uložen.", viewModel.MaintenanceEditorStatus);
+    }
+
+    [Fact]
+    public async Task Complete_selected_maintenance_updates_last_service_from_current_vehicle_data()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_1", "veh_1", "01.05.2026", "Servis", "120000", "1500", "Starší servis"));
+        dataSet.FuelEntries.Add(new FuelEntry("fuel_1", "veh_1", "02.06.2026", "123456", "35", "1700", true, "Natural 95", string.Empty));
+        dataSet.MaintenancePlans.Add(new MaintenancePlan("mnt_1", "veh_1", "Motorový olej", "15000", "12", "01.04.2025", "100000", true, "Roční servis"));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+        var expectedDate = DateOnly.FromDateTime(DateTime.Today).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+
+        Assert.True(viewModel.CompleteSelectedMaintenanceCommand.CanExecute(null));
+
+        await viewModel.CompleteSelectedMaintenanceCommand.ExecuteAsync(null);
+
+        var savedPlan = Assert.Single(dataStore.CurrentDataSet.MaintenancePlans);
+        Assert.Equal(expectedDate, savedPlan.LastServiceDate);
+        Assert.Equal("123456", savedPlan.LastServiceOdometer);
+        Assert.Equal("mnt_1", viewModel.SelectedMaintenance?.Id);
+        Assert.Contains(expectedDate, viewModel.MaintenanceEditorStatus);
+        Assert.Contains("123456 km", viewModel.MaintenanceEditorStatus);
+    }
+
+    [Fact]
+    public void Complete_selected_maintenance_is_disabled_without_selection_or_during_editing()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        Assert.False(viewModel.CompleteSelectedMaintenanceCommand.CanExecute(null));
+
+        dataStore.CurrentDataSet.MaintenancePlans.Add(new MaintenancePlan("mnt_1", "veh_1", "Motorový olej", "15000", "12", string.Empty, string.Empty, true, string.Empty));
+        var viewModelWithPlan = CreateViewModel(dataRoot, dataStore);
+        Assert.True(viewModelWithPlan.CompleteSelectedMaintenanceCommand.CanExecute(null));
+
+        viewModelWithPlan.CreateMaintenanceCommand.Execute(null);
+
+        Assert.False(viewModelWithPlan.CompleteSelectedMaintenanceCommand.CanExecute(null));
     }
 
     [Fact]
