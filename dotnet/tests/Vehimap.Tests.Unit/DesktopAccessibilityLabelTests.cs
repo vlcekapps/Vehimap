@@ -105,6 +105,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewTechnicalMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestGreenCardMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewGreenCardsMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestReminderMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReviewRemindersMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CalendarExportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReloadButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleCategoryFilterBox\"", xaml);
@@ -140,6 +142,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Click=\"OnOpenUpcomingOverviewMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenOverdueOverviewMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenNearestTechnicalMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenNearestReminderMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnReviewRemindersMenuClick\"", xaml);
 
         var codeBehind = ReadViewCodeBehind("MainWindow.axaml.cs");
         Assert.Contains("Key.F10", codeBehind);

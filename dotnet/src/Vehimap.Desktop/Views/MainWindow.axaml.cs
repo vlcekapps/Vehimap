@@ -640,6 +640,22 @@ public partial class MainWindow : Window
         }
     }
 
+    private async void OnOpenNearestReminderMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.OpenNearestReminderCommand is { } command)
+        {
+            await command.ExecuteAsync(null);
+        }
+    }
+
+    private async void OnReviewRemindersMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.ReviewRemindersCommand is { } command)
+        {
+            await command.ExecuteAsync(null);
+        }
+    }
+
     private async void OnOpenRemindersWindowClick(object? sender, RoutedEventArgs e)
     {
         await OpenRemindersWindowAsync();

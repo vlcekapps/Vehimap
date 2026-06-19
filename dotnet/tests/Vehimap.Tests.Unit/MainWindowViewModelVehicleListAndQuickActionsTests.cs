@@ -81,6 +81,38 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.NotEmpty(viewModel.UpcomingOverviewItems);
     }
 
+    [Fact]
+    public async Task Open_nearest_reminder_quick_action_selects_matching_reminder()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        await viewModel.OpenNearestReminderCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.IsReminderTabSelected);
+        Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
+        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
+        Assert.Equal(DesktopFocusTarget.ReminderList, requestedFocus);
+        Assert.Contains("Nejbližší připomínka", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Review_reminders_quick_action_opens_matching_overview_filter()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        await viewModel.ReviewRemindersCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.IsOverdueOverviewTabSelected);
+        Assert.Equal("Připomínky", viewModel.SelectedOverdueOverviewFilter);
+        Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
+        Assert.NotEmpty(viewModel.OverdueOverviewItems);
+        Assert.Contains("Připomínky k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+    }
+
     private static MainWindowViewModel CreateViewModel(VehimapDataSet dataSet)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -112,6 +144,10 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             [
                 new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "05/2026", "01/2026", "06/2026"),
                 new Vehicle("veh_2", "Božena", "Osobní vozidla", "Srazové", "Škoda 100", "", "1973", "30", "", "09/2099", "01/2099", "10/2099")
+            ],
+            Reminders =
+            [
+                new VehicleReminder("rem_1", "veh_2", "Objednat servis", "01.01.2000", "30", "Neopakovat", "Zavolat servisu")
             ],
             VehicleMetaEntries =
             [

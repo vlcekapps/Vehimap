@@ -213,6 +213,17 @@
                     Click="OnReviewGreenCardsMenuClick"
                     AutomationProperties.Name="Zkontrolovat zelené karty"
                     AutomationProperties.AutomationId="ReviewGreenCardsMenuItem" />
+          <Separator />
+          <MenuItem x:Name="OpenNearestReminderMenuItem"
+                    Header="Nejbližší připomínka"
+                    Click="OnOpenNearestReminderMenuClick"
+                    AutomationProperties.Name="Otevřít nejbližší vlastní připomínku"
+                    AutomationProperties.AutomationId="OpenNearestReminderMenuItem" />
+          <MenuItem x:Name="ReviewRemindersMenuItem"
+                    Header="Zkontrolovat připomínky"
+                    Click="OnReviewRemindersMenuClick"
+                    AutomationProperties.Name="Zkontrolovat vlastní připomínky"
+                    AutomationProperties.AutomationId="ReviewRemindersMenuItem" />
         </MenuItem>
         <MenuItem x:Name="AppMenuRoot"
                   Header="_Aplikace"
