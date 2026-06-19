@@ -89,7 +89,7 @@ V hlavním okně:
 
 - `Dashboard`: `Ctrl+R` obnoví seznam, `Ctrl+F` otevře globální hledání, `Ctrl+T` otevře přehled termínů, `Ctrl+Shift+T` otevře propadlé termíny, `Ctrl+P` otevře řešitelnou položku, `Ctrl+H` otevře historii vybraného vozidla, `Ctrl+L` označí vybraný servisní úkon jako splněný, `Ctrl+O` zobrazí vybrané vozidlo a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
 - `Globální hledání`: `Ctrl+F` přesune fokus do hledání, `Ctrl+O`, `Ctrl+P` nebo `Enter` na seznamu otevře vybraný výsledek
-- `Náklady napříč vozidly`: `Ctrl+R` obnoví období, `Ctrl+P` nebo `Enter` na seznamu otevře náklady vybraného vozidla, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
+- `Náklady napříč vozidly`: `Ctrl+R` obnoví období, `Ctrl+P` přesune fokus na rozpad nákladů vybraného vozidla, `Enter` na seznamu nebo `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
 - `Přehled termínů`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+Shift+T` přepne do propadlých termínů
 - `Propadlé termíny`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+T` přepne zpět do přehledu termínů
 - `Audit dat`: `Ctrl+F` přesune fokus do hledání, `Ctrl+P` nebo `Enter` na seznamu otevře řešenou položku, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` otevře nejbližší relevantní úpravu

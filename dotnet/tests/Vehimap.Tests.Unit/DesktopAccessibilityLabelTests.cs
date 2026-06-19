@@ -307,6 +307,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewOpenButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SelectedCostVehicleDetailText\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FocusCostDetailButton\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenCostVehicleButton\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"EditCostVehicleButton\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExportFleetCostSummaryButton\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExportSelectedVehicleCostDetailButton\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExportSelectedVehicleCostReportButton\"", costXaml);
@@ -330,6 +333,7 @@ public sealed class DesktopAccessibilityLabelTests
         var reminderXaml = ReadWorkspaceOrView("ReminderWorkspaceView.axaml", true);
         var maintenanceXaml = ReadWorkspaceOrView("MaintenanceWorkspaceView.axaml", true);
         var recordXaml = ReadWorkspaceOrView("RecordWorkspaceView.axaml", true);
+        var costXaml = ReadWorkspaceOrView("CostWorkspaceView.axaml", true);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", timelineXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedTimelineItemCommand}\"", timelineXaml);
@@ -378,6 +382,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+S\" Command=\"{Binding SaveRecordCommand}\"", recordXaml);
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedRecordFileCommand}\"", recordXaml);
         Assert.Contains("Gesture=\"Ctrl+Shift+O\" Command=\"{Binding OpenSelectedRecordFolderCommand}\"", recordXaml);
+
+        Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding FocusSelectedCostDetailCommand}\"", costXaml);
+        Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedCostVehicleCommand}\"", costXaml);
+        Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedCostVehicleCommand}\"", costXaml);
+        Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedCostVehicleCommand}\"", costXaml);
     }
 
     private static string ReadViewFile(string fileName)

@@ -29,6 +29,7 @@ public enum DesktopFocusTarget
     AuditSearch,
     AuditList,
     CostList,
+    CostDetail,
     DashboardAuditList,
     DashboardCostList,
     DashboardTimelineList

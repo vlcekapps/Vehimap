@@ -295,6 +295,38 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public async Task Cost_workspace_shortcuts_focus_detail_open_vehicle_and_edit_vehicle()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Cost;
+        viewModel.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+
+        var itemHandled = await viewModel.HandleCurrentWorkspaceItemOpenShortcutAsync();
+
+        Assert.True(itemHandled);
+        Assert.Contains(DesktopFocusTarget.CostDetail, requestedTargets);
+
+        var primaryHandled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
+
+        Assert.True(primaryHandled);
+        Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("veh_1", viewModel.SelectedVehicle?.Id);
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Cost;
+        viewModel.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+
+        var editHandled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
+
+        Assert.True(editHandled);
+        Assert.True(viewModel.IsEditingVehicle);
+        Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
+        Assert.Contains(DesktopFocusTarget.VehicleEditorName, requestedTargets);
+    }
+
+    [Fact]
     public async Task Cost_export_command_saves_fleet_summary_tsv()
     {
         var saveService = new CapturingTextFileSaveService(@"C:\exports\naklady.tsv");

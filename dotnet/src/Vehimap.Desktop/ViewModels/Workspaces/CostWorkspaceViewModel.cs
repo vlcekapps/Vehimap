@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -30,16 +31,34 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
 
     public string CostExportStatus => Root.CostExportStatus;
 
+    public bool CanUseSelectedCostVehicle => SelectedDashboardCostVehicle is not null;
+
     public ICommand OpenSelectedDashboardCostVehicleCommand => Root.OpenSelectedDashboardCostVehicleCommand;
+    public ICommand OpenSelectedCostVehicleCommand => Root.OpenSelectedDashboardCostVehicleCommand;
     public IAsyncRelayCommand ExportFleetCostSummaryCommand => Root.ExportFleetCostSummaryCommand;
     public IAsyncRelayCommand ExportSelectedVehicleCostDetailCommand => Root.ExportSelectedVehicleCostDetailCommand;
     public IAsyncRelayCommand ExportSelectedVehicleCostReportCommand => Root.ExportSelectedVehicleCostReportCommand;
+
+    [RelayCommand(CanExecute = nameof(CanUseSelectedCostVehicle))]
+    private void FocusSelectedCostDetail()
+    {
+        RequestFocus(DesktopFocusTarget.CostDetail);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUseSelectedCostVehicle))]
+    private async Task EditSelectedCostVehicleAsync()
+    {
+        await Root.EditSelectedCostVehicleFromCostsAsync(SelectedDashboardCostVehicle).ConfigureAwait(true);
+    }
 
     partial void OnSelectedDashboardCostVehicleChanged(CostVehicleItemViewModel? value)
     {
         SelectedCostVehicleDetail = value is null
             ? "Vyberte vozidlo v seznamu a zobrazí se rozpad nákladů."
             : $"Vozidlo: {value.VehicleName}\nKategorie: {value.Category}\nPalivo: {value.FuelCost}\nHistorie: {value.HistoryCost}\nDoklady: {value.RecordCost}\nCelkem: {value.TotalCost}\nUjeto: {value.Distance}\nCena / km: {value.CostPerKm}\nStav výpočtu: {value.Status}";
+        OnPropertyChanged(nameof(CanUseSelectedCostVehicle));
+        FocusSelectedCostDetailCommand.NotifyCanExecuteChanged();
+        EditSelectedCostVehicleCommand.NotifyCanExecuteChanged();
         Root.NotifyCostWorkspaceSelectionChanged();
     }
 }

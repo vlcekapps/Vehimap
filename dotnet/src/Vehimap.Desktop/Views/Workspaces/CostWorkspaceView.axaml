@@ -4,7 +4,14 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.CostWorkspaceView"
              x:DataType="vm:CostWorkspaceViewModel">
-  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+P" Command="{Binding FocusSelectedCostDetailCommand}" />
+    <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedCostVehicleCommand}" />
+    <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedCostVehicleCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding EditSelectedCostVehicleCommand}" />
+  </UserControl.KeyBindings>
+
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
     <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
@@ -28,31 +35,50 @@
               AutomationProperties.Name="Exportovat HTML sestavu nákladů vybraného vozidla"
               AutomationProperties.AutomationId="ExportSelectedVehicleCostReportButton" />
     </StackPanel>
-    <TextBlock Grid.Row="3"
+    <StackPanel Grid.Row="3"
+                Margin="0,10,0,0"
+                Orientation="Horizontal"
+                Spacing="10">
+      <Button Command="{Binding FocusSelectedCostDetailCommand}"
+              Content="Zobrazit rozpad"
+              AutomationProperties.Name="Zobrazit rozpad nákladů vybraného vozidla"
+              AutomationProperties.AutomationId="FocusCostDetailButton" />
+      <Button Command="{Binding OpenSelectedCostVehicleCommand}"
+              Content="Zobrazit vozidlo"
+              AutomationProperties.Name="Zobrazit detail vozidla z nákladového přehledu"
+              AutomationProperties.AutomationId="OpenCostVehicleButton" />
+      <Button Command="{Binding EditSelectedCostVehicleCommand}"
+              Content="Upravit vozidlo"
+              AutomationProperties.Name="Upravit vozidlo z nákladového přehledu"
+              AutomationProperties.AutomationId="EditCostVehicleButton" />
+    </StackPanel>
+    <TextBlock Grid.Row="4"
                Margin="0,8,0,0"
                Text="{Binding CostExportStatus}"
                TextWrapping="Wrap"
                AutomationProperties.Name="{Binding CostExportStatus}"
                AutomationProperties.AutomationId="CostExportStatusText" />
-    <Border Grid.Row="4"
+    <Border x:Name="SelectedCostVehicleDetailHost"
+            Grid.Row="5"
             Margin="0,12,0,0"
             Padding="12"
             Background="#10203040"
-            CornerRadius="6">
+            CornerRadius="6"
+            Focusable="True"
+            AutomationProperties.Name="{Binding SelectedCostVehicleDetail}"
+            AutomationProperties.AutomationId="SelectedCostVehicleDetailText">
       <TextBlock Text="{Binding SelectedCostVehicleDetail}"
-                 TextWrapping="Wrap"
-                 AutomationProperties.Name="{Binding SelectedCostVehicleDetail}"
-                 AutomationProperties.AutomationId="SelectedCostVehicleDetailText" />
+                 TextWrapping="Wrap" />
     </Border>
     <ListBox x:Name="CostListBox"
-             Grid.Row="5"
+             Grid.Row="6"
              Margin="0,12,0,0"
              ItemsSource="{Binding CostVehicles}"
              SelectedItem="{Binding SelectedDashboardCostVehicle}"
              AutomationProperties.Name="Seznam nákladových souhrnů vozidel"
              AutomationProperties.AutomationId="CostListBox">
       <ListBox.KeyBindings>
-        <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" />
+        <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedCostVehicleCommand}" />
       </ListBox.KeyBindings>
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="itemvm:CostVehicleItemViewModel">

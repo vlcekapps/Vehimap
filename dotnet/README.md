@@ -34,6 +34,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu
 - pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
 - pouzit plny auditni workspace se samostatnym hledanim, zkratkami `Ctrl+F`, `Ctrl+O`, `Ctrl+P`, `Ctrl+U` / `F2` a oddelenym dashboardovym top vyrezem
+- pouzit nakladovy workspace se zkratkami `Ctrl+P` pro precteni rozpadu nakladu, `Ctrl+O` nebo `Enter` pro otevreni vozidla a `Ctrl+U` / `F2` pro upravu vozidla
 - ovladat shell vice klavesnici: `F5` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+D` pro dashboard, `Ctrl+T` pro blizici se terminy, `Ctrl+Shift+T` pro propadle terminy, kontextove `Ctrl+F` pro hledani v aktivni pracovni plose, `Ctrl+Shift+F` pro globalni hledani a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech, dashboardu i ve vysledcich hledani
 - primo vytvaret, upravovat a mazat `pripominky`
 - primo vytvaret, upravovat a mazat `doklady`, vcetne volby `Spravovana kopie` vs `Externi cesta` a importu souboru do spravovanych priloh
@@ -45,7 +46,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit `Historii`, `Tankovani`, `Připominky`, `Údrzbu` i `Doklady` v samostatnych desktopovych oknech nad stejnou editační logikou jako hlavni shell
 - otevrit `Detail vozidla`, `Audit` a `Dashboard` i v samostatnych desktopovych oknech nad stejnym viewmodelem jako hlavni shell
 - drzet keyboard-first a11y i v hlavnim shellu, vcetne vlastni focusovatelne listy karet a konzistentniho focusu pro ctecky obrazovky
-- pouzivat stejne workspace zkratky v kartach i samostatnych oknech: `Ctrl+F` pro hledani, `Ctrl+O` pro vozidlo/vysledek a `Ctrl+P` pro otevreni resene polozky v casove ose, hledani i terminovych prehledech; v hlavnim shellu maji tyto kontextove zkratky prednost pred globalnim otevrenim vozidla nebo dokladu
+- pouzivat stejne workspace zkratky v kartach i samostatnych oknech: `Ctrl+F` pro hledani, `Ctrl+O` pro vozidlo/vysledek a `Ctrl+P` pro otevreni resene polozky v casove ose, hledani i terminovych prehledech; v nakladech `Ctrl+P` presune fokus na rozpad vybraneho vozidla a v hlavnim shellu maji kontextove zkratky prednost pred globalnim otevrenim vozidla nebo dokladu
 - pouzivat kontextove editacni zkratky v evidencnich workspacech: `Ctrl+N` pro novou polozku, `Ctrl+U` nebo `F2` pro upravu vybrane polozky, `Ctrl+S` pro ulozeni aktivniho editoru a v dokladech `Ctrl+O` / `Ctrl+Shift+O` pro otevreni prilohy nebo slozky
 - otevrit modalni `Nastaveni`, `O programu` a `Zkontrolovat aktualizace` primo z desktop shellu
 - cist a zapisovat podporovane reminder volby do stejneho `settings.ini` jako AHK verze a respektovat `show_dashboard_on_launch`

@@ -235,16 +235,16 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool IsOverdueOverviewTabSelected => SelectedVehicleTabIndex == OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspacePrimaryOpenShortcutContext =>
-        SelectedVehicleTabIndex is RecordTabIndex or AuditTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+        SelectedVehicleTabIndex is RecordTabIndex or AuditTabIndex or CostTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspaceItemOpenShortcutContext =>
-        SelectedVehicleTabIndex is TimelineTabIndex or AuditTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+        SelectedVehicleTabIndex is TimelineTabIndex or AuditTabIndex or CostTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspaceCreateShortcutContext =>
         SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
 
     public bool IsCurrentWorkspaceEditShortcutContext =>
-        SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex or AuditTabIndex;
+        SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex or AuditTabIndex or CostTabIndex;
 
     public bool IsCurrentWorkspaceSaveShortcutContext =>
         SelectedVehicleTabIndex is DetailTabIndex or HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
@@ -554,6 +554,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             case AuditTabIndex:
                 await OpenAuditVehicleAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
                 return true;
+            case CostTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedDashboardCostVehicleCommand).ConfigureAwait(true);
+                return true;
             case SearchTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedSearchResultCommand).ConfigureAwait(true);
                 return true;
@@ -577,6 +580,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 return true;
             case AuditTabIndex:
                 await OpenAuditItemAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
+                return true;
+            case CostTabIndex:
+                ExecuteWorkspaceShortcut(CostWorkspace.FocusSelectedCostDetailCommand);
                 return true;
             case SearchTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedSearchResultCommand).ConfigureAwait(true);
@@ -647,6 +653,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
         if (SelectedVehicleTabIndex == AuditTabIndex)
         {
             return await EditAuditItemAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
+        }
+
+        if (SelectedVehicleTabIndex == CostTabIndex)
+        {
+            return await EditSelectedCostVehicleFromCostsAsync(SelectedDashboardCostVehicle).ConfigureAwait(true);
         }
 
         return HandleCurrentWorkspaceEditShortcut();
@@ -764,6 +775,23 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         StartEditForCurrentAuditTarget(item?.EntityKind ?? string.Empty);
+        return true;
+    }
+
+    internal async Task<bool> EditSelectedCostVehicleFromCostsAsync(CostVehicleItemViewModel? item)
+    {
+        if (item is null)
+        {
+            return false;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("upravit vozidlo z nákladů").ConfigureAwait(true))
+        {
+            return false;
+        }
+
+        SelectVehicleAndOpenEntity(item.VehicleId, "Vozidlo", item.VehicleId);
+        ExecuteWorkspaceShortcut(EditSelectedVehicleCommand);
         return true;
     }
 

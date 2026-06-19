@@ -16,10 +16,12 @@ public partial class CostWorkspaceView : WorkspaceViewBase<CostWorkspaceViewMode
     protected override DesktopFocusTarget? GetDefaultFocusTarget() => DesktopFocusTarget.CostList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target == DesktopFocusTarget.CostList;
+        target is DesktopFocusTarget.CostList or DesktopFocusTarget.CostDetail;
 
-    protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
-        target == DesktopFocusTarget.CostList
-            ? this.FindControl<ListBox>("CostListBox")
-            : null;
+    protected override Control? ResolveFocusTarget(DesktopFocusTarget target) => target switch
+    {
+        DesktopFocusTarget.CostList => this.FindControl<ListBox>("CostListBox"),
+        DesktopFocusTarget.CostDetail => this.FindControl<Control>("SelectedCostVehicleDetailHost"),
+        _ => null
+    };
 }
