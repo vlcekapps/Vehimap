@@ -67,6 +67,40 @@ public sealed class MainWindowViewModelOverviewTests
         Assert.Equal("Milena", viewModel.SelectedVehicle?.Name);
     }
 
+    [Fact]
+    public void Upcoming_overview_can_include_missing_green_cards_and_audit_data_issues()
+    {
+        var dataSet = BuildOverviewDataSet();
+        var viewModel = CreateViewModel(dataSet);
+
+        Assert.DoesNotContain(viewModel.UpcomingOverviewItems, item => item.Title == "Chybí zelená karta");
+        Assert.DoesNotContain(viewModel.UpcomingOverviewItems, item => item.Kind == "data_issue");
+
+        viewModel.IncludeMissingGreenCardsInUpcomingOverview = true;
+        viewModel.IncludeDataIssuesInUpcomingOverview = true;
+
+        Assert.Equal("1", dataSet.Settings.GetValue("overview", "include_missing_green", "0"));
+        Assert.Equal("1", dataSet.Settings.GetValue("overview", "include_data_issues", "0"));
+        Assert.Contains(viewModel.UpcomingOverviewItems, item => item.Kind == "green" && item.Title == "Chybí zelená karta");
+        Assert.Contains(viewModel.UpcomingOverviewItems, item => item.Kind == "data_issue" && item.EntryId == "rec_1");
+        Assert.Contains("Datové nedostatky", viewModel.UpcomingOverviewWorkspace.OverviewFilters);
+        Assert.DoesNotContain("Datové nedostatky", viewModel.OverdueOverviewWorkspace.OverviewFilters);
+        Assert.Contains("datových nedostatků", viewModel.UpcomingOverviewSummary, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
+    public void Opening_upcoming_overview_data_issue_navigates_to_audit_target()
+    {
+        var viewModel = CreateViewModel(BuildOverviewDataSet());
+        viewModel.IncludeDataIssuesInUpcomingOverview = true;
+        viewModel.SelectedUpcomingOverviewItem = viewModel.UpcomingOverviewItems.First(item => item.Kind == "data_issue" && item.EntryId == "rec_1");
+
+        viewModel.OpenSelectedUpcomingOverviewItemCommand.Execute(null);
+
+        Assert.True(viewModel.IsRecordTabSelected);
+        Assert.Equal("Povinné ručení", viewModel.SelectedRecord?.Title);
+    }
+
     private static MainWindowViewModel CreateViewModel(VehimapDataSet dataSet)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -104,7 +138,8 @@ public sealed class MainWindowViewModelOverviewTests
             Settings = new VehimapSettings(),
             Vehicles =
             [
-                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", upcomingTechnicalControl, "01/2026", overdueGreenCard)
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", upcomingTechnicalControl, "01/2026", overdueGreenCard),
+                new Vehicle("veh_2", "Božena", "Osobní vozidla", "Veterán", "Škoda 100", "2AB3456", "1972", "33", "", "", "", "")
             ],
             HistoryEntries =
             [

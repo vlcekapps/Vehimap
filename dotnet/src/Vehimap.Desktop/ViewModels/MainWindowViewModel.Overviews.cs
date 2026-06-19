@@ -1,11 +1,18 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Application;
 using Vehimap.Application.Models;
+using Vehimap.Domain.Models;
 
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
+    private const string OverviewDataIssueKind = "data_issue";
+    private const string OverviewDataIssueFilterLabel = "Datové nedostatky";
+    private const string OverviewMissingGreenDateLabel = "Nevyplněno";
+    private bool _suppressOverviewPreferenceRefresh;
+
     public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems { get; } = [];
 
     public ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems { get; } = [];
@@ -18,6 +25,17 @@ public sealed partial class MainWindowViewModel
         "Připomínky",
         "Doklady",
         "Údržba"
+    ];
+
+    public IReadOnlyList<string> UpcomingOverviewFilters { get; } =
+    [
+        "Vše",
+        "Technické kontroly",
+        "Zelené karty",
+        "Připomínky",
+        "Doklady",
+        "Údržba",
+        OverviewDataIssueFilterLabel
     ];
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewItem))]
@@ -33,7 +51,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        OpenTimelineItem(SelectedUpcomingOverviewItem);
+        OpenOverviewTimelineItem(SelectedUpcomingOverviewItem);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewVehicle))]
@@ -90,10 +108,56 @@ public sealed partial class MainWindowViewModel
         RefreshOverdueOverview();
     }
 
+    private void ApplyOverviewPreferences()
+    {
+        _suppressOverviewPreferenceRefresh = true;
+        try
+        {
+            IncludeMissingGreenCardsInUpcomingOverview = ReadOverviewBooleanSetting("include_missing_green");
+            IncludeDataIssuesInUpcomingOverview = ReadOverviewBooleanSetting("include_data_issues");
+        }
+        finally
+        {
+            _suppressOverviewPreferenceRefresh = false;
+        }
+    }
+
+    private bool ReadOverviewBooleanSetting(string key) =>
+        string.Equals(_dataSet.Settings.GetValue("overview", key, "0").Trim(), "1", StringComparison.Ordinal);
+
+    private void PersistOverviewPreferencesAsync()
+    {
+        if (_suppressOverviewPreferenceRefresh || !_session.IsLoaded)
+        {
+            return;
+        }
+
+        _dataSet.Settings.SetValue("overview", "include_missing_green", IncludeMissingGreenCardsInUpcomingOverview ? "1" : "0");
+        _dataSet.Settings.SetValue("overview", "include_data_issues", IncludeDataIssuesInUpcomingOverview ? "1" : "0");
+        _ = PersistOverviewPreferencesCoreAsync();
+    }
+
+    private async Task PersistOverviewPreferencesCoreAsync()
+    {
+        try
+        {
+            await _session.PersistAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            ShellStatus = $"Nepodařilo se uložit volby přehledu termínů: {ex.Message}";
+        }
+    }
+
     private void RefreshUpcomingOverview()
     {
         var previousKey = BuildOverviewSelectionKey(SelectedUpcomingOverviewItem);
-        var items = BuildFleetOverviewItems(isFuture: true, SelectedUpcomingOverviewFilter, UpcomingOverviewSearchText);
+        var items = BuildFleetOverviewItems(
+            isFuture: true,
+            SelectedUpcomingOverviewFilter,
+            UpcomingOverviewSearchText,
+            IncludeMissingGreenCardsInUpcomingOverview,
+            IncludeDataIssuesInUpcomingOverview);
 
         UpcomingOverviewItems.Clear();
         foreach (var item in items)
@@ -101,9 +165,7 @@ public sealed partial class MainWindowViewModel
             UpcomingOverviewItems.Add(item);
         }
 
-        UpcomingOverviewSummary = items.Count == 0
-            ? "V dostupných datech zatím nejsou žádné blížící se termíny s konkrétním datem."
-            : $"Blížících se termínů: {items.Count}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.";
+        UpcomingOverviewSummary = BuildUpcomingOverviewSummary(items);
 
         SelectedUpcomingOverviewItem = FindById(UpcomingOverviewItems, BuildOverviewSelectionKey, previousKey) ?? UpcomingOverviewItems.FirstOrDefault();
         if (SelectedUpcomingOverviewItem is null)
@@ -136,29 +198,46 @@ public sealed partial class MainWindowViewModel
         }
     }
 
-    private List<VehicleTimelineItemViewModel> BuildFleetOverviewItems(bool isFuture, string? filter, string? search)
+    private List<VehicleTimelineItemViewModel> BuildFleetOverviewItems(
+        bool isFuture,
+        string? filter,
+        string? search,
+        bool includeMissingGreenCards = false,
+        bool includeDataIssues = false)
     {
         var today = DateOnly.FromDateTime(DateTime.Today);
         var items = _dataSet.Vehicles
             .SelectMany(vehicle => _timelineService.BuildVehicleTimeline(_dataSet, vehicle.Id, today))
             .Where(IsOverviewTimelineItem)
             .Where(item => item.IsFuture == isFuture)
-            .Where(item => MatchesOverviewFilter(item, filter))
-            .Where(item => MatchesOverviewSearch(item, search))
-            .OrderBy(item => item.Date)
-            .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)
-            .ThenBy(item => item.KindLabel, StringComparer.CurrentCultureIgnoreCase)
-            .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
-            .Select(CreateTimelineItemViewModel)
-            .ToList();
+            .Select(item => new FleetOverviewProjection(CreateTimelineItemViewModel(item), item.Date, 0));
 
-        return items;
+        if (isFuture && includeMissingGreenCards)
+        {
+            items = items.Concat(BuildMissingGreenCardOverviewItems());
+        }
+
+        if (isFuture && includeDataIssues)
+        {
+            items = items.Concat(BuildDataIssueOverviewItems());
+        }
+
+        return items
+            .Where(item => MatchesOverviewFilter(item.Item, filter))
+            .Where(item => MatchesOverviewSearch(item.Item, search))
+            .OrderBy(item => item.SortGroup)
+            .ThenBy(item => item.SortDate)
+            .ThenBy(item => item.Item.VehicleName, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(item => item.Item.KindLabel, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(item => item.Item.Title, StringComparer.CurrentCultureIgnoreCase)
+            .Select(item => item.Item)
+            .ToList();
     }
 
     private static bool IsOverviewTimelineItem(VehicleTimelineItem item) =>
         item.Kind is "technical" or "green" or "custom" or "record" or "maintenance";
 
-    private static bool MatchesOverviewFilter(VehicleTimelineItem item, string? filter)
+    private static bool MatchesOverviewFilter(VehicleTimelineItemViewModel item, string? filter)
     {
         return filter switch
         {
@@ -167,11 +246,12 @@ public sealed partial class MainWindowViewModel
             "Připomínky" => item.Kind == "custom",
             "Doklady" => item.Kind == "record",
             "Údržba" => item.Kind == "maintenance",
+            OverviewDataIssueFilterLabel => item.Kind == OverviewDataIssueKind,
             _ => true
         };
     }
 
-    private static bool MatchesOverviewSearch(VehicleTimelineItem item, string? search)
+    private static bool MatchesOverviewSearch(VehicleTimelineItemViewModel item, string? search)
     {
         var needle = search?.Trim();
         if (string.IsNullOrWhiteSpace(needle))
@@ -181,15 +261,14 @@ public sealed partial class MainWindowViewModel
 
         var haystack = string.Join(' ', new[]
         {
-            item.DateText,
+            item.Date,
             item.KindLabel,
             item.Title,
             item.Detail,
             item.Status,
             item.Note,
             item.VehicleName,
-            item.VehiclePlate,
-            item.VehicleMakeModel
+            item.EntryId
         });
 
         return haystack.Contains(needle, StringComparison.CurrentCultureIgnoreCase);
@@ -197,6 +276,87 @@ public sealed partial class MainWindowViewModel
 
     private static string BuildOverviewSelectionKey(VehicleTimelineItemViewModel? item) =>
         item is null ? string.Empty : $"{item.Kind}|{item.EntryId}|{item.VehicleId}|{item.Date}";
+
+    private List<FleetOverviewProjection> BuildMissingGreenCardOverviewItems()
+    {
+        var sortDate = DateOnly.MaxValue.AddDays(-1);
+        return _dataSet.Vehicles
+            .Where(vehicle => string.IsNullOrWhiteSpace(vehicle.GreenCardTo))
+            .OrderBy(vehicle => vehicle.Name, StringComparer.CurrentCultureIgnoreCase)
+            .Select(vehicle => new FleetOverviewProjection(
+                new VehicleTimelineItemViewModel(
+                    "green",
+                    "Zelená karta",
+                    OverviewMissingGreenDateLabel,
+                    "Chybí zelená karta",
+                    BuildOverviewVehicleDetail(vehicle),
+                    "Chybí",
+                    vehicle.Name,
+                    vehicle.Id,
+                    string.Empty,
+                    true,
+                    string.Empty),
+                sortDate,
+                1))
+            .ToList();
+    }
+
+    private List<FleetOverviewProjection> BuildDataIssueOverviewItems()
+    {
+        var sortDate = DateOnly.MaxValue;
+        return _auditItems
+            .Select(item => new FleetOverviewProjection(
+                new VehicleTimelineItemViewModel(
+                    OverviewDataIssueKind,
+                    "Datový nedostatek",
+                    "Doplnit",
+                    item.Title,
+                    $"{item.Category}: {item.Message}",
+                    item.Severity switch
+                    {
+                        AuditSeverity.Error => "Chyba",
+                        AuditSeverity.Warning => "Upozornění",
+                        _ => "Info"
+                    },
+                    item.VehicleName,
+                    item.VehicleId,
+                    item.EntityId,
+                    true,
+                    item.EntityKind),
+                sortDate,
+                2))
+            .ToList();
+    }
+
+    private string BuildUpcomingOverviewSummary(IReadOnlyCollection<VehicleTimelineItemViewModel> items)
+    {
+        var missingGreenCount = _dataSet.Vehicles.Count(vehicle => string.IsNullOrWhiteSpace(vehicle.GreenCardTo));
+        var dataIssueCount = _auditItems.Count;
+        var visibleDataIssueCount = items.Count(item => item.Kind == OverviewDataIssueKind);
+
+        var summary = items.Count == 0
+            ? IncludeDataIssuesInUpcomingOverview
+                ? "V dostupných datech zatím nejsou žádné blížící se termíny ani datové nedostatky k doplnění."
+                : "V dostupných datech zatím nejsou žádné blížící se termíny s konkrétním datem."
+            : $"Blížících se položek: {items.Count}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.";
+
+        if (visibleDataIssueCount > 0)
+        {
+            summary += $" Z toho datových nedostatků: {visibleDataIssueCount}.";
+        }
+
+        if (missingGreenCount > 0 && !IncludeMissingGreenCardsInUpcomingOverview)
+        {
+            summary += $" U {missingGreenCount} vozidel není vyplněná zelená karta; můžete je přidat volbou pod filtrem.";
+        }
+
+        if (dataIssueCount > 0 && !IncludeDataIssuesInUpcomingOverview)
+        {
+            summary += $" Audit eviduje {dataIssueCount} datových nedostatků; můžete je přidat volbou pod filtrem.";
+        }
+
+        return summary;
+    }
 
     private static VehicleTimelineItemViewModel CreateTimelineItemViewModel(VehicleTimelineItem item) => new(
         item.Kind,
@@ -210,4 +370,24 @@ public sealed partial class MainWindowViewModel
         item.EntryId,
         item.IsFuture,
         item.Note);
+
+    private static string BuildOverviewVehicleDetail(Vehicle vehicle) =>
+        string.Join(" | ", new[] { vehicle.Plate, vehicle.MakeModel, vehicle.Category }
+            .Where(part => !string.IsNullOrWhiteSpace(part)));
+
+    private void OpenOverviewTimelineItem(VehicleTimelineItemViewModel item)
+    {
+        if (item.Kind == OverviewDataIssueKind)
+        {
+            SelectVehicleAndOpenEntity(item.VehicleId, item.Note, item.EntryId);
+            return;
+        }
+
+        OpenTimelineItem(item);
+    }
+
+    private sealed record FleetOverviewProjection(
+        VehicleTimelineItemViewModel Item,
+        DateOnly SortDate,
+        int SortGroup);
 }

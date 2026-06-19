@@ -910,6 +910,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             CostComparison = _projectionService.BuildCostComparison(costSummary);
 
             ApplyVehicleListFilterPreferences();
+            ApplyOverviewPreferences();
             RefreshVehicleList(preferredVehicleId);
 
             AuditItems.Clear();

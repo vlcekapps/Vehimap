@@ -559,6 +559,18 @@ public sealed partial class MainWindowViewModel
         set => UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = value;
     }
 
+    public bool IncludeMissingGreenCardsInUpcomingOverview
+    {
+        get => UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview;
+        set => UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = value;
+    }
+
+    public bool IncludeDataIssuesInUpcomingOverview
+    {
+        get => UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview;
+        set => UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview = value;
+    }
+
     public string SelectedOverdueOverviewFilter
     {
         get => OverdueOverviewWorkspace.SelectedOverdueOverviewFilter;
@@ -769,6 +781,17 @@ public sealed partial class MainWindowViewModel
     internal void HandleUpcomingOverviewWorkspaceFilterChanged()
     {
         RefreshUpcomingOverview();
+    }
+
+    internal void HandleUpcomingOverviewWorkspaceOptionsChanged()
+    {
+        if (_suppressOverviewPreferenceRefresh)
+        {
+            return;
+        }
+
+        RefreshUpcomingOverview();
+        PersistOverviewPreferencesAsync();
     }
 
     internal void NotifyUpcomingOverviewWorkspaceSelectionChanged()

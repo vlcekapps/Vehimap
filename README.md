@@ -63,6 +63,7 @@ V hlavním okně:
 - `Časová osa vozidla` spojuje do jednoho seznamu historii, tankování, připomínky, expirace dokladů, technickou kontrolu, zelenou kartu i servisní úkoly s konkrétním datem
 - v `Přehledu` lze nově ručně exportovat budoucí termíny do kalendářového souboru `.ics`, včetně TK, ZK, připomínek, expirací dokladů a servisních úkolů s datem
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
+- v C# Avalonia větvi lze v `Blížících se termínech` zapnout i vozidla bez zelené karty a datové nedostatky z auditu; obě volby se ukládají do `settings.ini` a otevření datového nedostatku skočí rovnou na správnou evidenci
 - `Audit dat` teď funguje stejně klávesnicově jako ostatní přehledy: jde z něj rovnou otevřít řešenou položku, detail vozidla nebo přejít do úpravy
 - v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
 

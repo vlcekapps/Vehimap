@@ -16,6 +16,7 @@
     <Grid Grid.Row="1"
           Grid.ColumnSpan="2"
           Margin="0,12,0,0"
+          RowDefinitions="Auto,Auto"
           ColumnDefinitions="100,*,130,170,150">
       <TextBlock Grid.Column="0"
                  VerticalAlignment="Center"
@@ -46,6 +47,21 @@
               Content="Otevřít položku"
               AutomationProperties.Name="Otevřít vybraný blížící se termín"
               AutomationProperties.AutomationId="UpcomingOverviewOpenButton" />
+      <CheckBox Grid.Row="1"
+                Grid.Column="1"
+                Margin="12,8,0,0"
+                Content="Zobrazit i vozidla bez zelené karty"
+                IsChecked="{Binding IncludeMissingGreenCardsInUpcomingOverview}"
+                AutomationProperties.Name="Zobrazit v přehledu také vozidla bez vyplněné zelené karty"
+                AutomationProperties.AutomationId="UpcomingOverviewIncludeMissingGreenCardsCheckBox" />
+      <CheckBox Grid.Row="1"
+                Grid.Column="3"
+                Grid.ColumnSpan="2"
+                Margin="12,8,0,0"
+                Content="Zobrazit i datové nedostatky"
+                IsChecked="{Binding IncludeDataIssuesInUpcomingOverview}"
+                AutomationProperties.Name="Zobrazit v přehledu také datové nedostatky z auditu"
+                AutomationProperties.AutomationId="UpcomingOverviewIncludeDataIssuesCheckBox" />
     </Grid>
 
     <ListBox x:Name="UpcomingOverviewListBox"

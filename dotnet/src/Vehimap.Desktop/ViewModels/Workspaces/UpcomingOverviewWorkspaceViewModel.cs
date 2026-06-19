@@ -19,6 +19,12 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     private string selectedUpcomingOverviewFilter = "Vše";
 
     [ObservableProperty]
+    private bool includeMissingGreenCardsInUpcomingOverview;
+
+    [ObservableProperty]
+    private bool includeDataIssuesInUpcomingOverview;
+
+    [ObservableProperty]
     private string upcomingOverviewSummary = "Blížící se termíny napříč vozidly se zobrazí po načtení dat.";
 
     [ObservableProperty]
@@ -31,7 +37,7 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
 
     public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems => Root.UpcomingOverviewItems;
 
-    public IReadOnlyList<string> OverviewFilters => Root.OverviewFilters;
+    public IReadOnlyList<string> OverviewFilters => Root.UpcomingOverviewFilters;
 
     public ICommand OpenSelectedUpcomingOverviewItemCommand => Root.OpenSelectedUpcomingOverviewItemCommand;
 
@@ -51,6 +57,16 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     partial void OnSelectedUpcomingOverviewFilterChanged(string value)
     {
         Root.HandleUpcomingOverviewWorkspaceFilterChanged();
+    }
+
+    partial void OnIncludeMissingGreenCardsInUpcomingOverviewChanged(bool value)
+    {
+        Root.HandleUpcomingOverviewWorkspaceOptionsChanged();
+    }
+
+    partial void OnIncludeDataIssuesInUpcomingOverviewChanged(bool value)
+    {
+        Root.HandleUpcomingOverviewWorkspaceOptionsChanged();
     }
 
     partial void OnSelectedUpcomingOverviewItemChanged(VehicleTimelineItemViewModel? value)
