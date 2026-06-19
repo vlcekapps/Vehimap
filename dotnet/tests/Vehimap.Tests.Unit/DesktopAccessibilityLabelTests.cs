@@ -64,9 +64,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OverviewMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"QuickActionsMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppMenuRoot\"", xaml);
+        Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusCurrentSearchCommand}\"", xaml);
         Assert.Contains("Gesture=\"Ctrl+D\" Command=\"{Binding FocusDashboardCommand}\"", xaml);
         Assert.Contains("Gesture=\"Ctrl+T\" Command=\"{Binding FocusUpcomingOverviewCommand}\"", xaml);
         Assert.Contains("Gesture=\"Ctrl+Shift+T\" Command=\"{Binding FocusOverdueOverviewCommand}\"", xaml);
+        Assert.DoesNotContain("Gesture=\"Ctrl+F\" Command=\"{Binding FocusTimelineSearchCommand}\"", xaml);
         Assert.DoesNotContain("Gesture=\"Ctrl+Shift+D\"", xaml);
         Assert.Contains("x:Name=\"AppMenuBar\"", xaml);
         Assert.Contains("x:Name=\"FileMenuRoot\" Header=\"_Soubor\" IsTabStop=\"False\"", normalizedXaml);
@@ -142,6 +144,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.F10", codeBehind);
         Assert.Contains("Key.LeftAlt", codeBehind);
         Assert.Contains("Key.RightAlt", codeBehind);
+        Assert.Contains("HandleCurrentWorkspacePrimaryOpenShortcutAsync", codeBehind);
+        Assert.Contains("HandleCurrentWorkspaceItemOpenShortcutAsync", codeBehind);
         Assert.Contains("FocusAndOpenMainMenu()", codeBehind);
         Assert.Contains("case Key.N", codeBehind);
         Assert.Contains("case Key.R", codeBehind);

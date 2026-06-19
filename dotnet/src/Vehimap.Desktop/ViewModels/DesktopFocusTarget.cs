@@ -3,6 +3,7 @@ namespace Vehimap.Desktop.ViewModels;
 public enum DesktopFocusTarget
 {
     VehicleList,
+    VehicleSearch,
     SelectedVehicleTabHeader,
     VehicleDetailPrimaryAction,
     VehicleEditorName,

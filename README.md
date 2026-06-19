@@ -82,11 +82,12 @@ V hlavním okně:
 - `Ctrl+P`: otevřít pojištění a doklady vybraného vozidla
 - `Ctrl+R`: otevřít vlastní připomínky vybraného vozidla
 - v hlavním seznamu klávesa `Enter` otevře detail právě vybraného vozidla
+- v C# Avalonia větvi jsou `Ctrl+F`, `Ctrl+O` a `Ctrl+P` v přehledových kartách kontextové: nejdřív obslouží aktivní hledání, výsledek nebo termín a teprve mimo tyto pracovní plochy se použije globální akce hlavního okna
 
 ## Klávesové zkratky v dashboardu a přehledech:
 
 - `Dashboard`: `Ctrl+R` obnoví seznam, `Ctrl+F` otevře globální hledání, `Ctrl+T` otevře přehled termínů, `Ctrl+Shift+T` otevře propadlé termíny, `Ctrl+P` otevře řešitelnou položku, `Ctrl+H` otevře historii vybraného vozidla, `Ctrl+L` označí vybraný servisní úkon jako splněný, `Ctrl+O` zobrazí vybrané vozidlo a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
-- `Globální hledání`: `Ctrl+F` přesune fokus do hledání, `Ctrl+O` nebo `Enter` na seznamu otevře vybraný výsledek
+- `Globální hledání`: `Ctrl+F` přesune fokus do hledání, `Ctrl+O`, `Ctrl+P` nebo `Enter` na seznamu otevře vybraný výsledek
 - `Náklady napříč vozidly`: `Ctrl+R` obnoví období, `Ctrl+P` nebo `Enter` na seznamu otevře náklady vybraného vozidla, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
 - `Přehled termínů`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+Shift+T` přepne do propadlých termínů
 - `Propadlé termíny`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+T` přepne zpět do přehledu termínů

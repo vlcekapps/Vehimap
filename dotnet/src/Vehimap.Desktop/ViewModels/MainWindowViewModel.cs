@@ -232,6 +232,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool IsOverdueOverviewTabSelected => SelectedVehicleTabIndex == OverdueOverviewTabIndex;
 
+    public bool IsCurrentWorkspacePrimaryOpenShortcutContext =>
+        SelectedVehicleTabIndex is SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+
+    public bool IsCurrentWorkspaceItemOpenShortcutContext =>
+        SelectedVehicleTabIndex is TimelineTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+
     public MainWindowViewModel()
         : this(
             new LegacyVehimapDataStore(),
@@ -334,6 +340,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(IsSearchTabSelected));
         OnPropertyChanged(nameof(IsUpcomingOverviewTabSelected));
         OnPropertyChanged(nameof(IsOverdueOverviewTabSelected));
+        OnPropertyChanged(nameof(IsCurrentWorkspacePrimaryOpenShortcutContext));
+        OnPropertyChanged(nameof(IsCurrentWorkspaceItemOpenShortcutContext));
     }
 
     partial void OnSelectedVehicleChanged(VehicleListItemViewModel? value)
@@ -432,6 +440,21 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void FocusCurrentSearch()
+    {
+        var target = SelectedVehicleTabIndex switch
+        {
+            TimelineTabIndex => DesktopFocusTarget.TimelineSearch,
+            SearchTabIndex => DesktopFocusTarget.GlobalSearchBox,
+            UpcomingOverviewTabIndex => DesktopFocusTarget.UpcomingOverviewSearch,
+            OverdueOverviewTabIndex => DesktopFocusTarget.OverdueOverviewSearch,
+            _ => DesktopFocusTarget.VehicleSearch
+        };
+
+        RequestFocus(target);
+    }
+
+    [RelayCommand]
     private void FocusDashboard()
     {
         SelectedVehicleTabIndex = DashboardTabIndex;
@@ -504,6 +527,53 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         OpenTimelineItem(SelectedTimelineItem);
+    }
+
+    public async Task<bool> HandleCurrentWorkspacePrimaryOpenShortcutAsync()
+    {
+        switch (SelectedVehicleTabIndex)
+        {
+            case SearchTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedSearchResultCommand).ConfigureAwait(true);
+                return true;
+            case UpcomingOverviewTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedUpcomingOverviewVehicleCommand).ConfigureAwait(true);
+                return true;
+            case OverdueOverviewTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedOverdueOverviewVehicleCommand).ConfigureAwait(true);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public async Task<bool> HandleCurrentWorkspaceItemOpenShortcutAsync()
+    {
+        switch (SelectedVehicleTabIndex)
+        {
+            case TimelineTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedTimelineItemCommand).ConfigureAwait(true);
+                return true;
+            case SearchTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedSearchResultCommand).ConfigureAwait(true);
+                return true;
+            case UpcomingOverviewTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedUpcomingOverviewItemCommand).ConfigureAwait(true);
+                return true;
+            case OverdueOverviewTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedOverdueOverviewItemCommand).ConfigureAwait(true);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private static async Task ExecuteWorkspaceShortcutAsync(IAsyncRelayCommand command)
+    {
+        if (command.CanExecute(null))
+        {
+            await command.ExecuteAsync(null).ConfigureAwait(true);
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedRecordFile))]

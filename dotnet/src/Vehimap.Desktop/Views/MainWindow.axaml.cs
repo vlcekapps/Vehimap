@@ -193,7 +193,7 @@ public partial class MainWindow : Window
         e.Handled = FocusSelectedTabHeader();
     }
 
-    private void OnWindowKeyDown(object? sender, KeyEventArgs e)
+    private async void OnWindowKeyDown(object? sender, KeyEventArgs e)
     {
         if (IsMainMenuInvocationKey(e))
         {
@@ -217,6 +217,13 @@ public partial class MainWindow : Window
                 e.Handled = true;
                 break;
             case Key.O:
+                if (_viewModel?.IsCurrentWorkspacePrimaryOpenShortcutContext == true)
+                {
+                    e.Handled = true;
+                    await _viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync().ConfigureAwait(true);
+                    break;
+                }
+
                 _ = OpenVehicleDetailWindowAsync();
                 e.Handled = true;
                 break;
@@ -229,6 +236,13 @@ public partial class MainWindow : Window
                 e.Handled = true;
                 break;
             case Key.P:
+                if (_viewModel?.IsCurrentWorkspaceItemOpenShortcutContext == true)
+                {
+                    e.Handled = true;
+                    await _viewModel.HandleCurrentWorkspaceItemOpenShortcutAsync().ConfigureAwait(true);
+                    break;
+                }
+
                 _ = OpenRecordsWindowAsync();
                 e.Handled = true;
                 break;
@@ -689,6 +703,7 @@ public partial class MainWindow : Window
         return target switch
         {
             DesktopFocusTarget.VehicleList => this.FindControl<ListBox>("VehicleListBox"),
+            DesktopFocusTarget.VehicleSearch => this.FindControl<TextBox>("VehicleSearchBox"),
             _ => null
         };
     }

@@ -15,7 +15,7 @@
   <Window.KeyBindings>
     <KeyBinding Gesture="F5" Command="{Binding ReloadCommand}" />
     <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportCalendarCommand}" />
-    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusTimelineSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusCurrentSearchCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+F" Command="{Binding FocusGlobalSearchCommand}" />
     <KeyBinding Gesture="Ctrl+D" Command="{Binding FocusDashboardCommand}" />
     <KeyBinding Gesture="Ctrl+T" Command="{Binding FocusUpcomingOverviewCommand}" />
