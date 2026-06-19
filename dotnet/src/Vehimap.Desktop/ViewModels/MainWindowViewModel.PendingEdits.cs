@@ -134,6 +134,8 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
         OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
+        OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
+        MaintenanceWorkspace.NotifyMaintenanceRecommendationStateChanged();
 
         CreateVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();

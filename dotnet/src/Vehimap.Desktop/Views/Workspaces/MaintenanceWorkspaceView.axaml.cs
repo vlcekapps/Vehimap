@@ -2,15 +2,19 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.ViewModels.Workspaces;
+using Vehimap.Desktop.Views;
 
 namespace Vehimap.Desktop.Views.Workspaces;
 
 public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWorkspaceViewModel>
 {
+    private MaintenanceWorkspaceViewModel? _subscribedViewModel;
+
     public MaintenanceWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
         RegisterShiftTabBackNavigation("MaintenanceListBox", "MaintenanceEditorTitleBox");
+        DataContextChanged += OnMaintenanceDataContextChanged;
         ApplyHostMode();
     }
 
@@ -44,5 +48,58 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
         {
             editorHost.IsVisible = AllowEditing;
         }
+    }
+
+    private void OnMaintenanceDataContextChanged(object? sender, EventArgs e)
+    {
+        if (_subscribedViewModel is not null)
+        {
+            _subscribedViewModel.MaintenanceTemplatesRequested -= OnMaintenanceTemplatesRequested;
+        }
+
+        _subscribedViewModel = DataContext as MaintenanceWorkspaceViewModel;
+        if (_subscribedViewModel is not null)
+        {
+            _subscribedViewModel.MaintenanceTemplatesRequested += OnMaintenanceTemplatesRequested;
+        }
+    }
+
+    private async void OnMaintenanceTemplatesRequested(object? sender, EventArgs e)
+    {
+        await OpenMaintenanceTemplatesDialogAsync();
+    }
+
+    private async Task OpenMaintenanceTemplatesDialogAsync()
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        var preview = ViewModel.BuildMaintenanceTemplatePreview();
+        if (preview.TotalMissingCount == 0)
+        {
+            ViewModel.SetMaintenanceTemplateStatus("Doporučené šablony už nemají žádné chybějící servisní plány.");
+            return;
+        }
+
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+        {
+            return;
+        }
+
+        var dialog = new VehicleStarterBundleWindow
+        {
+            DataContext = VehicleStarterBundleDialogViewModel.CreateMaintenanceTemplates(preview)
+        };
+
+        var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(owner);
+        if (result is null)
+        {
+            return;
+        }
+
+        var message = await ViewModel.ApplyMaintenanceTemplatesAsync(result.SelectedItems);
+        ViewModel.SetMaintenanceTemplateStatus(message);
     }
 }

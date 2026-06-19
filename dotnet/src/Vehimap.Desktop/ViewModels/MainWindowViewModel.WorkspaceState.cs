@@ -293,6 +293,7 @@ public sealed partial class MainWindowViewModel
     public bool CanEditSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
     public bool CanDeleteSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
     public bool CanCompleteSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
+    public bool CanOpenMaintenanceRecommendations => SelectedVehicle is not null && !HasPendingEdits;
     public bool CanSaveMaintenance => SelectedVehicle is not null && IsEditingMaintenance;
     public bool CanCancelMaintenanceEdit => IsEditingMaintenance;
 
@@ -668,6 +669,8 @@ public sealed partial class MainWindowViewModel
         EditSelectedMaintenanceCommand.NotifyCanExecuteChanged();
         DeleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();
         CompleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
+        MaintenanceWorkspace.NotifyMaintenanceRecommendationStateChanged();
         SaveMaintenanceCommand.NotifyCanExecuteChanged();
         CancelMaintenanceEditCommand.NotifyCanExecuteChanged();
         NotifyPendingEditStateChanged();

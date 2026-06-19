@@ -371,6 +371,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
         OpenSelectedVehicleCostsCommand.NotifyCanExecuteChanged();
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
+        OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
+        MaintenanceWorkspace.NotifyMaintenanceRecommendationStateChanged();
         OnPropertyChanged(nameof(CanOpenVehicleDetailWindow));
         OnPropertyChanged(nameof(CanOpenHistoryWindow));
         OnPropertyChanged(nameof(CanOpenFuelWindow));

@@ -102,6 +102,7 @@ V hlavním okně:
 - `Detail vozidla`: `Ctrl+U` nebo `F2` upraví vozidlo, `Ctrl+H` otevře historii, `Ctrl+R` připomínky, `Ctrl+K` kilometry a tankování, `Ctrl+M` plán údržby a `Ctrl+P` pojištění a doklady
 - `Historie událostí`, `Kilometry a tankování`, `Pojištění a doklady` i `Vlastní připomínky`: `Ctrl+F` přesune fokus do rychlého hledání, `Ctrl+N` přidá záznam, `Ctrl+U` nebo `F2` upraví vybraný záznam a `Ctrl+D` otevře detail vozidla
 - `Plán údržby`: `Ctrl+F` přesune fokus do hledání, `Ctrl+N` přidá úkon, `Ctrl+Shift+N` nabídne doporučené šablony, `Ctrl+U` nebo `F2` upraví vybraný úkon, `Ctrl+L` jej označí jako splněný a `Ctrl+D` otevře detail vozidla
+- v C# Avalonia větvi je výběr doporučených servisních šablon dostupný i tlačítkem `Doporučené` ve sdíleném workspace údržby a funguje stejně v hlavní kartě i samostatném okně
 - v C# Avalonia větvi je označení servisu jako splněného dostupné i tlačítkem `Splněno`; doplní dnešní datum a pokud je v historii nebo tankování známý aktuální tachometr, použije i ten
 - `Výběr doporučených šablon`: `Ctrl+S` přidá vybrané položky, `Ctrl+A` vybere vše a `Ctrl+Shift+A` výběr vymaže
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní

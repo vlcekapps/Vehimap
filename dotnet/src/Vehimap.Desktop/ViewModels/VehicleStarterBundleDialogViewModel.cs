@@ -10,8 +10,39 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObject
 {
+    private readonly bool _showSectionCounts;
+    private readonly string _emptySelectionText;
+
     public VehicleStarterBundleDialogViewModel(VehicleStarterBundlePreview preview)
+        : this(
+            preview,
+            "Balíček pro vozidlo",
+            "Dialog pro výběr servisních plánů, dokladů a připomínek pro vozidlo.",
+            "Doporučené položky",
+            "Seznam položek balíčku",
+            "Vyberte položku vlevo a můžete upravit její obsah před přidáním.",
+            "Není vybraná žádná položka.",
+            showSectionCounts: true)
     {
+    }
+
+    private VehicleStarterBundleDialogViewModel(
+        VehicleStarterBundlePreview preview,
+        string dialogTitle,
+        string dialogHelpText,
+        string itemsHeading,
+        string itemsListName,
+        string detailHint,
+        string emptySelectionText,
+        bool showSectionCounts)
+    {
+        DialogTitle = dialogTitle;
+        DialogHelpText = dialogHelpText;
+        ItemsHeading = itemsHeading;
+        ItemsListName = itemsListName;
+        DetailHint = detailHint;
+        _emptySelectionText = emptySelectionText;
+        _showSectionCounts = showSectionCounts;
         VehicleId = preview.VehicleId;
         VehicleName = preview.VehicleName;
         ProfileLabel = string.IsNullOrWhiteSpace(preview.ProfileLabel) ? "Bez doplňujícího profilu" : preview.ProfileLabel;
@@ -26,6 +57,27 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         SelectedItem = Items.FirstOrDefault();
         RefreshSummary();
     }
+
+    public static VehicleStarterBundleDialogViewModel CreateMaintenanceTemplates(VehicleStarterBundlePreview preview) =>
+        new(
+            preview,
+            "Doporučené servisní šablony",
+            "Dialog pro výběr doporučených servisních plánů podle kategorie a servisního profilu vozidla.",
+            "Servisní šablony",
+            "Seznam doporučených servisních šablon",
+            "Vyberte šablonu vlevo a můžete upravit její intervaly nebo poznámku před přidáním.",
+            "Není vybraná žádná servisní šablona.",
+            showSectionCounts: false);
+
+    public string DialogTitle { get; }
+
+    public string DialogHelpText { get; }
+
+    public string ItemsHeading { get; }
+
+    public string ItemsListName { get; }
+
+    public string DetailHint { get; }
 
     public string VehicleId { get; }
 
@@ -111,8 +163,10 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         var recordCount = selectedItems.Count(item => item.Section == VehicleStarterBundleSection.Record);
         var reminderCount = selectedItems.Count(item => item.Section == VehicleStarterBundleSection.Reminder);
         SummaryText = selectedItems.Count == 0
-            ? "Není vybraná žádná položka."
-            : $"Vybráno: {selectedItems.Count} položek | Servis {maintenanceCount} | Doklady {recordCount} | Připomínky {reminderCount}";
+            ? _emptySelectionText
+            : _showSectionCounts
+                ? $"Vybráno: {selectedItems.Count} položek | Servis {maintenanceCount} | Doklady {recordCount} | Připomínky {reminderCount}"
+                : $"Vybráno: {maintenanceCount} servisních šablon.";
         OnPropertyChanged(nameof(CanApply));
     }
 }

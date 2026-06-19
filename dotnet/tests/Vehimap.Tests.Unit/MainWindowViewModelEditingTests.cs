@@ -433,6 +433,35 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Balíček pro vozidlo už neměl žádné nové položky k doplnění.", secondMessage);
     }
 
+    [Fact]
+    public async Task Maintenance_template_preview_and_apply_adds_only_service_plans()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_1", "Běžný provoz", string.Empty, "Nafta", "Má klimatizaci", "Řemen", "Automatická"));
+
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        var preview = viewModel.BuildMaintenanceTemplatePreview("veh_1");
+
+        Assert.NotEmpty(preview.Items);
+        Assert.All(preview.Items, item => Assert.Equal(VehicleStarterBundleSection.Maintenance, item.Section));
+
+        var message = await viewModel.ApplyMaintenanceTemplatesAsync("veh_1", preview.Items);
+
+        Assert.Contains("Doporučené šablony přidaly", message);
+        Assert.Contains(dataStore.CurrentDataSet.MaintenancePlans, item => item.VehicleId == "veh_1" && item.Title == "Motorový olej a filtr");
+        Assert.Empty(dataStore.CurrentDataSet.Records);
+        Assert.Empty(dataStore.CurrentDataSet.Reminders);
+        Assert.Equal(DesktopTabIndexes.Maintenance, viewModel.SelectedVehicleTabIndex);
+
+        var secondMessage = await viewModel.ApplyMaintenanceTemplatesAsync("veh_1", preview.Items);
+        Assert.Equal("Doporučené šablony už neměly žádné nové servisní plány k doplnění.", secondMessage);
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_tempRoot))

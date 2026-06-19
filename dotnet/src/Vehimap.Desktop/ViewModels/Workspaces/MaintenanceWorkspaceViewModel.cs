@@ -1,6 +1,8 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Vehimap.Application.Models;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -14,6 +16,9 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public string WindowTitle => Root.MaintenanceWindowTitle;
     public string MaintenanceSummary => Root.MaintenanceSummary;
     public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance => Root.SelectedVehicleMaintenance;
+    public bool CanOpenMaintenanceRecommendations => Root.CanOpenMaintenanceRecommendations;
+
+    public event EventHandler? MaintenanceTemplatesRequested;
 
     [ObservableProperty]
     private VehicleMaintenanceItemViewModel? selectedMaintenance;
@@ -59,6 +64,37 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public ICommand CompleteSelectedMaintenanceCommand => Root.CompleteSelectedMaintenanceCommand;
     public ICommand SaveMaintenanceCommand => Root.SaveMaintenanceCommand;
     public ICommand CancelMaintenanceEditCommand => Root.CancelMaintenanceEditCommand;
+
+    public VehicleStarterBundlePreview BuildMaintenanceTemplatePreview()
+    {
+        return Root.SelectedVehicle is null
+            ? new VehicleStarterBundlePreview(string.Empty, string.Empty, string.Empty, [])
+            : Root.BuildMaintenanceTemplatePreview(Root.SelectedVehicle.Id);
+    }
+
+    public Task<string> ApplyMaintenanceTemplatesAsync(IReadOnlyList<VehicleStarterBundleTemplate> items)
+    {
+        return Root.SelectedVehicle is null
+            ? Task.FromResult("Nejprve vyberte vozidlo.")
+            : Root.ApplyMaintenanceTemplatesAsync(Root.SelectedVehicle.Id, items);
+    }
+
+    public void SetMaintenanceTemplateStatus(string message)
+    {
+        MaintenanceEditorStatus = message;
+    }
+
+    internal void NotifyMaintenanceRecommendationStateChanged()
+    {
+        OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
+        OpenMaintenanceTemplatesCommand.NotifyCanExecuteChanged();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenMaintenanceRecommendations))]
+    private void OpenMaintenanceTemplates()
+    {
+        MaintenanceTemplatesRequested?.Invoke(this, EventArgs.Empty);
+    }
 
     partial void OnSelectedMaintenanceChanged(VehicleMaintenanceItemViewModel? value)
     {

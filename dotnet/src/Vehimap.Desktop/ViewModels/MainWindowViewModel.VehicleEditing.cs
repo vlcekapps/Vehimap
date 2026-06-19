@@ -268,6 +268,20 @@ public sealed partial class MainWindowViewModel
     internal VehicleStarterBundlePreview BuildVehicleStarterBundlePreview(string vehicleId) =>
         _vehicleStarterBundleService.BuildPreview(_dataSet, vehicleId, DateOnly.FromDateTime(DateTime.Today));
 
+    internal VehicleStarterBundlePreview BuildMaintenanceTemplatePreview(string vehicleId)
+    {
+        var preview = BuildVehicleStarterBundlePreview(vehicleId);
+        var maintenanceItems = preview.Items
+            .Where(item => item.Section == VehicleStarterBundleSection.Maintenance)
+            .ToList();
+
+        return new VehicleStarterBundlePreview(
+            preview.VehicleId,
+            preview.VehicleName,
+            preview.ProfileLabel,
+            maintenanceItems);
+    }
+
     internal bool TryConsumePendingVehicleStarterBundleOffer(string vehicleId)
     {
         if (!string.Equals(_pendingVehicleStarterBundleOfferVehicleId, vehicleId, StringComparison.Ordinal))
@@ -413,6 +427,62 @@ public sealed partial class MainWindowViewModel
         }
 
         return $"Balíček pro vozidlo přidal {addedCount} položek: {string.Join(", ", parts)}.";
+    }
+
+    internal async Task<string> ApplyMaintenanceTemplatesAsync(string vehicleId, IReadOnlyList<VehicleStarterBundleTemplate> items)
+    {
+        if (_dataRoot is null)
+        {
+            return "Doporučené šablony nelze použít bez načtených dat.";
+        }
+
+        var maintenanceItems = items
+            .Where(item => item.Section == VehicleStarterBundleSection.Maintenance)
+            .ToList();
+
+        if (maintenanceItems.Count == 0)
+        {
+            return "Doporučené šablony neobsahovaly žádné vybrané servisní plány.";
+        }
+
+        var maintenanceKeys = _dataSet.MaintenancePlans
+            .Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal))
+            .Select(item => NormalizeBundleKey(item.Title))
+            .Where(static item => !string.IsNullOrWhiteSpace(item))
+            .ToHashSet(StringComparer.Ordinal);
+
+        var addedMaintenance = 0;
+        foreach (var item in maintenanceItems)
+        {
+            var key = NormalizeBundleKey(item.Title);
+            if (string.IsNullOrWhiteSpace(key) || maintenanceKeys.Contains(key))
+            {
+                continue;
+            }
+
+            _dataSet.MaintenancePlans.Add(new MaintenancePlan(
+                GenerateLegacyId(_dataSet.MaintenancePlans.Select(entry => entry.Id)),
+                vehicleId,
+                item.Title.Trim(),
+                item.IntervalKm.Trim(),
+                item.IntervalMonths.Trim(),
+                string.Empty,
+                string.Empty,
+                true,
+                item.Note.Trim()));
+            maintenanceKeys.Add(key);
+            addedMaintenance++;
+        }
+
+        if (addedMaintenance == 0)
+        {
+            return "Doporučené šablony už neměly žádné nové servisní plány k doplnění.";
+        }
+
+        await PersistDataAndRestoreSelectionAsync(vehicleId, MaintenanceTabIndex);
+        SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
+
+        return $"Doporučené šablony přidaly {addedMaintenance} servisních plánů.";
     }
 
     internal void SetVehicleStarterBundleStatus(string message)

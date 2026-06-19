@@ -7,13 +7,13 @@
         Height="720"
         MinWidth="920"
         MinHeight="620"
-        Title="Balíček pro vozidlo"
-        AutomationProperties.Name="Balíček pro vozidlo"
+        Title="{Binding DialogTitle}"
+        AutomationProperties.Name="{Binding DialogTitle}"
         AutomationProperties.AutomationId="VehicleStarterBundleWindow"
-        AutomationProperties.HelpText="Dialog pro výběr servisních plánů, dokladů a připomínek pro vozidlo.">
+        AutomationProperties.HelpText="{Binding DialogHelpText}">
   <Grid Margin="18" RowDefinitions="Auto,Auto,*,Auto">
     <StackPanel Spacing="4">
-      <TextBlock FontSize="24" FontWeight="SemiBold" Text="Balíček pro vozidlo" />
+      <TextBlock FontSize="24" FontWeight="SemiBold" Text="{Binding DialogTitle}" />
       <TextBlock Text="{Binding VehicleName}" />
       <TextBlock Opacity="0.8" Text="{Binding ProfileLabel}" />
     </StackPanel>
@@ -26,13 +26,13 @@
     <Grid Grid.Row="2" Margin="0,18,0,0" ColumnDefinitions="360,*">
       <Border Padding="12" BorderBrush="#304050" BorderThickness="1" CornerRadius="8">
         <Grid RowDefinitions="Auto,*,Auto">
-          <TextBlock FontWeight="SemiBold" Text="Doporučené položky" />
+          <TextBlock FontWeight="SemiBold" Text="{Binding ItemsHeading}" />
           <ListBox x:Name="BundleItemsListBox"
                    Grid.Row="1"
                    Margin="0,12,0,0"
                    ItemsSource="{Binding Items}"
                    SelectedItem="{Binding SelectedItem}"
-                   AutomationProperties.Name="Seznam položek balíčku"
+                   AutomationProperties.Name="{Binding ItemsListName}"
                    AutomationProperties.AutomationId="BundleItemsListBox">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:VehicleStarterBundleItemEditorViewModel">
@@ -67,7 +67,7 @@
           <StackPanel Spacing="12">
             <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail vybrané položky" />
             <TextBlock Opacity="0.78"
-                       Text="Vyberte položku vlevo a můžete upravit její obsah před přidáním." />
+                       Text="{Binding DetailHint}" />
 
             <StackPanel IsVisible="{Binding SelectedItem.IsMaintenance}">
               <TextBlock FontWeight="SemiBold" Text="Název servisního úkonu" />

@@ -42,6 +42,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo vytvaret, upravovat a mazat `tankovani`
 - posunout opakovanou `pripominku` na dalsi termin tlacitkem `Dalsi termin` nebo zkratkou `Ctrl+Shift+N`
 - primo vytvaret, upravovat a mazat `plan udrzby`
+- doplnit chybejici doporucene servisni sablony v `Planu udrzby` tlacitkem `Doporucene` nebo zkratkou `Ctrl+Shift+N`; dialog pouziva stejny katalog jako balicek pro vozidlo, ale prida jen servisni plany
 - oznacit vybrany servisni plan jako splneny tlacitkem `Splneno` nebo zkratkou `Ctrl+L`; akce doplni dnesni datum a podle dostupnych dat i aktualni tachometr
 - primo vytvaret, upravovat a mazat `vozidla`, vcetne zakladniho servisniho profilu, stavu vozidla, potvrzeni kaskadoveho odstraneni evidenci a uklidu spravovanych priloh
 - otevrit `Naklady a souhrny` primo z vybraneho vozidla, zobrazit rozpad palivo / historie / doklady a exportovat souhrn TSV, detail TSV i HTML sestavu

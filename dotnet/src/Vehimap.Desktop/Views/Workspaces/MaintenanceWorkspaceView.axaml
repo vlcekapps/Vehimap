@@ -6,6 +6,7 @@
              x:DataType="vm:MaintenanceWorkspaceViewModel">
   <UserControl.KeyBindings>
     <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateMaintenanceCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+N" Command="{Binding OpenMaintenanceTemplatesCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedMaintenanceCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedMaintenanceCommand}" />
     <KeyBinding Gesture="Ctrl+L" Command="{Binding CompleteSelectedMaintenanceCommand}" />
@@ -41,6 +42,7 @@
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding MaintenancePanelHeading}" />
         <WrapPanel x:Name="MaintenanceActionPanel" Grid.Row="1" Margin="0,14,0,0" ItemWidth="132" ItemHeight="34">
           <Button Command="{Binding CreateMaintenanceCommand}" Content="Nový plán" AutomationProperties.Name="Vytvořit nový servisní plán" AutomationProperties.AutomationId="CreateMaintenanceButton" />
+          <Button Command="{Binding OpenMaintenanceTemplatesCommand}" Content="Doporučené" IsEnabled="{Binding CanOpenMaintenanceRecommendations}" AutomationProperties.Name="Otevřít doporučené servisní šablony" AutomationProperties.AutomationId="OpenMaintenanceTemplatesButton" />
           <Button Command="{Binding EditSelectedMaintenanceCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybraný servisní plán" AutomationProperties.AutomationId="EditMaintenanceButton" />
           <Button Command="{Binding DeleteSelectedMaintenanceCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybraný servisní plán" AutomationProperties.AutomationId="DeleteMaintenanceButton" />
           <Button Command="{Binding CompleteSelectedMaintenanceCommand}" Content="Splněno" AutomationProperties.Name="Označit vybraný servisní úkon jako splněný" AutomationProperties.AutomationId="CompleteMaintenanceButton" />
