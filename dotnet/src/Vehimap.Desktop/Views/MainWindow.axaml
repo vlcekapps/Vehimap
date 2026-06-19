@@ -224,6 +224,17 @@
                     Click="OnReviewRemindersMenuClick"
                     AutomationProperties.Name="Zkontrolovat vlastní připomínky"
                     AutomationProperties.AutomationId="ReviewRemindersMenuItem" />
+          <Separator />
+          <MenuItem x:Name="OpenNearestMaintenanceMenuItem"
+                    Header="Nejbližší servis"
+                    Click="OnOpenNearestMaintenanceMenuClick"
+                    AutomationProperties.Name="Otevřít nejbližší servisní úkon"
+                    AutomationProperties.AutomationId="OpenNearestMaintenanceMenuItem" />
+          <MenuItem x:Name="ReviewMaintenanceMenuItem"
+                    Header="Zkontrolovat údržbu"
+                    Click="OnReviewMaintenanceMenuClick"
+                    AutomationProperties.Name="Zkontrolovat plán údržby"
+                    AutomationProperties.AutomationId="ReviewMaintenanceMenuItem" />
         </MenuItem>
         <MenuItem x:Name="AppMenuRoot"
                   Header="_Aplikace"

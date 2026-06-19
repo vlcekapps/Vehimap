@@ -123,6 +123,40 @@ public sealed partial class MainWindowViewModel
             "Žádné vlastní připomínky teď nevyžadují upozornění.");
     }
 
+    [RelayCommand]
+    private async Task OpenNearestMaintenanceAsync()
+    {
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít nejbližší servisní úkon").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        var items = BuildQuickActionItems("maintenance");
+        if (items.Count == 0)
+        {
+            ShellStatus = "Momentálně není žádný servisní úkon s blížícím se nebo propadlým termínem.";
+            return;
+        }
+
+        ShellStatus = $"Nejbližší servis: {items[0].VehicleName} - {items[0].Title} ({items[0].Date}).";
+        OpenTimelineItem(items[0]);
+    }
+
+    [RelayCommand]
+    private async Task ReviewMaintenanceAsync()
+    {
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zkontrolovat plán údržby").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        OpenQuickActionOverview(
+            "maintenance",
+            AttentionVehicleStatusFilterLabel,
+            "Údržba",
+            "Žádné servisní úkony teď nevyžadují upozornění.");
+    }
+
     private List<VehicleTimelineItemViewModel> BuildQuickActionItems(string kind)
     {
         return _dataSet.Vehicles
@@ -189,6 +223,7 @@ public sealed partial class MainWindowViewModel
             "technical" => $"Technické kontroly k prověření: {items.Count}. Otevřen je příslušný přehled.",
             "green" => $"Zelené karty k prověření: {items.Count}. Otevřen je příslušný přehled.",
             "custom" => $"Připomínky k prověření: {items.Count}. Otevřen je příslušný přehled.",
+            "maintenance" => $"Údržba k prověření: {items.Count}. Otevřen je příslušný přehled.",
             _ => emptyFilterStatusMessage
         };
     }

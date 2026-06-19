@@ -113,6 +113,38 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Contains("Připomínky k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
+    [Fact]
+    public async Task Open_nearest_maintenance_quick_action_selects_matching_plan()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        await viewModel.OpenNearestMaintenanceCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.IsMaintenanceTabSelected);
+        Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
+        Assert.Equal("mnt_1", viewModel.SelectedMaintenance?.Id);
+        Assert.Equal(DesktopFocusTarget.MaintenanceList, requestedFocus);
+        Assert.Contains("Nejbližší servis", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Review_maintenance_quick_action_opens_matching_overview_filter()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        await viewModel.ReviewMaintenanceCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.IsOverdueOverviewTabSelected);
+        Assert.Equal("Údržba", viewModel.SelectedOverdueOverviewFilter);
+        Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
+        Assert.NotEmpty(viewModel.OverdueOverviewItems);
+        Assert.Contains("Údržba k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+    }
+
     private static MainWindowViewModel CreateViewModel(VehimapDataSet dataSet)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -148,6 +180,10 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             Reminders =
             [
                 new VehicleReminder("rem_1", "veh_2", "Objednat servis", "01.01.2000", "30", "Neopakovat", "Zavolat servisu")
+            ],
+            MaintenancePlans =
+            [
+                new MaintenancePlan("mnt_1", "veh_2", "Motorový olej", "", "12", "01.01.1999", "", true, "Roční servis")
             ],
             VehicleMetaEntries =
             [

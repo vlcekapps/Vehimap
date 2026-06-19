@@ -656,6 +656,22 @@ public partial class MainWindow : Window
         }
     }
 
+    private async void OnOpenNearestMaintenanceMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.OpenNearestMaintenanceCommand is { } command)
+        {
+            await command.ExecuteAsync(null);
+        }
+    }
+
+    private async void OnReviewMaintenanceMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.ReviewMaintenanceCommand is { } command)
+        {
+            await command.ExecuteAsync(null);
+        }
+    }
+
     private async void OnOpenRemindersWindowClick(object? sender, RoutedEventArgs e)
     {
         await OpenRemindersWindowAsync();
