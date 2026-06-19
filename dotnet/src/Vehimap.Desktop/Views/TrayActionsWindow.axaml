@@ -11,7 +11,7 @@
         Title="{Binding Title}"
         AutomationProperties.Name="Akce Vehimapu na liště"
         AutomationProperties.AutomationId="TrayActionsWindow"
-        AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace.">
+        AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; Escape okno zavře bez akce.">
   <Border Margin="16" Padding="20" Background="#1C2B38" CornerRadius="10">
     <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14">
       <TextBlock FontSize="22"

@@ -115,6 +115,8 @@ V hlavním okně:
 - `Ctrl+S`: uloží aktuální formulář nebo nastavení
 - v `Nastavení` navíc `Ctrl+B`: vytvoří zálohu ihned
 - v `Nastavení` klávesa `Esc` zavře dialog bez uložení
+- v `O programu` zkratka `Ctrl+O` otevře release poznámky a `Esc` dialog zavře
+- v aplikačních dialozích jako `Zkontrolovat aktualizace`, potvrzení akce, upozornění nebo `Akce Vehimapu na liště` klávesa `Esc` zavře dialog bez provedení nové akce; tlačítka se dál aktivují standardně klávesou `Enter` nebo mezerníkem
 
 ## Používání detailněji: 
 

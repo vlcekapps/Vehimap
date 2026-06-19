@@ -12,7 +12,8 @@
         WindowStartupLocation="CenterOwner"
         Title="Kontrola aktualizací"
         AutomationProperties.Name="Kontrola aktualizací"
-        AutomationProperties.AutomationId="UpdateCheckWindow">
+        AutomationProperties.AutomationId="UpdateCheckWindow"
+        AutomationProperties.HelpText="Výsledek kontroly aktualizací. Fokus je na hlavní dostupné akci; Escape dialog zavře.">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Heading}" />
     <TextBlock Grid.Row="1"

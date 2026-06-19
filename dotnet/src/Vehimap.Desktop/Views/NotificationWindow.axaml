@@ -11,7 +11,8 @@
         Topmost="True"
         Title="Vehimap upozornění"
         AutomationProperties.Name="Upozornění Vehimapu"
-        AutomationProperties.AutomationId="NotificationWindow">
+        AutomationProperties.AutomationId="NotificationWindow"
+        AutomationProperties.HelpText="Krátké upozornění Vehimapu. Zavře se samo; při aktivaci ho lze zavřít klávesou Escape.">
   <Border Margin="12" Padding="16" Background="#1C2B38" CornerRadius="10">
     <StackPanel Spacing="10">
       <TextBlock x:Name="NotificationTitleTextBlock" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" />

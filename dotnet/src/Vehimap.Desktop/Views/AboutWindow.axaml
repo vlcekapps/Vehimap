@@ -12,7 +12,8 @@
         WindowStartupLocation="CenterOwner"
         Title="O programu"
         AutomationProperties.Name="O programu"
-        AutomationProperties.AutomationId="AboutWindow">
+        AutomationProperties.AutomationId="AboutWindow"
+        AutomationProperties.HelpText="Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky a Escape dialog zavře.">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
     <TextBlock Grid.Row="1"

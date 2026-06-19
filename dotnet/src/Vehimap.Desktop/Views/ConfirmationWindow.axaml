@@ -12,7 +12,8 @@
         WindowStartupLocation="CenterOwner"
         Title="{Binding Title}"
         AutomationProperties.Name="{Binding Title}"
-        AutomationProperties.AutomationId="ConfirmationWindow">
+        AutomationProperties.AutomationId="ConfirmationWindow"
+        AutomationProperties.HelpText="Potvrzovací dialog. Fokus je na potvrzovacím tlačítku; Escape akci zruší.">
   <Grid Margin="20" RowDefinitions="Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
     <TextBlock Grid.Row="1"

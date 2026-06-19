@@ -39,6 +39,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - preview release tooling C# větve zapisuje do package metadat i SHA-256 a velikost balíčku a generátor update manifestu ověřuje shodu metadat, `.sha256` souboru i fyzického artefaktu
 - dostupnost akce `Minimalizovat na lištu` v Avalonia shellu je nově řízená viewmodelem podle podpory tray a nastavení automatických záloh vypíná intervalová pole, pokud nejsou pravidelné zálohy zapnuté
 - dialog `Nastavení` v Avalonia větvi má vlastní klávesové ovládání `Ctrl+S`, `Ctrl+B` a `Esc` i přístupný help text s těmito zkratkami
+- app-level dialogy v Avalonia větvi mají sjednocené bezpečné zavření klávesou `Esc`; `O programu` navíc nabízí `Ctrl+O` pro otevření release poznámek a všechny tyto dialogy popisují zkratky v přístupném help textu
 
 ### Opraveno
 - zpracování servisních doporučení, záloh a meta dat vozidel tak, aby správně fungoval nový servisní profil i smoke testy

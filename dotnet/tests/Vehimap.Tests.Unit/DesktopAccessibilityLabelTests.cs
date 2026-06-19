@@ -165,8 +165,11 @@ public sealed class DesktopAccessibilityLabelTests
         var settingsXaml = ReadViewFile("SettingsWindow.axaml");
         var settingsCodeBehind = ReadViewCodeBehind("SettingsWindow.axaml.cs");
         var aboutXaml = ReadViewFile("AboutWindow.axaml");
+        var aboutCodeBehind = ReadViewCodeBehind("AboutWindow.axaml.cs");
         var updateXaml = ReadViewFile("UpdateCheckWindow.axaml");
+        var updateCodeBehind = ReadViewCodeBehind("UpdateCheckWindow.axaml.cs");
         var notificationXaml = ReadViewFile("NotificationWindow.axaml");
+        var notificationCodeBehind = ReadViewCodeBehind("NotificationWindow.axaml.cs");
         var vehicleDetailXaml = ReadViewFile("VehicleDetailWindow.axaml");
         var historyXaml = ReadViewFile("HistoryWindow.axaml");
         var fuelXaml = ReadViewFile("FuelWindow.axaml");
@@ -182,7 +185,9 @@ public sealed class DesktopAccessibilityLabelTests
         var overdueOverviewXaml = ReadViewFile("OverdueOverviewWindow.axaml");
         var bundleXaml = ReadViewFile("VehicleStarterBundleWindow.axaml");
         var confirmationXaml = ReadViewFile("ConfirmationWindow.axaml");
+        var confirmationCodeBehind = ReadViewCodeBehind("ConfirmationWindow.axaml.cs");
         var trayActionsXaml = ReadViewFile("TrayActionsWindow.axaml");
+        var trayActionsCodeBehind = ReadViewCodeBehind("TrayActionsWindow.axaml.cs");
 
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
         Assert.Contains("Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.", settingsXaml);
@@ -194,13 +199,20 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("case Key.S", settingsCodeBehind);
         Assert.Contains("case Key.B", settingsCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
+        Assert.Contains("Ctrl+O otevře release poznámky a Escape dialog zavře.", aboutXaml);
+        Assert.Contains("Key.Escape", aboutCodeBehind);
+        Assert.Contains("Key.O", aboutCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"Kontrola aktualizací\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCheckWindow\"", updateXaml);
+        Assert.Contains("Escape dialog zavře.", updateXaml);
+        Assert.Contains("Key.Escape", updateCodeBehind);
         Assert.Contains("AutomationProperties.Name=\"{Binding PrimaryActionLabel}\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"Zavřít kontrolu aktualizací\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"Upozornění Vehimapu\"", notificationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"NotificationWindow\"", notificationXaml);
+        Assert.Contains("Zavře se samo; při aktivaci ho lze zavřít klávesou Escape.", notificationXaml);
+        Assert.Contains("Key.Escape", notificationCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseVehicleDetailWindowButton\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseHistoryWindowButton\"", historyXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseFuelWindowButton\"", fuelXaml);
@@ -218,10 +230,14 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ApplyBundleButton\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationConfirmButton\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationCancelButton\"", confirmationXaml);
+        Assert.Contains("Escape akci zruší.", confirmationXaml);
+        Assert.Contains("Key.Escape", confirmationCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowMainWindowTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowDashboardTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
+        Assert.Contains("Escape okno zavře bez akce.", trayActionsXaml);
+        Assert.Contains("Key.Escape", trayActionsCodeBehind);
     }
 
     [Fact]

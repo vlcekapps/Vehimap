@@ -1,5 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 
@@ -12,6 +14,7 @@ public partial class NotificationWindow : Window
     public NotificationWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        AddHandler(InputElement.KeyDownEvent, OnNotificationKeyDown, RoutingStrategies.Tunnel);
     }
 
     public NotificationWindow(string notificationTitle, string notificationMessage)
@@ -41,5 +44,16 @@ public partial class NotificationWindow : Window
         var x = Math.Max(area.X, area.X + area.Width - (int)Width - ScreenMargin);
         var y = Math.Max(area.Y, area.Y + area.Height - (int)Height - ScreenMargin);
         Position = new PixelPoint(x, y);
+    }
+
+    private void OnNotificationKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Escape || e.KeyModifiers != KeyModifiers.None)
+        {
+            return;
+        }
+
+        e.Handled = true;
+        Close();
     }
 }
