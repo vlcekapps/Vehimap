@@ -3,15 +3,15 @@
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.TrayActionsWindow"
         x:DataType="vm:TrayActionsDialogViewModel"
-        Width="460"
-        Height="350"
+        Width="520"
+        Height="560"
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen"
         Title="{Binding Title}"
         AutomationProperties.Name="Akce Vehimapu na liště"
         AutomationProperties.AutomationId="TrayActionsWindow"
-        AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; Escape okno zavře bez akce.">
+        AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; další tlačítka otevřou přehledy nebo nejbližší termíny. Escape okno zavře bez akce.">
   <Border Margin="16" Padding="20" Background="#1C2B38" CornerRadius="10">
     <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14">
       <TextBlock FontSize="22"
@@ -22,33 +22,63 @@
                  Opacity="0.82"
                  Text="{Binding Description}"
                  TextWrapping="Wrap" />
-      <StackPanel Grid.Row="2" Spacing="10">
-        <Button x:Name="ShowMainWindowTrayActionButton"
-                Click="OnShowMainWindowClick"
-                Content="{Binding ShowMainWindowLabel}"
-                AutomationProperties.Name="Zobrazit hlavní okno Vehimapu"
-                AutomationProperties.AutomationId="ShowMainWindowTrayActionButton" />
-        <Button x:Name="ShowDashboardTrayActionButton"
-                Click="OnShowDashboardClick"
-                Content="{Binding ShowDashboardLabel}"
-                AutomationProperties.Name="Otevřít dashboard Vehimapu"
-                AutomationProperties.AutomationId="ShowDashboardTrayActionButton" />
-        <Button x:Name="ShowUpcomingOverviewTrayActionButton"
-                Click="OnShowUpcomingOverviewClick"
-                Content="{Binding ShowUpcomingOverviewLabel}"
-                AutomationProperties.Name="Otevřít přehled blížících se termínů"
-                AutomationProperties.AutomationId="ShowUpcomingOverviewTrayActionButton" />
-        <Button x:Name="ShowOverdueOverviewTrayActionButton"
-                Click="OnShowOverdueOverviewClick"
-                Content="{Binding ShowOverdueOverviewLabel}"
-                AutomationProperties.Name="Otevřít přehled propadlých termínů"
-                AutomationProperties.AutomationId="ShowOverdueOverviewTrayActionButton" />
-        <Button x:Name="ExitTrayActionButton"
-                Click="OnExitClick"
-                Content="{Binding ExitLabel}"
-                AutomationProperties.Name="Ukončit Vehimap"
-                AutomationProperties.AutomationId="ExitTrayActionButton" />
-      </StackPanel>
+      <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="10">
+          <TextBlock FontWeight="SemiBold" Text="Aplikace a přehledy" />
+          <Button x:Name="ShowMainWindowTrayActionButton"
+                  Click="OnShowMainWindowClick"
+                  Content="{Binding ShowMainWindowLabel}"
+                  AutomationProperties.Name="Zobrazit hlavní okno Vehimapu"
+                  AutomationProperties.AutomationId="ShowMainWindowTrayActionButton" />
+          <Button x:Name="ShowDashboardTrayActionButton"
+                  Click="OnShowDashboardClick"
+                  Content="{Binding ShowDashboardLabel}"
+                  AutomationProperties.Name="Otevřít dashboard Vehimapu"
+                  AutomationProperties.AutomationId="ShowDashboardTrayActionButton" />
+          <Button x:Name="ShowUpcomingOverviewTrayActionButton"
+                  Click="OnShowUpcomingOverviewClick"
+                  Content="{Binding ShowUpcomingOverviewLabel}"
+                  AutomationProperties.Name="Otevřít přehled blížících se termínů"
+                  AutomationProperties.AutomationId="ShowUpcomingOverviewTrayActionButton" />
+          <Button x:Name="ShowOverdueOverviewTrayActionButton"
+                  Click="OnShowOverdueOverviewClick"
+                  Content="{Binding ShowOverdueOverviewLabel}"
+                  AutomationProperties.Name="Otevřít přehled propadlých termínů"
+                  AutomationProperties.AutomationId="ShowOverdueOverviewTrayActionButton" />
+          <TextBlock Margin="0,8,0,0" FontWeight="SemiBold" Text="Nejbližší položky" />
+          <Button x:Name="OpenNearestTechnicalTrayActionButton"
+                  Click="OnOpenNearestTechnicalClick"
+                  Content="{Binding OpenNearestTechnicalLabel}"
+                  AutomationProperties.Name="Otevřít nejbližší technickou kontrolu"
+                  AutomationProperties.AutomationId="OpenNearestTechnicalTrayActionButton" />
+          <Button x:Name="OpenNearestGreenCardTrayActionButton"
+                  Click="OnOpenNearestGreenCardClick"
+                  Content="{Binding OpenNearestGreenCardLabel}"
+                  AutomationProperties.Name="Otevřít nejbližší zelenou kartu"
+                  AutomationProperties.AutomationId="OpenNearestGreenCardTrayActionButton" />
+          <Button x:Name="OpenNearestReminderTrayActionButton"
+                  Click="OnOpenNearestReminderClick"
+                  Content="{Binding OpenNearestReminderLabel}"
+                  AutomationProperties.Name="Otevřít nejbližší vlastní připomínku"
+                  AutomationProperties.AutomationId="OpenNearestReminderTrayActionButton" />
+          <Button x:Name="OpenNearestMaintenanceTrayActionButton"
+                  Click="OnOpenNearestMaintenanceClick"
+                  Content="{Binding OpenNearestMaintenanceLabel}"
+                  AutomationProperties.Name="Otevřít nejbližší servisní úkon"
+                  AutomationProperties.AutomationId="OpenNearestMaintenanceTrayActionButton" />
+          <Button x:Name="OpenNearestRecordTrayActionButton"
+                  Click="OnOpenNearestRecordClick"
+                  Content="{Binding OpenNearestRecordLabel}"
+                  AutomationProperties.Name="Otevřít nejbližší doklad"
+                  AutomationProperties.AutomationId="OpenNearestRecordTrayActionButton" />
+          <Button x:Name="ExitTrayActionButton"
+                  Margin="0,8,0,0"
+                  Click="OnExitClick"
+                  Content="{Binding ExitLabel}"
+                  AutomationProperties.Name="Ukončit Vehimap"
+                  AutomationProperties.AutomationId="ExitTrayActionButton" />
+        </StackPanel>
+      </ScrollViewer>
       <Button Grid.Row="3"
               x:Name="CloseTrayActionsButton"
               HorizontalAlignment="Right"

@@ -7,5 +7,10 @@ public enum TrayActionsDialogAction
     ShowDashboard = 2,
     ExitApplication = 3,
     ShowUpcomingOverview = 4,
-    ShowOverdueOverview = 5
+    ShowOverdueOverview = 5,
+    OpenNearestTechnical = 6,
+    OpenNearestGreenCard = 7,
+    OpenNearestReminder = 8,
+    OpenNearestMaintenance = 9,
+    OpenNearestRecord = 10
 }

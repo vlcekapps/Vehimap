@@ -44,6 +44,36 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnOpenNearestTechnicalClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenNearestTechnical;
+        Close();
+    }
+
+    private void OnOpenNearestGreenCardClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenNearestGreenCard;
+        Close();
+    }
+
+    private void OnOpenNearestReminderClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenNearestReminder;
+        Close();
+    }
+
+    private void OnOpenNearestMaintenanceClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenNearestMaintenance;
+        Close();
+    }
+
+    private void OnOpenNearestRecordClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenNearestRecord;
+        Close();
+    }
+
     private void OnExitClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.ExitApplication;

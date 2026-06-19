@@ -217,6 +217,28 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         }).GetTask();
     }
 
+    private Task ExecuteShellQuickActionAsync(Func<Task> executeAsync)
+    {
+        var completion = new TaskCompletionSource();
+        Dispatcher.UIThread.Post(async () =>
+        {
+            try
+            {
+                _mainWindow.Show();
+                _mainWindow.WindowState = WindowState.Normal;
+                _mainWindow.Activate();
+                await executeAsync().ConfigureAwait(true);
+                completion.SetResult();
+            }
+            catch (Exception ex)
+            {
+                completion.SetException(ex);
+            }
+        });
+
+        return completion.Task;
+    }
+
     private async Task OpenTrayActionsAsync()
     {
         var action = await _dialogService
@@ -236,6 +258,21 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
                 break;
             case TrayActionsDialogAction.ShowOverdueOverview:
                 await ShowOverdueOverviewAsync().ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.OpenNearestTechnical:
+                await ExecuteShellQuickActionAsync(() => _shell.OpenNearestTechnicalCommand.ExecuteAsync(null)).ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.OpenNearestGreenCard:
+                await ExecuteShellQuickActionAsync(() => _shell.OpenNearestGreenCardCommand.ExecuteAsync(null)).ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.OpenNearestReminder:
+                await ExecuteShellQuickActionAsync(() => _shell.OpenNearestReminderCommand.ExecuteAsync(null)).ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.OpenNearestMaintenance:
+                await ExecuteShellQuickActionAsync(() => _shell.OpenNearestMaintenanceCommand.ExecuteAsync(null)).ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.OpenNearestRecord:
+                await ExecuteShellQuickActionAsync(() => _shell.OpenNearestRecordCommand.ExecuteAsync(null)).ConfigureAwait(true);
                 break;
             case TrayActionsDialogAction.ExitApplication:
                 await ExitApplicationAsync().ConfigureAwait(true);

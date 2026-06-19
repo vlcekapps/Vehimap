@@ -7,6 +7,11 @@ public sealed record TrayActionsDialogViewModel(
     string ShowDashboardLabel,
     string ShowUpcomingOverviewLabel,
     string ShowOverdueOverviewLabel,
+    string OpenNearestTechnicalLabel,
+    string OpenNearestGreenCardLabel,
+    string OpenNearestReminderLabel,
+    string OpenNearestMaintenanceLabel,
+    string OpenNearestRecordLabel,
     string ExitLabel,
     string CancelLabel)
 {
@@ -17,6 +22,11 @@ public sealed record TrayActionsDialogViewModel(
         "Otevřít Dashboard",
         "Blížící se termíny",
         "Propadlé termíny",
+        "Nejbližší TK",
+        "Nejbližší ZK",
+        "Nejbližší připomínka",
+        "Nejbližší servis",
+        "Nejbližší doklad",
         "Ukončit aplikaci",
         "Zavřít");
 }
