@@ -64,7 +64,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - Windows CI Appium smoke nad publish buildem desktop preview
 - ulozeni `Tiskoveho prehledu` vozidel jako HTML souboru pres sdilenou exportni sluzbu a otevreni ulozeneho souboru
 - rychle akce v Avalonia menu pro nejblizsi TK, zelenou kartu, vlastni pripominku, servisni udrzbu a doklad i pro filtrovanou kontrolu techto terminu
-- pristupne tray akcni okno s primym otevrenim hlavniho okna, dashboardu, blizicich se terminu, propadlych terminu, nejblizsi TK/ZK/pripominky/servisu/dokladu a ukonceni aplikace
+- pristupne tray akcni okno s primym otevrenim hlavniho okna, dashboardu, blizicich se terminu, propadlych terminu, nejblizsi TK/ZK/pripominky/servisu/dokladu, filtrovanych kontrol a ukonceni aplikace
 
 ## Co je dalsi na rade
 

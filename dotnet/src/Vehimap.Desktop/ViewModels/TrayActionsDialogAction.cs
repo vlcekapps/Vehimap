@@ -12,5 +12,10 @@ public enum TrayActionsDialogAction
     OpenNearestGreenCard = 7,
     OpenNearestReminder = 8,
     OpenNearestMaintenance = 9,
-    OpenNearestRecord = 10
+    OpenNearestRecord = 10,
+    ReviewTechnical = 11,
+    ReviewGreenCards = 12,
+    ReviewReminders = 13,
+    ReviewMaintenance = 14,
+    ReviewRecords = 15
 }

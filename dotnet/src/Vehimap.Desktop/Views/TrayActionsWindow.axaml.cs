@@ -74,6 +74,36 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnReviewTechnicalClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ReviewTechnical;
+        Close();
+    }
+
+    private void OnReviewGreenCardsClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ReviewGreenCards;
+        Close();
+    }
+
+    private void OnReviewRemindersClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ReviewReminders;
+        Close();
+    }
+
+    private void OnReviewMaintenanceClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ReviewMaintenance;
+        Close();
+    }
+
+    private void OnReviewRecordsClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ReviewRecords;
+        Close();
+    }
+
     private void OnExitClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.ExitApplication;

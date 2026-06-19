@@ -12,6 +12,11 @@ public sealed record TrayActionsDialogViewModel(
     string OpenNearestReminderLabel,
     string OpenNearestMaintenanceLabel,
     string OpenNearestRecordLabel,
+    string ReviewTechnicalLabel,
+    string ReviewGreenCardsLabel,
+    string ReviewRemindersLabel,
+    string ReviewMaintenanceLabel,
+    string ReviewRecordsLabel,
     string ExitLabel,
     string CancelLabel)
 {
@@ -27,6 +32,11 @@ public sealed record TrayActionsDialogViewModel(
         "Nejbližší připomínka",
         "Nejbližší servis",
         "Nejbližší doklad",
+        "Zkontrolovat TK",
+        "Zkontrolovat ZK",
+        "Zkontrolovat připomínky",
+        "Zkontrolovat údržbu",
+        "Zkontrolovat doklady",
         "Ukončit aplikaci",
         "Zavřít");
 }

@@ -11,7 +11,7 @@
         Title="{Binding Title}"
         AutomationProperties.Name="Akce Vehimapu na liště"
         AutomationProperties.AutomationId="TrayActionsWindow"
-        AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; další tlačítka otevřou přehledy nebo nejbližší termíny. Escape okno zavře bez akce.">
+        AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; další tlačítka otevřou přehledy, nejbližší termíny nebo filtrované kontroly. Escape okno zavře bez akce.">
   <Border Margin="16" Padding="20" Background="#1C2B38" CornerRadius="10">
     <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14">
       <TextBlock FontSize="22"
@@ -71,6 +71,32 @@
                   Content="{Binding OpenNearestRecordLabel}"
                   AutomationProperties.Name="Otevřít nejbližší doklad"
                   AutomationProperties.AutomationId="OpenNearestRecordTrayActionButton" />
+          <TextBlock Margin="0,8,0,0" FontWeight="SemiBold" Text="Filtrované kontroly" />
+          <Button x:Name="ReviewTechnicalTrayActionButton"
+                  Click="OnReviewTechnicalClick"
+                  Content="{Binding ReviewTechnicalLabel}"
+                  AutomationProperties.Name="Zkontrolovat technické kontroly"
+                  AutomationProperties.AutomationId="ReviewTechnicalTrayActionButton" />
+          <Button x:Name="ReviewGreenCardsTrayActionButton"
+                  Click="OnReviewGreenCardsClick"
+                  Content="{Binding ReviewGreenCardsLabel}"
+                  AutomationProperties.Name="Zkontrolovat zelené karty"
+                  AutomationProperties.AutomationId="ReviewGreenCardsTrayActionButton" />
+          <Button x:Name="ReviewRemindersTrayActionButton"
+                  Click="OnReviewRemindersClick"
+                  Content="{Binding ReviewRemindersLabel}"
+                  AutomationProperties.Name="Zkontrolovat vlastní připomínky"
+                  AutomationProperties.AutomationId="ReviewRemindersTrayActionButton" />
+          <Button x:Name="ReviewMaintenanceTrayActionButton"
+                  Click="OnReviewMaintenanceClick"
+                  Content="{Binding ReviewMaintenanceLabel}"
+                  AutomationProperties.Name="Zkontrolovat plán údržby"
+                  AutomationProperties.AutomationId="ReviewMaintenanceTrayActionButton" />
+          <Button x:Name="ReviewRecordsTrayActionButton"
+                  Click="OnReviewRecordsClick"
+                  Content="{Binding ReviewRecordsLabel}"
+                  AutomationProperties.Name="Zkontrolovat doklady"
+                  AutomationProperties.AutomationId="ReviewRecordsTrayActionButton" />
           <Button x:Name="ExitTrayActionButton"
                   Margin="0,8,0,0"
                   Click="OnExitClick"

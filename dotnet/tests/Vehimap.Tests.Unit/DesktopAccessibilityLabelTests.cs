@@ -65,6 +65,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Equal("Nejbližší připomínka", model.OpenNearestReminderLabel);
         Assert.Equal("Nejbližší servis", model.OpenNearestMaintenanceLabel);
         Assert.Equal("Nejbližší doklad", model.OpenNearestRecordLabel);
+        Assert.Equal("Zkontrolovat TK", model.ReviewTechnicalLabel);
+        Assert.Equal("Zkontrolovat ZK", model.ReviewGreenCardsLabel);
+        Assert.Equal("Zkontrolovat připomínky", model.ReviewRemindersLabel);
+        Assert.Equal("Zkontrolovat údržbu", model.ReviewMaintenanceLabel);
+        Assert.Equal("Zkontrolovat doklady", model.ReviewRecordsLabel);
         Assert.Equal("Ukončit aplikaci", model.ExitLabel);
     }
 
@@ -283,6 +288,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestReminderTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestMaintenanceTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestRecordTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReviewTechnicalTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReviewGreenCardsTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReviewRemindersTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReviewMaintenanceTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReviewRecordsTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
         Assert.Contains("Escape okno zavře bez akce.", trayActionsXaml);
@@ -293,6 +303,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OnOpenNearestReminderClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenNearestMaintenanceClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenNearestRecordClick", trayActionsCodeBehind);
+        Assert.Contains("OnReviewTechnicalClick", trayActionsCodeBehind);
+        Assert.Contains("OnReviewGreenCardsClick", trayActionsCodeBehind);
+        Assert.Contains("OnReviewRemindersClick", trayActionsCodeBehind);
+        Assert.Contains("OnReviewMaintenanceClick", trayActionsCodeBehind);
+        Assert.Contains("OnReviewRecordsClick", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowUpcomingOverview", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowOverdueOverview", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenNearestTechnical", trayActionsCodeBehind);
@@ -300,11 +315,16 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("TrayActionsDialogAction.OpenNearestReminder", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenNearestMaintenance", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenNearestRecord", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ReviewTechnical", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ReviewGreenCards", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ReviewReminders", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ReviewMaintenance", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ReviewRecords", trayActionsCodeBehind);
         Assert.Contains("Key.Escape", trayActionsCodeBehind);
     }
 
     [Fact]
-    public void Tray_runtime_controller_should_route_nearest_actions_to_quick_commands()
+    public void Tray_runtime_controller_should_route_quick_actions_to_shell_commands()
     {
         var runtimeController = ReadDesktopServiceFile("DesktopAppRuntimeController.cs");
 
@@ -318,6 +338,16 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("_shell.OpenNearestMaintenanceCommand.ExecuteAsync(null)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenNearestRecord", runtimeController);
         Assert.Contains("_shell.OpenNearestRecordCommand.ExecuteAsync(null)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ReviewTechnical", runtimeController);
+        Assert.Contains("_shell.ReviewTechnicalCommand.ExecuteAsync(null)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ReviewGreenCards", runtimeController);
+        Assert.Contains("_shell.ReviewGreenCardsCommand.ExecuteAsync(null)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ReviewReminders", runtimeController);
+        Assert.Contains("_shell.ReviewRemindersCommand.ExecuteAsync(null)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ReviewMaintenance", runtimeController);
+        Assert.Contains("_shell.ReviewMaintenanceCommand.ExecuteAsync(null)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ReviewRecords", runtimeController);
+        Assert.Contains("_shell.ReviewRecordsCommand.ExecuteAsync(null)", runtimeController);
     }
 
     [Fact]
