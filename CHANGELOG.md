@@ -46,6 +46,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - sdílené Avalonia workspace pro časovou osu, globální hledání a termínové přehledy mají vlastní `Ctrl+F`, `Ctrl+O` a `Ctrl+P` zkratky, takže stejné ovládání funguje v kartě i samostatném okně
 - `Ctrl+F`, `Ctrl+O` a `Ctrl+P` v Avalonia shellu se v přehledových kartách routují kontextově a už nepřebíjejí aktivní hledání nebo otevření vybrané položky globální akcí hlavního okna
 - `Ctrl+N`, `Ctrl+U` / `F2`, `Ctrl+S` a dokladové `Ctrl+O` / `Ctrl+Shift+O` v Avalonia shellu se nově routují podle aktivní evidence, takže stejné editace fungují v hlavních kartách i samostatných workspace oknech
+- `Audit dat` v Avalonia větvi má vlastní hledání, plný seznam auditních položek mimo dashboardový výřez a zkratky `Ctrl+F`, `Ctrl+O`, `Ctrl+P`, `Ctrl+U` / `F2`
 - otevírání souborů a složek v C# větvi nově používá explicitní platformní strategii: shell execute na Windows, `open` na macOS a `xdg-open` na Linuxu
 - Linux autostart záznam v C# větvi už se v popisu neoznačuje jako `preview`
 - samostatná Avalonia workspace okna mají sjednocené zavírací `AutomationId` a UI smoke test nově ověřuje jejich otevření i zavření napříč hlavními workflow

@@ -125,6 +125,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public ObservableCollection<AuditItemViewModel> AuditItems { get; } = [];
 
+    public ObservableCollection<AuditItemViewModel> DashboardAuditItems { get; } = [];
+
     public ObservableCollection<CostVehicleItemViewModel> CostVehicles { get; } = [];
 
     public ObservableCollection<VehicleTimelineItemViewModel> DashboardUpcomingTimeline { get; } = [];
@@ -233,16 +235,16 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool IsOverdueOverviewTabSelected => SelectedVehicleTabIndex == OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspacePrimaryOpenShortcutContext =>
-        SelectedVehicleTabIndex is RecordTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+        SelectedVehicleTabIndex is RecordTabIndex or AuditTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspaceItemOpenShortcutContext =>
-        SelectedVehicleTabIndex is TimelineTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+        SelectedVehicleTabIndex is TimelineTabIndex or AuditTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspaceCreateShortcutContext =>
         SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
 
     public bool IsCurrentWorkspaceEditShortcutContext =>
-        SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
+        SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex or AuditTabIndex;
 
     public bool IsCurrentWorkspaceSaveShortcutContext =>
         SelectedVehicleTabIndex is DetailTabIndex or HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
@@ -457,6 +459,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         var target = SelectedVehicleTabIndex switch
         {
             TimelineTabIndex => DesktopFocusTarget.TimelineSearch,
+            AuditTabIndex => DesktopFocusTarget.AuditSearch,
             SearchTabIndex => DesktopFocusTarget.GlobalSearchBox,
             UpcomingOverviewTabIndex => DesktopFocusTarget.UpcomingOverviewSearch,
             OverdueOverviewTabIndex => DesktopFocusTarget.OverdueOverviewSearch,
@@ -548,6 +551,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             case RecordTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedRecordFileCommand).ConfigureAwait(true);
                 return true;
+            case AuditTabIndex:
+                await OpenAuditVehicleAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
+                return true;
             case SearchTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedSearchResultCommand).ConfigureAwait(true);
                 return true;
@@ -568,6 +574,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
         {
             case TimelineTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedTimelineItemCommand).ConfigureAwait(true);
+                return true;
+            case AuditTabIndex:
+                await OpenAuditItemAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
                 return true;
             case SearchTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedSearchResultCommand).ConfigureAwait(true);
@@ -626,9 +635,21 @@ public sealed partial class MainWindowViewModel : ObservableObject
             case RecordTabIndex:
                 ExecuteWorkspaceShortcut(EditSelectedRecordCommand);
                 return true;
+            case AuditTabIndex:
+                return false;
             default:
                 return false;
         }
+    }
+
+    public async Task<bool> HandleCurrentWorkspaceEditShortcutAsync()
+    {
+        if (SelectedVehicleTabIndex == AuditTabIndex)
+        {
+            return await EditAuditItemAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
+        }
+
+        return HandleCurrentWorkspaceEditShortcut();
     }
 
     public async Task<bool> HandleCurrentWorkspaceSaveShortcutAsync()
@@ -700,17 +721,50 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardAuditItem))]
     private async Task OpenSelectedDashboardAuditItemAsync()
     {
-        if (SelectedDashboardAuditItem is null)
+        await OpenAuditItemAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
+    }
+
+    internal async Task<bool> OpenAuditItemAsync(AuditItemViewModel? item)
+    {
+        if (item is null)
         {
-            return;
+            return false;
         }
 
         if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít položku z auditu").ConfigureAwait(true))
         {
-            return;
+            return false;
         }
 
-        SelectVehicleAndOpenEntity(SelectedDashboardAuditItem.VehicleId, SelectedDashboardAuditItem.EntityKind, SelectedDashboardAuditItem.EntityId);
+        SelectVehicleAndOpenEntity(item.VehicleId, item.EntityKind, item.EntityId);
+        return true;
+    }
+
+    internal async Task<bool> OpenAuditVehicleAsync(AuditItemViewModel? item)
+    {
+        if (item is null)
+        {
+            return false;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zobrazit vozidlo z auditu").ConfigureAwait(true))
+        {
+            return false;
+        }
+
+        SelectVehicleAndOpenEntity(item.VehicleId, "Vozidlo", item.VehicleId);
+        return true;
+    }
+
+    internal async Task<bool> EditAuditItemAsync(AuditItemViewModel? item)
+    {
+        if (!await OpenAuditItemAsync(item).ConfigureAwait(true))
+        {
+            return false;
+        }
+
+        StartEditForCurrentAuditTarget(item?.EntityKind ?? string.Empty);
+        return true;
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardCostVehicle))]
@@ -805,9 +859,15 @@ public sealed partial class MainWindowViewModel : ObservableObject
             RefreshVehicleList(preferredVehicleId);
 
             AuditItems.Clear();
-            foreach (var item in _projectionService.BuildDashboardAuditItems(_auditItems))
+            foreach (var item in _projectionService.BuildAuditItems(_auditItems))
             {
                 AuditItems.Add(item);
+            }
+
+            DashboardAuditItems.Clear();
+            foreach (var item in _projectionService.BuildDashboardAuditItems(_auditItems))
+            {
+                DashboardAuditItems.Add(item);
             }
 
             CostVehicles.Clear();
@@ -819,7 +879,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             PopulateDashboardTimeline();
             RefreshFleetOverviews();
             RefreshGlobalSearch();
-            SelectedDashboardAuditItem = AuditItems.FirstOrDefault();
+            AuditWorkspace.RefreshVisibleAuditItems(preserveSelection: false);
             SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault();
             SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
             ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
@@ -1129,6 +1189,31 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         RequestFocus(plan.FocusTarget);
+    }
+
+    private void StartEditForCurrentAuditTarget(string entityKind)
+    {
+        switch (entityKind)
+        {
+            case "Historie":
+                ExecuteWorkspaceShortcut(EditSelectedHistoryCommand);
+                break;
+            case "Tankování":
+                ExecuteWorkspaceShortcut(EditSelectedFuelCommand);
+                break;
+            case "Doklad":
+                ExecuteWorkspaceShortcut(EditSelectedRecordCommand);
+                break;
+            case "Údržba":
+                ExecuteWorkspaceShortcut(EditSelectedMaintenanceCommand);
+                break;
+            case "Připomínka":
+                ExecuteWorkspaceShortcut(EditSelectedReminderCommand);
+                break;
+            default:
+                ExecuteWorkspaceShortcut(EditSelectedVehicleCommand);
+                break;
+        }
     }
 
     private void RequestFocus(DesktopFocusTarget target)

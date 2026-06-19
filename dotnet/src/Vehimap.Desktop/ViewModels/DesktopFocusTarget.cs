@@ -26,6 +26,7 @@ public enum DesktopFocusTarget
     OverdueOverviewList,
     RecordList,
     RecordEditorTitle,
+    AuditSearch,
     AuditList,
     CostList,
     DashboardAuditList,

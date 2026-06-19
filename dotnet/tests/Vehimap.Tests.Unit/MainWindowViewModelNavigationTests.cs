@@ -67,6 +67,8 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusCurrentSearchCommand.Execute(null);
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Timeline;
         viewModel.FocusCurrentSearchCommand.Execute(null);
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
+        viewModel.FocusCurrentSearchCommand.Execute(null);
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Search;
         viewModel.FocusCurrentSearchCommand.Execute(null);
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.UpcomingOverview;
@@ -78,6 +80,7 @@ public sealed class MainWindowViewModelNavigationTests
             [
                 DesktopFocusTarget.VehicleSearch,
                 DesktopFocusTarget.TimelineSearch,
+                DesktopFocusTarget.AuditSearch,
                 DesktopFocusTarget.GlobalSearchBox,
                 DesktopFocusTarget.UpcomingOverviewSearch,
                 DesktopFocusTarget.OverdueOverviewSearch
@@ -142,6 +145,57 @@ public sealed class MainWindowViewModelNavigationTests
         handled = await viewModel.HandleCurrentWorkspaceItemOpenShortcutAsync();
 
         Assert.False(handled);
+    }
+
+    [Fact]
+    public void Audit_search_filters_visible_audit_items_without_changing_dashboard_source()
+    {
+        var viewModel = CreateViewModel();
+
+        viewModel.AuditWorkspace.AuditSearchText = "Doklad bez cesty";
+
+        Assert.NotEmpty(viewModel.AuditWorkspace.VisibleAuditItems);
+        Assert.All(viewModel.AuditWorkspace.VisibleAuditItems, item =>
+            Assert.Contains("Doklad bez cesty", item.AccessibleLabel, StringComparison.CurrentCultureIgnoreCase));
+        Assert.Equal("rec_2", viewModel.SelectedDashboardAuditItem?.EntityId);
+        Assert.True(viewModel.DashboardWorkspace.AuditItems.Count <= viewModel.AuditItems.Count);
+    }
+
+    [Fact]
+    public async Task Audit_primary_open_shortcut_opens_vehicle_detail()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
+        viewModel.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
+
+        var handled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
+
+        Assert.True(handled);
+        Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("veh_1", viewModel.SelectedVehicle?.Id);
+        Assert.Equal(DesktopFocusTarget.VehicleList, requestedFocus);
+    }
+
+    [Fact]
+    public async Task Audit_edit_shortcut_opens_nearest_relevant_editor()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
+        viewModel.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
+
+        var handled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
+
+        Assert.True(handled);
+        Assert.Equal(DesktopTabIndexes.Record, viewModel.SelectedVehicleTabIndex);
+        Assert.True(viewModel.IsEditingRecord);
+        Assert.Equal("Asistence", viewModel.RecordEditorTitle);
+        Assert.Equal(DesktopFocusTarget.RecordEditorTitle, requestedFocus);
     }
 
     [Fact]

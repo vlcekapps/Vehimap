@@ -10,13 +10,19 @@ public partial class AuditWorkspaceView : WorkspaceViewBase<AuditWorkspaceViewMo
     public AuditWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
-        RegisterShiftTabBackNavigation("AuditListBox");
+        RegisterShiftTabBackNavigation("AuditSearchBox", "AuditListBox");
     }
 
-    protected override DesktopFocusTarget? GetDefaultFocusTarget() => DesktopFocusTarget.AuditList;
+    protected override DesktopFocusTarget? GetDefaultFocusTarget() => DesktopFocusTarget.AuditSearch;
 
-    protected override bool SupportsFocusTarget(DesktopFocusTarget target) => target == DesktopFocusTarget.AuditList;
+    protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
+        target is DesktopFocusTarget.AuditSearch or DesktopFocusTarget.AuditList;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
-        target == DesktopFocusTarget.AuditList ? this.FindControl<ListBox>("AuditListBox") : null;
+        target switch
+        {
+            DesktopFocusTarget.AuditSearch => this.FindControl<TextBox>("AuditSearchBox"),
+            DesktopFocusTarget.AuditList => this.FindControl<ListBox>("AuditListBox"),
+            _ => null
+        };
 }

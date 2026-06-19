@@ -148,6 +148,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("HandleCurrentWorkspaceItemOpenShortcutAsync", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceCreateShortcut", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceEditShortcut", codeBehind);
+        Assert.Contains("HandleCurrentWorkspaceEditShortcutAsync", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceSaveShortcutAsync", codeBehind);
         Assert.Contains("FocusAndOpenMainMenu()", codeBehind);
         Assert.Contains("case Key.N", codeBehind);
@@ -286,6 +287,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTimingDriveBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTransmissionBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditOpenItemButton\"", auditXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AuditOpenVehicleButton\"", auditXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AuditEditItemButton\"", auditXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AuditSearchBox\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditListBox\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardAuditOpenButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardAuditListBox\"", dashboardXaml);
@@ -317,6 +321,7 @@ public sealed class DesktopAccessibilityLabelTests
     public void Overview_workspace_xaml_should_define_keyboard_first_shortcuts()
     {
         var timelineXaml = ReadWorkspaceOrView("TimelineWorkspaceView.axaml", true);
+        var auditXaml = ReadWorkspaceOrView("AuditWorkspaceView.axaml", true);
         var globalSearchXaml = ReadWorkspaceOrView("GlobalSearchWorkspaceView.axaml", true);
         var upcomingOverviewXaml = ReadWorkspaceOrView("UpcomingOverviewWorkspaceView.axaml", true);
         var overdueOverviewXaml = ReadWorkspaceOrView("OverdueOverviewWorkspaceView.axaml", true);
@@ -328,6 +333,12 @@ public sealed class DesktopAccessibilityLabelTests
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", timelineXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedTimelineItemCommand}\"", timelineXaml);
+
+        Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", auditXaml);
+        Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedAuditVehicleCommand}\"", auditXaml);
+        Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedAuditItemCommand}\"", auditXaml);
+        Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedAuditItemCommand}\"", auditXaml);
+        Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedAuditItemCommand}\"", auditXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", globalSearchXaml);
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedSearchResultCommand}\"", globalSearchXaml);

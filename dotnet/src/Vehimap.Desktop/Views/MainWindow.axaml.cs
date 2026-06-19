@@ -206,7 +206,7 @@ public partial class MainWindow : Window
             if (_viewModel?.IsCurrentWorkspaceEditShortcutContext == true)
             {
                 e.Handled = true;
-                _viewModel.HandleCurrentWorkspaceEditShortcut();
+                await _viewModel.HandleCurrentWorkspaceEditShortcutAsync().ConfigureAwait(true);
                 return;
             }
 
@@ -237,7 +237,7 @@ public partial class MainWindow : Window
                 if (_viewModel?.IsCurrentWorkspaceEditShortcutContext == true)
                 {
                     e.Handled = true;
-                    _viewModel.HandleCurrentWorkspaceEditShortcut();
+                    await _viewModel.HandleCurrentWorkspaceEditShortcutAsync().ConfigureAwait(true);
                     break;
                 }
 

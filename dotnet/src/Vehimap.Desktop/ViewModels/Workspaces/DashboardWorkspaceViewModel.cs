@@ -28,7 +28,7 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
 
     public string CostComparison => Root.CostComparison;
 
-    public ObservableCollection<AuditItemViewModel> AuditItems => Root.AuditItems;
+    public ObservableCollection<AuditItemViewModel> AuditItems => Root.DashboardAuditItems;
 
     public ObservableCollection<CostVehicleItemViewModel> CostVehicles => Root.CostVehicles;
 

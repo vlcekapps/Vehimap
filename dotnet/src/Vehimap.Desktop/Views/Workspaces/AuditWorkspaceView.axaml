@@ -4,18 +4,59 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.AuditWorkspaceView"
              x:DataType="vm:AuditWorkspaceViewModel">
-  <Grid RowDefinitions="Auto,Auto,*">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedAuditVehicleCommand}" />
+    <KeyBinding Gesture="Ctrl+P" Command="{Binding OpenSelectedAuditItemCommand}" />
+    <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedAuditItemCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding EditSelectedAuditItemCommand}" />
+  </UserControl.KeyBindings>
+  <Grid RowDefinitions="Auto,Auto,Auto,*">
     <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-    <Button Grid.Row="1" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardAuditItemCommand}" Content="Otevřít položku" AutomationProperties.Name="Otevřít vybranou auditní položku" AutomationProperties.AutomationId="AuditOpenItemButton" />
+    <Grid Grid.Row="1" Margin="0,12,0,0" ColumnDefinitions="100,*,150,150,120">
+      <TextBlock Grid.Column="0"
+                 VerticalAlignment="Center"
+                 Text="Hledat" />
+      <TextBox x:Name="AuditSearchBox"
+               Grid.Column="1"
+               Margin="12,0,0,0"
+               Text="{Binding AuditSearchText}"
+               PlaceholderText="Vozidlo, SPZ, evidence nebo popis problému..."
+               AutomationProperties.Name="Hledání v auditu dat"
+               AutomationProperties.AutomationId="AuditSearchBox" />
+      <Button Grid.Column="2"
+              Margin="12,0,0,0"
+              Command="{Binding OpenSelectedAuditItemCommand}"
+              Content="Otevřít položku"
+              AutomationProperties.Name="Otevřít vybranou auditní položku"
+              AutomationProperties.AutomationId="AuditOpenItemButton" />
+      <Button Grid.Column="3"
+              Margin="12,0,0,0"
+              Command="{Binding OpenSelectedAuditVehicleCommand}"
+              Content="Zobrazit vozidlo"
+              AutomationProperties.Name="Zobrazit vozidlo vybrané auditní položky"
+              AutomationProperties.AutomationId="AuditOpenVehicleButton" />
+      <Button Grid.Column="4"
+              Margin="12,0,0,0"
+              Command="{Binding EditSelectedAuditItemCommand}"
+              Content="Upravit"
+              AutomationProperties.Name="Upravit vybranou auditní položku"
+              AutomationProperties.AutomationId="AuditEditItemButton" />
+    </Grid>
+    <TextBlock Grid.Row="2"
+               Margin="0,8,0,0"
+               Opacity="0.75"
+               Text="Ctrl+F hledá, Ctrl+P otevře řešenou položku, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 otevře nejbližší editor."
+               TextWrapping="Wrap" />
     <ListBox x:Name="AuditListBox"
-             Grid.Row="2"
+             Grid.Row="3"
              Margin="0,12,0,0"
-             ItemsSource="{Binding AuditItems}"
+             ItemsSource="{Binding VisibleAuditItems}"
              SelectedItem="{Binding SelectedDashboardAuditItem}"
              AutomationProperties.Name="Seznam auditních položek"
              AutomationProperties.AutomationId="AuditListBox">
       <ListBox.KeyBindings>
-        <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
+        <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedAuditItemCommand}" />
       </ListBox.KeyBindings>
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="itemvm:AuditItemViewModel">

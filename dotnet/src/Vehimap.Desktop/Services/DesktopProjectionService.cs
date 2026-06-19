@@ -62,9 +62,8 @@ internal sealed class DesktopProjectionService
             BuildVehicleListSummary(filteredVehicles.Count, dataSet.Vehicles.Count, filters));
     }
 
-    public IReadOnlyList<AuditItemViewModel> BuildDashboardAuditItems(IReadOnlyList<AuditItem> auditItems) =>
+    public IReadOnlyList<AuditItemViewModel> BuildAuditItems(IReadOnlyList<AuditItem> auditItems) =>
         auditItems
-            .Take(8)
             .Select(item => new AuditItemViewModel(
                 item.VehicleId,
                 item.EntityKind,
@@ -79,6 +78,11 @@ internal sealed class DesktopProjectionService
                 item.VehicleName,
                 item.Title,
                 item.Message))
+            .ToList();
+
+    public IReadOnlyList<AuditItemViewModel> BuildDashboardAuditItems(IReadOnlyList<AuditItem> auditItems) =>
+        BuildAuditItems(auditItems)
+            .Take(8)
             .ToList();
 
     public IReadOnlyList<CostVehicleItemViewModel> BuildDashboardCostVehicles(CostAnalysisSummary costSummary) =>
