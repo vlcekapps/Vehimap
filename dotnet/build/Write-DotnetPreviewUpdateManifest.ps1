@@ -61,6 +61,27 @@ if ($checksum.Length -ne 64) {
 }
 
 $packageInfo = Get-Item -LiteralPath $packagePath
+$actualChecksum = (Get-FileHash -Algorithm SHA256 -LiteralPath $packagePath).Hash.ToLowerInvariant()
+if ($actualChecksum -ne $checksum) {
+    throw "Checksum '$checksumPath' neodpovida skutecnemu SHA-256 hashi balicku '$packagePath'."
+}
+
+$metadataSha256 = $metadata.PSObject.Properties["sha256"]
+if ($null -ne $metadataSha256 -and -not [string]::IsNullOrWhiteSpace([string]$metadataSha256.Value)) {
+    $metadataChecksum = ([string]$metadataSha256.Value).Trim().ToLowerInvariant()
+    if ($metadataChecksum -ne $checksum) {
+        throw "Metadata '$PackageMetadataPath' obsahuji jiny SHA-256 hash nez checksum soubor."
+    }
+}
+
+$metadataPackageSize = $metadata.PSObject.Properties["packageSize"]
+if ($null -ne $metadataPackageSize -and -not [string]::IsNullOrWhiteSpace([string]$metadataPackageSize.Value)) {
+    $expectedSize = [long]$metadataPackageSize.Value
+    if ($expectedSize -ne $packageInfo.Length) {
+        throw "Metadata '$PackageMetadataPath' obsahuji jinou velikost balicku nez fyzicky soubor."
+    }
+}
+
 $publishedAt = if ([string]::IsNullOrWhiteSpace($metadata.createdUtc)) {
     [DateTime]::UtcNow.ToString("yyyy-MM-dd")
 }

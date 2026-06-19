@@ -150,7 +150,10 @@ function Write-ChecksumFile {
     $checksumPath = "$ArtifactPath.sha256"
     $artifactName = Split-Path -Path $ArtifactPath -Leaf
     Set-Content -Path $checksumPath -Value "$hash  $artifactName" -Encoding ascii
-    return $checksumPath
+    return [pscustomobject]@{
+        Path = $checksumPath
+        Sha256 = $hash
+    }
 }
 
 $resolvedPublishDirectory = (Resolve-Path -LiteralPath $PublishDirectory).Path
@@ -186,21 +189,24 @@ try {
         New-ZipArchive -SourceDirectory $stagingDirectory -ArchivePath $archivePath
     }
 
-    $checksumPath = Write-ChecksumFile -ArtifactPath $archivePath
+    $checksum = Write-ChecksumFile -ArtifactPath $archivePath
 
     $manifestPath = Join-Path $resolvedOutputDirectory "$packageBaseName.json"
+    $artifactInfo = Get-Item -LiteralPath $archivePath
     $artifactName = Split-Path -Path $archivePath -Leaf
     $manifest = [ordered]@{
         version = $Version
         runtimeIdentifier = $RuntimeIdentifier
         packageFile = $artifactName
-        checksumFile = (Split-Path -Path $checksumPath -Leaf)
+        checksumFile = (Split-Path -Path $checksum.Path -Leaf)
+        sha256 = $checksum.Sha256
+        packageSize = $artifactInfo.Length
         createdUtc = [DateTime]::UtcNow.ToString("o")
     } | ConvertTo-Json -Depth 3
     Set-Content -Path $manifestPath -Value $manifest -Encoding UTF8
 
     Write-Host "Created package: $archivePath"
-    Write-Host "Checksum file: $checksumPath"
+    Write-Host "Checksum file: $($checksum.Path)"
     Write-Host "Manifest file: $manifestPath"
 }
 finally {

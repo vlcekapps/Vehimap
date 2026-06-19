@@ -78,6 +78,8 @@ dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -r win-x6
 .\build\Package-DesktopRelease.ps1 -PublishDirectory .\artifacts\win-x64\desktop -RuntimeIdentifier win-x64 -Version (Get-Content ..\src\VERSION).Trim() -OutputDirectory .\artifacts\win-x64\release
 ```
 
+Balickovaci skript vynechava `.pdb`, vytvori archiv pro dany RID, prida `.sha256` a JSON metadata s `runtimeIdentifier`, nazvem balicku, hashem a velikosti. Generator preview update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt.
+
 CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 
 - otestovat `.NET` vetev na Windows

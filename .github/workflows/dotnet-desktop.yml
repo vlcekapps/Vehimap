@@ -5,12 +5,16 @@ on:
     paths:
       - "dotnet/**"
       - ".github/workflows/dotnet-desktop.yml"
+      - "src/VERSION"
+      - "update/latest-dotnet-preview-*.ini"
     tags:
       - "dotnet-preview-v*"
   pull_request:
     paths:
       - "dotnet/**"
       - ".github/workflows/dotnet-desktop.yml"
+      - "src/VERSION"
+      - "update/latest-dotnet-preview-*.ini"
   workflow_dispatch:
 
 permissions:
