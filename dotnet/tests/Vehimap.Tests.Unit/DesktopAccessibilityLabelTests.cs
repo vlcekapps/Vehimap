@@ -78,6 +78,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ExitAppButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateVehicleMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"EditVehicleMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DeleteVehicleMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleDetailMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenHistoryMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenFuelMenuItem\"", xaml);
@@ -121,6 +122,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Click=\"OnCalendarExportClick\"", xaml);
         Assert.Contains("Click=\"OnReloadClick\"", xaml);
         Assert.Contains("Click=\"OnCreateVehicleMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnDeleteVehicleMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenTimelineMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenGlobalSearchMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenAuditMenuClick\"", xaml);
@@ -277,6 +279,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
         Assert.Contains("AllowEditing=\"False\"", ReadViewFile("MainWindow.axaml"));
         Assert.Contains("x:Name=\"CancelVehicleButton\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DeleteVehicleButton\"", vehicleDetailXaml);
         Assert.Contains("ItemsSource=\"{Binding VehicleCategoryOptions}\"", vehicleDetailXaml);
     }
 

@@ -127,6 +127,7 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 
     public ICommand CreateVehicleCommand => Root.CreateVehicleCommand;
     public ICommand EditSelectedVehicleCommand => Root.EditSelectedVehicleCommand;
+    public IAsyncRelayCommand DeleteSelectedVehicleCommand => Root.DeleteSelectedVehicleCommand;
     public IAsyncRelayCommand SaveVehicleCommand => Root.SaveVehicleCommand;
     public ICommand CancelVehicleEditCommand => Root.CancelVehicleEditCommand;
 

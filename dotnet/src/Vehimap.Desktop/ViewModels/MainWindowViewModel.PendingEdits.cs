@@ -3,6 +3,7 @@ namespace Vehimap.Desktop.ViewModels;
 public sealed partial class MainWindowViewModel
 {
     private Func<string, Task<bool>>? _confirmPendingEditsHandler;
+    private Func<string, Task<bool>>? _confirmVehicleDeleteHandler;
 
     internal bool HasPendingEdits =>
         IsEditingVehicle
@@ -16,6 +17,12 @@ public sealed partial class MainWindowViewModel
     {
         get => _confirmPendingEditsHandler;
         set => _confirmPendingEditsHandler = value;
+    }
+
+    internal Func<string, Task<bool>>? ConfirmVehicleDeleteHandler
+    {
+        get => _confirmVehicleDeleteHandler;
+        set => _confirmVehicleDeleteHandler = value;
     }
 
     internal string GetPendingEditLabel()
@@ -122,10 +129,14 @@ public sealed partial class MainWindowViewModel
     internal void NotifyPendingEditStateChanged()
     {
         OnPropertyChanged(nameof(HasPendingEdits));
+        OnPropertyChanged(nameof(CanCreateVehicle));
+        OnPropertyChanged(nameof(CanEditSelectedVehicle));
+        OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
 
         CreateVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
+        DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
         CreateHistoryCommand.NotifyCanExecuteChanged();
         EditSelectedHistoryCommand.NotifyCanExecuteChanged();
         DeleteSelectedHistoryCommand.NotifyCanExecuteChanged();

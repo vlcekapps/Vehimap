@@ -39,7 +39,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo vytvaret, upravovat a mazat `historii`
 - primo vytvaret, upravovat a mazat `tankovani`
 - primo vytvaret, upravovat a mazat `plan udrzby`
-- primo vytvaret a upravovat `vozidla`, vcetne zakladniho servisniho profilu a stavu vozidla
+- primo vytvaret, upravovat a mazat `vozidla`, vcetne zakladniho servisniho profilu, stavu vozidla, potvrzeni kaskadoveho odstraneni evidenci a uklidu spravovanych priloh
 - otevrit `Historii`, `Tankovani`, `Připominky`, `Údrzbu` i `Doklady` v samostatnych desktopovych oknech nad stejnou editační logikou jako hlavni shell
 - otevrit `Detail vozidla`, `Audit` a `Dashboard` i v samostatnych desktopovych oknech nad stejnym viewmodelem jako hlavni shell
 - drzet keyboard-first a11y i v hlavnim shellu, vcetne vlastni focusovatelne listy karet a konzistentniho focusu pro ctecky obrazovky

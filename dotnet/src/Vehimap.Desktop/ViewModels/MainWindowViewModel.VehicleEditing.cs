@@ -76,6 +76,8 @@ public sealed partial class MainWindowViewModel
 
     public bool CanEditSelectedVehicle => SelectedVehicle is not null && !HasPendingEdits;
 
+    public bool CanDeleteSelectedVehicle => SelectedVehicle is not null && !HasPendingEdits;
+
     public bool CanSaveVehicle => IsEditingVehicle;
 
     public bool CanCancelVehicleEdit => IsEditingVehicle;
@@ -89,9 +91,13 @@ public sealed partial class MainWindowViewModel
             : "Detail vozidla";
 
         OnPropertyChanged(nameof(IsVehicleDetailVisible));
+        OnPropertyChanged(nameof(CanCreateVehicle));
+        OnPropertyChanged(nameof(CanEditSelectedVehicle));
+        OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         CreateVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
+        DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
         SaveVehicleCommand.NotifyCanExecuteChanged();
         CancelVehicleEditCommand.NotifyCanExecuteChanged();
         NotifyPendingEditStateChanged();
@@ -154,6 +160,52 @@ public sealed partial class MainWindowViewModel
         IsEditingVehicle = true;
         SelectedVehicleTabIndex = DetailTabIndex;
         RequestFocus(DesktopFocusTarget.VehicleEditorName);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanDeleteSelectedVehicle))]
+    private async Task DeleteSelectedVehicleAsync()
+    {
+        if (SelectedVehicle is null || _dataRoot is null)
+        {
+            return;
+        }
+
+        if (_confirmVehicleDeleteHandler is null)
+        {
+            return;
+        }
+
+        var vehicleId = SelectedVehicle.Id;
+        var vehicleName = SelectedVehicle.Name;
+        var confirmationMessage = BuildVehicleDeleteConfirmationMessage(vehicleId, vehicleName);
+        if (!await _confirmVehicleDeleteHandler(confirmationMessage).ConfigureAwait(true))
+        {
+            return;
+        }
+
+        var nextVehicleId = GetNextVisibleVehicleIdAfterDelete(vehicleId);
+        _dataSet.Vehicles.RemoveAll(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal));
+        _dataSet.HistoryEntries.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        _dataSet.FuelEntries.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        _dataSet.Records.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        _dataSet.Reminders.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        _dataSet.MaintenancePlans.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        _dataSet.VehicleMetaEntries.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+
+        var attachmentCleanupWarning = DeleteManagedAttachmentDirectory(vehicleId);
+        await _session.PersistAsync().ConfigureAwait(true);
+        Load(nextVehicleId, DetailTabIndex, applyLaunchTabPreference: false);
+
+        var status = $"Vozidlo {vehicleName} bylo odstraněno.";
+        if (!string.IsNullOrWhiteSpace(attachmentCleanupWarning))
+        {
+            status += $" {attachmentCleanupWarning}";
+        }
+
+        VehicleEditorStatus = status;
+        ShellStatus = status;
+        SelectedVehicleTabIndex = DetailTabIndex;
+        RequestFocus(DesktopFocusTarget.VehicleDetailPrimaryAction);
     }
 
     [RelayCommand(CanExecute = nameof(CanSaveVehicle))]
@@ -384,6 +436,85 @@ public sealed partial class MainWindowViewModel
         }
 
         return _dataSet.VehicleMetaEntries.FirstOrDefault(item => string.Equals(item.VehicleId, SelectedVehicle.Id, StringComparison.Ordinal));
+    }
+
+    private string BuildVehicleDeleteConfirmationMessage(string vehicleId, string vehicleName)
+    {
+        var historyCount = _dataSet.HistoryEntries.Count(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        var fuelCount = _dataSet.FuelEntries.Count(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        var recordCount = _dataSet.Records.Count(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        var reminderCount = _dataSet.Reminders.Count(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        var maintenanceCount = _dataSet.MaintenancePlans.Count(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+
+        return string.Join(
+            Environment.NewLine,
+            [
+                $"Opravdu chcete odstranit vozidlo „{vehicleName}“?",
+                string.Empty,
+                "Současně se odstraní navázaná evidence:",
+                $"- historie: {historyCount}",
+                $"- tankování: {fuelCount}",
+                $"- doklady: {recordCount}",
+                $"- připomínky: {reminderCount}",
+                $"- údržba: {maintenanceCount}",
+                string.Empty,
+                "Spravované přílohy tohoto vozidla budou smazány z datové složky. Externí soubory dokladů zůstanou beze změny.",
+                string.Empty,
+                "Tuto akci nelze vrátit zpět."
+            ]);
+    }
+
+    private string? GetNextVisibleVehicleIdAfterDelete(string vehicleId)
+    {
+        var selectedIndex = Vehicles.ToList().FindIndex(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal));
+        if (selectedIndex < 0)
+        {
+            return _dataSet.Vehicles.FirstOrDefault(item => !string.Equals(item.Id, vehicleId, StringComparison.Ordinal))?.Id;
+        }
+
+        if (selectedIndex + 1 < Vehicles.Count)
+        {
+            return Vehicles[selectedIndex + 1].Id;
+        }
+
+        if (selectedIndex > 0)
+        {
+            return Vehicles[selectedIndex - 1].Id;
+        }
+
+        return _dataSet.Vehicles.FirstOrDefault(item => !string.Equals(item.Id, vehicleId, StringComparison.Ordinal))?.Id;
+    }
+
+    private string? DeleteManagedAttachmentDirectory(string vehicleId)
+    {
+        if (_dataRoot is null || string.IsNullOrWhiteSpace(vehicleId))
+        {
+            return null;
+        }
+
+        try
+        {
+            var attachmentsRoot = Path.GetFullPath(Path.Combine(_dataRoot.DataPath, "attachments"));
+            var vehicleAttachmentDirectory = Path.GetFullPath(Path.Combine(attachmentsRoot, vehicleId));
+            var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            var safeRootPrefix = attachmentsRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                + Path.DirectorySeparatorChar;
+            if (!vehicleAttachmentDirectory.StartsWith(safeRootPrefix, comparison))
+            {
+                return "Spravované přílohy nebyly smazány, protože cílová cesta neleží v datové složce příloh.";
+            }
+
+            if (Directory.Exists(vehicleAttachmentDirectory))
+            {
+                Directory.Delete(vehicleAttachmentDirectory, recursive: true);
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            return $"Spravované přílohy se nepodařilo smazat: {ex.Message}";
+        }
     }
 
     private VehicleMeta? BuildUpdatedVehicleMeta(string vehicleId, VehicleMeta? existingMeta)

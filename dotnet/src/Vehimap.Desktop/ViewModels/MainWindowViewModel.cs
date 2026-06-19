@@ -335,7 +335,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
     partial void OnSelectedVehicleChanged(VehicleListItemViewModel? value)
     {
         HandleVehicleSelectionChanged();
+        OnPropertyChanged(nameof(CanEditSelectedVehicle));
+        OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
+        DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         OnPropertyChanged(nameof(CanOpenVehicleDetailWindow));
         OnPropertyChanged(nameof(CanOpenHistoryWindow));

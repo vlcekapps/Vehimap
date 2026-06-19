@@ -78,6 +78,7 @@ public partial class MainWindow : Window
             _viewModel.FocusRequested -= OnFocusRequested;
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.ConfirmPendingEditsHandler = null;
+            _viewModel.ConfirmVehicleDeleteHandler = null;
         }
 
         _viewModel = DataContext as MainWindowViewModel;
@@ -88,6 +89,7 @@ public partial class MainWindow : Window
             viewModel.PropertyChanged += OnViewModelPropertyChanged;
             viewModel.ConfirmPendingEditsHandler = actionDescription =>
                 viewModel.AppShellController.ConfirmDiscardPendingChangesAsync(this, viewModel, actionDescription);
+            viewModel.ConfirmVehicleDeleteHandler = ConfirmDeleteVehicleAsync;
             SyncVehicleSelectionFromViewModel();
         }
     }
@@ -473,6 +475,16 @@ public partial class MainWindow : Window
         await OpenVehicleDetailWindowAsync();
     }
 
+    private async void OnDeleteVehicleMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.DeleteSelectedVehicleCommand.CanExecute(null) == true)
+        {
+            await _viewModel.DeleteSelectedVehicleCommand.ExecuteAsync(null);
+        }
+
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
     private async void OnOpenHistoryMenuClick(object? sender, RoutedEventArgs e)
     {
         await OpenHistoryWindowAsync();
@@ -648,6 +660,20 @@ public partial class MainWindow : Window
             || fileMenu.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
         fileMenu.IsSubMenuOpen = true;
         return focused || fileMenu.IsSubMenuOpen;
+    }
+
+    private async Task<bool> ConfirmDeleteVehicleAsync(string message)
+    {
+        var confirmation = new ConfirmationWindow
+        {
+            DataContext = new ConfirmationDialogViewModel(
+                "Odstranit vozidlo",
+                message,
+                "Odstranit vozidlo",
+                "Zrušit")
+        };
+
+        return await confirmation.ShowDialog<bool>(this);
     }
 
     private Control? ResolveFocusTarget(DesktopFocusTarget target)

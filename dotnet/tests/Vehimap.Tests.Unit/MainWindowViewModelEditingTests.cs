@@ -236,6 +236,79 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
+    public async Task Delete_vehicle_command_requires_confirmation_and_keeps_data_when_rejected()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+        var confirmationWasShown = false;
+        viewModel.ConfirmVehicleDeleteHandler = message =>
+        {
+            confirmationWasShown = true;
+            Assert.Contains("Milena", message);
+            return Task.FromResult(false);
+        };
+
+        await viewModel.DeleteSelectedVehicleCommand.ExecuteAsync(null);
+
+        Assert.True(confirmationWasShown);
+        Assert.Single(dataStore.CurrentDataSet.Vehicles);
+        Assert.Equal("Milena", viewModel.SelectedVehicle?.Name);
+    }
+
+    [Fact]
+    public async Task Delete_vehicle_command_removes_related_data_and_managed_attachments()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+        var managedDirectory = Path.Combine(dataRoot.DataPath, "attachments", "veh_1");
+        Directory.CreateDirectory(managedDirectory);
+        await File.WriteAllTextAsync(Path.Combine(managedDirectory, "pojisteni.pdf"), "managed attachment");
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.Vehicles.Add(new Vehicle("veh_2", "Božena", "Osobní vozidla", "Srazové auto", "Škoda 100", "", "1973", "35", "", "09/2026", "", "10/2026"));
+        dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_1", "veh_1", "01.05.2026", "Servis", "123000", "1500", "Olej"));
+        dataSet.FuelEntries.Add(new FuelEntry("fuel_1", "veh_1", "02.05.2026", "123200", "35", "1700", true, "Natural 95", ""));
+        dataSet.Records.Add(new VehicleRecord("rec_1", "veh_1", "Povinné ručení", "Pojistka", "", "05/2026", "05/2027", "2000", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/pojisteni.pdf", ""));
+        dataSet.Records.Add(new VehicleRecord("rec_2", "veh_2", "Doklad", "Doklad druhého vozidla", "", "", "", "", VehicleRecordAttachmentMode.External, @"C:\externi.pdf", ""));
+        dataSet.Reminders.Add(new VehicleReminder("rem_1", "veh_1", "Objednat servis", "10.06.2026", "14", "", ""));
+        dataSet.MaintenancePlans.Add(new MaintenancePlan("mnt_1", "veh_1", "Motorový olej", "15000", "12", "", "", true, ""));
+        dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_1", "Běžný provoz", "rodina", "Benzín", "", "", ""));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+        viewModel.SelectedVehicle = Assert.Single(viewModel.Vehicles.Where(item => item.Id == "veh_1"));
+        string? confirmationMessage = null;
+        viewModel.ConfirmVehicleDeleteHandler = message =>
+        {
+            confirmationMessage = message;
+            return Task.FromResult(true);
+        };
+
+        await viewModel.DeleteSelectedVehicleCommand.ExecuteAsync(null);
+
+        Assert.NotNull(confirmationMessage);
+        Assert.Contains("historie: 1", confirmationMessage);
+        Assert.Contains("tankování: 1", confirmationMessage);
+        Assert.Contains("doklady: 1", confirmationMessage);
+        Assert.Contains("připomínky: 1", confirmationMessage);
+        Assert.Contains("údržba: 1", confirmationMessage);
+        Assert.DoesNotContain(dataStore.CurrentDataSet.Vehicles, item => item.Id == "veh_1");
+        Assert.DoesNotContain(dataStore.CurrentDataSet.HistoryEntries, item => item.VehicleId == "veh_1");
+        Assert.DoesNotContain(dataStore.CurrentDataSet.FuelEntries, item => item.VehicleId == "veh_1");
+        Assert.DoesNotContain(dataStore.CurrentDataSet.Records, item => item.VehicleId == "veh_1");
+        Assert.DoesNotContain(dataStore.CurrentDataSet.Reminders, item => item.VehicleId == "veh_1");
+        Assert.DoesNotContain(dataStore.CurrentDataSet.MaintenancePlans, item => item.VehicleId == "veh_1");
+        Assert.DoesNotContain(dataStore.CurrentDataSet.VehicleMetaEntries, item => item.VehicleId == "veh_1");
+        Assert.Contains(dataStore.CurrentDataSet.Records, item => item.Id == "rec_2");
+        Assert.False(Directory.Exists(managedDirectory));
+        Assert.Equal("veh_2", viewModel.SelectedVehicle?.Id);
+        Assert.Contains("bylo odstraněno", viewModel.ShellStatus);
+    }
+
+    [Fact]
     public async Task Vehicle_starter_bundle_preview_and_apply_adds_missing_items_without_duplicates()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);

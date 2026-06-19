@@ -87,6 +87,13 @@
                     IsEnabled="{Binding CanEditSelectedVehicle}"
                     AutomationProperties.Name="Upravit vybrané vozidlo"
                     AutomationProperties.AutomationId="EditVehicleMenuItem" />
+          <MenuItem x:Name="DeleteVehicleMenuItem"
+                    Header="Odstranit vybrané vozidlo"
+                    Click="OnDeleteVehicleMenuClick"
+                    IsEnabled="{Binding CanDeleteSelectedVehicle}"
+                    AutomationProperties.Name="Odstranit vybrané vozidlo"
+                    AutomationProperties.AutomationId="DeleteVehicleMenuItem" />
+          <Separator />
           <MenuItem x:Name="OpenVehicleDetailMenuItem"
                     Header="Detail vybraného vozidla"
                     Click="OnOpenVehicleDetailMenuClick"

@@ -25,6 +25,12 @@
               Content="Upravit"
               AutomationProperties.Name="Upravit vybrané vozidlo"
               AutomationProperties.AutomationId="EditVehicleButton" />
+      <Button x:Name="DeleteVehicleButton"
+              Command="{Binding DeleteSelectedVehicleCommand}"
+              Content="Odstranit"
+              IsVisible="{Binding IsVehicleDetailVisible}"
+              AutomationProperties.Name="Odstranit vybrané vozidlo"
+              AutomationProperties.AutomationId="DeleteVehicleButton" />
       <Button x:Name="OpenVehicleStarterBundleButton"
               Click="OnOpenVehicleStarterBundleClick"
               Content="Balíček"

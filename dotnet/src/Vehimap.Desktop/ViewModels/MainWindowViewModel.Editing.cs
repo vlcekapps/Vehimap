@@ -19,6 +19,7 @@ public sealed partial class MainWindowViewModel
         CancelRecordEditCore(clearStatus: true);
         CreateVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
+        DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
         CreateHistoryCommand.NotifyCanExecuteChanged();
         CreateFuelCommand.NotifyCanExecuteChanged();
         CreateReminderCommand.NotifyCanExecuteChanged();
