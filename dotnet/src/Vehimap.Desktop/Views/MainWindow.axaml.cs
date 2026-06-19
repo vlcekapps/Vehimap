@@ -201,6 +201,20 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (e.Key == Key.F2 && e.KeyModifiers == KeyModifiers.None)
+        {
+            if (_viewModel?.IsCurrentWorkspaceEditShortcutContext == true)
+            {
+                e.Handled = true;
+                _viewModel.HandleCurrentWorkspaceEditShortcut();
+                return;
+            }
+
+            _ = OpenVehicleDetailWindowAsync(startEdit: true);
+            e.Handled = true;
+            return;
+        }
+
         if (e.KeyModifiers != KeyModifiers.Control)
         {
             return;
@@ -209,12 +223,34 @@ public partial class MainWindow : Window
         switch (e.Key)
         {
             case Key.N:
+                if (_viewModel?.IsCurrentWorkspaceCreateShortcutContext == true)
+                {
+                    e.Handled = true;
+                    _viewModel.HandleCurrentWorkspaceCreateShortcut();
+                    break;
+                }
+
                 _ = OpenVehicleDetailWindowAsync(startCreate: true);
                 e.Handled = true;
                 break;
             case Key.U:
+                if (_viewModel?.IsCurrentWorkspaceEditShortcutContext == true)
+                {
+                    e.Handled = true;
+                    _viewModel.HandleCurrentWorkspaceEditShortcut();
+                    break;
+                }
+
                 _ = OpenVehicleDetailWindowAsync(startEdit: true);
                 e.Handled = true;
+                break;
+            case Key.S:
+                if (_viewModel?.IsCurrentWorkspaceSaveShortcutContext == true)
+                {
+                    e.Handled = true;
+                    await _viewModel.HandleCurrentWorkspaceSaveShortcutAsync().ConfigureAwait(true);
+                }
+
                 break;
             case Key.O:
                 if (_viewModel?.IsCurrentWorkspacePrimaryOpenShortcutContext == true)

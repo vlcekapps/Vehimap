@@ -233,10 +233,19 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool IsOverdueOverviewTabSelected => SelectedVehicleTabIndex == OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspacePrimaryOpenShortcutContext =>
-        SelectedVehicleTabIndex is SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+        SelectedVehicleTabIndex is RecordTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspaceItemOpenShortcutContext =>
         SelectedVehicleTabIndex is TimelineTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+
+    public bool IsCurrentWorkspaceCreateShortcutContext =>
+        SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
+
+    public bool IsCurrentWorkspaceEditShortcutContext =>
+        SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
+
+    public bool IsCurrentWorkspaceSaveShortcutContext =>
+        SelectedVehicleTabIndex is DetailTabIndex or HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
 
     public MainWindowViewModel()
         : this(
@@ -342,6 +351,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(IsOverdueOverviewTabSelected));
         OnPropertyChanged(nameof(IsCurrentWorkspacePrimaryOpenShortcutContext));
         OnPropertyChanged(nameof(IsCurrentWorkspaceItemOpenShortcutContext));
+        OnPropertyChanged(nameof(IsCurrentWorkspaceCreateShortcutContext));
+        OnPropertyChanged(nameof(IsCurrentWorkspaceEditShortcutContext));
+        OnPropertyChanged(nameof(IsCurrentWorkspaceSaveShortcutContext));
     }
 
     partial void OnSelectedVehicleChanged(VehicleListItemViewModel? value)
@@ -533,6 +545,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         switch (SelectedVehicleTabIndex)
         {
+            case RecordTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedRecordFileCommand).ConfigureAwait(true);
+                return true;
             case SearchTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedSearchResultCommand).ConfigureAwait(true);
                 return true;
@@ -565,6 +580,89 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 return true;
             default:
                 return false;
+        }
+    }
+
+    public bool HandleCurrentWorkspaceCreateShortcut()
+    {
+        switch (SelectedVehicleTabIndex)
+        {
+            case HistoryTabIndex:
+                ExecuteWorkspaceShortcut(CreateHistoryCommand);
+                return true;
+            case FuelTabIndex:
+                ExecuteWorkspaceShortcut(CreateFuelCommand);
+                return true;
+            case ReminderTabIndex:
+                ExecuteWorkspaceShortcut(CreateReminderCommand);
+                return true;
+            case MaintenanceTabIndex:
+                ExecuteWorkspaceShortcut(CreateMaintenanceCommand);
+                return true;
+            case RecordTabIndex:
+                ExecuteWorkspaceShortcut(CreateRecordCommand);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public bool HandleCurrentWorkspaceEditShortcut()
+    {
+        switch (SelectedVehicleTabIndex)
+        {
+            case HistoryTabIndex:
+                ExecuteWorkspaceShortcut(EditSelectedHistoryCommand);
+                return true;
+            case FuelTabIndex:
+                ExecuteWorkspaceShortcut(EditSelectedFuelCommand);
+                return true;
+            case ReminderTabIndex:
+                ExecuteWorkspaceShortcut(EditSelectedReminderCommand);
+                return true;
+            case MaintenanceTabIndex:
+                ExecuteWorkspaceShortcut(EditSelectedMaintenanceCommand);
+                return true;
+            case RecordTabIndex:
+                ExecuteWorkspaceShortcut(EditSelectedRecordCommand);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public async Task<bool> HandleCurrentWorkspaceSaveShortcutAsync()
+    {
+        switch (SelectedVehicleTabIndex)
+        {
+            case DetailTabIndex:
+                await ExecuteWorkspaceShortcutAsync(SaveVehicleCommand).ConfigureAwait(true);
+                return true;
+            case HistoryTabIndex:
+                await ExecuteWorkspaceShortcutAsync(SaveHistoryCommand).ConfigureAwait(true);
+                return true;
+            case FuelTabIndex:
+                await ExecuteWorkspaceShortcutAsync(SaveFuelCommand).ConfigureAwait(true);
+                return true;
+            case ReminderTabIndex:
+                await ExecuteWorkspaceShortcutAsync(SaveReminderCommand).ConfigureAwait(true);
+                return true;
+            case MaintenanceTabIndex:
+                await ExecuteWorkspaceShortcutAsync(SaveMaintenanceCommand).ConfigureAwait(true);
+                return true;
+            case RecordTabIndex:
+                await ExecuteWorkspaceShortcutAsync(SaveRecordCommand).ConfigureAwait(true);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private static void ExecuteWorkspaceShortcut(IRelayCommand command)
+    {
+        if (command.CanExecute(null))
+        {
+            command.Execute(null);
         }
     }
 

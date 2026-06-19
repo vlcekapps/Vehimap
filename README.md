@@ -83,6 +83,7 @@ V hlavním okně:
 - `Ctrl+R`: otevřít vlastní připomínky vybraného vozidla
 - v hlavním seznamu klávesa `Enter` otevře detail právě vybraného vozidla
 - v C# Avalonia větvi jsou `Ctrl+F`, `Ctrl+O` a `Ctrl+P` v přehledových kartách kontextové: nejdřív obslouží aktivní hledání, výsledek nebo termín a teprve mimo tyto pracovní plochy se použije globální akce hlavního okna
+- v C# Avalonia větvi jsou v kartách evidencí kontextové i `Ctrl+N`, `Ctrl+U` / `F2` a `Ctrl+S`: v historii pracují s historií, v dokladech s doklady, v údržbě s údržbou, `Ctrl+S` ukládá aktivní editor a mimo evidenci zůstávají `Ctrl+N` a `Ctrl+U` / `F2` globálními akcemi vozidla
 
 ## Klávesové zkratky v dashboardu a přehledech:
 

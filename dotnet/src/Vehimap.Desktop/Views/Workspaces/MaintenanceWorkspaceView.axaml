@@ -4,6 +4,12 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.MaintenanceWorkspaceView"
              x:DataType="vm:MaintenanceWorkspaceViewModel">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateMaintenanceCommand}" />
+    <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedMaintenanceCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding EditSelectedMaintenanceCommand}" />
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveMaintenanceCommand}" />
+  </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding MaintenanceSummary}" TextWrapping="Wrap" />
     <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">

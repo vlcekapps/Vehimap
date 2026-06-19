@@ -4,6 +4,14 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.RecordWorkspaceView"
              x:DataType="vm:RecordWorkspaceViewModel">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateRecordCommand}" />
+    <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedRecordCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding EditSelectedRecordCommand}" />
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveRecordCommand}" />
+    <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedRecordFileCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+O" Command="{Binding OpenSelectedRecordFolderCommand}" />
+  </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.1*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding RecordSummary}" TextWrapping="Wrap" />
     <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">

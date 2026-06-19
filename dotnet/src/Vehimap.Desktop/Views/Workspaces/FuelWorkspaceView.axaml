@@ -4,6 +4,12 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.FuelWorkspaceView"
              x:DataType="vm:FuelWorkspaceViewModel">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateFuelCommand}" />
+    <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedFuelCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding EditSelectedFuelCommand}" />
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveFuelCommand}" />
+  </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding FuelSummary}"

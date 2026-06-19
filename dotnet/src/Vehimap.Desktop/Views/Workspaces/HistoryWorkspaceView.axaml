@@ -4,6 +4,12 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.HistoryWorkspaceView"
              x:DataType="vm:HistoryWorkspaceViewModel">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateHistoryCommand}" />
+    <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedHistoryCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding EditSelectedHistoryCommand}" />
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveHistoryCommand}" />
+  </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding HistorySummary}"

@@ -4,6 +4,12 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.ReminderWorkspaceView"
              x:DataType="vm:ReminderWorkspaceViewModel">
+  <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateReminderCommand}" />
+    <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedReminderCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding EditSelectedReminderCommand}" />
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveReminderCommand}" />
+  </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding ReminderSummary}" TextWrapping="Wrap" />
     <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">

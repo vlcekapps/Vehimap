@@ -145,6 +145,87 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Contextual_create_shortcut_uses_active_evidence_workspace()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.History;
+
+        var handled = viewModel.HandleCurrentWorkspaceCreateShortcut();
+
+        Assert.True(handled);
+        Assert.True(viewModel.IsEditingHistory);
+        Assert.Equal(DesktopTabIndexes.History, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal(DesktopFocusTarget.HistoryEditorDate, requestedFocus);
+    }
+
+    [Fact]
+    public void Contextual_edit_shortcut_uses_active_evidence_workspace()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
+        viewModel.SelectedRecord = viewModel.SelectedVehicleRecords.Single(item => item.Id == "rec_2");
+
+        var handled = viewModel.HandleCurrentWorkspaceEditShortcut();
+
+        Assert.True(handled);
+        Assert.True(viewModel.IsEditingRecord);
+        Assert.Equal("Asistence", viewModel.RecordEditorTitle);
+        Assert.Equal(DesktopTabIndexes.Record, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal(DesktopFocusTarget.RecordEditorTitle, requestedFocus);
+    }
+
+    [Fact]
+    public async Task Contextual_save_shortcut_saves_active_evidence_editor()
+    {
+        var viewModel = CreateViewModel();
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.History;
+        Assert.True(viewModel.HandleCurrentWorkspaceCreateShortcut());
+        viewModel.HistoryEditorDate = "01.02.2026";
+        viewModel.HistoryEditorType = "Test";
+        viewModel.HistoryEditorOdometer = "11111";
+        viewModel.HistoryEditorCost = "123";
+        viewModel.HistoryEditorNote = "Ulozeno zkratkou";
+
+        var handled = await viewModel.HandleCurrentWorkspaceSaveShortcutAsync();
+
+        Assert.True(handled);
+        Assert.False(viewModel.IsEditingHistory);
+        Assert.Contains(viewModel.SelectedVehicleHistory, item => item.Note == "Ulozeno zkratkou");
+        Assert.Equal(DesktopTabIndexes.History, viewModel.SelectedVehicleTabIndex);
+    }
+
+    [Fact]
+    public async Task Contextual_primary_open_shortcut_opens_record_attachment_in_record_tab()
+    {
+        var attachmentPath = Path.GetTempFileName();
+        var fileLauncher = new CapturingFileLauncher();
+
+        try
+        {
+            var viewModel = CreateViewModel(fileLauncher: fileLauncher, recordFilePath: attachmentPath);
+
+            viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
+            viewModel.SelectedRecord = viewModel.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
+
+            var handled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
+
+            Assert.True(handled);
+            Assert.Equal(attachmentPath, fileLauncher.LastOpenedPath);
+        }
+        finally
+        {
+            File.Delete(attachmentPath);
+        }
+    }
+
+    [Fact]
     public async Task Selected_vehicle_cost_command_opens_cost_tab_and_selects_current_vehicle()
     {
         var viewModel = CreateViewModel();
@@ -234,7 +315,10 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("Časová osa vozidla", viewModel.TimelineWindowTitle);
     }
 
-    private static MainWindowViewModel CreateViewModel(ITextFileSaveService? textFileSaveService = null)
+    private static MainWindowViewModel CreateViewModel(
+        ITextFileSaveService? textFileSaveService = null,
+        IFileLauncher? fileLauncher = null,
+        string? recordFilePath = null)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
         var dataSet = new VehimapDataSet
@@ -257,7 +341,7 @@ public sealed class MainWindowViewModelNavigationTests
             ],
             Records =
             [
-                new VehicleRecord("rec_1", "veh_1", "Povinné ručení", "Chybějící příloha", "", "", "03/2027", "200", VehicleRecordAttachmentMode.External, @"C:\missing\policy.pdf", "Prověřit"),
+                new VehicleRecord("rec_1", "veh_1", "Povinné ručení", "Chybějící příloha", "", "", "03/2027", "200", VehicleRecordAttachmentMode.External, recordFilePath ?? @"C:\missing\policy.pdf", "Prověřit"),
                 new VehicleRecord("rec_2", "veh_1", "Asistence", "Asistence", "", "", "08/2099", "", VehicleRecordAttachmentMode.External, "", "")
             ],
             Reminders =
@@ -278,7 +362,7 @@ public sealed class MainWindowViewModelNavigationTests
             new StubLegacyDataStore(dataSet),
             bootstrapper,
             new ManagedAttachmentPathService(),
-            new StubFileLauncher(),
+            fileLauncher ?? new StubFileLauncher(),
             new StubFilePickerService(),
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
@@ -317,6 +401,19 @@ public sealed class MainWindowViewModelNavigationTests
     private sealed class StubFileLauncher : IFileLauncher
     {
         public Task OpenAsync(string path, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    private sealed class CapturingFileLauncher : IFileLauncher
+    {
+        public string LastOpenedPath { get; private set; } = string.Empty;
+
+        public Task OpenAsync(string path, CancellationToken cancellationToken = default)
+        {
+            LastOpenedPath = path;
+            return Task.CompletedTask;
+        }
 
         public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
