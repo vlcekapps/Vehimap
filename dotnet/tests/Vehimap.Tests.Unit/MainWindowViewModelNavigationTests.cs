@@ -280,6 +280,32 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public async Task Copy_selected_record_path_command_copies_resolved_attachment_path()
+    {
+        var attachmentPath = Path.GetTempFileName();
+        var clipboard = new CapturingClipboardService();
+
+        try
+        {
+            var viewModel = CreateViewModel(clipboardService: clipboard, recordFilePath: attachmentPath);
+
+            viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
+            viewModel.SelectedRecord = viewModel.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
+
+            Assert.True(viewModel.CopySelectedRecordPathCommand.CanExecute(null));
+
+            await viewModel.CopySelectedRecordPathCommand.ExecuteAsync(null);
+
+            Assert.Equal(attachmentPath, clipboard.LastCopiedText);
+            Assert.Contains("zkopírována", viewModel.RecordEditorStatus, StringComparison.CurrentCulture);
+        }
+        finally
+        {
+            File.Delete(attachmentPath);
+        }
+    }
+
+    [Fact]
     public async Task Selected_vehicle_cost_command_opens_cost_tab_and_selects_current_vehicle()
     {
         var viewModel = CreateViewModel();
@@ -404,6 +430,7 @@ public sealed class MainWindowViewModelNavigationTests
     private static MainWindowViewModel CreateViewModel(
         ITextFileSaveService? textFileSaveService = null,
         IFileLauncher? fileLauncher = null,
+        IClipboardService? clipboardService = null,
         string? recordFilePath = null)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -453,7 +480,8 @@ public sealed class MainWindowViewModelNavigationTests
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
-            textFileSaveService ?? new StubTextFileSaveService());
+            textFileSaveService ?? new StubTextFileSaveService(),
+            clipboardService: clipboardService);
     }
 
     private sealed class StubDataRootLocator : IDataRootLocator
@@ -502,6 +530,17 @@ public sealed class MainWindowViewModelNavigationTests
         }
 
         public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    private sealed class CapturingClipboardService : IClipboardService
+    {
+        public string LastCopiedText { get; private set; } = string.Empty;
+
+        public Task SetTextAsync(string text, CancellationToken cancellationToken = default)
+        {
+            LastCopiedText = text;
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class StubTextFileSaveService : ITextFileSaveService

@@ -38,6 +38,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - ovladat shell vice klavesnici: `F5` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+D` pro dashboard, `Ctrl+T` pro blizici se terminy, `Ctrl+Shift+T` pro propadle terminy, kontextove `Ctrl+F` pro hledani v aktivni pracovni plose, `Ctrl+Shift+F` pro globalni hledani a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech, dashboardu i ve vysledcich hledani
 - primo vytvaret, upravovat a mazat `pripominky`
 - primo vytvaret, upravovat a mazat `doklady`, vcetne volby `Spravovana kopie` vs `Externi cesta` a importu souboru do spravovanych priloh
+- u dokladu otevrit prilozeny soubor, otevrit jeho slozku a zkopirovat vyresenou cestu pres `Ctrl+Shift+C` nebo tlacitko `Kopirovat cestu`
 - primo vytvaret, upravovat a mazat `historii`
 - primo vytvaret, upravovat a mazat `tankovani`
 - posunout opakovanou `pripominku` na dalsi termin tlacitkem `Dalsi termin` nebo zkratkou `Ctrl+Shift+N`

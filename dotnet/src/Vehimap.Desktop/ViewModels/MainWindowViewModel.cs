@@ -32,6 +32,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly DesktopSessionController _session;
     private readonly IFileLauncher _fileLauncher;
     private readonly IFilePickerService _filePickerService;
+    private readonly IClipboardService _clipboardService;
     private readonly IGlobalSearchService _globalSearchService;
     private readonly ITimelineService _timelineService;
     private readonly ICalendarExportService _calendarExportService;
@@ -297,7 +298,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         DesktopNavigationCoordinator? navigationCoordinator = null,
         DesktopPrintableVehicleReportService? printableVehicleReportService = null,
         IAppShellDialogService? appShellDialogService = null,
-        IUpdateInstallLauncher? updateInstallLauncher = null)
+        IUpdateInstallLauncher? updateInstallLauncher = null,
+        IClipboardService? clipboardService = null)
     {
         var sessionBackupService = backupService ?? new LegacyBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
@@ -318,6 +320,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             sessionUpdateService);
         _fileLauncher = fileLauncher;
         _filePickerService = filePickerService;
+        _clipboardService = clipboardService ?? new AvaloniaClipboardService();
         _globalSearchService = globalSearchService;
         _timelineService = timelineService;
         _calendarExportService = calendarExportService;
@@ -338,6 +341,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool CanOpenSelectedRecordFolder =>
         SelectedRecord is not null
         && !string.IsNullOrWhiteSpace(GetSelectedRecordFolderPath());
+
+    public bool CanCopySelectedRecordPath =>
+        SelectedRecord is not null
+        && !string.IsNullOrWhiteSpace(GetSelectedRecordCopyPath());
 
     partial void OnSelectedVehicleTabIndexChanged(int value)
     {
@@ -732,6 +739,20 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         await _fileLauncher.OpenFolderAsync(folderPath).ConfigureAwait(false);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCopySelectedRecordPath))]
+    private async Task CopySelectedRecordPathAsync()
+    {
+        var path = GetSelectedRecordCopyPath();
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return;
+        }
+
+        await _clipboardService.SetTextAsync(path).ConfigureAwait(false);
+        RecordEditorStatus = "Vyřešená cesta dokladu byla zkopírována do schránky.";
+        RequestFocus(DesktopFocusTarget.RecordList);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardAuditItem))]
@@ -1142,6 +1163,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string? GetSelectedRecordFolderPath()
     {
         return _projectionService.GetRecordFolderPath(SelectedRecord);
+    }
+
+    private string? GetSelectedRecordCopyPath()
+    {
+        return string.IsNullOrWhiteSpace(SelectedRecord?.ResolvedPath)
+            ? null
+            : SelectedRecord.ResolvedPath;
     }
 
     private static TItem? FindById<TItem>(IEnumerable<TItem> items, Func<TItem, string> idSelector, string entryId)

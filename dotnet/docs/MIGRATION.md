@@ -36,6 +36,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - keyboard-first vrstvu shellu s focus managementem, shortcuty a enter-akcemi na hlavnich seznamech
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh
+- dokladove akce pro otevreni souboru, otevreni slozky a zkopirovani vyresene cesty prilohy pres `Ctrl+Shift+C`
 - posun opakovanych pripominek na dalsi termin v Avalonia workspace, vcetne zkratky `Ctrl+Shift+N`
 - oznaceni servisniho planu jako splneneho v Avalonia workspace, vcetne zkratky `Ctrl+L`, potvrzeni data a tachometru a volitelneho zapisu stejne udalosti do historie vozidla
 - doplneni doporucenych servisnich sablon primo z Avalonia planu udrzby pres sdileny vyberovy dialog a zkratku `Ctrl+Shift+N`

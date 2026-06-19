@@ -11,6 +11,7 @@
     <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveRecordCommand}" />
     <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedRecordFileCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+O" Command="{Binding OpenSelectedRecordFolderCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+C" Command="{Binding CopySelectedRecordPathCommand}" />
   </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.1*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding RecordSummary}" TextWrapping="Wrap" />
@@ -56,6 +57,7 @@
           <WrapPanel x:Name="RecordFileActionPanel" ItemWidth="138" ItemHeight="34">
             <Button Command="{Binding OpenSelectedRecordFileCommand}" Content="Otevřít soubor" IsVisible="{Binding IsRecordDetailVisible}" AutomationProperties.Name="Otevřít soubor přílohy vybraného dokladu" AutomationProperties.AutomationId="OpenRecordFileButton" />
             <Button Command="{Binding OpenSelectedRecordFolderCommand}" Content="Otevřít složku" IsVisible="{Binding IsRecordDetailVisible}" AutomationProperties.Name="Otevřít složku přílohy vybraného dokladu" AutomationProperties.AutomationId="OpenRecordFolderButton" />
+            <Button Command="{Binding CopySelectedRecordPathCommand}" Content="Kopírovat cestu" IsVisible="{Binding IsRecordDetailVisible}" AutomationProperties.Name="Kopírovat vyřešenou cestu přílohy dokladu" AutomationProperties.AutomationId="CopyRecordPathButton" />
           </WrapPanel>
         </StackPanel>
         <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding RecordEditorStatus}" TextWrapping="Wrap" />

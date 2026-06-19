@@ -690,6 +690,7 @@ public sealed partial class MainWindowViewModel
     {
         OpenSelectedRecordFileCommand.NotifyCanExecuteChanged();
         OpenSelectedRecordFolderCommand.NotifyCanExecuteChanged();
+        CopySelectedRecordPathCommand.NotifyCanExecuteChanged();
         EditSelectedRecordCommand.NotifyCanExecuteChanged();
         DeleteSelectedRecordCommand.NotifyCanExecuteChanged();
         MoveSelectedRecordToManagedCommand.NotifyCanExecuteChanged();

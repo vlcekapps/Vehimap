@@ -110,6 +110,7 @@ V hlavním okně:
 - v `Plánu údržby` klávesa `Enter` upraví vybraný úkon a `Delete` jej odstraní
 - kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce a Vehimap si poslední volbu pamatuje i po dalším otevření
 - v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu, `Ctrl+Shift+O` jeho složku a `Ctrl+Shift+C` zkopíruje uloženou cestu
+- v C# Avalonia větvi je stejná dokladová akce dostupná i tlačítkem `Kopírovat cestu`; kopíruje vyřešenou cestu, tedy použitelnou absolutní cestu ke spravované i externí příloze
 - ve `Vlastních připomínkách` navíc `Ctrl+Shift+N` posune vybranou opakovanou připomínku na další termín
 - v C# Avalonia větvi je stejná akce dostupná i tlačítkem `Další termín` ve sdíleném workspace připomínek a funguje stejně v hlavní kartě i samostatném okně
 - v `Nákladech a souhrnech` `Ctrl+R` obnoví vybrané období a `Ctrl+D` otevře detail vozidla

@@ -83,6 +83,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public ICommand MoveSelectedRecordToManagedCommand => Root.MoveSelectedRecordToManagedCommand;
     public ICommand OpenSelectedRecordFileCommand => Root.OpenSelectedRecordFileCommand;
     public ICommand OpenSelectedRecordFolderCommand => Root.OpenSelectedRecordFolderCommand;
+    public ICommand CopySelectedRecordPathCommand => Root.CopySelectedRecordPathCommand;
 
     partial void OnSelectedRecordChanged(VehicleRecordItemViewModel? value)
     {

@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- Avalonia dokladový workspace umí zkopírovat vyřešenou cestu přílohy tlačítkem `Kopírovat cestu` nebo zkratkou `Ctrl+Shift+C`
 - nový přehled `Audit dat`, který sjednocuje chybějící povinné údaje, neplatné rozsahy, problematické doklady, podezřelé tachometry, nákladové nesrovnalosti i servisní plány bez použitelného odometru
 - explicitní servisní profil vozidla s poli `Pohon`, `Klimatizace`, `Rozvody` a `Převodovka`, který slouží jako základ pro doporučené servisní šablony
 - výběrový dialog doporučených servisních šablon, ve kterém lze návrhy před přidáním odškrtnout nebo upravit
