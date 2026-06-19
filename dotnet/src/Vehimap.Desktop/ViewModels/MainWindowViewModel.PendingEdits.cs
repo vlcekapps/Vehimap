@@ -148,6 +148,7 @@ public sealed partial class MainWindowViewModel
         CreateReminderCommand.NotifyCanExecuteChanged();
         EditSelectedReminderCommand.NotifyCanExecuteChanged();
         DeleteSelectedReminderCommand.NotifyCanExecuteChanged();
+        AdvanceSelectedReminderCommand.NotifyCanExecuteChanged();
         CreateMaintenanceCommand.NotifyCanExecuteChanged();
         EditSelectedMaintenanceCommand.NotifyCanExecuteChanged();
         DeleteSelectedMaintenanceCommand.NotifyCanExecuteChanged();

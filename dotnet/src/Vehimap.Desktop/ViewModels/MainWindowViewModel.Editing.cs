@@ -1,4 +1,6 @@
 using CommunityToolkit.Mvvm.Input;
+using System.Globalization;
+using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 
@@ -24,6 +26,7 @@ public sealed partial class MainWindowViewModel
         CreateHistoryCommand.NotifyCanExecuteChanged();
         CreateFuelCommand.NotifyCanExecuteChanged();
         CreateReminderCommand.NotifyCanExecuteChanged();
+        AdvanceSelectedReminderCommand.NotifyCanExecuteChanged();
         CreateMaintenanceCommand.NotifyCanExecuteChanged();
         CreateRecordCommand.NotifyCanExecuteChanged();
     }
@@ -125,6 +128,33 @@ public sealed partial class MainWindowViewModel
         _dataSet.Reminders.RemoveAll(item => string.Equals(item.Id, SelectedReminder.Id, StringComparison.Ordinal));
         await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, ReminderTabIndex);
         ReminderEditorStatus = "Připomínka byla odstraněna.";
+        RequestFocus(DesktopFocusTarget.ReminderList);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanAdvanceSelectedReminder))]
+    private async Task AdvanceSelectedReminderAsync()
+    {
+        if (SelectedVehicle is null)
+        {
+            return;
+        }
+
+        var reminder = GetSelectedReminderModel();
+        if (!TryBuildNextReminderDueDate(reminder, out var nextDueDate))
+        {
+            ReminderEditorStatus = "Vybraná připomínka nemá opakování nebo čitelný termín.";
+            RequestFocus(DesktopFocusTarget.ReminderList);
+            return;
+        }
+
+        var nextDueDateText = FormatReminderDueDate(nextDueDate);
+        var updatedReminder = reminder! with { DueDate = nextDueDateText };
+        UpsertReminder(updatedReminder);
+
+        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, ReminderTabIndex, reminderId: updatedReminder.Id);
+
+        ReminderEditorStatus = $"Připomínka byla posunuta na {nextDueDateText}.";
+        SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, updatedReminder.Id);
         RequestFocus(DesktopFocusTarget.ReminderList);
     }
 
@@ -308,6 +338,77 @@ public sealed partial class MainWindowViewModel
 
         return _dataSet.Reminders.FirstOrDefault(item => string.Equals(item.Id, SelectedReminder.Id, StringComparison.Ordinal));
     }
+
+    private static bool TryBuildNextReminderDueDate(VehicleReminder? reminder, out DateOnly nextDueDate)
+    {
+        nextDueDate = default;
+        if (reminder is null
+            || !VehimapValueParser.TryParseEventDate(reminder.DueDate, out var currentDueDate)
+            || !TryGetReminderRepeatIntervalMonths(reminder.RepeatMode, out var intervalMonths))
+        {
+            return false;
+        }
+
+        nextDueDate = currentDueDate.AddMonths(intervalMonths);
+        return true;
+    }
+
+    private static bool TryGetReminderRepeatIntervalMonths(string? repeatMode, out int intervalMonths)
+    {
+        intervalMonths = 0;
+        var normalized = NormalizeReminderRepeatMode(repeatMode);
+        if (string.IsNullOrWhiteSpace(normalized) || normalized.Contains("neopakovat", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (normalized.Contains('5'))
+        {
+            intervalMonths = 60;
+            return true;
+        }
+
+        if (normalized.Contains('2'))
+        {
+            intervalMonths = 24;
+            return true;
+        }
+
+        if (normalized.Contains("rok", StringComparison.Ordinal) || normalized.Contains("rocne", StringComparison.Ordinal))
+        {
+            intervalMonths = 12;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static string NormalizeReminderRepeatMode(string? repeatMode)
+    {
+        return (repeatMode ?? string.Empty)
+            .Trim()
+            .ToLowerInvariant()
+            .Replace("\u00A0", string.Empty, StringComparison.Ordinal)
+            .Replace(" ", string.Empty, StringComparison.Ordinal)
+            .Replace("á", "a", StringComparison.Ordinal)
+            .Replace("č", "c", StringComparison.Ordinal)
+            .Replace("ď", "d", StringComparison.Ordinal)
+            .Replace("é", "e", StringComparison.Ordinal)
+            .Replace("ě", "e", StringComparison.Ordinal)
+            .Replace("í", "i", StringComparison.Ordinal)
+            .Replace("ň", "n", StringComparison.Ordinal)
+            .Replace("ó", "o", StringComparison.Ordinal)
+            .Replace("ř", "r", StringComparison.Ordinal)
+            .Replace("š", "s", StringComparison.Ordinal)
+            .Replace("ť", "t", StringComparison.Ordinal)
+            .Replace("ú", "u", StringComparison.Ordinal)
+            .Replace("ů", "u", StringComparison.Ordinal)
+            .Replace("ý", "y", StringComparison.Ordinal)
+            .Replace("ž", "z", StringComparison.Ordinal);
+    }
+
+    private static string FormatReminderDueDate(DateOnly date) =>
+        date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 
     private VehicleRecord? GetSelectedRecordModel()
     {

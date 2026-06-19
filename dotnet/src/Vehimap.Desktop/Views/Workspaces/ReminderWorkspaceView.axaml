@@ -8,6 +8,7 @@
     <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateReminderCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedReminderCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedReminderCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+N" Command="{Binding AdvanceSelectedReminderCommand}" />
     <KeyBinding Gesture="Ctrl+S" Command="{Binding SaveReminderCommand}" />
   </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
@@ -42,6 +43,7 @@
           <Button Command="{Binding CreateReminderCommand}" Content="Nová" AutomationProperties.Name="Vytvořit novou připomínku" AutomationProperties.AutomationId="CreateReminderButton" />
           <Button Command="{Binding EditSelectedReminderCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybranou připomínku" AutomationProperties.AutomationId="EditReminderButton" />
           <Button Command="{Binding DeleteSelectedReminderCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybranou připomínku" AutomationProperties.AutomationId="DeleteReminderButton" />
+          <Button Command="{Binding AdvanceSelectedReminderCommand}" Content="Další termín" AutomationProperties.Name="Posunout vybranou opakovanou připomínku na další termín" AutomationProperties.AutomationId="AdvanceReminderButton" />
           <Button Command="{Binding SaveReminderCommand}" Content="Uložit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Uložit připomínku" AutomationProperties.AutomationId="SaveReminderButton" />
           <Button Command="{Binding CancelReminderEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Zrušit úpravu připomínky" AutomationProperties.AutomationId="CancelReminderButton" />
         </WrapPanel>

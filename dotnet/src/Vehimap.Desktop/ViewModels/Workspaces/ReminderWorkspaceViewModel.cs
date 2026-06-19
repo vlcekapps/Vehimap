@@ -50,6 +50,7 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     public ICommand CreateReminderCommand => Root.CreateReminderCommand;
     public ICommand EditSelectedReminderCommand => Root.EditSelectedReminderCommand;
     public ICommand DeleteSelectedReminderCommand => Root.DeleteSelectedReminderCommand;
+    public ICommand AdvanceSelectedReminderCommand => Root.AdvanceSelectedReminderCommand;
     public ICommand SaveReminderCommand => Root.SaveReminderCommand;
     public ICommand CancelReminderEditCommand => Root.CancelReminderEditCommand;
 

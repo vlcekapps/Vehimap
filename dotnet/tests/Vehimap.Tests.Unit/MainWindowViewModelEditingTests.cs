@@ -45,6 +45,53 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Nová připomínka byla uložena.", viewModel.ReminderEditorStatus);
     }
 
+    [Theory]
+    [InlineData("Ročně", "10.10.2027")]
+    [InlineData("Každý rok", "10.10.2027")]
+    [InlineData("Každé 2 roky", "10.10.2028")]
+    [InlineData("Každých 5 let", "10.10.2031")]
+    public async Task Advance_selected_reminder_moves_recurring_due_date_and_restores_selection(string repeatMode, string expectedDueDate)
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.Reminders.Add(new VehicleReminder("rem_1", "veh_1", "Objednat servis", "10.10.2026", "14", repeatMode, "Zavolat servisu"));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        Assert.True(viewModel.AdvanceSelectedReminderCommand.CanExecute(null));
+
+        await viewModel.AdvanceSelectedReminderCommand.ExecuteAsync(null);
+
+        var savedReminder = Assert.Single(dataStore.CurrentDataSet.Reminders);
+        Assert.Equal(expectedDueDate, savedReminder.DueDate);
+        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
+        Assert.Equal(expectedDueDate, viewModel.SelectedReminder?.DueDate);
+        Assert.Equal($"Připomínka byla posunuta na {expectedDueDate}.", viewModel.ReminderEditorStatus);
+    }
+
+    [Fact]
+    public void Advance_selected_reminder_is_disabled_for_one_time_or_editing_reminder()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.Reminders.Add(new VehicleReminder("rem_1", "veh_1", "Jednorázová kontrola", "10.10.2026", "14", "Neopakovat", string.Empty));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        Assert.False(viewModel.AdvanceSelectedReminderCommand.CanExecute(null));
+
+        dataStore.CurrentDataSet.Reminders[0] = dataStore.CurrentDataSet.Reminders[0] with { RepeatMode = "Každý rok" };
+        Assert.True(viewModel.AdvanceSelectedReminderCommand.CanExecute(null));
+
+        viewModel.CreateReminderCommand.Execute(null);
+
+        Assert.False(viewModel.AdvanceSelectedReminderCommand.CanExecute(null));
+    }
+
     [Fact]
     public async Task Save_record_command_imports_managed_attachment_and_persists_relative_path()
     {

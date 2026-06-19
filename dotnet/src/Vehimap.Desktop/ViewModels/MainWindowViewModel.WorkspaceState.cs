@@ -212,6 +212,7 @@ public sealed partial class MainWindowViewModel
     public bool CanCreateReminder => SelectedVehicle is not null && !HasPendingEdits;
     public bool CanEditSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
     public bool CanDeleteSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
+    public bool CanAdvanceSelectedReminder => SelectedVehicle is not null && SelectedReminder is not null && !HasPendingEdits && TryBuildNextReminderDueDate(GetSelectedReminderModel(), out _);
     public bool CanSaveReminder => SelectedVehicle is not null && IsEditingReminder;
     public bool CanCancelReminderEdit => IsEditingReminder;
 
@@ -639,6 +640,7 @@ public sealed partial class MainWindowViewModel
     {
         EditSelectedReminderCommand.NotifyCanExecuteChanged();
         DeleteSelectedReminderCommand.NotifyCanExecuteChanged();
+        AdvanceSelectedReminderCommand.NotifyCanExecuteChanged();
     }
 
     internal void NotifyReminderWorkspaceEditingChanged()
@@ -646,6 +648,7 @@ public sealed partial class MainWindowViewModel
         CreateReminderCommand.NotifyCanExecuteChanged();
         EditSelectedReminderCommand.NotifyCanExecuteChanged();
         DeleteSelectedReminderCommand.NotifyCanExecuteChanged();
+        AdvanceSelectedReminderCommand.NotifyCanExecuteChanged();
         SaveReminderCommand.NotifyCanExecuteChanged();
         CancelReminderEditCommand.NotifyCanExecuteChanged();
         NotifyPendingEditStateChanged();

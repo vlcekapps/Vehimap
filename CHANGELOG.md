@@ -23,6 +23,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - C# desktop větev umí odstranit vybrané vozidlo včetně potvrzení, navázaných evidencí a spravovaných příloh
 - v Avalonia větvi lze z menu vybraného vozidla otevřít `Náklady a souhrny` s detailem rozpadu nákladů
 - nákladový workspace v Avalonia větvi umí exportovat flotilový souhrn TSV, detail vybraného vozidla TSV a HTML sestavu
+- připomínkový workspace v Avalonia větvi umí tlačítkem `Další termín` nebo zkratkou `Ctrl+Shift+N` posunout opakovanou připomínku podle nastaveného intervalu
 
 ### Změněno
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`
