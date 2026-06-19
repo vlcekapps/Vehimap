@@ -4,14 +4,37 @@
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.CostWorkspaceView"
              x:DataType="vm:CostWorkspaceViewModel">
-  <Grid RowDefinitions="Auto,Auto,Auto,*">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*">
     <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
                Opacity="0.75"
                Text="{Binding CostComparison}"
                TextWrapping="Wrap" />
-    <Border Grid.Row="2"
+    <StackPanel Grid.Row="2"
+                Margin="0,12,0,0"
+                Orientation="Horizontal"
+                Spacing="10">
+      <Button Command="{Binding ExportFleetCostSummaryCommand}"
+              Content="Export souhrnu TSV"
+              AutomationProperties.Name="Exportovat souhrn nákladů do TSV"
+              AutomationProperties.AutomationId="ExportFleetCostSummaryButton" />
+      <Button Command="{Binding ExportSelectedVehicleCostDetailCommand}"
+              Content="Export detailu TSV"
+              AutomationProperties.Name="Exportovat detail nákladů vybraného vozidla do TSV"
+              AutomationProperties.AutomationId="ExportSelectedVehicleCostDetailButton" />
+      <Button Command="{Binding ExportSelectedVehicleCostReportCommand}"
+              Content="Export HTML sestavy"
+              AutomationProperties.Name="Exportovat HTML sestavu nákladů vybraného vozidla"
+              AutomationProperties.AutomationId="ExportSelectedVehicleCostReportButton" />
+    </StackPanel>
+    <TextBlock Grid.Row="3"
+               Margin="0,8,0,0"
+               Text="{Binding CostExportStatus}"
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding CostExportStatus}"
+               AutomationProperties.AutomationId="CostExportStatusText" />
+    <Border Grid.Row="4"
             Margin="0,12,0,0"
             Padding="12"
             Background="#10203040"
@@ -22,7 +45,7 @@
                  AutomationProperties.AutomationId="SelectedCostVehicleDetailText" />
     </Border>
     <ListBox x:Name="CostListBox"
-             Grid.Row="3"
+             Grid.Row="5"
              Margin="0,12,0,0"
              ItemsSource="{Binding CostVehicles}"
              SelectedItem="{Binding SelectedDashboardCostVehicle}"

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -27,7 +28,12 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
 
     public ObservableCollection<CostVehicleItemViewModel> CostVehicles => Root.CostVehicles;
 
+    public string CostExportStatus => Root.CostExportStatus;
+
     public ICommand OpenSelectedDashboardCostVehicleCommand => Root.OpenSelectedDashboardCostVehicleCommand;
+    public IAsyncRelayCommand ExportFleetCostSummaryCommand => Root.ExportFleetCostSummaryCommand;
+    public IAsyncRelayCommand ExportSelectedVehicleCostDetailCommand => Root.ExportSelectedVehicleCostDetailCommand;
+    public IAsyncRelayCommand ExportSelectedVehicleCostReportCommand => Root.ExportSelectedVehicleCostReportCommand;
 
     partial void OnSelectedDashboardCostVehicleChanged(CostVehicleItemViewModel? value)
     {

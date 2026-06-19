@@ -722,6 +722,8 @@ public sealed partial class MainWindowViewModel
     internal void NotifyCostWorkspaceSelectionChanged()
     {
         OpenSelectedDashboardCostVehicleCommand.NotifyCanExecuteChanged();
+        ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
+        ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
     }
 
     internal void NotifyDashboardWorkspaceTimelineSelectionChanged()

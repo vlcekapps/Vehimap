@@ -40,10 +40,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly DesktopProjectionService _projectionService;
     private readonly DesktopNavigationCoordinator _navigationCoordinator;
     private readonly DesktopPrintableVehicleReportService _printableVehicleReportService;
+    private readonly DesktopCostExportService _costExportService = new();
     private VehimapDataRoot? _dataRoot => _session.DataRoot;
     private VehimapDataSet _dataSet => _session.DataSet;
     private IReadOnlyList<AuditItem> _auditItems => _session.AuditItems;
     private IReadOnlyDictionary<string, VehicleMeta> _metaByVehicleId => _session.MetaByVehicleId;
+    private CostAnalysisSummary? _currentCostSummary;
 
     public event Action<DesktopFocusTarget>? FocusRequested;
 
@@ -608,6 +610,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         {
             var result = _session.LoadAsync(AppContext.BaseDirectory).GetAwaiter().GetResult();
             var costSummary = result.CostSummary;
+            _currentCostSummary = costSummary;
 
             LoadError = string.Empty;
             DataMode = result.DataRoot.IsPortable ? "Portable data vedle aplikace" : "Systémová datová složka";
@@ -644,6 +647,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedDashboardAuditItem = AuditItems.FirstOrDefault();
             SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault();
             SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
+            ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
+            ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
+            ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
 
             if (applyLaunchTabPreference && result.SupportedSettings.ShowDashboardOnLaunch && !result.SupportedSettings.HideOnLaunch)
             {

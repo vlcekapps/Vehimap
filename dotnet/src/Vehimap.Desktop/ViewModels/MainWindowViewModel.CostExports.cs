@@ -1,0 +1,110 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
+namespace Vehimap.Desktop.ViewModels;
+
+public sealed partial class MainWindowViewModel
+{
+    [ObservableProperty]
+    private string costExportStatus = "Exporty nákladů použijí právě zobrazené období.";
+
+    public bool CanExportFleetCostSummary => _currentCostSummary is not null && CostVehicles.Count > 0;
+
+    public bool CanExportSelectedVehicleCost => _currentCostSummary is not null && SelectedDashboardCostVehicle is not null;
+
+    [RelayCommand(CanExecute = nameof(CanExportFleetCostSummary))]
+    private async Task ExportFleetCostSummaryAsync()
+    {
+        if (_currentCostSummary is null)
+        {
+            CostExportStatus = "Souhrn nákladů zatím není připraven k exportu.";
+            return;
+        }
+
+        var content = _costExportService.BuildFleetSummaryTsv(_currentCostSummary);
+        var fileName = _costExportService.BuildFleetSummaryFileName(_currentCostSummary);
+        var savedPath = await _fileSaveService.SaveTextAsync(
+                "Export souhrnu nákladů",
+                fileName,
+                content,
+                "TSV soubor",
+                "tsv",
+                ["*.tsv"])
+            .ConfigureAwait(false);
+
+        CostExportStatus = string.IsNullOrWhiteSpace(savedPath)
+            ? "Export souhrnu nákladů byl zrušen."
+            : $"Souhrn nákladů byl uložen do {savedPath}.";
+    }
+
+    [RelayCommand(CanExecute = nameof(CanExportSelectedVehicleCost))]
+    private async Task ExportSelectedVehicleCostDetailAsync()
+    {
+        if (_currentCostSummary is null || SelectedDashboardCostVehicle is null)
+        {
+            CostExportStatus = "Nejprve vyberte vozidlo v nákladovém přehledu.";
+            return;
+        }
+
+        var content = _costExportService.BuildVehicleDetailTsv(
+            _dataSet,
+            SelectedDashboardCostVehicle.VehicleId,
+            _currentCostSummary.PeriodStart,
+            _currentCostSummary.PeriodEnd);
+        var fileName = _costExportService.BuildVehicleDetailFileName(
+            _dataSet,
+            SelectedDashboardCostVehicle.VehicleId,
+            _currentCostSummary.PeriodStart,
+            _currentCostSummary.PeriodEnd);
+        var savedPath = await _fileSaveService.SaveTextAsync(
+                "Export detailu nákladů",
+                fileName,
+                content,
+                "TSV soubor",
+                "tsv",
+                ["*.tsv"])
+            .ConfigureAwait(false);
+
+        CostExportStatus = string.IsNullOrWhiteSpace(savedPath)
+            ? "Export detailu nákladů byl zrušen."
+            : $"Detail nákladů byl uložen do {savedPath}.";
+    }
+
+    [RelayCommand(CanExecute = nameof(CanExportSelectedVehicleCost))]
+    private async Task ExportSelectedVehicleCostReportAsync()
+    {
+        if (_currentCostSummary is null || SelectedDashboardCostVehicle is null)
+        {
+            CostExportStatus = "Nejprve vyberte vozidlo v nákladovém přehledu.";
+            return;
+        }
+
+        var content = _costExportService.BuildVehicleReportHtml(
+            _dataSet,
+            _currentCostSummary,
+            SelectedDashboardCostVehicle.VehicleId,
+            DateTime.Now);
+        var fileName = _costExportService.BuildVehicleReportFileName(
+            _dataSet,
+            SelectedDashboardCostVehicle.VehicleId,
+            _currentCostSummary.PeriodStart,
+            _currentCostSummary.PeriodEnd);
+        var savedPath = await _fileSaveService.SaveTextAsync(
+                "Export HTML sestavy nákladů",
+                fileName,
+                content,
+                "HTML soubor",
+                "html",
+                ["*.html", "*.htm"])
+            .ConfigureAwait(false);
+
+        if (string.IsNullOrWhiteSpace(savedPath))
+        {
+            CostExportStatus = "Export HTML sestavy nákladů byl zrušen.";
+            return;
+        }
+
+        CostExportStatus = $"HTML sestava nákladů byla uložena do {savedPath}.";
+        await _fileLauncher.OpenAsync(savedPath).ConfigureAwait(false);
+    }
+}

@@ -22,6 +22,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - v Avalonia větvi samostatná okna pro `Časovou osu`, `Globální hledání`, `Náklady napříč vozidly`, `Blížící se termíny` a `Propadlé termíny`, postavená nad stejnými workspace views jako hlavní karty
 - C# desktop větev umí odstranit vybrané vozidlo včetně potvrzení, navázaných evidencí a spravovaných příloh
 - v Avalonia větvi lze z menu vybraného vozidla otevřít `Náklady a souhrny` s detailem rozpadu nákladů
+- nákladový workspace v Avalonia větvi umí exportovat flotilový souhrn TSV, detail vybraného vozidla TSV a HTML sestavu
 
 ### Změněno
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`

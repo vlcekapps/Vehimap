@@ -72,6 +72,22 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public async Task Cost_export_command_saves_fleet_summary_tsv()
+    {
+        var saveService = new CapturingTextFileSaveService(@"C:\exports\naklady.tsv");
+        var viewModel = CreateViewModel(saveService);
+
+        await viewModel.ExportFleetCostSummaryCommand.ExecuteAsync(null);
+
+        Assert.Equal("Export souhrnu nákladů", saveService.LastTitle);
+        Assert.Equal("TSV soubor", saveService.LastFileTypeName);
+        Assert.Equal("tsv", saveService.LastDefaultExtension);
+        Assert.Contains("Octavia", saveService.LastContent);
+        Assert.Contains("Palivo", saveService.LastContent);
+        Assert.Contains("Souhrn nákladů byl uložen", viewModel.CostExportStatus);
+    }
+
+    [Fact]
     public void Global_search_result_opens_matching_record_and_requests_focus()
     {
         var viewModel = CreateViewModel();
@@ -130,7 +146,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("Časová osa vozidla", viewModel.TimelineWindowTitle);
     }
 
-    private static MainWindowViewModel CreateViewModel()
+    private static MainWindowViewModel CreateViewModel(ITextFileSaveService? textFileSaveService = null)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
         var dataSet = new VehimapDataSet
@@ -179,7 +195,7 @@ public sealed class MainWindowViewModelNavigationTests
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
-            new StubTextFileSaveService());
+            textFileSaveService ?? new StubTextFileSaveService());
     }
 
     private sealed class StubDataRootLocator : IDataRootLocator
@@ -221,6 +237,44 @@ public sealed class MainWindowViewModelNavigationTests
     {
         public Task<string?> SaveTextAsync(string title, string suggestedFileName, string content, CancellationToken cancellationToken = default)
             => Task.FromResult<string?>(null);
+    }
+
+    private sealed class CapturingTextFileSaveService : ITextFileSaveService
+    {
+        private readonly string _path;
+
+        public CapturingTextFileSaveService(string path)
+        {
+            _path = path;
+        }
+
+        public string LastTitle { get; private set; } = string.Empty;
+        public string LastFileTypeName { get; private set; } = string.Empty;
+        public string LastDefaultExtension { get; private set; } = string.Empty;
+        public string LastContent { get; private set; } = string.Empty;
+
+        public Task<string?> SaveTextAsync(string title, string suggestedFileName, string content, CancellationToken cancellationToken = default)
+        {
+            LastTitle = title;
+            LastContent = content;
+            return Task.FromResult<string?>(_path);
+        }
+
+        public Task<string?> SaveTextAsync(
+            string title,
+            string suggestedFileName,
+            string content,
+            string fileTypeName,
+            string defaultExtension,
+            IReadOnlyList<string> patterns,
+            CancellationToken cancellationToken = default)
+        {
+            LastTitle = title;
+            LastFileTypeName = fileTypeName;
+            LastDefaultExtension = defaultExtension;
+            LastContent = content;
+            return Task.FromResult<string?>(_path);
+        }
     }
 
     private sealed class StubFilePickerService : IFilePickerService
