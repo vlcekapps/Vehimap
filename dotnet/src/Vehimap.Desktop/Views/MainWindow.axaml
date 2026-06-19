@@ -17,8 +17,9 @@
     <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportCalendarCommand}" />
     <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusTimelineSearchCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+F" Command="{Binding FocusGlobalSearchCommand}" />
-    <KeyBinding Gesture="Ctrl+Shift+T" Command="{Binding FocusUpcomingOverviewCommand}" />
-    <KeyBinding Gesture="Ctrl+Shift+D" Command="{Binding FocusOverdueOverviewCommand}" />
+    <KeyBinding Gesture="Ctrl+D" Command="{Binding FocusDashboardCommand}" />
+    <KeyBinding Gesture="Ctrl+T" Command="{Binding FocusUpcomingOverviewCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+T" Command="{Binding FocusOverdueOverviewCommand}" />
   </Window.KeyBindings>
   <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*,Auto">
     <Grid ColumnDefinitions="*,Auto">

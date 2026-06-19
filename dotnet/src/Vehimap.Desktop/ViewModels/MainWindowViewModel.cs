@@ -432,6 +432,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void FocusDashboard()
+    {
+        SelectedVehicleTabIndex = DashboardTabIndex;
+        RequestFocus(DesktopFocusTarget.DashboardAuditList);
+    }
+
+    [RelayCommand]
     private void FocusUpcomingOverview()
     {
         SelectedVehicleTabIndex = UpcomingOverviewTabIndex;

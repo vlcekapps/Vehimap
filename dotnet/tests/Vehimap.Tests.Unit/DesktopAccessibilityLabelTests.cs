@@ -64,6 +64,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OverviewMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"QuickActionsMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppMenuRoot\"", xaml);
+        Assert.Contains("Gesture=\"Ctrl+D\" Command=\"{Binding FocusDashboardCommand}\"", xaml);
+        Assert.Contains("Gesture=\"Ctrl+T\" Command=\"{Binding FocusUpcomingOverviewCommand}\"", xaml);
+        Assert.Contains("Gesture=\"Ctrl+Shift+T\" Command=\"{Binding FocusOverdueOverviewCommand}\"", xaml);
+        Assert.DoesNotContain("Gesture=\"Ctrl+Shift+D\"", xaml);
         Assert.Contains("x:Name=\"AppMenuBar\"", xaml);
         Assert.Contains("x:Name=\"FileMenuRoot\" Header=\"_Soubor\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"VehicleMenuRoot\" Header=\"_Vozidlo\" IsTabStop=\"False\"", normalizedXaml);

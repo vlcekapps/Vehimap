@@ -57,6 +57,19 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Focus_dashboard_command_switches_to_dashboard_tab_and_requests_dashboard_focus()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        viewModel.FocusDashboardCommand.Execute(null);
+
+        Assert.Equal(DesktopTabIndexes.Dashboard, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal(DesktopFocusTarget.DashboardAuditList, requestedFocus);
+    }
+
+    [Fact]
     public async Task Selected_vehicle_cost_command_opens_cost_tab_and_selects_current_vehicle()
     {
         var viewModel = CreateViewModel();
