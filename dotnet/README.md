@@ -58,6 +58,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit `Historii`, `Tankovani`, `Připominky`, `Údrzbu` i `Doklady` v samostatnych desktopovych oknech nad stejnou editační logikou jako hlavni shell
 - otevrit `Detail vozidla`, `Audit` a `Dashboard` i v samostatnych desktopovych oknech nad stejnym viewmodelem jako hlavni shell
 - sdilet lifecycle samostatnych workspace oken: prvni fokus po otevreni i potvrzeni zavreni rozpracovaneho editoru jde pres jeden helper
+- drzet nazvy samostatnych workspace oken ve workspace viewmodelech misto verejnych root aliasu v `MainWindowViewModel`
 - sdilet i samotne otevirani workspace oken z hlavniho shellu: potvrzeni rozpracovane editace, prepnuti karty, modalni okno a navrat fokusu maji jeden helper
 - drzet stav `Casove osy` a `Globalniho hledani` primo v jejich workspace viewmodelech misto duplicitnich root proxy vlastnosti v `MainWindowViewModel`
 - drzet nactene kolekce polozek `Casove osy` a vysledku `Globalniho hledani` primo v jejich workspace viewmodelech misto verejnych root vlastnosti

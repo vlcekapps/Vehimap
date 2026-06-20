@@ -141,52 +141,52 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool CanOpenDataFolder => _dataRoot is not null && !string.IsNullOrWhiteSpace(_dataRoot.DataPath);
 
-    public string HistoryWindowTitle =>
+    internal string HistoryWindowTitle =>
         SelectedVehicle is null
             ? "Historie vozidla"
             : $"Historie - {SelectedVehicle.Name}";
 
-    public string FuelWindowTitle =>
+    internal string FuelWindowTitle =>
         SelectedVehicle is null
             ? "Tankování vozidla"
             : $"Tankování - {SelectedVehicle.Name}";
 
-    public string ReminderWindowTitle =>
+    internal string ReminderWindowTitle =>
         SelectedVehicle is null
             ? "Připomínky vozidla"
             : $"Připomínky - {SelectedVehicle.Name}";
 
-    public string MaintenanceWindowTitle =>
+    internal string MaintenanceWindowTitle =>
         SelectedVehicle is null
             ? "Plán údržby vozidla"
             : $"Údržba - {SelectedVehicle.Name}";
 
-    public string RecordWindowTitle =>
+    internal string RecordWindowTitle =>
         SelectedVehicle is null
             ? "Doklady a přílohy"
             : $"Doklady a přílohy - {SelectedVehicle.Name}";
 
-    public string VehicleDetailWindowTitle =>
+    internal string VehicleDetailWindowTitle =>
         SelectedVehicle is null
             ? "Detail vozidla"
             : $"Detail - {SelectedVehicle.Name}";
 
-    public string TimelineWindowTitle =>
+    internal string TimelineWindowTitle =>
         SelectedVehicle is null
             ? "Časová osa vozidla"
             : $"Časová osa - {SelectedVehicle.Name}";
 
-    public string AuditWindowTitle => "Audit dat";
+    internal string AuditWindowTitle => "Audit dat";
 
-    public string CostWindowTitle => "Náklady napříč vozidly";
+    internal string CostWindowTitle => "Náklady napříč vozidly";
 
-    public string DashboardWindowTitle => "Dashboard";
+    internal string DashboardWindowTitle => "Dashboard";
 
-    public string GlobalSearchWindowTitle => "Globální hledání";
+    internal string GlobalSearchWindowTitle => "Globální hledání";
 
-    public string UpcomingOverviewWindowTitle => "Blížící se termíny";
+    internal string UpcomingOverviewWindowTitle => "Blížící se termíny";
 
-    public string OverdueOverviewWindowTitle => "Propadlé termíny";
+    internal string OverdueOverviewWindowTitle => "Propadlé termíny";
 
     public bool IsDetailTabSelected => SelectedVehicleTabIndex == DetailTabIndex;
 

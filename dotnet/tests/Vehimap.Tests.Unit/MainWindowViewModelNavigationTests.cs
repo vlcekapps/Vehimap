@@ -970,19 +970,19 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.True(viewModel.CanOpenFuelWindow);
         Assert.True(viewModel.CanOpenMaintenanceWindow);
         Assert.True(viewModel.CanOpenVehicleDetailWindow);
-        Assert.Equal("Historie - Octavia", viewModel.HistoryWindowTitle);
-        Assert.Equal("Tankování - Octavia", viewModel.FuelWindowTitle);
-        Assert.Equal("Připomínky - Octavia", viewModel.ReminderWindowTitle);
-        Assert.Equal("Údržba - Octavia", viewModel.MaintenanceWindowTitle);
-        Assert.Equal("Doklady a přílohy - Octavia", viewModel.RecordWindowTitle);
-        Assert.Equal("Detail - Octavia", viewModel.VehicleDetailWindowTitle);
-        Assert.Equal("Časová osa - Octavia", viewModel.TimelineWindowTitle);
-        Assert.Equal("Audit dat", viewModel.AuditWindowTitle);
-        Assert.Equal("Náklady napříč vozidly", viewModel.CostWindowTitle);
-        Assert.Equal("Dashboard", viewModel.DashboardWindowTitle);
-        Assert.Equal("Globální hledání", viewModel.GlobalSearchWindowTitle);
-        Assert.Equal("Blížící se termíny", viewModel.UpcomingOverviewWindowTitle);
-        Assert.Equal("Propadlé termíny", viewModel.OverdueOverviewWindowTitle);
+        Assert.Equal("Historie - Octavia", viewModel.HistoryWorkspace.WindowTitle);
+        Assert.Equal("Tankování - Octavia", viewModel.FuelWorkspace.WindowTitle);
+        Assert.Equal("Připomínky - Octavia", viewModel.ReminderWorkspace.WindowTitle);
+        Assert.Equal("Údržba - Octavia", viewModel.MaintenanceWorkspace.WindowTitle);
+        Assert.Equal("Doklady a přílohy - Octavia", viewModel.RecordWorkspace.WindowTitle);
+        Assert.Equal("Detail - Octavia", viewModel.VehicleDetailWorkspace.WindowTitle);
+        Assert.Equal("Časová osa - Octavia", viewModel.TimelineWorkspace.WindowTitle);
+        Assert.Equal("Audit dat", viewModel.AuditWorkspace.WindowTitle);
+        Assert.Equal("Náklady napříč vozidly", viewModel.CostWorkspace.WindowTitle);
+        Assert.Equal("Dashboard", viewModel.DashboardWorkspace.WindowTitle);
+        Assert.Equal("Globální hledání", viewModel.GlobalSearchWorkspace.WindowTitle);
+        Assert.Equal("Blížící se termíny", viewModel.UpcomingOverviewWorkspace.WindowTitle);
+        Assert.Equal("Propadlé termíny", viewModel.OverdueOverviewWorkspace.WindowTitle);
 
         viewModel.SelectedVehicle = null;
 
@@ -992,13 +992,13 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.False(viewModel.CanOpenReminderWindow);
         Assert.False(viewModel.CanOpenMaintenanceWindow);
         Assert.False(viewModel.CanOpenRecordWindow);
-        Assert.Equal("Detail vozidla", viewModel.VehicleDetailWindowTitle);
-        Assert.Equal("Historie vozidla", viewModel.HistoryWindowTitle);
-        Assert.Equal("Tankování vozidla", viewModel.FuelWindowTitle);
-        Assert.Equal("Připomínky vozidla", viewModel.ReminderWindowTitle);
-        Assert.Equal("Plán údržby vozidla", viewModel.MaintenanceWindowTitle);
-        Assert.Equal("Doklady a přílohy", viewModel.RecordWindowTitle);
-        Assert.Equal("Časová osa vozidla", viewModel.TimelineWindowTitle);
+        Assert.Equal("Detail vozidla", viewModel.VehicleDetailWorkspace.WindowTitle);
+        Assert.Equal("Historie vozidla", viewModel.HistoryWorkspace.WindowTitle);
+        Assert.Equal("Tankování vozidla", viewModel.FuelWorkspace.WindowTitle);
+        Assert.Equal("Připomínky vozidla", viewModel.ReminderWorkspace.WindowTitle);
+        Assert.Equal("Plán údržby vozidla", viewModel.MaintenanceWorkspace.WindowTitle);
+        Assert.Equal("Doklady a přílohy", viewModel.RecordWorkspace.WindowTitle);
+        Assert.Equal("Časová osa vozidla", viewModel.TimelineWorkspace.WindowTitle);
     }
 
     private static MainWindowViewModel CreateViewModel(

@@ -70,6 +70,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - dialog `Nastavení` v Avalonia větvi má vlastní klávesové ovládání `Ctrl+S`, `Ctrl+B` a `Esc` i přístupný help text s těmito zkratkami
 - app-level dialogy v Avalonia větvi mají sjednocené bezpečné zavření klávesou `Esc`; `O programu` navíc nabízí `Ctrl+O` pro otevření release poznámek a všechny tyto dialogy popisují zkratky v přístupném help textu
 - samostatná Avalonia workspace okna používají sdílený lifecycle helper pro první fokus po otevření a bezpečné potvrzení zavření rozpracovaných editorů
+- názvy samostatných Avalonia workspace oken už nejsou veřejné root vlastnosti `MainWindowViewModel`; veřejně je poskytují příslušné workspace viewmodely
 - otevírání samostatných Avalonia workspace oken v hlavním shellu používá sdílený helper pro potvrzení rozpracovaných editací, přepnutí karty, modální okno a návrat fokusu
 - stav `Časové osy` a `Globálního hledání` v Avalonia větvi už není znovu vystavený přes root `MainWindowViewModel`; vlastní ho přímo příslušné workspace viewmodely
 - načtené kolekce položek `Časové osy` a výsledků `Globálního hledání` v Avalonia větvi vlastní příslušné workspace viewmodely místo veřejných root vlastností

@@ -29,14 +29,19 @@ public sealed class WorkspaceCompositionTests
         Assert.NotNull(viewModel.GlobalSearchWorkspace);
         Assert.NotNull(viewModel.UpcomingOverviewWorkspace);
         Assert.NotNull(viewModel.OverdueOverviewWorkspace);
-        Assert.Equal(viewModel.HistoryWindowTitle, viewModel.HistoryWorkspace.WindowTitle);
-        Assert.Equal(viewModel.RecordWindowTitle, viewModel.RecordWorkspace.WindowTitle);
-        Assert.Equal(viewModel.TimelineWindowTitle, viewModel.TimelineWorkspace.WindowTitle);
-        Assert.Equal(viewModel.CostWindowTitle, viewModel.CostWorkspace.WindowTitle);
-        Assert.Equal(viewModel.DashboardWindowTitle, viewModel.DashboardWorkspace.WindowTitle);
-        Assert.Equal(viewModel.GlobalSearchWindowTitle, viewModel.GlobalSearchWorkspace.WindowTitle);
-        Assert.Equal(viewModel.UpcomingOverviewWindowTitle, viewModel.UpcomingOverviewWorkspace.WindowTitle);
-        Assert.Equal(viewModel.OverdueOverviewWindowTitle, viewModel.OverdueOverviewWorkspace.WindowTitle);
+        Assert.Equal("Detail - Octavia", viewModel.VehicleDetailWorkspace.WindowTitle);
+        Assert.Equal("Historie - Octavia", viewModel.HistoryWorkspace.WindowTitle);
+        Assert.Equal("Tankování - Octavia", viewModel.FuelWorkspace.WindowTitle);
+        Assert.Equal("Připomínky - Octavia", viewModel.ReminderWorkspace.WindowTitle);
+        Assert.Equal("Údržba - Octavia", viewModel.MaintenanceWorkspace.WindowTitle);
+        Assert.Equal("Doklady a přílohy - Octavia", viewModel.RecordWorkspace.WindowTitle);
+        Assert.Equal("Časová osa - Octavia", viewModel.TimelineWorkspace.WindowTitle);
+        Assert.Equal("Audit dat", viewModel.AuditWorkspace.WindowTitle);
+        Assert.Equal("Náklady napříč vozidly", viewModel.CostWorkspace.WindowTitle);
+        Assert.Equal("Dashboard", viewModel.DashboardWorkspace.WindowTitle);
+        Assert.Equal("Globální hledání", viewModel.GlobalSearchWorkspace.WindowTitle);
+        Assert.Equal("Blížící se termíny", viewModel.UpcomingOverviewWorkspace.WindowTitle);
+        Assert.Equal("Propadlé termíny", viewModel.OverdueOverviewWorkspace.WindowTitle);
     }
 
     [Fact]
@@ -314,6 +319,19 @@ public sealed class WorkspaceCompositionTests
             "RecordSummary",
             "MaintenanceTemplateOptions",
             "RecordAttachmentModes",
+            "VehicleDetailWindowTitle",
+            "HistoryWindowTitle",
+            "FuelWindowTitle",
+            "ReminderWindowTitle",
+            "MaintenanceWindowTitle",
+            "RecordWindowTitle",
+            "TimelineWindowTitle",
+            "AuditWindowTitle",
+            "CostWindowTitle",
+            "DashboardWindowTitle",
+            "GlobalSearchWindowTitle",
+            "UpcomingOverviewWindowTitle",
+            "OverdueOverviewWindowTitle",
             "SelectedRecord",
             "SelectedRecordDetail",
             "IsEditingRecord",
