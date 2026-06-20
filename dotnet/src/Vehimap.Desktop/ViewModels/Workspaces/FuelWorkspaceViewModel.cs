@@ -23,6 +23,8 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string fuelSearchSummary = "Ctrl+F přesune fokus do hledání tankování.";
 
+    public bool CanClearFuelSearch => !string.IsNullOrWhiteSpace(FuelSearchText);
+
     [ObservableProperty]
     private VehicleFuelItemViewModel? selectedFuel;
 
@@ -73,6 +75,13 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
         RequestFocus(DesktopFocusTarget.FuelSearch);
     }
 
+    [RelayCommand(CanExecute = nameof(CanClearFuelSearch))]
+    private void ClearFuelSearch()
+    {
+        FuelSearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.FuelSearch);
+    }
+
     public void RefreshVisibleFuelItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedFuel : null;
@@ -111,6 +120,8 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnFuelSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearFuelSearch));
+        ClearFuelSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleFuelItems();
     }
 

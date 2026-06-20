@@ -42,6 +42,8 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     [ObservableProperty]
     private string maintenanceSearchSummary = "Ctrl+F přesune fokus do hledání údržby.";
 
+    public bool CanClearMaintenanceSearch => !string.IsNullOrWhiteSpace(MaintenanceSearchText);
+
     [ObservableProperty]
     private string selectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
 
@@ -89,6 +91,13 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     [RelayCommand]
     private void FocusSearch()
     {
+        RequestFocus(DesktopFocusTarget.MaintenanceSearch);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanClearMaintenanceSearch))]
+    private void ClearMaintenanceSearch()
+    {
+        MaintenanceSearchText = string.Empty;
         RequestFocus(DesktopFocusTarget.MaintenanceSearch);
     }
 
@@ -195,6 +204,8 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
 
     partial void OnMaintenanceSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearMaintenanceSearch));
+        ClearMaintenanceSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleMaintenanceItems();
     }
 

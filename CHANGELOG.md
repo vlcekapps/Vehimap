@@ -7,6 +7,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ### Přidáno
 - Avalonia dokladový workspace umí zkopírovat vyřešenou cestu přílohy tlačítkem `Kopírovat cestu` nebo zkratkou `Ctrl+Shift+C`
+- Avalonia evidence `Historie`, `Tankování`, `Připomínky`, `Plán údržby` a `Doklady` mají tlačítko `Vymazat` pro rychlé smazání hledání a návrat fokusu do filtru
 - Avalonia dashboard má tlačítko `Obnovit` a zkratku `Ctrl+R`, které přepočítají audit, náklady i nejbližší termíny bez ztráty výběru
 - Avalonia dashboard má horní akce `Hledat`, `Blížící se`, `Propadlé`, `Zobrazit vozidlo` a `Upravit vozidlo` včetně zkratek `Ctrl+F`, `Ctrl+T`, `Ctrl+Shift+T`, `Ctrl+O`, `Ctrl+P` a `Ctrl+U` / `F2`
 - Avalonia evidence `Historie`, `Tankování`, `Připomínky`, `Plán údržby` a `Doklady` mají rychlé hledání se zkratkou `Ctrl+F`, přístupnými popisky a filtrováním bez ztráty bezpečných action-state stavů

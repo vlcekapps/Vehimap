@@ -23,6 +23,8 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string historySearchSummary = "Ctrl+F přesune fokus do hledání historie.";
 
+    public bool CanClearHistorySearch => !string.IsNullOrWhiteSpace(HistorySearchText);
+
     [ObservableProperty]
     private VehicleHistoryItemViewModel? selectedHistory;
 
@@ -67,6 +69,13 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
         RequestFocus(DesktopFocusTarget.HistorySearch);
     }
 
+    [RelayCommand(CanExecute = nameof(CanClearHistorySearch))]
+    private void ClearHistorySearch()
+    {
+        HistorySearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.HistorySearch);
+    }
+
     public void RefreshVisibleHistoryItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedHistory : null;
@@ -105,6 +114,8 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnHistorySearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearHistorySearch));
+        ClearHistorySearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleHistoryItems();
     }
 

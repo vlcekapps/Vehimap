@@ -17,7 +17,7 @@
     <TextBlock Grid.ColumnSpan="2" Text="{Binding MaintenanceSummary}" TextWrapping="Wrap" />
     <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold" Text="Servisní plány vybraného vozidla" />
-      <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*">
+      <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
         <TextBlock VerticalAlignment="Center" Text="Hledat" />
         <TextBox x:Name="MaintenanceSearchBox"
                  Grid.Column="1"
@@ -25,6 +25,12 @@
                  PlaceholderText="Úkon, interval, poslední servis, stav nebo poznámka..."
                  AutomationProperties.Name="Hledání v plánu údržby"
                  AutomationProperties.AutomationId="MaintenanceSearchBox" />
+        <Button Grid.Column="2"
+                Margin="12,0,0,0"
+                Command="{Binding ClearMaintenanceSearchCommand}"
+                Content="Vymazat"
+                AutomationProperties.Name="Vymazat hledání v plánu údržby"
+                AutomationProperties.AutomationId="ClearMaintenanceSearchButton" />
       </Grid>
       <TextBlock Grid.Row="2" Margin="0,8,12,0" Opacity="0.72" Text="{Binding MaintenanceSearchSummary}" TextWrapping="Wrap" />
       <ListBox x:Name="MaintenanceListBox"

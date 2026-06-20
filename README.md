@@ -86,7 +86,7 @@ V hlavním okně:
 - v hlavním seznamu klávesa `Enter` otevře detail právě vybraného vozidla
 - v C# Avalonia větvi jsou `Ctrl+F`, `Ctrl+O` a `Ctrl+P` v přehledových kartách kontextové: nejdřív obslouží aktivní hledání, výsledek nebo termín a teprve mimo tyto pracovní plochy se použije globální akce hlavního okna
 - v C# Avalonia větvi jsou v kartách evidencí kontextové i `Ctrl+N`, `Ctrl+U` / `F2` a `Ctrl+S`: v historii pracují s historií, v dokladech s doklady, v údržbě s údržbou, `Ctrl+S` ukládá aktivní editor a mimo evidenci zůstávají `Ctrl+N` a `Ctrl+U` / `F2` globálními akcemi vozidla
-- v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` vlastní rychlé hledání; `Ctrl+F` přesune fokus do filtru, seznam zachová výběr podle položky a při prázdném výsledku vypne akce nad výběrem
+- v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` vlastní rychlé hledání; `Ctrl+F` přesune fokus do filtru, tlačítko `Vymazat` filtr smaže a vrátí fokus do hledání, seznam zachová výběr podle položky a při prázdném výsledku vypne akce nad výběrem
 
 ## Klávesové zkratky v dashboardu a přehledech:
 

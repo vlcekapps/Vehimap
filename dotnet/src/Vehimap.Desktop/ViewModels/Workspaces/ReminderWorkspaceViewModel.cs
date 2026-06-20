@@ -23,6 +23,8 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string reminderSearchSummary = "Ctrl+F přesune fokus do hledání připomínek.";
 
+    public bool CanClearReminderSearch => !string.IsNullOrWhiteSpace(ReminderSearchText);
+
     [ObservableProperty]
     private VehicleReminderItemViewModel? selectedReminder;
 
@@ -68,6 +70,13 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
         RequestFocus(DesktopFocusTarget.ReminderSearch);
     }
 
+    [RelayCommand(CanExecute = nameof(CanClearReminderSearch))]
+    private void ClearReminderSearch()
+    {
+        ReminderSearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.ReminderSearch);
+    }
+
     public void RefreshVisibleReminderItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedReminder : null;
@@ -106,6 +115,8 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnReminderSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearReminderSearch));
+        ClearReminderSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleReminderItems();
     }
 

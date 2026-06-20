@@ -18,7 +18,7 @@
     <TextBlock Grid.ColumnSpan="2" Text="{Binding RecordSummary}" TextWrapping="Wrap" />
     <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold" Text="Seznam dokladů a příloh vybraného vozidla" />
-      <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*">
+      <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
         <TextBlock VerticalAlignment="Center" Text="Hledat" />
         <TextBox x:Name="RecordSearchBox"
                  Grid.Column="1"
@@ -26,6 +26,12 @@
                  PlaceholderText="Typ, název, poskytovatel, platnost, příloha nebo poznámka..."
                  AutomationProperties.Name="Hledání v dokladech vozidla"
                  AutomationProperties.AutomationId="RecordSearchBox" />
+        <Button Grid.Column="2"
+                Margin="12,0,0,0"
+                Command="{Binding ClearRecordSearchCommand}"
+                Content="Vymazat"
+                AutomationProperties.Name="Vymazat hledání v dokladech vozidla"
+                AutomationProperties.AutomationId="ClearRecordSearchButton" />
       </Grid>
       <TextBlock Grid.Row="2" Margin="0,8,12,0" Opacity="0.72" Text="{Binding RecordSearchSummary}" TextWrapping="Wrap" />
       <ListBox x:Name="RecordListBox"

@@ -140,6 +140,57 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Evidence_workspace_clear_search_commands_restore_lists_and_focus_search_fields()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.HistoryWorkspace.HistorySearchText = "oleje";
+        viewModel.FuelWorkspace.FuelSearchText = "benzín";
+        viewModel.ReminderWorkspace.ReminderSearchText = "servis";
+        viewModel.MaintenanceWorkspace.MaintenanceSearchText = "olej";
+        viewModel.RecordWorkspace.RecordSearchText = "Asistence";
+
+        Assert.True(viewModel.HistoryWorkspace.ClearHistorySearchCommand.CanExecute(null));
+        Assert.True(viewModel.FuelWorkspace.ClearFuelSearchCommand.CanExecute(null));
+        Assert.True(viewModel.ReminderWorkspace.ClearReminderSearchCommand.CanExecute(null));
+        Assert.True(viewModel.MaintenanceWorkspace.ClearMaintenanceSearchCommand.CanExecute(null));
+        Assert.True(viewModel.RecordWorkspace.ClearRecordSearchCommand.CanExecute(null));
+
+        viewModel.HistoryWorkspace.ClearHistorySearchCommand.Execute(null);
+        viewModel.FuelWorkspace.ClearFuelSearchCommand.Execute(null);
+        viewModel.ReminderWorkspace.ClearReminderSearchCommand.Execute(null);
+        viewModel.MaintenanceWorkspace.ClearMaintenanceSearchCommand.Execute(null);
+        viewModel.RecordWorkspace.ClearRecordSearchCommand.Execute(null);
+
+        Assert.Equal(string.Empty, viewModel.HistoryWorkspace.HistorySearchText);
+        Assert.Equal(string.Empty, viewModel.FuelWorkspace.FuelSearchText);
+        Assert.Equal(string.Empty, viewModel.ReminderWorkspace.ReminderSearchText);
+        Assert.Equal(string.Empty, viewModel.MaintenanceWorkspace.MaintenanceSearchText);
+        Assert.Equal(string.Empty, viewModel.RecordWorkspace.RecordSearchText);
+        Assert.Equal(viewModel.SelectedVehicleHistory.Count, viewModel.HistoryWorkspace.VisibleHistoryItems.Count);
+        Assert.Equal(viewModel.SelectedVehicleFuel.Count, viewModel.FuelWorkspace.VisibleFuelItems.Count);
+        Assert.Equal(viewModel.SelectedVehicleReminders.Count, viewModel.ReminderWorkspace.VisibleReminderItems.Count);
+        Assert.Equal(viewModel.SelectedVehicleMaintenance.Count, viewModel.MaintenanceWorkspace.VisibleMaintenanceItems.Count);
+        Assert.Equal(viewModel.SelectedVehicleRecords.Count, viewModel.RecordWorkspace.VisibleRecordItems.Count);
+        Assert.False(viewModel.HistoryWorkspace.ClearHistorySearchCommand.CanExecute(null));
+        Assert.False(viewModel.FuelWorkspace.ClearFuelSearchCommand.CanExecute(null));
+        Assert.False(viewModel.ReminderWorkspace.ClearReminderSearchCommand.CanExecute(null));
+        Assert.False(viewModel.MaintenanceWorkspace.ClearMaintenanceSearchCommand.CanExecute(null));
+        Assert.False(viewModel.RecordWorkspace.ClearRecordSearchCommand.CanExecute(null));
+        Assert.Equal(
+            [
+                DesktopFocusTarget.HistorySearch,
+                DesktopFocusTarget.FuelSearch,
+                DesktopFocusTarget.ReminderSearch,
+                DesktopFocusTarget.MaintenanceSearch,
+                DesktopFocusTarget.RecordSearch
+            ],
+            requestedTargets);
+    }
+
+    [Fact]
     public void Cost_workspace_search_filters_vehicle_costs_and_clears_selected_actions_when_empty()
     {
         var viewModel = CreateViewModel();

@@ -26,6 +26,8 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string recordSearchSummary = "Ctrl+F přesune fokus do hledání dokladů.";
 
+    public bool CanClearRecordSearch => !string.IsNullOrWhiteSpace(RecordSearchText);
+
     [ObservableProperty]
     private string selectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
 
@@ -99,6 +101,13 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
         RequestFocus(DesktopFocusTarget.RecordSearch);
     }
 
+    [RelayCommand(CanExecute = nameof(CanClearRecordSearch))]
+    private void ClearRecordSearch()
+    {
+        RecordSearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.RecordSearch);
+    }
+
     public void RefreshVisibleRecordItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedRecord : null;
@@ -137,6 +146,8 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnRecordSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearRecordSearch));
+        ClearRecordSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleRecordItems();
     }
 
