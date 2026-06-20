@@ -51,6 +51,7 @@ V hlavním okně:
 - pole `Filtr seznamu` rychle zobrazí jen vozidla, která právě vyžadují pozornost
 - zaškrtávátko `Skrýt archivovaná a odstavená vozidla` schová neaktivní vozidla jen z hlavního seznamu a svou volbu si pamatuje i po dalším spuštění
 - v C# Avalonia větvi tlačítko `Vymazat filtry` obnoví celý seznam vozidel, ohlásí změnu ve stavovém textu a vrátí fokus do hledání
+- v C# Avalonia větvi se během rozpracované editace zamkne seznam vozidel i jeho filtry; nejdřív je potřeba editor uložit nebo zrušit, aby nešlo omylem přepnout na jiné vozidlo uprostřed práce
 - tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence včetně `Plánu údržby` otevřete i z menu `Vozidlo`
 - položky `Dashboard` a `Globální hledání` v menu `Přehled` nebo `Přehledy` otevřou rychlý souhrn termínů, servisních úkonů, nákladů, problémových stavů a stavu evidencí nebo vyhledání napříč všemi evidencemi
 - položka `Náklady napříč vozidly` v menu `Přehled` nebo `Přehledy` otevře porovnání nákladů za zvolené období mezi všemi vozidly a umožní z přehledu rovnou přejít na detail nákladů, detail vozidla nebo editaci

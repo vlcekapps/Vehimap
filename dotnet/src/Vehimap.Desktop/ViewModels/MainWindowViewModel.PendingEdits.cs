@@ -13,6 +13,15 @@ public sealed partial class MainWindowViewModel
         || IsEditingMaintenance
         || IsEditingRecord;
 
+    public bool IsVehicleListLocked => HasPendingEdits;
+
+    public bool CanUseVehicleList => !HasPendingEdits;
+
+    public string VehicleListLockStatus =>
+        HasPendingEdits
+            ? $"Probíhá úprava v části {GetPendingEditLabel()}. Uložte nebo zrušte editor, potom půjde vybrat jiné vozidlo."
+            : string.Empty;
+
     internal Func<string, Task<bool>>? ConfirmPendingEditsHandler
     {
         get => _confirmPendingEditsHandler;
@@ -129,6 +138,9 @@ public sealed partial class MainWindowViewModel
     internal void NotifyPendingEditStateChanged()
     {
         OnPropertyChanged(nameof(HasPendingEdits));
+        OnPropertyChanged(nameof(IsVehicleListLocked));
+        OnPropertyChanged(nameof(CanUseVehicleList));
+        OnPropertyChanged(nameof(VehicleListLockStatus));
         OnPropertyChanged(nameof(CanCreateVehicle));
         OnPropertyChanged(nameof(CanEditSelectedVehicle));
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
@@ -136,8 +148,10 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
         OnPropertyChanged(nameof(CanEditSelectedDashboardVehicle));
+        OnPropertyChanged(nameof(CanClearVehicleFilters));
         MaintenanceWorkspace.NotifyMaintenanceRecommendationStateChanged();
 
+        ClearVehicleFiltersCommand.NotifyCanExecuteChanged();
         CreateVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
         DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();

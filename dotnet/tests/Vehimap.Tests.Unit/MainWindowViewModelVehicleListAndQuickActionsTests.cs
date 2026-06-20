@@ -96,6 +96,33 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
     }
 
     [Fact]
+    public void Vehicle_list_controls_are_locked_while_an_editor_is_open()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+        viewModel.VehicleSearchText = "Milena";
+
+        Assert.True(viewModel.CanUseVehicleList);
+        Assert.False(viewModel.IsVehicleListLocked);
+        Assert.True(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
+
+        viewModel.EditSelectedVehicleCommand.Execute(null);
+
+        Assert.True(viewModel.IsEditingVehicle);
+        Assert.False(viewModel.CanUseVehicleList);
+        Assert.True(viewModel.IsVehicleListLocked);
+        Assert.Contains("detail vozidla", viewModel.VehicleListLockStatus, StringComparison.CurrentCultureIgnoreCase);
+        Assert.Contains("Uložte nebo zrušte", viewModel.VehicleListLockStatus, StringComparison.CurrentCulture);
+        Assert.False(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
+
+        viewModel.CancelVehicleEditCommand.Execute(null);
+
+        Assert.False(viewModel.IsEditingVehicle);
+        Assert.True(viewModel.CanUseVehicleList);
+        Assert.False(viewModel.IsVehicleListLocked);
+        Assert.True(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
+    }
+
+    [Fact]
     public async Task Review_green_cards_quick_action_opens_matching_overview_filter()
     {
         var viewModel = CreateViewModel(BuildQuickActionDataSet());

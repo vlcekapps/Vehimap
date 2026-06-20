@@ -70,6 +70,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - spravované přílohy se po přepnutí zpět na externí cestu korektně uklidí a smoke testy nově hlídají i round-trip přes zálohu
 - akční tlačítka v `Plánu údržby`, `Auditu dat`, `Časové ose`, přehledech a dokladech teď důsledně respektují skutečný výběr v seznamu
 - horní menu v Avalonia shellu jde vyvolat klávesou `F10` i samostatným `Alt`, ale zůstává mimo běžné pořadí `Tab` / `Shift+Tab`
+- hlavní seznam vozidel a jeho filtry v Avalonia větvi se během rozpracované editace zamknou, takže nelze omylem přepnout na jiné vozidlo před uložením nebo zrušením editoru
 - sdílené Avalonia workspace pro časovou osu, globální hledání a termínové přehledy mají vlastní `Ctrl+F`, `Ctrl+O` a `Ctrl+P` zkratky, takže stejné ovládání funguje v kartě i samostatném okně
 - `Ctrl+F`, `Ctrl+O` a `Ctrl+P` v Avalonia shellu se v přehledových kartách routují kontextově a už nepřebíjejí aktivní hledání nebo otevření vybrané položky globální akcí hlavního okna
 - `Ctrl+N`, `Ctrl+U` / `F2`, `Ctrl+S` a dokladové `Ctrl+O` / `Ctrl+Shift+O` v Avalonia shellu se nově routují podle aktivní evidence, takže stejné editace fungují v hlavních kartách i samostatných workspace oknech

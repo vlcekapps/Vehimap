@@ -45,10 +45,11 @@ public sealed partial class MainWindowViewModel
     ];
 
     public bool CanClearVehicleFilters =>
-        !string.IsNullOrWhiteSpace(VehicleSearchText)
-        || !string.Equals(SelectedVehicleCategoryFilter, AllVehicleCategoriesLabel, StringComparison.Ordinal)
-        || !string.Equals(SelectedVehicleStatusFilter, AllVehicleStatusFilterLabel, StringComparison.Ordinal)
-        || HideInactiveVehicles;
+        CanUseVehicleList
+        && (!string.IsNullOrWhiteSpace(VehicleSearchText)
+            || !string.Equals(SelectedVehicleCategoryFilter, AllVehicleCategoriesLabel, StringComparison.Ordinal)
+            || !string.Equals(SelectedVehicleStatusFilter, AllVehicleStatusFilterLabel, StringComparison.Ordinal)
+            || HideInactiveVehicles);
 
     partial void OnVehicleSearchTextChanged(string value)
     {

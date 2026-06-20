@@ -365,6 +365,14 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (_viewModel.HasPendingEdits)
+        {
+            _viewModel.ShellStatus = _viewModel.VehicleListLockStatus;
+            SyncVehicleSelectionFromViewModel();
+            RequestFocus(_viewModel.GetPendingEditFocusTarget());
+            return;
+        }
+
         if (!await _viewModel.ConfirmDiscardPendingEditsAsync("přejít na jiné vozidlo").ConfigureAwait(true))
         {
             SyncVehicleSelectionFromViewModel();
