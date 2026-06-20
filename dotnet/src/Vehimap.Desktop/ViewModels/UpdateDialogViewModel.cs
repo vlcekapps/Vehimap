@@ -55,12 +55,29 @@ public sealed class UpdateDialogViewModel
             lines.Add($"Velikost assetu: {FormatBytes(result.AssetSize.Value)}");
         }
 
+        if (result.IsUpdateAvailable)
+        {
+            lines.Add(result.CanInstallAutomatically
+                ? "Automatická instalace: dostupná."
+                : $"Automatická instalace: nedostupná. {BuildManualInstallReason(result)}");
+        }
+
         if (!string.IsNullOrWhiteSpace(result.NotesUrl))
         {
             lines.Add($"Release poznámky: {result.NotesUrl}");
         }
 
         return string.Join(Environment.NewLine, lines);
+    }
+
+    private static string BuildManualInstallReason(UpdateCheckResult result)
+    {
+        if (!string.IsNullOrWhiteSpace(result.AutomaticInstallUnavailableReason))
+        {
+            return result.AutomaticInstallUnavailableReason;
+        }
+
+        return "Použijte release stránku nebo stáhněte asset ručně.";
     }
 
     private static string FormatBytes(long sizeBytes)

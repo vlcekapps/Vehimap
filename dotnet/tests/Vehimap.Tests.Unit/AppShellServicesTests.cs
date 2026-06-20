@@ -7,6 +7,7 @@ using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
 using Xunit;
@@ -230,6 +231,73 @@ public sealed class AppShellServicesTests : IDisposable
                 File.Delete(localManifestPath);
             }
         }
+    }
+
+    [Fact]
+    public async Task Check_for_updates_reports_why_automatic_install_is_not_available()
+    {
+        var manifestFileName = $"latest-dotnet-preview-auto-reason-{Guid.NewGuid():N}.ini";
+        var manifest = """
+            [release]
+            version=1.0.3
+            published_at=2026-04-02
+            notes_url=https://example.com/release
+            asset_url=https://example.com/vehimap.zip
+            asset_sha256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            asset_size=2048
+            """;
+        var buildInfo = new StubBuildInfoProvider(
+            new AppBuildInfo(
+                "Vehimap",
+                "1.0.2",
+                "1.0.2.0",
+                "samostatna desktopova aplikace",
+                Path.Combine(_tempRoot, "Vehimap.Desktop.exe"),
+                "Windows",
+                ".NET 10",
+                $"https://example.com/{manifestFileName}",
+                "https://github.com/vlcekapps/Vehimap/releases",
+                Path.Combine(_tempRoot, "missing", "Vehimap.Updater.exe"),
+                true));
+
+        using var httpClient = new HttpClient(new StubHttpMessageHandler(Encoding.UTF8.GetBytes(manifest)));
+        var service = new LegacyUpdateService(buildInfo, httpClient);
+
+        var result = await service.CheckForUpdatesAsync("1.0.2");
+
+        Assert.True(result.IsUpdateAvailable);
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.False(result.CanInstallAutomatically);
+            Assert.Contains("Vehimap.Updater", result.AutomaticInstallUnavailableReason, StringComparison.OrdinalIgnoreCase);
+        }
+        else
+        {
+            Assert.False(result.CanInstallAutomatically);
+            Assert.Contains("Windows", result.AutomaticInstallUnavailableReason, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
+    [Fact]
+    public void Update_dialog_details_show_automatic_install_status()
+    {
+        var model = new UpdateDialogViewModel(new UpdateCheckResult(
+            "1.0.2",
+            "1.0.3",
+            true,
+            "2026-04-02",
+            "https://example.com/release",
+            "https://example.com/vehimap.zip",
+            new string('a', 64),
+            2048,
+            false,
+            "Je dostupna novejsi verze.",
+            null,
+            "Vedle aplikace chybi Vehimap.Updater."));
+
+        Assert.Contains("Automatická instalace: nedostupná", model.Details, StringComparison.Ordinal);
+        Assert.Contains("Vehimap.Updater", model.Details, StringComparison.Ordinal);
+        Assert.Equal("Otevřít release stránku", model.PrimaryActionLabel);
     }
 
     public void Dispose()

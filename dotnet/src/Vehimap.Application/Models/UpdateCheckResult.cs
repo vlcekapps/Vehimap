@@ -11,4 +11,5 @@ public sealed record UpdateCheckResult(
     long? AssetSize,
     bool CanInstallAutomatically,
     string Message,
-    string? FailureReason = null);
+    string? FailureReason = null,
+    string? AutomaticInstallUnavailableReason = null);

@@ -101,6 +101,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - cist a zapisovat podporovane reminder volby do stejneho `settings.ini` jako AHK verze a respektovat `show_dashboard_on_launch`
 - reportovat stejnou verzi jako root `src/VERSION`, vcetne file version pro desktop buildy
 - kontrolovat `update/latest.ini` kompatibilne s AHK vetvi a na Windows pripravit automatickou instalaci pres `Vehimap.Updater`
+- v dialogu kontroly aktualizaci ukazat duvod, proc automaticka instalace neni dostupna, napriklad chybejici updater, nepublikovany build, nepodporovanou platformu nebo nekompletni metadata manifestu
 - pri poskozenem lokalnim preview manifestu preskocit lokalni override a zkusit bezny vzdaleny manifest, aby testovaci soubor v `update/` nezablokoval kontrolu aktualizaci
 - otevrit modalni export a obnovu dat a pracovat se stejnym `.vehimapbak` formatem jako AHK vetev
 - generovat verzovane release balicky pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`
@@ -128,7 +129,7 @@ dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -r win-x6
 .\build\Package-DesktopRelease.ps1 -PublishDirectory .\artifacts\win-x64\desktop -RuntimeIdentifier win-x64 -Version (Get-Content ..\src\VERSION).Trim() -OutputDirectory .\artifacts\win-x64\release
 ```
 
-Balickovaci skript vynechava `.pdb`, vytvori archiv pro dany RID, prida `.sha256` a JSON metadata s `runtimeIdentifier`, nazvem balicku, hashem a velikosti. Generator preview update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt. Kontrola aktualizaci umi lokalni preview manifest pouzit jako override, ale pokud je lokalni soubor poskozeny, pokracuje na vzdaleny manifest.
+Balickovaci skript vynechava `.pdb`, vytvori archiv pro dany RID, prida `.sha256` a JSON metadata s `runtimeIdentifier`, nazvem balicku, hashem a velikosti. Generator preview update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt. Kontrola aktualizaci umi lokalni preview manifest pouzit jako override, ale pokud je lokalni soubor poskozeny, pokracuje na vzdaleny manifest. Dialog kontroly aktualizaci navic ukazuje, proc je update jen rucni, pokud automaticka instalace neni dostupna.
 
 CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 

@@ -26,11 +26,10 @@ public sealed class LegacyUpdateService : IUpdateService
         {
             var manifest = await LoadManifestAsync(appInfo, cancellationToken).ConfigureAwait(false);
             var comparison = SemVersionService.Compare(currentVersion, manifest.Version);
-            var canInstallAutomatically = comparison < 0
-                && OperatingSystem.IsWindows()
-                && appInfo.IsPublishedBuild
-                && File.Exists(appInfo.UpdaterPath)
-                && ValidateInstallMetadata(manifest, out _);
+            var automaticInstallUnavailableReason = comparison < 0
+                ? BuildAutomaticInstallUnavailableReason(appInfo, manifest)
+                : null;
+            var canInstallAutomatically = comparison < 0 && automaticInstallUnavailableReason is null;
 
             if (comparison < 0)
             {
@@ -45,7 +44,9 @@ public sealed class LegacyUpdateService : IUpdateService
                     manifest.AssetSha256,
                     manifest.AssetSize,
                     canInstallAutomatically,
-                    $"Je dostupna novejsi verze Vehimap ({manifest.Version}).{sizeText}");
+                    $"Je dostupna novejsi verze Vehimap ({manifest.Version}).{sizeText}",
+                    null,
+                    automaticInstallUnavailableReason);
             }
 
             if (comparison > 0)
@@ -245,6 +246,31 @@ public sealed class LegacyUpdateService : IUpdateService
 
     private static bool IsPreviewManifestFileName(string manifestFileName) =>
         manifestFileName.Contains("latest-dotnet-preview-", StringComparison.OrdinalIgnoreCase);
+
+    private static string? BuildAutomaticInstallUnavailableReason(AppBuildInfo appInfo, LegacyUpdateManifest manifest)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return "Automaticka instalace je v teto etape dostupna jen na Windows; na teto platforme pouzijte release stranku nebo asset.";
+        }
+
+        if (!appInfo.IsPublishedBuild)
+        {
+            return "Automaticka instalace je dostupna jen v publikovanem desktopovem buildu.";
+        }
+
+        if (!File.Exists(appInfo.UpdaterPath))
+        {
+            return "Vedle aplikace chybi Vehimap.Updater, automatickou instalaci proto nelze pripravit.";
+        }
+
+        if (!ValidateInstallMetadata(manifest, out var validationError))
+        {
+            return validationError;
+        }
+
+        return null;
+    }
 
     private static bool ValidateInstallMetadata(UpdateCheckResult update, out string error)
     {

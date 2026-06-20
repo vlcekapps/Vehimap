@@ -53,7 +53,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - v C# desktopové větvi vlastní souhrnné texty detailu vozidla přímo `VehicleDetailWorkspace`, zatímco hlavní viewmodel je jen přepočítává při změně výběru vozidla
 - v C# desktopové větvi vlastní `VehicleDetailWorkspace` i formulářové hodnoty editoru vozidla, takže hlavní viewmodel dál řídí workflow, ale nedrží lokální stav jednotlivých polí
 - v C# desktopové větvi vlastní `VehicleDetailWorkspace` také režim editace a nadpis detailního panelu, takže viditelný stav editoru patří stejné pracovní ploše jako jeho pole
-- C# desktopová větev má preview release balíčky pro Windows, Linux a macOS s ověřovanými `.sha256` soubory, metadata JSON a runtime-specific update manifesty; pokud je lokální preview manifest poškozený, kontrola aktualizací zkusí vzdálený manifest místo pádu na lokálním souboru
+- C# desktopová větev má preview release balíčky pro Windows, Linux a macOS s ověřovanými `.sha256` soubory, metadata JSON a runtime-specific update manifesty; pokud je lokální preview manifest poškozený, kontrola aktualizací zkusí vzdálený manifest místo pádu na lokálním souboru a v dialogu vysvětlí, proč je případně dostupná jen ruční instalace
 - pravidelné automatické zálohy do `data/auto-backups` se samostatným intervalem ve dnech a omezením počtu ponechaných souborů
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
