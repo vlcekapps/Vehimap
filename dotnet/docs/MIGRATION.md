@@ -68,6 +68,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - stav terminovych prehledu `Blizici se terminy` a `Propadle terminy` je take vlastneny jejich child workspace viewmodely; root `MainWindowViewModel` uz pro ne nevystavuje duplicitni proxy vlastnosti
 - nactene kolekce polozek terminovych prehledu `Blizici se terminy` a `Propadle terminy` jsou vlastnene jejich child workspace viewmodely; root je jen obnovuje pri zmene dat, filtru nebo hledani
 - dashboardove souhrny auditu, nakladu a nejblizsich terminu jsou take vlastnene sdilenymi workspace viewmodely; root `MainWindowViewModel` zustava jen orchestrator jejich obnovy
+- plny auditni seznam je vlastneny `AuditWorkspace`, dashboardovy auditni vyrez a nejblizsi terminy `DashboardWorkspace` a flotilovy seznam nakladu `CostWorkspace`; root uz je nevystavuje jako verejne kolekce
 - stav exportu nakladoveho prehledu je vlastneny `CostWorkspace`; root `MainWindowViewModel` pouze provadi exportni prikazy a nastavuje vysledek do workspace
 - souhrnne texty evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` jsou vlastnene jejich workspace viewmodely; root je jen prepocitava pri zmene vozidla nebo dat
 - nactene kolekce zaznamu evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` jsou vlastnene jejich workspace viewmodely; root je jen plni pri zmene vozidla nebo dat

@@ -101,13 +101,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public ObservableCollection<VehicleListItemViewModel> Vehicles { get; } = [];
 
-    public ObservableCollection<AuditItemViewModel> AuditItems { get; } = [];
+    private ObservableCollection<AuditItemViewModel> AuditItems => AuditWorkspace.AuditItems;
 
-    public ObservableCollection<AuditItemViewModel> DashboardAuditItems { get; } = [];
+    private ObservableCollection<AuditItemViewModel> DashboardAuditItems => DashboardWorkspace.AuditItems;
 
-    public ObservableCollection<CostVehicleItemViewModel> CostVehicles { get; } = [];
+    private ObservableCollection<CostVehicleItemViewModel> CostVehicles => CostWorkspace.CostVehicles;
 
-    public ObservableCollection<VehicleTimelineItemViewModel> DashboardUpcomingTimeline { get; } = [];
+    private ObservableCollection<VehicleTimelineItemViewModel> DashboardUpcomingTimeline => DashboardWorkspace.DashboardUpcomingTimeline;
 
     private ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory => HistoryWorkspace.SelectedVehicleHistory;
 

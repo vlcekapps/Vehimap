@@ -33,6 +33,8 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
 
     public IReadOnlyList<string> AuditSortOptions => WorkspaceSortHelpers.AuditSortOptions;
 
+    public ObservableCollection<AuditItemViewModel> AuditItems { get; } = [];
+
     public ObservableCollection<AuditItemViewModel> VisibleAuditItems { get; } = [];
 
     public bool CanOpenSelectedAuditItem => SelectedDashboardAuditItem is not null;
@@ -90,7 +92,7 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
     {
         var previousSelection = preserveSelection ? SelectedDashboardAuditItem : null;
         var filteredItems = WorkspaceSortHelpers
-            .SortAudit(Root.AuditItems.Where(MatchesSearch), SelectedAuditSortOption, AuditSortDescending)
+            .SortAudit(AuditItems.Where(MatchesSearch), SelectedAuditSortOption, AuditSortDescending)
             .ToList();
 
         VisibleAuditItems.Clear();
@@ -162,7 +164,7 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
 
         AuditSummary = VisibleAuditItems.Count == 0
             ? $"Pro hledání „{AuditSearchText.Trim()}“ nejsou v auditu žádné položky."
-            : $"Hledání „{AuditSearchText.Trim()}“ našlo {VisibleAuditItems.Count} z {Root.AuditItems.Count} auditních položek.";
+            : $"Hledání „{AuditSearchText.Trim()}“ našlo {VisibleAuditItems.Count} z {AuditItems.Count} auditních položek.";
     }
 
     private static bool Contains(string value, string query) =>

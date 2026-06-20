@@ -81,6 +81,18 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Audit_cost_and_dashboard_workspaces_own_loaded_collections()
+    {
+        var viewModel = CreateViewModel();
+
+        Assert.NotNull(viewModel.AuditWorkspace.AuditItems);
+        Assert.NotNull(viewModel.DashboardWorkspace.AuditItems);
+        Assert.NotNull(viewModel.CostWorkspace.CostVehicles);
+        Assert.Same(viewModel.CostWorkspace.CostVehicles, viewModel.DashboardWorkspace.CostVehicles);
+        Assert.NotNull(viewModel.DashboardWorkspace.DashboardUpcomingTimeline);
+    }
+
+    [Fact]
     public void Dashboard_workspace_reads_shared_audit_cost_and_timeline_state()
     {
         var viewModel = CreateViewModel();
@@ -260,6 +272,10 @@ public sealed class WorkspaceCompositionTests
             "DashboardTimelineSummary",
             "SelectedDashboardTimelineDetail",
             "SelectedDashboardTimelineItem",
+            "AuditItems",
+            "DashboardAuditItems",
+            "CostVehicles",
+            "DashboardUpcomingTimeline",
             "HistorySummary",
             "FuelSummary",
             "ReminderSummary",

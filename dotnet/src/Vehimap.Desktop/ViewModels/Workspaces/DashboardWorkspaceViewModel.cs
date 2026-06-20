@@ -29,11 +29,11 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
 
     public string CostComparison => Root.CostWorkspace.CostComparison;
 
-    public ObservableCollection<AuditItemViewModel> AuditItems => Root.DashboardAuditItems;
+    public ObservableCollection<AuditItemViewModel> AuditItems { get; } = [];
 
-    public ObservableCollection<CostVehicleItemViewModel> CostVehicles => Root.CostVehicles;
+    public ObservableCollection<CostVehicleItemViewModel> CostVehicles => Root.CostWorkspace.CostVehicles;
 
-    public ObservableCollection<VehicleTimelineItemViewModel> DashboardUpcomingTimeline => Root.DashboardUpcomingTimeline;
+    public ObservableCollection<VehicleTimelineItemViewModel> DashboardUpcomingTimeline { get; } = [];
 
     public AuditItemViewModel? SelectedDashboardAuditItem
     {

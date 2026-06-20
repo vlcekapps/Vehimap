@@ -19,7 +19,7 @@ public sealed class MainWindowViewModelNavigationTests
         DesktopFocusTarget? requestedFocus = null;
         viewModel.FocusRequested += target => requestedFocus = target;
 
-        viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
+        viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditWorkspace.AuditItems.First(item => item.EntityId == "rec_2");
 
         viewModel.OpenSelectedDashboardAuditItemCommand.Execute(null);
 
@@ -35,7 +35,7 @@ public sealed class MainWindowViewModelNavigationTests
         DesktopFocusTarget? requestedFocus = null;
         viewModel.FocusRequested += target => requestedFocus = target;
 
-        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = viewModel.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
+        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = viewModel.DashboardWorkspace.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
 
         viewModel.OpenSelectedDashboardTimelineItemCommand.Execute(null);
 
@@ -497,9 +497,9 @@ public sealed class MainWindowViewModelNavigationTests
         DesktopFocusTarget? requestedFocus = null;
         viewModel.FocusRequested += target => requestedFocus = target;
 
-        var selectedAudit = viewModel.DashboardAuditItems.First();
-        var selectedCost = viewModel.CostVehicles.First();
-        var selectedTimeline = viewModel.DashboardUpcomingTimeline.First();
+        var selectedAudit = viewModel.DashboardWorkspace.AuditItems.First();
+        var selectedCost = viewModel.CostWorkspace.CostVehicles.First();
+        var selectedTimeline = viewModel.DashboardWorkspace.DashboardUpcomingTimeline.First();
 
         viewModel.AuditWorkspace.SelectedDashboardAuditItem = selectedAudit;
         viewModel.CostWorkspace.SelectedDashboardCostVehicle = selectedCost;
@@ -547,8 +547,8 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += requestedTargets.Add;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
-        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
-        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = viewModel.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostWorkspace.CostVehicles.Single(item => item.VehicleId == "veh_1");
+        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = viewModel.DashboardWorkspace.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
 
         var primaryHandled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
 
@@ -567,7 +567,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Contains(DesktopFocusTarget.ReminderList, requestedTargets);
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
-        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostWorkspace.CostVehicles.Single(item => item.VehicleId == "veh_1");
 
         var editHandled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
 
@@ -713,7 +713,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.All(viewModel.AuditWorkspace.VisibleAuditItems, item =>
             Assert.Contains("Doklad bez cesty", item.AccessibleLabel, StringComparison.CurrentCultureIgnoreCase));
         Assert.Equal("rec_2", viewModel.AuditWorkspace.SelectedDashboardAuditItem?.EntityId);
-        Assert.True(viewModel.DashboardWorkspace.AuditItems.Count <= viewModel.AuditItems.Count);
+        Assert.True(viewModel.DashboardWorkspace.AuditItems.Count <= viewModel.AuditWorkspace.AuditItems.Count);
     }
 
     [Fact]
@@ -743,7 +743,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += target => requestedFocus = target;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
-        viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
+        viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditWorkspace.AuditItems.First(item => item.EntityId == "rec_2");
 
         var handled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
 
@@ -761,7 +761,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += target => requestedFocus = target;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
-        viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
+        viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditWorkspace.AuditItems.First(item => item.EntityId == "rec_2");
 
         var handled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
 
@@ -902,7 +902,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += requestedTargets.Add;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Cost;
-        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostWorkspace.CostVehicles.Single(item => item.VehicleId == "veh_1");
 
         var itemHandled = await viewModel.HandleCurrentWorkspaceItemOpenShortcutAsync();
 
@@ -916,7 +916,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("veh_1", viewModel.SelectedVehicle?.Id);
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Cost;
-        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostWorkspace.CostVehicles.Single(item => item.VehicleId == "veh_1");
 
         var editHandled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
 
