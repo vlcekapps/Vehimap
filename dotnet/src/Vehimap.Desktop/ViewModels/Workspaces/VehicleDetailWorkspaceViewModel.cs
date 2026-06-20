@@ -11,6 +11,23 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     private string selectedVehicleOverview = "Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.";
     private string selectedVehicleDates = string.Empty;
     private string selectedVehicleProfile = string.Empty;
+    private string vehicleEditorStatus = string.Empty;
+    private string vehicleEditorName = string.Empty;
+    private string vehicleEditorCategory = string.Empty;
+    private string vehicleEditorNote = string.Empty;
+    private string vehicleEditorMakeModel = string.Empty;
+    private string vehicleEditorPlate = string.Empty;
+    private string vehicleEditorYear = string.Empty;
+    private string vehicleEditorPower = string.Empty;
+    private string vehicleEditorLastTk = string.Empty;
+    private string vehicleEditorNextTk = string.Empty;
+    private string vehicleEditorGreenCardFrom = string.Empty;
+    private string vehicleEditorGreenCardTo = string.Empty;
+    private string vehicleEditorState = string.Empty;
+    private string vehicleEditorPowertrain = string.Empty;
+    private string vehicleEditorClimateProfile = string.Empty;
+    private string vehicleEditorTimingDrive = string.Empty;
+    private string vehicleEditorTransmission = string.Empty;
 
     public VehicleDetailWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
@@ -46,7 +63,13 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 
     public bool IsEditingVehicle => Root.IsEditingVehicle;
     public bool IsVehicleDetailVisible => Root.IsVehicleDetailVisible;
-    public string VehicleEditorStatus => Root.VehicleEditorStatus;
+
+    public string VehicleEditorStatus
+    {
+        get => vehicleEditorStatus;
+        set => SetProperty(ref vehicleEditorStatus, value);
+    }
+
     public IReadOnlyList<string> VehicleCategoryOptions => LegacyKnownValues.Categories;
     public IReadOnlyList<string> VehicleStateOptions => LegacyKnownValues.VehicleStates;
     public IReadOnlyList<string> VehiclePowertrainOptions => LegacyKnownValues.VehiclePowertrains;
@@ -57,98 +80,98 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 
     public string VehicleEditorName
     {
-        get => Root.VehicleEditorName;
-        set => Root.VehicleEditorName = value;
+        get => vehicleEditorName;
+        set => SetProperty(ref vehicleEditorName, value);
     }
 
     public string VehicleEditorCategory
     {
-        get => Root.VehicleEditorCategory;
-        set => Root.VehicleEditorCategory = value;
+        get => vehicleEditorCategory;
+        set => SetProperty(ref vehicleEditorCategory, value);
     }
 
     public string VehicleEditorNote
     {
-        get => Root.VehicleEditorNote;
-        set => Root.VehicleEditorNote = value;
+        get => vehicleEditorNote;
+        set => SetProperty(ref vehicleEditorNote, value);
     }
 
     public string VehicleEditorMakeModel
     {
-        get => Root.VehicleEditorMakeModel;
-        set => Root.VehicleEditorMakeModel = value;
+        get => vehicleEditorMakeModel;
+        set => SetProperty(ref vehicleEditorMakeModel, value);
     }
 
     public string VehicleEditorPlate
     {
-        get => Root.VehicleEditorPlate;
-        set => Root.VehicleEditorPlate = value;
+        get => vehicleEditorPlate;
+        set => SetProperty(ref vehicleEditorPlate, value);
     }
 
     public string VehicleEditorYear
     {
-        get => Root.VehicleEditorYear;
-        set => Root.VehicleEditorYear = value;
+        get => vehicleEditorYear;
+        set => SetProperty(ref vehicleEditorYear, value);
     }
 
     public string VehicleEditorPower
     {
-        get => Root.VehicleEditorPower;
-        set => Root.VehicleEditorPower = value;
+        get => vehicleEditorPower;
+        set => SetProperty(ref vehicleEditorPower, value);
     }
 
     public string VehicleEditorLastTk
     {
-        get => Root.VehicleEditorLastTk;
-        set => Root.VehicleEditorLastTk = value;
+        get => vehicleEditorLastTk;
+        set => SetProperty(ref vehicleEditorLastTk, value);
     }
 
     public string VehicleEditorNextTk
     {
-        get => Root.VehicleEditorNextTk;
-        set => Root.VehicleEditorNextTk = value;
+        get => vehicleEditorNextTk;
+        set => SetProperty(ref vehicleEditorNextTk, value);
     }
 
     public string VehicleEditorGreenCardFrom
     {
-        get => Root.VehicleEditorGreenCardFrom;
-        set => Root.VehicleEditorGreenCardFrom = value;
+        get => vehicleEditorGreenCardFrom;
+        set => SetProperty(ref vehicleEditorGreenCardFrom, value);
     }
 
     public string VehicleEditorGreenCardTo
     {
-        get => Root.VehicleEditorGreenCardTo;
-        set => Root.VehicleEditorGreenCardTo = value;
+        get => vehicleEditorGreenCardTo;
+        set => SetProperty(ref vehicleEditorGreenCardTo, value);
     }
 
     public string VehicleEditorState
     {
-        get => Root.VehicleEditorState;
-        set => Root.VehicleEditorState = value;
+        get => vehicleEditorState;
+        set => SetProperty(ref vehicleEditorState, value);
     }
 
     public string VehicleEditorPowertrain
     {
-        get => Root.VehicleEditorPowertrain;
-        set => Root.VehicleEditorPowertrain = value;
+        get => vehicleEditorPowertrain;
+        set => SetProperty(ref vehicleEditorPowertrain, value);
     }
 
     public string VehicleEditorClimateProfile
     {
-        get => Root.VehicleEditorClimateProfile;
-        set => Root.VehicleEditorClimateProfile = value;
+        get => vehicleEditorClimateProfile;
+        set => SetProperty(ref vehicleEditorClimateProfile, value);
     }
 
     public string VehicleEditorTimingDrive
     {
-        get => Root.VehicleEditorTimingDrive;
-        set => Root.VehicleEditorTimingDrive = value;
+        get => vehicleEditorTimingDrive;
+        set => SetProperty(ref vehicleEditorTimingDrive, value);
     }
 
     public string VehicleEditorTransmission
     {
-        get => Root.VehicleEditorTransmission;
-        set => Root.VehicleEditorTransmission = value;
+        get => vehicleEditorTransmission;
+        set => SetProperty(ref vehicleEditorTransmission, value);
     }
 
     public ICommand CreateVehicleCommand => Root.CreateVehicleCommand;
@@ -179,6 +202,5 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public void SetVehicleStarterBundleStatus(string message)
     {
         Root.SetVehicleStarterBundleStatus(message);
-        OnPropertyChanged(nameof(VehicleEditorStatus));
     }
 }

@@ -128,6 +128,48 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Vehicle_detail_workspace_owns_vehicle_editor_form_state()
+    {
+        var viewModel = CreateViewModel();
+
+        viewModel.VehicleDetailWorkspace.VehicleEditorStatus = "Editor má vlastní stav.";
+        viewModel.VehicleDetailWorkspace.VehicleEditorName = "Božena";
+        viewModel.VehicleDetailWorkspace.VehicleEditorCategory = "Osobní vozidla";
+        viewModel.VehicleDetailWorkspace.VehicleEditorNote = "Srazové";
+        viewModel.VehicleDetailWorkspace.VehicleEditorMakeModel = "Škoda 100";
+        viewModel.VehicleDetailWorkspace.VehicleEditorPlate = "2AB3456";
+        viewModel.VehicleDetailWorkspace.VehicleEditorYear = "1973";
+        viewModel.VehicleDetailWorkspace.VehicleEditorPower = "35";
+        viewModel.VehicleDetailWorkspace.VehicleEditorLastTk = "05/2025";
+        viewModel.VehicleDetailWorkspace.VehicleEditorNextTk = "05/2027";
+        viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardFrom = "05/2025";
+        viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardTo = "05/2026";
+        viewModel.VehicleDetailWorkspace.VehicleEditorState = "Veterán";
+        viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain = "Benzín";
+        viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile = "Má klimatizaci";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive = "Řemen";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTransmission = "Manuální";
+
+        Assert.Equal("Editor má vlastní stav.", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
+        Assert.Equal("Božena", viewModel.VehicleDetailWorkspace.VehicleEditorName);
+        Assert.Equal("Osobní vozidla", viewModel.VehicleDetailWorkspace.VehicleEditorCategory);
+        Assert.Equal("Srazové", viewModel.VehicleDetailWorkspace.VehicleEditorNote);
+        Assert.Equal("Škoda 100", viewModel.VehicleDetailWorkspace.VehicleEditorMakeModel);
+        Assert.Equal("2AB3456", viewModel.VehicleDetailWorkspace.VehicleEditorPlate);
+        Assert.Equal("1973", viewModel.VehicleDetailWorkspace.VehicleEditorYear);
+        Assert.Equal("35", viewModel.VehicleDetailWorkspace.VehicleEditorPower);
+        Assert.Equal("05/2025", viewModel.VehicleDetailWorkspace.VehicleEditorLastTk);
+        Assert.Equal("05/2027", viewModel.VehicleDetailWorkspace.VehicleEditorNextTk);
+        Assert.Equal("05/2025", viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardFrom);
+        Assert.Equal("05/2026", viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardTo);
+        Assert.Equal("Veterán", viewModel.VehicleDetailWorkspace.VehicleEditorState);
+        Assert.Equal("Benzín", viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain);
+        Assert.Equal("Má klimatizaci", viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile);
+        Assert.Equal("Řemen", viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive);
+        Assert.Equal("Manuální", viewModel.VehicleDetailWorkspace.VehicleEditorTransmission);
+    }
+
+    [Fact]
     public void Shared_workspace_state_should_not_be_reexposed_as_root_proxy_properties()
     {
         var rootType = typeof(MainWindowViewModel);
@@ -173,7 +215,24 @@ public sealed class WorkspaceCompositionTests
             "SelectedVehicleHeading",
             "SelectedVehicleOverview",
             "SelectedVehicleDates",
-            "SelectedVehicleProfile"
+            "SelectedVehicleProfile",
+            "VehicleEditorStatus",
+            "VehicleEditorName",
+            "VehicleEditorCategory",
+            "VehicleEditorNote",
+            "VehicleEditorMakeModel",
+            "VehicleEditorPlate",
+            "VehicleEditorYear",
+            "VehicleEditorPower",
+            "VehicleEditorLastTk",
+            "VehicleEditorNextTk",
+            "VehicleEditorGreenCardFrom",
+            "VehicleEditorGreenCardTo",
+            "VehicleEditorState",
+            "VehicleEditorPowertrain",
+            "VehicleEditorClimateProfile",
+            "VehicleEditorTimingDrive",
+            "VehicleEditorTransmission"
         };
 
         foreach (var propertyName in removedProxyProperties)

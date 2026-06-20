@@ -356,20 +356,20 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
         viewModel.CreateVehicleCommand.Execute(null);
-        viewModel.VehicleEditorName = "Božena";
-        viewModel.VehicleEditorCategory = "Osobní vozidla";
-        viewModel.VehicleEditorMakeModel = "Škoda 100";
-        viewModel.VehicleEditorPlate = "2AB3456";
-        viewModel.VehicleEditorYear = "1973";
-        viewModel.VehicleEditorPower = "35";
-        viewModel.VehicleEditorNote = "Srazové";
-        viewModel.VehicleEditorNextTk = "09/2026";
-        viewModel.VehicleEditorGreenCardTo = "10/2026";
-        viewModel.VehicleEditorState = "Veterán";
-        viewModel.VehicleEditorPowertrain = "Benzín";
-        viewModel.VehicleEditorClimateProfile = "Má klimatizaci";
-        viewModel.VehicleEditorTimingDrive = "Řemen";
-        viewModel.VehicleEditorTransmission = "Manuální";
+        viewModel.VehicleDetailWorkspace.VehicleEditorName = "Božena";
+        viewModel.VehicleDetailWorkspace.VehicleEditorCategory = "Osobní vozidla";
+        viewModel.VehicleDetailWorkspace.VehicleEditorMakeModel = "Škoda 100";
+        viewModel.VehicleDetailWorkspace.VehicleEditorPlate = "2AB3456";
+        viewModel.VehicleDetailWorkspace.VehicleEditorYear = "1973";
+        viewModel.VehicleDetailWorkspace.VehicleEditorPower = "35";
+        viewModel.VehicleDetailWorkspace.VehicleEditorNote = "Srazové";
+        viewModel.VehicleDetailWorkspace.VehicleEditorNextTk = "09/2026";
+        viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardTo = "10/2026";
+        viewModel.VehicleDetailWorkspace.VehicleEditorState = "Veterán";
+        viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain = "Benzín";
+        viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile = "Má klimatizaci";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive = "Řemen";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTransmission = "Manuální";
 
         await viewModel.SaveVehicleCommand.ExecuteAsync(null);
 
@@ -384,7 +384,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
                 && item.ClimateProfile == "Má klimatizaci"
                 && item.TimingDrive == "Řemen"
                 && item.Transmission == "Manuální");
-        Assert.Equal("Nové vozidlo bylo uloženo.", viewModel.VehicleEditorStatus);
+        Assert.Equal("Nové vozidlo bylo uloženo.", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
         Assert.True(viewModel.TryConsumePendingVehicleStarterBundleOffer(viewModel.SelectedVehicle.Id));
     }
 
@@ -401,12 +401,12 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
         viewModel.EditSelectedVehicleCommand.Execute(null);
-        viewModel.VehicleEditorName = "Milena po servisu";
-        viewModel.VehicleEditorPowertrain = "Nafta";
-        viewModel.VehicleEditorState = "Odstaveno";
-        viewModel.VehicleEditorClimateProfile = "Bez klimatizace";
-        viewModel.VehicleEditorTimingDrive = "Řetěz";
-        viewModel.VehicleEditorTransmission = "Automatická";
+        viewModel.VehicleDetailWorkspace.VehicleEditorName = "Milena po servisu";
+        viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain = "Nafta";
+        viewModel.VehicleDetailWorkspace.VehicleEditorState = "Odstaveno";
+        viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile = "Bez klimatizace";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive = "Řetěz";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTransmission = "Automatická";
 
         await viewModel.SaveVehicleCommand.ExecuteAsync(null);
 
@@ -420,7 +420,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Bez klimatizace", savedMeta.ClimateProfile);
         Assert.Equal("Řetěz", savedMeta.TimingDrive);
         Assert.Equal("Automatická", savedMeta.Transmission);
-        Assert.Equal("Vozidlo bylo upraveno.", viewModel.VehicleEditorStatus);
+        Assert.Equal("Vozidlo bylo upraveno.", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
     }
 
     [Fact]

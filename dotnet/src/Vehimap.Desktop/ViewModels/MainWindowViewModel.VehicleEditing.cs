@@ -19,57 +19,6 @@ public sealed partial class MainWindowViewModel
     [ObservableProperty]
     private string vehiclePanelHeading = "Detail vozidla";
 
-    [ObservableProperty]
-    private string vehicleEditorStatus = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorName = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorCategory = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorNote = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorMakeModel = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorPlate = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorYear = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorPower = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorLastTk = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorNextTk = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorGreenCardFrom = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorGreenCardTo = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorState = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorPowertrain = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorClimateProfile = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorTimingDrive = string.Empty;
-
-    [ObservableProperty]
-    private string vehicleEditorTransmission = string.Empty;
-
     public bool IsVehicleDetailVisible => !IsEditingVehicle;
 
     public bool CanCreateVehicle => !HasPendingEdits;
@@ -109,23 +58,23 @@ public sealed partial class MainWindowViewModel
     private void CreateVehicle()
     {
         _editingVehicleId = null;
-        VehicleEditorName = string.Empty;
-        VehicleEditorCategory = "Osobní vozidla";
-        VehicleEditorNote = string.Empty;
-        VehicleEditorMakeModel = string.Empty;
-        VehicleEditorPlate = string.Empty;
-        VehicleEditorYear = string.Empty;
-        VehicleEditorPower = string.Empty;
-        VehicleEditorLastTk = string.Empty;
-        VehicleEditorNextTk = string.Empty;
-        VehicleEditorGreenCardFrom = string.Empty;
-        VehicleEditorGreenCardTo = string.Empty;
-        VehicleEditorState = string.Empty;
-        VehicleEditorPowertrain = string.Empty;
-        VehicleEditorClimateProfile = string.Empty;
-        VehicleEditorTimingDrive = string.Empty;
-        VehicleEditorTransmission = string.Empty;
-        VehicleEditorStatus = "Vyplňte základní údaje o vozidle a uložte je.";
+        VehicleDetailWorkspace.VehicleEditorName = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorCategory = "Osobní vozidla";
+        VehicleDetailWorkspace.VehicleEditorNote = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorMakeModel = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorPlate = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorYear = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorPower = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorLastTk = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorNextTk = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorGreenCardFrom = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorGreenCardTo = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorState = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorPowertrain = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorClimateProfile = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorTimingDrive = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorTransmission = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorStatus = "Vyplňte základní údaje o vozidle a uložte je.";
         IsEditingVehicle = true;
         SelectedVehicleTabIndex = DetailTabIndex;
         RequestFocus(DesktopFocusTarget.VehicleEditorName);
@@ -142,23 +91,23 @@ public sealed partial class MainWindowViewModel
 
         var meta = GetSelectedVehicleMetaModel();
         _editingVehicleId = vehicle.Id;
-        VehicleEditorName = vehicle.Name;
-        VehicleEditorCategory = vehicle.Category;
-        VehicleEditorNote = vehicle.VehicleNote;
-        VehicleEditorMakeModel = vehicle.MakeModel;
-        VehicleEditorPlate = vehicle.Plate;
-        VehicleEditorYear = vehicle.Year;
-        VehicleEditorPower = vehicle.Power;
-        VehicleEditorLastTk = vehicle.LastTk;
-        VehicleEditorNextTk = vehicle.NextTk;
-        VehicleEditorGreenCardFrom = vehicle.GreenCardFrom;
-        VehicleEditorGreenCardTo = vehicle.GreenCardTo;
-        VehicleEditorState = meta?.State ?? string.Empty;
-        VehicleEditorPowertrain = meta?.Powertrain ?? string.Empty;
-        VehicleEditorClimateProfile = meta?.ClimateProfile ?? string.Empty;
-        VehicleEditorTimingDrive = meta?.TimingDrive ?? string.Empty;
-        VehicleEditorTransmission = meta?.Transmission ?? string.Empty;
-        VehicleEditorStatus = "Upravte údaje vozidla a uložte změny.";
+        VehicleDetailWorkspace.VehicleEditorName = vehicle.Name;
+        VehicleDetailWorkspace.VehicleEditorCategory = vehicle.Category;
+        VehicleDetailWorkspace.VehicleEditorNote = vehicle.VehicleNote;
+        VehicleDetailWorkspace.VehicleEditorMakeModel = vehicle.MakeModel;
+        VehicleDetailWorkspace.VehicleEditorPlate = vehicle.Plate;
+        VehicleDetailWorkspace.VehicleEditorYear = vehicle.Year;
+        VehicleDetailWorkspace.VehicleEditorPower = vehicle.Power;
+        VehicleDetailWorkspace.VehicleEditorLastTk = vehicle.LastTk;
+        VehicleDetailWorkspace.VehicleEditorNextTk = vehicle.NextTk;
+        VehicleDetailWorkspace.VehicleEditorGreenCardFrom = vehicle.GreenCardFrom;
+        VehicleDetailWorkspace.VehicleEditorGreenCardTo = vehicle.GreenCardTo;
+        VehicleDetailWorkspace.VehicleEditorState = meta?.State ?? string.Empty;
+        VehicleDetailWorkspace.VehicleEditorPowertrain = meta?.Powertrain ?? string.Empty;
+        VehicleDetailWorkspace.VehicleEditorClimateProfile = meta?.ClimateProfile ?? string.Empty;
+        VehicleDetailWorkspace.VehicleEditorTimingDrive = meta?.TimingDrive ?? string.Empty;
+        VehicleDetailWorkspace.VehicleEditorTransmission = meta?.Transmission ?? string.Empty;
+        VehicleDetailWorkspace.VehicleEditorStatus = "Upravte údaje vozidla a uložte změny.";
         IsEditingVehicle = true;
         SelectedVehicleTabIndex = DetailTabIndex;
         RequestFocus(DesktopFocusTarget.VehicleEditorName);
@@ -204,7 +153,7 @@ public sealed partial class MainWindowViewModel
             status += $" {attachmentCleanupWarning}";
         }
 
-        VehicleEditorStatus = status;
+        VehicleDetailWorkspace.VehicleEditorStatus = status;
         ShellStatus = status;
         SelectedVehicleTabIndex = DetailTabIndex;
         RequestFocus(DesktopFocusTarget.VehicleDetailPrimaryAction);
@@ -218,10 +167,10 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var name = (VehicleEditorName ?? string.Empty).Trim();
+        var name = (VehicleDetailWorkspace.VehicleEditorName ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(name))
         {
-            VehicleEditorStatus = "Vozidlo musí mít název.";
+            VehicleDetailWorkspace.VehicleEditorStatus = "Vozidlo musí mít název.";
             RequestFocus(DesktopFocusTarget.VehicleEditorName);
             return;
         }
@@ -232,16 +181,16 @@ public sealed partial class MainWindowViewModel
         var updatedVehicle = new Vehicle(
             vehicleId,
             name,
-            (VehicleEditorCategory ?? string.Empty).Trim(),
-            (VehicleEditorNote ?? string.Empty).Trim(),
-            (VehicleEditorMakeModel ?? string.Empty).Trim(),
-            (VehicleEditorPlate ?? string.Empty).Trim(),
-            (VehicleEditorYear ?? string.Empty).Trim(),
-            (VehicleEditorPower ?? string.Empty).Trim(),
-            (VehicleEditorLastTk ?? string.Empty).Trim(),
-            (VehicleEditorNextTk ?? string.Empty).Trim(),
-            (VehicleEditorGreenCardFrom ?? string.Empty).Trim(),
-            (VehicleEditorGreenCardTo ?? string.Empty).Trim());
+            (VehicleDetailWorkspace.VehicleEditorCategory ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorNote ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorMakeModel ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorPlate ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorYear ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorPower ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorLastTk ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorNextTk ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorGreenCardFrom ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorGreenCardTo ?? string.Empty).Trim());
 
         UpsertVehicle(updatedVehicle);
         UpsertVehicleMeta(BuildUpdatedVehicleMeta(vehicleId, existingMeta));
@@ -253,7 +202,7 @@ public sealed partial class MainWindowViewModel
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
         _pendingVehicleStarterBundleOfferVehicleId = wasNew ? vehicleId : null;
 
-        VehicleEditorStatus = wasNew
+        VehicleDetailWorkspace.VehicleEditorStatus = wasNew
             ? "Nové vozidlo bylo uloženo."
             : "Vozidlo bylo upraveno.";
         RequestFocus(DesktopFocusTarget.VehicleList);
@@ -487,7 +436,7 @@ public sealed partial class MainWindowViewModel
 
     internal void SetVehicleStarterBundleStatus(string message)
     {
-        VehicleEditorStatus = message;
+        VehicleDetailWorkspace.VehicleEditorStatus = message;
     }
 
     private Vehicle? GetSelectedVehicleModel()
@@ -593,12 +542,12 @@ public sealed partial class MainWindowViewModel
     {
         var updatedMeta = new VehicleMeta(
             vehicleId,
-            (VehicleEditorState ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorState ?? string.Empty).Trim(),
             existingMeta?.Tags ?? string.Empty,
-            (VehicleEditorPowertrain ?? string.Empty).Trim(),
-            (VehicleEditorClimateProfile ?? string.Empty).Trim(),
-            (VehicleEditorTimingDrive ?? string.Empty).Trim(),
-            (VehicleEditorTransmission ?? string.Empty).Trim());
+            (VehicleDetailWorkspace.VehicleEditorPowertrain ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorClimateProfile ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorTimingDrive ?? string.Empty).Trim(),
+            (VehicleDetailWorkspace.VehicleEditorTransmission ?? string.Empty).Trim());
 
         if (string.IsNullOrWhiteSpace(updatedMeta.State)
             && string.IsNullOrWhiteSpace(updatedMeta.Tags)
@@ -653,25 +602,25 @@ public sealed partial class MainWindowViewModel
     {
         _editingVehicleId = null;
         IsEditingVehicle = false;
-        VehicleEditorName = string.Empty;
-        VehicleEditorCategory = string.Empty;
-        VehicleEditorNote = string.Empty;
-        VehicleEditorMakeModel = string.Empty;
-        VehicleEditorPlate = string.Empty;
-        VehicleEditorYear = string.Empty;
-        VehicleEditorPower = string.Empty;
-        VehicleEditorLastTk = string.Empty;
-        VehicleEditorNextTk = string.Empty;
-        VehicleEditorGreenCardFrom = string.Empty;
-        VehicleEditorGreenCardTo = string.Empty;
-        VehicleEditorState = string.Empty;
-        VehicleEditorPowertrain = string.Empty;
-        VehicleEditorClimateProfile = string.Empty;
-        VehicleEditorTimingDrive = string.Empty;
-        VehicleEditorTransmission = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorName = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorCategory = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorNote = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorMakeModel = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorPlate = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorYear = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorPower = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorLastTk = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorNextTk = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorGreenCardFrom = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorGreenCardTo = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorState = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorPowertrain = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorClimateProfile = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorTimingDrive = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorTransmission = string.Empty;
         if (clearStatus)
         {
-            VehicleEditorStatus = string.Empty;
+            VehicleDetailWorkspace.VehicleEditorStatus = string.Empty;
         }
     }
 
