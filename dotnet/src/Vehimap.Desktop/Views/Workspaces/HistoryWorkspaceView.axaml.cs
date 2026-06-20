@@ -18,11 +18,12 @@ public partial class HistoryWorkspaceView : WorkspaceViewBase<HistoryWorkspaceVi
         ViewModel?.IsEditingHistory == true ? DesktopFocusTarget.HistoryEditorDate : DesktopFocusTarget.HistoryList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.HistoryList or DesktopFocusTarget.HistoryEditorDate;
+        target is DesktopFocusTarget.HistorySearch or DesktopFocusTarget.HistoryList or DesktopFocusTarget.HistoryEditorDate;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
+            DesktopFocusTarget.HistorySearch => this.FindControl<TextBox>("HistorySearchBox"),
             DesktopFocusTarget.HistoryList => this.FindControl<ListBox>("HistoryListBox"),
             DesktopFocusTarget.HistoryEditorDate => this.FindControl<TextBox>("HistoryEditorDateBox"),
             _ => null

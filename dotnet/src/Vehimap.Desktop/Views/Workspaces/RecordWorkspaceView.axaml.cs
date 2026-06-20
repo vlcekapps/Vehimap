@@ -18,11 +18,12 @@ public partial class RecordWorkspaceView : WorkspaceViewBase<RecordWorkspaceView
         ViewModel?.IsEditingRecord == true ? DesktopFocusTarget.RecordEditorTitle : DesktopFocusTarget.RecordList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.RecordList or DesktopFocusTarget.RecordEditorTitle;
+        target is DesktopFocusTarget.RecordSearch or DesktopFocusTarget.RecordList or DesktopFocusTarget.RecordEditorTitle;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
+            DesktopFocusTarget.RecordSearch => this.FindControl<TextBox>("RecordSearchBox"),
             DesktopFocusTarget.RecordList => this.FindControl<ListBox>("RecordListBox"),
             DesktopFocusTarget.RecordEditorTitle => this.FindControl<TextBox>("RecordEditorTitleBox"),
             _ => null

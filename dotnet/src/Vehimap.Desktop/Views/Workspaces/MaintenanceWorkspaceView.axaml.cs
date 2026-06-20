@@ -22,11 +22,12 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
         ViewModel?.IsEditingMaintenance == true ? DesktopFocusTarget.MaintenanceEditorTemplate : DesktopFocusTarget.MaintenanceList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.MaintenanceList or DesktopFocusTarget.MaintenanceEditorTemplate or DesktopFocusTarget.MaintenanceEditorTitle;
+        target is DesktopFocusTarget.MaintenanceSearch or DesktopFocusTarget.MaintenanceList or DesktopFocusTarget.MaintenanceEditorTemplate or DesktopFocusTarget.MaintenanceEditorTitle;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
+            DesktopFocusTarget.MaintenanceSearch => this.FindControl<TextBox>("MaintenanceSearchBox"),
             DesktopFocusTarget.MaintenanceList => this.FindControl<ListBox>("MaintenanceListBox"),
             DesktopFocusTarget.MaintenanceEditorTemplate => this.FindControl<ComboBox>("MaintenanceTemplateComboBox"),
             DesktopFocusTarget.MaintenanceEditorTitle => this.FindControl<TextBox>("MaintenanceEditorTitleBox"),

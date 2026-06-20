@@ -5,6 +5,7 @@
              x:Class="Vehimap.Desktop.Views.Workspaces.ReminderWorkspaceView"
              x:DataType="vm:ReminderWorkspaceViewModel">
   <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
     <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateReminderCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedReminderCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedReminderCommand}" />
@@ -13,14 +14,25 @@
   </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding ReminderSummary}" TextWrapping="Wrap" />
-    <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">
+    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold" Text="Seznam připomínek vybraného vozidla" />
+      <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*">
+        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBox x:Name="ReminderSearchBox"
+                 Grid.Column="1"
+                 Text="{Binding ReminderSearchText}"
+                 PlaceholderText="Název, termín, stav, opakování nebo poznámka..."
+                 AutomationProperties.Name="Hledání v připomínkách vozidla"
+                 AutomationProperties.AutomationId="ReminderSearchBox" />
+      </Grid>
+      <TextBlock Grid.Row="2" Margin="0,8,12,0" Opacity="0.72" Text="{Binding ReminderSearchSummary}" TextWrapping="Wrap" />
       <ListBox x:Name="ReminderListBox"
-               Grid.Row="1"
+               Grid.Row="3"
                Margin="0,12,12,0"
-               ItemsSource="{Binding SelectedVehicleReminders}"
+               ItemsSource="{Binding VisibleReminderItems}"
                SelectedItem="{Binding SelectedReminder}"
-               AutomationProperties.Name="Připomínky vybraného vozidla">
+               AutomationProperties.Name="Připomínky vybraného vozidla"
+               AutomationProperties.AutomationId="ReminderListBox">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="itemvm:VehicleReminderItemViewModel">
             <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">

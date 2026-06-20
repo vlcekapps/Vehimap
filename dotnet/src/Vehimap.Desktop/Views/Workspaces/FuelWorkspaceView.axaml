@@ -5,6 +5,7 @@
              x:Class="Vehimap.Desktop.Views.Workspaces.FuelWorkspaceView"
              x:DataType="vm:FuelWorkspaceViewModel">
   <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
     <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateFuelCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedFuelCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedFuelCommand}" />
@@ -14,15 +15,30 @@
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding FuelSummary}"
                TextWrapping="Wrap" />
-    <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">
+    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold"
                  Text="Tankování vybraného vozidla" />
+      <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*">
+        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBox x:Name="FuelSearchBox"
+                 Grid.Column="1"
+                 Text="{Binding FuelSearchText}"
+                 PlaceholderText="Datum, palivo, litry, cena, tachometr nebo poznámka..."
+                 AutomationProperties.Name="Hledání v tankování vozidla"
+                 AutomationProperties.AutomationId="FuelSearchBox" />
+      </Grid>
+      <TextBlock Grid.Row="2"
+                 Margin="0,8,12,0"
+                 Opacity="0.72"
+                 Text="{Binding FuelSearchSummary}"
+                 TextWrapping="Wrap" />
       <ListBox x:Name="FuelListBox"
-               Grid.Row="1"
+               Grid.Row="3"
                Margin="0,12,12,0"
-               ItemsSource="{Binding SelectedVehicleFuel}"
+               ItemsSource="{Binding VisibleFuelItems}"
                SelectedItem="{Binding SelectedFuel}"
-               AutomationProperties.Name="Tankování vybraného vozidla">
+               AutomationProperties.Name="Tankování vybraného vozidla"
+               AutomationProperties.AutomationId="FuelListBox">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="itemvm:VehicleFuelItemViewModel">
             <Border Padding="12"

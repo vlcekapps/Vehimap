@@ -5,6 +5,7 @@
              x:Class="Vehimap.Desktop.Views.Workspaces.MaintenanceWorkspaceView"
              x:DataType="vm:MaintenanceWorkspaceViewModel">
   <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
     <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateMaintenanceCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+N" Command="{Binding OpenMaintenanceTemplatesCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedMaintenanceCommand}" />
@@ -14,14 +15,25 @@
   </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding MaintenanceSummary}" TextWrapping="Wrap" />
-    <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">
+    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold" Text="Servisní plány vybraného vozidla" />
+      <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*">
+        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBox x:Name="MaintenanceSearchBox"
+                 Grid.Column="1"
+                 Text="{Binding MaintenanceSearchText}"
+                 PlaceholderText="Úkon, interval, poslední servis, stav nebo poznámka..."
+                 AutomationProperties.Name="Hledání v plánu údržby"
+                 AutomationProperties.AutomationId="MaintenanceSearchBox" />
+      </Grid>
+      <TextBlock Grid.Row="2" Margin="0,8,12,0" Opacity="0.72" Text="{Binding MaintenanceSearchSummary}" TextWrapping="Wrap" />
       <ListBox x:Name="MaintenanceListBox"
-               Grid.Row="1"
+               Grid.Row="3"
                Margin="0,12,12,0"
-               ItemsSource="{Binding SelectedVehicleMaintenance}"
+               ItemsSource="{Binding VisibleMaintenanceItems}"
                SelectedItem="{Binding SelectedMaintenance}"
-               AutomationProperties.Name="Plán údržby vybraného vozidla">
+               AutomationProperties.Name="Plán údržby vybraného vozidla"
+               AutomationProperties.AutomationId="MaintenanceListBox">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="itemvm:VehicleMaintenanceItemViewModel">
             <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">

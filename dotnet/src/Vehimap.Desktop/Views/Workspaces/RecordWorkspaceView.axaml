@@ -5,6 +5,7 @@
              x:Class="Vehimap.Desktop.Views.Workspaces.RecordWorkspaceView"
              x:DataType="vm:RecordWorkspaceViewModel">
   <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
     <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateRecordCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedRecordCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedRecordCommand}" />
@@ -15,14 +16,25 @@
   </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.1*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding RecordSummary}" TextWrapping="Wrap" />
-    <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">
+    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold" Text="Seznam dokladů a příloh vybraného vozidla" />
+      <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*">
+        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBox x:Name="RecordSearchBox"
+                 Grid.Column="1"
+                 Text="{Binding RecordSearchText}"
+                 PlaceholderText="Typ, název, poskytovatel, platnost, příloha nebo poznámka..."
+                 AutomationProperties.Name="Hledání v dokladech vozidla"
+                 AutomationProperties.AutomationId="RecordSearchBox" />
+      </Grid>
+      <TextBlock Grid.Row="2" Margin="0,8,12,0" Opacity="0.72" Text="{Binding RecordSearchSummary}" TextWrapping="Wrap" />
       <ListBox x:Name="RecordListBox"
-               Grid.Row="1"
+               Grid.Row="3"
                Margin="0,12,12,0"
-               ItemsSource="{Binding SelectedVehicleRecords}"
+               ItemsSource="{Binding VisibleRecordItems}"
                SelectedItem="{Binding SelectedRecord}"
-               AutomationProperties.Name="Doklady vybraného vozidla">
+               AutomationProperties.Name="Doklady vybraného vozidla"
+               AutomationProperties.AutomationId="RecordListBox">
         <ListBox.KeyBindings>
           <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedRecordFileCommand}" />
         </ListBox.KeyBindings>

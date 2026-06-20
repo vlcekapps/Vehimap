@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -14,6 +15,13 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.FuelWindowTitle;
     public string FuelSummary => Root.FuelSummary;
     public ObservableCollection<VehicleFuelItemViewModel> SelectedVehicleFuel => Root.SelectedVehicleFuel;
+    public ObservableCollection<VehicleFuelItemViewModel> VisibleFuelItems { get; } = [];
+
+    [ObservableProperty]
+    private string fuelSearchText = string.Empty;
+
+    [ObservableProperty]
+    private string fuelSearchSummary = "Ctrl+F přesune fokus do hledání tankování.";
 
     [ObservableProperty]
     private VehicleFuelItemViewModel? selectedFuel;
@@ -59,6 +67,39 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     public ICommand SaveFuelCommand => Root.SaveFuelCommand;
     public ICommand CancelFuelEditCommand => Root.CancelFuelEditCommand;
 
+    [RelayCommand]
+    private void FocusSearch()
+    {
+        RequestFocus(DesktopFocusTarget.FuelSearch);
+    }
+
+    public void RefreshVisibleFuelItems(bool preserveSelection = true)
+    {
+        var previousSelection = preserveSelection ? SelectedFuel : null;
+        var filteredItems = SelectedVehicleFuel
+            .Where(MatchesSearch)
+            .ToList();
+
+        VisibleFuelItems.Clear();
+        foreach (var item in filteredItems)
+        {
+            VisibleFuelItems.Add(item);
+        }
+
+        SelectedFuel = previousSelection is not null
+            ? VisibleFuelItems.FirstOrDefault(item => string.Equals(item.Id, previousSelection.Id, StringComparison.Ordinal))
+            : null;
+
+        SelectedFuel ??= VisibleFuelItems.FirstOrDefault();
+        if (SelectedFuel is null)
+        {
+            SelectedFuelDetail = "Vyberte tankování a zobrazí se detail položky.";
+            Root.NotifyFuelWorkspaceSelectionChanged();
+        }
+
+        UpdateSearchSummary();
+    }
+
     partial void OnSelectedFuelChanged(VehicleFuelItemViewModel? value)
     {
         SelectedFuelDetail = value is null
@@ -66,6 +107,11 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
             : $"Datum: {value.Date}\nPalivo: {value.FuelType}\nMnožství: {value.Liters}\nCena celkem: {value.TotalCost}\nTachometr: {value.Odometer}\nStav nádrže: {value.TankState}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
 
         Root.NotifyFuelWorkspaceSelectionChanged();
+    }
+
+    partial void OnFuelSearchTextChanged(string value)
+    {
+        RefreshVisibleFuelItems();
     }
 
     partial void OnIsEditingFuelChanged(bool value)
@@ -77,4 +123,38 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
         OnPropertyChanged(nameof(IsFuelDetailVisible));
         Root.NotifyFuelWorkspaceEditingChanged();
     }
+
+    private bool MatchesSearch(VehicleFuelItemViewModel item)
+    {
+        if (string.IsNullOrWhiteSpace(FuelSearchText))
+        {
+            return true;
+        }
+
+        var query = FuelSearchText.Trim();
+        return Contains(item.Date, query)
+            || Contains(item.FuelType, query)
+            || Contains(item.Liters, query)
+            || Contains(item.TotalCost, query)
+            || Contains(item.Odometer, query)
+            || Contains(item.TankState, query)
+            || Contains(item.Note, query)
+            || Contains(item.AccessibleLabel, query);
+    }
+
+    private void UpdateSearchSummary()
+    {
+        if (string.IsNullOrWhiteSpace(FuelSearchText))
+        {
+            FuelSearchSummary = $"Zobrazeno {VisibleFuelItems.Count} tankování. Ctrl+F přesune fokus do hledání.";
+            return;
+        }
+
+        FuelSearchSummary = VisibleFuelItems.Count == 0
+            ? $"Hledání „{FuelSearchText.Trim()}“ nenašlo v tankování žádný záznam."
+            : $"Hledání „{FuelSearchText.Trim()}“ našlo {VisibleFuelItems.Count} tankování.";
+    }
+
+    private static bool Contains(string value, string query) =>
+        value.Contains(query, StringComparison.CurrentCultureIgnoreCase);
 }

@@ -65,7 +65,17 @@ public sealed class MainWindowViewModelNavigationTests
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Detail;
         viewModel.FocusCurrentSearchCommand.Execute(null);
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.History;
+        viewModel.FocusCurrentSearchCommand.Execute(null);
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Fuel;
+        viewModel.FocusCurrentSearchCommand.Execute(null);
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Reminder;
+        viewModel.FocusCurrentSearchCommand.Execute(null);
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Maintenance;
+        viewModel.FocusCurrentSearchCommand.Execute(null);
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Timeline;
+        viewModel.FocusCurrentSearchCommand.Execute(null);
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
         viewModel.FocusCurrentSearchCommand.Execute(null);
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
         viewModel.FocusCurrentSearchCommand.Execute(null);
@@ -79,13 +89,51 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal(
             [
                 DesktopFocusTarget.VehicleSearch,
+                DesktopFocusTarget.HistorySearch,
+                DesktopFocusTarget.FuelSearch,
+                DesktopFocusTarget.ReminderSearch,
+                DesktopFocusTarget.MaintenanceSearch,
                 DesktopFocusTarget.TimelineSearch,
+                DesktopFocusTarget.RecordSearch,
                 DesktopFocusTarget.AuditSearch,
                 DesktopFocusTarget.GlobalSearchBox,
                 DesktopFocusTarget.UpcomingOverviewSearch,
                 DesktopFocusTarget.OverdueOverviewSearch
             ],
             requestedTargets);
+    }
+
+    [Fact]
+    public void Evidence_workspace_search_filters_lists_and_clears_actions_when_empty()
+    {
+        var viewModel = CreateViewModel();
+
+        viewModel.HistoryWorkspace.HistorySearchText = "oleje";
+        Assert.Single(viewModel.HistoryWorkspace.VisibleHistoryItems);
+        Assert.Equal("hist_1", viewModel.SelectedHistory?.Id);
+
+        viewModel.FuelWorkspace.FuelSearchText = "benzín";
+        Assert.Single(viewModel.FuelWorkspace.VisibleFuelItems);
+        Assert.Equal("fuel_1", viewModel.SelectedFuel?.Id);
+
+        viewModel.ReminderWorkspace.ReminderSearchText = "servis";
+        Assert.Single(viewModel.ReminderWorkspace.VisibleReminderItems);
+        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
+
+        viewModel.MaintenanceWorkspace.MaintenanceSearchText = "olej";
+        Assert.Single(viewModel.MaintenanceWorkspace.VisibleMaintenanceItems);
+        Assert.Equal("mnt_1", viewModel.SelectedMaintenance?.Id);
+
+        viewModel.RecordWorkspace.RecordSearchText = "Asistence";
+        Assert.Single(viewModel.RecordWorkspace.VisibleRecordItems);
+        Assert.Equal("rec_2", viewModel.SelectedRecord?.Id);
+
+        viewModel.RecordWorkspace.RecordSearchText = "nenajitelný dotaz";
+
+        Assert.Empty(viewModel.RecordWorkspace.VisibleRecordItems);
+        Assert.Null(viewModel.SelectedRecord);
+        Assert.False(viewModel.EditSelectedRecordCommand.CanExecute(null));
+        Assert.False(viewModel.OpenSelectedRecordFileCommand.CanExecute(null));
     }
 
     [Fact]

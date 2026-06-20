@@ -413,6 +413,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleMaintenance.Clear();
             SelectedVehicleTimeline.Clear();
             SelectedVehicleRecords.Clear();
+            HistoryWorkspace.RefreshVisibleHistoryItems(preserveSelection: false);
+            FuelWorkspace.RefreshVisibleFuelItems(preserveSelection: false);
+            ReminderWorkspace.RefreshVisibleReminderItems(preserveSelection: false);
+            MaintenanceWorkspace.RefreshVisibleMaintenanceItems(preserveSelection: false);
+            RecordWorkspace.RefreshVisibleRecordItems(preserveSelection: false);
             DashboardUpcomingTimeline.Clear();
             SelectedHistory = null;
             SelectedFuel = null;
@@ -470,7 +475,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         var target = SelectedVehicleTabIndex switch
         {
+            HistoryTabIndex => DesktopFocusTarget.HistorySearch,
+            FuelTabIndex => DesktopFocusTarget.FuelSearch,
+            ReminderTabIndex => DesktopFocusTarget.ReminderSearch,
+            MaintenanceTabIndex => DesktopFocusTarget.MaintenanceSearch,
             TimelineTabIndex => DesktopFocusTarget.TimelineSearch,
+            RecordTabIndex => DesktopFocusTarget.RecordSearch,
             AuditTabIndex => DesktopFocusTarget.AuditSearch,
             SearchTabIndex => DesktopFocusTarget.GlobalSearchBox,
             UpcomingOverviewTabIndex => DesktopFocusTarget.UpcomingOverviewSearch,
@@ -1014,13 +1024,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         HistorySummary = projection.Summary;
-
-        SelectedHistory = SelectedVehicleHistory.FirstOrDefault();
-        if (SelectedHistory is null)
-        {
-            SelectedHistoryDetail = "Vyberte historický záznam a zobrazí se detail položky.";
-            NotifyHistoryWorkspaceSelectionChanged();
-        }
+        HistoryWorkspace.RefreshVisibleHistoryItems(preserveSelection: false);
     }
 
     private void PopulateVehicleFuel(string vehicleId)
@@ -1033,13 +1037,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         FuelSummary = projection.Summary;
-
-        SelectedFuel = SelectedVehicleFuel.FirstOrDefault();
-        if (SelectedFuel is null)
-        {
-            SelectedFuelDetail = "Vyberte tankování a zobrazí se detail položky.";
-            NotifyFuelWorkspaceSelectionChanged();
-        }
+        FuelWorkspace.RefreshVisibleFuelItems(preserveSelection: false);
     }
 
     private void PopulateVehicleReminders(string vehicleId)
@@ -1052,13 +1050,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         ReminderSummary = projection.Summary;
-
-        SelectedReminder = SelectedVehicleReminders.FirstOrDefault();
-        if (SelectedReminder is null)
-        {
-            SelectedReminderDetail = "Vyberte připomínku a zobrazí se detail položky.";
-            NotifyReminderWorkspaceSelectionChanged();
-        }
+        ReminderWorkspace.RefreshVisibleReminderItems(preserveSelection: false);
     }
 
     private void PopulateVehicleMaintenance(string vehicleId)
@@ -1071,13 +1063,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         MaintenanceSummary = projection.Summary;
-
-        SelectedMaintenance = SelectedVehicleMaintenance.FirstOrDefault();
-        if (SelectedMaintenance is null)
-        {
-            SelectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
-            NotifyMaintenanceWorkspaceSelectionChanged();
-        }
+        MaintenanceWorkspace.RefreshVisibleMaintenanceItems(preserveSelection: false);
     }
 
     private void PopulateVehicleTimeline(string vehicleId)
@@ -1114,13 +1100,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         RecordSummary = projection.Summary;
-
-        SelectedRecord = SelectedVehicleRecords.FirstOrDefault();
-        if (SelectedRecord is null)
-        {
-            SelectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
-            NotifyRecordWorkspaceSelectionChanged();
-        }
+        RecordWorkspace.RefreshVisibleRecordItems(preserveSelection: false);
     }
 
     private void RefreshTimeline()

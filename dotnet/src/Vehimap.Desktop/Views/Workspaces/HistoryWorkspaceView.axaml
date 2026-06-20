@@ -5,6 +5,7 @@
              x:Class="Vehimap.Desktop.Views.Workspaces.HistoryWorkspaceView"
              x:DataType="vm:HistoryWorkspaceViewModel">
   <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
     <KeyBinding Gesture="Ctrl+N" Command="{Binding CreateHistoryCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedHistoryCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedHistoryCommand}" />
@@ -14,15 +15,30 @@
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding HistorySummary}"
                TextWrapping="Wrap" />
-    <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,16,0,0">
+    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold"
                  Text="Historické záznamy vybraného vozidla" />
+      <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*">
+        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBox x:Name="HistorySearchBox"
+                 Grid.Column="1"
+                 Text="{Binding HistorySearchText}"
+                 PlaceholderText="Datum, typ, tachometr, cena nebo poznámka..."
+                 AutomationProperties.Name="Hledání v historii vozidla"
+                 AutomationProperties.AutomationId="HistorySearchBox" />
+      </Grid>
+      <TextBlock Grid.Row="2"
+                 Margin="0,8,12,0"
+                 Opacity="0.72"
+                 Text="{Binding HistorySearchSummary}"
+                 TextWrapping="Wrap" />
       <ListBox x:Name="HistoryListBox"
-               Grid.Row="1"
+               Grid.Row="3"
                Margin="0,12,12,0"
-               ItemsSource="{Binding SelectedVehicleHistory}"
+               ItemsSource="{Binding VisibleHistoryItems}"
                SelectedItem="{Binding SelectedHistory}"
-               AutomationProperties.Name="Historie vybraného vozidla">
+               AutomationProperties.Name="Historie vybraného vozidla"
+               AutomationProperties.AutomationId="HistoryListBox">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="itemvm:VehicleHistoryItemViewModel">
             <Border Padding="12"

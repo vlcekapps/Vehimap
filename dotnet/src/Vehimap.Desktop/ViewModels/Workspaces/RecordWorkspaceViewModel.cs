@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -14,9 +15,16 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.RecordWindowTitle;
     public string RecordSummary => Root.RecordSummary;
     public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords => Root.SelectedVehicleRecords;
+    public ObservableCollection<VehicleRecordItemViewModel> VisibleRecordItems { get; } = [];
 
     [ObservableProperty]
     private VehicleRecordItemViewModel? selectedRecord;
+
+    [ObservableProperty]
+    private string recordSearchText = string.Empty;
+
+    [ObservableProperty]
+    private string recordSearchSummary = "Ctrl+F přesune fokus do hledání dokladů.";
 
     [ObservableProperty]
     private string selectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
@@ -85,6 +93,39 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public ICommand OpenSelectedRecordFolderCommand => Root.OpenSelectedRecordFolderCommand;
     public ICommand CopySelectedRecordPathCommand => Root.CopySelectedRecordPathCommand;
 
+    [RelayCommand]
+    private void FocusSearch()
+    {
+        RequestFocus(DesktopFocusTarget.RecordSearch);
+    }
+
+    public void RefreshVisibleRecordItems(bool preserveSelection = true)
+    {
+        var previousSelection = preserveSelection ? SelectedRecord : null;
+        var filteredItems = SelectedVehicleRecords
+            .Where(MatchesSearch)
+            .ToList();
+
+        VisibleRecordItems.Clear();
+        foreach (var item in filteredItems)
+        {
+            VisibleRecordItems.Add(item);
+        }
+
+        SelectedRecord = previousSelection is not null
+            ? VisibleRecordItems.FirstOrDefault(item => string.Equals(item.Id, previousSelection.Id, StringComparison.Ordinal))
+            : null;
+
+        SelectedRecord ??= VisibleRecordItems.FirstOrDefault();
+        if (SelectedRecord is null)
+        {
+            SelectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
+            Root.NotifyRecordWorkspaceSelectionChanged();
+        }
+
+        UpdateSearchSummary();
+    }
+
     partial void OnSelectedRecordChanged(VehicleRecordItemViewModel? value)
     {
         SelectedRecordDetail = value is null
@@ -92,6 +133,11 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
             : $"Typ: {value.RecordType}\nPlatnost: {value.Validity}\nCena: {value.Price}\nRežim přílohy: {value.AttachmentMode}\nStav přílohy: {value.AttachmentState}\nUložená cesta: {Root.FormatWorkspaceValue(value.StoredPath, "nevyplněno")}\nVyřešená cesta: {Root.FormatWorkspaceValue(value.ResolvedPath, "nevyplněno")}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
 
         Root.NotifyRecordWorkspaceSelectionChanged();
+    }
+
+    partial void OnRecordSearchTextChanged(string value)
+    {
+        RefreshVisibleRecordItems();
     }
 
     partial void OnIsEditingRecordChanged(bool value)
@@ -116,4 +162,41 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     {
         Root.HandleRecordAttachmentPathChanged();
     }
+
+    private bool MatchesSearch(VehicleRecordItemViewModel item)
+    {
+        if (string.IsNullOrWhiteSpace(RecordSearchText))
+        {
+            return true;
+        }
+
+        var query = RecordSearchText.Trim();
+        return Contains(item.RecordType, query)
+            || Contains(item.Title, query)
+            || Contains(item.Provider, query)
+            || Contains(item.Validity, query)
+            || Contains(item.Price, query)
+            || Contains(item.AttachmentMode, query)
+            || Contains(item.AttachmentState, query)
+            || Contains(item.StoredPath, query)
+            || Contains(item.ResolvedPath, query)
+            || Contains(item.Note, query)
+            || Contains(item.AccessibleLabel, query);
+    }
+
+    private void UpdateSearchSummary()
+    {
+        if (string.IsNullOrWhiteSpace(RecordSearchText))
+        {
+            RecordSearchSummary = $"Zobrazeno {VisibleRecordItems.Count} dokladů. Ctrl+F přesune fokus do hledání.";
+            return;
+        }
+
+        RecordSearchSummary = VisibleRecordItems.Count == 0
+            ? $"Hledání „{RecordSearchText.Trim()}“ nenašlo v dokladech žádný záznam."
+            : $"Hledání „{RecordSearchText.Trim()}“ našlo {VisibleRecordItems.Count} dokladů.";
+    }
+
+    private static bool Contains(string value, string query) =>
+        value.Contains(query, StringComparison.CurrentCultureIgnoreCase);
 }

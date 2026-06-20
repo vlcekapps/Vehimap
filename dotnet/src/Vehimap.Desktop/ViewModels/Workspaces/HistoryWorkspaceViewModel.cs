@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -14,6 +15,13 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.HistoryWindowTitle;
     public string HistorySummary => Root.HistorySummary;
     public ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory => Root.SelectedVehicleHistory;
+    public ObservableCollection<VehicleHistoryItemViewModel> VisibleHistoryItems { get; } = [];
+
+    [ObservableProperty]
+    private string historySearchText = string.Empty;
+
+    [ObservableProperty]
+    private string historySearchSummary = "Ctrl+F přesune fokus do hledání historie.";
 
     [ObservableProperty]
     private VehicleHistoryItemViewModel? selectedHistory;
@@ -53,6 +61,39 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     public ICommand SaveHistoryCommand => Root.SaveHistoryCommand;
     public ICommand CancelHistoryEditCommand => Root.CancelHistoryEditCommand;
 
+    [RelayCommand]
+    private void FocusSearch()
+    {
+        RequestFocus(DesktopFocusTarget.HistorySearch);
+    }
+
+    public void RefreshVisibleHistoryItems(bool preserveSelection = true)
+    {
+        var previousSelection = preserveSelection ? SelectedHistory : null;
+        var filteredItems = SelectedVehicleHistory
+            .Where(MatchesSearch)
+            .ToList();
+
+        VisibleHistoryItems.Clear();
+        foreach (var item in filteredItems)
+        {
+            VisibleHistoryItems.Add(item);
+        }
+
+        SelectedHistory = previousSelection is not null
+            ? VisibleHistoryItems.FirstOrDefault(item => string.Equals(item.Id, previousSelection.Id, StringComparison.Ordinal))
+            : null;
+
+        SelectedHistory ??= VisibleHistoryItems.FirstOrDefault();
+        if (SelectedHistory is null)
+        {
+            SelectedHistoryDetail = "Vyberte historický záznam a zobrazí se detail položky.";
+            Root.NotifyHistoryWorkspaceSelectionChanged();
+        }
+
+        UpdateSearchSummary();
+    }
+
     partial void OnSelectedHistoryChanged(VehicleHistoryItemViewModel? value)
     {
         SelectedHistoryDetail = value is null
@@ -60,6 +101,11 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
             : $"Datum: {value.Date}\nTyp události: {value.EventType}\nTachometr: {value.Odometer}\nCena: {value.Cost}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
 
         Root.NotifyHistoryWorkspaceSelectionChanged();
+    }
+
+    partial void OnHistorySearchTextChanged(string value)
+    {
+        RefreshVisibleHistoryItems();
     }
 
     partial void OnIsEditingHistoryChanged(bool value)
@@ -71,4 +117,36 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
         OnPropertyChanged(nameof(IsHistoryDetailVisible));
         Root.NotifyHistoryWorkspaceEditingChanged();
     }
+
+    private bool MatchesSearch(VehicleHistoryItemViewModel item)
+    {
+        if (string.IsNullOrWhiteSpace(HistorySearchText))
+        {
+            return true;
+        }
+
+        var query = HistorySearchText.Trim();
+        return Contains(item.Date, query)
+            || Contains(item.EventType, query)
+            || Contains(item.Odometer, query)
+            || Contains(item.Cost, query)
+            || Contains(item.Note, query)
+            || Contains(item.AccessibleLabel, query);
+    }
+
+    private void UpdateSearchSummary()
+    {
+        if (string.IsNullOrWhiteSpace(HistorySearchText))
+        {
+            HistorySearchSummary = $"Zobrazeno {VisibleHistoryItems.Count} historických záznamů. Ctrl+F přesune fokus do hledání.";
+            return;
+        }
+
+        HistorySearchSummary = VisibleHistoryItems.Count == 0
+            ? $"Hledání „{HistorySearchText.Trim()}“ nenašlo v historii žádný záznam."
+            : $"Hledání „{HistorySearchText.Trim()}“ našlo {VisibleHistoryItems.Count} historických záznamů.";
+    }
+
+    private static bool Contains(string value, string query) =>
+        value.Contains(query, StringComparison.CurrentCultureIgnoreCase);
 }

@@ -455,6 +455,16 @@ public sealed class DesktopAccessibilityLabelTests
 
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"GreenCardReminderDaysBox\"", settingsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"HistorySearchBox\"", historyXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"HistoryListBox\"", historyXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FuelSearchBox\"", fuelXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FuelListBox\"", fuelXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReminderSearchBox\"", reminderXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReminderListBox\"", reminderXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceSearchBox\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceListBox\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"RecordSearchBox\"", recordXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"RecordListBox\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorDateBox\"", fuelXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorFuelTypeBox\"", fuelXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"HistoryEditorDateBox\"", historyXaml);
@@ -559,22 +569,26 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedOverdueOverviewVehicleCommand}\"", overdueOverviewXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedOverdueOverviewItemCommand}\"", overdueOverviewXaml);
 
+        Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", historyXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateHistoryCommand}\"", historyXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedHistoryCommand}\"", historyXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedHistoryCommand}\"", historyXaml);
         Assert.Contains("Gesture=\"Ctrl+S\" Command=\"{Binding SaveHistoryCommand}\"", historyXaml);
 
+        Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateFuelCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedFuelCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedFuelCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"Ctrl+S\" Command=\"{Binding SaveFuelCommand}\"", fuelXaml);
 
+        Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", reminderXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateReminderCommand}\"", reminderXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedReminderCommand}\"", reminderXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedReminderCommand}\"", reminderXaml);
         Assert.Contains("Gesture=\"Ctrl+Shift+N\" Command=\"{Binding AdvanceSelectedReminderCommand}\"", reminderXaml);
         Assert.Contains("Gesture=\"Ctrl+S\" Command=\"{Binding SaveReminderCommand}\"", reminderXaml);
 
+        Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", maintenanceXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateMaintenanceCommand}\"", maintenanceXaml);
         Assert.Contains("Gesture=\"Ctrl+Shift+N\" Command=\"{Binding OpenMaintenanceTemplatesCommand}\"", maintenanceXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedMaintenanceCommand}\"", maintenanceXaml);
@@ -582,6 +596,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+L\" Command=\"{Binding CompleteSelectedMaintenanceCommand}\"", maintenanceXaml);
         Assert.Contains("Gesture=\"Ctrl+S\" Command=\"{Binding SaveMaintenanceCommand}\"", maintenanceXaml);
 
+        Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", recordXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateRecordCommand}\"", recordXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedRecordCommand}\"", recordXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedRecordCommand}\"", recordXaml);

@@ -18,11 +18,12 @@ public partial class FuelWorkspaceView : WorkspaceViewBase<FuelWorkspaceViewMode
         ViewModel?.IsEditingFuel == true ? DesktopFocusTarget.FuelEditorDate : DesktopFocusTarget.FuelList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.FuelList or DesktopFocusTarget.FuelEditorDate;
+        target is DesktopFocusTarget.FuelSearch or DesktopFocusTarget.FuelList or DesktopFocusTarget.FuelEditorDate;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
+            DesktopFocusTarget.FuelSearch => this.FindControl<TextBox>("FuelSearchBox"),
             DesktopFocusTarget.FuelList => this.FindControl<ListBox>("FuelListBox"),
             DesktopFocusTarget.FuelEditorDate => this.FindControl<TextBox>("FuelEditorDateBox"),
             _ => null

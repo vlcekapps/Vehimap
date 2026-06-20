@@ -20,6 +20,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public string WindowTitle => Root.MaintenanceWindowTitle;
     public string MaintenanceSummary => Root.MaintenanceSummary;
     public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance => Root.SelectedVehicleMaintenance;
+    public ObservableCollection<VehicleMaintenanceItemViewModel> VisibleMaintenanceItems { get; } = [];
     public bool CanOpenMaintenanceRecommendations => Root.CanOpenMaintenanceRecommendations;
     public bool CanCompleteSelectedMaintenance => Root.CanCompleteSelectedMaintenance;
     public IReadOnlyList<string> MaintenanceTemplateOptions { get; } =
@@ -34,6 +35,12 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
 
     [ObservableProperty]
     private VehicleMaintenanceItemViewModel? selectedMaintenance;
+
+    [ObservableProperty]
+    private string maintenanceSearchText = string.Empty;
+
+    [ObservableProperty]
+    private string maintenanceSearchSummary = "Ctrl+F přesune fokus do hledání údržby.";
 
     [ObservableProperty]
     private string selectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
@@ -78,6 +85,12 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public ICommand DeleteSelectedMaintenanceCommand => Root.DeleteSelectedMaintenanceCommand;
     public ICommand SaveMaintenanceCommand => Root.SaveMaintenanceCommand;
     public ICommand CancelMaintenanceEditCommand => Root.CancelMaintenanceEditCommand;
+
+    [RelayCommand]
+    private void FocusSearch()
+    {
+        RequestFocus(DesktopFocusTarget.MaintenanceSearch);
+    }
 
     public VehicleStarterBundlePreview BuildMaintenanceTemplatePreview()
     {
@@ -144,6 +157,33 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         MaintenanceCompletionRequested?.Invoke(this, EventArgs.Empty);
     }
 
+    public void RefreshVisibleMaintenanceItems(bool preserveSelection = true)
+    {
+        var previousSelection = preserveSelection ? SelectedMaintenance : null;
+        var filteredItems = SelectedVehicleMaintenance
+            .Where(MatchesSearch)
+            .ToList();
+
+        VisibleMaintenanceItems.Clear();
+        foreach (var item in filteredItems)
+        {
+            VisibleMaintenanceItems.Add(item);
+        }
+
+        SelectedMaintenance = previousSelection is not null
+            ? VisibleMaintenanceItems.FirstOrDefault(item => string.Equals(item.Id, previousSelection.Id, StringComparison.Ordinal))
+            : null;
+
+        SelectedMaintenance ??= VisibleMaintenanceItems.FirstOrDefault();
+        if (SelectedMaintenance is null)
+        {
+            SelectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
+            Root.NotifyMaintenanceWorkspaceSelectionChanged();
+        }
+
+        UpdateSearchSummary();
+    }
+
     partial void OnSelectedMaintenanceChanged(VehicleMaintenanceItemViewModel? value)
     {
         SelectedMaintenanceDetail = value is null
@@ -151,6 +191,11 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
             : $"Úkon: {value.Title}\nInterval: {value.Interval}\nPoslední servis: {value.LastService}\nStav: {value.Status}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
 
         Root.NotifyMaintenanceWorkspaceSelectionChanged();
+    }
+
+    partial void OnMaintenanceSearchTextChanged(string value)
+    {
+        RefreshVisibleMaintenanceItems();
     }
 
     partial void OnSelectedMaintenanceTemplateChanged(string value)
@@ -189,4 +234,36 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         OnPropertyChanged(nameof(IsMaintenanceDetailVisible));
         Root.NotifyMaintenanceWorkspaceEditingChanged();
     }
+
+    private bool MatchesSearch(VehicleMaintenanceItemViewModel item)
+    {
+        if (string.IsNullOrWhiteSpace(MaintenanceSearchText))
+        {
+            return true;
+        }
+
+        var query = MaintenanceSearchText.Trim();
+        return Contains(item.Title, query)
+            || Contains(item.Interval, query)
+            || Contains(item.LastService, query)
+            || Contains(item.Status, query)
+            || Contains(item.Note, query)
+            || Contains(item.AccessibleLabel, query);
+    }
+
+    private void UpdateSearchSummary()
+    {
+        if (string.IsNullOrWhiteSpace(MaintenanceSearchText))
+        {
+            MaintenanceSearchSummary = $"Zobrazeno {VisibleMaintenanceItems.Count} servisních plánů. Ctrl+F přesune fokus do hledání.";
+            return;
+        }
+
+        MaintenanceSearchSummary = VisibleMaintenanceItems.Count == 0
+            ? $"Hledání „{MaintenanceSearchText.Trim()}“ nenašlo v údržbě žádný záznam."
+            : $"Hledání „{MaintenanceSearchText.Trim()}“ našlo {VisibleMaintenanceItems.Count} servisních plánů.";
+    }
+
+    private static bool Contains(string value, string query) =>
+        value.Contains(query, StringComparison.CurrentCultureIgnoreCase);
 }
