@@ -67,7 +67,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.EditSelectedVehicleCommand.Execute(null);
         requestedTargets.Clear();
 
-        Assert.True(viewModel.IsEditingVehicle);
+        Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
         Assert.True(viewModel.IsWorkspaceNavigationLocked);
         Assert.False(viewModel.CanUseWorkspaceNavigation);
         Assert.False(viewModel.CanOpenHistoryWindow);
@@ -572,7 +572,7 @@ public sealed class MainWindowViewModelNavigationTests
         var editHandled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
 
         Assert.True(editHandled);
-        Assert.True(viewModel.IsEditingVehicle);
+        Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
         Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
         Assert.Contains(DesktopFocusTarget.VehicleEditorName, requestedTargets);
     }
@@ -921,7 +921,7 @@ public sealed class MainWindowViewModelNavigationTests
         var editHandled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
 
         Assert.True(editHandled);
-        Assert.True(viewModel.IsEditingVehicle);
+        Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
         Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
         Assert.Contains(DesktopFocusTarget.VehicleEditorName, requestedTargets);
     }

@@ -132,6 +132,16 @@ public sealed class WorkspaceCompositionTests
     {
         var viewModel = CreateViewModel();
 
+        Assert.False(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
+        Assert.True(viewModel.VehicleDetailWorkspace.IsVehicleDetailVisible);
+        Assert.Equal("Detail vozidla", viewModel.VehicleDetailWorkspace.VehiclePanelHeading);
+
+        viewModel.CreateVehicleCommand.Execute(null);
+
+        Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
+        Assert.False(viewModel.VehicleDetailWorkspace.IsVehicleDetailVisible);
+        Assert.Equal("Nové vozidlo", viewModel.VehicleDetailWorkspace.VehiclePanelHeading);
+
         viewModel.VehicleDetailWorkspace.VehicleEditorStatus = "Editor má vlastní stav.";
         viewModel.VehicleDetailWorkspace.VehicleEditorName = "Božena";
         viewModel.VehicleDetailWorkspace.VehicleEditorCategory = "Osobní vozidla";
@@ -167,6 +177,12 @@ public sealed class WorkspaceCompositionTests
         Assert.Equal("Má klimatizaci", viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile);
         Assert.Equal("Řemen", viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive);
         Assert.Equal("Manuální", viewModel.VehicleDetailWorkspace.VehicleEditorTransmission);
+
+        viewModel.CancelVehicleEditCommand.Execute(null);
+
+        Assert.False(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
+        Assert.True(viewModel.VehicleDetailWorkspace.IsVehicleDetailVisible);
+        Assert.Equal("Detail vozidla", viewModel.VehicleDetailWorkspace.VehiclePanelHeading);
     }
 
     [Fact]
@@ -232,7 +248,10 @@ public sealed class WorkspaceCompositionTests
             "VehicleEditorPowertrain",
             "VehicleEditorClimateProfile",
             "VehicleEditorTimingDrive",
-            "VehicleEditorTransmission"
+            "VehicleEditorTransmission",
+            "IsEditingVehicle",
+            "IsVehicleDetailVisible",
+            "VehiclePanelHeading"
         };
 
         foreach (var propertyName in removedProxyProperties)

@@ -7,6 +7,8 @@ namespace Vehimap.Desktop.ViewModels.Workspaces;
 
 public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 {
+    private bool isEditingVehicle;
+    private string vehiclePanelHeading = "Detail vozidla";
     private string selectedVehicleHeading = "Nevybrané vozidlo";
     private string selectedVehicleOverview = "Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.";
     private string selectedVehicleDates = string.Empty;
@@ -35,7 +37,12 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public string WindowTitle => Root.VehicleDetailWindowTitle;
-    public string VehiclePanelHeading => Root.VehiclePanelHeading;
+
+    public string VehiclePanelHeading
+    {
+        get => vehiclePanelHeading;
+        private set => SetProperty(ref vehiclePanelHeading, value);
+    }
 
     public string SelectedVehicleHeading
     {
@@ -61,8 +68,19 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
         set => SetProperty(ref selectedVehicleProfile, value);
     }
 
-    public bool IsEditingVehicle => Root.IsEditingVehicle;
-    public bool IsVehicleDetailVisible => Root.IsVehicleDetailVisible;
+    public bool IsEditingVehicle
+    {
+        get => isEditingVehicle;
+        private set
+        {
+            if (SetProperty(ref isEditingVehicle, value))
+            {
+                OnPropertyChanged(nameof(IsVehicleDetailVisible));
+            }
+        }
+    }
+
+    public bool IsVehicleDetailVisible => !IsEditingVehicle;
 
     public string VehicleEditorStatus
     {
@@ -202,5 +220,13 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public void SetVehicleStarterBundleStatus(string message)
     {
         Root.SetVehicleStarterBundleStatus(message);
+    }
+
+    internal void SetVehicleEditingState(bool isEditing, bool isNewVehicle)
+    {
+        VehiclePanelHeading = isEditing
+            ? (isNewVehicle ? "Nové vozidlo" : "Upravit vozidlo")
+            : "Detail vozidla";
+        IsEditingVehicle = isEditing;
     }
 }

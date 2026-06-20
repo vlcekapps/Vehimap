@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
@@ -13,36 +12,26 @@ public sealed partial class MainWindowViewModel
     private string? _editingVehicleId;
     private string? _pendingVehicleStarterBundleOfferVehicleId;
 
-    [ObservableProperty]
-    private bool isEditingVehicle;
-
-    [ObservableProperty]
-    private string vehiclePanelHeading = "Detail vozidla";
-
-    public bool IsVehicleDetailVisible => !IsEditingVehicle;
-
     public bool CanCreateVehicle => !HasPendingEdits;
 
     public bool CanEditSelectedVehicle => SelectedVehicle is not null && !HasPendingEdits;
 
     public bool CanDeleteSelectedVehicle => SelectedVehicle is not null && !HasPendingEdits;
 
-    public bool CanSaveVehicle => IsEditingVehicle;
+    public bool CanSaveVehicle => VehicleDetailWorkspace.IsEditingVehicle;
 
-    public bool CanCancelVehicleEdit => IsEditingVehicle;
+    public bool CanCancelVehicleEdit => VehicleDetailWorkspace.IsEditingVehicle;
 
     public bool CanOpenVehicleStarterBundle => SelectedVehicle is not null && !HasPendingEdits;
 
-    partial void OnIsEditingVehicleChanged(bool value)
+    private void SetVehicleEditingState(bool value)
     {
-        VehiclePanelHeading = value
-            ? (_editingVehicleId is null ? "Nové vozidlo" : "Upravit vozidlo")
-            : "Detail vozidla";
-
-        OnPropertyChanged(nameof(IsVehicleDetailVisible));
+        VehicleDetailWorkspace.SetVehicleEditingState(value, _editingVehicleId is null);
         OnPropertyChanged(nameof(CanCreateVehicle));
         OnPropertyChanged(nameof(CanEditSelectedVehicle));
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
+        OnPropertyChanged(nameof(CanSaveVehicle));
+        OnPropertyChanged(nameof(CanCancelVehicleEdit));
         OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         CreateVehicleCommand.NotifyCanExecuteChanged();
@@ -75,7 +64,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorTimingDrive = string.Empty;
         VehicleDetailWorkspace.VehicleEditorTransmission = string.Empty;
         VehicleDetailWorkspace.VehicleEditorStatus = "Vyplňte základní údaje o vozidle a uložte je.";
-        IsEditingVehicle = true;
+        SetVehicleEditingState(true);
         SelectedVehicleTabIndex = DetailTabIndex;
         RequestFocus(DesktopFocusTarget.VehicleEditorName);
     }
@@ -108,7 +97,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorTimingDrive = meta?.TimingDrive ?? string.Empty;
         VehicleDetailWorkspace.VehicleEditorTransmission = meta?.Transmission ?? string.Empty;
         VehicleDetailWorkspace.VehicleEditorStatus = "Upravte údaje vozidla a uložte změny.";
-        IsEditingVehicle = true;
+        SetVehicleEditingState(true);
         SelectedVehicleTabIndex = DetailTabIndex;
         RequestFocus(DesktopFocusTarget.VehicleEditorName);
     }
@@ -601,7 +590,7 @@ public sealed partial class MainWindowViewModel
     private void CancelVehicleEditCore(bool clearStatus)
     {
         _editingVehicleId = null;
-        IsEditingVehicle = false;
+        SetVehicleEditingState(false);
         VehicleDetailWorkspace.VehicleEditorName = string.Empty;
         VehicleDetailWorkspace.VehicleEditorCategory = string.Empty;
         VehicleDetailWorkspace.VehicleEditorNote = string.Empty;

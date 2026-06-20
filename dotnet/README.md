@@ -66,6 +66,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - drzet souhrnne texty evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` primo v jejich workspace viewmodelech misto root proxy vlastnosti
 - drzet souhrnne texty detailu vozidla primo ve `VehicleDetailWorkspace`, zatimco root je jen prepocitava pri zmene vyberu vozidla
 - drzet formularove hodnoty editoru vozidla primo ve `VehicleDetailWorkspace`, zatimco root zustava zodpovedny za prikazy, validaci a ulozeni
+- drzet rezim editace vozidla, viditelnost detailu a nadpis detailniho panelu primo ve `VehicleDetailWorkspace`, zatimco root jen synchronizuje shellove prikazy
 - drzet keyboard-first a11y i v hlavnim shellu, vcetne vlastni focusovatelne listy karet a konzistentniho focusu pro ctecky obrazovky
 - vymazat filtry hlavniho seznamu vozidel tlacitkem `Vymazat filtry`; obnovi cely seznam, zapise stavovou hlasku a vrati fokus do hledani vozidel
 - zamknout hlavni seznam vozidel, jeho filtry, prepinani pracovnich karet a otevirani jinych workspace oken po dobu aktivni editace, aby se nedalo omylem odejit z rozpracovane prace pred ulozenim nebo zrusenim editoru

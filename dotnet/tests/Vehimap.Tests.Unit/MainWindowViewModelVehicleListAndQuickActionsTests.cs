@@ -155,7 +155,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         viewModel.EditSelectedVehicleCommand.Execute(null);
 
-        Assert.True(viewModel.IsEditingVehicle);
+        Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
         Assert.False(viewModel.CanUseVehicleList);
         Assert.True(viewModel.IsVehicleListLocked);
         Assert.False(viewModel.CanUseWorkspaceNavigation);
@@ -166,7 +166,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         viewModel.CancelVehicleEditCommand.Execute(null);
 
-        Assert.False(viewModel.IsEditingVehicle);
+        Assert.False(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
         Assert.True(viewModel.CanUseVehicleList);
         Assert.False(viewModel.IsVehicleListLocked);
         Assert.True(viewModel.CanUseWorkspaceNavigation);

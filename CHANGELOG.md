@@ -78,6 +78,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - souhrnné texty evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` v Avalonia větvi vlastní příslušné workspace viewmodely místo root proxy vlastností
 - souhrnné texty detailu vozidla v Avalonia větvi vlastní `VehicleDetailWorkspace` místo root `MainWindowViewModel`
 - formulářové hodnoty editoru vozidla v Avalonia větvi vlastní `VehicleDetailWorkspace` místo root `MainWindowViewModel`
+- režim editace vozidla, viditelnost detailu a nadpis detailního panelu v Avalonia větvi vlastní `VehicleDetailWorkspace` místo root `MainWindowViewModel`
 - `Tiskový přehled` v Avalonia větvi se nově ukládá přes standardní exportní dialog jako HTML soubor a po uložení se otevře, místo aby vznikal jen jako dočasný soubor
 - nabídka `Rychlé akce` v Avalonia větvi nově kromě TK a zelených karet umí otevřít nejbližší vlastní připomínku, servisní úkon nebo doklad a filtrovaně zkontrolovat připomínky, údržbu i doklady v přehledu termínů
 - přístupné okno `Akce Vehimapu na liště` v Avalonia větvi umí kromě hlavního okna, dashboardu, přehledů a ukončení aplikace otevřít i nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrované kontroly těchto oblastí a vyvolat tiskový přehled, export/import zálohy, export kalendáře, znovunačtení dat, nastavení, `O programu` nebo kontrolu aktualizací

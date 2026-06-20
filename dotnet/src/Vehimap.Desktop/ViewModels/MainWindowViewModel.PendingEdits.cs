@@ -6,7 +6,7 @@ public sealed partial class MainWindowViewModel
     private Func<string, Task<bool>>? _confirmVehicleDeleteHandler;
 
     internal bool HasPendingEdits =>
-        IsEditingVehicle
+        VehicleDetailWorkspace.IsEditingVehicle
         || IsEditingHistory
         || IsEditingFuel
         || IsEditingReminder
@@ -46,7 +46,7 @@ public sealed partial class MainWindowViewModel
     internal string GetPendingEditLabel()
     {
         var labels = new List<string>();
-        if (IsEditingVehicle)
+        if (VehicleDetailWorkspace.IsEditingVehicle)
         {
             labels.Add("detail vozidla");
         }
@@ -86,7 +86,7 @@ public sealed partial class MainWindowViewModel
 
     internal DesktopFocusTarget GetPendingEditFocusTarget()
     {
-        if (IsEditingVehicle)
+        if (VehicleDetailWorkspace.IsEditingVehicle)
         {
             return DesktopFocusTarget.VehicleEditorName;
         }

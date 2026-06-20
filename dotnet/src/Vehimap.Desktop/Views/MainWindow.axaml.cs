@@ -931,7 +931,7 @@ public partial class MainWindow : Window
             return false;
         }
 
-        if (_viewModel.IsEditingVehicle)
+        if (_viewModel.VehicleDetailWorkspace.IsEditingVehicle)
         {
             await OpenVehicleDetailWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
             return true;
