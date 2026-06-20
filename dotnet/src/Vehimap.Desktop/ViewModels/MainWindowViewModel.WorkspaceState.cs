@@ -803,6 +803,7 @@ public sealed partial class MainWindowViewModel
 
         SelectedDashboardAuditItem = FindById(DashboardAuditItems, BuildDashboardAuditSelectionKey, previousAuditKey);
         SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, previousCostVehicleId);
+        CostWorkspace.RefreshVisibleCostVehicles();
         SelectedDashboardTimelineItem = previousTimelineItem is null
             ? DashboardUpcomingTimeline.FirstOrDefault()
             : FindTimelineItem(DashboardUpcomingTimeline, previousTimelineItem);

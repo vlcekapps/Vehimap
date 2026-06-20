@@ -482,6 +482,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             TimelineTabIndex => DesktopFocusTarget.TimelineSearch,
             RecordTabIndex => DesktopFocusTarget.RecordSearch,
             AuditTabIndex => DesktopFocusTarget.AuditSearch,
+            CostTabIndex => DesktopFocusTarget.CostSearch,
             SearchTabIndex => DesktopFocusTarget.GlobalSearchBox,
             UpcomingOverviewTabIndex => DesktopFocusTarget.UpcomingOverviewSearch,
             OverdueOverviewTabIndex => DesktopFocusTarget.OverdueOverviewSearch,
@@ -993,7 +994,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             RefreshFleetOverviews();
             RefreshGlobalSearch();
             AuditWorkspace.RefreshVisibleAuditItems(preserveSelection: false);
-            SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault();
+            CostWorkspace.RefreshVisibleCostVehicles(preserveSelection: false);
             SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
             ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
             ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();

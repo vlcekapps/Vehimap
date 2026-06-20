@@ -5,13 +5,14 @@
              x:Class="Vehimap.Desktop.Views.Workspaces.CostWorkspaceView"
              x:DataType="vm:CostWorkspaceViewModel">
   <UserControl.KeyBindings>
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
     <KeyBinding Gesture="Ctrl+P" Command="{Binding FocusSelectedCostDetailCommand}" />
     <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedCostVehicleCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedCostVehicleCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedCostVehicleCommand}" />
   </UserControl.KeyBindings>
 
-  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
     <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
@@ -70,10 +71,24 @@
       <TextBlock Text="{Binding SelectedCostVehicleDetail}"
                  TextWrapping="Wrap" />
     </Border>
+    <Grid Grid.Row="6" Margin="0,12,0,0" ColumnDefinitions="80,*">
+      <TextBlock VerticalAlignment="Center" Text="Hledat" />
+      <TextBox x:Name="CostSearchBox"
+               Grid.Column="1"
+               Text="{Binding CostSearchText}"
+               PlaceholderText="Vozidlo, kategorie, částka, cena za km nebo stav výpočtu..."
+               AutomationProperties.Name="Hledání v nákladovém přehledu"
+               AutomationProperties.AutomationId="CostSearchBox" />
+    </Grid>
+    <TextBlock Grid.Row="7"
+               Margin="0,8,0,0"
+               Opacity="0.72"
+               Text="{Binding CostSearchSummary}"
+               TextWrapping="Wrap" />
     <ListBox x:Name="CostListBox"
-             Grid.Row="6"
+             Grid.Row="8"
              Margin="0,12,0,0"
-             ItemsSource="{Binding CostVehicles}"
+             ItemsSource="{Binding VisibleCostVehicles}"
              SelectedItem="{Binding SelectedDashboardCostVehicle}"
              AutomationProperties.Name="Seznam nákladových souhrnů vozidel"
              AutomationProperties.AutomationId="CostListBox">

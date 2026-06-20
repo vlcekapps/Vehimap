@@ -79,6 +79,8 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusCurrentSearchCommand.Execute(null);
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
         viewModel.FocusCurrentSearchCommand.Execute(null);
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Cost;
+        viewModel.FocusCurrentSearchCommand.Execute(null);
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Search;
         viewModel.FocusCurrentSearchCommand.Execute(null);
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.UpcomingOverview;
@@ -96,6 +98,7 @@ public sealed class MainWindowViewModelNavigationTests
                 DesktopFocusTarget.TimelineSearch,
                 DesktopFocusTarget.RecordSearch,
                 DesktopFocusTarget.AuditSearch,
+                DesktopFocusTarget.CostSearch,
                 DesktopFocusTarget.GlobalSearchBox,
                 DesktopFocusTarget.UpcomingOverviewSearch,
                 DesktopFocusTarget.OverdueOverviewSearch
@@ -134,6 +137,25 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Null(viewModel.SelectedRecord);
         Assert.False(viewModel.EditSelectedRecordCommand.CanExecute(null));
         Assert.False(viewModel.OpenSelectedRecordFileCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void Cost_workspace_search_filters_vehicle_costs_and_clears_selected_actions_when_empty()
+    {
+        var viewModel = CreateViewModel();
+
+        viewModel.CostWorkspace.CostSearchText = "Octavia";
+
+        Assert.Single(viewModel.CostWorkspace.VisibleCostVehicles);
+        Assert.Equal("veh_1", viewModel.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.True(viewModel.ExportSelectedVehicleCostDetailCommand.CanExecute(null));
+
+        viewModel.CostWorkspace.CostSearchText = "nenajitelný dotaz";
+
+        Assert.Empty(viewModel.CostWorkspace.VisibleCostVehicles);
+        Assert.Null(viewModel.SelectedDashboardCostVehicle);
+        Assert.False(viewModel.OpenSelectedDashboardCostVehicleCommand.CanExecute(null));
+        Assert.False(viewModel.ExportSelectedVehicleCostDetailCommand.CanExecute(null));
     }
 
     [Fact]
