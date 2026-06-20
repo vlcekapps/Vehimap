@@ -344,7 +344,7 @@ public sealed class DesktopAccessibilitySmokeTests
             session.SendKeysByAccessibilityId("VehicleEditorNameBox", "Appium vozidlo");
             session.SendKeysByAccessibilityId("VehicleEditorMakeModelBox", "Test model");
             session.SendKeysByAccessibilityId("VehicleEditorStateBox", "Běžný provoz");
-            session.SendKeysByAccessibilityId("VehicleEditorPowertrainBox", "benzín");
+            session.SendKeysByAccessibilityId("VehicleEditorPowertrainBox", "Benzín");
             session.SendKeysByAccessibilityId("VehicleEditorNoteBox", "Vytvořeno UI testem");
             session.ClickByAccessibilityId("SaveVehicleButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveVehicleButton");

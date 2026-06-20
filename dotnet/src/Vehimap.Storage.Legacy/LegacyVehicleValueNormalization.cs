@@ -56,16 +56,32 @@ public static partial class LegacyVehicleValueNormalization
 
     public static string NormalizeFuelType(string? fuelType)
     {
-        var value = (fuelType ?? string.Empty).Trim();
-        foreach (var allowed in LegacyKnownValues.FuelTypes)
-        {
-            if (string.Equals(allowed, value, StringComparison.Ordinal))
-            {
-                return allowed;
-            }
-        }
+        return NormalizeKnownOption(fuelType, LegacyKnownValues.FuelTypes, LegacyKnownValues.FuelTypes[0]);
+    }
 
-        return LegacyKnownValues.FuelTypes[0];
+    public static string NormalizeVehicleState(string? state)
+    {
+        return NormalizeKnownOption(state, LegacyKnownValues.VehicleStates, LegacyKnownValues.VehicleStates[0]);
+    }
+
+    public static string NormalizeVehiclePowertrain(string? powertrain)
+    {
+        return NormalizeKnownOption(powertrain, LegacyKnownValues.VehiclePowertrains, LegacyKnownValues.VehiclePowertrains[0]);
+    }
+
+    public static string NormalizeVehicleClimateProfile(string? climateProfile)
+    {
+        return NormalizeKnownOption(climateProfile, LegacyKnownValues.VehicleClimateProfiles, LegacyKnownValues.VehicleClimateProfiles[0]);
+    }
+
+    public static string NormalizeVehicleTimingDrive(string? timingDrive)
+    {
+        return NormalizeKnownOption(timingDrive, LegacyKnownValues.VehicleTimingDrives, LegacyKnownValues.VehicleTimingDrives[0]);
+    }
+
+    public static string NormalizeVehicleTransmission(string? transmission)
+    {
+        return NormalizeKnownOption(transmission, LegacyKnownValues.VehicleTransmissions, LegacyKnownValues.VehicleTransmissions[0]);
     }
 
     public static string NormalizeReminderRepeatMode(string? repeatMode)
@@ -120,6 +136,20 @@ public static partial class LegacyVehicleValueNormalization
         }
 
         return LegacyKnownValues.ReminderRepeatModes[0];
+    }
+
+    private static string NormalizeKnownOption(string? value, IReadOnlyList<string> allowedValues, string fallback)
+    {
+        var trimmed = (value ?? string.Empty).Trim();
+        foreach (var allowed in allowedValues)
+        {
+            if (string.Equals(allowed, trimmed, StringComparison.Ordinal))
+            {
+                return allowed;
+            }
+        }
+
+        return fallback;
     }
 
     public static string NormalizeMonthYear(string? monthYear)

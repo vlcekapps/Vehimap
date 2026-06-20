@@ -57,7 +57,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - menu `Přehledy` v Avalonia větvi má přímou položku `Export termínů do kalendáře (.ics)`, aby odpovídalo AHK menu i původnímu workflow plánu
 
 ### Změněno
-- Avalonia editor vozidla při uložení sjednocuje kategorii, SPZ a data TK/ZK podle legacy AHK pravidel a při neplatné hodnotě vrací fokus na konkrétní pole k opravě
+- Avalonia editor vozidla při uložení sjednocuje kategorii, SPZ, data TK/ZK, stav vozidla a servisní profil podle legacy AHK pravidel a při neplatné hodnotě vrací fokus na konkrétní pole k opravě
 - Avalonia editory historie, tankování, připomínek, dokladů a údržby nově při uložení validují a normalizují datumy, tachometr, částky, intervaly a platnost dokladů podle legacy AHK pravidel a vrací fokus na chybné pole
 - Avalonia editor tankování používá pro typ paliva rozbalovací seznam se stejnými hodnotami jako AHK verze
 - Avalonia editory dokladů a připomínek používají pro typ dokladu a opakování připomínky rozbalovací seznamy se stejnými hodnotami jako AHK verze

@@ -648,6 +648,56 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
+    public async Task Save_vehicle_command_normalizes_unknown_meta_dropdown_values()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.EditSelectedVehicleCommand.Execute(null);
+        viewModel.VehicleDetailWorkspace.VehicleEditorState = "Neznámý stav";
+        viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain = "benzín";
+        viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile = "klima";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive = "řetěz";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTransmission = "manual";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTags = " test ";
+
+        await viewModel.SaveVehicleCommand.ExecuteAsync(null);
+
+        var savedMeta = Assert.Single(dataStore.CurrentDataSet.VehicleMetaEntries.Where(item => item.VehicleId == "veh_1"));
+        Assert.Equal(string.Empty, savedMeta.State);
+        Assert.Equal(string.Empty, savedMeta.Powertrain);
+        Assert.Equal(string.Empty, savedMeta.ClimateProfile);
+        Assert.Equal(string.Empty, savedMeta.TimingDrive);
+        Assert.Equal(string.Empty, savedMeta.Transmission);
+        Assert.Equal("test", savedMeta.Tags);
+    }
+
+    [Fact]
+    public void Edit_selected_vehicle_normalizes_unknown_meta_values_for_dropdowns()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_1", "Neznámý stav", "test", "benzín", "klima", "řetěz", "manual"));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.EditSelectedVehicleCommand.Execute(null);
+
+        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorState);
+        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain);
+        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile);
+        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive);
+        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorTransmission);
+        Assert.Equal("test", viewModel.VehicleDetailWorkspace.VehicleEditorTags);
+    }
+
+    [Fact]
     public async Task Delete_vehicle_command_requires_confirmation_and_keeps_data_when_rejected()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);

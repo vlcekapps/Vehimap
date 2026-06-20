@@ -93,6 +93,30 @@ public sealed class LegacyVehicleValueNormalizationTests
     }
 
     [Theory]
+    [InlineData("", "", "", "", "")]
+    [InlineData("Veterán", "Nafta", "Má klimatizaci", "Řemen", "Manuální")]
+    [InlineData("Neznámý stav", "benzín", "klima", "řetěz", "manual")]
+    public void Normalize_vehicle_meta_dropdowns_match_legacy_rules(
+        string state,
+        string powertrain,
+        string climateProfile,
+        string timingDrive,
+        string transmission)
+    {
+        var expectedState = state == "Veterán" ? "Veterán" : string.Empty;
+        var expectedPowertrain = powertrain == "Nafta" ? "Nafta" : string.Empty;
+        var expectedClimateProfile = climateProfile == "Má klimatizaci" ? "Má klimatizaci" : string.Empty;
+        var expectedTimingDrive = timingDrive == "Řemen" ? "Řemen" : string.Empty;
+        var expectedTransmission = transmission == "Manuální" ? "Manuální" : string.Empty;
+
+        Assert.Equal(expectedState, LegacyVehicleValueNormalization.NormalizeVehicleState(state));
+        Assert.Equal(expectedPowertrain, LegacyVehicleValueNormalization.NormalizeVehiclePowertrain(powertrain));
+        Assert.Equal(expectedClimateProfile, LegacyVehicleValueNormalization.NormalizeVehicleClimateProfile(climateProfile));
+        Assert.Equal(expectedTimingDrive, LegacyVehicleValueNormalization.NormalizeVehicleTimingDrive(timingDrive));
+        Assert.Equal(expectedTransmission, LegacyVehicleValueNormalization.NormalizeVehicleTransmission(transmission));
+    }
+
+    [Theory]
     [InlineData("", "Neopakovat")]
     [InlineData("Neopakovat", "Neopakovat")]
     [InlineData("Ročně", "Každý rok")]

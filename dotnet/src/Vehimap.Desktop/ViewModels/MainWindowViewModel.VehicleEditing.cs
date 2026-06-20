@@ -93,12 +93,12 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorNextTk = vehicle.NextTk;
         VehicleDetailWorkspace.VehicleEditorGreenCardFrom = vehicle.GreenCardFrom;
         VehicleDetailWorkspace.VehicleEditorGreenCardTo = vehicle.GreenCardTo;
-        VehicleDetailWorkspace.VehicleEditorState = meta?.State ?? string.Empty;
+        VehicleDetailWorkspace.VehicleEditorState = LegacyVehicleValueNormalization.NormalizeVehicleState(meta?.State);
         VehicleDetailWorkspace.VehicleEditorTags = meta?.Tags ?? string.Empty;
-        VehicleDetailWorkspace.VehicleEditorPowertrain = meta?.Powertrain ?? string.Empty;
-        VehicleDetailWorkspace.VehicleEditorClimateProfile = meta?.ClimateProfile ?? string.Empty;
-        VehicleDetailWorkspace.VehicleEditorTimingDrive = meta?.TimingDrive ?? string.Empty;
-        VehicleDetailWorkspace.VehicleEditorTransmission = meta?.Transmission ?? string.Empty;
+        VehicleDetailWorkspace.VehicleEditorPowertrain = LegacyVehicleValueNormalization.NormalizeVehiclePowertrain(meta?.Powertrain);
+        VehicleDetailWorkspace.VehicleEditorClimateProfile = LegacyVehicleValueNormalization.NormalizeVehicleClimateProfile(meta?.ClimateProfile);
+        VehicleDetailWorkspace.VehicleEditorTimingDrive = LegacyVehicleValueNormalization.NormalizeVehicleTimingDrive(meta?.TimingDrive);
+        VehicleDetailWorkspace.VehicleEditorTransmission = LegacyVehicleValueNormalization.NormalizeVehicleTransmission(meta?.Transmission);
         VehicleDetailWorkspace.VehicleEditorStatus = "Upravte údaje vozidla a uložte změny.";
         SetVehicleEditingState(true);
         SelectedVehicleTabIndex = DetailTabIndex;
@@ -606,12 +606,12 @@ public sealed partial class MainWindowViewModel
     {
         var updatedMeta = new VehicleMeta(
             vehicleId,
-            (VehicleDetailWorkspace.VehicleEditorState ?? string.Empty).Trim(),
+            LegacyVehicleValueNormalization.NormalizeVehicleState(VehicleDetailWorkspace.VehicleEditorState),
             LegacyVehicleMetaNormalization.NormalizeTagList(VehicleDetailWorkspace.VehicleEditorTags),
-            (VehicleDetailWorkspace.VehicleEditorPowertrain ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorClimateProfile ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorTimingDrive ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorTransmission ?? string.Empty).Trim());
+            LegacyVehicleValueNormalization.NormalizeVehiclePowertrain(VehicleDetailWorkspace.VehicleEditorPowertrain),
+            LegacyVehicleValueNormalization.NormalizeVehicleClimateProfile(VehicleDetailWorkspace.VehicleEditorClimateProfile),
+            LegacyVehicleValueNormalization.NormalizeVehicleTimingDrive(VehicleDetailWorkspace.VehicleEditorTimingDrive),
+            LegacyVehicleValueNormalization.NormalizeVehicleTransmission(VehicleDetailWorkspace.VehicleEditorTransmission));
 
         if (string.IsNullOrWhiteSpace(updatedMeta.State)
             && string.IsNullOrWhiteSpace(updatedMeta.Tags)

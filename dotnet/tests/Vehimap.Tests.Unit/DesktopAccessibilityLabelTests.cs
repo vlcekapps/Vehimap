@@ -706,6 +706,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"AdvanceReminderButton\"", reminderXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorNameBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorCategoryBox\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding VehicleCategoryOptions}\"", vehicleDetailXaml);
         Assert.Contains("x:Name=\"VehicleEditorMakeModelBox\"", vehicleDetailXaml);
         Assert.Contains("x:Name=\"VehicleEditorYearBox\"", vehicleDetailXaml);
         Assert.Contains("x:Name=\"VehicleEditorLastTkBox\"", vehicleDetailXaml);
@@ -717,6 +718,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorClimateProfileBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTimingDriveBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTransmissionBox\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding VehicleStateOptions}\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding VehiclePowertrainOptions}\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding VehicleClimateProfileOptions}\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding VehicleTimingDriveOptions}\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding VehicleTransmissionOptions}\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditRefreshButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditOpenItemButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditOpenVehicleButton\"", auditXaml);
