@@ -60,6 +60,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Avalonia editor vozidla při uložení sjednocuje kategorii, SPZ a data TK/ZK podle legacy AHK pravidel a při neplatné hodnotě vrací fokus na konkrétní pole k opravě
 - Avalonia editory historie, tankování, připomínek, dokladů a údržby nově při uložení validují a normalizují datumy, tachometr, částky, intervaly a platnost dokladů podle legacy AHK pravidel a vrací fokus na chybné pole
 - Avalonia editory dokladů a připomínek používají pro typ dokladu a opakování připomínky rozbalovací seznamy se stejnými hodnotami jako AHK verze
+- Avalonia dialog `Balíček pro vozidlo` používá pro typ dokladu a opakování připomínky stejné rozbalovací hodnoty a normalizaci jako běžné editory dokladů a připomínek
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`
 - přehledy termínů a dashboard lépe zvýrazňují problémové stavy, datové nedostatky a servisní úkoly
 - Vehimap je interně rozdělený do menších modulů `#Include`, takže se aplikace lépe udržuje a rozvíjí

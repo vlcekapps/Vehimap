@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Vehimap.Application.Models;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -12,14 +13,18 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
         Title = template.Title;
         IntervalKm = template.IntervalKm;
         IntervalMonths = template.IntervalMonths;
-        RecordType = template.RecordType;
+        RecordType = template.Section == VehicleStarterBundleSection.Record
+            ? LegacyVehicleValueNormalization.NormalizeRecordType(template.RecordType)
+            : template.RecordType;
         Provider = template.Provider;
         ValidFrom = template.ValidFrom;
         ValidTo = template.ValidTo;
         Price = template.Price;
         DueDate = template.DueDate;
         ReminderDays = template.ReminderDays;
-        RepeatMode = template.RepeatMode;
+        RepeatMode = template.Section == VehicleStarterBundleSection.Reminder
+            ? LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(template.RepeatMode)
+            : template.RepeatMode;
         Note = template.Note;
     }
 
@@ -78,20 +83,29 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
 
     partial void OnTitleChanged(string value) => OnPropertyChanged(nameof(AccessibleLabel));
 
-    public VehicleStarterBundleTemplate ToTemplate() =>
-        new(
+    public VehicleStarterBundleTemplate ToTemplate()
+    {
+        var recordType = IsRecord
+            ? LegacyVehicleValueNormalization.NormalizeRecordType(RecordType)
+            : RecordType.Trim();
+        var repeatMode = IsReminder
+            ? LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(RepeatMode)
+            : RepeatMode.Trim();
+
+        return new(
             Section,
             SectionLabel,
             Title.Trim(),
             IntervalKm.Trim(),
             IntervalMonths.Trim(),
-            RecordType.Trim(),
+            recordType,
             Provider.Trim(),
             ValidFrom.Trim(),
             ValidTo.Trim(),
             Price.Trim(),
             DueDate.Trim(),
             ReminderDays.Trim(),
-            RepeatMode.Trim(),
+            repeatMode,
             Note.Trim());
+    }
 }

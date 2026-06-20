@@ -367,7 +367,7 @@ public sealed partial class MainWindowViewModel
                 }
                 case VehicleStarterBundleSection.Record:
                 {
-                    var recordType = string.IsNullOrWhiteSpace(item.RecordType) ? "Doklad" : item.RecordType.Trim();
+                    var recordType = LegacyVehicleValueNormalization.NormalizeRecordType(item.RecordType);
                     var key = BuildBundleRecordKey(recordType, item.Title);
                     if (string.IsNullOrWhiteSpace(key) || recordKeys.Contains(key))
                     {
@@ -392,7 +392,8 @@ public sealed partial class MainWindowViewModel
                 }
                 case VehicleStarterBundleSection.Reminder:
                 {
-                    var key = BuildBundleReminderKey(item.Title, item.RepeatMode);
+                    var repeatMode = LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(item.RepeatMode);
+                    var key = BuildBundleReminderKey(item.Title, repeatMode);
                     if (string.IsNullOrWhiteSpace(key) || reminderKeys.Contains(key))
                     {
                         break;
@@ -404,7 +405,7 @@ public sealed partial class MainWindowViewModel
                         item.Title.Trim(),
                         item.DueDate.Trim(),
                         item.ReminderDays.Trim(),
-                        item.RepeatMode.Trim(),
+                        repeatMode,
                         item.Note.Trim()));
                     reminderKeys.Add(key);
                     addedReminders++;
@@ -695,5 +696,5 @@ public sealed partial class MainWindowViewModel
         $"{NormalizeBundleKey(recordType)}|{NormalizeBundleKey(title)}";
 
     private static string BuildBundleReminderKey(string title, string repeatMode) =>
-        $"{NormalizeBundleKey(title)}|{NormalizeBundleKey(repeatMode)}";
+        $"{NormalizeBundleKey(title)}|{NormalizeBundleKey(LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(repeatMode))}";
 }

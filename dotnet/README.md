@@ -47,6 +47,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo vytvaret, upravovat a mazat `pripominky`
 - primo vytvaret, upravovat a mazat `doklady`, vcetne volby `Spravovana kopie` vs `Externi cesta` a importu souboru do spravovanych priloh
 - v editorech dokladu a pripominek pouzivat AHK-kompatibilni rozbalovaci hodnoty pro typ dokladu a opakovani pripominky
+- v dialogu `Balicek pro vozidlo` pouzivat stejne rozbalovaci hodnoty a normalizaci pro typ dokladu a opakovani pripominky jako v beznych editorech
 - u dokladu otevrit prilozeny soubor, otevrit jeho slozku a zkopirovat vyresenou cestu pres `Ctrl+Shift+C` nebo tlacitko `Kopirovat cestu`
 - primo vytvaret, upravovat a mazat `historii`
 - primo vytvaret, upravovat a mazat `tankovani`

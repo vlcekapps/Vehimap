@@ -5,6 +5,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -86,6 +87,10 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
     public string ProfileLabel { get; }
 
     public ObservableCollection<VehicleStarterBundleItemEditorViewModel> Items { get; }
+
+    public IReadOnlyList<string> RecordTypeOptions => LegacyKnownValues.RecordTypes;
+
+    public IReadOnlyList<string> ReminderRepeatModeOptions => LegacyKnownValues.ReminderRepeatModes;
 
     [ObservableProperty]
     private VehicleStarterBundleItemEditorViewModel? selectedItem;

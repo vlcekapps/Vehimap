@@ -35,7 +35,7 @@ public partial class VehicleStarterBundleWindow : Window
 
         if (e.Key == Key.A && e.KeyModifiers is KeyModifiers.Control or (KeyModifiers.Control | KeyModifiers.Shift))
         {
-            if (e.Source is TextBox)
+            if (e.Source is TextBox or ComboBox)
             {
                 return;
             }

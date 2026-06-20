@@ -712,6 +712,58 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
+    public async Task Vehicle_starter_bundle_apply_normalizes_record_type_and_reminder_repeat_mode()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+        var items = new[]
+        {
+            new VehicleStarterBundleTemplate(
+                VehicleStarterBundleSection.Record,
+                "Doklad",
+                "Starý doklad",
+                string.Empty,
+                string.Empty,
+                "Vlastní typ",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty),
+            new VehicleStarterBundleTemplate(
+                VehicleStarterBundleSection.Reminder,
+                "Připomínka",
+                "Kontrola sezóny",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                "10.10.2026",
+                "30",
+                "Ročně",
+                string.Empty)
+        };
+
+        var message = await viewModel.ApplyVehicleStarterBundleAsync("veh_1", items);
+
+        Assert.Contains("Balíček pro vozidlo přidal", message);
+        var savedRecord = Assert.Single(dataStore.CurrentDataSet.Records);
+        Assert.Equal("Povinné ručení", savedRecord.RecordType);
+        var savedReminder = Assert.Single(dataStore.CurrentDataSet.Reminders);
+        Assert.Equal("Každý rok", savedReminder.RepeatMode);
+    }
+
+    [Fact]
     public async Task Maintenance_template_preview_and_apply_adds_only_service_plans()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);

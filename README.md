@@ -88,6 +88,7 @@ V hlavním okně:
 - v dashboardu lze nově z vybraného servisního úkonu rovnou otevřít historii vozidla nebo servis přímo označit jako splněný bez ručního hledání správného plánu
 - v `Plánu údržby` lze tlačítkem `Doporučené šablony` nebo zkratkou `Ctrl+Shift+N` otevřít výběr jen chybějících servisních plánů podle kategorie a servisního profilu vozidla a před přidáním je ještě upravit nebo odškrtnout
 - po založení nového vozidla může Vehimap nabídnout rovnou celý `Balíček pro vozidlo`, tedy doporučené servisní plány, placeholdery dokladů i obecné připomínky
+- v C# Avalonia větvi balíček používá pro typ dokladu a opakování připomínky stejné rozbalovací seznamy jako běžné editory, takže není potřeba ručně opisovat interní hodnoty
 - `Časová osa vozidla` spojuje do jednoho seznamu historii, tankování, připomínky, expirace dokladů, technickou kontrolu, zelenou kartu i servisní úkoly s konkrétním datem
 - v C# Avalonia větvi si `Časová osa vozidla` pamatuje poslední filtr `Vše`, `Budoucí` nebo `Minulé`; rychlé textové hledání v ose zůstává jen dočasné
 - v `Přehledu` lze nově ručně exportovat budoucí termíny do kalendářového souboru `.ics`, včetně TK, ZK, připomínek, expirací dokladů a servisních úkolů s datem

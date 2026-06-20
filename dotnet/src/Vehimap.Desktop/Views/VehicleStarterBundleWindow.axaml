@@ -103,9 +103,10 @@
 
             <StackPanel IsVisible="{Binding SelectedItem.IsRecord}">
               <TextBlock FontWeight="SemiBold" Text="Typ dokladu" />
-              <TextBox Text="{Binding SelectedItem.RecordType}"
-                       AutomationProperties.Name="Typ dokladu balíčku"
-                       AutomationProperties.AutomationId="BundleRecordTypeBox" />
+              <ComboBox ItemsSource="{Binding RecordTypeOptions}"
+                        SelectedItem="{Binding SelectedItem.RecordType}"
+                        AutomationProperties.Name="Typ dokladu balíčku"
+                        AutomationProperties.AutomationId="BundleRecordTypeBox" />
               <TextBlock FontWeight="SemiBold" Text="Název dokladu" />
               <TextBox Text="{Binding SelectedItem.Title}"
                        AutomationProperties.Name="Název dokladu balíčku"
@@ -156,9 +157,10 @@
                 </StackPanel>
                 <StackPanel Grid.Column="2" Spacing="6">
                   <TextBlock FontWeight="SemiBold" Text="Opakování" />
-                  <TextBox Text="{Binding SelectedItem.RepeatMode}"
-                           AutomationProperties.Name="Opakování připomínky balíčku"
-                           AutomationProperties.AutomationId="BundleReminderRepeatModeBox" />
+                  <ComboBox ItemsSource="{Binding ReminderRepeatModeOptions}"
+                            SelectedItem="{Binding SelectedItem.RepeatMode}"
+                            AutomationProperties.Name="Opakování připomínky balíčku"
+                            AutomationProperties.AutomationId="BundleReminderRepeatModeBox" />
                 </StackPanel>
               </Grid>
             </StackPanel>

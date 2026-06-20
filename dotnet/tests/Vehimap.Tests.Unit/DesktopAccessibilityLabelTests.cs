@@ -106,6 +106,64 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Vehicle_starter_bundle_items_should_normalize_dropdown_values()
+    {
+        var recordItem = new VehicleStarterBundleItemEditorViewModel(
+            new VehicleStarterBundleTemplate(
+                VehicleStarterBundleSection.Record,
+                "Doklad",
+                "Starý doklad",
+                string.Empty,
+                string.Empty,
+                "Vlastní typ",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty));
+        var reminderItem = new VehicleStarterBundleItemEditorViewModel(
+            new VehicleStarterBundleTemplate(
+                VehicleStarterBundleSection.Reminder,
+                "Připomínka",
+                "Kontrola",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                "10.10.2026",
+                "30",
+                "Ročně",
+                string.Empty));
+
+        Assert.Equal("Povinné ručení", recordItem.RecordType);
+        Assert.Equal("Povinné ručení", recordItem.ToTemplate().RecordType);
+        Assert.Equal("Každý rok", reminderItem.RepeatMode);
+        Assert.Equal("Každý rok", reminderItem.ToTemplate().RepeatMode);
+    }
+
+    [Fact]
+    public void Vehicle_starter_bundle_dialog_should_expose_dropdown_options()
+    {
+        var viewModel = new VehicleStarterBundleDialogViewModel(
+            new VehicleStarterBundlePreview(
+                "veh_1",
+                "Milena",
+                "Osobní vozidla",
+                []));
+
+        Assert.Contains("Povinné ručení", viewModel.RecordTypeOptions);
+        Assert.Contains("Doklad", viewModel.RecordTypeOptions);
+        Assert.Contains("Neopakovat", viewModel.ReminderRepeatModeOptions);
+        Assert.Contains("Každý rok", viewModel.ReminderRepeatModeOptions);
+    }
+
+    [Fact]
     public void Tray_actions_dialog_defaults_should_expose_overview_actions()
     {
         var model = TrayActionsDialogViewModel.CreateDefault();
@@ -391,6 +449,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"BundleDetailHintText\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", bundleXaml);
         Assert.Contains("Mezerník přepne, zda se položka přidá", bundleXaml);
+        Assert.Contains("ItemsSource=\"{Binding RecordTypeOptions}\"", bundleXaml);
+        Assert.Contains("SelectedItem=\"{Binding SelectedItem.RecordType}\"", bundleXaml);
+        Assert.Contains("ItemsSource=\"{Binding ReminderRepeatModeOptions}\"", bundleXaml);
+        Assert.Contains("SelectedItem=\"{Binding SelectedItem.RepeatMode}\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"Vybrat všechny položky balíčku\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"Zrušit výběr položek balíčku\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"Přidat vybrané položky balíčku\"", bundleXaml);
@@ -400,7 +462,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.S", bundleCodeBehind);
         Assert.Contains("Key.A", bundleCodeBehind);
         Assert.Contains("Key.Space", bundleCodeBehind);
-        Assert.Contains("e.Source is TextBox", bundleCodeBehind);
+        Assert.Contains("e.Source is TextBox or ComboBox", bundleCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationConfirmButton\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationCancelButton\"", confirmationXaml);
         Assert.Contains("Escape akci zruší.", confirmationXaml);
