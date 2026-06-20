@@ -114,7 +114,7 @@ V hlavním okně:
 - v C# Avalonia větvi má editor údržby rozbalovací `Šablonu úkonu`, která při ručním přidání rychle předvyplní název, intervaly a poznámku běžného servisu
 - v C# Avalonia větvi je výběr doporučených servisních šablon dostupný i tlačítkem `Doporučené` ve sdíleném workspace údržby a funguje stejně v hlavní kartě i samostatném okně
 - v C# Avalonia větvi je označení servisu jako splněného dostupné i tlačítkem `Splněno`; otevře potvrzovací dialog s datem, tachometrem a volitelným zápisem stejné události do historie vozidla
-- `Výběr doporučených šablon`: `Ctrl+S` přidá vybrané položky, `Ctrl+A` vybere vše a `Ctrl+Shift+A` výběr vymaže
+- `Výběr doporučených šablon` a `Balíček pro vozidlo`: `Ctrl+S` přidá vybrané položky, `Ctrl+A` vybere vše, `Ctrl+Shift+A` výběr vymaže, `Escape` dialog zavře a mezerník v seznamu přepne, zda se právě vybraná položka přidá
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní
 - v `Plánu údržby` klávesa `Enter` upraví vybraný úkon a `Delete` jej odstraní
 - kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce a Vehimap si poslední volbu pamatuje i po dalším otevření

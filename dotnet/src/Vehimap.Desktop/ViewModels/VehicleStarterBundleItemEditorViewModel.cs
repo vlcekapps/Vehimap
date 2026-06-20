@@ -74,6 +74,10 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
     [ObservableProperty]
     private string note;
 
+    public override string ToString() => AccessibleLabel;
+
+    partial void OnTitleChanged(string value) => OnPropertyChanged(nameof(AccessibleLabel));
+
     public VehicleStarterBundleTemplate ToTemplate() =>
         new(
             Section,

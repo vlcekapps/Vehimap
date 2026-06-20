@@ -21,7 +21,9 @@
     <TextBlock Grid.Row="1"
                Margin="0,14,0,0"
                Text="{Binding SummaryText}"
-               TextWrapping="Wrap" />
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding SummaryText}"
+               AutomationProperties.AutomationId="BundleSummaryText" />
 
     <Grid Grid.Row="2" Margin="0,18,0,0" ColumnDefinitions="360,*">
       <Border Padding="12" BorderBrush="#304050" BorderThickness="1" CornerRadius="8">
@@ -33,10 +35,15 @@
                    ItemsSource="{Binding Items}"
                    SelectedItem="{Binding SelectedItem}"
                    AutomationProperties.Name="{Binding ItemsListName}"
-                   AutomationProperties.AutomationId="BundleItemsListBox">
+                   AutomationProperties.AutomationId="BundleItemsListBox"
+                   AutomationProperties.HelpText="Šipkami vyberte položku. Mezerník přepne, zda se položka přidá. Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže.">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:VehicleStarterBundleItemEditorViewModel">
-                <Border Padding="10" Margin="0,0,0,8" Background="#10203040" CornerRadius="6">
+                <Border Padding="10"
+                        Margin="0,0,0,8"
+                        Background="#10203040"
+                        CornerRadius="6"
+                        AutomationProperties.Name="{Binding AccessibleLabel}">
                   <Grid ColumnDefinitions="Auto,*">
                     <CheckBox IsChecked="{Binding IsSelected}"
                               VerticalAlignment="Top"
@@ -54,9 +61,11 @@
           <StackPanel Grid.Row="2" Margin="0,12,0,0" Orientation="Horizontal" Spacing="10">
             <Button Command="{Binding SelectAllCommand}"
                     Content="Vybrat vše"
+                    AutomationProperties.Name="Vybrat všechny položky balíčku"
                     AutomationProperties.AutomationId="BundleSelectAllButton" />
             <Button Command="{Binding ClearSelectionCommand}"
                     Content="Zrušit výběr"
+                    AutomationProperties.Name="Zrušit výběr položek balíčku"
                     AutomationProperties.AutomationId="BundleClearSelectionButton" />
           </StackPanel>
         </Grid>
@@ -67,7 +76,9 @@
           <StackPanel Spacing="12">
             <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail vybrané položky" />
             <TextBlock Opacity="0.78"
-                       Text="{Binding DetailHint}" />
+                       Text="{Binding DetailHint}"
+                       AutomationProperties.Name="{Binding DetailHint}"
+                       AutomationProperties.AutomationId="BundleDetailHintText" />
 
             <StackPanel IsVisible="{Binding SelectedItem.IsMaintenance}">
               <TextBlock FontWeight="SemiBold" Text="Název servisního úkonu" />
@@ -170,10 +181,12 @@
               Click="OnApplyClick"
               Content="Přidat vybrané"
               IsEnabled="{Binding CanApply}"
+              AutomationProperties.Name="Přidat vybrané položky balíčku"
               AutomationProperties.AutomationId="ApplyBundleButton" />
       <Button x:Name="CancelBundleButton"
               Click="OnCancelClick"
               Content="Zavřít"
+              AutomationProperties.Name="Zavřít balíček bez přidání"
               AutomationProperties.AutomationId="CancelBundleButton" />
     </StackPanel>
   </Grid>

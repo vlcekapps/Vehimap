@@ -17,7 +17,7 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         : this(
             preview,
             "Balíček pro vozidlo",
-            "Dialog pro výběr servisních plánů, dokladů a připomínek pro vozidlo.",
+            "Dialog pro výběr servisních plánů, dokladů a připomínek pro vozidlo. Ctrl+S přidá vybrané položky, Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže a Escape zavře dialog.",
             "Doporučené položky",
             "Seznam položek balíčku",
             "Vyberte položku vlevo a můžete upravit její obsah před přidáním.",
@@ -62,7 +62,7 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         new(
             preview,
             "Doporučené servisní šablony",
-            "Dialog pro výběr doporučených servisních plánů podle kategorie a servisního profilu vozidla.",
+            "Dialog pro výběr doporučených servisních plánů podle kategorie a servisního profilu vozidla. Ctrl+S přidá vybrané šablony, Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže a Escape zavře dialog.",
             "Servisní šablony",
             "Seznam doporučených servisních šablon",
             "Vyberte šablonu vlevo a můžete upravit její intervaly nebo poznámku před přidáním.",

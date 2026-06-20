@@ -44,6 +44,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - oznaceni servisniho planu jako splneneho v Avalonia workspace, vcetne zkratky `Ctrl+L`, potvrzeni data a tachometru a volitelneho zapisu stejne udalosti do historie vozidla
 - doplneni doporucenych servisnich sablon primo z Avalonia planu udrzby pres sdileny vyberovy dialog a zkratku `Ctrl+Shift+N`
 - vyber bezne servisni sablony v Avalonia editoru udrzby, ktery predvyplni nazev, intervaly a poznamku
+- pristupne polozky a klavesove ovladani dialogu `Balicek pro vozidlo` / `Doporucene servisni sablony`: ctecky dostavaji lidsky popis polozky, mezernik prepina vybranou polozku, `Ctrl+S` potvrzuje, `Ctrl+A` vybira vse, `Ctrl+Shift+A` vyber maze a `Escape` zavira dialog
 - editacni workflow pro zakladni udaje vozidla, vcetne stavu vozidla a pohonu pro servisni profil
 - samostatna desktopova okna pro `Historii`, `Tankovani`, `Pripominky`, `Udrzbu`, `Doklady`, `Detail vozidla`, `Audit` a `Dashboard`
 - app-level dialogy `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`

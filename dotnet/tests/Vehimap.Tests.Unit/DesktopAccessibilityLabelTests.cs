@@ -1,4 +1,5 @@
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Application.Models;
 using Xunit;
 using System.Text.RegularExpressions;
 
@@ -49,6 +50,47 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Kooperativa", item.AccessibleLabel);
         Assert.Contains("Povinné ručení", item.AccessibleLabel);
         Assert.DoesNotContain(nameof(VehicleRecordItemViewModel), item.AccessibleLabel);
+    }
+
+    [Fact]
+    public void Vehicle_starter_bundle_items_should_expose_human_readable_labels()
+    {
+        var item = new VehicleStarterBundleItemEditorViewModel(
+            new VehicleStarterBundleTemplate(
+                VehicleStarterBundleSection.Record,
+                "Doklad",
+                "Povinné ručení",
+                string.Empty,
+                string.Empty,
+                "Povinné ručení",
+                "Kooperativa",
+                "03/2026",
+                "03/2027",
+                "2 000 Kč",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                "Roční smlouva"));
+
+        var accessibleLabelChanged = false;
+        item.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == nameof(VehicleStarterBundleItemEditorViewModel.AccessibleLabel))
+            {
+                accessibleLabelChanged = true;
+            }
+        };
+
+        Assert.Equal(item.AccessibleLabel, item.ToString());
+        Assert.Contains("Doklad", item.AccessibleLabel);
+        Assert.Contains("Povinné ručení", item.AccessibleLabel);
+        Assert.DoesNotContain(nameof(VehicleStarterBundleItemEditorViewModel), item.AccessibleLabel);
+
+        item.Title = "Havarijní pojištění";
+
+        Assert.True(accessibleLabelChanged);
+        Assert.Equal("Doklad: Havarijní pojištění", item.AccessibleLabel);
+        Assert.Equal(item.AccessibleLabel, item.ToString());
     }
 
     [Fact]
@@ -249,6 +291,7 @@ public sealed class DesktopAccessibilityLabelTests
         var upcomingOverviewXaml = ReadViewFile("UpcomingOverviewWindow.axaml");
         var overdueOverviewXaml = ReadViewFile("OverdueOverviewWindow.axaml");
         var bundleXaml = ReadViewFile("VehicleStarterBundleWindow.axaml");
+        var bundleCodeBehind = ReadViewCodeBehind("VehicleStarterBundleWindow.axaml.cs");
         var confirmationXaml = ReadViewFile("ConfirmationWindow.axaml");
         var confirmationCodeBehind = ReadViewCodeBehind("ConfirmationWindow.axaml.cs");
         var trayActionsXaml = ReadViewFile("TrayActionsWindow.axaml");
@@ -303,7 +346,20 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CloseUpcomingOverviewWindowButton\"", upcomingOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseOverdueOverviewWindowButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"BundleItemsListBox\"", bundleXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"BundleSummaryText\"", bundleXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"BundleDetailHintText\"", bundleXaml);
+        Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", bundleXaml);
+        Assert.Contains("Mezerník přepne, zda se položka přidá", bundleXaml);
+        Assert.Contains("AutomationProperties.Name=\"Vybrat všechny položky balíčku\"", bundleXaml);
+        Assert.Contains("AutomationProperties.Name=\"Zrušit výběr položek balíčku\"", bundleXaml);
+        Assert.Contains("AutomationProperties.Name=\"Přidat vybrané položky balíčku\"", bundleXaml);
+        Assert.Contains("AutomationProperties.Name=\"Zavřít balíček bez přidání\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ApplyBundleButton\"", bundleXaml);
+        Assert.Contains("Key.Escape", bundleCodeBehind);
+        Assert.Contains("Key.S", bundleCodeBehind);
+        Assert.Contains("Key.A", bundleCodeBehind);
+        Assert.Contains("Key.Space", bundleCodeBehind);
+        Assert.Contains("e.Source is TextBox", bundleCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationConfirmButton\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationCancelButton\"", confirmationXaml);
         Assert.Contains("Escape akci zruší.", confirmationXaml);
