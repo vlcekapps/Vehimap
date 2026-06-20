@@ -28,7 +28,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo cist a zapisovat dnesni Vehimap data (`TSV`, `INI`, `.vehimapbak`, managed attachments)
 - skladat sdilene C# use-cases pro audit, nakladove souhrny, cenu za kilometr, casovou osu vozidla a ICS export
 - zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych legacy dat
-- v detailu vozidla zobrazit posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby stejne jako rychla kontrolni plocha v AHK verzi
+- v detailu vozidla zobrazit stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby stejne jako rychla kontrolni plocha v AHK verzi
 - prejit z detailu vozidla pres pristupny blok `Souvisejici evidence` rovnou do historie, tankovani, pripominek, udrzby, dokladu, casove osy nebo nakladu vybraneho vozidla
 - vyhledavat napric vozidly, historii, tankovanim, doklady, pripominkami a planem udrzby v nove karte `Hledani`
 - zobrazit flotilovy `Prehled terminu` a `Propadle terminy` nad stejnymi daty jako AHK verze a z obou pohledu skocit na spravne vozidlo nebo evidenci
@@ -54,7 +54,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - v editoru `planu udrzby` vybrat beznou servisni sablonu, ktera predvyplni nazev ukonu, intervaly a poznamku
 - doplnit chybejici doporucene servisni sablony v `Planu udrzby` tlacitkem `Doporucene` nebo zkratkou `Ctrl+Shift+N`; dialog pouziva stejny katalog jako balicek pro vozidlo, ale prida jen servisni plany
 - oznacit vybrany servisni plan jako splneny tlacitkem `Splneno` nebo zkratkou `Ctrl+L`; akce otevre potvrzovaci dialog s datem, tachometrem a volitelnym zapisem stejne udalosti do historie vozidla
-- primo vytvaret, upravovat a mazat `vozidla`, vcetne zakladniho servisniho profilu, stavu vozidla, potvrzeni kaskadoveho odstraneni evidenci a uklidu spravovanych priloh
+- primo vytvaret, upravovat a mazat `vozidla`, vcetne zakladniho servisniho profilu, stavu vozidla, stitku, potvrzeni kaskadoveho odstraneni evidenci a uklidu spravovanych priloh
 - otevrit `Naklady a souhrny` primo z vybraneho vozidla, zobrazit rozpad palivo / historie / doklady a exportovat souhrn TSV, detail TSV i HTML sestavu
 - ulozit `Tiskovy prehled` vozidel jako HTML soubor pres standardni exportni dialog a po ulozeni ho otevrit pro tisk nebo archivaci
 - otevrit `Historii`, `Tankovani`, `Připominky`, `Údrzbu` i `Doklady` v samostatnych desktopovych oknech nad stejnou editační logikou jako hlavni shell

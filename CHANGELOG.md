@@ -13,6 +13,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Avalonia detail vozidla nově ukazuje poslední historické záznamy, poslední známý tachometr a souhrn navazujících evidencí
 - Avalonia detail vozidla má samostatné přístupné stavové souhrny pro historii, tankování, připomínky, doklady a údržbu
 - Avalonia detail vozidla má přístupný blok `Související evidence` s přímým přechodem do historie, tankování, připomínek, údržby, dokladů, časové osy a nákladů vybraného vozidla
+- Avalonia editor vozidla umí zobrazit a uložit štítky z `vehicle_meta.tsv` a detail vozidla je uvádí v základním souhrnu
 - Avalonia evidence `Historie`, `Tankování`, `Připomínky`, `Plán údržby` a `Doklady` mají tlačítko `Vymazat` pro rychlé smazání hledání a návrat fokusu do filtru
 - Avalonia přehledy `Časová osa`, `Globální hledání`, `Audit dat`, `Náklady napříč vozidly`, `Blížící se termíny` a `Propadlé termíny` mají tlačítko `Vymazat` pro smazání hledání a návrat fokusu do filtru
 - Avalonia dashboard má tlačítko `Obnovit` a zkratku `Ctrl+R`, které přepočítají audit, náklady i nejbližší termíny bez ztráty výběru

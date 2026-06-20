@@ -59,6 +59,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorGreenCardFrom = string.Empty;
         VehicleDetailWorkspace.VehicleEditorGreenCardTo = string.Empty;
         VehicleDetailWorkspace.VehicleEditorState = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorTags = string.Empty;
         VehicleDetailWorkspace.VehicleEditorPowertrain = string.Empty;
         VehicleDetailWorkspace.VehicleEditorClimateProfile = string.Empty;
         VehicleDetailWorkspace.VehicleEditorTimingDrive = string.Empty;
@@ -92,6 +93,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorGreenCardFrom = vehicle.GreenCardFrom;
         VehicleDetailWorkspace.VehicleEditorGreenCardTo = vehicle.GreenCardTo;
         VehicleDetailWorkspace.VehicleEditorState = meta?.State ?? string.Empty;
+        VehicleDetailWorkspace.VehicleEditorTags = meta?.Tags ?? string.Empty;
         VehicleDetailWorkspace.VehicleEditorPowertrain = meta?.Powertrain ?? string.Empty;
         VehicleDetailWorkspace.VehicleEditorClimateProfile = meta?.ClimateProfile ?? string.Empty;
         VehicleDetailWorkspace.VehicleEditorTimingDrive = meta?.TimingDrive ?? string.Empty;
@@ -532,7 +534,7 @@ public sealed partial class MainWindowViewModel
         var updatedMeta = new VehicleMeta(
             vehicleId,
             (VehicleDetailWorkspace.VehicleEditorState ?? string.Empty).Trim(),
-            existingMeta?.Tags ?? string.Empty,
+            (VehicleDetailWorkspace.VehicleEditorTags ?? string.Empty).Trim(),
             (VehicleDetailWorkspace.VehicleEditorPowertrain ?? string.Empty).Trim(),
             (VehicleDetailWorkspace.VehicleEditorClimateProfile ?? string.Empty).Trim(),
             (VehicleDetailWorkspace.VehicleEditorTimingDrive ?? string.Empty).Trim(),
@@ -603,6 +605,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorGreenCardFrom = string.Empty;
         VehicleDetailWorkspace.VehicleEditorGreenCardTo = string.Empty;
         VehicleDetailWorkspace.VehicleEditorState = string.Empty;
+        VehicleDetailWorkspace.VehicleEditorTags = string.Empty;
         VehicleDetailWorkspace.VehicleEditorPowertrain = string.Empty;
         VehicleDetailWorkspace.VehicleEditorClimateProfile = string.Empty;
         VehicleDetailWorkspace.VehicleEditorTimingDrive = string.Empty;

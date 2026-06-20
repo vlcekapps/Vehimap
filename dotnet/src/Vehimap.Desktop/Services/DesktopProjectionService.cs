@@ -124,6 +124,7 @@ internal sealed class DesktopProjectionService
 
         var effectiveToday = today ?? DateOnly.FromDateTime(DateTime.Today);
         var state = string.IsNullOrWhiteSpace(vehicle.State) ? "Běžný provoz" : vehicle.State;
+        var tags = string.IsNullOrWhiteSpace(meta?.Tags) ? "nevyplněno" : meta.Tags;
         var note = string.IsNullOrWhiteSpace(vehicle.VehicleNote) ? "Bez poznámky" : vehicle.VehicleNote;
         var powertrain = string.IsNullOrWhiteSpace(meta?.Powertrain) ? "nevyplněno" : meta.Powertrain;
         var climate = string.IsNullOrWhiteSpace(meta?.ClimateProfile) ? "nevyplněno" : meta.ClimateProfile;
@@ -141,7 +142,7 @@ internal sealed class DesktopProjectionService
 
         return new DesktopVehicleDetailProjection(
             vehicle.Name,
-            $"{vehicle.MakeModel} | {vehicle.Category} | {vehicle.Plate}\nStav: {state}\nPoslední tachometr: {FormatCurrentOdometer(currentOdometer)}\nPoznámka: {note}",
+            $"{vehicle.MakeModel} | {vehicle.Category} | {vehicle.Plate}\nStav: {state}\nŠtítky: {tags}\nPoslední tachometr: {FormatCurrentOdometer(currentOdometer)}\nPoznámka: {note}",
             $"Příští TK: {FormatValue(vehicle.NextTk, "nevyplněno")}\nZelená karta do: {FormatValue(vehicle.GreenCardTo, "nevyplněno")}\nSouhrnný stav: {FormatValue(vehicle.StatusSummary, "bez upozornění")}",
             $"Pohon: {powertrain}\nKlimatizace: {climate}\nRozvody: {timingDrive}\nPřevodovka: {transmission}",
             BuildVehicleEvidenceSummary(dataSet, vehicle.Id),

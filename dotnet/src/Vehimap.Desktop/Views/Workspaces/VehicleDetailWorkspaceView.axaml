@@ -59,7 +59,7 @@
             Grid.Row="3"
             Margin="0,16,0,0">
       <Grid IsVisible="{Binding IsEditingVehicle}"
-            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
       <Grid ColumnDefinitions="*,200">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Název vozidla" />
@@ -180,8 +180,16 @@
         </StackPanel>
       </Grid>
 
-      <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka k vozidlu" />
+      <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Štítky" />
       <TextBox Grid.Row="8"
+               Margin="0,6,0,0"
+               Text="{Binding VehicleEditorTags}"
+               PlaceholderText="Například rodina, veterán, pracovní"
+               AutomationProperties.Name="Štítky vozidla"
+               AutomationProperties.AutomationId="VehicleEditorTagsBox" />
+
+      <TextBlock Grid.Row="9" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka k vozidlu" />
+      <TextBox Grid.Row="10"
                Margin="0,6,0,0"
                Height="110"
                AcceptsReturn="True"
@@ -190,7 +198,7 @@
                Text="{Binding VehicleEditorNote}"
                AutomationProperties.Name="Poznámka k vozidlu"
                AutomationProperties.AutomationId="VehicleEditorNoteBox" />
-      <TextBlock Grid.Row="9"
+      <TextBlock Grid.Row="11"
                  Margin="0,14,0,0"
                  Opacity="0.72"
                  Text="Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu."

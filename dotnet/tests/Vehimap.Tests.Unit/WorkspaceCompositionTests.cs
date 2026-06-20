@@ -247,6 +247,7 @@ public sealed class WorkspaceCompositionTests
         viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardFrom = "05/2025";
         viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardTo = "05/2026";
         viewModel.VehicleDetailWorkspace.VehicleEditorState = "Veterán";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTags = "srazové, veterán";
         viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain = "Benzín";
         viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile = "Má klimatizaci";
         viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive = "Řemen";
@@ -265,6 +266,7 @@ public sealed class WorkspaceCompositionTests
         Assert.Equal("05/2025", viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardFrom);
         Assert.Equal("05/2026", viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardTo);
         Assert.Equal("Veterán", viewModel.VehicleDetailWorkspace.VehicleEditorState);
+        Assert.Equal("srazové, veterán", viewModel.VehicleDetailWorkspace.VehicleEditorTags);
         Assert.Equal("Benzín", viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain);
         Assert.Equal("Má klimatizaci", viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile);
         Assert.Equal("Řemen", viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive);
@@ -473,6 +475,7 @@ public sealed class WorkspaceCompositionTests
             "VehicleEditorGreenCardFrom",
             "VehicleEditorGreenCardTo",
             "VehicleEditorState",
+            "VehicleEditorTags",
             "VehicleEditorPowertrain",
             "VehicleEditorClimateProfile",
             "VehicleEditorTimingDrive",

@@ -366,6 +366,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.VehicleDetailWorkspace.VehicleEditorNextTk = "09/2026";
         viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardTo = "10/2026";
         viewModel.VehicleDetailWorkspace.VehicleEditorState = "Veterán";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTags = "srazové, veterán";
         viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain = "Benzín";
         viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile = "Má klimatizaci";
         viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive = "Řemen";
@@ -380,6 +381,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
             dataStore.CurrentDataSet.VehicleMetaEntries,
             item => item.VehicleId == viewModel.SelectedVehicle.Id
                 && item.State == "Veterán"
+                && item.Tags == "srazové, veterán"
                 && item.Powertrain == "Benzín"
                 && item.ClimateProfile == "Má klimatizaci"
                 && item.TimingDrive == "Řemen"
@@ -401,9 +403,11 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
         viewModel.EditSelectedVehicleCommand.Execute(null);
+        Assert.Equal("test", viewModel.VehicleDetailWorkspace.VehicleEditorTags);
         viewModel.VehicleDetailWorkspace.VehicleEditorName = "Milena po servisu";
         viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain = "Nafta";
         viewModel.VehicleDetailWorkspace.VehicleEditorState = "Odstaveno";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTags = "rodina, servis";
         viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile = "Bez klimatizace";
         viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive = "Řetěz";
         viewModel.VehicleDetailWorkspace.VehicleEditorTransmission = "Automatická";
@@ -416,7 +420,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var savedMeta = Assert.Single(dataStore.CurrentDataSet.VehicleMetaEntries.Where(item => item.VehicleId == "veh_1"));
         Assert.Equal("Odstaveno", savedMeta.State);
         Assert.Equal("Nafta", savedMeta.Powertrain);
-        Assert.Equal("test", savedMeta.Tags);
+        Assert.Equal("rodina, servis", savedMeta.Tags);
         Assert.Equal("Bez klimatizace", savedMeta.ClimateProfile);
         Assert.Equal("Řetěz", savedMeta.TimingDrive);
         Assert.Equal("Automatická", savedMeta.Transmission);

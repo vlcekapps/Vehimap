@@ -42,7 +42,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - terminove prehledy v Avalonia vetvi maji sdilene `Obnovit` / `Ctrl+R`, ktere prepocita seznam bez ztraty vyberu
 - keyboard-first vrstvu shellu s focus managementem, shortcuty a enter-akcemi na hlavnich seznamech
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
-- detail vozidla v Avalonia vetvi ukazuje posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby, aby se priblizil kontrolnimu detailu z AHK verze
+- detail vozidla v Avalonia vetvi ukazuje stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby, aby se priblizil kontrolnimu detailu z AHK verze
 - detail vozidla v Avalonia vetvi umi z pristupneho bloku `Souvisejici evidence` prepnout na historii, tankovani, pripominky, udrzbu, doklady, casovou osu nebo naklady vybraneho vozidla
 - hlavni seznam vozidel v Avalonia shellu si pamatuje posledni rozbalovaci filtr kategorie a stavovy filtr v `settings.ini`, ale rychle textove hledani zustava jen docasne
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh
@@ -53,7 +53,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - doplneni doporucenych servisnich sablon primo z Avalonia planu udrzby pres sdileny vyberovy dialog a zkratku `Ctrl+Shift+N`
 - vyber bezne servisni sablony v Avalonia editoru udrzby, ktery predvyplni nazev, intervaly a poznamku
 - pristupne polozky a klavesove ovladani dialogu `Balicek pro vozidlo` / `Doporucene servisni sablony`: ctecky dostavaji lidsky popis polozky, mezernik prepina vybranou polozku, `Ctrl+S` potvrzuje, `Ctrl+A` vybira vse, `Ctrl+Shift+A` vyber maze a `Escape` zavira dialog
-- editacni workflow pro zakladni udaje vozidla, vcetne stavu vozidla a pohonu pro servisni profil
+- editacni workflow pro zakladni udaje vozidla, vcetne stavu vozidla, stitku a pohonu pro servisni profil
 - samostatna desktopova okna pro `Historii`, `Tankovani`, `Pripominky`, `Udrzbu`, `Doklady`, `Detail vozidla`, `Audit` a `Dashboard`
 - app-level dialogy `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`
 - typed vrstvu nad podporovanymi hodnotami ze `settings.ini`, ktera umi menit reminder thresholdy a `show_dashboard_on_launch`

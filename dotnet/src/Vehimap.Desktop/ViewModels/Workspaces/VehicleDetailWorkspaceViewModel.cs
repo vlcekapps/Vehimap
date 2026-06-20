@@ -30,6 +30,7 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     private string vehicleEditorGreenCardFrom = string.Empty;
     private string vehicleEditorGreenCardTo = string.Empty;
     private string vehicleEditorState = string.Empty;
+    private string vehicleEditorTags = string.Empty;
     private string vehicleEditorPowertrain = string.Empty;
     private string vehicleEditorClimateProfile = string.Empty;
     private string vehicleEditorTimingDrive = string.Empty;
@@ -187,6 +188,12 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     {
         get => vehicleEditorState;
         set => SetProperty(ref vehicleEditorState, value);
+    }
+
+    public string VehicleEditorTags
+    {
+        get => vehicleEditorTags;
+        set => SetProperty(ref vehicleEditorTags, value);
     }
 
     public string VehicleEditorPowertrain

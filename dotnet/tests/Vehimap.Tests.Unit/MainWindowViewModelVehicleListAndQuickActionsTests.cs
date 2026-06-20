@@ -64,6 +64,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         viewModel.SelectedVehicle = Assert.Single(viewModel.Vehicles, item => item.Id == "veh_2");
 
         Assert.Contains("Poslední tachometr: 12650 km", viewModel.VehicleDetailWorkspace.SelectedVehicleOverview, StringComparison.CurrentCulture);
+        Assert.Contains("Štítky: veterán, srazy", viewModel.VehicleDetailWorkspace.SelectedVehicleOverview, StringComparison.CurrentCulture);
         Assert.Contains("historie 2", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
         Assert.Contains("tankování 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
         Assert.Contains("doklady 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
@@ -373,7 +374,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             VehicleMetaEntries =
             [
                 new VehicleMeta("veh_1", "Běžný provoz", "", "Benzín", "Má klimatizaci", "Řemen", "Manuální"),
-                new VehicleMeta("veh_2", "Veterán", "", "Benzín", "", "", "")
+                new VehicleMeta("veh_2", "Veterán", "veterán, srazy", "Benzín", "", "", "")
             ]
         };
     }

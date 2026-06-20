@@ -166,7 +166,7 @@ V hlavním okně:
 Ve formuláři pro vozidlo:
 
 - `Vlastní pojmenování`, `Kategorie`, `Značka / model` a `Příští TK` jsou povinné
-- `Poznámka k vozidlu`, `SPZ`, `Rok výroby`, `Výkon`, `Poslední TK`, `Zelená karta od`, `Zelená karta do`, `Pohon`, `Klimatizace`, `Rozvody` i `Převodovka` jsou volitelné
+- `Poznámka k vozidlu`, `Štítky`, `SPZ`, `Rok výroby`, `Výkon`, `Poslední TK`, `Zelená karta od`, `Zelená karta do`, `Pohon`, `Klimatizace`, `Rozvody` i `Převodovka` jsou volitelné
 - datum technické i zelené karty se zadává jako `MM/RRRR`, například `04/2026`
 
 V historii událostí:
