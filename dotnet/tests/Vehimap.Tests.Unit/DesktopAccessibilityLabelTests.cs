@@ -118,6 +118,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Equal("Nastavení", model.OpenSettingsLabel);
         Assert.Equal("Export termínů do kalendáře", model.ExportCalendarLabel);
         Assert.Equal("Načíst data znovu", model.ReloadDataLabel);
+        Assert.Equal("Otevřít datovou složku", model.OpenDataFolderLabel);
         Assert.Equal("O programu", model.OpenAboutLabel);
         Assert.Equal("Zkontrolovat aktualizace", model.CheckForUpdatesLabel);
         Assert.Equal("Ukončit aplikaci", model.ExitLabel);
@@ -136,6 +137,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OverviewMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"QuickActionsMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppMenuRoot\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DataModeText\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DataPathText\"", xaml);
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusCurrentSearchCommand}\"", xaml);
         Assert.Contains("Gesture=\"Ctrl+D\" Command=\"{Binding FocusDashboardCommand}\"", xaml);
         Assert.Contains("Gesture=\"Ctrl+T\" Command=\"{Binding FocusUpcomingOverviewCommand}\"", xaml);
@@ -150,6 +153,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"_Aplikace\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"MinimizeToTrayButton\" Header=\"Minimalizovat na lištu\" Click=\"OnMinimizeToTrayClick\" IsEnabled=\"{Binding IsMinimizeToTrayAvailable}\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDataFolderMenuItem\"", xaml);
+        Assert.Contains("Click=\"OnOpenDataFolderClick\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MinimizeToTrayButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SettingsButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutButton\"", xaml);
@@ -384,6 +389,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenSettingsTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExportCalendarTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReloadDataTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDataFolderTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenAboutTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CheckForUpdatesTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
@@ -407,6 +413,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OnOpenSettingsClick", trayActionsCodeBehind);
         Assert.Contains("OnExportCalendarClick", trayActionsCodeBehind);
         Assert.Contains("OnReloadDataClick", trayActionsCodeBehind);
+        Assert.Contains("OnOpenDataFolderClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenAboutClick", trayActionsCodeBehind);
         Assert.Contains("OnCheckForUpdatesClick", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowUpcomingOverview", trayActionsCodeBehind);
@@ -427,6 +434,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("TrayActionsDialogAction.OpenSettings", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ExportCalendar", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ReloadData", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.OpenDataFolder", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenAbout", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.CheckForUpdates", trayActionsCodeBehind);
         Assert.Contains("Key.Escape", trayActionsCodeBehind);
@@ -469,6 +477,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("_shell.ExportCalendarCommand.ExecuteAsync(null)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.ReloadData", runtimeController);
         Assert.Contains("_shell.ReloadCommand.Execute(null)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.OpenDataFolder", runtimeController);
+        Assert.Contains("_shell.OpenDataFolderAsync()", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenAbout", runtimeController);
         Assert.Contains("_shell.AppShellController.OpenAboutAsync(_mainWindow, _shell)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.CheckForUpdates", runtimeController);

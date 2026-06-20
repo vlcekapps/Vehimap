@@ -158,6 +158,34 @@ public sealed class MainWindowViewModelAppShellTests
     }
 
     [Fact]
+    public async Task Open_data_folder_uses_current_data_root_and_reports_status()
+    {
+        var rootPath = Path.Combine(Path.GetTempPath(), "vehimap-open-data-folder-test", Guid.NewGuid().ToString("N"));
+        var dataPath = Path.Combine(rootPath, "data");
+        var dataRoot = new VehimapDataRoot(rootPath, dataPath, true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var fileLauncher = new StubFileLauncher();
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet), fileLauncher: fileLauncher);
+
+        Assert.True(viewModel.CanOpenDataFolder);
+
+        var status = await viewModel.OpenDataFolderAsync();
+
+        Assert.Equal(dataPath, fileLauncher.LastOpenedFolderPath);
+        Assert.True(Directory.Exists(dataPath));
+        Assert.Contains("Datová složka byla otevřena", status);
+        Assert.Contains(dataPath, status);
+        Assert.Equal(status, viewModel.ShellStatus);
+    }
+
+    [Fact]
     public void Background_snapshot_reports_overdue_technical_control_even_without_future_dashboard_items()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -187,14 +215,15 @@ public sealed class MainWindowViewModelAppShellTests
     private static MainWindowViewModel CreateViewModel(
         VehimapDataRoot dataRoot,
         StubLegacyDataStore dataStore,
-        IBackupService? backupService = null)
+        IBackupService? backupService = null,
+        IFileLauncher? fileLauncher = null)
     {
         var bootstrapper = new LegacyVehimapBootstrapper(new StubDataRootLocator(dataRoot), dataStore);
         return new MainWindowViewModel(
             dataStore,
             bootstrapper,
             new ManagedAttachmentPathService(),
-            new StubFileLauncher(),
+            fileLauncher ?? new StubFileLauncher(),
             new StubFilePickerService(),
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
@@ -240,9 +269,15 @@ public sealed class MainWindowViewModelAppShellTests
 
     private sealed class StubFileLauncher : IFileLauncher
     {
+        public string? LastOpenedFolderPath { get; private set; }
+
         public Task OpenAsync(string path, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-        public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default)
+        {
+            LastOpenedFolderPath = path;
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class StubTextFileSaveService : ITextFileSaveService

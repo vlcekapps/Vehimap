@@ -233,6 +233,29 @@ public sealed partial class MainWindowViewModel
     internal Task OpenExternalAsync(string path, CancellationToken cancellationToken = default) =>
         _fileLauncher.OpenAsync(path, cancellationToken);
 
+    internal async Task<string> OpenDataFolderAsync(CancellationToken cancellationToken = default)
+    {
+        var dataPath = _dataRoot?.DataPath;
+        if (string.IsNullOrWhiteSpace(dataPath))
+        {
+            ShellStatus = "Datovou složku zatím nelze otevřít, protože data nebyla načtena.";
+            return ShellStatus;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(dataPath);
+            await _fileLauncher.OpenFolderAsync(dataPath, cancellationToken).ConfigureAwait(false);
+            ShellStatus = $"Datová složka byla otevřena: {dataPath}.";
+        }
+        catch (Exception ex)
+        {
+            ShellStatus = $"Datovou složku se nepodařilo otevřít: {ex.Message}";
+        }
+
+        return ShellStatus;
+    }
+
     internal Task<UpdateCheckResult> CheckForUpdatesAsync(CancellationToken cancellationToken = default) =>
         _session.CheckForUpdatesAsync(cancellationToken);
 

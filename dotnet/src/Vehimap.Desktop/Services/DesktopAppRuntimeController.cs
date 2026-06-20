@@ -311,6 +311,9 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
                     return Task.CompletedTask;
                 }).ConfigureAwait(true);
                 break;
+            case TrayActionsDialogAction.OpenDataFolder:
+                await ExecuteShellQuickActionAsync(() => _shell.OpenDataFolderAsync()).ConfigureAwait(true);
+                break;
             case TrayActionsDialogAction.OpenAbout:
                 await ExecuteShellQuickActionAsync(() => _shell.AppShellController.OpenAboutAsync(_mainWindow, _shell)).ConfigureAwait(true);
                 break;

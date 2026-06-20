@@ -128,6 +128,11 @@
                   Content="{Binding ReloadDataLabel}"
                   AutomationProperties.Name="Znovu načíst data"
                   AutomationProperties.AutomationId="ReloadDataTrayActionButton" />
+          <Button x:Name="OpenDataFolderTrayActionButton"
+                  Click="OnOpenDataFolderClick"
+                  Content="{Binding OpenDataFolderLabel}"
+                  AutomationProperties.Name="Otevřít datovou složku Vehimapu"
+                  AutomationProperties.AutomationId="OpenDataFolderTrayActionButton" />
           <Button x:Name="OpenAboutTrayActionButton"
                   Click="OnOpenAboutClick"
                   Content="{Binding OpenAboutLabel}"

@@ -72,6 +72,12 @@
                     Click="OnReloadClick"
                     AutomationProperties.Name="Znovu načíst data"
                     AutomationProperties.AutomationId="ReloadButton" />
+          <MenuItem x:Name="OpenDataFolderMenuItem"
+                    Header="Otevřít datovou složku"
+                    Click="OnOpenDataFolderClick"
+                    IsEnabled="{Binding CanOpenDataFolder}"
+                    AutomationProperties.Name="Otevřít datovou složku Vehimapu"
+                    AutomationProperties.AutomationId="OpenDataFolderMenuItem" />
         </MenuItem>
         <MenuItem x:Name="VehicleMenuRoot"
                   Header="_Vozidlo"
@@ -316,9 +322,9 @@
           ColumnDefinitions="180,*"
           RowDefinitions="Auto,Auto,Auto,Auto">
       <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="SemiBold" Text="Režim dat" />
-      <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DataMode}" />
+      <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DataMode}" AutomationProperties.Name="{Binding DataMode}" AutomationProperties.AutomationId="DataModeText" />
       <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" Text="Datová složka" />
-      <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataPath}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataPath}" TextWrapping="Wrap" AutomationProperties.Name="{Binding DataPath}" AutomationProperties.AutomationId="DataPathText" />
       <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Foreground="IndianRed" Text="{Binding LoadError}" TextWrapping="Wrap" AutomationProperties.Name="{Binding LoadError}" AutomationProperties.AutomationId="LoadErrorText" />
       <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="0,8,0,0" Text="{Binding ShellStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ShellStatus}" AutomationProperties.AutomationId="ShellStatusText" />
     </Grid>

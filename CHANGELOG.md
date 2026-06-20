@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- Avalonia shell umí z hlavního menu `Soubor` i přístupného tray okna otevřít aktuální datovou složku a hlavní diagnostické texty `Režim dat` / `Datová složka` mají vlastní `AutomationId`
 - Avalonia dokladový workspace umí zkopírovat vyřešenou cestu přílohy tlačítkem `Kopírovat cestu` nebo zkratkou `Ctrl+Shift+C`
 - Avalonia hlavní seznam po tlačítku `Vymazat filtry` obnoví celý seznam vozidel, zapíše stavovou hlášku a vrátí fokus do hledání vozidel
 - Avalonia evidence `Historie`, `Tankování`, `Připomínky`, `Plán údržby` a `Doklady` mají tlačítko `Vymazat` pro rychlé smazání hledání a návrat fokusu do filtru

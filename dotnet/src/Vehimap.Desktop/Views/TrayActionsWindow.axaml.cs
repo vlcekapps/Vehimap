@@ -140,6 +140,12 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnOpenDataFolderClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenDataFolder;
+        Close();
+    }
+
     private void OnOpenAboutClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.OpenAbout;

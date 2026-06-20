@@ -453,6 +453,17 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
+    private async void OnOpenDataFolderClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.OpenDataFolderAsync().ConfigureAwait(true);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
     private async void OnAboutClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel is null)

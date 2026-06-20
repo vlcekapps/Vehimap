@@ -25,5 +25,6 @@ public enum TrayActionsDialogAction
     ExportCalendar = 20,
     ReloadData = 21,
     OpenAbout = 22,
-    CheckForUpdates = 23
+    CheckForUpdates = 23,
+    OpenDataFolder = 24
 }

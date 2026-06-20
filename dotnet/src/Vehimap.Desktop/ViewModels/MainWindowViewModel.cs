@@ -165,6 +165,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool CanOpenSelectedVehicleCosts => SelectedVehicle is not null && !HasPendingEdits;
 
+    public bool CanOpenDataFolder => _dataRoot is not null && !string.IsNullOrWhiteSpace(_dataRoot.DataPath);
+
     public string HistoryWindowTitle =>
         SelectedVehicle is null
             ? "Historie vozidla"
@@ -991,6 +993,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             LoadError = string.Empty;
             DataMode = result.DataRoot.IsPortable ? "Portable data vedle aplikace" : "Systémová datová složka";
             DataPath = result.DataRoot.DataPath;
+            OnPropertyChanged(nameof(CanOpenDataFolder));
             VehicleCount = result.DataSet.Vehicles.Count;
             HistoryCount = result.DataSet.HistoryEntries.Count;
             FuelCount = result.DataSet.FuelEntries.Count;

@@ -36,7 +36,8 @@ Komplexní řešení pro evidenci vašich vozidel.
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
 - horní menu; v AHK aplikaci `Soubor`, `Vozidlo`, `Přehled`, `Nástroje` a `Nápověda`, v C# Avalonia větvi `Soubor`, `Vozidlo`, `Přehledy`, `Rychlé akce` a `Aplikace`
-- přístupné tray okno pro rychlé zobrazení hlavního okna, dashboardu, blížících se termínů, propadlých termínů, nejbližší TK/ZK/připomínky/servisu/dokladu, filtrovaných kontrol, tiskového přehledu, záloh, exportu kalendáře, znovunačtení dat, nastavení, dialogu `O programu`, kontroly aktualizací a ukončení aplikace
+- v C# Avalonia větvi lze z hlavního menu i přístupného tray okna otevřít aktuální datovou složku, což pomáhá při kontrole portable dat, záloh a spravovaných příloh
+- přístupné tray okno pro rychlé zobrazení hlavního okna, dashboardu, blížících se termínů, propadlých termínů, nejbližší TK/ZK/připomínky/servisu/dokladu, filtrovaných kontrol, tiskového přehledu, záloh, exportu kalendáře, znovunačtení dat, otevření datové složky, nastavení, dialogu `O programu`, kontroly aktualizací a ukončení aplikace
 - v C# Avalonia větvi mají stavové, souhrnné a detailní texty hlavního shellu i workspace obrazovek vlastní přístupný název a stabilní `AutomationId`, aby je šlo spolehlivě číst čtečkou obrazovky i ověřovat UI testy
 - automatickou kontrolu termínů, připomínek a servisních plánů každých 15 minut a znovu po probuzení počítače ze spánku
 
@@ -208,7 +209,7 @@ Pro upozornění aplikace používá pole `Příští TK`, `Zelená karta do` a 
 
 V horním menu najdete tyto části:
 
-- `Soubor`: tiskový přehled, export a import zálohy, export budoucích termínů do kalendáře a znovunačtení dat; v AHK aplikaci také ukončení
+- `Soubor`: tiskový přehled, export a import zálohy, export budoucích termínů do kalendáře, znovunačtení dat a v C# Avalonia větvi také otevření datové složky; v AHK aplikaci také ukončení
 - `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby, `Časové osy vozidla`, `Balíčku pro vozidlo` a pojištění a dokladů
 - `Přehled` v AHK nebo `Přehledy` v C# Avalonia větvi: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Časová osa vozidla`, blížící se a propadlé termíny, `Audit dat` a export termínů do kalendáře `.ics`
 - `Rychlé akce` v C# Avalonia větvi: nejbližší TK, ZK, připomínka, servis nebo doklad a filtrovaná kontrola těchto termínů v přehledech
@@ -238,6 +239,6 @@ V horním menu najdete tyto části:
 
 Zavření hlavního okna aplikaci neukončí. Vehimap se schová do oznamovací oblasti a dál hlídá technické kontroly, zelené karty, vlastní připomínky i plány údržby. Kontrola běží průběžně na pozadí každých 15 minut a znovu se vyvolá i po probuzení počítače ze spánku. Stejným způsobem se na pozadí jednou za hodinu ověřuje i potřeba automatické zálohy. Pokud je vše v pořádku, tooltip tray ikony zůstává jen `Vehimap`; pokud ne, zobrazí souhrn propadlých a brzy končících `TK`, `ZK`, připomínek i servisních úkonů.
 
-V C# Avalonia větvi nativní menu lišty otevírá vlastní přístupné okno `Akce Vehimapu na liště`. Z něj lze klávesnicí a čtečkou obrazovky zobrazit hlavní okno, otevřít `Dashboard`, přejít rovnou do `Blížících se termínů` nebo `Propadlých termínů`, otevřít nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrovanou kontrolu těchto oblastí, uložit tiskový přehled, exportovat nebo obnovit zálohu, exportovat budoucí termíny do kalendáře, znovu načíst data, otevřít nastavení, zobrazit `O programu`, zkontrolovat aktualizace, případně aplikaci ukončit.
+V C# Avalonia větvi nativní menu lišty otevírá vlastní přístupné okno `Akce Vehimapu na liště`. Z něj lze klávesnicí a čtečkou obrazovky zobrazit hlavní okno, otevřít `Dashboard`, přejít rovnou do `Blížících se termínů` nebo `Propadlých termínů`, otevřít nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrovanou kontrolu těchto oblastí, uložit tiskový přehled, exportovat nebo obnovit zálohu, exportovat budoucí termíny do kalendáře, znovu načíst data, otevřít datovou složku, otevřít nastavení, zobrazit `O programu`, zkontrolovat aktualizace, případně aplikaci ukončit.
 
 
