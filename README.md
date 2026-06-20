@@ -91,7 +91,7 @@ V hlavním okně:
 - v C# Avalonia větvi balíček používá pro typ dokladu a opakování připomínky stejné rozbalovací seznamy jako běžné editory, takže není potřeba ručně opisovat interní hodnoty
 - `Časová osa vozidla` spojuje do jednoho seznamu historii, tankování, připomínky, expirace dokladů, technickou kontrolu, zelenou kartu i servisní úkoly s konkrétním datem
 - v C# Avalonia větvi si `Časová osa vozidla` pamatuje poslední filtr `Vše`, `Budoucí` nebo `Minulé`; rychlé textové hledání v ose zůstává jen dočasné
-- v `Přehledu` lze nově ručně exportovat budoucí termíny do kalendářového souboru `.ics`, včetně TK, ZK, připomínek, expirací dokladů a servisních úkolů s datem
+- v `Přehledu` lze nově ručně exportovat budoucí termíny do kalendářového souboru `.ics`, včetně TK, ZK, připomínek, expirací dokladů a servisních úkolů s datem; C# Avalonia větev navíc skládá dlouhé iCalendar řádky podle pravidel `.ics`, aby se neztrácely delší české popisy
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
 - v C# Avalonia větvi lze v `Blížících se termínech` zapnout i vozidla bez zelené karty a datové nedostatky z auditu; obě volby i rozbalovací filtr typu položky se ukládají do `settings.ini` a otevření datového nedostatku skočí rovnou na správnou evidenci
 - v C# Avalonia větvi si `Blížící se termíny` i `Propadlé termíny` pamatují poslední rozbalovací filtr, sloupec řazení a směr řazení, ale rychlé textové hledání zůstává jen dočasné

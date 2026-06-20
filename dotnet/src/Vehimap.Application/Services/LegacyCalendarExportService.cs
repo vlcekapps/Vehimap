@@ -8,6 +8,9 @@ namespace Vehimap.Application.Services;
 
 public sealed class LegacyCalendarExportService : ICalendarExportService
 {
+    private const int IcsFirstLineByteLimit = 75;
+    private const int IcsContinuationLineTextByteLimit = 74;
+
     private readonly ITimelineService _timelineService;
 
     public LegacyCalendarExportService()
@@ -158,7 +161,7 @@ public sealed class LegacyCalendarExportService : ICalendarExportService
         }
 
         lines.Add("END:VCALENDAR");
-        return string.Join("\r\n", lines) + "\r\n";
+        return string.Join("\r\n", lines.Select(FoldIcsLine)) + "\r\n";
     }
 
     private static string EscapeIcsText(string text)
@@ -168,6 +171,35 @@ public sealed class LegacyCalendarExportService : ICalendarExportService
             .Replace(";", "\\;", StringComparison.Ordinal)
             .Replace(",", "\\,", StringComparison.Ordinal)
             .Replace("\r\n", "\\n", StringComparison.Ordinal)
-            .Replace("\n", "\\n", StringComparison.Ordinal);
+            .Replace("\n", "\\n", StringComparison.Ordinal)
+            .Replace("\r", "\\n", StringComparison.Ordinal);
+    }
+
+    private static string FoldIcsLine(string line)
+    {
+        if (Encoding.UTF8.GetByteCount(line) <= IcsFirstLineByteLimit)
+        {
+            return line;
+        }
+
+        var builder = new StringBuilder();
+        var currentLineTextBytes = 0;
+        var textByteLimit = IcsFirstLineByteLimit;
+
+        foreach (var rune in line.EnumerateRunes())
+        {
+            var runeBytes = rune.Utf8SequenceLength;
+            if (currentLineTextBytes > 0 && currentLineTextBytes + runeBytes > textByteLimit)
+            {
+                builder.Append("\r\n ");
+                currentLineTextBytes = 0;
+                textByteLimit = IcsContinuationLineTextByteLimit;
+            }
+
+            builder.Append(rune);
+            currentLineTextBytes += runeBytes;
+        }
+
+        return builder.ToString();
     }
 }
