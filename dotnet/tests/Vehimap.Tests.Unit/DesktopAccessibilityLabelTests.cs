@@ -653,6 +653,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"CancelVehicleButton\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DeleteVehicleButton\"", vehicleDetailXaml);
         Assert.Contains("ItemsSource=\"{Binding VehicleCategoryOptions}\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailRecentHistoryListBox\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding RecentHistoryItems}\"", vehicleDetailXaml);
+        Assert.Contains("x:DataType=\"itemvm:VehicleHistoryItemViewModel\"", vehicleDetailXaml);
     }
 
     [Fact]
@@ -725,6 +728,8 @@ public sealed class DesktopAccessibilityLabelTests
         AssertAccessibleBoundText(vehicleDetailXaml, "SelectedVehicleOverviewText", "SelectedVehicleOverview");
         AssertAccessibleBoundText(vehicleDetailXaml, "SelectedVehicleDatesText", "SelectedVehicleDates");
         AssertAccessibleBoundText(vehicleDetailXaml, "SelectedVehicleProfileText", "SelectedVehicleProfile");
+        AssertAccessibleBoundText(vehicleDetailXaml, "SelectedVehicleEvidenceSummaryText", "SelectedVehicleEvidenceSummary");
+        AssertAccessibleBoundText(vehicleDetailXaml, "SelectedVehicleRecentHistorySummaryText", "SelectedVehicleRecentHistorySummary");
     }
 
     [Fact]

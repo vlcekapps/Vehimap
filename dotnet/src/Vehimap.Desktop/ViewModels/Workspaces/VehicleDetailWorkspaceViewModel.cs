@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
@@ -13,6 +14,8 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     private string selectedVehicleOverview = "Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.";
     private string selectedVehicleDates = string.Empty;
     private string selectedVehicleProfile = string.Empty;
+    private string selectedVehicleEvidenceSummary = "Navazující evidence se zobrazí po výběru vozidla.";
+    private string selectedVehicleRecentHistorySummary = "Poslední události se zobrazí po výběru vozidla.";
     private string vehicleEditorStatus = string.Empty;
     private string vehicleEditorName = string.Empty;
     private string vehicleEditorCategory = string.Empty;
@@ -67,6 +70,20 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
         get => selectedVehicleProfile;
         set => SetProperty(ref selectedVehicleProfile, value);
     }
+
+    public string SelectedVehicleEvidenceSummary
+    {
+        get => selectedVehicleEvidenceSummary;
+        set => SetProperty(ref selectedVehicleEvidenceSummary, value);
+    }
+
+    public string SelectedVehicleRecentHistorySummary
+    {
+        get => selectedVehicleRecentHistorySummary;
+        set => SetProperty(ref selectedVehicleRecentHistorySummary, value);
+    }
+
+    public ObservableCollection<VehicleHistoryItemViewModel> RecentHistoryItems { get; } = [];
 
     public bool IsEditingVehicle
     {

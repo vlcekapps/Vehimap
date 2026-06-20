@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+             xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.VehicleDetailWorkspaceView"
              x:DataType="vm:VehicleDetailWorkspaceViewModel">
   <Grid RowDefinitions="Auto,Auto,Auto,*">
@@ -197,16 +198,53 @@
       </Grid>
     </Border>
 
-    <Grid Grid.Row="3"
-          Margin="0,16,0,0"
-          IsVisible="{Binding IsVehicleDetailVisible}"
-          RowDefinitions="Auto,Auto,Auto,*">
-      <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
-      <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="{Binding SelectedVehicleOverview}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedVehicleOverview}" AutomationProperties.AutomationId="SelectedVehicleOverviewText" />
-      <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="{Binding SelectedVehicleDates}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedVehicleDates}" AutomationProperties.AutomationId="SelectedVehicleDatesText" />
-      <Border Grid.Row="3" Margin="0,16,0,0" Padding="14" Background="#10203040" CornerRadius="8">
-        <TextBlock Text="{Binding SelectedVehicleProfile}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedVehicleProfile}" AutomationProperties.AutomationId="SelectedVehicleProfileText" />
-      </Border>
-    </Grid>
+    <ScrollViewer Grid.Row="3"
+                  Margin="0,16,0,0"
+                  IsVisible="{Binding IsVehicleDetailVisible}">
+      <StackPanel Spacing="14">
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
+        <TextBlock Text="{Binding SelectedVehicleOverview}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding SelectedVehicleOverview}"
+                   AutomationProperties.AutomationId="SelectedVehicleOverviewText" />
+        <TextBlock Text="{Binding SelectedVehicleDates}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding SelectedVehicleDates}"
+                   AutomationProperties.AutomationId="SelectedVehicleDatesText" />
+        <Border Padding="14" Background="#10203040" CornerRadius="8">
+          <TextBlock Text="{Binding SelectedVehicleProfile}"
+                     TextWrapping="Wrap"
+                     AutomationProperties.Name="{Binding SelectedVehicleProfile}"
+                     AutomationProperties.AutomationId="SelectedVehicleProfileText" />
+        </Border>
+        <TextBlock Text="{Binding SelectedVehicleEvidenceSummary}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding SelectedVehicleEvidenceSummary}"
+                   AutomationProperties.AutomationId="SelectedVehicleEvidenceSummaryText" />
+        <TextBlock FontWeight="SemiBold"
+                   Text="{Binding SelectedVehicleRecentHistorySummary}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding SelectedVehicleRecentHistorySummary}"
+                   AutomationProperties.AutomationId="SelectedVehicleRecentHistorySummaryText" />
+        <ListBox ItemsSource="{Binding RecentHistoryItems}"
+                 MinHeight="96"
+                 MaxHeight="180"
+                 AutomationProperties.Name="Poslední historické události vybraného vozidla"
+                 AutomationProperties.AutomationId="VehicleDetailRecentHistoryListBox">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="itemvm:VehicleHistoryItemViewModel">
+              <Border Padding="8" Margin="0,0,0,6" Background="#08102030" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+                <Grid ColumnDefinitions="110,*,110,120">
+                  <TextBlock Text="{Binding Date}" />
+                  <TextBlock Grid.Column="1" Text="{Binding EventType}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="2" Text="{Binding Odometer}" />
+                  <TextBlock Grid.Column="3" Text="{Binding Cost}" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </StackPanel>
+    </ScrollViewer>
   </Grid>
 </UserControl>

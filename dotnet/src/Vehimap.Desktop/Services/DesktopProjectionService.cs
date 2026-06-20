@@ -101,7 +101,10 @@ internal sealed class DesktopProjectionService
                 row.Status))
             .ToList();
 
-    public DesktopVehicleDetailProjection BuildVehicleDetail(VehicleListItemViewModel? vehicle, VehicleMeta? meta = null)
+    public DesktopVehicleDetailProjection BuildVehicleDetail(
+        VehimapDataSet dataSet,
+        VehicleListItemViewModel? vehicle,
+        VehicleMeta? meta = null)
     {
         if (vehicle is null)
         {
@@ -109,7 +112,10 @@ internal sealed class DesktopProjectionService
                 "Nevybrané vozidlo",
                 "Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.",
                 string.Empty,
-                string.Empty);
+                string.Empty,
+                "Navazující evidence se zobrazí po výběru vozidla.",
+                "Poslední události se zobrazí po výběru vozidla.",
+                []);
         }
 
         var state = string.IsNullOrWhiteSpace(vehicle.State) ? "Běžný provoz" : vehicle.State;
@@ -118,12 +124,19 @@ internal sealed class DesktopProjectionService
         var climate = string.IsNullOrWhiteSpace(meta?.ClimateProfile) ? "nevyplněno" : meta.ClimateProfile;
         var timingDrive = string.IsNullOrWhiteSpace(meta?.TimingDrive) ? "nevyplněno" : meta.TimingDrive;
         var transmission = string.IsNullOrWhiteSpace(meta?.Transmission) ? "nevyplněno" : meta.Transmission;
+        var currentOdometer = BuildCurrentOdometerLookup(dataSet).GetValueOrDefault(vehicle.Id);
+        var recentHistory = BuildRecentVehicleHistory(dataSet, vehicle.Id);
 
         return new DesktopVehicleDetailProjection(
             vehicle.Name,
-            $"{vehicle.MakeModel} | {vehicle.Category} | {vehicle.Plate}\nStav: {state}\nPoznámka: {note}",
+            $"{vehicle.MakeModel} | {vehicle.Category} | {vehicle.Plate}\nStav: {state}\nPoslední tachometr: {FormatCurrentOdometer(currentOdometer)}\nPoznámka: {note}",
             $"Příští TK: {FormatValue(vehicle.NextTk, "nevyplněno")}\nZelená karta do: {FormatValue(vehicle.GreenCardTo, "nevyplněno")}\nSouhrnný stav: {FormatValue(vehicle.StatusSummary, "bez upozornění")}",
-            $"Pohon: {powertrain}\nKlimatizace: {climate}\nRozvody: {timingDrive}\nPřevodovka: {transmission}");
+            $"Pohon: {powertrain}\nKlimatizace: {climate}\nRozvody: {timingDrive}\nPřevodovka: {transmission}",
+            BuildVehicleEvidenceSummary(dataSet, vehicle.Id),
+            recentHistory.Count == 0
+                ? "Poslední události: zatím žádné historické záznamy."
+                : $"Poslední události: zobrazeno {recentHistory.Count} nejnovějších záznamů.",
+            recentHistory);
     }
 
     public DesktopListProjection<VehicleHistoryItemViewModel> BuildHistory(VehimapDataSet dataSet, string vehicleId)
@@ -492,6 +505,40 @@ internal sealed class DesktopProjectionService
         return result;
     }
 
+    private static IReadOnlyList<VehicleHistoryItemViewModel> BuildRecentVehicleHistory(VehimapDataSet dataSet, string vehicleId) =>
+        dataSet.HistoryEntries
+            .Where(item => item.VehicleId == vehicleId)
+            .Select(item => new
+            {
+                Item = item,
+                HasDate = VehimapValueParser.TryParseEventDate(item.EventDate, out var parsedDate),
+                Date = parsedDate
+            })
+            .OrderByDescending(item => item.HasDate)
+            .ThenByDescending(item => item.Date)
+            .ThenBy(item => item.Item.EventType, StringComparer.CurrentCultureIgnoreCase)
+            .Take(5)
+            .Select(item => new VehicleHistoryItemViewModel(
+                item.Item.Id,
+                FormatValue(item.Item.EventDate, "bez data"),
+                FormatValue(item.Item.EventType, "bez typu"),
+                FormatValue(item.Item.Odometer, "bez tachometru"),
+                FormatValue(item.Item.Cost, "bez ceny"),
+                FormatValue(item.Item.Note, "bez poznámky")))
+            .ToList();
+
+    private static string BuildVehicleEvidenceSummary(VehimapDataSet dataSet, string vehicleId)
+    {
+        var historyCount = dataSet.HistoryEntries.Count(item => item.VehicleId == vehicleId);
+        var fuelCount = dataSet.FuelEntries.Count(item => item.VehicleId == vehicleId);
+        var recordCount = dataSet.Records.Count(item => item.VehicleId == vehicleId);
+        var reminderCount = dataSet.Reminders.Count(item => item.VehicleId == vehicleId);
+        var maintenanceCount = dataSet.MaintenancePlans.Count(item => item.VehicleId == vehicleId);
+        var activeMaintenanceCount = dataSet.MaintenancePlans.Count(item => item.VehicleId == vehicleId && item.IsActive);
+
+        return $"Navazující evidence: historie {historyCount}, tankování {fuelCount}, doklady {recordCount}, připomínky {reminderCount}, servisní plány {maintenanceCount} z toho aktivních {activeMaintenanceCount}.";
+    }
+
     private static string BuildReminderStatus(VehicleReminder reminder, DateOnly today)
     {
         if (!TryParseReminderDate(reminder.DueDate, out var dueDate))
@@ -722,6 +769,9 @@ internal sealed class DesktopProjectionService
         return $"{parsed} km";
     }
 
+    private static string FormatCurrentOdometer(int? value) =>
+        value.HasValue ? $"{value.Value} km" : "neznámý";
+
     private static string FormatMoney(decimal value) => $"{value:0.00} Kč";
 
     private static string FormatValue(string? value, string fallback) =>
@@ -861,7 +911,10 @@ internal sealed record DesktopVehicleDetailProjection(
     string Heading,
     string Overview,
     string Dates,
-    string Profile);
+    string Profile,
+    string EvidenceSummary,
+    string RecentHistorySummary,
+    IReadOnlyList<VehicleHistoryItemViewModel> RecentHistory);
 
 internal sealed record DesktopListProjection<TItem>(
     IReadOnlyList<TItem> Items,

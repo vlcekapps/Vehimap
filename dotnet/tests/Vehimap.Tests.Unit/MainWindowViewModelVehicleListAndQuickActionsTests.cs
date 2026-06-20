@@ -52,6 +52,30 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
     }
 
     [Fact]
+    public void Vehicle_detail_workspace_shows_recent_history_and_evidence_summary()
+    {
+        var dataSet = BuildQuickActionDataSet();
+        dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_1", "veh_2", "01.05.2026", "Starší servis", "12000", "1500", "Olej"));
+        dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_2", "veh_2", "10.05.2026", "Novější servis", "12500", "2200", "Brzdy"));
+        dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_3", "veh_1", "15.05.2026", "Cizí servis", "8000", "500", "Jiné vozidlo"));
+        dataSet.FuelEntries.Add(new FuelEntry("fuel_1", "veh_2", "12.05.2026", "12650", "35", "1200", true, "Benzín", "Plná"));
+
+        var viewModel = CreateViewModel(dataSet);
+        viewModel.SelectedVehicle = Assert.Single(viewModel.Vehicles, item => item.Id == "veh_2");
+
+        Assert.Contains("Poslední tachometr: 12650 km", viewModel.VehicleDetailWorkspace.SelectedVehicleOverview, StringComparison.CurrentCulture);
+        Assert.Contains("historie 2", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("tankování 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("doklady 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("připomínky 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("servisní plány 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("zobrazeno 2", viewModel.VehicleDetailWorkspace.SelectedVehicleRecentHistorySummary, StringComparison.CurrentCulture);
+        Assert.Equal(2, viewModel.VehicleDetailWorkspace.RecentHistoryItems.Count);
+        Assert.Equal("Novější servis", viewModel.VehicleDetailWorkspace.RecentHistoryItems[0].EventType);
+        Assert.DoesNotContain(viewModel.VehicleDetailWorkspace.RecentHistoryItems, item => item.Id == "hist_3");
+    }
+
+    [Fact]
     public async Task Open_nearest_technical_quick_action_selects_matching_vehicle()
     {
         var viewModel = CreateViewModel(BuildQuickActionDataSet());

@@ -372,11 +372,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         if (value is null)
         {
-            var projection = _projectionService.BuildVehicleDetail(null);
-            VehicleDetailWorkspace.SelectedVehicleHeading = projection.Heading;
-            VehicleDetailWorkspace.SelectedVehicleOverview = projection.Overview;
-            VehicleDetailWorkspace.SelectedVehicleDates = projection.Dates;
-            VehicleDetailWorkspace.SelectedVehicleProfile = projection.Profile;
+            ApplyVehicleDetailProjection(_projectionService.BuildVehicleDetail(_dataSet, null));
             HistoryWorkspace.HistorySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
             FuelWorkspace.FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
             ReminderWorkspace.ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
@@ -411,11 +407,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        var detailProjection = _projectionService.BuildVehicleDetail(value, _metaByVehicleId.GetValueOrDefault(value.Id));
-        VehicleDetailWorkspace.SelectedVehicleHeading = detailProjection.Heading;
-        VehicleDetailWorkspace.SelectedVehicleOverview = detailProjection.Overview;
-        VehicleDetailWorkspace.SelectedVehicleDates = detailProjection.Dates;
-        VehicleDetailWorkspace.SelectedVehicleProfile = detailProjection.Profile;
+        ApplyVehicleDetailProjection(_projectionService.BuildVehicleDetail(_dataSet, value, _metaByVehicleId.GetValueOrDefault(value.Id)));
 
         PopulateVehicleHistory(value.Id);
         PopulateVehicleFuel(value.Id);
@@ -423,6 +415,22 @@ public sealed partial class MainWindowViewModel : ObservableObject
         PopulateVehicleMaintenance(value.Id);
         PopulateVehicleTimeline(value.Id);
         PopulateVehicleRecords(value.Id);
+    }
+
+    private void ApplyVehicleDetailProjection(DesktopVehicleDetailProjection projection)
+    {
+        VehicleDetailWorkspace.SelectedVehicleHeading = projection.Heading;
+        VehicleDetailWorkspace.SelectedVehicleOverview = projection.Overview;
+        VehicleDetailWorkspace.SelectedVehicleDates = projection.Dates;
+        VehicleDetailWorkspace.SelectedVehicleProfile = projection.Profile;
+        VehicleDetailWorkspace.SelectedVehicleEvidenceSummary = projection.EvidenceSummary;
+        VehicleDetailWorkspace.SelectedVehicleRecentHistorySummary = projection.RecentHistorySummary;
+
+        VehicleDetailWorkspace.RecentHistoryItems.Clear();
+        foreach (var item in projection.RecentHistory)
+        {
+            VehicleDetailWorkspace.RecentHistoryItems.Add(item);
+        }
     }
 
     [RelayCommand]
