@@ -13,9 +13,11 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public string WindowTitle => Root.HistoryWindowTitle;
-    public string HistorySummary => Root.HistorySummary;
     public ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory => Root.SelectedVehicleHistory;
     public ObservableCollection<VehicleHistoryItemViewModel> VisibleHistoryItems { get; } = [];
+
+    [ObservableProperty]
+    private string historySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
     private string historySearchText = string.Empty;

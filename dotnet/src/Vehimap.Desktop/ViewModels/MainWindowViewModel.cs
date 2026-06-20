@@ -100,21 +100,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string selectedVehicleProfile = string.Empty;
 
     [ObservableProperty]
-    private string historySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
-
-    [ObservableProperty]
-    private string fuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
-
-    [ObservableProperty]
-    private string reminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
-
-    [ObservableProperty]
-    private string maintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
-
-    [ObservableProperty]
-    private string recordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
-
-    [ObservableProperty]
     private string shellStatus = "Desktopová větev je připravená.";
 
     [ObservableProperty]
@@ -404,12 +389,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleOverview = projection.Overview;
             SelectedVehicleDates = projection.Dates;
             SelectedVehicleProfile = projection.Profile;
-            HistorySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
-            FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
-            ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
-            MaintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
+            HistoryWorkspace.HistorySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
+            FuelWorkspace.FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
+            ReminderWorkspace.ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
+            MaintenanceWorkspace.MaintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
             TimelineWorkspace.TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
-            RecordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
+            RecordWorkspace.RecordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
             SelectedVehicleHistory.Clear();
             SelectedVehicleFuel.Clear();
             SelectedVehicleReminders.Clear();
@@ -1072,7 +1057,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleHistory.Add(item);
         }
 
-        HistorySummary = projection.Summary;
+        HistoryWorkspace.HistorySummary = projection.Summary;
         HistoryWorkspace.RefreshVisibleHistoryItems(preserveSelection: false);
     }
 
@@ -1085,7 +1070,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleFuel.Add(item);
         }
 
-        FuelSummary = projection.Summary;
+        FuelWorkspace.FuelSummary = projection.Summary;
         FuelWorkspace.RefreshVisibleFuelItems(preserveSelection: false);
     }
 
@@ -1098,7 +1083,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleReminders.Add(item);
         }
 
-        ReminderSummary = projection.Summary;
+        ReminderWorkspace.ReminderSummary = projection.Summary;
         ReminderWorkspace.RefreshVisibleReminderItems(preserveSelection: false);
     }
 
@@ -1111,7 +1096,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleMaintenance.Add(item);
         }
 
-        MaintenanceSummary = projection.Summary;
+        MaintenanceWorkspace.MaintenanceSummary = projection.Summary;
         MaintenanceWorkspace.RefreshVisibleMaintenanceItems(preserveSelection: false);
     }
 
@@ -1148,7 +1133,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedVehicleRecords.Add(item);
         }
 
-        RecordSummary = projection.Summary;
+        RecordWorkspace.RecordSummary = projection.Summary;
         RecordWorkspace.RefreshVisibleRecordItems(preserveSelection: false);
     }
 

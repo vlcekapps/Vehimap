@@ -13,9 +13,11 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public string WindowTitle => Root.ReminderWindowTitle;
-    public string ReminderSummary => Root.ReminderSummary;
     public ObservableCollection<VehicleReminderItemViewModel> SelectedVehicleReminders => Root.SelectedVehicleReminders;
     public ObservableCollection<VehicleReminderItemViewModel> VisibleReminderItems { get; } = [];
+
+    [ObservableProperty]
+    private string reminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
     private string reminderSearchText = string.Empty;

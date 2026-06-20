@@ -13,9 +13,11 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public string WindowTitle => Root.RecordWindowTitle;
-    public string RecordSummary => Root.RecordSummary;
     public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords => Root.SelectedVehicleRecords;
     public ObservableCollection<VehicleRecordItemViewModel> VisibleRecordItems { get; } = [];
+
+    [ObservableProperty]
+    private string recordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
     private VehicleRecordItemViewModel? selectedRecord;

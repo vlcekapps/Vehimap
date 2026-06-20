@@ -13,9 +13,11 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public string WindowTitle => Root.FuelWindowTitle;
-    public string FuelSummary => Root.FuelSummary;
     public ObservableCollection<VehicleFuelItemViewModel> SelectedVehicleFuel => Root.SelectedVehicleFuel;
     public ObservableCollection<VehicleFuelItemViewModel> VisibleFuelItems { get; } = [];
+
+    [ObservableProperty]
+    private string fuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
     private string fuelSearchText = string.Empty;

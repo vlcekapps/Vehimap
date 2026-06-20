@@ -18,7 +18,6 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     }
 
     public string WindowTitle => Root.MaintenanceWindowTitle;
-    public string MaintenanceSummary => Root.MaintenanceSummary;
     public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance => Root.SelectedVehicleMaintenance;
     public ObservableCollection<VehicleMaintenanceItemViewModel> VisibleMaintenanceItems { get; } = [];
     public bool CanOpenMaintenanceRecommendations => Root.CanOpenMaintenanceRecommendations;
@@ -32,6 +31,9 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public event EventHandler? MaintenanceTemplatesRequested;
 
     public event EventHandler? MaintenanceCompletionRequested;
+
+    [ObservableProperty]
+    private string maintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
     private VehicleMaintenanceItemViewModel? selectedMaintenance;

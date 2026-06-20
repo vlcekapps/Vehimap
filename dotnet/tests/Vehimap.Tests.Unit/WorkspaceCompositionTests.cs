@@ -94,6 +94,24 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Evidence_workspaces_own_their_summary_state()
+    {
+        var viewModel = CreateViewModel();
+
+        viewModel.HistoryWorkspace.HistorySummary = "Historie má vlastní souhrn.";
+        viewModel.FuelWorkspace.FuelSummary = "Tankování má vlastní souhrn.";
+        viewModel.ReminderWorkspace.ReminderSummary = "Připomínky mají vlastní souhrn.";
+        viewModel.MaintenanceWorkspace.MaintenanceSummary = "Údržba má vlastní souhrn.";
+        viewModel.RecordWorkspace.RecordSummary = "Doklady mají vlastní souhrn.";
+
+        Assert.Equal("Historie má vlastní souhrn.", viewModel.HistoryWorkspace.HistorySummary);
+        Assert.Equal("Tankování má vlastní souhrn.", viewModel.FuelWorkspace.FuelSummary);
+        Assert.Equal("Připomínky mají vlastní souhrn.", viewModel.ReminderWorkspace.ReminderSummary);
+        Assert.Equal("Údržba má vlastní souhrn.", viewModel.MaintenanceWorkspace.MaintenanceSummary);
+        Assert.Equal("Doklady mají vlastní souhrn.", viewModel.RecordWorkspace.RecordSummary);
+    }
+
+    [Fact]
     public void Shared_workspace_state_should_not_be_reexposed_as_root_proxy_properties()
     {
         var rootType = typeof(MainWindowViewModel);
@@ -130,7 +148,12 @@ public sealed class WorkspaceCompositionTests
             "CostExportStatus",
             "DashboardTimelineSummary",
             "SelectedDashboardTimelineDetail",
-            "SelectedDashboardTimelineItem"
+            "SelectedDashboardTimelineItem",
+            "HistorySummary",
+            "FuelSummary",
+            "ReminderSummary",
+            "MaintenanceSummary",
+            "RecordSummary"
         };
 
         foreach (var propertyName in removedProxyProperties)

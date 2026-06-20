@@ -67,6 +67,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - stav terminovych prehledu `Blizici se terminy` a `Propadle terminy` je take vlastneny jejich child workspace viewmodely; root `MainWindowViewModel` uz pro ne nevystavuje duplicitni proxy vlastnosti
 - dashboardove souhrny auditu, nakladu a nejblizsich terminu jsou take vlastnene sdilenymi workspace viewmodely; root `MainWindowViewModel` zustava jen orchestrator jejich obnovy
 - stav exportu nakladoveho prehledu je vlastneny `CostWorkspace`; root `MainWindowViewModel` pouze provadi exportni prikazy a nastavuje vysledek do workspace
+- souhrnne texty evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` jsou vlastnene jejich workspace viewmodely; root je jen prepocitava pri zmene vozidla nebo dat
 - sdilene workspace zkratky pro hledani a otevreni polozek v casove ose, globalnim hledani a terminovych prehledech, stejne v kartach i samostatnych oknech; hlavni shell je routuje kontextove, aby je neprebijely globalni akce vozidla
 - sdilene editacni workspace zkratky pro historii, tankovani, pripominky, udrzbu a doklady; `Ctrl+N`, `Ctrl+U` / `F2`, `Ctrl+S` a dokladove `Ctrl+O` / `Ctrl+Shift+O` funguji stejne v karte i samostatnem okne
 - `Ctrl+N` a `Ctrl+U` / `F2` z hlavni karty evidence oteviraji prislusne modalni workspace okno s viditelnym editorem, aby se v read-only shellu nespoustel skryty inline editor
