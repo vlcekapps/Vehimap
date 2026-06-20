@@ -27,6 +27,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - prvni C# audit engine nad legacy daty
 - prvni C# nakladovy souhrn vcetne `Cena / km` a srovnani proti stejne dlouhemu obdobi loni
 - klavesove dotazeni nakladoveho workspace: `Ctrl+P` cte rozpad vybraneho vozidla, `Ctrl+O` nebo `Enter` otevre vozidlo a `Ctrl+U` / `F2` otevre editor vozidla
+- nakladovy workspace v Avalonia vetvi umi zvolit predvolbu obdobi nebo vlastni datumovy rozsah; volba se uklada do `settings.ini` a sdili ji dashboard i exporty
 - builder casove osy vozidla nad historii, tankovanim, pripominkami, doklady, TK/ZK a planem udrzby
 - casova osa vozidla v Avalonia vetvi si pamatuje posledni filtr `Vse` / `Budouci` / `Minule` v `settings.ini`, ale rychle textove hledani zustava jen docasne
 - manualni ICS export budouciho kalendare z nove C# vetve

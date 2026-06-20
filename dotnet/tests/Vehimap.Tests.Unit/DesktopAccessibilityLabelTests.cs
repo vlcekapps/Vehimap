@@ -615,6 +615,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewRefreshButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewOpenButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CostPeriodPresetComboBox\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CostPeriodStartBox\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CostPeriodEndBox\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ApplyCostPeriodButton\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CostPeriodStatusText\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostSearchBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ClearCostSearchButton\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SelectedCostVehicleDetailText\"", costXaml);
@@ -691,6 +696,7 @@ public sealed class DesktopAccessibilityLabelTests
         AssertAccessibleBoundText(overdueOverviewXaml, "SelectedOverdueOverviewDetailText", "SelectedOverdueOverviewDetail");
         AssertAccessibleBoundText(costXaml, "CostSummaryText", "CostSummary");
         AssertAccessibleBoundText(costXaml, "CostComparisonText", "CostComparison");
+        AssertAccessibleBoundText(costXaml, "CostPeriodStatusText", "CostPeriodStatus");
         AssertAccessibleBoundText(costXaml, "CostSearchSummaryText", "CostSearchSummary");
         AssertAccessibleBoundText(dashboardXaml, "DashboardAuditSummaryText", "AuditSummary");
         AssertAccessibleBoundText(dashboardXaml, "DashboardCostSummaryText", "CostSummary");

@@ -10,16 +10,17 @@ public partial class CostWorkspaceView : WorkspaceViewBase<CostWorkspaceViewMode
     public CostWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
-        RegisterShiftTabBackNavigation("CostListBox");
+        RegisterShiftTabBackNavigation("CostPeriodPresetComboBox", "CostListBox");
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() => DesktopFocusTarget.CostList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.CostSearch or DesktopFocusTarget.CostList or DesktopFocusTarget.CostDetail;
+        target is DesktopFocusTarget.CostPeriodStart or DesktopFocusTarget.CostSearch or DesktopFocusTarget.CostList or DesktopFocusTarget.CostDetail;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) => target switch
     {
+        DesktopFocusTarget.CostPeriodStart => this.FindControl<TextBox>("CostPeriodStartBox"),
         DesktopFocusTarget.CostSearch => this.FindControl<TextBox>("CostSearchBox"),
         DesktopFocusTarget.CostList => this.FindControl<ListBox>("CostListBox"),
         DesktopFocusTarget.CostDetail => this.FindControl<Control>("SelectedCostVehicleDetailHost"),

@@ -70,6 +70,44 @@ public sealed class DesktopSessionControllerTests
     }
 
     [Fact]
+    public async Task Build_cost_summary_uses_requested_period()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var costSummary = new CostAnalysisSummary(
+            "Unor 2026",
+            new DateOnly(2026, 2, 1),
+            new DateOnly(2026, 2, 28),
+            500m,
+            100,
+            5m,
+            400m,
+            4m,
+            100m,
+            1m,
+            1,
+            0,
+            0,
+            []);
+        var costAnalysisService = new StubCostAnalysisService(costSummary);
+        var session = CreateSessionController(dataRoot, new StubLegacyDataStore(dataSet), costAnalysisService: costAnalysisService);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        var result = session.BuildCostSummary(new DateOnly(2026, 2, 1), new DateOnly(2026, 2, 28));
+
+        Assert.Equal(costSummary, result);
+        Assert.Equal(new DateOnly(2026, 2, 1), costAnalysisService.LastPeriodStart);
+        Assert.Equal(new DateOnly(2026, 2, 28), costAnalysisService.LastPeriodEnd);
+    }
+
+    [Fact]
     public async Task Apply_supported_settings_persists_values_and_keeps_other_keys()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -375,7 +413,18 @@ public sealed class DesktopSessionControllerTests
             _summary = summary;
         }
 
+        public DateOnly? LastPeriodStart { get; private set; }
+
+        public DateOnly? LastPeriodEnd { get; private set; }
+
         public CostAnalysisSummary BuildYearToDateSummary(VehimapDataSet dataSet, DateOnly today) => _summary;
+
+        public CostAnalysisSummary BuildPeriodSummary(VehimapDataSet dataSet, DateOnly periodStart, DateOnly periodEnd)
+        {
+            LastPeriodStart = periodStart;
+            LastPeriodEnd = periodEnd;
+            return _summary;
+        }
     }
 
     private sealed class StubBackupService : IBackupService

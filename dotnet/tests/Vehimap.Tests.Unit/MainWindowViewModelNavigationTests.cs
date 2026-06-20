@@ -318,6 +318,47 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Cost_workspace_custom_period_recomputes_summary_and_persists_dates()
+    {
+        VehimapDataSet? dataSetRef = null;
+        var viewModel = CreateViewModel(configureDataSet: dataSet =>
+        {
+            dataSetRef = dataSet;
+            dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_2", "veh_1", "10.02.2026", "Servis", "10200", "100", ""));
+            dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_3", "veh_1", "20.02.2026", "Servis", "10400", "200", ""));
+        });
+
+        viewModel.CostWorkspace.CostPeriodStartText = "01.02.2026";
+        viewModel.CostWorkspace.CostPeriodEndText = "28.02.2026";
+        viewModel.CostWorkspace.ApplyCostPeriodCommand.Execute(null);
+
+        Assert.Equal("Vlastní období", viewModel.CostWorkspace.SelectedCostPeriodPreset);
+        Assert.Equal("01.02.2026", viewModel.CostWorkspace.CostPeriodStartText);
+        Assert.Equal("28.02.2026", viewModel.CostWorkspace.CostPeriodEndText);
+        Assert.Contains("Od 01.02.2026 do 28.02.2026", viewModel.CostSummary, StringComparison.CurrentCulture);
+        Assert.Equal("Vlastní období", dataSetRef!.Settings.GetValue("costs", "period_preset"));
+        Assert.Equal("2026-02-01", dataSetRef.Settings.GetValue("costs", "period_start"));
+        Assert.Equal("2026-02-28", dataSetRef.Settings.GetValue("costs", "period_end"));
+        Assert.Contains("Období nákladů bylo použito", viewModel.CostWorkspace.CostPeriodStatus, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
+    public void Cost_workspace_loads_saved_custom_period_preferences()
+    {
+        var viewModel = CreateViewModel(configureDataSet: dataSet =>
+        {
+            dataSet.Settings.SetValue("costs", "period_preset", "Vlastní období");
+            dataSet.Settings.SetValue("costs", "period_start", "2026-02-01");
+            dataSet.Settings.SetValue("costs", "period_end", "2026-02-28");
+        });
+
+        Assert.Equal("Vlastní období", viewModel.CostWorkspace.SelectedCostPeriodPreset);
+        Assert.Equal("01.02.2026", viewModel.CostWorkspace.CostPeriodStartText);
+        Assert.Equal("28.02.2026", viewModel.CostWorkspace.CostPeriodEndText);
+        Assert.Contains("Od 01.02.2026 do 28.02.2026", viewModel.CostSummary, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
     public void Focus_dashboard_command_switches_to_dashboard_tab_and_requests_dashboard_focus()
     {
         var viewModel = CreateViewModel();

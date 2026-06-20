@@ -34,6 +34,7 @@ public enum DesktopFocusTarget
     RecordEditorTitle,
     AuditSearch,
     AuditList,
+    CostPeriodStart,
     CostSearch,
     CostList,
     CostDetail,

@@ -130,6 +130,9 @@ internal sealed class DesktopSessionController
     public CostAnalysisSummary BuildCurrentCostSummary() =>
         _costAnalysisService.BuildYearToDateSummary(DataSet, DateOnly.FromDateTime(DateTime.Today));
 
+    public CostAnalysisSummary BuildCostSummary(DateOnly periodStart, DateOnly periodEnd) =>
+        _costAnalysisService.BuildPeriodSummary(DataSet, periodStart, periodEnd);
+
     public async Task ApplySupportedSettingsAsync(DesktopSupportedSettingsSnapshot snapshot, CancellationToken cancellationToken = default)
     {
         await _autostartService.SetEnabledAsync(snapshot.RunAtStartup, cancellationToken).ConfigureAwait(false);

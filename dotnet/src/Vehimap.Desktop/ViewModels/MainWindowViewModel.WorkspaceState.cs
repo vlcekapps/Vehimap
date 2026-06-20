@@ -810,7 +810,7 @@ public sealed partial class MainWindowViewModel
     internal void RefreshCostWorkspace()
     {
         var previousCostVehicleId = SelectedDashboardCostVehicle?.VehicleId ?? string.Empty;
-        _currentCostSummary = _session.BuildCurrentCostSummary();
+        _currentCostSummary = BuildSelectedCostSummary();
 
         CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);
         CostComparison = _projectionService.BuildCostComparison(_currentCostSummary);
@@ -847,6 +847,11 @@ public sealed partial class MainWindowViewModel
         var previousTimelineItem = SelectedDashboardTimelineItem;
 
         AuditSummary = _projectionService.BuildAuditSummary(_auditItems);
+        if (_session.IsLoaded)
+        {
+            _currentCostSummary = BuildSelectedCostSummary();
+        }
+
         if (_currentCostSummary is not null)
         {
             CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);

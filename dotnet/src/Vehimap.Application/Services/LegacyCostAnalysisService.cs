@@ -8,18 +8,27 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
     public CostAnalysisSummary BuildYearToDateSummary(VehimapDataSet dataSet, DateOnly today)
     {
         var currentStart = new DateOnly(today.Year, 1, 1);
-        var currentEnd = today;
-        var duration = currentEnd.DayNumber - currentStart.DayNumber;
-        var previousStart = currentStart.AddYears(-1);
+        return BuildPeriodSummary(dataSet, currentStart, today);
+    }
+
+    public CostAnalysisSummary BuildPeriodSummary(VehimapDataSet dataSet, DateOnly periodStart, DateOnly periodEnd)
+    {
+        if (periodEnd < periodStart)
+        {
+            (periodStart, periodEnd) = (periodEnd, periodStart);
+        }
+
+        var duration = periodEnd.DayNumber - periodStart.DayNumber;
+        var previousStart = periodStart.AddYears(-1);
         var previousEnd = previousStart.AddDays(duration);
 
-        var current = BuildPeriodSummary(dataSet, currentStart, currentEnd);
-        var previous = BuildPeriodSummary(dataSet, previousStart, previousEnd);
+        var current = BuildPeriodTotals(dataSet, periodStart, periodEnd);
+        var previous = BuildPeriodTotals(dataSet, previousStart, previousEnd);
 
         return new CostAnalysisSummary(
-            $"Od {currentStart:dd.MM.yyyy} do {currentEnd:dd.MM.yyyy}",
-            currentStart,
-            currentEnd,
+            $"Od {periodStart:dd.MM.yyyy} do {periodEnd:dd.MM.yyyy}",
+            periodStart,
+            periodEnd,
             current.TotalCost,
             current.DistanceKm,
             current.CostPerKm,
@@ -33,7 +42,7 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
             current.Vehicles);
     }
 
-    private static CostAnalysisSummary BuildPeriodSummary(VehimapDataSet dataSet, DateOnly periodStart, DateOnly periodEnd)
+    private static CostAnalysisSummary BuildPeriodTotals(VehimapDataSet dataSet, DateOnly periodStart, DateOnly periodEnd)
     {
         var metaByVehicleId = dataSet.VehicleMetaEntries
             .GroupBy(item => item.VehicleId, StringComparer.Ordinal)

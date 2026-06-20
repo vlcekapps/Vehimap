@@ -68,4 +68,36 @@ public sealed class LegacyCostAnalysisServiceTests
         Assert.Equal("Nekonzistentní tachometr", summary.Vehicles[0].Status);
         Assert.Null(summary.Vehicles[0].CostPerKm);
     }
+
+    [Fact]
+    public void BuildPeriodSummary_filters_requested_range_and_compares_same_period_last_year()
+    {
+        var service = new LegacyCostAnalysisService();
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Octavia", "Osobní vozidla", "", "Škoda Octavia", "1AB2345", "2020", "110", "", "05/2027", "", "")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "10.02.2026", "Servis", "10000", "100", ""),
+                new VehicleHistoryEntry("hist_2", "veh_1", "20.02.2026", "Servis", "10100", "200", ""),
+                new VehicleHistoryEntry("hist_3", "veh_1", "10.03.2026", "Servis", "10200", "900", ""),
+                new VehicleHistoryEntry("hist_4", "veh_1", "10.02.2025", "Servis", "9000", "50", ""),
+                new VehicleHistoryEntry("hist_5", "veh_1", "20.02.2025", "Servis", "9050", "50", "")
+            ]
+        };
+
+        var summary = service.BuildPeriodSummary(dataSet, new DateOnly(2026, 2, 28), new DateOnly(2026, 2, 1));
+
+        Assert.Equal(new DateOnly(2026, 2, 1), summary.PeriodStart);
+        Assert.Equal(new DateOnly(2026, 2, 28), summary.PeriodEnd);
+        Assert.Equal(300m, summary.TotalCost);
+        Assert.Equal(100, summary.DistanceKm);
+        Assert.Equal(3m, summary.CostPerKm);
+        Assert.Equal(100m, summary.PreviousTotalCost);
+        Assert.Equal(200m, summary.TotalCostDifference);
+        Assert.Single(summary.Vehicles);
+    }
 }

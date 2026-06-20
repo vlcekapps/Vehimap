@@ -20,6 +20,18 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     private string costComparison = string.Empty;
 
     [ObservableProperty]
+    private string selectedCostPeriodPreset = string.Empty;
+
+    [ObservableProperty]
+    private string costPeriodStartText = string.Empty;
+
+    [ObservableProperty]
+    private string costPeriodEndText = string.Empty;
+
+    [ObservableProperty]
+    private string costPeriodStatus = "Období nákladů se načte společně s daty.";
+
+    [ObservableProperty]
     private CostVehicleItemViewModel? selectedDashboardCostVehicle;
 
     [ObservableProperty]
@@ -29,6 +41,8 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
 
     public ObservableCollection<CostVehicleItemViewModel> CostVehicles => Root.CostVehicles;
     public ObservableCollection<CostVehicleItemViewModel> VisibleCostVehicles { get; } = [];
+
+    public IReadOnlyList<string> CostPeriodPresets => Root.CostPeriodPresets;
 
     public string CostExportStatus => Root.CostExportStatus;
 
@@ -46,6 +60,12 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     public IAsyncRelayCommand ExportFleetCostSummaryCommand => Root.ExportFleetCostSummaryCommand;
     public IAsyncRelayCommand ExportSelectedVehicleCostDetailCommand => Root.ExportSelectedVehicleCostDetailCommand;
     public IAsyncRelayCommand ExportSelectedVehicleCostReportCommand => Root.ExportSelectedVehicleCostReportCommand;
+
+    [RelayCommand]
+    private void ApplyCostPeriod()
+    {
+        Root.ApplyCostPeriodFromWorkspace();
+    }
 
     [RelayCommand]
     private void FocusSearch()
@@ -121,6 +141,21 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
         OnPropertyChanged(nameof(CanClearCostSearch));
         ClearCostSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleCostVehicles();
+    }
+
+    partial void OnSelectedCostPeriodPresetChanged(string value)
+    {
+        Root.HandleCostPeriodPresetChanged(value);
+    }
+
+    partial void OnCostPeriodStartTextChanged(string value)
+    {
+        Root.HandleCostPeriodCustomDateChanged();
+    }
+
+    partial void OnCostPeriodEndTextChanged(string value)
+    {
+        Root.HandleCostPeriodCustomDateChanged();
     }
 
     private bool MatchesSearch(CostVehicleItemViewModel item)

@@ -13,16 +13,64 @@
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedCostVehicleCommand}" />
   </UserControl.KeyBindings>
 
-  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
-    <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding CostSummary}" AutomationProperties.AutomationId="CostSummaryText" />
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
+    <StackPanel Spacing="8">
+      <TextBlock FontWeight="SemiBold"
+                 Text="Období nákladů" />
+      <Grid ColumnDefinitions="170,150,42,150,Auto" RowDefinitions="Auto,Auto">
+        <ComboBox x:Name="CostPeriodPresetComboBox"
+                  ItemsSource="{Binding CostPeriodPresets}"
+                  SelectedItem="{Binding SelectedCostPeriodPreset}"
+                  AutomationProperties.Name="Předvolba období nákladů"
+                  AutomationProperties.AutomationId="CostPeriodPresetComboBox" />
+        <TextBox x:Name="CostPeriodStartBox"
+                 Grid.Column="1"
+                 Margin="12,0,0,0"
+                 Text="{Binding CostPeriodStartText}"
+                 PlaceholderText="Od"
+                 AutomationProperties.Name="Začátek období nákladů"
+                 AutomationProperties.AutomationId="CostPeriodStartBox" />
+        <TextBlock Grid.Column="2"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Text="až" />
+        <TextBox x:Name="CostPeriodEndBox"
+                 Grid.Column="3"
+                 Text="{Binding CostPeriodEndText}"
+                 PlaceholderText="Do"
+                 AutomationProperties.Name="Konec období nákladů"
+                 AutomationProperties.AutomationId="CostPeriodEndBox" />
+        <Button Grid.Column="4"
+                Margin="12,0,0,0"
+                Command="{Binding ApplyCostPeriodCommand}"
+                Content="Přepočítat"
+                AutomationProperties.Name="Přepočítat náklady pro zadané období"
+                AutomationProperties.AutomationId="ApplyCostPeriodButton" />
+        <TextBlock Grid.Row="1"
+                   Grid.ColumnSpan="5"
+                   Margin="0,6,0,0"
+                   Opacity="0.72"
+                   Text="{Binding CostPeriodStatus}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding CostPeriodStatus}"
+                   AutomationProperties.AutomationId="CostPeriodStatusText" />
+      </Grid>
+    </StackPanel>
+
     <TextBlock Grid.Row="1"
+               Margin="0,10,0,0"
+               Text="{Binding CostSummary}"
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding CostSummary}"
+               AutomationProperties.AutomationId="CostSummaryText" />
+    <TextBlock Grid.Row="2"
                Margin="0,8,0,0"
                Opacity="0.75"
                Text="{Binding CostComparison}"
                TextWrapping="Wrap"
                AutomationProperties.Name="{Binding CostComparison}"
                AutomationProperties.AutomationId="CostComparisonText" />
-    <StackPanel Grid.Row="2"
+    <StackPanel Grid.Row="3"
                 Margin="0,12,0,0"
                 Orientation="Horizontal"
                 Spacing="10">
@@ -39,7 +87,7 @@
               AutomationProperties.Name="Exportovat HTML sestavu nákladů vybraného vozidla"
               AutomationProperties.AutomationId="ExportSelectedVehicleCostReportButton" />
     </StackPanel>
-    <StackPanel Grid.Row="3"
+    <StackPanel Grid.Row="4"
                 Margin="0,10,0,0"
                 Orientation="Horizontal"
                 Spacing="10">
@@ -60,14 +108,14 @@
               AutomationProperties.Name="Upravit vozidlo z nákladového přehledu"
               AutomationProperties.AutomationId="EditCostVehicleButton" />
     </StackPanel>
-    <TextBlock Grid.Row="4"
+    <TextBlock Grid.Row="5"
                Margin="0,8,0,0"
                Text="{Binding CostExportStatus}"
                TextWrapping="Wrap"
                AutomationProperties.Name="{Binding CostExportStatus}"
                AutomationProperties.AutomationId="CostExportStatusText" />
     <Border x:Name="SelectedCostVehicleDetailHost"
-            Grid.Row="5"
+            Grid.Row="6"
             Margin="0,12,0,0"
             Padding="12"
             Background="#10203040"
@@ -78,7 +126,7 @@
       <TextBlock Text="{Binding SelectedCostVehicleDetail}"
                  TextWrapping="Wrap" />
     </Border>
-    <Grid Grid.Row="6" Margin="0,12,0,0" ColumnDefinitions="80,*,120">
+    <Grid Grid.Row="7" Margin="0,12,0,0" ColumnDefinitions="80,*,120">
       <TextBlock VerticalAlignment="Center" Text="Hledat" />
       <TextBox x:Name="CostSearchBox"
                Grid.Column="1"
@@ -93,7 +141,7 @@
               AutomationProperties.Name="Vymazat hledání v nákladovém přehledu"
               AutomationProperties.AutomationId="ClearCostSearchButton" />
     </Grid>
-    <TextBlock Grid.Row="7"
+    <TextBlock Grid.Row="8"
                Margin="0,8,0,0"
                Opacity="0.72"
                Text="{Binding CostSearchSummary}"
@@ -101,7 +149,7 @@
                AutomationProperties.Name="{Binding CostSearchSummary}"
                AutomationProperties.AutomationId="CostSearchSummaryText" />
     <ListBox x:Name="CostListBox"
-             Grid.Row="8"
+             Grid.Row="9"
              Margin="0,12,0,0"
              ItemsSource="{Binding VisibleCostVehicles}"
              SelectedItem="{Binding SelectedDashboardCostVehicle}"

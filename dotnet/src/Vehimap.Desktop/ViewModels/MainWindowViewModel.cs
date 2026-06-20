@@ -987,7 +987,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         try
         {
             var result = _session.LoadAsync(AppContext.BaseDirectory).GetAwaiter().GetResult();
-            var costSummary = result.CostSummary;
+            ApplyCostPeriodPreferences();
+            var costSummary = BuildSelectedCostSummary();
             _currentCostSummary = costSummary;
 
             LoadError = string.Empty;
