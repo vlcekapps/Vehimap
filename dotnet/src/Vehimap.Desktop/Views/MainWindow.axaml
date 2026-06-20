@@ -193,6 +193,12 @@
                     Click="OnOpenOverdueOverviewMenuClick"
                     AutomationProperties.Name="Otevřít propadlé termíny"
                     AutomationProperties.AutomationId="OpenOverdueOverviewMenuItem" />
+          <Separator />
+          <MenuItem x:Name="OverviewCalendarExportMenuItem"
+                    Header="Export termínů do kalendáře (.ics)"
+                    Click="OnCalendarExportClick"
+                    AutomationProperties.Name="Exportovat termíny do kalendáře z nabídky Přehledy"
+                    AutomationProperties.AutomationId="OverviewCalendarExportMenuItem" />
         </MenuItem>
         <MenuItem x:Name="QuickActionsMenuRoot"
                   Header="_Rychlé akce"
