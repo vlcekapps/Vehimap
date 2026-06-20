@@ -425,58 +425,10 @@ public sealed partial class MainWindowViewModel
     public string RecordEditorPathInputLabel => RecordWorkspace.RecordEditorPathInputLabel;
     public string RecordEditorPathInputHelp => RecordWorkspace.RecordEditorPathInputHelp;
 
-    public string AuditSummary
-    {
-        get => AuditWorkspace.AuditSummary;
-        set => AuditWorkspace.AuditSummary = value;
-    }
-
-    public AuditItemViewModel? SelectedDashboardAuditItem
-    {
-        get => AuditWorkspace.SelectedDashboardAuditItem;
-        set => AuditWorkspace.SelectedDashboardAuditItem = value;
-    }
-
-    public string CostSummary
-    {
-        get => CostWorkspace.CostSummary;
-        set => CostWorkspace.CostSummary = value;
-    }
-
-    public string CostComparison
-    {
-        get => CostWorkspace.CostComparison;
-        set => CostWorkspace.CostComparison = value;
-    }
-
-    public CostVehicleItemViewModel? SelectedDashboardCostVehicle
-    {
-        get => CostWorkspace.SelectedDashboardCostVehicle;
-        set => CostWorkspace.SelectedDashboardCostVehicle = value;
-    }
-
-    public string DashboardTimelineSummary
-    {
-        get => DashboardWorkspace.DashboardTimelineSummary;
-        set => DashboardWorkspace.DashboardTimelineSummary = value;
-    }
-
-    public string SelectedDashboardTimelineDetail
-    {
-        get => DashboardWorkspace.SelectedDashboardTimelineDetail;
-        set => DashboardWorkspace.SelectedDashboardTimelineDetail = value;
-    }
-
-    public VehicleTimelineItemViewModel? SelectedDashboardTimelineItem
-    {
-        get => DashboardWorkspace.SelectedDashboardTimelineItem;
-        set => DashboardWorkspace.SelectedDashboardTimelineItem = value;
-    }
-
     public bool CanOpenSelectedTimelineItem => TimelineWorkspace.SelectedTimelineItem is not null;
-    public bool CanOpenSelectedDashboardAuditItem => SelectedDashboardAuditItem is not null;
-    public bool CanOpenSelectedDashboardCostVehicle => SelectedDashboardCostVehicle is not null;
-    public bool CanOpenSelectedDashboardTimelineItem => SelectedDashboardTimelineItem is not null;
+    public bool CanOpenSelectedDashboardAuditItem => AuditWorkspace.SelectedDashboardAuditItem is not null;
+    public bool CanOpenSelectedDashboardCostVehicle => CostWorkspace.SelectedDashboardCostVehicle is not null;
+    public bool CanOpenSelectedDashboardTimelineItem => DashboardWorkspace.SelectedDashboardTimelineItem is not null;
     public bool CanOpenSelectedDashboardVehicle => GetSelectedDashboardVehicleId() is not null;
     public bool CanEditSelectedDashboardVehicle => CanOpenSelectedDashboardVehicle && !HasPendingEdits;
 
@@ -637,6 +589,7 @@ public sealed partial class MainWindowViewModel
 
     internal void NotifyAuditWorkspaceSelectionChanged()
     {
+        DashboardWorkspace.NotifyDashboardAuditSelectionChanged();
         OpenSelectedDashboardAuditItemCommand.NotifyCanExecuteChanged();
         OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
@@ -644,7 +597,7 @@ public sealed partial class MainWindowViewModel
 
     internal void RefreshAuditWorkspace()
     {
-        AuditSummary = _projectionService.BuildAuditSummary(_auditItems);
+        AuditWorkspace.SetAuditSummary(_projectionService.BuildAuditSummary(_auditItems));
 
         AuditItems.Clear();
         foreach (var item in _projectionService.BuildAuditItems(_auditItems))
@@ -667,6 +620,7 @@ public sealed partial class MainWindowViewModel
 
     internal void NotifyCostWorkspaceSelectionChanged()
     {
+        DashboardWorkspace.NotifyDashboardCostSelectionChanged();
         OpenSelectedDashboardCostVehicleCommand.NotifyCanExecuteChanged();
         OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
@@ -676,11 +630,11 @@ public sealed partial class MainWindowViewModel
 
     internal void RefreshCostWorkspace()
     {
-        var previousCostVehicleId = SelectedDashboardCostVehicle?.VehicleId ?? string.Empty;
+        var previousCostVehicleId = CostWorkspace.SelectedDashboardCostVehicle?.VehicleId ?? string.Empty;
         _currentCostSummary = BuildSelectedCostSummary();
 
-        CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);
-        CostComparison = _projectionService.BuildCostComparison(_currentCostSummary);
+        CostWorkspace.CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);
+        CostWorkspace.CostComparison = _projectionService.BuildCostComparison(_currentCostSummary);
 
         CostVehicles.Clear();
         foreach (var row in _projectionService.BuildDashboardCostVehicles(_currentCostSummary))
@@ -688,7 +642,7 @@ public sealed partial class MainWindowViewModel
             CostVehicles.Add(row);
         }
 
-        SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, previousCostVehicleId);
+        CostWorkspace.SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, previousCostVehicleId);
         CostWorkspace.RefreshVisibleCostVehicles();
         DashboardWorkspace.NotifyDashboardSummariesChanged();
         ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
@@ -709,11 +663,11 @@ public sealed partial class MainWindowViewModel
 
     internal void RefreshDashboardWorkspace()
     {
-        var previousAuditKey = BuildDashboardAuditSelectionKey(SelectedDashboardAuditItem);
-        var previousCostVehicleId = SelectedDashboardCostVehicle?.VehicleId ?? string.Empty;
-        var previousTimelineItem = SelectedDashboardTimelineItem;
+        var previousAuditKey = BuildDashboardAuditSelectionKey(AuditWorkspace.SelectedDashboardAuditItem);
+        var previousCostVehicleId = CostWorkspace.SelectedDashboardCostVehicle?.VehicleId ?? string.Empty;
+        var previousTimelineItem = DashboardWorkspace.SelectedDashboardTimelineItem;
 
-        AuditSummary = _projectionService.BuildAuditSummary(_auditItems);
+        AuditWorkspace.SetAuditSummary(_projectionService.BuildAuditSummary(_auditItems));
         if (_session.IsLoaded)
         {
             _currentCostSummary = BuildSelectedCostSummary();
@@ -721,8 +675,8 @@ public sealed partial class MainWindowViewModel
 
         if (_currentCostSummary is not null)
         {
-            CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);
-            CostComparison = _projectionService.BuildCostComparison(_currentCostSummary);
+            CostWorkspace.CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);
+            CostWorkspace.CostComparison = _projectionService.BuildCostComparison(_currentCostSummary);
         }
 
         DashboardAuditItems.Clear();
@@ -742,10 +696,10 @@ public sealed partial class MainWindowViewModel
 
         PopulateDashboardTimeline();
 
-        SelectedDashboardAuditItem = FindById(DashboardAuditItems, BuildDashboardAuditSelectionKey, previousAuditKey);
-        SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, previousCostVehicleId);
+        AuditWorkspace.SelectedDashboardAuditItem = FindById(DashboardAuditItems, BuildDashboardAuditSelectionKey, previousAuditKey);
+        CostWorkspace.SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, previousCostVehicleId);
         CostWorkspace.RefreshVisibleCostVehicles();
-        SelectedDashboardTimelineItem = previousTimelineItem is null
+        DashboardWorkspace.SelectedDashboardTimelineItem = previousTimelineItem is null
             ? DashboardUpcomingTimeline.FirstOrDefault()
             : FindTimelineItem(DashboardUpcomingTimeline, previousTimelineItem);
 

@@ -71,6 +71,29 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Dashboard_workspace_reads_shared_audit_cost_and_timeline_state()
+    {
+        var viewModel = CreateViewModel();
+        var auditItem = new AuditItemViewModel("veh_1", "Doklad", "rec_1", "Vážné", "Doklady", "Octavia", "Doklad bez cesty", "Doplňte cestu.");
+        var costVehicle = new CostVehicleItemViewModel("veh_1", "Octavia", "Osobní vozidla", "1 000 Kč", "0 Kč", "0 Kč", "1 000 Kč", "100 km", "10 Kč/km", "Vypočteno");
+        var timelineItem = new VehicleTimelineItemViewModel("custom", "Připomínka", "01.12.2099", "Objednat servis", "Zavolat servisu", "Budoucí", "Octavia", "veh_1", "rem_1", true, string.Empty);
+
+        viewModel.AuditWorkspace.SetAuditSummary("Audit sdílený přes workspace.");
+        viewModel.CostWorkspace.CostSummary = "Náklady sdílené přes workspace.";
+        viewModel.CostWorkspace.CostComparison = "Srovnání sdílené přes workspace.";
+        viewModel.AuditWorkspace.SelectedDashboardAuditItem = auditItem;
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = costVehicle;
+        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = timelineItem;
+
+        Assert.Equal("Audit sdílený přes workspace.", viewModel.DashboardWorkspace.AuditSummary);
+        Assert.Equal("Náklady sdílené přes workspace.", viewModel.DashboardWorkspace.CostSummary);
+        Assert.Equal("Srovnání sdílené přes workspace.", viewModel.DashboardWorkspace.CostComparison);
+        Assert.Same(auditItem, viewModel.DashboardWorkspace.SelectedDashboardAuditItem);
+        Assert.Same(costVehicle, viewModel.DashboardWorkspace.SelectedDashboardCostVehicle);
+        Assert.Same(timelineItem, viewModel.DashboardWorkspace.SelectedDashboardTimelineItem);
+    }
+
+    [Fact]
     public void Shared_workspace_state_should_not_be_reexposed_as_root_proxy_properties()
     {
         var rootType = typeof(MainWindowViewModel);
@@ -98,7 +121,15 @@ public sealed class WorkspaceCompositionTests
             "SelectedUpcomingOverviewDetail",
             "SelectedOverdueOverviewDetail",
             "SelectedUpcomingOverviewItem",
-            "SelectedOverdueOverviewItem"
+            "SelectedOverdueOverviewItem",
+            "AuditSummary",
+            "SelectedDashboardAuditItem",
+            "CostSummary",
+            "CostComparison",
+            "SelectedDashboardCostVehicle",
+            "DashboardTimelineSummary",
+            "SelectedDashboardTimelineDetail",
+            "SelectedDashboardTimelineItem"
         };
 
         foreach (var propertyName in removedProxyProperties)

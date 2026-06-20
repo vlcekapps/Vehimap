@@ -427,12 +427,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedReminder = null;
             SelectedMaintenance = null;
             TimelineWorkspace.SelectedTimelineItem = null;
-            SelectedDashboardAuditItem = null;
-            SelectedDashboardCostVehicle = null;
-            SelectedDashboardTimelineItem = null;
+            AuditWorkspace.SelectedDashboardAuditItem = null;
+            CostWorkspace.SelectedDashboardCostVehicle = null;
+            DashboardWorkspace.SelectedDashboardTimelineItem = null;
             SelectedRecord = null;
-            DashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
-            SelectedDashboardTimelineDetail = "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.";
+            DashboardWorkspace.DashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
+            DashboardWorkspace.SelectedDashboardTimelineDetail = "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.";
             SelectedVehicleTabIndex = DetailTabIndex;
             RequestFocus(DesktopFocusTarget.VehicleList);
             return;
@@ -613,7 +613,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedRecordFileCommand).ConfigureAwait(true);
                 return true;
             case AuditTabIndex:
-                await OpenAuditVehicleAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
+                await OpenAuditVehicleAsync(AuditWorkspace.SelectedDashboardAuditItem).ConfigureAwait(true);
                 return true;
             case CostTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedDashboardCostVehicleCommand).ConfigureAwait(true);
@@ -643,7 +643,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedTimelineItemCommand).ConfigureAwait(true);
                 return true;
             case AuditTabIndex:
-                await OpenAuditItemAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
+                await OpenAuditItemAsync(AuditWorkspace.SelectedDashboardAuditItem).ConfigureAwait(true);
                 return true;
             case CostTabIndex:
                 ExecuteWorkspaceShortcut(CostWorkspace.FocusSelectedCostDetailCommand);
@@ -719,12 +719,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         if (SelectedVehicleTabIndex == AuditTabIndex)
         {
-            return await EditAuditItemAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
+            return await EditAuditItemAsync(AuditWorkspace.SelectedDashboardAuditItem).ConfigureAwait(true);
         }
 
         if (SelectedVehicleTabIndex == CostTabIndex)
         {
-            return await EditSelectedCostVehicleFromCostsAsync(SelectedDashboardCostVehicle).ConfigureAwait(true);
+            return await EditSelectedCostVehicleFromCostsAsync(CostWorkspace.SelectedDashboardCostVehicle).ConfigureAwait(true);
         }
 
         if (SelectedVehicleTabIndex == DashboardTabIndex)
@@ -819,7 +819,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardAuditItem))]
     private async Task OpenSelectedDashboardAuditItemAsync()
     {
-        await OpenAuditItemAsync(SelectedDashboardAuditItem).ConfigureAwait(true);
+        await OpenAuditItemAsync(AuditWorkspace.SelectedDashboardAuditItem).ConfigureAwait(true);
     }
 
     internal async Task<bool> OpenAuditItemAsync(AuditItemViewModel? item)
@@ -920,7 +920,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardCostVehicle))]
     private async Task OpenSelectedDashboardCostVehicleAsync()
     {
-        if (SelectedDashboardCostVehicle is null)
+        var selectedCostVehicle = CostWorkspace.SelectedDashboardCostVehicle;
+        if (selectedCostVehicle is null)
         {
             return;
         }
@@ -930,7 +931,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        SelectVehicleAndOpenEntity(SelectedDashboardCostVehicle.VehicleId, "Vozidlo", SelectedDashboardCostVehicle.VehicleId);
+        SelectVehicleAndOpenEntity(selectedCostVehicle.VehicleId, "Vozidlo", selectedCostVehicle.VehicleId);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedVehicleCosts))]
@@ -946,7 +947,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, SelectedVehicle.Id);
+        CostWorkspace.SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, SelectedVehicle.Id);
         SelectedVehicleTabIndex = CostTabIndex;
         RequestFocus(DesktopFocusTarget.CostList);
     }
@@ -954,7 +955,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardTimelineItem))]
     private async Task OpenSelectedDashboardTimelineItemAsync()
     {
-        if (SelectedDashboardTimelineItem is null)
+        var selectedTimelineItem = DashboardWorkspace.SelectedDashboardTimelineItem;
+        if (selectedTimelineItem is null)
         {
             return;
         }
@@ -964,7 +966,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        OpenTimelineItem(SelectedDashboardTimelineItem);
+        OpenTimelineItem(selectedTimelineItem);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedSearchResult))]
@@ -1006,9 +1008,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             RemindersCount = result.DataSet.Reminders.Count;
             MaintenanceCount = result.DataSet.MaintenancePlans.Count;
             AuditCount = _auditItems.Count;
-            AuditSummary = _projectionService.BuildAuditSummary(_auditItems);
-            CostSummary = _projectionService.BuildCostSummary(costSummary);
-            CostComparison = _projectionService.BuildCostComparison(costSummary);
+            AuditWorkspace.SetAuditSummary(_projectionService.BuildAuditSummary(_auditItems));
+            CostWorkspace.CostSummary = _projectionService.BuildCostSummary(costSummary);
+            CostWorkspace.CostComparison = _projectionService.BuildCostComparison(costSummary);
             DashboardWorkspace.NotifyDashboardSummariesChanged();
 
             ApplyVehicleListFilterPreferences();
@@ -1041,7 +1043,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             RefreshGlobalSearch();
             AuditWorkspace.RefreshVisibleAuditItems(preserveSelection: false);
             CostWorkspace.RefreshVisibleCostVehicles(preserveSelection: false);
-            SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
+            DashboardWorkspace.SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
             ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
             ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
             ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
@@ -1240,7 +1242,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             DashboardUpcomingTimeline.Add(item);
         }
 
-        DashboardTimelineSummary = projection.Summary;
+        DashboardWorkspace.DashboardTimelineSummary = projection.Summary;
     }
 
     private string? GetSelectedRecordFolderPath()
@@ -1284,19 +1286,19 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     private string? GetSelectedDashboardVehicleId()
     {
-        if (!string.IsNullOrWhiteSpace(SelectedDashboardCostVehicle?.VehicleId))
+        if (!string.IsNullOrWhiteSpace(CostWorkspace.SelectedDashboardCostVehicle?.VehicleId))
         {
-            return SelectedDashboardCostVehicle.VehicleId;
+            return CostWorkspace.SelectedDashboardCostVehicle.VehicleId;
         }
 
-        if (!string.IsNullOrWhiteSpace(SelectedDashboardTimelineItem?.VehicleId))
+        if (!string.IsNullOrWhiteSpace(DashboardWorkspace.SelectedDashboardTimelineItem?.VehicleId))
         {
-            return SelectedDashboardTimelineItem.VehicleId;
+            return DashboardWorkspace.SelectedDashboardTimelineItem.VehicleId;
         }
 
-        if (!string.IsNullOrWhiteSpace(SelectedDashboardAuditItem?.VehicleId))
+        if (!string.IsNullOrWhiteSpace(AuditWorkspace.SelectedDashboardAuditItem?.VehicleId))
         {
-            return SelectedDashboardAuditItem.VehicleId;
+            return AuditWorkspace.SelectedDashboardAuditItem.VehicleId;
         }
 
         return null;

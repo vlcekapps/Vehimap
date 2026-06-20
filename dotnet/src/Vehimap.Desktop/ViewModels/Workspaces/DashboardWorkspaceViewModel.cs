@@ -23,11 +23,11 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
 
     public string WindowTitle => Root.DashboardWindowTitle;
 
-    public string AuditSummary => Root.AuditSummary;
+    public string AuditSummary => Root.AuditWorkspace.AuditSummary;
 
-    public string CostSummary => Root.CostSummary;
+    public string CostSummary => Root.CostWorkspace.CostSummary;
 
-    public string CostComparison => Root.CostComparison;
+    public string CostComparison => Root.CostWorkspace.CostComparison;
 
     public ObservableCollection<AuditItemViewModel> AuditItems => Root.DashboardAuditItems;
 
@@ -37,14 +37,14 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
 
     public AuditItemViewModel? SelectedDashboardAuditItem
     {
-        get => Root.SelectedDashboardAuditItem;
-        set => Root.SelectedDashboardAuditItem = value;
+        get => Root.AuditWorkspace.SelectedDashboardAuditItem;
+        set => Root.AuditWorkspace.SelectedDashboardAuditItem = value;
     }
 
     public CostVehicleItemViewModel? SelectedDashboardCostVehicle
     {
-        get => Root.SelectedDashboardCostVehicle;
-        set => Root.SelectedDashboardCostVehicle = value;
+        get => Root.CostWorkspace.SelectedDashboardCostVehicle;
+        set => Root.CostWorkspace.SelectedDashboardCostVehicle = value;
     }
 
     public ICommand OpenSelectedDashboardAuditItemCommand => Root.OpenSelectedDashboardAuditItemCommand;
@@ -74,6 +74,16 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
         OnPropertyChanged(nameof(AuditSummary));
         OnPropertyChanged(nameof(CostSummary));
         OnPropertyChanged(nameof(CostComparison));
+    }
+
+    internal void NotifyDashboardAuditSelectionChanged()
+    {
+        OnPropertyChanged(nameof(SelectedDashboardAuditItem));
+    }
+
+    internal void NotifyDashboardCostSelectionChanged()
+    {
+        OnPropertyChanged(nameof(SelectedDashboardCostVehicle));
     }
 
     partial void OnSelectedDashboardTimelineItemChanged(VehicleTimelineItemViewModel? value)

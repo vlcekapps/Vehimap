@@ -15,7 +15,7 @@ public sealed partial class MainWindowViewModel
 
     public bool CanExportFleetCostSummary => _currentCostSummary is not null && CostVehicles.Count > 0;
 
-    public bool CanExportSelectedVehicleCost => _currentCostSummary is not null && SelectedDashboardCostVehicle is not null;
+    public bool CanExportSelectedVehicleCost => _currentCostSummary is not null && CostWorkspace.SelectedDashboardCostVehicle is not null;
 
     [RelayCommand(CanExecute = nameof(CanExportFleetCostSummary))]
     private async Task ExportFleetCostSummaryAsync()
@@ -45,7 +45,8 @@ public sealed partial class MainWindowViewModel
     [RelayCommand(CanExecute = nameof(CanExportSelectedVehicleCost))]
     private async Task ExportSelectedVehicleCostDetailAsync()
     {
-        if (_currentCostSummary is null || SelectedDashboardCostVehicle is null)
+        var selectedCostVehicle = CostWorkspace.SelectedDashboardCostVehicle;
+        if (_currentCostSummary is null || selectedCostVehicle is null)
         {
             CostExportStatus = "Nejprve vyberte vozidlo v nákladovém přehledu.";
             return;
@@ -53,12 +54,12 @@ public sealed partial class MainWindowViewModel
 
         var content = _costExportService.BuildVehicleDetailTsv(
             _dataSet,
-            SelectedDashboardCostVehicle.VehicleId,
+            selectedCostVehicle.VehicleId,
             _currentCostSummary.PeriodStart,
             _currentCostSummary.PeriodEnd);
         var fileName = _costExportService.BuildVehicleDetailFileName(
             _dataSet,
-            SelectedDashboardCostVehicle.VehicleId,
+            selectedCostVehicle.VehicleId,
             _currentCostSummary.PeriodStart,
             _currentCostSummary.PeriodEnd);
         var savedPath = await _fileSaveService.SaveTextAsync(
@@ -78,7 +79,8 @@ public sealed partial class MainWindowViewModel
     [RelayCommand(CanExecute = nameof(CanExportSelectedVehicleCost))]
     private async Task ExportSelectedVehicleCostReportAsync()
     {
-        if (_currentCostSummary is null || SelectedDashboardCostVehicle is null)
+        var selectedCostVehicle = CostWorkspace.SelectedDashboardCostVehicle;
+        if (_currentCostSummary is null || selectedCostVehicle is null)
         {
             CostExportStatus = "Nejprve vyberte vozidlo v nákladovém přehledu.";
             return;
@@ -87,11 +89,11 @@ public sealed partial class MainWindowViewModel
         var content = _costExportService.BuildVehicleReportHtml(
             _dataSet,
             _currentCostSummary,
-            SelectedDashboardCostVehicle.VehicleId,
+            selectedCostVehicle.VehicleId,
             DateTime.Now);
         var fileName = _costExportService.BuildVehicleReportFileName(
             _dataSet,
-            SelectedDashboardCostVehicle.VehicleId,
+            selectedCostVehicle.VehicleId,
             _currentCostSummary.PeriodStart,
             _currentCostSummary.PeriodEnd);
         var savedPath = await _fileSaveService.SaveTextAsync(

@@ -73,6 +73,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - otevírání samostatných Avalonia workspace oken v hlavním shellu používá sdílený helper pro potvrzení rozpracovaných editací, přepnutí karty, modální okno a návrat fokusu
 - stav `Časové osy` a `Globálního hledání` v Avalonia větvi už není znovu vystavený přes root `MainWindowViewModel`; vlastní ho přímo příslušné workspace viewmodely
 - stav přehledů `Blížící se termíny` a `Propadlé termíny` v Avalonia větvi také vlastní příslušné workspace viewmodely místo duplicitních root proxy vlastností
+- dashboardové souhrny auditu, nákladů a nejbližších termínů v Avalonia větvi se čtou ze sdílených workspace stavů místo duplicitních root proxy vlastností
 - `Tiskový přehled` v Avalonia větvi se nově ukládá přes standardní exportní dialog jako HTML soubor a po uložení se otevře, místo aby vznikal jen jako dočasný soubor
 - nabídka `Rychlé akce` v Avalonia větvi nově kromě TK a zelených karet umí otevřít nejbližší vlastní připomínku, servisní úkon nebo doklad a filtrovaně zkontrolovat připomínky, údržbu i doklady v přehledu termínů
 - přístupné okno `Akce Vehimapu na liště` v Avalonia větvi umí kromě hlavního okna, dashboardu, přehledů a ukončení aplikace otevřít i nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrované kontroly těchto oblastí a vyvolat tiskový přehled, export/import zálohy, export kalendáře, znovunačtení dat, nastavení, `O programu` nebo kontrolu aktualizací

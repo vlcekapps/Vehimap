@@ -19,7 +19,7 @@ public sealed class MainWindowViewModelNavigationTests
         DesktopFocusTarget? requestedFocus = null;
         viewModel.FocusRequested += target => requestedFocus = target;
 
-        viewModel.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
+        viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
 
         viewModel.OpenSelectedDashboardAuditItemCommand.Execute(null);
 
@@ -35,7 +35,7 @@ public sealed class MainWindowViewModelNavigationTests
         DesktopFocusTarget? requestedFocus = null;
         viewModel.FocusRequested += target => requestedFocus = target;
 
-        viewModel.SelectedDashboardTimelineItem = viewModel.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
+        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = viewModel.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
 
         viewModel.OpenSelectedDashboardTimelineItemCommand.Execute(null);
 
@@ -231,13 +231,13 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.CostWorkspace.CostSearchText = "Octavia";
 
         Assert.Single(viewModel.CostWorkspace.VisibleCostVehicles);
-        Assert.Equal("veh_1", viewModel.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.Equal("veh_1", viewModel.CostWorkspace.SelectedDashboardCostVehicle?.VehicleId);
         Assert.True(viewModel.ExportSelectedVehicleCostDetailCommand.CanExecute(null));
 
         viewModel.CostWorkspace.CostSearchText = "nenajitelný dotaz";
 
         Assert.Empty(viewModel.CostWorkspace.VisibleCostVehicles);
-        Assert.Null(viewModel.SelectedDashboardCostVehicle);
+        Assert.Null(viewModel.CostWorkspace.SelectedDashboardCostVehicle);
         Assert.False(viewModel.OpenSelectedDashboardCostVehicleCommand.CanExecute(null));
         Assert.False(viewModel.ExportSelectedVehicleCostDetailCommand.CanExecute(null));
     }
@@ -424,11 +424,11 @@ public sealed class MainWindowViewModelNavigationTests
 
         viewModel.CostWorkspace.CostSearchText = "Octavia";
         var selectedCostVehicle = Assert.Single(viewModel.CostWorkspace.VisibleCostVehicles);
-        viewModel.SelectedDashboardCostVehicle = selectedCostVehicle;
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = selectedCostVehicle;
 
         viewModel.CostWorkspace.RefreshCostCommand.Execute(null);
 
-        Assert.Equal(selectedCostVehicle.VehicleId, viewModel.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.Equal(selectedCostVehicle.VehicleId, viewModel.CostWorkspace.SelectedDashboardCostVehicle?.VehicleId);
         Assert.Single(viewModel.CostWorkspace.VisibleCostVehicles);
         Assert.Equal(DesktopFocusTarget.CostList, requestedFocus);
         Assert.Equal("Nákladový přehled byl obnoven.", viewModel.CostExportStatus);
@@ -454,7 +454,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("Vlastní období", viewModel.CostWorkspace.SelectedCostPeriodPreset);
         Assert.Equal("01.02.2026", viewModel.CostWorkspace.CostPeriodStartText);
         Assert.Equal("28.02.2026", viewModel.CostWorkspace.CostPeriodEndText);
-        Assert.Contains("Od 01.02.2026 do 28.02.2026", viewModel.CostSummary, StringComparison.CurrentCulture);
+        Assert.Contains("Od 01.02.2026 do 28.02.2026", viewModel.CostWorkspace.CostSummary, StringComparison.CurrentCulture);
         Assert.Equal("Vlastní období", dataSetRef!.Settings.GetValue("costs", "period_preset"));
         Assert.Equal("2026-02-01", dataSetRef.Settings.GetValue("costs", "period_start"));
         Assert.Equal("2026-02-28", dataSetRef.Settings.GetValue("costs", "period_end"));
@@ -474,7 +474,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("Vlastní období", viewModel.CostWorkspace.SelectedCostPeriodPreset);
         Assert.Equal("01.02.2026", viewModel.CostWorkspace.CostPeriodStartText);
         Assert.Equal("28.02.2026", viewModel.CostWorkspace.CostPeriodEndText);
-        Assert.Contains("Od 01.02.2026 do 28.02.2026", viewModel.CostSummary, StringComparison.CurrentCulture);
+        Assert.Contains("Od 01.02.2026 do 28.02.2026", viewModel.CostWorkspace.CostSummary, StringComparison.CurrentCulture);
     }
 
     [Fact]
@@ -501,15 +501,15 @@ public sealed class MainWindowViewModelNavigationTests
         var selectedCost = viewModel.CostVehicles.First();
         var selectedTimeline = viewModel.DashboardUpcomingTimeline.First();
 
-        viewModel.SelectedDashboardAuditItem = selectedAudit;
-        viewModel.SelectedDashboardCostVehicle = selectedCost;
-        viewModel.SelectedDashboardTimelineItem = selectedTimeline;
+        viewModel.AuditWorkspace.SelectedDashboardAuditItem = selectedAudit;
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = selectedCost;
+        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = selectedTimeline;
 
         viewModel.DashboardWorkspace.RefreshDashboardCommand.Execute(null);
 
-        Assert.Equal(selectedAudit.EntityId, viewModel.SelectedDashboardAuditItem?.EntityId);
-        Assert.Equal(selectedCost.VehicleId, viewModel.SelectedDashboardCostVehicle?.VehicleId);
-        Assert.Equal(selectedTimeline.EntryId, viewModel.SelectedDashboardTimelineItem?.EntryId);
+        Assert.Equal(selectedAudit.EntityId, viewModel.AuditWorkspace.SelectedDashboardAuditItem?.EntityId);
+        Assert.Equal(selectedCost.VehicleId, viewModel.CostWorkspace.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.Equal(selectedTimeline.EntryId, viewModel.DashboardWorkspace.SelectedDashboardTimelineItem?.EntryId);
         Assert.Equal(DesktopFocusTarget.DashboardAuditList, requestedFocus);
         Assert.Contains("Dashboard byl obnoven", viewModel.ShellStatus, StringComparison.CurrentCulture);
     }
@@ -547,8 +547,8 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += requestedTargets.Add;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
-        viewModel.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
-        viewModel.SelectedDashboardTimelineItem = viewModel.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = viewModel.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
 
         var primaryHandled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
 
@@ -567,7 +567,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Contains(DesktopFocusTarget.ReminderList, requestedTargets);
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
-        viewModel.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
 
         var editHandled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
 
@@ -712,7 +712,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.NotEmpty(viewModel.AuditWorkspace.VisibleAuditItems);
         Assert.All(viewModel.AuditWorkspace.VisibleAuditItems, item =>
             Assert.Contains("Doklad bez cesty", item.AccessibleLabel, StringComparison.CurrentCultureIgnoreCase));
-        Assert.Equal("rec_2", viewModel.SelectedDashboardAuditItem?.EntityId);
+        Assert.Equal("rec_2", viewModel.AuditWorkspace.SelectedDashboardAuditItem?.EntityId);
         Assert.True(viewModel.DashboardWorkspace.AuditItems.Count <= viewModel.AuditItems.Count);
     }
 
@@ -725,14 +725,14 @@ public sealed class MainWindowViewModelNavigationTests
 
         viewModel.AuditWorkspace.AuditSearchText = "Doklad bez cesty";
         var selectedAuditItem = Assert.Single(viewModel.AuditWorkspace.VisibleAuditItems);
-        viewModel.SelectedDashboardAuditItem = selectedAuditItem;
+        viewModel.AuditWorkspace.SelectedDashboardAuditItem = selectedAuditItem;
 
         viewModel.AuditWorkspace.RefreshAuditCommand.Execute(null);
 
-        Assert.Equal(selectedAuditItem.EntityId, viewModel.SelectedDashboardAuditItem?.EntityId);
+        Assert.Equal(selectedAuditItem.EntityId, viewModel.AuditWorkspace.SelectedDashboardAuditItem?.EntityId);
         Assert.Equal(DesktopFocusTarget.AuditList, requestedFocus);
         Assert.Contains("Audit dat byl obnoven", viewModel.ShellStatus, StringComparison.CurrentCulture);
-        Assert.Contains("Hledání", viewModel.AuditSummary, StringComparison.CurrentCulture);
+        Assert.Contains("Hledání", viewModel.AuditWorkspace.AuditSummary, StringComparison.CurrentCulture);
     }
 
     [Fact]
@@ -743,7 +743,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += target => requestedFocus = target;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
-        viewModel.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
+        viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
 
         var handled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
 
@@ -761,7 +761,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += target => requestedFocus = target;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
-        viewModel.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
+        viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditItems.First(item => item.EntityId == "rec_2");
 
         var handled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
 
@@ -889,7 +889,7 @@ public sealed class MainWindowViewModelNavigationTests
         await viewModel.OpenSelectedVehicleCostsCommand.ExecuteAsync(null);
 
         Assert.Equal(DesktopTabIndexes.Cost, viewModel.SelectedVehicleTabIndex);
-        Assert.Equal("veh_1", viewModel.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.Equal("veh_1", viewModel.CostWorkspace.SelectedDashboardCostVehicle?.VehicleId);
         Assert.Contains("Palivo:", viewModel.CostWorkspace.SelectedCostVehicleDetail);
         Assert.Equal(DesktopFocusTarget.CostList, requestedFocus);
     }
@@ -902,7 +902,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += requestedTargets.Add;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Cost;
-        viewModel.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
 
         var itemHandled = await viewModel.HandleCurrentWorkspaceItemOpenShortcutAsync();
 
@@ -916,7 +916,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("veh_1", viewModel.SelectedVehicle?.Id);
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Cost;
-        viewModel.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
 
         var editHandled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
 

@@ -167,11 +167,11 @@ public sealed partial class MainWindowViewModel
 
     private void RefreshCostWorkspaceFromSelectedPeriod(string status, bool requestFocus)
     {
-        var previousCostVehicleId = SelectedDashboardCostVehicle?.VehicleId ?? string.Empty;
+        var previousCostVehicleId = CostWorkspace.SelectedDashboardCostVehicle?.VehicleId ?? string.Empty;
         _currentCostSummary = BuildSelectedCostSummary();
 
-        CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);
-        CostComparison = _projectionService.BuildCostComparison(_currentCostSummary);
+        CostWorkspace.CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);
+        CostWorkspace.CostComparison = _projectionService.BuildCostComparison(_currentCostSummary);
 
         CostVehicles.Clear();
         foreach (var row in _projectionService.BuildDashboardCostVehicles(_currentCostSummary))
@@ -179,7 +179,7 @@ public sealed partial class MainWindowViewModel
             CostVehicles.Add(row);
         }
 
-        SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, previousCostVehicleId);
+        CostWorkspace.SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, previousCostVehicleId);
         CostWorkspace.RefreshVisibleCostVehicles();
         DashboardWorkspace.NotifyDashboardSummariesChanged();
         ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();

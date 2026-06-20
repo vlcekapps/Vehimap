@@ -15,6 +15,8 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string auditSummary = string.Empty;
 
+    private string unfilteredAuditSummary = string.Empty;
+
     [ObservableProperty]
     private string auditSearchText = string.Empty;
 
@@ -74,6 +76,15 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public ICommand OpenSelectedDashboardAuditItemCommand => OpenSelectedAuditItemCommand;
+
+    public void SetAuditSummary(string summary)
+    {
+        unfilteredAuditSummary = summary;
+        if (string.IsNullOrWhiteSpace(AuditSearchText))
+        {
+            AuditSummary = summary;
+        }
+    }
 
     public void RefreshVisibleAuditItems(bool preserveSelection = true)
     {
@@ -145,7 +156,7 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(AuditSearchText))
         {
-            AuditSummary = Root.AuditSummary;
+            AuditSummary = unfilteredAuditSummary;
             return;
         }
 
