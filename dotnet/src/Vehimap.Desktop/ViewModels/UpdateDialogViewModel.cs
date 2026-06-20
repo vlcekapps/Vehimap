@@ -67,6 +67,16 @@ public sealed class UpdateDialogViewModel
             lines.Add($"Release poznámky: {result.NotesUrl}");
         }
 
+        if (result.IsUpdateAvailable && !string.IsNullOrWhiteSpace(result.AssetUrl))
+        {
+            lines.Add($"Asset ke stažení: {result.AssetUrl}");
+        }
+
+        if (result.IsUpdateAvailable && !string.IsNullOrWhiteSpace(result.Sha256))
+        {
+            lines.Add($"SHA-256: {result.Sha256}");
+        }
+
         return string.Join(Environment.NewLine, lines);
     }
 

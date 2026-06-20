@@ -281,6 +281,7 @@ public sealed class AppShellServicesTests : IDisposable
     [Fact]
     public void Update_dialog_details_show_automatic_install_status()
     {
+        var sha256 = new string('a', 64);
         var model = new UpdateDialogViewModel(new UpdateCheckResult(
             "1.0.2",
             "1.0.3",
@@ -288,7 +289,7 @@ public sealed class AppShellServicesTests : IDisposable
             "2026-04-02",
             "https://example.com/release",
             "https://example.com/vehimap.zip",
-            new string('a', 64),
+            sha256,
             2048,
             false,
             "Je dostupna novejsi verze.",
@@ -297,6 +298,8 @@ public sealed class AppShellServicesTests : IDisposable
 
         Assert.Contains("Automatická instalace: nedostupná", model.Details, StringComparison.Ordinal);
         Assert.Contains("Vehimap.Updater", model.Details, StringComparison.Ordinal);
+        Assert.Contains("Asset ke stažení: https://example.com/vehimap.zip", model.Details, StringComparison.Ordinal);
+        Assert.Contains($"SHA-256: {sha256}", model.Details, StringComparison.Ordinal);
         Assert.Equal("Otevřít release stránku", model.PrimaryActionLabel);
     }
 
