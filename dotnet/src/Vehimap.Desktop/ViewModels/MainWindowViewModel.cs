@@ -312,13 +312,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
         Load(applyLaunchTabPreference: true);
     }
 
-    public bool CanOpenSelectedRecordFile => SelectedRecord is { FileExists: true } && !string.IsNullOrWhiteSpace(SelectedRecord.ResolvedPath);
+    private bool CanOpenSelectedRecordFile => SelectedRecord is { FileExists: true } && !string.IsNullOrWhiteSpace(SelectedRecord.ResolvedPath);
 
-    public bool CanOpenSelectedRecordFolder =>
+    private bool CanOpenSelectedRecordFolder =>
         SelectedRecord is not null
         && !string.IsNullOrWhiteSpace(GetSelectedRecordFolderPath());
 
-    public bool CanCopySelectedRecordPath =>
+    private bool CanCopySelectedRecordPath =>
         SelectedRecord is not null
         && !string.IsNullOrWhiteSpace(GetSelectedRecordCopyPath());
 

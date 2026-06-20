@@ -63,6 +63,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - sjednocena korenova accessibility metadata hlavniho shellu, workspace oken a app-level dialogu pro stabilnejsi screen-reader diagnostiku a UI automatizaci
 - sdileny lifecycle samostatnych workspace oken pro prvni fokus po otevreni a potvrzeni zavreni rozpracovanych editoru
 - nazvy samostatnych workspace oken jsou vlastnene workspace viewmodely; root `MainWindowViewModel` uz je nevystavuje jako verejne proxy vlastnosti
+- action-state podminky evidencnich editoru, dokladovych priloh a exportu nakladu jsou interni soucasti prikazu a workspace vrstvy; root `MainWindowViewModel` uz je nevystavuje jako verejne proxy vlastnosti
 - sdilene otevirani samostatnych workspace oken z hlavniho shellu, aby potvrzeni rozpracovanych editaci, prepnuti karty a navrat fokusu mely jeden kodovy tok
 - stav `Casove osy` a `Globalniho hledani` je vlastneny jejich child workspace viewmodely; root `MainWindowViewModel` uz pro ne nevystavuje duplicitni proxy vlastnosti
 - nactene kolekce polozek `Casove osy` a vysledku `Globalniho hledani` jsou vlastnene jejich child workspace viewmodely; root je jen obnovuje pri zmene dat, filtru nebo hledani

@@ -4,9 +4,9 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    public bool CanExportFleetCostSummary => _currentCostSummary is not null && CostVehicles.Count > 0;
+    private bool CanExportFleetCostSummary => _currentCostSummary is not null && CostVehicles.Count > 0;
 
-    public bool CanExportSelectedVehicleCost => _currentCostSummary is not null && CostWorkspace.SelectedDashboardCostVehicle is not null;
+    private bool CanExportSelectedVehicleCost => _currentCostSummary is not null && CostWorkspace.SelectedDashboardCostVehicle is not null;
 
     [RelayCommand(CanExecute = nameof(CanExportFleetCostSummary))]
     private async Task ExportFleetCostSummaryAsync()

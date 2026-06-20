@@ -35,6 +35,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - v C# desktopové větvi lze přehledová workflow `Časová osa`, `Globální hledání`, `Audit dat`, `Náklady`, `Dashboard`, `Blížící se termíny` a `Propadlé termíny` otevřít jako kartu v hlavním shellu i jako samostatné okno se stejnou přístupnou pracovní plochou
 - v C# desktopové větvi mají samostatná workspace okna sjednocené otevření prvního logického prvku a stejnou ochranu před zavřením rozpracovaného editoru jako hlavní shell
 - v C# desktopové větvi patří názvy samostatných workspace oken jejich workspace viewmodelům; hlavní shell je už nevystavuje jako veřejné root aliasy
+- v C# desktopové větvi zůstávají action-state podmínky evidenčních editorů, dokladových příloh a exportů nákladů interní součástí příkazů a workspace vrstvy, ne veřejným root API shellu
 - v C# desktopové větvi jde otevření samostatných workspace oken přes jeden sdílený tok, takže potvrzení rozpracované editace, přepnutí karty a návrat fokusu zůstávají stejné napříč evidencemi i přehledy
 - v C# desktopové větvi už `Časová osa` a `Globální hledání` drží svůj vyhledávací text, výběr a stavové texty přímo ve vlastních workspace viewmodelech, ne přes duplicitní root aliasy
 - v C# desktopové větvi vlastní `Časová osa` a `Globální hledání` také své načtené kolekce položek a výsledků, takže hlavní viewmodel je pouze obnovuje při změně dat nebo hledání

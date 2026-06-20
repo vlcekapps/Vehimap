@@ -63,11 +63,11 @@ public sealed partial class MainWindowViewModel
     }
 
     private bool IsHistoryDetailVisible => HistoryWorkspace.IsHistoryDetailVisible;
-    public bool CanCreateHistory => SelectedVehicle is not null && !HasPendingEdits;
-    public bool CanEditSelectedHistory => SelectedHistory is not null && !HasPendingEdits;
-    public bool CanDeleteSelectedHistory => SelectedHistory is not null && !HasPendingEdits;
-    public bool CanSaveHistory => SelectedVehicle is not null && IsEditingHistory;
-    public bool CanCancelHistoryEdit => IsEditingHistory;
+    private bool CanCreateHistory => SelectedVehicle is not null && !HasPendingEdits;
+    private bool CanEditSelectedHistory => SelectedHistory is not null && !HasPendingEdits;
+    private bool CanDeleteSelectedHistory => SelectedHistory is not null && !HasPendingEdits;
+    private bool CanSaveHistory => SelectedVehicle is not null && IsEditingHistory;
+    private bool CanCancelHistoryEdit => IsEditingHistory;
 
     private VehicleFuelItemViewModel? SelectedFuel
     {
@@ -142,11 +142,11 @@ public sealed partial class MainWindowViewModel
     }
 
     private bool IsFuelDetailVisible => FuelWorkspace.IsFuelDetailVisible;
-    public bool CanCreateFuel => SelectedVehicle is not null && !HasPendingEdits;
-    public bool CanEditSelectedFuel => SelectedFuel is not null && !HasPendingEdits;
-    public bool CanDeleteSelectedFuel => SelectedFuel is not null && !HasPendingEdits;
-    public bool CanSaveFuel => SelectedVehicle is not null && IsEditingFuel;
-    public bool CanCancelFuelEdit => IsEditingFuel;
+    private bool CanCreateFuel => SelectedVehicle is not null && !HasPendingEdits;
+    private bool CanEditSelectedFuel => SelectedFuel is not null && !HasPendingEdits;
+    private bool CanDeleteSelectedFuel => SelectedFuel is not null && !HasPendingEdits;
+    private bool CanSaveFuel => SelectedVehicle is not null && IsEditingFuel;
+    private bool CanCancelFuelEdit => IsEditingFuel;
 
     private VehicleReminderItemViewModel? SelectedReminder
     {
@@ -209,12 +209,12 @@ public sealed partial class MainWindowViewModel
     }
 
     private bool IsReminderDetailVisible => ReminderWorkspace.IsReminderDetailVisible;
-    public bool CanCreateReminder => SelectedVehicle is not null && !HasPendingEdits;
-    public bool CanEditSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
-    public bool CanDeleteSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
-    public bool CanAdvanceSelectedReminder => SelectedVehicle is not null && SelectedReminder is not null && !HasPendingEdits && TryBuildNextReminderDueDate(GetSelectedReminderModel(), out _);
-    public bool CanSaveReminder => SelectedVehicle is not null && IsEditingReminder;
-    public bool CanCancelReminderEdit => IsEditingReminder;
+    private bool CanCreateReminder => SelectedVehicle is not null && !HasPendingEdits;
+    private bool CanEditSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
+    private bool CanDeleteSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
+    private bool CanAdvanceSelectedReminder => SelectedVehicle is not null && SelectedReminder is not null && !HasPendingEdits && TryBuildNextReminderDueDate(GetSelectedReminderModel(), out _);
+    private bool CanSaveReminder => SelectedVehicle is not null && IsEditingReminder;
+    private bool CanCancelReminderEdit => IsEditingReminder;
 
     private VehicleMaintenanceItemViewModel? SelectedMaintenance
     {
@@ -295,13 +295,13 @@ public sealed partial class MainWindowViewModel
     }
 
     private bool IsMaintenanceDetailVisible => MaintenanceWorkspace.IsMaintenanceDetailVisible;
-    public bool CanCreateMaintenance => SelectedVehicle is not null && !HasPendingEdits;
-    public bool CanEditSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
-    public bool CanDeleteSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
-    public bool CanCompleteSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits && GetSelectedMaintenanceModel()?.IsActive == true;
-    public bool CanOpenMaintenanceRecommendations => SelectedVehicle is not null && !HasPendingEdits;
-    public bool CanSaveMaintenance => SelectedVehicle is not null && IsEditingMaintenance;
-    public bool CanCancelMaintenanceEdit => IsEditingMaintenance;
+    private bool CanCreateMaintenance => SelectedVehicle is not null && !HasPendingEdits;
+    private bool CanEditSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
+    private bool CanDeleteSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
+    internal bool CanCompleteSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits && GetSelectedMaintenanceModel()?.IsActive == true;
+    internal bool CanOpenMaintenanceRecommendations => SelectedVehicle is not null && !HasPendingEdits;
+    private bool CanSaveMaintenance => SelectedVehicle is not null && IsEditingMaintenance;
+    private bool CanCancelMaintenanceEdit => IsEditingMaintenance;
 
     private VehicleRecordItemViewModel? SelectedRecord
     {
@@ -406,13 +406,13 @@ public sealed partial class MainWindowViewModel
     }
 
     private bool IsRecordDetailVisible => RecordWorkspace.IsRecordDetailVisible;
-    public bool CanCreateRecord => SelectedVehicle is not null && !HasPendingEdits;
-    public bool CanEditSelectedRecord => SelectedRecord is not null && !HasPendingEdits;
-    public bool CanDeleteSelectedRecord => SelectedRecord is not null && !HasPendingEdits;
-    public bool CanSaveRecord => SelectedVehicle is not null && IsEditingRecord;
-    public bool CanCancelRecordEdit => IsEditingRecord;
-    public bool CanBrowseRecordAttachment => IsEditingRecord;
-    public bool CanMoveSelectedRecordToManaged =>
+    private bool CanCreateRecord => SelectedVehicle is not null && !HasPendingEdits;
+    private bool CanEditSelectedRecord => SelectedRecord is not null && !HasPendingEdits;
+    private bool CanDeleteSelectedRecord => SelectedRecord is not null && !HasPendingEdits;
+    private bool CanSaveRecord => SelectedVehicle is not null && IsEditingRecord;
+    private bool CanCancelRecordEdit => IsEditingRecord;
+    private bool CanBrowseRecordAttachment => IsEditingRecord;
+    private bool CanMoveSelectedRecordToManaged =>
         SelectedRecord is not null
         && !HasPendingEdits
         && !string.Equals(SelectedRecord.AttachmentMode, "Spravovaná kopie", StringComparison.CurrentCulture)
