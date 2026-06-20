@@ -13,7 +13,7 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public string WindowTitle => Root.HistoryWindowTitle;
-    public ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory => Root.SelectedVehicleHistory;
+    public ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory { get; } = [];
     public ObservableCollection<VehicleHistoryItemViewModel> VisibleHistoryItems { get; } = [];
 
     [ObservableProperty]

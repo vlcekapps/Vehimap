@@ -13,7 +13,7 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public string WindowTitle => Root.FuelWindowTitle;
-    public ObservableCollection<VehicleFuelItemViewModel> SelectedVehicleFuel => Root.SelectedVehicleFuel;
+    public ObservableCollection<VehicleFuelItemViewModel> SelectedVehicleFuel { get; } = [];
     public ObservableCollection<VehicleFuelItemViewModel> VisibleFuelItems { get; } = [];
 
     [ObservableProperty]

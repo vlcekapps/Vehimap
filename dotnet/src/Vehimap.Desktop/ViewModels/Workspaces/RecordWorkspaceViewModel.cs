@@ -13,7 +13,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public string WindowTitle => Root.RecordWindowTitle;
-    public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords => Root.SelectedVehicleRecords;
+    public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords { get; } = [];
     public ObservableCollection<VehicleRecordItemViewModel> VisibleRecordItems { get; } = [];
 
     [ObservableProperty]

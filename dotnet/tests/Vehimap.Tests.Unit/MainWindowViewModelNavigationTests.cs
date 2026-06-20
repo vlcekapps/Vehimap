@@ -202,11 +202,11 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal(string.Empty, viewModel.ReminderWorkspace.ReminderSearchText);
         Assert.Equal(string.Empty, viewModel.MaintenanceWorkspace.MaintenanceSearchText);
         Assert.Equal(string.Empty, viewModel.RecordWorkspace.RecordSearchText);
-        Assert.Equal(viewModel.SelectedVehicleHistory.Count, viewModel.HistoryWorkspace.VisibleHistoryItems.Count);
-        Assert.Equal(viewModel.SelectedVehicleFuel.Count, viewModel.FuelWorkspace.VisibleFuelItems.Count);
-        Assert.Equal(viewModel.SelectedVehicleReminders.Count, viewModel.ReminderWorkspace.VisibleReminderItems.Count);
-        Assert.Equal(viewModel.SelectedVehicleMaintenance.Count, viewModel.MaintenanceWorkspace.VisibleMaintenanceItems.Count);
-        Assert.Equal(viewModel.SelectedVehicleRecords.Count, viewModel.RecordWorkspace.VisibleRecordItems.Count);
+        Assert.Equal(viewModel.HistoryWorkspace.SelectedVehicleHistory.Count, viewModel.HistoryWorkspace.VisibleHistoryItems.Count);
+        Assert.Equal(viewModel.FuelWorkspace.SelectedVehicleFuel.Count, viewModel.FuelWorkspace.VisibleFuelItems.Count);
+        Assert.Equal(viewModel.ReminderWorkspace.SelectedVehicleReminders.Count, viewModel.ReminderWorkspace.VisibleReminderItems.Count);
+        Assert.Equal(viewModel.MaintenanceWorkspace.SelectedVehicleMaintenance.Count, viewModel.MaintenanceWorkspace.VisibleMaintenanceItems.Count);
+        Assert.Equal(viewModel.RecordWorkspace.SelectedVehicleRecords.Count, viewModel.RecordWorkspace.VisibleRecordItems.Count);
         Assert.False(viewModel.HistoryWorkspace.ClearHistorySearchCommand.CanExecute(null));
         Assert.False(viewModel.FuelWorkspace.ClearFuelSearchCommand.CanExecute(null));
         Assert.False(viewModel.ReminderWorkspace.ClearReminderSearchCommand.CanExecute(null));
@@ -797,7 +797,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += target => requestedFocus = target;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
-        viewModel.SelectedRecord = viewModel.SelectedVehicleRecords.Single(item => item.Id == "rec_2");
+        viewModel.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_2");
 
         var handled = viewModel.HandleCurrentWorkspaceEditShortcut();
 
@@ -825,7 +825,7 @@ public sealed class MainWindowViewModelNavigationTests
 
         Assert.True(handled);
         Assert.False(viewModel.IsEditingHistory);
-        Assert.Contains(viewModel.SelectedVehicleHistory, item => item.Note == "Ulozeno zkratkou");
+        Assert.Contains(viewModel.HistoryWorkspace.SelectedVehicleHistory, item => item.Note == "Ulozeno zkratkou");
         Assert.Equal(DesktopTabIndexes.History, viewModel.SelectedVehicleTabIndex);
     }
 
@@ -840,7 +840,7 @@ public sealed class MainWindowViewModelNavigationTests
             var viewModel = CreateViewModel(fileLauncher: fileLauncher, recordFilePath: attachmentPath);
 
             viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
-            viewModel.SelectedRecord = viewModel.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
+            viewModel.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
 
             var handled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
 
@@ -864,7 +864,7 @@ public sealed class MainWindowViewModelNavigationTests
             var viewModel = CreateViewModel(clipboardService: clipboard, recordFilePath: attachmentPath);
 
             viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
-            viewModel.SelectedRecord = viewModel.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
+            viewModel.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
 
             Assert.True(viewModel.CopySelectedRecordPathCommand.CanExecute(null));
 

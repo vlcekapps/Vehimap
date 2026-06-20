@@ -13,7 +13,7 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     }
 
     public string WindowTitle => Root.ReminderWindowTitle;
-    public ObservableCollection<VehicleReminderItemViewModel> SelectedVehicleReminders => Root.SelectedVehicleReminders;
+    public ObservableCollection<VehicleReminderItemViewModel> SelectedVehicleReminders { get; } = [];
     public ObservableCollection<VehicleReminderItemViewModel> VisibleReminderItems { get; } = [];
 
     [ObservableProperty]

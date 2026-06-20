@@ -109,17 +109,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public ObservableCollection<VehicleTimelineItemViewModel> DashboardUpcomingTimeline { get; } = [];
 
-    public ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory { get; } = [];
+    private ObservableCollection<VehicleHistoryItemViewModel> SelectedVehicleHistory => HistoryWorkspace.SelectedVehicleHistory;
 
-    public ObservableCollection<VehicleFuelItemViewModel> SelectedVehicleFuel { get; } = [];
+    private ObservableCollection<VehicleFuelItemViewModel> SelectedVehicleFuel => FuelWorkspace.SelectedVehicleFuel;
 
-    public ObservableCollection<VehicleReminderItemViewModel> SelectedVehicleReminders { get; } = [];
+    private ObservableCollection<VehicleReminderItemViewModel> SelectedVehicleReminders => ReminderWorkspace.SelectedVehicleReminders;
 
-    public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance { get; } = [];
+    private ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance => MaintenanceWorkspace.SelectedVehicleMaintenance;
 
     public ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline { get; } = [];
 
-    public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords { get; } = [];
+    private ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords => RecordWorkspace.SelectedVehicleRecords;
 
     public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults { get; } = [];
 

@@ -64,6 +64,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - drzet dashboardove souhrny auditu, nakladu a nejblizsich terminu ve sdilenych workspace stavech auditu, nakladu a dashboardu misto root proxy vlastnosti
 - drzet stav exportu nakladoveho prehledu primo v `CostWorkspace`, zatimco root `MainWindowViewModel` zustava jen orchestratorem exportnich prikazu
 - drzet souhrnne texty evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` primo v jejich workspace viewmodelech misto root proxy vlastnosti
+- drzet nactene kolekce zaznamu evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` primo v jejich workspace viewmodelech misto verejnych root vlastnosti
 - drzet souhrnne texty detailu vozidla primo ve `VehicleDetailWorkspace`, zatimco root je jen prepocitava pri zmene vyberu vozidla
 - drzet formularove hodnoty editoru vozidla primo ve `VehicleDetailWorkspace`, zatimco root zustava zodpovedny za prikazy, validaci a ulozeni
 - drzet rezim editace vozidla, viditelnost detailu a nadpis detailniho panelu primo ve `VehicleDetailWorkspace`, zatimco root jen synchronizuje shellove prikazy

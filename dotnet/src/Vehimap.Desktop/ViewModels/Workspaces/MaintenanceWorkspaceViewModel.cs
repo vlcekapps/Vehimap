@@ -18,7 +18,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     }
 
     public string WindowTitle => Root.MaintenanceWindowTitle;
-    public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance => Root.SelectedVehicleMaintenance;
+    public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance { get; } = [];
     public ObservableCollection<VehicleMaintenanceItemViewModel> VisibleMaintenanceItems { get; } = [];
     public bool CanOpenMaintenanceRecommendations => Root.CanOpenMaintenanceRecommendations;
     public bool CanCompleteSelectedMaintenance => Root.CanCompleteSelectedMaintenance;

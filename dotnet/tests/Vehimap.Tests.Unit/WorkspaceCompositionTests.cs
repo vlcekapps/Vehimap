@@ -2,6 +2,7 @@ using Vehimap.Application.Abstractions;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
 using Xunit;
@@ -109,6 +110,33 @@ public sealed class WorkspaceCompositionTests
         Assert.Equal("Připomínky mají vlastní souhrn.", viewModel.ReminderWorkspace.ReminderSummary);
         Assert.Equal("Údržba má vlastní souhrn.", viewModel.MaintenanceWorkspace.MaintenanceSummary);
         Assert.Equal("Doklady mají vlastní souhrn.", viewModel.RecordWorkspace.RecordSummary);
+    }
+
+    [Fact]
+    public void Evidence_workspaces_own_their_loaded_collections()
+    {
+        var viewModel = CreateViewModel();
+
+        Assert.NotEmpty(viewModel.HistoryWorkspace.SelectedVehicleHistory);
+        Assert.NotEmpty(viewModel.FuelWorkspace.SelectedVehicleFuel);
+        Assert.NotEmpty(viewModel.ReminderWorkspace.SelectedVehicleReminders);
+        Assert.NotEmpty(viewModel.MaintenanceWorkspace.SelectedVehicleMaintenance);
+        Assert.NotEmpty(viewModel.RecordWorkspace.SelectedVehicleRecords);
+        Assert.Equal(
+            viewModel.HistoryWorkspace.SelectedVehicleHistory.Count,
+            viewModel.HistoryWorkspace.VisibleHistoryItems.Count);
+        Assert.Equal(
+            viewModel.FuelWorkspace.SelectedVehicleFuel.Count,
+            viewModel.FuelWorkspace.VisibleFuelItems.Count);
+        Assert.Equal(
+            viewModel.ReminderWorkspace.SelectedVehicleReminders.Count,
+            viewModel.ReminderWorkspace.VisibleReminderItems.Count);
+        Assert.Equal(
+            viewModel.MaintenanceWorkspace.SelectedVehicleMaintenance.Count,
+            viewModel.MaintenanceWorkspace.VisibleMaintenanceItems.Count);
+        Assert.Equal(
+            viewModel.RecordWorkspace.SelectedVehicleRecords.Count,
+            viewModel.RecordWorkspace.VisibleRecordItems.Count);
     }
 
     [Fact]
@@ -228,6 +256,11 @@ public sealed class WorkspaceCompositionTests
             "ReminderSummary",
             "MaintenanceSummary",
             "RecordSummary",
+            "SelectedVehicleHistory",
+            "SelectedVehicleFuel",
+            "SelectedVehicleReminders",
+            "SelectedVehicleMaintenance",
+            "SelectedVehicleRecords",
             "SelectedVehicleHeading",
             "SelectedVehicleOverview",
             "SelectedVehicleDates",
@@ -332,9 +365,25 @@ public sealed class WorkspaceCompositionTests
             [
                 new VehicleMeta("veh_1", "Aktivní", "", "Benzín", "Klimatizace", "Řemen", "Manuál")
             ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "10.01.2026", "Servis", "10000", "150", "Výměna oleje")
+            ],
+            FuelEntries =
+            [
+                new FuelEntry("fuel_1", "veh_1", "15.01.2026", "10150", "42", "350", true, "Benzín", "Plná")
+            ],
             Reminders =
             [
                 new VehicleReminder("rem_1", "veh_1", "Objednat servis", "01.12.2099", "30", "Ročně", "Zavolat servisu")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_1", "veh_1", "Doklad", "Asistence", "", "", "08/2099", "", VehicleRecordAttachmentMode.External, "", "")
+            ],
+            MaintenancePlans =
+            [
+                new MaintenancePlan("mnt_1", "veh_1", "Motorový olej", "15000", "12", "10.01.2026", "10000", true, "Každý rok")
             ]
         };
 
