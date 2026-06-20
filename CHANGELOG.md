@@ -54,6 +54,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - `Audit dat` dostal plné klávesové ovládání ve stylu ostatních přehledů a detail vozidla nově po otevření fokusuje primární akci úpravy
 - formulář dokladu v režimu `Spravovaná kopie` už nevystavuje interní relativní cestu jako běžně editovatelné pole a přehled dokladů nově jasně zobrazuje i režim přílohy
 - Avalonia shell už se v titulku a přístupném názvu neprezentuje jako preview a dostal samostatnou nabídku `Přehledy` pro otevření hlavních přehledových oken
+- Avalonia horní menu nově zobrazuje nativní `InputGesture` u hlavních položek se zkratkami, takže menu viditelně odpovídá keyboard-first ovládání
 - klávesové zkratky přehledů v Avalonia shellu jsou sjednocené s hlavní dokumentací: `Ctrl+D` dashboard, `Ctrl+T` blížící se termíny a `Ctrl+Shift+T` propadlé termíny
 - C# desktop větev používá Avalonia `12.0.4` místo původní release-candidate verze a NuGet restore už nehlásí zranitelný `Tmds.DBus.Protocol`
 - preview release tooling C# větve zapisuje do package metadat i SHA-256 a velikost balíčku a generátor update manifestu ověřuje shodu metadat, `.sha256` souboru i fyzického artefaktu

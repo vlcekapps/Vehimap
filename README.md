@@ -73,6 +73,7 @@ V hlavním okně:
 ## Klávesové zkratky v hlavním okně:
 
 - `F10` nebo samostatná klávesa `Alt`: otevře horní menu bez zařazení menu do běžného pořadí `Tab` / `Shift+Tab`
+- v C# Avalonia větvi horní menu zobrazuje hlavní dostupné klávesové zkratky přímo u položek, takže stejnou akci lze najít přes menu i použít zkratkou
 - `Ctrl+N`: přidat vozidlo
 - `Ctrl+U` nebo `F2`: upravit vybrané vozidlo
 - `Ctrl+F`: přesunout fokus do hledání

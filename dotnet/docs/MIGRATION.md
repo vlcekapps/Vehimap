@@ -71,6 +71,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - rychle akce v Avalonia menu pro nejblizsi TK, zelenou kartu, vlastni pripominku, servisni udrzbu a doklad i pro filtrovanou kontrolu techto terminu
 - primy vstup `Casova osa vozidla` v menu `Vozidlo`, aby C# shell zachoval stejnou informacni architekturu jako AHK menu
 - primy vstup `Export terminu do kalendare (.ics)` v menu `Prehledy`, napojeny na sdileny kalendarovy export
+- nativni `InputGesture` popisky u hlavnich Avalonia menu polozek, aby menu ukazovalo stejne klavesove zkratky jako shell
 - pristupne tray akcni okno s primym otevrenim hlavniho okna, dashboardu, blizicich se terminu, propadlych terminu, nejblizsi TK/ZK/pripominky/servisu/dokladu, filtrovanych kontrol, tiskoveho prehledu, exportu/importu zalohy, exportu kalendare, znovunacteni dat, nastaveni, O programu, kontroly aktualizaci a ukonceni aplikace
 - regresni kontrola desktop UI zdroju proti typickym mojibake znakum, aby ctecky obrazovky nedostavaly poskozenou UTF-8 diakritiku
 
