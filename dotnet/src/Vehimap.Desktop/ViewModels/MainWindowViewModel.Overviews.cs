@@ -11,6 +11,11 @@ public sealed partial class MainWindowViewModel
     private const string OverviewDataIssueKind = "data_issue";
     private const string OverviewDataIssueFilterLabel = "Datové nedostatky";
     private const string OverviewMissingGreenDateLabel = "Nevyplněno";
+    private const string OverviewAllFilterLabel = "Vše";
+    private const string OverviewIncludeMissingGreenSettingKey = "include_missing_green";
+    private const string OverviewIncludeDataIssuesSettingKey = "include_data_issues";
+    private const string OverviewUpcomingFilterSettingKey = "upcoming_filter";
+    private const string OverviewOverdueFilterSettingKey = "overdue_filter";
     private bool _suppressOverviewPreferenceRefresh;
 
     public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems { get; } = [];
@@ -19,7 +24,7 @@ public sealed partial class MainWindowViewModel
 
     public IReadOnlyList<string> OverviewFilters { get; } =
     [
-        "Vše",
+        OverviewAllFilterLabel,
         "Technické kontroly",
         "Zelené karty",
         "Připomínky",
@@ -29,7 +34,7 @@ public sealed partial class MainWindowViewModel
 
     public IReadOnlyList<string> UpcomingOverviewFilters { get; } =
     [
-        "Vše",
+        OverviewAllFilterLabel,
         "Technické kontroly",
         "Zelené karty",
         "Připomínky",
@@ -113,8 +118,10 @@ public sealed partial class MainWindowViewModel
         _suppressOverviewPreferenceRefresh = true;
         try
         {
-            IncludeMissingGreenCardsInUpcomingOverview = ReadOverviewBooleanSetting("include_missing_green");
-            IncludeDataIssuesInUpcomingOverview = ReadOverviewBooleanSetting("include_data_issues");
+            IncludeMissingGreenCardsInUpcomingOverview = ReadOverviewBooleanSetting(OverviewIncludeMissingGreenSettingKey);
+            IncludeDataIssuesInUpcomingOverview = ReadOverviewBooleanSetting(OverviewIncludeDataIssuesSettingKey);
+            SelectedUpcomingOverviewFilter = NormalizeUpcomingOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewUpcomingFilterSettingKey, OverviewAllFilterLabel));
+            SelectedOverdueOverviewFilter = NormalizeOverdueOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewOverdueFilterSettingKey, OverviewAllFilterLabel));
         }
         finally
         {
@@ -132,8 +139,10 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        _dataSet.Settings.SetValue("overview", "include_missing_green", IncludeMissingGreenCardsInUpcomingOverview ? "1" : "0");
-        _dataSet.Settings.SetValue("overview", "include_data_issues", IncludeDataIssuesInUpcomingOverview ? "1" : "0");
+        _dataSet.Settings.SetValue("overview", OverviewIncludeMissingGreenSettingKey, IncludeMissingGreenCardsInUpcomingOverview ? "1" : "0");
+        _dataSet.Settings.SetValue("overview", OverviewIncludeDataIssuesSettingKey, IncludeDataIssuesInUpcomingOverview ? "1" : "0");
+        _dataSet.Settings.SetValue("overview", OverviewUpcomingFilterSettingKey, NormalizeUpcomingOverviewFilter(SelectedUpcomingOverviewFilter));
+        _dataSet.Settings.SetValue("overview", OverviewOverdueFilterSettingKey, NormalizeOverdueOverviewFilter(SelectedOverdueOverviewFilter));
         _ = PersistOverviewPreferencesCoreAsync();
     }
 
@@ -147,6 +156,20 @@ public sealed partial class MainWindowViewModel
         {
             ShellStatus = $"Nepodařilo se uložit volby přehledu termínů: {ex.Message}";
         }
+    }
+
+    private string NormalizeUpcomingOverviewFilter(string? value) =>
+        NormalizeOverviewFilter(value, UpcomingOverviewFilters);
+
+    private string NormalizeOverdueOverviewFilter(string? value) =>
+        NormalizeOverviewFilter(value, OverviewFilters);
+
+    private static string NormalizeOverviewFilter(string? value, IReadOnlyList<string> supportedFilters)
+    {
+        var normalized = string.IsNullOrWhiteSpace(value) ? OverviewAllFilterLabel : value.Trim();
+        return supportedFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
+            ? normalized
+            : OverviewAllFilterLabel;
     }
 
     private void RefreshUpcomingOverview()

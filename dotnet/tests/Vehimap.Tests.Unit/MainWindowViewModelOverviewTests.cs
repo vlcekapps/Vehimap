@@ -147,6 +147,63 @@ public sealed class MainWindowViewModelOverviewTests
     }
 
     [Fact]
+    public void Overview_filter_preferences_are_restored_from_settings()
+    {
+        var dataSet = BuildOverviewDataSet();
+        dataSet.Settings.SetValue("overview", "upcoming_filter", "Technické kontroly");
+        dataSet.Settings.SetValue("overview", "overdue_filter", "Doklady");
+
+        var viewModel = CreateViewModel(dataSet);
+
+        Assert.Equal("Technické kontroly", viewModel.SelectedUpcomingOverviewFilter);
+        Assert.Single(viewModel.UpcomingOverviewItems);
+        Assert.All(viewModel.UpcomingOverviewItems, item => Assert.Equal("technical", item.Kind));
+        Assert.Equal("Doklady", viewModel.SelectedOverdueOverviewFilter);
+        Assert.Single(viewModel.OverdueOverviewItems);
+        Assert.All(viewModel.OverdueOverviewItems, item => Assert.Equal("record", item.Kind));
+    }
+
+    [Fact]
+    public void Overview_filter_changes_are_saved_to_settings()
+    {
+        var dataSet = BuildOverviewDataSet();
+        var viewModel = CreateViewModel(dataSet);
+
+        viewModel.SelectedUpcomingOverviewFilter = "Připomínky";
+        viewModel.SelectedOverdueOverviewFilter = "Zelené karty";
+
+        Assert.Equal("Připomínky", dataSet.Settings.GetValue("overview", "upcoming_filter", string.Empty));
+        Assert.Equal("Zelené karty", dataSet.Settings.GetValue("overview", "overdue_filter", string.Empty));
+        Assert.Single(viewModel.UpcomingOverviewItems);
+        Assert.All(viewModel.UpcomingOverviewItems, item => Assert.Equal("custom", item.Kind));
+        Assert.Single(viewModel.OverdueOverviewItems);
+        Assert.All(viewModel.OverdueOverviewItems, item => Assert.Equal("green", item.Kind));
+    }
+
+    [Fact]
+    public void Unknown_overview_filter_preferences_fall_back_to_all_items()
+    {
+        var dataSet = BuildOverviewDataSet();
+        dataSet.Settings.SetValue("overview", "upcoming_filter", "Neznámý filtr");
+        dataSet.Settings.SetValue("overview", "overdue_filter", "Neznámý filtr");
+
+        var viewModel = CreateViewModel(dataSet);
+
+        Assert.Equal("Vše", viewModel.SelectedUpcomingOverviewFilter);
+        Assert.Equal("Vše", viewModel.SelectedOverdueOverviewFilter);
+        Assert.Equal(2, viewModel.UpcomingOverviewItems.Count);
+        Assert.Equal(2, viewModel.OverdueOverviewItems.Count);
+
+        viewModel.SelectedUpcomingOverviewFilter = "Neznámý filtr";
+        viewModel.SelectedOverdueOverviewFilter = "Neznámý filtr";
+
+        Assert.Equal("Vše", viewModel.SelectedUpcomingOverviewFilter);
+        Assert.Equal("Vše", viewModel.SelectedOverdueOverviewFilter);
+        Assert.Equal("Vše", dataSet.Settings.GetValue("overview", "upcoming_filter", string.Empty));
+        Assert.Equal("Vše", dataSet.Settings.GetValue("overview", "overdue_filter", string.Empty));
+    }
+
+    [Fact]
     public void Opening_upcoming_overview_data_issue_navigates_to_audit_target()
     {
         var viewModel = CreateViewModel(BuildOverviewDataSet());

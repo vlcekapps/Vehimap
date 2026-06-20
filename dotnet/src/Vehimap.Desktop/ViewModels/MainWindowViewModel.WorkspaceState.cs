@@ -915,7 +915,20 @@ public sealed partial class MainWindowViewModel
 
     internal void HandleUpcomingOverviewWorkspaceFilterChanged()
     {
+        if (_suppressOverviewPreferenceRefresh)
+        {
+            return;
+        }
+
+        var normalizedFilter = NormalizeUpcomingOverviewFilter(SelectedUpcomingOverviewFilter);
+        if (!string.Equals(SelectedUpcomingOverviewFilter, normalizedFilter, StringComparison.Ordinal))
+        {
+            SelectedUpcomingOverviewFilter = normalizedFilter;
+            return;
+        }
+
         RefreshUpcomingOverview();
+        PersistOverviewPreferencesAsync();
     }
 
     internal void HandleUpcomingOverviewWorkspaceOptionsChanged()
@@ -949,7 +962,20 @@ public sealed partial class MainWindowViewModel
 
     internal void HandleOverdueOverviewWorkspaceFilterChanged()
     {
+        if (_suppressOverviewPreferenceRefresh)
+        {
+            return;
+        }
+
+        var normalizedFilter = NormalizeOverdueOverviewFilter(SelectedOverdueOverviewFilter);
+        if (!string.Equals(SelectedOverdueOverviewFilter, normalizedFilter, StringComparison.Ordinal))
+        {
+            SelectedOverdueOverviewFilter = normalizedFilter;
+            return;
+        }
+
         RefreshOverdueOverview();
+        PersistOverviewPreferencesAsync();
     }
 
     internal void RefreshOverdueOverviewWorkspace()
