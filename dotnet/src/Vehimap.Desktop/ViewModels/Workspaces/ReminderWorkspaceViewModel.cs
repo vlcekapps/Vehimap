@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -32,6 +33,7 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     private bool reminderSortDescending;
 
     public IReadOnlyList<string> ReminderSortOptions => WorkspaceSortHelpers.ReminderSortOptions;
+    public IReadOnlyList<string> ReminderRepeatModeOptions => LegacyKnownValues.ReminderRepeatModes;
 
     public bool CanClearReminderSearch => !string.IsNullOrWhiteSpace(ReminderSearchText);
 

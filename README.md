@@ -199,6 +199,7 @@ V plánu údržby:
 V evidenci pojištění a dokladů:
 
 - `Druh záznamu` a `Název záznamu` jsou povinné
+- v C# Avalonia větvi je `Druh záznamu` rozbalovací seznam se stejnými hodnotami jako v AHK aplikaci
 - `Platné od` a `Platné do` se zadávají jako `MM/RRRR`, například `04/2026`
 - v C# Avalonia větvi se platnost při uložení normalizuje a hlídá se, aby `Platné od` nebylo později než `Platné do`; cena dokladu musí být číselná částka
 - `Poskytovatel / vydavatel`, `Cena / částka`, `Režim přílohy`, `Příloha` a `Poznámka` jsou volitelné
@@ -226,6 +227,7 @@ Ve vlastních připomínkách:
 
 - `Název připomínky`, `Termín` a `Upozornit dnů předem` jsou povinné
 - `Opakování` může být `Neopakovat`, `Každý rok`, `Každé 2 roky` nebo `Každých 5 let`
+- v C# Avalonia větvi je `Opakování` rozbalovací seznam, takže není potřeba ručně opisovat text hodnoty
 - v C# Avalonia větvi nová připomínka předvyplní předstih `30` dnů a při uložení normalizuje termín na `DD.MM.RRRR`
 - tlačítko `Posunout na další` přesune opakovanou připomínku na další termín bez nutnosti ručního přepisu data
 

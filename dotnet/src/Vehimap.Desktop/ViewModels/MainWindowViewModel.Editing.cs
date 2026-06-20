@@ -66,7 +66,7 @@ public sealed partial class MainWindowViewModel
         ReminderEditorTitle = reminder.Title;
         ReminderEditorDueDate = reminder.DueDate;
         ReminderEditorDays = reminder.ReminderDays;
-        ReminderEditorRepeatMode = reminder.RepeatMode;
+        ReminderEditorRepeatMode = LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(reminder.RepeatMode);
         ReminderEditorNote = reminder.Note;
         ReminderEditorStatus = "Upravte připomínku a uložte změny.";
         IsEditingReminder = true;
@@ -115,7 +115,7 @@ public sealed partial class MainWindowViewModel
             title,
             dueDate,
             reminderDays,
-            string.IsNullOrWhiteSpace(ReminderEditorRepeatMode) ? "Neopakovat" : ReminderEditorRepeatMode.Trim(),
+            LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(ReminderEditorRepeatMode),
             (ReminderEditorNote ?? string.Empty).Trim());
 
         UpsertReminder(updatedReminder);
@@ -253,8 +253,9 @@ public sealed partial class MainWindowViewModel
         }
 
         var title = (RecordEditorTitle ?? string.Empty).Trim();
-        var recordType = (RecordEditorRecordType ?? string.Empty).Trim();
-        if (string.IsNullOrWhiteSpace(recordType))
+        var recordTypeText = (RecordEditorRecordType ?? string.Empty).Trim();
+        var recordType = LegacyVehicleValueNormalization.NormalizeRecordType(recordTypeText);
+        if (string.IsNullOrWhiteSpace(recordTypeText))
         {
             RecordEditorStatus = "Vyberte prosím druh záznamu.";
             RequestFocus(DesktopFocusTarget.RecordEditorType);
@@ -380,7 +381,7 @@ public sealed partial class MainWindowViewModel
     private void BeginRecordEdit(VehicleRecord record, bool preferManagedImport)
     {
         _editingRecordId = record.Id;
-        RecordEditorRecordType = record.RecordType;
+        RecordEditorRecordType = LegacyVehicleValueNormalization.NormalizeRecordType(record.RecordType);
         RecordEditorTitle = record.Title;
         RecordEditorProvider = record.Provider;
         RecordEditorValidFrom = record.ValidFrom;
@@ -427,55 +428,26 @@ public sealed partial class MainWindowViewModel
     private static bool TryGetReminderRepeatIntervalMonths(string? repeatMode, out int intervalMonths)
     {
         intervalMonths = 0;
-        var normalized = NormalizeReminderRepeatMode(repeatMode);
-        if (string.IsNullOrWhiteSpace(normalized) || normalized.Contains("neopakovat", StringComparison.Ordinal))
-        {
-            return false;
-        }
-
-        if (normalized.Contains('5'))
+        var normalized = LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(repeatMode);
+        if (string.Equals(normalized, "Každých 5 let", StringComparison.Ordinal))
         {
             intervalMonths = 60;
             return true;
         }
 
-        if (normalized.Contains('2'))
+        if (string.Equals(normalized, "Každé 2 roky", StringComparison.Ordinal))
         {
             intervalMonths = 24;
             return true;
         }
 
-        if (normalized.Contains("rok", StringComparison.Ordinal) || normalized.Contains("rocne", StringComparison.Ordinal))
+        if (string.Equals(normalized, "Každý rok", StringComparison.Ordinal))
         {
             intervalMonths = 12;
             return true;
         }
 
         return false;
-    }
-
-    private static string NormalizeReminderRepeatMode(string? repeatMode)
-    {
-        return (repeatMode ?? string.Empty)
-            .Trim()
-            .ToLowerInvariant()
-            .Replace("\u00A0", string.Empty, StringComparison.Ordinal)
-            .Replace(" ", string.Empty, StringComparison.Ordinal)
-            .Replace("á", "a", StringComparison.Ordinal)
-            .Replace("č", "c", StringComparison.Ordinal)
-            .Replace("ď", "d", StringComparison.Ordinal)
-            .Replace("é", "e", StringComparison.Ordinal)
-            .Replace("ě", "e", StringComparison.Ordinal)
-            .Replace("í", "i", StringComparison.Ordinal)
-            .Replace("ň", "n", StringComparison.Ordinal)
-            .Replace("ó", "o", StringComparison.Ordinal)
-            .Replace("ř", "r", StringComparison.Ordinal)
-            .Replace("š", "s", StringComparison.Ordinal)
-            .Replace("ť", "t", StringComparison.Ordinal)
-            .Replace("ú", "u", StringComparison.Ordinal)
-            .Replace("ů", "u", StringComparison.Ordinal)
-            .Replace("ý", "y", StringComparison.Ordinal)
-            .Replace("ž", "z", StringComparison.Ordinal);
     }
 
     private static string FormatReminderDueDate(DateOnly date) =>

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -35,6 +36,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     private bool recordSortDescending;
 
     public IReadOnlyList<string> RecordSortOptions => WorkspaceSortHelpers.RecordSortOptions;
+    public IReadOnlyList<string> RecordTypeOptions => LegacyKnownValues.RecordTypes;
 
     public bool CanClearRecordSearch => !string.IsNullOrWhiteSpace(RecordSearchText);
 

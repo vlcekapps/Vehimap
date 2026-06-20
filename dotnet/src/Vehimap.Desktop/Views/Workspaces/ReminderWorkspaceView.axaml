@@ -86,7 +86,7 @@
             </StackPanel>
           </Grid>
           <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="Opakování" />
-          <TextBox Grid.Row="4" Margin="0,6,0,0" Text="{Binding ReminderEditorRepeatMode}" PlaceholderText="Například Ročně nebo bez opakování" AutomationProperties.Name="Opakování připomínky" AutomationProperties.AutomationId="ReminderEditorRepeatModeBox" />
+          <ComboBox x:Name="ReminderEditorRepeatModeBox" Grid.Row="4" Margin="0,6,0,0" ItemsSource="{Binding ReminderRepeatModeOptions}" SelectedItem="{Binding ReminderEditorRepeatMode}" AutomationProperties.Name="Opakování připomínky" AutomationProperties.AutomationId="ReminderEditorRepeatModeBox" />
           <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
           <TextBox Grid.Row="6" Margin="0,6,0,0" Height="120" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding ReminderEditorNote}" AutomationProperties.Name="Poznámka k připomínce" AutomationProperties.AutomationId="ReminderEditorNoteBox" />
           </Grid>

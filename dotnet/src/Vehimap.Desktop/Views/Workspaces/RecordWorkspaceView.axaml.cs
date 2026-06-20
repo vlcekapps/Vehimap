@@ -32,7 +32,7 @@ public partial class RecordWorkspaceView : WorkspaceViewBase<RecordWorkspaceView
         {
             DesktopFocusTarget.RecordSearch => this.FindControl<TextBox>("RecordSearchBox"),
             DesktopFocusTarget.RecordList => this.FindControl<ListBox>("RecordListBox"),
-            DesktopFocusTarget.RecordEditorType => this.FindControl<TextBox>("RecordEditorTypeBox"),
+            DesktopFocusTarget.RecordEditorType => this.FindControl<ComboBox>("RecordEditorTypeBox"),
             DesktopFocusTarget.RecordEditorTitle => this.FindControl<TextBox>("RecordEditorTitleBox"),
             DesktopFocusTarget.RecordEditorValidFrom => this.FindControl<TextBox>("RecordEditorValidFromBox"),
             DesktopFocusTarget.RecordEditorValidTo => this.FindControl<TextBox>("RecordEditorValidToBox"),

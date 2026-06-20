@@ -71,4 +71,28 @@ public sealed class LegacyVehicleValueNormalizationTests
     {
         Assert.Equal(expected, LegacyVehicleValueNormalization.NormalizeCategory(value));
     }
+
+    [Theory]
+    [InlineData("Povinné ručení", "Povinné ručení")]
+    [InlineData("Doklad", "Doklad")]
+    [InlineData("Vlastní typ", "Povinné ručení")]
+    [InlineData("", "Povinné ručení")]
+    public void Normalize_record_type_matches_legacy_dropdown_rules(string value, string expected)
+    {
+        Assert.Equal(expected, LegacyVehicleValueNormalization.NormalizeRecordType(value));
+    }
+
+    [Theory]
+    [InlineData("", "Neopakovat")]
+    [InlineData("Neopakovat", "Neopakovat")]
+    [InlineData("Ročně", "Každý rok")]
+    [InlineData("ročně", "Každý rok")]
+    [InlineData("Každý rok", "Každý rok")]
+    [InlineData("Každé 2 roky", "Každé 2 roky")]
+    [InlineData("Každých 5 let", "Každých 5 let")]
+    [InlineData("něco jiného", "Neopakovat")]
+    public void Normalize_reminder_repeat_mode_matches_legacy_dropdown_rules(string value, string expected)
+    {
+        Assert.Equal(expected, LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(value));
+    }
 }

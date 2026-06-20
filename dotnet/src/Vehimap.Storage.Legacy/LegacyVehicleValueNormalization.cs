@@ -40,6 +40,74 @@ public static partial class LegacyVehicleValueNormalization
         return "Ostatní";
     }
 
+    public static string NormalizeRecordType(string? recordType)
+    {
+        var value = (recordType ?? string.Empty).Trim();
+        foreach (var allowed in LegacyKnownValues.RecordTypes)
+        {
+            if (string.Equals(allowed, value, StringComparison.Ordinal))
+            {
+                return allowed;
+            }
+        }
+
+        return LegacyKnownValues.RecordTypes[0];
+    }
+
+    public static string NormalizeReminderRepeatMode(string? repeatMode)
+    {
+        var value = (repeatMode ?? string.Empty).Trim();
+        if (value.Length == 0)
+        {
+            return LegacyKnownValues.ReminderRepeatModes[0];
+        }
+
+        foreach (var allowed in LegacyKnownValues.ReminderRepeatModes)
+        {
+            if (string.Equals(allowed, value, StringComparison.Ordinal))
+            {
+                return allowed;
+            }
+        }
+
+        var folded = value
+            .ToLowerInvariant()
+            .Replace("\u00A0", string.Empty, StringComparison.Ordinal)
+            .Replace(" ", string.Empty, StringComparison.Ordinal)
+            .Replace("á", "a", StringComparison.Ordinal)
+            .Replace("č", "c", StringComparison.Ordinal)
+            .Replace("ď", "d", StringComparison.Ordinal)
+            .Replace("é", "e", StringComparison.Ordinal)
+            .Replace("ě", "e", StringComparison.Ordinal)
+            .Replace("í", "i", StringComparison.Ordinal)
+            .Replace("ň", "n", StringComparison.Ordinal)
+            .Replace("ó", "o", StringComparison.Ordinal)
+            .Replace("ř", "r", StringComparison.Ordinal)
+            .Replace("š", "s", StringComparison.Ordinal)
+            .Replace("ť", "t", StringComparison.Ordinal)
+            .Replace("ú", "u", StringComparison.Ordinal)
+            .Replace("ů", "u", StringComparison.Ordinal)
+            .Replace("ý", "y", StringComparison.Ordinal)
+            .Replace("ž", "z", StringComparison.Ordinal);
+
+        if (folded.Contains("5"))
+        {
+            return "Každých 5 let";
+        }
+
+        if (folded.Contains('2'))
+        {
+            return "Každé 2 roky";
+        }
+
+        if (folded.Contains("rok", StringComparison.Ordinal) || folded.Contains("rocne", StringComparison.Ordinal))
+        {
+            return "Každý rok";
+        }
+
+        return LegacyKnownValues.ReminderRepeatModes[0];
+    }
+
     public static string NormalizeMonthYear(string? monthYear)
     {
         var value = (monthYear ?? string.Empty).Trim();

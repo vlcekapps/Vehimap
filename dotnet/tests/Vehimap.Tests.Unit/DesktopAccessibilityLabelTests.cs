@@ -625,6 +625,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CompleteMaintenanceButton\"", maintenanceXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"RecordEditorTypeBox\"", recordXaml);
         Assert.Contains("x:Name=\"RecordEditorTypeBox\"", recordXaml);
+        Assert.Contains("<ComboBox x:Name=\"RecordEditorTypeBox\"", recordXaml);
+        Assert.Contains("ItemsSource=\"{Binding RecordTypeOptions}\"", recordXaml);
         Assert.Contains("x:Name=\"RecordEditorValidFromBox\"", recordXaml);
         Assert.Contains("x:Name=\"RecordEditorValidToBox\"", recordXaml);
         Assert.Contains("x:Name=\"RecordEditorPriceBox\"", recordXaml);
@@ -634,6 +636,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ReminderEditorDueDateBox\"", reminderXaml);
         Assert.Contains("x:Name=\"ReminderEditorDueDateBox\"", reminderXaml);
         Assert.Contains("x:Name=\"ReminderEditorDaysBox\"", reminderXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReminderEditorRepeatModeBox\"", reminderXaml);
+        Assert.Contains("<ComboBox x:Name=\"ReminderEditorRepeatModeBox\"", reminderXaml);
+        Assert.Contains("ItemsSource=\"{Binding ReminderRepeatModeOptions}\"", reminderXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AdvanceReminderButton\"", reminderXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorNameBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorCategoryBox\"", vehicleDetailXaml);

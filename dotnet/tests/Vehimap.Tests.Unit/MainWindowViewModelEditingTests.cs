@@ -42,7 +42,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         Assert.NotNull(viewModel.ReminderWorkspace.SelectedReminder);
         Assert.Equal("Objednat pneuservis", viewModel.ReminderWorkspace.SelectedReminder!.Title);
-        Assert.Contains(dataStore.CurrentDataSet.Reminders, item => item.Title == "Objednat pneuservis" && item.VehicleId == "veh_1");
+        var savedReminder = Assert.Single(dataStore.CurrentDataSet.Reminders.Where(item => item.Title == "Objednat pneuservis" && item.VehicleId == "veh_1"));
+        Assert.Equal("Každý rok", savedReminder.RepeatMode);
         Assert.Equal("Nová připomínka byla uložena.", viewModel.ReminderWorkspace.ReminderEditorStatus);
     }
 
@@ -149,6 +150,26 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.True(File.Exists(importedPath));
         Assert.Equal("Nový doklad byl uložen.", viewModel.RecordWorkspace.RecordEditorStatus);
         Assert.Equal("Spravovaná kopie", viewModel.RecordWorkspace.SelectedRecord?.AttachmentMode);
+    }
+
+    [Fact]
+    public async Task Save_record_command_normalizes_unknown_type_to_legacy_default()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateRecordCommand.Execute(null);
+        viewModel.RecordWorkspace.RecordEditorRecordType = "Vlastní typ";
+        viewModel.RecordWorkspace.RecordEditorTitle = "Starý doklad";
+
+        await viewModel.SaveRecordCommand.ExecuteAsync(null);
+
+        var savedRecord = Assert.Single(dataStore.CurrentDataSet.Records);
+        Assert.Equal("Povinné ručení", savedRecord.RecordType);
     }
 
     [Fact]
