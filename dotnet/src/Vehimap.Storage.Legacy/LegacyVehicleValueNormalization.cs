@@ -54,6 +54,20 @@ public static partial class LegacyVehicleValueNormalization
         return LegacyKnownValues.RecordTypes[0];
     }
 
+    public static string NormalizeFuelType(string? fuelType)
+    {
+        var value = (fuelType ?? string.Empty).Trim();
+        foreach (var allowed in LegacyKnownValues.FuelTypes)
+        {
+            if (string.Equals(allowed, value, StringComparison.Ordinal))
+            {
+                return allowed;
+            }
+        }
+
+        return LegacyKnownValues.FuelTypes[0];
+    }
+
     public static string NormalizeReminderRepeatMode(string? repeatMode)
     {
         var value = (repeatMode ?? string.Empty).Trim();

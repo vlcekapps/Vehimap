@@ -83,6 +83,16 @@ public sealed class LegacyVehicleValueNormalizationTests
     }
 
     [Theory]
+    [InlineData("", "")]
+    [InlineData("Nafta", "Nafta")]
+    [InlineData("Elektřina", "Elektřina")]
+    [InlineData("Natural 95", "")]
+    public void Normalize_fuel_type_matches_legacy_dropdown_rules(string value, string expected)
+    {
+        Assert.Equal(expected, LegacyVehicleValueNormalization.NormalizeFuelType(value));
+    }
+
+    [Theory]
     [InlineData("", "Neopakovat")]
     [InlineData("Neopakovat", "Neopakovat")]
     [InlineData("Ročně", "Každý rok")]

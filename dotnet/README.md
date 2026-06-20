@@ -51,6 +51,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - u dokladu otevrit prilozeny soubor, otevrit jeho slozku a zkopirovat vyresenou cestu pres `Ctrl+Shift+C` nebo tlacitko `Kopirovat cestu`
 - primo vytvaret, upravovat a mazat `historii`
 - primo vytvaret, upravovat a mazat `tankovani`
+- v editoru tankovani pouzivat AHK-kompatibilni rozbalovaci hodnoty pro typ paliva
 - pri ukladani evidencnich editoru validovat a normalizovat datumy, tachometr, litry, castky, intervaly udrzby, terminy pripominek a platnost dokladu podle legacy AHK pravidel s navratem fokusu na chybne pole
 - posunout opakovanou `pripominku` na dalsi termin tlacitkem `Dalsi termin` nebo zkratkou `Ctrl+Shift+N`
 - primo vytvaret, upravovat a mazat `plan udrzby`

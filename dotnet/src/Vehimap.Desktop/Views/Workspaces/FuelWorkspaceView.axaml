@@ -145,10 +145,11 @@
             </StackPanel>
             <StackPanel Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Typ paliva" />
-              <TextBox Text="{Binding FuelEditorFuelType}"
-                       PlaceholderText="Například Natural 95"
-                       AutomationProperties.Name="Typ paliva"
-                       AutomationProperties.AutomationId="FuelEditorFuelTypeBox" />
+              <ComboBox x:Name="FuelEditorFuelTypeBox"
+                        ItemsSource="{Binding FuelTypeOptions}"
+                        SelectedItem="{Binding FuelEditorFuelType}"
+                        AutomationProperties.Name="Typ paliva"
+                        AutomationProperties.AutomationId="FuelEditorFuelTypeBox" />
             </StackPanel>
           </Grid>
           <Grid Grid.Row="1"

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -32,6 +33,8 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     private bool fuelSortDescending = true;
 
     public IReadOnlyList<string> FuelSortOptions => WorkspaceSortHelpers.FuelSortOptions;
+
+    public IReadOnlyList<string> FuelTypeOptions => LegacyKnownValues.FuelTypes;
 
     public bool CanClearFuelSearch => !string.IsNullOrWhiteSpace(FuelSearchText);
 

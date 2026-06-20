@@ -284,7 +284,7 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.Equal("Typ paliva", session.GetNameByAccessibilityId("FuelEditorFuelTypeBox"));
 
             session.SendKeysByAccessibilityId("FuelEditorDateBox", "20.10.2026");
-            session.SendKeysByAccessibilityId("FuelEditorFuelTypeBox", "Natural 95");
+            session.SendKeysByAccessibilityId("FuelEditorFuelTypeBox", "Nafta");
             session.SendKeysByAccessibilityId("FuelEditorLitersBox", "38.5");
             session.SendKeysByAccessibilityId("FuelEditorTotalCostBox", "1890");
             session.SendKeysByAccessibilityId("FuelEditorOdometerBox", "123789");

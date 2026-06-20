@@ -260,7 +260,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.CreateFuelCommand.Execute(null);
         viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
-        viewModel.FuelWorkspace.FuelEditorFuelType = "Natural 95";
+        viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
         viewModel.FuelWorkspace.FuelEditorLiters = "38.5";
         viewModel.FuelWorkspace.FuelEditorTotalCost = "1890";
         viewModel.FuelWorkspace.FuelEditorOdometer = "123789";
@@ -270,9 +270,48 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         await viewModel.SaveFuelCommand.ExecuteAsync(null);
 
         Assert.NotNull(viewModel.FuelWorkspace.SelectedFuel);
-        Assert.Equal("Natural 95", viewModel.FuelWorkspace.SelectedFuel!.FuelType);
-        Assert.Contains(dataStore.CurrentDataSet.FuelEntries, item => item.FuelType == "Natural 95" && item.VehicleId == "veh_1");
+        Assert.Equal("Nafta", viewModel.FuelWorkspace.SelectedFuel!.FuelType);
+        Assert.Contains(dataStore.CurrentDataSet.FuelEntries, item => item.FuelType == "Nafta" && item.VehicleId == "veh_1");
         Assert.Equal("Nové tankování bylo uloženo.", viewModel.FuelWorkspace.FuelEditorStatus);
+    }
+
+    [Fact]
+    public async Task Save_fuel_command_normalizes_unknown_fuel_type_to_legacy_default()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateFuelCommand.Execute(null);
+        viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
+        viewModel.FuelWorkspace.FuelEditorFuelType = "Natural 95";
+        viewModel.FuelWorkspace.FuelEditorLiters = "38.5";
+        viewModel.FuelWorkspace.FuelEditorTotalCost = "1890";
+        viewModel.FuelWorkspace.FuelEditorOdometer = "123789";
+
+        await viewModel.SaveFuelCommand.ExecuteAsync(null);
+
+        var savedFuel = Assert.Single(dataStore.CurrentDataSet.FuelEntries);
+        Assert.Equal(string.Empty, savedFuel.FuelType);
+    }
+
+    [Fact]
+    public void Edit_selected_fuel_normalizes_unknown_fuel_type_for_dropdown()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.FuelEntries.Add(new FuelEntry("fuel_1", "veh_1", "20.10.2026", "123789", "38.5", "1890", true, "Natural 95", string.Empty));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.EditSelectedFuelCommand.Execute(null);
+
+        Assert.Equal(string.Empty, viewModel.FuelWorkspace.FuelEditorFuelType);
     }
 
     [Fact]

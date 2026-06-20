@@ -177,7 +177,7 @@ public sealed partial class MainWindowViewModel
 
         _editingFuelId = entry.Id;
         FuelEditorDate = entry.EntryDate;
-        FuelEditorFuelType = entry.FuelType;
+        FuelEditorFuelType = LegacyVehicleValueNormalization.NormalizeFuelType(entry.FuelType);
         FuelEditorLiters = entry.Liters;
         FuelEditorTotalCost = entry.TotalCost;
         FuelEditorOdometer = entry.Odometer;
@@ -255,7 +255,7 @@ public sealed partial class MainWindowViewModel
             liters,
             totalCost,
             FuelEditorFullTank,
-            string.IsNullOrWhiteSpace(FuelEditorFuelType) ? "Palivo" : FuelEditorFuelType.Trim(),
+            LegacyVehicleValueNormalization.NormalizeFuelType(FuelEditorFuelType),
             (FuelEditorNote ?? string.Empty).Trim());
 
         UpsertFuelEntry(updatedEntry);

@@ -184,6 +184,7 @@ V evidenci kilometrů a tankování:
 - `Datum záznamu` a `Stav tachometru` jsou povinné
 - datum záznamu se zadává jako `DD.MM.RRRR`, například `26.03.2026`
 - v C# Avalonia větvi se při uložení datum, tachometr, litry a cena normalizují; pokud je vyplněná cena tankování, musí být vyplněné i litry
+- v C# Avalonia větvi je `Typ paliva` rozbalovací seznam se stejnými hodnotami jako v AHK aplikaci; starší uložené volné texty zůstávají v seznamech čitelné
 - `Natankováno litrů`, `Cena celkem v Kč`, `Typ paliva`, `Plná nádrž` a `Poznámka` jsou volitelné
 
 V plánu údržby:

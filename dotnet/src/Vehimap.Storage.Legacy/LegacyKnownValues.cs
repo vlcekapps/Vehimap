@@ -67,6 +67,17 @@ public static class LegacyKnownValues
         "Není relevantní"
     ];
 
+    public static readonly string[] FuelTypes =
+    [
+        string.Empty,
+        "Benzin",
+        "Nafta",
+        "LPG",
+        "CNG",
+        "Elektřina",
+        "Jiné"
+    ];
+
     public static readonly string[] ReminderRepeatModes =
     [
         "Neopakovat",
