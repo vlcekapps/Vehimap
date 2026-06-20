@@ -44,6 +44,12 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
         RequestFocus(DesktopFocusTarget.TimelineSearch);
     }
 
+    [RelayCommand]
+    private void RefreshTimeline()
+    {
+        Root.RefreshTimelineWorkspace();
+    }
+
     partial void OnSelectedTimelineItemChanged(VehicleTimelineItemViewModel? value)
     {
         SelectedTimelineDetail = value is null

@@ -92,6 +92,7 @@ V hlavním okně:
 
 - `Dashboard`: `Ctrl+R` obnoví seznam, `Ctrl+F` otevře globální hledání, `Ctrl+T` otevře přehled termínů, `Ctrl+Shift+T` otevře propadlé termíny, `Ctrl+P` otevře vybraný nejbližší termín, `Ctrl+O` zobrazí vozidlo vybrané v dashboardu a `Ctrl+U` nebo `F2` ho upraví
 - `Globální hledání`: `Ctrl+F` přesune fokus do hledání, `Ctrl+O`, `Ctrl+P` nebo `Enter` na seznamu otevře vybraný výsledek
+- `Časová osa`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví časovou osu bez ztráty výběru a `Ctrl+P` nebo `Enter` otevře vybranou položku
 - `Náklady napříč vozidly`: `Ctrl+F` přesune fokus do hledání vozidel, `Ctrl+R` obnoví období, `Ctrl+P` přesune fokus na rozpad nákladů vybraného vozidla, `Enter` na seznamu nebo `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
 - `Přehled termínů`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+Shift+T` přepne do propadlých termínů
 - `Propadlé termíny`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+T` přepne zpět do přehledu termínů

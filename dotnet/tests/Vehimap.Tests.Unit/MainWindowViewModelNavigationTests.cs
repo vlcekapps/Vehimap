@@ -305,6 +305,23 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Timeline_refresh_preserves_selection_and_requests_list_focus()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        var selectedTimelineItem = viewModel.SelectedVehicleTimeline.First(item => item.Kind == "custom");
+        viewModel.SelectedTimelineItem = selectedTimelineItem;
+
+        viewModel.TimelineWorkspace.RefreshTimelineCommand.Execute(null);
+
+        Assert.Equal(selectedTimelineItem.EntryId, viewModel.SelectedTimelineItem?.EntryId);
+        Assert.Equal(DesktopFocusTarget.TimelineList, requestedFocus);
+        Assert.Contains("Časová osa byla obnovena", viewModel.ShellStatus, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
     public void Audit_search_filters_visible_audit_items_without_changing_dashboard_source()
     {
         var viewModel = CreateViewModel();

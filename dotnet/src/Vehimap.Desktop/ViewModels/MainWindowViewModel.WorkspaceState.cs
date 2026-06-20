@@ -748,6 +748,13 @@ public sealed partial class MainWindowViewModel
         RefreshTimeline();
     }
 
+    internal void RefreshTimelineWorkspace()
+    {
+        RefreshTimeline();
+        ShellStatus = "Časová osa byla obnovena.";
+        RequestFocus(SelectedVehicleTimeline.Count == 0 ? DesktopFocusTarget.TimelineSearch : DesktopFocusTarget.TimelineList);
+    }
+
     internal void NotifyAuditWorkspaceSelectionChanged()
     {
         OpenSelectedDashboardAuditItemCommand.NotifyCanExecuteChanged();

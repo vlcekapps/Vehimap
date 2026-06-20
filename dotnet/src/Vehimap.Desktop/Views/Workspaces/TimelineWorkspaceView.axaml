@@ -6,6 +6,7 @@
              x:DataType="vm:TimelineWorkspaceViewModel">
   <UserControl.KeyBindings>
     <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+R" Command="{Binding RefreshTimelineCommand}" />
     <KeyBinding Gesture="Ctrl+P" Command="{Binding OpenSelectedTimelineItemCommand}" />
   </UserControl.KeyBindings>
   <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.35*,*">
@@ -16,7 +17,7 @@
     <Grid Grid.Row="1"
           Grid.ColumnSpan="2"
           Margin="0,12,0,0"
-          ColumnDefinitions="100,170,100,*">
+          ColumnDefinitions="100,170,100,*,130">
       <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Zobrazit" />
       <ComboBox x:Name="TimelineFilterComboBox"
                 Grid.Column="1"
@@ -32,6 +33,14 @@
                PlaceholderText="Položka, stav nebo poznámka"
                AutomationProperties.Name="Hledání v časové ose"
                AutomationProperties.AutomationId="TimelineSearchBox" />
+      <Button Grid.Column="4"
+              x:Name="TimelineRefreshButton"
+              Margin="12,0,0,0"
+              Width="118"
+              Command="{Binding RefreshTimelineCommand}"
+              Content="Obnovit"
+              AutomationProperties.Name="Obnovit časovou osu vybraného vozidla"
+              AutomationProperties.AutomationId="TimelineRefreshButton" />
     </Grid>
 
     <ListBox x:Name="TimelineListBox"
