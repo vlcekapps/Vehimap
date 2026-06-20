@@ -859,6 +859,36 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Main_window_should_open_workspace_windows_through_shared_helper()
+    {
+        var codeBehind = ReadViewCodeBehind("MainWindow.axaml.cs");
+        var workspaceWindows = new[]
+        {
+            "AuditWindow",
+            "CostWindow",
+            "DashboardWindow",
+            "FuelWindow",
+            "GlobalSearchWindow",
+            "HistoryWindow",
+            "MaintenanceWindow",
+            "OverdueOverviewWindow",
+            "RecordsWindow",
+            "RemindersWindow",
+            "TimelineWindow",
+            "UpcomingOverviewWindow",
+            "VehicleDetailWindow"
+        };
+
+        Assert.Contains("ShowWorkspaceWindowAsync<TWindow>", codeBehind);
+
+        foreach (var windowName in workspaceWindows)
+        {
+            Assert.Contains($"ShowWorkspaceWindowAsync<{windowName}>", codeBehind);
+            Assert.DoesNotContain($"new {windowName}", codeBehind);
+        }
+    }
+
+    [Fact]
     public void Desktop_ui_sources_should_not_contain_common_mojibake_markers()
     {
         var repositoryRoot = FindRepositoryRoot();

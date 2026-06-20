@@ -970,6 +970,34 @@ public partial class MainWindow : Window
         return false;
     }
 
+    private async Task ShowWorkspaceWindowAsync<TWindow>(
+        int tabIndex,
+        object workspace,
+        DesktopFocusTarget returnFocusTarget,
+        string confirmActionDescription,
+        bool allowActiveEditor = false)
+        where TWindow : Window, new()
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync(confirmActionDescription).ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _viewModel.SelectedVehicleTabIndex = tabIndex;
+        var dialog = new TWindow
+        {
+            DataContext = workspace
+        };
+
+        await dialog.ShowDialog(this).ConfigureAwait(true);
+        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : returnFocusTarget);
+    }
+
     private async Task OpenVehicleDetailWindowAsync(bool startCreate = false, bool startEdit = false, bool allowActiveEditor = false)
     {
         if (_viewModel is null)
@@ -1008,14 +1036,12 @@ public partial class MainWindow : Window
             }
         }
 
-        _viewModel.SelectedVehicleTabIndex = DetailTabIndex;
-        var dialog = new VehicleDetailWindow
-        {
-            DataContext = _viewModel.VehicleDetailWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.VehicleList);
+        await ShowWorkspaceWindowAsync<VehicleDetailWindow>(
+            DetailTabIndex,
+            _viewModel.VehicleDetailWorkspace,
+            DesktopFocusTarget.VehicleList,
+            "otevřít detail vybraného vozidla",
+            allowActiveEditor: true).ConfigureAwait(true);
     }
 
     private async Task OpenHistoryWindowAsync(bool allowActiveEditor = false)
@@ -1025,19 +1051,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít historii vybraného vozidla").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = HistoryTabIndex;
-        var dialog = new HistoryWindow
-        {
-            DataContext = _viewModel.HistoryWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.HistoryList);
+        await ShowWorkspaceWindowAsync<HistoryWindow>(
+            HistoryTabIndex,
+            _viewModel.HistoryWorkspace,
+            DesktopFocusTarget.HistoryList,
+            "otevřít historii vybraného vozidla",
+            allowActiveEditor).ConfigureAwait(true);
     }
 
     private async Task OpenFuelWindowAsync(bool allowActiveEditor = false)
@@ -1047,19 +1066,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít tankování vybraného vozidla").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = FuelTabIndex;
-        var dialog = new FuelWindow
-        {
-            DataContext = _viewModel.FuelWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.FuelList);
+        await ShowWorkspaceWindowAsync<FuelWindow>(
+            FuelTabIndex,
+            _viewModel.FuelWorkspace,
+            DesktopFocusTarget.FuelList,
+            "otevřít tankování vybraného vozidla",
+            allowActiveEditor).ConfigureAwait(true);
     }
 
     private async Task OpenRemindersWindowAsync(bool allowActiveEditor = false)
@@ -1069,19 +1081,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít připomínky vybraného vozidla").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = ReminderTabIndex;
-        var dialog = new RemindersWindow
-        {
-            DataContext = _viewModel.ReminderWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.ReminderList);
+        await ShowWorkspaceWindowAsync<RemindersWindow>(
+            ReminderTabIndex,
+            _viewModel.ReminderWorkspace,
+            DesktopFocusTarget.ReminderList,
+            "otevřít připomínky vybraného vozidla",
+            allowActiveEditor).ConfigureAwait(true);
     }
 
     private async Task OpenMaintenanceWindowAsync(bool allowActiveEditor = false)
@@ -1091,19 +1096,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít plán údržby vybraného vozidla").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = MaintenanceTabIndex;
-        var dialog = new MaintenanceWindow
-        {
-            DataContext = _viewModel.MaintenanceWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.MaintenanceList);
+        await ShowWorkspaceWindowAsync<MaintenanceWindow>(
+            MaintenanceTabIndex,
+            _viewModel.MaintenanceWorkspace,
+            DesktopFocusTarget.MaintenanceList,
+            "otevřít plán údržby vybraného vozidla",
+            allowActiveEditor).ConfigureAwait(true);
     }
 
     private async Task OpenTimelineWindowAsync()
@@ -1113,19 +1111,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít časovou osu vybraného vozidla").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = TimelineTabIndex;
-        var dialog = new TimelineWindow
-        {
-            DataContext = _viewModel.TimelineWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.TimelineSearch);
+        await ShowWorkspaceWindowAsync<TimelineWindow>(
+            TimelineTabIndex,
+            _viewModel.TimelineWorkspace,
+            DesktopFocusTarget.TimelineSearch,
+            "otevřít časovou osu vybraného vozidla").ConfigureAwait(true);
     }
 
     private async Task OpenAuditWindowAsync()
@@ -1135,19 +1125,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít audit dat").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = AuditTabIndex;
-        var dialog = new AuditWindow
-        {
-            DataContext = _viewModel.AuditWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.AuditList);
+        await ShowWorkspaceWindowAsync<AuditWindow>(
+            AuditTabIndex,
+            _viewModel.AuditWorkspace,
+            DesktopFocusTarget.AuditList,
+            "otevřít audit dat").ConfigureAwait(true);
     }
 
     private async Task OpenCostWindowAsync()
@@ -1157,19 +1139,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít náklady napříč vozidly").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = CostTabIndex;
-        var dialog = new CostWindow
-        {
-            DataContext = _viewModel.CostWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.CostList);
+        await ShowWorkspaceWindowAsync<CostWindow>(
+            CostTabIndex,
+            _viewModel.CostWorkspace,
+            DesktopFocusTarget.CostList,
+            "otevřít náklady napříč vozidly").ConfigureAwait(true);
     }
 
     private async Task OpenDashboardWindowAsync()
@@ -1179,19 +1153,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít dashboard").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = DashboardTabIndex;
-        var dialog = new DashboardWindow
-        {
-            DataContext = _viewModel.DashboardWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.DashboardAuditList);
+        await ShowWorkspaceWindowAsync<DashboardWindow>(
+            DashboardTabIndex,
+            _viewModel.DashboardWorkspace,
+            DesktopFocusTarget.DashboardAuditList,
+            "otevřít dashboard").ConfigureAwait(true);
     }
 
     private async Task OpenGlobalSearchWindowAsync()
@@ -1201,19 +1167,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít globální hledání").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = SearchTabIndex;
-        var dialog = new GlobalSearchWindow
-        {
-            DataContext = _viewModel.GlobalSearchWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.GlobalSearchBox);
+        await ShowWorkspaceWindowAsync<GlobalSearchWindow>(
+            SearchTabIndex,
+            _viewModel.GlobalSearchWorkspace,
+            DesktopFocusTarget.GlobalSearchBox,
+            "otevřít globální hledání").ConfigureAwait(true);
     }
 
     private async Task OpenUpcomingOverviewWindowAsync()
@@ -1223,19 +1181,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít blížící se termíny").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
-        var dialog = new UpcomingOverviewWindow
-        {
-            DataContext = _viewModel.UpcomingOverviewWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.UpcomingOverviewSearch);
+        await ShowWorkspaceWindowAsync<UpcomingOverviewWindow>(
+            UpcomingOverviewTabIndex,
+            _viewModel.UpcomingOverviewWorkspace,
+            DesktopFocusTarget.UpcomingOverviewSearch,
+            "otevřít blížící se termíny").ConfigureAwait(true);
     }
 
     private async Task OpenOverdueOverviewWindowAsync()
@@ -1245,19 +1195,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít propadlé termíny").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = OverdueOverviewTabIndex;
-        var dialog = new OverdueOverviewWindow
-        {
-            DataContext = _viewModel.OverdueOverviewWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.OverdueOverviewSearch);
+        await ShowWorkspaceWindowAsync<OverdueOverviewWindow>(
+            OverdueOverviewTabIndex,
+            _viewModel.OverdueOverviewWorkspace,
+            DesktopFocusTarget.OverdueOverviewSearch,
+            "otevřít propadlé termíny").ConfigureAwait(true);
     }
 
     private async Task OpenRecordsWindowAsync(bool allowActiveEditor = false)
@@ -1267,19 +1209,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít doklady vybraného vozidla").ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = RecordTabIndex;
-        var dialog = new RecordsWindow
-        {
-            DataContext = _viewModel.RecordWorkspace
-        };
-
-        await dialog.ShowDialog(this);
-        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.RecordList);
+        await ShowWorkspaceWindowAsync<RecordsWindow>(
+            RecordTabIndex,
+            _viewModel.RecordWorkspace,
+            DesktopFocusTarget.RecordList,
+            "otevřít doklady vybraného vozidla",
+            allowActiveEditor).ConfigureAwait(true);
     }
 
     private async Task OpenVehicleStarterBundleDialogAsync()
