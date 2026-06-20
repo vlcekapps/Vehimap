@@ -122,6 +122,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenRecordsMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenRemindersMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenMaintenanceMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleTimelineMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleStarterBundleMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenSelectedVehicleCostsMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenTimelineMenuItem\"", xaml);

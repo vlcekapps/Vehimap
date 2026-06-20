@@ -208,7 +208,7 @@ Pro upozornění aplikace používá pole `Příští TK`, `Zelená karta do` a 
 V horním menu najdete tyto části:
 
 - `Soubor`: tiskový přehled, export a import zálohy, export budoucích termínů do kalendáře a znovunačtení dat; v AHK aplikaci také ukončení
-- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby, `Balíčku pro vozidlo` a pojištění a dokladů
+- `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby, `Časové osy vozidla`, `Balíčku pro vozidlo` a pojištění a dokladů
 - `Přehled` v AHK nebo `Přehledy` v C# Avalonia větvi: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Časová osa vozidla`, blížící se a propadlé termíny a `Audit dat`
 - `Rychlé akce` v C# Avalonia větvi: nejbližší TK, ZK, připomínka, servis nebo doklad a filtrovaná kontrola těchto termínů v přehledech
 - `Nástroje` v AHK aplikaci: `Nastavení`, `Skrýt do lišty`

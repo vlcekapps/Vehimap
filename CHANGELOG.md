@@ -41,6 +41,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - servisní workspace v Avalonia větvi otevírá tlačítkem `Splněno` nebo zkratkou `Ctrl+L` potvrzovací dialog pro datum a tachometr splněného úkonu a umí stejnou událost volitelně zapsat i do historie vozidla
 - servisní workspace v Avalonia větvi umí tlačítkem `Doporučené` nebo zkratkou `Ctrl+Shift+N` otevřít výběr chybějících servisních šablon podle kategorie a servisního profilu vozidla
 - editor plánu údržby v Avalonia větvi má výběr běžné servisní šablony, který předvyplní název úkonu, intervaly a poznámku
+- menu `Vozidlo` v Avalonia větvi má přímou položku `Časová osa vozidla`, stejně jako AHK menu a původní workflow plán
 
 ### Změněno
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`

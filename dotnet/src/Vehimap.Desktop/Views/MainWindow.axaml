@@ -131,6 +131,12 @@
                     IsEnabled="{Binding CanOpenMaintenanceWindow}"
                     AutomationProperties.Name="Otevřít plán údržby vybraného vozidla"
                     AutomationProperties.AutomationId="OpenMaintenanceMenuItem" />
+          <MenuItem x:Name="OpenVehicleTimelineMenuItem"
+                    Header="Časová osa vozidla"
+                    Click="OnOpenTimelineMenuClick"
+                    IsEnabled="{Binding CanOpenVehicleDetailWindow}"
+                    AutomationProperties.Name="Otevřít časovou osu vybraného vozidla"
+                    AutomationProperties.AutomationId="OpenVehicleTimelineMenuItem" />
           <MenuItem x:Name="OpenVehicleStarterBundleMenuItem"
                     Header="Balíček pro vozidlo"
                     Click="OnOpenVehicleStarterBundleMenuClick"
