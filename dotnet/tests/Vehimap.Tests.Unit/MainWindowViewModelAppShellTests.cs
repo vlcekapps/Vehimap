@@ -212,6 +212,63 @@ public sealed class MainWindowViewModelAppShellTests
         Assert.Contains("Po termínu", snapshot.NotificationMessage, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Background_snapshot_prioritizes_due_timeline_before_general_audit_items()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "", "1988", "43", "", "01/2000", "05/2025", "12/2099")
+            ]
+        };
+        dataSet.Settings.SetValue("notifications", "technical_reminder_days", "30");
+        dataSet.Settings.SetValue("notifications", "green_card_reminder_days", "30");
+        dataSet.Settings.SetValue("notifications", "maintenance_reminder_days", "31");
+        dataSet.Settings.SetValue("notifications", "maintenance_reminder_km", "1000");
+
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet));
+
+        var snapshot = viewModel.BuildBackgroundSnapshot();
+
+        Assert.True(snapshot.HasNotification);
+        Assert.StartsWith("timeline|", snapshot.NotificationKey, StringComparison.Ordinal);
+        Assert.Contains("termínů k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
+        Assert.Contains("Milena", snapshot.NotificationMessage, StringComparison.Ordinal);
+        Assert.Contains("Po termínu", snapshot.NotificationMessage, StringComparison.Ordinal);
+        Assert.Contains("Nejbližší k řešení", snapshot.ToolTipText, StringComparison.Ordinal);
+        Assert.Contains("Po termínu", snapshot.ToolTipText, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Background_snapshot_uses_audit_notification_when_no_due_timeline_item_exists()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "", "1988", "43", "", "12/2099", "05/2025", "12/2099")
+            ]
+        };
+        dataSet.Settings.SetValue("notifications", "technical_reminder_days", "30");
+        dataSet.Settings.SetValue("notifications", "green_card_reminder_days", "30");
+        dataSet.Settings.SetValue("notifications", "maintenance_reminder_days", "31");
+        dataSet.Settings.SetValue("notifications", "maintenance_reminder_km", "1000");
+
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet));
+
+        var snapshot = viewModel.BuildBackgroundSnapshot();
+
+        Assert.True(snapshot.HasNotification);
+        Assert.StartsWith("audit|", snapshot.NotificationKey, StringComparison.Ordinal);
+        Assert.Contains("položek k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
+        Assert.Contains("Chybí SPZ", snapshot.NotificationMessage, StringComparison.Ordinal);
+    }
+
     private static MainWindowViewModel CreateViewModel(
         VehimapDataRoot dataRoot,
         StubLegacyDataStore dataStore,

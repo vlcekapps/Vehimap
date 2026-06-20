@@ -151,8 +151,8 @@ public sealed partial class MainWindowViewModel
             .Where(item =>
                 !string.IsNullOrWhiteSpace(item.Status)
                 && !string.Equals(item.Status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase))
-            .OrderBy(item => item.IsFuture)
-            .ThenBy(item => item.Date)
+            .OrderBy(item => item.IsFuture ? 1 : 0)
+            .ThenBy(item => item.IsFuture ? item.Date.DayNumber : -item.Date.DayNumber)
             .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)
             .ThenBy(item => item.KindLabel, StringComparer.CurrentCultureIgnoreCase)
             .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
@@ -164,10 +164,24 @@ public sealed partial class MainWindowViewModel
             $"Vozidla: {VehicleCount} | K řešení: {AuditCount} | Termíny: {DashboardUpcomingTimeline.Count}"
         };
 
-        var firstUpcoming = DashboardUpcomingTimeline.FirstOrDefault();
-        if (firstUpcoming is not null)
+        var firstAttention = attentionTimelineItems.FirstOrDefault();
+        if (firstAttention is not null)
+        {
+            toolTipLines.Add($"Nejbližší k řešení: {firstAttention.VehicleName} - {firstAttention.Title} ({firstAttention.DateText}, {firstAttention.Status})");
+        }
+        else if (DashboardUpcomingTimeline.FirstOrDefault() is { } firstUpcoming)
         {
             toolTipLines.Add($"Nejbližší: {firstUpcoming.VehicleName} - {firstUpcoming.Title} ({firstUpcoming.Date})");
+        }
+
+        if (firstAttention is not null)
+        {
+            return new DesktopBackgroundSnapshot(
+                string.Join(Environment.NewLine, toolTipLines),
+                $"timeline|{attentionTimelineItems.Count}|{firstAttention.VehicleId}|{firstAttention.Kind}|{firstAttention.EntryId}|{firstAttention.Date}",
+                $"Vehimap: {attentionTimelineItems.Count} termínů k řešení",
+                $"{firstAttention.VehicleName}: {firstAttention.Title} ({firstAttention.DateText}). {firstAttention.Status}",
+                true);
         }
 
         if (AuditItems.Count > 0)
@@ -178,17 +192,6 @@ public sealed partial class MainWindowViewModel
                 $"audit|{AuditItems.Count}|{firstAudit.VehicleId}|{firstAudit.EntityKind}|{firstAudit.EntityId}",
                 $"Vehimap: {AuditItems.Count} položek k řešení",
                 $"{firstAudit.VehicleName}: {firstAudit.Title}. {firstAudit.Message}",
-                true);
-        }
-
-        if (attentionTimelineItems.Count > 0)
-        {
-            var firstAttention = attentionTimelineItems[0];
-            return new DesktopBackgroundSnapshot(
-                string.Join(Environment.NewLine, toolTipLines),
-                $"timeline|{attentionTimelineItems.Count}|{firstAttention.VehicleId}|{firstAttention.Kind}|{firstAttention.EntryId}|{firstAttention.Date}",
-                $"Vehimap: {attentionTimelineItems.Count} termínů k řešení",
-                $"{firstAttention.VehicleName}: {firstAttention.Title} ({firstAttention.Date}). {firstAttention.Status}",
                 true);
         }
 
