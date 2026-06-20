@@ -14,6 +14,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Avalonia `Audit dat` má tlačítko `Obnovit` a zkratku `Ctrl+R`, které znovu promítnou auditní položky, zachovají filtrovaný výběr a vrátí fokus na seznam
 - Avalonia `Globální hledání` má tlačítko `Obnovit` a zkratku `Ctrl+R`, které znovu provedou dotaz, zachovají vybraný výsledek a vrátí fokus na seznam
 - Avalonia přehled `Náklady napříč vozidly` má rychlé hledání vozidel se zkratkou `Ctrl+F`; při prázdném výsledku vypne otevření, úpravu i export vybraného vozidla
+- Avalonia přehled `Náklady napříč vozidly` má tlačítko `Obnovit` a zkratku `Ctrl+R`, které znovu spočítají aktuální období, zachovají filtrovaný výběr a vrátí fokus na seznam
 - Avalonia přehled `Blížící se termíny` umí volitelně přimíchat vozidla bez zelené karty a datové nedostatky z auditu včetně navigace na správnou evidenci
 - Avalonia přehledy `Blížící se termíny` a `Propadlé termíny` mají tlačítko `Obnovit` a zkratku `Ctrl+R`, které zachovávají výběr a vrací fokus na seznam
 - nový přehled `Audit dat`, který sjednocuje chybějící povinné údaje, neplatné rozsahy, problematické doklady, podezřelé tachometry, nákladové nesrovnalosti i servisní plány bez použitelného odometru

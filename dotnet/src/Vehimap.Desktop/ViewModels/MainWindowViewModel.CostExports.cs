@@ -8,6 +8,11 @@ public sealed partial class MainWindowViewModel
     [ObservableProperty]
     private string costExportStatus = "Exporty nákladů použijí právě zobrazené období.";
 
+    partial void OnCostExportStatusChanged(string value)
+    {
+        CostWorkspace?.NotifyCostExportStatusChanged();
+    }
+
     public bool CanExportFleetCostSummary => _currentCostSummary is not null && CostVehicles.Count > 0;
 
     public bool CanExportSelectedVehicleCost => _currentCostSummary is not null && SelectedDashboardCostVehicle is not null;

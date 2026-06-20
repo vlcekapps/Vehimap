@@ -127,6 +127,9 @@ internal sealed class DesktopSessionController
     public DesktopSupportedSettingsSnapshot ReadSupportedSettings() =>
         CurrentSupportedSettings;
 
+    public CostAnalysisSummary BuildCurrentCostSummary() =>
+        _costAnalysisService.BuildYearToDateSummary(DataSet, DateOnly.FromDateTime(DateTime.Today));
+
     public async Task ApplySupportedSettingsAsync(DesktopSupportedSettingsSnapshot snapshot, CancellationToken cancellationToken = default)
     {
         await _autostartService.SetEnabledAsync(snapshot.RunAtStartup, cancellationToken).ConfigureAwait(false);

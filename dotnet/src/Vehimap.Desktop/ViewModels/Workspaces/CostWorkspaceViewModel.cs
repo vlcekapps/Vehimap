@@ -52,6 +52,12 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
         RequestFocus(DesktopFocusTarget.CostSearch);
     }
 
+    [RelayCommand]
+    private void RefreshCost()
+    {
+        Root.RefreshCostWorkspace();
+    }
+
     [RelayCommand(CanExecute = nameof(CanUseSelectedCostVehicle))]
     private void FocusSelectedCostDetail()
     {
@@ -131,13 +137,18 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(CostSearchText))
         {
-            CostSearchSummary = $"Zobrazeno {VisibleCostVehicles.Count} vozidel v nákladovém přehledu. Ctrl+F přesune fokus do hledání.";
+            CostSearchSummary = $"Zobrazeno {VisibleCostVehicles.Count} vozidel v nákladovém přehledu. Ctrl+F přesune fokus do hledání, Ctrl+R přehled obnoví.";
             return;
         }
 
         CostSearchSummary = VisibleCostVehicles.Count == 0
             ? $"Hledání „{CostSearchText.Trim()}“ nenašlo v nákladech žádné vozidlo."
             : $"Hledání „{CostSearchText.Trim()}“ našlo {VisibleCostVehicles.Count} vozidel v nákladech.";
+    }
+
+    internal void NotifyCostExportStatusChanged()
+    {
+        OnPropertyChanged(nameof(CostExportStatus));
     }
 
     private static bool Contains(string value, string query) =>

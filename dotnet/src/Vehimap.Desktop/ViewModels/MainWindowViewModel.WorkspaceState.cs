@@ -794,6 +794,32 @@ public sealed partial class MainWindowViewModel
         ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
     }
 
+    internal void RefreshCostWorkspace()
+    {
+        var previousCostVehicleId = SelectedDashboardCostVehicle?.VehicleId ?? string.Empty;
+        _currentCostSummary = _session.BuildCurrentCostSummary();
+
+        CostSummary = _projectionService.BuildCostSummary(_currentCostSummary);
+        CostComparison = _projectionService.BuildCostComparison(_currentCostSummary);
+
+        CostVehicles.Clear();
+        foreach (var row in _projectionService.BuildDashboardCostVehicles(_currentCostSummary))
+        {
+            CostVehicles.Add(row);
+        }
+
+        SelectedDashboardCostVehicle = FindById(CostVehicles, item => item.VehicleId, previousCostVehicleId);
+        CostWorkspace.RefreshVisibleCostVehicles();
+        DashboardWorkspace.NotifyDashboardSummariesChanged();
+        ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
+        ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
+        ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
+
+        CostExportStatus = "Nákladový přehled byl obnoven.";
+        ShellStatus = "Nákladový přehled byl obnoven.";
+        RequestFocus(CostWorkspace.VisibleCostVehicles.Count == 0 ? DesktopFocusTarget.CostSearch : DesktopFocusTarget.CostList);
+    }
+
     internal void NotifyDashboardWorkspaceTimelineSelectionChanged()
     {
         OpenSelectedDashboardTimelineItemCommand.NotifyCanExecuteChanged();

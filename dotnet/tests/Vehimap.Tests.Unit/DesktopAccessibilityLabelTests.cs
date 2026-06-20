@@ -520,6 +520,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostSearchBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SelectedCostVehicleDetailText\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CostRefreshButton\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FocusCostDetailButton\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenCostVehicleButton\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"EditCostVehicleButton\"", costXaml);
@@ -613,6 +614,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+Shift+C\" Command=\"{Binding CopySelectedRecordPathCommand}\"", recordXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", costXaml);
+        Assert.Contains("Gesture=\"Ctrl+R\" Command=\"{Binding RefreshCostCommand}\"", costXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding FocusSelectedCostDetailCommand}\"", costXaml);
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedCostVehicleCommand}\"", costXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedCostVehicleCommand}\"", costXaml);

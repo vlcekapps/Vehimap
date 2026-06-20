@@ -159,6 +159,35 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Cost_workspace_refresh_recomputes_summary_preserves_filter_and_notifies_status()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        var costStatusNotified = false;
+        viewModel.FocusRequested += target => requestedFocus = target;
+        viewModel.CostWorkspace.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName == "CostExportStatus")
+            {
+                costStatusNotified = true;
+            }
+        };
+
+        viewModel.CostWorkspace.CostSearchText = "Octavia";
+        var selectedCostVehicle = Assert.Single(viewModel.CostWorkspace.VisibleCostVehicles);
+        viewModel.SelectedDashboardCostVehicle = selectedCostVehicle;
+
+        viewModel.CostWorkspace.RefreshCostCommand.Execute(null);
+
+        Assert.Equal(selectedCostVehicle.VehicleId, viewModel.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.Single(viewModel.CostWorkspace.VisibleCostVehicles);
+        Assert.Equal(DesktopFocusTarget.CostList, requestedFocus);
+        Assert.Equal("Nákladový přehled byl obnoven.", viewModel.CostExportStatus);
+        Assert.Contains("Nákladový přehled byl obnoven", viewModel.ShellStatus, StringComparison.CurrentCulture);
+        Assert.True(costStatusNotified);
+    }
+
+    [Fact]
     public void Focus_dashboard_command_switches_to_dashboard_tab_and_requests_dashboard_focus()
     {
         var viewModel = CreateViewModel();

@@ -6,6 +6,7 @@
              x:DataType="vm:CostWorkspaceViewModel">
   <UserControl.KeyBindings>
     <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+R" Command="{Binding RefreshCostCommand}" />
     <KeyBinding Gesture="Ctrl+P" Command="{Binding FocusSelectedCostDetailCommand}" />
     <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedCostVehicleCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedCostVehicleCommand}" />
@@ -40,6 +41,10 @@
                 Margin="0,10,0,0"
                 Orientation="Horizontal"
                 Spacing="10">
+      <Button Command="{Binding RefreshCostCommand}"
+              Content="Obnovit"
+              AutomationProperties.Name="Obnovit nákladový přehled"
+              AutomationProperties.AutomationId="CostRefreshButton" />
       <Button Command="{Binding FocusSelectedCostDetailCommand}"
               Content="Zobrazit rozpad"
               AutomationProperties.Name="Zobrazit rozpad nákladů vybraného vozidla"
