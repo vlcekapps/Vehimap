@@ -499,6 +499,50 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Timeline_filter_preference_is_restored_from_settings()
+    {
+        var viewModel = CreateViewModel(configureDataSet: dataSet =>
+            dataSet.Settings.SetValue("timeline", "filter", "Budoucí"));
+
+        Assert.Equal("Budoucí", viewModel.SelectedTimelineFilter);
+        Assert.NotEmpty(viewModel.SelectedVehicleTimeline);
+        Assert.All(viewModel.SelectedVehicleTimeline, item => Assert.True(item.IsFuture));
+    }
+
+    [Fact]
+    public void Timeline_filter_changes_are_saved_to_settings()
+    {
+        VehimapDataSet? dataSetRef = null;
+        var viewModel = CreateViewModel(configureDataSet: dataSet => dataSetRef = dataSet);
+
+        viewModel.SelectedTimelineFilter = "Minulé";
+
+        Assert.Equal("Minulé", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
+        Assert.NotEmpty(viewModel.SelectedVehicleTimeline);
+        Assert.All(viewModel.SelectedVehicleTimeline, item => Assert.False(item.IsFuture));
+    }
+
+    [Fact]
+    public void Unknown_timeline_filter_preference_falls_back_to_all_items()
+    {
+        VehimapDataSet? dataSetRef = null;
+        var viewModel = CreateViewModel(configureDataSet: dataSet =>
+        {
+            dataSet.Settings.SetValue("timeline", "filter", "Neznámý filtr");
+            dataSetRef = dataSet;
+        });
+
+        Assert.Equal("Vše", viewModel.SelectedTimelineFilter);
+        Assert.Contains(viewModel.SelectedVehicleTimeline, item => item.IsFuture);
+        Assert.Contains(viewModel.SelectedVehicleTimeline, item => !item.IsFuture);
+
+        viewModel.SelectedTimelineFilter = "Neznámý filtr";
+
+        Assert.Equal("Vše", viewModel.SelectedTimelineFilter);
+        Assert.Equal("Vše", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
+    }
+
+    [Fact]
     public void Audit_search_filters_visible_audit_items_without_changing_dashboard_source()
     {
         var viewModel = CreateViewModel();
@@ -801,7 +845,8 @@ public sealed class MainWindowViewModelNavigationTests
         ITextFileSaveService? textFileSaveService = null,
         IFileLauncher? fileLauncher = null,
         IClipboardService? clipboardService = null,
-        string? recordFilePath = null)
+        string? recordFilePath = null,
+        Action<VehimapDataSet>? configureDataSet = null)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
         var dataSet = new VehimapDataSet
@@ -836,6 +881,8 @@ public sealed class MainWindowViewModelNavigationTests
                 new MaintenancePlan("mnt_1", "veh_1", "Motorový olej", "15000", "12", "10.01.2026", "10000", true, "Každý rok")
             ]
         };
+
+        configureDataSet?.Invoke(dataSet);
 
         var bootstrapper = new LegacyVehimapBootstrapper(
             new StubDataRootLocator(dataRoot),

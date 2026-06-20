@@ -1008,6 +1008,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
             ApplyVehicleListFilterPreferences();
             ApplyOverviewPreferences();
+            ApplyTimelinePreferences();
             RefreshVehicleList(preferredVehicleId);
 
             AuditItems.Clear();

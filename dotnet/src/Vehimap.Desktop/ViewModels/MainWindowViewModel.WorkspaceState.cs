@@ -745,7 +745,20 @@ public sealed partial class MainWindowViewModel
 
     internal void HandleTimelineWorkspaceFilterChanged()
     {
+        if (_suppressTimelinePreferenceRefresh)
+        {
+            return;
+        }
+
+        var normalizedFilter = NormalizeTimelineFilter(SelectedTimelineFilter);
+        if (!string.Equals(SelectedTimelineFilter, normalizedFilter, StringComparison.Ordinal))
+        {
+            SelectedTimelineFilter = normalizedFilter;
+            return;
+        }
+
         RefreshTimeline();
+        PersistTimelinePreferencesAsync();
     }
 
     internal void RefreshTimelineWorkspace()
