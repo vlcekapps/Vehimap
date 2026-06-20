@@ -89,6 +89,8 @@ public sealed partial class MainWindowViewModel
         RefreshVehicleList();
         NotifyVehicleListFilterStateChanged();
         PersistHideInactiveVehiclePreferenceAsync();
+        ShellStatus = "Filtry seznamu vozidel byly vymazány.";
+        RequestFocus(DesktopFocusTarget.VehicleSearch);
     }
 
     private void ApplyVehicleListFilterPreferences()

@@ -67,6 +67,35 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
     }
 
     [Fact]
+    public void Clear_vehicle_filters_restores_full_list_and_focuses_search()
+    {
+        var dataSet = BuildQuickActionDataSet();
+        var viewModel = CreateViewModel(dataSet);
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        viewModel.VehicleSearchText = "Božena";
+        viewModel.SelectedVehicleCategoryFilter = "Osobní vozidla";
+        viewModel.SelectedVehicleStatusFilter = MainWindowViewModel.MissingGreenVehicleStatusFilterLabel;
+        viewModel.HideInactiveVehicles = true;
+
+        Assert.True(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
+        Assert.True(viewModel.Vehicles.Count < dataSet.Vehicles.Count);
+
+        viewModel.ClearVehicleFiltersCommand.Execute(null);
+
+        Assert.Equal(string.Empty, viewModel.VehicleSearchText);
+        Assert.Equal(MainWindowViewModel.AllVehicleCategoriesLabel, viewModel.SelectedVehicleCategoryFilter);
+        Assert.Equal(MainWindowViewModel.AllVehicleStatusFilterLabel, viewModel.SelectedVehicleStatusFilter);
+        Assert.False(viewModel.HideInactiveVehicles);
+        Assert.Equal(dataSet.Vehicles.Count, viewModel.Vehicles.Count);
+        Assert.False(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
+        Assert.Equal("0", dataSet.Settings.GetValue("app", "hide_inactive_vehicles", "0"));
+        Assert.Equal(DesktopFocusTarget.VehicleSearch, requestedFocus);
+        Assert.Contains("Filtry seznamu vozidel byly vymazány", viewModel.ShellStatus, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
     public async Task Review_green_cards_quick_action_opens_matching_overview_filter()
     {
         var viewModel = CreateViewModel(BuildQuickActionDataSet());

@@ -7,6 +7,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ### Přidáno
 - Avalonia dokladový workspace umí zkopírovat vyřešenou cestu přílohy tlačítkem `Kopírovat cestu` nebo zkratkou `Ctrl+Shift+C`
+- Avalonia hlavní seznam po tlačítku `Vymazat filtry` obnoví celý seznam vozidel, zapíše stavovou hlášku a vrátí fokus do hledání vozidel
 - Avalonia evidence `Historie`, `Tankování`, `Připomínky`, `Plán údržby` a `Doklady` mají tlačítko `Vymazat` pro rychlé smazání hledání a návrat fokusu do filtru
 - Avalonia přehledy `Časová osa`, `Globální hledání`, `Audit dat`, `Náklady napříč vozidly`, `Blížící se termíny` a `Propadlé termíny` mají tlačítko `Vymazat` pro smazání hledání a návrat fokusu do filtru
 - Avalonia dashboard má tlačítko `Obnovit` a zkratku `Ctrl+R`, které přepočítají audit, náklady i nejbližší termíny bez ztráty výběru
