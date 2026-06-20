@@ -24,7 +24,15 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
     [ObservableProperty]
     private string selectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
 
+    [ObservableProperty]
+    private string selectedGlobalSearchSortOption = WorkspaceSortHelpers.TypeSortLabel;
+
+    [ObservableProperty]
+    private bool globalSearchSortDescending;
+
     public string WindowTitle => Root.GlobalSearchWindowTitle;
+
+    public IReadOnlyList<string> GlobalSearchSortOptions => WorkspaceSortHelpers.GlobalSearchSortOptions;
 
     public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults => Root.GlobalSearchResults;
 
@@ -64,5 +72,15 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
             : $"{value.SectionLabel}: {value.Title}\nVozidlo: {value.VehicleName}\n{value.Summary}";
 
         Root.NotifyGlobalSearchWorkspaceSelectionChanged();
+    }
+
+    partial void OnSelectedGlobalSearchSortOptionChanged(string value)
+    {
+        Root.HandleGlobalSearchWorkspaceSortChanged();
+    }
+
+    partial void OnGlobalSearchSortDescendingChanged(bool value)
+    {
+        Root.HandleGlobalSearchWorkspaceSortChanged();
     }
 }

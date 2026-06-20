@@ -6,6 +6,7 @@ using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Services;
+using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
@@ -1011,6 +1012,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             ApplyOverviewPreferences();
             ApplyTimelinePreferences();
             ApplyEvidenceSortPreferences();
+            ApplyWorkspaceSortPreferences();
             RefreshVehicleList(preferredVehicleId);
 
             AuditItems.Clear();
@@ -1192,16 +1194,23 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         var results = _globalSearchService.Search(_dataRoot, _dataSet, GlobalSearchText);
-        foreach (var result in results)
-        {
-            GlobalSearchResults.Add(new GlobalSearchResultItemViewModel(
+        var projectedResults = results
+            .Select(result => new GlobalSearchResultItemViewModel(
                 result.VehicleId,
                 result.EntityKind,
                 result.EntityId,
                 result.VehicleName,
                 result.SectionLabel,
                 result.Title,
-                result.Summary));
+                result.Summary))
+            .ToList();
+
+        foreach (var result in WorkspaceSortHelpers.SortGlobalSearch(
+                     projectedResults,
+                     GlobalSearchWorkspace.SelectedGlobalSearchSortOption,
+                     GlobalSearchWorkspace.GlobalSearchSortDescending))
+        {
+            GlobalSearchResults.Add(result);
         }
 
         GlobalSearchSummary = results.Count == 0

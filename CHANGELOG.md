@@ -26,6 +26,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Avalonia přehled `Blížící se termíny` umí volitelně přimíchat vozidla bez zelené karty a datové nedostatky z auditu včetně navigace na správnou evidenci
 - Avalonia přehledy `Blížící se termíny` a `Propadlé termíny` si pamatují poslední rozbalovací filtr typu položky v `settings.ini`, zatímco rychlé textové hledání zůstává jen dočasné
 - Avalonia přehledy `Blížící se termíny` a `Propadlé termíny` mají přístupné ovladače `Řadit` a `Sestupně`; poslední sloupec i směr řazení se ukládají do `settings.ini`
+- Avalonia `Audit dat` a `Globální hledání` mají přístupné ovladače `Řadit` a `Sestupně`; poslední sloupec i směr řazení se ukládají do `settings.ini`
 - Avalonia přehledy `Blížící se termíny` a `Propadlé termíny` mají tlačítko `Obnovit` a zkratku `Ctrl+R`, které zachovávají výběr a vrací fokus na seznam
 - nový přehled `Audit dat`, který sjednocuje chybějící povinné údaje, neplatné rozsahy, problematické doklady, podezřelé tachometry, nákladové nesrovnalosti i servisní plány bez použitelného odometru
 - explicitní servisní profil vozidla s poli `Pohon`, `Klimatizace`, `Rozvody` a `Převodovka`, který slouží jako základ pro doporučené servisní šablony

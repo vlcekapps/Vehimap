@@ -21,7 +21,15 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private AuditItemViewModel? selectedDashboardAuditItem;
 
+    [ObservableProperty]
+    private string selectedAuditSortOption = WorkspaceSortHelpers.SeveritySortLabel;
+
+    [ObservableProperty]
+    private bool auditSortDescending;
+
     public string WindowTitle => Root.AuditWindowTitle;
+
+    public IReadOnlyList<string> AuditSortOptions => WorkspaceSortHelpers.AuditSortOptions;
 
     public ObservableCollection<AuditItemViewModel> VisibleAuditItems { get; } = [];
 
@@ -70,8 +78,8 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
     public void RefreshVisibleAuditItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedDashboardAuditItem : null;
-        var filteredItems = Root.AuditItems
-            .Where(MatchesSearch)
+        var filteredItems = WorkspaceSortHelpers
+            .SortAudit(Root.AuditItems.Where(MatchesSearch), SelectedAuditSortOption, AuditSortDescending)
             .ToList();
 
         VisibleAuditItems.Clear();
@@ -105,6 +113,16 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
         OnPropertyChanged(nameof(CanClearAuditSearch));
         ClearAuditSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleAuditItems();
+    }
+
+    partial void OnSelectedAuditSortOptionChanged(string value)
+    {
+        Root.HandleAuditWorkspaceSortChanged();
+    }
+
+    partial void OnAuditSortDescendingChanged(bool value)
+    {
+        Root.HandleAuditWorkspaceSortChanged();
     }
 
     private bool MatchesSearch(AuditItemViewModel item)

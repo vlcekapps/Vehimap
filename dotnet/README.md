@@ -33,6 +33,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - v `Blizicich se terminech` volitelne zobrazit i vozidla bez zelene karty a datove nedostatky z auditu; volby se ukladaji do legacy `settings.ini`
 - v terminovych prehledech pouzit `Obnovit` nebo `Ctrl+R`; refresh zachova vyber a fokus vrati na seznam, pokud je v nem polozka
 - radit terminove prehledy `Blizici se terminy` a `Propadle terminy` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do legacy `settings.ini`
+- radit `Audit` a `Globalni hledani` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do legacy `settings.ini`, hledany text zustava jen docasny
 - vyexportovat budouci terminy do `.ics` primo z nove C# vetve
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu; `Obnovit` nebo `Ctrl+R` prepocita casovou osu bez ztraty vyberu a vrati fokus na seznam
 - pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly

@@ -315,6 +315,52 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Audit_and_global_search_sort_controls_reorder_lists_and_persist_preferences()
+    {
+        VehimapDataSet? dataSetRef = null;
+        var viewModel = CreateViewModel(configureDataSet: dataSet =>
+        {
+            dataSetRef = dataSet;
+            dataSet.Vehicles.Add(new Vehicle("veh_2", "Božena", "Osobní vozidla", "Srazové auto", "Škoda 100", "", "1975", "35", "", "", "", ""));
+            dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_2", "Aktivní", "", "Benzín", "", "Řemen", "Manuál"));
+            dataSet.Records.Add(new VehicleRecord("rec_3", "veh_2", "Doklad", "Chybějící příloha", "", "", "02/2027", "", VehicleRecordAttachmentMode.External, "", "Prověřit"));
+        });
+
+        viewModel.AuditWorkspace.SelectedAuditSortOption = WorkspaceSortHelpers.VehicleSortLabel;
+        viewModel.GlobalSearchWorkspace.GlobalSearchText = "Chybějící příloha";
+        viewModel.GlobalSearchWorkspace.SelectedGlobalSearchSortOption = WorkspaceSortHelpers.VehicleSortLabel;
+
+        Assert.Equal("Božena", viewModel.AuditWorkspace.VisibleAuditItems.First().VehicleName);
+        Assert.Equal("Božena", viewModel.GlobalSearchResults.First().VehicleName);
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, dataSetRef!.Settings.GetValue("workspace_sort", "audit_sort"));
+        Assert.Equal("0", dataSetRef.Settings.GetValue("workspace_sort", "audit_descending"));
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, dataSetRef.Settings.GetValue("workspace_sort", "global_search_sort"));
+        Assert.Equal("0", dataSetRef.Settings.GetValue("workspace_sort", "global_search_descending"));
+    }
+
+    [Fact]
+    public void Audit_and_global_search_load_saved_sort_preferences()
+    {
+        var viewModel = CreateViewModel(configureDataSet: dataSet =>
+        {
+            dataSet.Vehicles.Add(new Vehicle("veh_2", "Božena", "Osobní vozidla", "Srazové auto", "Škoda 100", "", "1975", "35", "", "", "", ""));
+            dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_2", "Aktivní", "", "Benzín", "", "Řemen", "Manuál"));
+            dataSet.Records.Add(new VehicleRecord("rec_3", "veh_2", "Doklad", "Chybějící příloha", "", "", "02/2027", "", VehicleRecordAttachmentMode.External, "", "Prověřit"));
+            dataSet.Settings.SetValue("workspace_sort", "audit_sort", WorkspaceSortHelpers.VehicleSortLabel);
+            dataSet.Settings.SetValue("workspace_sort", "audit_descending", "0");
+            dataSet.Settings.SetValue("workspace_sort", "global_search_sort", WorkspaceSortHelpers.VehicleSortLabel);
+            dataSet.Settings.SetValue("workspace_sort", "global_search_descending", "0");
+        });
+
+        viewModel.GlobalSearchWorkspace.GlobalSearchText = "Chybějící příloha";
+
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.AuditWorkspace.SelectedAuditSortOption);
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.GlobalSearchWorkspace.SelectedGlobalSearchSortOption);
+        Assert.Equal("Božena", viewModel.AuditWorkspace.VisibleAuditItems.First().VehicleName);
+        Assert.Equal("Božena", viewModel.GlobalSearchResults.First().VehicleName);
+    }
+
+    [Fact]
     public void Overview_workspace_clear_search_commands_restore_lists_and_focus_search_fields()
     {
         var viewModel = CreateViewModel();

@@ -12,7 +12,7 @@
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedAuditItemCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedAuditItemCommand}" />
   </UserControl.KeyBindings>
-  <Grid RowDefinitions="Auto,Auto,Auto,*">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
     <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding AuditSummary}" AutomationProperties.AutomationId="AuditSummaryText" />
     <Grid Grid.Row="1" Margin="0,12,0,0" ColumnDefinitions="100,*,120,120,150,150,120">
       <TextBlock Grid.Column="0"
@@ -58,11 +58,31 @@
     </Grid>
     <TextBlock Grid.Row="2"
                Margin="0,8,0,0"
+               VerticalAlignment="Center"
+               Text="Řadit" />
+    <Grid Grid.Row="2"
+          Margin="112,8,0,0"
+          ColumnDefinitions="220,150,*">
+      <ComboBox Grid.Column="0"
+                ItemsSource="{Binding AuditSortOptions}"
+                SelectedItem="{Binding SelectedAuditSortOption}"
+                AutomationProperties.Name="Řazení auditu dat"
+                AutomationProperties.AutomationId="AuditSortComboBox" />
+      <CheckBox Grid.Column="1"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                Content="Sestupně"
+                IsChecked="{Binding AuditSortDescending}"
+                AutomationProperties.Name="Řadit audit dat sestupně"
+                AutomationProperties.AutomationId="AuditSortDescendingCheckBox" />
+    </Grid>
+    <TextBlock Grid.Row="3"
+               Margin="0,8,0,0"
                Opacity="0.75"
                Text="Ctrl+F hledá, Ctrl+R obnoví audit, Ctrl+P otevře řešenou položku, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 otevře nejbližší editor."
                TextWrapping="Wrap" />
     <ListBox x:Name="AuditListBox"
-             Grid.Row="3"
+             Grid.Row="4"
              Margin="0,12,0,0"
              ItemsSource="{Binding VisibleAuditItems}"
              SelectedItem="{Binding SelectedDashboardAuditItem}"

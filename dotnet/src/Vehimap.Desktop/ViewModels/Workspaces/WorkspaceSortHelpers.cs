@@ -24,6 +24,9 @@ internal static class WorkspaceSortHelpers
     public const string ProviderSortLabel = "Poskytovatel";
     public const string AttachmentModeSortLabel = "Režim přílohy";
     public const string AttachmentStateSortLabel = "Stav přílohy";
+    public const string SeveritySortLabel = "Závažnost";
+    public const string CategorySortLabel = "Evidence";
+    public const string SummarySortLabel = "Souhrn";
 
     public static IReadOnlyList<string> HistorySortOptions { get; } =
     [
@@ -80,6 +83,23 @@ internal static class WorkspaceSortHelpers
         VehicleSortLabel,
         TitleSortLabel,
         StatusSortLabel
+    ];
+
+    public static IReadOnlyList<string> AuditSortOptions { get; } =
+    [
+        SeveritySortLabel,
+        VehicleSortLabel,
+        TitleSortLabel,
+        CategorySortLabel,
+        TypeSortLabel
+    ];
+
+    public static IReadOnlyList<string> GlobalSearchSortOptions { get; } =
+    [
+        TypeSortLabel,
+        VehicleSortLabel,
+        TitleSortLabel,
+        SummarySortLabel
     ];
 
     public static string NormalizeSortOption(string? value, IReadOnlyList<string> supportedOptions, string defaultOption)
@@ -183,6 +203,35 @@ internal static class WorkspaceSortHelpers
         };
     }
 
+    public static IEnumerable<AuditItemViewModel> SortAudit(
+        IEnumerable<AuditItemViewModel> items,
+        string selectedOption,
+        bool descending)
+    {
+        return NormalizeSortOption(selectedOption, AuditSortOptions, SeveritySortLabel) switch
+        {
+            VehicleSortLabel => OrderByText(items, descending, item => item.VehicleName, item => item.Title),
+            TitleSortLabel => OrderByText(items, descending, item => item.Title, item => item.VehicleName),
+            CategorySortLabel => OrderByText(items, descending, item => item.Category, item => item.VehicleName),
+            TypeSortLabel => OrderByText(items, descending, item => item.EntityKind, item => item.VehicleName),
+            _ => OrderBySeverity(items, descending, item => item.Severity, item => item.VehicleName)
+        };
+    }
+
+    public static IEnumerable<GlobalSearchResultItemViewModel> SortGlobalSearch(
+        IEnumerable<GlobalSearchResultItemViewModel> items,
+        string selectedOption,
+        bool descending)
+    {
+        return NormalizeSortOption(selectedOption, GlobalSearchSortOptions, TypeSortLabel) switch
+        {
+            VehicleSortLabel => OrderByText(items, descending, item => item.VehicleName, item => item.Title),
+            TitleSortLabel => OrderByText(items, descending, item => item.Title, item => item.VehicleName),
+            SummarySortLabel => OrderByText(items, descending, item => item.Summary, item => item.VehicleName),
+            _ => OrderByText(items, descending, item => item.SectionLabel, item => item.VehicleName)
+        };
+    }
+
     private static IEnumerable<T> OrderByText<T>(
         IEnumerable<T> items,
         bool descending,
@@ -239,6 +288,35 @@ internal static class WorkspaceSortHelpers
             : items.OrderBy(item => keySelector(item).HasValue ? 0 : 1)
                 .ThenBy(item => keySelector(item) ?? decimal.MaxValue)
                 .ThenBy(secondarySelector, StringComparer.CurrentCultureIgnoreCase);
+    }
+
+    private static IEnumerable<T> OrderBySeverity<T>(
+        IEnumerable<T> items,
+        bool descending,
+        Func<T, string> keySelector,
+        Func<T, string> secondarySelector)
+    {
+        return descending
+            ? items.OrderByDescending(item => GetSeverityRank(keySelector(item)))
+                .ThenBy(secondarySelector, StringComparer.CurrentCultureIgnoreCase)
+            : items.OrderBy(item => GetSeverityRank(keySelector(item)))
+                .ThenBy(secondarySelector, StringComparer.CurrentCultureIgnoreCase);
+    }
+
+    private static int GetSeverityRank(string? severity)
+    {
+        if (string.IsNullOrWhiteSpace(severity))
+        {
+            return 3;
+        }
+
+        return severity.Trim().ToLowerInvariant() switch
+        {
+            "chyba" or "error" => 0,
+            "varování" or "warning" => 1,
+            "upozornění" or "info" or "informace" => 2,
+            _ => 3
+        };
     }
 
     private static DateOnly? TryParseDate(string? value)

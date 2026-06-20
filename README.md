@@ -98,11 +98,12 @@ V hlavním okně:
 - v C# Avalonia větvi jsou v kartách evidencí kontextové i `Ctrl+N`, `Ctrl+U` / `F2` a `Ctrl+S`: `Ctrl+N` a `Ctrl+U` / `F2` z hlavní karty otevřou příslušné modální workspace okno s viditelným editorem, `Ctrl+S` ukládá aktivní editor a mimo evidenci zůstávají `Ctrl+N` a `Ctrl+U` / `F2` globálními akcemi vozidla
 - v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` vlastní rychlé hledání; `Ctrl+F` přesune fokus do filtru, tlačítko `Vymazat` filtr smaže a vrátí fokus do hledání, seznam zachová výběr podle položky a při prázdném výsledku vypne akce nad výběrem
 - v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` přístupné ovladače `Řadit` a `Sestupně`; zvolený sloupec i směr řazení se ukládají do `settings.ini`
+- v C# Avalonia větvi mají `Globální hledání` a `Audit dat` stejné přístupné ovladače `Řadit` a `Sestupně`; poslední volba se ukládá do `settings.ini`, zatímco samotný hledaný text zůstává dočasný
 
 ## Klávesové zkratky v dashboardu a přehledech:
 
 - `Dashboard`: `Ctrl+R` obnoví seznam, `Ctrl+F` otevře globální hledání, `Ctrl+T` otevře přehled termínů, `Ctrl+Shift+T` otevře propadlé termíny, `Ctrl+P` otevře vybraný nejbližší termín, `Ctrl+O` zobrazí vozidlo vybrané v dashboardu a `Ctrl+U` nebo `F2` ho upraví
-- `Globální hledání`: `Ctrl+F` přesune fokus do hledání, tlačítko `Vymazat` smaže dotaz a vrátí fokus do hledání, `Ctrl+R` obnoví výsledky bez ztráty výběru a `Ctrl+O`, `Ctrl+P` nebo `Enter` na seznamu otevře vybraný výsledek
+- `Globální hledání`: `Ctrl+F` přesune fokus do hledání, tlačítko `Vymazat` smaže dotaz a vrátí fokus do hledání, `Řadit` / `Sestupně` přeskupí výsledky a uloží volbu, `Ctrl+R` obnoví výsledky bez ztráty výběru a `Ctrl+O`, `Ctrl+P` nebo `Enter` na seznamu otevře vybraný výsledek
 - `Časová osa`: `Ctrl+F` přesune fokus do hledání, tlačítko `Vymazat` smaže dotaz a vrátí fokus do hledání, `Ctrl+R` obnoví časovou osu bez ztráty výběru a `Ctrl+P` nebo `Enter` otevře vybranou položku
 - `Náklady napříč vozidly`: nahoře lze zvolit předvolbu období nebo vlastní datumový rozsah a tlačítkem `Přepočítat` ho použít; `Ctrl+F` přesune fokus do hledání vozidel, tlačítko `Vymazat` smaže dotaz a vrátí fokus do hledání, tlačítko `Obnovit` nebo `Ctrl+R` obnoví aktuální období, `Ctrl+P` přesune fokus na rozpad nákladů vybraného vozidla, `Enter` na seznamu nebo `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
 - `Přehled termínů`: `Ctrl+F` přesune fokus do hledání, tlačítko `Vymazat` smaže dotaz a vrátí fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+Shift+T` přepne do propadlých termínů
@@ -110,7 +111,7 @@ V hlavním okně:
 - v C# Avalonia větvi má `Dashboard` také horní tlačítka `Obnovit`, `Hledat`, `Blížící se`, `Propadlé`, `Zobrazit vozidlo` a `Upravit vozidlo`; `Obnovit` stejně jako `Ctrl+R` přepočítá audit, náklady a nejbližší termíny bez ztráty aktuálního výběru
 - v C# Avalonia větvi mají `Blížící se termíny` i `Propadlé termíny` také tlačítko `Obnovit` a přístupné ovladače `Řadit` / `Sestupně`; zachovají výběr a po obnově vrací fokus na seznam, pokud obsahuje položky
 - `Audit dat`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví auditní seznam bez ztráty výběru, `Ctrl+P` nebo `Enter` na seznamu otevře řešenou položku, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` otevře nejbližší relevantní úpravu
-- v C# Avalonia větvi má `Audit dat` vlastní hledání nad všemi auditními položkami; tlačítko `Vymazat` smaže dotaz, vrátí fokus do hledání a dashboard zůstává jen stručným výřezem nejdůležitějších problémů
+- v C# Avalonia větvi má `Audit dat` vlastní hledání nad všemi auditními položkami; tlačítko `Vymazat` smaže dotaz a vrátí fokus do hledání, `Řadit` / `Sestupně` přeskupí seznam a uloží volbu a dashboard zůstává jen stručným výřezem nejdůležitějších problémů
 - v `Dashboardu`, `Přehledu termínů` i `Propadlých termínech` klávesa `Enter` otevře právě vybranou položku; stejné chování má i dvojklik na seznamu
 
 ## Klávesové zkratky v detailu a evidencích:

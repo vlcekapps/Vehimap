@@ -594,6 +594,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"AuditEditItemButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditSearchBox\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ClearAuditSearchButton\"", auditXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AuditSortComboBox\"", auditXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AuditSortDescendingCheckBox\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditListBox\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardRefreshButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardSearchButton\"", dashboardXaml);
@@ -612,6 +614,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"TimelineOpenButton\"", timelineXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"GlobalSearchTextBox\"", globalSearchXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ClearGlobalSearchButton\"", globalSearchXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"GlobalSearchSortComboBox\"", globalSearchXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"GlobalSearchSortDescendingCheckBox\"", globalSearchXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"GlobalSearchRefreshButton\"", globalSearchXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SearchOpenButton\"", globalSearchXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpcomingOverviewSearchBox\"", upcomingOverviewXaml);
