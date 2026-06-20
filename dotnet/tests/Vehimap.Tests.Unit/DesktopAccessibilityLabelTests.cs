@@ -150,7 +150,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"HideInactiveVehiclesCheckBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleListBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleListLockStatusText\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"WorkspaceNavigationLockStatusText\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanUseVehicleList}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanUseWorkspaceNavigation}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenHistoryWindowButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenTimelineWindowButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenCostWindowButton\"", xaml);
@@ -569,6 +571,7 @@ public sealed class DesktopAccessibilityLabelTests
         AssertAccessibleBoundText(mainXaml, "ShellStatusText", "ShellStatus");
         AssertAccessibleBoundText(mainXaml, "VehicleListSummaryText", "VehicleListSummary");
         AssertAccessibleBoundText(mainXaml, "VehicleListLockStatusText", "VehicleListLockStatus");
+        AssertAccessibleBoundText(mainXaml, "WorkspaceNavigationLockStatusText", "WorkspaceNavigationLockStatus");
         AssertAccessibleBoundText(auditXaml, "AuditSummaryText", "AuditSummary");
         AssertAccessibleBoundText(historyXaml, "HistorySummaryText", "HistorySummary");
         AssertAccessibleBoundText(historyXaml, "HistorySearchSummaryText", "HistorySearchSummary");

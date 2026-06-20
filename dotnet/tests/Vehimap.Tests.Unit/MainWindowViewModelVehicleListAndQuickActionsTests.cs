@@ -110,6 +110,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(viewModel.IsEditingVehicle);
         Assert.False(viewModel.CanUseVehicleList);
         Assert.True(viewModel.IsVehicleListLocked);
+        Assert.False(viewModel.CanUseWorkspaceNavigation);
+        Assert.True(viewModel.IsWorkspaceNavigationLocked);
         Assert.Contains("detail vozidla", viewModel.VehicleListLockStatus, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("Uložte nebo zrušte", viewModel.VehicleListLockStatus, StringComparison.CurrentCulture);
         Assert.False(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
@@ -119,6 +121,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(viewModel.IsEditingVehicle);
         Assert.True(viewModel.CanUseVehicleList);
         Assert.False(viewModel.IsVehicleListLocked);
+        Assert.True(viewModel.CanUseWorkspaceNavigation);
+        Assert.False(viewModel.IsWorkspaceNavigationLocked);
         Assert.True(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
     }
 

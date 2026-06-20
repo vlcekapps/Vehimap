@@ -202,6 +202,11 @@ public sealed partial class MainWindowViewModel
 
     internal void ShowDashboardFromTray()
     {
+        if (BlockWorkspaceNavigationIfEditing())
+        {
+            return;
+        }
+
         SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
         RequestFocus(DesktopFocusTarget.SelectedVehicleTabHeader);
     }

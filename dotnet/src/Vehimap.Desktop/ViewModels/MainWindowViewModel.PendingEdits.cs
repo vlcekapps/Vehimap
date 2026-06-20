@@ -17,9 +17,18 @@ public sealed partial class MainWindowViewModel
 
     public bool CanUseVehicleList => !HasPendingEdits;
 
+    public bool IsWorkspaceNavigationLocked => HasPendingEdits;
+
+    public bool CanUseWorkspaceNavigation => !HasPendingEdits;
+
     public string VehicleListLockStatus =>
         HasPendingEdits
             ? $"Probíhá úprava v části {GetPendingEditLabel()}. Uložte nebo zrušte editor, potom půjde vybrat jiné vozidlo."
+            : string.Empty;
+
+    public string WorkspaceNavigationLockStatus =>
+        HasPendingEdits
+            ? $"Probíhá úprava v části {GetPendingEditLabel()}. Uložte nebo zrušte editor, potom půjde přejít na jinou kartu nebo otevřít jiné okno."
             : string.Empty;
 
     internal Func<string, Task<bool>>? ConfirmPendingEditsHandler
@@ -141,6 +150,15 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(IsVehicleListLocked));
         OnPropertyChanged(nameof(CanUseVehicleList));
         OnPropertyChanged(nameof(VehicleListLockStatus));
+        OnPropertyChanged(nameof(IsWorkspaceNavigationLocked));
+        OnPropertyChanged(nameof(CanUseWorkspaceNavigation));
+        OnPropertyChanged(nameof(WorkspaceNavigationLockStatus));
+        OnPropertyChanged(nameof(CanOpenReminderWindow));
+        OnPropertyChanged(nameof(CanOpenRecordWindow));
+        OnPropertyChanged(nameof(CanOpenHistoryWindow));
+        OnPropertyChanged(nameof(CanOpenFuelWindow));
+        OnPropertyChanged(nameof(CanOpenMaintenanceWindow));
+        OnPropertyChanged(nameof(CanOpenVehicleDetailWindow));
         OnPropertyChanged(nameof(CanCreateVehicle));
         OnPropertyChanged(nameof(CanEditSelectedVehicle));
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
@@ -177,5 +195,17 @@ public sealed partial class MainWindowViewModel
         MoveSelectedRecordToManagedCommand.NotifyCanExecuteChanged();
         OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
+    }
+
+    internal bool BlockWorkspaceNavigationIfEditing()
+    {
+        if (!HasPendingEdits)
+        {
+            return false;
+        }
+
+        ShellStatus = WorkspaceNavigationLockStatus;
+        RequestFocus(GetPendingEditFocusTarget());
+        return true;
     }
 }

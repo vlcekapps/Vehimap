@@ -325,6 +325,12 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (nextIndex != _viewModel.SelectedVehicleTabIndex && _viewModel.BlockWorkspaceNavigationIfEditing())
+        {
+            e.Handled = true;
+            return;
+        }
+
         _viewModel.SelectedVehicleTabIndex = nextIndex;
         e.Handled = FocusSelectedTabHeader();
     }
@@ -345,6 +351,12 @@ public partial class MainWindow : Window
 
         if (!int.TryParse(tagValue.ToString(), out var tabIndex))
         {
+            return;
+        }
+
+        if (tabIndex != _viewModel.SelectedVehicleTabIndex && _viewModel.BlockWorkspaceNavigationIfEditing())
+        {
+            e.Handled = true;
             return;
         }
 
@@ -823,6 +835,11 @@ public partial class MainWindow : Window
         if (_viewModel is null || !_viewModel.HasPendingEdits)
         {
             return true;
+        }
+
+        if (_viewModel.BlockWorkspaceNavigationIfEditing())
+        {
+            return false;
         }
 
         if (!await _viewModel.ConfirmDiscardPendingEditsAsync(actionDescription).ConfigureAwait(true))

@@ -57,6 +57,38 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Workspace_navigation_commands_are_locked_while_an_editor_is_open()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.EditSelectedVehicleCommand.Execute(null);
+        requestedTargets.Clear();
+
+        Assert.True(viewModel.IsEditingVehicle);
+        Assert.True(viewModel.IsWorkspaceNavigationLocked);
+        Assert.False(viewModel.CanUseWorkspaceNavigation);
+        Assert.False(viewModel.CanOpenHistoryWindow);
+
+        viewModel.FocusDashboardCommand.Execute(null);
+        viewModel.SelectVehicleTabCommand.Execute(DesktopTabIndexes.History);
+        viewModel.ShowDashboardFromTray();
+
+        Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
+        Assert.Contains("jinou kartu", viewModel.WorkspaceNavigationLockStatus, StringComparison.CurrentCulture);
+        Assert.Contains("jinou kartu", viewModel.ShellStatus, StringComparison.CurrentCulture);
+        Assert.NotEmpty(requestedTargets);
+        Assert.All(requestedTargets, target => Assert.Equal(DesktopFocusTarget.VehicleEditorName, target));
+
+        viewModel.CancelVehicleEditCommand.Execute(null);
+
+        Assert.False(viewModel.IsWorkspaceNavigationLocked);
+        Assert.True(viewModel.CanUseWorkspaceNavigation);
+        Assert.True(viewModel.CanOpenHistoryWindow);
+    }
+
+    [Fact]
     public void Focus_current_search_command_uses_active_workspace_or_vehicle_search()
     {
         var viewModel = CreateViewModel();

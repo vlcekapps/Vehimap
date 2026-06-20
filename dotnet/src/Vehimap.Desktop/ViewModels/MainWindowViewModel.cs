@@ -151,17 +151,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     internal DesktopAppShellController AppShellController { get; }
 
-    public bool CanOpenReminderWindow => SelectedVehicle is not null;
+    public bool CanOpenReminderWindow => SelectedVehicle is not null && CanUseWorkspaceNavigation;
 
-    public bool CanOpenRecordWindow => SelectedVehicle is not null;
+    public bool CanOpenRecordWindow => SelectedVehicle is not null && CanUseWorkspaceNavigation;
 
-    public bool CanOpenHistoryWindow => SelectedVehicle is not null;
+    public bool CanOpenHistoryWindow => SelectedVehicle is not null && CanUseWorkspaceNavigation;
 
-    public bool CanOpenFuelWindow => SelectedVehicle is not null;
+    public bool CanOpenFuelWindow => SelectedVehicle is not null && CanUseWorkspaceNavigation;
 
-    public bool CanOpenMaintenanceWindow => SelectedVehicle is not null;
+    public bool CanOpenMaintenanceWindow => SelectedVehicle is not null && CanUseWorkspaceNavigation;
 
-    public bool CanOpenVehicleDetailWindow => SelectedVehicle is not null;
+    public bool CanOpenVehicleDetailWindow => SelectedVehicle is not null && CanUseWorkspaceNavigation;
 
     public bool CanOpenSelectedVehicleCosts => SelectedVehicle is not null && !HasPendingEdits;
 
@@ -459,6 +459,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void FocusTimelineSearch()
     {
+        if (BlockWorkspaceNavigationIfEditing())
+        {
+            return;
+        }
+
         SelectedVehicleTabIndex = TimelineTabIndex;
         RequestFocus(DesktopFocusTarget.TimelineSearch);
     }
@@ -466,6 +471,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void FocusGlobalSearch()
     {
+        if (BlockWorkspaceNavigationIfEditing())
+        {
+            return;
+        }
+
         SelectedVehicleTabIndex = SearchTabIndex;
         RequestFocus(DesktopFocusTarget.GlobalSearchBox);
     }
@@ -473,6 +483,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void FocusCurrentSearch()
     {
+        if (BlockWorkspaceNavigationIfEditing())
+        {
+            return;
+        }
+
         var target = SelectedVehicleTabIndex switch
         {
             HistoryTabIndex => DesktopFocusTarget.HistorySearch,
@@ -495,6 +510,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void FocusDashboard()
     {
+        if (BlockWorkspaceNavigationIfEditing())
+        {
+            return;
+        }
+
         SelectedVehicleTabIndex = DashboardTabIndex;
         RequestFocus(DesktopFocusTarget.DashboardAuditList);
     }
@@ -502,6 +522,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void FocusUpcomingOverview()
     {
+        if (BlockWorkspaceNavigationIfEditing())
+        {
+            return;
+        }
+
         SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
         RequestFocus(DesktopFocusTarget.UpcomingOverviewSearch);
     }
@@ -509,6 +534,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void FocusOverdueOverview()
     {
+        if (BlockWorkspaceNavigationIfEditing())
+        {
+            return;
+        }
+
         SelectedVehicleTabIndex = OverdueOverviewTabIndex;
         RequestFocus(DesktopFocusTarget.OverdueOverviewSearch);
     }
@@ -517,6 +547,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void SelectVehicleTab(int tabIndex)
     {
         if (tabIndex < DetailTabIndex || tabIndex > OverdueOverviewTabIndex)
+        {
+            return;
+        }
+
+        if (tabIndex != SelectedVehicleTabIndex && BlockWorkspaceNavigationIfEditing())
         {
             return;
         }
