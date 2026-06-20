@@ -621,6 +621,12 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"AdvanceReminderButton\"", reminderXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorNameBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorCategoryBox\"", vehicleDetailXaml);
+        Assert.Contains("x:Name=\"VehicleEditorMakeModelBox\"", vehicleDetailXaml);
+        Assert.Contains("x:Name=\"VehicleEditorYearBox\"", vehicleDetailXaml);
+        Assert.Contains("x:Name=\"VehicleEditorLastTkBox\"", vehicleDetailXaml);
+        Assert.Contains("x:Name=\"VehicleEditorNextTkBox\"", vehicleDetailXaml);
+        Assert.Contains("x:Name=\"VehicleEditorGreenCardFromBox\"", vehicleDetailXaml);
+        Assert.Contains("x:Name=\"VehicleEditorGreenCardToBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.Name=\"Štítky vozidla\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTagsBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorClimateProfileBox\"", vehicleDetailXaml);

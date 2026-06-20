@@ -57,6 +57,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - menu `Přehledy` v Avalonia větvi má přímou položku `Export termínů do kalendáře (.ics)`, aby odpovídalo AHK menu i původnímu workflow plánu
 
 ### Změněno
+- Avalonia editor vozidla při uložení sjednocuje kategorii, SPZ a data TK/ZK podle legacy AHK pravidel a při neplatné hodnotě vrací fokus na konkrétní pole k opravě
 - pole `Typ` u vozidla bylo nahrazeno praktičtější `Poznámkou k vozidlu`
 - přehledy termínů a dashboard lépe zvýrazňují problémové stavy, datové nedostatky a servisní úkoly
 - Vehimap je interně rozdělený do menších modulů `#Include`, takže se aplikace lépe udržuje a rozvíjí

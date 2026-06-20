@@ -82,7 +82,8 @@
       <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="*,200">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Značka a model" />
-          <TextBox Text="{Binding VehicleEditorMakeModel}"
+          <TextBox x:Name="VehicleEditorMakeModelBox"
+                   Text="{Binding VehicleEditorMakeModel}"
                    PlaceholderText="Například Škoda 120L"
                    AutomationProperties.Name="Značka a model vozidla"
                    AutomationProperties.AutomationId="VehicleEditorMakeModelBox" />
@@ -99,7 +100,8 @@
       <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="160,160,*">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Rok" />
-          <TextBox Text="{Binding VehicleEditorYear}"
+          <TextBox x:Name="VehicleEditorYearBox"
+                   Text="{Binding VehicleEditorYear}"
                    AutomationProperties.Name="Rok vozidla"
                    AutomationProperties.AutomationId="VehicleEditorYearBox" />
         </StackPanel>
@@ -121,13 +123,15 @@
       <Grid Grid.Row="3" Margin="0,14,0,0" ColumnDefinitions="*,*">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Poslední TK" />
-          <TextBox Text="{Binding VehicleEditorLastTk}"
+          <TextBox x:Name="VehicleEditorLastTkBox"
+                   Text="{Binding VehicleEditorLastTk}"
                    AutomationProperties.Name="Poslední technická kontrola"
                    AutomationProperties.AutomationId="VehicleEditorLastTkBox" />
         </StackPanel>
         <StackPanel Grid.Column="1" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Příští TK" />
-          <TextBox Text="{Binding VehicleEditorNextTk}"
+          <TextBox x:Name="VehicleEditorNextTkBox"
+                   Text="{Binding VehicleEditorNextTk}"
                    AutomationProperties.Name="Příští technická kontrola"
                    AutomationProperties.AutomationId="VehicleEditorNextTkBox" />
         </StackPanel>
@@ -136,13 +140,15 @@
       <Grid Grid.Row="4" Margin="0,14,0,0" ColumnDefinitions="*,*">
         <StackPanel Margin="0,0,12,0" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Zelená karta od" />
-          <TextBox Text="{Binding VehicleEditorGreenCardFrom}"
+          <TextBox x:Name="VehicleEditorGreenCardFromBox"
+                   Text="{Binding VehicleEditorGreenCardFrom}"
                    AutomationProperties.Name="Zelená karta od"
                    AutomationProperties.AutomationId="VehicleEditorGreenCardFromBox" />
         </StackPanel>
         <StackPanel Grid.Column="1" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Zelená karta do" />
-          <TextBox Text="{Binding VehicleEditorGreenCardTo}"
+          <TextBox x:Name="VehicleEditorGreenCardToBox"
+                   Text="{Binding VehicleEditorGreenCardTo}"
                    AutomationProperties.Name="Zelená karta do"
                    AutomationProperties.AutomationId="VehicleEditorGreenCardToBox" />
         </StackPanel>

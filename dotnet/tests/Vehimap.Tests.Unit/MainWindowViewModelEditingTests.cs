@@ -357,14 +357,16 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.CreateVehicleCommand.Execute(null);
         viewModel.VehicleDetailWorkspace.VehicleEditorName = "Božena";
-        viewModel.VehicleDetailWorkspace.VehicleEditorCategory = "Osobní vozidla";
+        viewModel.VehicleDetailWorkspace.VehicleEditorCategory = "Osobní";
         viewModel.VehicleDetailWorkspace.VehicleEditorMakeModel = "Škoda 100";
-        viewModel.VehicleDetailWorkspace.VehicleEditorPlate = "2AB3456";
+        viewModel.VehicleDetailWorkspace.VehicleEditorPlate = " 2ab3456 ";
         viewModel.VehicleDetailWorkspace.VehicleEditorYear = "1973";
         viewModel.VehicleDetailWorkspace.VehicleEditorPower = "35";
         viewModel.VehicleDetailWorkspace.VehicleEditorNote = "Srazové";
-        viewModel.VehicleDetailWorkspace.VehicleEditorNextTk = "09/2026";
-        viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardTo = "10/2026";
+        viewModel.VehicleDetailWorkspace.VehicleEditorLastTk = "5.2025";
+        viewModel.VehicleDetailWorkspace.VehicleEditorNextTk = "9-2026";
+        viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardFrom = "7.2025";
+        viewModel.VehicleDetailWorkspace.VehicleEditorGreenCardTo = "10.2026";
         viewModel.VehicleDetailWorkspace.VehicleEditorState = "Veterán";
         viewModel.VehicleDetailWorkspace.VehicleEditorTags = "srazové, veterán";
         viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain = "Benzín";
@@ -377,6 +379,13 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.NotNull(viewModel.SelectedVehicle);
         Assert.Equal("Božena", viewModel.SelectedVehicle!.Name);
         Assert.Contains(dataStore.CurrentDataSet.Vehicles, item => item.Name == "Božena");
+        var savedVehicle = Assert.Single(dataStore.CurrentDataSet.Vehicles.Where(item => item.Id == viewModel.SelectedVehicle.Id));
+        Assert.Equal("Osobní vozidla", savedVehicle.Category);
+        Assert.Equal("2AB3456", savedVehicle.Plate);
+        Assert.Equal("05/2025", savedVehicle.LastTk);
+        Assert.Equal("09/2026", savedVehicle.NextTk);
+        Assert.Equal("07/2025", savedVehicle.GreenCardFrom);
+        Assert.Equal("10/2026", savedVehicle.GreenCardTo);
         Assert.Contains(
             dataStore.CurrentDataSet.VehicleMetaEntries,
             item => item.VehicleId == viewModel.SelectedVehicle.Id
@@ -388,6 +397,32 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
                 && item.Transmission == "Manuální");
         Assert.Equal("Nové vozidlo bylo uloženo.", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
         Assert.True(viewModel.TryConsumePendingVehicleStarterBundleOffer(viewModel.SelectedVehicle.Id));
+    }
+
+    [Fact]
+    public async Task Save_vehicle_command_rejects_invalid_month_year_and_focuses_field()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateVehicleCommand.Execute(null);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+        viewModel.VehicleDetailWorkspace.VehicleEditorName = "Božena";
+        viewModel.VehicleDetailWorkspace.VehicleEditorCategory = "Osobní vozidla";
+        viewModel.VehicleDetailWorkspace.VehicleEditorMakeModel = "Škoda 100";
+        viewModel.VehicleDetailWorkspace.VehicleEditorNextTk = "13/2026";
+
+        await viewModel.SaveVehicleCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
+        Assert.Equal("Pole Příští TK je povinné a musí být ve formátu MM/RRRR.", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
+        Assert.Equal(DesktopFocusTarget.VehicleEditorNextTk, Assert.Single(requestedTargets));
+        Assert.DoesNotContain(dataStore.CurrentDataSet.Vehicles, item => item.Name == "Božena");
     }
 
     [Fact]

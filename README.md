@@ -168,7 +168,8 @@ Ve formuláři pro vozidlo:
 - `Vlastní pojmenování`, `Kategorie`, `Značka / model` a `Příští TK` jsou povinné
 - `Poznámka k vozidlu`, `Štítky`, `SPZ`, `Rok výroby`, `Výkon`, `Poslední TK`, `Zelená karta od`, `Zelená karta do`, `Pohon`, `Klimatizace`, `Rozvody` i `Převodovka` jsou volitelné
 - štítky lze oddělovat čárkou nebo středníkem; při uložení se prázdné položky a duplicity sjednotí stejně jako v původní AHK aplikaci
-- datum technické i zelené karty se zadává jako `MM/RRRR`, například `04/2026`
+- datum technické i zelené karty se zadává jako `MM/RRRR`, například `04/2026`; C# Avalonia editor přijme i `4.2026` nebo `4-2026` a při uložení je sjednotí na `04/2026`
+- C# Avalonia editor při uložení sjednocuje zkrácené kategorie, převede SPZ na velká písmena a při neplatném datu nebo roku vrátí fokus na pole k opravě
 
 V historii událostí:
 

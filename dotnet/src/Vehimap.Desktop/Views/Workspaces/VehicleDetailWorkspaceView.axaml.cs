@@ -26,13 +26,29 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
     }
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.VehicleDetailPrimaryAction or DesktopFocusTarget.VehicleEditorName or DesktopFocusTarget.VehicleEditorCancel;
+        target is DesktopFocusTarget.VehicleDetailPrimaryAction
+            or DesktopFocusTarget.VehicleEditorName
+            or DesktopFocusTarget.VehicleEditorCategory
+            or DesktopFocusTarget.VehicleEditorMakeModel
+            or DesktopFocusTarget.VehicleEditorYear
+            or DesktopFocusTarget.VehicleEditorLastTk
+            or DesktopFocusTarget.VehicleEditorNextTk
+            or DesktopFocusTarget.VehicleEditorGreenCardFrom
+            or DesktopFocusTarget.VehicleEditorGreenCardTo
+            or DesktopFocusTarget.VehicleEditorCancel;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
             DesktopFocusTarget.VehicleDetailPrimaryAction => ResolvePrimaryAction(),
             DesktopFocusTarget.VehicleEditorName => this.FindControl<TextBox>("VehicleEditorNameBox"),
+            DesktopFocusTarget.VehicleEditorCategory => this.FindControl<ComboBox>("VehicleEditorCategoryBox"),
+            DesktopFocusTarget.VehicleEditorMakeModel => this.FindControl<TextBox>("VehicleEditorMakeModelBox"),
+            DesktopFocusTarget.VehicleEditorYear => this.FindControl<TextBox>("VehicleEditorYearBox"),
+            DesktopFocusTarget.VehicleEditorLastTk => this.FindControl<TextBox>("VehicleEditorLastTkBox"),
+            DesktopFocusTarget.VehicleEditorNextTk => this.FindControl<TextBox>("VehicleEditorNextTkBox"),
+            DesktopFocusTarget.VehicleEditorGreenCardFrom => this.FindControl<TextBox>("VehicleEditorGreenCardFromBox"),
+            DesktopFocusTarget.VehicleEditorGreenCardTo => this.FindControl<TextBox>("VehicleEditorGreenCardToBox"),
             DesktopFocusTarget.VehicleEditorCancel => this.FindControl<Button>("CancelVehicleButton"),
             _ => null
         };

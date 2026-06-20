@@ -58,25 +58,7 @@ internal static class LegacySectionSerialization
 
     public static string NormalizeCategory(string? value)
     {
-        if (string.Equals(value, "Osobní", StringComparison.Ordinal))
-        {
-            return "Osobní vozidla";
-        }
-
-        if (string.Equals(value, "Nákladní", StringComparison.Ordinal))
-        {
-            return "Nákladní vozidla";
-        }
-
-        foreach (var allowed in LegacyKnownValues.Categories)
-        {
-            if (string.Equals(allowed, value, StringComparison.Ordinal))
-            {
-                return allowed;
-            }
-        }
-
-        return "Ostatní";
+        return LegacyVehicleValueNormalization.NormalizeCategory(value);
     }
 
     public static VehicleRecordAttachmentMode NormalizeAttachmentMode(string? mode)

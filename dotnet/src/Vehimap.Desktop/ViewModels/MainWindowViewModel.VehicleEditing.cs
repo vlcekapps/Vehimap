@@ -160,10 +160,81 @@ public sealed partial class MainWindowViewModel
         }
 
         var name = (VehicleDetailWorkspace.VehicleEditorName ?? string.Empty).Trim();
+        var category = (VehicleDetailWorkspace.VehicleEditorCategory ?? string.Empty).Trim();
+        var makeModel = (VehicleDetailWorkspace.VehicleEditorMakeModel ?? string.Empty).Trim();
+        var plate = (VehicleDetailWorkspace.VehicleEditorPlate ?? string.Empty).Trim().ToUpperInvariant();
+        var year = (VehicleDetailWorkspace.VehicleEditorYear ?? string.Empty).Trim();
+        var lastTkText = (VehicleDetailWorkspace.VehicleEditorLastTk ?? string.Empty).Trim();
+        var nextTkText = (VehicleDetailWorkspace.VehicleEditorNextTk ?? string.Empty).Trim();
+        var greenCardFromText = (VehicleDetailWorkspace.VehicleEditorGreenCardFrom ?? string.Empty).Trim();
+        var greenCardToText = (VehicleDetailWorkspace.VehicleEditorGreenCardTo ?? string.Empty).Trim();
+        var lastTk = LegacyVehicleValueNormalization.NormalizeMonthYear(lastTkText);
+        var nextTk = LegacyVehicleValueNormalization.NormalizeMonthYear(nextTkText);
+        var greenCardFrom = LegacyVehicleValueNormalization.NormalizeMonthYear(greenCardFromText);
+        var greenCardTo = LegacyVehicleValueNormalization.NormalizeMonthYear(greenCardToText);
+
         if (string.IsNullOrWhiteSpace(name))
         {
             VehicleDetailWorkspace.VehicleEditorStatus = "Vozidlo musí mít název.";
             RequestFocus(DesktopFocusTarget.VehicleEditorName);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(category))
+        {
+            VehicleDetailWorkspace.VehicleEditorStatus = "Vozidlo musí mít kategorii.";
+            RequestFocus(DesktopFocusTarget.VehicleEditorCategory);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(makeModel))
+        {
+            VehicleDetailWorkspace.VehicleEditorStatus = "Vozidlo musí mít vyplněnou značku a model.";
+            RequestFocus(DesktopFocusTarget.VehicleEditorMakeModel);
+            return;
+        }
+
+        if (lastTkText.Length > 0 && lastTk.Length == 0)
+        {
+            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Poslední TK musí být ve formátu MM/RRRR.";
+            RequestFocus(DesktopFocusTarget.VehicleEditorLastTk);
+            return;
+        }
+
+        if (nextTk.Length == 0)
+        {
+            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Příští TK je povinné a musí být ve formátu MM/RRRR.";
+            RequestFocus(DesktopFocusTarget.VehicleEditorNextTk);
+            return;
+        }
+
+        if (greenCardFromText.Length > 0 && greenCardFrom.Length == 0)
+        {
+            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Zelená karta od musí být ve formátu MM/RRRR.";
+            RequestFocus(DesktopFocusTarget.VehicleEditorGreenCardFrom);
+            return;
+        }
+
+        if (greenCardToText.Length > 0 && greenCardTo.Length == 0)
+        {
+            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Zelená karta do musí být ve formátu MM/RRRR.";
+            RequestFocus(DesktopFocusTarget.VehicleEditorGreenCardTo);
+            return;
+        }
+
+        if (LegacyVehicleValueNormalization.TryGetMonthYearOrder(greenCardFrom, out var greenCardFromOrder)
+            && LegacyVehicleValueNormalization.TryGetMonthYearOrder(greenCardTo, out var greenCardToOrder)
+            && greenCardFromOrder > greenCardToOrder)
+        {
+            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Zelená karta od nesmí být později než pole Zelená karta do.";
+            RequestFocus(DesktopFocusTarget.VehicleEditorGreenCardFrom);
+            return;
+        }
+
+        if (year.Length > 0 && (year.Length != 4 || !year.All(char.IsDigit)))
+        {
+            VehicleDetailWorkspace.VehicleEditorStatus = "Rok výroby zadejte jako čtyřciferný rok, nebo pole nechte prázdné.";
+            RequestFocus(DesktopFocusTarget.VehicleEditorYear);
             return;
         }
 
@@ -173,16 +244,16 @@ public sealed partial class MainWindowViewModel
         var updatedVehicle = new Vehicle(
             vehicleId,
             name,
-            (VehicleDetailWorkspace.VehicleEditorCategory ?? string.Empty).Trim(),
+            LegacyVehicleValueNormalization.NormalizeCategory(category),
             (VehicleDetailWorkspace.VehicleEditorNote ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorMakeModel ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorPlate ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorYear ?? string.Empty).Trim(),
+            makeModel,
+            plate,
+            year,
             (VehicleDetailWorkspace.VehicleEditorPower ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorLastTk ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorNextTk ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorGreenCardFrom ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorGreenCardTo ?? string.Empty).Trim());
+            lastTk,
+            nextTk,
+            greenCardFrom,
+            greenCardTo);
 
         UpsertVehicle(updatedVehicle);
         UpsertVehicleMeta(BuildUpdatedVehicleMeta(vehicleId, existingMeta));
