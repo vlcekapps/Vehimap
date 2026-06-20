@@ -53,7 +53,7 @@ public sealed class MainWindowViewModelOverviewTests
         viewModel.OpenSelectedUpcomingOverviewItemCommand.Execute(null);
 
         Assert.True(viewModel.IsReminderTabSelected);
-        Assert.Equal("Přezutí", viewModel.SelectedReminder?.Title);
+        Assert.Equal("Přezutí", viewModel.ReminderWorkspace.SelectedReminder?.Title);
     }
 
     [Fact]

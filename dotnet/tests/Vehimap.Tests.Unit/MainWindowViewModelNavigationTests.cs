@@ -40,7 +40,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.OpenSelectedDashboardTimelineItemCommand.Execute(null);
 
         Assert.Equal(3, viewModel.SelectedVehicleTabIndex);
-        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
+        Assert.Equal("rem_1", viewModel.ReminderWorkspace.SelectedReminder?.Id);
         Assert.Equal(DesktopFocusTarget.ReminderList, requestedFocus);
     }
 
@@ -154,11 +154,11 @@ public sealed class MainWindowViewModelNavigationTests
 
         viewModel.ReminderWorkspace.ReminderSearchText = "servis";
         Assert.Single(viewModel.ReminderWorkspace.VisibleReminderItems);
-        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
+        Assert.Equal("rem_1", viewModel.ReminderWorkspace.SelectedReminder?.Id);
 
         viewModel.MaintenanceWorkspace.MaintenanceSearchText = "olej";
         Assert.Single(viewModel.MaintenanceWorkspace.VisibleMaintenanceItems);
-        Assert.Equal("mnt_1", viewModel.SelectedMaintenance?.Id);
+        Assert.Equal("mnt_1", viewModel.MaintenanceWorkspace.SelectedMaintenance?.Id);
 
         viewModel.RecordWorkspace.RecordSearchText = "Asistence";
         Assert.Single(viewModel.RecordWorkspace.VisibleRecordItems);
@@ -563,7 +563,7 @@ public sealed class MainWindowViewModelNavigationTests
 
         Assert.True(itemHandled);
         Assert.Equal(DesktopTabIndexes.Reminder, viewModel.SelectedVehicleTabIndex);
-        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
+        Assert.Equal("rem_1", viewModel.ReminderWorkspace.SelectedReminder?.Id);
         Assert.Contains(DesktopFocusTarget.ReminderList, requestedTargets);
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
@@ -633,7 +633,7 @@ public sealed class MainWindowViewModelNavigationTests
 
         Assert.True(handled);
         Assert.Equal(DesktopTabIndexes.Reminder, viewModel.SelectedVehicleTabIndex);
-        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
+        Assert.Equal("rem_1", viewModel.ReminderWorkspace.SelectedReminder?.Id);
         Assert.Equal(DesktopFocusTarget.ReminderList, requestedFocus);
 
         handled = await viewModel.HandleCurrentWorkspaceItemOpenShortcutAsync();

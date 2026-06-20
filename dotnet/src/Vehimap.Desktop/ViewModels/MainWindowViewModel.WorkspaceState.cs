@@ -148,67 +148,67 @@ public sealed partial class MainWindowViewModel
     public bool CanSaveFuel => SelectedVehicle is not null && IsEditingFuel;
     public bool CanCancelFuelEdit => IsEditingFuel;
 
-    public VehicleReminderItemViewModel? SelectedReminder
+    private VehicleReminderItemViewModel? SelectedReminder
     {
         get => ReminderWorkspace.SelectedReminder;
         set => ReminderWorkspace.SelectedReminder = value;
     }
 
-    public string SelectedReminderDetail
+    private string SelectedReminderDetail
     {
         get => ReminderWorkspace.SelectedReminderDetail;
         set => ReminderWorkspace.SelectedReminderDetail = value;
     }
 
-    public bool IsEditingReminder
+    private bool IsEditingReminder
     {
         get => ReminderWorkspace.IsEditingReminder;
         set => ReminderWorkspace.IsEditingReminder = value;
     }
 
-    public string ReminderPanelHeading
+    private string ReminderPanelHeading
     {
         get => ReminderWorkspace.ReminderPanelHeading;
         set => ReminderWorkspace.ReminderPanelHeading = value;
     }
 
-    public string ReminderEditorStatus
+    private string ReminderEditorStatus
     {
         get => ReminderWorkspace.ReminderEditorStatus;
         set => ReminderWorkspace.ReminderEditorStatus = value;
     }
 
-    public string ReminderEditorTitle
+    private string ReminderEditorTitle
     {
         get => ReminderWorkspace.ReminderEditorTitle;
         set => ReminderWorkspace.ReminderEditorTitle = value;
     }
 
-    public string ReminderEditorDueDate
+    private string ReminderEditorDueDate
     {
         get => ReminderWorkspace.ReminderEditorDueDate;
         set => ReminderWorkspace.ReminderEditorDueDate = value;
     }
 
-    public string ReminderEditorDays
+    private string ReminderEditorDays
     {
         get => ReminderWorkspace.ReminderEditorDays;
         set => ReminderWorkspace.ReminderEditorDays = value;
     }
 
-    public string ReminderEditorRepeatMode
+    private string ReminderEditorRepeatMode
     {
         get => ReminderWorkspace.ReminderEditorRepeatMode;
         set => ReminderWorkspace.ReminderEditorRepeatMode = value;
     }
 
-    public string ReminderEditorNote
+    private string ReminderEditorNote
     {
         get => ReminderWorkspace.ReminderEditorNote;
         set => ReminderWorkspace.ReminderEditorNote = value;
     }
 
-    public bool IsReminderDetailVisible => ReminderWorkspace.IsReminderDetailVisible;
+    private bool IsReminderDetailVisible => ReminderWorkspace.IsReminderDetailVisible;
     public bool CanCreateReminder => SelectedVehicle is not null && !HasPendingEdits;
     public bool CanEditSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
     public bool CanDeleteSelectedReminder => SelectedReminder is not null && !HasPendingEdits;
@@ -216,85 +216,85 @@ public sealed partial class MainWindowViewModel
     public bool CanSaveReminder => SelectedVehicle is not null && IsEditingReminder;
     public bool CanCancelReminderEdit => IsEditingReminder;
 
-    public VehicleMaintenanceItemViewModel? SelectedMaintenance
+    private VehicleMaintenanceItemViewModel? SelectedMaintenance
     {
         get => MaintenanceWorkspace.SelectedMaintenance;
         set => MaintenanceWorkspace.SelectedMaintenance = value;
     }
 
-    public string SelectedMaintenanceDetail
+    private string SelectedMaintenanceDetail
     {
         get => MaintenanceWorkspace.SelectedMaintenanceDetail;
         set => MaintenanceWorkspace.SelectedMaintenanceDetail = value;
     }
 
-    public bool IsEditingMaintenance
+    private bool IsEditingMaintenance
     {
         get => MaintenanceWorkspace.IsEditingMaintenance;
         set => MaintenanceWorkspace.IsEditingMaintenance = value;
     }
 
-    public string MaintenancePanelHeading
+    private string MaintenancePanelHeading
     {
         get => MaintenanceWorkspace.MaintenancePanelHeading;
         set => MaintenanceWorkspace.MaintenancePanelHeading = value;
     }
 
-    public string MaintenanceEditorStatus
+    private string MaintenanceEditorStatus
     {
         get => MaintenanceWorkspace.MaintenanceEditorStatus;
         set => MaintenanceWorkspace.MaintenanceEditorStatus = value;
     }
 
-    public string SelectedMaintenanceTemplate
+    private string SelectedMaintenanceTemplate
     {
         get => MaintenanceWorkspace.SelectedMaintenanceTemplate;
         set => MaintenanceWorkspace.SelectedMaintenanceTemplate = value;
     }
 
-    public string MaintenanceEditorTitle
+    private string MaintenanceEditorTitle
     {
         get => MaintenanceWorkspace.MaintenanceEditorTitle;
         set => MaintenanceWorkspace.MaintenanceEditorTitle = value;
     }
 
-    public string MaintenanceEditorIntervalKm
+    private string MaintenanceEditorIntervalKm
     {
         get => MaintenanceWorkspace.MaintenanceEditorIntervalKm;
         set => MaintenanceWorkspace.MaintenanceEditorIntervalKm = value;
     }
 
-    public string MaintenanceEditorIntervalMonths
+    private string MaintenanceEditorIntervalMonths
     {
         get => MaintenanceWorkspace.MaintenanceEditorIntervalMonths;
         set => MaintenanceWorkspace.MaintenanceEditorIntervalMonths = value;
     }
 
-    public string MaintenanceEditorLastServiceDate
+    private string MaintenanceEditorLastServiceDate
     {
         get => MaintenanceWorkspace.MaintenanceEditorLastServiceDate;
         set => MaintenanceWorkspace.MaintenanceEditorLastServiceDate = value;
     }
 
-    public string MaintenanceEditorLastServiceOdometer
+    private string MaintenanceEditorLastServiceOdometer
     {
         get => MaintenanceWorkspace.MaintenanceEditorLastServiceOdometer;
         set => MaintenanceWorkspace.MaintenanceEditorLastServiceOdometer = value;
     }
 
-    public bool MaintenanceEditorIsActive
+    private bool MaintenanceEditorIsActive
     {
         get => MaintenanceWorkspace.MaintenanceEditorIsActive;
         set => MaintenanceWorkspace.MaintenanceEditorIsActive = value;
     }
 
-    public string MaintenanceEditorNote
+    private string MaintenanceEditorNote
     {
         get => MaintenanceWorkspace.MaintenanceEditorNote;
         set => MaintenanceWorkspace.MaintenanceEditorNote = value;
     }
 
-    public bool IsMaintenanceDetailVisible => MaintenanceWorkspace.IsMaintenanceDetailVisible;
+    private bool IsMaintenanceDetailVisible => MaintenanceWorkspace.IsMaintenanceDetailVisible;
     public bool CanCreateMaintenance => SelectedVehicle is not null && !HasPendingEdits;
     public bool CanEditSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;
     public bool CanDeleteSelectedMaintenance => SelectedMaintenance is not null && !HasPendingEdits;

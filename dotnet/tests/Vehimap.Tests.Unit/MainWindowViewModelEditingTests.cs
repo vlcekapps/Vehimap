@@ -32,18 +32,18 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
         viewModel.CreateReminderCommand.Execute(null);
-        viewModel.ReminderEditorTitle = "Objednat pneuservis";
-        viewModel.ReminderEditorDueDate = "10.10.2026";
-        viewModel.ReminderEditorDays = "14";
-        viewModel.ReminderEditorRepeatMode = "Ročně";
-        viewModel.ReminderEditorNote = "Nezapomenout na zimní gumy";
+        viewModel.ReminderWorkspace.ReminderEditorTitle = "Objednat pneuservis";
+        viewModel.ReminderWorkspace.ReminderEditorDueDate = "10.10.2026";
+        viewModel.ReminderWorkspace.ReminderEditorDays = "14";
+        viewModel.ReminderWorkspace.ReminderEditorRepeatMode = "Ročně";
+        viewModel.ReminderWorkspace.ReminderEditorNote = "Nezapomenout na zimní gumy";
 
         await viewModel.SaveReminderCommand.ExecuteAsync(null);
 
-        Assert.NotNull(viewModel.SelectedReminder);
-        Assert.Equal("Objednat pneuservis", viewModel.SelectedReminder!.Title);
+        Assert.NotNull(viewModel.ReminderWorkspace.SelectedReminder);
+        Assert.Equal("Objednat pneuservis", viewModel.ReminderWorkspace.SelectedReminder!.Title);
         Assert.Contains(dataStore.CurrentDataSet.Reminders, item => item.Title == "Objednat pneuservis" && item.VehicleId == "veh_1");
-        Assert.Equal("Nová připomínka byla uložena.", viewModel.ReminderEditorStatus);
+        Assert.Equal("Nová připomínka byla uložena.", viewModel.ReminderWorkspace.ReminderEditorStatus);
     }
 
     [Theory]
@@ -67,9 +67,9 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         var savedReminder = Assert.Single(dataStore.CurrentDataSet.Reminders);
         Assert.Equal(expectedDueDate, savedReminder.DueDate);
-        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
-        Assert.Equal(expectedDueDate, viewModel.SelectedReminder?.DueDate);
-        Assert.Equal($"Připomínka byla posunuta na {expectedDueDate}.", viewModel.ReminderEditorStatus);
+        Assert.Equal("rem_1", viewModel.ReminderWorkspace.SelectedReminder?.Id);
+        Assert.Equal(expectedDueDate, viewModel.ReminderWorkspace.SelectedReminder?.DueDate);
+        Assert.Equal($"Připomínka byla posunuta na {expectedDueDate}.", viewModel.ReminderWorkspace.ReminderEditorStatus);
     }
 
     [Fact]
@@ -189,20 +189,20 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
         viewModel.CreateMaintenanceCommand.Execute(null);
-        viewModel.MaintenanceEditorTitle = "Motorový olej";
-        viewModel.MaintenanceEditorIntervalKm = "15000";
-        viewModel.MaintenanceEditorIntervalMonths = "12";
-        viewModel.MaintenanceEditorLastServiceDate = "01.04.2026";
-        viewModel.MaintenanceEditorLastServiceOdometer = "120000";
-        viewModel.MaintenanceEditorIsActive = true;
-        viewModel.MaintenanceEditorNote = "Každoroční servis";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorTitle = "Motorový olej";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm = "15000";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalMonths = "12";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceDate = "01.04.2026";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceOdometer = "120000";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorIsActive = true;
+        viewModel.MaintenanceWorkspace.MaintenanceEditorNote = "Každoroční servis";
 
         await viewModel.SaveMaintenanceCommand.ExecuteAsync(null);
 
-        Assert.NotNull(viewModel.SelectedMaintenance);
-        Assert.Equal("Motorový olej", viewModel.SelectedMaintenance!.Title);
+        Assert.NotNull(viewModel.MaintenanceWorkspace.SelectedMaintenance);
+        Assert.Equal("Motorový olej", viewModel.MaintenanceWorkspace.SelectedMaintenance!.Title);
         Assert.Contains(dataStore.CurrentDataSet.MaintenancePlans, item => item.Title == "Motorový olej" && item.VehicleId == "veh_1");
-        Assert.Equal("Nový servisní plán byl uložen.", viewModel.MaintenanceEditorStatus);
+        Assert.Equal("Nový servisní plán byl uložen.", viewModel.MaintenanceWorkspace.MaintenanceEditorStatus);
     }
 
     [Fact]
@@ -218,19 +218,19 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.CreateMaintenanceCommand.Execute(null);
 
         Assert.Contains("Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
-        Assert.Equal("Vlastní položka", viewModel.SelectedMaintenanceTemplate);
+        Assert.Equal("Vlastní položka", viewModel.MaintenanceWorkspace.SelectedMaintenanceTemplate);
 
-        viewModel.SelectedMaintenanceTemplate = "Kabinový filtr";
+        viewModel.MaintenanceWorkspace.SelectedMaintenanceTemplate = "Kabinový filtr";
 
-        Assert.Equal("Kabinový filtr", viewModel.MaintenanceEditorTitle);
-        Assert.Equal("15000", viewModel.MaintenanceEditorIntervalKm);
-        Assert.Equal("12", viewModel.MaintenanceEditorIntervalMonths);
-        Assert.Equal("Pravidelná výměna pylového filtru.", viewModel.MaintenanceEditorNote);
-        Assert.Contains("předvyplnila", viewModel.MaintenanceEditorStatus);
+        Assert.Equal("Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceEditorTitle);
+        Assert.Equal("15000", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm);
+        Assert.Equal("12", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalMonths);
+        Assert.Equal("Pravidelná výměna pylového filtru.", viewModel.MaintenanceWorkspace.MaintenanceEditorNote);
+        Assert.Contains("předvyplnila", viewModel.MaintenanceWorkspace.MaintenanceEditorStatus);
 
         viewModel.CancelMaintenanceEditCommand.Execute(null);
 
-        Assert.Equal("Vlastní položka", viewModel.SelectedMaintenanceTemplate);
+        Assert.Equal("Vlastní položka", viewModel.MaintenanceWorkspace.SelectedMaintenanceTemplate);
     }
 
     [Fact]
@@ -254,9 +254,9 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var savedPlan = Assert.Single(dataStore.CurrentDataSet.MaintenancePlans);
         Assert.Equal(expectedDate, savedPlan.LastServiceDate);
         Assert.Equal("123456", savedPlan.LastServiceOdometer);
-        Assert.Equal("mnt_1", viewModel.SelectedMaintenance?.Id);
-        Assert.Contains(expectedDate, viewModel.MaintenanceEditorStatus);
-        Assert.Contains("123456 km", viewModel.MaintenanceEditorStatus);
+        Assert.Equal("mnt_1", viewModel.MaintenanceWorkspace.SelectedMaintenance?.Id);
+        Assert.Contains(expectedDate, viewModel.MaintenanceWorkspace.MaintenanceEditorStatus);
+        Assert.Contains("123456 km", viewModel.MaintenanceWorkspace.MaintenanceEditorStatus);
     }
 
     [Fact]
@@ -292,7 +292,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("2500.5", history.Cost);
         Assert.Equal("Zapsáno z plánu údržby.", history.Note);
         Assert.Contains("historie", message);
-        Assert.Equal("mnt_1", viewModel.SelectedMaintenance?.Id);
+        Assert.Equal("mnt_1", viewModel.MaintenanceWorkspace.SelectedMaintenance?.Id);
     }
 
     [Fact]

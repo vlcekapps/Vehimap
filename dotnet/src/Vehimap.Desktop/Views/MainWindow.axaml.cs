@@ -949,13 +949,13 @@ public partial class MainWindow : Window
             return true;
         }
 
-        if (_viewModel.IsEditingReminder)
+        if (_viewModel.ReminderWorkspace.IsEditingReminder)
         {
             await OpenRemindersWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
             return true;
         }
 
-        if (_viewModel.IsEditingMaintenance)
+        if (_viewModel.MaintenanceWorkspace.IsEditingMaintenance)
         {
             await OpenMaintenanceWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
             return true;

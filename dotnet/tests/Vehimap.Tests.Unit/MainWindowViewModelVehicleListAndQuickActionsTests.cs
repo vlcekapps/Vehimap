@@ -200,7 +200,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         Assert.True(viewModel.IsReminderTabSelected);
         Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
-        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
+        Assert.Equal("rem_1", viewModel.ReminderWorkspace.SelectedReminder?.Id);
         Assert.Equal(DesktopFocusTarget.ReminderList, requestedFocus);
         Assert.Contains("Nejbližší připomínka", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
@@ -232,7 +232,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         Assert.True(viewModel.IsMaintenanceTabSelected);
         Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
-        Assert.Equal("mnt_1", viewModel.SelectedMaintenance?.Id);
+        Assert.Equal("mnt_1", viewModel.MaintenanceWorkspace.SelectedMaintenance?.Id);
         Assert.Equal(DesktopFocusTarget.MaintenanceList, requestedFocus);
         Assert.Contains("Nejbližší servis", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }

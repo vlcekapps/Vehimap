@@ -40,21 +40,20 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
-    public void Reminder_workspace_shares_selection_and_editing_state_with_root()
+    public void Reminder_workspace_owns_selection_and_editing_state()
     {
         var viewModel = CreateViewModel();
         var reminder = Assert.Single(viewModel.ReminderWorkspace.SelectedVehicleReminders);
 
         viewModel.ReminderWorkspace.SelectedReminder = reminder;
 
-        Assert.Same(reminder, viewModel.SelectedReminder);
+        Assert.Same(reminder, viewModel.ReminderWorkspace.SelectedReminder);
 
         viewModel.ReminderWorkspace.EditSelectedReminderCommand.Execute(null);
         viewModel.ReminderWorkspace.ReminderEditorTitle = "Upravená připomínka";
 
-        Assert.True(viewModel.IsEditingReminder);
         Assert.True(viewModel.ReminderWorkspace.IsEditingReminder);
-        Assert.Equal("Upravená připomínka", viewModel.ReminderEditorTitle);
+        Assert.Equal("Upravená připomínka", viewModel.ReminderWorkspace.ReminderEditorTitle);
     }
 
     [Fact]
@@ -322,6 +321,31 @@ public sealed class WorkspaceCompositionTests
             "FuelEditorFullTank",
             "FuelEditorNote",
             "IsFuelDetailVisible",
+            "SelectedReminder",
+            "SelectedReminderDetail",
+            "IsEditingReminder",
+            "ReminderPanelHeading",
+            "ReminderEditorStatus",
+            "ReminderEditorTitle",
+            "ReminderEditorDueDate",
+            "ReminderEditorDays",
+            "ReminderEditorRepeatMode",
+            "ReminderEditorNote",
+            "IsReminderDetailVisible",
+            "SelectedMaintenance",
+            "SelectedMaintenanceDetail",
+            "IsEditingMaintenance",
+            "MaintenancePanelHeading",
+            "MaintenanceEditorStatus",
+            "SelectedMaintenanceTemplate",
+            "MaintenanceEditorTitle",
+            "MaintenanceEditorIntervalKm",
+            "MaintenanceEditorIntervalMonths",
+            "MaintenanceEditorLastServiceDate",
+            "MaintenanceEditorLastServiceOdometer",
+            "MaintenanceEditorIsActive",
+            "MaintenanceEditorNote",
+            "IsMaintenanceDetailVisible",
             "SelectedVehicleHistory",
             "SelectedVehicleFuel",
             "SelectedVehicleReminders",
