@@ -171,7 +171,11 @@ public sealed class LegacyUpdateService : IUpdateService
         var localManifestPath = FindLocalManifestPath(AppContext.BaseDirectory, manifestFileName);
         if (!string.IsNullOrWhiteSpace(localManifestPath))
         {
-            return LegacyUpdateManifestParser.Parse(await File.ReadAllTextAsync(localManifestPath, cancellationToken).ConfigureAwait(false));
+            var localManifest = await TryLoadLocalManifestAsync(localManifestPath, cancellationToken).ConfigureAwait(false);
+            if (localManifest is not null)
+            {
+                return localManifest;
+            }
         }
 
         using var request = new HttpRequestMessage(HttpMethod.Get, appInfo.UpdateManifestUrl);
@@ -189,6 +193,22 @@ public sealed class LegacyUpdateService : IUpdateService
 
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         return LegacyUpdateManifestParser.Parse(content);
+    }
+
+    private static async Task<LegacyUpdateManifest?> TryLoadLocalManifestAsync(string localManifestPath, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return LegacyUpdateManifestParser.Parse(await File.ReadAllTextAsync(localManifestPath, cancellationToken).ConfigureAwait(false));
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 
     private static string? FindLocalManifestPath(string startPath, string manifestFileName)

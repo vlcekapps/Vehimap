@@ -79,6 +79,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Avalonia ukládání štítků vozidla sjednocuje čárky, středníky, prázdné položky a duplicity stejně jako AHK větev
 - C# desktop větev používá Avalonia `12.0.4` místo původní release-candidate verze a NuGet restore už nehlásí zranitelný `Tmds.DBus.Protocol`
 - preview release tooling C# větve zapisuje do package metadat i SHA-256 a velikost balíčku a generátor update manifestu ověřuje shodu metadat, `.sha256` souboru i fyzického artefaktu
+- kontrola aktualizací v Avalonia větvi už při poškozeném lokálním preview manifestu zkusí běžný vzdálený manifest místo toho, aby skončila jen chybou lokálního souboru
 - dostupnost akce `Minimalizovat na lištu` v Avalonia shellu je nově řízená viewmodelem podle podpory tray a nastavení automatických záloh vypíná intervalová pole, pokud nejsou pravidelné zálohy zapnuté
 - dialog `Nastavení` v Avalonia větvi má vlastní klávesové ovládání `Ctrl+S`, `Ctrl+B` a `Esc` i přístupný help text s těmito zkratkami
 - app-level dialogy v Avalonia větvi mají sjednocené bezpečné zavření klávesou `Esc`; `O programu` navíc nabízí `Ctrl+O` pro otevření release poznámek a všechny tyto dialogy popisují zkratky v přístupném help textu

@@ -93,6 +93,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - multiplatformni publish matrix pro `.NET` desktop preview
 - draft release workflow pro tagy `dotnet-preview-v<verze>` s verzovanymi balicky a checksumy
 - runtime-specific preview update manifesty `update/latest-dotnet-preview-<rid>.ini`
+- odolnejsi kontrolu aktualizaci: poskozeny lokalni preview manifest se preskoci a sluzba zkusi vzdaleny manifest
 - regresni testy packaging skriptu a generatoru manifestu, vcetne kontroly, ze `.sha256`, metadata a fyzicky balicek souhlasi
 - Windows CI Appium smoke nad publish buildem desktop preview
 - ulozeni `Tiskoveho prehledu` vozidel jako HTML souboru pres sdilenou exportni sluzbu a otevreni ulozeneho souboru

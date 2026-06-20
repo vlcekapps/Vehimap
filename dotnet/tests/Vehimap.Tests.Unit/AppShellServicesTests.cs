@@ -179,6 +179,59 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Contains("zatim neni publikovany", result.Message, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Fact]
+    public async Task Invalid_local_update_manifest_falls_back_to_remote_manifest()
+    {
+        var manifestFileName = $"latest-dotnet-preview-local-fallback-{Guid.NewGuid():N}.ini";
+        var localUpdateDirectory = Path.Combine(AppContext.BaseDirectory, "update");
+        var localManifestPath = Path.Combine(localUpdateDirectory, manifestFileName);
+        Directory.CreateDirectory(localUpdateDirectory);
+        await File.WriteAllTextAsync(localManifestPath, "[release]\nnotes_url=https://example.com/broken\n");
+
+        try
+        {
+            var remoteManifest = """
+                [release]
+                version=1.0.3
+                published_at=2026-04-02
+                notes_url=https://example.com/release
+                asset_url=https://example.com/vehimap.zip
+                asset_sha256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                asset_size=2048
+                """;
+            var buildInfo = new StubBuildInfoProvider(
+                new AppBuildInfo(
+                    "Vehimap",
+                    "1.0.2",
+                    "1.0.2.0",
+                    "samostatna desktopova aplikace",
+                    Path.Combine(_tempRoot, "Vehimap.Desktop.exe"),
+                    "Windows",
+                    ".NET 10",
+                    $"https://example.com/{manifestFileName}",
+                    "https://github.com/vlcekapps/Vehimap/releases",
+                    Path.Combine(_tempRoot, "Vehimap.Updater.exe"),
+                    true));
+
+            using var httpClient = new HttpClient(new StubHttpMessageHandler(Encoding.UTF8.GetBytes(remoteManifest)));
+            var service = new LegacyUpdateService(buildInfo, httpClient);
+
+            var result = await service.CheckForUpdatesAsync("1.0.2");
+
+            Assert.True(result.IsUpdateAvailable);
+            Assert.Null(result.FailureReason);
+            Assert.Equal("1.0.3", result.LatestVersion);
+            Assert.Contains("1.0.3", result.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            if (File.Exists(localManifestPath))
+            {
+                File.Delete(localManifestPath);
+            }
+        }
+    }
+
     public void Dispose()
     {
         if (Directory.Exists(_tempRoot))
