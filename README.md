@@ -98,7 +98,7 @@ V hlavním okně:
 - `Propadlé termíny`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+T` přepne zpět do přehledu termínů
 - v C# Avalonia větvi má `Dashboard` také horní tlačítka `Obnovit`, `Hledat`, `Blížící se`, `Propadlé`, `Zobrazit vozidlo` a `Upravit vozidlo`; `Obnovit` stejně jako `Ctrl+R` přepočítá audit, náklady a nejbližší termíny bez ztráty aktuálního výběru
 - v C# Avalonia větvi mají `Blížící se termíny` i `Propadlé termíny` také tlačítko `Obnovit`; zachová výběr a vrací fokus na seznam, pokud obsahuje položky
-- `Audit dat`: `Ctrl+F` přesune fokus do hledání, `Ctrl+P` nebo `Enter` na seznamu otevře řešenou položku, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` otevře nejbližší relevantní úpravu
+- `Audit dat`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví auditní seznam bez ztráty výběru, `Ctrl+P` nebo `Enter` na seznamu otevře řešenou položku, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` otevře nejbližší relevantní úpravu
 - v C# Avalonia větvi má `Audit dat` vlastní hledání nad všemi auditními položkami; dashboard zůstává jen stručným výřezem nejdůležitějších problémů
 - v `Dashboardu`, `Přehledu termínů` i `Propadlých termínech` klávesa `Enter` otevře právě vybranou položku; stejné chování má i dvojklik na seznamu
 

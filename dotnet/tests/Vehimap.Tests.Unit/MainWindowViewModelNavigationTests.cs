@@ -336,6 +336,25 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Audit_refresh_preserves_filtered_selection_and_requests_list_focus()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        viewModel.AuditWorkspace.AuditSearchText = "Doklad bez cesty";
+        var selectedAuditItem = Assert.Single(viewModel.AuditWorkspace.VisibleAuditItems);
+        viewModel.SelectedDashboardAuditItem = selectedAuditItem;
+
+        viewModel.AuditWorkspace.RefreshAuditCommand.Execute(null);
+
+        Assert.Equal(selectedAuditItem.EntityId, viewModel.SelectedDashboardAuditItem?.EntityId);
+        Assert.Equal(DesktopFocusTarget.AuditList, requestedFocus);
+        Assert.Contains("Audit dat byl obnoven", viewModel.ShellStatus, StringComparison.CurrentCulture);
+        Assert.Contains("Hledání", viewModel.AuditSummary, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
     public async Task Audit_primary_open_shortcut_opens_vehicle_detail()
     {
         var viewModel = CreateViewModel();

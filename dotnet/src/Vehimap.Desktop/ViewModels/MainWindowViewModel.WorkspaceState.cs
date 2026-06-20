@@ -762,6 +762,29 @@ public sealed partial class MainWindowViewModel
         EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
     }
 
+    internal void RefreshAuditWorkspace()
+    {
+        AuditSummary = _projectionService.BuildAuditSummary(_auditItems);
+
+        AuditItems.Clear();
+        foreach (var item in _projectionService.BuildAuditItems(_auditItems))
+        {
+            AuditItems.Add(item);
+        }
+
+        DashboardAuditItems.Clear();
+        foreach (var item in _projectionService.BuildDashboardAuditItems(_auditItems))
+        {
+            DashboardAuditItems.Add(item);
+        }
+
+        AuditWorkspace.RefreshVisibleAuditItems();
+        DashboardWorkspace.NotifyDashboardSummariesChanged();
+
+        ShellStatus = "Audit dat byl obnoven.";
+        RequestFocus(AuditWorkspace.VisibleAuditItems.Count == 0 ? DesktopFocusTarget.AuditSearch : DesktopFocusTarget.AuditList);
+    }
+
     internal void NotifyCostWorkspaceSelectionChanged()
     {
         OpenSelectedDashboardCostVehicleCommand.NotifyCanExecuteChanged();

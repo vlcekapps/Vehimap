@@ -6,6 +6,7 @@
              x:DataType="vm:AuditWorkspaceViewModel">
   <UserControl.KeyBindings>
     <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+R" Command="{Binding RefreshAuditCommand}" />
     <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedAuditVehicleCommand}" />
     <KeyBinding Gesture="Ctrl+P" Command="{Binding OpenSelectedAuditItemCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedAuditItemCommand}" />
@@ -13,7 +14,7 @@
   </UserControl.KeyBindings>
   <Grid RowDefinitions="Auto,Auto,Auto,*">
     <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-    <Grid Grid.Row="1" Margin="0,12,0,0" ColumnDefinitions="100,*,150,150,120">
+    <Grid Grid.Row="1" Margin="0,12,0,0" ColumnDefinitions="100,*,120,150,150,120">
       <TextBlock Grid.Column="0"
                  VerticalAlignment="Center"
                  Text="Hledat" />
@@ -26,17 +27,23 @@
                AutomationProperties.AutomationId="AuditSearchBox" />
       <Button Grid.Column="2"
               Margin="12,0,0,0"
+              Command="{Binding RefreshAuditCommand}"
+              Content="Obnovit"
+              AutomationProperties.Name="Obnovit audit dat"
+              AutomationProperties.AutomationId="AuditRefreshButton" />
+      <Button Grid.Column="3"
+              Margin="12,0,0,0"
               Command="{Binding OpenSelectedAuditItemCommand}"
               Content="Otevřít položku"
               AutomationProperties.Name="Otevřít vybranou auditní položku"
               AutomationProperties.AutomationId="AuditOpenItemButton" />
-      <Button Grid.Column="3"
+      <Button Grid.Column="4"
               Margin="12,0,0,0"
               Command="{Binding OpenSelectedAuditVehicleCommand}"
               Content="Zobrazit vozidlo"
               AutomationProperties.Name="Zobrazit vozidlo vybrané auditní položky"
               AutomationProperties.AutomationId="AuditOpenVehicleButton" />
-      <Button Grid.Column="4"
+      <Button Grid.Column="5"
               Margin="12,0,0,0"
               Command="{Binding EditSelectedAuditItemCommand}"
               Content="Upravit"
@@ -46,7 +53,7 @@
     <TextBlock Grid.Row="2"
                Margin="0,8,0,0"
                Opacity="0.75"
-               Text="Ctrl+F hledá, Ctrl+P otevře řešenou položku, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 otevře nejbližší editor."
+               Text="Ctrl+F hledá, Ctrl+R obnoví audit, Ctrl+P otevře řešenou položku, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 otevře nejbližší editor."
                TextWrapping="Wrap" />
     <ListBox x:Name="AuditListBox"
              Grid.Row="3"

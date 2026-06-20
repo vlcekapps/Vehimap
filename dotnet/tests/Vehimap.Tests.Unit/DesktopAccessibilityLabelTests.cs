@@ -486,6 +486,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorClimateProfileBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTimingDriveBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTransmissionBox\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AuditRefreshButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditOpenItemButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditOpenVehicleButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditEditItemButton\"", auditXaml);
@@ -553,6 +554,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"TimelineRefreshButton\"", timelineXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", auditXaml);
+        Assert.Contains("Gesture=\"Ctrl+R\" Command=\"{Binding RefreshAuditCommand}\"", auditXaml);
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedAuditVehicleCommand}\"", auditXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedAuditItemCommand}\"", auditXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedAuditItemCommand}\"", auditXaml);

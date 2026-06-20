@@ -33,6 +33,12 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
         RequestFocus(DesktopFocusTarget.AuditSearch);
     }
 
+    [RelayCommand]
+    private void RefreshAudit()
+    {
+        Root.RefreshAuditWorkspace();
+    }
+
     [RelayCommand(CanExecute = nameof(CanOpenSelectedAuditItem))]
     private async Task OpenSelectedAuditItemAsync()
     {
