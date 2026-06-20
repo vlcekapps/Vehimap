@@ -37,7 +37,15 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
 
     public ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems { get; } = [];
 
-    public IReadOnlyList<string> OverviewFilters => Root.OverviewFilters;
+    public IReadOnlyList<string> OverviewFilters { get; } =
+    [
+        "Vše",
+        "Technické kontroly",
+        "Zelené karty",
+        "Připomínky",
+        "Doklady",
+        "Údržba"
+    ];
 
     public IReadOnlyList<string> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
 

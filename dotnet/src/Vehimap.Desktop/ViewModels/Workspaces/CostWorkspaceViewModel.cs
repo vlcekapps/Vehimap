@@ -46,7 +46,15 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
 
     public ObservableCollection<CostVehicleItemViewModel> VisibleCostVehicles { get; } = [];
 
-    public IReadOnlyList<string> CostPeriodPresets => Root.CostPeriodPresets;
+    public IReadOnlyList<string> CostPeriodPresets { get; } =
+    [
+        MainWindowViewModel.CostPeriodYearToDateLabel,
+        MainWindowViewModel.CostPeriodLast30DaysLabel,
+        MainWindowViewModel.CostPeriodLast90DaysLabel,
+        MainWindowViewModel.CostPeriodCurrentYearLabel,
+        MainWindowViewModel.CostPeriodPreviousYearLabel,
+        MainWindowViewModel.CostPeriodCustomLabel
+    ];
 
     public bool CanUseSelectedCostVehicle => SelectedDashboardCostVehicle is not null;
     public bool CanClearCostSearch => !string.IsNullOrWhiteSpace(CostSearchText);

@@ -43,7 +43,16 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
 
     public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems { get; } = [];
 
-    public IReadOnlyList<string> OverviewFilters => Root.UpcomingOverviewFilters;
+    public IReadOnlyList<string> OverviewFilters { get; } =
+    [
+        "Vše",
+        "Technické kontroly",
+        "Zelené karty",
+        "Připomínky",
+        "Doklady",
+        "Údržba",
+        "Datové nedostatky"
+    ];
 
     public IReadOnlyList<string> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
 

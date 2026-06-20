@@ -22,16 +22,6 @@ public sealed partial class MainWindowViewModel
     private DateOnly _costPeriodStart;
     private DateOnly _costPeriodEnd;
 
-    public IReadOnlyList<string> CostPeriodPresets { get; } =
-    [
-        CostPeriodYearToDateLabel,
-        CostPeriodLast30DaysLabel,
-        CostPeriodLast90DaysLabel,
-        CostPeriodCurrentYearLabel,
-        CostPeriodPreviousYearLabel,
-        CostPeriodCustomLabel
-    ];
-
     private void ApplyCostPeriodPreferences()
     {
         var today = DateOnly.FromDateTime(DateTime.Today);
@@ -254,7 +244,7 @@ public sealed partial class MainWindowViewModel
     private string NormalizeCostPeriodPreset(string? value)
     {
         var normalized = string.IsNullOrWhiteSpace(value) ? CostPeriodYearToDateLabel : value.Trim();
-        return CostPeriodPresets.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
+        return CostWorkspace.CostPeriodPresets.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
             ? normalized
             : CostPeriodYearToDateLabel;
     }

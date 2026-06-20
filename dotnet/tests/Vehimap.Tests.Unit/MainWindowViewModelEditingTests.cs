@@ -217,7 +217,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.CreateMaintenanceCommand.Execute(null);
 
-        Assert.Contains("Kabinový filtr", viewModel.MaintenanceTemplateOptions);
+        Assert.Contains("Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
         Assert.Equal("Vlastní položka", viewModel.SelectedMaintenanceTemplate);
 
         viewModel.SelectedMaintenanceTemplate = "Kabinový filtr";

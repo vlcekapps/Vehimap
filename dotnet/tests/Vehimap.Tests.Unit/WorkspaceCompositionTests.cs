@@ -93,6 +93,18 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Workspace_option_lists_are_exposed_by_their_own_workspaces()
+    {
+        var viewModel = CreateViewModel();
+
+        Assert.Contains("Vlastní období", viewModel.CostWorkspace.CostPeriodPresets);
+        Assert.Contains("Datové nedostatky", viewModel.UpcomingOverviewWorkspace.OverviewFilters);
+        Assert.DoesNotContain("Datové nedostatky", viewModel.OverdueOverviewWorkspace.OverviewFilters);
+        Assert.Contains("Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
+        Assert.Contains("Spravovaná kopie", viewModel.RecordWorkspace.RecordAttachmentModes);
+    }
+
+    [Fact]
     public void Dashboard_workspace_reads_shared_audit_cost_and_timeline_state()
     {
         var viewModel = CreateViewModel();
@@ -263,12 +275,15 @@ public sealed class WorkspaceCompositionTests
             "SelectedOverdueOverviewDetail",
             "SelectedUpcomingOverviewItem",
             "SelectedOverdueOverviewItem",
+            "OverviewFilters",
+            "UpcomingOverviewFilters",
             "AuditSummary",
             "SelectedDashboardAuditItem",
             "CostSummary",
             "CostComparison",
             "SelectedDashboardCostVehicle",
             "CostExportStatus",
+            "CostPeriodPresets",
             "DashboardTimelineSummary",
             "SelectedDashboardTimelineDetail",
             "SelectedDashboardTimelineItem",
@@ -281,6 +296,8 @@ public sealed class WorkspaceCompositionTests
             "ReminderSummary",
             "MaintenanceSummary",
             "RecordSummary",
+            "MaintenanceTemplateOptions",
+            "RecordAttachmentModes",
             "SelectedVehicleHistory",
             "SelectedVehicleFuel",
             "SelectedVehicleReminders",

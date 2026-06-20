@@ -65,6 +65,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - drzet nactene kolekce polozek terminovych prehledu `Blizici se terminy` a `Propadle terminy` primo v jejich workspace viewmodelech misto verejnych root vlastnosti
 - drzet dashboardove souhrny auditu, nakladu a nejblizsich terminu ve sdilenych workspace stavech auditu, nakladu a dashboardu misto root proxy vlastnosti
 - drzet plny auditni seznam v `AuditWorkspace`, dashboardovy auditni vyrez a nejblizsi terminy v `DashboardWorkspace` a flotilovy seznam nakladu v `CostWorkspace` misto verejnych root kolekci
+- drzet volby nakladoveho obdobi, terminovych filtru, sablon udrzby a rezimu dokladovych priloh primo v odpovidajicich workspace viewmodelech misto root proxy vlastnosti
 - drzet stav exportu nakladoveho prehledu primo v `CostWorkspace`, zatimco root `MainWindowViewModel` zustava jen orchestratorem exportnich prikazu
 - drzet souhrnne texty evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` primo v jejich workspace viewmodelech misto root proxy vlastnosti
 - drzet nactene kolekce zaznamu evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` primo v jejich workspace viewmodelech misto verejnych root vlastnosti

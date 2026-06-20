@@ -77,6 +77,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - načtené kolekce položek přehledů `Blížící se termíny` a `Propadlé termíny` v Avalonia větvi vlastní příslušné workspace viewmodely místo veřejných root vlastností
 - dashboardové souhrny auditu, nákladů a nejbližších termínů v Avalonia větvi se čtou ze sdílených workspace stavů místo duplicitních root proxy vlastností
 - plný auditní seznam, dashboardový auditní výřez, dashboardové nejbližší termíny a flotilový seznam nákladů v Avalonia větvi vlastní workspace viewmodely místo veřejných root kolekcí
+- seznamy voleb pro nákladové období, termínové filtry, šablony údržby a režimy dokladových příloh v Avalonia větvi vlastní příslušné workspace viewmodely místo root proxy vlastností
 - stav exportů nákladového přehledu v Avalonia větvi vlastní `CostWorkspace` místo root `MainWindowViewModel`
 - souhrnné texty evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` v Avalonia větvi vlastní příslušné workspace viewmodely místo root proxy vlastností
 - načtené kolekce záznamů evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` v Avalonia větvi vlastní příslušné workspace viewmodely místo veřejných root vlastností

@@ -41,6 +41,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - v C# desktopové větvi vlastní termínové přehledy `Blížící se termíny` a `Propadlé termíny` také načtené kolekce položek; hlavní viewmodel je pouze obnovuje při změně dat, filtrů nebo hledání
 - v C# desktopové větvi už ani dashboardové souhrny auditu, nákladů a nejbližších termínů nejsou znovu vystavené přes root aliasy; čtou se ze sdílených workspace stavů auditu, nákladů a dashboardu
 - v C# desktopové větvi vlastní `AuditWorkspace` plný seznam auditních položek, `DashboardWorkspace` vlastní dashboardový auditní výřez a nejbližší termíny a `CostWorkspace` vlastní flotilový seznam nákladů
+- v C# desktopové větvi vlastní příslušné workspace viewmodely také své volby filtrů a předvoleb pro náklady, termínové přehledy, údržbu a režimy dokladových příloh
 - v C# desktopové větvi patří i stav exportů nákladového přehledu přímo `CostWorkspace`, takže hlavní viewmodel jen spouští exportní příkazy
 - v C# desktopové větvi vlastní souhrnné texty evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` přímo jejich workspace viewmodely místo root aliasů
 - v C# desktopové větvi vlastní evidence workspaces `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` také načtené kolekce záznamů; hlavní viewmodel je pouze plní při změně vozidla nebo dat

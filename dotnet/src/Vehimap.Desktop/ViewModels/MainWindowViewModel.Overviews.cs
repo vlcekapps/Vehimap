@@ -27,27 +27,6 @@ public sealed partial class MainWindowViewModel
 
     private ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems => OverdueOverviewWorkspace.OverdueOverviewItems;
 
-    public IReadOnlyList<string> OverviewFilters { get; } =
-    [
-        OverviewAllFilterLabel,
-        "Technické kontroly",
-        "Zelené karty",
-        "Připomínky",
-        "Doklady",
-        "Údržba"
-    ];
-
-    public IReadOnlyList<string> UpcomingOverviewFilters { get; } =
-    [
-        OverviewAllFilterLabel,
-        "Technické kontroly",
-        "Zelené karty",
-        "Připomínky",
-        "Doklady",
-        "Údržba",
-        OverviewDataIssueFilterLabel
-    ];
-
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewItem))]
     private async Task OpenSelectedUpcomingOverviewItemAsync()
     {
@@ -184,10 +163,10 @@ public sealed partial class MainWindowViewModel
     }
 
     private string NormalizeUpcomingOverviewFilter(string? value) =>
-        NormalizeOverviewFilter(value, UpcomingOverviewFilters);
+        NormalizeOverviewFilter(value, UpcomingOverviewWorkspace.OverviewFilters);
 
     private string NormalizeOverdueOverviewFilter(string? value) =>
-        NormalizeOverviewFilter(value, OverviewFilters);
+        NormalizeOverviewFilter(value, OverdueOverviewWorkspace.OverviewFilters);
 
     private static string NormalizeOverviewFilter(string? value, IReadOnlyList<string> supportedFilters)
     {

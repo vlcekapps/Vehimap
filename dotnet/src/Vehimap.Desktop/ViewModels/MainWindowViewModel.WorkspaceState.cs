@@ -246,8 +246,6 @@ public sealed partial class MainWindowViewModel
         set => MaintenanceWorkspace.MaintenanceEditorStatus = value;
     }
 
-    public IReadOnlyList<string> MaintenanceTemplateOptions => MaintenanceWorkspace.MaintenanceTemplateOptions;
-
     public string SelectedMaintenanceTemplate
     {
         get => MaintenanceWorkspace.SelectedMaintenanceTemplate;
@@ -370,8 +368,6 @@ public sealed partial class MainWindowViewModel
         get => RecordWorkspace.RecordEditorPrice;
         set => RecordWorkspace.RecordEditorPrice = value;
     }
-
-    public IReadOnlyList<string> RecordAttachmentModes => RecordWorkspace.RecordAttachmentModes;
 
     public string SelectedRecordEditorAttachmentMode
     {
