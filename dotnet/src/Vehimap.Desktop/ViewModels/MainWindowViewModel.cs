@@ -88,18 +88,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private int auditCount;
 
     [ObservableProperty]
-    private string selectedVehicleHeading = "Nevybrané vozidlo";
-
-    [ObservableProperty]
-    private string selectedVehicleOverview = "Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.";
-
-    [ObservableProperty]
-    private string selectedVehicleDates = string.Empty;
-
-    [ObservableProperty]
-    private string selectedVehicleProfile = string.Empty;
-
-    [ObservableProperty]
     private string shellStatus = "Desktopová větev je připravená.";
 
     [ObservableProperty]
@@ -385,10 +373,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
         if (value is null)
         {
             var projection = _projectionService.BuildVehicleDetail(null);
-            SelectedVehicleHeading = projection.Heading;
-            SelectedVehicleOverview = projection.Overview;
-            SelectedVehicleDates = projection.Dates;
-            SelectedVehicleProfile = projection.Profile;
+            VehicleDetailWorkspace.SelectedVehicleHeading = projection.Heading;
+            VehicleDetailWorkspace.SelectedVehicleOverview = projection.Overview;
+            VehicleDetailWorkspace.SelectedVehicleDates = projection.Dates;
+            VehicleDetailWorkspace.SelectedVehicleProfile = projection.Profile;
             HistoryWorkspace.HistorySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
             FuelWorkspace.FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
             ReminderWorkspace.ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
@@ -424,10 +412,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         var detailProjection = _projectionService.BuildVehicleDetail(value, _metaByVehicleId.GetValueOrDefault(value.Id));
-        SelectedVehicleHeading = detailProjection.Heading;
-        SelectedVehicleOverview = detailProjection.Overview;
-        SelectedVehicleDates = detailProjection.Dates;
-        SelectedVehicleProfile = detailProjection.Profile;
+        VehicleDetailWorkspace.SelectedVehicleHeading = detailProjection.Heading;
+        VehicleDetailWorkspace.SelectedVehicleOverview = detailProjection.Overview;
+        VehicleDetailWorkspace.SelectedVehicleDates = detailProjection.Dates;
+        VehicleDetailWorkspace.SelectedVehicleProfile = detailProjection.Profile;
 
         PopulateVehicleHistory(value.Id);
         PopulateVehicleFuel(value.Id);

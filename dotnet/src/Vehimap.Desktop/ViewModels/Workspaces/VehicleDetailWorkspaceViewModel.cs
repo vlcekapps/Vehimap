@@ -7,6 +7,11 @@ namespace Vehimap.Desktop.ViewModels.Workspaces;
 
 public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 {
+    private string selectedVehicleHeading = "Nevybrané vozidlo";
+    private string selectedVehicleOverview = "Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.";
+    private string selectedVehicleDates = string.Empty;
+    private string selectedVehicleProfile = string.Empty;
+
     public VehicleDetailWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
     {
@@ -14,10 +19,31 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 
     public string WindowTitle => Root.VehicleDetailWindowTitle;
     public string VehiclePanelHeading => Root.VehiclePanelHeading;
-    public string SelectedVehicleHeading => Root.SelectedVehicleHeading;
-    public string SelectedVehicleOverview => Root.SelectedVehicleOverview;
-    public string SelectedVehicleDates => Root.SelectedVehicleDates;
-    public string SelectedVehicleProfile => Root.SelectedVehicleProfile;
+
+    public string SelectedVehicleHeading
+    {
+        get => selectedVehicleHeading;
+        set => SetProperty(ref selectedVehicleHeading, value);
+    }
+
+    public string SelectedVehicleOverview
+    {
+        get => selectedVehicleOverview;
+        set => SetProperty(ref selectedVehicleOverview, value);
+    }
+
+    public string SelectedVehicleDates
+    {
+        get => selectedVehicleDates;
+        set => SetProperty(ref selectedVehicleDates, value);
+    }
+
+    public string SelectedVehicleProfile
+    {
+        get => selectedVehicleProfile;
+        set => SetProperty(ref selectedVehicleProfile, value);
+    }
+
     public bool IsEditingVehicle => Root.IsEditingVehicle;
     public bool IsVehicleDetailVisible => Root.IsVehicleDetailVisible;
     public string VehicleEditorStatus => Root.VehicleEditorStatus;

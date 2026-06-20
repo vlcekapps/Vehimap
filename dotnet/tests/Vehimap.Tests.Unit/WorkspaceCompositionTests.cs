@@ -112,6 +112,22 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Vehicle_detail_workspace_owns_display_summary_state()
+    {
+        var viewModel = CreateViewModel();
+
+        viewModel.VehicleDetailWorkspace.SelectedVehicleHeading = "Detail má vlastní nadpis.";
+        viewModel.VehicleDetailWorkspace.SelectedVehicleOverview = "Detail má vlastní přehled.";
+        viewModel.VehicleDetailWorkspace.SelectedVehicleDates = "Detail má vlastní termíny.";
+        viewModel.VehicleDetailWorkspace.SelectedVehicleProfile = "Detail má vlastní servisní profil.";
+
+        Assert.Equal("Detail má vlastní nadpis.", viewModel.VehicleDetailWorkspace.SelectedVehicleHeading);
+        Assert.Equal("Detail má vlastní přehled.", viewModel.VehicleDetailWorkspace.SelectedVehicleOverview);
+        Assert.Equal("Detail má vlastní termíny.", viewModel.VehicleDetailWorkspace.SelectedVehicleDates);
+        Assert.Equal("Detail má vlastní servisní profil.", viewModel.VehicleDetailWorkspace.SelectedVehicleProfile);
+    }
+
+    [Fact]
     public void Shared_workspace_state_should_not_be_reexposed_as_root_proxy_properties()
     {
         var rootType = typeof(MainWindowViewModel);
@@ -153,7 +169,11 @@ public sealed class WorkspaceCompositionTests
             "FuelSummary",
             "ReminderSummary",
             "MaintenanceSummary",
-            "RecordSummary"
+            "RecordSummary",
+            "SelectedVehicleHeading",
+            "SelectedVehicleOverview",
+            "SelectedVehicleDates",
+            "SelectedVehicleProfile"
         };
 
         foreach (var propertyName in removedProxyProperties)

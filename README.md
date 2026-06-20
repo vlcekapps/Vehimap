@@ -40,6 +40,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - v C# desktopové větvi už ani dashboardové souhrny auditu, nákladů a nejbližších termínů nejsou znovu vystavené přes root aliasy; čtou se ze sdílených workspace stavů auditu, nákladů a dashboardu
 - v C# desktopové větvi patří i stav exportů nákladového přehledu přímo `CostWorkspace`, takže hlavní viewmodel jen spouští exportní příkazy
 - v C# desktopové větvi vlastní souhrnné texty evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` přímo jejich workspace viewmodely místo root aliasů
+- v C# desktopové větvi vlastní souhrnné texty detailu vozidla přímo `VehicleDetailWorkspace`, zatímco hlavní viewmodel je jen přepočítává při změně výběru vozidla
 - C# desktopová větev má preview release balíčky pro Windows, Linux a macOS s ověřovanými `.sha256` soubory, metadata JSON a runtime-specific update manifesty
 - pravidelné automatické zálohy do `data/auto-backups` se samostatným intervalem ve dnech a omezením počtu ponechaných souborů
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
