@@ -12,7 +12,7 @@ public sealed partial class MainWindowViewModel
         _suppressTimelinePreferenceRefresh = true;
         try
         {
-            SelectedTimelineFilter = NormalizeTimelineFilter(_dataSet.Settings.GetValue(
+            TimelineWorkspace.SelectedTimelineFilter = NormalizeTimelineFilter(_dataSet.Settings.GetValue(
                 TimelineSettingsSection,
                 TimelineFilterSettingKey,
                 GetDefaultTimelineFilter()));
@@ -30,7 +30,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        _dataSet.Settings.SetValue(TimelineSettingsSection, TimelineFilterSettingKey, NormalizeTimelineFilter(SelectedTimelineFilter));
+        _dataSet.Settings.SetValue(TimelineSettingsSection, TimelineFilterSettingKey, NormalizeTimelineFilter(TimelineWorkspace.SelectedTimelineFilter));
         _ = PersistTimelinePreferencesCoreAsync();
     }
 
@@ -50,10 +50,10 @@ public sealed partial class MainWindowViewModel
     {
         var defaultFilter = GetDefaultTimelineFilter();
         var normalized = string.IsNullOrWhiteSpace(value) ? defaultFilter : value.Trim();
-        return TimelineFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
+        return TimelineWorkspace.TimelineFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
             ? normalized
             : defaultFilter;
     }
 
-    private string GetDefaultTimelineFilter() => TimelineFilters.Count > 0 ? TimelineFilters[0] : "Vše";
+    private string GetDefaultTimelineFilter() => TimelineWorkspace.TimelineFilters.Count > 0 ? TimelineWorkspace.TimelineFilters[0] : "Vše";
 }

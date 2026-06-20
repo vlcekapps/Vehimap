@@ -408,7 +408,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
             ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
             MaintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
-            TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
+            TimelineWorkspace.TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
             RecordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
             SelectedVehicleHistory.Clear();
             SelectedVehicleFuel.Clear();
@@ -426,7 +426,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SelectedFuel = null;
             SelectedReminder = null;
             SelectedMaintenance = null;
-            SelectedTimelineItem = null;
+            TimelineWorkspace.SelectedTimelineItem = null;
             SelectedDashboardAuditItem = null;
             SelectedDashboardCostVehicle = null;
             SelectedDashboardTimelineItem = null;
@@ -569,7 +569,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         var export = _calendarExportService.BuildUpcomingCalendar(_dataSet, today, DateTimeOffset.UtcNow);
         if (export.Items.Count == 0)
         {
-            ExportStatus = "Kalendář zatím neobsahuje žádné budoucí položky s konkrétním datem.";
+            TimelineWorkspace.ExportStatus = "Kalendář zatím neobsahuje žádné budoucí položky s konkrétním datem.";
             return;
         }
 
@@ -580,11 +580,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(savedPath))
         {
-            ExportStatus = "Export kalendáře byl zrušen.";
+            TimelineWorkspace.ExportStatus = "Export kalendáře byl zrušen.";
             return;
         }
 
-        ExportStatus = export.SkippedMaintenanceCount > 0
+        TimelineWorkspace.ExportStatus = export.SkippedMaintenanceCount > 0
             ? $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}. Přeskočené servisní úkoly bez data: {export.SkippedMaintenanceCount}."
             : $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}.";
     }
@@ -592,7 +592,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSelectedTimelineItem))]
     private async Task OpenSelectedTimelineItemAsync()
     {
-        if (SelectedTimelineItem is null)
+        if (TimelineWorkspace.SelectedTimelineItem is null)
         {
             return;
         }
@@ -602,7 +602,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        OpenTimelineItem(SelectedTimelineItem);
+        OpenTimelineItem(TimelineWorkspace.SelectedTimelineItem);
     }
 
     public async Task<bool> HandleCurrentWorkspacePrimaryOpenShortcutAsync()
@@ -970,7 +970,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSelectedSearchResult))]
     private async Task OpenSelectedSearchResultAsync()
     {
-        if (SelectedSearchResult is null)
+        if (GlobalSearchWorkspace.SelectedSearchResult is null)
         {
             return;
         }
@@ -980,7 +980,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        SelectVehicleAndOpenEntity(SelectedSearchResult.VehicleId, SelectedSearchResult.EntityKind, SelectedSearchResult.EntityId);
+        SelectVehicleAndOpenEntity(
+            GlobalSearchWorkspace.SelectedSearchResult.VehicleId,
+            GlobalSearchWorkspace.SelectedSearchResult.EntityKind,
+            GlobalSearchWorkspace.SelectedSearchResult.EntityId);
     }
 
     private void Load(string? preferredVehicleId = null, int? preferredTabIndex = null, bool applyLaunchTabPreference = false)
@@ -1118,18 +1121,18 @@ public sealed partial class MainWindowViewModel : ObservableObject
             _timelineService,
             vehicleId,
             DateOnly.FromDateTime(DateTime.Today),
-            SelectedTimelineFilter,
-            TimelineSearchText);
+            TimelineWorkspace.SelectedTimelineFilter,
+            TimelineWorkspace.TimelineSearchText);
         foreach (var item in projection.Items)
         {
             SelectedVehicleTimeline.Add(item);
         }
 
-        TimelineSummary = projection.Summary;
-        SelectedTimelineItem = SelectedVehicleTimeline.FirstOrDefault();
-        if (SelectedTimelineItem is null)
+        TimelineWorkspace.TimelineSummary = projection.Summary;
+        TimelineWorkspace.SelectedTimelineItem = SelectedVehicleTimeline.FirstOrDefault();
+        if (TimelineWorkspace.SelectedTimelineItem is null)
         {
-            SelectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
+            TimelineWorkspace.SelectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
             NotifyTimelineWorkspaceSelectionChanged();
         }
     }
@@ -1151,49 +1154,49 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         if (SelectedVehicle is null)
         {
-            TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
-            SelectedTimelineItem = null;
+            TimelineWorkspace.TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
+            TimelineWorkspace.SelectedTimelineItem = null;
             return;
         }
 
-        var previousSelection = SelectedTimelineItem;
+        var previousSelection = TimelineWorkspace.SelectedTimelineItem;
         var projection = _projectionService.BuildTimeline(
             _dataSet,
             _timelineService,
             SelectedVehicle.Id,
             DateOnly.FromDateTime(DateTime.Today),
-            SelectedTimelineFilter,
-            TimelineSearchText);
+            TimelineWorkspace.SelectedTimelineFilter,
+            TimelineWorkspace.TimelineSearchText);
         SelectedVehicleTimeline.Clear();
         foreach (var item in projection.Items)
         {
             SelectedVehicleTimeline.Add(item);
         }
 
-        TimelineSummary = projection.Summary;
-        SelectedTimelineItem = previousSelection is null
+        TimelineWorkspace.TimelineSummary = projection.Summary;
+        TimelineWorkspace.SelectedTimelineItem = previousSelection is null
             ? SelectedVehicleTimeline.FirstOrDefault()
             : FindTimelineItem(SelectedVehicleTimeline, previousSelection);
-        if (SelectedTimelineItem is null)
+        if (TimelineWorkspace.SelectedTimelineItem is null)
         {
-            SelectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
+            TimelineWorkspace.SelectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
             NotifyTimelineWorkspaceSelectionChanged();
         }
     }
 
     private void RefreshGlobalSearch()
     {
-        var previousSelection = SelectedSearchResult;
+        var previousSelection = GlobalSearchWorkspace.SelectedSearchResult;
         GlobalSearchResults.Clear();
 
-        if (_dataRoot is null || string.IsNullOrWhiteSpace(GlobalSearchText))
+        if (_dataRoot is null || string.IsNullOrWhiteSpace(GlobalSearchWorkspace.GlobalSearchText))
         {
-            GlobalSearchSummary = "Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.";
-            SelectedSearchResult = null;
+            GlobalSearchWorkspace.GlobalSearchSummary = "Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.";
+            GlobalSearchWorkspace.SelectedSearchResult = null;
             return;
         }
 
-        var results = _globalSearchService.Search(_dataRoot, _dataSet, GlobalSearchText);
+        var results = _globalSearchService.Search(_dataRoot, _dataSet, GlobalSearchWorkspace.GlobalSearchText);
         var projectedResults = results
             .Select(result => new GlobalSearchResultItemViewModel(
                 result.VehicleId,
@@ -1213,17 +1216,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
             GlobalSearchResults.Add(result);
         }
 
-        GlobalSearchSummary = results.Count == 0
-            ? $"Pro dotaz „{GlobalSearchText.Trim()}“ nebyly nalezeny žádné výsledky."
-            : $"Dotaz „{GlobalSearchText.Trim()}“: {results.Count} výsledků. Enter otevře vybranou položku.";
+        GlobalSearchWorkspace.GlobalSearchSummary = results.Count == 0
+            ? $"Pro dotaz „{GlobalSearchWorkspace.GlobalSearchText.Trim()}“ nebyly nalezeny žádné výsledky."
+            : $"Dotaz „{GlobalSearchWorkspace.GlobalSearchText.Trim()}“: {results.Count} výsledků. Enter otevře vybranou položku.";
 
         var previousKey = previousSelection is null
             ? string.Empty
             : $"{previousSelection.EntityKind}|{previousSelection.EntityId}|{previousSelection.VehicleId}";
-        SelectedSearchResult = FindById(GlobalSearchResults, item => $"{item.EntityKind}|{item.EntityId}|{item.VehicleId}", previousKey);
-        if (SelectedSearchResult is null)
+        GlobalSearchWorkspace.SelectedSearchResult = FindById(GlobalSearchResults, item => $"{item.EntityKind}|{item.EntityId}|{item.VehicleId}", previousKey);
+        if (GlobalSearchWorkspace.SelectedSearchResult is null)
         {
-            SelectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
+            GlobalSearchWorkspace.SelectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
             NotifyGlobalSearchWorkspaceSelectionChanged();
         }
     }
@@ -1326,7 +1329,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         if (timelineSelection is not null)
         {
-            SelectedTimelineItem = FindTimelineItem(SelectedVehicleTimeline, timelineSelection);
+            TimelineWorkspace.SelectedTimelineItem = FindTimelineItem(SelectedVehicleTimeline, timelineSelection);
         }
 
         SelectedVehicleTabIndex = plan.TabIndex;

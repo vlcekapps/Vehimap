@@ -583,8 +583,8 @@ public sealed class MainWindowViewModelNavigationTests
         var viewModel = CreateViewModel();
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Search;
-        viewModel.GlobalSearchText = "Asistence";
-        viewModel.SelectedSearchResult = viewModel.GlobalSearchResults.Single(item => item.EntityId == "rec_2");
+        viewModel.GlobalSearchWorkspace.GlobalSearchText = "Asistence";
+        viewModel.GlobalSearchWorkspace.SelectedSearchResult = viewModel.GlobalSearchResults.Single(item => item.EntityId == "rec_2");
 
         var handled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
 
@@ -593,7 +593,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("rec_2", viewModel.SelectedRecord?.Id);
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Search;
-        viewModel.SelectedSearchResult = null;
+        viewModel.GlobalSearchWorkspace.SelectedSearchResult = null;
 
         handled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
 
@@ -608,13 +608,13 @@ public sealed class MainWindowViewModelNavigationTests
         DesktopFocusTarget? requestedFocus = null;
         viewModel.FocusRequested += target => requestedFocus = target;
 
-        viewModel.GlobalSearchText = "Asistence";
+        viewModel.GlobalSearchWorkspace.GlobalSearchText = "Asistence";
         var selectedResult = viewModel.GlobalSearchResults.Single(item => item.EntityId == "rec_2");
-        viewModel.SelectedSearchResult = selectedResult;
+        viewModel.GlobalSearchWorkspace.SelectedSearchResult = selectedResult;
 
         viewModel.GlobalSearchWorkspace.RefreshGlobalSearchCommand.Execute(null);
 
-        Assert.Equal(selectedResult.EntityId, viewModel.SelectedSearchResult?.EntityId);
+        Assert.Equal(selectedResult.EntityId, viewModel.GlobalSearchWorkspace.SelectedSearchResult?.EntityId);
         Assert.Equal(DesktopFocusTarget.GlobalSearchList, requestedFocus);
         Assert.Contains("Globální hledání bylo obnoveno", viewModel.ShellStatus, StringComparison.CurrentCulture);
     }
@@ -627,7 +627,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += target => requestedFocus = target;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Timeline;
-        viewModel.SelectedTimelineItem = viewModel.SelectedVehicleTimeline.First(item => item.Kind == "custom");
+        viewModel.TimelineWorkspace.SelectedTimelineItem = viewModel.SelectedVehicleTimeline.First(item => item.Kind == "custom");
 
         var handled = await viewModel.HandleCurrentWorkspaceItemOpenShortcutAsync();
 
@@ -649,11 +649,11 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += target => requestedFocus = target;
 
         var selectedTimelineItem = viewModel.SelectedVehicleTimeline.First(item => item.Kind == "custom");
-        viewModel.SelectedTimelineItem = selectedTimelineItem;
+        viewModel.TimelineWorkspace.SelectedTimelineItem = selectedTimelineItem;
 
         viewModel.TimelineWorkspace.RefreshTimelineCommand.Execute(null);
 
-        Assert.Equal(selectedTimelineItem.EntryId, viewModel.SelectedTimelineItem?.EntryId);
+        Assert.Equal(selectedTimelineItem.EntryId, viewModel.TimelineWorkspace.SelectedTimelineItem?.EntryId);
         Assert.Equal(DesktopFocusTarget.TimelineList, requestedFocus);
         Assert.Contains("Časová osa byla obnovena", viewModel.ShellStatus, StringComparison.CurrentCulture);
     }
@@ -664,7 +664,7 @@ public sealed class MainWindowViewModelNavigationTests
         var viewModel = CreateViewModel(configureDataSet: dataSet =>
             dataSet.Settings.SetValue("timeline", "filter", "Budoucí"));
 
-        Assert.Equal("Budoucí", viewModel.SelectedTimelineFilter);
+        Assert.Equal("Budoucí", viewModel.TimelineWorkspace.SelectedTimelineFilter);
         Assert.NotEmpty(viewModel.SelectedVehicleTimeline);
         Assert.All(viewModel.SelectedVehicleTimeline, item => Assert.True(item.IsFuture));
     }
@@ -675,7 +675,7 @@ public sealed class MainWindowViewModelNavigationTests
         VehimapDataSet? dataSetRef = null;
         var viewModel = CreateViewModel(configureDataSet: dataSet => dataSetRef = dataSet);
 
-        viewModel.SelectedTimelineFilter = "Minulé";
+        viewModel.TimelineWorkspace.SelectedTimelineFilter = "Minulé";
 
         Assert.Equal("Minulé", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
         Assert.NotEmpty(viewModel.SelectedVehicleTimeline);
@@ -692,13 +692,13 @@ public sealed class MainWindowViewModelNavigationTests
             dataSetRef = dataSet;
         });
 
-        Assert.Equal("Vše", viewModel.SelectedTimelineFilter);
+        Assert.Equal("Vše", viewModel.TimelineWorkspace.SelectedTimelineFilter);
         Assert.Contains(viewModel.SelectedVehicleTimeline, item => item.IsFuture);
         Assert.Contains(viewModel.SelectedVehicleTimeline, item => !item.IsFuture);
 
-        viewModel.SelectedTimelineFilter = "Neznámý filtr";
+        viewModel.TimelineWorkspace.SelectedTimelineFilter = "Neznámý filtr";
 
-        Assert.Equal("Vše", viewModel.SelectedTimelineFilter);
+        Assert.Equal("Vše", viewModel.TimelineWorkspace.SelectedTimelineFilter);
         Assert.Equal("Vše", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
     }
 
@@ -949,8 +949,8 @@ public sealed class MainWindowViewModelNavigationTests
         DesktopFocusTarget? requestedFocus = null;
         viewModel.FocusRequested += target => requestedFocus = target;
 
-        viewModel.GlobalSearchText = "Asistence";
-        viewModel.SelectedSearchResult = viewModel.GlobalSearchResults.Single(item => item.EntityId == "rec_2");
+        viewModel.GlobalSearchWorkspace.GlobalSearchText = "Asistence";
+        viewModel.GlobalSearchWorkspace.SelectedSearchResult = viewModel.GlobalSearchResults.Single(item => item.EntityId == "rec_2");
 
         viewModel.OpenSelectedSearchResultCommand.Execute(null);
 

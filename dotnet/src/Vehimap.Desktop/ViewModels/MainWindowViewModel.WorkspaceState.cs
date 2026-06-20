@@ -473,75 +473,14 @@ public sealed partial class MainWindowViewModel
         set => DashboardWorkspace.SelectedDashboardTimelineItem = value;
     }
 
-    public string TimelineSummary
-    {
-        get => TimelineWorkspace.TimelineSummary;
-        set => TimelineWorkspace.TimelineSummary = value;
-    }
-
-    public string TimelineSearchText
-    {
-        get => TimelineWorkspace.TimelineSearchText;
-        set => TimelineWorkspace.TimelineSearchText = value;
-    }
-
-    public string SelectedTimelineFilter
-    {
-        get => TimelineWorkspace.SelectedTimelineFilter;
-        set => TimelineWorkspace.SelectedTimelineFilter = value;
-    }
-
-    public VehicleTimelineItemViewModel? SelectedTimelineItem
-    {
-        get => TimelineWorkspace.SelectedTimelineItem;
-        set => TimelineWorkspace.SelectedTimelineItem = value;
-    }
-
-    public string SelectedTimelineDetail
-    {
-        get => TimelineWorkspace.SelectedTimelineDetail;
-        set => TimelineWorkspace.SelectedTimelineDetail = value;
-    }
-
-    public string ExportStatus
-    {
-        get => TimelineWorkspace.ExportStatus;
-        set => TimelineWorkspace.ExportStatus = value;
-    }
-
-    public IReadOnlyList<string> TimelineFilters => TimelineWorkspace.TimelineFilters;
-    public bool CanOpenSelectedTimelineItem => SelectedTimelineItem is not null;
+    public bool CanOpenSelectedTimelineItem => TimelineWorkspace.SelectedTimelineItem is not null;
     public bool CanOpenSelectedDashboardAuditItem => SelectedDashboardAuditItem is not null;
     public bool CanOpenSelectedDashboardCostVehicle => SelectedDashboardCostVehicle is not null;
     public bool CanOpenSelectedDashboardTimelineItem => SelectedDashboardTimelineItem is not null;
     public bool CanOpenSelectedDashboardVehicle => GetSelectedDashboardVehicleId() is not null;
     public bool CanEditSelectedDashboardVehicle => CanOpenSelectedDashboardVehicle && !HasPendingEdits;
 
-    public string GlobalSearchSummary
-    {
-        get => GlobalSearchWorkspace.GlobalSearchSummary;
-        set => GlobalSearchWorkspace.GlobalSearchSummary = value;
-    }
-
-    public string GlobalSearchText
-    {
-        get => GlobalSearchWorkspace.GlobalSearchText;
-        set => GlobalSearchWorkspace.GlobalSearchText = value;
-    }
-
-    public GlobalSearchResultItemViewModel? SelectedSearchResult
-    {
-        get => GlobalSearchWorkspace.SelectedSearchResult;
-        set => GlobalSearchWorkspace.SelectedSearchResult = value;
-    }
-
-    public string SelectedSearchResultDetail
-    {
-        get => GlobalSearchWorkspace.SelectedSearchResultDetail;
-        set => GlobalSearchWorkspace.SelectedSearchResultDetail = value;
-    }
-
-    public bool CanOpenSelectedSearchResult => SelectedSearchResult is not null;
+    public bool CanOpenSelectedSearchResult => GlobalSearchWorkspace.SelectedSearchResult is not null;
 
     public string UpcomingOverviewSearchText
     {
@@ -750,10 +689,10 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var normalizedFilter = NormalizeTimelineFilter(SelectedTimelineFilter);
-        if (!string.Equals(SelectedTimelineFilter, normalizedFilter, StringComparison.Ordinal))
+        var normalizedFilter = NormalizeTimelineFilter(TimelineWorkspace.SelectedTimelineFilter);
+        if (!string.Equals(TimelineWorkspace.SelectedTimelineFilter, normalizedFilter, StringComparison.Ordinal))
         {
-            SelectedTimelineFilter = normalizedFilter;
+            TimelineWorkspace.SelectedTimelineFilter = normalizedFilter;
             return;
         }
 

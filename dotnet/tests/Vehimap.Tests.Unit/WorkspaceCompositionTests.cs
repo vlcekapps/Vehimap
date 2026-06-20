@@ -57,17 +57,42 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
-    public void Timeline_and_search_workspaces_share_root_state()
+    public void Timeline_and_search_workspaces_own_state_and_share_root_collections()
     {
         var viewModel = CreateViewModel();
 
         viewModel.TimelineWorkspace.TimelineSearchText = "technická";
         viewModel.GlobalSearchWorkspace.GlobalSearchText = "Octavia";
 
-        Assert.Equal("technická", viewModel.TimelineSearchText);
-        Assert.Equal("Octavia", viewModel.GlobalSearchText);
+        Assert.Equal("technická", viewModel.TimelineWorkspace.TimelineSearchText);
+        Assert.Equal("Octavia", viewModel.GlobalSearchWorkspace.GlobalSearchText);
         Assert.Same(viewModel.SelectedVehicleTimeline, viewModel.TimelineWorkspace.SelectedVehicleTimeline);
         Assert.Same(viewModel.GlobalSearchResults, viewModel.GlobalSearchWorkspace.GlobalSearchResults);
+    }
+
+    [Fact]
+    public void Timeline_and_search_state_should_not_be_reexposed_as_root_proxy_properties()
+    {
+        var rootType = typeof(MainWindowViewModel);
+        var removedProxyProperties = new[]
+        {
+            "TimelineSummary",
+            "TimelineSearchText",
+            "SelectedTimelineFilter",
+            "SelectedTimelineItem",
+            "SelectedTimelineDetail",
+            "ExportStatus",
+            "TimelineFilters",
+            "GlobalSearchSummary",
+            "GlobalSearchText",
+            "SelectedSearchResult",
+            "SelectedSearchResultDetail"
+        };
+
+        foreach (var propertyName in removedProxyProperties)
+        {
+            Assert.Null(rootType.GetProperty(propertyName));
+        }
     }
 
     [Fact]

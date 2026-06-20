@@ -63,6 +63,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - sjednocena korenova accessibility metadata hlavniho shellu, workspace oken a app-level dialogu pro stabilnejsi screen-reader diagnostiku a UI automatizaci
 - sdileny lifecycle samostatnych workspace oken pro prvni fokus po otevreni a potvrzeni zavreni rozpracovanych editoru
 - sdilene otevirani samostatnych workspace oken z hlavniho shellu, aby potvrzeni rozpracovanych editaci, prepnuti karty a navrat fokusu mely jeden kodovy tok
+- stav `Casove osy` a `Globalniho hledani` je vlastneny jejich child workspace viewmodely; root `MainWindowViewModel` uz pro ne nevystavuje duplicitni proxy vlastnosti
 - sdilene workspace zkratky pro hledani a otevreni polozek v casove ose, globalnim hledani a terminovych prehledech, stejne v kartach i samostatnych oknech; hlavni shell je routuje kontextove, aby je neprebijely globalni akce vozidla
 - sdilene editacni workspace zkratky pro historii, tankovani, pripominky, udrzbu a doklady; `Ctrl+N`, `Ctrl+U` / `F2`, `Ctrl+S` a dokladove `Ctrl+O` / `Ctrl+Shift+O` funguji stejne v karte i samostatnem okne
 - `Ctrl+N` a `Ctrl+U` / `F2` z hlavni karty evidence oteviraji prislusne modalni workspace okno s viditelnym editorem, aby se v read-only shellu nespoustel skryty inline editor

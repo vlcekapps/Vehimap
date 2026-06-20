@@ -35,6 +35,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - v C# desktopové větvi lze přehledová workflow `Časová osa`, `Globální hledání`, `Audit dat`, `Náklady`, `Dashboard`, `Blížící se termíny` a `Propadlé termíny` otevřít jako kartu v hlavním shellu i jako samostatné okno se stejnou přístupnou pracovní plochou
 - v C# desktopové větvi mají samostatná workspace okna sjednocené otevření prvního logického prvku a stejnou ochranu před zavřením rozpracovaného editoru jako hlavní shell
 - v C# desktopové větvi jde otevření samostatných workspace oken přes jeden sdílený tok, takže potvrzení rozpracované editace, přepnutí karty a návrat fokusu zůstávají stejné napříč evidencemi i přehledy
+- v C# desktopové větvi už `Časová osa` a `Globální hledání` drží svůj vyhledávací text, výběr a stavové texty přímo ve vlastních workspace viewmodelech, ne přes duplicitní root aliasy
 - C# desktopová větev má preview release balíčky pro Windows, Linux a macOS s ověřovanými `.sha256` soubory, metadata JSON a runtime-specific update manifesty
 - pravidelné automatické zálohy do `data/auto-backups` se samostatným intervalem ve dnech a omezením počtu ponechaných souborů
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
