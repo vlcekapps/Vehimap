@@ -29,6 +29,7 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
     public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults => Root.GlobalSearchResults;
 
     public ICommand OpenSelectedSearchResultCommand => Root.OpenSelectedSearchResultCommand;
+    public bool CanClearGlobalSearch => !string.IsNullOrWhiteSpace(GlobalSearchText);
 
     [RelayCommand]
     private void FocusSearch()
@@ -42,8 +43,17 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
         Root.RefreshGlobalSearchWorkspace();
     }
 
+    [RelayCommand(CanExecute = nameof(CanClearGlobalSearch))]
+    private void ClearGlobalSearch()
+    {
+        GlobalSearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.GlobalSearchBox);
+    }
+
     partial void OnGlobalSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearGlobalSearch));
+        ClearGlobalSearchCommand.NotifyCanExecuteChanged();
         Root.HandleGlobalSearchWorkspaceSearchChanged();
     }
 

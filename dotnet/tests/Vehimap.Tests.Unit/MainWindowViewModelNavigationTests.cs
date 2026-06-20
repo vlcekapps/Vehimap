@@ -210,6 +210,53 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Overview_workspace_clear_search_commands_restore_lists_and_focus_search_fields()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+        var initialTimelineCount = viewModel.SelectedVehicleTimeline.Count;
+        var initialAuditCount = viewModel.AuditWorkspace.VisibleAuditItems.Count;
+        var initialCostCount = viewModel.CostWorkspace.VisibleCostVehicles.Count;
+
+        viewModel.TimelineWorkspace.TimelineSearchText = "Asistence";
+        viewModel.GlobalSearchWorkspace.GlobalSearchText = "Asistence";
+        viewModel.AuditWorkspace.AuditSearchText = "Doklad bez cesty";
+        viewModel.CostWorkspace.CostSearchText = "Octavia";
+
+        Assert.True(viewModel.TimelineWorkspace.ClearTimelineSearchCommand.CanExecute(null));
+        Assert.True(viewModel.GlobalSearchWorkspace.ClearGlobalSearchCommand.CanExecute(null));
+        Assert.True(viewModel.AuditWorkspace.ClearAuditSearchCommand.CanExecute(null));
+        Assert.True(viewModel.CostWorkspace.ClearCostSearchCommand.CanExecute(null));
+
+        viewModel.TimelineWorkspace.ClearTimelineSearchCommand.Execute(null);
+        viewModel.GlobalSearchWorkspace.ClearGlobalSearchCommand.Execute(null);
+        viewModel.AuditWorkspace.ClearAuditSearchCommand.Execute(null);
+        viewModel.CostWorkspace.ClearCostSearchCommand.Execute(null);
+
+        Assert.Equal(string.Empty, viewModel.TimelineWorkspace.TimelineSearchText);
+        Assert.Equal(string.Empty, viewModel.GlobalSearchWorkspace.GlobalSearchText);
+        Assert.Equal(string.Empty, viewModel.AuditWorkspace.AuditSearchText);
+        Assert.Equal(string.Empty, viewModel.CostWorkspace.CostSearchText);
+        Assert.Equal(initialTimelineCount, viewModel.SelectedVehicleTimeline.Count);
+        Assert.Empty(viewModel.GlobalSearchResults);
+        Assert.Equal(initialAuditCount, viewModel.AuditWorkspace.VisibleAuditItems.Count);
+        Assert.Equal(initialCostCount, viewModel.CostWorkspace.VisibleCostVehicles.Count);
+        Assert.False(viewModel.TimelineWorkspace.ClearTimelineSearchCommand.CanExecute(null));
+        Assert.False(viewModel.GlobalSearchWorkspace.ClearGlobalSearchCommand.CanExecute(null));
+        Assert.False(viewModel.AuditWorkspace.ClearAuditSearchCommand.CanExecute(null));
+        Assert.False(viewModel.CostWorkspace.ClearCostSearchCommand.CanExecute(null));
+        Assert.Equal(
+            [
+                DesktopFocusTarget.TimelineSearch,
+                DesktopFocusTarget.GlobalSearchBox,
+                DesktopFocusTarget.AuditSearch,
+                DesktopFocusTarget.CostSearch
+            ],
+            requestedTargets);
+    }
+
+    [Fact]
     public void Cost_workspace_refresh_recomputes_summary_preserves_filter_and_notifies_status()
     {
         var viewModel = CreateViewModel();

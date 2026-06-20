@@ -17,7 +17,7 @@
     <Grid Grid.Row="1"
           Grid.ColumnSpan="2"
           Margin="0,12,0,0"
-          ColumnDefinitions="100,*,120,150">
+          ColumnDefinitions="100,*,120,120,150">
       <TextBlock Grid.Column="0"
                  VerticalAlignment="Center"
                  Text="Hledat" />
@@ -29,6 +29,14 @@
                AutomationProperties.Name="Globální hledání ve Vehimapu"
                AutomationProperties.AutomationId="GlobalSearchTextBox" />
       <Button Grid.Column="2"
+              x:Name="ClearGlobalSearchButton"
+              Margin="12,0,0,0"
+              Width="108"
+              Command="{Binding ClearGlobalSearchCommand}"
+              Content="Vymazat"
+              AutomationProperties.Name="Vymazat globální hledání"
+              AutomationProperties.AutomationId="ClearGlobalSearchButton" />
+      <Button Grid.Column="3"
               x:Name="GlobalSearchRefreshButton"
               Margin="12,0,0,0"
               Width="118"
@@ -36,7 +44,7 @@
               Content="Obnovit"
               AutomationProperties.Name="Obnovit globální hledání"
               AutomationProperties.AutomationId="GlobalSearchRefreshButton" />
-      <Button Grid.Column="3"
+      <Button Grid.Column="4"
               x:Name="SearchOpenButton"
               Margin="12,0,0,0"
               Width="150"

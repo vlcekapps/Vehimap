@@ -26,6 +26,7 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
     public ObservableCollection<AuditItemViewModel> VisibleAuditItems { get; } = [];
 
     public bool CanOpenSelectedAuditItem => SelectedDashboardAuditItem is not null;
+    public bool CanClearAuditSearch => !string.IsNullOrWhiteSpace(AuditSearchText);
 
     [RelayCommand]
     private void FocusSearch()
@@ -37,6 +38,13 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
     private void RefreshAudit()
     {
         Root.RefreshAuditWorkspace();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanClearAuditSearch))]
+    private void ClearAuditSearch()
+    {
+        AuditSearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.AuditSearch);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedAuditItem))]
@@ -94,6 +102,8 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnAuditSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearAuditSearch));
+        ClearAuditSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleAuditItems();
     }
 

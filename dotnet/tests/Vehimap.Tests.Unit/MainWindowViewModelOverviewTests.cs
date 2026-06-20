@@ -94,6 +94,38 @@ public sealed class MainWindowViewModelOverviewTests
     }
 
     [Fact]
+    public void Overview_clear_search_commands_restore_lists_and_focus_search_fields()
+    {
+        var requestedTargets = new List<DesktopFocusTarget>();
+        var viewModel = CreateViewModel(BuildOverviewDataSet());
+        viewModel.FocusRequested += requestedTargets.Add;
+        var initialUpcomingCount = viewModel.UpcomingOverviewItems.Count;
+        var initialOverdueCount = viewModel.OverdueOverviewItems.Count;
+
+        viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSearchText = "Přezutí";
+        viewModel.OverdueOverviewWorkspace.OverdueOverviewSearchText = "Povinné";
+
+        Assert.True(viewModel.UpcomingOverviewWorkspace.ClearUpcomingOverviewSearchCommand.CanExecute(null));
+        Assert.True(viewModel.OverdueOverviewWorkspace.ClearOverdueOverviewSearchCommand.CanExecute(null));
+
+        viewModel.UpcomingOverviewWorkspace.ClearUpcomingOverviewSearchCommand.Execute(null);
+        viewModel.OverdueOverviewWorkspace.ClearOverdueOverviewSearchCommand.Execute(null);
+
+        Assert.Equal(string.Empty, viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSearchText);
+        Assert.Equal(string.Empty, viewModel.OverdueOverviewWorkspace.OverdueOverviewSearchText);
+        Assert.Equal(initialUpcomingCount, viewModel.UpcomingOverviewItems.Count);
+        Assert.Equal(initialOverdueCount, viewModel.OverdueOverviewItems.Count);
+        Assert.False(viewModel.UpcomingOverviewWorkspace.ClearUpcomingOverviewSearchCommand.CanExecute(null));
+        Assert.False(viewModel.OverdueOverviewWorkspace.ClearOverdueOverviewSearchCommand.CanExecute(null));
+        Assert.Equal(
+            [
+                DesktopFocusTarget.UpcomingOverviewSearch,
+                DesktopFocusTarget.OverdueOverviewSearch
+            ],
+            requestedTargets);
+    }
+
+    [Fact]
     public void Upcoming_overview_can_include_missing_green_cards_and_audit_data_issues()
     {
         var dataSet = BuildOverviewDataSet();

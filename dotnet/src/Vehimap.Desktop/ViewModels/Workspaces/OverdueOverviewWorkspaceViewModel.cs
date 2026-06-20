@@ -36,6 +36,7 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
     public ICommand OpenSelectedOverdueOverviewItemCommand => Root.OpenSelectedOverdueOverviewItemCommand;
 
     public ICommand OpenSelectedOverdueOverviewVehicleCommand => Root.OpenSelectedOverdueOverviewVehicleCommand;
+    public bool CanClearOverdueOverviewSearch => !string.IsNullOrWhiteSpace(OverdueOverviewSearchText);
 
     [RelayCommand]
     private void FocusSearch()
@@ -49,8 +50,17 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
         Root.RefreshOverdueOverviewWorkspace();
     }
 
+    [RelayCommand(CanExecute = nameof(CanClearOverdueOverviewSearch))]
+    private void ClearOverdueOverviewSearch()
+    {
+        OverdueOverviewSearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.OverdueOverviewSearch);
+    }
+
     partial void OnOverdueOverviewSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearOverdueOverviewSearch));
+        ClearOverdueOverviewSearchCommand.NotifyCanExecuteChanged();
         Root.HandleOverdueOverviewWorkspaceSearchChanged();
     }
 

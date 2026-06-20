@@ -496,6 +496,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"AuditOpenVehicleButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditEditItemButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditSearchBox\"", auditXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ClearAuditSearchButton\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditListBox\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardRefreshButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardSearchButton\"", dashboardXaml);
@@ -510,20 +511,25 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardTimelineOpenButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardTimelineListBox\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TimelineSearchBox\"", timelineXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ClearTimelineSearchButton\"", timelineXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TimelineOpenButton\"", timelineXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"GlobalSearchTextBox\"", globalSearchXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ClearGlobalSearchButton\"", globalSearchXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"GlobalSearchRefreshButton\"", globalSearchXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SearchOpenButton\"", globalSearchXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpcomingOverviewSearchBox\"", upcomingOverviewXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ClearUpcomingOverviewSearchButton\"", upcomingOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpcomingOverviewRefreshButton\"", upcomingOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpcomingOverviewOpenButton\"", upcomingOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpcomingOverviewIncludeMissingGreenCardsCheckBox\"", upcomingOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpcomingOverviewIncludeDataIssuesCheckBox\"", upcomingOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewSearchBox\"", overdueOverviewXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ClearOverdueOverviewSearchButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewRefreshButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewOpenButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostSearchBox\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ClearCostSearchButton\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SelectedCostVehicleDetailText\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostRefreshButton\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FocusCostDetailButton\"", costXaml);
@@ -558,6 +564,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", timelineXaml);
         Assert.Contains("Gesture=\"Ctrl+R\" Command=\"{Binding RefreshTimelineCommand}\"", timelineXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedTimelineItemCommand}\"", timelineXaml);
+        Assert.Contains("Command=\"{Binding ClearTimelineSearchCommand}\"", timelineXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TimelineRefreshButton\"", timelineXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", auditXaml);
@@ -566,21 +573,25 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedAuditItemCommand}\"", auditXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedAuditItemCommand}\"", auditXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedAuditItemCommand}\"", auditXaml);
+        Assert.Contains("Command=\"{Binding ClearAuditSearchCommand}\"", auditXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", globalSearchXaml);
         Assert.Contains("Gesture=\"Ctrl+R\" Command=\"{Binding RefreshGlobalSearchCommand}\"", globalSearchXaml);
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedSearchResultCommand}\"", globalSearchXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedSearchResultCommand}\"", globalSearchXaml);
+        Assert.Contains("Command=\"{Binding ClearGlobalSearchCommand}\"", globalSearchXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", upcomingOverviewXaml);
         Assert.Contains("Gesture=\"Ctrl+R\" Command=\"{Binding RefreshUpcomingOverviewCommand}\"", upcomingOverviewXaml);
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedUpcomingOverviewVehicleCommand}\"", upcomingOverviewXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedUpcomingOverviewItemCommand}\"", upcomingOverviewXaml);
+        Assert.Contains("Command=\"{Binding ClearUpcomingOverviewSearchCommand}\"", upcomingOverviewXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", overdueOverviewXaml);
         Assert.Contains("Gesture=\"Ctrl+R\" Command=\"{Binding RefreshOverdueOverviewCommand}\"", overdueOverviewXaml);
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedOverdueOverviewVehicleCommand}\"", overdueOverviewXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedOverdueOverviewItemCommand}\"", overdueOverviewXaml);
+        Assert.Contains("Command=\"{Binding ClearOverdueOverviewSearchCommand}\"", overdueOverviewXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", historyXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateHistoryCommand}\"", historyXaml);
@@ -624,6 +635,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedCostVehicleCommand}\"", costXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedCostVehicleCommand}\"", costXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedCostVehicleCommand}\"", costXaml);
+        Assert.Contains("Command=\"{Binding ClearCostSearchCommand}\"", costXaml);
 
         Assert.Contains("Gesture=\"Ctrl+R\" Command=\"{Binding RefreshDashboardCommand}\"", dashboardXaml);
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusGlobalSearchCommand}\"", dashboardXaml);

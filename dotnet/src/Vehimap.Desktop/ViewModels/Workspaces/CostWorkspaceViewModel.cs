@@ -33,6 +33,7 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     public string CostExportStatus => Root.CostExportStatus;
 
     public bool CanUseSelectedCostVehicle => SelectedDashboardCostVehicle is not null;
+    public bool CanClearCostSearch => !string.IsNullOrWhiteSpace(CostSearchText);
 
     [ObservableProperty]
     private string costSearchText = string.Empty;
@@ -56,6 +57,13 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     private void RefreshCost()
     {
         Root.RefreshCostWorkspace();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanClearCostSearch))]
+    private void ClearCostSearch()
+    {
+        CostSearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.CostSearch);
     }
 
     [RelayCommand(CanExecute = nameof(CanUseSelectedCostVehicle))]
@@ -110,6 +118,8 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnCostSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearCostSearch));
+        ClearCostSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleCostVehicles();
     }
 

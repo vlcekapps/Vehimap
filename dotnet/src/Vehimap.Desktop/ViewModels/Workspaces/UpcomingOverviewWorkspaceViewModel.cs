@@ -42,6 +42,7 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     public ICommand OpenSelectedUpcomingOverviewItemCommand => Root.OpenSelectedUpcomingOverviewItemCommand;
 
     public ICommand OpenSelectedUpcomingOverviewVehicleCommand => Root.OpenSelectedUpcomingOverviewVehicleCommand;
+    public bool CanClearUpcomingOverviewSearch => !string.IsNullOrWhiteSpace(UpcomingOverviewSearchText);
 
     [RelayCommand]
     private void FocusSearch()
@@ -55,8 +56,17 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
         Root.RefreshUpcomingOverviewWorkspace();
     }
 
+    [RelayCommand(CanExecute = nameof(CanClearUpcomingOverviewSearch))]
+    private void ClearUpcomingOverviewSearch()
+    {
+        UpcomingOverviewSearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.UpcomingOverviewSearch);
+    }
+
     partial void OnUpcomingOverviewSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearUpcomingOverviewSearch));
+        ClearUpcomingOverviewSearchCommand.NotifyCanExecuteChanged();
         Root.HandleUpcomingOverviewWorkspaceSearchChanged();
     }
 

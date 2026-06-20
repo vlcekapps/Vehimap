@@ -37,6 +37,7 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.TimelineWindowTitle;
 
     public ICommand OpenSelectedTimelineItemCommand => Root.OpenSelectedTimelineItemCommand;
+    public bool CanClearTimelineSearch => !string.IsNullOrWhiteSpace(TimelineSearchText);
 
     [RelayCommand]
     private void FocusSearch()
@@ -50,6 +51,13 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
         Root.RefreshTimelineWorkspace();
     }
 
+    [RelayCommand(CanExecute = nameof(CanClearTimelineSearch))]
+    private void ClearTimelineSearch()
+    {
+        TimelineSearchText = string.Empty;
+        RequestFocus(DesktopFocusTarget.TimelineSearch);
+    }
+
     partial void OnSelectedTimelineItemChanged(VehicleTimelineItemViewModel? value)
     {
         SelectedTimelineDetail = value is null
@@ -61,6 +69,8 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnTimelineSearchTextChanged(string value)
     {
+        OnPropertyChanged(nameof(CanClearTimelineSearch));
+        ClearTimelineSearchCommand.NotifyCanExecuteChanged();
         Root.HandleTimelineWorkspaceSearchChanged();
     }
 
