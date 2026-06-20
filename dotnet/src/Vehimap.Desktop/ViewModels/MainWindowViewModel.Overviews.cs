@@ -51,7 +51,7 @@ public sealed partial class MainWindowViewModel
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewItem))]
     private async Task OpenSelectedUpcomingOverviewItemAsync()
     {
-        if (SelectedUpcomingOverviewItem is null)
+        if (UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem is null)
         {
             return;
         }
@@ -61,13 +61,13 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        OpenOverviewTimelineItem(SelectedUpcomingOverviewItem);
+        OpenOverviewTimelineItem(UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewVehicle))]
     private async Task OpenSelectedUpcomingOverviewVehicleAsync()
     {
-        if (SelectedUpcomingOverviewItem is null)
+        if (UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem is null)
         {
             return;
         }
@@ -77,13 +77,16 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        SelectVehicleAndOpenEntity(SelectedUpcomingOverviewItem.VehicleId, "Vozidlo", SelectedUpcomingOverviewItem.VehicleId);
+        SelectVehicleAndOpenEntity(
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem.VehicleId,
+            "Vozidlo",
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem.VehicleId);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedOverdueOverviewItem))]
     private async Task OpenSelectedOverdueOverviewItemAsync()
     {
-        if (SelectedOverdueOverviewItem is null)
+        if (OverdueOverviewWorkspace.SelectedOverdueOverviewItem is null)
         {
             return;
         }
@@ -93,13 +96,13 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        OpenTimelineItem(SelectedOverdueOverviewItem);
+        OpenTimelineItem(OverdueOverviewWorkspace.SelectedOverdueOverviewItem);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedOverdueOverviewVehicle))]
     private async Task OpenSelectedOverdueOverviewVehicleAsync()
     {
-        if (SelectedOverdueOverviewItem is null)
+        if (OverdueOverviewWorkspace.SelectedOverdueOverviewItem is null)
         {
             return;
         }
@@ -109,7 +112,10 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        SelectVehicleAndOpenEntity(SelectedOverdueOverviewItem.VehicleId, "Vozidlo", SelectedOverdueOverviewItem.VehicleId);
+        SelectVehicleAndOpenEntity(
+            OverdueOverviewWorkspace.SelectedOverdueOverviewItem.VehicleId,
+            "Vozidlo",
+            OverdueOverviewWorkspace.SelectedOverdueOverviewItem.VehicleId);
     }
 
     private void RefreshFleetOverviews()
@@ -123,10 +129,10 @@ public sealed partial class MainWindowViewModel
         _suppressOverviewPreferenceRefresh = true;
         try
         {
-            IncludeMissingGreenCardsInUpcomingOverview = ReadOverviewBooleanSetting(OverviewIncludeMissingGreenSettingKey);
-            IncludeDataIssuesInUpcomingOverview = ReadOverviewBooleanSetting(OverviewIncludeDataIssuesSettingKey);
-            SelectedUpcomingOverviewFilter = NormalizeUpcomingOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewUpcomingFilterSettingKey, OverviewAllFilterLabel));
-            SelectedOverdueOverviewFilter = NormalizeOverdueOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewOverdueFilterSettingKey, OverviewAllFilterLabel));
+            UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = ReadOverviewBooleanSetting(OverviewIncludeMissingGreenSettingKey);
+            UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview = ReadOverviewBooleanSetting(OverviewIncludeDataIssuesSettingKey);
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = NormalizeUpcomingOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewUpcomingFilterSettingKey, OverviewAllFilterLabel));
+            OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = NormalizeOverdueOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewOverdueFilterSettingKey, OverviewAllFilterLabel));
             UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption = ReadOverviewSortOption(OverviewUpcomingSortSettingKey);
             UpcomingOverviewWorkspace.UpcomingOverviewSortDescending = ReadOverviewBooleanSetting(OverviewUpcomingSortDescendingSettingKey);
             OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption = ReadOverviewSortOption(OverviewOverdueSortSettingKey);
@@ -154,10 +160,10 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        _dataSet.Settings.SetValue("overview", OverviewIncludeMissingGreenSettingKey, IncludeMissingGreenCardsInUpcomingOverview ? "1" : "0");
-        _dataSet.Settings.SetValue("overview", OverviewIncludeDataIssuesSettingKey, IncludeDataIssuesInUpcomingOverview ? "1" : "0");
-        _dataSet.Settings.SetValue("overview", OverviewUpcomingFilterSettingKey, NormalizeUpcomingOverviewFilter(SelectedUpcomingOverviewFilter));
-        _dataSet.Settings.SetValue("overview", OverviewOverdueFilterSettingKey, NormalizeOverdueOverviewFilter(SelectedOverdueOverviewFilter));
+        _dataSet.Settings.SetValue("overview", OverviewIncludeMissingGreenSettingKey, UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview ? "1" : "0");
+        _dataSet.Settings.SetValue("overview", OverviewIncludeDataIssuesSettingKey, UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview ? "1" : "0");
+        _dataSet.Settings.SetValue("overview", OverviewUpcomingFilterSettingKey, NormalizeUpcomingOverviewFilter(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter));
+        _dataSet.Settings.SetValue("overview", OverviewOverdueFilterSettingKey, NormalizeOverdueOverviewFilter(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter));
         _dataSet.Settings.SetValue("overview", OverviewUpcomingSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel));
         _dataSet.Settings.SetValue("overview", OverviewUpcomingSortDescendingSettingKey, UpcomingOverviewWorkspace.UpcomingOverviewSortDescending ? "1" : "0");
         _dataSet.Settings.SetValue("overview", OverviewOverdueSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel));
@@ -193,14 +199,14 @@ public sealed partial class MainWindowViewModel
 
     private void RefreshUpcomingOverview()
     {
-        var previousKey = BuildOverviewSelectionKey(SelectedUpcomingOverviewItem);
+        var previousKey = BuildOverviewSelectionKey(UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem);
         var items = WorkspaceSortHelpers.SortTimelineOverview(
                 BuildFleetOverviewItems(
                     isFuture: true,
-                    SelectedUpcomingOverviewFilter,
-                    UpcomingOverviewSearchText,
-                    IncludeMissingGreenCardsInUpcomingOverview,
-                    IncludeDataIssuesInUpcomingOverview),
+                    UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter,
+                    UpcomingOverviewWorkspace.UpcomingOverviewSearchText,
+                    UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview,
+                    UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview),
                 UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption,
                 UpcomingOverviewWorkspace.UpcomingOverviewSortDescending)
             .ToList();
@@ -211,21 +217,21 @@ public sealed partial class MainWindowViewModel
             UpcomingOverviewItems.Add(item);
         }
 
-        UpcomingOverviewSummary = BuildUpcomingOverviewSummary(items);
+        UpcomingOverviewWorkspace.UpcomingOverviewSummary = BuildUpcomingOverviewSummary(items);
 
-        SelectedUpcomingOverviewItem = FindById(UpcomingOverviewItems, BuildOverviewSelectionKey, previousKey) ?? UpcomingOverviewItems.FirstOrDefault();
-        if (SelectedUpcomingOverviewItem is null)
+        UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = FindById(UpcomingOverviewItems, BuildOverviewSelectionKey, previousKey) ?? UpcomingOverviewItems.FirstOrDefault();
+        if (UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem is null)
         {
-            SelectedUpcomingOverviewDetail = "Vyberte termín a můžete přejít na související vozidlo nebo evidenci.";
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewDetail = "Vyberte termín a můžete přejít na související vozidlo nebo evidenci.";
             NotifyUpcomingOverviewWorkspaceSelectionChanged();
         }
     }
 
     private void RefreshOverdueOverview()
     {
-        var previousKey = BuildOverviewSelectionKey(SelectedOverdueOverviewItem);
+        var previousKey = BuildOverviewSelectionKey(OverdueOverviewWorkspace.SelectedOverdueOverviewItem);
         var items = WorkspaceSortHelpers.SortTimelineOverview(
-                BuildFleetOverviewItems(isFuture: false, SelectedOverdueOverviewFilter, OverdueOverviewSearchText),
+                BuildFleetOverviewItems(isFuture: false, OverdueOverviewWorkspace.SelectedOverdueOverviewFilter, OverdueOverviewWorkspace.OverdueOverviewSearchText),
                 OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption,
                 OverdueOverviewWorkspace.OverdueOverviewSortDescending)
             .ToList();
@@ -236,14 +242,14 @@ public sealed partial class MainWindowViewModel
             OverdueOverviewItems.Add(item);
         }
 
-        OverdueOverviewSummary = items.Count == 0
+        OverdueOverviewWorkspace.OverdueOverviewSummary = items.Count == 0
             ? "V dostupných datech zatím nejsou žádné propadlé termíny s konkrétním datem."
             : $"Propadlých termínů: {items.Count}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.";
 
-        SelectedOverdueOverviewItem = FindById(OverdueOverviewItems, BuildOverviewSelectionKey, previousKey) ?? OverdueOverviewItems.FirstOrDefault();
-        if (SelectedOverdueOverviewItem is null)
+        OverdueOverviewWorkspace.SelectedOverdueOverviewItem = FindById(OverdueOverviewItems, BuildOverviewSelectionKey, previousKey) ?? OverdueOverviewItems.FirstOrDefault();
+        if (OverdueOverviewWorkspace.SelectedOverdueOverviewItem is null)
         {
-            SelectedOverdueOverviewDetail = "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci.";
+            OverdueOverviewWorkspace.SelectedOverdueOverviewDetail = "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci.";
             NotifyOverdueOverviewWorkspaceSelectionChanged();
         }
     }
@@ -385,7 +391,7 @@ public sealed partial class MainWindowViewModel
         var visibleDataIssueCount = items.Count(item => item.Kind == OverviewDataIssueKind);
 
         var summary = items.Count == 0
-            ? IncludeDataIssuesInUpcomingOverview
+            ? UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview
                 ? "V dostupných datech zatím nejsou žádné blížící se termíny ani datové nedostatky k doplnění."
                 : "V dostupných datech zatím nejsou žádné blížící se termíny s konkrétním datem."
             : $"Blížících se položek: {items.Count}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.";
@@ -395,12 +401,12 @@ public sealed partial class MainWindowViewModel
             summary += $" Z toho datových nedostatků: {visibleDataIssueCount}.";
         }
 
-        if (missingGreenCount > 0 && !IncludeMissingGreenCardsInUpcomingOverview)
+        if (missingGreenCount > 0 && !UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview)
         {
             summary += $" U {missingGreenCount} vozidel není vyplněná zelená karta; můžete je přidat volbou pod filtrem.";
         }
 
-        if (dataIssueCount > 0 && !IncludeDataIssuesInUpcomingOverview)
+        if (dataIssueCount > 0 && !UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview)
         {
             summary += $" Audit eviduje {dataIssueCount} datových nedostatků; můžete je přidat volbou pod filtrem.";
         }

@@ -184,7 +184,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         await viewModel.ReviewGreenCardsCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.IsUpcomingOverviewTabSelected);
-        Assert.Equal("Zelené karty", viewModel.SelectedUpcomingOverviewFilter);
+        Assert.Equal("Zelené karty", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
         Assert.Equal(DesktopFocusTarget.UpcomingOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.UpcomingOverviewItems);
     }
@@ -215,7 +215,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         await viewModel.ReviewRemindersCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.IsOverdueOverviewTabSelected);
-        Assert.Equal("Připomínky", viewModel.SelectedOverdueOverviewFilter);
+        Assert.Equal("Připomínky", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.OverdueOverviewItems);
         Assert.Contains("Připomínky k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
@@ -247,7 +247,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         await viewModel.ReviewMaintenanceCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.IsOverdueOverviewTabSelected);
-        Assert.Equal("Údržba", viewModel.SelectedOverdueOverviewFilter);
+        Assert.Equal("Údržba", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.OverdueOverviewItems);
         Assert.Contains("Údržba k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
@@ -279,7 +279,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         await viewModel.ReviewRecordsCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.IsOverdueOverviewTabSelected);
-        Assert.Equal("Doklady", viewModel.SelectedOverdueOverviewFilter);
+        Assert.Equal("Doklady", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.OverdueOverviewItems);
         Assert.Contains("Doklady k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);

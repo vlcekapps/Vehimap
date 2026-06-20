@@ -231,10 +231,10 @@ public sealed partial class MainWindowViewModel
 
         if (targetTabIndex == UpcomingOverviewTabIndex)
         {
-            UpcomingOverviewSearchText = string.Empty;
-            SelectedUpcomingOverviewFilter = overviewFilterLabel;
+            UpcomingOverviewWorkspace.UpcomingOverviewSearchText = string.Empty;
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = overviewFilterLabel;
             SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
-            SelectedUpcomingOverviewItem = FindById(
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = FindById(
                 UpcomingOverviewItems,
                 BuildOverviewSelectionKey,
                 BuildOverviewSelectionKey(items[0]));
@@ -242,10 +242,10 @@ public sealed partial class MainWindowViewModel
         }
         else
         {
-            OverdueOverviewSearchText = string.Empty;
-            SelectedOverdueOverviewFilter = overviewFilterLabel;
+            OverdueOverviewWorkspace.OverdueOverviewSearchText = string.Empty;
+            OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = overviewFilterLabel;
             SelectedVehicleTabIndex = OverdueOverviewTabIndex;
-            SelectedOverdueOverviewItem = FindById(
+            OverdueOverviewWorkspace.SelectedOverdueOverviewItem = FindById(
                 OverdueOverviewItems,
                 BuildOverviewSelectionKey,
                 BuildOverviewSelectionKey(items[0]));

@@ -482,82 +482,10 @@ public sealed partial class MainWindowViewModel
 
     public bool CanOpenSelectedSearchResult => GlobalSearchWorkspace.SelectedSearchResult is not null;
 
-    public string UpcomingOverviewSearchText
-    {
-        get => UpcomingOverviewWorkspace.UpcomingOverviewSearchText;
-        set => UpcomingOverviewWorkspace.UpcomingOverviewSearchText = value;
-    }
-
-    public string OverdueOverviewSearchText
-    {
-        get => OverdueOverviewWorkspace.OverdueOverviewSearchText;
-        set => OverdueOverviewWorkspace.OverdueOverviewSearchText = value;
-    }
-
-    public string SelectedUpcomingOverviewFilter
-    {
-        get => UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter;
-        set => UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = value;
-    }
-
-    public bool IncludeMissingGreenCardsInUpcomingOverview
-    {
-        get => UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview;
-        set => UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = value;
-    }
-
-    public bool IncludeDataIssuesInUpcomingOverview
-    {
-        get => UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview;
-        set => UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview = value;
-    }
-
-    public string SelectedOverdueOverviewFilter
-    {
-        get => OverdueOverviewWorkspace.SelectedOverdueOverviewFilter;
-        set => OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = value;
-    }
-
-    public string UpcomingOverviewSummary
-    {
-        get => UpcomingOverviewWorkspace.UpcomingOverviewSummary;
-        set => UpcomingOverviewWorkspace.UpcomingOverviewSummary = value;
-    }
-
-    public string OverdueOverviewSummary
-    {
-        get => OverdueOverviewWorkspace.OverdueOverviewSummary;
-        set => OverdueOverviewWorkspace.OverdueOverviewSummary = value;
-    }
-
-    public string SelectedUpcomingOverviewDetail
-    {
-        get => UpcomingOverviewWorkspace.SelectedUpcomingOverviewDetail;
-        set => UpcomingOverviewWorkspace.SelectedUpcomingOverviewDetail = value;
-    }
-
-    public string SelectedOverdueOverviewDetail
-    {
-        get => OverdueOverviewWorkspace.SelectedOverdueOverviewDetail;
-        set => OverdueOverviewWorkspace.SelectedOverdueOverviewDetail = value;
-    }
-
-    public VehicleTimelineItemViewModel? SelectedUpcomingOverviewItem
-    {
-        get => UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem;
-        set => UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = value;
-    }
-
-    public VehicleTimelineItemViewModel? SelectedOverdueOverviewItem
-    {
-        get => OverdueOverviewWorkspace.SelectedOverdueOverviewItem;
-        set => OverdueOverviewWorkspace.SelectedOverdueOverviewItem = value;
-    }
-
-    public bool CanOpenSelectedUpcomingOverviewItem => SelectedUpcomingOverviewItem is not null;
-    public bool CanOpenSelectedUpcomingOverviewVehicle => SelectedUpcomingOverviewItem is not null;
-    public bool CanOpenSelectedOverdueOverviewItem => SelectedOverdueOverviewItem is not null;
-    public bool CanOpenSelectedOverdueOverviewVehicle => SelectedOverdueOverviewItem is not null;
+    public bool CanOpenSelectedUpcomingOverviewItem => UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem is not null;
+    public bool CanOpenSelectedUpcomingOverviewVehicle => UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem is not null;
+    public bool CanOpenSelectedOverdueOverviewItem => OverdueOverviewWorkspace.SelectedOverdueOverviewItem is not null;
+    public bool CanOpenSelectedOverdueOverviewVehicle => OverdueOverviewWorkspace.SelectedOverdueOverviewItem is not null;
 
     internal string? GetEditingHistoryId() => _editingHistoryId;
     internal string? GetEditingFuelId() => _editingFuelId;
@@ -877,10 +805,10 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var normalizedFilter = NormalizeUpcomingOverviewFilter(SelectedUpcomingOverviewFilter);
-        if (!string.Equals(SelectedUpcomingOverviewFilter, normalizedFilter, StringComparison.Ordinal))
+        var normalizedFilter = NormalizeUpcomingOverviewFilter(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
+        if (!string.Equals(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter, normalizedFilter, StringComparison.Ordinal))
         {
-            SelectedUpcomingOverviewFilter = normalizedFilter;
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = normalizedFilter;
             return;
         }
 
@@ -935,10 +863,10 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var normalizedFilter = NormalizeOverdueOverviewFilter(SelectedOverdueOverviewFilter);
-        if (!string.Equals(SelectedOverdueOverviewFilter, normalizedFilter, StringComparison.Ordinal))
+        var normalizedFilter = NormalizeOverdueOverviewFilter(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
+        if (!string.Equals(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter, normalizedFilter, StringComparison.Ordinal))
         {
-            SelectedOverdueOverviewFilter = normalizedFilter;
+            OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = normalizedFilter;
             return;
         }
 

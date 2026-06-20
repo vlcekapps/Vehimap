@@ -71,7 +71,7 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
-    public void Timeline_and_search_state_should_not_be_reexposed_as_root_proxy_properties()
+    public void Shared_workspace_state_should_not_be_reexposed_as_root_proxy_properties()
     {
         var rootType = typeof(MainWindowViewModel);
         var removedProxyProperties = new[]
@@ -86,7 +86,19 @@ public sealed class WorkspaceCompositionTests
             "GlobalSearchSummary",
             "GlobalSearchText",
             "SelectedSearchResult",
-            "SelectedSearchResultDetail"
+            "SelectedSearchResultDetail",
+            "UpcomingOverviewSearchText",
+            "OverdueOverviewSearchText",
+            "SelectedUpcomingOverviewFilter",
+            "IncludeMissingGreenCardsInUpcomingOverview",
+            "IncludeDataIssuesInUpcomingOverview",
+            "SelectedOverdueOverviewFilter",
+            "UpcomingOverviewSummary",
+            "OverdueOverviewSummary",
+            "SelectedUpcomingOverviewDetail",
+            "SelectedOverdueOverviewDetail",
+            "SelectedUpcomingOverviewItem",
+            "SelectedOverdueOverviewItem"
         };
 
         foreach (var propertyName in removedProxyProperties)
