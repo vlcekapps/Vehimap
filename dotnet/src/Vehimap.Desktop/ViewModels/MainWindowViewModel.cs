@@ -117,11 +117,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     private ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance => MaintenanceWorkspace.SelectedVehicleMaintenance;
 
-    public ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline { get; } = [];
+    private ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline => TimelineWorkspace.SelectedVehicleTimeline;
 
     private ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords => RecordWorkspace.SelectedVehicleRecords;
 
-    public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults { get; } = [];
+    private ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults => GlobalSearchWorkspace.GlobalSearchResults;
 
     internal DesktopAppShellController AppShellController { get; }
 

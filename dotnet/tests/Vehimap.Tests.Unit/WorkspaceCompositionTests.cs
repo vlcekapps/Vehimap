@@ -58,7 +58,7 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
-    public void Timeline_and_search_workspaces_own_state_and_share_root_collections()
+    public void Timeline_and_search_workspaces_own_state_and_collections()
     {
         var viewModel = CreateViewModel();
 
@@ -67,8 +67,8 @@ public sealed class WorkspaceCompositionTests
 
         Assert.Equal("technická", viewModel.TimelineWorkspace.TimelineSearchText);
         Assert.Equal("Octavia", viewModel.GlobalSearchWorkspace.GlobalSearchText);
-        Assert.Same(viewModel.SelectedVehicleTimeline, viewModel.TimelineWorkspace.SelectedVehicleTimeline);
-        Assert.Same(viewModel.GlobalSearchResults, viewModel.GlobalSearchWorkspace.GlobalSearchResults);
+        Assert.NotEmpty(viewModel.TimelineWorkspace.SelectedVehicleTimeline);
+        Assert.NotEmpty(viewModel.GlobalSearchWorkspace.GlobalSearchResults);
     }
 
     [Fact]
@@ -261,6 +261,8 @@ public sealed class WorkspaceCompositionTests
             "SelectedVehicleReminders",
             "SelectedVehicleMaintenance",
             "SelectedVehicleRecords",
+            "SelectedVehicleTimeline",
+            "GlobalSearchResults",
             "SelectedVehicleHeading",
             "SelectedVehicleOverview",
             "SelectedVehicleDates",

@@ -60,6 +60,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - sdilet lifecycle samostatnych workspace oken: prvni fokus po otevreni i potvrzeni zavreni rozpracovaneho editoru jde pres jeden helper
 - sdilet i samotne otevirani workspace oken z hlavniho shellu: potvrzeni rozpracovane editace, prepnuti karty, modalni okno a navrat fokusu maji jeden helper
 - drzet stav `Casove osy` a `Globalniho hledani` primo v jejich workspace viewmodelech misto duplicitnich root proxy vlastnosti v `MainWindowViewModel`
+- drzet nactene kolekce polozek `Casove osy` a vysledku `Globalniho hledani` primo v jejich workspace viewmodelech misto verejnych root vlastnosti
 - drzet stav terminovych prehledu `Blizici se terminy` a `Propadle terminy` primo v jejich workspace viewmodelech misto duplicitnich root proxy vlastnosti v `MainWindowViewModel`
 - drzet dashboardove souhrny auditu, nakladu a nejblizsich terminu ve sdilenych workspace stavech auditu, nakladu a dashboardu misto root proxy vlastnosti
 - drzet stav exportu nakladoveho prehledu primo v `CostWorkspace`, zatimco root `MainWindowViewModel` zustava jen orchestratorem exportnich prikazu

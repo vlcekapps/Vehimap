@@ -32,7 +32,7 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
 
     public IReadOnlyList<string> TimelineFilters { get; } = ["Vše", "Budoucí", "Minulé"];
 
-    public ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline => Root.SelectedVehicleTimeline;
+    public ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline { get; } = [];
 
     public string WindowTitle => Root.TimelineWindowTitle;
 

@@ -64,6 +64,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - sdileny lifecycle samostatnych workspace oken pro prvni fokus po otevreni a potvrzeni zavreni rozpracovanych editoru
 - sdilene otevirani samostatnych workspace oken z hlavniho shellu, aby potvrzeni rozpracovanych editaci, prepnuti karty a navrat fokusu mely jeden kodovy tok
 - stav `Casove osy` a `Globalniho hledani` je vlastneny jejich child workspace viewmodely; root `MainWindowViewModel` uz pro ne nevystavuje duplicitni proxy vlastnosti
+- nactene kolekce polozek `Casove osy` a vysledku `Globalniho hledani` jsou vlastnene jejich child workspace viewmodely; root je jen obnovuje pri zmene dat, filtru nebo hledani
 - stav terminovych prehledu `Blizici se terminy` a `Propadle terminy` je take vlastneny jejich child workspace viewmodely; root `MainWindowViewModel` uz pro ne nevystavuje duplicitni proxy vlastnosti
 - dashboardove souhrny auditu, nakladu a nejblizsich terminu jsou take vlastnene sdilenymi workspace viewmodely; root `MainWindowViewModel` zustava jen orchestrator jejich obnovy
 - stav exportu nakladoveho prehledu je vlastneny `CostWorkspace`; root `MainWindowViewModel` pouze provadi exportni prikazy a nastavuje vysledek do workspace

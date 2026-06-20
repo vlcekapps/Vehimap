@@ -34,7 +34,7 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
 
     public IReadOnlyList<string> GlobalSearchSortOptions => WorkspaceSortHelpers.GlobalSearchSortOptions;
 
-    public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults => Root.GlobalSearchResults;
+    public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults { get; } = [];
 
     public ICommand OpenSelectedSearchResultCommand => Root.OpenSelectedSearchResultCommand;
     public bool CanClearGlobalSearch => !string.IsNullOrWhiteSpace(GlobalSearchText);
