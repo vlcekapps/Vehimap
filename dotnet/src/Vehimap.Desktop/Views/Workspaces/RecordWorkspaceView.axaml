@@ -15,7 +15,7 @@
     <KeyBinding Gesture="Ctrl+Shift+C" Command="{Binding CopySelectedRecordPathCommand}" />
   </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.1*,*" RowDefinitions="Auto,*">
-    <TextBlock Grid.ColumnSpan="2" Text="{Binding RecordSummary}" TextWrapping="Wrap" />
+    <TextBlock Grid.ColumnSpan="2" Text="{Binding RecordSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordSummary}" AutomationProperties.AutomationId="RecordSummaryText" />
     <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold" Text="Seznam dokladů a příloh vybraného vozidla" />
       <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
@@ -33,7 +33,7 @@
                 AutomationProperties.Name="Vymazat hledání v dokladech vozidla"
                 AutomationProperties.AutomationId="ClearRecordSearchButton" />
       </Grid>
-      <TextBlock Grid.Row="2" Margin="0,8,12,0" Opacity="0.72" Text="{Binding RecordSearchSummary}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="2" Margin="0,8,12,0" Opacity="0.72" Text="{Binding RecordSearchSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordSearchSummary}" AutomationProperties.AutomationId="RecordSearchSummaryText" />
       <ListBox x:Name="RecordListBox"
                Grid.Row="3"
                Margin="0,12,12,0"
@@ -78,7 +78,7 @@
             <Button Command="{Binding CopySelectedRecordPathCommand}" Content="Kopírovat cestu" IsVisible="{Binding IsRecordDetailVisible}" AutomationProperties.Name="Kopírovat vyřešenou cestu přílohy dokladu" AutomationProperties.AutomationId="CopyRecordPathButton" />
           </WrapPanel>
         </StackPanel>
-        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding RecordEditorStatus}" TextWrapping="Wrap" />
+        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding RecordEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordEditorStatus}" AutomationProperties.AutomationId="RecordEditorStatusText" />
         <Border x:Name="RecordEditorHost" Grid.Row="3" Margin="0,16,0,0">
           <Grid IsVisible="{Binding IsEditingRecord}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
             <Grid ColumnDefinitions="1.1*,1.4*">
@@ -120,19 +120,19 @@
               <TextBox x:Name="RecordEditorPathInputBox" IsReadOnly="{Binding IsRecordEditorManaged}" Text="{Binding RecordEditorPathInput}" PlaceholderText="{Binding RecordEditorPathInputHelp}" AutomationProperties.Name="{Binding RecordEditorPathInputLabel}" AutomationProperties.AutomationId="RecordEditorPathInputBox" />
               <Button Grid.Column="1" Margin="12,0,0,0" Command="{Binding BrowseRecordAttachmentCommand}" Content="Vybrat soubor" AutomationProperties.Name="Vybrat soubor pro doklad" AutomationProperties.AutomationId="BrowseRecordAttachmentButton" />
             </Grid>
-            <TextBlock Grid.Row="5" Margin="0,8,0,0" Opacity="0.74" Text="{Binding RecordEditorPathInputHelp}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="5" Margin="0,8,0,0" Opacity="0.74" Text="{Binding RecordEditorPathInputHelp}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordEditorPathInputHelp}" AutomationProperties.AutomationId="RecordEditorPathInputHelpText" />
             <TextBlock Grid.Row="6" Margin="0,14,0,0" FontWeight="SemiBold" Text="Uložená cesta" />
-            <SelectableTextBlock Grid.Row="7" Margin="0,6,0,0" Text="{Binding RecordEditorStoredPath}" AutomationProperties.Name="Uložená cesta přílohy" />
+            <SelectableTextBlock Grid.Row="7" Margin="0,6,0,0" Text="{Binding RecordEditorStoredPath}" AutomationProperties.Name="Uložená cesta přílohy" AutomationProperties.AutomationId="RecordEditorStoredPathText" />
             <TextBlock Grid.Row="8" Margin="0,14,0,0" FontWeight="SemiBold" Text="Vyřešená cesta" />
-            <SelectableTextBlock Grid.Row="9" Margin="0,6,0,0" Text="{Binding RecordEditorResolvedPath}" AutomationProperties.Name="Vyřešená cesta přílohy" />
-            <TextBlock Grid.Row="10" Margin="0,14,0,0" Text="{Binding RecordEditorAvailability}" TextWrapping="Wrap" />
+            <SelectableTextBlock Grid.Row="9" Margin="0,6,0,0" Text="{Binding RecordEditorResolvedPath}" AutomationProperties.Name="Vyřešená cesta přílohy" AutomationProperties.AutomationId="RecordEditorResolvedPathText" />
+            <TextBlock Grid.Row="10" Margin="0,14,0,0" Text="{Binding RecordEditorAvailability}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordEditorAvailability}" AutomationProperties.AutomationId="RecordEditorAvailabilityText" />
             <StackPanel Grid.Row="11" Margin="0,14,0,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Poznámka" />
               <TextBox Height="100" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" Text="{Binding RecordEditorNote}" AutomationProperties.Name="Poznámka k dokladu" AutomationProperties.AutomationId="RecordEditorNoteBox" />
             </StackPanel>
           </Grid>
         </Border>
-        <TextBlock Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsRecordDetailVisible}" Text="{Binding SelectedRecordDetail}" TextWrapping="Wrap" />
+        <TextBlock Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsRecordDetailVisible}" Text="{Binding SelectedRecordDetail}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedRecordDetail}" AutomationProperties.AutomationId="SelectedRecordDetailText" />
       </Grid>
     </Border>
   </Grid>

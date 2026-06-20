@@ -9,7 +9,9 @@
                Margin="0,12,0,0"
                Opacity="0.82"
                Text="{Binding VehicleEditorStatus}"
-               TextWrapping="Wrap" />
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding VehicleEditorStatus}"
+               AutomationProperties.AutomationId="VehicleEditorStatusText" />
     <WrapPanel x:Name="VehicleActionPanel"
                Grid.Row="2"
                Margin="0,14,0,0"
@@ -200,10 +202,10 @@
           IsVisible="{Binding IsVehicleDetailVisible}"
           RowDefinitions="Auto,Auto,Auto,*">
       <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
-      <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="{Binding SelectedVehicleOverview}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="{Binding SelectedVehicleDates}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="{Binding SelectedVehicleOverview}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedVehicleOverview}" AutomationProperties.AutomationId="SelectedVehicleOverviewText" />
+      <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="{Binding SelectedVehicleDates}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedVehicleDates}" AutomationProperties.AutomationId="SelectedVehicleDatesText" />
       <Border Grid.Row="3" Margin="0,16,0,0" Padding="14" Background="#10203040" CornerRadius="8">
-        <TextBlock Text="{Binding SelectedVehicleProfile}" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding SelectedVehicleProfile}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedVehicleProfile}" AutomationProperties.AutomationId="SelectedVehicleProfileText" />
       </Border>
     </Grid>
   </Grid>

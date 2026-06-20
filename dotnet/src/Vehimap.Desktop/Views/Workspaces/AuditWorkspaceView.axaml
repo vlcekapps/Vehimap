@@ -13,7 +13,7 @@
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedAuditItemCommand}" />
   </UserControl.KeyBindings>
   <Grid RowDefinitions="Auto,Auto,Auto,*">
-    <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
+    <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding AuditSummary}" AutomationProperties.AutomationId="AuditSummaryText" />
     <Grid Grid.Row="1" Margin="0,12,0,0" ColumnDefinitions="100,*,120,120,150,150,120">
       <TextBlock Grid.Column="0"
                  VerticalAlignment="Center"

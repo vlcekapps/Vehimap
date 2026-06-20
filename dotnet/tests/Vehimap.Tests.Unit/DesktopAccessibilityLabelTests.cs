@@ -546,6 +546,75 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Workspace_status_and_detail_texts_should_define_accessible_names_and_automation_ids()
+    {
+        var mainXaml = ReadViewFile("MainWindow.axaml");
+        var auditXaml = ReadWorkspaceOrView("AuditWorkspaceView.axaml", true);
+        var dashboardXaml = ReadWorkspaceOrView("DashboardWorkspaceView.axaml", true);
+        var fuelXaml = ReadWorkspaceOrView("FuelWorkspaceView.axaml", true);
+        var historyXaml = ReadWorkspaceOrView("HistoryWorkspaceView.axaml", true);
+        var maintenanceXaml = ReadWorkspaceOrView("MaintenanceWorkspaceView.axaml", true);
+        var recordXaml = ReadWorkspaceOrView("RecordWorkspaceView.axaml", true);
+        var reminderXaml = ReadWorkspaceOrView("ReminderWorkspaceView.axaml", true);
+        var timelineXaml = ReadWorkspaceOrView("TimelineWorkspaceView.axaml", true);
+        var globalSearchXaml = ReadWorkspaceOrView("GlobalSearchWorkspaceView.axaml", true);
+        var upcomingOverviewXaml = ReadWorkspaceOrView("UpcomingOverviewWorkspaceView.axaml", true);
+        var overdueOverviewXaml = ReadWorkspaceOrView("OverdueOverviewWorkspaceView.axaml", true);
+        var costXaml = ReadWorkspaceOrView("CostWorkspaceView.axaml", true);
+        var vehicleDetailXaml = ReadWorkspaceOrView("VehicleDetailWorkspaceView.axaml", true);
+
+        AssertAccessibleBoundText(mainXaml, "LoadErrorText", "LoadError");
+        AssertAccessibleBoundText(mainXaml, "ShellStatusText", "ShellStatus");
+        AssertAccessibleBoundText(mainXaml, "VehicleListSummaryText", "VehicleListSummary");
+        AssertAccessibleBoundText(auditXaml, "AuditSummaryText", "AuditSummary");
+        AssertAccessibleBoundText(historyXaml, "HistorySummaryText", "HistorySummary");
+        AssertAccessibleBoundText(historyXaml, "HistorySearchSummaryText", "HistorySearchSummary");
+        AssertAccessibleBoundText(historyXaml, "HistoryEditorStatusText", "HistoryEditorStatus");
+        AssertAccessibleBoundText(historyXaml, "SelectedHistoryDetailText", "SelectedHistoryDetail");
+        AssertAccessibleBoundText(fuelXaml, "FuelSummaryText", "FuelSummary");
+        AssertAccessibleBoundText(fuelXaml, "FuelSearchSummaryText", "FuelSearchSummary");
+        AssertAccessibleBoundText(fuelXaml, "FuelEditorStatusText", "FuelEditorStatus");
+        AssertAccessibleBoundText(fuelXaml, "SelectedFuelDetailText", "SelectedFuelDetail");
+        AssertAccessibleBoundText(reminderXaml, "ReminderSummaryText", "ReminderSummary");
+        AssertAccessibleBoundText(reminderXaml, "ReminderSearchSummaryText", "ReminderSearchSummary");
+        AssertAccessibleBoundText(reminderXaml, "ReminderEditorStatusText", "ReminderEditorStatus");
+        AssertAccessibleBoundText(reminderXaml, "SelectedReminderDetailText", "SelectedReminderDetail");
+        AssertAccessibleBoundText(maintenanceXaml, "MaintenanceSummaryText", "MaintenanceSummary");
+        AssertAccessibleBoundText(maintenanceXaml, "MaintenanceSearchSummaryText", "MaintenanceSearchSummary");
+        AssertAccessibleBoundText(maintenanceXaml, "MaintenanceEditorStatusText", "MaintenanceEditorStatus");
+        AssertAccessibleBoundText(maintenanceXaml, "SelectedMaintenanceDetailText", "SelectedMaintenanceDetail");
+        AssertAccessibleBoundText(recordXaml, "RecordSummaryText", "RecordSummary");
+        AssertAccessibleBoundText(recordXaml, "RecordSearchSummaryText", "RecordSearchSummary");
+        AssertAccessibleBoundText(recordXaml, "RecordEditorStatusText", "RecordEditorStatus");
+        AssertAccessibleBoundText(recordXaml, "RecordEditorPathInputHelpText", "RecordEditorPathInputHelp");
+        AssertAccessibleBoundText(recordXaml, "RecordEditorAvailabilityText", "RecordEditorAvailability");
+        AssertAccessibleBoundText(recordXaml, "SelectedRecordDetailText", "SelectedRecordDetail");
+        AssertAccessibleTextId(recordXaml, "RecordEditorStoredPathText");
+        AssertAccessibleTextId(recordXaml, "RecordEditorResolvedPathText");
+        AssertAccessibleBoundText(timelineXaml, "TimelineSummaryText", "TimelineSummary");
+        AssertAccessibleBoundText(timelineXaml, "TimelineExportStatusText", "ExportStatus");
+        AssertAccessibleBoundText(timelineXaml, "SelectedTimelineDetailText", "SelectedTimelineDetail");
+        AssertAccessibleBoundText(globalSearchXaml, "GlobalSearchSummaryText", "GlobalSearchSummary");
+        AssertAccessibleBoundText(globalSearchXaml, "SelectedSearchResultDetailText", "SelectedSearchResultDetail");
+        AssertAccessibleBoundText(upcomingOverviewXaml, "UpcomingOverviewSummaryText", "UpcomingOverviewSummary");
+        AssertAccessibleBoundText(upcomingOverviewXaml, "SelectedUpcomingOverviewDetailText", "SelectedUpcomingOverviewDetail");
+        AssertAccessibleBoundText(overdueOverviewXaml, "OverdueOverviewSummaryText", "OverdueOverviewSummary");
+        AssertAccessibleBoundText(overdueOverviewXaml, "SelectedOverdueOverviewDetailText", "SelectedOverdueOverviewDetail");
+        AssertAccessibleBoundText(costXaml, "CostSummaryText", "CostSummary");
+        AssertAccessibleBoundText(costXaml, "CostComparisonText", "CostComparison");
+        AssertAccessibleBoundText(costXaml, "CostSearchSummaryText", "CostSearchSummary");
+        AssertAccessibleBoundText(dashboardXaml, "DashboardAuditSummaryText", "AuditSummary");
+        AssertAccessibleBoundText(dashboardXaml, "DashboardCostSummaryText", "CostSummary");
+        AssertAccessibleBoundText(dashboardXaml, "DashboardCostComparisonText", "CostComparison");
+        AssertAccessibleBoundText(dashboardXaml, "DashboardTimelineSummaryText", "DashboardTimelineSummary");
+        AssertAccessibleBoundText(dashboardXaml, "SelectedDashboardTimelineDetailText", "SelectedDashboardTimelineDetail");
+        AssertAccessibleBoundText(vehicleDetailXaml, "VehicleEditorStatusText", "VehicleEditorStatus");
+        AssertAccessibleBoundText(vehicleDetailXaml, "SelectedVehicleOverviewText", "SelectedVehicleOverview");
+        AssertAccessibleBoundText(vehicleDetailXaml, "SelectedVehicleDatesText", "SelectedVehicleDates");
+        AssertAccessibleBoundText(vehicleDetailXaml, "SelectedVehicleProfileText", "SelectedVehicleProfile");
+    }
+
+    [Fact]
     public void Overview_workspace_xaml_should_define_keyboard_first_shortcuts()
     {
         var timelineXaml = ReadWorkspaceOrView("TimelineWorkspaceView.axaml", true);
@@ -775,6 +844,17 @@ public sealed class DesktopAccessibilityLabelTests
             "Services"));
 
         return File.ReadAllText(Path.Combine(servicesRoot, fileName));
+    }
+
+    private static void AssertAccessibleBoundText(string xaml, string automationId, string bindingName)
+    {
+        AssertAccessibleTextId(xaml, automationId);
+        Assert.Contains($"AutomationProperties.Name=\"{{Binding {bindingName}}}\"", xaml);
+    }
+
+    private static void AssertAccessibleTextId(string xaml, string automationId)
+    {
+        Assert.Contains($"AutomationProperties.AutomationId=\"{automationId}\"", xaml);
     }
 
     private static string FindRepositoryRoot()

@@ -14,12 +14,14 @@
   </UserControl.KeyBindings>
 
   <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
-    <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" />
+    <TextBlock Text="{Binding CostSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding CostSummary}" AutomationProperties.AutomationId="CostSummaryText" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
                Opacity="0.75"
                Text="{Binding CostComparison}"
-               TextWrapping="Wrap" />
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding CostComparison}"
+               AutomationProperties.AutomationId="CostComparisonText" />
     <StackPanel Grid.Row="2"
                 Margin="0,12,0,0"
                 Orientation="Horizontal"
@@ -95,7 +97,9 @@
                Margin="0,8,0,0"
                Opacity="0.72"
                Text="{Binding CostSearchSummary}"
-               TextWrapping="Wrap" />
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding CostSearchSummary}"
+               AutomationProperties.AutomationId="CostSearchSummaryText" />
     <ListBox x:Name="CostListBox"
              Grid.Row="8"
              Margin="0,12,0,0"

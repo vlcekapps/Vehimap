@@ -13,7 +13,9 @@
   <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.25*,*">
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding OverdueOverviewSummary}"
-               TextWrapping="Wrap" />
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding OverdueOverviewSummary}"
+               AutomationProperties.AutomationId="OverdueOverviewSummaryText" />
     <Grid Grid.Row="1"
           Grid.ColumnSpan="2"
           Margin="0,12,0,0"
@@ -123,7 +125,9 @@
         <TextBlock Grid.Row="3"
                    Margin="0,16,0,0"
                    Text="{Binding SelectedOverdueOverviewDetail}"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding SelectedOverdueOverviewDetail}"
+                   AutomationProperties.AutomationId="SelectedOverdueOverviewDetailText" />
       </Grid>
     </Border>
   </Grid>

@@ -12,7 +12,9 @@
   <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.35*,*">
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding TimelineSummary}"
-               TextWrapping="Wrap" />
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding TimelineSummary}"
+               AutomationProperties.AutomationId="TimelineSummaryText" />
 
     <Grid Grid.Row="1"
           Grid.ColumnSpan="2"
@@ -103,7 +105,9 @@
                    Margin="0,12,0,0"
                    Opacity="0.78"
                    Text="{Binding ExportStatus}"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding ExportStatus}"
+                   AutomationProperties.AutomationId="TimelineExportStatusText" />
         <TextBlock Grid.Row="3"
                    Margin="0,12,0,0"
                    Opacity="0.75"
@@ -112,7 +116,9 @@
         <TextBlock Grid.Row="4"
                    Margin="0,16,0,0"
                    Text="{Binding SelectedTimelineDetail}"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding SelectedTimelineDetail}"
+                   AutomationProperties.AutomationId="SelectedTimelineDetailText" />
       </Grid>
     </Border>
   </Grid>

@@ -13,7 +13,9 @@
   <Grid RowDefinitions="Auto,Auto,*" ColumnDefinitions="1.25*,*">
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding UpcomingOverviewSummary}"
-               TextWrapping="Wrap" />
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding UpcomingOverviewSummary}"
+               AutomationProperties.AutomationId="UpcomingOverviewSummaryText" />
     <Grid Grid.Row="1"
           Grid.ColumnSpan="2"
           Margin="0,12,0,0"
@@ -139,7 +141,9 @@
         <TextBlock Grid.Row="3"
                    Margin="0,16,0,0"
                    Text="{Binding SelectedUpcomingOverviewDetail}"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding SelectedUpcomingOverviewDetail}"
+                   AutomationProperties.AutomationId="SelectedUpcomingOverviewDetailText" />
       </Grid>
     </Border>
   </Grid>

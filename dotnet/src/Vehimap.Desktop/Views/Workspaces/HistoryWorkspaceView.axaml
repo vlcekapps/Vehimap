@@ -14,7 +14,9 @@
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2"
                Text="{Binding HistorySummary}"
-               TextWrapping="Wrap" />
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding HistorySummary}"
+               AutomationProperties.AutomationId="HistorySummaryText" />
     <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold"
                  Text="Historické záznamy vybraného vozidla" />
@@ -37,7 +39,9 @@
                  Margin="0,8,12,0"
                  Opacity="0.72"
                  Text="{Binding HistorySearchSummary}"
-                 TextWrapping="Wrap" />
+                 TextWrapping="Wrap"
+                 AutomationProperties.Name="{Binding HistorySearchSummary}"
+                 AutomationProperties.AutomationId="HistorySearchSummaryText" />
       <ListBox x:Name="HistoryListBox"
                Grid.Row="3"
                Margin="0,12,12,0"
@@ -106,7 +110,9 @@
                    Margin="0,12,0,0"
                    Opacity="0.82"
                    Text="{Binding HistoryEditorStatus}"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding HistoryEditorStatus}"
+                   AutomationProperties.AutomationId="HistoryEditorStatusText" />
         <Border x:Name="HistoryEditorHost"
                 Grid.Row="3"
                 Margin="0,16,0,0">
@@ -167,7 +173,9 @@
                    Margin="0,16,0,0"
                    IsVisible="{Binding IsHistoryDetailVisible}"
                    Text="{Binding SelectedHistoryDetail}"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding SelectedHistoryDetail}"
+                   AutomationProperties.AutomationId="SelectedHistoryDetailText" />
       </Grid>
     </Border>
   </Grid>

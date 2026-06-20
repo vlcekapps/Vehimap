@@ -292,8 +292,8 @@
       <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DataMode}" />
       <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" Text="Datová složka" />
       <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataPath}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Foreground="IndianRed" Text="{Binding LoadError}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="0,8,0,0" Text="{Binding ShellStatus}" TextWrapping="Wrap" />
+      <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Foreground="IndianRed" Text="{Binding LoadError}" TextWrapping="Wrap" AutomationProperties.Name="{Binding LoadError}" AutomationProperties.AutomationId="LoadErrorText" />
+      <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="0,8,0,0" Text="{Binding ShellStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ShellStatus}" AutomationProperties.AutomationId="ShellStatusText" />
     </Grid>
 
     <Grid Grid.Row="2"
@@ -348,7 +348,9 @@
         <Grid RowDefinitions="Auto,Auto,*">
           <TextBlock FontSize="18"
                      FontWeight="SemiBold"
-                     Text="{Binding VehicleListSummary}" />
+                     Text="{Binding VehicleListSummary}"
+                     AutomationProperties.Name="{Binding VehicleListSummary}"
+                     AutomationProperties.AutomationId="VehicleListSummaryText" />
           <Grid Grid.Row="1"
                 Margin="0,12,0,0"
                 ColumnDefinitions="170,*,220,Auto"

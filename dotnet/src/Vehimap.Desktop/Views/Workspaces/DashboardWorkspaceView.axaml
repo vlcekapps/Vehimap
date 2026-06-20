@@ -16,10 +16,10 @@
   </UserControl.KeyBindings>
   <Grid RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
     <StackPanel Grid.ColumnSpan="3" Spacing="8">
-      <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" />
-      <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" />
-      <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
-      <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding AuditSummary}" AutomationProperties.AutomationId="DashboardAuditSummaryText" />
+      <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding CostSummary}" AutomationProperties.AutomationId="DashboardCostSummaryText" />
+      <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" AutomationProperties.Name="{Binding CostComparison}" AutomationProperties.AutomationId="DashboardCostComparisonText" />
+      <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding DashboardTimelineSummary}" AutomationProperties.AutomationId="DashboardTimelineSummaryText" />
       <TextBlock Opacity="0.75"
                  Text="Ctrl+R obnoví dashboard, Ctrl+F otevře globální hledání, Ctrl+T blížící se termíny, Ctrl+Shift+T propadlé termíny, Ctrl+P otevře vybraný termín, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 vozidlo upraví."
                  TextWrapping="Wrap" />
@@ -125,7 +125,7 @@
       <Grid RowDefinitions="Auto,Auto,Auto,*">
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="Nejbližší termíny" />
         <Button Grid.Row="1" x:Name="DashboardTimelineOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" Content="Otevřít položku" AutomationProperties.Name="Otevřít vybraný termín z dashboardu" AutomationProperties.AutomationId="DashboardTimelineOpenButton" />
-        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.75" Text="{Binding SelectedDashboardTimelineDetail}" TextWrapping="Wrap" />
+        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.75" Text="{Binding SelectedDashboardTimelineDetail}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedDashboardTimelineDetail}" AutomationProperties.AutomationId="SelectedDashboardTimelineDetailText" />
         <ListBox x:Name="DashboardTimelineListBox"
                  Grid.Row="3"
                  Margin="0,12,0,0"
