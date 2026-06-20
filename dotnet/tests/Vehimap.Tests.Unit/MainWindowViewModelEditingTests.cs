@@ -137,18 +137,18 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
         viewModel.CreateHistoryCommand.Execute(null);
-        viewModel.HistoryEditorDate = "15.10.2026";
-        viewModel.HistoryEditorType = "Servis";
-        viewModel.HistoryEditorOdometer = "123456";
-        viewModel.HistoryEditorCost = "2500";
-        viewModel.HistoryEditorNote = "Vyměněný olej a filtry";
+        viewModel.HistoryWorkspace.HistoryEditorDate = "15.10.2026";
+        viewModel.HistoryWorkspace.HistoryEditorType = "Servis";
+        viewModel.HistoryWorkspace.HistoryEditorOdometer = "123456";
+        viewModel.HistoryWorkspace.HistoryEditorCost = "2500";
+        viewModel.HistoryWorkspace.HistoryEditorNote = "Vyměněný olej a filtry";
 
         await viewModel.SaveHistoryCommand.ExecuteAsync(null);
 
-        Assert.NotNull(viewModel.SelectedHistory);
-        Assert.Equal("Servis", viewModel.SelectedHistory!.EventType);
+        Assert.NotNull(viewModel.HistoryWorkspace.SelectedHistory);
+        Assert.Equal("Servis", viewModel.HistoryWorkspace.SelectedHistory!.EventType);
         Assert.Contains(dataStore.CurrentDataSet.HistoryEntries, item => item.EventType == "Servis" && item.VehicleId == "veh_1");
-        Assert.Equal("Nový historický záznam byl uložen.", viewModel.HistoryEditorStatus);
+        Assert.Equal("Nový historický záznam byl uložen.", viewModel.HistoryWorkspace.HistoryEditorStatus);
     }
 
     [Fact]
@@ -162,20 +162,20 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
         viewModel.CreateFuelCommand.Execute(null);
-        viewModel.FuelEditorDate = "20.10.2026";
-        viewModel.FuelEditorFuelType = "Natural 95";
-        viewModel.FuelEditorLiters = "38.5";
-        viewModel.FuelEditorTotalCost = "1890";
-        viewModel.FuelEditorOdometer = "123789";
-        viewModel.FuelEditorFullTank = false;
-        viewModel.FuelEditorNote = "Dálnice";
+        viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
+        viewModel.FuelWorkspace.FuelEditorFuelType = "Natural 95";
+        viewModel.FuelWorkspace.FuelEditorLiters = "38.5";
+        viewModel.FuelWorkspace.FuelEditorTotalCost = "1890";
+        viewModel.FuelWorkspace.FuelEditorOdometer = "123789";
+        viewModel.FuelWorkspace.FuelEditorFullTank = false;
+        viewModel.FuelWorkspace.FuelEditorNote = "Dálnice";
 
         await viewModel.SaveFuelCommand.ExecuteAsync(null);
 
-        Assert.NotNull(viewModel.SelectedFuel);
-        Assert.Equal("Natural 95", viewModel.SelectedFuel!.FuelType);
+        Assert.NotNull(viewModel.FuelWorkspace.SelectedFuel);
+        Assert.Equal("Natural 95", viewModel.FuelWorkspace.SelectedFuel!.FuelType);
         Assert.Contains(dataStore.CurrentDataSet.FuelEntries, item => item.FuelType == "Natural 95" && item.VehicleId == "veh_1");
-        Assert.Equal("Nové tankování bylo uloženo.", viewModel.FuelEditorStatus);
+        Assert.Equal("Nové tankování bylo uloženo.", viewModel.FuelWorkspace.FuelEditorStatus);
     }
 
     [Fact]

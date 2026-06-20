@@ -73,6 +73,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - stav exportu nakladoveho prehledu je vlastneny `CostWorkspace`; root `MainWindowViewModel` pouze provadi exportni prikazy a nastavuje vysledek do workspace
 - souhrnne texty evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` jsou vlastnene jejich workspace viewmodely; root je jen prepocitava pri zmene vozidla nebo dat
 - nactene kolekce zaznamu evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` jsou vlastnene jejich workspace viewmodely; root je jen plni pri zmene vozidla nebo dat
+- vyber polozky, detailni text a editorovy stav evidenci `Historie` a `Tankovani` jsou vlastnene jejich workspace viewmodely; root je pouziva jen interne pri persistu a navigaci
 - souhrnne texty detailu vozidla jsou vlastnene `VehicleDetailWorkspace`; root je jen prepocitava pri zmene vyberu vozidla
 - formularove hodnoty editoru vozidla jsou vlastnene `VehicleDetailWorkspace`; root zustava orchestrator prikazu, validace a persistu
 - rezim editace vozidla, viditelnost detailu a nadpis detailniho panelu jsou vlastnene `VehicleDetailWorkspace`; root pouze synchronizuje prikazy, pending-edit ochrany a shellovou navigaci

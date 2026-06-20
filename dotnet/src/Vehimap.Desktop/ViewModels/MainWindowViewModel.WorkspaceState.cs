@@ -2,146 +2,146 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    public VehicleHistoryItemViewModel? SelectedHistory
+    private VehicleHistoryItemViewModel? SelectedHistory
     {
         get => HistoryWorkspace.SelectedHistory;
         set => HistoryWorkspace.SelectedHistory = value;
     }
 
-    public string SelectedHistoryDetail
+    private string SelectedHistoryDetail
     {
         get => HistoryWorkspace.SelectedHistoryDetail;
         set => HistoryWorkspace.SelectedHistoryDetail = value;
     }
 
-    public bool IsEditingHistory
+    private bool IsEditingHistory
     {
         get => HistoryWorkspace.IsEditingHistory;
         set => HistoryWorkspace.IsEditingHistory = value;
     }
 
-    public string HistoryPanelHeading
+    private string HistoryPanelHeading
     {
         get => HistoryWorkspace.HistoryPanelHeading;
         set => HistoryWorkspace.HistoryPanelHeading = value;
     }
 
-    public string HistoryEditorStatus
+    private string HistoryEditorStatus
     {
         get => HistoryWorkspace.HistoryEditorStatus;
         set => HistoryWorkspace.HistoryEditorStatus = value;
     }
 
-    public string HistoryEditorDate
+    private string HistoryEditorDate
     {
         get => HistoryWorkspace.HistoryEditorDate;
         set => HistoryWorkspace.HistoryEditorDate = value;
     }
 
-    public string HistoryEditorType
+    private string HistoryEditorType
     {
         get => HistoryWorkspace.HistoryEditorType;
         set => HistoryWorkspace.HistoryEditorType = value;
     }
 
-    public string HistoryEditorOdometer
+    private string HistoryEditorOdometer
     {
         get => HistoryWorkspace.HistoryEditorOdometer;
         set => HistoryWorkspace.HistoryEditorOdometer = value;
     }
 
-    public string HistoryEditorCost
+    private string HistoryEditorCost
     {
         get => HistoryWorkspace.HistoryEditorCost;
         set => HistoryWorkspace.HistoryEditorCost = value;
     }
 
-    public string HistoryEditorNote
+    private string HistoryEditorNote
     {
         get => HistoryWorkspace.HistoryEditorNote;
         set => HistoryWorkspace.HistoryEditorNote = value;
     }
 
-    public bool IsHistoryDetailVisible => HistoryWorkspace.IsHistoryDetailVisible;
+    private bool IsHistoryDetailVisible => HistoryWorkspace.IsHistoryDetailVisible;
     public bool CanCreateHistory => SelectedVehicle is not null && !HasPendingEdits;
     public bool CanEditSelectedHistory => SelectedHistory is not null && !HasPendingEdits;
     public bool CanDeleteSelectedHistory => SelectedHistory is not null && !HasPendingEdits;
     public bool CanSaveHistory => SelectedVehicle is not null && IsEditingHistory;
     public bool CanCancelHistoryEdit => IsEditingHistory;
 
-    public VehicleFuelItemViewModel? SelectedFuel
+    private VehicleFuelItemViewModel? SelectedFuel
     {
         get => FuelWorkspace.SelectedFuel;
         set => FuelWorkspace.SelectedFuel = value;
     }
 
-    public string SelectedFuelDetail
+    private string SelectedFuelDetail
     {
         get => FuelWorkspace.SelectedFuelDetail;
         set => FuelWorkspace.SelectedFuelDetail = value;
     }
 
-    public bool IsEditingFuel
+    private bool IsEditingFuel
     {
         get => FuelWorkspace.IsEditingFuel;
         set => FuelWorkspace.IsEditingFuel = value;
     }
 
-    public string FuelPanelHeading
+    private string FuelPanelHeading
     {
         get => FuelWorkspace.FuelPanelHeading;
         set => FuelWorkspace.FuelPanelHeading = value;
     }
 
-    public string FuelEditorStatus
+    private string FuelEditorStatus
     {
         get => FuelWorkspace.FuelEditorStatus;
         set => FuelWorkspace.FuelEditorStatus = value;
     }
 
-    public string FuelEditorDate
+    private string FuelEditorDate
     {
         get => FuelWorkspace.FuelEditorDate;
         set => FuelWorkspace.FuelEditorDate = value;
     }
 
-    public string FuelEditorFuelType
+    private string FuelEditorFuelType
     {
         get => FuelWorkspace.FuelEditorFuelType;
         set => FuelWorkspace.FuelEditorFuelType = value;
     }
 
-    public string FuelEditorLiters
+    private string FuelEditorLiters
     {
         get => FuelWorkspace.FuelEditorLiters;
         set => FuelWorkspace.FuelEditorLiters = value;
     }
 
-    public string FuelEditorTotalCost
+    private string FuelEditorTotalCost
     {
         get => FuelWorkspace.FuelEditorTotalCost;
         set => FuelWorkspace.FuelEditorTotalCost = value;
     }
 
-    public string FuelEditorOdometer
+    private string FuelEditorOdometer
     {
         get => FuelWorkspace.FuelEditorOdometer;
         set => FuelWorkspace.FuelEditorOdometer = value;
     }
 
-    public bool FuelEditorFullTank
+    private bool FuelEditorFullTank
     {
         get => FuelWorkspace.FuelEditorFullTank;
         set => FuelWorkspace.FuelEditorFullTank = value;
     }
 
-    public string FuelEditorNote
+    private string FuelEditorNote
     {
         get => FuelWorkspace.FuelEditorNote;
         set => FuelWorkspace.FuelEditorNote = value;
     }
 
-    public bool IsFuelDetailVisible => FuelWorkspace.IsFuelDetailVisible;
+    private bool IsFuelDetailVisible => FuelWorkspace.IsFuelDetailVisible;
     public bool CanCreateFuel => SelectedVehicle is not null && !HasPendingEdits;
     public bool CanEditSelectedFuel => SelectedFuel is not null && !HasPendingEdits;
     public bool CanDeleteSelectedFuel => SelectedFuel is not null && !HasPendingEdits;

@@ -937,13 +937,13 @@ public partial class MainWindow : Window
             return true;
         }
 
-        if (_viewModel.IsEditingHistory)
+        if (_viewModel.HistoryWorkspace.IsEditingHistory)
         {
             await OpenHistoryWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
             return true;
         }
 
-        if (_viewModel.IsEditingFuel)
+        if (_viewModel.FuelWorkspace.IsEditingFuel)
         {
             await OpenFuelWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
             return true;

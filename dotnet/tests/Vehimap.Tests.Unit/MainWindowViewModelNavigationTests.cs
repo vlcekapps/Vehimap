@@ -146,11 +146,11 @@ public sealed class MainWindowViewModelNavigationTests
 
         viewModel.HistoryWorkspace.HistorySearchText = "oleje";
         Assert.Single(viewModel.HistoryWorkspace.VisibleHistoryItems);
-        Assert.Equal("hist_1", viewModel.SelectedHistory?.Id);
+        Assert.Equal("hist_1", viewModel.HistoryWorkspace.SelectedHistory?.Id);
 
         viewModel.FuelWorkspace.FuelSearchText = "benzín";
         Assert.Single(viewModel.FuelWorkspace.VisibleFuelItems);
-        Assert.Equal("fuel_1", viewModel.SelectedFuel?.Id);
+        Assert.Equal("fuel_1", viewModel.FuelWorkspace.SelectedFuel?.Id);
 
         viewModel.ReminderWorkspace.ReminderSearchText = "servis";
         Assert.Single(viewModel.ReminderWorkspace.VisibleReminderItems);
@@ -784,7 +784,7 @@ public sealed class MainWindowViewModelNavigationTests
         var handled = viewModel.HandleCurrentWorkspaceCreateShortcut();
 
         Assert.True(handled);
-        Assert.True(viewModel.IsEditingHistory);
+        Assert.True(viewModel.HistoryWorkspace.IsEditingHistory);
         Assert.Equal(DesktopTabIndexes.History, viewModel.SelectedVehicleTabIndex);
         Assert.Equal(DesktopFocusTarget.HistoryEditorDate, requestedFocus);
     }
@@ -815,16 +815,16 @@ public sealed class MainWindowViewModelNavigationTests
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.History;
         Assert.True(viewModel.HandleCurrentWorkspaceCreateShortcut());
-        viewModel.HistoryEditorDate = "01.02.2026";
-        viewModel.HistoryEditorType = "Test";
-        viewModel.HistoryEditorOdometer = "11111";
-        viewModel.HistoryEditorCost = "123";
-        viewModel.HistoryEditorNote = "Ulozeno zkratkou";
+        viewModel.HistoryWorkspace.HistoryEditorDate = "01.02.2026";
+        viewModel.HistoryWorkspace.HistoryEditorType = "Test";
+        viewModel.HistoryWorkspace.HistoryEditorOdometer = "11111";
+        viewModel.HistoryWorkspace.HistoryEditorCost = "123";
+        viewModel.HistoryWorkspace.HistoryEditorNote = "Ulozeno zkratkou";
 
         var handled = await viewModel.HandleCurrentWorkspaceSaveShortcutAsync();
 
         Assert.True(handled);
-        Assert.False(viewModel.IsEditingHistory);
+        Assert.False(viewModel.HistoryWorkspace.IsEditingHistory);
         Assert.Contains(viewModel.HistoryWorkspace.SelectedVehicleHistory, item => item.Note == "Ulozeno zkratkou");
         Assert.Equal(DesktopTabIndexes.History, viewModel.SelectedVehicleTabIndex);
     }
