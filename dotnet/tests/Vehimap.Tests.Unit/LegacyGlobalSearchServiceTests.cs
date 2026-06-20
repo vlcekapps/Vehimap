@@ -53,6 +53,20 @@ public sealed class LegacyGlobalSearchServiceTests
     }
 
     [Fact]
+    public void Search_should_find_timeline_status_texts_without_matching_unrelated_entries()
+    {
+        var service = new LegacyGlobalSearchService(new StubAttachmentService());
+        var dataSet = CreateDataSet();
+
+        var results = service.Search(DataRoot, dataSet, "Po termínu");
+
+        Assert.Contains(results, item => item.EntityKind == "Vozidlo" && item.VehicleId == "veh_1");
+        Assert.Contains(results, item => item.EntityKind == "Připomínka" && item.EntityId == "rem_1");
+        Assert.DoesNotContain(results, item => item.EntityKind == "Historie" && item.EntityId == "hist_1");
+        Assert.DoesNotContain(results, item => item.EntityKind == "Tankování" && item.EntityId == "fuel_1");
+    }
+
+    [Fact]
     public void Search_should_find_managed_attachment_by_file_name()
     {
         var service = new LegacyGlobalSearchService(new StubAttachmentService());

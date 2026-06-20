@@ -121,7 +121,7 @@ V hlavním okně:
 - v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` vlastní rychlé hledání; `Ctrl+F` přesune fokus do filtru, tlačítko `Vymazat` filtr smaže a vrátí fokus do hledání, seznam zachová výběr podle položky a při prázdném výsledku vypne akce nad výběrem
 - v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` přístupné ovladače `Řadit` a `Sestupně`; zvolený sloupec i směr řazení se ukládají do `settings.ini`
 - v C# Avalonia větvi mají `Globální hledání` a `Audit dat` stejné přístupné ovladače `Řadit` a `Sestupně`; poslední volba se ukládá do `settings.ini`, zatímco samotný hledaný text zůstává dočasný
-- v C# Avalonia větvi `Globální hledání` prohledává i štítky, stav a servisní profil vozidla; u historie, tankování, dokladů, připomínek a údržby bere v úvahu také název vozidla, SPZ a značku/model stejně jako AHK verze
+- v C# Avalonia větvi `Globální hledání` prohledává i štítky, stav, servisní profil a stavové texty z časové osy; u historie, tankování, dokladů, připomínek a údržby bere v úvahu také název vozidla, SPZ a značku/model stejně jako AHK verze
 
 ## Klávesové zkratky v dashboardu a přehledech:
 

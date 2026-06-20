@@ -24,7 +24,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Avalonia `Časová osa vozidla` si pamatuje poslední filtr `Vše`, `Budoucí` nebo `Minulé` v `settings.ini`, zatímco rychlé textové hledání zůstává jen dočasné
 - Avalonia `Audit dat` má tlačítko `Obnovit` a zkratku `Ctrl+R`, které znovu promítnou auditní položky, zachovají filtrovaný výběr a vrátí fokus na seznam
 - Avalonia `Globální hledání` má tlačítko `Obnovit` a zkratku `Ctrl+R`, které znovu provedou dotaz, zachovají vybraný výsledek a vrátí fokus na seznam
-- Avalonia `Globální hledání` nově prohledává rozšířená metadata vozidla a identitu vozidla i u souvisejících evidencí, takže dotaz na název, SPZ nebo model najde i historii, tankování, doklady, připomínky a údržbu daného vozidla
+- Avalonia `Globální hledání` nově prohledává rozšířená metadata vozidla, stavové texty z časové osy a identitu vozidla i u souvisejících evidencí, takže dotaz na název, SPZ, model nebo stav typu `Po termínu` najde správné vozidlo i relevantní položky
 - Avalonia přehled `Náklady napříč vozidly` má rychlé hledání vozidel se zkratkou `Ctrl+F`; při prázdném výsledku vypne otevření, úpravu i export vybraného vozidla
 - Avalonia přehled `Náklady napříč vozidly` má tlačítko `Obnovit` a zkratku `Ctrl+R`, které znovu spočítají aktuální období, zachovají filtrovaný výběr a vrátí fokus na seznam
 - Avalonia přehled `Náklady napříč vozidly` umí zvolit období přes předvolby nebo vlastní datumový rozsah; poslední volba se ukládá do `settings.ini` a používá se i v dashboardu a exportech
