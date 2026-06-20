@@ -17,7 +17,7 @@
                TextWrapping="Wrap"
                AutomationProperties.Name="{Binding FuelSummary}"
                AutomationProperties.AutomationId="FuelSummaryText" />
-    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
+    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold"
                  Text="Tankování vybraného vozidla" />
       <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
@@ -35,7 +35,22 @@
                 AutomationProperties.Name="Vymazat hledání v tankování vozidla"
                 AutomationProperties.AutomationId="ClearFuelSearchButton" />
       </Grid>
-      <TextBlock Grid.Row="2"
+      <Grid Grid.Row="2" Margin="0,8,12,0" ColumnDefinitions="80,*,120">
+        <TextBlock VerticalAlignment="Center" Text="Řadit" />
+        <ComboBox Grid.Column="1"
+                  ItemsSource="{Binding FuelSortOptions}"
+                  SelectedItem="{Binding SelectedFuelSortOption}"
+                  AutomationProperties.Name="Řazení tankování vozidla"
+                  AutomationProperties.AutomationId="FuelSortComboBox" />
+        <CheckBox Grid.Column="2"
+                  Margin="12,0,0,0"
+                  VerticalAlignment="Center"
+                  Content="Sestupně"
+                  IsChecked="{Binding FuelSortDescending}"
+                  AutomationProperties.Name="Řadit tankování sestupně"
+                  AutomationProperties.AutomationId="FuelSortDescendingCheckBox" />
+      </Grid>
+      <TextBlock Grid.Row="3"
                  Margin="0,8,12,0"
                  Opacity="0.72"
                  Text="{Binding FuelSearchSummary}"
@@ -43,7 +58,7 @@
                  AutomationProperties.Name="{Binding FuelSearchSummary}"
                  AutomationProperties.AutomationId="FuelSearchSummaryText" />
       <ListBox x:Name="FuelListBox"
-               Grid.Row="3"
+               Grid.Row="4"
                Margin="0,12,12,0"
                ItemsSource="{Binding VisibleFuelItems}"
                SelectedItem="{Binding SelectedFuel}"

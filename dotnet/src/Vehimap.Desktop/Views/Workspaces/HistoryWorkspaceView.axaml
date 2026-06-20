@@ -17,7 +17,7 @@
                TextWrapping="Wrap"
                AutomationProperties.Name="{Binding HistorySummary}"
                AutomationProperties.AutomationId="HistorySummaryText" />
-    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
+    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold"
                  Text="Historické záznamy vybraného vozidla" />
       <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
@@ -35,7 +35,22 @@
                 AutomationProperties.Name="Vymazat hledání v historii vozidla"
                 AutomationProperties.AutomationId="ClearHistorySearchButton" />
       </Grid>
-      <TextBlock Grid.Row="2"
+      <Grid Grid.Row="2" Margin="0,8,12,0" ColumnDefinitions="80,*,120">
+        <TextBlock VerticalAlignment="Center" Text="Řadit" />
+        <ComboBox Grid.Column="1"
+                  ItemsSource="{Binding HistorySortOptions}"
+                  SelectedItem="{Binding SelectedHistorySortOption}"
+                  AutomationProperties.Name="Řazení historie vozidla"
+                  AutomationProperties.AutomationId="HistorySortComboBox" />
+        <CheckBox Grid.Column="2"
+                  Margin="12,0,0,0"
+                  VerticalAlignment="Center"
+                  Content="Sestupně"
+                  IsChecked="{Binding HistorySortDescending}"
+                  AutomationProperties.Name="Řadit historii sestupně"
+                  AutomationProperties.AutomationId="HistorySortDescendingCheckBox" />
+      </Grid>
+      <TextBlock Grid.Row="3"
                  Margin="0,8,12,0"
                  Opacity="0.72"
                  Text="{Binding HistorySearchSummary}"
@@ -43,7 +58,7 @@
                  AutomationProperties.Name="{Binding HistorySearchSummary}"
                  AutomationProperties.AutomationId="HistorySearchSummaryText" />
       <ListBox x:Name="HistoryListBox"
-               Grid.Row="3"
+               Grid.Row="4"
                Margin="0,12,12,0"
                ItemsSource="{Binding VisibleHistoryItems}"
                SelectedItem="{Binding SelectedHistory}"

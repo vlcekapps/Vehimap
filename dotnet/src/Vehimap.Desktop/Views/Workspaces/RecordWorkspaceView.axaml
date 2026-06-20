@@ -16,7 +16,7 @@
   </UserControl.KeyBindings>
   <Grid ColumnDefinitions="1.1*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding RecordSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordSummary}" AutomationProperties.AutomationId="RecordSummaryText" />
-    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*" Margin="0,16,0,0">
+    <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold" Text="Seznam dokladů a příloh vybraného vozidla" />
       <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
         <TextBlock VerticalAlignment="Center" Text="Hledat" />
@@ -33,9 +33,14 @@
                 AutomationProperties.Name="Vymazat hledání v dokladech vozidla"
                 AutomationProperties.AutomationId="ClearRecordSearchButton" />
       </Grid>
-      <TextBlock Grid.Row="2" Margin="0,8,12,0" Opacity="0.72" Text="{Binding RecordSearchSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordSearchSummary}" AutomationProperties.AutomationId="RecordSearchSummaryText" />
+      <Grid Grid.Row="2" Margin="0,8,12,0" ColumnDefinitions="80,*,120">
+        <TextBlock VerticalAlignment="Center" Text="Řadit" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding RecordSortOptions}" SelectedItem="{Binding SelectedRecordSortOption}" AutomationProperties.Name="Řazení dokladů vozidla" AutomationProperties.AutomationId="RecordSortComboBox" />
+        <CheckBox Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center" Content="Sestupně" IsChecked="{Binding RecordSortDescending}" AutomationProperties.Name="Řadit doklady sestupně" AutomationProperties.AutomationId="RecordSortDescendingCheckBox" />
+      </Grid>
+      <TextBlock Grid.Row="3" Margin="0,8,12,0" Opacity="0.72" Text="{Binding RecordSearchSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordSearchSummary}" AutomationProperties.AutomationId="RecordSearchSummaryText" />
       <ListBox x:Name="RecordListBox"
-               Grid.Row="3"
+               Grid.Row="4"
                Margin="0,12,12,0"
                ItemsSource="{Binding VisibleRecordItems}"
                SelectedItem="{Binding SelectedRecord}"

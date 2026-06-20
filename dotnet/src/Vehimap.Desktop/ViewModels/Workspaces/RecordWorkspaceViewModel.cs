@@ -26,6 +26,14 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string recordSearchSummary = "Ctrl+F přesune fokus do hledání dokladů.";
 
+    [ObservableProperty]
+    private string selectedRecordSortOption = WorkspaceSortHelpers.ValiditySortLabel;
+
+    [ObservableProperty]
+    private bool recordSortDescending;
+
+    public IReadOnlyList<string> RecordSortOptions => WorkspaceSortHelpers.RecordSortOptions;
+
     public bool CanClearRecordSearch => !string.IsNullOrWhiteSpace(RecordSearchText);
 
     [ObservableProperty]
@@ -111,8 +119,8 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public void RefreshVisibleRecordItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedRecord : null;
-        var filteredItems = SelectedVehicleRecords
-            .Where(MatchesSearch)
+        var filteredItems = WorkspaceSortHelpers
+            .SortRecords(SelectedVehicleRecords.Where(MatchesSearch), SelectedRecordSortOption, RecordSortDescending)
             .ToList();
 
         VisibleRecordItems.Clear();
@@ -149,6 +157,16 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
         OnPropertyChanged(nameof(CanClearRecordSearch));
         ClearRecordSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleRecordItems();
+    }
+
+    partial void OnSelectedRecordSortOptionChanged(string value)
+    {
+        Root.HandleRecordWorkspaceSortChanged();
+    }
+
+    partial void OnRecordSortDescendingChanged(bool value)
+    {
+        Root.HandleRecordWorkspaceSortChanged();
     }
 
     partial void OnIsEditingRecordChanged(bool value)

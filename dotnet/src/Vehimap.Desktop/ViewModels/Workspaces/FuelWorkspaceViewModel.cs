@@ -23,6 +23,14 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string fuelSearchSummary = "Ctrl+F přesune fokus do hledání tankování.";
 
+    [ObservableProperty]
+    private string selectedFuelSortOption = WorkspaceSortHelpers.DateSortLabel;
+
+    [ObservableProperty]
+    private bool fuelSortDescending = true;
+
+    public IReadOnlyList<string> FuelSortOptions => WorkspaceSortHelpers.FuelSortOptions;
+
     public bool CanClearFuelSearch => !string.IsNullOrWhiteSpace(FuelSearchText);
 
     [ObservableProperty]
@@ -85,8 +93,8 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     public void RefreshVisibleFuelItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedFuel : null;
-        var filteredItems = SelectedVehicleFuel
-            .Where(MatchesSearch)
+        var filteredItems = WorkspaceSortHelpers
+            .SortFuel(SelectedVehicleFuel.Where(MatchesSearch), SelectedFuelSortOption, FuelSortDescending)
             .ToList();
 
         VisibleFuelItems.Clear();
@@ -123,6 +131,16 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
         OnPropertyChanged(nameof(CanClearFuelSearch));
         ClearFuelSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleFuelItems();
+    }
+
+    partial void OnSelectedFuelSortOptionChanged(string value)
+    {
+        Root.HandleFuelWorkspaceSortChanged();
+    }
+
+    partial void OnFuelSortDescendingChanged(bool value)
+    {
+        Root.HandleFuelWorkspaceSortChanged();
     }
 
     partial void OnIsEditingFuelChanged(bool value)

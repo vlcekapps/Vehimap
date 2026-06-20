@@ -16,7 +16,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů
 - samostatný `Plán údržby` pro každé vozidlo, včetně šablon běžných servisních úkonů, doporučených balíků podle kategorie a explicitního servisního profilu vozidla, intervalu podle kilometrů nebo měsíců, evidence posledního servisu a rychlého označení splnění s volitelným zapsáním do historie
 - samostatný `Balíček pro vozidlo`, který umí v jednom kroku nabídnout doporučené servisní plány, placeholdery dokladů i obecné připomínky podle kategorie a servisního profilu
-- rychlé hledání a řazení sloupců v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách, včetně zapamatování posledního řazení
+- rychlé hledání a přístupné řazení v historii událostí, kilometrech a tankování, pojištění a dokladech i vlastních připomínkách, včetně zapamatování posledního řazení
 - samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, volby mezi `Externí cestou` a `Spravovanou kopií`, přesunu přílohy do interní složky aplikace, znovu propojení chybějícího souboru, otevření navázaného souboru i jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku, včetně `Ujeto km`, `Ceny / km` a srovnání s předchozím stejně dlouhým obdobím
 - samostatný přehled `Náklady napříč vozidly` pro vybrané období s porovnáním vozidel, rozpadnutím částek podle skupin, `Ujeto km`, `Cenou / km`, upozorněním na aktivní vozidla bez číselného nákladu a se stavy k řešení přímo u jednotlivých vozidel
@@ -97,6 +97,7 @@ V hlavním okně:
 - v C# Avalonia větvi jsou `Ctrl+F`, `Ctrl+O` a `Ctrl+P` v přehledových kartách kontextové: nejdřív obslouží aktivní hledání, výsledek nebo termín a teprve mimo tyto pracovní plochy se použije globální akce hlavního okna
 - v C# Avalonia větvi jsou v kartách evidencí kontextové i `Ctrl+N`, `Ctrl+U` / `F2` a `Ctrl+S`: `Ctrl+N` a `Ctrl+U` / `F2` z hlavní karty otevřou příslušné modální workspace okno s viditelným editorem, `Ctrl+S` ukládá aktivní editor a mimo evidenci zůstávají `Ctrl+N` a `Ctrl+U` / `F2` globálními akcemi vozidla
 - v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` vlastní rychlé hledání; `Ctrl+F` přesune fokus do filtru, tlačítko `Vymazat` filtr smaže a vrátí fokus do hledání, seznam zachová výběr podle položky a při prázdném výsledku vypne akce nad výběrem
+- v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady` a `Vlastní připomínky` přístupné ovladače `Řadit` a `Sestupně`; zvolený sloupec i směr řazení se ukládají do `settings.ini`
 
 ## Klávesové zkratky v dashboardu a přehledech:
 
@@ -123,7 +124,7 @@ V hlavním okně:
 - `Výběr doporučených šablon` a `Balíček pro vozidlo`: `Ctrl+S` přidá vybrané položky, `Ctrl+A` vybere vše, `Ctrl+Shift+A` výběr vymaže, `Escape` dialog zavře a mezerník v seznamu přepne, zda se právě vybraná položka přidá
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní
 - v `Plánu údržby` klávesa `Enter` upraví vybraný úkon a `Delete` jej odstraní
-- kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce a Vehimap si poslední volbu pamatuje i po dalším otevření
+- v AHK aplikaci kliknutí na hlavičku sloupce v těchto čtyřech seznamech přepíná řazení podle vybraného sloupce; v C# Avalonia větvi se stejná volba provádí přes přístupné ovladače `Řadit` a `Sestupně`, aby byla dobře čitelná i pro screen readery
 - v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu, `Ctrl+Shift+O` jeho složku a `Ctrl+Shift+C` zkopíruje uloženou cestu
 - v C# Avalonia větvi je stejná dokladová akce dostupná i tlačítkem `Kopírovat cestu`; kopíruje vyřešenou cestu, tedy použitelnou absolutní cestu ke spravované i externí příloze
 - ve `Vlastních připomínkách` navíc `Ctrl+Shift+N` posune vybranou opakovanou připomínku na další termín

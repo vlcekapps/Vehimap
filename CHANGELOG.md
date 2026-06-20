@@ -15,6 +15,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Avalonia dashboard má tlačítko `Obnovit` a zkratku `Ctrl+R`, které přepočítají audit, náklady i nejbližší termíny bez ztráty výběru
 - Avalonia dashboard má horní akce `Hledat`, `Blížící se`, `Propadlé`, `Zobrazit vozidlo` a `Upravit vozidlo` včetně zkratek `Ctrl+F`, `Ctrl+T`, `Ctrl+Shift+T`, `Ctrl+O`, `Ctrl+P` a `Ctrl+U` / `F2`
 - Avalonia evidence `Historie`, `Tankování`, `Připomínky`, `Plán údržby` a `Doklady` mají rychlé hledání se zkratkou `Ctrl+F`, přístupnými popisky a filtrováním bez ztráty bezpečných action-state stavů
+- Avalonia evidence `Historie`, `Tankování`, `Připomínky` a `Doklady` mají přístupné ovladače `Řadit` a `Sestupně`; poslední sloupec i směr řazení se ukládají do `settings.ini`
 - Avalonia `Časová osa` má tlačítko `Obnovit` a zkratku `Ctrl+R`, které zachovávají výběr a vrací fokus na seznam
 - Avalonia `Časová osa vozidla` si pamatuje poslední filtr `Vše`, `Budoucí` nebo `Minulé` v `settings.ini`, zatímco rychlé textové hledání zůstává jen dočasné
 - Avalonia `Audit dat` má tlačítko `Obnovit` a zkratku `Ctrl+R`, které znovu promítnou auditní položky, zachovají filtrovaný výběr a vrátí fokus na seznam

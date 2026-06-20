@@ -23,6 +23,14 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string reminderSearchSummary = "Ctrl+F přesune fokus do hledání připomínek.";
 
+    [ObservableProperty]
+    private string selectedReminderSortOption = WorkspaceSortHelpers.DueDateSortLabel;
+
+    [ObservableProperty]
+    private bool reminderSortDescending;
+
+    public IReadOnlyList<string> ReminderSortOptions => WorkspaceSortHelpers.ReminderSortOptions;
+
     public bool CanClearReminderSearch => !string.IsNullOrWhiteSpace(ReminderSearchText);
 
     [ObservableProperty]
@@ -80,8 +88,8 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     public void RefreshVisibleReminderItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedReminder : null;
-        var filteredItems = SelectedVehicleReminders
-            .Where(MatchesSearch)
+        var filteredItems = WorkspaceSortHelpers
+            .SortReminders(SelectedVehicleReminders.Where(MatchesSearch), SelectedReminderSortOption, ReminderSortDescending)
             .ToList();
 
         VisibleReminderItems.Clear();
@@ -118,6 +126,16 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
         OnPropertyChanged(nameof(CanClearReminderSearch));
         ClearReminderSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleReminderItems();
+    }
+
+    partial void OnSelectedReminderSortOptionChanged(string value)
+    {
+        Root.HandleReminderWorkspaceSortChanged();
+    }
+
+    partial void OnReminderSortDescendingChanged(bool value)
+    {
+        Root.HandleReminderWorkspaceSortChanged();
     }
 
     partial void OnIsEditingReminderChanged(bool value)

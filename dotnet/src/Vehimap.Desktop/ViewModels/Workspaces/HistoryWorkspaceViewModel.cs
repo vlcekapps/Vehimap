@@ -23,6 +23,14 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string historySearchSummary = "Ctrl+F přesune fokus do hledání historie.";
 
+    [ObservableProperty]
+    private string selectedHistorySortOption = WorkspaceSortHelpers.DateSortLabel;
+
+    [ObservableProperty]
+    private bool historySortDescending = true;
+
+    public IReadOnlyList<string> HistorySortOptions => WorkspaceSortHelpers.HistorySortOptions;
+
     public bool CanClearHistorySearch => !string.IsNullOrWhiteSpace(HistorySearchText);
 
     [ObservableProperty]
@@ -79,8 +87,8 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     public void RefreshVisibleHistoryItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedHistory : null;
-        var filteredItems = SelectedVehicleHistory
-            .Where(MatchesSearch)
+        var filteredItems = WorkspaceSortHelpers
+            .SortHistory(SelectedVehicleHistory.Where(MatchesSearch), SelectedHistorySortOption, HistorySortDescending)
             .ToList();
 
         VisibleHistoryItems.Clear();
@@ -117,6 +125,16 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
         OnPropertyChanged(nameof(CanClearHistorySearch));
         ClearHistorySearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleHistoryItems();
+    }
+
+    partial void OnSelectedHistorySortOptionChanged(string value)
+    {
+        Root.HandleHistoryWorkspaceSortChanged();
+    }
+
+    partial void OnHistorySortDescendingChanged(bool value)
+    {
+        Root.HandleHistoryWorkspaceSortChanged();
     }
 
     partial void OnIsEditingHistoryChanged(bool value)
