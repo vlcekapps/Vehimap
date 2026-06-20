@@ -73,6 +73,23 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Equal(2, viewModel.VehicleDetailWorkspace.RecentHistoryItems.Count);
         Assert.Equal("Novější servis", viewModel.VehicleDetailWorkspace.RecentHistoryItems[0].EventType);
         Assert.DoesNotContain(viewModel.VehicleDetailWorkspace.RecentHistoryItems, item => item.Id == "hist_3");
+
+        Assert.Equal(5, viewModel.VehicleDetailWorkspace.EvidenceSummaryItems.Count);
+        Assert.Contains(
+            viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
+            item => item.Title == "Historie" && item.Summary.Contains("Poslední událost: Novější servis", StringComparison.CurrentCulture));
+        Assert.Contains(
+            viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
+            item => item.Title == "Tankování" && item.Summary.Contains("Poslední tankování: 35 l za 1200,00 Kč", StringComparison.CurrentCulture));
+        Assert.Contains(
+            viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
+            item => item.Title == "Připomínky" && item.Summary.Contains("Nejbližší: Objednat servis", StringComparison.CurrentCulture));
+        Assert.Contains(
+            viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
+            item => item.Title == "Doklady" && item.Summary.Contains("Bez vyplněné cesty: 1", StringComparison.CurrentCulture));
+        Assert.Contains(
+            viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
+            item => item.Title == "Údržba" && item.Summary.Contains("Nejbližší: Motorový olej", StringComparison.CurrentCulture));
     }
 
     [Fact]

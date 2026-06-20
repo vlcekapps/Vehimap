@@ -408,7 +408,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        ApplyVehicleDetailProjection(_projectionService.BuildVehicleDetail(_dataSet, value, _metaByVehicleId.GetValueOrDefault(value.Id)));
+        ApplyVehicleDetailProjection(_projectionService.BuildVehicleDetail(
+            _dataSet,
+            value,
+            _metaByVehicleId.GetValueOrDefault(value.Id),
+            _dataRoot,
+            ResolveManagedAttachmentAbsolutePath,
+            DateOnly.FromDateTime(DateTime.Today)));
 
         PopulateVehicleHistory(value.Id);
         PopulateVehicleFuel(value.Id);
@@ -426,6 +432,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
         VehicleDetailWorkspace.SelectedVehicleProfile = projection.Profile;
         VehicleDetailWorkspace.SelectedVehicleEvidenceSummary = projection.EvidenceSummary;
         VehicleDetailWorkspace.SelectedVehicleRecentHistorySummary = projection.RecentHistorySummary;
+
+        VehicleDetailWorkspace.EvidenceSummaryItems.Clear();
+        foreach (var item in projection.EvidenceSummaries)
+        {
+            VehicleDetailWorkspace.EvidenceSummaryItems.Add(item);
+        }
 
         VehicleDetailWorkspace.RecentHistoryItems.Clear();
         foreach (var item in projection.RecentHistory)

@@ -12,7 +12,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - volitelné skrytí archivovaných a odstavených vozidel v hlavním seznamu, aniž by zmizela z dat a přehledů
 - v C# Avalonia větvi se poslední zvolená kategorie a stavový filtr hlavního seznamu ukládají do `settings.ini`; textové hledání zůstává jen dočasné, aby po startu neschovalo očekávaná vozidla
 - detail vozidla se souhrnem údajů, stavem platností, posledními událostmi z historie a souhrnem tankování i dokladů
-- v C# Avalonia větvi detail vozidla ukazuje i poslední historické záznamy, poslední známý tachometr a souhrn navazujících evidencí, takže odpovídá rychlé kontrolní ploše z AHK verze
+- v C# Avalonia větvi detail vozidla ukazuje i poslední historické záznamy, poslední známý tachometr a samostatné stavové souhrny historie, tankování, připomínek, dokladů a údržby, takže odpovídá rychlé kontrolní ploše z AHK verze
 - v C# Avalonia větvi má detail vozidla přístupný blok `Související evidence`, ze kterého lze rovnou přejít do historie, tankování, připomínek, údržby, dokladů, časové osy nebo nákladů vybraného vozidla
 - historii událostí pro každé vozidlo, včetně přidání, úpravy a odstranění servisních nebo jiných záznamů
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů

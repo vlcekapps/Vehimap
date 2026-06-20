@@ -84,6 +84,8 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
         set => SetProperty(ref selectedVehicleRecentHistorySummary, value);
     }
 
+    public ObservableCollection<VehicleDetailEvidenceSummaryItemViewModel> EvidenceSummaryItems { get; } = [];
+
     public ObservableCollection<VehicleHistoryItemViewModel> RecentHistoryItems { get; } = [];
 
     public bool IsEditingVehicle

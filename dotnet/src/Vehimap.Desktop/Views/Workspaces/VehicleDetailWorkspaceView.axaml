@@ -221,6 +221,27 @@
                    TextWrapping="Wrap"
                    AutomationProperties.Name="{Binding SelectedVehicleEvidenceSummary}"
                    AutomationProperties.AutomationId="SelectedVehicleEvidenceSummaryText" />
+        <ItemsControl ItemsSource="{Binding EvidenceSummaryItems}"
+                      AutomationProperties.Name="Stav navazujících evidencí vybraného vozidla"
+                      AutomationProperties.AutomationId="VehicleDetailEvidenceSummaryItems">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="itemvm:VehicleDetailEvidenceSummaryItemViewModel">
+              <Border Padding="10"
+                      Margin="0,0,0,6"
+                      Background="#08102030"
+                      CornerRadius="6"
+                      AutomationProperties.Name="{Binding AccessibleLabel}">
+                <Grid ColumnDefinitions="130,*">
+                  <TextBlock FontWeight="SemiBold"
+                             Text="{Binding Title}" />
+                  <TextBlock Grid.Column="1"
+                             Text="{Binding Summary}"
+                             TextWrapping="Wrap" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
         <Border Padding="14"
                 Background="#10143A2A"
                 CornerRadius="8"

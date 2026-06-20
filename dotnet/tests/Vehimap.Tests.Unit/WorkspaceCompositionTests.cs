@@ -204,6 +204,8 @@ public sealed class WorkspaceCompositionTests
         viewModel.VehicleDetailWorkspace.SelectedVehicleProfile = "Detail má vlastní servisní profil.";
         viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary = "Detail má vlastní souhrn evidencí.";
         viewModel.VehicleDetailWorkspace.SelectedVehicleRecentHistorySummary = "Detail má vlastní souhrn posledních událostí.";
+        viewModel.VehicleDetailWorkspace.EvidenceSummaryItems.Clear();
+        viewModel.VehicleDetailWorkspace.EvidenceSummaryItems.Add(new VehicleDetailEvidenceSummaryItemViewModel("Doklady", "Detail má vlastní souhrn dokladů."));
         viewModel.VehicleDetailWorkspace.RecentHistoryItems.Clear();
         viewModel.VehicleDetailWorkspace.RecentHistoryItems.Add(new VehicleHistoryItemViewModel("hist_1", "01.05.2026", "Servis", "12000 km", "1500 Kč", "Olej"));
 
@@ -213,6 +215,7 @@ public sealed class WorkspaceCompositionTests
         Assert.Equal("Detail má vlastní servisní profil.", viewModel.VehicleDetailWorkspace.SelectedVehicleProfile);
         Assert.Equal("Detail má vlastní souhrn evidencí.", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary);
         Assert.Equal("Detail má vlastní souhrn posledních událostí.", viewModel.VehicleDetailWorkspace.SelectedVehicleRecentHistorySummary);
+        Assert.Equal("Doklady", Assert.Single(viewModel.VehicleDetailWorkspace.EvidenceSummaryItems).Title);
         Assert.Equal("Servis", Assert.Single(viewModel.VehicleDetailWorkspace.RecentHistoryItems).EventType);
     }
 

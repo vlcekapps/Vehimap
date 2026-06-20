@@ -104,7 +104,10 @@ internal sealed class DesktopProjectionService
     public DesktopVehicleDetailProjection BuildVehicleDetail(
         VehimapDataSet dataSet,
         VehicleListItemViewModel? vehicle,
-        VehicleMeta? meta = null)
+        VehicleMeta? meta = null,
+        VehimapDataRoot? dataRoot = null,
+        Func<string, string>? managedPathResolver = null,
+        DateOnly? today = null)
     {
         if (vehicle is null)
         {
@@ -115,9 +118,11 @@ internal sealed class DesktopProjectionService
                 string.Empty,
                 "Navazující evidence se zobrazí po výběru vozidla.",
                 "Poslední události se zobrazí po výběru vozidla.",
+                [],
                 []);
         }
 
+        var effectiveToday = today ?? DateOnly.FromDateTime(DateTime.Today);
         var state = string.IsNullOrWhiteSpace(vehicle.State) ? "Běžný provoz" : vehicle.State;
         var note = string.IsNullOrWhiteSpace(vehicle.VehicleNote) ? "Bez poznámky" : vehicle.VehicleNote;
         var powertrain = string.IsNullOrWhiteSpace(meta?.Powertrain) ? "nevyplněno" : meta.Powertrain;
@@ -126,6 +131,13 @@ internal sealed class DesktopProjectionService
         var transmission = string.IsNullOrWhiteSpace(meta?.Transmission) ? "nevyplněno" : meta.Transmission;
         var currentOdometer = BuildCurrentOdometerLookup(dataSet).GetValueOrDefault(vehicle.Id);
         var recentHistory = BuildRecentVehicleHistory(dataSet, vehicle.Id);
+        var evidenceSummaries = BuildVehicleEvidenceSummaryItems(
+            dataSet,
+            vehicle.Id,
+            dataRoot,
+            managedPathResolver,
+            effectiveToday,
+            currentOdometer);
 
         return new DesktopVehicleDetailProjection(
             vehicle.Name,
@@ -136,6 +148,7 @@ internal sealed class DesktopProjectionService
             recentHistory.Count == 0
                 ? "Poslední události: zatím žádné historické záznamy."
                 : $"Poslední události: zobrazeno {recentHistory.Count} nejnovějších záznamů.",
+            evidenceSummaries,
             recentHistory);
     }
 
@@ -539,6 +552,277 @@ internal sealed class DesktopProjectionService
         return $"Navazující evidence: historie {historyCount}, tankování {fuelCount}, doklady {recordCount}, připomínky {reminderCount}, servisní plány {maintenanceCount} z toho aktivních {activeMaintenanceCount}.";
     }
 
+    private static IReadOnlyList<VehicleDetailEvidenceSummaryItemViewModel> BuildVehicleEvidenceSummaryItems(
+        VehimapDataSet dataSet,
+        string vehicleId,
+        VehimapDataRoot? dataRoot,
+        Func<string, string>? managedPathResolver,
+        DateOnly today,
+        int? currentOdometer)
+    {
+        return
+        [
+            new VehicleDetailEvidenceSummaryItemViewModel("Historie", BuildVehicleHistoryDetailSummary(dataSet, vehicleId)),
+            new VehicleDetailEvidenceSummaryItemViewModel("Tankování", BuildVehicleFuelDetailSummary(dataSet, vehicleId)),
+            new VehicleDetailEvidenceSummaryItemViewModel("Připomínky", BuildVehicleReminderDetailSummary(dataSet, vehicleId, today)),
+            new VehicleDetailEvidenceSummaryItemViewModel("Doklady", BuildVehicleRecordDetailSummary(dataRoot, dataSet, vehicleId, managedPathResolver)),
+            new VehicleDetailEvidenceSummaryItemViewModel("Údržba", BuildVehicleMaintenanceDetailSummary(dataSet, vehicleId, today, currentOdometer))
+        ];
+    }
+
+    private static string BuildVehicleHistoryDetailSummary(VehimapDataSet dataSet, string vehicleId)
+    {
+        var entries = dataSet.HistoryEntries
+            .Where(item => item.VehicleId == vehicleId)
+            .Select(item => new
+            {
+                Item = item,
+                HasDate = VehimapValueParser.TryParseEventDate(item.EventDate, out var parsedDate),
+                Date = parsedDate
+            })
+            .OrderByDescending(item => item.HasDate)
+            .ThenByDescending(item => item.Date)
+            .ThenBy(item => item.Item.EventType, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+
+        if (entries.Count == 0)
+        {
+            return "K tomuto vozidlu zatím není uložená žádná historie událostí.";
+        }
+
+        var latest = entries[0].Item;
+        var summary = $"Celkem událostí: {entries.Count}. Poslední událost: {FormatValue(latest.EventType, "bez typu")} ({FormatValue(latest.EventDate, "bez data")}).";
+        if (!string.IsNullOrWhiteSpace(latest.Odometer))
+        {
+            summary += $" Tachometr: {FormatOdometerValue(latest.Odometer)}.";
+        }
+
+        return summary;
+    }
+
+    private static string BuildVehicleFuelDetailSummary(VehimapDataSet dataSet, string vehicleId)
+    {
+        var entries = dataSet.FuelEntries
+            .Where(item => item.VehicleId == vehicleId)
+            .Select(item => new
+            {
+                Item = item,
+                HasDate = VehimapValueParser.TryParseEventDate(item.EntryDate, out var parsedDate),
+                Date = parsedDate
+            })
+            .OrderByDescending(item => item.HasDate)
+            .ThenByDescending(item => item.Date)
+            .ThenBy(item => item.Item.FuelType, StringComparer.CurrentCultureIgnoreCase)
+            .Select(item => item.Item)
+            .ToList();
+
+        if (entries.Count == 0)
+        {
+            return "K tomuto vozidlu zatím nejsou uloženy žádné záznamy kilometrů ani tankování.";
+        }
+
+        var summary = $"Záznamů: {entries.Count}. Poslední tachometr: {FormatOdometerValue(entries[0].Odometer)}.";
+        var latestFuelEntry = entries.FirstOrDefault(item => !string.IsNullOrWhiteSpace(item.Liters) || !string.IsNullOrWhiteSpace(item.TotalCost));
+        if (latestFuelEntry is not null)
+        {
+            summary += " Poslední tankování: ";
+            summary += string.IsNullOrWhiteSpace(latestFuelEntry.Liters)
+                ? "bez údajů o litrech"
+                : FormatFuelLiters(latestFuelEntry.Liters);
+            if (!string.IsNullOrWhiteSpace(latestFuelEntry.TotalCost))
+            {
+                summary += $" za {FormatCostValue(latestFuelEntry.TotalCost)}";
+            }
+
+            summary += $" ({FormatValue(latestFuelEntry.EntryDate, "bez data")}).";
+        }
+
+        return summary;
+    }
+
+    private static string BuildVehicleReminderDetailSummary(VehimapDataSet dataSet, string vehicleId, DateOnly today)
+    {
+        var entries = dataSet.Reminders
+            .Where(item => item.VehicleId == vehicleId)
+            .Select(item => new
+            {
+                Item = item,
+                HasDate = TryParseReminderDate(item.DueDate, out var parsedDate),
+                Date = parsedDate
+            })
+            .OrderByDescending(item => item.HasDate)
+            .ThenBy(item => item.Date)
+            .ThenBy(item => item.Item.Title, StringComparer.CurrentCultureIgnoreCase)
+            .Select(item => item.Item)
+            .ToList();
+
+        if (entries.Count == 0)
+        {
+            return "K tomuto vozidlu zatím nejsou uloženy žádné vlastní připomínky.";
+        }
+
+        var nearest = entries[0];
+        var status = BuildReminderStatus(nearest, today);
+        var summary = $"Připomínek: {entries.Count}. Nejbližší: {FormatValue(nearest.Title, "bez názvu")} ({FormatValue(nearest.DueDate, "bez termínu")}";
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            summary += $", {status}";
+        }
+
+        var repeatLabel = FormatReminderRepeatMode(nearest.RepeatMode);
+        if (!string.Equals(repeatLabel, "Neopakovat", StringComparison.CurrentCultureIgnoreCase)
+            && !string.Equals(repeatLabel, "bez opakování", StringComparison.CurrentCultureIgnoreCase))
+        {
+            summary += $", {repeatLabel}";
+        }
+
+        summary += ").";
+        return summary;
+    }
+
+    private static string BuildVehicleRecordDetailSummary(
+        VehimapDataRoot? dataRoot,
+        VehimapDataSet dataSet,
+        string vehicleId,
+        Func<string, string>? managedPathResolver)
+    {
+        var entries = dataSet.Records
+            .Where(item => item.VehicleId == vehicleId)
+            .Select(item => new
+            {
+                Item = item,
+                HasDate = VehimapValueParser.TryParseMonthYear(item.ValidTo, out var parsedDate),
+                Date = parsedDate
+            })
+            .OrderByDescending(item => item.HasDate)
+            .ThenBy(item => item.Date)
+            .ThenBy(item => item.Item.Title, StringComparer.CurrentCultureIgnoreCase)
+            .Select(item => item.Item)
+            .ToList();
+
+        if (entries.Count == 0)
+        {
+            return "K tomuto vozidlu zatím není uložen žádný záznam pojištění ani dokladů.";
+        }
+
+        var missingPathCount = 0;
+        var emptyPathCount = 0;
+        foreach (var entry in entries)
+        {
+            if (string.IsNullOrWhiteSpace(entry.FilePath))
+            {
+                emptyPathCount++;
+                continue;
+            }
+
+            var resolvedPath = ResolveRecordPath(dataRoot, entry, managedPathResolver ?? (_ => string.Empty));
+            if (string.IsNullOrWhiteSpace(resolvedPath) || !File.Exists(resolvedPath))
+            {
+                missingPathCount++;
+            }
+        }
+
+        var summary = $"Záznamů: {entries.Count}.";
+        var nearestRecord = entries.FirstOrDefault(item => !string.IsNullOrWhiteSpace(item.ValidTo));
+        if (nearestRecord is not null)
+        {
+            summary += $" Nejbližší platnost: {FormatValue(nearestRecord.Title, "bez názvu")}";
+            if (!string.IsNullOrWhiteSpace(nearestRecord.Provider))
+            {
+                summary += $" ({nearestRecord.Provider})";
+            }
+
+            summary += $" do {nearestRecord.ValidTo}.";
+        }
+        else
+        {
+            summary += " U žádného záznamu není vyplněné datum platnosti.";
+        }
+
+        if (missingPathCount > 0)
+        {
+            summary += $" Nedostupných příloh: {missingPathCount}.";
+        }
+
+        if (emptyPathCount > 0)
+        {
+            summary += $" Bez vyplněné cesty: {emptyPathCount}.";
+        }
+
+        return summary;
+    }
+
+    private static string BuildVehicleMaintenanceDetailSummary(
+        VehimapDataSet dataSet,
+        string vehicleId,
+        DateOnly today,
+        int? currentOdometer)
+    {
+        var plans = dataSet.MaintenancePlans
+            .Where(item => item.VehicleId == vehicleId)
+            .Select(item => new
+            {
+                Plan = item,
+                Status = BuildMaintenanceStatus(item, today, currentOdometer)
+            })
+            .OrderBy(item => BuildMaintenanceStatusPriority(item.Status))
+            .ThenBy(item => item.Plan.Title, StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+
+        if (plans.Count == 0)
+        {
+            return "K tomuto vozidlu zatím nejsou uložené žádné plány údržby.";
+        }
+
+        var activeCount = plans.Count(item => item.Plan.IsActive);
+        var pausedCount = plans.Count - activeCount;
+        var summary = $"Plánů údržby: {plans.Count}. Aktivních: {activeCount}.";
+        if (pausedCount > 0)
+        {
+            summary += $" Pozastavených: {pausedCount}.";
+        }
+
+        if (activeCount == 0)
+        {
+            return summary + " Všechny plány jsou momentálně pozastavené.";
+        }
+
+        var nextPlan = plans.FirstOrDefault(item => item.Plan.IsActive);
+        if (nextPlan is not null)
+        {
+            summary += $" Nejbližší: {FormatValue(nextPlan.Plan.Title, "bez názvu")} ({nextPlan.Status}).";
+        }
+
+        return summary;
+    }
+
+    private static int BuildMaintenanceStatusPriority(string status)
+    {
+        if (status.Contains("Po termínu", StringComparison.CurrentCultureIgnoreCase)
+            || status.Contains("Po limitu", StringComparison.CurrentCultureIgnoreCase))
+        {
+            return 0;
+        }
+
+        if (status.Contains("dnes", StringComparison.CurrentCultureIgnoreCase)
+            || status.Contains("nyní", StringComparison.CurrentCultureIgnoreCase))
+        {
+            return 1;
+        }
+
+        if (status.StartsWith("Za ", StringComparison.CurrentCultureIgnoreCase))
+        {
+            return 2;
+        }
+
+        if (status.Contains("Chybí", StringComparison.CurrentCultureIgnoreCase))
+        {
+            return 3;
+        }
+
+        return 4;
+    }
+
     private static string BuildReminderStatus(VehicleReminder reminder, DateOnly today)
     {
         if (!TryParseReminderDate(reminder.DueDate, out var dueDate))
@@ -914,6 +1198,7 @@ internal sealed record DesktopVehicleDetailProjection(
     string Profile,
     string EvidenceSummary,
     string RecentHistorySummary,
+    IReadOnlyList<VehicleDetailEvidenceSummaryItemViewModel> EvidenceSummaries,
     IReadOnlyList<VehicleHistoryItemViewModel> RecentHistory);
 
 internal sealed record DesktopListProjection<TItem>(

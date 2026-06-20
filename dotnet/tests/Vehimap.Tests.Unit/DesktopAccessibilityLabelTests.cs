@@ -53,6 +53,18 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Vehicle_detail_evidence_summary_items_should_expose_human_readable_labels()
+    {
+        var item = new VehicleDetailEvidenceSummaryItemViewModel(
+            "Doklady",
+            "Záznamů: 2. Bez vyplněné cesty: 1.");
+
+        Assert.Equal(item.AccessibleLabel, item.ToString());
+        Assert.Equal("Doklady: Záznamů: 2. Bez vyplněné cesty: 1.", item.AccessibleLabel);
+        Assert.DoesNotContain(nameof(VehicleDetailEvidenceSummaryItemViewModel), item.AccessibleLabel);
+    }
+
+    [Fact]
     public void Vehicle_starter_bundle_items_should_expose_human_readable_labels()
     {
         var item = new VehicleStarterBundleItemEditorViewModel(
@@ -678,6 +690,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"DeleteVehicleButton\"", vehicleDetailXaml);
         Assert.Contains("ItemsSource=\"{Binding VehicleCategoryOptions}\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailRecentHistoryListBox\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailEvidenceSummaryItems\"", vehicleDetailXaml);
+        Assert.Contains("ItemsSource=\"{Binding EvidenceSummaryItems}\"", vehicleDetailXaml);
+        Assert.Contains("x:DataType=\"itemvm:VehicleDetailEvidenceSummaryItemViewModel\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", vehicleDetailXaml);
         Assert.Contains("ItemsSource=\"{Binding RecentHistoryItems}\"", vehicleDetailXaml);
         Assert.Contains("x:DataType=\"itemvm:VehicleHistoryItemViewModel\"", vehicleDetailXaml);
     }
