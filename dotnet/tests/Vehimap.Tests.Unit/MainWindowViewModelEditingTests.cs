@@ -407,7 +407,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.VehicleDetailWorkspace.VehicleEditorName = "Milena po servisu";
         viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain = "Nafta";
         viewModel.VehicleDetailWorkspace.VehicleEditorState = "Odstaveno";
-        viewModel.VehicleDetailWorkspace.VehicleEditorTags = "rodina, servis";
+        viewModel.VehicleDetailWorkspace.VehicleEditorTags = " rodina; servis, RODINA ";
         viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile = "Bez klimatizace";
         viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive = "Řetěz";
         viewModel.VehicleDetailWorkspace.VehicleEditorTransmission = "Automatická";

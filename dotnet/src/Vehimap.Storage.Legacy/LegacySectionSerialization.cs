@@ -399,7 +399,7 @@ internal static class LegacySectionSerialization
             lines.Add(string.Join('\t',
                 EscapeField(item.VehicleId),
                 EscapeField(item.State),
-                EscapeField(item.Tags),
+                EscapeField(LegacyVehicleMetaNormalization.NormalizeTagList(item.Tags)),
                 EscapeField(item.Powertrain),
                 EscapeField(item.ClimateProfile),
                 EscapeField(item.TimingDrive),

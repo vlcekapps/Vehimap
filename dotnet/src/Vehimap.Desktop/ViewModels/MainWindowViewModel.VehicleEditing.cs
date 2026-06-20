@@ -3,6 +3,7 @@ using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -534,7 +535,7 @@ public sealed partial class MainWindowViewModel
         var updatedMeta = new VehicleMeta(
             vehicleId,
             (VehicleDetailWorkspace.VehicleEditorState ?? string.Empty).Trim(),
-            (VehicleDetailWorkspace.VehicleEditorTags ?? string.Empty).Trim(),
+            LegacyVehicleMetaNormalization.NormalizeTagList(VehicleDetailWorkspace.VehicleEditorTags),
             (VehicleDetailWorkspace.VehicleEditorPowertrain ?? string.Empty).Trim(),
             (VehicleDetailWorkspace.VehicleEditorClimateProfile ?? string.Empty).Trim(),
             (VehicleDetailWorkspace.VehicleEditorTimingDrive ?? string.Empty).Trim(),
