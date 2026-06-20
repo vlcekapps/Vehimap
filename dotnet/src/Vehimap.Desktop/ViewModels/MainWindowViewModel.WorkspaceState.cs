@@ -514,6 +514,8 @@ public sealed partial class MainWindowViewModel
     public bool CanOpenSelectedDashboardAuditItem => SelectedDashboardAuditItem is not null;
     public bool CanOpenSelectedDashboardCostVehicle => SelectedDashboardCostVehicle is not null;
     public bool CanOpenSelectedDashboardTimelineItem => SelectedDashboardTimelineItem is not null;
+    public bool CanOpenSelectedDashboardVehicle => GetSelectedDashboardVehicleId() is not null;
+    public bool CanEditSelectedDashboardVehicle => CanOpenSelectedDashboardVehicle && !HasPendingEdits;
 
     public string GlobalSearchSummary
     {
@@ -749,11 +751,15 @@ public sealed partial class MainWindowViewModel
     internal void NotifyAuditWorkspaceSelectionChanged()
     {
         OpenSelectedDashboardAuditItemCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
+        EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
     }
 
     internal void NotifyCostWorkspaceSelectionChanged()
     {
         OpenSelectedDashboardCostVehicleCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
+        EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
     }
@@ -761,6 +767,8 @@ public sealed partial class MainWindowViewModel
     internal void NotifyDashboardWorkspaceTimelineSelectionChanged()
     {
         OpenSelectedDashboardTimelineItemCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
+        EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
     }
 
     internal void RefreshDashboardWorkspace()

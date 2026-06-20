@@ -53,6 +53,16 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
 
     public ICommand OpenSelectedDashboardTimelineItemCommand => Root.OpenSelectedDashboardTimelineItemCommand;
 
+    public ICommand OpenSelectedDashboardVehicleCommand => Root.OpenSelectedDashboardVehicleCommand;
+
+    public ICommand EditSelectedDashboardVehicleCommand => Root.EditSelectedDashboardVehicleCommand;
+
+    public ICommand FocusGlobalSearchCommand => Root.FocusGlobalSearchCommand;
+
+    public ICommand FocusUpcomingOverviewCommand => Root.FocusUpcomingOverviewCommand;
+
+    public ICommand FocusOverdueOverviewCommand => Root.FocusOverdueOverviewCommand;
+
     [RelayCommand]
     private void RefreshDashboard()
     {

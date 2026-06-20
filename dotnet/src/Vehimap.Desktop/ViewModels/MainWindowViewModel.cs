@@ -239,16 +239,16 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool IsOverdueOverviewTabSelected => SelectedVehicleTabIndex == OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspacePrimaryOpenShortcutContext =>
-        SelectedVehicleTabIndex is RecordTabIndex or AuditTabIndex or CostTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+        SelectedVehicleTabIndex is RecordTabIndex or AuditTabIndex or CostTabIndex or DashboardTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspaceItemOpenShortcutContext =>
-        SelectedVehicleTabIndex is TimelineTabIndex or AuditTabIndex or CostTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+        SelectedVehicleTabIndex is TimelineTabIndex or AuditTabIndex or CostTabIndex or DashboardTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
 
     public bool IsCurrentWorkspaceCreateShortcutContext =>
         SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
 
     public bool IsCurrentWorkspaceEditShortcutContext =>
-        SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex or AuditTabIndex or CostTabIndex;
+        SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex or AuditTabIndex or CostTabIndex or DashboardTabIndex;
 
     public bool IsCurrentWorkspaceSaveShortcutContext =>
         SelectedVehicleTabIndex is DetailTabIndex or HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
@@ -569,6 +569,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             case CostTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedDashboardCostVehicleCommand).ConfigureAwait(true);
                 return true;
+            case DashboardTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedDashboardVehicleCommand).ConfigureAwait(true);
+                return true;
             case SearchTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedSearchResultCommand).ConfigureAwait(true);
                 return true;
@@ -595,6 +598,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 return true;
             case CostTabIndex:
                 ExecuteWorkspaceShortcut(CostWorkspace.FocusSelectedCostDetailCommand);
+                return true;
+            case DashboardTabIndex:
+                await ExecuteWorkspaceShortcutAsync(OpenSelectedDashboardTimelineItemCommand).ConfigureAwait(true);
                 return true;
             case SearchTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedSearchResultCommand).ConfigureAwait(true);
@@ -670,6 +676,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
         if (SelectedVehicleTabIndex == CostTabIndex)
         {
             return await EditSelectedCostVehicleFromCostsAsync(SelectedDashboardCostVehicle).ConfigureAwait(true);
+        }
+
+        if (SelectedVehicleTabIndex == DashboardTabIndex)
+        {
+            await ExecuteWorkspaceShortcutAsync(EditSelectedDashboardVehicleCommand).ConfigureAwait(true);
+            return true;
         }
 
         return HandleCurrentWorkspaceEditShortcut();
@@ -819,6 +831,41 @@ public sealed partial class MainWindowViewModel : ObservableObject
         SelectVehicleAndOpenEntity(item.VehicleId, "Vozidlo", item.VehicleId);
         ExecuteWorkspaceShortcut(EditSelectedVehicleCommand);
         return true;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardVehicle))]
+    private async Task OpenSelectedDashboardVehicleAsync()
+    {
+        var vehicleId = GetSelectedDashboardVehicleId();
+        if (vehicleId is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zobrazit vozidlo z dashboardu").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        SelectVehicleAndOpenEntity(vehicleId, "Vozidlo", vehicleId);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanEditSelectedDashboardVehicle))]
+    private async Task EditSelectedDashboardVehicleAsync()
+    {
+        var vehicleId = GetSelectedDashboardVehicleId();
+        if (vehicleId is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("upravit vozidlo z dashboardu").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        SelectVehicleAndOpenEntity(vehicleId, "Vozidlo", vehicleId);
+        ExecuteWorkspaceShortcut(EditSelectedVehicleCommand);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardCostVehicle))]
@@ -1199,6 +1246,26 @@ public sealed partial class MainWindowViewModel : ObservableObject
                    && string.Equals(item.Title, target.Title, StringComparison.Ordinal)
                    && string.Equals(item.VehicleId, target.VehicleId, StringComparison.Ordinal))
                ?? items.FirstOrDefault();
+    }
+
+    private string? GetSelectedDashboardVehicleId()
+    {
+        if (!string.IsNullOrWhiteSpace(SelectedDashboardCostVehicle?.VehicleId))
+        {
+            return SelectedDashboardCostVehicle.VehicleId;
+        }
+
+        if (!string.IsNullOrWhiteSpace(SelectedDashboardTimelineItem?.VehicleId))
+        {
+            return SelectedDashboardTimelineItem.VehicleId;
+        }
+
+        if (!string.IsNullOrWhiteSpace(SelectedDashboardAuditItem?.VehicleId))
+        {
+            return SelectedDashboardAuditItem.VehicleId;
+        }
+
+        return null;
     }
 
     private void OpenTimelineItem(VehicleTimelineItemViewModel item)

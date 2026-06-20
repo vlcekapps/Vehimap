@@ -126,6 +126,69 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Dashboard_workspace_navigation_commands_open_search_and_overviews()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
+
+        viewModel.DashboardWorkspace.FocusGlobalSearchCommand.Execute(null);
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
+        viewModel.DashboardWorkspace.FocusUpcomingOverviewCommand.Execute(null);
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
+        viewModel.DashboardWorkspace.FocusOverdueOverviewCommand.Execute(null);
+
+        Assert.Equal(
+            [
+                DesktopFocusTarget.GlobalSearchBox,
+                DesktopFocusTarget.UpcomingOverviewSearch,
+                DesktopFocusTarget.OverdueOverviewSearch
+            ],
+            requestedTargets);
+        Assert.Equal(DesktopTabIndexes.OverdueOverview, viewModel.SelectedVehicleTabIndex);
+    }
+
+    [Fact]
+    public async Task Dashboard_contextual_shortcuts_open_term_vehicle_and_edit_vehicle()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
+        viewModel.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+        viewModel.SelectedDashboardTimelineItem = viewModel.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
+
+        var primaryHandled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
+
+        Assert.True(primaryHandled);
+        Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("veh_1", viewModel.SelectedVehicle?.Id);
+        Assert.Contains(DesktopFocusTarget.VehicleList, requestedTargets);
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
+
+        var itemHandled = await viewModel.HandleCurrentWorkspaceItemOpenShortcutAsync();
+
+        Assert.True(itemHandled);
+        Assert.Equal(DesktopTabIndexes.Reminder, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("rem_1", viewModel.SelectedReminder?.Id);
+        Assert.Contains(DesktopFocusTarget.ReminderList, requestedTargets);
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
+        viewModel.SelectedDashboardCostVehicle = viewModel.CostVehicles.Single(item => item.VehicleId == "veh_1");
+
+        var editHandled = await viewModel.HandleCurrentWorkspaceEditShortcutAsync();
+
+        Assert.True(editHandled);
+        Assert.True(viewModel.IsEditingVehicle);
+        Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
+        Assert.Contains(DesktopFocusTarget.VehicleEditorName, requestedTargets);
+    }
+
+    [Fact]
     public async Task Contextual_primary_open_shortcut_opens_search_result_and_handles_empty_search_selection()
     {
         var viewModel = CreateViewModel();

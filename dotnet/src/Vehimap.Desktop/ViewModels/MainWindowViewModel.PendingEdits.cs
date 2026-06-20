@@ -135,6 +135,7 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
+        OnPropertyChanged(nameof(CanEditSelectedDashboardVehicle));
         MaintenanceWorkspace.NotifyMaintenanceRecommendationStateChanged();
 
         CreateVehicleCommand.NotifyCanExecuteChanged();
@@ -160,5 +161,7 @@ public sealed partial class MainWindowViewModel
         EditSelectedRecordCommand.NotifyCanExecuteChanged();
         DeleteSelectedRecordCommand.NotifyCanExecuteChanged();
         MoveSelectedRecordToManagedCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
+        EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
     }
 }

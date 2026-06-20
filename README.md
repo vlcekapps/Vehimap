@@ -89,12 +89,12 @@ V hlavním okně:
 
 ## Klávesové zkratky v dashboardu a přehledech:
 
-- `Dashboard`: `Ctrl+R` obnoví seznam, `Ctrl+F` otevře globální hledání, `Ctrl+T` otevře přehled termínů, `Ctrl+Shift+T` otevře propadlé termíny, `Ctrl+P` otevře řešitelnou položku, `Ctrl+H` otevře historii vybraného vozidla, `Ctrl+L` označí vybraný servisní úkon jako splněný, `Ctrl+O` zobrazí vybrané vozidlo a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
+- `Dashboard`: `Ctrl+R` obnoví seznam, `Ctrl+F` otevře globální hledání, `Ctrl+T` otevře přehled termínů, `Ctrl+Shift+T` otevře propadlé termíny, `Ctrl+P` otevře vybraný nejbližší termín, `Ctrl+O` zobrazí vozidlo vybrané v dashboardu a `Ctrl+U` nebo `F2` ho upraví
 - `Globální hledání`: `Ctrl+F` přesune fokus do hledání, `Ctrl+O`, `Ctrl+P` nebo `Enter` na seznamu otevře vybraný výsledek
 - `Náklady napříč vozidly`: `Ctrl+R` obnoví období, `Ctrl+P` přesune fokus na rozpad nákladů vybraného vozidla, `Enter` na seznamu nebo `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` upraví vybrané vozidlo
 - `Přehled termínů`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+Shift+T` přepne do propadlých termínů
 - `Propadlé termíny`: `Ctrl+F` přesune fokus do hledání, `Ctrl+R` obnoví seznam, `Ctrl+P` otevře vybranou položku, `Ctrl+O` zobrazí vybrané vozidlo, `Ctrl+U` nebo `F2` upraví vybrané vozidlo a `Ctrl+T` přepne zpět do přehledu termínů
-- v C# Avalonia větvi má `Dashboard` také tlačítko `Obnovit`; stejně jako `Ctrl+R` přepočítá audit, náklady a nejbližší termíny bez ztráty aktuálního výběru
+- v C# Avalonia větvi má `Dashboard` také horní tlačítka `Obnovit`, `Hledat`, `Blížící se`, `Propadlé`, `Zobrazit vozidlo` a `Upravit vozidlo`; `Obnovit` stejně jako `Ctrl+R` přepočítá audit, náklady a nejbližší termíny bez ztráty aktuálního výběru
 - v C# Avalonia větvi mají `Blížící se termíny` i `Propadlé termíny` také tlačítko `Obnovit`; zachová výběr a vrací fokus na seznam, pokud obsahuje položky
 - `Audit dat`: `Ctrl+F` přesune fokus do hledání, `Ctrl+P` nebo `Enter` na seznamu otevře řešenou položku, `Ctrl+O` zobrazí detail vozidla a `Ctrl+U` nebo `F2` otevře nejbližší relevantní úpravu
 - v C# Avalonia větvi má `Audit dat` vlastní hledání nad všemi auditními položkami; dashboard zůstává jen stručným výřezem nejdůležitějších problémů

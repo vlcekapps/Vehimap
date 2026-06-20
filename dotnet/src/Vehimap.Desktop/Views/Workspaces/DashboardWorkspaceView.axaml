@@ -6,6 +6,13 @@
              x:DataType="vm:DashboardWorkspaceViewModel">
   <UserControl.KeyBindings>
     <KeyBinding Gesture="Ctrl+R" Command="{Binding RefreshDashboardCommand}" />
+    <KeyBinding Gesture="Ctrl+F" Command="{Binding FocusGlobalSearchCommand}" />
+    <KeyBinding Gesture="Ctrl+T" Command="{Binding FocusUpcomingOverviewCommand}" />
+    <KeyBinding Gesture="Ctrl+Shift+T" Command="{Binding FocusOverdueOverviewCommand}" />
+    <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedDashboardVehicleCommand}" />
+    <KeyBinding Gesture="Ctrl+P" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" />
+    <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedDashboardVehicleCommand}" />
+    <KeyBinding Gesture="F2" Command="{Binding EditSelectedDashboardVehicleCommand}" />
   </UserControl.KeyBindings>
   <Grid RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
     <StackPanel Grid.ColumnSpan="3" Spacing="8">
@@ -13,13 +20,47 @@
       <TextBlock Opacity="0.82" Text="{Binding CostSummary}" TextWrapping="Wrap" />
       <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" />
       <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" />
-      <Button x:Name="DashboardRefreshButton"
-              Width="120"
-              HorizontalAlignment="Left"
-              Command="{Binding RefreshDashboardCommand}"
-              Content="Obnovit"
-              AutomationProperties.Name="Obnovit dashboard"
-              AutomationProperties.AutomationId="DashboardRefreshButton" />
+      <TextBlock Opacity="0.75"
+                 Text="Ctrl+R obnoví dashboard, Ctrl+F otevře globální hledání, Ctrl+T blížící se termíny, Ctrl+Shift+T propadlé termíny, Ctrl+P otevře vybraný termín, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 vozidlo upraví."
+                 TextWrapping="Wrap" />
+      <WrapPanel Margin="0,4,0,0" Orientation="Horizontal">
+        <Button x:Name="DashboardRefreshButton"
+                Margin="0,0,10,8"
+                Command="{Binding RefreshDashboardCommand}"
+                Content="Obnovit"
+                AutomationProperties.Name="Obnovit dashboard"
+                AutomationProperties.AutomationId="DashboardRefreshButton" />
+        <Button x:Name="DashboardSearchButton"
+                Margin="0,0,10,8"
+                Command="{Binding FocusGlobalSearchCommand}"
+                Content="Hledat"
+                AutomationProperties.Name="Otevřít globální hledání z dashboardu"
+                AutomationProperties.AutomationId="DashboardSearchButton" />
+        <Button x:Name="DashboardUpcomingButton"
+                Margin="0,0,10,8"
+                Command="{Binding FocusUpcomingOverviewCommand}"
+                Content="Blížící se"
+                AutomationProperties.Name="Otevřít blížící se termíny z dashboardu"
+                AutomationProperties.AutomationId="DashboardUpcomingButton" />
+        <Button x:Name="DashboardOverdueButton"
+                Margin="0,0,10,8"
+                Command="{Binding FocusOverdueOverviewCommand}"
+                Content="Propadlé"
+                AutomationProperties.Name="Otevřít propadlé termíny z dashboardu"
+                AutomationProperties.AutomationId="DashboardOverdueButton" />
+        <Button x:Name="DashboardOpenVehicleButton"
+                Margin="0,0,10,8"
+                Command="{Binding OpenSelectedDashboardVehicleCommand}"
+                Content="Zobrazit vozidlo"
+                AutomationProperties.Name="Zobrazit vozidlo vybrané na dashboardu"
+                AutomationProperties.AutomationId="DashboardOpenVehicleButton" />
+        <Button x:Name="DashboardEditVehicleButton"
+                Margin="0,0,10,8"
+                Command="{Binding EditSelectedDashboardVehicleCommand}"
+                Content="Upravit vozidlo"
+                AutomationProperties.Name="Upravit vozidlo vybrané na dashboardu"
+                AutomationProperties.AutomationId="DashboardEditVehicleButton" />
+      </WrapPanel>
     </StackPanel>
     <Border Grid.Row="1" Grid.Column="0" Margin="0,16,12,0" Padding="16" Background="#10203040" CornerRadius="8">
       <Grid RowDefinitions="Auto,Auto,*">
