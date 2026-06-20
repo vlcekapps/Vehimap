@@ -649,7 +649,7 @@ public sealed partial class MainWindowViewModel
         ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
 
-        CostExportStatus = "Nákladový přehled byl obnoven.";
+        CostWorkspace.CostExportStatus = "Nákladový přehled byl obnoven.";
         ShellStatus = "Nákladový přehled byl obnoven.";
         RequestFocus(CostWorkspace.VisibleCostVehicles.Count == 0 ? DesktopFocusTarget.CostSearch : DesktopFocusTarget.CostList);
     }

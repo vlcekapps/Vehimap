@@ -1,18 +1,9 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    [ObservableProperty]
-    private string costExportStatus = "Exporty nákladů použijí právě zobrazené období.";
-
-    partial void OnCostExportStatusChanged(string value)
-    {
-        CostWorkspace?.NotifyCostExportStatusChanged();
-    }
-
     public bool CanExportFleetCostSummary => _currentCostSummary is not null && CostVehicles.Count > 0;
 
     public bool CanExportSelectedVehicleCost => _currentCostSummary is not null && CostWorkspace.SelectedDashboardCostVehicle is not null;
@@ -22,7 +13,7 @@ public sealed partial class MainWindowViewModel
     {
         if (_currentCostSummary is null)
         {
-            CostExportStatus = "Souhrn nákladů zatím není připraven k exportu.";
+            CostWorkspace.CostExportStatus = "Souhrn nákladů zatím není připraven k exportu.";
             return;
         }
 
@@ -37,7 +28,7 @@ public sealed partial class MainWindowViewModel
                 ["*.tsv"])
             .ConfigureAwait(false);
 
-        CostExportStatus = string.IsNullOrWhiteSpace(savedPath)
+        CostWorkspace.CostExportStatus = string.IsNullOrWhiteSpace(savedPath)
             ? "Export souhrnu nákladů byl zrušen."
             : $"Souhrn nákladů byl uložen do {savedPath}.";
     }
@@ -48,7 +39,7 @@ public sealed partial class MainWindowViewModel
         var selectedCostVehicle = CostWorkspace.SelectedDashboardCostVehicle;
         if (_currentCostSummary is null || selectedCostVehicle is null)
         {
-            CostExportStatus = "Nejprve vyberte vozidlo v nákladovém přehledu.";
+            CostWorkspace.CostExportStatus = "Nejprve vyberte vozidlo v nákladovém přehledu.";
             return;
         }
 
@@ -71,7 +62,7 @@ public sealed partial class MainWindowViewModel
                 ["*.tsv"])
             .ConfigureAwait(false);
 
-        CostExportStatus = string.IsNullOrWhiteSpace(savedPath)
+        CostWorkspace.CostExportStatus = string.IsNullOrWhiteSpace(savedPath)
             ? "Export detailu nákladů byl zrušen."
             : $"Detail nákladů byl uložen do {savedPath}.";
     }
@@ -82,7 +73,7 @@ public sealed partial class MainWindowViewModel
         var selectedCostVehicle = CostWorkspace.SelectedDashboardCostVehicle;
         if (_currentCostSummary is null || selectedCostVehicle is null)
         {
-            CostExportStatus = "Nejprve vyberte vozidlo v nákladovém přehledu.";
+            CostWorkspace.CostExportStatus = "Nejprve vyberte vozidlo v nákladovém přehledu.";
             return;
         }
 
@@ -107,11 +98,11 @@ public sealed partial class MainWindowViewModel
 
         if (string.IsNullOrWhiteSpace(savedPath))
         {
-            CostExportStatus = "Export HTML sestavy nákladů byl zrušen.";
+            CostWorkspace.CostExportStatus = "Export HTML sestavy nákladů byl zrušen.";
             return;
         }
 
-        CostExportStatus = $"HTML sestava nákladů byla uložena do {savedPath}.";
+        CostWorkspace.CostExportStatus = $"HTML sestava nákladů byla uložena do {savedPath}.";
         await _fileLauncher.OpenAsync(savedPath).ConfigureAwait(false);
     }
 }

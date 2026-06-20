@@ -32,6 +32,9 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     private string costPeriodStatus = "Období nákladů se načte společně s daty.";
 
     [ObservableProperty]
+    private string costExportStatus = "Exporty nákladů použijí právě zobrazené období.";
+
+    [ObservableProperty]
     private CostVehicleItemViewModel? selectedDashboardCostVehicle;
 
     [ObservableProperty]
@@ -43,8 +46,6 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     public ObservableCollection<CostVehicleItemViewModel> VisibleCostVehicles { get; } = [];
 
     public IReadOnlyList<string> CostPeriodPresets => Root.CostPeriodPresets;
-
-    public string CostExportStatus => Root.CostExportStatus;
 
     public bool CanUseSelectedCostVehicle => SelectedDashboardCostVehicle is not null;
     public bool CanClearCostSearch => !string.IsNullOrWhiteSpace(CostSearchText);
@@ -189,11 +190,6 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
         CostSearchSummary = VisibleCostVehicles.Count == 0
             ? $"Hledání „{CostSearchText.Trim()}“ nenašlo v nákladech žádné vozidlo."
             : $"Hledání „{CostSearchText.Trim()}“ našlo {VisibleCostVehicles.Count} vozidel v nákladech.";
-    }
-
-    internal void NotifyCostExportStatusChanged()
-    {
-        OnPropertyChanged(nameof(CostExportStatus));
     }
 
     private static bool Contains(string value, string query) =>

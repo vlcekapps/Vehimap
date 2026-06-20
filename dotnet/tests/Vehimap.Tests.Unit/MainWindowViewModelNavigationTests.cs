@@ -431,7 +431,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal(selectedCostVehicle.VehicleId, viewModel.CostWorkspace.SelectedDashboardCostVehicle?.VehicleId);
         Assert.Single(viewModel.CostWorkspace.VisibleCostVehicles);
         Assert.Equal(DesktopFocusTarget.CostList, requestedFocus);
-        Assert.Equal("Nákladový přehled byl obnoven.", viewModel.CostExportStatus);
+        Assert.Equal("Nákladový přehled byl obnoven.", viewModel.CostWorkspace.CostExportStatus);
         Assert.Contains("Nákladový přehled byl obnoven", viewModel.ShellStatus, StringComparison.CurrentCulture);
         Assert.True(costStatusNotified);
     }
@@ -939,7 +939,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("tsv", saveService.LastDefaultExtension);
         Assert.Contains("Octavia", saveService.LastContent);
         Assert.Contains("Palivo", saveService.LastContent);
-        Assert.Contains("Souhrn nákladů byl uložen", viewModel.CostExportStatus);
+        Assert.Contains("Souhrn nákladů byl uložen", viewModel.CostWorkspace.CostExportStatus);
     }
 
     [Fact]

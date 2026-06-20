@@ -127,6 +127,7 @@ public sealed class WorkspaceCompositionTests
             "CostSummary",
             "CostComparison",
             "SelectedDashboardCostVehicle",
+            "CostExportStatus",
             "DashboardTimelineSummary",
             "SelectedDashboardTimelineDetail",
             "SelectedDashboardTimelineItem"

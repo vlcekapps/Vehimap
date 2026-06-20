@@ -186,7 +186,7 @@ public sealed partial class MainWindowViewModel
         ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
 
-        CostExportStatus = status;
+        CostWorkspace.CostExportStatus = status;
         CostWorkspace.CostPeriodStatus = $"{status} {BuildCostPeriodStatus(CostWorkspace.SelectedCostPeriodPreset, _costPeriodStart, _costPeriodEnd)}";
         ShellStatus = status;
 
