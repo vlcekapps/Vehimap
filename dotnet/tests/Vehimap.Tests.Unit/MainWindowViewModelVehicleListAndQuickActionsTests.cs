@@ -91,8 +91,56 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Equal(dataSet.Vehicles.Count, viewModel.Vehicles.Count);
         Assert.False(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
         Assert.Equal("0", dataSet.Settings.GetValue("app", "hide_inactive_vehicles", "0"));
+        Assert.Equal(MainWindowViewModel.AllVehicleCategoriesLabel, dataSet.Settings.GetValue("app", "vehicle_category_filter", string.Empty));
+        Assert.Equal(MainWindowViewModel.AllVehicleStatusFilterLabel, dataSet.Settings.GetValue("app", "vehicle_status_filter", string.Empty));
         Assert.Equal(DesktopFocusTarget.VehicleSearch, requestedFocus);
         Assert.Contains("Filtry seznamu vozidel byly vymazány", viewModel.ShellStatus, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
+    public void Stable_vehicle_filter_preferences_are_restored_from_settings()
+    {
+        var dataSet = BuildQuickActionDataSet();
+        dataSet.Settings.SetValue("app", "vehicle_category_filter", "Osobní vozidla");
+        dataSet.Settings.SetValue("app", "vehicle_status_filter", MainWindowViewModel.AttentionVehicleStatusFilterLabel);
+        dataSet.Settings.SetValue("app", "hide_inactive_vehicles", "1");
+
+        var viewModel = CreateViewModel(dataSet);
+
+        Assert.Equal("Osobní vozidla", viewModel.SelectedVehicleCategoryFilter);
+        Assert.Equal(MainWindowViewModel.AttentionVehicleStatusFilterLabel, viewModel.SelectedVehicleStatusFilter);
+        Assert.True(viewModel.HideInactiveVehicles);
+        Assert.True(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void Stable_vehicle_filter_changes_are_saved_to_settings()
+    {
+        var dataSet = BuildQuickActionDataSet();
+        var viewModel = CreateViewModel(dataSet);
+
+        viewModel.SelectedVehicleCategoryFilter = "Osobní vozidla";
+        viewModel.SelectedVehicleStatusFilter = MainWindowViewModel.OverdueVehicleStatusFilterLabel;
+        viewModel.HideInactiveVehicles = true;
+
+        Assert.Equal("Osobní vozidla", dataSet.Settings.GetValue("app", "vehicle_category_filter", string.Empty));
+        Assert.Equal(MainWindowViewModel.OverdueVehicleStatusFilterLabel, dataSet.Settings.GetValue("app", "vehicle_status_filter", string.Empty));
+        Assert.Equal("1", dataSet.Settings.GetValue("app", "hide_inactive_vehicles", "0"));
+    }
+
+    [Fact]
+    public void Unknown_vehicle_filter_preferences_fall_back_to_safe_defaults()
+    {
+        var dataSet = BuildQuickActionDataSet();
+        dataSet.Settings.SetValue("app", "vehicle_category_filter", "Neznámá kategorie");
+        dataSet.Settings.SetValue("app", "vehicle_status_filter", "Neznámý stav");
+
+        var viewModel = CreateViewModel(dataSet);
+
+        Assert.Equal(MainWindowViewModel.AllVehicleCategoriesLabel, viewModel.SelectedVehicleCategoryFilter);
+        Assert.Equal(MainWindowViewModel.AllVehicleStatusFilterLabel, viewModel.SelectedVehicleStatusFilter);
+        Assert.Equal(dataSet.Vehicles.Count, viewModel.Vehicles.Count);
+        Assert.False(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
     }
 
     [Fact]

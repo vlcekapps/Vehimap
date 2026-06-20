@@ -10,6 +10,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - globální hledání napříč vozidly, historií událostí, kilometry a tankováním, pojištěním a doklady, vlastními připomínkami i plány údržby
 - filtr hlavního seznamu na všechna vozidla, vozidla s blížícím se termínem, vozidla po termínu a vozidla bez vyplněné zelené karty
 - volitelné skrytí archivovaných a odstavených vozidel v hlavním seznamu, aniž by zmizela z dat a přehledů
+- v C# Avalonia větvi se poslední zvolená kategorie a stavový filtr hlavního seznamu ukládají do `settings.ini`; textové hledání zůstává jen dočasné, aby po startu neschovalo očekávaná vozidla
 - detail vozidla se souhrnem údajů, stavem platností, posledními událostmi z historie a souhrnem tankování i dokladů
 - historii událostí pro každé vozidlo, včetně přidání, úpravy a odstranění servisních nebo jiných záznamů
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů
@@ -51,6 +52,7 @@ V hlavním okně:
 - pole `Hledat název, značku, SPZ, poznámku nebo štítek` filtruje jen aktuálně otevřenou kategorii
 - pole `Filtr seznamu` rychle zobrazí jen vozidla, která právě vyžadují pozornost
 - zaškrtávátko `Skrýt archivovaná a odstavená vozidla` schová neaktivní vozidla jen z hlavního seznamu a svou volbu si pamatuje i po dalším spuštění
+- v C# Avalonia větvi se po dalším spuštění obnoví i poslední rozbalovací filtr kategorie a stavový filtr; rychlé textové hledání se záměrně neobnovuje
 - v C# Avalonia větvi tlačítko `Vymazat filtry` obnoví celý seznam vozidel, ohlásí změnu ve stavovém textu a vrátí fokus do hledání
 - v C# Avalonia větvi se během rozpracované editace zamkne seznam vozidel, jeho filtry, přepínání pracovních karet i otevírání jiných workspace oken; nejdřív je potřeba editor uložit nebo zrušit, aby nešlo omylem odejít z rozpracované práce
 - tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence včetně `Plánu údržby` otevřete i z menu `Vozidlo`

@@ -13,6 +13,10 @@ public sealed partial class MainWindowViewModel
     internal const string OverdueVehicleStatusFilterLabel = "Jen po termínu";
     internal const string MissingGreenVehicleStatusFilterLabel = "Jen bez zelené karty";
 
+    private const string VehicleListCategoryFilterSettingKey = "vehicle_category_filter";
+    private const string VehicleListStatusFilterSettingKey = "vehicle_status_filter";
+    private const string VehicleListHideInactiveSettingKey = "hide_inactive_vehicles";
+
     private bool _suppressVehicleListFilterRefresh;
 
     [ObservableProperty]
@@ -58,17 +62,17 @@ public sealed partial class MainWindowViewModel
 
     partial void OnSelectedVehicleCategoryFilterChanged(string value)
     {
-        HandleVehicleListFiltersChanged();
+        HandleVehicleListFiltersChanged(persistVehicleListPreferences: true);
     }
 
     partial void OnSelectedVehicleStatusFilterChanged(string value)
     {
-        HandleVehicleListFiltersChanged();
+        HandleVehicleListFiltersChanged(persistVehicleListPreferences: true);
     }
 
     partial void OnHideInactiveVehiclesChanged(bool value)
     {
-        HandleVehicleListFiltersChanged(persistHideInactivePreference: true);
+        HandleVehicleListFiltersChanged(persistVehicleListPreferences: true);
     }
 
     [RelayCommand(CanExecute = nameof(CanClearVehicleFilters))]
@@ -89,7 +93,7 @@ public sealed partial class MainWindowViewModel
 
         RefreshVehicleList();
         NotifyVehicleListFilterStateChanged();
-        PersistHideInactiveVehiclePreferenceAsync();
+        PersistVehicleListFilterPreferencesAsync();
         ShellStatus = "Filtry seznamu vozidel byly vymazány.";
         RequestFocus(DesktopFocusTarget.VehicleSearch);
     }
@@ -100,16 +104,8 @@ public sealed partial class MainWindowViewModel
         try
         {
             HideInactiveVehicles = GetHideInactiveVehiclesEnabled();
-
-            if (string.IsNullOrWhiteSpace(SelectedVehicleCategoryFilter))
-            {
-                SelectedVehicleCategoryFilter = AllVehicleCategoriesLabel;
-            }
-
-            if (string.IsNullOrWhiteSpace(SelectedVehicleStatusFilter))
-            {
-                SelectedVehicleStatusFilter = AllVehicleStatusFilterLabel;
-            }
+            SelectedVehicleCategoryFilter = NormalizeVehicleCategoryFilter(_dataSet.Settings.GetValue("app", VehicleListCategoryFilterSettingKey, AllVehicleCategoriesLabel));
+            SelectedVehicleStatusFilter = NormalizeVehicleStatusFilter(_dataSet.Settings.GetValue("app", VehicleListStatusFilterSettingKey, AllVehicleStatusFilterLabel));
         }
         finally
         {
@@ -122,12 +118,12 @@ public sealed partial class MainWindowViewModel
     private bool GetHideInactiveVehiclesEnabled()
     {
         return string.Equals(
-            _dataSet.Settings.GetValue("app", "hide_inactive_vehicles", "0").Trim(),
+            _dataSet.Settings.GetValue("app", VehicleListHideInactiveSettingKey, "0").Trim(),
             "1",
             StringComparison.Ordinal);
     }
 
-    private void HandleVehicleListFiltersChanged(bool persistHideInactivePreference = false)
+    private void HandleVehicleListFiltersChanged(bool persistVehicleListPreferences = false)
     {
         if (_suppressVehicleListFilterRefresh)
         {
@@ -136,9 +132,9 @@ public sealed partial class MainWindowViewModel
 
         RefreshVehicleList();
         NotifyVehicleListFilterStateChanged();
-        if (persistHideInactivePreference)
+        if (persistVehicleListPreferences)
         {
-            PersistHideInactiveVehiclePreferenceAsync();
+            PersistVehicleListFilterPreferencesAsync();
         }
     }
 
@@ -148,18 +144,20 @@ public sealed partial class MainWindowViewModel
         ClearVehicleFiltersCommand.NotifyCanExecuteChanged();
     }
 
-    private void PersistHideInactiveVehiclePreferenceAsync()
+    private void PersistVehicleListFilterPreferencesAsync()
     {
         if (!_session.IsLoaded)
         {
             return;
         }
 
-        _dataSet.Settings.SetValue("app", "hide_inactive_vehicles", HideInactiveVehicles ? "1" : "0");
-        _ = PersistHideInactiveVehiclePreferenceCoreAsync();
+        _dataSet.Settings.SetValue("app", VehicleListHideInactiveSettingKey, HideInactiveVehicles ? "1" : "0");
+        _dataSet.Settings.SetValue("app", VehicleListCategoryFilterSettingKey, NormalizeVehicleCategoryFilter(SelectedVehicleCategoryFilter));
+        _dataSet.Settings.SetValue("app", VehicleListStatusFilterSettingKey, NormalizeVehicleStatusFilter(SelectedVehicleStatusFilter));
+        _ = PersistVehicleListFilterPreferencesCoreAsync();
     }
 
-    private async Task PersistHideInactiveVehiclePreferenceCoreAsync()
+    private async Task PersistVehicleListFilterPreferencesCoreAsync()
     {
         try
         {
@@ -167,8 +165,24 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex)
         {
-            ShellStatus = $"Nepodařilo se uložit volbu skrytí neaktivních vozidel: {ex.Message}";
+            ShellStatus = $"Nepodařilo se uložit filtry seznamu vozidel: {ex.Message}";
         }
+    }
+
+    private string NormalizeVehicleCategoryFilter(string? value)
+    {
+        var normalized = string.IsNullOrWhiteSpace(value) ? AllVehicleCategoriesLabel : value.Trim();
+        return VehicleCategoryFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
+            ? normalized
+            : AllVehicleCategoriesLabel;
+    }
+
+    private string NormalizeVehicleStatusFilter(string? value)
+    {
+        var normalized = string.IsNullOrWhiteSpace(value) ? AllVehicleStatusFilterLabel : value.Trim();
+        return VehicleStatusFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
+            ? normalized
+            : AllVehicleStatusFilterLabel;
     }
 
     private void RefreshVehicleList(string? preferredVehicleId = null)
