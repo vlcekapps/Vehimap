@@ -36,6 +36,12 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
         RequestFocus(DesktopFocusTarget.GlobalSearchBox);
     }
 
+    [RelayCommand]
+    private void RefreshGlobalSearch()
+    {
+        Root.RefreshGlobalSearchWorkspace();
+    }
+
     partial void OnGlobalSearchTextChanged(string value)
     {
         Root.HandleGlobalSearchWorkspaceSearchChanged();

@@ -870,6 +870,13 @@ public sealed partial class MainWindowViewModel
         RefreshGlobalSearch();
     }
 
+    internal void RefreshGlobalSearchWorkspace()
+    {
+        RefreshGlobalSearch();
+        ShellStatus = "Globální hledání bylo obnoveno.";
+        RequestFocus(GlobalSearchResults.Count == 0 ? DesktopFocusTarget.GlobalSearchBox : DesktopFocusTarget.GlobalSearchList);
+    }
+
     internal void NotifyGlobalSearchWorkspaceSelectionChanged()
     {
         OpenSelectedSearchResultCommand.NotifyCanExecuteChanged();

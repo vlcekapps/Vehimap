@@ -283,6 +283,24 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public void Global_search_refresh_preserves_selection_and_requests_list_focus()
+    {
+        var viewModel = CreateViewModel();
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        viewModel.GlobalSearchText = "Asistence";
+        var selectedResult = viewModel.GlobalSearchResults.Single(item => item.EntityId == "rec_2");
+        viewModel.SelectedSearchResult = selectedResult;
+
+        viewModel.GlobalSearchWorkspace.RefreshGlobalSearchCommand.Execute(null);
+
+        Assert.Equal(selectedResult.EntityId, viewModel.SelectedSearchResult?.EntityId);
+        Assert.Equal(DesktopFocusTarget.GlobalSearchList, requestedFocus);
+        Assert.Contains("Globální hledání bylo obnoveno", viewModel.ShellStatus, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
     public async Task Contextual_item_open_shortcut_opens_timeline_item_and_ignores_non_context_tabs()
     {
         var viewModel = CreateViewModel();
