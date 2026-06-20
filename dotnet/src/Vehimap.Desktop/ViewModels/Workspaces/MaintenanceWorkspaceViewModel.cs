@@ -42,6 +42,14 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     [ObservableProperty]
     private string maintenanceSearchSummary = "Ctrl+F přesune fokus do hledání údržby.";
 
+    [ObservableProperty]
+    private string selectedMaintenanceSortOption = WorkspaceSortHelpers.TitleSortLabel;
+
+    [ObservableProperty]
+    private bool maintenanceSortDescending;
+
+    public IReadOnlyList<string> MaintenanceSortOptions => WorkspaceSortHelpers.MaintenanceSortOptions;
+
     public bool CanClearMaintenanceSearch => !string.IsNullOrWhiteSpace(MaintenanceSearchText);
 
     [ObservableProperty]
@@ -169,8 +177,8 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public void RefreshVisibleMaintenanceItems(bool preserveSelection = true)
     {
         var previousSelection = preserveSelection ? SelectedMaintenance : null;
-        var filteredItems = SelectedVehicleMaintenance
-            .Where(MatchesSearch)
+        var filteredItems = WorkspaceSortHelpers
+            .SortMaintenance(SelectedVehicleMaintenance.Where(MatchesSearch), SelectedMaintenanceSortOption, MaintenanceSortDescending)
             .ToList();
 
         VisibleMaintenanceItems.Clear();
@@ -207,6 +215,16 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         OnPropertyChanged(nameof(CanClearMaintenanceSearch));
         ClearMaintenanceSearchCommand.NotifyCanExecuteChanged();
         RefreshVisibleMaintenanceItems();
+    }
+
+    partial void OnSelectedMaintenanceSortOptionChanged(string value)
+    {
+        Root.HandleMaintenanceWorkspaceSortChanged();
+    }
+
+    partial void OnMaintenanceSortDescendingChanged(bool value)
+    {
+        Root.HandleMaintenanceWorkspaceSortChanged();
     }
 
     partial void OnSelectedMaintenanceTemplateChanged(string value)

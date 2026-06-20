@@ -252,6 +252,7 @@ public sealed class MainWindowViewModelNavigationTests
             dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_2", "veh_1", "05.01.2026", "Oprava", "9800", "900", ""));
             dataSet.FuelEntries.Add(new FuelEntry("fuel_2", "veh_1", "05.01.2026", "9800", "30", "200", true, "Benzín", ""));
             dataSet.Reminders.Add(new VehicleReminder("rem_2", "veh_1", "AAA kontrola", "01.01.2099", "30", "Ročně", ""));
+            dataSet.MaintenancePlans.Add(new MaintenancePlan("mnt_2", "veh_1", "AAA filtr", "5000", "6", "05.01.2026", "9800", true, ""));
             dataSet.Records.Add(new VehicleRecord("rec_3", "veh_1", "Doklad", "Drahý doklad", "", "", "02/2027", "900", VehicleRecordAttachmentMode.External, "", ""));
         });
 
@@ -260,18 +261,22 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FuelWorkspace.SelectedFuelSortOption = WorkspaceSortHelpers.OdometerSortLabel;
         viewModel.FuelWorkspace.FuelSortDescending = false;
         viewModel.ReminderWorkspace.SelectedReminderSortOption = WorkspaceSortHelpers.TitleSortLabel;
+        viewModel.MaintenanceWorkspace.SelectedMaintenanceSortOption = WorkspaceSortHelpers.IntervalSortLabel;
         viewModel.RecordWorkspace.SelectedRecordSortOption = WorkspaceSortHelpers.CostSortLabel;
         viewModel.RecordWorkspace.RecordSortDescending = true;
 
         Assert.Equal("hist_2", viewModel.HistoryWorkspace.VisibleHistoryItems.First().Id);
         Assert.Equal("fuel_2", viewModel.FuelWorkspace.VisibleFuelItems.First().Id);
         Assert.Equal("rem_2", viewModel.ReminderWorkspace.VisibleReminderItems.First().Id);
+        Assert.Equal("mnt_2", viewModel.MaintenanceWorkspace.VisibleMaintenanceItems.First().Id);
         Assert.Equal("rec_3", viewModel.RecordWorkspace.VisibleRecordItems.First().Id);
         Assert.Equal(WorkspaceSortHelpers.CostSortLabel, dataSetRef!.Settings.GetValue("evidence_sort", "history_sort"));
         Assert.Equal("1", dataSetRef.Settings.GetValue("evidence_sort", "history_descending"));
         Assert.Equal(WorkspaceSortHelpers.OdometerSortLabel, dataSetRef.Settings.GetValue("evidence_sort", "fuel_sort"));
         Assert.Equal("0", dataSetRef.Settings.GetValue("evidence_sort", "fuel_descending"));
         Assert.Equal(WorkspaceSortHelpers.TitleSortLabel, dataSetRef.Settings.GetValue("evidence_sort", "reminder_sort"));
+        Assert.Equal(WorkspaceSortHelpers.IntervalSortLabel, dataSetRef.Settings.GetValue("evidence_sort", "maintenance_sort"));
+        Assert.Equal("0", dataSetRef.Settings.GetValue("evidence_sort", "maintenance_descending"));
         Assert.Equal(WorkspaceSortHelpers.CostSortLabel, dataSetRef.Settings.GetValue("evidence_sort", "record_sort"));
         Assert.Equal("1", dataSetRef.Settings.GetValue("evidence_sort", "record_descending"));
     }
@@ -284,12 +289,15 @@ public sealed class MainWindowViewModelNavigationTests
             dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_2", "veh_1", "05.01.2026", "Oprava", "9800", "900", ""));
             dataSet.FuelEntries.Add(new FuelEntry("fuel_2", "veh_1", "05.01.2026", "9800", "30", "200", true, "Benzín", ""));
             dataSet.Reminders.Add(new VehicleReminder("rem_2", "veh_1", "AAA kontrola", "01.01.2099", "30", "Ročně", ""));
+            dataSet.MaintenancePlans.Add(new MaintenancePlan("mnt_2", "veh_1", "AAA filtr", "5000", "6", "05.01.2026", "9800", true, ""));
             dataSet.Records.Add(new VehicleRecord("rec_3", "veh_1", "Doklad", "Drahý doklad", "", "", "02/2027", "900", VehicleRecordAttachmentMode.External, "", ""));
             dataSet.Settings.SetValue("evidence_sort", "history_sort", WorkspaceSortHelpers.CostSortLabel);
             dataSet.Settings.SetValue("evidence_sort", "history_descending", "1");
             dataSet.Settings.SetValue("evidence_sort", "fuel_sort", WorkspaceSortHelpers.OdometerSortLabel);
             dataSet.Settings.SetValue("evidence_sort", "fuel_descending", "0");
             dataSet.Settings.SetValue("evidence_sort", "reminder_sort", WorkspaceSortHelpers.TitleSortLabel);
+            dataSet.Settings.SetValue("evidence_sort", "maintenance_sort", WorkspaceSortHelpers.IntervalSortLabel);
+            dataSet.Settings.SetValue("evidence_sort", "maintenance_descending", "0");
             dataSet.Settings.SetValue("evidence_sort", "record_sort", WorkspaceSortHelpers.CostSortLabel);
             dataSet.Settings.SetValue("evidence_sort", "record_descending", "1");
         });
@@ -297,10 +305,12 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal(WorkspaceSortHelpers.CostSortLabel, viewModel.HistoryWorkspace.SelectedHistorySortOption);
         Assert.Equal(WorkspaceSortHelpers.OdometerSortLabel, viewModel.FuelWorkspace.SelectedFuelSortOption);
         Assert.Equal(WorkspaceSortHelpers.TitleSortLabel, viewModel.ReminderWorkspace.SelectedReminderSortOption);
+        Assert.Equal(WorkspaceSortHelpers.IntervalSortLabel, viewModel.MaintenanceWorkspace.SelectedMaintenanceSortOption);
         Assert.Equal(WorkspaceSortHelpers.CostSortLabel, viewModel.RecordWorkspace.SelectedRecordSortOption);
         Assert.Equal("hist_2", viewModel.HistoryWorkspace.VisibleHistoryItems.First().Id);
         Assert.Equal("fuel_2", viewModel.FuelWorkspace.VisibleFuelItems.First().Id);
         Assert.Equal("rem_2", viewModel.ReminderWorkspace.VisibleReminderItems.First().Id);
+        Assert.Equal("mnt_2", viewModel.MaintenanceWorkspace.VisibleMaintenanceItems.First().Id);
         Assert.Equal("rec_3", viewModel.RecordWorkspace.VisibleRecordItems.First().Id);
     }
 

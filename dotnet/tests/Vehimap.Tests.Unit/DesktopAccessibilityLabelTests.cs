@@ -559,6 +559,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ReminderListBox\"", reminderXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceSearchBox\"", maintenanceXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ClearMaintenanceSearchButton\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceSortComboBox\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceSortDescendingCheckBox\"", maintenanceXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceListBox\"", maintenanceXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"RecordSearchBox\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ClearRecordSearchButton\"", recordXaml);

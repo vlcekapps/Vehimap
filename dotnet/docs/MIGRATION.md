@@ -43,7 +43,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
 - hlavni seznam vozidel v Avalonia shellu si pamatuje posledni rozbalovaci filtr kategorie a stavovy filtr v `settings.ini`, ale rychle textove hledani zustava jen docasne
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh
-- pristupne razeni evidencnich workspace `Historie`, `Tankovani`, `Pripominky` a `Doklady` pres ovladace `Radit` a `Sestupne`; posledni volba se uklada do legacy `settings.ini`
+- pristupne razeni evidencnich workspace `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` pres ovladace `Radit` a `Sestupne`; posledni volba se uklada do legacy `settings.ini`
 - dokladove akce pro otevreni souboru, otevreni slozky a zkopirovani vyresene cesty prilohy pres `Ctrl+Shift+C`
 - posun opakovanych pripominek na dalsi termin v Avalonia workspace, vcetne zkratky `Ctrl+Shift+N`
 - oznaceni servisniho planu jako splneneho v Avalonia workspace, vcetne zkratky `Ctrl+L`, potvrzeni data a tachometru a volitelneho zapisu stejne udalosti do historie vozidla

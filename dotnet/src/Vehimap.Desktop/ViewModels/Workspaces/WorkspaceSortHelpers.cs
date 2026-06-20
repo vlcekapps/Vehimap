@@ -17,6 +17,8 @@ internal static class WorkspaceSortHelpers
     public const string DueDateSortLabel = "Termín";
     public const string StatusSortLabel = "Stav";
     public const string RepeatModeSortLabel = "Opakování";
+    public const string IntervalSortLabel = "Interval";
+    public const string LastServiceSortLabel = "Poslední servis";
     public const string ValiditySortLabel = "Platnost";
     public const string ProviderSortLabel = "Poskytovatel";
     public const string AttachmentModeSortLabel = "Režim přílohy";
@@ -47,6 +49,15 @@ internal static class WorkspaceSortHelpers
         TitleSortLabel,
         StatusSortLabel,
         RepeatModeSortLabel,
+        NoteSortLabel
+    ];
+
+    public static IReadOnlyList<string> MaintenanceSortOptions { get; } =
+    [
+        TitleSortLabel,
+        IntervalSortLabel,
+        LastServiceSortLabel,
+        StatusSortLabel,
         NoteSortLabel
     ];
 
@@ -112,6 +123,21 @@ internal static class WorkspaceSortHelpers
             RepeatModeSortLabel => OrderByText(items, descending, item => item.RepeatMode, item => item.DueDate),
             NoteSortLabel => OrderByText(items, descending, item => item.Note, item => item.DueDate),
             _ => OrderByDate(items, descending, item => TryParseDate(item.DueDate), item => item.Title)
+        };
+    }
+
+    public static IEnumerable<VehicleMaintenanceItemViewModel> SortMaintenance(
+        IEnumerable<VehicleMaintenanceItemViewModel> items,
+        string selectedOption,
+        bool descending)
+    {
+        return NormalizeSortOption(selectedOption, MaintenanceSortOptions, TitleSortLabel) switch
+        {
+            IntervalSortLabel => OrderByNumber(items, descending, item => TryParseFirstNumber(item.Interval), item => item.Title),
+            LastServiceSortLabel => OrderByDate(items, descending, item => TryParseMaintenanceLastService(item.LastService), item => item.Title),
+            StatusSortLabel => OrderByText(items, descending, item => item.Status, item => item.Title),
+            NoteSortLabel => OrderByText(items, descending, item => item.Note, item => item.Title),
+            _ => OrderByText(items, descending, item => item.Title, item => item.Status)
         };
     }
 
@@ -218,8 +244,25 @@ internal static class WorkspaceSortHelpers
         return TryParseDate(value);
     }
 
+    private static DateOnly? TryParseMaintenanceLastService(string? value)
+    {
+        var datePart = (value ?? string.Empty).Split('|', 2, StringSplitOptions.TrimEntries)[0];
+        return TryParseDate(datePart);
+    }
+
     private static int? TryParseOdometer(string? value) =>
         VehimapValueParser.TryParseOdometer(value, out var parsed) ? parsed : null;
+
+    private static int? TryParseFirstNumber(string? value)
+    {
+        var token = (value ?? string.Empty)
+            .Split([' ', '/', '|'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault(item => item.Any(char.IsDigit));
+
+        return token is not null && int.TryParse(new string(token.Where(char.IsDigit).ToArray()), out var parsed)
+            ? parsed
+            : null;
+    }
 
     private static decimal? TryParseMoney(string? value) =>
         VehimapValueParser.TryParseMoney(value, out var parsed) ? parsed : null;
