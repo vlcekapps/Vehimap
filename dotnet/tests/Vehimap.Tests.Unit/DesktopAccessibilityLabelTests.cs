@@ -193,8 +193,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.RightAlt", codeBehind);
         Assert.Contains("HandleCurrentWorkspacePrimaryOpenShortcutAsync", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceItemOpenShortcutAsync", codeBehind);
-        Assert.Contains("HandleCurrentWorkspaceCreateShortcut", codeBehind);
-        Assert.Contains("HandleCurrentWorkspaceEditShortcut", codeBehind);
+        Assert.Contains("OpenCurrentWorkspaceCreateWindowAsync", codeBehind);
+        Assert.Contains("OpenCurrentWorkspaceEditWindowAsync", codeBehind);
+        Assert.Contains("OpenActiveEditorWindowAsync", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceEditShortcutAsync", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceSaveShortcutAsync", codeBehind);
         Assert.Contains("FocusAndOpenMainMenu()", codeBehind);

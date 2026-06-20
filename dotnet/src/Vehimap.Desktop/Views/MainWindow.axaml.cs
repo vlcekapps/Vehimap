@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using System.ComponentModel;
+using System.Windows.Input;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
@@ -206,7 +207,7 @@ public partial class MainWindow : Window
             if (_viewModel?.IsCurrentWorkspaceEditShortcutContext == true)
             {
                 e.Handled = true;
-                await _viewModel.HandleCurrentWorkspaceEditShortcutAsync().ConfigureAwait(true);
+                await OpenCurrentWorkspaceEditWindowAsync().ConfigureAwait(true);
                 return;
             }
 
@@ -226,7 +227,7 @@ public partial class MainWindow : Window
                 if (_viewModel?.IsCurrentWorkspaceCreateShortcutContext == true)
                 {
                     e.Handled = true;
-                    _viewModel.HandleCurrentWorkspaceCreateShortcut();
+                    await OpenCurrentWorkspaceCreateWindowAsync().ConfigureAwait(true);
                     break;
                 }
 
@@ -237,7 +238,7 @@ public partial class MainWindow : Window
                 if (_viewModel?.IsCurrentWorkspaceEditShortcutContext == true)
                 {
                     e.Handled = true;
-                    await _viewModel.HandleCurrentWorkspaceEditShortcutAsync().ConfigureAwait(true);
+                    await OpenCurrentWorkspaceEditWindowAsync().ConfigureAwait(true);
                     break;
                 }
 
@@ -852,7 +853,113 @@ public partial class MainWindow : Window
         return true;
     }
 
-    private async Task OpenVehicleDetailWindowAsync(bool startCreate = false, bool startEdit = false)
+    private async Task<bool> OpenCurrentWorkspaceCreateWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return false;
+        }
+
+        var command = _viewModel.SelectedVehicleTabIndex switch
+        {
+            HistoryTabIndex => _viewModel.CreateHistoryCommand,
+            FuelTabIndex => _viewModel.CreateFuelCommand,
+            ReminderTabIndex => _viewModel.CreateReminderCommand,
+            MaintenanceTabIndex => _viewModel.CreateMaintenanceCommand,
+            RecordTabIndex => _viewModel.CreateRecordCommand,
+            _ => null
+        };
+
+        return await ExecuteShortcutAndOpenEditorWindowAsync(command).ConfigureAwait(true);
+    }
+
+    private async Task<bool> OpenCurrentWorkspaceEditWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return false;
+        }
+
+        switch (_viewModel.SelectedVehicleTabIndex)
+        {
+            case HistoryTabIndex:
+                return await ExecuteShortcutAndOpenEditorWindowAsync(_viewModel.EditSelectedHistoryCommand).ConfigureAwait(true);
+            case FuelTabIndex:
+                return await ExecuteShortcutAndOpenEditorWindowAsync(_viewModel.EditSelectedFuelCommand).ConfigureAwait(true);
+            case ReminderTabIndex:
+                return await ExecuteShortcutAndOpenEditorWindowAsync(_viewModel.EditSelectedReminderCommand).ConfigureAwait(true);
+            case MaintenanceTabIndex:
+                return await ExecuteShortcutAndOpenEditorWindowAsync(_viewModel.EditSelectedMaintenanceCommand).ConfigureAwait(true);
+            case RecordTabIndex:
+                return await ExecuteShortcutAndOpenEditorWindowAsync(_viewModel.EditSelectedRecordCommand).ConfigureAwait(true);
+            default:
+                if (!await _viewModel.HandleCurrentWorkspaceEditShortcutAsync().ConfigureAwait(true))
+                {
+                    return false;
+                }
+
+                return await OpenActiveEditorWindowAsync().ConfigureAwait(true);
+        }
+    }
+
+    private async Task<bool> ExecuteShortcutAndOpenEditorWindowAsync(ICommand? command)
+    {
+        if (command?.CanExecute(null) != true)
+        {
+            return false;
+        }
+
+        command.Execute(null);
+        return await OpenActiveEditorWindowAsync().ConfigureAwait(true);
+    }
+
+    private async Task<bool> OpenActiveEditorWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return false;
+        }
+
+        if (_viewModel.IsEditingVehicle)
+        {
+            await OpenVehicleDetailWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            return true;
+        }
+
+        if (_viewModel.IsEditingHistory)
+        {
+            await OpenHistoryWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            return true;
+        }
+
+        if (_viewModel.IsEditingFuel)
+        {
+            await OpenFuelWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            return true;
+        }
+
+        if (_viewModel.IsEditingReminder)
+        {
+            await OpenRemindersWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            return true;
+        }
+
+        if (_viewModel.IsEditingMaintenance)
+        {
+            await OpenMaintenanceWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            return true;
+        }
+
+        if (_viewModel.IsEditingRecord)
+        {
+            await OpenRecordsWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            return true;
+        }
+
+        return false;
+    }
+
+    private async Task OpenVehicleDetailWindowAsync(bool startCreate = false, bool startEdit = false, bool allowActiveEditor = false)
     {
         if (_viewModel is null)
         {
@@ -879,12 +986,12 @@ public partial class MainWindow : Window
         }
         else
         {
-            if (_viewModel.SelectedVehicle is null)
+            if (!allowActiveEditor && _viewModel.SelectedVehicle is null)
             {
                 return;
             }
 
-            if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít detail vybraného vozidla").ConfigureAwait(true))
+            if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít detail vybraného vozidla").ConfigureAwait(true))
             {
                 return;
             }
@@ -900,14 +1007,14 @@ public partial class MainWindow : Window
         RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.VehicleList);
     }
 
-    private async Task OpenHistoryWindowAsync()
+    private async Task OpenHistoryWindowAsync(bool allowActiveEditor = false)
     {
         if (_viewModel?.SelectedVehicle is null)
         {
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít historii vybraného vozidla").ConfigureAwait(true))
+        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít historii vybraného vozidla").ConfigureAwait(true))
         {
             return;
         }
@@ -919,17 +1026,17 @@ public partial class MainWindow : Window
         };
 
         await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.HistoryList);
+        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.HistoryList);
     }
 
-    private async Task OpenFuelWindowAsync()
+    private async Task OpenFuelWindowAsync(bool allowActiveEditor = false)
     {
         if (_viewModel?.SelectedVehicle is null)
         {
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít tankování vybraného vozidla").ConfigureAwait(true))
+        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít tankování vybraného vozidla").ConfigureAwait(true))
         {
             return;
         }
@@ -941,17 +1048,17 @@ public partial class MainWindow : Window
         };
 
         await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.FuelList);
+        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.FuelList);
     }
 
-    private async Task OpenRemindersWindowAsync()
+    private async Task OpenRemindersWindowAsync(bool allowActiveEditor = false)
     {
         if (_viewModel?.SelectedVehicle is null)
         {
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít připomínky vybraného vozidla").ConfigureAwait(true))
+        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít připomínky vybraného vozidla").ConfigureAwait(true))
         {
             return;
         }
@@ -963,17 +1070,17 @@ public partial class MainWindow : Window
         };
 
         await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.ReminderList);
+        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.ReminderList);
     }
 
-    private async Task OpenMaintenanceWindowAsync()
+    private async Task OpenMaintenanceWindowAsync(bool allowActiveEditor = false)
     {
         if (_viewModel?.SelectedVehicle is null)
         {
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít plán údržby vybraného vozidla").ConfigureAwait(true))
+        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít plán údržby vybraného vozidla").ConfigureAwait(true))
         {
             return;
         }
@@ -985,7 +1092,7 @@ public partial class MainWindow : Window
         };
 
         await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.MaintenanceList);
+        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.MaintenanceList);
     }
 
     private async Task OpenTimelineWindowAsync()
@@ -1142,14 +1249,14 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.OverdueOverviewSearch);
     }
 
-    private async Task OpenRecordsWindowAsync()
+    private async Task OpenRecordsWindowAsync(bool allowActiveEditor = false)
     {
         if (_viewModel?.SelectedVehicle is null)
         {
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít doklady vybraného vozidla").ConfigureAwait(true))
+        if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít doklady vybraného vozidla").ConfigureAwait(true))
         {
             return;
         }
@@ -1161,7 +1268,7 @@ public partial class MainWindow : Window
         };
 
         await dialog.ShowDialog(this);
-        RequestFocus(DesktopFocusTarget.RecordList);
+        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : DesktopFocusTarget.RecordList);
     }
 
     private async Task OpenVehicleStarterBundleDialogAsync()
