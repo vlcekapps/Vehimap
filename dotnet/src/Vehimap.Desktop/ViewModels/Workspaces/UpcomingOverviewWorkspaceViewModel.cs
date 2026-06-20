@@ -41,7 +41,7 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
 
     public string WindowTitle => Root.UpcomingOverviewWindowTitle;
 
-    public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems => Root.UpcomingOverviewItems;
+    public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems { get; } = [];
 
     public IReadOnlyList<string> OverviewFilters => Root.UpcomingOverviewFilters;
 

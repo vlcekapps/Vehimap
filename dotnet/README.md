@@ -62,6 +62,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - drzet stav `Casove osy` a `Globalniho hledani` primo v jejich workspace viewmodelech misto duplicitnich root proxy vlastnosti v `MainWindowViewModel`
 - drzet nactene kolekce polozek `Casove osy` a vysledku `Globalniho hledani` primo v jejich workspace viewmodelech misto verejnych root vlastnosti
 - drzet stav terminovych prehledu `Blizici se terminy` a `Propadle terminy` primo v jejich workspace viewmodelech misto duplicitnich root proxy vlastnosti v `MainWindowViewModel`
+- drzet nactene kolekce polozek terminovych prehledu `Blizici se terminy` a `Propadle terminy` primo v jejich workspace viewmodelech misto verejnych root vlastnosti
 - drzet dashboardove souhrny auditu, nakladu a nejblizsich terminu ve sdilenych workspace stavech auditu, nakladu a dashboardu misto root proxy vlastnosti
 - drzet stav exportu nakladoveho prehledu primo v `CostWorkspace`, zatimco root `MainWindowViewModel` zustava jen orchestratorem exportnich prikazu
 - drzet souhrnne texty evidenci `Historie`, `Tankovani`, `Pripominky`, `Udrzba` a `Doklady` primo v jejich workspace viewmodelech misto root proxy vlastnosti

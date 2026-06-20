@@ -74,6 +74,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - stav `Časové osy` a `Globálního hledání` v Avalonia větvi už není znovu vystavený přes root `MainWindowViewModel`; vlastní ho přímo příslušné workspace viewmodely
 - načtené kolekce položek `Časové osy` a výsledků `Globálního hledání` v Avalonia větvi vlastní příslušné workspace viewmodely místo veřejných root vlastností
 - stav přehledů `Blížící se termíny` a `Propadlé termíny` v Avalonia větvi také vlastní příslušné workspace viewmodely místo duplicitních root proxy vlastností
+- načtené kolekce položek přehledů `Blížící se termíny` a `Propadlé termíny` v Avalonia větvi vlastní příslušné workspace viewmodely místo veřejných root vlastností
 - dashboardové souhrny auditu, nákladů a nejbližších termínů v Avalonia větvi se čtou ze sdílených workspace stavů místo duplicitních root proxy vlastností
 - stav exportů nákladového přehledu v Avalonia větvi vlastní `CostWorkspace` místo root `MainWindowViewModel`
 - souhrnné texty evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` v Avalonia větvi vlastní příslušné workspace viewmodely místo root proxy vlastností

@@ -35,7 +35,7 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
 
     public string WindowTitle => Root.OverdueOverviewWindowTitle;
 
-    public ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems => Root.OverdueOverviewItems;
+    public ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems { get; } = [];
 
     public IReadOnlyList<string> OverviewFilters => Root.OverviewFilters;
 

@@ -19,13 +19,13 @@ public sealed class MainWindowViewModelOverviewTests
     {
         var viewModel = CreateViewModel(BuildOverviewDataSet());
 
-        Assert.Equal(2, viewModel.UpcomingOverviewItems.Count);
-        Assert.Equal(2, viewModel.OverdueOverviewItems.Count);
-        Assert.Contains(viewModel.UpcomingOverviewItems, item => item.Kind == "technical");
-        Assert.Contains(viewModel.UpcomingOverviewItems, item => item.Kind == "custom");
-        Assert.Contains(viewModel.OverdueOverviewItems, item => item.Kind == "green");
-        Assert.Contains(viewModel.OverdueOverviewItems, item => item.Kind == "record");
-        Assert.DoesNotContain(viewModel.UpcomingOverviewItems, item => item.Kind is "history" or "fuel");
+        Assert.Equal(2, viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.Count);
+        Assert.Equal(2, viewModel.OverdueOverviewWorkspace.OverdueOverviewItems.Count);
+        Assert.Contains(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Kind == "technical");
+        Assert.Contains(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Kind == "custom");
+        Assert.Contains(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems, item => item.Kind == "green");
+        Assert.Contains(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems, item => item.Kind == "record");
+        Assert.DoesNotContain(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Kind is "history" or "fuel");
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public sealed class MainWindowViewModelOverviewTests
     public void Opening_upcoming_overview_item_navigates_to_matching_vehicle_workflow()
     {
         var viewModel = CreateViewModel(BuildOverviewDataSet());
-        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = viewModel.UpcomingOverviewItems.First(item => item.Kind == "custom");
+        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.First(item => item.Kind == "custom");
 
         viewModel.OpenSelectedUpcomingOverviewItemCommand.Execute(null);
 
@@ -60,7 +60,7 @@ public sealed class MainWindowViewModelOverviewTests
     public void Opening_overdue_overview_vehicle_navigates_back_to_vehicle_detail()
     {
         var viewModel = CreateViewModel(BuildOverviewDataSet());
-        viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewItem = viewModel.OverdueOverviewItems.First(item => item.Kind == "green");
+        viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewItem = viewModel.OverdueOverviewWorkspace.OverdueOverviewItems.First(item => item.Kind == "green");
 
         viewModel.OpenSelectedOverdueOverviewVehicleCommand.Execute(null);
 
@@ -75,7 +75,7 @@ public sealed class MainWindowViewModelOverviewTests
         var viewModel = CreateViewModel(BuildOverviewDataSet());
         viewModel.FocusRequested += target => requestedFocus = target;
 
-        var selectedUpcoming = viewModel.UpcomingOverviewItems.First(item => item.Kind == "custom");
+        var selectedUpcoming = viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.First(item => item.Kind == "custom");
         viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = selectedUpcoming;
 
         viewModel.UpcomingOverviewWorkspace.RefreshUpcomingOverviewCommand.Execute(null);
@@ -84,7 +84,7 @@ public sealed class MainWindowViewModelOverviewTests
         Assert.Equal(DesktopFocusTarget.UpcomingOverviewList, requestedFocus);
         Assert.Contains("blížících se termínů byl obnoven", viewModel.ShellStatus, StringComparison.CurrentCulture);
 
-        var selectedOverdue = viewModel.OverdueOverviewItems.First(item => item.Kind == "record");
+        var selectedOverdue = viewModel.OverdueOverviewWorkspace.OverdueOverviewItems.First(item => item.Kind == "record");
         viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewItem = selectedOverdue;
 
         viewModel.OverdueOverviewWorkspace.RefreshOverdueOverviewCommand.Execute(null);
@@ -100,8 +100,8 @@ public sealed class MainWindowViewModelOverviewTests
         var requestedTargets = new List<DesktopFocusTarget>();
         var viewModel = CreateViewModel(BuildOverviewDataSet());
         viewModel.FocusRequested += requestedTargets.Add;
-        var initialUpcomingCount = viewModel.UpcomingOverviewItems.Count;
-        var initialOverdueCount = viewModel.OverdueOverviewItems.Count;
+        var initialUpcomingCount = viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.Count;
+        var initialOverdueCount = viewModel.OverdueOverviewWorkspace.OverdueOverviewItems.Count;
 
         viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSearchText = "Přezutí";
         viewModel.OverdueOverviewWorkspace.OverdueOverviewSearchText = "Povinné";
@@ -114,8 +114,8 @@ public sealed class MainWindowViewModelOverviewTests
 
         Assert.Equal(string.Empty, viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSearchText);
         Assert.Equal(string.Empty, viewModel.OverdueOverviewWorkspace.OverdueOverviewSearchText);
-        Assert.Equal(initialUpcomingCount, viewModel.UpcomingOverviewItems.Count);
-        Assert.Equal(initialOverdueCount, viewModel.OverdueOverviewItems.Count);
+        Assert.Equal(initialUpcomingCount, viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.Count);
+        Assert.Equal(initialOverdueCount, viewModel.OverdueOverviewWorkspace.OverdueOverviewItems.Count);
         Assert.False(viewModel.UpcomingOverviewWorkspace.ClearUpcomingOverviewSearchCommand.CanExecute(null));
         Assert.False(viewModel.OverdueOverviewWorkspace.ClearOverdueOverviewSearchCommand.CanExecute(null));
         Assert.Equal(
@@ -132,16 +132,16 @@ public sealed class MainWindowViewModelOverviewTests
         var dataSet = BuildOverviewDataSet();
         var viewModel = CreateViewModel(dataSet);
 
-        Assert.DoesNotContain(viewModel.UpcomingOverviewItems, item => item.Title == "Chybí zelená karta");
-        Assert.DoesNotContain(viewModel.UpcomingOverviewItems, item => item.Kind == "data_issue");
+        Assert.DoesNotContain(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Title == "Chybí zelená karta");
+        Assert.DoesNotContain(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Kind == "data_issue");
 
         viewModel.UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = true;
         viewModel.UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview = true;
 
         Assert.Equal("1", dataSet.Settings.GetValue("overview", "include_missing_green", "0"));
         Assert.Equal("1", dataSet.Settings.GetValue("overview", "include_data_issues", "0"));
-        Assert.Contains(viewModel.UpcomingOverviewItems, item => item.Kind == "green" && item.Title == "Chybí zelená karta");
-        Assert.Contains(viewModel.UpcomingOverviewItems, item => item.Kind == "data_issue" && item.EntryId == "rec_1");
+        Assert.Contains(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Kind == "green" && item.Title == "Chybí zelená karta");
+        Assert.Contains(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Kind == "data_issue" && item.EntryId == "rec_1");
         Assert.Contains("Datové nedostatky", viewModel.UpcomingOverviewWorkspace.OverviewFilters);
         Assert.DoesNotContain("Datové nedostatky", viewModel.OverdueOverviewWorkspace.OverviewFilters);
         Assert.Contains("datových nedostatků", viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSummary, StringComparison.CurrentCulture);
@@ -157,11 +157,11 @@ public sealed class MainWindowViewModelOverviewTests
         var viewModel = CreateViewModel(dataSet);
 
         Assert.Equal("Technické kontroly", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
-        Assert.Single(viewModel.UpcomingOverviewItems);
-        Assert.All(viewModel.UpcomingOverviewItems, item => Assert.Equal("technical", item.Kind));
+        Assert.Single(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems);
+        Assert.All(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => Assert.Equal("technical", item.Kind));
         Assert.Equal("Doklady", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
-        Assert.Single(viewModel.OverdueOverviewItems);
-        Assert.All(viewModel.OverdueOverviewItems, item => Assert.Equal("record", item.Kind));
+        Assert.Single(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
+        Assert.All(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems, item => Assert.Equal("record", item.Kind));
     }
 
     [Fact]
@@ -175,10 +175,10 @@ public sealed class MainWindowViewModelOverviewTests
 
         Assert.Equal("Připomínky", dataSet.Settings.GetValue("overview", "upcoming_filter", string.Empty));
         Assert.Equal("Zelené karty", dataSet.Settings.GetValue("overview", "overdue_filter", string.Empty));
-        Assert.Single(viewModel.UpcomingOverviewItems);
-        Assert.All(viewModel.UpcomingOverviewItems, item => Assert.Equal("custom", item.Kind));
-        Assert.Single(viewModel.OverdueOverviewItems);
-        Assert.All(viewModel.OverdueOverviewItems, item => Assert.Equal("green", item.Kind));
+        Assert.Single(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems);
+        Assert.All(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => Assert.Equal("custom", item.Kind));
+        Assert.Single(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
+        Assert.All(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems, item => Assert.Equal("green", item.Kind));
     }
 
     [Fact]
@@ -198,8 +198,8 @@ public sealed class MainWindowViewModelOverviewTests
 
         Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption);
         Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption);
-        Assert.Equal("Božena", viewModel.UpcomingOverviewItems.First().VehicleName);
-        Assert.Equal("Božena", viewModel.OverdueOverviewItems.First().VehicleName);
+        Assert.Equal("Božena", viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.First().VehicleName);
+        Assert.Equal("Božena", viewModel.OverdueOverviewWorkspace.OverdueOverviewItems.First().VehicleName);
 
         viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption = WorkspaceSortHelpers.StatusSortLabel;
         viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSortDescending = true;
@@ -223,8 +223,8 @@ public sealed class MainWindowViewModelOverviewTests
 
         Assert.Equal("Vše", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
         Assert.Equal("Vše", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
-        Assert.Equal(2, viewModel.UpcomingOverviewItems.Count);
-        Assert.Equal(2, viewModel.OverdueOverviewItems.Count);
+        Assert.Equal(2, viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.Count);
+        Assert.Equal(2, viewModel.OverdueOverviewWorkspace.OverdueOverviewItems.Count);
 
         viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = "Neznámý filtr";
         viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = "Neznámý filtr";
@@ -240,7 +240,7 @@ public sealed class MainWindowViewModelOverviewTests
     {
         var viewModel = CreateViewModel(BuildOverviewDataSet());
         viewModel.UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview = true;
-        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = viewModel.UpcomingOverviewItems.First(item => item.Kind == "data_issue" && item.EntryId == "rec_1");
+        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.First(item => item.Kind == "data_issue" && item.EntryId == "rec_1");
 
         viewModel.OpenSelectedUpcomingOverviewItemCommand.Execute(null);
 

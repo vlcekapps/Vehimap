@@ -72,6 +72,15 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Overview_workspaces_own_loaded_collections()
+    {
+        var viewModel = CreateViewModel();
+
+        Assert.NotNull(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems);
+        Assert.NotNull(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
+    }
+
+    [Fact]
     public void Dashboard_workspace_reads_shared_audit_cost_and_timeline_state()
     {
         var viewModel = CreateViewModel();
@@ -263,6 +272,8 @@ public sealed class WorkspaceCompositionTests
             "SelectedVehicleRecords",
             "SelectedVehicleTimeline",
             "GlobalSearchResults",
+            "UpcomingOverviewItems",
+            "OverdueOverviewItems",
             "SelectedVehicleHeading",
             "SelectedVehicleOverview",
             "SelectedVehicleDates",

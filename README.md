@@ -38,6 +38,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - v C# desktopové větvi už `Časová osa` a `Globální hledání` drží svůj vyhledávací text, výběr a stavové texty přímo ve vlastních workspace viewmodelech, ne přes duplicitní root aliasy
 - v C# desktopové větvi vlastní `Časová osa` a `Globální hledání` také své načtené kolekce položek a výsledků, takže hlavní viewmodel je pouze obnovuje při změně dat nebo hledání
 - v C# desktopové větvi stejný princip platí i pro termínové přehledy `Blížící se termíny` a `Propadlé termíny`, takže jejich filtr, hledání, volby a výběr patří child workspace viewmodelům
+- v C# desktopové větvi vlastní termínové přehledy `Blížící se termíny` a `Propadlé termíny` také načtené kolekce položek; hlavní viewmodel je pouze obnovuje při změně dat, filtrů nebo hledání
 - v C# desktopové větvi už ani dashboardové souhrny auditu, nákladů a nejbližších termínů nejsou znovu vystavené přes root aliasy; čtou se ze sdílených workspace stavů auditu, nákladů a dashboardu
 - v C# desktopové větvi patří i stav exportů nákladového přehledu přímo `CostWorkspace`, takže hlavní viewmodel jen spouští exportní příkazy
 - v C# desktopové větvi vlastní souhrnné texty evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` přímo jejich workspace viewmodely místo root aliasů

@@ -23,9 +23,9 @@ public sealed partial class MainWindowViewModel
     private const string OverviewOverdueSortDescendingSettingKey = "overdue_sort_descending";
     private bool _suppressOverviewPreferenceRefresh;
 
-    public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems { get; } = [];
+    private ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems => UpcomingOverviewWorkspace.UpcomingOverviewItems;
 
-    public ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems { get; } = [];
+    private ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems => OverdueOverviewWorkspace.OverdueOverviewItems;
 
     public IReadOnlyList<string> OverviewFilters { get; } =
     [

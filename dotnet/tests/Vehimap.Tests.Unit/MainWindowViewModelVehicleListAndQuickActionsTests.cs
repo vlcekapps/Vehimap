@@ -186,7 +186,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(viewModel.IsUpcomingOverviewTabSelected);
         Assert.Equal("Zelené karty", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
         Assert.Equal(DesktopFocusTarget.UpcomingOverviewList, requestedFocus);
-        Assert.NotEmpty(viewModel.UpcomingOverviewItems);
+        Assert.NotEmpty(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems);
     }
 
     [Fact]
@@ -217,7 +217,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(viewModel.IsOverdueOverviewTabSelected);
         Assert.Equal("Připomínky", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
-        Assert.NotEmpty(viewModel.OverdueOverviewItems);
+        Assert.NotEmpty(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
         Assert.Contains("Připomínky k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
@@ -249,7 +249,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(viewModel.IsOverdueOverviewTabSelected);
         Assert.Equal("Údržba", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
-        Assert.NotEmpty(viewModel.OverdueOverviewItems);
+        Assert.NotEmpty(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
         Assert.Contains("Údržba k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
@@ -281,7 +281,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(viewModel.IsOverdueOverviewTabSelected);
         Assert.Equal("Doklady", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
-        Assert.NotEmpty(viewModel.OverdueOverviewItems);
+        Assert.NotEmpty(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
         Assert.Contains("Doklady k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
