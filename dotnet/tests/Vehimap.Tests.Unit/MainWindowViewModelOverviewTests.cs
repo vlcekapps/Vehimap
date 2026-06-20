@@ -4,6 +4,7 @@ using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
@@ -178,6 +179,37 @@ public sealed class MainWindowViewModelOverviewTests
         Assert.All(viewModel.UpcomingOverviewItems, item => Assert.Equal("custom", item.Kind));
         Assert.Single(viewModel.OverdueOverviewItems);
         Assert.All(viewModel.OverdueOverviewItems, item => Assert.Equal("green", item.Kind));
+    }
+
+    [Fact]
+    public void Overview_sort_preferences_are_restored_and_saved_to_settings()
+    {
+        var dataSet = BuildOverviewDataSet();
+        var upcomingDate = DateOnly.FromDateTime(DateTime.Today).AddDays(14).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+        var overdueDate = DateOnly.FromDateTime(DateTime.Today).AddMonths(-2).ToString("MM/yyyy", CultureInfo.InvariantCulture);
+        dataSet.Reminders.Add(new VehicleReminder("rem_2", "veh_2", "Kontrola veterána", upcomingDate, "7", "ročně", ""));
+        dataSet.Records.Add(new VehicleRecord("rec_2", "veh_2", "Doklad", "Veteránský doklad", "", "", overdueDate, "", VehicleRecordAttachmentMode.External, "", ""));
+        dataSet.Settings.SetValue("overview", "upcoming_sort", WorkspaceSortHelpers.VehicleSortLabel);
+        dataSet.Settings.SetValue("overview", "upcoming_sort_descending", "0");
+        dataSet.Settings.SetValue("overview", "overdue_sort", WorkspaceSortHelpers.VehicleSortLabel);
+        dataSet.Settings.SetValue("overview", "overdue_sort_descending", "0");
+
+        var viewModel = CreateViewModel(dataSet);
+
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption);
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption);
+        Assert.Equal("Božena", viewModel.UpcomingOverviewItems.First().VehicleName);
+        Assert.Equal("Božena", viewModel.OverdueOverviewItems.First().VehicleName);
+
+        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption = WorkspaceSortHelpers.StatusSortLabel;
+        viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSortDescending = true;
+        viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption = WorkspaceSortHelpers.TitleSortLabel;
+        viewModel.OverdueOverviewWorkspace.OverdueOverviewSortDescending = true;
+
+        Assert.Equal(WorkspaceSortHelpers.StatusSortLabel, dataSet.Settings.GetValue("overview", "upcoming_sort", string.Empty));
+        Assert.Equal("1", dataSet.Settings.GetValue("overview", "upcoming_sort_descending", string.Empty));
+        Assert.Equal(WorkspaceSortHelpers.TitleSortLabel, dataSet.Settings.GetValue("overview", "overdue_sort", string.Empty));
+        Assert.Equal("1", dataSet.Settings.GetValue("overview", "overdue_sort_descending", string.Empty));
     }
 
     [Fact]

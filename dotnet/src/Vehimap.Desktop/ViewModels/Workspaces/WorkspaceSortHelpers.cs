@@ -14,6 +14,7 @@ internal static class WorkspaceSortHelpers
     public const string TotalCostSortLabel = "Cena celkem";
     public const string TankStateSortLabel = "Stav nádrže";
     public const string TitleSortLabel = "Název";
+    public const string VehicleSortLabel = "Vozidlo";
     public const string DueDateSortLabel = "Termín";
     public const string StatusSortLabel = "Stav";
     public const string RepeatModeSortLabel = "Opakování";
@@ -70,6 +71,15 @@ internal static class WorkspaceSortHelpers
         CostSortLabel,
         AttachmentModeSortLabel,
         AttachmentStateSortLabel
+    ];
+
+    public static IReadOnlyList<string> TimelineOverviewSortOptions { get; } =
+    [
+        DateSortLabel,
+        TypeSortLabel,
+        VehicleSortLabel,
+        TitleSortLabel,
+        StatusSortLabel
     ];
 
     public static string NormalizeSortOption(string? value, IReadOnlyList<string> supportedOptions, string defaultOption)
@@ -155,6 +165,21 @@ internal static class WorkspaceSortHelpers
             AttachmentModeSortLabel => OrderByText(items, descending, item => item.AttachmentMode, item => item.Validity),
             AttachmentStateSortLabel => OrderByText(items, descending, item => item.AttachmentState, item => item.Validity),
             _ => OrderByDate(items, descending, item => TryParseRecordValidity(item.Validity), item => item.Title)
+        };
+    }
+
+    public static IEnumerable<VehicleTimelineItemViewModel> SortTimelineOverview(
+        IEnumerable<VehicleTimelineItemViewModel> items,
+        string selectedOption,
+        bool descending)
+    {
+        return NormalizeSortOption(selectedOption, TimelineOverviewSortOptions, DateSortLabel) switch
+        {
+            TypeSortLabel => OrderByText(items, descending, item => item.KindLabel, item => item.Date),
+            VehicleSortLabel => OrderByText(items, descending, item => item.VehicleName, item => item.Date),
+            TitleSortLabel => OrderByText(items, descending, item => item.Title, item => item.Date),
+            StatusSortLabel => OrderByText(items, descending, item => item.Status, item => item.Date),
+            _ => OrderByDate(items, descending, item => TryParseDate(item.Date), item => item.VehicleName)
         };
     }
 

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Models;
 
 namespace Vehimap.Desktop.ViewModels;
@@ -16,6 +17,10 @@ public sealed partial class MainWindowViewModel
     private const string OverviewIncludeDataIssuesSettingKey = "include_data_issues";
     private const string OverviewUpcomingFilterSettingKey = "upcoming_filter";
     private const string OverviewOverdueFilterSettingKey = "overdue_filter";
+    private const string OverviewUpcomingSortSettingKey = "upcoming_sort";
+    private const string OverviewUpcomingSortDescendingSettingKey = "upcoming_sort_descending";
+    private const string OverviewOverdueSortSettingKey = "overdue_sort";
+    private const string OverviewOverdueSortDescendingSettingKey = "overdue_sort_descending";
     private bool _suppressOverviewPreferenceRefresh;
 
     public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems { get; } = [];
@@ -122,6 +127,10 @@ public sealed partial class MainWindowViewModel
             IncludeDataIssuesInUpcomingOverview = ReadOverviewBooleanSetting(OverviewIncludeDataIssuesSettingKey);
             SelectedUpcomingOverviewFilter = NormalizeUpcomingOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewUpcomingFilterSettingKey, OverviewAllFilterLabel));
             SelectedOverdueOverviewFilter = NormalizeOverdueOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewOverdueFilterSettingKey, OverviewAllFilterLabel));
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption = ReadOverviewSortOption(OverviewUpcomingSortSettingKey);
+            UpcomingOverviewWorkspace.UpcomingOverviewSortDescending = ReadOverviewBooleanSetting(OverviewUpcomingSortDescendingSettingKey);
+            OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption = ReadOverviewSortOption(OverviewOverdueSortSettingKey);
+            OverdueOverviewWorkspace.OverdueOverviewSortDescending = ReadOverviewBooleanSetting(OverviewOverdueSortDescendingSettingKey);
         }
         finally
         {
@@ -131,6 +140,12 @@ public sealed partial class MainWindowViewModel
 
     private bool ReadOverviewBooleanSetting(string key) =>
         string.Equals(_dataSet.Settings.GetValue("overview", key, "0").Trim(), "1", StringComparison.Ordinal);
+
+    private string ReadOverviewSortOption(string key) =>
+        WorkspaceSortHelpers.NormalizeSortOption(
+            _dataSet.Settings.GetValue("overview", key, WorkspaceSortHelpers.DateSortLabel),
+            WorkspaceSortHelpers.TimelineOverviewSortOptions,
+            WorkspaceSortHelpers.DateSortLabel);
 
     private void PersistOverviewPreferencesAsync()
     {
@@ -143,6 +158,10 @@ public sealed partial class MainWindowViewModel
         _dataSet.Settings.SetValue("overview", OverviewIncludeDataIssuesSettingKey, IncludeDataIssuesInUpcomingOverview ? "1" : "0");
         _dataSet.Settings.SetValue("overview", OverviewUpcomingFilterSettingKey, NormalizeUpcomingOverviewFilter(SelectedUpcomingOverviewFilter));
         _dataSet.Settings.SetValue("overview", OverviewOverdueFilterSettingKey, NormalizeOverdueOverviewFilter(SelectedOverdueOverviewFilter));
+        _dataSet.Settings.SetValue("overview", OverviewUpcomingSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel));
+        _dataSet.Settings.SetValue("overview", OverviewUpcomingSortDescendingSettingKey, UpcomingOverviewWorkspace.UpcomingOverviewSortDescending ? "1" : "0");
+        _dataSet.Settings.SetValue("overview", OverviewOverdueSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel));
+        _dataSet.Settings.SetValue("overview", OverviewOverdueSortDescendingSettingKey, OverdueOverviewWorkspace.OverdueOverviewSortDescending ? "1" : "0");
         _ = PersistOverviewPreferencesCoreAsync();
     }
 
@@ -175,12 +194,16 @@ public sealed partial class MainWindowViewModel
     private void RefreshUpcomingOverview()
     {
         var previousKey = BuildOverviewSelectionKey(SelectedUpcomingOverviewItem);
-        var items = BuildFleetOverviewItems(
-            isFuture: true,
-            SelectedUpcomingOverviewFilter,
-            UpcomingOverviewSearchText,
-            IncludeMissingGreenCardsInUpcomingOverview,
-            IncludeDataIssuesInUpcomingOverview);
+        var items = WorkspaceSortHelpers.SortTimelineOverview(
+                BuildFleetOverviewItems(
+                    isFuture: true,
+                    SelectedUpcomingOverviewFilter,
+                    UpcomingOverviewSearchText,
+                    IncludeMissingGreenCardsInUpcomingOverview,
+                    IncludeDataIssuesInUpcomingOverview),
+                UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption,
+                UpcomingOverviewWorkspace.UpcomingOverviewSortDescending)
+            .ToList();
 
         UpcomingOverviewItems.Clear();
         foreach (var item in items)
@@ -201,7 +224,11 @@ public sealed partial class MainWindowViewModel
     private void RefreshOverdueOverview()
     {
         var previousKey = BuildOverviewSelectionKey(SelectedOverdueOverviewItem);
-        var items = BuildFleetOverviewItems(isFuture: false, SelectedOverdueOverviewFilter, OverdueOverviewSearchText);
+        var items = WorkspaceSortHelpers.SortTimelineOverview(
+                BuildFleetOverviewItems(isFuture: false, SelectedOverdueOverviewFilter, OverdueOverviewSearchText),
+                OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption,
+                OverdueOverviewWorkspace.OverdueOverviewSortDescending)
+            .ToList();
 
         OverdueOverviewItems.Clear();
         foreach (var item in items)

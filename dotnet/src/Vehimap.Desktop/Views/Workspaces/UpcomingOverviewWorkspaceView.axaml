@@ -19,7 +19,7 @@
     <Grid Grid.Row="1"
           Grid.ColumnSpan="2"
           Margin="0,12,0,0"
-          RowDefinitions="Auto,Auto"
+          RowDefinitions="Auto,Auto,Auto"
           ColumnDefinitions="100,*,120,110,160,130,130">
       <TextBlock Grid.Column="0"
                  VerticalAlignment="Center"
@@ -81,6 +81,27 @@
                 IsChecked="{Binding IncludeDataIssuesInUpcomingOverview}"
                 AutomationProperties.Name="Zobrazit v přehledu také datové nedostatky z auditu"
                 AutomationProperties.AutomationId="UpcomingOverviewIncludeDataIssuesCheckBox" />
+      <TextBlock Grid.Row="2"
+                 Grid.Column="0"
+                 Margin="0,8,0,0"
+                 VerticalAlignment="Center"
+                 Text="Řadit" />
+      <ComboBox Grid.Row="2"
+                Grid.Column="1"
+                Margin="12,8,0,0"
+                ItemsSource="{Binding OverviewSortOptions}"
+                SelectedItem="{Binding SelectedUpcomingOverviewSortOption}"
+                AutomationProperties.Name="Řazení přehledu blížících se termínů"
+                AutomationProperties.AutomationId="UpcomingOverviewSortComboBox" />
+      <CheckBox Grid.Row="2"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Margin="12,8,0,0"
+                VerticalAlignment="Center"
+                Content="Sestupně"
+                IsChecked="{Binding UpcomingOverviewSortDescending}"
+                AutomationProperties.Name="Řadit přehled blížících se termínů sestupně"
+                AutomationProperties.AutomationId="UpcomingOverviewSortDescendingCheckBox" />
     </Grid>
 
     <ListBox x:Name="UpcomingOverviewListBox"

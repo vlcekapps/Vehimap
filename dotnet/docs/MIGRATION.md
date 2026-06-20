@@ -36,7 +36,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - globalni hledani napric vozidly a hlavnim evidencemi s otevrenim na spravnou kartu a polozku
 - flotilovy `Prehled terminu` a `Propadle terminy`, ktere umi otevrit spravne vozidlo nebo souvisejici evidenci
 - Avalonia `Blizici se terminy` umi volitelne pridat vozidla bez zelene karty a datove nedostatky z auditu; otevreni datoveho nedostatku pouziva stejnou navigaci jako `Audit dat`
-- terminove prehledy v Avalonia vetvi si pamatuji posledni rozbalovaci filtr typu polozky v `settings.ini`, ale rychle textove hledani zustava jen docasne
+- terminove prehledy v Avalonia vetvi si pamatuji posledni rozbalovaci filtr typu polozky i pristupne razeni v `settings.ini`, ale rychle textove hledani zustava jen docasne
 - dashboard v Avalonia vetvi ma sdilene `Obnovit` / `Ctrl+R`, ktere prepocita auditni vyrez, naklady a nejblizsi terminy bez ztraty vyberu
 - terminove prehledy v Avalonia vetvi maji sdilene `Obnovit` / `Ctrl+R`, ktere prepocita seznam bez ztraty vyberu
 - keyboard-first vrstvu shellu s focus managementem, shortcuty a enter-akcemi na hlavnich seznamech

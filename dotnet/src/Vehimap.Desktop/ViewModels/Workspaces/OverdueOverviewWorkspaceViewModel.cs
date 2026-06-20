@@ -19,6 +19,12 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
     private string selectedOverdueOverviewFilter = "Vše";
 
     [ObservableProperty]
+    private string selectedOverdueOverviewSortOption = WorkspaceSortHelpers.DateSortLabel;
+
+    [ObservableProperty]
+    private bool overdueOverviewSortDescending;
+
+    [ObservableProperty]
     private string overdueOverviewSummary = "Propadlé termíny napříč vozidly se zobrazí po načtení dat.";
 
     [ObservableProperty]
@@ -32,6 +38,8 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
     public ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems => Root.OverdueOverviewItems;
 
     public IReadOnlyList<string> OverviewFilters => Root.OverviewFilters;
+
+    public IReadOnlyList<string> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
 
     public ICommand OpenSelectedOverdueOverviewItemCommand => Root.OpenSelectedOverdueOverviewItemCommand;
 
@@ -67,6 +75,16 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
     partial void OnSelectedOverdueOverviewFilterChanged(string value)
     {
         Root.HandleOverdueOverviewWorkspaceFilterChanged();
+    }
+
+    partial void OnSelectedOverdueOverviewSortOptionChanged(string value)
+    {
+        Root.HandleOverdueOverviewWorkspaceSortChanged();
+    }
+
+    partial void OnOverdueOverviewSortDescendingChanged(bool value)
+    {
+        Root.HandleOverdueOverviewWorkspaceSortChanged();
     }
 
     partial void OnSelectedOverdueOverviewItemChanged(VehicleTimelineItemViewModel? value)

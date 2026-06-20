@@ -19,6 +19,7 @@
     <Grid Grid.Row="1"
           Grid.ColumnSpan="2"
           Margin="0,12,0,0"
+          RowDefinitions="Auto,Auto"
           ColumnDefinitions="100,*,120,110,160,130,130">
       <TextBlock Grid.Column="0"
                  VerticalAlignment="Center"
@@ -65,6 +66,27 @@
               Content="Otevřít položku"
               AutomationProperties.Name="Otevřít vybraný propadlý termín"
               AutomationProperties.AutomationId="OverdueOverviewOpenButton" />
+      <TextBlock Grid.Row="1"
+                 Grid.Column="0"
+                 Margin="0,8,0,0"
+                 VerticalAlignment="Center"
+                 Text="Řadit" />
+      <ComboBox Grid.Row="1"
+                Grid.Column="1"
+                Margin="12,8,0,0"
+                ItemsSource="{Binding OverviewSortOptions}"
+                SelectedItem="{Binding SelectedOverdueOverviewSortOption}"
+                AutomationProperties.Name="Řazení přehledu propadlých termínů"
+                AutomationProperties.AutomationId="OverdueOverviewSortComboBox" />
+      <CheckBox Grid.Row="1"
+                Grid.Column="2"
+                Grid.ColumnSpan="2"
+                Margin="12,8,0,0"
+                VerticalAlignment="Center"
+                Content="Sestupně"
+                IsChecked="{Binding OverdueOverviewSortDescending}"
+                AutomationProperties.Name="Řadit přehled propadlých termínů sestupně"
+                AutomationProperties.AutomationId="OverdueOverviewSortDescendingCheckBox" />
     </Grid>
 
     <ListBox x:Name="OverdueOverviewListBox"

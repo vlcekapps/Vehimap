@@ -949,6 +949,17 @@ public sealed partial class MainWindowViewModel
         PersistOverviewPreferencesAsync();
     }
 
+    internal void HandleUpcomingOverviewWorkspaceSortChanged()
+    {
+        if (_suppressOverviewPreferenceRefresh)
+        {
+            return;
+        }
+
+        RefreshUpcomingOverview();
+        PersistOverviewPreferencesAsync();
+    }
+
     internal void HandleUpcomingOverviewWorkspaceOptionsChanged()
     {
         if (_suppressOverviewPreferenceRefresh)
@@ -989,6 +1000,17 @@ public sealed partial class MainWindowViewModel
         if (!string.Equals(SelectedOverdueOverviewFilter, normalizedFilter, StringComparison.Ordinal))
         {
             SelectedOverdueOverviewFilter = normalizedFilter;
+            return;
+        }
+
+        RefreshOverdueOverview();
+        PersistOverviewPreferencesAsync();
+    }
+
+    internal void HandleOverdueOverviewWorkspaceSortChanged()
+    {
+        if (_suppressOverviewPreferenceRefresh)
+        {
             return;
         }
 

@@ -19,6 +19,12 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     private string selectedUpcomingOverviewFilter = "Vše";
 
     [ObservableProperty]
+    private string selectedUpcomingOverviewSortOption = WorkspaceSortHelpers.DateSortLabel;
+
+    [ObservableProperty]
+    private bool upcomingOverviewSortDescending;
+
+    [ObservableProperty]
     private bool includeMissingGreenCardsInUpcomingOverview;
 
     [ObservableProperty]
@@ -38,6 +44,8 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems => Root.UpcomingOverviewItems;
 
     public IReadOnlyList<string> OverviewFilters => Root.UpcomingOverviewFilters;
+
+    public IReadOnlyList<string> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
 
     public ICommand OpenSelectedUpcomingOverviewItemCommand => Root.OpenSelectedUpcomingOverviewItemCommand;
 
@@ -73,6 +81,16 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     partial void OnSelectedUpcomingOverviewFilterChanged(string value)
     {
         Root.HandleUpcomingOverviewWorkspaceFilterChanged();
+    }
+
+    partial void OnSelectedUpcomingOverviewSortOptionChanged(string value)
+    {
+        Root.HandleUpcomingOverviewWorkspaceSortChanged();
+    }
+
+    partial void OnUpcomingOverviewSortDescendingChanged(bool value)
+    {
+        Root.HandleUpcomingOverviewWorkspaceSortChanged();
     }
 
     partial void OnIncludeMissingGreenCardsInUpcomingOverviewChanged(bool value)
