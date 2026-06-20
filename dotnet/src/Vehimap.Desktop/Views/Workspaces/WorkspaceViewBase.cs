@@ -7,7 +7,12 @@ using Vehimap.Desktop.ViewModels.Workspaces;
 
 namespace Vehimap.Desktop.Views.Workspaces;
 
-public abstract class WorkspaceViewBase<TViewModel> : UserControl
+public interface IWorkspaceView
+{
+    void FocusDefaultControl();
+}
+
+public abstract class WorkspaceViewBase<TViewModel> : UserControl, IWorkspaceView
     where TViewModel : WorkspaceViewModelBase
 {
     private TViewModel? _viewModel;

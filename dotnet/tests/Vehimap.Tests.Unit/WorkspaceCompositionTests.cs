@@ -111,19 +111,19 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Theory]
-    [InlineData("TimelineWindow", "TimelineWorkspaceView")]
-    [InlineData("CostWindow", "CostWorkspaceView")]
-    [InlineData("GlobalSearchWindow", "GlobalSearchWorkspaceView")]
-    [InlineData("UpcomingOverviewWindow", "UpcomingOverviewWorkspaceView")]
-    [InlineData("OverdueOverviewWindow", "OverdueOverviewWorkspaceView")]
-    public void Overview_windows_host_shared_workspace_controls(string windowName, string workspaceViewName)
+    [InlineData("TimelineWindow", "TimelineWorkspaceView", "TimelineWorkspaceHost")]
+    [InlineData("CostWindow", "CostWorkspaceView", "CostWorkspaceHost")]
+    [InlineData("GlobalSearchWindow", "GlobalSearchWorkspaceView", "GlobalSearchWorkspaceHost")]
+    [InlineData("UpcomingOverviewWindow", "UpcomingOverviewWorkspaceView", "UpcomingOverviewWorkspaceHost")]
+    [InlineData("OverdueOverviewWindow", "OverdueOverviewWorkspaceView", "OverdueOverviewWorkspaceHost")]
+    public void Overview_windows_host_shared_workspace_controls(string windowName, string workspaceViewName, string workspaceHostName)
     {
         var root = FindRepositoryRoot();
         var windowXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", $"{windowName}.axaml"));
         var codeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", $"{windowName}.axaml.cs"));
 
         Assert.Contains($"workspaces:{workspaceViewName}", windowXaml, StringComparison.Ordinal);
-        Assert.Contains("FocusDefaultControl", codeBehind, StringComparison.Ordinal);
+        Assert.Contains($"RegisterWorkspaceLifecycle(this, \"{workspaceHostName}\"", codeBehind, StringComparison.Ordinal);
     }
 
     private static MainWindowViewModel CreateViewModel()

@@ -1,10 +1,22 @@
 using Avalonia.Controls;
+using Avalonia.Threading;
 using Vehimap.Desktop.ViewModels.Workspaces;
+using Vehimap.Desktop.Views.Workspaces;
 
 namespace Vehimap.Desktop.Views;
 
 internal static class ModalWorkspaceWindowHelpers
 {
+    public static void RegisterWorkspaceLifecycle(Window window, string workspaceHostName, string? closeActionDescription = null)
+    {
+        window.Opened += (_, _) => FocusDefaultWorkspaceControl(window, workspaceHostName);
+
+        if (!string.IsNullOrWhiteSpace(closeActionDescription))
+        {
+            RegisterPendingEditCloseConfirmation(window, closeActionDescription);
+        }
+    }
+
     public static bool HasPendingEdits(object? dataContext)
     {
         return dataContext is WorkspaceViewModelBase { HasPendingEdits: true };
@@ -24,5 +36,34 @@ internal static class ModalWorkspaceWindowHelpers
 
         workspace.DiscardPendingEdits(clearStatus: false);
         return true;
+    }
+
+    private static void FocusDefaultWorkspaceControl(Window window, string workspaceHostName)
+    {
+        if (window.FindControl<Control>(workspaceHostName) is IWorkspaceView workspaceView)
+        {
+            Dispatcher.UIThread.Post(workspaceView.FocusDefaultControl, DispatcherPriority.Loaded);
+        }
+    }
+
+    private static void RegisterPendingEditCloseConfirmation(Window window, string actionDescription)
+    {
+        var closeConfirmed = false;
+        window.Closing += async (_, e) =>
+        {
+            if (closeConfirmed || !HasPendingEdits(window.DataContext))
+            {
+                return;
+            }
+
+            e.Cancel = true;
+            if (!await ConfirmCloseAsync(window.DataContext, actionDescription).ConfigureAwait(true))
+            {
+                return;
+            }
+
+            closeConfirmed = true;
+            window.Close();
+        };
     }
 }

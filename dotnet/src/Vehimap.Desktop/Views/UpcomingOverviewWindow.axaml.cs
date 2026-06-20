@@ -1,8 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
-using Vehimap.Desktop.Views.Workspaces;
 
 namespace Vehimap.Desktop.Views;
 
@@ -11,15 +9,7 @@ public partial class UpcomingOverviewWindow : Window
     public UpcomingOverviewWindow()
     {
         AvaloniaXamlLoader.Load(this);
-        Opened += OnOpened;
-    }
-
-    private void OnOpened(object? sender, EventArgs e)
-    {
-        if (this.FindControl<UpcomingOverviewWorkspaceView>("UpcomingOverviewWorkspaceHost") is { } workspaceView)
-        {
-            Dispatcher.UIThread.Post(workspaceView.FocusDefaultControl, DispatcherPriority.Loaded);
-        }
+        ModalWorkspaceWindowHelpers.RegisterWorkspaceLifecycle(this, "UpcomingOverviewWorkspaceHost");
     }
 
     private void OnCloseClick(object? sender, RoutedEventArgs e) => Close();

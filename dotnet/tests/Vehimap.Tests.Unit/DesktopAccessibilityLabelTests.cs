@@ -830,6 +830,35 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Workspace_windows_should_use_shared_focus_and_close_lifecycle()
+    {
+        var workspaceWindows = new[]
+        {
+            ("AuditWindow.axaml.cs", "AuditWorkspaceHost"),
+            ("CostWindow.axaml.cs", "CostWorkspaceHost"),
+            ("DashboardWindow.axaml.cs", "DashboardWorkspaceHost"),
+            ("FuelWindow.axaml.cs", "FuelWorkspaceHost"),
+            ("GlobalSearchWindow.axaml.cs", "GlobalSearchWorkspaceHost"),
+            ("HistoryWindow.axaml.cs", "HistoryWorkspaceHost"),
+            ("MaintenanceWindow.axaml.cs", "MaintenanceWorkspaceHost"),
+            ("OverdueOverviewWindow.axaml.cs", "OverdueOverviewWorkspaceHost"),
+            ("RecordsWindow.axaml.cs", "RecordWorkspaceHost"),
+            ("RemindersWindow.axaml.cs", "ReminderWorkspaceHost"),
+            ("TimelineWindow.axaml.cs", "TimelineWorkspaceHost"),
+            ("UpcomingOverviewWindow.axaml.cs", "UpcomingOverviewWorkspaceHost"),
+            ("VehicleDetailWindow.axaml.cs", "VehicleDetailWorkspaceHost")
+        };
+
+        foreach (var (fileName, hostName) in workspaceWindows)
+        {
+            var codeBehind = ReadViewCodeBehind(fileName);
+            Assert.Contains($"RegisterWorkspaceLifecycle(this, \"{hostName}\"", codeBehind);
+            Assert.DoesNotContain("Opened += OnOpened", codeBehind);
+            Assert.DoesNotContain("Closing += OnClosing", codeBehind);
+        }
+    }
+
+    [Fact]
     public void Desktop_ui_sources_should_not_contain_common_mojibake_markers()
     {
         var repositoryRoot = FindRepositoryRoot();

@@ -61,6 +61,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - Appium harness a zivy Windows UI smoke nad publish buildem
 - rozsireny Appium smoke pro samostatna workflow okna a hlavni app-level dialogy vcetne nastaveni, o programu a kontroly aktualizaci
 - sjednocena korenova accessibility metadata hlavniho shellu, workspace oken a app-level dialogu pro stabilnejsi screen-reader diagnostiku a UI automatizaci
+- sdileny lifecycle samostatnych workspace oken pro prvni fokus po otevreni a potvrzeni zavreni rozpracovanych editoru
 - sdilene workspace zkratky pro hledani a otevreni polozek v casove ose, globalnim hledani a terminovych prehledech, stejne v kartach i samostatnych oknech; hlavni shell je routuje kontextove, aby je neprebijely globalni akce vozidla
 - sdilene editacni workspace zkratky pro historii, tankovani, pripominky, udrzbu a doklady; `Ctrl+N`, `Ctrl+U` / `F2`, `Ctrl+S` a dokladove `Ctrl+O` / `Ctrl+Shift+O` funguji stejne v karte i samostatnem okne
 - `Ctrl+N` a `Ctrl+U` / `F2` z hlavni karty evidence oteviraji prislusne modalni workspace okno s viditelnym editorem, aby se v read-only shellu nespoustel skryty inline editor
