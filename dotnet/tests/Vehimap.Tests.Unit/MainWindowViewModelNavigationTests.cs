@@ -24,7 +24,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.OpenSelectedDashboardAuditItemCommand.Execute(null);
 
         Assert.Equal(6, viewModel.SelectedVehicleTabIndex);
-        Assert.Equal("rec_2", viewModel.SelectedRecord?.Id);
+        Assert.Equal("rec_2", viewModel.RecordWorkspace.SelectedRecord?.Id);
         Assert.Equal(DesktopFocusTarget.RecordList, requestedFocus);
     }
 
@@ -162,12 +162,12 @@ public sealed class MainWindowViewModelNavigationTests
 
         viewModel.RecordWorkspace.RecordSearchText = "Asistence";
         Assert.Single(viewModel.RecordWorkspace.VisibleRecordItems);
-        Assert.Equal("rec_2", viewModel.SelectedRecord?.Id);
+        Assert.Equal("rec_2", viewModel.RecordWorkspace.SelectedRecord?.Id);
 
         viewModel.RecordWorkspace.RecordSearchText = "nenajitelný dotaz";
 
         Assert.Empty(viewModel.RecordWorkspace.VisibleRecordItems);
-        Assert.Null(viewModel.SelectedRecord);
+        Assert.Null(viewModel.RecordWorkspace.SelectedRecord);
         Assert.False(viewModel.EditSelectedRecordCommand.CanExecute(null));
         Assert.False(viewModel.OpenSelectedRecordFileCommand.CanExecute(null));
     }
@@ -590,7 +590,7 @@ public sealed class MainWindowViewModelNavigationTests
 
         Assert.True(handled);
         Assert.Equal(DesktopTabIndexes.Record, viewModel.SelectedVehicleTabIndex);
-        Assert.Equal("rec_2", viewModel.SelectedRecord?.Id);
+        Assert.Equal("rec_2", viewModel.RecordWorkspace.SelectedRecord?.Id);
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Search;
         viewModel.GlobalSearchWorkspace.SelectedSearchResult = null;
@@ -767,8 +767,8 @@ public sealed class MainWindowViewModelNavigationTests
 
         Assert.True(handled);
         Assert.Equal(DesktopTabIndexes.Record, viewModel.SelectedVehicleTabIndex);
-        Assert.True(viewModel.IsEditingRecord);
-        Assert.Equal("Asistence", viewModel.RecordEditorTitle);
+        Assert.True(viewModel.RecordWorkspace.IsEditingRecord);
+        Assert.Equal("Asistence", viewModel.RecordWorkspace.RecordEditorTitle);
         Assert.Equal(DesktopFocusTarget.RecordEditorTitle, requestedFocus);
     }
 
@@ -797,13 +797,13 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.FocusRequested += target => requestedFocus = target;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
-        viewModel.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_2");
+        viewModel.RecordWorkspace.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_2");
 
         var handled = viewModel.HandleCurrentWorkspaceEditShortcut();
 
         Assert.True(handled);
-        Assert.True(viewModel.IsEditingRecord);
-        Assert.Equal("Asistence", viewModel.RecordEditorTitle);
+        Assert.True(viewModel.RecordWorkspace.IsEditingRecord);
+        Assert.Equal("Asistence", viewModel.RecordWorkspace.RecordEditorTitle);
         Assert.Equal(DesktopTabIndexes.Record, viewModel.SelectedVehicleTabIndex);
         Assert.Equal(DesktopFocusTarget.RecordEditorTitle, requestedFocus);
     }
@@ -840,7 +840,7 @@ public sealed class MainWindowViewModelNavigationTests
             var viewModel = CreateViewModel(fileLauncher: fileLauncher, recordFilePath: attachmentPath);
 
             viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
-            viewModel.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
+            viewModel.RecordWorkspace.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
 
             var handled = await viewModel.HandleCurrentWorkspacePrimaryOpenShortcutAsync();
 
@@ -864,14 +864,14 @@ public sealed class MainWindowViewModelNavigationTests
             var viewModel = CreateViewModel(clipboardService: clipboard, recordFilePath: attachmentPath);
 
             viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
-            viewModel.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
+            viewModel.RecordWorkspace.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
 
             Assert.True(viewModel.CopySelectedRecordPathCommand.CanExecute(null));
 
             await viewModel.CopySelectedRecordPathCommand.ExecuteAsync(null);
 
             Assert.Equal(attachmentPath, clipboard.LastCopiedText);
-            Assert.Contains("zkopírována", viewModel.RecordEditorStatus, StringComparison.CurrentCulture);
+            Assert.Contains("zkopírována", viewModel.RecordWorkspace.RecordEditorStatus, StringComparison.CurrentCulture);
         }
         finally
         {
@@ -955,7 +955,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.OpenSelectedSearchResultCommand.Execute(null);
 
         Assert.Equal(6, viewModel.SelectedVehicleTabIndex);
-        Assert.Equal("rec_2", viewModel.SelectedRecord?.Id);
+        Assert.Equal("rec_2", viewModel.RecordWorkspace.SelectedRecord?.Id);
         Assert.Equal(DesktopFocusTarget.RecordList, requestedFocus);
     }
 

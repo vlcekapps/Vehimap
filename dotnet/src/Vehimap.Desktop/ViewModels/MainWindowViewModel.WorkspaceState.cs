@@ -303,109 +303,109 @@ public sealed partial class MainWindowViewModel
     public bool CanSaveMaintenance => SelectedVehicle is not null && IsEditingMaintenance;
     public bool CanCancelMaintenanceEdit => IsEditingMaintenance;
 
-    public VehicleRecordItemViewModel? SelectedRecord
+    private VehicleRecordItemViewModel? SelectedRecord
     {
         get => RecordWorkspace.SelectedRecord;
         set => RecordWorkspace.SelectedRecord = value;
     }
 
-    public string SelectedRecordDetail
+    private string SelectedRecordDetail
     {
         get => RecordWorkspace.SelectedRecordDetail;
         set => RecordWorkspace.SelectedRecordDetail = value;
     }
 
-    public bool IsEditingRecord
+    private bool IsEditingRecord
     {
         get => RecordWorkspace.IsEditingRecord;
         set => RecordWorkspace.IsEditingRecord = value;
     }
 
-    public string RecordPanelHeading
+    private string RecordPanelHeading
     {
         get => RecordWorkspace.RecordPanelHeading;
         set => RecordWorkspace.RecordPanelHeading = value;
     }
 
-    public string RecordEditorStatus
+    private string RecordEditorStatus
     {
         get => RecordWorkspace.RecordEditorStatus;
         set => RecordWorkspace.RecordEditorStatus = value;
     }
 
-    public string RecordEditorRecordType
+    private string RecordEditorRecordType
     {
         get => RecordWorkspace.RecordEditorRecordType;
         set => RecordWorkspace.RecordEditorRecordType = value;
     }
 
-    public string RecordEditorTitle
+    private string RecordEditorTitle
     {
         get => RecordWorkspace.RecordEditorTitle;
         set => RecordWorkspace.RecordEditorTitle = value;
     }
 
-    public string RecordEditorProvider
+    private string RecordEditorProvider
     {
         get => RecordWorkspace.RecordEditorProvider;
         set => RecordWorkspace.RecordEditorProvider = value;
     }
 
-    public string RecordEditorValidFrom
+    private string RecordEditorValidFrom
     {
         get => RecordWorkspace.RecordEditorValidFrom;
         set => RecordWorkspace.RecordEditorValidFrom = value;
     }
 
-    public string RecordEditorValidTo
+    private string RecordEditorValidTo
     {
         get => RecordWorkspace.RecordEditorValidTo;
         set => RecordWorkspace.RecordEditorValidTo = value;
     }
 
-    public string RecordEditorPrice
+    private string RecordEditorPrice
     {
         get => RecordWorkspace.RecordEditorPrice;
         set => RecordWorkspace.RecordEditorPrice = value;
     }
 
-    public string SelectedRecordEditorAttachmentMode
+    private string SelectedRecordEditorAttachmentMode
     {
         get => RecordWorkspace.SelectedRecordEditorAttachmentMode;
         set => RecordWorkspace.SelectedRecordEditorAttachmentMode = value;
     }
 
-    public string RecordEditorPathInput
+    private string RecordEditorPathInput
     {
         get => RecordWorkspace.RecordEditorPathInput;
         set => RecordWorkspace.RecordEditorPathInput = value;
     }
 
-    public string RecordEditorStoredPath
+    private string RecordEditorStoredPath
     {
         get => RecordWorkspace.RecordEditorStoredPath;
         set => RecordWorkspace.RecordEditorStoredPath = value;
     }
 
-    public string RecordEditorResolvedPath
+    private string RecordEditorResolvedPath
     {
         get => RecordWorkspace.RecordEditorResolvedPath;
         set => RecordWorkspace.RecordEditorResolvedPath = value;
     }
 
-    public string RecordEditorAvailability
+    private string RecordEditorAvailability
     {
         get => RecordWorkspace.RecordEditorAvailability;
         set => RecordWorkspace.RecordEditorAvailability = value;
     }
 
-    public string RecordEditorNote
+    private string RecordEditorNote
     {
         get => RecordWorkspace.RecordEditorNote;
         set => RecordWorkspace.RecordEditorNote = value;
     }
 
-    public bool IsRecordDetailVisible => RecordWorkspace.IsRecordDetailVisible;
+    private bool IsRecordDetailVisible => RecordWorkspace.IsRecordDetailVisible;
     public bool CanCreateRecord => SelectedVehicle is not null && !HasPendingEdits;
     public bool CanEditSelectedRecord => SelectedRecord is not null && !HasPendingEdits;
     public bool CanDeleteSelectedRecord => SelectedRecord is not null && !HasPendingEdits;
@@ -417,9 +417,9 @@ public sealed partial class MainWindowViewModel
         && !HasPendingEdits
         && !string.Equals(SelectedRecord.AttachmentMode, "Spravovaná kopie", StringComparison.CurrentCulture)
         && !string.IsNullOrWhiteSpace(SelectedRecord.ResolvedPath);
-    public bool IsRecordEditorManaged => RecordWorkspace.IsRecordEditorManaged;
-    public string RecordEditorPathInputLabel => RecordWorkspace.RecordEditorPathInputLabel;
-    public string RecordEditorPathInputHelp => RecordWorkspace.RecordEditorPathInputHelp;
+    private bool IsRecordEditorManaged => RecordWorkspace.IsRecordEditorManaged;
+    private string RecordEditorPathInputLabel => RecordWorkspace.RecordEditorPathInputLabel;
+    private string RecordEditorPathInputHelp => RecordWorkspace.RecordEditorPathInputHelp;
 
     public bool CanOpenSelectedTimelineItem => TimelineWorkspace.SelectedTimelineItem is not null;
     public bool CanOpenSelectedDashboardAuditItem => AuditWorkspace.SelectedDashboardAuditItem is not null;

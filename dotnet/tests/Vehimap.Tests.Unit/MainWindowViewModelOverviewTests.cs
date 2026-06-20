@@ -245,7 +245,7 @@ public sealed class MainWindowViewModelOverviewTests
         viewModel.OpenSelectedUpcomingOverviewItemCommand.Execute(null);
 
         Assert.True(viewModel.IsRecordTabSelected);
-        Assert.Equal("Povinné ručení", viewModel.SelectedRecord?.Title);
+        Assert.Equal("Povinné ručení", viewModel.RecordWorkspace.SelectedRecord?.Title);
     }
 
     private static MainWindowViewModel CreateViewModel(VehimapDataSet dataSet)

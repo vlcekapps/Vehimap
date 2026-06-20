@@ -57,6 +57,23 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Record_workspace_owns_selection_and_editing_state()
+    {
+        var viewModel = CreateViewModel();
+        var record = viewModel.RecordWorkspace.SelectedVehicleRecords.First();
+
+        viewModel.RecordWorkspace.SelectedRecord = record;
+
+        Assert.Same(record, viewModel.RecordWorkspace.SelectedRecord);
+
+        viewModel.RecordWorkspace.EditSelectedRecordCommand.Execute(null);
+        viewModel.RecordWorkspace.RecordEditorTitle = "Upravený doklad";
+
+        Assert.True(viewModel.RecordWorkspace.IsEditingRecord);
+        Assert.Equal("Upravený doklad", viewModel.RecordWorkspace.RecordEditorTitle);
+    }
+
+    [Fact]
     public void Timeline_and_search_workspaces_own_state_and_collections()
     {
         var viewModel = CreateViewModel();
@@ -297,6 +314,27 @@ public sealed class WorkspaceCompositionTests
             "RecordSummary",
             "MaintenanceTemplateOptions",
             "RecordAttachmentModes",
+            "SelectedRecord",
+            "SelectedRecordDetail",
+            "IsEditingRecord",
+            "RecordPanelHeading",
+            "RecordEditorStatus",
+            "RecordEditorRecordType",
+            "RecordEditorTitle",
+            "RecordEditorProvider",
+            "RecordEditorValidFrom",
+            "RecordEditorValidTo",
+            "RecordEditorPrice",
+            "SelectedRecordEditorAttachmentMode",
+            "RecordEditorPathInput",
+            "RecordEditorStoredPath",
+            "RecordEditorResolvedPath",
+            "RecordEditorAvailability",
+            "RecordEditorNote",
+            "IsRecordDetailVisible",
+            "IsRecordEditorManaged",
+            "RecordEditorPathInputLabel",
+            "RecordEditorPathInputHelp",
             "SelectedHistory",
             "SelectedHistoryDetail",
             "IsEditingHistory",

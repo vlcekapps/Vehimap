@@ -81,7 +81,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - stav exportů nákladového přehledu v Avalonia větvi vlastní `CostWorkspace` místo root `MainWindowViewModel`
 - souhrnné texty evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` v Avalonia větvi vlastní příslušné workspace viewmodely místo root proxy vlastností
 - načtené kolekce záznamů evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` v Avalonia větvi vlastní příslušné workspace viewmodely místo veřejných root vlastností
-- výběr položky, detailní text a editorový stav evidencí `Historie`, `Tankování`, `Připomínky` a `Údržba` v Avalonia větvi už nejsou veřejné root proxy vlastnosti; patří přímo jejich workspace viewmodelům
+- výběr položky, detailní text a editorový stav evidencí `Historie`, `Tankování`, `Připomínky`, `Údržba` a `Doklady` v Avalonia větvi už nejsou veřejné root proxy vlastnosti; patří přímo jejich workspace viewmodelům
 - souhrnné texty detailu vozidla v Avalonia větvi vlastní `VehicleDetailWorkspace` místo root `MainWindowViewModel`
 - formulářové hodnoty editoru vozidla v Avalonia větvi vlastní `VehicleDetailWorkspace` místo root `MainWindowViewModel`
 - režim editace vozidla, viditelnost detailu a nadpis detailního panelu v Avalonia větvi vlastní `VehicleDetailWorkspace` místo root `MainWindowViewModel`

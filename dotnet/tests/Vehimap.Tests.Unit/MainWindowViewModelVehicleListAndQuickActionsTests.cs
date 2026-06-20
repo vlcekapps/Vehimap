@@ -264,7 +264,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         Assert.True(viewModel.IsRecordTabSelected);
         Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
-        Assert.Equal("rec_1", viewModel.SelectedRecord?.Id);
+        Assert.Equal("rec_1", viewModel.RecordWorkspace.SelectedRecord?.Id);
         Assert.Equal(DesktopFocusTarget.RecordList, requestedFocus);
         Assert.Contains("Nejbližší doklad", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }

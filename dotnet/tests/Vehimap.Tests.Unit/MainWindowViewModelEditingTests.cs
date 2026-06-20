@@ -107,11 +107,11 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var viewModel = CreateViewModel(dataRoot, dataStore);
 
         viewModel.CreateRecordCommand.Execute(null);
-        viewModel.RecordEditorRecordType = "Povinné ručení";
-        viewModel.RecordEditorTitle = "Kooperativa 2026";
-        viewModel.RecordEditorValidTo = "12/2026";
-        viewModel.SelectedRecordEditorAttachmentMode = "Spravovaná kopie";
-        viewModel.RecordEditorPathInput = sourceFile;
+        viewModel.RecordWorkspace.RecordEditorRecordType = "Povinné ručení";
+        viewModel.RecordWorkspace.RecordEditorTitle = "Kooperativa 2026";
+        viewModel.RecordWorkspace.RecordEditorValidTo = "12/2026";
+        viewModel.RecordWorkspace.SelectedRecordEditorAttachmentMode = "Spravovaná kopie";
+        viewModel.RecordWorkspace.RecordEditorPathInput = sourceFile;
 
         await viewModel.SaveRecordCommand.ExecuteAsync(null);
 
@@ -122,8 +122,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         var importedPath = Path.Combine(dataRoot.DataPath, savedRecord.FilePath.Replace('/', Path.DirectorySeparatorChar));
         Assert.True(File.Exists(importedPath));
-        Assert.Equal("Nový doklad byl uložen.", viewModel.RecordEditorStatus);
-        Assert.Equal("Spravovaná kopie", viewModel.SelectedRecord?.AttachmentMode);
+        Assert.Equal("Nový doklad byl uložen.", viewModel.RecordWorkspace.RecordEditorStatus);
+        Assert.Equal("Spravovaná kopie", viewModel.RecordWorkspace.SelectedRecord?.AttachmentMode);
     }
 
     [Fact]

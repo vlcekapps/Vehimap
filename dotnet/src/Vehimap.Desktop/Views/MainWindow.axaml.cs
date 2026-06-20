@@ -961,7 +961,7 @@ public partial class MainWindow : Window
             return true;
         }
 
-        if (_viewModel.IsEditingRecord)
+        if (_viewModel.RecordWorkspace.IsEditingRecord)
         {
             await OpenRecordsWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
             return true;
