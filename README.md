@@ -13,6 +13,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - v C# Avalonia větvi se poslední zvolená kategorie a stavový filtr hlavního seznamu ukládají do `settings.ini`; textové hledání zůstává jen dočasné, aby po startu neschovalo očekávaná vozidla
 - detail vozidla se souhrnem údajů, stavem platností, posledními událostmi z historie a souhrnem tankování i dokladů
 - v C# Avalonia větvi detail vozidla ukazuje i poslední historické záznamy, poslední známý tachometr a souhrn navazujících evidencí, takže odpovídá rychlé kontrolní ploše z AHK verze
+- v C# Avalonia větvi má detail vozidla přístupný blok `Související evidence`, ze kterého lze rovnou přejít do historie, tankování, připomínek, údržby, dokladů, časové osy nebo nákladů vybraného vozidla
 - historii událostí pro každé vozidlo, včetně přidání, úpravy a odstranění servisních nebo jiných záznamů
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů
 - samostatný `Plán údržby` pro každé vozidlo, včetně šablon běžných servisních úkonů, doporučených balíků podle kategorie a explicitního servisního profilu vozidla, intervalu podle kilometrů nebo měsíců, evidence posledního servisu a rychlého označení splnění s volitelným zapsáním do historie
@@ -76,6 +77,7 @@ V hlavním okně:
 - v C# Avalonia větvi tlačítko `Vymazat filtry` obnoví celý seznam vozidel, ohlásí změnu ve stavovém textu a vrátí fokus do hledání
 - v C# Avalonia větvi se během rozpracované editace zamkne seznam vozidel, jeho filtry, přepínání pracovních karet i otevírání jiných workspace oken; nejdřív je potřeba editor uložit nebo zrušit, aby nešlo omylem odejít z rozpracované práce
 - tlačítka `Detail vozidla` a `Historie událostí` pracují s právě vybraným vozidlem, další evidence včetně `Plánu údržby` otevřete i z menu `Vozidlo`
+- v C# Avalonia větvi lze stejné navazující evidence otevřít přímo z detailu vozidla v bloku `Související evidence`; pokud je detail otevřený jako samostatné okno, po přechodu do evidence se okno zavře
 - položky `Dashboard` a `Globální hledání` v menu `Přehled` nebo `Přehledy` otevřou rychlý souhrn termínů, servisních úkonů, nákladů, problémových stavů a stavu evidencí nebo vyhledání napříč všemi evidencemi
 - položka `Náklady napříč vozidly` v menu `Přehled` nebo `Přehledy` otevře porovnání nákladů za zvolené období mezi všemi vozidly a umožní z přehledu rovnou přejít na detail nákladů, detail vozidla nebo editaci
 - v AHK menu `Nápověda` a v C# Avalonia menu `Aplikace` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky i samostatnou ruční kontrolu aktualizací
@@ -135,7 +137,7 @@ V hlavním okně:
 
 ## Klávesové zkratky v detailu a evidencích:
 
-- `Detail vozidla`: `Ctrl+U` nebo `F2` upraví vozidlo, `Ctrl+H` otevře historii, `Ctrl+R` připomínky, `Ctrl+K` kilometry a tankování, `Ctrl+M` plán údržby a `Ctrl+P` pojištění a doklady
+- `Detail vozidla`: `Ctrl+U` nebo `F2` upraví vozidlo, `Ctrl+H` otevře historii, `Ctrl+R` připomínky, `Ctrl+K` kilometry a tankování, `Ctrl+M` plán údržby a `Ctrl+P` pojištění a doklady; v C# Avalonia větvi jsou hlavní navazující evidence dostupné i jako pojmenovaná tlačítka v bloku `Související evidence`
 - `Historie událostí`, `Kilometry a tankování`, `Pojištění a doklady` i `Vlastní připomínky`: `Ctrl+F` přesune fokus do rychlého hledání, `Ctrl+N` přidá záznam, `Ctrl+U` nebo `F2` upraví vybraný záznam a `Ctrl+D` otevře detail vozidla
 - `Plán údržby`: `Ctrl+F` přesune fokus do hledání, `Ctrl+N` přidá úkon, `Ctrl+Shift+N` nabídne doporučené šablony, `Ctrl+U` nebo `F2` upraví vybraný úkon, `Ctrl+L` jej označí jako splněný a `Ctrl+D` otevře detail vozidla
 - v C# Avalonia větvi má editor údržby rozbalovací `Šablonu úkonu`, která při ručním přidání rychle předvyplní název, intervaly a poznámku běžného servisu

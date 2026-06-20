@@ -270,6 +270,30 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Vehicle_detail_workspace_should_define_accessible_related_actions()
+    {
+        var xaml = ReadWorkspaceOrView("VehicleDetailWorkspaceView.axaml", true);
+
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailRelatedActionsPanel\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailRelatedActionsHelpText\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailHistoryButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít historii vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailFuelButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít tankování vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailRemindersButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít připomínky vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailMaintenanceButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít plán údržby vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailRecordsButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít doklady a přílohy vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailTimelineButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít časovou osu vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailCostsButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít náklady vybraného vozidla\"", xaml);
+        Assert.Equal(7, Regex.Matches(xaml, "IsEnabled=\"\\{Binding CanOpenVehicleRelatedWorkspace\\}\"").Count);
+    }
+
+    [Fact]
     public void Dialog_xaml_files_should_define_expected_automation_ids()
     {
         var settingsXaml = ReadViewFile("SettingsWindow.axaml");

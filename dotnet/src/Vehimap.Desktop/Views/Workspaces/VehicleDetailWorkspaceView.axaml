@@ -221,6 +221,57 @@
                    TextWrapping="Wrap"
                    AutomationProperties.Name="{Binding SelectedVehicleEvidenceSummary}"
                    AutomationProperties.AutomationId="SelectedVehicleEvidenceSummaryText" />
+        <Border Padding="14"
+                Background="#10143A2A"
+                CornerRadius="8"
+                AutomationProperties.Name="Související evidence vybraného vozidla"
+                AutomationProperties.AutomationId="VehicleDetailRelatedActionsPanel">
+          <StackPanel Spacing="8">
+            <TextBlock FontWeight="SemiBold" Text="Související evidence" />
+            <TextBlock Opacity="0.76"
+                       Text="Přejděte přímo do evidence, časové osy nebo nákladů vybraného vozidla."
+                       TextWrapping="Wrap"
+                       AutomationProperties.Name="Přejděte přímo do evidence, časové osy nebo nákladů vybraného vozidla."
+                       AutomationProperties.AutomationId="VehicleDetailRelatedActionsHelpText" />
+            <WrapPanel ItemWidth="148" ItemHeight="34">
+              <Button Click="OnOpenVehicleHistoryWorkspaceClick"
+                      Content="Historie"
+                      IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
+                      AutomationProperties.Name="Otevřít historii vybraného vozidla"
+                      AutomationProperties.AutomationId="OpenDetailHistoryButton" />
+              <Button Click="OnOpenVehicleFuelWorkspaceClick"
+                      Content="Tankování"
+                      IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
+                      AutomationProperties.Name="Otevřít tankování vybraného vozidla"
+                      AutomationProperties.AutomationId="OpenDetailFuelButton" />
+              <Button Click="OnOpenVehicleReminderWorkspaceClick"
+                      Content="Připomínky"
+                      IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
+                      AutomationProperties.Name="Otevřít připomínky vybraného vozidla"
+                      AutomationProperties.AutomationId="OpenDetailRemindersButton" />
+              <Button Click="OnOpenVehicleMaintenanceWorkspaceClick"
+                      Content="Údržba"
+                      IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
+                      AutomationProperties.Name="Otevřít plán údržby vybraného vozidla"
+                      AutomationProperties.AutomationId="OpenDetailMaintenanceButton" />
+              <Button Click="OnOpenVehicleRecordWorkspaceClick"
+                      Content="Doklady"
+                      IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
+                      AutomationProperties.Name="Otevřít doklady a přílohy vybraného vozidla"
+                      AutomationProperties.AutomationId="OpenDetailRecordsButton" />
+              <Button Click="OnOpenVehicleTimelineWorkspaceClick"
+                      Content="Časová osa"
+                      IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
+                      AutomationProperties.Name="Otevřít časovou osu vybraného vozidla"
+                      AutomationProperties.AutomationId="OpenDetailTimelineButton" />
+              <Button Click="OnOpenVehicleCostsWorkspaceClick"
+                      Content="Náklady"
+                      IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
+                      AutomationProperties.Name="Otevřít náklady vybraného vozidla"
+                      AutomationProperties.AutomationId="OpenDetailCostsButton" />
+            </WrapPanel>
+          </StackPanel>
+        </Border>
         <TextBlock FontWeight="SemiBold"
                    Text="{Binding SelectedVehicleRecentHistorySummary}"
                    TextWrapping="Wrap"

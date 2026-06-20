@@ -167,6 +167,7 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
         OnPropertyChanged(nameof(CanEditSelectedDashboardVehicle));
         OnPropertyChanged(nameof(CanClearVehicleFilters));
+        VehicleDetailWorkspace.NotifyVehicleRelatedWorkspaceStateChanged();
         MaintenanceWorkspace.NotifyMaintenanceRecommendationStateChanged();
 
         ClearVehicleFiltersCommand.NotifyCanExecuteChanged();

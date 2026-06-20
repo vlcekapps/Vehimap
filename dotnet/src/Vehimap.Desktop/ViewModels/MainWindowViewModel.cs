@@ -362,6 +362,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(CanOpenReminderWindow));
         OnPropertyChanged(nameof(CanOpenMaintenanceWindow));
         OnPropertyChanged(nameof(CanOpenRecordWindow));
+        VehicleDetailWorkspace.NotifyVehicleRelatedWorkspaceStateChanged();
         OnPropertyChanged(nameof(VehicleDetailWindowTitle));
         OnPropertyChanged(nameof(HistoryWindowTitle));
         OnPropertyChanged(nameof(FuelWindowTitle));

@@ -97,6 +97,46 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         ViewModel.SetVehicleStarterBundleStatus(message);
     }
 
+    private void OnOpenVehicleHistoryWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        CloseVehicleDetailWindowIfNeeded(ViewModel?.OpenVehicleHistoryWorkspace() == true);
+    }
+
+    private void OnOpenVehicleFuelWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        CloseVehicleDetailWindowIfNeeded(ViewModel?.OpenVehicleFuelWorkspace() == true);
+    }
+
+    private void OnOpenVehicleReminderWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        CloseVehicleDetailWindowIfNeeded(ViewModel?.OpenVehicleReminderWorkspace() == true);
+    }
+
+    private void OnOpenVehicleMaintenanceWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        CloseVehicleDetailWindowIfNeeded(ViewModel?.OpenVehicleMaintenanceWorkspace() == true);
+    }
+
+    private void OnOpenVehicleRecordWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        CloseVehicleDetailWindowIfNeeded(ViewModel?.OpenVehicleRecordWorkspace() == true);
+    }
+
+    private void OnOpenVehicleTimelineWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        CloseVehicleDetailWindowIfNeeded(ViewModel?.OpenVehicleTimelineWorkspace() == true);
+    }
+
+    private async void OnOpenVehicleCostsWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        CloseVehicleDetailWindowIfNeeded(await ViewModel.OpenVehicleCostsWorkspaceAsync());
+    }
+
     private Control? ResolvePrimaryAction()
     {
         if (ViewModel?.IsVehicleDetailVisible == true
@@ -107,6 +147,19 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         }
 
         return this.FindControl<Button>("CreateVehicleButton");
+    }
+
+    private void CloseVehicleDetailWindowIfNeeded(bool navigationSucceeded)
+    {
+        if (!navigationSucceeded)
+        {
+            return;
+        }
+
+        if (TopLevel.GetTopLevel(this) is VehicleDetailWindow detailWindow)
+        {
+            detailWindow.Close();
+        }
     }
 
     private void ApplyHostMode()

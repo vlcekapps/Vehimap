@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Services;
 using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
@@ -112,6 +113,7 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public IReadOnlyList<string> VehicleTimingDriveOptions => LegacyKnownValues.VehicleTimingDrives;
     public IReadOnlyList<string> VehicleTransmissionOptions => LegacyKnownValues.VehicleTransmissions;
     public bool CanOpenVehicleStarterBundle => Root.CanOpenVehicleStarterBundle;
+    public bool CanOpenVehicleRelatedWorkspace => Root.SelectedVehicle is not null && Root.CanUseWorkspaceNavigation;
 
     public string VehicleEditorName
     {
@@ -239,11 +241,58 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
         Root.SetVehicleStarterBundleStatus(message);
     }
 
+    public bool OpenVehicleHistoryWorkspace() =>
+        OpenVehicleRelatedWorkspace(DesktopTabIndexes.History, DesktopFocusTarget.HistoryList);
+
+    public bool OpenVehicleFuelWorkspace() =>
+        OpenVehicleRelatedWorkspace(DesktopTabIndexes.Fuel, DesktopFocusTarget.FuelList);
+
+    public bool OpenVehicleReminderWorkspace() =>
+        OpenVehicleRelatedWorkspace(DesktopTabIndexes.Reminder, DesktopFocusTarget.ReminderList);
+
+    public bool OpenVehicleMaintenanceWorkspace() =>
+        OpenVehicleRelatedWorkspace(DesktopTabIndexes.Maintenance, DesktopFocusTarget.MaintenanceList);
+
+    public bool OpenVehicleTimelineWorkspace() =>
+        OpenVehicleRelatedWorkspace(DesktopTabIndexes.Timeline, DesktopFocusTarget.TimelineList);
+
+    public bool OpenVehicleRecordWorkspace() =>
+        OpenVehicleRelatedWorkspace(DesktopTabIndexes.Record, DesktopFocusTarget.RecordList);
+
+    public async Task<bool> OpenVehicleCostsWorkspaceAsync()
+    {
+        if (!CanOpenVehicleRelatedWorkspace || !Root.OpenSelectedVehicleCostsCommand.CanExecute(null))
+        {
+            return false;
+        }
+
+        await Root.OpenSelectedVehicleCostsCommand.ExecuteAsync(null).ConfigureAwait(true);
+        return Root.SelectedVehicleTabIndex == DesktopTabIndexes.Cost;
+    }
+
     internal void SetVehicleEditingState(bool isEditing, bool isNewVehicle)
     {
         VehiclePanelHeading = isEditing
             ? (isNewVehicle ? "Nové vozidlo" : "Upravit vozidlo")
             : "Detail vozidla";
         IsEditingVehicle = isEditing;
+        NotifyVehicleRelatedWorkspaceStateChanged();
+    }
+
+    internal void NotifyVehicleRelatedWorkspaceStateChanged()
+    {
+        OnPropertyChanged(nameof(CanOpenVehicleRelatedWorkspace));
+    }
+
+    private bool OpenVehicleRelatedWorkspace(int tabIndex, DesktopFocusTarget focusTarget)
+    {
+        if (!CanOpenVehicleRelatedWorkspace)
+        {
+            return false;
+        }
+
+        Root.SelectedVehicleTabIndex = tabIndex;
+        RequestFocus(focusTarget);
+        return true;
     }
 }

@@ -90,6 +90,65 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public async Task Vehicle_detail_related_actions_switch_to_matching_workspaces_and_request_focus()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        Assert.True(viewModel.VehicleDetailWorkspace.OpenVehicleHistoryWorkspace());
+        Assert.Equal(DesktopTabIndexes.History, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal(DesktopFocusTarget.HistoryList, requestedTargets.Last());
+
+        Assert.True(viewModel.VehicleDetailWorkspace.OpenVehicleFuelWorkspace());
+        Assert.Equal(DesktopTabIndexes.Fuel, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal(DesktopFocusTarget.FuelList, requestedTargets.Last());
+
+        Assert.True(viewModel.VehicleDetailWorkspace.OpenVehicleReminderWorkspace());
+        Assert.Equal(DesktopTabIndexes.Reminder, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal(DesktopFocusTarget.ReminderList, requestedTargets.Last());
+
+        Assert.True(viewModel.VehicleDetailWorkspace.OpenVehicleMaintenanceWorkspace());
+        Assert.Equal(DesktopTabIndexes.Maintenance, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal(DesktopFocusTarget.MaintenanceList, requestedTargets.Last());
+
+        Assert.True(viewModel.VehicleDetailWorkspace.OpenVehicleRecordWorkspace());
+        Assert.Equal(DesktopTabIndexes.Record, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal(DesktopFocusTarget.RecordList, requestedTargets.Last());
+
+        Assert.True(viewModel.VehicleDetailWorkspace.OpenVehicleTimelineWorkspace());
+        Assert.Equal(DesktopTabIndexes.Timeline, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal(DesktopFocusTarget.TimelineList, requestedTargets.Last());
+
+        Assert.True(await viewModel.VehicleDetailWorkspace.OpenVehicleCostsWorkspaceAsync());
+        Assert.Equal(DesktopTabIndexes.Cost, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("veh_1", viewModel.CostWorkspace.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.Equal(DesktopFocusTarget.CostList, requestedTargets.Last());
+    }
+
+    [Fact]
+    public async Task Vehicle_detail_related_actions_are_locked_while_an_editor_is_open()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.EditSelectedVehicleCommand.Execute(null);
+        requestedTargets.Clear();
+
+        Assert.False(viewModel.VehicleDetailWorkspace.CanOpenVehicleRelatedWorkspace);
+        Assert.False(viewModel.VehicleDetailWorkspace.OpenVehicleHistoryWorkspace());
+        Assert.False(viewModel.VehicleDetailWorkspace.OpenVehicleFuelWorkspace());
+        Assert.False(viewModel.VehicleDetailWorkspace.OpenVehicleReminderWorkspace());
+        Assert.False(viewModel.VehicleDetailWorkspace.OpenVehicleMaintenanceWorkspace());
+        Assert.False(viewModel.VehicleDetailWorkspace.OpenVehicleRecordWorkspace());
+        Assert.False(viewModel.VehicleDetailWorkspace.OpenVehicleTimelineWorkspace());
+        Assert.False(await viewModel.VehicleDetailWorkspace.OpenVehicleCostsWorkspaceAsync());
+        Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
+        Assert.Empty(requestedTargets);
+    }
+
+    [Fact]
     public void Focus_current_search_command_uses_active_workspace_or_vehicle_search()
     {
         var viewModel = CreateViewModel();
