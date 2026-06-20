@@ -18,7 +18,11 @@ public partial class ReminderWorkspaceView : WorkspaceViewBase<ReminderWorkspace
         ViewModel?.IsEditingReminder == true ? DesktopFocusTarget.ReminderEditorTitle : DesktopFocusTarget.ReminderList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.ReminderSearch or DesktopFocusTarget.ReminderList or DesktopFocusTarget.ReminderEditorTitle;
+        target is DesktopFocusTarget.ReminderSearch
+            or DesktopFocusTarget.ReminderList
+            or DesktopFocusTarget.ReminderEditorTitle
+            or DesktopFocusTarget.ReminderEditorDueDate
+            or DesktopFocusTarget.ReminderEditorDays;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
@@ -26,6 +30,8 @@ public partial class ReminderWorkspaceView : WorkspaceViewBase<ReminderWorkspace
             DesktopFocusTarget.ReminderSearch => this.FindControl<TextBox>("ReminderSearchBox"),
             DesktopFocusTarget.ReminderList => this.FindControl<ListBox>("ReminderListBox"),
             DesktopFocusTarget.ReminderEditorTitle => this.FindControl<TextBox>("ReminderEditorTitleBox"),
+            DesktopFocusTarget.ReminderEditorDueDate => this.FindControl<TextBox>("ReminderEditorDueDateBox"),
+            DesktopFocusTarget.ReminderEditorDays => this.FindControl<TextBox>("ReminderEditorDaysBox"),
             _ => null
         };
 

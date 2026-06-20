@@ -156,19 +156,22 @@
                 ColumnDefinitions="*,*,*">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Množství" />
-              <TextBox Text="{Binding FuelEditorLiters}"
+              <TextBox x:Name="FuelEditorLitersBox"
+                       Text="{Binding FuelEditorLiters}"
                        AutomationProperties.Name="Množství tankovaného paliva"
                        AutomationProperties.AutomationId="FuelEditorLitersBox" />
             </StackPanel>
             <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Cena celkem" />
-              <TextBox Text="{Binding FuelEditorTotalCost}"
+              <TextBox x:Name="FuelEditorTotalCostBox"
+                       Text="{Binding FuelEditorTotalCost}"
                        AutomationProperties.Name="Cena tankování celkem"
                        AutomationProperties.AutomationId="FuelEditorTotalCostBox" />
             </StackPanel>
             <StackPanel Grid.Column="2" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Tachometr" />
-              <TextBox Text="{Binding FuelEditorOdometer}"
+              <TextBox x:Name="FuelEditorOdometerBox"
+                       Text="{Binding FuelEditorOdometer}"
                        AutomationProperties.Name="Tachometr při tankování"
                        AutomationProperties.AutomationId="FuelEditorOdometerBox" />
             </StackPanel>

@@ -46,6 +46,31 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Nová připomínka byla uložena.", viewModel.ReminderWorkspace.ReminderEditorStatus);
     }
 
+    [Fact]
+    public async Task Save_reminder_command_rejects_invalid_days_and_focuses_field()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateReminderCommand.Execute(null);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+        viewModel.ReminderWorkspace.ReminderEditorTitle = "Objednat pneuservis";
+        viewModel.ReminderWorkspace.ReminderEditorDueDate = "10.10.2026";
+        viewModel.ReminderWorkspace.ReminderEditorDays = "1000";
+
+        await viewModel.SaveReminderCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.ReminderWorkspace.IsEditingReminder);
+        Assert.Equal("Pole Upozornit dnů předem musí být celé číslo od 0 do 999.", viewModel.ReminderWorkspace.ReminderEditorStatus);
+        Assert.Equal(DesktopFocusTarget.ReminderEditorDays, Assert.Single(requestedTargets));
+        Assert.Empty(dataStore.CurrentDataSet.Reminders);
+    }
+
     [Theory]
     [InlineData("Ročně", "10.10.2027")]
     [InlineData("Každý rok", "10.10.2027")]
@@ -127,6 +152,32 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
+    public async Task Save_record_command_rejects_reversed_validity_and_focuses_field()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateRecordCommand.Execute(null);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+        viewModel.RecordWorkspace.RecordEditorRecordType = "Doklad";
+        viewModel.RecordWorkspace.RecordEditorTitle = "Pojistka";
+        viewModel.RecordWorkspace.RecordEditorValidFrom = "12/2026";
+        viewModel.RecordWorkspace.RecordEditorValidTo = "11/2026";
+
+        await viewModel.SaveRecordCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.RecordWorkspace.IsEditingRecord);
+        Assert.Equal("Pole Platné od nesmí být později než pole Platné do.", viewModel.RecordWorkspace.RecordEditorStatus);
+        Assert.Equal(DesktopFocusTarget.RecordEditorValidFrom, Assert.Single(requestedTargets));
+        Assert.Empty(dataStore.CurrentDataSet.Records);
+    }
+
+    [Fact]
     public async Task Save_history_command_adds_new_history_entry_and_restores_selection()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
@@ -149,6 +200,31 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Servis", viewModel.HistoryWorkspace.SelectedHistory!.EventType);
         Assert.Contains(dataStore.CurrentDataSet.HistoryEntries, item => item.EventType == "Servis" && item.VehicleId == "veh_1");
         Assert.Equal("Nový historický záznam byl uložen.", viewModel.HistoryWorkspace.HistoryEditorStatus);
+    }
+
+    [Fact]
+    public async Task Save_history_command_rejects_invalid_cost_and_focuses_field()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateHistoryCommand.Execute(null);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+        viewModel.HistoryWorkspace.HistoryEditorDate = "15.10.2026";
+        viewModel.HistoryWorkspace.HistoryEditorType = "Servis";
+        viewModel.HistoryWorkspace.HistoryEditorCost = "není číslo";
+
+        await viewModel.SaveHistoryCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.HistoryWorkspace.IsEditingHistory);
+        Assert.Equal("Cenu události zadejte jako číslo, například 2500.", viewModel.HistoryWorkspace.HistoryEditorStatus);
+        Assert.Equal(DesktopFocusTarget.HistoryEditorCost, Assert.Single(requestedTargets));
+        Assert.Empty(dataStore.CurrentDataSet.HistoryEntries);
     }
 
     [Fact]
@@ -179,6 +255,31 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
+    public async Task Save_fuel_command_requires_liters_when_cost_is_filled_and_focuses_field()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateFuelCommand.Execute(null);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+        viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
+        viewModel.FuelWorkspace.FuelEditorOdometer = "123789";
+        viewModel.FuelWorkspace.FuelEditorTotalCost = "1890";
+
+        await viewModel.SaveFuelCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.FuelWorkspace.IsEditingFuel);
+        Assert.Equal("Pokud zadáváte cenu tankování, doplňte i počet litrů.", viewModel.FuelWorkspace.FuelEditorStatus);
+        Assert.Equal(DesktopFocusTarget.FuelEditorLiters, Assert.Single(requestedTargets));
+        Assert.Empty(dataStore.CurrentDataSet.FuelEntries);
+    }
+
+    [Fact]
     public async Task Save_maintenance_command_adds_new_plan_and_restores_selection()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
@@ -203,6 +304,30 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Motorový olej", viewModel.MaintenanceWorkspace.SelectedMaintenance!.Title);
         Assert.Contains(dataStore.CurrentDataSet.MaintenancePlans, item => item.Title == "Motorový olej" && item.VehicleId == "veh_1");
         Assert.Equal("Nový servisní plán byl uložen.", viewModel.MaintenanceWorkspace.MaintenanceEditorStatus);
+    }
+
+    [Fact]
+    public async Task Save_maintenance_command_requires_last_odometer_for_km_interval_and_focuses_field()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateMaintenanceCommand.Execute(null);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+        viewModel.MaintenanceWorkspace.MaintenanceEditorTitle = "Motorový olej";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm = "15000";
+
+        await viewModel.SaveMaintenanceCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.MaintenanceWorkspace.IsEditingMaintenance);
+        Assert.Equal("Pro interval podle tachometru vyplňte i stav tachometru při posledním servisu.", viewModel.MaintenanceWorkspace.MaintenanceEditorStatus);
+        Assert.Equal(DesktopFocusTarget.MaintenanceEditorLastServiceOdometer, Assert.Single(requestedTargets));
+        Assert.Empty(dataStore.CurrentDataSet.MaintenancePlans);
     }
 
     [Fact]

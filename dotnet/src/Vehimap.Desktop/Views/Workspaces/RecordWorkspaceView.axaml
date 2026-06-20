@@ -89,7 +89,7 @@
             <Grid ColumnDefinitions="1.1*,1.4*">
               <StackPanel Margin="0,0,12,0" Spacing="6">
                 <TextBlock FontWeight="SemiBold" Text="Typ dokladu" />
-                <TextBox Text="{Binding RecordEditorRecordType}" PlaceholderText="Například Povinné ručení" AutomationProperties.Name="Typ dokladu" AutomationProperties.AutomationId="RecordEditorTypeBox" />
+                <TextBox x:Name="RecordEditorTypeBox" Text="{Binding RecordEditorRecordType}" PlaceholderText="Například Povinné ručení" AutomationProperties.Name="Typ dokladu" AutomationProperties.AutomationId="RecordEditorTypeBox" />
               </StackPanel>
               <StackPanel Grid.Column="1" Spacing="6">
                 <TextBlock FontWeight="SemiBold" Text="Název" />
@@ -103,17 +103,17 @@
               </StackPanel>
               <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
                 <TextBlock FontWeight="SemiBold" Text="Platí od" />
-                <TextBox Text="{Binding RecordEditorValidFrom}" AutomationProperties.Name="Platnost dokladu od" AutomationProperties.AutomationId="RecordEditorValidFromBox" />
+                <TextBox x:Name="RecordEditorValidFromBox" Text="{Binding RecordEditorValidFrom}" AutomationProperties.Name="Platnost dokladu od" AutomationProperties.AutomationId="RecordEditorValidFromBox" />
               </StackPanel>
               <StackPanel Grid.Column="2" Spacing="6">
                 <TextBlock FontWeight="SemiBold" Text="Platí do" />
-                <TextBox Text="{Binding RecordEditorValidTo}" AutomationProperties.Name="Platnost dokladu do" AutomationProperties.AutomationId="RecordEditorValidToBox" />
+                <TextBox x:Name="RecordEditorValidToBox" Text="{Binding RecordEditorValidTo}" AutomationProperties.Name="Platnost dokladu do" AutomationProperties.AutomationId="RecordEditorValidToBox" />
               </StackPanel>
             </Grid>
             <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="180,*">
               <StackPanel Margin="0,0,12,0" Spacing="6">
                 <TextBlock FontWeight="SemiBold" Text="Cena" />
-                <TextBox Text="{Binding RecordEditorPrice}" AutomationProperties.Name="Cena dokladu" AutomationProperties.AutomationId="RecordEditorPriceBox" />
+                <TextBox x:Name="RecordEditorPriceBox" Text="{Binding RecordEditorPrice}" AutomationProperties.Name="Cena dokladu" AutomationProperties.AutomationId="RecordEditorPriceBox" />
               </StackPanel>
               <StackPanel Spacing="6">
                 <TextBlock FontWeight="SemiBold" Text="Režim přílohy" />

@@ -4,6 +4,18 @@ namespace Vehimap.Storage.Legacy;
 
 public static partial class LegacyVehicleValueNormalization
 {
+    private static readonly string[] EventDateFormats =
+    [
+        "dd.MM.yyyy",
+        "d.M.yyyy",
+        "dd/MM/yyyy",
+        "d/M/yyyy",
+        "dd-MM-yyyy",
+        "d-M-yyyy",
+        "yyyy-MM-dd",
+        "yyyy/MM/dd"
+    ];
+
     public static string NormalizeCategory(string? category)
     {
         var value = (category ?? string.Empty).Trim();
@@ -47,6 +59,71 @@ public static partial class LegacyVehicleValueNormalization
         }
 
         return $"{month:00}/{year:0000}";
+    }
+
+    public static string NormalizeEventDate(string? eventDate)
+    {
+        if (!DateOnly.TryParseExact(
+                (eventDate ?? string.Empty).Trim(),
+                EventDateFormats,
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None,
+                out var value)
+            || value.Year is < 1900 or > 2200)
+        {
+            return string.Empty;
+        }
+
+        return value.ToString("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    public static string NormalizeOdometer(string? odometer)
+    {
+        var value = (odometer ?? string.Empty).Trim()
+            .Replace("\u00A0", string.Empty, StringComparison.Ordinal)
+            .Replace(" ", string.Empty, StringComparison.Ordinal);
+
+        return int.TryParse(value, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var parsed)
+               && parsed >= 0
+            ? parsed.ToString(System.Globalization.CultureInfo.InvariantCulture)
+            : string.Empty;
+    }
+
+    public static string NormalizePositiveInteger(string? value)
+    {
+        var normalized = (value ?? string.Empty).Trim()
+            .Replace("\u00A0", string.Empty, StringComparison.Ordinal)
+            .Replace(" ", string.Empty, StringComparison.Ordinal);
+
+        return int.TryParse(normalized, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var parsed)
+               && parsed > 0
+            ? parsed.ToString(System.Globalization.CultureInfo.InvariantCulture)
+            : string.Empty;
+    }
+
+    public static string NormalizeReminderDays(string? value)
+    {
+        var normalized = (value ?? string.Empty).Trim()
+            .Replace("\u00A0", string.Empty, StringComparison.Ordinal)
+            .Replace(" ", string.Empty, StringComparison.Ordinal);
+
+        return int.TryParse(normalized, System.Globalization.NumberStyles.None, System.Globalization.CultureInfo.InvariantCulture, out var parsed)
+               && parsed is >= 0 and <= 999
+            ? parsed.ToString(System.Globalization.CultureInfo.InvariantCulture)
+            : string.Empty;
+    }
+
+    public static string NormalizeDecimal(string? value)
+    {
+        var normalized = (value ?? string.Empty).Trim()
+            .Replace("\u00A0", string.Empty, StringComparison.Ordinal)
+            .Replace(" ", string.Empty, StringComparison.Ordinal)
+            .Replace(',', '.');
+
+        return decimal.TryParse(normalized, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out var parsed)
+               && parsed >= 0
+            ? parsed.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)
+            : string.Empty;
     }
 
     public static bool TryGetMonthYearOrder(string? monthYear, out int order)

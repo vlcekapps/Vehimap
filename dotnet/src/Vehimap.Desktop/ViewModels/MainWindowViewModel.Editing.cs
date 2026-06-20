@@ -3,6 +3,7 @@ using System.Globalization;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -43,8 +44,8 @@ public sealed partial class MainWindowViewModel
         _editingReminderId = null;
         ReminderEditorTitle = string.Empty;
         ReminderEditorDueDate = string.Empty;
-        ReminderEditorDays = string.Empty;
-        ReminderEditorRepeatMode = string.Empty;
+        ReminderEditorDays = "30";
+        ReminderEditorRepeatMode = "Neopakovat";
         ReminderEditorNote = string.Empty;
         ReminderEditorStatus = "Vyplňte připomínku a uložte ji.";
         IsEditingReminder = true;
@@ -89,14 +90,32 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        var dueDateText = (ReminderEditorDueDate ?? string.Empty).Trim();
+        var dueDate = LegacyVehicleValueNormalization.NormalizeEventDate(dueDateText);
+        if (dueDate.Length == 0)
+        {
+            ReminderEditorStatus = "Pole Termín je povinné a musí být ve formátu DD.MM.RRRR.";
+            RequestFocus(DesktopFocusTarget.ReminderEditorDueDate);
+            return;
+        }
+
+        var reminderDaysText = (ReminderEditorDays ?? string.Empty).Trim();
+        var reminderDays = LegacyVehicleValueNormalization.NormalizeReminderDays(reminderDaysText);
+        if (reminderDays.Length == 0)
+        {
+            ReminderEditorStatus = "Pole Upozornit dnů předem musí být celé číslo od 0 do 999.";
+            RequestFocus(DesktopFocusTarget.ReminderEditorDays);
+            return;
+        }
+
         var reminderId = _editingReminderId ?? GenerateLegacyId(_dataSet.Reminders.Select(item => item.Id));
         var updatedReminder = new VehicleReminder(
             reminderId,
             SelectedVehicle.Id,
             title,
-            (ReminderEditorDueDate ?? string.Empty).Trim(),
-            (ReminderEditorDays ?? string.Empty).Trim(),
-            (ReminderEditorRepeatMode ?? string.Empty).Trim(),
+            dueDate,
+            reminderDays,
+            string.IsNullOrWhiteSpace(ReminderEditorRepeatMode) ? "Neopakovat" : ReminderEditorRepeatMode.Trim(),
             (ReminderEditorNote ?? string.Empty).Trim());
 
         UpsertReminder(updatedReminder);
@@ -234,11 +253,61 @@ public sealed partial class MainWindowViewModel
         }
 
         var title = (RecordEditorTitle ?? string.Empty).Trim();
+        var recordType = (RecordEditorRecordType ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(recordType))
+        {
+            RecordEditorStatus = "Vyberte prosím druh záznamu.";
+            RequestFocus(DesktopFocusTarget.RecordEditorType);
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(title))
         {
             RecordEditorStatus = "Doklad musí mít název.";
             RequestFocus(DesktopFocusTarget.RecordEditorTitle);
             return;
+        }
+
+        var validFromText = (RecordEditorValidFrom ?? string.Empty).Trim();
+        var validToText = (RecordEditorValidTo ?? string.Empty).Trim();
+        var validFrom = LegacyVehicleValueNormalization.NormalizeMonthYear(validFromText);
+        var validTo = LegacyVehicleValueNormalization.NormalizeMonthYear(validToText);
+        var priceText = (RecordEditorPrice ?? string.Empty).Trim();
+        var price = string.Empty;
+
+        if (validFromText.Length > 0 && validFrom.Length == 0)
+        {
+            RecordEditorStatus = "Pole Platné od musí být ve formátu MM/RRRR.";
+            RequestFocus(DesktopFocusTarget.RecordEditorValidFrom);
+            return;
+        }
+
+        if (validToText.Length > 0 && validTo.Length == 0)
+        {
+            RecordEditorStatus = "Pole Platné do musí být ve formátu MM/RRRR.";
+            RequestFocus(DesktopFocusTarget.RecordEditorValidTo);
+            return;
+        }
+
+        if (LegacyVehicleValueNormalization.TryGetMonthYearOrder(validFrom, out var validFromOrder)
+            && LegacyVehicleValueNormalization.TryGetMonthYearOrder(validTo, out var validToOrder)
+            && validFromOrder > validToOrder)
+        {
+            RecordEditorStatus = "Pole Platné od nesmí být později než pole Platné do.";
+            RequestFocus(DesktopFocusTarget.RecordEditorValidFrom);
+            return;
+        }
+
+        if (priceText.Length > 0)
+        {
+            if (!VehimapValueParser.TryParseMoney(priceText, out var parsedPrice) || parsedPrice < 0)
+            {
+                RecordEditorStatus = "Cenu dokladu zadejte jako číslo, například 2000.";
+                RequestFocus(DesktopFocusTarget.RecordEditorPrice);
+                return;
+            }
+
+            price = parsedPrice.ToString("0.##", CultureInfo.InvariantCulture);
         }
 
         var recordId = _editingRecordId ?? GenerateLegacyId(_dataSet.Records.Select(item => item.Id));
@@ -253,6 +322,7 @@ public sealed partial class MainWindowViewModel
         catch (Exception ex)
         {
             RecordEditorStatus = ex.Message;
+            RequestFocus(DesktopFocusTarget.RecordEditorPathInput);
             return;
         }
 
@@ -260,12 +330,12 @@ public sealed partial class MainWindowViewModel
         var updatedRecord = new VehicleRecord(
             recordId,
             SelectedVehicle.Id,
-            string.IsNullOrWhiteSpace(RecordEditorRecordType) ? "Doklad" : RecordEditorRecordType.Trim(),
+            recordType,
             title,
             (RecordEditorProvider ?? string.Empty).Trim(),
-            (RecordEditorValidFrom ?? string.Empty).Trim(),
-            (RecordEditorValidTo ?? string.Empty).Trim(),
-            (RecordEditorPrice ?? string.Empty).Trim(),
+            validFrom,
+            validTo,
+            price,
             attachmentMode,
             filePath,
             (RecordEditorNote ?? string.Empty).Trim());

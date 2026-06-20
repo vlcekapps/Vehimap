@@ -146,14 +146,16 @@
                 ColumnDefinitions="*,160">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Typ události" />
-              <TextBox Text="{Binding HistoryEditorType}"
+              <TextBox x:Name="HistoryEditorTypeBox"
+                       Text="{Binding HistoryEditorType}"
                        PlaceholderText="Například Servis"
                        AutomationProperties.Name="Typ historické události"
                        AutomationProperties.AutomationId="HistoryEditorTypeBox" />
             </StackPanel>
             <StackPanel Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Tachometr" />
-              <TextBox Text="{Binding HistoryEditorOdometer}"
+              <TextBox x:Name="HistoryEditorOdometerBox"
+                       Text="{Binding HistoryEditorOdometer}"
                        PlaceholderText="Například 123456"
                        AutomationProperties.Name="Tachometr historického záznamu"
                        AutomationProperties.AutomationId="HistoryEditorOdometerBox" />
@@ -163,7 +165,8 @@
                      Margin="0,14,0,0"
                      FontWeight="SemiBold"
                      Text="Cena" />
-          <TextBox Grid.Row="4"
+          <TextBox x:Name="HistoryEditorCostBox"
+                   Grid.Row="4"
                    Margin="0,6,0,0"
                    Text="{Binding HistoryEditorCost}"
                    PlaceholderText="Například 2500"

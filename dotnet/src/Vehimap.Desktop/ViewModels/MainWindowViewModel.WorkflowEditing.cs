@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Globalization;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Models;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -60,14 +61,55 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        var eventDateText = (HistoryEditorDate ?? string.Empty).Trim();
+        var eventDate = LegacyVehicleValueNormalization.NormalizeEventDate(eventDateText);
+        var eventType = (HistoryEditorType ?? string.Empty).Trim();
+        var odometerText = (HistoryEditorOdometer ?? string.Empty).Trim();
+        var odometer = LegacyVehicleValueNormalization.NormalizeOdometer(odometerText);
+        var costText = (HistoryEditorCost ?? string.Empty).Trim();
+        var cost = string.Empty;
+
+        if (eventDate.Length == 0)
+        {
+            HistoryEditorStatus = "Pole Datum události je povinné a musí být ve formátu DD.MM.RRRR.";
+            RequestFocus(DesktopFocusTarget.HistoryEditorDate);
+            return;
+        }
+
+        if (eventType.Length == 0)
+        {
+            HistoryEditorStatus = "Vyplňte prosím název události.";
+            RequestFocus(DesktopFocusTarget.HistoryEditorType);
+            return;
+        }
+
+        if (odometerText.Length > 0 && odometer.Length == 0)
+        {
+            HistoryEditorStatus = "Stav tachometru zadejte jen jako celé číslo, nebo pole nechte prázdné.";
+            RequestFocus(DesktopFocusTarget.HistoryEditorOdometer);
+            return;
+        }
+
+        if (costText.Length > 0)
+        {
+            if (!VehimapValueParser.TryParseMoney(costText, out var parsedCost) || parsedCost < 0)
+            {
+                HistoryEditorStatus = "Cenu události zadejte jako číslo, například 2500.";
+                RequestFocus(DesktopFocusTarget.HistoryEditorCost);
+                return;
+            }
+
+            cost = parsedCost.ToString("0.##", CultureInfo.InvariantCulture);
+        }
+
         var historyId = _editingHistoryId ?? GenerateLegacyId(_dataSet.HistoryEntries.Select(item => item.Id));
         var updatedEntry = new VehicleHistoryEntry(
             historyId,
             SelectedVehicle.Id,
-            (HistoryEditorDate ?? string.Empty).Trim(),
-            string.IsNullOrWhiteSpace(HistoryEditorType) ? "Událost" : HistoryEditorType.Trim(),
-            (HistoryEditorOdometer ?? string.Empty).Trim(),
-            (HistoryEditorCost ?? string.Empty).Trim(),
+            eventDate,
+            eventType,
+            odometer,
+            cost,
             (HistoryEditorNote ?? string.Empty).Trim());
 
         UpsertHistoryEntry(updatedEntry);
@@ -155,14 +197,63 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        var entryDateText = (FuelEditorDate ?? string.Empty).Trim();
+        var entryDate = LegacyVehicleValueNormalization.NormalizeEventDate(entryDateText);
+        var odometerText = (FuelEditorOdometer ?? string.Empty).Trim();
+        var odometer = LegacyVehicleValueNormalization.NormalizeOdometer(odometerText);
+        var litersText = (FuelEditorLiters ?? string.Empty).Trim();
+        var liters = LegacyVehicleValueNormalization.NormalizeDecimal(litersText);
+        var totalCostText = (FuelEditorTotalCost ?? string.Empty).Trim();
+        var totalCost = string.Empty;
+
+        if (entryDate.Length == 0)
+        {
+            FuelEditorStatus = "Pole Datum záznamu je povinné a musí být ve formátu DD.MM.RRRR.";
+            RequestFocus(DesktopFocusTarget.FuelEditorDate);
+            return;
+        }
+
+        if (odometer.Length == 0)
+        {
+            FuelEditorStatus = "Pole Stav tachometru je povinné a musí obsahovat celé číslo.";
+            RequestFocus(DesktopFocusTarget.FuelEditorOdometer);
+            return;
+        }
+
+        if (litersText.Length > 0 && liters.Length == 0)
+        {
+            FuelEditorStatus = "Natankované litry zadejte jako číslo, například 42,5.";
+            RequestFocus(DesktopFocusTarget.FuelEditorLiters);
+            return;
+        }
+
+        if (totalCostText.Length > 0)
+        {
+            if (!VehimapValueParser.TryParseMoney(totalCostText, out var parsedTotalCost) || parsedTotalCost < 0)
+            {
+                FuelEditorStatus = "Cenu celkem zadejte jako číslo v Kč, například 1890.";
+                RequestFocus(DesktopFocusTarget.FuelEditorTotalCost);
+                return;
+            }
+
+            totalCost = parsedTotalCost.ToString("0.##", CultureInfo.InvariantCulture);
+        }
+
+        if (totalCost.Length > 0 && liters.Length == 0)
+        {
+            FuelEditorStatus = "Pokud zadáváte cenu tankování, doplňte i počet litrů.";
+            RequestFocus(DesktopFocusTarget.FuelEditorLiters);
+            return;
+        }
+
         var fuelId = _editingFuelId ?? GenerateLegacyId(_dataSet.FuelEntries.Select(item => item.Id));
         var updatedEntry = new FuelEntry(
             fuelId,
             SelectedVehicle.Id,
-            (FuelEditorDate ?? string.Empty).Trim(),
-            (FuelEditorOdometer ?? string.Empty).Trim(),
-            (FuelEditorLiters ?? string.Empty).Trim(),
-            (FuelEditorTotalCost ?? string.Empty).Trim(),
+            entryDate,
+            odometer,
+            liters,
+            totalCost,
             FuelEditorFullTank,
             string.IsNullOrWhiteSpace(FuelEditorFuelType) ? "Palivo" : FuelEditorFuelType.Trim(),
             (FuelEditorNote ?? string.Empty).Trim());
@@ -260,15 +351,73 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        var intervalKmText = (MaintenanceEditorIntervalKm ?? string.Empty).Trim();
+        var intervalMonthsText = (MaintenanceEditorIntervalMonths ?? string.Empty).Trim();
+        var intervalKm = LegacyVehicleValueNormalization.NormalizePositiveInteger(intervalKmText);
+        var intervalMonths = LegacyVehicleValueNormalization.NormalizePositiveInteger(intervalMonthsText);
+        var lastServiceDateText = (MaintenanceEditorLastServiceDate ?? string.Empty).Trim();
+        var lastServiceDate = LegacyVehicleValueNormalization.NormalizeEventDate(lastServiceDateText);
+        var lastServiceOdometerText = (MaintenanceEditorLastServiceOdometer ?? string.Empty).Trim();
+        var lastServiceOdometer = LegacyVehicleValueNormalization.NormalizeOdometer(lastServiceOdometerText);
+
+        if (intervalKm.Length == 0 && intervalMonths.Length == 0)
+        {
+            MaintenanceEditorStatus = "Plán údržby musí mít vyplněný interval kilometrů, měsíců nebo obojí.";
+            RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalKm);
+            return;
+        }
+
+        if (intervalKmText.Length > 0 && intervalKm.Length == 0)
+        {
+            MaintenanceEditorStatus = "Interval kilometrů zadejte jako kladné celé číslo.";
+            RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalKm);
+            return;
+        }
+
+        if (intervalMonthsText.Length > 0 && intervalMonths.Length == 0)
+        {
+            MaintenanceEditorStatus = "Interval měsíců zadejte jako kladné celé číslo.";
+            RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalMonths);
+            return;
+        }
+
+        if (lastServiceDateText.Length > 0 && lastServiceDate.Length == 0)
+        {
+            MaintenanceEditorStatus = "Datum posledního servisu musí být ve formátu DD.MM.RRRR.";
+            RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceDate);
+            return;
+        }
+
+        if (intervalMonths.Length > 0 && lastServiceDate.Length == 0)
+        {
+            MaintenanceEditorStatus = "Pro interval podle data vyplňte i datum posledního servisu ve formátu DD.MM.RRRR.";
+            RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceDate);
+            return;
+        }
+
+        if (lastServiceOdometerText.Length > 0 && lastServiceOdometer.Length == 0)
+        {
+            MaintenanceEditorStatus = "Stav tachometru posledního servisu zadejte jako celé číslo.";
+            RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceOdometer);
+            return;
+        }
+
+        if (intervalKm.Length > 0 && lastServiceOdometer.Length == 0)
+        {
+            MaintenanceEditorStatus = "Pro interval podle tachometru vyplňte i stav tachometru při posledním servisu.";
+            RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceOdometer);
+            return;
+        }
+
         var maintenanceId = _editingMaintenanceId ?? GenerateLegacyId(_dataSet.MaintenancePlans.Select(item => item.Id));
         var updatedPlan = new MaintenancePlan(
             maintenanceId,
             SelectedVehicle.Id,
             title,
-            (MaintenanceEditorIntervalKm ?? string.Empty).Trim(),
-            (MaintenanceEditorIntervalMonths ?? string.Empty).Trim(),
-            (MaintenanceEditorLastServiceDate ?? string.Empty).Trim(),
-            (MaintenanceEditorLastServiceOdometer ?? string.Empty).Trim(),
+            intervalKm,
+            intervalMonths,
+            lastServiceDate,
+            lastServiceOdometer,
             MaintenanceEditorIsActive,
             (MaintenanceEditorNote ?? string.Empty).Trim());
 

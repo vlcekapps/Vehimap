@@ -22,7 +22,14 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
         ViewModel?.IsEditingMaintenance == true ? DesktopFocusTarget.MaintenanceEditorTemplate : DesktopFocusTarget.MaintenanceList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.MaintenanceSearch or DesktopFocusTarget.MaintenanceList or DesktopFocusTarget.MaintenanceEditorTemplate or DesktopFocusTarget.MaintenanceEditorTitle;
+        target is DesktopFocusTarget.MaintenanceSearch
+            or DesktopFocusTarget.MaintenanceList
+            or DesktopFocusTarget.MaintenanceEditorTemplate
+            or DesktopFocusTarget.MaintenanceEditorTitle
+            or DesktopFocusTarget.MaintenanceEditorIntervalKm
+            or DesktopFocusTarget.MaintenanceEditorIntervalMonths
+            or DesktopFocusTarget.MaintenanceEditorLastServiceDate
+            or DesktopFocusTarget.MaintenanceEditorLastServiceOdometer;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
@@ -31,6 +38,10 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
             DesktopFocusTarget.MaintenanceList => this.FindControl<ListBox>("MaintenanceListBox"),
             DesktopFocusTarget.MaintenanceEditorTemplate => this.FindControl<ComboBox>("MaintenanceTemplateComboBox"),
             DesktopFocusTarget.MaintenanceEditorTitle => this.FindControl<TextBox>("MaintenanceEditorTitleBox"),
+            DesktopFocusTarget.MaintenanceEditorIntervalKm => this.FindControl<TextBox>("MaintenanceEditorIntervalKmBox"),
+            DesktopFocusTarget.MaintenanceEditorIntervalMonths => this.FindControl<TextBox>("MaintenanceEditorIntervalMonthsBox"),
+            DesktopFocusTarget.MaintenanceEditorLastServiceDate => this.FindControl<TextBox>("MaintenanceEditorLastServiceDateBox"),
+            DesktopFocusTarget.MaintenanceEditorLastServiceOdometer => this.FindControl<TextBox>("MaintenanceEditorLastServiceOdometerBox"),
             _ => null
         };
 

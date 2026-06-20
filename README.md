@@ -175,18 +175,21 @@ V historii událostí:
 
 - `Datum události` a `Název události` jsou povinné
 - datum události se zadává jako `DD.MM.RRRR`, například `26.03.2026`
+- v C# Avalonia větvi se při uložení datum sjednotí na `DD.MM.RRRR`, tachometr musí být celé číslo a cena musí být číselná částka; při chybě se fokus vrátí na konkrétní pole
 - `Stav tachometru`, `Cena nebo částka` a `Poznámka` jsou volitelné
 
 V evidenci kilometrů a tankování:
 
 - `Datum záznamu` a `Stav tachometru` jsou povinné
 - datum záznamu se zadává jako `DD.MM.RRRR`, například `26.03.2026`
+- v C# Avalonia větvi se při uložení datum, tachometr, litry a cena normalizují; pokud je vyplněná cena tankování, musí být vyplněné i litry
 - `Natankováno litrů`, `Cena celkem v Kč`, `Typ paliva`, `Plná nádrž` a `Poznámka` jsou volitelné
 
 V plánu údržby:
 
 - `Název úkonu` je povinný
 - alespoň jeden interval `po kilometrech` nebo `po měsících` musí být vyplněný
+- v C# Avalonia větvi musí mít kilometrový interval také tachometr posledního servisu a měsíční interval datum posledního servisu; neplatná čísla nebo datum vrací fokus na příslušné pole
 - `Poslední servis dne`, `Stav tachometru při posledním servisu`, `Poznámka` a volba aktivního plánu jsou volitelné
 - nahoře lze zvolit šablonu běžného servisního úkonu, která předvyplní název, intervaly i doporučenou poznámku
 - tlačítko `Doporučené šablony` otevře výběrový dialog, ve kterém lze doporučené plány podle kategorie a servisního profilu vozidla před přidáním odškrtnout nebo doladit
@@ -197,6 +200,7 @@ V evidenci pojištění a dokladů:
 
 - `Druh záznamu` a `Název záznamu` jsou povinné
 - `Platné od` a `Platné do` se zadávají jako `MM/RRRR`, například `04/2026`
+- v C# Avalonia větvi se platnost při uložení normalizuje a hlídá se, aby `Platné od` nebylo později než `Platné do`; cena dokladu musí být číselná částka
 - `Poskytovatel / vydavatel`, `Cena / částka`, `Režim přílohy`, `Příloha` a `Poznámka` jsou volitelné
 - `Spravovaná kopie` uloží vybraný soubor relativně do `data/attachments/<id vozidla>/`, takže portable přesun celé aplikace přílohu nerozbije; uloženou interní cestu pak Vehimap ukazuje jen jako spravovanou hodnotu, ne jako běžně editovatelný technický vstup
 - `Externí cesta` ponechá doklad napojený na původní soubor mimo aplikaci bez automatického kopírování
@@ -222,6 +226,7 @@ Ve vlastních připomínkách:
 
 - `Název připomínky`, `Termín` a `Upozornit dnů předem` jsou povinné
 - `Opakování` může být `Neopakovat`, `Každý rok`, `Každé 2 roky` nebo `Každých 5 let`
+- v C# Avalonia větvi nová připomínka předvyplní předstih `30` dnů a při uložení normalizuje termín na `DD.MM.RRRR`
 - tlačítko `Posunout na další` přesune opakovanou připomínku na další termín bez nutnosti ručního přepisu data
 
 V nastavení:
