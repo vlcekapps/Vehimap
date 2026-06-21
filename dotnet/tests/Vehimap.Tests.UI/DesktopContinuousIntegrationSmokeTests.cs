@@ -1,3 +1,4 @@
+using OpenQA.Selenium;
 using Xunit;
 
 namespace Vehimap.Tests.UI;
@@ -41,6 +42,32 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("SearchTabButton"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("UpcomingOverviewTabButton"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("DashboardTabButton"));
+        }
+    }
+
+    [Fact]
+    public void Main_menu_data_and_quick_actions_expose_expected_action_states_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("FileMenuRoot");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateAutomaticBackupNowMenuItem"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenAutomaticBackupFolderMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("CreateAutomaticBackupNowMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenAutomaticBackupFolderMenuItem"));
+            session.SendKeysToActiveElement(Keys.Escape);
+
+            session.ClickByAccessibilityId("QuickActionsMenuRoot");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenNearestReminderMenuItem"));
+            Assert.False(session.IsEnabledByAccessibilityId("OpenNearestTechnicalMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenNearestReminderMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("ReviewRecordsMenuItem"));
         }
     }
 }

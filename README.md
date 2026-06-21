@@ -285,4 +285,7 @@ Zavření hlavního okna aplikaci neukončí. Vehimap se schová do oznamovací 
 
 V C# Avalonia větvi nativní menu lišty otevírá vlastní přístupné okno `Akce Vehimapu na liště`. Z něj lze klávesnicí a čtečkou obrazovky zobrazit hlavní okno, otevřít `Dashboard`, přejít rovnou do `Blížících se termínů` nebo `Propadlých termínů`, otevřít nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrovanou kontrolu těchto oblastí, uložit tiskový přehled, exportovat nebo obnovit zálohu, vytvořit okamžitou automatickou zálohu, exportovat budoucí termíny do kalendáře, znovu načíst data, otevřít datovou složku nebo složku automatických záloh, otevřít nastavení, zobrazit `O programu`, zkontrolovat aktualizace, případně aplikaci ukončit. Tlačítka pro nejbližší položky a filtrované kontroly jsou aktivní jen tehdy, když existuje odpovídající termín k řešení; navigační a datové akce se při rozpracované editaci vypnou, aby nedošlo ke ztrátě neuložených změn.
 
+## Vývojové ověření C# větve
+
+C# Avalonia větev má vedle unit testů také Appium smoke testy nad izolovanou kopií publish buildu. CI smoke kontroluje dostupnost menu `Soubor` a `Rychlé akce`, jejich aktuální aktivní/neaktivní stavy a hlavní app-level vstupy. Rozšířená Appium sada navíc spouští okamžitou automatickou zálohu v dočasné datové složce, aby se ověřilo, že menu akce opravdu vytvoří `.vehimapbak`, aniž by sahala do uživatelských dat.
 

@@ -62,6 +62,71 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void File_menu_data_actions_are_accessible_and_create_manual_automatic_backup_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            Assert.NotNull(session.TemporaryDataPath);
+            var backupDirectory = Path.Combine(session.TemporaryDataPath!, "auto-backups");
+            var backupCountBefore = Directory.Exists(backupDirectory)
+                ? Directory.GetFiles(backupDirectory, "*.vehimapbak").Length
+                : 0;
+
+            session.ClickByAccessibilityId("FileMenuRoot");
+
+            Assert.Equal("Exportovat data aplikace do zálohy", session.GetNameByAccessibilityId("BackupExportButton"));
+            Assert.Equal("Obnovit data aplikace ze zálohy", session.GetNameByAccessibilityId("BackupImportButton"));
+            Assert.Equal("Vytvořit automatickou zálohu ihned", session.GetNameByAccessibilityId("CreateAutomaticBackupNowMenuItem"));
+            Assert.Equal("Otevřít složku automatických záloh", session.GetNameByAccessibilityId("OpenAutomaticBackupFolderMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("BackupExportButton"));
+            Assert.True(session.IsEnabledByAccessibilityId("BackupImportButton"));
+            Assert.True(session.IsEnabledByAccessibilityId("CreateAutomaticBackupNowMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenAutomaticBackupFolderMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenDataFolderMenuItem"));
+
+            session.ClickByAccessibilityId("CreateAutomaticBackupNowMenuItem");
+
+            session.WaitUntilCondition(
+                () => Directory.Exists(backupDirectory)
+                    && Directory.GetFiles(backupDirectory, "*.vehimapbak").Length > backupCountBefore,
+                "Okamžitá automatická záloha se po akci v menu Soubor nevytvořila.");
+        }
+    }
+
+    [Fact]
+    public void Quick_actions_menu_disables_missing_targets_and_opens_available_target_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("QuickActionsMenuRoot");
+
+            Assert.Equal("Otevřít nejbližší technickou kontrolu", session.GetNameByAccessibilityId("OpenNearestTechnicalMenuItem"));
+            Assert.Equal("Otevřít nejbližší vlastní připomínku", session.GetNameByAccessibilityId("OpenNearestReminderMenuItem"));
+            Assert.False(session.IsEnabledByAccessibilityId("OpenNearestTechnicalMenuItem"));
+            Assert.False(session.IsEnabledByAccessibilityId("OpenNearestGreenCardMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenNearestReminderMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("ReviewRecordsMenuItem"));
+
+            session.ClickByAccessibilityId("OpenNearestReminderMenuItem");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenReminderWindowButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ReminderListBox"));
+        }
+    }
+
+    [Fact]
     public void Main_menu_can_be_invoked_with_f10_without_entering_regular_tab_order_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

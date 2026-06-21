@@ -116,6 +116,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - denni historie desktopovych oznameni v `settings.ini`, vcetne resetu po zmene reminder nastaveni nebo po obnoveni zalohy, aby .NET vetev neoznamovala stejny akutni termin porad dokola
 - Windows resume hook pro background runtime: po probuzeni systemu se po 1500 ms provede stejna kontrola terminu, tray tooltipu a automatickych zaloh jako v AHK; pro macOS/Linux je vrstva pripravena jako no-op, dokud se platformy nebudou stabilizovat
 - regresni kontrola desktop UI zdroju proti typickym mojibake znakum, aby ctecky obrazovky nedostavaly poskozenou UTF-8 diakritiku
+- Appium smoke nad publish buildem kontroluje app-level menu `Soubor`, menu `Rychle akce`, dostupnost zapnutych/vypnutych akci a rozsirena sada v izolovane portable kopii overuje i realne vytvoreni okamzite automaticke zalohy
 
 ## Co je dalsi na rade
 

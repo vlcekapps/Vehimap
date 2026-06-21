@@ -15,6 +15,11 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         _temporaryAppRoot = temporaryAppRoot;
     }
 
+    public string? TemporaryDataPath =>
+        string.IsNullOrWhiteSpace(_temporaryAppRoot)
+            ? null
+            : Path.Combine(_temporaryAppRoot, "data");
+
     public static bool TryStart(out DesktopAppiumTestSession? session, out string reason)
     {
         session = null;
@@ -94,6 +99,11 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         return WaitForElementByAccessibilityId(automationId, timeoutSeconds).GetAttribute("Name") ?? string.Empty;
     }
 
+    public bool IsEnabledByAccessibilityId(string automationId, int timeoutSeconds = 12)
+    {
+        return WaitForElementByAccessibilityId(automationId, timeoutSeconds).Enabled;
+    }
+
     public void SendKeysByAccessibilityId(string automationId, string text, int timeoutSeconds = 12)
     {
         WaitForElementByAccessibilityId(automationId, timeoutSeconds).SendKeys(text);
@@ -140,6 +150,23 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         WaitUntilMissing(
             () => _driver.FindElements(MobileBy.AccessibilityId(automationId)).Any(element => element.Displayed),
             timeoutSeconds);
+    }
+
+    public void WaitUntilCondition(Func<bool> predicate, string failureMessage, int timeoutSeconds = 12)
+    {
+        var timeoutAt = DateTime.UtcNow.AddSeconds(timeoutSeconds);
+
+        while (DateTime.UtcNow < timeoutAt)
+        {
+            if (predicate())
+            {
+                return;
+            }
+
+            Thread.Sleep(250);
+        }
+
+        throw new TimeoutException(failureMessage);
     }
 
     public void Dispose()
