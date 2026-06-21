@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -13,6 +14,8 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
         : base(root)
     {
     }
+
+    public event EventHandler? DashboardMaintenanceCompletionRequested;
 
     [ObservableProperty]
     private bool showDashboardOnLaunch;
@@ -62,16 +65,45 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
 
     public ICommand EditSelectedDashboardVehicleCommand => Root.EditSelectedDashboardVehicleCommand;
 
+    public ICommand OpenDashboardCostOverviewCommand => Root.OpenDashboardCostOverviewCommand;
+
+    public ICommand OpenSelectedDashboardVehicleHistoryCommand => Root.OpenSelectedDashboardVehicleHistoryCommand;
+
+    public ICommand OpenSelectedDashboardVehicleCostsCommand => Root.OpenSelectedDashboardVehicleCostsCommand;
+
     public ICommand FocusGlobalSearchCommand => Root.FocusGlobalSearchCommand;
 
     public ICommand FocusUpcomingOverviewCommand => Root.FocusUpcomingOverviewCommand;
 
     public ICommand FocusOverdueOverviewCommand => Root.FocusOverdueOverviewCommand;
 
+    public bool CanCompleteSelectedDashboardMaintenance => Root.CanCompleteSelectedDashboardMaintenance;
+
     [RelayCommand]
     private void RefreshDashboard()
     {
         Root.RefreshDashboardWorkspace();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCompleteSelectedDashboardMaintenance))]
+    private async Task CompleteSelectedDashboardMaintenance()
+    {
+        if (await Root.SelectDashboardMaintenanceForCompletionAsync().ConfigureAwait(true))
+        {
+            DashboardMaintenanceCompletionRequested?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public MaintenanceCompletionDialogViewModel? BuildDashboardMaintenanceCompletionDialogViewModel() =>
+        Root.BuildMaintenanceCompletionDialogViewModel();
+
+    public Task<string> ApplyDashboardMaintenanceCompletionAsync(MaintenanceCompletionDialogResult result) =>
+        Root.ApplyMaintenanceCompletionAsync(result);
+
+    public void SetDashboardMaintenanceStatus(string message)
+    {
+        Root.MaintenanceWorkspace.MaintenanceEditorStatus = message;
+        Root.ShellStatus = message;
     }
 
     internal void NotifyDashboardSummariesChanged()
@@ -89,6 +121,12 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
     internal void NotifyDashboardCostSelectionChanged()
     {
         OnPropertyChanged(nameof(SelectedDashboardCostVehicle));
+    }
+
+    internal void NotifyDashboardActionStateChanged()
+    {
+        OnPropertyChanged(nameof(CanCompleteSelectedDashboardMaintenance));
+        CompleteSelectedDashboardMaintenanceCommand.NotifyCanExecuteChanged();
     }
 
     internal void SyncShowDashboardOnLaunch(bool value)
@@ -121,5 +159,6 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
             : $"Vozidlo: {value.VehicleName}\nDatum: {value.Date}\nDruh: {value.KindLabel}\nPoložka: {value.Title}\nStav: {Root.FormatWorkspaceValue(value.Status, "-")}\nDetail: {Root.FormatWorkspaceValue(value.Detail, "-")}";
 
         Root.NotifyDashboardWorkspaceTimelineSelectionChanged();
+        NotifyDashboardActionStateChanged();
     }
 }

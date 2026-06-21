@@ -7,10 +7,13 @@ namespace Vehimap.Desktop.Views.Workspaces;
 
 public partial class DashboardWorkspaceView : WorkspaceViewBase<DashboardWorkspaceViewModel>
 {
+    private DashboardWorkspaceViewModel? _subscribedViewModel;
+
     public DashboardWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
         RegisterShiftTabBackNavigation("DashboardRefreshButton", "DashboardAuditOpenButton", "DashboardCostOpenButton", "DashboardTimelineOpenButton");
+        DataContextChanged += OnDashboardDataContextChanged;
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() => DesktopFocusTarget.DashboardAuditList;
@@ -26,4 +29,57 @@ public partial class DashboardWorkspaceView : WorkspaceViewBase<DashboardWorkspa
             DesktopFocusTarget.DashboardTimelineList => this.FindControl<ListBox>("DashboardTimelineListBox"),
             _ => null
         };
+
+    private void OnDashboardDataContextChanged(object? sender, EventArgs e)
+    {
+        if (_subscribedViewModel is not null)
+        {
+            _subscribedViewModel.DashboardMaintenanceCompletionRequested -= OnDashboardMaintenanceCompletionRequested;
+        }
+
+        _subscribedViewModel = DataContext as DashboardWorkspaceViewModel;
+        if (_subscribedViewModel is not null)
+        {
+            _subscribedViewModel.DashboardMaintenanceCompletionRequested += OnDashboardMaintenanceCompletionRequested;
+        }
+    }
+
+    private async void OnDashboardMaintenanceCompletionRequested(object? sender, EventArgs e)
+    {
+        await OpenDashboardMaintenanceCompletionDialogAsync();
+    }
+
+    private async Task OpenDashboardMaintenanceCompletionDialogAsync()
+    {
+        if (ViewModel is null)
+        {
+            return;
+        }
+
+        var dialogViewModel = ViewModel.BuildDashboardMaintenanceCompletionDialogViewModel();
+        if (dialogViewModel is null)
+        {
+            ViewModel.SetDashboardMaintenanceStatus("Nejprve vyberte servisní plán.");
+            return;
+        }
+
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+        {
+            return;
+        }
+
+        var dialog = new MaintenanceCompletionWindow
+        {
+            DataContext = dialogViewModel
+        };
+
+        var result = await dialog.ShowDialog<MaintenanceCompletionDialogResult?>(owner);
+        if (result is null)
+        {
+            return;
+        }
+
+        var message = await ViewModel.ApplyDashboardMaintenanceCompletionAsync(result);
+        ViewModel.SetDashboardMaintenanceStatus(message);
+    }
 }

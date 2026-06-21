@@ -427,6 +427,12 @@ public sealed partial class MainWindowViewModel
     public bool CanOpenSelectedDashboardTimelineItem => DashboardWorkspace.SelectedDashboardTimelineItem is not null;
     public bool CanOpenSelectedDashboardVehicle => GetSelectedDashboardVehicleId() is not null;
     public bool CanEditSelectedDashboardVehicle => CanOpenSelectedDashboardVehicle && !HasPendingEdits;
+    public bool CanOpenDashboardCostOverview => _currentCostSummary is not null && !HasPendingEdits;
+    public bool CanOpenSelectedDashboardVehicleHistory => CanOpenSelectedDashboardVehicle && !HasPendingEdits;
+    public bool CanOpenSelectedDashboardVehicleCosts => CanOpenSelectedDashboardVehicle && !HasPendingEdits;
+    internal bool CanCompleteSelectedDashboardMaintenance =>
+        DashboardWorkspace.SelectedDashboardTimelineItem is { Kind: "maintenance", EntryId.Length: > 0 }
+        && !HasPendingEdits;
 
     public bool CanOpenSelectedSearchResult => GlobalSearchWorkspace.SelectedSearchResult is not null;
 
@@ -586,9 +592,14 @@ public sealed partial class MainWindowViewModel
     internal void NotifyAuditWorkspaceSelectionChanged()
     {
         DashboardWorkspace.NotifyDashboardAuditSelectionChanged();
+        OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleHistory));
+        OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleCosts));
         OpenSelectedDashboardAuditItemCommand.NotifyCanExecuteChanged();
         OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleHistoryCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleCostsCommand.NotifyCanExecuteChanged();
+        DashboardWorkspace.NotifyDashboardActionStateChanged();
     }
 
     internal void RefreshAuditWorkspace()
@@ -617,11 +628,16 @@ public sealed partial class MainWindowViewModel
     internal void NotifyCostWorkspaceSelectionChanged()
     {
         DashboardWorkspace.NotifyDashboardCostSelectionChanged();
+        OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleHistory));
+        OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleCosts));
         OpenSelectedDashboardCostVehicleCommand.NotifyCanExecuteChanged();
         OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleHistoryCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleCostsCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
+        DashboardWorkspace.NotifyDashboardActionStateChanged();
     }
 
     internal void RefreshCostWorkspace()
@@ -644,6 +660,7 @@ public sealed partial class MainWindowViewModel
         ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
+        OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
 
         CostWorkspace.CostExportStatus = "Nákladový přehled byl obnoven.";
         ShellStatus = "Nákladový přehled byl obnoven.";
@@ -653,8 +670,13 @@ public sealed partial class MainWindowViewModel
     internal void NotifyDashboardWorkspaceTimelineSelectionChanged()
     {
         OpenSelectedDashboardTimelineItemCommand.NotifyCanExecuteChanged();
+        OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleHistory));
+        OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleCosts));
         OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleHistoryCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleCostsCommand.NotifyCanExecuteChanged();
+        DashboardWorkspace.NotifyDashboardActionStateChanged();
     }
 
     internal void RefreshDashboardWorkspace()
@@ -703,6 +725,7 @@ public sealed partial class MainWindowViewModel
         ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
+        OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
 
         ShellStatus = "Dashboard byl obnoven.";
         RequestFocus(GetDashboardRefreshFocusTarget());

@@ -40,7 +40,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu; `Obnovit` nebo `Ctrl+R` prepocita casovou osu bez ztraty vyberu a vrati fokus na seznam
 - pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
 - v dashboardu pouzit `Obnovit` nebo `Ctrl+R`; refresh prepocita auditni vyrez, naklady i nejblizsi terminy a zachova aktualni vyber
-- v dashboardu pouzit horni akce `Hledat`, `Blizici se`, `Propadle`, `Zobrazit vozidlo` a `Upravit vozidlo`; stejne akce maji zkratky `Ctrl+F`, `Ctrl+T`, `Ctrl+Shift+T`, `Ctrl+O`, `Ctrl+P` a `Ctrl+U` / `F2`
+- v dashboardu pouzit horni akce `Hledat`, `Souhrn nakladu`, `Blizici se`, `Propadle`, `Zobrazit vozidlo`, `Historie vozidla`, `Naklady vozidla`, `Dokoncit servis` a `Upravit vozidlo`; stejne akce maji zkratky `Ctrl+F`, `Ctrl+T`, `Ctrl+Shift+T`, `Ctrl+O`, `Ctrl+P`, `Ctrl+H`, `Ctrl+L` a `Ctrl+U` / `F2`
 - v dashboardu prepnout `Zobrazovat dashboard pri startu`; zmena se uklada do stejneho `settings.ini` jako dialog `Nastaveni`
 - pouzit plny auditni workspace se samostatnym hledanim, tlacitky `Vymazat` a `Obnovit`, zkratkami `Ctrl+F`, `Ctrl+R`, `Ctrl+O`, `Ctrl+P`, `Ctrl+U` / `F2` a oddelenym dashboardovym top vyrezem
 - pouzit nakladovy workspace s volbou predvolby obdobi nebo vlastniho datumoveho rozsahu, rychlym hledanim vozidel, tlacitky `Vymazat` a `Obnovit` a zkratkami `Ctrl+F` pro hledani, `Ctrl+R` pro obnovu prehledu, `Ctrl+P` pro precteni rozpadu nakladu, `Ctrl+O` nebo `Enter` pro otevreni vozidla a `Ctrl+U` / `F2` pro upravu vozidla

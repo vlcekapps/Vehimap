@@ -911,6 +911,60 @@ public sealed partial class MainWindowViewModel : ObservableObject
         ExecuteWorkspaceShortcut(EditSelectedVehicleCommand);
     }
 
+    [RelayCommand(CanExecute = nameof(CanOpenDashboardCostOverview))]
+    private async Task OpenDashboardCostOverviewAsync()
+    {
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít souhrn nákladů z dashboardu").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        SelectedVehicleTabIndex = CostTabIndex;
+        RequestFocus(CostWorkspace.VisibleCostVehicles.Count == 0 ? DesktopFocusTarget.CostSearch : DesktopFocusTarget.CostList);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardVehicleHistory))]
+    private async Task OpenSelectedDashboardVehicleHistoryAsync()
+    {
+        var vehicleId = GetSelectedDashboardVehicleId();
+        if (vehicleId is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít historii vozidla z dashboardu").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        SelectVehicleAndOpenEntity(vehicleId, "Historie", string.Empty);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardVehicleCosts))]
+    private async Task OpenSelectedDashboardVehicleCostsAsync()
+    {
+        var vehicleId = GetSelectedDashboardVehicleId();
+        if (vehicleId is null)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít náklady vozidla z dashboardu").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        if (!string.Equals(SelectedVehicle?.Id, vehicleId, StringComparison.Ordinal))
+        {
+            SelectedVehicle = Vehicles.FirstOrDefault(vehicle => string.Equals(vehicle.Id, vehicleId, StringComparison.Ordinal));
+        }
+
+        CostWorkspace.CostSearchText = string.Empty;
+        CostWorkspace.SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        SelectedVehicleTabIndex = CostTabIndex;
+        RequestFocus(CostWorkspace.SelectedDashboardCostVehicle is null ? DesktopFocusTarget.CostSearch : DesktopFocusTarget.CostList);
+    }
+
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardCostVehicle))]
     private async Task OpenSelectedDashboardCostVehicleAsync()
     {
@@ -926,6 +980,25 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         SelectVehicleAndOpenEntity(selectedCostVehicle.VehicleId, "Vozidlo", selectedCostVehicle.VehicleId);
+    }
+
+    internal async Task<bool> SelectDashboardMaintenanceForCompletionAsync()
+    {
+        var selectedTimelineItem = DashboardWorkspace.SelectedDashboardTimelineItem;
+        if (selectedTimelineItem is not { Kind: "maintenance", EntryId.Length: > 0 })
+        {
+            return false;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("označit servis z dashboardu jako splněný").ConfigureAwait(true))
+        {
+            return false;
+        }
+
+        OpenTimelineItem(selectedTimelineItem);
+        return SelectedMaintenance is not null
+            && string.Equals(SelectedMaintenance.Id, selectedTimelineItem.EntryId, StringComparison.Ordinal)
+            && CanCompleteSelectedMaintenance;
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedVehicleCosts))]
@@ -1042,6 +1115,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
             ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
             ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
+            OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
 
             if (applyLaunchTabPreference && result.SupportedSettings.ShowDashboardOnLaunch && !result.SupportedSettings.HideOnLaunch)
             {

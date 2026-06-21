@@ -166,9 +166,13 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
         OnPropertyChanged(nameof(CanEditSelectedDashboardVehicle));
+        OnPropertyChanged(nameof(CanOpenDashboardCostOverview));
+        OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleHistory));
+        OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleCosts));
         OnPropertyChanged(nameof(CanClearVehicleFilters));
         VehicleDetailWorkspace.NotifyVehicleRelatedWorkspaceStateChanged();
         MaintenanceWorkspace.NotifyMaintenanceRecommendationStateChanged();
+        DashboardWorkspace.NotifyDashboardActionStateChanged();
 
         ClearVehicleFiltersCommand.NotifyCanExecuteChanged();
         CreateVehicleCommand.NotifyCanExecuteChanged();
@@ -196,6 +200,9 @@ public sealed partial class MainWindowViewModel
         MoveSelectedRecordToManagedCommand.NotifyCanExecuteChanged();
         OpenSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
         EditSelectedDashboardVehicleCommand.NotifyCanExecuteChanged();
+        OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleHistoryCommand.NotifyCanExecuteChanged();
+        OpenSelectedDashboardVehicleCostsCommand.NotifyCanExecuteChanged();
     }
 
     internal bool BlockWorkspaceNavigationIfEditing()

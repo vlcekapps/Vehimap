@@ -745,9 +745,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardShowOnLaunchCheckBox\"", dashboardXaml);
         Assert.Contains("AutomationProperties.Name=\"Zobrazovat dashboard při startu aplikace\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardSearchButton\"", dashboardXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DashboardCostOverviewButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardUpcomingButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardOverdueButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardOpenVehicleButton\"", dashboardXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DashboardVehicleHistoryButton\"", dashboardXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DashboardVehicleCostsButton\"", dashboardXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DashboardCompleteMaintenanceButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardEditVehicleButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardAuditOpenButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardAuditListBox\"", dashboardXaml);
@@ -980,6 +984,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+Shift+T\" Command=\"{Binding FocusOverdueOverviewCommand}\"", dashboardXaml);
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedDashboardVehicleCommand}\"", dashboardXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedDashboardTimelineItemCommand}\"", dashboardXaml);
+        Assert.Contains("Gesture=\"Ctrl+H\" Command=\"{Binding OpenSelectedDashboardVehicleHistoryCommand}\"", dashboardXaml);
+        Assert.Contains("Gesture=\"Ctrl+L\" Command=\"{Binding CompleteSelectedDashboardMaintenanceCommand}\"", dashboardXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedDashboardVehicleCommand}\"", dashboardXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedDashboardVehicleCommand}\"", dashboardXaml);
     }

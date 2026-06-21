@@ -637,6 +637,51 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public async Task Dashboard_action_buttons_open_history_costs_and_prepare_maintenance_completion()
+    {
+        var viewModel = CreateViewModel();
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+        var completionRequested = false;
+        viewModel.DashboardWorkspace.DashboardMaintenanceCompletionRequested += (_, _) => completionRequested = true;
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
+        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = viewModel.DashboardWorkspace.DashboardUpcomingTimeline.First(item => item.Kind == "custom");
+
+        Assert.False(viewModel.DashboardWorkspace.CompleteSelectedDashboardMaintenanceCommand.CanExecute(null));
+
+        await viewModel.OpenSelectedDashboardVehicleHistoryCommand.ExecuteAsync(null);
+
+        Assert.Equal(DesktopTabIndexes.History, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("hist_1", viewModel.HistoryWorkspace.SelectedHistory?.Id);
+        Assert.Contains(DesktopFocusTarget.HistoryList, requestedTargets);
+
+        await viewModel.OpenDashboardCostOverviewCommand.ExecuteAsync(null);
+
+        Assert.Equal(DesktopTabIndexes.Cost, viewModel.SelectedVehicleTabIndex);
+        Assert.Contains(DesktopFocusTarget.CostList, requestedTargets);
+
+        await viewModel.OpenSelectedDashboardVehicleCostsCommand.ExecuteAsync(null);
+
+        Assert.Equal(DesktopTabIndexes.Cost, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("veh_1", viewModel.CostWorkspace.SelectedDashboardCostVehicle?.VehicleId);
+        Assert.Contains(DesktopFocusTarget.CostList, requestedTargets);
+
+        viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
+        viewModel.DashboardWorkspace.SelectedDashboardTimelineItem = viewModel.DashboardWorkspace.DashboardUpcomingTimeline.First(item => item.Kind == "maintenance");
+
+        Assert.True(viewModel.DashboardWorkspace.CompleteSelectedDashboardMaintenanceCommand.CanExecute(null));
+
+        await viewModel.DashboardWorkspace.CompleteSelectedDashboardMaintenanceCommand.ExecuteAsync(null);
+
+        Assert.True(completionRequested);
+        Assert.Equal(DesktopTabIndexes.Maintenance, viewModel.SelectedVehicleTabIndex);
+        Assert.Equal("mnt_1", viewModel.MaintenanceWorkspace.SelectedMaintenance?.Id);
+        Assert.NotNull(viewModel.DashboardWorkspace.BuildDashboardMaintenanceCompletionDialogViewModel());
+        Assert.Contains(DesktopFocusTarget.MaintenanceList, requestedTargets);
+    }
+
+    [Fact]
     public async Task Contextual_primary_open_shortcut_opens_search_result_and_handles_empty_search_selection()
     {
         var viewModel = CreateViewModel();

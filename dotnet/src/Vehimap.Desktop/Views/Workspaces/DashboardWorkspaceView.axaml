@@ -11,6 +11,8 @@
     <KeyBinding Gesture="Ctrl+Shift+T" Command="{Binding FocusOverdueOverviewCommand}" />
     <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedDashboardVehicleCommand}" />
     <KeyBinding Gesture="Ctrl+P" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" />
+    <KeyBinding Gesture="Ctrl+H" Command="{Binding OpenSelectedDashboardVehicleHistoryCommand}" />
+    <KeyBinding Gesture="Ctrl+L" Command="{Binding CompleteSelectedDashboardMaintenanceCommand}" />
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedDashboardVehicleCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedDashboardVehicleCommand}" />
   </UserControl.KeyBindings>
@@ -21,7 +23,7 @@
       <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" AutomationProperties.Name="{Binding CostComparison}" AutomationProperties.AutomationId="DashboardCostComparisonText" />
       <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding DashboardTimelineSummary}" AutomationProperties.AutomationId="DashboardTimelineSummaryText" />
       <TextBlock Opacity="0.75"
-                 Text="Ctrl+R obnoví dashboard, Ctrl+F otevře globální hledání, Ctrl+T blížící se termíny, Ctrl+Shift+T propadlé termíny, Ctrl+P otevře vybraný termín, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 vozidlo upraví."
+                 Text="Ctrl+R obnoví dashboard, Ctrl+F otevře globální hledání, Ctrl+T blížící se termíny, Ctrl+Shift+T propadlé termíny, Ctrl+P otevře vybraný termín, Ctrl+H historii vozidla, Ctrl+L dokončí vybraný servis, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 vozidlo upraví."
                  TextWrapping="Wrap" />
       <WrapPanel Margin="0,4,0,0" Orientation="Horizontal">
         <Button x:Name="DashboardRefreshButton"
@@ -44,6 +46,12 @@
                 Content="Hledat"
                 AutomationProperties.Name="Otevřít globální hledání z dashboardu"
                 AutomationProperties.AutomationId="DashboardSearchButton" />
+        <Button x:Name="DashboardCostOverviewButton"
+                Margin="0,0,10,8"
+                Command="{Binding OpenDashboardCostOverviewCommand}"
+                Content="Souhrn nákladů"
+                AutomationProperties.Name="Otevřít souhrn nákladů z dashboardu"
+                AutomationProperties.AutomationId="DashboardCostOverviewButton" />
         <Button x:Name="DashboardUpcomingButton"
                 Margin="0,0,10,8"
                 Command="{Binding FocusUpcomingOverviewCommand}"
@@ -62,6 +70,24 @@
                 Content="Zobrazit vozidlo"
                 AutomationProperties.Name="Zobrazit vozidlo vybrané na dashboardu"
                 AutomationProperties.AutomationId="DashboardOpenVehicleButton" />
+        <Button x:Name="DashboardVehicleHistoryButton"
+                Margin="0,0,10,8"
+                Command="{Binding OpenSelectedDashboardVehicleHistoryCommand}"
+                Content="Historie vozidla"
+                AutomationProperties.Name="Otevřít historii vozidla vybraného na dashboardu"
+                AutomationProperties.AutomationId="DashboardVehicleHistoryButton" />
+        <Button x:Name="DashboardVehicleCostsButton"
+                Margin="0,0,10,8"
+                Command="{Binding OpenSelectedDashboardVehicleCostsCommand}"
+                Content="Náklady vozidla"
+                AutomationProperties.Name="Otevřít náklady vozidla vybraného na dashboardu"
+                AutomationProperties.AutomationId="DashboardVehicleCostsButton" />
+        <Button x:Name="DashboardCompleteMaintenanceButton"
+                Margin="0,0,10,8"
+                Command="{Binding CompleteSelectedDashboardMaintenanceCommand}"
+                Content="Dokončit servis"
+                AutomationProperties.Name="Označit vybraný servisní termín z dashboardu jako splněný"
+                AutomationProperties.AutomationId="DashboardCompleteMaintenanceButton" />
         <Button x:Name="DashboardEditVehicleButton"
                 Margin="0,0,10,8"
                 Command="{Binding EditSelectedDashboardVehicleCommand}"
