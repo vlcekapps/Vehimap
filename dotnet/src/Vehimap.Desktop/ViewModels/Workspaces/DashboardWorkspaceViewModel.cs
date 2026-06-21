@@ -7,10 +7,15 @@ namespace Vehimap.Desktop.ViewModels.Workspaces;
 
 public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
 {
+    private bool _syncingShowDashboardOnLaunch;
+
     public DashboardWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
     {
     }
+
+    [ObservableProperty]
+    private bool showDashboardOnLaunch;
 
     [ObservableProperty]
     private string dashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
@@ -84,6 +89,29 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
     internal void NotifyDashboardCostSelectionChanged()
     {
         OnPropertyChanged(nameof(SelectedDashboardCostVehicle));
+    }
+
+    internal void SyncShowDashboardOnLaunch(bool value)
+    {
+        _syncingShowDashboardOnLaunch = true;
+        try
+        {
+            ShowDashboardOnLaunch = value;
+        }
+        finally
+        {
+            _syncingShowDashboardOnLaunch = false;
+        }
+    }
+
+    partial void OnShowDashboardOnLaunchChanged(bool value)
+    {
+        if (_syncingShowDashboardOnLaunch)
+        {
+            return;
+        }
+
+        _ = Root.SetDashboardShowOnLaunchAsync(value);
     }
 
     partial void OnSelectedDashboardTimelineItemChanged(VehicleTimelineItemViewModel? value)

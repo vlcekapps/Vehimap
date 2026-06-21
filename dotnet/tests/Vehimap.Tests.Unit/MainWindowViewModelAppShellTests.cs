@@ -73,6 +73,50 @@ public sealed class MainWindowViewModelAppShellTests
     }
 
     [Fact]
+    public void Dashboard_workspace_syncs_show_on_launch_from_settings()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        dataSet.Settings.SetValue("app", "show_dashboard_on_launch", "1");
+
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet));
+
+        Assert.True(viewModel.DashboardWorkspace.ShowDashboardOnLaunch);
+    }
+
+    [Fact]
+    public async Task Dashboard_workspace_show_on_launch_toggle_persists_supported_setting()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        dataSet.Settings.SetValue("app", "show_dashboard_on_launch", "0");
+        dataSet.Settings.SetValue("app", "hide_on_launch", "1");
+        var dataStore = new StubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        await viewModel.SetDashboardShowOnLaunchAsync(true);
+
+        Assert.True(viewModel.DashboardWorkspace.ShowDashboardOnLaunch);
+        Assert.Equal("1", dataStore.CurrentDataSet.Settings.GetValue("app", "show_dashboard_on_launch"));
+        Assert.Equal("1", dataStore.CurrentDataSet.Settings.GetValue("app", "hide_on_launch"));
+        Assert.Contains("Dashboard se bude zobrazovat", viewModel.ShellStatus);
+    }
+
+    [Fact]
     public async Task Saving_supported_settings_persists_values_and_keeps_other_keys()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);

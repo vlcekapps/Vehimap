@@ -67,6 +67,36 @@ public sealed partial class MainWindowViewModel
         ShellStatus = "Nastavení byla uložena a přehledy byly přepočítány.";
     }
 
+    internal async Task SetDashboardShowOnLaunchAsync(bool showDashboardOnLaunch)
+    {
+        if (!_session.IsLoaded)
+        {
+            DashboardWorkspace.SyncShowDashboardOnLaunch(showDashboardOnLaunch);
+            return;
+        }
+
+        var current = _session.ReadSupportedSettings();
+        if (current.ShowDashboardOnLaunch == showDashboardOnLaunch)
+        {
+            DashboardWorkspace.SyncShowDashboardOnLaunch(showDashboardOnLaunch);
+            return;
+        }
+
+        try
+        {
+            await SaveSupportedSettingsAsync(current with { ShowDashboardOnLaunch = showDashboardOnLaunch }).ConfigureAwait(false);
+            ShellStatus = showDashboardOnLaunch
+                ? "Dashboard se bude zobrazovat při startu aplikace."
+                : "Dashboard se při startu aplikace nebude otevírat automaticky.";
+            DashboardWorkspace.SyncShowDashboardOnLaunch(showDashboardOnLaunch);
+        }
+        catch (Exception ex)
+        {
+            DashboardWorkspace.SyncShowDashboardOnLaunch(current.ShowDashboardOnLaunch);
+            ShellStatus = $"Volbu dashboardu při startu se nepodařilo uložit: {ex.Message}";
+        }
+    }
+
     internal async Task<string> CreateAutomaticBackupNowAsync(CancellationToken cancellationToken = default)
     {
         if (!_session.IsLoaded)

@@ -39,6 +39,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - terminove prehledy v Avalonia vetvi si pamatuji posledni rozbalovaci filtr typu polozky i pristupne razeni v `settings.ini`, ale rychle textove hledani zustava jen docasne
 - `Audit dat` a `Globalni hledani` v Avalonia vetvi si pamatuji posledni pristupne razeni v `settings.ini`, ale rychle textove hledani zustava jen docasne
 - dashboard v Avalonia vetvi ma sdilene `Obnovit` / `Ctrl+R`, ktere prepocita auditni vyrez, naklady a nejblizsi terminy bez ztraty vyberu
+- dashboard v Avalonia vetvi umi primo prepnout `show_dashboard_on_launch`, stejne jako AHK dashboard a dialog nastaveni
 - terminove prehledy v Avalonia vetvi maji sdilene `Obnovit` / `Ctrl+R`, ktere prepocita seznam bez ztraty vyberu
 - keyboard-first vrstvu shellu s focus managementem, shortcuty a enter-akcemi na hlavnich seznamech
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat

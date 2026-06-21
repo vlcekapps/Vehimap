@@ -742,6 +742,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"AuditSortDescendingCheckBox\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AuditListBox\"", auditXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardRefreshButton\"", dashboardXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DashboardShowOnLaunchCheckBox\"", dashboardXaml);
+        Assert.Contains("AutomationProperties.Name=\"Zobrazovat dashboard při startu aplikace\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardSearchButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardUpcomingButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardOverdueButton\"", dashboardXaml);

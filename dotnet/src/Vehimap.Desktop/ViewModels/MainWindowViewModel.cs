@@ -995,6 +995,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             DataMode = result.DataRoot.IsPortable ? "Portable data vedle aplikace" : "Systémová datová složka";
             DataPath = result.DataRoot.DataPath;
             OnPropertyChanged(nameof(CanOpenDataFolder));
+            DashboardWorkspace.SyncShowDashboardOnLaunch(result.SupportedSettings.ShowDashboardOnLaunch);
             VehicleCount = result.DataSet.Vehicles.Count;
             HistoryCount = result.DataSet.HistoryEntries.Count;
             FuelCount = result.DataSet.FuelEntries.Count;

@@ -96,7 +96,7 @@ V hlavním okně:
 - v C# Avalonia větvi lze v `Blížících se termínech` zapnout i vozidla bez zelené karty a datové nedostatky z auditu; obě volby i rozbalovací filtr typu položky se ukládají do `settings.ini`, otevření datového nedostatku skočí rovnou na správnou evidenci a rychlá akce `Zkontrolovat ZK` umí přehled otevřít i tehdy, když je problémem jen chybějící zelená karta
 - v C# Avalonia větvi si `Blížící se termíny` i `Propadlé termíny` pamatují poslední rozbalovací filtr, sloupec řazení a směr řazení, ale rychlé textové hledání zůstává jen dočasné
 - `Audit dat` teď funguje stejně klávesnicově jako ostatní přehledy: jde z něj rovnou otevřít řešenou položku, detail vozidla nebo přejít do úpravy
-- v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které změnu uloží ihned
+- v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které mění stejnou volbu jako dialog `Nastavení` a uloží ji ihned do `settings.ini`
 
 ## Klávesové zkratky v hlavním okně:
 
