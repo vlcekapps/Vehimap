@@ -82,6 +82,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - kontrola aktualizací v Avalonia větvi už při poškozeném lokálním preview manifestu zkusí běžný vzdálený manifest místo toho, aby skončila jen chybou lokálního souboru
 - dialog kontroly aktualizací v Avalonia větvi nově ukazuje, proč není automatická instalace dostupná, například kvůli chybějícímu updateru, nepublikovanému buildu, nepodporované platformě nebo neúplným manifestovým metadatům
 - dialog kontroly aktualizací v Avalonia větvi zobrazuje u dostupné verze také přímý odkaz na release asset a SHA-256 hash pro ruční ověření staženého balíčku
+- dialog kontroly aktualizací v Avalonia větvi umí tlačítkem `Kopírovat detaily` nebo zkratkou `Ctrl+Shift+C` zkopírovat verze, stav instalace, asset URL a SHA-256 hash do schránky
 - dostupnost akce `Minimalizovat na lištu` v Avalonia shellu je nově řízená viewmodelem podle podpory tray a nastavení automatických záloh vypíná intervalová pole, pokud nejsou pravidelné zálohy zapnuté
 - dialog `Nastavení` v Avalonia větvi má vlastní klávesové ovládání `Ctrl+S`, `Ctrl+B` a `Esc` i přístupný help text s těmito zkratkami
 - app-level dialogy v Avalonia větvi mají sjednocené bezpečné zavření klávesou `Esc`; `O programu` navíc nabízí `Ctrl+O` pro otevření release poznámek a všechny tyto dialogy popisují zkratky v přístupném help textu

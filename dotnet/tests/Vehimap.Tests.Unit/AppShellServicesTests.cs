@@ -300,6 +300,10 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Contains("Vehimap.Updater", model.Details, StringComparison.Ordinal);
         Assert.Contains("Asset ke stažení: https://example.com/vehimap.zip", model.Details, StringComparison.Ordinal);
         Assert.Contains($"SHA-256: {sha256}", model.Details, StringComparison.Ordinal);
+        Assert.Contains("Vehimap - kontrola aktualizací", model.ClipboardText, StringComparison.Ordinal);
+        Assert.Contains("Aktuální verze: 1.0.2", model.ClipboardText, StringComparison.Ordinal);
+        Assert.Contains("Asset ke stažení: https://example.com/vehimap.zip", model.ClipboardText, StringComparison.Ordinal);
+        Assert.Contains($"SHA-256: {sha256}", model.ClipboardText, StringComparison.Ordinal);
         Assert.Equal("Otevřít release stránku", model.PrimaryActionLabel);
     }
 

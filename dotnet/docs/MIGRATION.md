@@ -95,6 +95,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - runtime-specific preview update manifesty `update/latest-dotnet-preview-<rid>.ini`
 - detailni stav automaticke instalace v dialogu kontroly aktualizaci, vcetne duvodu rucniho rezimu
 - asset URL a SHA-256 hash v dialogu kontroly aktualizaci pro overitelnou rucni instalaci
+- kopirovani detailu kontroly aktualizaci do schranky tlacitkem nebo `Ctrl+Shift+C`, aby sla rucni instalace overit bez opisovani URL a hashe
 - odolnejsi kontrolu aktualizaci: poskozeny lokalni preview manifest se preskoci a sluzba zkusi vzdaleny manifest
 - regresni testy packaging skriptu a generatoru manifestu, vcetne kontroly, ze `.sha256`, metadata a fyzicky balicek souhlasi
 - Windows CI Appium smoke nad publish buildem desktop preview

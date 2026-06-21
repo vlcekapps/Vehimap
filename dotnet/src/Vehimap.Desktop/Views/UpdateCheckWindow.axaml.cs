@@ -1,8 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.Views;
 
@@ -36,10 +38,19 @@ public partial class UpdateCheckWindow : Window
 
     private void OnAssetActionClick(object? sender, RoutedEventArgs e) => Close(UpdateDialogAction.OpenAsset);
 
+    private async void OnCopyDetailsClick(object? sender, RoutedEventArgs e) => await CopyDetailsAsync();
+
     private void OnCloseClick(object? sender, RoutedEventArgs e) => Close(UpdateDialogAction.Close);
 
-    private void OnUpdateCheckKeyDown(object? sender, KeyEventArgs e)
+    private async void OnUpdateCheckKeyDown(object? sender, KeyEventArgs e)
     {
+        if (e.Key == Key.C && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
+        {
+            e.Handled = true;
+            await CopyDetailsAsync();
+            return;
+        }
+
         if (e.Key != Key.Escape || e.KeyModifiers != KeyModifiers.None)
         {
             return;
@@ -47,5 +58,15 @@ public partial class UpdateCheckWindow : Window
 
         e.Handled = true;
         Close(UpdateDialogAction.Close);
+    }
+
+    private async Task CopyDetailsAsync()
+    {
+        if (DataContext is not UpdateDialogViewModel model || Clipboard is null)
+        {
+            return;
+        }
+
+        await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
     }
 }

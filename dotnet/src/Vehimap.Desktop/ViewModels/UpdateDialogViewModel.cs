@@ -14,6 +14,7 @@ public sealed class UpdateDialogViewModel
                 : "Kontrola aktualizací";
         Summary = result.FailureReason ?? result.Message;
         Details = BuildDetails(result);
+        ClipboardText = BuildClipboardText(Heading, Summary, Details);
         PrimaryActionLabel = result.IsUpdateAvailable
             ? result.CanInstallAutomatically
                 ? "Stáhnout a nainstalovat"
@@ -30,6 +31,8 @@ public sealed class UpdateDialogViewModel
     public string Summary { get; }
 
     public string Details { get; }
+
+    public string ClipboardText { get; }
 
     public string PrimaryActionLabel { get; }
 
@@ -78,6 +81,20 @@ public sealed class UpdateDialogViewModel
         }
 
         return string.Join(Environment.NewLine, lines);
+    }
+
+    private static string BuildClipboardText(string heading, string summary, string details)
+    {
+        return string.Join(
+            Environment.NewLine,
+            new[]
+            {
+                "Vehimap - kontrola aktualizací",
+                heading,
+                summary,
+                string.Empty,
+                details
+            });
     }
 
     private static string BuildManualInstallReason(UpdateCheckResult result)

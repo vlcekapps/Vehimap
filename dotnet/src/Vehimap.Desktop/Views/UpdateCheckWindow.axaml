@@ -13,7 +13,7 @@
         Title="Kontrola aktualizací"
         AutomationProperties.Name="Kontrola aktualizací"
         AutomationProperties.AutomationId="UpdateCheckWindow"
-        AutomationProperties.HelpText="Výsledek kontroly aktualizací. Fokus je na hlavní dostupné akci; Escape dialog zavře.">
+        AutomationProperties.HelpText="Výsledek kontroly aktualizací. Fokus je na hlavní dostupné akci; Ctrl+Shift+C zkopíruje detaily a Escape dialog zavře.">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Heading}" />
     <TextBlock Grid.Row="1"
@@ -49,6 +49,12 @@
               Content="Stáhnout asset"
               AutomationProperties.Name="Stáhnout aktualizační asset"
               AutomationProperties.AutomationId="AssetActionButton" />
+      <Button x:Name="CopyDetailsButton"
+              MinWidth="150"
+              Click="OnCopyDetailsClick"
+              Content="Kopírovat detaily"
+              AutomationProperties.Name="Kopírovat detaily kontroly aktualizací do schránky"
+              AutomationProperties.AutomationId="CopyUpdateDetailsButton" />
       <Button x:Name="CloseButton"
               MinWidth="110"
               Click="OnCloseClick"
