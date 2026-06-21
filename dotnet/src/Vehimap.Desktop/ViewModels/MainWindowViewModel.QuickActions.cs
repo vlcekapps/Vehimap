@@ -74,9 +74,19 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (!HasAnyGreenCardConfigured())
+        var hasMissingGreenCard = HasAnyMissingGreenCard();
+        var greenCardItems = BuildQuickActionItems("green");
+        if (greenCardItems.Count == 0 && hasMissingGreenCard)
         {
-            ShellStatus = "U žádného vozidla není vyplněná zelená karta. Můžete ji doplnit v detailu vozidla.";
+            OpenMissingGreenCardsOverview();
+            return;
+        }
+
+        if (greenCardItems.Count == 0)
+        {
+            ShellStatus = HasAnyGreenCardConfigured()
+                ? "Žádná vyplněná zelená karta teď nevyžaduje upozornění."
+                : "U žádného vozidla není vyplněná zelená karta. Můžete ji doplnit v detailu vozidla.";
             return;
         }
 
@@ -84,9 +94,8 @@ public sealed partial class MainWindowViewModel
             "green",
             MissingGreenVehicleStatusFilterLabel,
             "Zelené karty",
-            HasAnyMissingGreenCard()
-                ? "Žádná vyplněná zelená karta teď nevyžaduje upozornění. U některých vozidel zelená karta vyplněná není."
-                : "Žádná vyplněná zelená karta teď nevyžaduje upozornění.");
+            "Žádná vyplněná zelená karta teď nevyžaduje upozornění.",
+            includeMissingGreenCards: hasMissingGreenCard);
     }
 
     [RelayCommand]
@@ -216,7 +225,12 @@ public sealed partial class MainWindowViewModel
             .ToList();
     }
 
-    private void OpenQuickActionOverview(string kind, string emptyFilterStatusMessage, string overviewFilterLabel, string emptyMessage)
+    private void OpenQuickActionOverview(
+        string kind,
+        string emptyFilterStatusMessage,
+        string overviewFilterLabel,
+        string emptyMessage,
+        bool includeMissingGreenCards = false)
     {
         var items = BuildQuickActionItems(kind);
         if (items.Count == 0)
@@ -232,7 +246,9 @@ public sealed partial class MainWindowViewModel
         if (targetTabIndex == UpcomingOverviewTabIndex)
         {
             UpcomingOverviewWorkspace.UpcomingOverviewSearchText = string.Empty;
+            UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = includeMissingGreenCards;
             UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = overviewFilterLabel;
+            RefreshUpcomingOverview();
             SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
             UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = FindById(
                 UpcomingOverviewItems,
@@ -244,6 +260,7 @@ public sealed partial class MainWindowViewModel
         {
             OverdueOverviewWorkspace.OverdueOverviewSearchText = string.Empty;
             OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = overviewFilterLabel;
+            RefreshOverdueOverview();
             SelectedVehicleTabIndex = OverdueOverviewTabIndex;
             OverdueOverviewWorkspace.SelectedOverdueOverviewItem = FindById(
                 OverdueOverviewItems,
@@ -261,6 +278,21 @@ public sealed partial class MainWindowViewModel
             "record" => $"Doklady k prověření: {items.Count}. Otevřen je příslušný přehled.",
             _ => emptyFilterStatusMessage
         };
+    }
+
+    private void OpenMissingGreenCardsOverview()
+    {
+        var missingCount = _dataSet.Vehicles.Count(vehicle => string.IsNullOrWhiteSpace(vehicle.GreenCardTo));
+        UpcomingOverviewWorkspace.UpcomingOverviewSearchText = string.Empty;
+        UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = true;
+        UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = "Zelené karty";
+        RefreshUpcomingOverview();
+        SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
+        UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem =
+            UpcomingOverviewItems.FirstOrDefault(item => string.Equals(item.Title, "Chybí zelená karta", StringComparison.CurrentCultureIgnoreCase))
+            ?? UpcomingOverviewItems.FirstOrDefault();
+        RequestFocus(DesktopFocusTarget.UpcomingOverviewList);
+        ShellStatus = $"Vozidla bez zelené karty k doplnění: {missingCount}. Otevřen je přehled blížících se termínů.";
     }
 
     private bool HasAnyGreenCardConfigured() =>

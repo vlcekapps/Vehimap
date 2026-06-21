@@ -109,6 +109,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - přístupné okno `Akce Vehimapu na liště` v Avalonia větvi umí kromě hlavního okna, dashboardu, přehledů a ukončení aplikace otevřít i nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrované kontroly těchto oblastí a vyvolat tiskový přehled, export/import zálohy, export kalendáře, znovunačtení dat, nastavení, `O programu` nebo kontrolu aktualizací
 
 ### Opraveno
+- rychlá akce `Zkontrolovat ZK` v Avalonia větvi otevře `Blížící se termíny` i v případě, kdy nejsou žádné blížící se zelené karty, ale existují vozidla bez vyplněné ZK
 - dialog `Balíček pro vozidlo` a `Doporučené servisní šablony` v Avalonia větvi má čitelné názvy položek pro čtečky obrazovky, klávesové přepínání položek mezerníkem a zkratky `Ctrl+S`, `Ctrl+A`, `Ctrl+Shift+A` a `Escape`
 - souhrnné, stavové a detailní texty v hlavním Avalonia shellu a workspace obrazovkách mají vlastní přístupné názvy a stabilní `AutomationId`, takže nejsou pro čtečky obrazovky ani UI testy anonymní
 - poškozená diakritika v dokladovém workspace Avalonia větve, aby vizuální texty i přístupné názvy pro čtečky obrazovky znovu četly správnou češtinu; unit testy nově hlídají návrat typických mojibake znaků v desktop UI zdrojích

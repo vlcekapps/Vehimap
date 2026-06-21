@@ -232,6 +232,34 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
     }
 
     [Fact]
+    public async Task Review_green_cards_quick_action_opens_missing_green_cards_when_no_due_green_cards()
+    {
+        var dataSet = BuildQuickActionDataSet();
+        dataSet.Vehicles.Clear();
+        dataSet.Reminders.Clear();
+        dataSet.MaintenancePlans.Clear();
+        dataSet.Records.Clear();
+        dataSet.VehicleMetaEntries.Clear();
+        dataSet.Vehicles.Add(new Vehicle("veh_ok", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "12/2099", "01/2099", "12/2099"));
+        dataSet.Vehicles.Add(new Vehicle("veh_missing", "Božena", "Osobní vozidla", "Srazové", "Škoda 100", "", "1973", "30", "", "12/2099", "", ""));
+        var viewModel = CreateViewModel(dataSet);
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        await viewModel.ReviewGreenCardsCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.IsUpcomingOverviewTabSelected);
+        Assert.True(viewModel.UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview);
+        Assert.Equal("Zelené karty", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
+        Assert.Equal(DesktopFocusTarget.UpcomingOverviewList, requestedFocus);
+        Assert.Contains(
+            viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems,
+            item => item.VehicleId == "veh_missing" && item.Title == "Chybí zelená karta");
+        Assert.Equal("veh_missing", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem?.VehicleId);
+        Assert.Contains("bez zelené karty", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    [Fact]
     public async Task Open_nearest_reminder_quick_action_selects_matching_reminder()
     {
         var viewModel = CreateViewModel(BuildQuickActionDataSet());
