@@ -58,7 +58,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
 - horní menu; v AHK aplikaci `Soubor`, `Vozidlo`, `Přehled`, `Nástroje` a `Nápověda`, v C# Avalonia větvi `Soubor`, `Vozidlo`, `Přehledy`, `Rychlé akce` a `Aplikace`
-- v C# Avalonia větvi lze z hlavního menu i přístupného tray okna otevřít aktuální datovou složku, což pomáhá při kontrole portable dat, záloh a spravovaných příloh
+- v C# Avalonia větvi lze z hlavního menu i přístupného tray okna otevřít aktuální datovou složku; složky se otevírají oddělenou multiplatformní cestou (`explorer.exe` na Windows, `open` na macOS, `xdg-open` na Linuxu), což pomáhá při kontrole portable dat, záloh a spravovaných příloh
 - přístupné tray okno pro rychlé zobrazení hlavního okna, dashboardu, blížících se termínů, propadlých termínů, nejbližší TK/ZK/připomínky/servisu/dokladu, filtrovaných kontrol, tiskového přehledu, záloh, exportu kalendáře, znovunačtení dat, otevření datové složky, nastavení, dialogu `O programu`, kontroly aktualizací a ukončení aplikace
 - v C# Avalonia větvi mají stavové, souhrnné a detailní texty hlavního shellu i workspace obrazovek vlastní přístupný název a stabilní `AutomationId`, aby je šlo spolehlivě číst čtečkou obrazovky i ověřovat UI testy
 - automatickou kontrolu termínů, připomínek a servisních plánů každých 15 minut a znovu po probuzení počítače ze spánku; v C# Avalonia větvi se probuzení zatím napojuje přes Windows systémovou událost a akutní termíny v oznámeních a tooltipu lišty mají přednost před obecnými auditními nedostatky

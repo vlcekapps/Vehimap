@@ -29,13 +29,18 @@ public sealed class ProcessFileLauncher : IFileLauncher
     public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        Launch(path);
+        LaunchFolder(path);
         return Task.CompletedTask;
     }
 
     private void Launch(string path)
     {
         _startProcess(BuildStartInfo(path, _platformResolver()));
+    }
+
+    private void LaunchFolder(string path)
+    {
+        _startProcess(BuildFolderStartInfo(path, _platformResolver()));
     }
 
     internal static ProcessStartInfo BuildStartInfo(string path, FileLaunchPlatform platform)
@@ -55,6 +60,22 @@ public sealed class ProcessFileLauncher : IFileLauncher
             FileLaunchPlatform.MacOS => BuildCommandStartInfo("open", path),
             FileLaunchPlatform.Linux => BuildCommandStartInfo("xdg-open", path),
             _ => throw new PlatformNotSupportedException("Otevření souboru není pro tuto platformu podporované.")
+        };
+    }
+
+    internal static ProcessStartInfo BuildFolderStartInfo(string path, FileLaunchPlatform platform)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new ArgumentException("Cesta k otevření nesmí být prázdná.", nameof(path));
+        }
+
+        return platform switch
+        {
+            FileLaunchPlatform.Windows => BuildCommandStartInfo("explorer.exe", path),
+            FileLaunchPlatform.MacOS => BuildCommandStartInfo("open", path),
+            FileLaunchPlatform.Linux => BuildCommandStartInfo("xdg-open", path),
+            _ => throw new PlatformNotSupportedException("Otevření složky není pro tuto platformu podporované.")
         };
     }
 

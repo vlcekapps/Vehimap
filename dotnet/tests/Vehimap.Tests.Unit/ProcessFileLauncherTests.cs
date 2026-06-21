@@ -37,18 +37,48 @@ public sealed class ProcessFileLauncherTests
     }
 
     [Fact]
+    public void Build_folder_start_info_uses_explorer_on_windows()
+    {
+        var startInfo = ProcessFileLauncher.BuildFolderStartInfo(@"C:\vehimap\data\attachments", FileLaunchPlatform.Windows);
+
+        Assert.Equal("explorer.exe", startInfo.FileName);
+        Assert.False(startInfo.UseShellExecute);
+        Assert.Equal([@"C:\vehimap\data\attachments"], startInfo.ArgumentList);
+    }
+
+    [Fact]
+    public void Build_folder_start_info_uses_open_on_macos()
+    {
+        var startInfo = ProcessFileLauncher.BuildFolderStartInfo("/Users/test/Vehimap/data", FileLaunchPlatform.MacOS);
+
+        Assert.Equal("open", startInfo.FileName);
+        Assert.False(startInfo.UseShellExecute);
+        Assert.Equal(["/Users/test/Vehimap/data"], startInfo.ArgumentList);
+    }
+
+    [Fact]
+    public void Build_folder_start_info_uses_xdg_open_on_linux()
+    {
+        var startInfo = ProcessFileLauncher.BuildFolderStartInfo("/home/test/Vehimap/data", FileLaunchPlatform.Linux);
+
+        Assert.Equal("xdg-open", startInfo.FileName);
+        Assert.False(startInfo.UseShellExecute);
+        Assert.Equal(["/home/test/Vehimap/data"], startInfo.ArgumentList);
+    }
+
+    [Fact]
     public async Task Open_folder_async_uses_injected_process_starter_without_launching_process()
     {
         ProcessStartInfo? capturedStartInfo = null;
         var launcher = new ProcessFileLauncher(
             startInfo => capturedStartInfo = startInfo,
-            () => FileLaunchPlatform.Linux);
+            () => FileLaunchPlatform.Windows);
 
-        await launcher.OpenFolderAsync("/home/test/Vehimap/data/attachments/veh_1");
+        await launcher.OpenFolderAsync(@"C:\vehimap\data\attachments\veh_1");
 
         Assert.NotNull(capturedStartInfo);
-        Assert.Equal("xdg-open", capturedStartInfo!.FileName);
-        Assert.Equal(["/home/test/Vehimap/data/attachments/veh_1"], capturedStartInfo.ArgumentList);
+        Assert.Equal("explorer.exe", capturedStartInfo!.FileName);
+        Assert.Equal([@"C:\vehimap\data\attachments\veh_1"], capturedStartInfo.ArgumentList);
     }
 
     [Fact]
@@ -56,6 +86,15 @@ public sealed class ProcessFileLauncherTests
     {
         var error = Assert.Throws<ArgumentException>(() =>
             ProcessFileLauncher.BuildStartInfo(" ", FileLaunchPlatform.Windows));
+
+        Assert.Equal("path", error.ParamName);
+    }
+
+    [Fact]
+    public void Build_folder_start_info_rejects_empty_path()
+    {
+        var error = Assert.Throws<ArgumentException>(() =>
+            ProcessFileLauncher.BuildFolderStartInfo(" ", FileLaunchPlatform.Windows));
 
         Assert.Equal("path", error.ParamName);
     }
