@@ -22,6 +22,7 @@ internal sealed class DesktopNotificationService : INotificationService
     private const uint NiifInfo = 0x00000001;
 
     private readonly IAppBuildInfoProvider _appBuildInfoProvider;
+    private readonly Func<bool> _isWindowsPlatform;
     private Func<nint>? _hostWindowHandleProvider;
     private uint _notificationId = 1001;
 
@@ -30,8 +31,14 @@ internal sealed class DesktopNotificationService : INotificationService
         ShowVehimapNotificationWindowAsync;
 
     public DesktopNotificationService(IAppBuildInfoProvider appBuildInfoProvider)
+        : this(appBuildInfoProvider, OperatingSystem.IsWindows)
+    {
+    }
+
+    internal DesktopNotificationService(IAppBuildInfoProvider appBuildInfoProvider, Func<bool> isWindowsPlatform)
     {
         _appBuildInfoProvider = appBuildInfoProvider;
+        _isWindowsPlatform = isWindowsPlatform;
         WindowsNotificationPresenter = ShowWindowsBalloonAsync;
     }
 
@@ -42,7 +49,7 @@ internal sealed class DesktopNotificationService : INotificationService
 
     public async Task ShowAsync(string title, string message, CancellationToken cancellationToken = default)
     {
-        if (OperatingSystem.IsWindows())
+        if (_isWindowsPlatform())
         {
             var shown = await WindowsNotificationPresenter(
                     NormalizeNotificationText(title, 63),

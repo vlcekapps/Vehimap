@@ -11,7 +11,7 @@ public sealed class DesktopNotificationServiceTests
     public async Task Show_async_uses_windows_presenter_before_falling_back()
     {
         var provider = new StubBuildInfoProvider();
-        var service = new DesktopNotificationService(provider);
+        var service = new DesktopNotificationService(provider, () => true);
         var invoked = false;
 
         service.WindowsNotificationPresenter = (title, message, _) =>
@@ -37,10 +37,35 @@ public sealed class DesktopNotificationServiceTests
     public async Task Show_async_falls_back_to_inline_notification_when_windows_presenter_returns_false()
     {
         var provider = new StubBuildInfoProvider();
-        var service = new DesktopNotificationService(provider);
+        var service = new DesktopNotificationService(provider, () => true);
         var inlineInvoked = false;
 
         service.WindowsNotificationPresenter = (_, _, _) => Task.FromResult(false);
+        service.InlineNotificationPresenter = (title, message, _) =>
+        {
+            inlineInvoked = true;
+            Assert.Equal("Vehimap upozornění", title);
+            Assert.Equal("Propadlá technická kontrola", message);
+            return Task.CompletedTask;
+        };
+
+        await service.ShowAsync("Vehimap upozornění", "Propadlá technická kontrola");
+
+        Assert.True(inlineInvoked);
+    }
+
+    [Fact]
+    public async Task Show_async_uses_inline_notification_directly_on_non_windows_platforms()
+    {
+        var provider = new StubBuildInfoProvider();
+        var service = new DesktopNotificationService(provider, () => false);
+        var inlineInvoked = false;
+
+        service.WindowsNotificationPresenter = (_, _, _) =>
+        {
+            Assert.Fail("Windows presenter se na ne-Windows platformě nemá volat.");
+            return Task.FromResult(true);
+        };
         service.InlineNotificationPresenter = (title, message, _) =>
         {
             inlineInvoked = true;
