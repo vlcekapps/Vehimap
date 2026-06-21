@@ -131,6 +131,89 @@ public sealed class LegacyDataStoreCompatibilityTests
     }
 
     [Fact]
+    public async Task Import_backup_reports_path_for_missing_backup_file()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-missing-backup-" + Guid.NewGuid());
+        var backupPath = Path.Combine(tempRoot, "missing.vehimapbak");
+        var backupService = new LegacyBackupService();
+
+        try
+        {
+            var exception = await Assert.ThrowsAsync<LegacyBackupException>(() => backupService.ImportAsync(backupPath));
+
+            Assert.Equal(Path.GetFullPath(backupPath), exception.BackupPath);
+            Assert.Contains(Path.GetFullPath(backupPath), exception.Message, StringComparison.Ordinal);
+            Assert.Contains("Zálohu se nepodařilo načíst", exception.Message, StringComparison.Ordinal);
+            Assert.IsAssignableFrom<IOException>(exception.InnerException);
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task Import_backup_reports_path_and_parser_detail_for_invalid_header()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-invalid-backup-" + Guid.NewGuid());
+        var backupPath = Path.Combine(tempRoot, "broken.vehimapbak");
+        var backupService = new LegacyBackupService();
+
+        try
+        {
+            Directory.CreateDirectory(tempRoot);
+            await File.WriteAllTextAsync(backupPath, "# Neni Vehimap backup\nsettings_length=0\nvehicles_length=0\n\n");
+
+            var exception = await Assert.ThrowsAsync<LegacyBackupException>(() => backupService.ImportAsync(backupPath));
+
+            Assert.Equal(Path.GetFullPath(backupPath), exception.BackupPath);
+            Assert.Contains(Path.GetFullPath(backupPath), exception.Message, StringComparison.Ordinal);
+            Assert.Contains("formátu zálohy Vehimap", exception.Message, StringComparison.Ordinal);
+            Assert.IsType<FormatException>(exception.InnerException);
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task Import_backup_reports_attachment_line_for_invalid_base64()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-invalid-attachment-backup-" + Guid.NewGuid());
+        var backupPath = Path.Combine(tempRoot, "broken-attachment.vehimapbak");
+        var backupService = new LegacyBackupService();
+        var attachments = "# Vehimap attachments v1\nattachments/veh_1/tp.pdf\t%%%neni-base64%%%\n";
+
+        try
+        {
+            Directory.CreateDirectory(tempRoot);
+            await File.WriteAllTextAsync(backupPath, BuildBackupContent(attachments));
+
+            var exception = await Assert.ThrowsAsync<LegacyBackupException>(() => backupService.ImportAsync(backupPath));
+
+            Assert.Equal(Path.GetFullPath(backupPath), exception.BackupPath);
+            Assert.Contains(Path.GetFullPath(backupPath), exception.Message, StringComparison.Ordinal);
+            Assert.Contains("Řádek příloh 2", exception.Message, StringComparison.Ordinal);
+            Assert.Contains("neplatný obsah souboru", exception.Message, StringComparison.Ordinal);
+            Assert.IsType<FormatException>(exception.InnerException);
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
     public async Task Restore_creates_import_backup_with_current_files_and_attachments()
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-import-backup-" + Guid.NewGuid());
@@ -197,5 +280,31 @@ public sealed class LegacyDataStoreCompatibilityTests
                 Directory.Delete(tempRoot, true);
             }
         }
+    }
+
+    private static string BuildBackupContent(string attachmentsContent)
+    {
+        const string settings = "[app]\n";
+        const string vehicles = "# Vehimap data v4\n";
+        const string history = "# Vehimap history v1\n";
+        const string fuel = "# Vehimap fuel v1\n";
+        const string records = "# Vehimap records v2\n";
+        const string meta = "# Vehimap meta v2\n";
+        const string reminders = "# Vehimap reminders v1\n";
+        const string maintenance = "# Vehimap maintenance v1\n";
+
+        var header = string.Join('\n',
+            "# Vehimap backup v6",
+            $"settings_length={settings.Length}",
+            $"vehicles_length={vehicles.Length}",
+            $"history_length={history.Length}",
+            $"fuel_length={fuel.Length}",
+            $"records_length={records.Length}",
+            $"meta_length={meta.Length}",
+            $"reminders_length={reminders.Length}",
+            $"maintenance_length={maintenance.Length}",
+            $"attachments_length={attachmentsContent.Length}");
+
+        return $"{header}\n\n{settings}{vehicles}{history}{fuel}{records}{meta}{reminders}{maintenance}{attachmentsContent}";
     }
 }

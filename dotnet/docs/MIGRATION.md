@@ -24,7 +24,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - portable/system data root locator
 - prime cteni a zapis soucasnych TSV/INI souboru
 - diagnostiku poskozenych legacy TSV/INI souboru s nazvem souboru, plnou cestou a puvodnim parser detailem pro shell i testy
-- import/export `.vehimapbak` vcetne spravovanych priloh a exportni hlasky s poctem zahrnutych i preskocenych chybejicich managed souboru
+- import/export `.vehimapbak` vcetne spravovanych priloh, exportni hlasky s poctem zahrnutych i preskocenych chybejicich managed souboru a citelne diagnostiky importu s cestou k zaloze a parser detailem
 - prvni C# audit engine nad legacy daty
 - prvni C# nakladovy souhrn vcetne `Cena / km` a srovnani proti stejne dlouhemu obdobi loni
 - klavesove dotazeni nakladoveho workspace: `Ctrl+P` cte rozpad vybraneho vozidla, `Ctrl+O` nebo `Enter` otevre vozidlo a `Ctrl+U` / `F2` otevre editor vozidla

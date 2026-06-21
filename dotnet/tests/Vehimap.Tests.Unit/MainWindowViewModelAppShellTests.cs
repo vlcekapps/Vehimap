@@ -188,6 +188,31 @@ public sealed class MainWindowViewModelAppShellTests
     }
 
     [Fact]
+    public async Task Export_backup_failure_reports_status_without_crashing_shell()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var backupService = new StubBackupService
+        {
+            ExportException = new IOException("Disk je plný.")
+        };
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet), backupService: backupService);
+
+        var status = await viewModel.ExportBackupAsync(@"C:\backups\vehimap.vehimapbak");
+
+        Assert.Contains("Export zálohy se nepodařil", status);
+        Assert.Contains("Disk je plný", status);
+        Assert.Equal(status, viewModel.ShellStatus);
+    }
+
+    [Fact]
     public async Task Import_backup_restores_bundle_and_reports_status()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -224,6 +249,36 @@ public sealed class MainWindowViewModelAppShellTests
         Assert.Contains("Data byla obnovena ze zálohy", status);
         Assert.Contains(@"C:\vehimap-test\data\import-backups\2026-04-02_10-00-00", status);
         Assert.Contains("Obnoveno spravovaných příloh: 2", status);
+        Assert.Equal(status, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Import_backup_failure_reports_status_without_crashing_shell()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var backupPath = @"C:\backups\broken.vehimapbak";
+        var backupService = new StubBackupService
+        {
+            ImportException = new LegacyBackupException(
+                backupPath,
+                $"Zálohu se nepodařilo načíst: {backupPath}. Detail: Soubor není ve formátu zálohy Vehimap.",
+                new FormatException("Soubor není ve formátu zálohy Vehimap."))
+        };
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet), backupService: backupService);
+
+        var status = await viewModel.ImportBackupAsync(backupPath);
+
+        Assert.Contains("Obnova ze zálohy se nepodařila", status);
+        Assert.Contains(backupPath, status);
+        Assert.Contains("formátu zálohy Vehimap", status);
         Assert.Equal(status, viewModel.ShellStatus);
     }
 
@@ -540,24 +595,42 @@ public sealed class MainWindowViewModelAppShellTests
         public VehimapBackupBundle ImportBundle { get; set; } = new(new VehimapDataSet(), []);
         public BackupRestoreResult RestoreResult { get; set; } = new(null, 0);
         public Action<VehimapBackupBundle>? RestoreCallback { get; set; }
+        public Exception? ExportException { get; set; }
+        public Exception? ImportException { get; set; }
+        public Exception? RestoreException { get; set; }
 
         public BackupExportResult ExportResult { get; set; } = new(string.Empty, 0, 0);
 
         public Task<BackupExportResult> ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
             ExportedPath = backupPath;
+            if (ExportException is not null)
+            {
+                return Task.FromException<BackupExportResult>(ExportException);
+            }
+
             return Task.FromResult(ExportResult with { BackupPath = backupPath });
         }
 
         public Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
         {
             ImportedPath = backupPath;
+            if (ImportException is not null)
+            {
+                return Task.FromException<VehimapBackupBundle>(ImportException);
+            }
+
             return Task.FromResult(ImportBundle);
         }
 
         public Task<BackupRestoreResult> RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
         {
             RestoredFromPath = ImportedPath;
+            if (RestoreException is not null)
+            {
+                return Task.FromException<BackupRestoreResult>(RestoreException);
+            }
+
             RestoreCallback?.Invoke(backupBundle);
             return Task.FromResult(RestoreResult);
         }

@@ -35,23 +35,30 @@ public sealed class LegacyBackupService : IBackupService
 
     public async Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
     {
-        var content = await File.ReadAllTextAsync(backupPath, Encoding.UTF8, cancellationToken).ConfigureAwait(false);
-        var payload = LegacyBackupSerialization.Parse(content);
-
-        var data = new VehimapDataSet
+        try
         {
-            Settings = LegacySectionSerialization.ParseSettings(payload.SettingsContent),
-            Vehicles = LegacySectionSerialization.ParseVehicles(payload.VehiclesContent),
-            HistoryEntries = LegacySectionSerialization.ParseHistory(payload.HistoryContent),
-            FuelEntries = LegacySectionSerialization.ParseFuel(payload.FuelContent),
-            Records = LegacySectionSerialization.ParseRecords(payload.RecordsContent),
-            VehicleMetaEntries = LegacySectionSerialization.ParseVehicleMeta(payload.MetaContent),
-            Reminders = LegacySectionSerialization.ParseReminders(payload.RemindersContent),
-            MaintenancePlans = LegacySectionSerialization.ParseMaintenancePlans(payload.MaintenanceContent)
-        };
+            var content = await File.ReadAllTextAsync(backupPath, Encoding.UTF8, cancellationToken).ConfigureAwait(false);
+            var payload = LegacyBackupSerialization.Parse(content);
 
-        var attachments = LegacySectionSerialization.ParseAttachmentsSection(payload.AttachmentsContent);
-        return new VehimapBackupBundle(data, attachments);
+            var data = new VehimapDataSet
+            {
+                Settings = LegacySectionSerialization.ParseSettings(payload.SettingsContent),
+                Vehicles = LegacySectionSerialization.ParseVehicles(payload.VehiclesContent),
+                HistoryEntries = LegacySectionSerialization.ParseHistory(payload.HistoryContent),
+                FuelEntries = LegacySectionSerialization.ParseFuel(payload.FuelContent),
+                Records = LegacySectionSerialization.ParseRecords(payload.RecordsContent),
+                VehicleMetaEntries = LegacySectionSerialization.ParseVehicleMeta(payload.MetaContent),
+                Reminders = LegacySectionSerialization.ParseReminders(payload.RemindersContent),
+                MaintenancePlans = LegacySectionSerialization.ParseMaintenancePlans(payload.MaintenanceContent)
+            };
+
+            var attachments = LegacySectionSerialization.ParseAttachmentsSection(payload.AttachmentsContent);
+            return new VehimapBackupBundle(data, attachments);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            throw CreateImportException(backupPath, ex);
+        }
     }
 
     public async Task<BackupRestoreResult> RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
@@ -184,6 +191,36 @@ public sealed class LegacyBackupService : IBackupService
         }
 
         return new ManagedAttachmentCollection(items, missingCount);
+    }
+
+    private static LegacyBackupException CreateImportException(string backupPath, Exception exception)
+    {
+        var resolvedPath = ResolveBackupPathForMessage(backupPath);
+        var detail = string.IsNullOrWhiteSpace(exception.Message)
+            ? exception.GetType().Name
+            : exception.Message;
+
+        return new LegacyBackupException(
+            resolvedPath,
+            $"Zálohu se nepodařilo načíst: {resolvedPath}. Detail: {detail}",
+            exception);
+    }
+
+    private static string ResolveBackupPathForMessage(string backupPath)
+    {
+        if (string.IsNullOrWhiteSpace(backupPath))
+        {
+            return "(nebyla zadána cesta k záloze)";
+        }
+
+        try
+        {
+            return Path.GetFullPath(backupPath);
+        }
+        catch
+        {
+            return backupPath;
+        }
     }
 
     private static readonly string[] LegacyDataFileNames =

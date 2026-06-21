@@ -28,16 +28,23 @@ public sealed partial class MainWindowViewModel
             return "Export se nepodařilo připravit, protože nejsou načtená data.";
         }
 
-        var result = await _session.ExportBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
-        ShellStatus = $"Záloha byla uložena do {backupPath}.";
-        if (result.IncludedManagedAttachmentCount > 0)
+        try
         {
-            ShellStatus += $" Spravovaných příloh v záloze: {result.IncludedManagedAttachmentCount}.";
-        }
+            var result = await _session.ExportBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
+            ShellStatus = $"Záloha byla uložena do {backupPath}.";
+            if (result.IncludedManagedAttachmentCount > 0)
+            {
+                ShellStatus += $" Spravovaných příloh v záloze: {result.IncludedManagedAttachmentCount}.";
+            }
 
-        if (result.MissingManagedAttachmentCount > 0)
+            if (result.MissingManagedAttachmentCount > 0)
+            {
+                ShellStatus += $" Přeskočených chybějících spravovaných příloh: {result.MissingManagedAttachmentCount}.";
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus += $" Přeskočených chybějících spravovaných příloh: {result.MissingManagedAttachmentCount}.";
+            ShellStatus = $"Export zálohy se nepodařil: {ex.Message}";
         }
 
         return ShellStatus;
@@ -50,17 +57,24 @@ public sealed partial class MainWindowViewModel
             return "Obnovu se nepodařilo připravit, protože nejsou načtená data.";
         }
 
-        var restoreResult = await _session.RestoreBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
-        Load(applyLaunchTabPreference: false);
-        ShellStatus = $"Data byla obnovena ze zálohy {backupPath}.";
-        if (!string.IsNullOrWhiteSpace(restoreResult.PreRestoreBackupPath))
+        try
         {
-            ShellStatus += $" Původní data byla před obnovou odložena do {restoreResult.PreRestoreBackupPath}.";
-        }
+            var restoreResult = await _session.RestoreBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
+            Load(applyLaunchTabPreference: false);
+            ShellStatus = $"Data byla obnovena ze zálohy {backupPath}.";
+            if (!string.IsNullOrWhiteSpace(restoreResult.PreRestoreBackupPath))
+            {
+                ShellStatus += $" Původní data byla před obnovou odložena do {restoreResult.PreRestoreBackupPath}.";
+            }
 
-        if (restoreResult.RestoredAttachmentCount > 0)
+            if (restoreResult.RestoredAttachmentCount > 0)
+            {
+                ShellStatus += $" Obnoveno spravovaných příloh: {restoreResult.RestoredAttachmentCount}.";
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus += $" Obnoveno spravovaných příloh: {restoreResult.RestoredAttachmentCount}.";
+            ShellStatus = $"Obnova ze zálohy se nepodařila: {ex.Message}";
         }
 
         return ShellStatus;

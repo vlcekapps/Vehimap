@@ -500,7 +500,14 @@ internal static class LegacySectionSerialization
                 throw new FormatException($"Řádek příloh {index + 2} obsahuje prázdnou relativní cestu.");
             }
 
-            return new ManagedAttachment(relativePath, Convert.FromBase64String(UnescapeField(fields[1])));
+            try
+            {
+                return new ManagedAttachment(relativePath, Convert.FromBase64String(UnescapeField(fields[1])));
+            }
+            catch (FormatException ex)
+            {
+                throw new FormatException($"Řádek příloh {index + 2} obsahuje neplatný obsah souboru.", ex);
+            }
         }).ToList();
     }
 

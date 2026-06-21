@@ -33,7 +33,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - `Tiskový přehled` všech vozidel ve formátu HTML; v C# Avalonia větvi se nejprve uloží jako běžný soubor a po uložení se otevře v prohlížeči pro tisk přes `Ctrl+P`
 - `Export dat` do jednoho záložního souboru `.vehimapbak` včetně plánů údržby a spravovaných příloh dokladů; v C# Avalonia větvi výsledná hláška uvádí i počet zahrnutých a přeskočených chybějících spravovaných příloh
 - `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním, obnovení plánů údržby i návratu spravovaných příloh dokladů
-- v C# Avalonia větvi se při poškozeném legacy `TSV` nebo `INI` souboru v úvodním stavu zobrazí konkrétní název souboru, plná cesta a detail parseru, aby šlo chybu opravit bez hádání, která evidence selhala
+- v C# Avalonia větvi se při poškozeném legacy `TSV`, `INI` nebo `.vehimapbak` souboru zobrazí konkrétní cesta a detail parseru, aby šlo chybu opravit bez hádání, která evidence nebo záloha selhala
 - hlavní pracovní okna jako `Dashboard`, `Přehled termínů`, `Propadlé termíny`, `Audit dat`, `Časová osa vozidla`, `Pojištění a doklady`, `Plán údržby`, detail vozidla i hlavní seznam lze zvětšit, takže se seznamy natáhnou do šířky i výšky
 - v C# desktopové větvi lze přehledová workflow `Časová osa`, `Globální hledání`, `Audit dat`, `Náklady`, `Dashboard`, `Blížící se termíny` a `Propadlé termíny` otevřít jako kartu v hlavním shellu i jako samostatné okno se stejnou přístupnou pracovní plochou
 - v C# desktopové větvi mají samostatná workspace okna sjednocené otevření prvního logického prvku a stejnou ochranu před zavřením rozpracovaného editoru jako hlavní shell
@@ -274,6 +274,7 @@ V horním menu najdete tyto části:
 - automatické zálohy se ukládají do složky `data/auto-backups`
 - při importu se původní soubory před přepsáním automaticky odloží do `data/import-backups`
 - v C# Avalonia větvi se při obnově zálohy do `data/import-backups/<čas>` odkládají i spravované přílohy; stavová hláška po importu ukáže konkrétní složku s původními daty i počet obnovených příloh
+- pokud je vybraný `.vehimapbak` soubor nedostupný, poškozený nebo obsahuje neplatná data příloh, C# Avalonia větev nepřeruší shell výjimkou, ale oznámí cestu k záloze a čitelný detail chyby ve stavovém textu
 - oba soubory jsou ve složce `data` vedle aplikace
 - Vehimap zapisuje vozidla ve formátu `# Vehimap data v4`
 - historie používá hlavičku `# Vehimap history v1`
