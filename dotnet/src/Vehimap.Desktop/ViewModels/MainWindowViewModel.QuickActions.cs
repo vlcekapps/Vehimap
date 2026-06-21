@@ -300,4 +300,41 @@ public sealed partial class MainWindowViewModel
 
     private bool HasAnyMissingGreenCard() =>
         _dataSet.Vehicles.Any(vehicle => string.IsNullOrWhiteSpace(vehicle.GreenCardTo));
+
+    internal TrayActionsDialogViewModel BuildTrayActionsDialogModel()
+    {
+        var canNavigate = CanUseWorkspaceNavigation;
+        var isLoaded = _session.IsLoaded;
+        var hasTechnical = BuildQuickActionItems("technical").Count > 0;
+        var hasGreenCard = BuildQuickActionItems("green").Count > 0;
+        var hasReminder = BuildQuickActionItems("custom").Count > 0;
+        var hasMaintenance = BuildQuickActionItems("maintenance").Count > 0;
+        var hasRecord = BuildQuickActionItems("record").Count > 0;
+        var hasMissingGreenCard = HasAnyMissingGreenCard();
+        var canUseDataActions = isLoaded && !HasPendingEdits;
+
+        return TrayActionsDialogViewModel.CreateDefault() with
+        {
+            CanShowDashboard = canNavigate,
+            CanShowUpcomingOverview = canNavigate,
+            CanShowOverdueOverview = canNavigate,
+            CanOpenNearestTechnical = canNavigate && hasTechnical,
+            CanOpenNearestGreenCard = canNavigate && hasGreenCard,
+            CanOpenNearestReminder = canNavigate && hasReminder,
+            CanOpenNearestMaintenance = canNavigate && hasMaintenance,
+            CanOpenNearestRecord = canNavigate && hasRecord,
+            CanReviewTechnical = canNavigate && hasTechnical,
+            CanReviewGreenCards = canNavigate && (hasGreenCard || hasMissingGreenCard),
+            CanReviewReminders = canNavigate && hasReminder,
+            CanReviewMaintenance = canNavigate && hasMaintenance,
+            CanReviewRecords = canNavigate && hasRecord,
+            CanOpenPrintableReport = canUseDataActions,
+            CanExportBackup = canUseDataActions,
+            CanImportBackup = canUseDataActions,
+            CanOpenSettings = canUseDataActions,
+            CanExportCalendar = canUseDataActions,
+            CanReloadData = canUseDataActions,
+            CanOpenDataFolder = canUseDataActions && this.CanOpenDataFolder
+        };
+    }
 }

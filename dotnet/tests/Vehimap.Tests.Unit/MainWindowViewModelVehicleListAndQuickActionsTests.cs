@@ -355,6 +355,65 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Contains("Doklady k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
+    [Fact]
+    public void Tray_actions_availability_reflects_current_quick_action_targets()
+    {
+        var activeModel = CreateViewModel(BuildQuickActionDataSet()).BuildTrayActionsDialogModel();
+
+        Assert.True(activeModel.CanOpenNearestTechnical);
+        Assert.True(activeModel.CanOpenNearestGreenCard);
+        Assert.True(activeModel.CanOpenNearestReminder);
+        Assert.True(activeModel.CanOpenNearestMaintenance);
+        Assert.True(activeModel.CanOpenNearestRecord);
+        Assert.True(activeModel.CanReviewTechnical);
+        Assert.True(activeModel.CanReviewGreenCards);
+        Assert.True(activeModel.CanReviewReminders);
+        Assert.True(activeModel.CanReviewMaintenance);
+        Assert.True(activeModel.CanReviewRecords);
+
+        var quietModel = CreateViewModel(BuildQuietQuickActionDataSet()).BuildTrayActionsDialogModel();
+
+        Assert.True(quietModel.CanShowMainWindow);
+        Assert.True(quietModel.CanOpenDataFolder);
+        Assert.True(quietModel.CanOpenSettings);
+        Assert.False(quietModel.CanOpenNearestTechnical);
+        Assert.False(quietModel.CanOpenNearestGreenCard);
+        Assert.False(quietModel.CanOpenNearestReminder);
+        Assert.False(quietModel.CanOpenNearestMaintenance);
+        Assert.False(quietModel.CanOpenNearestRecord);
+        Assert.False(quietModel.CanReviewTechnical);
+        Assert.False(quietModel.CanReviewGreenCards);
+        Assert.False(quietModel.CanReviewReminders);
+        Assert.False(quietModel.CanReviewMaintenance);
+        Assert.False(quietModel.CanReviewRecords);
+    }
+
+    [Fact]
+    public void Tray_actions_disable_navigation_and_data_actions_while_editing()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+
+        viewModel.EditSelectedVehicleCommand.Execute(null);
+        var model = viewModel.BuildTrayActionsDialogModel();
+
+        Assert.True(model.CanShowMainWindow);
+        Assert.True(model.CanOpenAbout);
+        Assert.True(model.CanCheckForUpdates);
+        Assert.True(model.CanExit);
+        Assert.False(model.CanShowDashboard);
+        Assert.False(model.CanShowUpcomingOverview);
+        Assert.False(model.CanShowOverdueOverview);
+        Assert.False(model.CanOpenNearestTechnical);
+        Assert.False(model.CanReviewTechnical);
+        Assert.False(model.CanOpenPrintableReport);
+        Assert.False(model.CanExportBackup);
+        Assert.False(model.CanImportBackup);
+        Assert.False(model.CanOpenSettings);
+        Assert.False(model.CanExportCalendar);
+        Assert.False(model.CanReloadData);
+        Assert.False(model.CanOpenDataFolder);
+    }
+
     private static MainWindowViewModel CreateViewModel(VehimapDataSet dataSet)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -403,6 +462,18 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             [
                 new VehicleMeta("veh_1", "Běžný provoz", "", "Benzín", "Má klimatizaci", "Řemen", "Manuální"),
                 new VehicleMeta("veh_2", "Veterán", "veterán, srazy", "Benzín", "", "", "")
+            ]
+        };
+    }
+
+    private static VehimapDataSet BuildQuietQuickActionDataSet()
+    {
+        return new VehimapDataSet
+        {
+            Settings = BuildSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_quiet", "Klidné auto", "Osobní vozidla", "", "Škoda Octavia", "1AB2345", "2024", "110", "", "12/2099", "01/2099", "12/2099")
             ]
         };
     }

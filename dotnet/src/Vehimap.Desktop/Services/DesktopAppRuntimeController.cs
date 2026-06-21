@@ -271,7 +271,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
     private async Task OpenTrayActionsAsync()
     {
         var action = await _dialogService
-            .ShowTrayActionsAsync(_mainWindow.IsVisible ? _mainWindow : null, TrayActionsDialogViewModel.CreateDefault())
+            .ShowTrayActionsAsync(_mainWindow.IsVisible ? _mainWindow : null, _shell.BuildTrayActionsDialogModel())
             .ConfigureAwait(true);
 
         switch (action)

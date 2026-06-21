@@ -8,6 +8,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ### Přidáno
 - Avalonia shell umí z hlavního menu `Soubor` i přístupného tray okna otevřít aktuální datovou složku a hlavní diagnostické texty `Režim dat` / `Datová složka` mají vlastní `AutomationId`
 - Avalonia platformní launcher nově rozlišuje otevření souboru a složky; složky na Windows otevírá přes `explorer.exe` a na macOS/Linuxu přes `open` / `xdg-open`
+- Přístupné tray okno `Akce Vehimapu na liště` nově vypíná rychlé akce bez aktuálního cíle a navigační/datové akce blokované rozpracovanou editací
 - Avalonia menu `Soubor` má položku `Konec`, která používá stejnou ukončovací cestu jako menu `Aplikace` a dorovnává klasický F10 tok z AHK verze
 - Avalonia dokladový workspace umí zkopírovat vyřešenou cestu přílohy tlačítkem `Kopírovat cestu` nebo zkratkou `Ctrl+Shift+C`
 - Avalonia hlavní seznam po tlačítku `Vymazat filtry` obnoví celý seznam vozidel, zapíše stavovou hlášku a vrátí fokus do hledání vozidel

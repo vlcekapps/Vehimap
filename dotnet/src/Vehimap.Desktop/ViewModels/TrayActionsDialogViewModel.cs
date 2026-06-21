@@ -29,6 +29,31 @@ public sealed record TrayActionsDialogViewModel(
     string ExitLabel,
     string CancelLabel)
 {
+    public bool CanShowMainWindow { get; init; } = true;
+    public bool CanShowDashboard { get; init; } = true;
+    public bool CanShowUpcomingOverview { get; init; } = true;
+    public bool CanShowOverdueOverview { get; init; } = true;
+    public bool CanOpenNearestTechnical { get; init; } = true;
+    public bool CanOpenNearestGreenCard { get; init; } = true;
+    public bool CanOpenNearestReminder { get; init; } = true;
+    public bool CanOpenNearestMaintenance { get; init; } = true;
+    public bool CanOpenNearestRecord { get; init; } = true;
+    public bool CanReviewTechnical { get; init; } = true;
+    public bool CanReviewGreenCards { get; init; } = true;
+    public bool CanReviewReminders { get; init; } = true;
+    public bool CanReviewMaintenance { get; init; } = true;
+    public bool CanReviewRecords { get; init; } = true;
+    public bool CanOpenPrintableReport { get; init; } = true;
+    public bool CanExportBackup { get; init; } = true;
+    public bool CanImportBackup { get; init; } = true;
+    public bool CanOpenSettings { get; init; } = true;
+    public bool CanExportCalendar { get; init; } = true;
+    public bool CanReloadData { get; init; } = true;
+    public bool CanOpenDataFolder { get; init; } = true;
+    public bool CanOpenAbout { get; init; } = true;
+    public bool CanCheckForUpdates { get; init; } = true;
+    public bool CanExit { get; init; } = true;
+
     public static TrayActionsDialogViewModel CreateDefault() => new(
         "Akce Vehimapu na liště",
         "Vyberte akci pro běžící Vehimap. Toto okno nahrazuje nativní menu lišty pro přístupnější ovládání přes klávesnici a čtečku obrazovky.",
