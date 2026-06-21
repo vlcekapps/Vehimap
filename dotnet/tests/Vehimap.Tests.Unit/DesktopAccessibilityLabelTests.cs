@@ -224,6 +224,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"MinimizeToTrayButton\" Header=\"Minimalizovat na lištu\" Click=\"OnMinimizeToTrayClick\" IsEnabled=\"{Binding IsMinimizeToTrayAvailable}\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDataFolderMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FileExitAppButton\"", xaml);
+        Assert.Contains("x:Name=\"FileExitAppButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Ukončit aplikaci z nabídky Soubor\"", xaml);
         Assert.Contains("Click=\"OnOpenDataFolderClick\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MinimizeToTrayButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SettingsButton\"", xaml);
@@ -299,6 +302,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Click=\"OnUpdateCheckClick\"", xaml);
         Assert.Contains("Click=\"OnMinimizeToTrayClick\"", xaml);
         Assert.Contains("Click=\"OnExitClick\"", xaml);
+        Assert.Contains("x:Name=\"FileExitAppButton\" Header=\"Konec\" Click=\"OnExitClick\"", normalizedXaml);
         Assert.Contains("Click=\"OnPrintableReportClick\"", xaml);
         Assert.Contains("Click=\"OnCalendarExportClick\"", xaml);
         Assert.Contains("Click=\"OnReloadClick\"", xaml);

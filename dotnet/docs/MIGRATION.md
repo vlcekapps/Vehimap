@@ -107,6 +107,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - primy vstup `Export terminu do kalendare (.ics)` v menu `Prehledy`, napojeny na sdileny kalendarovy export
 - nativni `InputGesture` popisky u hlavnich Avalonia menu polozek, aby menu ukazovalo stejne klavesove zkratky jako shell
 - otevreni aktualni datove slozky z menu `Soubor` i z pristupneho tray akcniho okna pres sdileny multiplatformni file launcher
+- ukonceni aplikace z menu `Soubor` polozkou `Konec` stejnym handlerem jako v menu `Aplikace`, aby F10 cesta zustala blizka AHK i bez ztraty samostatneho app menu
 - pristupne tray akcni okno s primym otevrenim hlavniho okna, dashboardu, blizicich se terminu, propadlych terminu, nejblizsi TK/ZK/pripominky/servisu/dokladu, filtrovanych kontrol, tiskoveho prehledu, exportu/importu zalohy, exportu kalendare, znovunacteni dat, otevreni datove slozky, nastaveni, O programu, kontroly aktualizaci a ukonceni aplikace
 - background snapshot pro tray tooltip a oznameni preferuje akutni terminy pred obecnym auditem dat a audit pouziva jako fallback, pokud zadny termin prave nevyzaduje pozornost
 - regresni kontrola desktop UI zdroju proti typickym mojibake znakum, aby ctecky obrazovky nedostavaly poskozenou UTF-8 diakritiku

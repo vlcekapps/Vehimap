@@ -77,6 +77,7 @@ public sealed class DesktopAccessibilitySmokeTests
             var focusedId = session.WaitForFocusedAutomationId(12, "FileMenuRoot", "PrintableReportButton");
             Assert.Contains(focusedId, new[] { "FileMenuRoot", "PrintableReportButton" });
             Assert.NotNull(session.WaitForElementByAccessibilityId("PrintableReportButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("FileExitAppButton"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("ExitAppButton"));
         }
     }

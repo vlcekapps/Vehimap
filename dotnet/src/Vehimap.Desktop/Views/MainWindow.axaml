@@ -78,6 +78,12 @@
                     IsEnabled="{Binding CanOpenDataFolder}"
                     AutomationProperties.Name="Otevřít datovou složku Vehimapu"
                     AutomationProperties.AutomationId="OpenDataFolderMenuItem" />
+          <Separator />
+          <MenuItem x:Name="FileExitAppButton"
+                    Header="Konec"
+                    Click="OnExitClick"
+                    AutomationProperties.Name="Ukončit aplikaci z nabídky Soubor"
+                    AutomationProperties.AutomationId="FileExitAppButton" />
         </MenuItem>
         <MenuItem x:Name="VehicleMenuRoot"
                   Header="_Vozidlo"
