@@ -37,6 +37,7 @@ public partial class App : Avalonia.Application
                 mainWindowViewModel,
                 new AvaloniaTrayService(buildInfoProvider),
                 notificationService,
+                new SystemEventsResumeService(),
                 dialogService);
             mainWindow.ExitApplicationRequested = _runtimeController.RequestExitAsync;
             mainWindow.MinimizeToTrayRequested = _runtimeController.RequestMinimizeToTrayAsync;

@@ -13,18 +13,21 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
     private static readonly TimeSpan DueCheckInterval = TimeSpan.FromMinutes(15);
     private static readonly TimeSpan BackupCheckInterval = TimeSpan.FromHours(1);
     private static readonly TimeSpan InitialBackgroundDelay = TimeSpan.FromMilliseconds(1500);
+    private static readonly TimeSpan ResumeBackgroundDelay = TimeSpan.FromMilliseconds(1500);
 
     private readonly IClassicDesktopStyleApplicationLifetime _desktopLifetime;
     private readonly MainWindow _mainWindow;
     private readonly MainWindowViewModel _shell;
     private readonly ITrayService _trayService;
     private readonly INotificationService _notificationService;
+    private readonly ISystemResumeService _systemResumeService;
     private readonly IAppShellDialogService _dialogService;
     private readonly DispatcherTimer _dueTimer;
     private readonly DispatcherTimer _backupTimer;
     private bool _allowClose;
     private bool _initialized;
     private bool _closeConfirmationInProgress;
+    private bool _resumeRefreshScheduled;
     private string _lastNotificationKey = string.Empty;
 
     public DesktopAppRuntimeController(
@@ -33,6 +36,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         MainWindowViewModel shell,
         ITrayService trayService,
         INotificationService notificationService,
+        ISystemResumeService systemResumeService,
         IAppShellDialogService dialogService)
     {
         _desktopLifetime = desktopLifetime;
@@ -40,6 +44,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         _shell = shell;
         _trayService = trayService;
         _notificationService = notificationService;
+        _systemResumeService = systemResumeService;
         _dialogService = dialogService;
         _dueTimer = new DispatcherTimer { Interval = DueCheckInterval };
         _backupTimer = new DispatcherTimer { Interval = BackupCheckInterval };
@@ -56,6 +61,8 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
 
         _initialized = true;
         _mainWindow.Closing += OnMainWindowClosing;
+        _systemResumeService.Resumed += OnSystemResumed;
+        await _systemResumeService.InitializeAsync(cancellationToken).ConfigureAwait(false);
 
         await _trayService.InitializeAsync(
                 new TrayServiceConfiguration(
@@ -108,6 +115,8 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         _dueTimer.Stop();
         _backupTimer.Stop();
         _mainWindow.Closing -= OnMainWindowClosing;
+        _systemResumeService.Resumed -= OnSystemResumed;
+        await _systemResumeService.DisposeAsync().ConfigureAwait(false);
         await _trayService.DisposeAsync().ConfigureAwait(false);
     }
 
@@ -119,6 +128,24 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
     private async void OnBackupTimerTick(object? sender, EventArgs e)
     {
         await RefreshBackgroundStateAsync(notifyWhenHidden: !_mainWindow.IsVisible, runAutomaticBackup: true).ConfigureAwait(false);
+    }
+
+    private void OnSystemResumed(object? sender, EventArgs e)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (_resumeRefreshScheduled)
+            {
+                return;
+            }
+
+            _resumeRefreshScheduled = true;
+            DispatcherTimer.RunOnce(async () =>
+            {
+                _resumeRefreshScheduled = false;
+                await RefreshBackgroundStateAsync(notifyWhenHidden: !_mainWindow.IsVisible, runAutomaticBackup: true).ConfigureAwait(false);
+            }, ResumeBackgroundDelay);
+        }, DispatcherPriority.Background);
     }
 
     private void OnMainWindowClosing(object? sender, WindowClosingEventArgs e)
