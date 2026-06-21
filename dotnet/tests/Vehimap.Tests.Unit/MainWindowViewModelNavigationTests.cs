@@ -1,4 +1,5 @@
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
@@ -1047,6 +1048,45 @@ public sealed class MainWindowViewModelNavigationTests
     }
 
     [Fact]
+    public async Task Calendar_export_command_saves_ics_and_updates_shell_status()
+    {
+        var saveService = new CapturingTextFileSaveService(@"C:\exports\terminy.ics");
+        var viewModel = CreateViewModel(saveService);
+
+        await viewModel.ExportCalendarCommand.ExecuteAsync(null);
+
+        Assert.Equal("Export termínů do kalendáře", saveService.LastTitle);
+        Assert.Contains("BEGIN:VCALENDAR", saveService.LastContent);
+        Assert.Contains("Kalendář uložen", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.Contains(@"C:\exports\terminy.ics", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.Equal(viewModel.TimelineWorkspace.ExportStatus, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Calendar_export_save_failure_reports_status_without_crashing_shell()
+    {
+        var viewModel = CreateViewModel(new FailingTextFileSaveService(new IOException("Cílovou složku nelze zapsat.")));
+
+        await viewModel.ExportCalendarCommand.ExecuteAsync(null);
+
+        Assert.Contains("Export kalendáře se nepodařil", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.Contains("Cílovou složku nelze zapsat", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.Equal(viewModel.TimelineWorkspace.ExportStatus, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Calendar_export_build_failure_reports_status_without_crashing_shell()
+    {
+        var viewModel = CreateViewModel(calendarExportService: new FailingCalendarExportService("Generátor ICS selhal."));
+
+        await viewModel.ExportCalendarCommand.ExecuteAsync(null);
+
+        Assert.Contains("Export kalendáře se nepodařil", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.Contains("Generátor ICS selhal", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.Equal(viewModel.TimelineWorkspace.ExportStatus, viewModel.ShellStatus);
+    }
+
+    [Fact]
     public void Global_search_result_opens_matching_record_and_requests_focus()
     {
         var viewModel = CreateViewModel();
@@ -1110,6 +1150,7 @@ public sealed class MainWindowViewModelNavigationTests
         IFileLauncher? fileLauncher = null,
         IClipboardService? clipboardService = null,
         string? recordFilePath = null,
+        ICalendarExportService? calendarExportService = null,
         Action<VehimapDataSet>? configureDataSet = null)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -1160,7 +1201,7 @@ public sealed class MainWindowViewModelNavigationTests
             new StubFilePickerService(),
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
-            new LegacyCalendarExportService(),
+            calendarExportService ?? new LegacyCalendarExportService(),
             textFileSaveService ?? new StubTextFileSaveService(),
             clipboardService: clipboardService);
     }
@@ -1266,6 +1307,32 @@ public sealed class MainWindowViewModelNavigationTests
             LastContent = content;
             return Task.FromResult<string?>(_path);
         }
+    }
+
+    private sealed class FailingTextFileSaveService : ITextFileSaveService
+    {
+        private readonly Exception _exception;
+
+        public FailingTextFileSaveService(Exception exception)
+        {
+            _exception = exception;
+        }
+
+        public Task<string?> SaveTextAsync(string title, string suggestedFileName, string content, CancellationToken cancellationToken = default)
+            => Task.FromException<string?>(_exception);
+    }
+
+    private sealed class FailingCalendarExportService : ICalendarExportService
+    {
+        private readonly string _message;
+
+        public FailingCalendarExportService(string message)
+        {
+            _message = message;
+        }
+
+        public CalendarExportResult BuildUpcomingCalendar(VehimapDataSet dataSet, DateOnly today, DateTimeOffset generatedAtUtc)
+            => throw new InvalidOperationException(_message);
     }
 
     private sealed class StubFilePickerService : IFilePickerService

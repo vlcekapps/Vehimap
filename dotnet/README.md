@@ -40,6 +40,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - radit terminove prehledy `Blizici se terminy` a `Propadle terminy` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do legacy `settings.ini`
 - radit `Audit` a `Globalni hledani` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do legacy `settings.ini`, hledany text zustava jen docasny
 - vyexportovat budouci terminy do `.ics` primo z nove C# vetve vcetne foldingu dlouhych iCalendar radku pro delsi popisy
+- hlasit uspech, zruseni i selhani exportu `.ics` ve stavovem textu casove osy i hlavniho shellu, aby menu a tray akce neskoncily neobslouzenou vyjimkou
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu; `Obnovit` nebo `Ctrl+R` prepocita casovou osu bez ztraty vyberu a vrati fokus na seznam
 - pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
 - v dashboardu pouzit `Obnovit` nebo `Ctrl+R`; refresh prepocita auditni vyrez, naklady i nejblizsi terminy a zachova aktualni vyber

@@ -575,28 +575,41 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        var today = DateOnly.FromDateTime(DateTime.Today);
-        var export = _calendarExportService.BuildUpcomingCalendar(_dataSet, today, DateTimeOffset.UtcNow);
-        if (export.Items.Count == 0)
+        try
         {
-            TimelineWorkspace.ExportStatus = "Kalendář zatím neobsahuje žádné budoucí položky s konkrétním datem.";
-            return;
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var export = _calendarExportService.BuildUpcomingCalendar(_dataSet, today, DateTimeOffset.UtcNow);
+            if (export.Items.Count == 0)
+            {
+                SetCalendarExportStatus("Kalendář zatím neobsahuje žádné budoucí položky s konkrétním datem.");
+                return;
+            }
+
+            var suggestedFileName = $"vehimap-kalendar-{today:yyyy-MM-dd}.ics";
+            var savedPath = await _fileSaveService
+                .SaveTextAsync("Export termínů do kalendáře", suggestedFileName, export.IcsContent)
+                .ConfigureAwait(false);
+
+            if (string.IsNullOrWhiteSpace(savedPath))
+            {
+                SetCalendarExportStatus("Export kalendáře byl zrušen.");
+                return;
+            }
+
+            SetCalendarExportStatus(export.SkippedMaintenanceCount > 0
+                ? $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}. Přeskočené servisní úkoly bez data: {export.SkippedMaintenanceCount}."
+                : $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}.");
         }
-
-        var suggestedFileName = $"vehimap-kalendar-{today:yyyy-MM-dd}.ics";
-        var savedPath = await _fileSaveService
-            .SaveTextAsync("Export termínů do kalendáře", suggestedFileName, export.IcsContent)
-            .ConfigureAwait(false);
-
-        if (string.IsNullOrWhiteSpace(savedPath))
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            TimelineWorkspace.ExportStatus = "Export kalendáře byl zrušen.";
-            return;
+            SetCalendarExportStatus($"Export kalendáře se nepodařil: {ex.Message}");
         }
+    }
 
-        TimelineWorkspace.ExportStatus = export.SkippedMaintenanceCount > 0
-            ? $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}. Přeskočené servisní úkoly bez data: {export.SkippedMaintenanceCount}."
-            : $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}.";
+    private void SetCalendarExportStatus(string status)
+    {
+        TimelineWorkspace.ExportStatus = status;
+        ShellStatus = status;
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedTimelineItem))]
