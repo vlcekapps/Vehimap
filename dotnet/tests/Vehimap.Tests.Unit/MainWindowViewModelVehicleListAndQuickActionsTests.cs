@@ -361,6 +361,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         var activeViewModel = CreateViewModel(BuildQuickActionDataSet());
         var activeModel = activeViewModel.BuildTrayActionsDialogModel();
 
+        Assert.True(activeViewModel.CanUseDataActions);
         Assert.True(activeViewModel.CanOpenNearestTechnicalQuickAction);
         Assert.True(activeViewModel.CanOpenNearestGreenCardQuickAction);
         Assert.True(activeViewModel.CanOpenNearestReminderQuickAction);
@@ -381,6 +382,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(activeModel.CanReviewReminders);
         Assert.True(activeModel.CanReviewMaintenance);
         Assert.True(activeModel.CanReviewRecords);
+        Assert.True(activeModel.CanCreateAutomaticBackupNow);
+        Assert.True(activeModel.CanOpenAutomaticBackupFolder);
 
         var quietViewModel = CreateViewModel(BuildQuietQuickActionDataSet());
         var quietModel = quietViewModel.BuildTrayActionsDialogModel();
@@ -396,6 +399,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(quietViewModel.CanReviewMaintenanceQuickAction);
         Assert.False(quietViewModel.CanReviewRecordsQuickAction);
         Assert.True(quietModel.CanShowMainWindow);
+        Assert.True(quietModel.CanCreateAutomaticBackupNow);
+        Assert.True(quietModel.CanOpenAutomaticBackupFolder);
         Assert.True(quietModel.CanOpenDataFolder);
         Assert.True(quietModel.CanOpenSettings);
         Assert.False(quietModel.CanOpenNearestTechnical);
@@ -420,6 +425,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         Assert.False(viewModel.CanOpenNearestTechnicalQuickAction);
         Assert.False(viewModel.CanReviewTechnicalQuickAction);
+        Assert.False(viewModel.CanUseDataActions);
         Assert.True(model.CanShowMainWindow);
         Assert.True(model.CanOpenAbout);
         Assert.True(model.CanCheckForUpdates);
@@ -432,6 +438,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(model.CanOpenPrintableReport);
         Assert.False(model.CanExportBackup);
         Assert.False(model.CanImportBackup);
+        Assert.False(model.CanCreateAutomaticBackupNow);
+        Assert.False(model.CanOpenAutomaticBackupFolder);
         Assert.False(model.CanOpenSettings);
         Assert.False(model.CanExportCalendar);
         Assert.False(model.CanReloadData);

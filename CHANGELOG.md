@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- Avalonia menu `Soubor` i přístupné tray okno umí spustit okamžitou automatickou zálohu a otevřít složku `data/auto-backups`; tyto datové akce se vypínají při rozpracované editaci stejně jako export/import zálohy
 - Avalonia shell umí z hlavního menu `Soubor` i přístupného tray okna otevřít aktuální datovou složku a hlavní diagnostické texty `Režim dat` / `Datová složka` mají vlastní `AutomationId`
 - Avalonia platformní launcher nově rozlišuje otevření souboru a složky; složky na Windows otevírá přes `explorer.exe` a na macOS/Linuxu přes `open` / `xdg-open`
 - Avalonia menu `Rychlé akce` a přístupné tray okno `Akce Vehimapu na liště` nově vypínají rychlé akce bez aktuálního cíle a navigační/datové akce blokované rozpracovanou editací

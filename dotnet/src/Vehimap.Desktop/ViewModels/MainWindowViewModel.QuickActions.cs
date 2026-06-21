@@ -340,8 +340,7 @@ public sealed partial class MainWindowViewModel
 
     internal TrayActionsDialogViewModel BuildTrayActionsDialogModel()
     {
-        var isLoaded = _session.IsLoaded;
-        var canUseDataActions = isLoaded && !HasPendingEdits;
+        var canUseDataActions = CanUseDataActions;
 
         return TrayActionsDialogViewModel.CreateDefault() with
         {
@@ -361,10 +360,12 @@ public sealed partial class MainWindowViewModel
             CanOpenPrintableReport = canUseDataActions,
             CanExportBackup = canUseDataActions,
             CanImportBackup = canUseDataActions,
+            CanCreateAutomaticBackupNow = this.CanCreateAutomaticBackupNow,
+            CanOpenAutomaticBackupFolder = this.CanOpenAutomaticBackupFolder,
             CanOpenSettings = canUseDataActions,
             CanExportCalendar = canUseDataActions,
             CanReloadData = canUseDataActions,
-            CanOpenDataFolder = canUseDataActions && this.CanOpenDataFolder
+            CanOpenDataFolder = this.CanOpenDataFolder
         };
     }
 }

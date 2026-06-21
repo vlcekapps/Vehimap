@@ -222,6 +222,9 @@ internal sealed class DesktopSessionController
         return status;
     }
 
+    public string GetAutomaticBackupDirectoryPath() =>
+        GetAutomaticBackupDirectory();
+
     public async Task<AutomaticBackupResult> RunAutomaticBackupCheckAsync(bool force = false, CancellationToken cancellationToken = default)
     {
         if (DataRoot is null)

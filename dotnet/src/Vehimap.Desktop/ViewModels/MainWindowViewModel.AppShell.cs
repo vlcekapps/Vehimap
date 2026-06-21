@@ -124,6 +124,11 @@ public sealed partial class MainWindowViewModel
             return "Automatickou zálohu nelze vytvořit bez načtených dat.";
         }
 
+        if (BlockDataActionIfEditing("vytvořit zálohu"))
+        {
+            return ShellStatus;
+        }
+
         var result = await _session.CreateAutomaticBackupAsync(cancellationToken).ConfigureAwait(false);
         ShellStatus = result.Message;
         return result.Message;
@@ -304,6 +309,11 @@ public sealed partial class MainWindowViewModel
 
         try
         {
+            if (BlockDataActionIfEditing("otevřít datovou složku"))
+            {
+                return ShellStatus;
+            }
+
             Directory.CreateDirectory(dataPath);
             await _fileLauncher.OpenFolderAsync(dataPath, cancellationToken).ConfigureAwait(false);
             ShellStatus = $"Datová složka byla otevřena: {dataPath}.";
@@ -311,6 +321,34 @@ public sealed partial class MainWindowViewModel
         catch (Exception ex)
         {
             ShellStatus = $"Datovou složku se nepodařilo otevřít: {ex.Message}";
+        }
+
+        return ShellStatus;
+    }
+
+    internal async Task<string> OpenAutomaticBackupFolderAsync(CancellationToken cancellationToken = default)
+    {
+        var backupDirectory = _session.GetAutomaticBackupDirectoryPath();
+        if (string.IsNullOrWhiteSpace(backupDirectory))
+        {
+            ShellStatus = "Složku automatických záloh zatím nelze otevřít, protože data nebyla načtena.";
+            return ShellStatus;
+        }
+
+        if (BlockDataActionIfEditing("otevřít složku automatických záloh"))
+        {
+            return ShellStatus;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(backupDirectory);
+            await _fileLauncher.OpenFolderAsync(backupDirectory, cancellationToken).ConfigureAwait(false);
+            ShellStatus = $"Složka automatických záloh byla otevřena: {backupDirectory}.";
+        }
+        catch (Exception ex)
+        {
+            ShellStatus = $"Složku automatických záloh se nepodařilo otevřít: {ex.Message}";
         }
 
         return ShellStatus;

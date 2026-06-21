@@ -139,7 +139,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool CanOpenSelectedVehicleCosts => SelectedVehicle is not null && !HasPendingEdits;
 
-    public bool CanOpenDataFolder => _dataRoot is not null && !string.IsNullOrWhiteSpace(_dataRoot.DataPath);
+    public bool CanUseDataActions => _session.IsLoaded && !HasPendingEdits;
+
+    public bool CanOpenDataFolder => CanUseDataActions && _dataRoot is not null && !string.IsNullOrWhiteSpace(_dataRoot.DataPath);
+
+    public bool CanCreateAutomaticBackupNow => CanUseDataActions;
+
+    public bool CanOpenAutomaticBackupFolder => CanUseDataActions && !string.IsNullOrWhiteSpace(_session.GetAutomaticBackupDirectoryPath());
 
     internal string HistoryWindowTitle =>
         SelectedVehicle is null
@@ -449,6 +455,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void Reload()
     {
+        if (BlockDataActionIfEditing("znovu načíst data"))
+        {
+            return;
+        }
+
         Load(SelectedVehicle?.Id, SelectedVehicleTabIndex, applyLaunchTabPreference: false);
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
@@ -559,6 +570,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private async Task ExportCalendarAsync()
     {
+        if (BlockDataActionIfEditing("exportovat termíny do kalendáře"))
+        {
+            return;
+        }
+
         var today = DateOnly.FromDateTime(DateTime.Today);
         var export = _calendarExportService.BuildUpcomingCalendar(_dataSet, today, DateTimeOffset.UtcNow);
         if (export.Items.Count == 0)
@@ -1067,7 +1083,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
             LoadError = string.Empty;
             DataMode = result.DataRoot.IsPortable ? "Portable data vedle aplikace" : "Systémová datová složka";
             DataPath = result.DataRoot.DataPath;
+            OnPropertyChanged(nameof(CanUseDataActions));
             OnPropertyChanged(nameof(CanOpenDataFolder));
+            OnPropertyChanged(nameof(CanCreateAutomaticBackupNow));
+            OnPropertyChanged(nameof(CanOpenAutomaticBackupFolder));
             DashboardWorkspace.SyncShowDashboardOnLaunch(result.SupportedSettings.ShowDashboardOnLaunch);
             VehicleCount = result.DataSet.Vehicles.Count;
             HistoryCount = result.DataSet.HistoryEntries.Count;

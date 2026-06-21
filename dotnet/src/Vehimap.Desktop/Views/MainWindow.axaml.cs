@@ -464,6 +464,28 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
+    private async void OnCreateAutomaticBackupNowClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.CreateAutomaticBackupNowAsync().ConfigureAwait(true);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private async void OnOpenAutomaticBackupFolderClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.OpenAutomaticBackupFolderAsync().ConfigureAwait(true);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
     private async void OnAboutClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel is null)

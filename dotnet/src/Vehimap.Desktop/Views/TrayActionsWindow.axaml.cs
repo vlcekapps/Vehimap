@@ -122,6 +122,18 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnCreateAutomaticBackupNowClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.CreateAutomaticBackupNow;
+        Close();
+    }
+
+    private void OnOpenAutomaticBackupFolderClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenAutomaticBackupFolder;
+        Close();
+    }
+
     private void OnOpenSettingsClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.OpenSettings;

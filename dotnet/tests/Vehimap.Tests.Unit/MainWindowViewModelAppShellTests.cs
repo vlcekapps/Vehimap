@@ -238,6 +238,71 @@ public sealed class MainWindowViewModelAppShellTests
     }
 
     [Fact]
+    public async Task Open_automatic_backup_folder_uses_data_auto_backups_directory_and_reports_status()
+    {
+        var rootPath = Path.Combine(Path.GetTempPath(), "vehimap-open-auto-backup-folder-test", Guid.NewGuid().ToString("N"));
+        var dataPath = Path.Combine(rootPath, "data");
+        var backupDirectory = Path.Combine(dataPath, "auto-backups");
+        var dataRoot = new VehimapDataRoot(rootPath, dataPath, true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var fileLauncher = new StubFileLauncher();
+        var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet), fileLauncher: fileLauncher);
+
+        Assert.True(viewModel.CanOpenAutomaticBackupFolder);
+
+        var status = await viewModel.OpenAutomaticBackupFolderAsync();
+
+        Assert.Equal(backupDirectory, fileLauncher.LastOpenedFolderPath);
+        Assert.True(Directory.Exists(backupDirectory));
+        Assert.Contains("Složka automatických záloh byla otevřena", status);
+        Assert.Contains(backupDirectory, status);
+        Assert.Equal(status, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Create_automatic_backup_now_uses_data_auto_backups_directory_and_reports_status()
+    {
+        var rootPath = Path.Combine(Path.GetTempPath(), "vehimap-create-auto-backup-test", Guid.NewGuid().ToString("N"));
+        var dataPath = Path.Combine(rootPath, "data");
+        var backupDirectory = Path.Combine(dataPath, "auto-backups");
+        var dataRoot = new VehimapDataRoot(rootPath, dataPath, true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var dataStore = new StubLegacyDataStore(dataSet);
+        var backupService = new StubBackupService
+        {
+            ExportResult = new BackupExportResult(string.Empty, 1, 0)
+        };
+        var viewModel = CreateViewModel(dataRoot, dataStore, backupService: backupService);
+
+        Assert.True(viewModel.CanCreateAutomaticBackupNow);
+
+        var status = await viewModel.CreateAutomaticBackupNowAsync();
+
+        Assert.NotNull(backupService.ExportedPath);
+        Assert.StartsWith(backupDirectory, backupService.ExportedPath, StringComparison.Ordinal);
+        Assert.EndsWith(".vehimapbak", backupService.ExportedPath, StringComparison.Ordinal);
+        Assert.True(Directory.Exists(backupDirectory));
+        Assert.Contains("Automatická záloha byla vytvořena", status);
+        Assert.Contains("Spravovaných příloh v záloze: 1", status);
+        Assert.Equal(backupService.ExportedPath, dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_path"));
+        Assert.Equal(status, viewModel.ShellStatus);
+    }
+
+    [Fact]
     public void Background_snapshot_reports_overdue_technical_control_even_without_future_dashboard_items()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);

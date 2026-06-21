@@ -163,6 +163,10 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanEditSelectedVehicle));
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
         OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
+        OnPropertyChanged(nameof(CanUseDataActions));
+        OnPropertyChanged(nameof(CanOpenDataFolder));
+        OnPropertyChanged(nameof(CanCreateAutomaticBackupNow));
+        OnPropertyChanged(nameof(CanOpenAutomaticBackupFolder));
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
         OnPropertyChanged(nameof(CanEditSelectedDashboardVehicle));
@@ -214,6 +218,21 @@ public sealed partial class MainWindowViewModel
         }
 
         ShellStatus = WorkspaceNavigationLockStatus;
+        RequestFocus(GetPendingEditFocusTarget());
+        return true;
+    }
+
+    internal bool BlockDataActionIfEditing(string actionDescription)
+    {
+        if (!HasPendingEdits)
+        {
+            return false;
+        }
+
+        var action = string.IsNullOrWhiteSpace(actionDescription)
+            ? "pokračovat"
+            : actionDescription.Trim();
+        ShellStatus = $"Probíhá úprava v části {GetPendingEditLabel()}. Uložte nebo zrušte editor, potom půjde {action}.";
         RequestFocus(GetPendingEditFocusTarget());
         return true;
     }

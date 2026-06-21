@@ -327,6 +327,12 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             case TrayActionsDialogAction.ImportBackup:
                 await ExecuteShellQuickActionAsync(() => _shell.AppShellController.ImportBackupAsync(_mainWindow, _shell)).ConfigureAwait(true);
                 break;
+            case TrayActionsDialogAction.CreateAutomaticBackupNow:
+                await ExecuteShellQuickActionAsync(() => _shell.CreateAutomaticBackupNowAsync()).ConfigureAwait(true);
+                break;
+            case TrayActionsDialogAction.OpenAutomaticBackupFolder:
+                await ExecuteShellQuickActionAsync(() => _shell.OpenAutomaticBackupFolderAsync()).ConfigureAwait(true);
+                break;
             case TrayActionsDialogAction.OpenSettings:
                 await ExecuteShellQuickActionAsync(() => _shell.AppShellController.OpenSettingsAsync(_mainWindow, _shell)).ConfigureAwait(true);
                 break;

@@ -20,6 +20,8 @@ public sealed record TrayActionsDialogViewModel(
     string OpenPrintableReportLabel,
     string ExportBackupLabel,
     string ImportBackupLabel,
+    string CreateAutomaticBackupNowLabel,
+    string OpenAutomaticBackupFolderLabel,
     string OpenSettingsLabel,
     string ExportCalendarLabel,
     string ReloadDataLabel,
@@ -46,6 +48,8 @@ public sealed record TrayActionsDialogViewModel(
     public bool CanOpenPrintableReport { get; init; } = true;
     public bool CanExportBackup { get; init; } = true;
     public bool CanImportBackup { get; init; } = true;
+    public bool CanCreateAutomaticBackupNow { get; init; } = true;
+    public bool CanOpenAutomaticBackupFolder { get; init; } = true;
     public bool CanOpenSettings { get; init; } = true;
     public bool CanExportCalendar { get; init; } = true;
     public bool CanReloadData { get; init; } = true;
@@ -74,6 +78,8 @@ public sealed record TrayActionsDialogViewModel(
         "Tiskový přehled",
         "Export dat do zálohy",
         "Obnovit data ze zálohy",
+        "Zálohovat ihned",
+        "Otevřít složku automatických záloh",
         "Nastavení",
         "Export termínů do kalendáře",
         "Načíst data znovu",

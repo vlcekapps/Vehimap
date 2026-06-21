@@ -185,6 +185,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Equal("Tiskový přehled", model.OpenPrintableReportLabel);
         Assert.Equal("Export dat do zálohy", model.ExportBackupLabel);
         Assert.Equal("Obnovit data ze zálohy", model.ImportBackupLabel);
+        Assert.Equal("Zálohovat ihned", model.CreateAutomaticBackupNowLabel);
+        Assert.Equal("Otevřít složku automatických záloh", model.OpenAutomaticBackupFolderLabel);
         Assert.Equal("Nastavení", model.OpenSettingsLabel);
         Assert.Equal("Export termínů do kalendáře", model.ExportCalendarLabel);
         Assert.Equal("Načíst data znovu", model.ReloadDataLabel);
@@ -223,11 +225,18 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"_Aplikace\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"MinimizeToTrayButton\" Header=\"Minimalizovat na lištu\" Click=\"OnMinimizeToTrayClick\" IsEnabled=\"{Binding IsMinimizeToTrayAvailable}\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupNowMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenAutomaticBackupFolderMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDataFolderMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FileExitAppButton\"", xaml);
         Assert.Contains("x:Name=\"FileExitAppButton\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"Ukončit aplikaci z nabídky Soubor\"", xaml);
         Assert.Contains("Click=\"OnOpenDataFolderClick\"", xaml);
+        Assert.Contains("Click=\"OnCreateAutomaticBackupNowClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenAutomaticBackupFolderClick\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanUseDataActions}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanCreateAutomaticBackupNow}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenAutomaticBackupFolder}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MinimizeToTrayButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SettingsButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutButton\"", xaml);
@@ -517,6 +526,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenPrintableReportTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExportBackupTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ImportBackupTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupNowTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenAutomaticBackupFolderTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("IsEnabled=\"{Binding CanCreateAutomaticBackupNow}\"", trayActionsXaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenAutomaticBackupFolder}\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenSettingsTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExportCalendarTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReloadDataTrayActionButton\"", trayActionsXaml);
@@ -541,6 +554,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OnOpenPrintableReportClick", trayActionsCodeBehind);
         Assert.Contains("OnExportBackupClick", trayActionsCodeBehind);
         Assert.Contains("OnImportBackupClick", trayActionsCodeBehind);
+        Assert.Contains("OnCreateAutomaticBackupNowClick", trayActionsCodeBehind);
+        Assert.Contains("OnOpenAutomaticBackupFolderClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenSettingsClick", trayActionsCodeBehind);
         Assert.Contains("OnExportCalendarClick", trayActionsCodeBehind);
         Assert.Contains("OnReloadDataClick", trayActionsCodeBehind);
@@ -562,6 +577,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("TrayActionsDialogAction.OpenPrintableReport", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ExportBackup", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ImportBackup", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.CreateAutomaticBackupNow", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.OpenAutomaticBackupFolder", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenSettings", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ExportCalendar", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ReloadData", trayActionsCodeBehind);
@@ -602,6 +619,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("_shell.AppShellController.ExportBackupAsync(_mainWindow, _shell)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.ImportBackup", runtimeController);
         Assert.Contains("_shell.AppShellController.ImportBackupAsync(_mainWindow, _shell)", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.CreateAutomaticBackupNow", runtimeController);
+        Assert.Contains("_shell.CreateAutomaticBackupNowAsync()", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.OpenAutomaticBackupFolder", runtimeController);
+        Assert.Contains("_shell.OpenAutomaticBackupFolderAsync()", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenSettings", runtimeController);
         Assert.Contains("_shell.AppShellController.OpenSettingsAsync(_mainWindow, _shell)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.ExportCalendar", runtimeController);
