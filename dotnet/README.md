@@ -97,6 +97,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - ovladat `Nastaveni` klavesnici: `Ctrl+S` ulozi, `Ctrl+B` ulozi a vytvori zalohu ihned, `Esc` zavre dialog bez ulozeni
 - ovladat app-level dialogy konzistentne klavesnici: `O programu` ma `Ctrl+O` pro release poznamky, `Ctrl+Shift+C` pro zkopirovani diagnostiky a `Esc` pro zavreni, potvrzovaci dialogy, kontrola aktualizaci, upozorneni i tray akce maji `Esc` pro bezpecne zavreni bez nove akce
 - ukoncit aplikaci z menu `Soubor` pres polozku `Konec` i z menu `Aplikace`, aby F10 tok odpovidal klasickemu desktopovemu rozvrzeni i AHK parite
+- generovat a testovat autostart zaznamy pro Linux `.desktop` a macOS LaunchAgent vcetne bezpecneho escapovani cest, argumentu a XML znaku
 - otevirat soubory a slozky pres oddelene vetve multiplatformniho launcheru; slozky jdou na Windows pres `explorer.exe`, na macOS pres `open` a na Linuxu pres `xdg-open`
 - spustit okamzitou automatickou zalohu a otevrit slozku `data/auto-backups` primo z menu `Soubor` i z pristupneho tray okna; tyto datove akce se vypinaji pri rozpracovane editaci stejne jako export/import zalohy
 - pouzivat `Rychle akce` pro nejblizsi TK, zelenou kartu, vlastni pripominku, servisni udrzbu a doklady i pro filtrovanou kontrolu techto terminu v prehledech; `Zkontrolovat ZK` otevira i vozidla bez vyplnene zelene karty a menu polozky bez aktualniho cile jsou neaktivni

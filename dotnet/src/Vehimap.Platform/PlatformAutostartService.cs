@@ -168,7 +168,7 @@ X-GNOME-Autostart-enabled=true
 """;
     }
 
-    private static string BuildMacLaunchAgentContent(LaunchCommand command)
+    internal static string BuildMacLaunchAgentContent(LaunchCommand command)
     {
         var builder = new StringBuilder();
         builder.AppendLine("""<?xml version="1.0" encoding="UTF-8"?>""");
@@ -189,13 +189,30 @@ X-GNOME-Autostart-enabled=true
         builder.AppendLine("  <key>RunAtLoad</key>");
         builder.AppendLine("  <true/>");
         builder.AppendLine("  <key>WorkingDirectory</key>");
-        builder.AppendLine($"  <string>{System.Security.SecurityElement.Escape(Path.GetDirectoryName(command.ExecutablePath) ?? AppContext.BaseDirectory)}</string>");
+        builder.AppendLine($"  <string>{System.Security.SecurityElement.Escape(GetUnixWorkingDirectory(command.ExecutablePath))}</string>");
         builder.AppendLine("</dict>");
         builder.AppendLine("</plist>");
         return builder.ToString();
     }
 
-    private static string QuoteCommandArgument(string value)
+    private static string GetUnixWorkingDirectory(string executablePath)
+    {
+        if (string.IsNullOrWhiteSpace(executablePath))
+        {
+            return AppContext.BaseDirectory;
+        }
+
+        var normalized = executablePath.Replace('\\', '/');
+        var lastSeparator = normalized.LastIndexOf('/');
+        return lastSeparator switch
+        {
+            < 0 => AppContext.BaseDirectory,
+            0 => "/",
+            _ => normalized[..lastSeparator]
+        };
+    }
+
+    internal static string QuoteCommandArgument(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
