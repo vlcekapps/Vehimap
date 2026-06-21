@@ -77,10 +77,12 @@ public sealed class LegacyDataStoreCompatibilityTests
         {
             await backupService.ExportAsync(backupPath, dataRoot, dataSet);
             var imported = await backupService.ImportAsync(backupPath);
-            await backupService.RestoreAsync(restoreRoot, imported);
+            var restoreResult = await backupService.RestoreAsync(restoreRoot, imported);
             var restored = await store.LoadAsync(restoreRoot);
 
             Assert.Single(imported.Attachments);
+            Assert.Null(restoreResult.PreRestoreBackupPath);
+            Assert.Equal(1, restoreResult.RestoredAttachmentCount);
             Assert.Single(restored.Records);
             Assert.True(File.Exists(Path.Combine(restoreRoot.DataPath, "attachments", "veh_1", "tp.pdf")));
         }
@@ -135,7 +137,7 @@ public sealed class LegacyDataStoreCompatibilityTests
                 importedDataSet,
                 [new ManagedAttachment("attachments/veh_new/imported.pdf", [20, 21])]);
 
-            await backupService.RestoreAsync(dataRoot, bundle);
+            var restoreResult = await backupService.RestoreAsync(dataRoot, bundle);
             var restored = await store.LoadAsync(dataRoot);
 
             var importBackupRoot = Path.Combine(dataRoot.DataPath, "import-backups");
@@ -145,6 +147,8 @@ public sealed class LegacyDataStoreCompatibilityTests
             var restoredAttachment = await File.ReadAllBytesAsync(Path.Combine(dataRoot.DataPath, "attachments", "veh_new", "imported.pdf"));
 
             Assert.Contains("Puvodni", backedUpVehicles, StringComparison.Ordinal);
+            Assert.Equal(importBackupDirectory, restoreResult.PreRestoreBackupPath);
+            Assert.Equal(1, restoreResult.RestoredAttachmentCount);
             Assert.Equal([10, 11], backedUpAttachment);
             Assert.Single(restored.Vehicles);
             Assert.Equal("Importovane", restored.Vehicles[0].Name);

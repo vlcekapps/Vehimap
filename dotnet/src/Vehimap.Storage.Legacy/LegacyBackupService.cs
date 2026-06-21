@@ -1,5 +1,6 @@
 using System.Text;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 
@@ -52,9 +53,9 @@ public sealed class LegacyBackupService : IBackupService
         return new VehimapBackupBundle(data, attachments);
     }
 
-    public async Task RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
+    public async Task<BackupRestoreResult> RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
     {
-        await BackupCurrentFilesBeforeRestoreAsync(dataRoot, cancellationToken).ConfigureAwait(false);
+        var preRestoreBackupPath = await BackupCurrentFilesBeforeRestoreAsync(dataRoot, cancellationToken).ConfigureAwait(false);
 
         var dataStore = new LegacyVehimapDataStore();
         await dataStore.SaveAsync(dataRoot, backupBundle.Data, cancellationToken).ConfigureAwait(false);
@@ -65,6 +66,7 @@ public sealed class LegacyBackupService : IBackupService
             Directory.Delete(attachmentsRoot, true);
         }
 
+        var restoredAttachmentCount = 0;
         foreach (var attachment in backupBundle.Attachments)
         {
             var targetPath = LegacySectionSerialization.ResolveManagedAttachmentPath(dataRoot.DataPath, attachment.RelativePath);
@@ -75,16 +77,19 @@ public sealed class LegacyBackupService : IBackupService
             }
 
             await File.WriteAllBytesAsync(targetPath, attachment.Content, cancellationToken).ConfigureAwait(false);
+            restoredAttachmentCount++;
         }
+
+        return new BackupRestoreResult(preRestoreBackupPath, restoredAttachmentCount);
     }
 
-    private static Task BackupCurrentFilesBeforeRestoreAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken)
+    private static Task<string?> BackupCurrentFilesBeforeRestoreAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
         if (!Directory.Exists(dataRoot.DataPath))
         {
-            return Task.CompletedTask;
+            return Task.FromResult<string?>(null);
         }
 
         var backupDirectory = CreateImportBackupDirectory(dataRoot);
@@ -107,7 +112,7 @@ public sealed class LegacyBackupService : IBackupService
             CopyDirectory(attachmentsRoot, Path.Combine(backupDirectory, LegacySectionSerialization.AttachmentsDirectoryName), cancellationToken);
         }
 
-        return Task.CompletedTask;
+        return Task.FromResult<string?>(backupDirectory);
     }
 
     private static string CreateImportBackupDirectory(VehimapDataRoot dataRoot)

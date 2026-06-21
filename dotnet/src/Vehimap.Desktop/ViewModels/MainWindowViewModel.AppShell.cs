@@ -40,9 +40,19 @@ public sealed partial class MainWindowViewModel
             return "Obnovu se nepodařilo připravit, protože nejsou načtená data.";
         }
 
-        await _session.RestoreBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
+        var restoreResult = await _session.RestoreBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
         Load(applyLaunchTabPreference: false);
         ShellStatus = $"Data byla obnovena ze zálohy {backupPath}.";
+        if (!string.IsNullOrWhiteSpace(restoreResult.PreRestoreBackupPath))
+        {
+            ShellStatus += $" Původní data byla před obnovou odložena do {restoreResult.PreRestoreBackupPath}.";
+        }
+
+        if (restoreResult.RestoredAttachmentCount > 0)
+        {
+            ShellStatus += $" Obnoveno spravovaných příloh: {restoreResult.RestoredAttachmentCount}.";
+        }
+
         return ShellStatus;
     }
 

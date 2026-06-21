@@ -113,15 +113,15 @@ internal sealed class DesktopSessionController
         await _backupService.ExportAsync(backupPath, DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task RestoreBackupAsync(string backupPath, CancellationToken cancellationToken = default)
+    public async Task<BackupRestoreResult> RestoreBackupAsync(string backupPath, CancellationToken cancellationToken = default)
     {
         if (DataRoot is null)
         {
-            return;
+            return new BackupRestoreResult(null, 0);
         }
 
         var bundle = await _backupService.ImportAsync(backupPath, cancellationToken).ConfigureAwait(false);
-        await _backupService.RestoreAsync(DataRoot, bundle, cancellationToken).ConfigureAwait(false);
+        return await _backupService.RestoreAsync(DataRoot, bundle, cancellationToken).ConfigureAwait(false);
     }
 
     public DesktopSupportedSettingsSnapshot ReadSupportedSettings() =>

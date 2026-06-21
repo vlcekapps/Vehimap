@@ -63,7 +63,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - centralizovane build info z root `src/VERSION`, ktere desktop vetvi dava stejnou semver a file version jako AHK release tok
 - kompatibilni parser `update/latest.ini` a Windows pripravu automaticke instalace pres `Vehimap.Updater`
 - modalni workflow pro `Export dat` a `Obnovit data`, ktere pouziva stejny `.vehimapbak` format jako AHK verze
-- pred obnovou zalohy vytvari stejnou ochrannou kopii aktualnich TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` jako AHK verze
+- pred obnovou zalohy vytvari stejnou ochrannou kopii aktualnich TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` jako AHK verze a shell po importu hlasi konkretni cestu i pocet obnovenych priloh
 - Appium harness a zivy Windows UI smoke nad publish buildem
 - rozsireny Appium smoke pro samostatna workflow okna a hlavni app-level dialogy vcetne nastaveni, o programu a kontroly aktualizaci
 - sjednocena korenova accessibility metadata hlavniho shellu, workspace oken a app-level dialogu pro stabilnejsi screen-reader diagnostiku a UI automatizaci

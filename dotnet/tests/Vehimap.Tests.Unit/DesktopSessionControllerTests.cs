@@ -441,8 +441,8 @@ public sealed class DesktopSessionControllerTests
         public Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
             => Task.FromResult(new VehimapBackupBundle(new VehimapDataSet(), []));
 
-        public Task RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
+        public Task<BackupRestoreResult> RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
+            => Task.FromResult(new BackupRestoreResult(null, 0));
     }
 
     private sealed class StubBuildInfoProvider : IAppBuildInfoProvider

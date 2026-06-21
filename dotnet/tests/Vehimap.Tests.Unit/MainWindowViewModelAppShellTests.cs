@@ -188,7 +188,8 @@ public sealed class MainWindowViewModelAppShellTests
         var backupService = new StubBackupService
         {
             ImportBundle = new VehimapBackupBundle(importedData, []),
-            RestoreCallback = bundle => dataStore.CurrentDataSet = bundle.Data
+            RestoreCallback = bundle => dataStore.CurrentDataSet = bundle.Data,
+            RestoreResult = new BackupRestoreResult(@"C:\vehimap-test\data\import-backups\2026-04-02_10-00-00", 2)
         };
         var viewModel = CreateViewModel(dataRoot, dataStore, backupService: backupService);
 
@@ -198,6 +199,8 @@ public sealed class MainWindowViewModelAppShellTests
         Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.RestoredFromPath);
         Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
         Assert.Contains("Data byla obnovena ze zálohy", status);
+        Assert.Contains(@"C:\vehimap-test\data\import-backups\2026-04-02_10-00-00", status);
+        Assert.Contains("Obnoveno spravovaných příloh: 2", status);
         Assert.Equal(status, viewModel.ShellStatus);
     }
 
@@ -431,6 +434,7 @@ public sealed class MainWindowViewModelAppShellTests
         public string? ImportedPath { get; private set; }
         public string? RestoredFromPath { get; private set; }
         public VehimapBackupBundle ImportBundle { get; set; } = new(new VehimapDataSet(), []);
+        public BackupRestoreResult RestoreResult { get; set; } = new(null, 0);
         public Action<VehimapBackupBundle>? RestoreCallback { get; set; }
 
         public Task ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
@@ -445,11 +449,11 @@ public sealed class MainWindowViewModelAppShellTests
             return Task.FromResult(ImportBundle);
         }
 
-        public Task RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
+        public Task<BackupRestoreResult> RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
         {
             RestoredFromPath = ImportedPath;
             RestoreCallback?.Invoke(backupBundle);
-            return Task.CompletedTask;
+            return Task.FromResult(RestoreResult);
         }
     }
 }
