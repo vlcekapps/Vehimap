@@ -8,6 +8,37 @@ namespace Vehimap.Tests.LegacyCompatibility;
 public sealed class LegacyDataStoreCompatibilityTests
 {
     [Fact]
+    public async Task Load_reports_file_name_path_and_parser_detail_for_malformed_legacy_file()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-malformed-" + Guid.NewGuid());
+        var dataRoot = new Vehimap.Application.Abstractions.VehimapDataRoot(tempRoot, Path.Combine(tempRoot, "data"), true);
+        var store = new LegacyVehimapDataStore();
+        var vehiclesPath = Path.Combine(dataRoot.DataPath, "vehicles.tsv");
+
+        try
+        {
+            Directory.CreateDirectory(dataRoot.DataPath);
+            await File.WriteAllTextAsync(vehiclesPath, "# Vehimap data v4\njen-jedno-pole\n");
+
+            var exception = await Assert.ThrowsAsync<LegacyDataLoadException>(() => store.LoadAsync(dataRoot));
+
+            Assert.Equal("vehicles.tsv", exception.FileName);
+            Assert.Equal(vehiclesPath, exception.FilePath);
+            Assert.Contains("vehicles.tsv", exception.Message, StringComparison.Ordinal);
+            Assert.Contains(vehiclesPath, exception.Message, StringComparison.Ordinal);
+            Assert.Contains("Řádek vozidel", exception.Message, StringComparison.Ordinal);
+            Assert.IsType<FormatException>(exception.InnerException);
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
     public async Task Save_and_load_roundtrip_preserves_records_v2_and_managed_attachments()
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-compat-" + Guid.NewGuid());

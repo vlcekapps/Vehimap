@@ -33,6 +33,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - `Tiskový přehled` všech vozidel ve formátu HTML; v C# Avalonia větvi se nejprve uloží jako běžný soubor a po uložení se otevře v prohlížeči pro tisk přes `Ctrl+P`
 - `Export dat` do jednoho záložního souboru `.vehimapbak` včetně plánů údržby a spravovaných příloh dokladů; v C# Avalonia větvi výsledná hláška uvádí i počet zahrnutých a přeskočených chybějících spravovaných příloh
 - `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním, obnovení plánů údržby i návratu spravovaných příloh dokladů
+- v C# Avalonia větvi se při poškozeném legacy `TSV` nebo `INI` souboru v úvodním stavu zobrazí konkrétní název souboru, plná cesta a detail parseru, aby šlo chybu opravit bez hádání, která evidence selhala
 - hlavní pracovní okna jako `Dashboard`, `Přehled termínů`, `Propadlé termíny`, `Audit dat`, `Časová osa vozidla`, `Pojištění a doklady`, `Plán údržby`, detail vozidla i hlavní seznam lze zvětšit, takže se seznamy natáhnou do šířky i výšky
 - v C# desktopové větvi lze přehledová workflow `Časová osa`, `Globální hledání`, `Audit dat`, `Náklady`, `Dashboard`, `Blížící se termíny` a `Propadlé termíny` otevřít jako kartu v hlavním shellu i jako samostatné okno se stejnou přístupnou pracovní plochou
 - v C# desktopové větvi mají samostatná workspace okna sjednocené otevření prvního logického prvku a stejnou ochranu před zavřením rozpracovaného editoru jako hlavní shell
@@ -288,4 +289,3 @@ V C# Avalonia větvi nativní menu lišty otevírá vlastní přístupné okno `
 ## Vývojové ověření C# větve
 
 C# Avalonia větev má vedle unit testů také Appium smoke testy nad izolovanou kopií publish buildu. CI smoke kontroluje dostupnost menu `Soubor` a `Rychlé akce`, jejich aktuální aktivní/neaktivní stavy a hlavní app-level vstupy. Rozšířená Appium sada navíc spouští okamžitou automatickou zálohu v dočasné datové složce, aby se ověřilo, že menu akce opravdu vytvoří `.vehimapbak`, aniž by sahala do uživatelských dat.
-

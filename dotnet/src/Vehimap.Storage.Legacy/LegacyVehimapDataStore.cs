@@ -10,14 +10,14 @@ public sealed class LegacyVehimapDataStore : ILegacyDataStore
     {
         await EnsureDataFilesAsync(dataRoot, cancellationToken).ConfigureAwait(false);
 
-        var settings = LegacySectionSerialization.ParseSettings(await ReadTextAsync(GetPath(dataRoot, LegacySectionSerialization.SettingsFileName), cancellationToken).ConfigureAwait(false));
-        var vehicles = LegacySectionSerialization.ParseVehicles(await ReadTextAsync(GetPath(dataRoot, LegacySectionSerialization.VehiclesFileName), cancellationToken).ConfigureAwait(false));
-        var history = LegacySectionSerialization.ParseHistory(await ReadTextAsync(GetPath(dataRoot, LegacySectionSerialization.HistoryFileName), cancellationToken).ConfigureAwait(false));
-        var fuel = LegacySectionSerialization.ParseFuel(await ReadTextAsync(GetPath(dataRoot, LegacySectionSerialization.FuelFileName), cancellationToken).ConfigureAwait(false));
-        var records = LegacySectionSerialization.ParseRecords(await ReadTextAsync(GetPath(dataRoot, LegacySectionSerialization.RecordsFileName), cancellationToken).ConfigureAwait(false));
-        var meta = LegacySectionSerialization.ParseVehicleMeta(await ReadTextAsync(GetPath(dataRoot, LegacySectionSerialization.MetaFileName), cancellationToken).ConfigureAwait(false));
-        var reminders = LegacySectionSerialization.ParseReminders(await ReadTextAsync(GetPath(dataRoot, LegacySectionSerialization.RemindersFileName), cancellationToken).ConfigureAwait(false));
-        var maintenance = LegacySectionSerialization.ParseMaintenancePlans(await ReadTextAsync(GetPath(dataRoot, LegacySectionSerialization.MaintenanceFileName), cancellationToken).ConfigureAwait(false));
+        var settings = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.SettingsFileName, "nastavení", LegacySectionSerialization.ParseSettings, cancellationToken).ConfigureAwait(false);
+        var vehicles = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.VehiclesFileName, "vozidel", LegacySectionSerialization.ParseVehicles, cancellationToken).ConfigureAwait(false);
+        var history = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.HistoryFileName, "historie", LegacySectionSerialization.ParseHistory, cancellationToken).ConfigureAwait(false);
+        var fuel = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.FuelFileName, "tankování", LegacySectionSerialization.ParseFuel, cancellationToken).ConfigureAwait(false);
+        var records = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.RecordsFileName, "dokladů", LegacySectionSerialization.ParseRecords, cancellationToken).ConfigureAwait(false);
+        var meta = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.MetaFileName, "metadat vozidel", LegacySectionSerialization.ParseVehicleMeta, cancellationToken).ConfigureAwait(false);
+        var reminders = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.RemindersFileName, "připomínek", LegacySectionSerialization.ParseReminders, cancellationToken).ConfigureAwait(false);
+        var maintenance = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.MaintenanceFileName, "plánů údržby", LegacySectionSerialization.ParseMaintenancePlans, cancellationToken).ConfigureAwait(false);
 
         return new VehimapDataSet
         {
@@ -61,6 +61,35 @@ public sealed class LegacyVehimapDataStore : ILegacyDataStore
 
         var text = await File.ReadAllTextAsync(path, Encoding.UTF8, cancellationToken).ConfigureAwait(false);
         return LegacySectionSerialization.NormalizeTextForStorage(text);
+    }
+
+    private static async Task<T> ReadAndParseAsync<T>(
+        VehimapDataRoot dataRoot,
+        string fileName,
+        string sectionName,
+        Func<string, T> parser,
+        CancellationToken cancellationToken)
+    {
+        var path = GetPath(dataRoot, fileName);
+        try
+        {
+            var content = await ReadTextAsync(path, cancellationToken).ConfigureAwait(false);
+            return parser(content);
+        }
+        catch (FormatException ex)
+        {
+            throw BuildLoadException(fileName, path, sectionName, ex);
+        }
+    }
+
+    private static LegacyDataLoadException BuildLoadException(string fileName, string path, string sectionName, Exception innerException)
+    {
+        var message =
+            $"Soubor {sectionName} ({fileName}) se nepodařilo načíst.{Environment.NewLine}" +
+            $"Zkontrolujte soubor: {path}{Environment.NewLine}" +
+            $"Detail: {innerException.Message}";
+
+        return new LegacyDataLoadException(fileName, path, message, innerException);
     }
 
     internal static async Task WriteTextAsync(string path, string content, CancellationToken cancellationToken)

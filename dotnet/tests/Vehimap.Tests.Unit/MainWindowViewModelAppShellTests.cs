@@ -5,12 +5,30 @@ using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
+using Vehimap.Storage.Legacy;
 using Xunit;
 
 namespace Vehimap.Tests.Unit;
 
 public sealed class MainWindowViewModelAppShellTests
 {
+    [Fact]
+    public void Load_error_keeps_legacy_file_diagnostic_message_visible()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var loadException = new LegacyDataLoadException(
+            "vehicles.tsv",
+            @"C:\vehimap-test\data\vehicles.tsv",
+            "Soubor vozidel (vehicles.tsv) se nepodařilo načíst.\nZkontrolujte soubor: C:\\vehimap-test\\data\\vehicles.tsv\nDetail: Řádek vozidel 2 musí obsahovat 12 polí.",
+            new FormatException("Řádek vozidel 2 musí obsahovat 12 polí."));
+
+        var viewModel = CreateViewModel(dataRoot, new FailingLegacyDataStore(loadException));
+
+        Assert.Contains("vehicles.tsv", viewModel.LoadError, StringComparison.Ordinal);
+        Assert.Contains(@"C:\vehimap-test\data\vehicles.tsv", viewModel.LoadError, StringComparison.Ordinal);
+        Assert.Contains("Řádek vozidel", viewModel.LoadError, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void Minimize_to_tray_menu_state_is_exposed_by_view_model()
     {
@@ -388,7 +406,7 @@ public sealed class MainWindowViewModelAppShellTests
 
     private static MainWindowViewModel CreateViewModel(
         VehimapDataRoot dataRoot,
-        StubLegacyDataStore dataStore,
+        ILegacyDataStore dataStore,
         IBackupService? backupService = null,
         IFileLauncher? fileLauncher = null)
     {
@@ -439,6 +457,22 @@ public sealed class MainWindowViewModelAppShellTests
             CurrentDataSet = dataSet;
             return Task.CompletedTask;
         }
+    }
+
+    private sealed class FailingLegacyDataStore : ILegacyDataStore
+    {
+        private readonly Exception _exception;
+
+        public FailingLegacyDataStore(Exception exception)
+        {
+            _exception = exception;
+        }
+
+        public Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
+            => Task.FromException<VehimapDataSet>(_exception);
+
+        public Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
     }
 
     private sealed class StubFileLauncher : IFileLauncher
