@@ -23,7 +23,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku, včetně `Ujeto km`, `Ceny / km` a srovnání s předchozím stejně dlouhým obdobím
 - samostatný přehled `Náklady napříč vozidly` pro vybrané období s porovnáním vozidel, rozpadnutím částek podle skupin, `Ujeto km`, `Cenou / km`, upozorněním na aktivní vozidla bez číselného nákladu a se stavy k řešení přímo u jednotlivých vozidel
 - v C# Avalonia větvi lze v přehledu `Náklady napříč vozidly` zvolit období přes předvolby nebo vlastní datumový rozsah; poslední volba se ukládá do `settings.ini` a používá se i v dashboardu a exportech
-- export nákladových přehledů do `TSV souhrnu`, `TSV detailu` a `HTML sestavy`
+- export nákladových přehledů do `TSV souhrnu`, `TSV detailu` a `HTML sestavy`; v C# Avalonia větvi se úspěch, zrušení i chyba exportu hlásí ve stavovém textu nákladů i hlavního shellu a uložená HTML sestava jasně oznámí i případné selhání otevření v prohlížeči
 - vlastní připomínky i s volbou opakování `Neopakovat`, `Každý rok`, `Každé 2 roky` a `Každých 5 let`
 - upozornění na blížící se nebo propadlou technickou kontrolu
 - upozornění na blížící se nebo propadlou zelenou kartu

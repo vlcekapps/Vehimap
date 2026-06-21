@@ -69,6 +69,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - menu `Přehledy` v Avalonia větvi má přímou položku `Export termínů do kalendáře (.ics)`, aby odpovídalo AHK menu i původnímu workflow plánu
 
 ### Změněno
+- Avalonia exporty nákladů do TSV a HTML nově hlásí úspěch, zrušení i chybu do stavového textu nákladového workspace i hlavního shellu; u HTML sestavy rozlišují i stav, kdy se soubor uloží, ale nejde otevřít
 - Avalonia export termínů do `.ics` nově zapisuje úspěch, zrušení i chybu do stavového textu časové osy i hlavního shellu, takže menu a tray akce zůstávají čitelné i při selhání uložení
 - C# import `.vehimapbak` nově balí chyby čtení a parseru do čitelné diagnostiky s cestou k záloze; shell při selhání exportu nebo obnovy zůstane běžet a zobrazí stavovou hlášku místo neobsloužené výjimky
 - Avalonia editor vozidla při uložení sjednocuje kategorii, SPZ, data TK/ZK, stav vozidla a servisní profil podle legacy AHK pravidel a při neplatné hodnotě vrací fokus na konkrétní pole k opravě

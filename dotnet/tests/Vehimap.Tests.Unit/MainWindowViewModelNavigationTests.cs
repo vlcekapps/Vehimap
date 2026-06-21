@@ -1045,6 +1045,59 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Contains("Octavia", saveService.LastContent);
         Assert.Contains("Palivo", saveService.LastContent);
         Assert.Contains("Souhrn nákladů byl uložen", viewModel.CostWorkspace.CostExportStatus);
+        Assert.Equal(viewModel.CostWorkspace.CostExportStatus, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Cost_detail_export_command_saves_selected_vehicle_tsv()
+    {
+        var saveService = new CapturingTextFileSaveService(@"C:\exports\octavia-naklady.tsv");
+        var viewModel = CreateViewModel(saveService);
+
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostWorkspace.CostVehicles.Single(item => item.VehicleId == "veh_1");
+
+        await viewModel.ExportSelectedVehicleCostDetailCommand.ExecuteAsync(null);
+
+        Assert.Equal("Export detailu nákladů", saveService.LastTitle);
+        Assert.Equal("TSV soubor", saveService.LastFileTypeName);
+        Assert.Equal("tsv", saveService.LastDefaultExtension);
+        Assert.Contains("Octavia", saveService.LastContent);
+        Assert.Contains("Tankování", saveService.LastContent);
+        Assert.Contains("Detail nákladů byl uložen", viewModel.CostWorkspace.CostExportStatus);
+        Assert.Equal(viewModel.CostWorkspace.CostExportStatus, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Cost_export_save_failure_reports_status_without_crashing_shell()
+    {
+        var viewModel = CreateViewModel(new FailingTextFileSaveService(new IOException("Cílový soubor nelze zapsat.")));
+
+        await viewModel.ExportFleetCostSummaryCommand.ExecuteAsync(null);
+
+        Assert.Contains("Export souhrnu nákladů se nepodařil", viewModel.CostWorkspace.CostExportStatus);
+        Assert.Contains("Cílový soubor nelze zapsat", viewModel.CostWorkspace.CostExportStatus);
+        Assert.Equal(viewModel.CostWorkspace.CostExportStatus, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Cost_html_report_open_failure_reports_saved_path_and_error()
+    {
+        var saveService = new CapturingTextFileSaveService(@"C:\exports\octavia-naklady.html");
+        var fileLauncher = new FailingFileLauncher(new InvalidOperationException("Prohlížeč není dostupný."));
+        var viewModel = CreateViewModel(saveService, fileLauncher);
+
+        viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostWorkspace.CostVehicles.Single(item => item.VehicleId == "veh_1");
+
+        await viewModel.ExportSelectedVehicleCostReportCommand.ExecuteAsync(null);
+
+        Assert.Equal("Export HTML sestavy nákladů", saveService.LastTitle);
+        Assert.Equal("HTML soubor", saveService.LastFileTypeName);
+        Assert.Equal("html", saveService.LastDefaultExtension);
+        Assert.Contains("<!DOCTYPE html>", saveService.LastContent);
+        Assert.Contains(@"C:\exports\octavia-naklady.html", viewModel.CostWorkspace.CostExportStatus);
+        Assert.Contains("nepodařilo se ji otevřít", viewModel.CostWorkspace.CostExportStatus);
+        Assert.Contains("Prohlížeč není dostupný", viewModel.CostWorkspace.CostExportStatus);
+        Assert.Equal(viewModel.CostWorkspace.CostExportStatus, viewModel.ShellStatus);
     }
 
     [Fact]
@@ -1252,6 +1305,22 @@ public sealed class MainWindowViewModelNavigationTests
         }
 
         public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    private sealed class FailingFileLauncher : IFileLauncher
+    {
+        private readonly Exception _exception;
+
+        public FailingFileLauncher(Exception exception)
+        {
+            _exception = exception;
+        }
+
+        public Task OpenAsync(string path, CancellationToken cancellationToken = default)
+            => Task.FromException(_exception);
+
+        public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
     }
 
     private sealed class CapturingClipboardService : IClipboardService

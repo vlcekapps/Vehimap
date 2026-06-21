@@ -64,7 +64,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - doplnit chybejici doporucene servisni sablony v `Planu udrzby` tlacitkem `Doporucene` nebo zkratkou `Ctrl+Shift+N`; dialog pouziva stejny katalog jako balicek pro vozidlo, ale prida jen servisni plany
 - oznacit vybrany servisni plan jako splneny tlacitkem `Splneno` nebo zkratkou `Ctrl+L`; akce otevre potvrzovaci dialog s datem, tachometrem a volitelnym zapisem stejne udalosti do historie vozidla
 - primo vytvaret, upravovat a mazat `vozidla`, vcetne stitku, stavu vozidla, zakladniho servisniho profilu, AHK-kompatibilni normalizace stitku, kategorie, SPZ, terminu TK/ZK a rozbalovacich hodnot servisniho profilu, potvrzeni kaskadoveho odstraneni evidenci a uklidu spravovanych priloh
-- otevrit `Naklady a souhrny` primo z vybraneho vozidla, zobrazit rozpad palivo / historie / doklady a exportovat souhrn TSV, detail TSV i HTML sestavu
+- otevrit `Naklady a souhrny` primo z vybraneho vozidla, zobrazit rozpad palivo / historie / doklady a exportovat souhrn TSV, detail TSV i HTML sestavu vcetne stavove hlasky pro uspech, zruseni, selhani ulozeni i selhani otevreni HTML vystupu
 - ulozit `Tiskovy prehled` vozidel jako HTML soubor pres standardni exportni dialog a po ulozeni ho otevrit pro tisk nebo archivaci
 - otevrit `Historii`, `Tankovani`, `Připominky`, `Údrzbu` i `Doklady` v samostatnych desktopovych oknech nad stejnou editační logikou jako hlavni shell
 - otevrit `Detail vozidla`, `Audit` a `Dashboard` i v samostatnych desktopovych oknech nad stejnym viewmodelem jako hlavni shell
