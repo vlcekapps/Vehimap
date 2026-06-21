@@ -80,7 +80,7 @@ V hlavním okně:
 - v C# Avalonia větvi lze stejné navazující evidence otevřít přímo z detailu vozidla v bloku `Související evidence`; pokud je detail otevřený jako samostatné okno, po přechodu do evidence se okno zavře
 - položky `Dashboard` a `Globální hledání` v menu `Přehled` nebo `Přehledy` otevřou rychlý souhrn termínů, servisních úkonů, nákladů, problémových stavů a stavu evidencí nebo vyhledání napříč všemi evidencemi
 - položka `Náklady napříč vozidly` v menu `Přehled` nebo `Přehledy` otevře porovnání nákladů za zvolené období mezi všemi vozidly a umožní z přehledu rovnou přejít na detail nákladů, detail vozidla nebo editaci
-- v AHK menu `Nápověda` a v C# Avalonia menu `Aplikace` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky i samostatnou ruční kontrolu aktualizací
+- v AHK menu `Nápověda` a v C# Avalonia menu `Aplikace` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky; v C# větvi lze tyto informace zkopírovat do schránky pro podporu a vedle toho spustit samostatnou ruční kontrolu aktualizací
 - v dashboardu souhrn vozidel vypisuje i nejpalčivější problémové stavy podle priority a nákladový souhrn ukazuje nejdražší vozidla i aktivní vozidla bez číselného nákladu v aktuálním roce
 - v dashboardu, `Přehledu termínů` i `Propadlých termínech` se vedle `TK`, `ZK` a vlastních připomínek zobrazují i blížící se nebo propadlé servisní úkony
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
@@ -160,7 +160,7 @@ V hlavním okně:
 - `Ctrl+S`: uloží aktuální formulář nebo nastavení
 - v `Nastavení` navíc `Ctrl+B`: vytvoří zálohu ihned
 - v `Nastavení` klávesa `Esc` zavře dialog bez uložení
-- v `O programu` zkratka `Ctrl+O` otevře release poznámky a `Esc` dialog zavře
+- v `O programu` zkratka `Ctrl+O` otevře release poznámky, `Ctrl+Shift+C` zkopíruje informace o aplikaci do schránky a `Esc` dialog zavře
 - v aplikačních dialozích jako `Zkontrolovat aktualizace`, potvrzení akce, upozornění nebo `Akce Vehimapu na liště` klávesa `Esc` zavře dialog bez provedení nové akce; v kontrole aktualizací `Ctrl+Shift+C` zkopíruje detail výsledku do schránky a tlačítka se dál aktivují standardně klávesou `Enter` nebo mezerníkem
 
 ## Používání detailněji: 

@@ -85,7 +85,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - dialog kontroly aktualizací v Avalonia větvi umí tlačítkem `Kopírovat detaily` nebo zkratkou `Ctrl+Shift+C` zkopírovat verze, stav instalace, asset URL a SHA-256 hash do schránky
 - dostupnost akce `Minimalizovat na lištu` v Avalonia shellu je nově řízená viewmodelem podle podpory tray a nastavení automatických záloh vypíná intervalová pole, pokud nejsou pravidelné zálohy zapnuté
 - dialog `Nastavení` v Avalonia větvi má vlastní klávesové ovládání `Ctrl+S`, `Ctrl+B` a `Esc` i přístupný help text s těmito zkratkami
-- app-level dialogy v Avalonia větvi mají sjednocené bezpečné zavření klávesou `Esc`; `O programu` navíc nabízí `Ctrl+O` pro otevření release poznámek a všechny tyto dialogy popisují zkratky v přístupném help textu
+- app-level dialogy v Avalonia větvi mají sjednocené bezpečné zavření klávesou `Esc`; `O programu` navíc nabízí `Ctrl+O` pro otevření release poznámek, `Ctrl+Shift+C` pro zkopírování diagnostiky a všechny tyto dialogy popisují zkratky v přístupném help textu
 - samostatná Avalonia workspace okna používají sdílený lifecycle helper pro první fokus po otevření a bezpečné potvrzení zavření rozpracovaných editorů
 - názvy samostatných Avalonia workspace oken už nejsou veřejné root vlastnosti `MainWindowViewModel`; veřejně je poskytují příslušné workspace viewmodely
 - action-state podmínky evidenčních editorů, dokladových příloh a exportů nákladů už nejsou veřejné root vlastnosti `MainWindowViewModel`; zůstávají interní součástí příkazů a workspace vrstvy

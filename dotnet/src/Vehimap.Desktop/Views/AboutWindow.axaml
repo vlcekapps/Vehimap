@@ -13,7 +13,7 @@
         Title="O programu"
         AutomationProperties.Name="O programu"
         AutomationProperties.AutomationId="AboutWindow"
-        AutomationProperties.HelpText="Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky a Escape dialog zavře.">
+        AutomationProperties.HelpText="Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+Shift+C zkopíruje informace a Escape dialog zavře.">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
     <TextBlock Grid.Row="1"
@@ -55,6 +55,12 @@
               Content="Release poznámky"
               AutomationProperties.Name="Otevřít release poznámky"
               AutomationProperties.AutomationId="ReleaseNotesButton" />
+      <Button x:Name="CopyAboutDetailsButton"
+              MinWidth="160"
+              Click="OnCopyDetailsClick"
+              Content="Kopírovat informace"
+              AutomationProperties.Name="Kopírovat informace o aplikaci do schránky"
+              AutomationProperties.AutomationId="CopyAboutDetailsButton" />
       <Button x:Name="CloseAboutButton"
               MinWidth="110"
               Click="OnCloseClick"

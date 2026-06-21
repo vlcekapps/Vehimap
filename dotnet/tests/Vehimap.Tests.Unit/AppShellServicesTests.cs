@@ -39,6 +39,28 @@ public sealed class AppShellServicesTests : IDisposable
     }
 
     [Fact]
+    public void About_dialog_clipboard_text_contains_support_diagnostics()
+    {
+        var model = new AboutDialogViewModel(
+            "Vehimap",
+            "1.2.3",
+            "1.2.3.0",
+            "portable",
+            @"C:\vehimap\data",
+            "Portable data vedle aplikace",
+            "Windows 11 x64",
+            ".NET 10.0",
+            @"C:\vehimap\Vehimap.Desktop.exe",
+            "https://example.com/release");
+
+        Assert.Contains("Vehimap - O programu", model.ClipboardText, StringComparison.Ordinal);
+        Assert.Contains("Verze aplikace: 1.2.3", model.ClipboardText, StringComparison.Ordinal);
+        Assert.Contains(@"Datová složka: C:\vehimap\data", model.ClipboardText, StringComparison.Ordinal);
+        Assert.Contains(@"Soubor aplikace: C:\vehimap\Vehimap.Desktop.exe", model.ClipboardText, StringComparison.Ordinal);
+        Assert.Contains("Release poznámky: https://example.com/release", model.ClipboardText, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Supported_settings_service_preserves_unrelated_sections_and_keys()
     {
         var settings = new VehimapSettings();

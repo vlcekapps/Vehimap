@@ -406,9 +406,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("case Key.S", settingsCodeBehind);
         Assert.Contains("case Key.B", settingsCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
-        Assert.Contains("Ctrl+O otevře release poznámky a Escape dialog zavře.", aboutXaml);
+        Assert.Contains("Ctrl+O otevře release poznámky, Ctrl+Shift+C zkopíruje informace a Escape dialog zavře.", aboutXaml);
         Assert.Contains("Key.Escape", aboutCodeBehind);
         Assert.Contains("Key.O", aboutCodeBehind);
+        Assert.Contains("Key.C", aboutCodeBehind);
+        Assert.Contains("KeyModifiers.Control | KeyModifiers.Shift", aboutCodeBehind);
+        Assert.Contains("AutomationProperties.AutomationId=\"CopyAboutDetailsButton\"", aboutXaml);
+        Assert.Contains("AutomationProperties.Name=\"Kopírovat informace o aplikaci do schránky\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"Kontrola aktualizací\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCheckWindow\"", updateXaml);
