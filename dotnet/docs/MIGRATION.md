@@ -107,6 +107,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - primy vstup `Casova osa vozidla` v menu `Vozidlo`, aby C# shell zachoval stejnou informacni architekturu jako AHK menu
 - primy vstup `Export terminu do kalendare (.ics)` v menu `Prehledy`, napojeny na sdileny kalendarovy export
 - nativni `InputGesture` popisky u hlavnich Avalonia menu polozek, aby menu ukazovalo stejne klavesove zkratky jako shell
+- hlavni menu `Rychle akce` pouziva stejne dostupnostni podminky jako pristupne tray akcni okno, takze nejblizsi polozky ani filtrovane kontroly nejsou aktivni bez realneho cile nebo behem rozpracovane editace
 - otevreni aktualni datove slozky z menu `Soubor` i z pristupneho tray akcniho okna pres sdileny multiplatformni file launcher; slozky pouzivaji samostatnou vetev s `explorer.exe` na Windows, `open` na macOS a `xdg-open` na Linuxu
 - ukonceni aplikace z menu `Soubor` polozkou `Konec` stejnym handlerem jako v menu `Aplikace`, aby F10 cesta zustala blizka AHK i bez ztraty samostatneho app menu
 - pristupne tray akcni okno s primym otevrenim hlavniho okna, dashboardu, blizicich se terminu, propadlych terminu, nejblizsi TK/ZK/pripominky/servisu/dokladu, filtrovanych kontrol, tiskoveho prehledu, exportu/importu zalohy, exportu kalendare, znovunacteni dat, otevreni datove slozky, nastaveni, O programu, kontroly aktualizaci a ukonceni aplikace; dostupnost tlacitek se sklada z aktualnich dat shellu, aby nejblizsi polozky ani datove akce nebyly aktivni bez cile nebo behem rozpracovane editace

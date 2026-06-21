@@ -358,8 +358,19 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
     [Fact]
     public void Tray_actions_availability_reflects_current_quick_action_targets()
     {
-        var activeModel = CreateViewModel(BuildQuickActionDataSet()).BuildTrayActionsDialogModel();
+        var activeViewModel = CreateViewModel(BuildQuickActionDataSet());
+        var activeModel = activeViewModel.BuildTrayActionsDialogModel();
 
+        Assert.True(activeViewModel.CanOpenNearestTechnicalQuickAction);
+        Assert.True(activeViewModel.CanOpenNearestGreenCardQuickAction);
+        Assert.True(activeViewModel.CanOpenNearestReminderQuickAction);
+        Assert.True(activeViewModel.CanOpenNearestMaintenanceQuickAction);
+        Assert.True(activeViewModel.CanOpenNearestRecordQuickAction);
+        Assert.True(activeViewModel.CanReviewTechnicalQuickAction);
+        Assert.True(activeViewModel.CanReviewGreenCardsQuickAction);
+        Assert.True(activeViewModel.CanReviewRemindersQuickAction);
+        Assert.True(activeViewModel.CanReviewMaintenanceQuickAction);
+        Assert.True(activeViewModel.CanReviewRecordsQuickAction);
         Assert.True(activeModel.CanOpenNearestTechnical);
         Assert.True(activeModel.CanOpenNearestGreenCard);
         Assert.True(activeModel.CanOpenNearestReminder);
@@ -371,8 +382,19 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(activeModel.CanReviewMaintenance);
         Assert.True(activeModel.CanReviewRecords);
 
-        var quietModel = CreateViewModel(BuildQuietQuickActionDataSet()).BuildTrayActionsDialogModel();
+        var quietViewModel = CreateViewModel(BuildQuietQuickActionDataSet());
+        var quietModel = quietViewModel.BuildTrayActionsDialogModel();
 
+        Assert.False(quietViewModel.CanOpenNearestTechnicalQuickAction);
+        Assert.False(quietViewModel.CanOpenNearestGreenCardQuickAction);
+        Assert.False(quietViewModel.CanOpenNearestReminderQuickAction);
+        Assert.False(quietViewModel.CanOpenNearestMaintenanceQuickAction);
+        Assert.False(quietViewModel.CanOpenNearestRecordQuickAction);
+        Assert.False(quietViewModel.CanReviewTechnicalQuickAction);
+        Assert.False(quietViewModel.CanReviewGreenCardsQuickAction);
+        Assert.False(quietViewModel.CanReviewRemindersQuickAction);
+        Assert.False(quietViewModel.CanReviewMaintenanceQuickAction);
+        Assert.False(quietViewModel.CanReviewRecordsQuickAction);
         Assert.True(quietModel.CanShowMainWindow);
         Assert.True(quietModel.CanOpenDataFolder);
         Assert.True(quietModel.CanOpenSettings);
@@ -396,6 +418,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         viewModel.EditSelectedVehicleCommand.Execute(null);
         var model = viewModel.BuildTrayActionsDialogModel();
 
+        Assert.False(viewModel.CanOpenNearestTechnicalQuickAction);
+        Assert.False(viewModel.CanReviewTechnicalQuickAction);
         Assert.True(model.CanShowMainWindow);
         Assert.True(model.CanOpenAbout);
         Assert.True(model.CanCheckForUpdates);

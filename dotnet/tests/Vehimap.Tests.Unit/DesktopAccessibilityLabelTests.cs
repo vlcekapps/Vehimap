@@ -263,6 +263,16 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewMaintenanceMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestRecordMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewRecordsMenuItem\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenNearestTechnicalQuickAction}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanReviewTechnicalQuickAction}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenNearestGreenCardQuickAction}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanReviewGreenCardsQuickAction}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenNearestReminderQuickAction}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanReviewRemindersQuickAction}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenNearestMaintenanceQuickAction}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanReviewMaintenanceQuickAction}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenNearestRecordQuickAction}\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanReviewRecordsQuickAction}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CalendarExportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReloadButton\"", xaml);
         Assert.Contains("InputGesture=\"Ctrl+E\"", xaml);

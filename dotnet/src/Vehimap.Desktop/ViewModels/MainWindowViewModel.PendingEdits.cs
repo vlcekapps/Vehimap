@@ -170,6 +170,7 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleHistory));
         OnPropertyChanged(nameof(CanOpenSelectedDashboardVehicleCosts));
         OnPropertyChanged(nameof(CanClearVehicleFilters));
+        NotifyQuickActionAvailabilityChanged();
         VehicleDetailWorkspace.NotifyVehicleRelatedWorkspaceStateChanged();
         MaintenanceWorkspace.NotifyMaintenanceRecommendationStateChanged();
         DashboardWorkspace.NotifyDashboardActionStateChanged();

@@ -59,7 +59,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
 - horní menu; v AHK aplikaci `Soubor`, `Vozidlo`, `Přehled`, `Nástroje` a `Nápověda`, v C# Avalonia větvi `Soubor`, `Vozidlo`, `Přehledy`, `Rychlé akce` a `Aplikace`
 - v C# Avalonia větvi lze z hlavního menu i přístupného tray okna otevřít aktuální datovou složku; složky se otevírají oddělenou multiplatformní cestou (`explorer.exe` na Windows, `open` na macOS, `xdg-open` na Linuxu), což pomáhá při kontrole portable dat, záloh a spravovaných příloh
-- přístupné tray okno pro rychlé zobrazení hlavního okna, dashboardu, blížících se termínů, propadlých termínů, nejbližší TK/ZK/připomínky/servisu/dokladu, filtrovaných kontrol, tiskového přehledu, záloh, exportu kalendáře, znovunačtení dat, otevření datové složky, nastavení, dialogu `O programu`, kontroly aktualizací a ukončení aplikace; akce bez aktuálního cíle nebo akce blokované rozpracovanou editací jsou v tomto okně vypnuté
+- přístupné tray okno pro rychlé zobrazení hlavního okna, dashboardu, blížících se termínů, propadlých termínů, nejbližší TK/ZK/připomínky/servisu/dokladu, filtrovaných kontrol, tiskového přehledu, záloh, exportu kalendáře, znovunačtení dat, otevření datové složky, nastavení, dialogu `O programu`, kontroly aktualizací a ukončení aplikace; rychlé akce bez aktuálního cíle nebo akce blokované rozpracovanou editací jsou vypnuté v tray okně i v hlavním menu `Rychlé akce`
 - v C# Avalonia větvi mají stavové, souhrnné a detailní texty hlavního shellu i workspace obrazovek vlastní přístupný název a stabilní `AutomationId`, aby je šlo spolehlivě číst čtečkou obrazovky i ověřovat UI testy
 - automatickou kontrolu termínů, připomínek a servisních plánů každých 15 minut a znovu po probuzení počítače ze spánku; v C# Avalonia větvi se probuzení zatím napojuje přes Windows systémovou událost a akutní termíny v oznámeních a tooltipu lišty mají přednost před obecnými auditními nedostatky
 - v C# Avalonia větvi se poslední denní desktopové oznámení ukládá do `settings.ini`, takže stejný akutní termín neotravuje opakovaně během jednoho dne; změna nastavení upozornění nebo obnova zálohy tuto historii bezpečně vynuluje
@@ -254,7 +254,7 @@ V horním menu najdete tyto části:
 - `Soubor`: tiskový přehled, export a import zálohy, export budoucích termínů do kalendáře, znovunačtení dat, v C# Avalonia větvi také otevření datové složky a v obou větvích ukončení aplikace
 - `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby, `Časové osy vozidla`, `Balíčku pro vozidlo` a pojištění a dokladů
 - `Přehled` v AHK nebo `Přehledy` v C# Avalonia větvi: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Časová osa vozidla`, blížící se a propadlé termíny, `Audit dat` a export termínů do kalendáře `.ics`
-- `Rychlé akce` v C# Avalonia větvi: nejbližší TK, ZK, připomínka, servis nebo doklad a filtrovaná kontrola těchto termínů v přehledech; kontrola ZK zahrne i vozidla bez vyplněné zelené karty
+- `Rychlé akce` v C# Avalonia větvi: nejbližší TK, ZK, připomínka, servis nebo doklad a filtrovaná kontrola těchto termínů v přehledech; kontrola ZK zahrne i vozidla bez vyplněné zelené karty a položky bez aktuálního cíle jsou v menu vypnuté
 - `Nástroje` v AHK aplikaci: `Nastavení`, `Skrýt do lišty`
 - `Nápověda` v AHK aplikaci nebo `Aplikace` v C# Avalonia větvi: `Nastavení`, minimalizace na lištu, `O programu`, kontrola aktualizací a ukončení aplikace
 

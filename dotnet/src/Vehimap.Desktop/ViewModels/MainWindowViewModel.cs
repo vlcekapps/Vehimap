@@ -1109,6 +1109,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             PopulateDashboardTimeline();
             RefreshFleetOverviews();
             RefreshGlobalSearch();
+            NotifyQuickActionAvailabilityChanged();
             AuditWorkspace.RefreshVisibleAuditItems(preserveSelection: false);
             CostWorkspace.RefreshVisibleCostVehicles(preserveSelection: false);
             DashboardWorkspace.SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();

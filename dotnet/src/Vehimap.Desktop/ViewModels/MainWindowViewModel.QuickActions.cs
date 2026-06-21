@@ -301,33 +301,63 @@ public sealed partial class MainWindowViewModel
     private bool HasAnyMissingGreenCard() =>
         _dataSet.Vehicles.Any(vehicle => string.IsNullOrWhiteSpace(vehicle.GreenCardTo));
 
+    public bool CanOpenNearestTechnicalQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("technical");
+
+    public bool CanReviewTechnicalQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("technical");
+
+    public bool CanOpenNearestGreenCardQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("green");
+
+    public bool CanReviewGreenCardsQuickAction => CanUseWorkspaceNavigation && (HasQuickActionTarget("green") || HasAnyMissingGreenCard());
+
+    public bool CanOpenNearestReminderQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("custom");
+
+    public bool CanReviewRemindersQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("custom");
+
+    public bool CanOpenNearestMaintenanceQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("maintenance");
+
+    public bool CanReviewMaintenanceQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("maintenance");
+
+    public bool CanOpenNearestRecordQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("record");
+
+    public bool CanReviewRecordsQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("record");
+
+    internal void NotifyQuickActionAvailabilityChanged()
+    {
+        OnPropertyChanged(nameof(CanOpenNearestTechnicalQuickAction));
+        OnPropertyChanged(nameof(CanReviewTechnicalQuickAction));
+        OnPropertyChanged(nameof(CanOpenNearestGreenCardQuickAction));
+        OnPropertyChanged(nameof(CanReviewGreenCardsQuickAction));
+        OnPropertyChanged(nameof(CanOpenNearestReminderQuickAction));
+        OnPropertyChanged(nameof(CanReviewRemindersQuickAction));
+        OnPropertyChanged(nameof(CanOpenNearestMaintenanceQuickAction));
+        OnPropertyChanged(nameof(CanReviewMaintenanceQuickAction));
+        OnPropertyChanged(nameof(CanOpenNearestRecordQuickAction));
+        OnPropertyChanged(nameof(CanReviewRecordsQuickAction));
+    }
+
+    private bool HasQuickActionTarget(string kind) =>
+        BuildQuickActionItems(kind).Count > 0;
+
     internal TrayActionsDialogViewModel BuildTrayActionsDialogModel()
     {
-        var canNavigate = CanUseWorkspaceNavigation;
         var isLoaded = _session.IsLoaded;
-        var hasTechnical = BuildQuickActionItems("technical").Count > 0;
-        var hasGreenCard = BuildQuickActionItems("green").Count > 0;
-        var hasReminder = BuildQuickActionItems("custom").Count > 0;
-        var hasMaintenance = BuildQuickActionItems("maintenance").Count > 0;
-        var hasRecord = BuildQuickActionItems("record").Count > 0;
-        var hasMissingGreenCard = HasAnyMissingGreenCard();
         var canUseDataActions = isLoaded && !HasPendingEdits;
 
         return TrayActionsDialogViewModel.CreateDefault() with
         {
-            CanShowDashboard = canNavigate,
-            CanShowUpcomingOverview = canNavigate,
-            CanShowOverdueOverview = canNavigate,
-            CanOpenNearestTechnical = canNavigate && hasTechnical,
-            CanOpenNearestGreenCard = canNavigate && hasGreenCard,
-            CanOpenNearestReminder = canNavigate && hasReminder,
-            CanOpenNearestMaintenance = canNavigate && hasMaintenance,
-            CanOpenNearestRecord = canNavigate && hasRecord,
-            CanReviewTechnical = canNavigate && hasTechnical,
-            CanReviewGreenCards = canNavigate && (hasGreenCard || hasMissingGreenCard),
-            CanReviewReminders = canNavigate && hasReminder,
-            CanReviewMaintenance = canNavigate && hasMaintenance,
-            CanReviewRecords = canNavigate && hasRecord,
+            CanShowDashboard = CanUseWorkspaceNavigation,
+            CanShowUpcomingOverview = CanUseWorkspaceNavigation,
+            CanShowOverdueOverview = CanUseWorkspaceNavigation,
+            CanOpenNearestTechnical = CanOpenNearestTechnicalQuickAction,
+            CanOpenNearestGreenCard = CanOpenNearestGreenCardQuickAction,
+            CanOpenNearestReminder = CanOpenNearestReminderQuickAction,
+            CanOpenNearestMaintenance = CanOpenNearestMaintenanceQuickAction,
+            CanOpenNearestRecord = CanOpenNearestRecordQuickAction,
+            CanReviewTechnical = CanReviewTechnicalQuickAction,
+            CanReviewGreenCards = CanReviewGreenCardsQuickAction,
+            CanReviewReminders = CanReviewRemindersQuickAction,
+            CanReviewMaintenance = CanReviewMaintenanceQuickAction,
+            CanReviewRecords = CanReviewRecordsQuickAction,
             CanOpenPrintableReport = canUseDataActions,
             CanExportBackup = canUseDataActions,
             CanImportBackup = canUseDataActions,
