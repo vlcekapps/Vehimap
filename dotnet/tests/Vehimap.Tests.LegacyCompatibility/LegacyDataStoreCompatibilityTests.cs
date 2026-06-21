@@ -92,4 +92,71 @@ public sealed class LegacyDataStoreCompatibilityTests
             }
         }
     }
+
+    [Fact]
+    public async Task Restore_creates_import_backup_with_current_files_and_attachments()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-import-backup-" + Guid.NewGuid());
+        var dataRoot = new Vehimap.Application.Abstractions.VehimapDataRoot(tempRoot, Path.Combine(tempRoot, "data"), true);
+        var store = new LegacyVehimapDataStore();
+        var backupService = new LegacyBackupService();
+
+        var currentDataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_old", "Puvodni", "Osobni vozidla", "", "Skoda 100", "ABC1234", "1975", "35", "", "05/2025", "", "")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_old", "veh_old", "Doklad", "Stary TP", "", "", "", "", VehicleRecordAttachmentMode.Managed, "attachments/veh_old/old.pdf", "")
+            ]
+        };
+
+        var importedDataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_new", "Importovane", "Osobni vozidla", "", "Skoda 120", "DEF5678", "1985", "40", "", "06/2026", "", "")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_new", "veh_new", "Doklad", "Novy TP", "", "", "", "", VehicleRecordAttachmentMode.Managed, "attachments/veh_new/imported.pdf", "")
+            ]
+        };
+
+        try
+        {
+            await store.SaveAsync(dataRoot, currentDataSet);
+            Directory.CreateDirectory(Path.Combine(dataRoot.DataPath, "attachments", "veh_old"));
+            await File.WriteAllBytesAsync(Path.Combine(dataRoot.DataPath, "attachments", "veh_old", "old.pdf"), [10, 11]);
+
+            var bundle = new VehimapBackupBundle(
+                importedDataSet,
+                [new ManagedAttachment("attachments/veh_new/imported.pdf", [20, 21])]);
+
+            await backupService.RestoreAsync(dataRoot, bundle);
+            var restored = await store.LoadAsync(dataRoot);
+
+            var importBackupRoot = Path.Combine(dataRoot.DataPath, "import-backups");
+            var importBackupDirectory = Assert.Single(Directory.GetDirectories(importBackupRoot));
+            var backedUpVehicles = await File.ReadAllTextAsync(Path.Combine(importBackupDirectory, "vehicles.tsv"));
+            var backedUpAttachment = await File.ReadAllBytesAsync(Path.Combine(importBackupDirectory, "attachments", "veh_old", "old.pdf"));
+            var restoredAttachment = await File.ReadAllBytesAsync(Path.Combine(dataRoot.DataPath, "attachments", "veh_new", "imported.pdf"));
+
+            Assert.Contains("Puvodni", backedUpVehicles, StringComparison.Ordinal);
+            Assert.Equal([10, 11], backedUpAttachment);
+            Assert.Single(restored.Vehicles);
+            Assert.Equal("Importovane", restored.Vehicles[0].Name);
+            Assert.False(File.Exists(Path.Combine(dataRoot.DataPath, "attachments", "veh_old", "old.pdf")));
+            Assert.Equal([20, 21], restoredAttachment);
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
 }

@@ -268,6 +268,7 @@ V horním menu najdete tyto části:
 - nastavení upozornění a chování aplikace se ukládá do souboru `data/settings.ini`
 - automatické zálohy se ukládají do složky `data/auto-backups`
 - při importu se původní soubory před přepsáním automaticky odloží do `data/import-backups`
+- v C# Avalonia větvi se při obnově zálohy do `data/import-backups/<čas>` odkládají i spravované přílohy, takže import lze ručně vrátit i po přepsání `data/attachments`
 - oba soubory jsou ve složce `data` vedle aplikace
 - Vehimap zapisuje vozidla ve formátu `# Vehimap data v4`
 - historie používá hlavičku `# Vehimap history v1`

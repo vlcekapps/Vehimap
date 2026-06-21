@@ -54,6 +54,8 @@ public sealed class LegacyBackupService : IBackupService
 
     public async Task RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
     {
+        await BackupCurrentFilesBeforeRestoreAsync(dataRoot, cancellationToken).ConfigureAwait(false);
+
         var dataStore = new LegacyVehimapDataStore();
         await dataStore.SaveAsync(dataRoot, backupBundle.Data, cancellationToken).ConfigureAwait(false);
 
@@ -73,6 +75,80 @@ public sealed class LegacyBackupService : IBackupService
             }
 
             await File.WriteAllBytesAsync(targetPath, attachment.Content, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private static Task BackupCurrentFilesBeforeRestoreAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (!Directory.Exists(dataRoot.DataPath))
+        {
+            return Task.CompletedTask;
+        }
+
+        var backupDirectory = CreateImportBackupDirectory(dataRoot);
+        foreach (var fileName in LegacyDataFileNames)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var sourcePath = LegacyVehimapDataStore.GetPath(dataRoot, fileName);
+            if (!File.Exists(sourcePath))
+            {
+                continue;
+            }
+
+            File.Copy(sourcePath, Path.Combine(backupDirectory, fileName), overwrite: true);
+        }
+
+        var attachmentsRoot = LegacyVehimapDataStore.GetAttachmentsPath(dataRoot);
+        if (Directory.Exists(attachmentsRoot))
+        {
+            CopyDirectory(attachmentsRoot, Path.Combine(backupDirectory, LegacySectionSerialization.AttachmentsDirectoryName), cancellationToken);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private static string CreateImportBackupDirectory(VehimapDataRoot dataRoot)
+    {
+        var backupRoot = Path.Combine(dataRoot.DataPath, "import-backups");
+        Directory.CreateDirectory(backupRoot);
+
+        var baseName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        var candidate = Path.Combine(backupRoot, baseName);
+        for (var suffix = 2; Directory.Exists(candidate); suffix++)
+        {
+            candidate = Path.Combine(backupRoot, $"{baseName}-{suffix}");
+        }
+
+        Directory.CreateDirectory(candidate);
+        return candidate;
+    }
+
+    private static void CopyDirectory(string sourceDirectory, string targetDirectory, CancellationToken cancellationToken)
+    {
+        foreach (var directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var relativePath = Path.GetRelativePath(sourceDirectory, directory);
+            Directory.CreateDirectory(Path.Combine(targetDirectory, relativePath));
+        }
+
+        foreach (var file in Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var relativePath = Path.GetRelativePath(sourceDirectory, file);
+            var targetPath = Path.Combine(targetDirectory, relativePath);
+            var targetParent = Path.GetDirectoryName(targetPath);
+            if (!string.IsNullOrWhiteSpace(targetParent))
+            {
+                Directory.CreateDirectory(targetParent);
+            }
+
+            File.Copy(file, targetPath, overwrite: true);
         }
     }
 
@@ -101,4 +177,16 @@ public sealed class LegacyBackupService : IBackupService
 
         return items;
     }
+
+    private static readonly string[] LegacyDataFileNames =
+    [
+        LegacySectionSerialization.VehiclesFileName,
+        LegacySectionSerialization.HistoryFileName,
+        LegacySectionSerialization.FuelFileName,
+        LegacySectionSerialization.RecordsFileName,
+        LegacySectionSerialization.MetaFileName,
+        LegacySectionSerialization.RemindersFileName,
+        LegacySectionSerialization.MaintenanceFileName,
+        LegacySectionSerialization.SettingsFileName
+    ];
 }
