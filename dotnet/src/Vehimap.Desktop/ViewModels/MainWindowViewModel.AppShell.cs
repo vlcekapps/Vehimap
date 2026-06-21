@@ -28,8 +28,18 @@ public sealed partial class MainWindowViewModel
             return "Export se nepodařilo připravit, protože nejsou načtená data.";
         }
 
-        await _session.ExportBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
+        var result = await _session.ExportBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
         ShellStatus = $"Záloha byla uložena do {backupPath}.";
+        if (result.IncludedManagedAttachmentCount > 0)
+        {
+            ShellStatus += $" Spravovaných příloh v záloze: {result.IncludedManagedAttachmentCount}.";
+        }
+
+        if (result.MissingManagedAttachmentCount > 0)
+        {
+            ShellStatus += $" Přeskočených chybějících spravovaných příloh: {result.MissingManagedAttachmentCount}.";
+        }
+
         return ShellStatus;
     }
 

@@ -66,7 +66,8 @@ public sealed class LegacyDataStoreCompatibilityTests
             ],
             Records =
             [
-                new VehicleRecord("rec_1", "veh_1", "Doklad", "TP", "MDČR", "", "", "", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/tp.pdf", "")
+                new VehicleRecord("rec_1", "veh_1", "Doklad", "TP", "MDČR", "", "", "", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/tp.pdf", ""),
+                new VehicleRecord("rec_2", "veh_1", "Doklad", "Chybějící příloha", "", "", "", "", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/chybi.pdf", "")
             ]
         };
 
@@ -75,15 +76,18 @@ public sealed class LegacyDataStoreCompatibilityTests
 
         try
         {
-            await backupService.ExportAsync(backupPath, dataRoot, dataSet);
+            var exportResult = await backupService.ExportAsync(backupPath, dataRoot, dataSet);
             var imported = await backupService.ImportAsync(backupPath);
             var restoreResult = await backupService.RestoreAsync(restoreRoot, imported);
             var restored = await store.LoadAsync(restoreRoot);
 
+            Assert.Equal(backupPath, exportResult.BackupPath);
+            Assert.Equal(1, exportResult.IncludedManagedAttachmentCount);
+            Assert.Equal(1, exportResult.MissingManagedAttachmentCount);
             Assert.Single(imported.Attachments);
             Assert.Null(restoreResult.PreRestoreBackupPath);
             Assert.Equal(1, restoreResult.RestoredAttachmentCount);
-            Assert.Single(restored.Records);
+            Assert.Equal(2, restored.Records.Count);
             Assert.True(File.Exists(Path.Combine(restoreRoot.DataPath, "attachments", "veh_1", "tp.pdf")));
         }
         finally

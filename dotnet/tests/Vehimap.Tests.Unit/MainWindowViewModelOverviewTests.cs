@@ -390,7 +390,8 @@ public sealed class MainWindowViewModelOverviewTests
 
     private sealed class StubBackupService : IBackupService
     {
-        public Task ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<BackupExportResult> ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default) =>
+            Task.FromResult(new BackupExportResult(backupPath, 0, 0));
 
         public Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default) =>
             Task.FromResult(new VehimapBackupBundle(new VehimapDataSet(), []));

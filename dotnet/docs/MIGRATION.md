@@ -23,7 +23,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - desktop shell v Avalonia
 - portable/system data root locator
 - prime cteni a zapis soucasnych TSV/INI souboru
-- import/export `.vehimapbak` vcetne spravovanych priloh
+- import/export `.vehimapbak` vcetne spravovanych priloh a exportni hlasky s poctem zahrnutych i preskocenych chybejicich managed souboru
 - prvni C# audit engine nad legacy daty
 - prvni C# nakladovy souhrn vcetne `Cena / km` a srovnani proti stejne dlouhemu obdobi loni
 - klavesove dotazeni nakladoveho workspace: `Ctrl+P` cte rozpad vybraneho vozidla, `Ctrl+O` nebo `Enter` otevre vozidlo a `Ctrl+U` / `F2` otevre editor vozidla

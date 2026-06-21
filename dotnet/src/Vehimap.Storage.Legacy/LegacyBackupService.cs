@@ -8,7 +8,7 @@ namespace Vehimap.Storage.Legacy;
 
 public sealed class LegacyBackupService : IBackupService
 {
-    public async Task ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
+    public async Task<BackupExportResult> ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
     {
         var attachments = await CollectManagedAttachmentsAsync(dataRoot, dataSet, cancellationToken).ConfigureAwait(false);
         var payload = new LegacyBackupPayload(
@@ -20,7 +20,7 @@ public sealed class LegacyBackupService : IBackupService
             LegacySectionSerialization.SerializeVehicleMeta(dataSet.VehicleMetaEntries),
             LegacySectionSerialization.SerializeReminders(dataSet.Reminders),
             LegacySectionSerialization.SerializeMaintenancePlans(dataSet.MaintenancePlans),
-            LegacySectionSerialization.SerializeAttachmentsSection(attachments));
+            LegacySectionSerialization.SerializeAttachmentsSection(attachments.Items));
 
         var content = LegacyBackupSerialization.Build(payload);
         var directory = Path.GetDirectoryName(backupPath);
@@ -30,6 +30,7 @@ public sealed class LegacyBackupService : IBackupService
         }
 
         await File.WriteAllTextAsync(backupPath, content, new UTF8Encoding(true), cancellationToken).ConfigureAwait(false);
+        return new BackupExportResult(backupPath, attachments.Items.Count, attachments.MissingCount);
     }
 
     public async Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
@@ -157,10 +158,11 @@ public sealed class LegacyBackupService : IBackupService
         }
     }
 
-    private static async Task<List<ManagedAttachment>> CollectManagedAttachmentsAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken)
+    private static async Task<ManagedAttachmentCollection> CollectManagedAttachmentsAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken)
     {
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var items = new List<ManagedAttachment>();
+        var missingCount = 0;
 
         foreach (var record in dataSet.Records.Where(record => record.AttachmentMode == VehicleRecordAttachmentMode.Managed))
         {
@@ -173,6 +175,7 @@ public sealed class LegacyBackupService : IBackupService
             var absolutePath = LegacySectionSerialization.ResolveManagedAttachmentPath(dataRoot.DataPath, relativePath);
             if (!File.Exists(absolutePath))
             {
+                missingCount++;
                 continue;
             }
 
@@ -180,7 +183,7 @@ public sealed class LegacyBackupService : IBackupService
             items.Add(new ManagedAttachment(relativePath, content));
         }
 
-        return items;
+        return new ManagedAttachmentCollection(items, missingCount);
     }
 
     private static readonly string[] LegacyDataFileNames =
@@ -194,4 +197,8 @@ public sealed class LegacyBackupService : IBackupService
         LegacySectionSerialization.MaintenanceFileName,
         LegacySectionSerialization.SettingsFileName
     ];
+
+    private sealed record ManagedAttachmentCollection(
+        List<ManagedAttachment> Items,
+        int MissingCount);
 }

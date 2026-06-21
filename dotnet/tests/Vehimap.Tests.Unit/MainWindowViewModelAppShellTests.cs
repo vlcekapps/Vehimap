@@ -154,13 +154,18 @@ public sealed class MainWindowViewModelAppShellTests
                 new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
             ]
         };
-        var backupService = new StubBackupService();
+        var backupService = new StubBackupService
+        {
+            ExportResult = new BackupExportResult(string.Empty, 2, 1)
+        };
         var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet), backupService: backupService);
 
         var status = await viewModel.ExportBackupAsync(@"C:\backups\vehimap.vehimapbak");
 
         Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.ExportedPath);
         Assert.Contains("Záloha byla uložena", status);
+        Assert.Contains("Spravovaných příloh v záloze: 2", status);
+        Assert.Contains("Přeskočených chybějících spravovaných příloh: 1", status);
         Assert.Equal(status, viewModel.ShellStatus);
     }
 
@@ -437,10 +442,12 @@ public sealed class MainWindowViewModelAppShellTests
         public BackupRestoreResult RestoreResult { get; set; } = new(null, 0);
         public Action<VehimapBackupBundle>? RestoreCallback { get; set; }
 
-        public Task ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
+        public BackupExportResult ExportResult { get; set; } = new(string.Empty, 0, 0);
+
+        public Task<BackupExportResult> ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
             ExportedPath = backupPath;
-            return Task.CompletedTask;
+            return Task.FromResult(ExportResult with { BackupPath = backupPath });
         }
 
         public Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)

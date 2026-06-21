@@ -51,6 +51,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - spravované přílohy dokladů s volbou mezi `Externí cestou` a `Spravovanou kopií`
 - interní složka `data/attachments/<id vozidla>/` pro portable uložení spravovaných příloh
 - rozšířený export a import `.vehimapbak`, který umí přenést i spravované přílohy dokladů
+- C# export `.vehimapbak` nově vrací do shellu počty zahrnutých spravovaných příloh a přeskočených chybějících spravovaných příloh, takže ruční i automatická záloha už tyto stavy nezamlčí
 - C# legacy restore před obnovou zálohy odkládá aktuální TSV/INI soubory i `data/attachments` do `data/import-backups/<čas>` stejně jako AHK větev a shell po importu hlásí konkrétní cestu i počet obnovených příloh
 - v Avalonia větvi samostatná okna pro `Časovou osu`, `Globální hledání`, `Náklady napříč vozidly`, `Blížící se termíny` a `Propadlé termíny`, postavená nad stejnými workspace views jako hlavní karty
 - C# desktop větev umí odstranit vybrané vozidlo včetně potvrzení, navázaných evidencí a spravovaných příloh

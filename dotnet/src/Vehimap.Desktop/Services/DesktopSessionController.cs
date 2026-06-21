@@ -122,14 +122,14 @@ internal sealed class DesktopSessionController
         await _legacyDataStore.SaveAsync(DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task ExportBackupAsync(string backupPath, CancellationToken cancellationToken = default)
+    public async Task<BackupExportResult> ExportBackupAsync(string backupPath, CancellationToken cancellationToken = default)
     {
         if (DataRoot is null)
         {
-            return;
+            return new BackupExportResult(backupPath, 0, 0);
         }
 
-        await _backupService.ExportAsync(backupPath, DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
+        return await _backupService.ExportAsync(backupPath, DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<BackupRestoreResult> RestoreBackupAsync(string backupPath, CancellationToken cancellationToken = default)
@@ -255,12 +255,23 @@ internal sealed class DesktopSessionController
             var now = DateTime.Now;
             var backupPath = GetAutomaticBackupPath(now);
             Directory.CreateDirectory(Path.GetDirectoryName(backupPath)!);
-            await _backupService.ExportAsync(backupPath, DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
+            var exportResult = await _backupService.ExportAsync(backupPath, DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
             DataSet.Settings.SetValue("backups", "last_automatic_backup_stamp", now.ToString("yyyyMMddHHmmss"));
             DataSet.Settings.SetValue("backups", "last_automatic_backup_path", backupPath);
             await PersistAsync(cancellationToken).ConfigureAwait(false);
             TrimAutomaticBackupFiles();
-            return new AutomaticBackupResult(true, false, backupPath, $"Automatická záloha byla vytvořena do {backupPath}.");
+            var message = $"Automatická záloha byla vytvořena do {backupPath}.";
+            if (exportResult.IncludedManagedAttachmentCount > 0)
+            {
+                message += $" Spravovaných příloh v záloze: {exportResult.IncludedManagedAttachmentCount}.";
+            }
+
+            if (exportResult.MissingManagedAttachmentCount > 0)
+            {
+                message += $" Přeskočených chybějících spravovaných příloh: {exportResult.MissingManagedAttachmentCount}.";
+            }
+
+            return new AutomaticBackupResult(true, false, backupPath, message);
         }
         catch (Exception ex)
         {

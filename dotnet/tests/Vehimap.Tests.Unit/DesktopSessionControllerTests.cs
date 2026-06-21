@@ -360,7 +360,10 @@ public sealed class DesktopSessionControllerTests
                 new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
             ]
         };
-        var backupService = new StubBackupService();
+        var backupService = new StubBackupService
+        {
+            ExportResult = new BackupExportResult(string.Empty, 3, 1)
+        };
         var dataStore = new StubLegacyDataStore(dataSet);
         var session = CreateSessionController(dataRoot, dataStore, backupService: backupService);
         await session.LoadAsync(dataRoot.AppBasePath);
@@ -370,6 +373,9 @@ public sealed class DesktopSessionControllerTests
         Assert.True(result.Created);
         Assert.False(result.IsError);
         Assert.Equal(result.BackupPath, backupService.ExportedPath);
+        Assert.Contains("Spravovaných příloh v záloze", result.Message);
+        Assert.Contains("3", result.Message);
+        Assert.Contains("Přeskočených chybějících spravovaných příloh", result.Message);
         Assert.False(string.IsNullOrWhiteSpace(dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_stamp")));
         Assert.Equal(result.BackupPath, dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_path"));
     }
@@ -550,11 +556,14 @@ public sealed class DesktopSessionControllerTests
 
         public BackupRestoreResult RestoreResult { get; set; } = new(null, 0);
 
-        public Task ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
+        public BackupExportResult ExportResult { get; set; } = new(string.Empty, 0, 0);
+
+        public async Task<BackupExportResult> ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
             ExportedPath = backupPath;
             Directory.CreateDirectory(Path.GetDirectoryName(backupPath)!);
-            return File.WriteAllTextAsync(backupPath, "backup", cancellationToken);
+            await File.WriteAllTextAsync(backupPath, "backup", cancellationToken);
+            return ExportResult with { BackupPath = backupPath };
         }
 
         public Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
