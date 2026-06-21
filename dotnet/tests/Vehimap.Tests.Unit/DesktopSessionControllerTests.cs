@@ -10,6 +10,20 @@ namespace Vehimap.Tests.Unit;
 
 public sealed class DesktopSessionControllerTests
 {
+    private static readonly string[] NotificationHistoryKeys =
+    [
+        "last_alert_day",
+        "last_alert_signature",
+        "last_green_alert_day",
+        "last_green_alert_signature",
+        "last_reminder_alert_day",
+        "last_reminder_alert_signature",
+        "last_maintenance_alert_day",
+        "last_maintenance_alert_signature",
+        "last_desktop_alert_day",
+        "last_desktop_alert_signature"
+    ];
+
     [Fact]
     public async Task Load_async_populates_state_meta_audit_and_settings()
     {
@@ -156,6 +170,89 @@ public sealed class DesktopSessionControllerTests
         await session.ApplySupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(30, 30, 31, 1000, true, false, false, false, 1, 30));
 
         Assert.True(autostartService.LastSetEnabled);
+    }
+
+    [Fact]
+    public async Task Should_show_and_remember_due_notification_persists_daily_signature()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var dataStore = new StubLegacyDataStore(dataSet);
+        var session = CreateSessionController(dataRoot, dataStore);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        var firstResult = await session.ShouldShowAndRememberDueNotificationAsync("timeline|veh_1|technical|20260402", new DateOnly(2026, 4, 2));
+        var duplicateResult = await session.ShouldShowAndRememberDueNotificationAsync("timeline|veh_1|technical|20260402", new DateOnly(2026, 4, 2));
+        var nextDayResult = await session.ShouldShowAndRememberDueNotificationAsync("timeline|veh_1|technical|20260402", new DateOnly(2026, 4, 3));
+
+        Assert.True(firstResult);
+        Assert.False(duplicateResult);
+        Assert.True(nextDayResult);
+        Assert.Equal("20260403", dataStore.CurrentDataSet.Settings.GetValue("notifications", "last_desktop_alert_day"));
+        Assert.Equal("timeline|veh_1|technical|20260402", dataStore.CurrentDataSet.Settings.GetValue("notifications", "last_desktop_alert_signature"));
+    }
+
+    [Fact]
+    public async Task Apply_supported_settings_resets_notification_history()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        SeedNotificationHistory(dataSet.Settings);
+        var dataStore = new StubLegacyDataStore(dataSet);
+        var session = CreateSessionController(dataRoot, dataStore);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        await session.ApplySupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(45, 21, 14, 1500, false, true, false, false, 1, 30));
+
+        AssertNotificationHistoryCleared(dataStore.CurrentDataSet.Settings);
+    }
+
+    [Fact]
+    public async Task Restore_backup_resets_imported_notification_history_before_restore()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var currentData = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var importedData = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_2", "Bozena", "Osobni vozidla", "Veteran", "Skoda 100", "", "1974", "35", "", "09/2026", "05/2025", "10/2026")
+            ]
+        };
+        SeedNotificationHistory(importedData.Settings);
+        var backupService = new StubBackupService
+        {
+            ImportBundle = new VehimapBackupBundle(importedData, [])
+        };
+        var session = CreateSessionController(dataRoot, new StubLegacyDataStore(currentData), backupService: backupService);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        await session.RestoreBackupAsync(@"C:\backups\vehimap.vehimapbak");
+
+        Assert.NotNull(backupService.RestoredBundle);
+        AssertNotificationHistoryCleared(backupService.RestoredBundle.Data.Settings);
     }
 
     [Fact]
@@ -347,6 +444,22 @@ public sealed class DesktopSessionControllerTests
                 new UpdateInstallResult(false, "Bez nove verze.", null)));
     }
 
+    private static void SeedNotificationHistory(VehimapSettings settings)
+    {
+        foreach (var key in NotificationHistoryKeys)
+        {
+            settings.SetValue("notifications", key, "seed");
+        }
+    }
+
+    private static void AssertNotificationHistoryCleared(VehimapSettings settings)
+    {
+        foreach (var key in NotificationHistoryKeys)
+        {
+            Assert.Equal(string.Empty, settings.GetValue("notifications", key));
+        }
+    }
+
     private sealed class StubDataRootLocator : IDataRootLocator
     {
         private readonly VehimapDataRoot _dataRoot;
@@ -431,6 +544,12 @@ public sealed class DesktopSessionControllerTests
     {
         public string? ExportedPath { get; private set; }
 
+        public VehimapBackupBundle ImportBundle { get; set; } = new(new VehimapDataSet(), []);
+
+        public VehimapBackupBundle? RestoredBundle { get; private set; }
+
+        public BackupRestoreResult RestoreResult { get; set; } = new(null, 0);
+
         public Task ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
             ExportedPath = backupPath;
@@ -439,10 +558,13 @@ public sealed class DesktopSessionControllerTests
         }
 
         public Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
-            => Task.FromResult(new VehimapBackupBundle(new VehimapDataSet(), []));
+            => Task.FromResult(ImportBundle);
 
         public Task<BackupRestoreResult> RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
-            => Task.FromResult(new BackupRestoreResult(null, 0));
+        {
+            RestoredBundle = backupBundle;
+            return Task.FromResult(RestoreResult);
+        }
     }
 
     private sealed class StubBuildInfoProvider : IAppBuildInfoProvider

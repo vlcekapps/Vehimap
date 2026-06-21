@@ -191,7 +191,9 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             }
         }
 
-        if (DesktopBackgroundRuntimePolicy.CanShowDueNotification(background.HasNotification, background.NotificationKey, _lastNotificationKey))
+        if (!hasPendingEdits
+            && DesktopBackgroundRuntimePolicy.CanShowDueNotification(background.HasNotification, background.NotificationKey, _lastNotificationKey)
+            && await _shell.ShouldShowAndRememberDueNotificationAsync(background.NotificationKey).ConfigureAwait(false))
         {
             _lastNotificationKey = background.NotificationKey;
             await _notificationService.ShowAsync(background.NotificationTitle, background.NotificationMessage).ConfigureAwait(false);

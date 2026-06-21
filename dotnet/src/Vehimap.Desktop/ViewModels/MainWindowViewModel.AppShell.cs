@@ -135,6 +135,13 @@ public sealed partial class MainWindowViewModel
         return result;
     }
 
+    internal Task<bool> ShouldShowAndRememberDueNotificationAsync(string notificationKey, CancellationToken cancellationToken = default)
+    {
+        return _session.IsLoaded
+            ? _session.ShouldShowAndRememberDueNotificationAsync(notificationKey, DateOnly.FromDateTime(DateTime.Today), cancellationToken)
+            : Task.FromResult(false);
+    }
+
     internal void ReloadForBackgroundMonitoring() =>
         Load(SelectedVehicle?.Id, SelectedVehicleTabIndex, applyLaunchTabPreference: false);
 

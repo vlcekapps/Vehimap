@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -9,6 +10,24 @@ namespace Vehimap.Desktop.Services;
 
 internal sealed class DesktopSessionController
 {
+    private const string NotificationsSection = "notifications";
+    private const string DesktopLastAlertDayKey = "last_desktop_alert_day";
+    private const string DesktopLastAlertSignatureKey = "last_desktop_alert_signature";
+
+    private static readonly string[] NotificationHistoryKeys =
+    [
+        "last_alert_day",
+        "last_alert_signature",
+        "last_green_alert_day",
+        "last_green_alert_signature",
+        "last_reminder_alert_day",
+        "last_reminder_alert_signature",
+        "last_maintenance_alert_day",
+        "last_maintenance_alert_signature",
+        DesktopLastAlertDayKey,
+        DesktopLastAlertSignatureKey
+    ];
+
     private readonly LegacyVehimapBootstrapper _bootstrapper;
     private readonly ILegacyDataStore _legacyDataStore;
     private readonly IAuditService _auditService;
@@ -121,6 +140,7 @@ internal sealed class DesktopSessionController
         }
 
         var bundle = await _backupService.ImportAsync(backupPath, cancellationToken).ConfigureAwait(false);
+        ResetNotificationHistory(bundle.Data.Settings);
         return await _backupService.RestoreAsync(DataRoot, bundle, cancellationToken).ConfigureAwait(false);
     }
 
@@ -137,8 +157,31 @@ internal sealed class DesktopSessionController
     {
         await _autostartService.SetEnabledAsync(snapshot.RunAtStartup, cancellationToken).ConfigureAwait(false);
         _supportedSettingsService.Apply(DataSet.Settings, snapshot);
+        ResetNotificationHistory(DataSet.Settings);
         await PersistAsync(cancellationToken).ConfigureAwait(false);
         CurrentSupportedSettings = snapshot;
+    }
+
+    public async Task<bool> ShouldShowAndRememberDueNotificationAsync(string notificationKey, DateOnly today, CancellationToken cancellationToken = default)
+    {
+        if (DataRoot is null || string.IsNullOrWhiteSpace(notificationKey) || string.Equals(notificationKey, "none", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var todayKey = today.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+        var lastDay = DataSet.Settings.GetValue(NotificationsSection, DesktopLastAlertDayKey, string.Empty).Trim();
+        var lastSignature = DataSet.Settings.GetValue(NotificationsSection, DesktopLastAlertSignatureKey, string.Empty).Trim();
+        if (string.Equals(lastDay, todayKey, StringComparison.Ordinal)
+            && string.Equals(lastSignature, notificationKey, StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        DataSet.Settings.SetValue(NotificationsSection, DesktopLastAlertDayKey, todayKey);
+        DataSet.Settings.SetValue(NotificationsSection, DesktopLastAlertSignatureKey, notificationKey);
+        await PersistAsync(cancellationToken).ConfigureAwait(false);
+        return true;
     }
 
     public AppBuildInfo GetAppInfo() => _appBuildInfoProvider.GetCurrent();
@@ -260,7 +303,7 @@ internal sealed class DesktopSessionController
 
     private static string FormatAutomaticBackupStamp(string stamp)
     {
-        return DateTime.TryParseExact(stamp, "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out var parsed)
+        return DateTime.TryParseExact(stamp, "yyyyMMddHHmmss", null, DateTimeStyles.None, out var parsed)
             ? parsed.ToString("dd.MM.yyyy HH:mm")
             : "zatím nebyla vytvořena";
     }
@@ -273,7 +316,7 @@ internal sealed class DesktopSessionController
             return true;
         }
 
-        if (!DateTime.TryParseExact(lastStamp, "yyyyMMddHHmmss", null, System.Globalization.DateTimeStyles.None, out var lastBackup))
+        if (!DateTime.TryParseExact(lastStamp, "yyyyMMddHHmmss", null, DateTimeStyles.None, out var lastBackup))
         {
             return true;
         }
@@ -305,6 +348,14 @@ internal sealed class DesktopSessionController
             }
 
             files.RemoveAt(files.Count - 1);
+        }
+    }
+
+    private static void ResetNotificationHistory(VehimapSettings settings)
+    {
+        foreach (var key in NotificationHistoryKeys)
+        {
+            settings.SetValue(NotificationsSection, key, string.Empty);
         }
     }
 }
