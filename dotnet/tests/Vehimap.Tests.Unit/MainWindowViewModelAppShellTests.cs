@@ -236,7 +236,6 @@ public sealed class MainWindowViewModelAppShellTests
         var backupService = new StubBackupService
         {
             ImportBundle = new VehimapBackupBundle(importedData, []),
-            RestoreCallback = bundle => dataStore.CurrentDataSet = bundle.Data,
             RestoreResult = new BackupRestoreResult(@"C:\vehimap-test\data\import-backups\2026-04-02_10-00-00", 2)
         };
         var viewModel = CreateViewModel(dataRoot, dataStore, backupService: backupService);
@@ -245,6 +244,7 @@ public sealed class MainWindowViewModelAppShellTests
 
         Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.ImportedPath);
         Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.RestoredFromPath);
+        Assert.Same(dataSet, dataStore.CurrentDataSet);
         Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
         Assert.Contains("Data byla obnovena ze zálohy", status);
         Assert.Contains(@"C:\vehimap-test\data\import-backups\2026-04-02_10-00-00", status);

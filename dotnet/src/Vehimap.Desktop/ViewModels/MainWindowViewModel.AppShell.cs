@@ -60,7 +60,7 @@ public sealed partial class MainWindowViewModel
         try
         {
             var restoreResult = await _session.RestoreBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
-            Load(applyLaunchTabPreference: false);
+            RefreshShellFromSessionState(applyLaunchTabPreference: false);
             ShellStatus = $"Data byla obnovena ze zálohy {backupPath}.";
             if (!string.IsNullOrWhiteSpace(restoreResult.PreRestoreBackupPath))
             {

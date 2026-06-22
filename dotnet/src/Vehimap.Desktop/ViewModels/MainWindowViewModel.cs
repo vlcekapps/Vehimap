@@ -1197,6 +1197,85 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
     }
 
+    private void RefreshShellFromSessionState(string? preferredVehicleId = null, int? preferredTabIndex = null, bool applyLaunchTabPreference = false)
+    {
+        if (_dataRoot is null)
+        {
+            return;
+        }
+
+        var supportedSettings = _session.ReadSupportedSettings();
+        ApplyCostPeriodPreferences();
+        var costSummary = BuildSelectedCostSummary();
+        _currentCostSummary = costSummary;
+
+        LoadError = string.Empty;
+        DataMode = _dataRoot.IsPortable ? "Portable data vedle aplikace" : "Systémová datová složka";
+        DataPath = _dataRoot.DataPath;
+        OnPropertyChanged(nameof(CanUseDataActions));
+        OnPropertyChanged(nameof(CanOpenDataFolder));
+        OnPropertyChanged(nameof(CanCreateAutomaticBackupNow));
+        OnPropertyChanged(nameof(CanOpenAutomaticBackupFolder));
+        DashboardWorkspace.SyncShowDashboardOnLaunch(supportedSettings.ShowDashboardOnLaunch);
+        VehicleCount = _dataSet.Vehicles.Count;
+        HistoryCount = _dataSet.HistoryEntries.Count;
+        FuelCount = _dataSet.FuelEntries.Count;
+        RecordsCount = _dataSet.Records.Count;
+        RemindersCount = _dataSet.Reminders.Count;
+        MaintenanceCount = _dataSet.MaintenancePlans.Count;
+        AuditCount = _auditItems.Count;
+        AuditWorkspace.SetAuditSummary(_projectionService.BuildAuditSummary(_auditItems));
+        CostWorkspace.CostSummary = _projectionService.BuildCostSummary(costSummary);
+        CostWorkspace.CostComparison = _projectionService.BuildCostComparison(costSummary);
+        DashboardWorkspace.NotifyDashboardSummariesChanged();
+
+        ApplyVehicleListFilterPreferences();
+        ApplyOverviewPreferences();
+        ApplyTimelinePreferences();
+        ApplyEvidenceSortPreferences();
+        ApplyWorkspaceSortPreferences();
+        RefreshVehicleList(preferredVehicleId);
+
+        AuditItems.Clear();
+        foreach (var item in _projectionService.BuildAuditItems(_auditItems))
+        {
+            AuditItems.Add(item);
+        }
+
+        DashboardAuditItems.Clear();
+        foreach (var item in _projectionService.BuildDashboardAuditItems(_auditItems))
+        {
+            DashboardAuditItems.Add(item);
+        }
+
+        CostVehicles.Clear();
+        foreach (var row in _projectionService.BuildDashboardCostVehicles(costSummary))
+        {
+            CostVehicles.Add(row);
+        }
+
+        PopulateDashboardTimeline();
+        RefreshFleetOverviews();
+        RefreshGlobalSearch();
+        NotifyQuickActionAvailabilityChanged();
+        AuditWorkspace.RefreshVisibleAuditItems(preserveSelection: false);
+        CostWorkspace.RefreshVisibleCostVehicles(preserveSelection: false);
+        DashboardWorkspace.SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
+        ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
+        ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
+        ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
+        OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
+
+        if (applyLaunchTabPreference && supportedSettings.ShowDashboardOnLaunch && !supportedSettings.HideOnLaunch)
+        {
+            SelectedVehicleTabIndex = DashboardTabIndex;
+        }
+        else if (preferredTabIndex.HasValue && preferredTabIndex.Value >= DetailTabIndex && preferredTabIndex.Value <= OverdueOverviewTabIndex)
+        {
+            SelectedVehicleTabIndex = preferredTabIndex.Value;
+        }
+    }
+
     private void PopulateVehicleHistory(string vehicleId)
     {
         SelectedVehicleHistory.Clear();
