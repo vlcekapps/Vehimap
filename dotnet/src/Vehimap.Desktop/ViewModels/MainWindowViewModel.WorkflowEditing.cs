@@ -112,11 +112,13 @@ public sealed partial class MainWindowViewModel
             cost,
             (HistoryEditorNote ?? string.Empty).Trim());
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertHistoryEntry(updatedEntry);
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 HistoryTabIndex,
                 historyId: historyId,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => HistoryEditorStatus = status,
                 failureFocus: DesktopFocusTarget.HistoryEditorDate,
                 failurePrefix: "Historický záznam se nepodařilo uložit"))
@@ -147,10 +149,12 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         _dataSet.HistoryEntries.RemoveAll(item => string.Equals(item.Id, SelectedHistory.Id, StringComparison.Ordinal));
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 HistoryTabIndex,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => HistoryEditorStatus = status,
                 failureFocus: DesktopFocusTarget.HistoryList,
                 failurePrefix: "Historický záznam se nepodařilo odstranit"))
@@ -275,11 +279,13 @@ public sealed partial class MainWindowViewModel
             LegacyVehicleValueNormalization.NormalizeFuelType(FuelEditorFuelType),
             (FuelEditorNote ?? string.Empty).Trim());
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertFuelEntry(updatedEntry);
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 FuelTabIndex,
                 fuelId: fuelId,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => FuelEditorStatus = status,
                 failureFocus: DesktopFocusTarget.FuelEditorDate,
                 failurePrefix: "Tankování se nepodařilo uložit"))
@@ -310,10 +316,12 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         _dataSet.FuelEntries.RemoveAll(item => string.Equals(item.Id, SelectedFuel.Id, StringComparison.Ordinal));
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 FuelTabIndex,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => FuelEditorStatus = status,
                 failureFocus: DesktopFocusTarget.FuelList,
                 failurePrefix: "Tankování se nepodařilo odstranit"))
@@ -455,11 +463,13 @@ public sealed partial class MainWindowViewModel
             MaintenanceEditorIsActive,
             (MaintenanceEditorNote ?? string.Empty).Trim());
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertMaintenancePlan(updatedPlan);
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 MaintenanceTabIndex,
                 maintenanceId: maintenanceId,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => MaintenanceEditorStatus = status,
                 failureFocus: DesktopFocusTarget.MaintenanceEditorTitle,
                 failurePrefix: "Servisní plán se nepodařilo uložit"))
@@ -490,10 +500,12 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         _dataSet.MaintenancePlans.RemoveAll(item => string.Equals(item.Id, SelectedMaintenance.Id, StringComparison.Ordinal));
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 MaintenanceTabIndex,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => MaintenanceEditorStatus = status,
                 failureFocus: DesktopFocusTarget.MaintenanceList,
                 failurePrefix: "Servisní plán se nepodařilo odstranit"))
@@ -601,6 +613,7 @@ public sealed partial class MainWindowViewModel
             IsActive = true
         };
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertMaintenancePlan(updatedPlan);
 
         if (completion.AddHistory)
@@ -622,6 +635,7 @@ public sealed partial class MainWindowViewModel
                 updatedPlan.VehicleId,
                 MaintenanceTabIndex,
                 maintenanceId: updatedPlan.Id,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => MaintenanceEditorStatus = status,
                 failureFocus: DesktopFocusTarget.MaintenanceList,
                 failurePrefix: "Splnění servisního úkonu se nepodařilo uložit"))

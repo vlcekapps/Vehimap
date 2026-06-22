@@ -84,11 +84,7 @@ internal sealed class DesktopSessionController
         DataSet = result.DataSet;
         AuditItems = _auditService.BuildAudit(result.DataRoot, result.DataSet);
 
-        _metaByVehicleId.Clear();
-        foreach (var meta in result.DataSet.VehicleMetaEntries.GroupBy(item => item.VehicleId, StringComparer.Ordinal))
-        {
-            _metaByVehicleId[meta.Key] = meta.First();
-        }
+        RebuildMetaLookup();
 
         var costSummary = _costAnalysisService.BuildYearToDateSummary(result.DataSet, DateOnly.FromDateTime(DateTime.Today));
         bool? autostartEnabled = null;
@@ -120,6 +116,23 @@ internal sealed class DesktopSessionController
         }
 
         await _legacyDataStore.SaveAsync(DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
+    }
+
+    public void RestoreDataSet(VehimapDataSet dataSet)
+    {
+        DataSet = dataSet;
+        AuditItems = DataRoot is null ? [] : _auditService.BuildAudit(DataRoot, DataSet);
+        RebuildMetaLookup();
+        CurrentSupportedSettings = _supportedSettingsService.Read(DataSet.Settings, CurrentSupportedSettings.RunAtStartup);
+    }
+
+    private void RebuildMetaLookup()
+    {
+        _metaByVehicleId.Clear();
+        foreach (var meta in DataSet.VehicleMetaEntries.GroupBy(item => item.VehicleId, StringComparer.Ordinal))
+        {
+            _metaByVehicleId[meta.Key] = meta.First();
+        }
     }
 
     public async Task<BackupExportResult> ExportBackupAsync(string backupPath, CancellationToken cancellationToken = default)

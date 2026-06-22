@@ -60,6 +60,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - v editoru tankovani pouzivat AHK-kompatibilni rozbalovaci hodnoty pro typ paliva
 - pri ukladani evidencnich editoru validovat a normalizovat datumy, tachometr, litry, castky, intervaly udrzby, terminy pripominek a platnost dokladu podle legacy AHK pravidel s navratem fokusu na chybne pole
 - pri selhani zapisu evidencnich editoru ponechat rozpracovany editor otevreny, zapsat chybu do stavoveho textu editoru i shellu a vratit fokus na smysluplny prvek
+- pri selhani zapisu vratit session dataset na snapshot pred zmenou a mazat managed prilohy nebo slozku priloh vozidla az po uspesnem persistu
 - posunout opakovanou `pripominku` na dalsi termin tlacitkem `Dalsi termin` nebo zkratkou `Ctrl+Shift+N`
 - primo vytvaret, upravovat a mazat `plan udrzby`
 - v editoru `planu udrzby` vybrat beznou servisni sablonu, ktera predvyplni nazev ukonu, intervaly a poznamku

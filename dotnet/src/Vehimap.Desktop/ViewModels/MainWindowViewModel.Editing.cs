@@ -118,6 +118,7 @@ public sealed partial class MainWindowViewModel
             LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(ReminderEditorRepeatMode),
             (ReminderEditorNote ?? string.Empty).Trim());
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertReminder(updatedReminder);
         var wasNew = _editingReminderId is null;
 
@@ -125,6 +126,7 @@ public sealed partial class MainWindowViewModel
                 SelectedVehicle.Id,
                 ReminderTabIndex,
                 reminderId: reminderId,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => ReminderEditorStatus = status,
                 failureFocus: DesktopFocusTarget.ReminderEditorTitle,
                 failurePrefix: "Připomínku se nepodařilo uložit"))
@@ -154,10 +156,12 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         _dataSet.Reminders.RemoveAll(item => string.Equals(item.Id, SelectedReminder.Id, StringComparison.Ordinal));
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 ReminderTabIndex,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => ReminderEditorStatus = status,
                 failureFocus: DesktopFocusTarget.ReminderList,
                 failurePrefix: "Připomínku se nepodařilo odstranit"))
@@ -186,12 +190,14 @@ public sealed partial class MainWindowViewModel
 
         var nextDueDateText = FormatReminderDueDate(nextDueDate);
         var updatedReminder = reminder! with { DueDate = nextDueDateText };
+        var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertReminder(updatedReminder);
 
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 ReminderTabIndex,
                 reminderId: updatedReminder.Id,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => ReminderEditorStatus = status,
                 failureFocus: DesktopFocusTarget.ReminderList,
                 failurePrefix: "Posun připomínky se nepodařilo uložit"))
@@ -340,6 +346,7 @@ public sealed partial class MainWindowViewModel
         var recordId = _editingRecordId ?? GenerateLegacyId(_dataSet.Records.Select(item => item.Id));
         var existingRecord = _dataSet.Records.FirstOrDefault(item => string.Equals(item.Id, recordId, StringComparison.Ordinal));
         var attachmentMode = IsRecordEditorManaged ? VehicleRecordAttachmentMode.Managed : VehicleRecordAttachmentMode.External;
+        var rollbackDataSet = CloneDataSet(_dataSet);
 
         string filePath;
         try
@@ -368,19 +375,26 @@ public sealed partial class MainWindowViewModel
             (RecordEditorNote ?? string.Empty).Trim());
 
         UpsertRecord(updatedRecord);
-        DeleteManagedAttachmentIfUnused(previousManagedPath);
+        var createdManagedPath = attachmentMode == VehicleRecordAttachmentMode.Managed
+            && !string.IsNullOrWhiteSpace(filePath)
+            && !string.Equals(NormalizeManagedRelativePath(filePath), NormalizeManagedRelativePath(previousManagedPath), StringComparison.OrdinalIgnoreCase)
+                ? filePath
+                : null;
 
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 RecordTabIndex,
                 recordId: recordId,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => RecordEditorStatus = status,
                 failureFocus: DesktopFocusTarget.RecordEditorTitle,
                 failurePrefix: "Doklad se nepodařilo uložit"))
         {
+            DeleteManagedAttachmentIfUnused(createdManagedPath);
             return;
         }
 
+        DeleteManagedAttachmentIfUnused(previousManagedPath);
         CancelRecordEditCore(clearStatus: false);
         RecordEditorStatus = existingRecord is null
             ? "Nový doklad byl uložen."
@@ -404,12 +418,14 @@ public sealed partial class MainWindowViewModel
         }
 
         var existingRecord = GetSelectedRecordModel();
+        var deletedManagedPath = existingRecord?.AttachmentMode == VehicleRecordAttachmentMode.Managed ? existingRecord.FilePath : null;
+        var rollbackDataSet = CloneDataSet(_dataSet);
         _dataSet.Records.RemoveAll(item => string.Equals(item.Id, SelectedRecord.Id, StringComparison.Ordinal));
-        DeleteManagedAttachmentIfUnused(existingRecord?.AttachmentMode == VehicleRecordAttachmentMode.Managed ? existingRecord.FilePath : null);
 
         if (!await PersistDataAndRestoreSelectionAsync(
                 SelectedVehicle.Id,
                 RecordTabIndex,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => RecordEditorStatus = status,
                 failureFocus: DesktopFocusTarget.RecordList,
                 failurePrefix: "Doklad se nepodařilo odstranit"))
@@ -418,6 +434,7 @@ public sealed partial class MainWindowViewModel
         }
 
         RecordEditorStatus = "Doklad byl odstraněn.";
+        DeleteManagedAttachmentIfUnused(deletedManagedPath);
         RequestFocus(DesktopFocusTarget.RecordList);
     }
 
@@ -540,8 +557,10 @@ public sealed partial class MainWindowViewModel
         string? reminderId = null,
         string? maintenanceId = null,
         string? recordId = null,
+        VehimapDataSet? rollbackDataSet = null,
         Action<string>? setFailureStatus = null,
         DesktopFocusTarget? failureFocus = null,
+        bool requireVehicleSelection = true,
         string failurePrefix = "Změny se nepodařilo uložit")
     {
         if (_dataRoot is null)
@@ -555,6 +574,11 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
+            if (rollbackDataSet is not null)
+            {
+                _session.RestoreDataSet(rollbackDataSet);
+            }
+
             var message = $"{failurePrefix}: {ex.Message}";
             setFailureStatus?.Invoke(message);
             ShellStatus = message;
@@ -571,7 +595,7 @@ public sealed partial class MainWindowViewModel
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
         if (SelectedVehicle is null)
         {
-            return false;
+            return !requireVehicleSelection;
         }
 
         SelectedVehicleTabIndex = tabIndex;
@@ -603,6 +627,35 @@ public sealed partial class MainWindowViewModel
         }
 
         return true;
+    }
+
+    private static VehimapDataSet CloneDataSet(VehimapDataSet source)
+    {
+        return new VehimapDataSet
+        {
+            Settings = CloneSettings(source.Settings),
+            Vehicles = [.. source.Vehicles],
+            HistoryEntries = [.. source.HistoryEntries],
+            FuelEntries = [.. source.FuelEntries],
+            Records = [.. source.Records],
+            VehicleMetaEntries = [.. source.VehicleMetaEntries],
+            Reminders = [.. source.Reminders],
+            MaintenancePlans = [.. source.MaintenancePlans]
+        };
+    }
+
+    private static VehimapSettings CloneSettings(VehimapSettings source)
+    {
+        var clone = new VehimapSettings();
+        foreach (var (section, values) in source.Sections)
+        {
+            foreach (var (key, value) in values)
+            {
+                clone.SetValue(section, key, value);
+            }
+        }
+
+        return clone;
     }
 
     private async Task<string> BuildRecordFilePathAsync(VehicleRecord? existingRecord, VehicleRecordAttachmentMode attachmentMode)

@@ -157,6 +157,100 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal(DesktopFocusTarget.VehicleEditorName, requestedTargets.Last());
     }
 
+    [Fact]
+    public async Task Save_record_command_removes_new_managed_copy_when_persist_fails()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+        var sourceFile = Path.Combine(_tempRoot, "pojistka.pdf");
+        await File.WriteAllTextAsync(sourceFile, "managed attachment content");
+
+        var dataStore = new MutableStubLegacyDataStore(BuildBaseDataSet(), cloneOnLoad: true)
+        {
+            SaveException = new IOException("records.tsv is locked.")
+        };
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateRecordCommand.Execute(null);
+        viewModel.RecordWorkspace.SelectedRecordEditorAttachmentMode = "Spravovaná kopie";
+        viewModel.RecordWorkspace.RecordEditorRecordType = "Doklad";
+        viewModel.RecordWorkspace.RecordEditorTitle = "Povinné ručení";
+        viewModel.RecordWorkspace.RecordEditorPathInput = sourceFile;
+
+        await viewModel.SaveRecordCommand.ExecuteAsync(null);
+
+        var attachmentDirectory = Path.Combine(dataRoot.DataPath, "attachments", "veh_1");
+        Assert.True(viewModel.RecordWorkspace.IsEditingRecord);
+        Assert.Contains("Doklad se nepodařilo uložit", viewModel.RecordWorkspace.RecordEditorStatus);
+        Assert.Empty(dataStore.CurrentDataSet.Records);
+        Assert.False(Directory.Exists(attachmentDirectory) && Directory.EnumerateFiles(attachmentDirectory, "*", SearchOption.AllDirectories).Any());
+    }
+
+    [Fact]
+    public async Task Delete_vehicle_command_reports_persist_failure_and_keeps_data_and_attachments()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+        var managedDirectory = Path.Combine(dataRoot.DataPath, "attachments", "veh_1");
+        Directory.CreateDirectory(managedDirectory);
+        var managedFile = Path.Combine(managedDirectory, "pojisteni.pdf");
+        await File.WriteAllTextAsync(managedFile, "managed attachment");
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.Vehicles.Add(new Vehicle("veh_2", "Božena", "Osobní vozidla", "Srazové auto", "Škoda 100", "", "1973", "35", "", "09/2026", "", "10/2026"));
+        dataSet.Records.Add(new VehicleRecord("rec_1", "veh_1", "Povinné ručení", "Pojistka", "", "05/2026", "05/2027", "2000", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/pojisteni.pdf", ""));
+        var dataStore = new MutableStubLegacyDataStore(dataSet, cloneOnLoad: true)
+        {
+            SaveException = new IOException("vehicles.tsv is locked.")
+        };
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+        viewModel.SelectedVehicle = Assert.Single(viewModel.Vehicles.Where(item => item.Id == "veh_1"));
+        viewModel.ConfirmVehicleDeleteHandler = _ => Task.FromResult(true);
+
+        await viewModel.DeleteSelectedVehicleCommand.ExecuteAsync(null);
+
+        Assert.Contains(dataStore.CurrentDataSet.Vehicles, item => item.Id == "veh_1");
+        Assert.Contains(dataStore.CurrentDataSet.Records, item => item.Id == "rec_1");
+        Assert.True(File.Exists(managedFile));
+        Assert.Equal("veh_1", viewModel.SelectedVehicle?.Id);
+        Assert.Contains("Vozidlo Milena se", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
+        Assert.Contains("odstranit", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
+        Assert.Contains("vehicles.tsv is locked", viewModel.ShellStatus);
+        Assert.Equal(DesktopFocusTarget.VehicleDetailPrimaryAction, requestedTargets.Last());
+    }
+
+    [Fact]
+    public async Task Delete_record_command_reports_persist_failure_and_keeps_managed_attachment()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+        var managedDirectory = Path.Combine(dataRoot.DataPath, "attachments", "veh_1");
+        Directory.CreateDirectory(managedDirectory);
+        var managedFile = Path.Combine(managedDirectory, "pojisteni.pdf");
+        await File.WriteAllTextAsync(managedFile, "managed attachment");
+
+        var dataSet = BuildBaseDataSet();
+        dataSet.Records.Add(new VehicleRecord("rec_1", "veh_1", "Povinné ručení", "Pojistka", "", "05/2026", "05/2027", "2000", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/pojisteni.pdf", ""));
+        var dataStore = new MutableStubLegacyDataStore(dataSet, cloneOnLoad: true)
+        {
+            SaveException = new IOException("records.tsv is locked.")
+        };
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        await viewModel.DeleteSelectedRecordCommand.ExecuteAsync(null);
+
+        Assert.Contains(dataStore.CurrentDataSet.Records, item => item.Id == "rec_1");
+        Assert.True(File.Exists(managedFile));
+        Assert.Equal("rec_1", viewModel.RecordWorkspace.SelectedRecord?.Id);
+        Assert.Contains("Doklad se nepodařilo odstranit", viewModel.RecordWorkspace.RecordEditorStatus);
+        Assert.Contains("records.tsv is locked", viewModel.ShellStatus);
+        Assert.Equal(DesktopFocusTarget.RecordList, requestedTargets.Last());
+    }
+
     [Theory]
     [InlineData("Ročně", "10.10.2027")]
     [InlineData("Každý rok", "10.10.2027")]
@@ -1002,9 +1096,12 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
     private sealed class MutableStubLegacyDataStore : ILegacyDataStore
     {
-        public MutableStubLegacyDataStore(VehimapDataSet dataSet)
+        private readonly bool _cloneOnLoad;
+
+        public MutableStubLegacyDataStore(VehimapDataSet dataSet, bool cloneOnLoad = false)
         {
             CurrentDataSet = dataSet;
+            _cloneOnLoad = cloneOnLoad;
         }
 
         public VehimapDataSet CurrentDataSet { get; private set; }
@@ -1012,7 +1109,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         public Exception? SaveException { get; set; }
 
         public Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
-            => Task.FromResult(CurrentDataSet);
+            => Task.FromResult(_cloneOnLoad ? CloneDataSet(CurrentDataSet) : CurrentDataSet);
 
         public Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
@@ -1021,8 +1118,37 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
                 throw SaveException;
             }
 
-            CurrentDataSet = dataSet;
+            CurrentDataSet = _cloneOnLoad ? CloneDataSet(dataSet) : dataSet;
             return Task.CompletedTask;
+        }
+
+        private static VehimapDataSet CloneDataSet(VehimapDataSet source)
+        {
+            return new VehimapDataSet
+            {
+                Settings = CloneSettings(source.Settings),
+                Vehicles = [.. source.Vehicles],
+                HistoryEntries = [.. source.HistoryEntries],
+                FuelEntries = [.. source.FuelEntries],
+                Records = [.. source.Records],
+                VehicleMetaEntries = [.. source.VehicleMetaEntries],
+                Reminders = [.. source.Reminders],
+                MaintenancePlans = [.. source.MaintenancePlans]
+            };
+        }
+
+        private static VehimapSettings CloneSettings(VehimapSettings source)
+        {
+            var clone = new VehimapSettings();
+            foreach (var (section, values) in source.Sections)
+            {
+                foreach (var (key, value) in values)
+                {
+                    clone.SetValue(section, key, value);
+                }
+            }
+
+            return clone;
         }
     }
 

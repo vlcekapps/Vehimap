@@ -52,6 +52,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - globalni hledani v Avalonia vetvi prohledava rozsirena metadata vozidla, stavove texty z casove osy a u navazujicich evidenci bere v uvahu i nazev vozidla, SPZ a znacku/model stejne jako AHK implementace
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh, AHK-kompatibilni validace/normalizace datumu, tachometru, castek, intervalu, typu paliva a platnosti dokladu i rozbalovacich hodnot pro typ dokladu a opakovani pripominky v beznych editorech i v balicku pro vozidlo
 - persist chyb evidencnich editoru je osetreny pres sdileny helper: editor zustane otevreny, chyba se precte ve workspace statusu i shellu a fokus se vrati na editor nebo seznam
+- evidencni persist helper umi rollback session datasetu na snapshot pred mutaci; fyzicke mazani managed priloh se provadi az po uspesnem zapsani legacy dat
 - pristupne razeni evidencnich workspace `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` pres ovladace `Radit` a `Sestupne`; posledni volba se uklada do legacy `settings.ini`
 - dokladove akce pro otevreni souboru, otevreni slozky a zkopirovani vyresene cesty prilohy pres `Ctrl+Shift+C`, vcetne citelneho stavoveho vysledku pri uspechu i selhani
 - posun opakovanych pripominek na dalsi termin v Avalonia workspace, vcetne zkratky `Ctrl+Shift+N`

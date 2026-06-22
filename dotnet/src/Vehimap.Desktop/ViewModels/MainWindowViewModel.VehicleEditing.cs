@@ -127,6 +127,7 @@ public sealed partial class MainWindowViewModel
         }
 
         var nextVehicleId = GetNextVisibleVehicleIdAfterDelete(vehicleId);
+        var rollbackDataSet = CloneDataSet(_dataSet);
         _dataSet.Vehicles.RemoveAll(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal));
         _dataSet.HistoryEntries.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
         _dataSet.FuelEntries.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
@@ -135,9 +136,19 @@ public sealed partial class MainWindowViewModel
         _dataSet.MaintenancePlans.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
         _dataSet.VehicleMetaEntries.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
 
+        if (!await PersistDataAndRestoreSelectionAsync(
+                nextVehicleId ?? string.Empty,
+                DetailTabIndex,
+                rollbackDataSet: rollbackDataSet,
+                setFailureStatus: status => VehicleDetailWorkspace.VehicleEditorStatus = status,
+                failureFocus: DesktopFocusTarget.VehicleDetailPrimaryAction,
+                requireVehicleSelection: false,
+                failurePrefix: $"Vozidlo {vehicleName} se nepodařilo odstranit"))
+        {
+            return;
+        }
+
         var attachmentCleanupWarning = DeleteManagedAttachmentDirectory(vehicleId);
-        await _session.PersistAsync().ConfigureAwait(true);
-        Load(nextVehicleId, DetailTabIndex, applyLaunchTabPreference: false);
 
         var status = $"Vozidlo {vehicleName} bylo odstraněno.";
         if (!string.IsNullOrWhiteSpace(attachmentCleanupWarning))
@@ -255,6 +266,7 @@ public sealed partial class MainWindowViewModel
             greenCardFrom,
             greenCardTo);
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertVehicle(updatedVehicle);
         UpsertVehicleMeta(BuildUpdatedVehicleMeta(vehicleId, existingMeta));
 
@@ -262,6 +274,7 @@ public sealed partial class MainWindowViewModel
         if (!await PersistDataAndRestoreSelectionAsync(
                 vehicleId,
                 DetailTabIndex,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => VehicleDetailWorkspace.VehicleEditorStatus = status,
                 failureFocus: DesktopFocusTarget.VehicleEditorName,
                 failurePrefix: "Vozidlo se nepodařilo uložit"))
@@ -343,6 +356,7 @@ public sealed partial class MainWindowViewModel
             .Where(static item => !string.IsNullOrWhiteSpace(item))
             .ToHashSet(StringComparer.Ordinal);
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         var addedMaintenance = 0;
         var addedRecords = 0;
         var addedReminders = 0;
@@ -431,6 +445,7 @@ public sealed partial class MainWindowViewModel
         if (!await PersistDataAndRestoreSelectionAsync(
                 vehicleId,
                 DetailTabIndex,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => VehicleDetailWorkspace.VehicleEditorStatus = status,
                 failureFocus: DesktopFocusTarget.VehicleDetailPrimaryAction,
                 failurePrefix: "Balíček pro vozidlo se nepodařilo uložit"))
@@ -480,6 +495,7 @@ public sealed partial class MainWindowViewModel
             .Where(static item => !string.IsNullOrWhiteSpace(item))
             .ToHashSet(StringComparer.Ordinal);
 
+        var rollbackDataSet = CloneDataSet(_dataSet);
         var addedMaintenance = 0;
         foreach (var item in maintenanceItems)
         {
@@ -511,6 +527,7 @@ public sealed partial class MainWindowViewModel
         if (!await PersistDataAndRestoreSelectionAsync(
                 vehicleId,
                 MaintenanceTabIndex,
+                rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => MaintenanceEditorStatus = status,
                 failureFocus: DesktopFocusTarget.MaintenanceList,
                 failurePrefix: "Doporučené šablony se nepodařilo uložit"))
