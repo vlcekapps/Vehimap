@@ -51,6 +51,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public event Action<DesktopFocusTarget>? FocusRequested;
 
+    public event Action? BackgroundRefreshRequested;
+
     [ObservableProperty]
     private string title = "Vehimap";
 
@@ -461,6 +463,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         Load(SelectedVehicle?.Id, SelectedVehicleTabIndex, applyLaunchTabPreference: false);
+        RequestBackgroundRefresh();
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
@@ -1537,6 +1540,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private void RequestFocus(DesktopFocusTarget target)
     {
         FocusRequested?.Invoke(target);
+    }
+
+    private void RequestBackgroundRefresh()
+    {
+        BackgroundRefreshRequested?.Invoke();
     }
 
     private static string FormatCostValue(string? value)

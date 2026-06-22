@@ -61,6 +61,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
 
         _initialized = true;
         _mainWindow.Closing += OnMainWindowClosing;
+        _shell.BackgroundRefreshRequested += OnShellBackgroundRefreshRequested;
         _systemResumeService.Resumed += OnSystemResumed;
         await _systemResumeService.InitializeAsync(cancellationToken).ConfigureAwait(false);
 
@@ -115,6 +116,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         _dueTimer.Stop();
         _backupTimer.Stop();
         _mainWindow.Closing -= OnMainWindowClosing;
+        _shell.BackgroundRefreshRequested -= OnShellBackgroundRefreshRequested;
         _systemResumeService.Resumed -= OnSystemResumed;
         await _systemResumeService.DisposeAsync().ConfigureAwait(false);
         await _trayService.DisposeAsync().ConfigureAwait(false);
@@ -128,6 +130,17 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
     private async void OnBackupTimerTick(object? sender, EventArgs e)
     {
         await RefreshBackgroundStateAsync(notifyWhenHidden: !_mainWindow.IsVisible, runAutomaticBackup: true).ConfigureAwait(false);
+    }
+
+    private void OnShellBackgroundRefreshRequested()
+    {
+        Dispatcher.UIThread.Post(async () =>
+        {
+            await RefreshBackgroundStateAsync(
+                notifyWhenHidden: !_mainWindow.IsVisible,
+                runAutomaticBackup: false,
+                reloadData: false).ConfigureAwait(false);
+        }, DispatcherPriority.Background);
     }
 
     private void OnSystemResumed(object? sender, EventArgs e)
@@ -171,10 +184,10 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         _ = ConfirmAndCloseMainWindowAsync();
     }
 
-    private async Task RefreshBackgroundStateAsync(bool notifyWhenHidden, bool runAutomaticBackup)
+    private async Task RefreshBackgroundStateAsync(bool notifyWhenHidden, bool runAutomaticBackup, bool reloadData = true)
     {
         var hasPendingEdits = _shell.HasPendingEdits;
-        if (DesktopBackgroundRuntimePolicy.CanReloadInBackground(hasPendingEdits))
+        if (reloadData && DesktopBackgroundRuntimePolicy.CanReloadInBackground(hasPendingEdits))
         {
             _shell.ReloadForBackgroundMonitoring();
         }

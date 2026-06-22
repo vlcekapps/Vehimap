@@ -595,7 +595,13 @@ public sealed partial class MainWindowViewModel
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
         if (SelectedVehicle is null)
         {
-            return !requireVehicleSelection;
+            if (!requireVehicleSelection)
+            {
+                RequestBackgroundRefresh();
+                return true;
+            }
+
+            return false;
         }
 
         SelectedVehicleTabIndex = tabIndex;
@@ -626,6 +632,7 @@ public sealed partial class MainWindowViewModel
             SelectedRecord = FindById(SelectedVehicleRecords, item => item.Id, recordId ?? string.Empty);
         }
 
+        RequestBackgroundRefresh();
         return true;
     }
 

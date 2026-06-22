@@ -31,6 +31,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var dataSet = BuildBaseDataSet();
         var dataStore = new MutableStubLegacyDataStore(dataSet);
         var viewModel = CreateViewModel(dataRoot, dataStore);
+        var backgroundRefreshCount = 0;
+        viewModel.BackgroundRefreshRequested += () => backgroundRefreshCount++;
 
         viewModel.CreateReminderCommand.Execute(null);
         viewModel.ReminderWorkspace.ReminderEditorTitle = "Objednat pneuservis";
@@ -41,6 +43,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         await viewModel.SaveReminderCommand.ExecuteAsync(null);
 
+        Assert.Equal(1, backgroundRefreshCount);
         Assert.NotNull(viewModel.ReminderWorkspace.SelectedReminder);
         Assert.Equal("Objednat pneuservis", viewModel.ReminderWorkspace.SelectedReminder!.Title);
         var savedReminder = Assert.Single(dataStore.CurrentDataSet.Reminders.Where(item => item.Title == "Objednat pneuservis" && item.VehicleId == "veh_1"));

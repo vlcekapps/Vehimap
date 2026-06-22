@@ -69,6 +69,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - menu `Přehledy` v Avalonia větvi má přímou položku `Export termínů do kalendáře (.ics)`, aby odpovídalo AHK menu i původnímu workflow plánu
 
 ### Změněno
+- Avalonia background runtime se po úspěšném uložení evidence, importu zálohy, změně nastavení, ručním reloadu a okamžité automatické záloze synchronizuje hned se shell snapshotem, takže tray tooltip a oznámení nečekají až na další intervalovou kontrolu
 - Avalonia ukládání vozidel a evidenčních editorů nově při selhání zápisu nezavírá rozpracovaný formulář, hlásí chybu v editoru i shellu a vrací fokus na smysluplný prvek
 - Avalonia evidenční změny se při selhání zápisu vracejí na snapshot před mutací a spravované přílohy nebo složky příloh vozidla se mažou až po úspěšném uložení dat
 - Avalonia průběžné ukládání preferencí shellu, filtrů, řazení, časové osy, přehledů termínů a období nákladů nově používá sdílenou serializovanou frontu se snapshot rollbackem; pokud `settings.ini` nejde zapsat, neuložená preference neprosákne do pozdějšího uložení dat

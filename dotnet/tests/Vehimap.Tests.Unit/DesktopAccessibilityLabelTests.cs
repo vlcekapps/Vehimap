@@ -638,6 +638,17 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Runtime_controller_should_refresh_tray_state_after_shell_data_changes_without_extra_reload()
+    {
+        var runtimeController = ReadDesktopServiceFile("DesktopAppRuntimeController.cs");
+
+        Assert.Contains("_shell.BackgroundRefreshRequested += OnShellBackgroundRefreshRequested", runtimeController);
+        Assert.Contains("_shell.BackgroundRefreshRequested -= OnShellBackgroundRefreshRequested", runtimeController);
+        Assert.Contains("reloadData: false", runtimeController);
+        Assert.Contains("if (reloadData && DesktopBackgroundRuntimePolicy.CanReloadInBackground(hasPendingEdits))", runtimeController);
+    }
+
+    [Fact]
     public void Window_roots_should_define_accessible_name_and_automation_id()
     {
         var windowFiles = new[]

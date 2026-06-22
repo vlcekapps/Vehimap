@@ -71,6 +71,8 @@ public sealed partial class MainWindowViewModel
             {
                 ShellStatus += $" Obnoveno spravovaných příloh: {restoreResult.RestoredAttachmentCount}.";
             }
+
+            RequestBackgroundRefresh();
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -99,6 +101,7 @@ public sealed partial class MainWindowViewModel
         await _session.ApplySupportedSettingsAsync(snapshot).ConfigureAwait(false);
         Load(SelectedVehicle?.Id, SelectedVehicleTabIndex, applyLaunchTabPreference: false);
         ShellStatus = "Nastavení byla uložena a přehledy byly přepočítány.";
+        RequestBackgroundRefresh();
     }
 
     internal async Task SetDashboardShowOnLaunchAsync(bool showDashboardOnLaunch)
@@ -145,6 +148,7 @@ public sealed partial class MainWindowViewModel
 
         var result = await _session.CreateAutomaticBackupAsync(cancellationToken).ConfigureAwait(false);
         ShellStatus = result.Message;
+        RequestBackgroundRefresh();
         return result.Message;
     }
 

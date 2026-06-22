@@ -149,9 +149,12 @@ public sealed class MainWindowViewModelAppShellTests
         dataSet.Settings.SetValue("app", "hide_on_launch", "1");
         var dataStore = new StubLegacyDataStore(dataSet);
         var viewModel = CreateViewModel(dataRoot, dataStore);
+        var backgroundRefreshCount = 0;
+        viewModel.BackgroundRefreshRequested += () => backgroundRefreshCount++;
 
         await viewModel.SaveSupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(60, 25, 14, 1500, false, true, true, false, 1, 30));
 
+        Assert.Equal(1, backgroundRefreshCount);
         Assert.Equal("60", dataStore.CurrentDataSet.Settings.GetValue("notifications", "technical_reminder_days"));
         Assert.Equal("25", dataStore.CurrentDataSet.Settings.GetValue("notifications", "green_card_reminder_days"));
         Assert.Equal("14", dataStore.CurrentDataSet.Settings.GetValue("notifications", "maintenance_reminder_days"));
@@ -239,9 +242,12 @@ public sealed class MainWindowViewModelAppShellTests
             RestoreResult = new BackupRestoreResult(@"C:\vehimap-test\data\import-backups\2026-04-02_10-00-00", 2)
         };
         var viewModel = CreateViewModel(dataRoot, dataStore, backupService: backupService);
+        var backgroundRefreshCount = 0;
+        viewModel.BackgroundRefreshRequested += () => backgroundRefreshCount++;
 
         var status = await viewModel.ImportBackupAsync(@"C:\backups\vehimap.vehimapbak");
 
+        Assert.Equal(1, backgroundRefreshCount);
         Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.ImportedPath);
         Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.RestoredFromPath);
         Assert.Same(dataSet, dataStore.CurrentDataSet);
@@ -360,11 +366,14 @@ public sealed class MainWindowViewModelAppShellTests
             ExportResult = new BackupExportResult(string.Empty, 1, 0)
         };
         var viewModel = CreateViewModel(dataRoot, dataStore, backupService: backupService);
+        var backgroundRefreshCount = 0;
+        viewModel.BackgroundRefreshRequested += () => backgroundRefreshCount++;
 
         Assert.True(viewModel.CanCreateAutomaticBackupNow);
 
         var status = await viewModel.CreateAutomaticBackupNowAsync();
 
+        Assert.Equal(1, backgroundRefreshCount);
         Assert.NotNull(backupService.ExportedPath);
         Assert.StartsWith(backupDirectory, backupService.ExportedPath, StringComparison.Ordinal);
         Assert.EndsWith(".vehimapbak", backupService.ExportedPath, StringComparison.Ordinal);
