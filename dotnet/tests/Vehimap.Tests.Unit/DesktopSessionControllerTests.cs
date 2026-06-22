@@ -200,6 +200,32 @@ public sealed class DesktopSessionControllerTests
     }
 
     [Fact]
+    public async Task Should_show_and_remember_due_notification_rolls_back_when_persist_fails()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var dataStore = new StubLegacyDataStore(dataSet)
+        {
+            SaveException = new IOException("settings.ini nelze zapsat.")
+        };
+        var session = CreateSessionController(dataRoot, dataStore);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        var result = await session.ShouldShowAndRememberDueNotificationAsync("timeline|veh_1|technical|20260402", new DateOnly(2026, 4, 2));
+
+        Assert.False(result);
+        Assert.Equal(string.Empty, session.DataSet.Settings.GetValue("notifications", "last_desktop_alert_day"));
+        Assert.Equal(string.Empty, session.DataSet.Settings.GetValue("notifications", "last_desktop_alert_signature"));
+    }
+
+    [Fact]
     public async Task Apply_supported_settings_resets_notification_history()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -219,6 +245,41 @@ public sealed class DesktopSessionControllerTests
         await session.ApplySupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(45, 21, 14, 1500, false, true, false, false, 1, 30));
 
         AssertNotificationHistoryCleared(dataStore.CurrentDataSet.Settings);
+    }
+
+    [Fact]
+    public async Task Apply_supported_settings_rolls_back_settings_when_persist_fails()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        dataSet.Settings.SetValue("notifications", "technical_reminder_days", "30");
+        dataSet.Settings.SetValue("app", "show_dashboard_on_launch", "0");
+        SeedNotificationHistory(dataSet.Settings);
+        var dataStore = new StubLegacyDataStore(dataSet)
+        {
+            SaveException = new IOException("settings.ini nelze zapsat.")
+        };
+        var session = CreateSessionController(dataRoot, dataStore);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        await Assert.ThrowsAsync<IOException>(() =>
+            session.ApplySupportedSettingsAsync(new DesktopSupportedSettingsSnapshot(45, 21, 14, 1500, false, true, false, false, 1, 30)));
+
+        Assert.Equal("30", session.DataSet.Settings.GetValue("notifications", "technical_reminder_days"));
+        Assert.Equal("0", session.DataSet.Settings.GetValue("app", "show_dashboard_on_launch"));
+        foreach (var key in NotificationHistoryKeys)
+        {
+            Assert.Equal("seed", session.DataSet.Settings.GetValue("notifications", key));
+        }
+
+        Assert.False(session.ReadSupportedSettings().ShowDashboardOnLaunch);
     }
 
     [Fact]
@@ -381,6 +442,38 @@ public sealed class DesktopSessionControllerTests
     }
 
     [Fact]
+    public async Task Create_automatic_backup_async_rolls_back_metadata_when_settings_persist_fails()
+    {
+        var rootPath = Path.Combine(Path.GetTempPath(), "vehimap-session-test", Guid.NewGuid().ToString("N"));
+        var dataRoot = new VehimapDataRoot(rootPath, Path.Combine(rootPath, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var backupService = new StubBackupService();
+        var dataStore = new StubLegacyDataStore(dataSet)
+        {
+            SaveException = new IOException("settings.ini nelze zapsat.")
+        };
+        var session = CreateSessionController(dataRoot, dataStore, backupService: backupService);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        var result = await session.CreateAutomaticBackupAsync();
+
+        Assert.False(result.Created);
+        Assert.True(result.IsError);
+        Assert.Contains("settings.ini nelze zapsat", result.Message);
+        Assert.True(File.Exists(backupService.ExportedPath));
+        Assert.Equal(string.Empty, session.DataSet.Settings.GetValue("backups", "last_automatic_backup_stamp"));
+        Assert.Equal(string.Empty, session.DataSet.Settings.GetValue("backups", "last_automatic_backup_path"));
+    }
+
+    [Fact]
     public async Task Run_automatic_backup_check_trims_old_files_when_backup_is_not_due()
     {
         var rootPath = Path.Combine(Path.GetTempPath(), "vehimap-session-test", Guid.NewGuid().ToString("N"));
@@ -487,11 +580,18 @@ public sealed class DesktopSessionControllerTests
 
         public VehimapDataSet CurrentDataSet { get; set; }
 
+        public Exception? SaveException { get; set; }
+
         public Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
             => Task.FromResult(CurrentDataSet);
 
         public Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
+            if (SaveException is not null)
+            {
+                throw SaveException;
+            }
+
             CurrentDataSet = dataSet;
             return Task.CompletedTask;
         }

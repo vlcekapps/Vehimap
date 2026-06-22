@@ -169,9 +169,14 @@ internal sealed class DesktopSessionController
     public async Task ApplySupportedSettingsAsync(DesktopSupportedSettingsSnapshot snapshot, CancellationToken cancellationToken = default)
     {
         await _autostartService.SetEnabledAsync(snapshot.RunAtStartup, cancellationToken).ConfigureAwait(false);
-        _supportedSettingsService.Apply(DataSet.Settings, snapshot);
-        ResetNotificationHistory(DataSet.Settings);
-        await PersistAsync(cancellationToken).ConfigureAwait(false);
+        await PersistSettingsMutationAsync(
+                settings =>
+                {
+                    _supportedSettingsService.Apply(settings, snapshot);
+                    ResetNotificationHistory(settings);
+                },
+                cancellationToken)
+            .ConfigureAwait(false);
         CurrentSupportedSettings = snapshot;
     }
 
@@ -191,10 +196,22 @@ internal sealed class DesktopSessionController
             return false;
         }
 
-        DataSet.Settings.SetValue(NotificationsSection, DesktopLastAlertDayKey, todayKey);
-        DataSet.Settings.SetValue(NotificationsSection, DesktopLastAlertSignatureKey, notificationKey);
-        await PersistAsync(cancellationToken).ConfigureAwait(false);
-        return true;
+        try
+        {
+            await PersistSettingsMutationAsync(
+                    settings =>
+                    {
+                        settings.SetValue(NotificationsSection, DesktopLastAlertDayKey, todayKey);
+                        settings.SetValue(NotificationsSection, DesktopLastAlertSignatureKey, notificationKey);
+                    },
+                    cancellationToken)
+                .ConfigureAwait(false);
+            return true;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            return false;
+        }
     }
 
     public AppBuildInfo GetAppInfo() => _appBuildInfoProvider.GetCurrent();
@@ -272,9 +289,14 @@ internal sealed class DesktopSessionController
             var backupPath = GetAutomaticBackupPath(now);
             Directory.CreateDirectory(Path.GetDirectoryName(backupPath)!);
             var exportResult = await _backupService.ExportAsync(backupPath, DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
-            DataSet.Settings.SetValue("backups", "last_automatic_backup_stamp", now.ToString("yyyyMMddHHmmss"));
-            DataSet.Settings.SetValue("backups", "last_automatic_backup_path", backupPath);
-            await PersistAsync(cancellationToken).ConfigureAwait(false);
+            await PersistSettingsMutationAsync(
+                    settings =>
+                    {
+                        settings.SetValue("backups", "last_automatic_backup_stamp", now.ToString("yyyyMMddHHmmss"));
+                        settings.SetValue("backups", "last_automatic_backup_path", backupPath);
+                    },
+                    cancellationToken)
+                .ConfigureAwait(false);
             TrimAutomaticBackupFiles();
             var message = $"Automatická záloha byla vytvořena do {backupPath}.";
             if (exportResult.IncludedManagedAttachmentCount > 0)
@@ -376,6 +398,53 @@ internal sealed class DesktopSessionController
 
             files.RemoveAt(files.Count - 1);
         }
+    }
+
+    private async Task PersistSettingsMutationAsync(Action<VehimapSettings> updateSettings, CancellationToken cancellationToken)
+    {
+        var rollbackDataSet = CloneDataSet(DataSet);
+        var rollbackSupportedSettings = CurrentSupportedSettings;
+
+        try
+        {
+            updateSettings(DataSet.Settings);
+            await PersistAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch
+        {
+            RestoreDataSet(rollbackDataSet);
+            CurrentSupportedSettings = rollbackSupportedSettings;
+            throw;
+        }
+    }
+
+    private static VehimapDataSet CloneDataSet(VehimapDataSet source)
+    {
+        return new VehimapDataSet
+        {
+            Settings = CloneSettings(source.Settings),
+            Vehicles = [.. source.Vehicles],
+            HistoryEntries = [.. source.HistoryEntries],
+            FuelEntries = [.. source.FuelEntries],
+            Records = [.. source.Records],
+            VehicleMetaEntries = [.. source.VehicleMetaEntries],
+            Reminders = [.. source.Reminders],
+            MaintenancePlans = [.. source.MaintenancePlans]
+        };
+    }
+
+    private static VehimapSettings CloneSettings(VehimapSettings source)
+    {
+        var clone = new VehimapSettings();
+        foreach (var (section, values) in source.Sections)
+        {
+            foreach (var (key, value) in values)
+            {
+                clone.SetValue(section, key, value);
+            }
+        }
+
+        return clone;
     }
 
     private static void ResetNotificationHistory(VehimapSettings settings)
