@@ -78,6 +78,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - rozsireny Appium smoke pro samostatna workflow okna a hlavni app-level dialogy vcetne nastaveni, o programu a kontroly aktualizaci
 - sjednocena korenova accessibility metadata hlavniho shellu, workspace oken a app-level dialogu pro stabilnejsi screen-reader diagnostiku a UI automatizaci
 - sdileny lifecycle samostatnych workspace oken pro prvni fokus po otevreni a potvrzeni zavreni rozpracovanych editoru
+- samostatna workspace okna lze zavrit klavesou `Escape`; stejne jako zaviraci tlacitko tato cesta respektuje potvrzeni rozpracovanych editoru
 - nazvy samostatnych workspace oken jsou vlastnene workspace viewmodely; root `MainWindowViewModel` uz je nevystavuje jako verejne proxy vlastnosti
 - action-state podminky evidencnich editoru, dokladovych priloh a exportu nakladu jsou interni soucasti prikazu a workspace vrstvy; root `MainWindowViewModel` uz je nevystavuje jako verejne proxy vlastnosti
 - sdilene otevirani samostatnych workspace oken z hlavniho shellu, aby potvrzeni rozpracovanych editaci, prepnuti karty a navrat fokusu mely jeden kodovy tok

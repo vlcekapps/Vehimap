@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Blížící se termíny"
         AutomationProperties.AutomationId="UpcomingOverviewWindow"
-        AutomationProperties.HelpText="Samostatné okno pro blížící se termíny napříč vozidly.">
+        AutomationProperties.HelpText="Samostatné okno pro blížící se termíny napříč vozidly. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">

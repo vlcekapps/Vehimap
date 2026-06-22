@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Plán údržby vozidla"
         AutomationProperties.AutomationId="MaintenanceWindow"
-        AutomationProperties.HelpText="Samostatné okno pro práci s plánem údržby vybraného vozidla.">
+        AutomationProperties.HelpText="Samostatné okno pro práci s plánem údržby vybraného vozidla. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">

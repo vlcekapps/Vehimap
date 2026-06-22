@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Desktop.Views.Workspaces;
@@ -10,6 +12,10 @@ internal static class ModalWorkspaceWindowHelpers
     public static void RegisterWorkspaceLifecycle(Window window, string workspaceHostName, string? closeActionDescription = null)
     {
         window.Opened += (_, _) => FocusDefaultWorkspaceControl(window, workspaceHostName);
+        window.AddHandler(
+            InputElement.KeyDownEvent,
+            (_, e) => OnWorkspaceWindowKeyDown(window, e),
+            RoutingStrategies.Bubble);
 
         if (!string.IsNullOrWhiteSpace(closeActionDescription))
         {
@@ -65,5 +71,19 @@ internal static class ModalWorkspaceWindowHelpers
             closeConfirmed = true;
             window.Close();
         };
+    }
+
+    private static void OnWorkspaceWindowKeyDown(Window window, KeyEventArgs e)
+    {
+        if (e.Handled)
+        {
+            return;
+        }
+
+        if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
+        {
+            e.Handled = true;
+            window.Close();
+        }
     }
 }

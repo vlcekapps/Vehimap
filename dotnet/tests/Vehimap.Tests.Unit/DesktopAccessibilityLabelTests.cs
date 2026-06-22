@@ -1063,6 +1063,7 @@ public sealed class DesktopAccessibilityLabelTests
     [Fact]
     public void Workspace_windows_should_use_shared_focus_and_close_lifecycle()
     {
+        var lifecycleHelper = ReadViewCodeBehind("ModalWorkspaceWindowHelpers.cs");
         var workspaceWindows = new[]
         {
             ("AuditWindow.axaml.cs", "AuditWorkspaceHost"),
@@ -1083,10 +1084,17 @@ public sealed class DesktopAccessibilityLabelTests
         foreach (var (fileName, hostName) in workspaceWindows)
         {
             var codeBehind = ReadViewCodeBehind(fileName);
+            var xaml = ReadViewFile(fileName.Replace(".axaml.cs", ".axaml", StringComparison.Ordinal));
             Assert.Contains($"RegisterWorkspaceLifecycle(this, \"{hostName}\"", codeBehind);
+            Assert.Contains("Escape okno zavře.", xaml);
             Assert.DoesNotContain("Opened += OnOpened", codeBehind);
             Assert.DoesNotContain("Closing += OnClosing", codeBehind);
         }
+
+        Assert.Contains("InputElement.KeyDownEvent", lifecycleHelper);
+        Assert.Contains("RoutingStrategies.Bubble", lifecycleHelper);
+        Assert.Contains("Key.Escape", lifecycleHelper);
+        Assert.Contains("window.Close();", lifecycleHelper);
     }
 
     [Fact]

@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- Samostatná Avalonia pracovní okna pro detail, evidence, přehledy, audit, dashboard, náklady a časovou osu lze zavřít klávesou `Escape`; stejná informace je uvedená v jejich přístupné nápovědě a krytá unit i Appium smoke testem
 - Appium smoke pro Avalonia preview nově hlídá app-level menu `Soubor`, menu `Rychlé akce`, jejich dostupnostní stavy a v rozšířené sadě i skutečné vytvoření okamžité automatické zálohy v izolované portable kopii
 - Avalonia menu `Soubor` i přístupné tray okno umí spustit okamžitou automatickou zálohu a otevřít složku `data/auto-backups`; tyto datové akce se vypínají při rozpracované editaci stejně jako export/import zálohy
 - Avalonia shell umí z hlavního menu `Soubor` i přístupného tray okna otevřít aktuální datovou složku a hlavní diagnostické texty `Režim dat` / `Datová složka` mají vlastní `AutomationId`

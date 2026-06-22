@@ -252,6 +252,27 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Workspace_window_can_be_closed_with_escape_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("AuditTabButton");
+            session.ClickByAccessibilityId("OpenAuditWindowButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseAuditWindowButton"));
+
+            session.SendKeysToActiveElement(Keys.Escape);
+
+            session.WaitForElementToDisappearByAccessibilityId("CloseAuditWindowButton");
+        }
+    }
+
+    [Fact]
     public void Reminder_editor_runs_in_standalone_window_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

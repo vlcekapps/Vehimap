@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Dashboard"
         AutomationProperties.AutomationId="DashboardWindow"
-        AutomationProperties.HelpText="Samostatné okno pro dashboard napříč vozidly.">
+        AutomationProperties.HelpText="Samostatné okno pro dashboard napříč vozidly. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">

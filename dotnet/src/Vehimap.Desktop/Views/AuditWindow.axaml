@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Audit dat"
         AutomationProperties.AutomationId="AuditWindow"
-        AutomationProperties.HelpText="Samostatné okno pro audit dat a problémových stavů.">
+        AutomationProperties.HelpText="Samostatné okno pro audit dat a problémových stavů. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">

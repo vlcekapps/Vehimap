@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Historie vozidla"
         AutomationProperties.AutomationId="HistoryWindow"
-        AutomationProperties.HelpText="Samostatné okno pro práci s historií vybraného vozidla.">
+        AutomationProperties.HelpText="Samostatné okno pro práci s historií vybraného vozidla. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">

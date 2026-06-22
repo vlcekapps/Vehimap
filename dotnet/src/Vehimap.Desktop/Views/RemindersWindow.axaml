@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Připomínky vozidla"
         AutomationProperties.AutomationId="RemindersWindow"
-        AutomationProperties.HelpText="Samostatné okno pro práci s připomínkami vybraného vozidla.">
+        AutomationProperties.HelpText="Samostatné okno pro práci s připomínkami vybraného vozidla. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">

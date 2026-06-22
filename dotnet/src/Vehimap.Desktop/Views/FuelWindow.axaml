@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Tankování vozidla"
         AutomationProperties.AutomationId="FuelWindow"
-        AutomationProperties.HelpText="Samostatné okno pro práci s tankováním vybraného vozidla.">
+        AutomationProperties.HelpText="Samostatné okno pro práci s tankováním vybraného vozidla. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">

@@ -41,6 +41,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - hlavní pracovní okna jako `Dashboard`, `Přehled termínů`, `Propadlé termíny`, `Audit dat`, `Časová osa vozidla`, `Pojištění a doklady`, `Plán údržby`, detail vozidla i hlavní seznam lze zvětšit, takže se seznamy natáhnou do šířky i výšky
 - v C# desktopové větvi lze přehledová workflow `Časová osa`, `Globální hledání`, `Audit dat`, `Náklady`, `Dashboard`, `Blížící se termíny` a `Propadlé termíny` otevřít jako kartu v hlavním shellu i jako samostatné okno se stejnou přístupnou pracovní plochou
 - v C# desktopové větvi mají samostatná workspace okna sjednocené otevření prvního logického prvku a stejnou ochranu před zavřením rozpracovaného editoru jako hlavní shell
+- v C# desktopové větvi lze samostatná pracovní okna zavřít klávesou `Escape`; při rozpracované úpravě se použije stejné potvrzení zahození změn jako při zavření tlačítkem
 - v C# desktopové větvi patří názvy samostatných workspace oken jejich workspace viewmodelům; hlavní shell je už nevystavuje jako veřejné root aliasy
 - v C# desktopové větvi zůstávají action-state podmínky evidenčních editorů, dokladových příloh a exportů nákladů interní součástí příkazů a workspace vrstvy, ne veřejným root API shellu
 - v C# desktopové větvi jde otevření samostatných workspace oken přes jeden sdílený tok, takže potvrzení rozpracované editace, přepnutí karty a návrat fokusu zůstávají stejné napříč evidencemi i přehledy
@@ -175,6 +176,7 @@ V hlavním okně:
 - v `Nastavení` klávesa `Esc` zavře dialog bez uložení
 - v `O programu` zkratka `Ctrl+O` otevře release poznámky, `Ctrl+Shift+C` zkopíruje informace o aplikaci do schránky a `Esc` dialog zavře
 - v aplikačních dialozích jako `Zkontrolovat aktualizace`, potvrzení akce, upozornění nebo `Akce Vehimapu na liště` klávesa `Esc` zavře dialog bez provedení nové akce; v kontrole aktualizací `Ctrl+Shift+C` zkopíruje detail výsledku do schránky a tlačítka se dál aktivují standardně klávesou `Enter` nebo mezerníkem
+- v samostatných pracovních oknech detailu, evidencí a přehledů klávesa `Esc` zavře okno; pokud je uvnitř rozpracovaný editor, Vehimap se nejdřív zeptá na zahození změn
 - v C# Avalonia větvi jsou dialogy `Nastavení`, `O programu` a `Zkontrolovat aktualizace` zvětšitelné a mají scrollovatelný hlavní obsah, takže dlouhé cesty nebo větší systémové písmo neschovají tlačítka `Uložit`, `Zavřít` nebo hlavní aktualizační akci
 - v C# Avalonia větvi stejnou ochranu dostaly i potvrzovací dialogy, dokončení údržby, `Balíček pro vozidlo` a přístupné tray okno: dlouhý text nebo větší písmo rolují obsah, zatímco hlavní akce zůstávají dosažitelné
 

@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Časová osa vozidla"
         AutomationProperties.AutomationId="TimelineWindow"
-        AutomationProperties.HelpText="Samostatné okno pro časovou osu vybraného vozidla.">
+        AutomationProperties.HelpText="Samostatné okno pro časovou osu vybraného vozidla. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">

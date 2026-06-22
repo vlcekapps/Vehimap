@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Doklady vozidla"
         AutomationProperties.AutomationId="RecordsWindow"
-        AutomationProperties.HelpText="Samostatné okno pro práci s doklady a přílohami vybraného vozidla.">
+        AutomationProperties.HelpText="Samostatné okno pro práci s doklady a přílohami vybraného vozidla. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">
