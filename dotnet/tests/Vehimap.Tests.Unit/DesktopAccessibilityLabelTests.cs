@@ -458,7 +458,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"NotificationWindow\"", notificationXaml);
         Assert.Contains("Zavře se samo; při aktivaci ho lze zavřít klávesou Escape.", notificationXaml);
         Assert.Contains("Key.Escape", notificationCodeBehind);
+        Assert.Contains("CanResize=\"True\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionWindow\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionFieldsScrollViewer\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionDateBox\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionOdometerBox\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionAddHistoryCheckBox\"", maintenanceCompletionXaml);
@@ -482,8 +484,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CloseGlobalSearchWindowButton\"", globalSearchXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseUpcomingOverviewWindowButton\"", upcomingOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseOverdueOverviewWindowButton\"", overdueOverviewXaml);
+        Assert.Contains("CanResize=\"True\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"BundleItemsListBox\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"BundleSummaryText\"", bundleXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"BundleDetailScrollViewer\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"BundleDetailHintText\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", bundleXaml);
         Assert.Contains("Mezerník přepne, zda se položka přidá", bundleXaml);
@@ -501,10 +505,14 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.A", bundleCodeBehind);
         Assert.Contains("Key.Space", bundleCodeBehind);
         Assert.Contains("e.Source is TextBox or ComboBox", bundleCodeBehind);
+        Assert.Contains("CanResize=\"True\"", confirmationXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationMessageScrollViewer\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationConfirmButton\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationCancelButton\"", confirmationXaml);
         Assert.Contains("Escape akci zruší.", confirmationXaml);
         Assert.Contains("Key.Escape", confirmationCodeBehind);
+        Assert.Contains("CanResize=\"True\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"TrayActionsScrollViewer\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowMainWindowTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowDashboardTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowUpcomingOverviewTrayActionButton\"", trayActionsXaml);

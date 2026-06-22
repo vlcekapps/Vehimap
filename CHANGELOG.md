@@ -70,6 +70,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ### Změněno
 - Avalonia app-level dialogy `Nastavení`, `O programu` a `Kontrola aktualizací` jsou nově zvětšitelné a jejich hlavní obsah je scrollovatelný, takže delší cesty, update detaily a větší systémové písmo neschovají spodní akční tlačítka
+- Avalonia potvrzovací dialogy, dokončení údržby, `Balíček pro vozidlo` a přístupné tray akce mají explicitní resize nebo scroll regiony, aby dlouhý text a větší systémové písmo neschovaly primární akce
 - Avalonia background runtime se po úspěšném uložení evidence, importu zálohy, změně nastavení, ručním reloadu a okamžité automatické záloze synchronizuje hned se shell snapshotem, takže tray tooltip a oznámení nečekají až na další intervalovou kontrolu
 - Avalonia ukládání vozidel a evidenčních editorů nově při selhání zápisu nezavírá rozpracovaný formulář, hlásí chybu v editoru i shellu a vrací fokus na smysluplný prvek
 - Avalonia evidenční změny se při selhání zápisu vracejí na snapshot před mutací a spravované přílohy nebo složky příloh vozidla se mažou až po úspěšném uložení dat

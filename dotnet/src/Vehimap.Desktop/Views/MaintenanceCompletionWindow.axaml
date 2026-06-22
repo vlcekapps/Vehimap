@@ -7,7 +7,7 @@
         Height="560"
         MinWidth="580"
         MinHeight="520"
-        CanResize="False"
+        CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="Označit servisní úkon jako splněný"
@@ -25,58 +25,65 @@
                  TextWrapping="Wrap" />
     </StackPanel>
 
-    <Grid Grid.Row="1" Margin="0,18,0,0" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-      <TextBlock FontWeight="SemiBold" Text="Datum provedení" />
-      <TextBox x:Name="MaintenanceCompletionDateBox"
-               Grid.Row="1"
-               Margin="0,6,0,0"
-               Text="{Binding CompletedDate}"
-               AutomationProperties.Name="Datum provedení servisního úkonu"
-               AutomationProperties.AutomationId="MaintenanceCompletionDateBox" />
+    <ScrollViewer Grid.Row="1"
+                  Margin="0,18,0,0"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  AutomationProperties.Name="Pole dokončení servisního úkonu"
+                  AutomationProperties.AutomationId="MaintenanceCompletionFieldsScrollViewer">
+      <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+        <TextBlock FontWeight="SemiBold" Text="Datum provedení" />
+        <TextBox x:Name="MaintenanceCompletionDateBox"
+                 Grid.Row="1"
+                 Margin="0,6,0,0"
+                 Text="{Binding CompletedDate}"
+                 AutomationProperties.Name="Datum provedení servisního úkonu"
+                 AutomationProperties.AutomationId="MaintenanceCompletionDateBox" />
 
-      <TextBlock Grid.Row="2" Margin="0,14,0,0" FontWeight="SemiBold" Text="Tachometr při provedení" />
-      <TextBox x:Name="MaintenanceCompletionOdometerBox"
-               Grid.Row="3"
-               Margin="0,6,0,0"
-               Text="{Binding CompletedOdometer}"
-               AutomationProperties.Name="Tachometr při provedení servisního úkonu"
-               AutomationProperties.AutomationId="MaintenanceCompletionOdometerBox" />
+        <TextBlock Grid.Row="2" Margin="0,14,0,0" FontWeight="SemiBold" Text="Tachometr při provedení" />
+        <TextBox x:Name="MaintenanceCompletionOdometerBox"
+                 Grid.Row="3"
+                 Margin="0,6,0,0"
+                 Text="{Binding CompletedOdometer}"
+                 AutomationProperties.Name="Tachometr při provedení servisního úkonu"
+                 AutomationProperties.AutomationId="MaintenanceCompletionOdometerBox" />
 
-      <CheckBox Grid.Row="4"
-                Margin="0,16,0,0"
-                IsChecked="{Binding AddHistory}"
-                Content="Současně zapsat i do historie událostí"
-                AutomationProperties.Name="Současně zapsat servisní úkon do historie událostí"
-                AutomationProperties.AutomationId="MaintenanceCompletionAddHistoryCheckBox" />
+        <CheckBox Grid.Row="4"
+                  Margin="0,16,0,0"
+                  IsChecked="{Binding AddHistory}"
+                  Content="Současně zapsat i do historie událostí"
+                  AutomationProperties.Name="Současně zapsat servisní úkon do historie událostí"
+                  AutomationProperties.AutomationId="MaintenanceCompletionAddHistoryCheckBox" />
 
-      <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Cena do historie" />
-      <TextBox x:Name="MaintenanceCompletionHistoryCostBox"
-               Grid.Row="6"
-               Margin="0,6,0,0"
-               Text="{Binding HistoryCost}"
-               AutomationProperties.Name="Cena servisního úkonu do historie"
-               AutomationProperties.AutomationId="MaintenanceCompletionHistoryCostBox" />
+        <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Cena do historie" />
+        <TextBox x:Name="MaintenanceCompletionHistoryCostBox"
+                 Grid.Row="6"
+                 Margin="0,6,0,0"
+                 Text="{Binding HistoryCost}"
+                 AutomationProperties.Name="Cena servisního úkonu do historie"
+                 AutomationProperties.AutomationId="MaintenanceCompletionHistoryCostBox" />
 
-      <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka do historie" />
-      <TextBox x:Name="MaintenanceCompletionHistoryNoteBox"
-               Grid.Row="8"
-               Margin="0,6,0,0"
-               Height="90"
-               AcceptsReturn="True"
-               TextWrapping="Wrap"
-               VerticalContentAlignment="Top"
-               Text="{Binding HistoryNote}"
-               AutomationProperties.Name="Poznámka servisního úkonu do historie"
-               AutomationProperties.AutomationId="MaintenanceCompletionHistoryNoteBox" />
-
-      <TextBlock Grid.Row="9"
-                 Margin="0,12,0,0"
-                 Foreground="#B00020"
-                 Text="{Binding ErrorMessage}"
+        <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka do historie" />
+        <TextBox x:Name="MaintenanceCompletionHistoryNoteBox"
+                 Grid.Row="8"
+                 Margin="0,6,0,0"
+                 Height="90"
+                 AcceptsReturn="True"
                  TextWrapping="Wrap"
-                 AutomationProperties.Name="{Binding ErrorMessage}"
-                 AutomationProperties.AutomationId="MaintenanceCompletionStatusText" />
-    </Grid>
+                 VerticalContentAlignment="Top"
+                 Text="{Binding HistoryNote}"
+                 AutomationProperties.Name="Poznámka servisního úkonu do historie"
+                 AutomationProperties.AutomationId="MaintenanceCompletionHistoryNoteBox" />
+
+        <TextBlock Grid.Row="9"
+                   Margin="0,12,0,0"
+                   Foreground="#B00020"
+                   Text="{Binding ErrorMessage}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding ErrorMessage}"
+                   AutomationProperties.AutomationId="MaintenanceCompletionStatusText" />
+      </Grid>
+    </ScrollViewer>
 
     <StackPanel Grid.Row="2"
                 Margin="0,18,0,0"

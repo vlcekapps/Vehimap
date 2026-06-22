@@ -7,7 +7,7 @@
         Height="280"
         MinWidth="520"
         MinHeight="240"
-        CanResize="False"
+        CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="{Binding Title}"
@@ -16,10 +16,15 @@
         AutomationProperties.HelpText="Potvrzovací dialog. Fokus je na potvrzovacím tlačítku; Escape akci zruší.">
   <Grid Margin="20" RowDefinitions="Auto,*,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
-    <TextBlock Grid.Row="1"
-               Margin="0,16,0,0"
-               Text="{Binding Message}"
-               TextWrapping="Wrap" />
+    <ScrollViewer Grid.Row="1"
+                  Margin="0,16,0,0"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  AutomationProperties.Name="Text potvrzení"
+                  AutomationProperties.AutomationId="ConfirmationMessageScrollViewer">
+      <TextBlock Text="{Binding Message}"
+                 TextWrapping="Wrap" />
+    </ScrollViewer>
     <StackPanel Grid.Row="2"
                 Margin="0,18,0,0"
                 Orientation="Horizontal"
