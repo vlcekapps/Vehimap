@@ -77,34 +77,25 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        _dataSet.Settings.SetValue(
-            WorkspaceSortSettingsSection,
-            AuditSortSettingKey,
-            WorkspaceSortHelpers.NormalizeSortOption(
-                AuditWorkspace.SelectedAuditSortOption,
-                WorkspaceSortHelpers.AuditSortOptions,
-                WorkspaceSortHelpers.SeveritySortLabel));
-        _dataSet.Settings.SetValue(WorkspaceSortSettingsSection, AuditSortDescendingSettingKey, AuditWorkspace.AuditSortDescending ? "1" : "0");
-        _dataSet.Settings.SetValue(
-            WorkspaceSortSettingsSection,
-            GlobalSearchSortSettingKey,
-            WorkspaceSortHelpers.NormalizeSortOption(
-                GlobalSearchWorkspace.SelectedGlobalSearchSortOption,
-                WorkspaceSortHelpers.GlobalSearchSortOptions,
-                WorkspaceSortHelpers.TypeSortLabel));
-        _dataSet.Settings.SetValue(WorkspaceSortSettingsSection, GlobalSearchSortDescendingSettingKey, GlobalSearchWorkspace.GlobalSearchSortDescending ? "1" : "0");
-        _ = PersistWorkspaceSortPreferencesCoreAsync();
-    }
+        var auditSort = WorkspaceSortHelpers.NormalizeSortOption(
+            AuditWorkspace.SelectedAuditSortOption,
+            WorkspaceSortHelpers.AuditSortOptions,
+            WorkspaceSortHelpers.SeveritySortLabel);
+        var auditDescending = AuditWorkspace.AuditSortDescending ? "1" : "0";
+        var globalSearchSort = WorkspaceSortHelpers.NormalizeSortOption(
+            GlobalSearchWorkspace.SelectedGlobalSearchSortOption,
+            WorkspaceSortHelpers.GlobalSearchSortOptions,
+            WorkspaceSortHelpers.TypeSortLabel);
+        var globalSearchDescending = GlobalSearchWorkspace.GlobalSearchSortDescending ? "1" : "0";
 
-    private async Task PersistWorkspaceSortPreferencesCoreAsync()
-    {
-        try
-        {
-            await _session.PersistAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            ShellStatus = $"Nepodařilo se uložit řazení přehledů: {ex.Message}";
-        }
+        PersistPreferenceSettingsAsync(
+            settings =>
+            {
+                settings.SetValue(WorkspaceSortSettingsSection, AuditSortSettingKey, auditSort);
+                settings.SetValue(WorkspaceSortSettingsSection, AuditSortDescendingSettingKey, auditDescending);
+                settings.SetValue(WorkspaceSortSettingsSection, GlobalSearchSortSettingKey, globalSearchSort);
+                settings.SetValue(WorkspaceSortSettingsSection, GlobalSearchSortDescendingSettingKey, globalSearchDescending);
+            },
+            "Nepodařilo se uložit řazení přehledů");
     }
 }

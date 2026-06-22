@@ -53,6 +53,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh, AHK-kompatibilni validace/normalizace datumu, tachometru, castek, intervalu, typu paliva a platnosti dokladu i rozbalovacich hodnot pro typ dokladu a opakovani pripominky v beznych editorech i v balicku pro vozidlo
 - persist chyb evidencnich editoru je osetreny pres sdileny helper: editor zustane otevreny, chyba se precte ve workspace statusu i shellu a fokus se vrati na editor nebo seznam
 - evidencni persist helper umi rollback session datasetu na snapshot pred mutaci; fyzicke mazani managed priloh se provadi az po uspesnem zapsani legacy dat
+- prubezne ukladane preference shellu, filtru, razeni, casove osy, terminovych prehledu a nakladoveho obdobi pouzivaji sdilenou serializovanou persist frontu se snapshot rollbackem, aby selhani zapisu `settings.ini` neprosaklo do pozdejsiho ulozeni dat
 - pristupne razeni evidencnich workspace `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` pres ovladace `Radit` a `Sestupne`; posledni volba se uklada do legacy `settings.ini`
 - dokladove akce pro otevreni souboru, otevreni slozky a zkopirovani vyresene cesty prilohy pres `Ctrl+Shift+C`, vcetne citelneho stavoveho vysledku pri uspechu i selhani
 - posun opakovanych pripominek na dalsi termin v Avalonia workspace, vcetne zkratky `Ctrl+Shift+N`

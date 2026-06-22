@@ -151,22 +151,17 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        _dataSet.Settings.SetValue("app", VehicleListHideInactiveSettingKey, HideInactiveVehicles ? "1" : "0");
-        _dataSet.Settings.SetValue("app", VehicleListCategoryFilterSettingKey, NormalizeVehicleCategoryFilter(SelectedVehicleCategoryFilter));
-        _dataSet.Settings.SetValue("app", VehicleListStatusFilterSettingKey, NormalizeVehicleStatusFilter(SelectedVehicleStatusFilter));
-        _ = PersistVehicleListFilterPreferencesCoreAsync();
-    }
-
-    private async Task PersistVehicleListFilterPreferencesCoreAsync()
-    {
-        try
-        {
-            await _session.PersistAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            ShellStatus = $"Nepodařilo se uložit filtry seznamu vozidel: {ex.Message}";
-        }
+        var hideInactiveValue = HideInactiveVehicles ? "1" : "0";
+        var categoryFilter = NormalizeVehicleCategoryFilter(SelectedVehicleCategoryFilter);
+        var statusFilter = NormalizeVehicleStatusFilter(SelectedVehicleStatusFilter);
+        PersistPreferenceSettingsAsync(
+            settings =>
+            {
+                settings.SetValue("app", VehicleListHideInactiveSettingKey, hideInactiveValue);
+                settings.SetValue("app", VehicleListCategoryFilterSettingKey, categoryFilter);
+                settings.SetValue("app", VehicleListStatusFilterSettingKey, statusFilter);
+            },
+            "Nepodařilo se uložit filtry seznamu vozidel");
     }
 
     private string NormalizeVehicleCategoryFilter(string? value)

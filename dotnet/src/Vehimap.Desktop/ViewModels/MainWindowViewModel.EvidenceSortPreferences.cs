@@ -119,28 +119,31 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, HistorySortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(HistoryWorkspace.SelectedHistorySortOption, WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortLabel));
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, HistorySortDescendingSettingKey, HistoryWorkspace.HistorySortDescending ? "1" : "0");
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, FuelSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(FuelWorkspace.SelectedFuelSortOption, WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortLabel));
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, FuelSortDescendingSettingKey, FuelWorkspace.FuelSortDescending ? "1" : "0");
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, ReminderSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(ReminderWorkspace.SelectedReminderSortOption, WorkspaceSortHelpers.ReminderSortOptions, WorkspaceSortHelpers.DueDateSortLabel));
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, ReminderSortDescendingSettingKey, ReminderWorkspace.ReminderSortDescending ? "1" : "0");
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, MaintenanceSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(MaintenanceWorkspace.SelectedMaintenanceSortOption, WorkspaceSortHelpers.MaintenanceSortOptions, WorkspaceSortHelpers.TitleSortLabel));
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, MaintenanceSortDescendingSettingKey, MaintenanceWorkspace.MaintenanceSortDescending ? "1" : "0");
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, RecordSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(RecordWorkspace.SelectedRecordSortOption, WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortLabel));
-        _dataSet.Settings.SetValue(EvidenceSortSettingsSection, RecordSortDescendingSettingKey, RecordWorkspace.RecordSortDescending ? "1" : "0");
-        _ = PersistEvidenceSortPreferencesCoreAsync();
-    }
+        var historySort = WorkspaceSortHelpers.NormalizeSortOption(HistoryWorkspace.SelectedHistorySortOption, WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortLabel);
+        var historyDescending = HistoryWorkspace.HistorySortDescending ? "1" : "0";
+        var fuelSort = WorkspaceSortHelpers.NormalizeSortOption(FuelWorkspace.SelectedFuelSortOption, WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortLabel);
+        var fuelDescending = FuelWorkspace.FuelSortDescending ? "1" : "0";
+        var reminderSort = WorkspaceSortHelpers.NormalizeSortOption(ReminderWorkspace.SelectedReminderSortOption, WorkspaceSortHelpers.ReminderSortOptions, WorkspaceSortHelpers.DueDateSortLabel);
+        var reminderDescending = ReminderWorkspace.ReminderSortDescending ? "1" : "0";
+        var maintenanceSort = WorkspaceSortHelpers.NormalizeSortOption(MaintenanceWorkspace.SelectedMaintenanceSortOption, WorkspaceSortHelpers.MaintenanceSortOptions, WorkspaceSortHelpers.TitleSortLabel);
+        var maintenanceDescending = MaintenanceWorkspace.MaintenanceSortDescending ? "1" : "0";
+        var recordSort = WorkspaceSortHelpers.NormalizeSortOption(RecordWorkspace.SelectedRecordSortOption, WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortLabel);
+        var recordDescending = RecordWorkspace.RecordSortDescending ? "1" : "0";
 
-    private async Task PersistEvidenceSortPreferencesCoreAsync()
-    {
-        try
-        {
-            await _session.PersistAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            ShellStatus = $"Nepodařilo se uložit řazení evidencí: {ex.Message}";
-        }
+        PersistPreferenceSettingsAsync(
+            settings =>
+            {
+                settings.SetValue(EvidenceSortSettingsSection, HistorySortSettingKey, historySort);
+                settings.SetValue(EvidenceSortSettingsSection, HistorySortDescendingSettingKey, historyDescending);
+                settings.SetValue(EvidenceSortSettingsSection, FuelSortSettingKey, fuelSort);
+                settings.SetValue(EvidenceSortSettingsSection, FuelSortDescendingSettingKey, fuelDescending);
+                settings.SetValue(EvidenceSortSettingsSection, ReminderSortSettingKey, reminderSort);
+                settings.SetValue(EvidenceSortSettingsSection, ReminderSortDescendingSettingKey, reminderDescending);
+                settings.SetValue(EvidenceSortSettingsSection, MaintenanceSortSettingKey, maintenanceSort);
+                settings.SetValue(EvidenceSortSettingsSection, MaintenanceSortDescendingSettingKey, maintenanceDescending);
+                settings.SetValue(EvidenceSortSettingsSection, RecordSortSettingKey, recordSort);
+                settings.SetValue(EvidenceSortSettingsSection, RecordSortDescendingSettingKey, recordDescending);
+            },
+            "Nepodařilo se uložit řazení evidencí");
     }
 }

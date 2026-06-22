@@ -30,20 +30,10 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        _dataSet.Settings.SetValue(TimelineSettingsSection, TimelineFilterSettingKey, NormalizeTimelineFilter(TimelineWorkspace.SelectedTimelineFilter));
-        _ = PersistTimelinePreferencesCoreAsync();
-    }
-
-    private async Task PersistTimelinePreferencesCoreAsync()
-    {
-        try
-        {
-            await _session.PersistAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            ShellStatus = $"Nepodařilo se uložit filtr časové osy: {ex.Message}";
-        }
+        var timelineFilter = NormalizeTimelineFilter(TimelineWorkspace.SelectedTimelineFilter);
+        PersistPreferenceSettingsAsync(
+            settings => settings.SetValue(TimelineSettingsSection, TimelineFilterSettingKey, timelineFilter),
+            "Nepodařilo se uložit filtr časové osy");
     }
 
     private string NormalizeTimelineFilter(string? value)

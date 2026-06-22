@@ -6,6 +6,7 @@ using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
+using Vehimap.Storage.Legacy;
 using System.Globalization;
 using Xunit;
 
@@ -155,6 +156,35 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Contains("vehicles.tsv nelze zapsat", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
         Assert.Equal(viewModel.VehicleDetailWorkspace.VehicleEditorStatus, viewModel.ShellStatus);
         Assert.Equal(DesktopFocusTarget.VehicleEditorName, requestedTargets.Last());
+    }
+
+    [Fact]
+    public async Task Failed_preference_save_does_not_leak_into_later_data_persist()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataStore = new MutableStubLegacyDataStore(BuildBaseDataSet(), cloneOnLoad: true);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        dataStore.SaveException = new IOException("settings.ini nelze zapsat.");
+        var changedCategory = LegacyKnownValues.Categories[0];
+        viewModel.SelectedVehicleCategoryFilter = changedCategory;
+
+        Assert.Equal(changedCategory, viewModel.SelectedVehicleCategoryFilter);
+        Assert.Contains("Nepodařilo se uložit filtry seznamu vozidel", viewModel.ShellStatus);
+
+        dataStore.SaveException = null;
+        viewModel.CreateHistoryCommand.Execute(null);
+        viewModel.HistoryWorkspace.HistoryEditorDate = "15.10.2026";
+        viewModel.HistoryWorkspace.HistoryEditorType = "Servis";
+
+        await viewModel.SaveHistoryCommand.ExecuteAsync(null);
+
+        Assert.Single(dataStore.CurrentDataSet.HistoryEntries);
+        Assert.Equal(
+            MainWindowViewModel.AllVehicleCategoriesLabel,
+            dataStore.CurrentDataSet.Settings.GetValue("app", "vehicle_category_filter", MainWindowViewModel.AllVehicleCategoriesLabel));
     }
 
     [Fact]

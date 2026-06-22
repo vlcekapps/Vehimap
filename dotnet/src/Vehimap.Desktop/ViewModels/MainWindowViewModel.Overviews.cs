@@ -139,27 +139,28 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        _dataSet.Settings.SetValue("overview", OverviewIncludeMissingGreenSettingKey, UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview ? "1" : "0");
-        _dataSet.Settings.SetValue("overview", OverviewIncludeDataIssuesSettingKey, UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview ? "1" : "0");
-        _dataSet.Settings.SetValue("overview", OverviewUpcomingFilterSettingKey, NormalizeUpcomingOverviewFilter(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter));
-        _dataSet.Settings.SetValue("overview", OverviewOverdueFilterSettingKey, NormalizeOverdueOverviewFilter(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter));
-        _dataSet.Settings.SetValue("overview", OverviewUpcomingSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel));
-        _dataSet.Settings.SetValue("overview", OverviewUpcomingSortDescendingSettingKey, UpcomingOverviewWorkspace.UpcomingOverviewSortDescending ? "1" : "0");
-        _dataSet.Settings.SetValue("overview", OverviewOverdueSortSettingKey, WorkspaceSortHelpers.NormalizeSortOption(OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel));
-        _dataSet.Settings.SetValue("overview", OverviewOverdueSortDescendingSettingKey, OverdueOverviewWorkspace.OverdueOverviewSortDescending ? "1" : "0");
-        _ = PersistOverviewPreferencesCoreAsync();
-    }
+        var includeMissingGreen = UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview ? "1" : "0";
+        var includeDataIssues = UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview ? "1" : "0";
+        var upcomingFilter = NormalizeUpcomingOverviewFilter(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
+        var overdueFilter = NormalizeOverdueOverviewFilter(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
+        var upcomingSort = WorkspaceSortHelpers.NormalizeSortOption(UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel);
+        var upcomingDescending = UpcomingOverviewWorkspace.UpcomingOverviewSortDescending ? "1" : "0";
+        var overdueSort = WorkspaceSortHelpers.NormalizeSortOption(OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel);
+        var overdueDescending = OverdueOverviewWorkspace.OverdueOverviewSortDescending ? "1" : "0";
 
-    private async Task PersistOverviewPreferencesCoreAsync()
-    {
-        try
-        {
-            await _session.PersistAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            ShellStatus = $"Nepodařilo se uložit volby přehledu termínů: {ex.Message}";
-        }
+        PersistPreferenceSettingsAsync(
+            settings =>
+            {
+                settings.SetValue("overview", OverviewIncludeMissingGreenSettingKey, includeMissingGreen);
+                settings.SetValue("overview", OverviewIncludeDataIssuesSettingKey, includeDataIssues);
+                settings.SetValue("overview", OverviewUpcomingFilterSettingKey, upcomingFilter);
+                settings.SetValue("overview", OverviewOverdueFilterSettingKey, overdueFilter);
+                settings.SetValue("overview", OverviewUpcomingSortSettingKey, upcomingSort);
+                settings.SetValue("overview", OverviewUpcomingSortDescendingSettingKey, upcomingDescending);
+                settings.SetValue("overview", OverviewOverdueSortSettingKey, overdueSort);
+                settings.SetValue("overview", OverviewOverdueSortDescendingSettingKey, overdueDescending);
+            },
+            "Nepodařilo se uložit volby přehledu termínů");
     }
 
     private string NormalizeUpcomingOverviewFilter(string? value) =>

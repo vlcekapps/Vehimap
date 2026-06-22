@@ -223,22 +223,17 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        _dataSet.Settings.SetValue(CostPeriodSettingsSection, CostPeriodPresetSettingKey, NormalizeCostPeriodPreset(preset));
-        _dataSet.Settings.SetValue(CostPeriodSettingsSection, CostPeriodStartSettingKey, start.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-        _dataSet.Settings.SetValue(CostPeriodSettingsSection, CostPeriodEndSettingKey, end.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
-        _ = PersistCostPeriodPreferencesCoreAsync();
-    }
-
-    private async Task PersistCostPeriodPreferencesCoreAsync()
-    {
-        try
-        {
-            await _session.PersistAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            ShellStatus = $"Nepodařilo se uložit období nákladů: {ex.Message}";
-        }
+        var normalizedPreset = NormalizeCostPeriodPreset(preset);
+        var startValue = start.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        var endValue = end.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        PersistPreferenceSettingsAsync(
+            settings =>
+            {
+                settings.SetValue(CostPeriodSettingsSection, CostPeriodPresetSettingKey, normalizedPreset);
+                settings.SetValue(CostPeriodSettingsSection, CostPeriodStartSettingKey, startValue);
+                settings.SetValue(CostPeriodSettingsSection, CostPeriodEndSettingKey, endValue);
+            },
+            "Nepodařilo se uložit období nákladů");
     }
 
     private string NormalizeCostPeriodPreset(string? value)
