@@ -33,6 +33,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - `Tiskový přehled` všech vozidel ve formátu HTML; v C# Avalonia větvi se nejprve uloží jako běžný soubor a po uložení se otevře v prohlížeči pro tisk přes `Ctrl+P`
 - `Export dat` do jednoho záložního souboru `.vehimapbak` včetně plánů údržby a spravovaných příloh dokladů; v C# Avalonia větvi výsledná hláška uvádí i počet zahrnutých a přeskočených chybějících spravovaných příloh
 - `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním, obnovení plánů údržby i návratu spravovaných příloh dokladů
+- v C# Avalonia větvi se po úspěšné obnově zálohy okamžitě synchronizuje i běžící session stav aplikace, tedy data, audit, meta údaje a podporovaná nastavení; pokud samotné obnovení selže, původní běžící data zůstanou zachovaná a chyba se oznámí stavovou hláškou
 - v C# Avalonia větvi se při poškozeném legacy `TSV`, `INI` nebo `.vehimapbak` souboru zobrazí konkrétní cesta a detail parseru, aby šlo chybu opravit bez hádání, která evidence nebo záloha selhala
 - v C# Avalonia větvi app-level akce z menu a tray okna jako nastavení, export/import zálohy, `O programu` a kontrola aktualizací hlásí zrušení i chyby ve stavovém textu shellu nebo v aktualizačním dialogu místo pádu aplikace
 - hlavní pracovní okna jako `Dashboard`, `Přehled termínů`, `Propadlé termíny`, `Audit dat`, `Časová osa vozidla`, `Pojištění a doklady`, `Plán údržby`, detail vozidla i hlavní seznam lze zvětšit, takže se seznamy natáhnou do šířky i výšky

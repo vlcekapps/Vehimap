@@ -300,8 +300,13 @@ public sealed class DesktopSessionControllerTests
             Vehicles =
             [
                 new Vehicle("veh_2", "Bozena", "Osobni vozidla", "Veteran", "Skoda 100", "", "1974", "35", "", "09/2026", "05/2025", "10/2026")
+            ],
+            VehicleMetaEntries =
+            [
+                new VehicleMeta("veh_2", "Veteran", "srazove", "benzin", "", "klidne", "manual")
             ]
         };
+        importedData.Settings.SetValue("app", "show_dashboard_on_launch", "1");
         SeedNotificationHistory(importedData.Settings);
         var backupService = new StubBackupService
         {
@@ -314,6 +319,47 @@ public sealed class DesktopSessionControllerTests
 
         Assert.NotNull(backupService.RestoredBundle);
         AssertNotificationHistoryCleared(backupService.RestoredBundle.Data.Settings);
+        Assert.NotSame(importedData, session.DataSet);
+        Assert.Equal("veh_2", Assert.Single(session.DataSet.Vehicles).Id);
+        Assert.True(session.MetaByVehicleId.ContainsKey("veh_2"));
+        Assert.True(session.ReadSupportedSettings().ShowDashboardOnLaunch);
+        AssertNotificationHistoryCleared(session.DataSet.Settings);
+    }
+
+    [Fact]
+    public async Task Restore_backup_keeps_current_session_state_when_restore_fails()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var currentData = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobni vozidla", "Rodinne auto", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        currentData.Settings.SetValue("app", "show_dashboard_on_launch", "0");
+        var importedData = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_2", "Bozena", "Osobni vozidla", "Veteran", "Skoda 100", "", "1974", "35", "", "09/2026", "05/2025", "10/2026")
+            ]
+        };
+        importedData.Settings.SetValue("app", "show_dashboard_on_launch", "1");
+        var backupService = new StubBackupService
+        {
+            ImportBundle = new VehimapBackupBundle(importedData, []),
+            RestoreException = new IOException("restore failed")
+        };
+        var session = CreateSessionController(dataRoot, new StubLegacyDataStore(currentData), backupService: backupService);
+        await session.LoadAsync(dataRoot.AppBasePath);
+
+        await Assert.ThrowsAsync<IOException>(() => session.RestoreBackupAsync(@"C:\backups\vehimap.vehimapbak"));
+
+        Assert.Equal("veh_1", Assert.Single(session.DataSet.Vehicles).Id);
+        Assert.False(session.ReadSupportedSettings().ShowDashboardOnLaunch);
     }
 
     [Fact]
@@ -658,6 +704,8 @@ public sealed class DesktopSessionControllerTests
 
         public BackupExportResult ExportResult { get; set; } = new(string.Empty, 0, 0);
 
+        public Exception? RestoreException { get; set; }
+
         public async Task<BackupExportResult> ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
             ExportedPath = backupPath;
@@ -671,6 +719,11 @@ public sealed class DesktopSessionControllerTests
 
         public Task<BackupRestoreResult> RestoreAsync(VehimapDataRoot dataRoot, VehimapBackupBundle backupBundle, CancellationToken cancellationToken = default)
         {
+            if (RestoreException is not null)
+            {
+                throw RestoreException;
+            }
+
             RestoredBundle = backupBundle;
             return Task.FromResult(RestoreResult);
         }

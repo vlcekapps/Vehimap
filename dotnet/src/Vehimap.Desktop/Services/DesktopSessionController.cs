@@ -154,7 +154,9 @@ internal sealed class DesktopSessionController
 
         var bundle = await _backupService.ImportAsync(backupPath, cancellationToken).ConfigureAwait(false);
         ResetNotificationHistory(bundle.Data.Settings);
-        return await _backupService.RestoreAsync(DataRoot, bundle, cancellationToken).ConfigureAwait(false);
+        var result = await _backupService.RestoreAsync(DataRoot, bundle, cancellationToken).ConfigureAwait(false);
+        RestoreDataSet(CloneDataSet(bundle.Data));
+        return result;
     }
 
     public DesktopSupportedSettingsSnapshot ReadSupportedSettings() =>
