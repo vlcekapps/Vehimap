@@ -15,7 +15,7 @@
         AutomationProperties.AutomationId="TrayActionsWindow"
         AutomationProperties.HelpText="Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; další tlačítka otevřou přehledy, nejbližší termíny, filtrované kontroly nebo souborové akce. Escape okno zavře bez akce.">
   <Border Margin="16" Padding="20" Background="#1C2B38" CornerRadius="10">
-    <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14">
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="14">
       <TextBlock FontSize="22"
                  FontWeight="SemiBold"
                  Text="{Binding Title}"
@@ -24,7 +24,16 @@
                  Opacity="0.82"
                  Text="{Binding Description}"
                  TextWrapping="Wrap" />
-      <ScrollViewer Grid.Row="2"
+      <Border Grid.Row="2"
+              Padding="10"
+              Background="#263B4D"
+              CornerRadius="8">
+        <TextBlock Text="{Binding BackgroundStatus}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding BackgroundStatus}"
+                   AutomationProperties.AutomationId="TrayActionsBackgroundStatusText" />
+      </Border>
+      <ScrollViewer Grid.Row="3"
                     VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
                     AutomationProperties.Name="Seznam akcí lišty"
@@ -193,7 +202,7 @@
                   AutomationProperties.AutomationId="ExitTrayActionButton" />
         </StackPanel>
       </ScrollViewer>
-      <Button Grid.Row="3"
+      <Button Grid.Row="4"
               x:Name="CloseTrayActionsButton"
               HorizontalAlignment="Right"
               MinWidth="120"

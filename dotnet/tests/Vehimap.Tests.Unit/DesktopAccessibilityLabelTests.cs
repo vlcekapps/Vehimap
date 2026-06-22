@@ -168,6 +168,7 @@ public sealed class DesktopAccessibilityLabelTests
     {
         var model = TrayActionsDialogViewModel.CreateDefault();
 
+        Assert.Equal("Stav pozadí zatím není dostupný.", model.BackgroundStatus);
         Assert.Equal("Zobrazit Vehimap", model.ShowMainWindowLabel);
         Assert.Equal("Otevřít Dashboard", model.ShowDashboardLabel);
         Assert.Equal("Blížící se termíny", model.ShowUpcomingOverviewLabel);
@@ -512,6 +513,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Escape akci zruší.", confirmationXaml);
         Assert.Contains("Key.Escape", confirmationCodeBehind);
         Assert.Contains("CanResize=\"True\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"TrayActionsBackgroundStatusText\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TrayActionsScrollViewer\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowMainWindowTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowDashboardTrayActionButton\"", trayActionsXaml);

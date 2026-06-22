@@ -341,9 +341,11 @@ public sealed partial class MainWindowViewModel
     internal TrayActionsDialogViewModel BuildTrayActionsDialogModel()
     {
         var canUseDataActions = CanUseDataActions;
+        var background = BuildBackgroundSnapshot();
 
         return TrayActionsDialogViewModel.CreateDefault() with
         {
+            BackgroundStatus = BuildTrayBackgroundStatus(background),
             CanShowDashboard = CanUseWorkspaceNavigation,
             CanShowUpcomingOverview = CanUseWorkspaceNavigation,
             CanShowOverdueOverview = CanUseWorkspaceNavigation,
@@ -367,5 +369,27 @@ public sealed partial class MainWindowViewModel
             CanReloadData = canUseDataActions,
             CanOpenDataFolder = this.CanOpenDataFolder
         };
+    }
+
+    private static string BuildTrayBackgroundStatus(DesktopBackgroundSnapshot snapshot)
+    {
+        if (snapshot.HasNotification)
+        {
+            return $"{snapshot.NotificationTitle}. {snapshot.NotificationMessage}";
+        }
+
+        var toolTip = NormalizeTrayBackgroundText(snapshot.ToolTipText);
+        return string.IsNullOrWhiteSpace(toolTip)
+            ? "Pozadí je aktivní. Aktuálně není nic k oznámení."
+            : $"Pozadí je aktivní. {toolTip}";
+    }
+
+    private static string NormalizeTrayBackgroundText(string value)
+    {
+        var parts = value
+            .Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(part => !string.Equals(part, "Vehimap Desktop", StringComparison.CurrentCultureIgnoreCase));
+
+        return string.Join(" ", parts);
     }
 }

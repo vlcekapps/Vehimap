@@ -384,6 +384,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(activeModel.CanReviewRecords);
         Assert.True(activeModel.CanCreateAutomaticBackupNow);
         Assert.True(activeModel.CanOpenAutomaticBackupFolder);
+        Assert.Contains("Vehimap:", activeModel.BackgroundStatus, StringComparison.Ordinal);
+        Assert.Contains("termínů k řešení", activeModel.BackgroundStatus, StringComparison.Ordinal);
 
         var quietViewModel = CreateViewModel(BuildQuietQuickActionDataSet());
         var quietModel = quietViewModel.BuildTrayActionsDialogModel();
@@ -413,6 +415,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(quietModel.CanReviewReminders);
         Assert.False(quietModel.CanReviewMaintenance);
         Assert.False(quietModel.CanReviewRecords);
+        Assert.Contains("Pozadí je aktivní", quietModel.BackgroundStatus, StringComparison.Ordinal);
+        Assert.Contains("Vozidla:", quietModel.BackgroundStatus, StringComparison.Ordinal);
     }
 
     [Fact]
