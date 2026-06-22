@@ -805,12 +805,28 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenSelectedRecordFile))]
     private async Task OpenSelectedRecordFileAsync()
     {
-        if (!CanOpenSelectedRecordFile || SelectedRecord is null)
+        if (SelectedRecord is null || string.IsNullOrWhiteSpace(SelectedRecord.ResolvedPath))
         {
+            SetRecordAttachmentActionStatus("Doklad nemá dostupnou cestu k příloze.");
             return;
         }
 
-        await _fileLauncher.OpenAsync(SelectedRecord.ResolvedPath).ConfigureAwait(false);
+        var path = SelectedRecord.ResolvedPath;
+        if (!CanOpenSelectedRecordFile)
+        {
+            SetRecordAttachmentActionStatus($"Příloha dokladu není dostupná: {path}.");
+            return;
+        }
+
+        try
+        {
+            await _fileLauncher.OpenAsync(path).ConfigureAwait(true);
+            SetRecordAttachmentActionStatus($"Příloha dokladu byla otevřena: {path}.");
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            SetRecordAttachmentActionStatus($"Přílohu dokladu se nepodařilo otevřít: {ex.Message}");
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedRecordFolder))]
@@ -819,10 +835,19 @@ public sealed partial class MainWindowViewModel : ObservableObject
         var folderPath = GetSelectedRecordFolderPath();
         if (string.IsNullOrWhiteSpace(folderPath))
         {
+            SetRecordAttachmentActionStatus("Doklad nemá dostupnou složku přílohy.");
             return;
         }
 
-        await _fileLauncher.OpenFolderAsync(folderPath).ConfigureAwait(false);
+        try
+        {
+            await _fileLauncher.OpenFolderAsync(folderPath).ConfigureAwait(true);
+            SetRecordAttachmentActionStatus($"Složka přílohy dokladu byla otevřena: {folderPath}.");
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            SetRecordAttachmentActionStatus($"Složku přílohy dokladu se nepodařilo otevřít: {ex.Message}");
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanCopySelectedRecordPath))]
@@ -831,12 +856,19 @@ public sealed partial class MainWindowViewModel : ObservableObject
         var path = GetSelectedRecordCopyPath();
         if (string.IsNullOrWhiteSpace(path))
         {
+            SetRecordAttachmentActionStatus("Doklad nemá dostupnou cestu ke zkopírování.");
             return;
         }
 
-        await _clipboardService.SetTextAsync(path).ConfigureAwait(false);
-        RecordEditorStatus = "Vyřešená cesta dokladu byla zkopírována do schránky.";
-        RequestFocus(DesktopFocusTarget.RecordList);
+        try
+        {
+            await _clipboardService.SetTextAsync(path).ConfigureAwait(true);
+            SetRecordAttachmentActionStatus("Vyřešená cesta dokladu byla zkopírována do schránky.");
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            SetRecordAttachmentActionStatus($"Cestu dokladu se nepodařilo zkopírovat: {ex.Message}");
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardAuditItem))]
@@ -1357,6 +1389,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
         return string.IsNullOrWhiteSpace(SelectedRecord?.ResolvedPath)
             ? null
             : SelectedRecord.ResolvedPath;
+    }
+
+    private void SetRecordAttachmentActionStatus(string status)
+    {
+        RecordEditorStatus = status;
+        ShellStatus = status;
+        RequestFocus(DesktopFocusTarget.RecordList);
     }
 
     private static TItem? FindById<TItem>(IEnumerable<TItem> items, Func<TItem, string> idSelector, string entryId)

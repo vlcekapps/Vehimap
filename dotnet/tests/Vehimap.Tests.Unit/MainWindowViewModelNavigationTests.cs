@@ -977,6 +977,79 @@ public sealed class MainWindowViewModelNavigationTests
 
             Assert.Equal(attachmentPath, clipboard.LastCopiedText);
             Assert.Contains("zkopírována", viewModel.RecordWorkspace.RecordEditorStatus, StringComparison.CurrentCulture);
+            Assert.Equal(viewModel.RecordWorkspace.RecordEditorStatus, viewModel.ShellStatus);
+        }
+        finally
+        {
+            File.Delete(attachmentPath);
+        }
+    }
+
+    [Fact]
+    public async Task Open_selected_record_file_failure_reports_status_without_crashing_shell()
+    {
+        var attachmentPath = Path.GetTempFileName();
+        var fileLauncher = new FailingFileLauncher(new InvalidOperationException("Soubor nejde otevřít."));
+
+        try
+        {
+            var viewModel = CreateViewModel(fileLauncher: fileLauncher, recordFilePath: attachmentPath);
+
+            viewModel.RecordWorkspace.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
+
+            await viewModel.OpenSelectedRecordFileCommand.ExecuteAsync(null);
+
+            Assert.Contains("Přílohu dokladu se nepodařilo otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
+            Assert.Contains("Soubor nejde otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
+            Assert.Equal(viewModel.RecordWorkspace.RecordEditorStatus, viewModel.ShellStatus);
+        }
+        finally
+        {
+            File.Delete(attachmentPath);
+        }
+    }
+
+    [Fact]
+    public async Task Open_selected_record_folder_failure_reports_status_without_crashing_shell()
+    {
+        var attachmentPath = Path.GetTempFileName();
+        var fileLauncher = new FailingFileLauncher(new InvalidOperationException("Složka nejde otevřít."), failFolders: true);
+
+        try
+        {
+            var viewModel = CreateViewModel(fileLauncher: fileLauncher, recordFilePath: attachmentPath);
+
+            viewModel.RecordWorkspace.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
+
+            await viewModel.OpenSelectedRecordFolderCommand.ExecuteAsync(null);
+
+            Assert.Contains("Složku přílohy dokladu se nepodařilo otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
+            Assert.Contains("Složka nejde otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
+            Assert.Equal(viewModel.RecordWorkspace.RecordEditorStatus, viewModel.ShellStatus);
+        }
+        finally
+        {
+            File.Delete(attachmentPath);
+        }
+    }
+
+    [Fact]
+    public async Task Copy_selected_record_path_failure_reports_status_without_crashing_shell()
+    {
+        var attachmentPath = Path.GetTempFileName();
+        var clipboard = new FailingClipboardService(new InvalidOperationException("Schránka není dostupná."));
+
+        try
+        {
+            var viewModel = CreateViewModel(clipboardService: clipboard, recordFilePath: attachmentPath);
+
+            viewModel.RecordWorkspace.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_1");
+
+            await viewModel.CopySelectedRecordPathCommand.ExecuteAsync(null);
+
+            Assert.Contains("Cestu dokladu se nepodařilo zkopírovat", viewModel.RecordWorkspace.RecordEditorStatus);
+            Assert.Contains("Schránka není dostupná", viewModel.RecordWorkspace.RecordEditorStatus);
+            Assert.Equal(viewModel.RecordWorkspace.RecordEditorStatus, viewModel.ShellStatus);
         }
         finally
         {
@@ -1310,17 +1383,19 @@ public sealed class MainWindowViewModelNavigationTests
     private sealed class FailingFileLauncher : IFileLauncher
     {
         private readonly Exception _exception;
+        private readonly bool _failFolders;
 
-        public FailingFileLauncher(Exception exception)
+        public FailingFileLauncher(Exception exception, bool failFolders = false)
         {
             _exception = exception;
+            _failFolders = failFolders;
         }
 
         public Task OpenAsync(string path, CancellationToken cancellationToken = default)
             => Task.FromException(_exception);
 
         public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
+            => _failFolders ? Task.FromException(_exception) : Task.CompletedTask;
     }
 
     private sealed class CapturingClipboardService : IClipboardService
@@ -1332,6 +1407,19 @@ public sealed class MainWindowViewModelNavigationTests
             LastCopiedText = text;
             return Task.CompletedTask;
         }
+    }
+
+    private sealed class FailingClipboardService : IClipboardService
+    {
+        private readonly Exception _exception;
+
+        public FailingClipboardService(Exception exception)
+        {
+            _exception = exception;
+        }
+
+        public Task SetTextAsync(string text, CancellationToken cancellationToken = default)
+            => Task.FromException(_exception);
     }
 
     private sealed class StubTextFileSaveService : ITextFileSaveService

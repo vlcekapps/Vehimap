@@ -19,7 +19,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - samostatný `Plán údržby` pro každé vozidlo, včetně šablon běžných servisních úkonů, doporučených balíků podle kategorie a explicitního servisního profilu vozidla, intervalu podle kilometrů nebo měsíců, evidence posledního servisu a rychlého označení splnění s volitelným zapsáním do historie
 - samostatný `Balíček pro vozidlo`, který umí v jednom kroku nabídnout doporučené servisní plány, placeholdery dokladů i obecné připomínky podle kategorie a servisního profilu
 - rychlé hledání a přístupné řazení v historii událostí, kilometrech a tankování, pojištění a dokladech, vlastních připomínkách i plánu údržby, včetně zapamatování posledního řazení
-- samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, volby mezi `Externí cestou` a `Spravovanou kopií`, přesunu přílohy do interní složky aplikace, znovu propojení chybějícího souboru, otevření navázaného souboru i jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy
+- samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, volby mezi `Externí cestou` a `Spravovanou kopií`, přesunu přílohy do interní složky aplikace, znovu propojení chybějícího souboru, otevření navázaného souboru i jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy; v C# Avalonia větvi se úspěch i selhání těchto akcí hlásí ve stavovém textu dokladů i hlavního shellu
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku, včetně `Ujeto km`, `Ceny / km` a srovnání s předchozím stejně dlouhým obdobím
 - samostatný přehled `Náklady napříč vozidly` pro vybrané období s porovnáním vozidel, rozpadnutím částek podle skupin, `Ujeto km`, `Cenou / km`, upozorněním na aktivní vozidla bez číselného nákladu a se stavy k řešení přímo u jednotlivých vozidel
 - v C# Avalonia větvi lze v přehledu `Náklady napříč vozidly` zvolit období přes předvolby nebo vlastní datumový rozsah; poslední volba se ukládá do `settings.ini` a používá se i v dashboardu a exportech
@@ -154,7 +154,7 @@ V hlavním okně:
 - v `Plánu údržby` klávesa `Enter` upraví vybraný úkon a `Delete` jej odstraní
 - v AHK aplikaci kliknutí na hlavičku sloupce v evidencích přepíná řazení podle vybraného sloupce; v C# Avalonia větvi se stejná volba provádí přes přístupné ovladače `Řadit` a `Sestupně`, aby byla dobře čitelná i pro screen readery
 - v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu, `Ctrl+Shift+O` jeho složku a `Ctrl+Shift+C` zkopíruje uloženou cestu
-- v C# Avalonia větvi je stejná dokladová akce dostupná i tlačítkem `Kopírovat cestu`; kopíruje vyřešenou cestu, tedy použitelnou absolutní cestu ke spravované i externí příloze
+- v C# Avalonia větvi je stejná dokladová akce dostupná i tlačítkem `Kopírovat cestu`; kopíruje vyřešenou cestu, tedy použitelnou absolutní cestu ke spravované i externí příloze, a případný problém se schránkou nebo otevřením souboru oznámí stavovou hláškou místo tichého selhání
 - ve `Vlastních připomínkách` navíc `Ctrl+Shift+N` posune vybranou opakovanou připomínku na další termín
 - v C# Avalonia větvi je stejná akce dostupná i tlačítkem `Další termín` ve sdíleném workspace připomínek a funguje stejně v hlavní kartě i samostatném okně
 - v `Nákladech a souhrnech` `Ctrl+R` obnoví vybrané období a `Ctrl+D` otevře detail vozidla
@@ -215,6 +215,7 @@ V evidenci pojištění a dokladů:
 - `Externí cesta` ponechá doklad napojený na původní soubor mimo aplikaci bez automatického kopírování
 - tlačítko `Přesunout do příloh` umí převést existující externí cestu na spravovanou kopii a `Znovu propojit` opraví chybějící soubor v obou režimech
 - stav přílohy zobrazuje režim, uloženou cestu, skutečně vyřešenou cestu i dostupnost a seznam navíc rozlišuje `Soubor`, `Složka`, `Chybí soubor`, `Chybí složka` nebo `Bez cesty`, takže hned poznáte nedostupnou přílohu
+- otevření přílohy, otevření její složky i kopírování cesty v C# Avalonia větvi zapisuje čitelný výsledek do stavového textu, takže je jasné, zda akce proběhla, nebo proč selhala
 
 V `Náklady a souhrny`:
 

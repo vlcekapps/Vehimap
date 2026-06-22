@@ -53,7 +53,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo vytvaret, upravovat a mazat `doklady`, vcetne volby `Spravovana kopie` vs `Externi cesta` a importu souboru do spravovanych priloh
 - v editorech dokladu a pripominek pouzivat AHK-kompatibilni rozbalovaci hodnoty pro typ dokladu a opakovani pripominky
 - v dialogu `Balicek pro vozidlo` pouzivat stejne rozbalovaci hodnoty a normalizaci pro typ dokladu a opakovani pripominky jako v beznych editorech
-- u dokladu otevrit prilozeny soubor, otevrit jeho slozku a zkopirovat vyresenou cestu pres `Ctrl+Shift+C` nebo tlacitko `Kopirovat cestu`
+- u dokladu otevrit prilozeny soubor, otevrit jeho slozku a zkopirovat vyresenou cestu pres `Ctrl+Shift+C` nebo tlacitko `Kopirovat cestu`; uspech i chyba techto akci se propisuje do stavoveho textu dokladu i hlavniho shellu
 - primo vytvaret, upravovat a mazat `historii`
 - primo vytvaret, upravovat a mazat `tankovani`
 - v editoru tankovani pouzivat AHK-kompatibilni rozbalovaci hodnoty pro typ paliva
