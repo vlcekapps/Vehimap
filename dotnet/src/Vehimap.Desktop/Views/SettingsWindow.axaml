@@ -7,14 +7,14 @@
         Height="700"
         MinWidth="580"
         MinHeight="660"
-        CanResize="False"
+        CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="Nastavení"
         AutomationProperties.Name="Nastavení Vehimapu"
         AutomationProperties.AutomationId="SettingsWindow"
         AutomationProperties.HelpText="Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.">
-  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="Nastavení Vehimapu" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
@@ -22,7 +22,13 @@
                Text="Zde nastavíte upozornění, chování aplikace po spuštění a automatické zálohy desktopové větve."
                TextWrapping="Wrap" />
 
-    <StackPanel Grid.Row="2" Margin="0,18,0,0" Spacing="18">
+    <ScrollViewer Grid.Row="2"
+                  Margin="0,18,0,0"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  AutomationProperties.Name="Volby nastavení"
+                  AutomationProperties.AutomationId="SettingsContentScrollViewer">
+      <StackPanel Spacing="18">
       <Border Padding="14" Background="#143A4A5A" CornerRadius="8">
         <Grid ColumnDefinitions="280,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
           <TextBlock Grid.Row="0" Text="Upozornění na TK (dny)" VerticalAlignment="Center" />
@@ -126,9 +132,10 @@
                      TextWrapping="Wrap" />
         </Grid>
       </Border>
-    </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
 
-    <Border Grid.Row="4"
+    <Border Grid.Row="3"
             Margin="0,18,0,0"
             Padding="12"
             Background="#143A4A5A"
@@ -136,7 +143,7 @@
       <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" />
     </Border>
 
-    <StackPanel Grid.Row="5"
+    <StackPanel Grid.Row="4"
                 Margin="0,18,0,0"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"

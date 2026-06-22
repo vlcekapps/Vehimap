@@ -419,6 +419,8 @@ public sealed class DesktopAccessibilityLabelTests
         var trayActionsXaml = ReadViewFile("TrayActionsWindow.axaml");
         var trayActionsCodeBehind = ReadViewCodeBehind("TrayActionsWindow.axaml.cs");
 
+        Assert.Contains("CanResize=\"True\"", settingsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SettingsContentScrollViewer\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
         Assert.Contains("Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.", settingsXaml);
         Assert.Contains("IsEnabled=\"{Binding CanConfigureAutomaticBackups}\"", settingsXaml);
@@ -428,6 +430,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.Escape", settingsCodeBehind);
         Assert.Contains("case Key.S", settingsCodeBehind);
         Assert.Contains("case Key.B", settingsCodeBehind);
+        Assert.Contains("CanResize=\"True\"", aboutXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AboutDetailsScrollViewer\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
         Assert.Contains("Ctrl+O otevře release poznámky, Ctrl+Shift+C zkopíruje informace a Escape dialog zavře.", aboutXaml);
         Assert.Contains("Key.Escape", aboutCodeBehind);
@@ -436,6 +440,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("KeyModifiers.Control | KeyModifiers.Shift", aboutCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"CopyAboutDetailsButton\"", aboutXaml);
         Assert.Contains("AutomationProperties.Name=\"Kopírovat informace o aplikaci do schránky\"", aboutXaml);
+        Assert.Contains("CanResize=\"True\"", updateXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"UpdateDetailsScrollViewer\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"Kontrola aktualizací\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCheckWindow\"", updateXaml);

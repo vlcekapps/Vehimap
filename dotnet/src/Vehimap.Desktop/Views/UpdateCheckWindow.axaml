@@ -7,7 +7,7 @@
         Height="420"
         MinWidth="560"
         MinHeight="360"
-        CanResize="False"
+        CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="Kontrola aktualizací"
@@ -26,9 +26,14 @@
             Padding="12"
             Background="#143A4A5A"
             CornerRadius="8">
-      <TextBlock Text="{Binding Details}"
-                 TextWrapping="Wrap"
-                 AutomationProperties.AutomationId="UpdateDetailsText" />
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    AutomationProperties.Name="Detaily kontroly aktualizací"
+                    AutomationProperties.AutomationId="UpdateDetailsScrollViewer">
+        <TextBlock Text="{Binding Details}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.AutomationId="UpdateDetailsText" />
+      </ScrollViewer>
     </Border>
     <StackPanel Grid.Row="3"
                 Margin="0,18,0,0"

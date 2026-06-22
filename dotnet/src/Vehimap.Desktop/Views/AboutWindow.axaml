@@ -7,7 +7,7 @@
         Height="430"
         MinWidth="560"
         MinHeight="390"
-        CanResize="False"
+        CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="O programu"
@@ -22,9 +22,13 @@
                Text="Informace o běhu desktopové větve Vehimapu."
                TextWrapping="Wrap" />
 
-    <Grid Grid.Row="2"
-          Margin="0,18,0,0"
-          ColumnDefinitions="170,*"
+    <ScrollViewer Grid.Row="2"
+                  Margin="0,18,0,0"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  AutomationProperties.Name="Informace o aplikaci"
+                  AutomationProperties.AutomationId="AboutDetailsScrollViewer">
+      <Grid ColumnDefinitions="170,*"
           RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
       <TextBlock Grid.Row="0" Text="Verze aplikace" FontWeight="SemiBold" />
       <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AppVersion}" TextWrapping="Wrap" />
@@ -42,7 +46,8 @@
       <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding FrameworkDescription}" TextWrapping="Wrap" />
       <TextBlock Grid.Row="7" Text="Soubor aplikace" FontWeight="SemiBold" />
       <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ApplicationPath}" TextWrapping="Wrap" />
-    </Grid>
+      </Grid>
+    </ScrollViewer>
 
     <StackPanel Grid.Row="3"
                 Margin="0,18,0,0"

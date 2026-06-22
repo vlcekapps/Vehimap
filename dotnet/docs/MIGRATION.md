@@ -103,6 +103,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - settings UX pro automaticke zalohy: interval a pocet ponechanych zaloh jsou aktivni jen pri zapnutych pravidelnych zalohach a vypnuta sekce neblokuje ulozeni ostatnich voleb
 - klavesove ovladani dialogu `Nastaveni`: `Ctrl+S`, `Ctrl+B` a `Esc`
 - sjednocene klavesove ovladani app-level dialogu: `O programu` ma `Ctrl+O` pro release poznamky a `Ctrl+Shift+C` pro zkopirovani diagnostiky, kontrola aktualizaci, potvrzeni, upozorneni a tray akce maji `Esc` pro bezpecne zavreni
+- app-level dialogy `Nastaveni`, `O programu` a `Kontrola aktualizaci` jsou resizable a hlavni obsah maji ve scrollovatelne oblasti, aby delsi cesty nebo vetsi systemove pismo neschovaly akcni tlacitka
 - testovane generovani autostart zaznamu pro Linux `.desktop` a macOS LaunchAgent, vcetne cest s mezerami, uvozovkami a XML znaky
 - multiplatformni publish matrix pro `.NET` desktop preview
 - draft release workflow pro tagy `dotnet-preview-v<verze>` s verzovanymi balicky a checksumy

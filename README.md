@@ -175,6 +175,7 @@ V hlavním okně:
 - v `Nastavení` klávesa `Esc` zavře dialog bez uložení
 - v `O programu` zkratka `Ctrl+O` otevře release poznámky, `Ctrl+Shift+C` zkopíruje informace o aplikaci do schránky a `Esc` dialog zavře
 - v aplikačních dialozích jako `Zkontrolovat aktualizace`, potvrzení akce, upozornění nebo `Akce Vehimapu na liště` klávesa `Esc` zavře dialog bez provedení nové akce; v kontrole aktualizací `Ctrl+Shift+C` zkopíruje detail výsledku do schránky a tlačítka se dál aktivují standardně klávesou `Enter` nebo mezerníkem
+- v C# Avalonia větvi jsou dialogy `Nastavení`, `O programu` a `Zkontrolovat aktualizace` zvětšitelné a mají scrollovatelný hlavní obsah, takže dlouhé cesty nebo větší systémové písmo neschovají tlačítka `Uložit`, `Zavřít` nebo hlavní aktualizační akci
 
 ## Používání detailněji: 
 
