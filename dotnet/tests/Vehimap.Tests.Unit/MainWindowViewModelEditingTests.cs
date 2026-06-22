@@ -72,6 +72,91 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Empty(dataStore.CurrentDataSet.Reminders);
     }
 
+    [Fact]
+    public async Task Save_history_command_reports_persist_failure_and_keeps_editor_open()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataStore = new MutableStubLegacyDataStore(BuildBaseDataSet())
+        {
+            SaveException = new IOException("history.tsv nelze zapsat.")
+        };
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.CreateHistoryCommand.Execute(null);
+        viewModel.HistoryWorkspace.HistoryEditorDate = "10.10.2026";
+        viewModel.HistoryWorkspace.HistoryEditorType = "Servis";
+
+        await viewModel.SaveHistoryCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.HistoryWorkspace.IsEditingHistory);
+        Assert.Contains("Historický záznam se nepodařilo uložit", viewModel.HistoryWorkspace.HistoryEditorStatus);
+        Assert.Contains("history.tsv nelze zapsat", viewModel.HistoryWorkspace.HistoryEditorStatus);
+        Assert.Equal(viewModel.HistoryWorkspace.HistoryEditorStatus, viewModel.ShellStatus);
+        Assert.Equal(DesktopFocusTarget.HistoryEditorDate, requestedTargets.Last());
+    }
+
+    [Fact]
+    public async Task Save_record_command_reports_persist_failure_and_keeps_editor_open()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataStore = new MutableStubLegacyDataStore(BuildBaseDataSet())
+        {
+            SaveException = new IOException("records.tsv nelze zapsat.")
+        };
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.CreateRecordCommand.Execute(null);
+        viewModel.RecordWorkspace.SelectedRecordEditorAttachmentMode = "Externí cesta";
+        viewModel.RecordWorkspace.RecordEditorRecordType = "Doklad";
+        viewModel.RecordWorkspace.RecordEditorTitle = "Povinné ručení";
+        viewModel.RecordWorkspace.RecordEditorValidTo = "03/2027";
+
+        await viewModel.SaveRecordCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.RecordWorkspace.IsEditingRecord);
+        Assert.Contains("Doklad se nepodařilo uložit", viewModel.RecordWorkspace.RecordEditorStatus);
+        Assert.Contains("records.tsv nelze zapsat", viewModel.RecordWorkspace.RecordEditorStatus);
+        Assert.Equal(viewModel.RecordWorkspace.RecordEditorStatus, viewModel.ShellStatus);
+        Assert.Equal(DesktopFocusTarget.RecordEditorTitle, requestedTargets.Last());
+    }
+
+    [Fact]
+    public async Task Save_vehicle_command_reports_persist_failure_and_keeps_editor_open()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataStore = new MutableStubLegacyDataStore(BuildBaseDataSet())
+        {
+            SaveException = new IOException("vehicles.tsv nelze zapsat.")
+        };
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+        var requestedTargets = new List<DesktopFocusTarget>();
+        viewModel.FocusRequested += requestedTargets.Add;
+
+        viewModel.CreateVehicleCommand.Execute(null);
+        viewModel.VehicleDetailWorkspace.VehicleEditorName = "Božena";
+        viewModel.VehicleDetailWorkspace.VehicleEditorCategory = "Osobní vozidla";
+        viewModel.VehicleDetailWorkspace.VehicleEditorMakeModel = "Škoda 100";
+        viewModel.VehicleDetailWorkspace.VehicleEditorNextTk = "09/2026";
+
+        await viewModel.SaveVehicleCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
+        Assert.Contains("Vozidlo se nepodařilo uložit", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
+        Assert.Contains("vehicles.tsv nelze zapsat", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
+        Assert.Equal(viewModel.VehicleDetailWorkspace.VehicleEditorStatus, viewModel.ShellStatus);
+        Assert.Equal(DesktopFocusTarget.VehicleEditorName, requestedTargets.Last());
+    }
+
     [Theory]
     [InlineData("Ročně", "10.10.2027")]
     [InlineData("Každý rok", "10.10.2027")]
@@ -924,11 +1009,18 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         public VehimapDataSet CurrentDataSet { get; private set; }
 
+        public Exception? SaveException { get; set; }
+
         public Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
             => Task.FromResult(CurrentDataSet);
 
         public Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
+            if (SaveException is not null)
+            {
+                throw SaveException;
+            }
+
             CurrentDataSet = dataSet;
             return Task.CompletedTask;
         }

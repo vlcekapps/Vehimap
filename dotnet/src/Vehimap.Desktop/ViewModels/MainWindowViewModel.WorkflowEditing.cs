@@ -113,7 +113,16 @@ public sealed partial class MainWindowViewModel
             (HistoryEditorNote ?? string.Empty).Trim());
 
         UpsertHistoryEntry(updatedEntry);
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, HistoryTabIndex, historyId: historyId);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                HistoryTabIndex,
+                historyId: historyId,
+                setFailureStatus: status => HistoryEditorStatus = status,
+                failureFocus: DesktopFocusTarget.HistoryEditorDate,
+                failurePrefix: "Historický záznam se nepodařilo uložit"))
+        {
+            return;
+        }
 
         var wasNew = _editingHistoryId is null;
         CancelHistoryEditCore(clearStatus: false);
@@ -139,7 +148,15 @@ public sealed partial class MainWindowViewModel
         }
 
         _dataSet.HistoryEntries.RemoveAll(item => string.Equals(item.Id, SelectedHistory.Id, StringComparison.Ordinal));
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, HistoryTabIndex);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                HistoryTabIndex,
+                setFailureStatus: status => HistoryEditorStatus = status,
+                failureFocus: DesktopFocusTarget.HistoryList,
+                failurePrefix: "Historický záznam se nepodařilo odstranit"))
+        {
+            return;
+        }
         HistoryEditorStatus = "Historický záznam byl odstraněn.";
         RequestFocus(DesktopFocusTarget.HistoryList);
     }
@@ -259,7 +276,16 @@ public sealed partial class MainWindowViewModel
             (FuelEditorNote ?? string.Empty).Trim());
 
         UpsertFuelEntry(updatedEntry);
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, FuelTabIndex, fuelId: fuelId);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                FuelTabIndex,
+                fuelId: fuelId,
+                setFailureStatus: status => FuelEditorStatus = status,
+                failureFocus: DesktopFocusTarget.FuelEditorDate,
+                failurePrefix: "Tankování se nepodařilo uložit"))
+        {
+            return;
+        }
 
         var wasNew = _editingFuelId is null;
         CancelFuelEditCore(clearStatus: false);
@@ -285,7 +311,15 @@ public sealed partial class MainWindowViewModel
         }
 
         _dataSet.FuelEntries.RemoveAll(item => string.Equals(item.Id, SelectedFuel.Id, StringComparison.Ordinal));
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, FuelTabIndex);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                FuelTabIndex,
+                setFailureStatus: status => FuelEditorStatus = status,
+                failureFocus: DesktopFocusTarget.FuelList,
+                failurePrefix: "Tankování se nepodařilo odstranit"))
+        {
+            return;
+        }
         FuelEditorStatus = "Tankování bylo odstraněno.";
         RequestFocus(DesktopFocusTarget.FuelList);
     }
@@ -422,7 +456,16 @@ public sealed partial class MainWindowViewModel
             (MaintenanceEditorNote ?? string.Empty).Trim());
 
         UpsertMaintenancePlan(updatedPlan);
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, MaintenanceTabIndex, maintenanceId: maintenanceId);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                MaintenanceTabIndex,
+                maintenanceId: maintenanceId,
+                setFailureStatus: status => MaintenanceEditorStatus = status,
+                failureFocus: DesktopFocusTarget.MaintenanceEditorTitle,
+                failurePrefix: "Servisní plán se nepodařilo uložit"))
+        {
+            return;
+        }
 
         var wasNew = _editingMaintenanceId is null;
         CancelMaintenanceEditCore(clearStatus: false);
@@ -448,7 +491,15 @@ public sealed partial class MainWindowViewModel
         }
 
         _dataSet.MaintenancePlans.RemoveAll(item => string.Equals(item.Id, SelectedMaintenance.Id, StringComparison.Ordinal));
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, MaintenanceTabIndex);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                MaintenanceTabIndex,
+                setFailureStatus: status => MaintenanceEditorStatus = status,
+                failureFocus: DesktopFocusTarget.MaintenanceList,
+                failurePrefix: "Servisní plán se nepodařilo odstranit"))
+        {
+            return;
+        }
         MaintenanceEditorStatus = "Servisní plán byl odstraněn.";
         RequestFocus(DesktopFocusTarget.MaintenanceList);
     }
@@ -567,7 +618,16 @@ public sealed partial class MainWindowViewModel
                 historyNote));
         }
 
-        await PersistDataAndRestoreSelectionAsync(updatedPlan.VehicleId, MaintenanceTabIndex, maintenanceId: updatedPlan.Id);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                updatedPlan.VehicleId,
+                MaintenanceTabIndex,
+                maintenanceId: updatedPlan.Id,
+                setFailureStatus: status => MaintenanceEditorStatus = status,
+                failureFocus: DesktopFocusTarget.MaintenanceList,
+                failurePrefix: "Splnění servisního úkonu se nepodařilo uložit"))
+        {
+            return MaintenanceEditorStatus;
+        }
 
         var odometerMessage = string.IsNullOrWhiteSpace(updatedPlan.LastServiceOdometer)
             ? "Tachometr zůstal prázdný."

@@ -121,7 +121,16 @@ public sealed partial class MainWindowViewModel
         UpsertReminder(updatedReminder);
         var wasNew = _editingReminderId is null;
 
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, ReminderTabIndex, reminderId: reminderId);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                ReminderTabIndex,
+                reminderId: reminderId,
+                setFailureStatus: status => ReminderEditorStatus = status,
+                failureFocus: DesktopFocusTarget.ReminderEditorTitle,
+                failurePrefix: "Připomínku se nepodařilo uložit"))
+        {
+            return;
+        }
 
         CancelReminderEditCore(clearStatus: false);
         ReminderEditorStatus = wasNew
@@ -146,7 +155,15 @@ public sealed partial class MainWindowViewModel
         }
 
         _dataSet.Reminders.RemoveAll(item => string.Equals(item.Id, SelectedReminder.Id, StringComparison.Ordinal));
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, ReminderTabIndex);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                ReminderTabIndex,
+                setFailureStatus: status => ReminderEditorStatus = status,
+                failureFocus: DesktopFocusTarget.ReminderList,
+                failurePrefix: "Připomínku se nepodařilo odstranit"))
+        {
+            return;
+        }
         ReminderEditorStatus = "Připomínka byla odstraněna.";
         RequestFocus(DesktopFocusTarget.ReminderList);
     }
@@ -171,7 +188,16 @@ public sealed partial class MainWindowViewModel
         var updatedReminder = reminder! with { DueDate = nextDueDateText };
         UpsertReminder(updatedReminder);
 
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, ReminderTabIndex, reminderId: updatedReminder.Id);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                ReminderTabIndex,
+                reminderId: updatedReminder.Id,
+                setFailureStatus: status => ReminderEditorStatus = status,
+                failureFocus: DesktopFocusTarget.ReminderList,
+                failurePrefix: "Posun připomínky se nepodařilo uložit"))
+        {
+            return;
+        }
 
         ReminderEditorStatus = $"Připomínka byla posunuta na {nextDueDateText}.";
         SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, updatedReminder.Id);
@@ -344,7 +370,16 @@ public sealed partial class MainWindowViewModel
         UpsertRecord(updatedRecord);
         DeleteManagedAttachmentIfUnused(previousManagedPath);
 
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, RecordTabIndex, recordId: recordId);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                RecordTabIndex,
+                recordId: recordId,
+                setFailureStatus: status => RecordEditorStatus = status,
+                failureFocus: DesktopFocusTarget.RecordEditorTitle,
+                failurePrefix: "Doklad se nepodařilo uložit"))
+        {
+            return;
+        }
 
         CancelRecordEditCore(clearStatus: false);
         RecordEditorStatus = existingRecord is null
@@ -372,7 +407,15 @@ public sealed partial class MainWindowViewModel
         _dataSet.Records.RemoveAll(item => string.Equals(item.Id, SelectedRecord.Id, StringComparison.Ordinal));
         DeleteManagedAttachmentIfUnused(existingRecord?.AttachmentMode == VehicleRecordAttachmentMode.Managed ? existingRecord.FilePath : null);
 
-        await PersistDataAndRestoreSelectionAsync(SelectedVehicle.Id, RecordTabIndex);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                SelectedVehicle.Id,
+                RecordTabIndex,
+                setFailureStatus: status => RecordEditorStatus = status,
+                failureFocus: DesktopFocusTarget.RecordList,
+                failurePrefix: "Doklad se nepodařilo odstranit"))
+        {
+            return;
+        }
 
         RecordEditorStatus = "Doklad byl odstraněn.";
         RequestFocus(DesktopFocusTarget.RecordList);
@@ -489,27 +532,46 @@ public sealed partial class MainWindowViewModel
         }
     }
 
-    private async Task PersistDataAndRestoreSelectionAsync(
+    private async Task<bool> PersistDataAndRestoreSelectionAsync(
         string vehicleId,
         int tabIndex,
         string? historyId = null,
         string? fuelId = null,
         string? reminderId = null,
         string? maintenanceId = null,
-        string? recordId = null)
+        string? recordId = null,
+        Action<string>? setFailureStatus = null,
+        DesktopFocusTarget? failureFocus = null,
+        string failurePrefix = "Změny se nepodařilo uložit")
     {
         if (_dataRoot is null)
         {
-            return;
+            return false;
         }
 
-        await _session.PersistAsync();
+        try
+        {
+            await _session.PersistAsync().ConfigureAwait(true);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            var message = $"{failurePrefix}: {ex.Message}";
+            setFailureStatus?.Invoke(message);
+            ShellStatus = message;
+            if (failureFocus is { } focusTarget)
+            {
+                RequestFocus(focusTarget);
+            }
+
+            return false;
+        }
+
         Load();
 
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
         if (SelectedVehicle is null)
         {
-            return;
+            return false;
         }
 
         SelectedVehicleTabIndex = tabIndex;
@@ -539,6 +601,8 @@ public sealed partial class MainWindowViewModel
             PopulateVehicleRecords(vehicleId);
             SelectedRecord = FindById(SelectedVehicleRecords, item => item.Id, recordId ?? string.Empty);
         }
+
+        return true;
     }
 
     private async Task<string> BuildRecordFilePathAsync(VehicleRecord? existingRecord, VehicleRecordAttachmentMode attachmentMode)

@@ -259,7 +259,15 @@ public sealed partial class MainWindowViewModel
         UpsertVehicleMeta(BuildUpdatedVehicleMeta(vehicleId, existingMeta));
 
         var wasNew = _editingVehicleId is null;
-        await PersistDataAndRestoreSelectionAsync(vehicleId, DetailTabIndex);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                vehicleId,
+                DetailTabIndex,
+                setFailureStatus: status => VehicleDetailWorkspace.VehicleEditorStatus = status,
+                failureFocus: DesktopFocusTarget.VehicleEditorName,
+                failurePrefix: "Vozidlo se nepodařilo uložit"))
+        {
+            return;
+        }
 
         CancelVehicleEditCore(clearStatus: false);
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
@@ -420,7 +428,15 @@ public sealed partial class MainWindowViewModel
             return "Balíček pro vozidlo už neměl žádné nové položky k doplnění.";
         }
 
-        await PersistDataAndRestoreSelectionAsync(vehicleId, DetailTabIndex);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                vehicleId,
+                DetailTabIndex,
+                setFailureStatus: status => VehicleDetailWorkspace.VehicleEditorStatus = status,
+                failureFocus: DesktopFocusTarget.VehicleDetailPrimaryAction,
+                failurePrefix: "Balíček pro vozidlo se nepodařilo uložit"))
+        {
+            return VehicleDetailWorkspace.VehicleEditorStatus;
+        }
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
 
         var parts = new List<string>();
@@ -492,7 +508,15 @@ public sealed partial class MainWindowViewModel
             return "Doporučené šablony už neměly žádné nové servisní plány k doplnění.";
         }
 
-        await PersistDataAndRestoreSelectionAsync(vehicleId, MaintenanceTabIndex);
+        if (!await PersistDataAndRestoreSelectionAsync(
+                vehicleId,
+                MaintenanceTabIndex,
+                setFailureStatus: status => MaintenanceEditorStatus = status,
+                failureFocus: DesktopFocusTarget.MaintenanceList,
+                failurePrefix: "Doporučené šablony se nepodařilo uložit"))
+        {
+            return MaintenanceEditorStatus;
+        }
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
 
         return $"Doporučené šablony přidaly {addedMaintenance} servisních plánů.";
