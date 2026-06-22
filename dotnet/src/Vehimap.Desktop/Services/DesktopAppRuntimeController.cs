@@ -295,6 +295,9 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             case TrayActionsDialogAction.ShowDashboard:
                 await ShowDashboardAsync().ConfigureAwait(true);
                 break;
+            case TrayActionsDialogAction.OpenBackgroundStatus:
+                await ExecuteShellQuickActionAsync(() => _shell.OpenBackgroundNotificationAsync()).ConfigureAwait(true);
+                break;
             case TrayActionsDialogAction.ShowUpcomingOverview:
                 await ShowUpcomingOverviewAsync().ConfigureAwait(true);
                 break;

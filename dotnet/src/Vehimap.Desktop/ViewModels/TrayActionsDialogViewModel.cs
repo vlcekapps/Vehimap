@@ -4,6 +4,7 @@ public sealed record TrayActionsDialogViewModel(
     string Title,
     string Description,
     string BackgroundStatus,
+    string OpenBackgroundStatusLabel,
     string ShowMainWindowLabel,
     string ShowDashboardLabel,
     string ShowUpcomingOverviewLabel,
@@ -33,6 +34,7 @@ public sealed record TrayActionsDialogViewModel(
     string CancelLabel)
 {
     public bool CanShowMainWindow { get; init; } = true;
+    public bool CanOpenBackgroundStatus { get; init; }
     public bool CanShowDashboard { get; init; } = true;
     public bool CanShowUpcomingOverview { get; init; } = true;
     public bool CanShowOverdueOverview { get; init; } = true;
@@ -63,6 +65,7 @@ public sealed record TrayActionsDialogViewModel(
         "Akce Vehimapu na liště",
         "Vyberte akci pro běžící Vehimap. Toto okno nahrazuje nativní menu lišty pro přístupnější ovládání přes klávesnici a čtečku obrazovky.",
         "Stav pozadí zatím není dostupný.",
+        "Otevřít aktuální upozornění",
         "Zobrazit Vehimap",
         "Otevřít Dashboard",
         "Blížící se termíny",

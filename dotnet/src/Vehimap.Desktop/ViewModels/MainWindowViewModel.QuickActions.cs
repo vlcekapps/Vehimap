@@ -225,6 +225,32 @@ public sealed partial class MainWindowViewModel
             .ToList();
     }
 
+    internal async Task<bool> OpenBackgroundNotificationAsync()
+    {
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít aktuální upozornění").ConfigureAwait(true))
+        {
+            return false;
+        }
+
+        var attentionItems = BuildBackgroundAttentionItems();
+        if (attentionItems.FirstOrDefault() is { } timelineItem)
+        {
+            ShellStatus = $"Otevřeno aktuální upozornění: {timelineItem.VehicleName} - {timelineItem.Title} ({timelineItem.Date}).";
+            OpenTimelineItem(timelineItem);
+            return true;
+        }
+
+        if (AuditItems.FirstOrDefault() is { } auditItem)
+        {
+            ShellStatus = $"Otevřena auditní položka: {auditItem.VehicleName} - {auditItem.Title}.";
+            SelectVehicleAndOpenEntity(auditItem.VehicleId, auditItem.EntityKind, auditItem.EntityId);
+            return true;
+        }
+
+        ShellStatus = "Momentálně není žádné aktuální upozornění k otevření.";
+        return false;
+    }
+
     private void OpenQuickActionOverview(
         string kind,
         string emptyFilterStatusMessage,
@@ -346,6 +372,7 @@ public sealed partial class MainWindowViewModel
         return TrayActionsDialogViewModel.CreateDefault() with
         {
             BackgroundStatus = BuildTrayBackgroundStatus(background),
+            CanOpenBackgroundStatus = background.HasNotification && CanUseWorkspaceNavigation,
             CanShowDashboard = CanUseWorkspaceNavigation,
             CanShowUpcomingOverview = CanUseWorkspaceNavigation,
             CanShowOverdueOverview = CanUseWorkspaceNavigation,

@@ -28,10 +28,18 @@
               Padding="10"
               Background="#263B4D"
               CornerRadius="8">
-        <TextBlock Text="{Binding BackgroundStatus}"
-                   TextWrapping="Wrap"
-                   AutomationProperties.Name="{Binding BackgroundStatus}"
-                   AutomationProperties.AutomationId="TrayActionsBackgroundStatusText" />
+        <StackPanel Spacing="8">
+          <TextBlock Text="{Binding BackgroundStatus}"
+                     TextWrapping="Wrap"
+                     AutomationProperties.Name="{Binding BackgroundStatus}"
+                     AutomationProperties.AutomationId="TrayActionsBackgroundStatusText" />
+          <Button x:Name="OpenBackgroundStatusTrayActionButton"
+                  Click="OnOpenBackgroundStatusClick"
+                  Content="{Binding OpenBackgroundStatusLabel}"
+                  IsEnabled="{Binding CanOpenBackgroundStatus}"
+                  AutomationProperties.Name="Otevřít aktuální upozornění z pozadí"
+                  AutomationProperties.AutomationId="OpenBackgroundStatusTrayActionButton" />
+        </StackPanel>
       </Border>
       <ScrollViewer Grid.Row="3"
                     VerticalScrollBarVisibility="Auto"

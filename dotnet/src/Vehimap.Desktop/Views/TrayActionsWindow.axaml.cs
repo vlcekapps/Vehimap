@@ -26,6 +26,12 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnOpenBackgroundStatusClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.OpenBackgroundStatus;
+        Close();
+    }
+
     private void OnShowDashboardClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.ShowDashboard;

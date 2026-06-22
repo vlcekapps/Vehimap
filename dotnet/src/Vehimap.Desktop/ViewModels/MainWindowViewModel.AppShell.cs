@@ -226,17 +226,7 @@ public sealed partial class MainWindowViewModel
 
     internal DesktopBackgroundSnapshot BuildBackgroundSnapshot()
     {
-        var attentionTimelineItems = _dataSet.Vehicles
-            .SelectMany(vehicle => _timelineService.BuildVehicleTimeline(_dataSet, vehicle.Id, DateOnly.FromDateTime(DateTime.Today)))
-            .Where(item =>
-                !string.IsNullOrWhiteSpace(item.Status)
-                && !string.Equals(item.Status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase))
-            .OrderBy(item => item.IsFuture ? 1 : 0)
-            .ThenBy(item => item.IsFuture ? item.Date.DayNumber : -item.Date.DayNumber)
-            .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)
-            .ThenBy(item => item.KindLabel, StringComparer.CurrentCultureIgnoreCase)
-            .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
-            .ToList();
+        var attentionTimelineItems = BuildBackgroundAttentionItems();
 
         var toolTipLines = new List<string>
         {
@@ -247,7 +237,7 @@ public sealed partial class MainWindowViewModel
         var firstAttention = attentionTimelineItems.FirstOrDefault();
         if (firstAttention is not null)
         {
-            toolTipLines.Add($"Nejbližší k řešení: {firstAttention.VehicleName} - {firstAttention.Title} ({firstAttention.DateText}, {firstAttention.Status})");
+            toolTipLines.Add($"Nejbližší k řešení: {firstAttention.VehicleName} - {firstAttention.Title} ({firstAttention.Date}, {firstAttention.Status})");
         }
         else if (DashboardUpcomingTimeline.FirstOrDefault() is { } firstUpcoming)
         {
@@ -260,7 +250,7 @@ public sealed partial class MainWindowViewModel
                 string.Join(Environment.NewLine, toolTipLines),
                 $"timeline|{attentionTimelineItems.Count}|{firstAttention.VehicleId}|{firstAttention.Kind}|{firstAttention.EntryId}|{firstAttention.Date}",
                 $"Vehimap: {attentionTimelineItems.Count} termínů k řešení",
-                $"{firstAttention.VehicleName}: {firstAttention.Title} ({firstAttention.DateText}). {firstAttention.Status}",
+                $"{firstAttention.VehicleName}: {firstAttention.Title} ({firstAttention.Date}). {firstAttention.Status}",
                 true);
         }
 
@@ -281,6 +271,22 @@ public sealed partial class MainWindowViewModel
             string.Empty,
             string.Empty,
             false);
+    }
+
+    private List<VehicleTimelineItemViewModel> BuildBackgroundAttentionItems()
+    {
+        return _dataSet.Vehicles
+            .SelectMany(vehicle => _timelineService.BuildVehicleTimeline(_dataSet, vehicle.Id, DateOnly.FromDateTime(DateTime.Today)))
+            .Where(item =>
+                !string.IsNullOrWhiteSpace(item.Status)
+                && !string.Equals(item.Status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase))
+            .OrderBy(item => item.IsFuture ? 1 : 0)
+            .ThenBy(item => item.IsFuture ? item.Date.DayNumber : -item.Date.DayNumber)
+            .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(item => item.KindLabel, StringComparer.CurrentCultureIgnoreCase)
+            .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
+            .Select(CreateTimelineItemViewModel)
+            .ToList();
     }
 
     internal void ShowDashboardFromTray()

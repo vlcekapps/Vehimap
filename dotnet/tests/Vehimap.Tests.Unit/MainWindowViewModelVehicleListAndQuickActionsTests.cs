@@ -356,6 +356,42 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
     }
 
     [Fact]
+    public async Task Open_background_notification_prefers_current_due_timeline_item()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        var opened = await viewModel.OpenBackgroundNotificationAsync();
+
+        Assert.True(opened);
+        Assert.True(viewModel.IsDetailTabSelected);
+        Assert.Equal("Milena", viewModel.SelectedVehicle?.Name);
+        Assert.Equal(DesktopFocusTarget.VehicleList, requestedFocus);
+        Assert.Contains("Otevřeno aktuální upozornění", viewModel.ShellStatus, StringComparison.CurrentCulture);
+        Assert.Contains("Milena", viewModel.ShellStatus, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
+    public async Task Open_background_notification_falls_back_to_first_audit_item()
+    {
+        var dataSet = BuildQuietQuickActionDataSet();
+        dataSet.Vehicles.Clear();
+        dataSet.Vehicles.Add(new Vehicle("veh_audit", "Bez spz", "Osobní vozidla", "", "Škoda 120", "", "1988", "43", "", "12/2099", "01/2099", "12/2099"));
+        var viewModel = CreateViewModel(dataSet);
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        var opened = await viewModel.OpenBackgroundNotificationAsync();
+
+        Assert.True(opened);
+        Assert.True(viewModel.IsDetailTabSelected);
+        Assert.Equal("Bez spz", viewModel.SelectedVehicle?.Name);
+        Assert.Equal(DesktopFocusTarget.VehicleList, requestedFocus);
+        Assert.Contains("Otevřena auditní položka", viewModel.ShellStatus, StringComparison.CurrentCulture);
+    }
+
+    [Fact]
     public void Tray_actions_availability_reflects_current_quick_action_targets()
     {
         var activeViewModel = CreateViewModel(BuildQuickActionDataSet());
@@ -382,6 +418,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(activeModel.CanReviewReminders);
         Assert.True(activeModel.CanReviewMaintenance);
         Assert.True(activeModel.CanReviewRecords);
+        Assert.True(activeModel.CanOpenBackgroundStatus);
         Assert.True(activeModel.CanCreateAutomaticBackupNow);
         Assert.True(activeModel.CanOpenAutomaticBackupFolder);
         Assert.Contains("Vehimap:", activeModel.BackgroundStatus, StringComparison.Ordinal);
@@ -415,6 +452,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(quietModel.CanReviewReminders);
         Assert.False(quietModel.CanReviewMaintenance);
         Assert.False(quietModel.CanReviewRecords);
+        Assert.False(quietModel.CanOpenBackgroundStatus);
         Assert.Contains("Pozadí je aktivní", quietModel.BackgroundStatus, StringComparison.Ordinal);
         Assert.Contains("Vozidla:", quietModel.BackgroundStatus, StringComparison.Ordinal);
     }
@@ -437,6 +475,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(model.CanShowDashboard);
         Assert.False(model.CanShowUpcomingOverview);
         Assert.False(model.CanShowOverdueOverview);
+        Assert.False(model.CanOpenBackgroundStatus);
         Assert.False(model.CanOpenNearestTechnical);
         Assert.False(model.CanReviewTechnical);
         Assert.False(model.CanOpenPrintableReport);

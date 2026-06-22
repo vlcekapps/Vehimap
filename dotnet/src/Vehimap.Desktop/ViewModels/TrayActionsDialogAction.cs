@@ -28,5 +28,6 @@ public enum TrayActionsDialogAction
     CheckForUpdates = 23,
     OpenDataFolder = 24,
     CreateAutomaticBackupNow = 25,
-    OpenAutomaticBackupFolder = 26
+    OpenAutomaticBackupFolder = 26,
+    OpenBackgroundStatus = 27
 }

@@ -169,6 +169,7 @@ public sealed class DesktopAccessibilityLabelTests
         var model = TrayActionsDialogViewModel.CreateDefault();
 
         Assert.Equal("Stav pozadí zatím není dostupný.", model.BackgroundStatus);
+        Assert.Equal("Otevřít aktuální upozornění", model.OpenBackgroundStatusLabel);
         Assert.Equal("Zobrazit Vehimap", model.ShowMainWindowLabel);
         Assert.Equal("Otevřít Dashboard", model.ShowDashboardLabel);
         Assert.Equal("Blížící se termíny", model.ShowUpcomingOverviewLabel);
@@ -514,6 +515,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.Escape", confirmationCodeBehind);
         Assert.Contains("CanResize=\"True\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TrayActionsBackgroundStatusText\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenBackgroundStatusTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenBackgroundStatus}\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TrayActionsScrollViewer\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowMainWindowTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowDashboardTrayActionButton\"", trayActionsXaml);
@@ -556,6 +559,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
         Assert.Contains("Escape okno zavře bez akce.", trayActionsXaml);
         Assert.Contains("OnShowUpcomingOverviewClick", trayActionsCodeBehind);
+        Assert.Contains("OnOpenBackgroundStatusClick", trayActionsCodeBehind);
         Assert.Contains("OnShowOverdueOverviewClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenNearestTechnicalClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenNearestGreenCardClick", trayActionsCodeBehind);
@@ -579,6 +583,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OnOpenAboutClick", trayActionsCodeBehind);
         Assert.Contains("OnCheckForUpdatesClick", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowUpcomingOverview", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.OpenBackgroundStatus", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowOverdueOverview", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenNearestTechnical", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenNearestGreenCard", trayActionsCodeBehind);
@@ -609,6 +614,8 @@ public sealed class DesktopAccessibilityLabelTests
     {
         var runtimeController = ReadDesktopServiceFile("DesktopAppRuntimeController.cs");
 
+        Assert.Contains("TrayActionsDialogAction.OpenBackgroundStatus", runtimeController);
+        Assert.Contains("_shell.OpenBackgroundNotificationAsync()", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenNearestTechnical", runtimeController);
         Assert.Contains("_shell.OpenNearestTechnicalCommand.ExecuteAsync(null)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenNearestGreenCard", runtimeController);
