@@ -73,6 +73,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - pred obnovou zalohy vytvari stejnou ochrannou kopii aktualnich TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` jako AHK verze a shell po importu hlasi konkretni cestu i pocet obnovenych priloh
 - po uspesne obnove zalohy `DesktopSessionController` synchronizuje in-memory dataset, meta lookupy, audit a podporovane nastaveni; selhani restore ponecha predchozi session stav beze zmen
 - hlavni Avalonia shell po importu zalohy obnovuje projekce, seznamy, audit, dashboard, naklady a rychle akce z aktualni session, ne pres druhy okamzity reload legacy store
+- start shellu, rucni reload a import zalohy pouzivaji jednu sdilenou refresh cestu nad aktualni session, aby se hlavni projekce a action-state stavy nerozchazely mezi workflow
 - Appium harness a zivy Windows UI smoke nad publish buildem
 - rozsireny Appium smoke pro samostatna workflow okna a hlavni app-level dialogy vcetne nastaveni, o programu a kontroly aktualizaci
 - sjednocena korenova accessibility metadata hlavniho shellu, workspace oken a app-level dialogu pro stabilnejsi screen-reader diagnostiku a UI automatizaci

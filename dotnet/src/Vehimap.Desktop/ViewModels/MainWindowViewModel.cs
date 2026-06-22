@@ -1120,76 +1120,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         try
         {
-            var result = _session.LoadAsync(AppContext.BaseDirectory).GetAwaiter().GetResult();
-            ApplyCostPeriodPreferences();
-            var costSummary = BuildSelectedCostSummary();
-            _currentCostSummary = costSummary;
-
-            LoadError = string.Empty;
-            DataMode = result.DataRoot.IsPortable ? "Portable data vedle aplikace" : "Systémová datová složka";
-            DataPath = result.DataRoot.DataPath;
-            OnPropertyChanged(nameof(CanUseDataActions));
-            OnPropertyChanged(nameof(CanOpenDataFolder));
-            OnPropertyChanged(nameof(CanCreateAutomaticBackupNow));
-            OnPropertyChanged(nameof(CanOpenAutomaticBackupFolder));
-            DashboardWorkspace.SyncShowDashboardOnLaunch(result.SupportedSettings.ShowDashboardOnLaunch);
-            VehicleCount = result.DataSet.Vehicles.Count;
-            HistoryCount = result.DataSet.HistoryEntries.Count;
-            FuelCount = result.DataSet.FuelEntries.Count;
-            RecordsCount = result.DataSet.Records.Count;
-            RemindersCount = result.DataSet.Reminders.Count;
-            MaintenanceCount = result.DataSet.MaintenancePlans.Count;
-            AuditCount = _auditItems.Count;
-            AuditWorkspace.SetAuditSummary(_projectionService.BuildAuditSummary(_auditItems));
-            CostWorkspace.CostSummary = _projectionService.BuildCostSummary(costSummary);
-            CostWorkspace.CostComparison = _projectionService.BuildCostComparison(costSummary);
-            DashboardWorkspace.NotifyDashboardSummariesChanged();
-
-            ApplyVehicleListFilterPreferences();
-            ApplyOverviewPreferences();
-            ApplyTimelinePreferences();
-            ApplyEvidenceSortPreferences();
-            ApplyWorkspaceSortPreferences();
-            RefreshVehicleList(preferredVehicleId);
-
-            AuditItems.Clear();
-            foreach (var item in _projectionService.BuildAuditItems(_auditItems))
-            {
-                AuditItems.Add(item);
-            }
-
-            DashboardAuditItems.Clear();
-            foreach (var item in _projectionService.BuildDashboardAuditItems(_auditItems))
-            {
-                DashboardAuditItems.Add(item);
-            }
-
-            CostVehicles.Clear();
-            foreach (var row in _projectionService.BuildDashboardCostVehicles(costSummary))
-            {
-                CostVehicles.Add(row);
-            }
-
-            PopulateDashboardTimeline();
-            RefreshFleetOverviews();
-            RefreshGlobalSearch();
-            NotifyQuickActionAvailabilityChanged();
-            AuditWorkspace.RefreshVisibleAuditItems(preserveSelection: false);
-            CostWorkspace.RefreshVisibleCostVehicles(preserveSelection: false);
-            DashboardWorkspace.SelectedDashboardTimelineItem = DashboardUpcomingTimeline.FirstOrDefault();
-            ExportFleetCostSummaryCommand.NotifyCanExecuteChanged();
-            ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
-            ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
-            OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
-
-            if (applyLaunchTabPreference && result.SupportedSettings.ShowDashboardOnLaunch && !result.SupportedSettings.HideOnLaunch)
-            {
-                SelectedVehicleTabIndex = DashboardTabIndex;
-            }
-            else if (preferredTabIndex.HasValue && preferredTabIndex.Value >= DetailTabIndex && preferredTabIndex.Value <= OverdueOverviewTabIndex)
-            {
-                SelectedVehicleTabIndex = preferredTabIndex.Value;
-            }
+            _session.LoadAsync(AppContext.BaseDirectory).GetAwaiter().GetResult();
+            RefreshShellFromSessionState(preferredVehicleId, preferredTabIndex, applyLaunchTabPreference);
         }
         catch (Exception ex)
         {
