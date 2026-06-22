@@ -309,8 +309,26 @@ public sealed partial class MainWindowViewModel
             appInfo.ReleaseNotesUrl);
     }
 
-    internal Task OpenExternalAsync(string path, CancellationToken cancellationToken = default) =>
-        _fileLauncher.OpenAsync(path, cancellationToken);
+    internal async Task<string> OpenExternalAsync(string path, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            ShellStatus = "Externí odkaz nelze otevřít, protože není vyplněná cesta ani URL.";
+            return ShellStatus;
+        }
+
+        try
+        {
+            await _fileLauncher.OpenAsync(path, cancellationToken).ConfigureAwait(false);
+            ShellStatus = $"Externí odkaz byl otevřen: {path}.";
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            ShellStatus = $"Externí odkaz se nepodařilo otevřít: {ex.Message}";
+        }
+
+        return ShellStatus;
+    }
 
     internal async Task<string> OpenDataFolderAsync(CancellationToken cancellationToken = default)
     {
@@ -368,9 +386,45 @@ public sealed partial class MainWindowViewModel
         return ShellStatus;
     }
 
-    internal Task<UpdateCheckResult> CheckForUpdatesAsync(CancellationToken cancellationToken = default) =>
-        _session.CheckForUpdatesAsync(cancellationToken);
+    internal async Task<UpdateCheckResult> CheckForUpdatesAsync(CancellationToken cancellationToken = default)
+    {
+        var appInfo = _session.GetAppInfo();
+        try
+        {
+            var result = await _session.CheckForUpdatesAsync(cancellationToken).ConfigureAwait(false);
+            ShellStatus = result.Message;
+            return result;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            ShellStatus = $"Kontrola aktualizací se nepodařila: {ex.Message}";
+            return new UpdateCheckResult(
+                appInfo.AppVersion,
+                appInfo.AppVersion,
+                false,
+                null,
+                appInfo.ReleaseNotesUrl,
+                null,
+                null,
+                null,
+                false,
+                ShellStatus,
+                ShellStatus);
+        }
+    }
 
-    internal Task<UpdateInstallResult> PrepareUpdateInstallAsync(UpdateCheckResult result, CancellationToken cancellationToken = default) =>
-        _session.PrepareInstallAsync(result, cancellationToken);
+    internal async Task<UpdateInstallResult> PrepareUpdateInstallAsync(UpdateCheckResult result, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var installResult = await _session.PrepareInstallAsync(result, cancellationToken).ConfigureAwait(false);
+            ShellStatus = installResult.Message;
+            return installResult;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            ShellStatus = $"Příprava instalace aktualizace se nepodařila: {ex.Message}";
+            return new UpdateInstallResult(false, ShellStatus, null);
+        }
+    }
 }

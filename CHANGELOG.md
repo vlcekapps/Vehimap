@@ -69,6 +69,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - menu `Přehledy` v Avalonia větvi má přímou položku `Export termínů do kalendáře (.ics)`, aby odpovídalo AHK menu i původnímu workflow plánu
 
 ### Změněno
+- Avalonia app-level akce z menu a tray okna pro nastavení, export/import zálohy, `O programu` a kontrolu aktualizací nově převádějí zrušení i selhání dialogu, externího odkazu, kontroly manifestu nebo spuštění updateru na čitelný stav shellu
 - Avalonia dokladové akce pro otevření přílohy, otevření složky a kopírování vyřešené cesty nově hlásí úspěch i chybu do stavového textu dokladů a hlavního shellu místo neobsloužené výjimky nebo tichého selhání
 - Avalonia exporty nákladů do TSV a HTML nově hlásí úspěch, zrušení i chybu do stavového textu nákladového workspace i hlavního shellu; u HTML sestavy rozlišují i stav, kdy se soubor uloží, ale nejde otevřít
 - Avalonia export termínů do `.ics` nově zapisuje úspěch, zrušení i chybu do stavového textu časové osy i hlavního shellu, takže menu a tray akce zůstávají čitelné i při selhání uložení

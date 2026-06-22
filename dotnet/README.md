@@ -28,6 +28,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo cist a zapisovat dnesni Vehimap data (`TSV`, `INI`, `.vehimapbak`, managed attachments)
 - pri poskozenem legacy `TSV` nebo `INI` souboru ukazat konkretni nazev souboru, plnou cestu a parser detail v chybovem stavu shellu
 - pri nedostupnem nebo poskozenem `.vehimapbak` souboru ukazat cestu k zaloze a parser/I/O detail ve stavovem textu misto neobslouzene vyjimky v shellu
+- pri zruseni nebo selhani app-level akci z menu/tray, jako jsou nastaveni, export/import zalohy, O programu a kontrola aktualizaci, zapsat citelnou stavovou hlasku misto neobslouzene vyjimky
 - pri exportu `.vehimapbak` hlasit pocet zahrnutych spravovanych priloh a pocet chybejicich spravovanych priloh, ktere byly bezpecne preskoceny stejne jako v AHK vetvi
 - skladat sdilene C# use-cases pro audit, nakladove souhrny, cenu za kilometr, casovou osu vozidla a ICS export
 - zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych legacy dat
@@ -117,6 +118,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - v dialogu kontroly aktualizaci zobrazit asset URL a SHA-256 hash, aby rucni instalace sla overit bez dohledavani v manifestu
 - v dialogu kontroly aktualizaci zkopirovat cely vysledek vcetne verzi, asset URL a SHA-256 do schranky tlacitkem nebo `Ctrl+Shift+C`
 - pri poskozenem lokalnim preview manifestu preskocit lokalni override a zkusit bezny vzdaleny manifest, aby testovaci soubor v `update/` nezablokoval kontrolu aktualizaci
+- pri selhani kontroly aktualizaci, otevreni release poznamek, otevreni assetu nebo spusteni updater helperu udrzet shell bezici a ukazat chybu ve stavovem textu nebo aktualizacnim dialogu
 - otevrit modalni export a obnovu dat a pracovat se stejnym `.vehimapbak` formatem jako AHK vetev
 - pri obnoveni zalohy pred prepsanim aktualnich dat vytvorit AHK-kompatibilni kopii puvodnich TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` a po importu ukazat cestu k teto kopii i pocet obnovenych priloh
 - pri selhani obnovy `.vehimapbak` zobrazit cestu k zaloze a konkretni parser detail vcetne chybne radky priloh, pokud je problem v attachment sekci

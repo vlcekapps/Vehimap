@@ -21,30 +21,46 @@ internal sealed class DesktopAppShellController
 
     public async Task OpenSettingsAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
-        var result = await _dialogService
-            .ShowSettingsAsync(owner, shell.GetSupportedSettingsSnapshot(), shell.GetAutomaticBackupStatusText())
-            .ConfigureAwait(true);
-        if (result is null)
+        try
         {
-            return;
-        }
+            var result = await _dialogService
+                .ShowSettingsAsync(owner, shell.GetSupportedSettingsSnapshot(), shell.GetAutomaticBackupStatusText())
+                .ConfigureAwait(true);
+            if (result is null)
+            {
+                shell.ShellStatus = "Nastavení bylo zavřeno bez uložení.";
+                return;
+            }
 
-        await shell.SaveSupportedSettingsAsync(result.Snapshot).ConfigureAwait(true);
-        if (result.CreateBackupNow)
+            await shell.SaveSupportedSettingsAsync(result.Snapshot).ConfigureAwait(true);
+            if (result.CreateBackupNow)
+            {
+                await shell.CreateAutomaticBackupNowAsync(cancellationToken).ConfigureAwait(true);
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            await shell.CreateAutomaticBackupNowAsync(cancellationToken).ConfigureAwait(true);
+            shell.ShellStatus = $"Nastavení se nepodařilo dokončit: {ex.Message}";
         }
     }
 
     public async Task ExportBackupAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
-        var backupPath = await shell.PickBackupExportPathAsync(cancellationToken).ConfigureAwait(true);
-        if (string.IsNullOrWhiteSpace(backupPath))
+        try
         {
-            return;
-        }
+            var backupPath = await shell.PickBackupExportPathAsync(cancellationToken).ConfigureAwait(true);
+            if (string.IsNullOrWhiteSpace(backupPath))
+            {
+                shell.ShellStatus = "Export zálohy byl zrušen.";
+                return;
+            }
 
-        await shell.ExportBackupAsync(backupPath, cancellationToken).ConfigureAwait(true);
+            await shell.ExportBackupAsync(backupPath, cancellationToken).ConfigureAwait(true);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            shell.ShellStatus = $"Export zálohy se nepodařilo spustit: {ex.Message}";
+        }
     }
 
     public Task OpenPrintableReportAsync(MainWindowViewModel shell, CancellationToken cancellationToken = default) =>
@@ -52,104 +68,128 @@ internal sealed class DesktopAppShellController
 
     public async Task ImportBackupAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
-        if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "obnovit data ze zálohy").ConfigureAwait(true))
+        try
         {
-            shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
-            return;
-        }
+            if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "obnovit data ze zálohy").ConfigureAwait(true))
+            {
+                shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
+                return;
+            }
 
-        var backupPath = await shell.PickBackupImportPathAsync(cancellationToken).ConfigureAwait(true);
-        if (string.IsNullOrWhiteSpace(backupPath))
+            var backupPath = await shell.PickBackupImportPathAsync(cancellationToken).ConfigureAwait(true);
+            if (string.IsNullOrWhiteSpace(backupPath))
+            {
+                shell.ShellStatus = "Obnova ze zálohy byla zrušena.";
+                return;
+            }
+
+            var confirmed = await _dialogService.ConfirmBackupImportAsync(owner, backupPath).ConfigureAwait(true);
+            if (!confirmed)
+            {
+                shell.ShellStatus = "Obnova ze zálohy nebyla potvrzena.";
+                return;
+            }
+
+            await shell.ImportBackupAsync(backupPath, cancellationToken).ConfigureAwait(true);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            return;
+            shell.ShellStatus = $"Obnovu ze zálohy se nepodařilo spustit: {ex.Message}";
         }
-
-        var confirmed = await _dialogService.ConfirmBackupImportAsync(owner, backupPath).ConfigureAwait(true);
-        if (!confirmed)
-        {
-            return;
-        }
-
-        await shell.ImportBackupAsync(backupPath, cancellationToken).ConfigureAwait(true);
     }
 
     public async Task OpenAboutAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
-        var aboutModel = shell.BuildAboutDialogModel();
-        var openReleaseNotes = await _dialogService
-            .ShowAboutAsync(owner, aboutModel)
-            .ConfigureAwait(true);
-        if (!openReleaseNotes)
+        try
         {
-            return;
-        }
+            var aboutModel = shell.BuildAboutDialogModel();
+            var openReleaseNotes = await _dialogService
+                .ShowAboutAsync(owner, aboutModel)
+                .ConfigureAwait(true);
+            if (!openReleaseNotes)
+            {
+                return;
+            }
 
-        if (!string.IsNullOrWhiteSpace(aboutModel.ReleaseNotesUrl))
+            if (!string.IsNullOrWhiteSpace(aboutModel.ReleaseNotesUrl))
+            {
+                await shell.OpenExternalAsync(aboutModel.ReleaseNotesUrl, cancellationToken).ConfigureAwait(true);
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            await shell.OpenExternalAsync(aboutModel.ReleaseNotesUrl, cancellationToken).ConfigureAwait(true);
+            shell.ShellStatus = $"Dialog O programu se nepodařilo dokončit: {ex.Message}";
         }
     }
 
     public async Task<bool> CheckForUpdatesAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
-        var result = await shell.CheckForUpdatesAsync(cancellationToken).ConfigureAwait(true);
-        var action = await _dialogService.ShowUpdateAsync(owner, new UpdateDialogViewModel(result)).ConfigureAwait(true);
-
-        switch (action)
+        try
         {
-            case UpdateDialogAction.PrimaryAction:
-                if (result.IsUpdateAvailable && result.CanInstallAutomatically)
-                {
-                    if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "stáhnout a nainstalovat aktualizaci").ConfigureAwait(true))
+            var result = await shell.CheckForUpdatesAsync(cancellationToken).ConfigureAwait(true);
+            var action = await _dialogService.ShowUpdateAsync(owner, new UpdateDialogViewModel(result)).ConfigureAwait(true);
+
+            switch (action)
+            {
+                case UpdateDialogAction.PrimaryAction:
+                    if (result.IsUpdateAvailable && result.CanInstallAutomatically)
                     {
-                        shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
+                        if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "stáhnout a nainstalovat aktualizaci").ConfigureAwait(true))
+                        {
+                            shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
+                            return false;
+                        }
+
+                        var installResult = await shell.PrepareUpdateInstallAsync(result, cancellationToken).ConfigureAwait(true);
+                        if (installResult.IsReady && installResult.InstallPlan is not null)
+                        {
+                            _updateInstallLauncher.Launch(installResult.InstallPlan);
+                            return true;
+                        }
+
+                        await _dialogService.ShowUpdateAsync(
+                                owner,
+                                new UpdateDialogViewModel(new UpdateCheckResult(
+                                    result.CurrentVersion,
+                                    result.LatestVersion,
+                                    false,
+                                    result.PublishedAt,
+                                    result.NotesUrl,
+                                    result.AssetUrl,
+                                    result.Sha256,
+                                    result.AssetSize,
+                                    false,
+                                    installResult.Message,
+                                    installResult.Message)))
+                            .ConfigureAwait(true);
                         return false;
                     }
 
-                    var installResult = await shell.PrepareUpdateInstallAsync(result, cancellationToken).ConfigureAwait(true);
-                    if (installResult.IsReady && installResult.InstallPlan is not null)
+                    if (!string.IsNullOrWhiteSpace(result.NotesUrl))
                     {
-                        _updateInstallLauncher.Launch(installResult.InstallPlan);
-                        return true;
+                        await shell.OpenExternalAsync(result.NotesUrl, cancellationToken).ConfigureAwait(true);
+                    }
+                    else if (!string.IsNullOrWhiteSpace(result.AssetUrl))
+                    {
+                        await shell.OpenExternalAsync(result.AssetUrl, cancellationToken).ConfigureAwait(true);
                     }
 
-                    await _dialogService.ShowUpdateAsync(
-                            owner,
-                            new UpdateDialogViewModel(new UpdateCheckResult(
-                                result.CurrentVersion,
-                                result.LatestVersion,
-                                false,
-                                result.PublishedAt,
-                                result.NotesUrl,
-                                result.AssetUrl,
-                                result.Sha256,
-                                result.AssetSize,
-                                false,
-                                installResult.Message,
-                                installResult.Message)))
-                        .ConfigureAwait(true);
                     return false;
-                }
+                case UpdateDialogAction.OpenAsset:
+                    if (!string.IsNullOrWhiteSpace(result.AssetUrl))
+                    {
+                        await shell.OpenExternalAsync(result.AssetUrl, cancellationToken).ConfigureAwait(true);
+                    }
 
-                if (!string.IsNullOrWhiteSpace(result.NotesUrl))
-                {
-                    await shell.OpenExternalAsync(result.NotesUrl, cancellationToken).ConfigureAwait(true);
-                }
-                else if (!string.IsNullOrWhiteSpace(result.AssetUrl))
-                {
-                    await shell.OpenExternalAsync(result.AssetUrl, cancellationToken).ConfigureAwait(true);
-                }
-
-                return false;
-            case UpdateDialogAction.OpenAsset:
-                if (!string.IsNullOrWhiteSpace(result.AssetUrl))
-                {
-                    await shell.OpenExternalAsync(result.AssetUrl, cancellationToken).ConfigureAwait(true);
-                }
-
-                return false;
-            default:
-                return false;
+                    return false;
+                default:
+                    return false;
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            shell.ShellStatus = $"Kontrolu aktualizací se nepodařilo dokončit: {ex.Message}";
+            return false;
         }
     }
 

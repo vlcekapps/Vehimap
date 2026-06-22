@@ -37,6 +37,28 @@ public sealed class DesktopAppShellControllerTests
     }
 
     [Fact]
+    public async Task Open_settings_async_reports_save_failure_without_throwing()
+    {
+        var dialogService = new StubAppShellDialogService
+        {
+            SettingsResult = new SettingsDialogResult(
+                new DesktopSupportedSettingsSnapshot(45, 20, 10, 900, false, false, true, true, 2, 14),
+                false)
+        };
+        var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
+        var dataStore = new StubLegacyDataStore(CreateDataSet())
+        {
+            SaveException = new IOException("settings.ini nelze zapsat.")
+        };
+        var viewModel = CreateViewModel(new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true), dataStore);
+
+        await controller.OpenSettingsAsync(null!, viewModel);
+
+        Assert.Contains("Nastavení se nepodařilo dokončit", viewModel.ShellStatus);
+        Assert.Contains("settings.ini nelze zapsat", viewModel.ShellStatus);
+    }
+
+    [Fact]
     public async Task Open_about_async_opens_release_notes_when_dialog_requests_it()
     {
         var dialogService = new StubAppShellDialogService
@@ -53,6 +75,25 @@ public sealed class DesktopAppShellControllerTests
         await controller.OpenAboutAsync(null!, viewModel);
 
         Assert.Equal("https://example.com/release", fileLauncher.LastOpenedPath);
+    }
+
+    [Fact]
+    public async Task Open_about_async_reports_release_notes_failure_without_throwing()
+    {
+        var dialogService = new StubAppShellDialogService
+        {
+            AboutResult = true
+        };
+        var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            fileLauncher: new FailingFileLauncher(new InvalidOperationException("Prohlížeč není dostupný.")));
+
+        await controller.OpenAboutAsync(null!, viewModel);
+
+        Assert.Contains("Externí odkaz se nepodařilo otevřít", viewModel.ShellStatus);
+        Assert.Contains("Prohlížeč není dostupný", viewModel.ShellStatus);
     }
 
     [Fact]
@@ -98,6 +139,34 @@ public sealed class DesktopAppShellControllerTests
     }
 
     [Fact]
+    public async Task Export_backup_async_reports_cancelled_file_picker()
+    {
+        var controller = new DesktopAppShellController(new StubAppShellDialogService(), new StubUpdateInstallLauncher());
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()));
+
+        await controller.ExportBackupAsync(null!, viewModel);
+
+        Assert.Equal("Export zálohy byl zrušen.", viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Import_backup_async_reports_cancelled_file_picker()
+    {
+        var dialogService = new StubAppShellDialogService();
+        var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()));
+
+        await controller.ImportBackupAsync(null!, viewModel);
+
+        Assert.Equal("Obnova ze zálohy byla zrušena.", viewModel.ShellStatus);
+        Assert.False(dialogService.ConfirmBackupImportCalled);
+    }
+
+    [Fact]
     public async Task Check_for_updates_async_launches_installer_and_requests_close_when_install_is_ready()
     {
         var dialogService = new StubAppShellDialogService
@@ -118,6 +187,47 @@ public sealed class DesktopAppShellControllerTests
         Assert.True(shouldClose);
         Assert.NotNull(launcher.LastPlan);
         Assert.Equal("1.0.9", launcher.LastPlan!.ExpectedVersion);
+    }
+
+    [Fact]
+    public async Task Check_for_updates_async_shows_failure_result_when_check_throws()
+    {
+        var dialogService = new StubAppShellDialogService();
+        var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            updateService: new FailingUpdateService(checkException: new InvalidOperationException("Manifest nejde načíst.")));
+
+        var shouldClose = await controller.CheckForUpdatesAsync(null!, viewModel);
+
+        Assert.False(shouldClose);
+        Assert.NotNull(dialogService.LastUpdateModel);
+        Assert.Equal("Kontrola aktualizací se nepodařila", dialogService.LastUpdateModel!.Heading);
+        Assert.Contains("Manifest nejde načíst", dialogService.LastUpdateModel.Summary);
+        Assert.Equal(dialogService.LastUpdateModel.Summary, viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Check_for_updates_async_reports_launcher_failure_without_throwing()
+    {
+        var dialogService = new StubAppShellDialogService
+        {
+            UpdateResult = UpdateDialogAction.PrimaryAction,
+            ConfirmDiscardResult = true
+        };
+        var launcher = new FailingUpdateInstallLauncher(new InvalidOperationException("Updater nelze spustit."));
+        var controller = new DesktopAppShellController(dialogService, launcher);
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            updateService: new StubUpdateService());
+
+        var shouldClose = await controller.CheckForUpdatesAsync(null!, viewModel);
+
+        Assert.False(shouldClose);
+        Assert.Contains("Kontrolu aktualizací se nepodařilo dokončit", viewModel.ShellStatus);
+        Assert.Contains("Updater nelze spustit", viewModel.ShellStatus);
     }
 
     [Fact]
@@ -167,9 +277,10 @@ public sealed class DesktopAppShellControllerTests
     private static MainWindowViewModel CreateViewModel(
         VehimapDataRoot dataRoot,
         StubLegacyDataStore dataStore,
-        StubFileLauncher? fileLauncher = null,
+        IFileLauncher? fileLauncher = null,
         ITextFileSaveService? textFileSaveService = null,
-        IUpdateService? updateService = null)
+        IUpdateService? updateService = null,
+        IFileDialogService? fileDialogService = null)
     {
         var bootstrapper = new LegacyVehimapBootstrapper(new StubDataRootLocator(dataRoot), dataStore);
         return new MainWindowViewModel(
@@ -183,7 +294,7 @@ public sealed class DesktopAppShellControllerTests
             new LegacyCalendarExportService(),
             textFileSaveService ?? new StubTextFileSaveService(),
             new StubBackupService(),
-            new StubFileDialogService(),
+            fileDialogService ?? new StubFileDialogService(),
             new DesktopSupportedSettingsService(),
             new StubBuildInfoProvider(),
             new StubAutostartService(),
@@ -222,11 +333,18 @@ public sealed class DesktopAppShellControllerTests
 
         public VehimapDataSet CurrentDataSet { get; set; }
 
+        public Exception? SaveException { get; set; }
+
         public Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
             => Task.FromResult(CurrentDataSet);
 
         public Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
+            if (SaveException is not null)
+            {
+                throw SaveException;
+            }
+
             CurrentDataSet = dataSet;
             return Task.CompletedTask;
         }
@@ -255,6 +373,22 @@ public sealed class DesktopAppShellControllerTests
         }
 
         public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    private sealed class FailingFileLauncher : IFileLauncher
+    {
+        private readonly Exception _exception;
+
+        public FailingFileLauncher(Exception exception)
+        {
+            _exception = exception;
+        }
+
+        public Task OpenAsync(string path, CancellationToken cancellationToken = default)
+            => Task.FromException(_exception);
+
+        public Task OpenFolderAsync(string path, CancellationToken cancellationToken = default)
+            => Task.FromException(_exception);
     }
 
     private sealed class StubFilePickerService : IFilePickerService
@@ -382,6 +516,38 @@ public sealed class DesktopAppShellControllerTests
                     update.LatestVersion)));
     }
 
+    private sealed class FailingUpdateService : IUpdateService
+    {
+        private readonly Exception? _checkException;
+        private readonly Exception? _prepareException;
+
+        public FailingUpdateService(Exception? checkException = null, Exception? prepareException = null)
+        {
+            _checkException = checkException;
+            _prepareException = prepareException;
+        }
+
+        public Task<UpdateCheckResult> CheckForUpdatesAsync(string currentVersion, CancellationToken cancellationToken = default)
+            => _checkException is not null
+                ? Task.FromException<UpdateCheckResult>(_checkException)
+                : Task.FromResult(new UpdateCheckResult(
+                    currentVersion,
+                    "1.0.9",
+                    true,
+                    "2026-04-02",
+                    "https://example.com/release",
+                    "https://example.com/vehimap.zip",
+                    new string('a', 64),
+                    2048,
+                    true,
+                    "Je dostupná novější verze."));
+
+        public Task<UpdateInstallResult> PrepareInstallAsync(UpdateCheckResult update, CancellationToken cancellationToken = default)
+            => _prepareException is not null
+                ? Task.FromException<UpdateInstallResult>(_prepareException)
+                : Task.FromResult(new UpdateInstallResult(false, "Testovací aktualizace není připravená.", null));
+    }
+
     private sealed class StubAppShellDialogService : IAppShellDialogService
     {
         public SettingsDialogResult? SettingsResult { get; set; }
@@ -391,6 +557,7 @@ public sealed class DesktopAppShellControllerTests
         public bool ShowSettingsCalled { get; private set; }
         public bool ConfirmBackupImportCalled { get; private set; }
         public bool ConfirmDiscardPendingChangesCalled { get; private set; }
+        public UpdateDialogViewModel? LastUpdateModel { get; private set; }
 
         public Task<SettingsDialogResult?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot, string automaticBackupStatus)
         {
@@ -412,7 +579,11 @@ public sealed class DesktopAppShellControllerTests
 
         public Task<bool> ShowAboutAsync(Window owner, AboutDialogViewModel model) => Task.FromResult(AboutResult);
 
-        public Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model) => Task.FromResult(UpdateResult);
+        public Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model)
+        {
+            LastUpdateModel = model;
+            return Task.FromResult(UpdateResult);
+        }
 
         public Task<TrayActionsDialogAction> ShowTrayActionsAsync(Window? owner, TrayActionsDialogViewModel model)
             => Task.FromResult(TrayActionsDialogAction.None);
@@ -425,6 +596,21 @@ public sealed class DesktopAppShellControllerTests
         public void Launch(UpdateInstallPlan plan)
         {
             LastPlan = plan;
+        }
+    }
+
+    private sealed class FailingUpdateInstallLauncher : IUpdateInstallLauncher
+    {
+        private readonly Exception _exception;
+
+        public FailingUpdateInstallLauncher(Exception exception)
+        {
+            _exception = exception;
+        }
+
+        public void Launch(UpdateInstallPlan plan)
+        {
+            throw _exception;
         }
     }
 

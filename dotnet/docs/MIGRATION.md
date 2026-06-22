@@ -61,6 +61,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - editacni workflow pro zakladni udaje vozidla, vcetne AHK-kompatibilne normalizovanych stitku, kategorie, SPZ, terminu TK/ZK, stavu vozidla a celeho servisniho profilu
 - samostatna desktopova okna pro `Historii`, `Tankovani`, `Pripominky`, `Udrzbu`, `Doklady`, `Detail vozidla`, `Audit` a `Dashboard`
 - app-level dialogy `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`
+- app-level controller hlasi zruseni a selhani nastaveni, exportu/importu zalohy, otevreni release poznamek, kontroly aktualizaci a spusteni updateru pres stavovy text nebo aktualizacni dialog misto padu shellu
 - typed vrstvu nad podporovanymi hodnotami ze `settings.ini`, ktera umi menit reminder thresholdy a `show_dashboard_on_launch`
 - centralizovane build info z root `src/VERSION`, ktere desktop vetvi dava stejnou semver a file version jako AHK release tok
 - kompatibilni parser `update/latest.ini` a Windows pripravu automaticke instalace pres `Vehimap.Updater`
@@ -103,6 +104,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - asset URL a SHA-256 hash v dialogu kontroly aktualizaci pro overitelnou rucni instalaci
 - kopirovani detailu kontroly aktualizaci do schranky tlacitkem nebo `Ctrl+Shift+C`, aby sla rucni instalace overit bez opisovani URL a hashe
 - odolnejsi kontrolu aktualizaci: poskozeny lokalni preview manifest se preskoci a sluzba zkusi vzdaleny manifest
+- odolnejsi aktualizacni orchestrace: chyba site/manifestu, otevreni externiho odkazu nebo spusteni updater helperu zustane uzivatelsky citelna a nespadne mimo shell
 - regresni testy packaging skriptu a generatoru manifestu, vcetne kontroly, ze `.sha256`, metadata a fyzicky balicek souhlasi
 - Windows CI Appium smoke nad publish buildem desktop preview
 - ulozeni `Tiskoveho prehledu` vozidel jako HTML souboru pres sdilenou exportni sluzbu a otevreni ulozeneho souboru

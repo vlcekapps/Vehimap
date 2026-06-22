@@ -34,6 +34,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - `Export dat` do jednoho záložního souboru `.vehimapbak` včetně plánů údržby a spravovaných příloh dokladů; v C# Avalonia větvi výsledná hláška uvádí i počet zahrnutých a přeskočených chybějících spravovaných příloh
 - `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním, obnovení plánů údržby i návratu spravovaných příloh dokladů
 - v C# Avalonia větvi se při poškozeném legacy `TSV`, `INI` nebo `.vehimapbak` souboru zobrazí konkrétní cesta a detail parseru, aby šlo chybu opravit bez hádání, která evidence nebo záloha selhala
+- v C# Avalonia větvi app-level akce z menu a tray okna jako nastavení, export/import zálohy, `O programu` a kontrola aktualizací hlásí zrušení i chyby ve stavovém textu shellu nebo v aktualizačním dialogu místo pádu aplikace
 - hlavní pracovní okna jako `Dashboard`, `Přehled termínů`, `Propadlé termíny`, `Audit dat`, `Časová osa vozidla`, `Pojištění a doklady`, `Plán údržby`, detail vozidla i hlavní seznam lze zvětšit, takže se seznamy natáhnou do šířky i výšky
 - v C# desktopové větvi lze přehledová workflow `Časová osa`, `Globální hledání`, `Audit dat`, `Náklady`, `Dashboard`, `Blížící se termíny` a `Propadlé termíny` otevřít jako kartu v hlavním shellu i jako samostatné okno se stejnou přístupnou pracovní plochou
 - v C# desktopové větvi mají samostatná workspace okna sjednocené otevření prvního logického prvku a stejnou ochranu před zavřením rozpracovaného editoru jako hlavní shell
@@ -54,7 +55,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 - v C# desktopové větvi vlastní souhrnné texty detailu vozidla přímo `VehicleDetailWorkspace`, zatímco hlavní viewmodel je jen přepočítává při změně výběru vozidla
 - v C# desktopové větvi vlastní `VehicleDetailWorkspace` i formulářové hodnoty editoru vozidla, takže hlavní viewmodel dál řídí workflow, ale nedrží lokální stav jednotlivých polí
 - v C# desktopové větvi vlastní `VehicleDetailWorkspace` také režim editace a nadpis detailního panelu, takže viditelný stav editoru patří stejné pracovní ploše jako jeho pole
-- C# desktopová větev má preview release balíčky pro Windows, Linux a macOS s ověřovanými `.sha256` soubory, metadata JSON a runtime-specific update manifesty; pokud je lokální preview manifest poškozený, kontrola aktualizací zkusí vzdálený manifest místo pádu na lokálním souboru a v dialogu vysvětlí, proč je případně dostupná jen ruční instalace, včetně asset URL a SHA-256 hashe, které lze zkopírovat do schránky
+- C# desktopová větev má preview release balíčky pro Windows, Linux a macOS s ověřovanými `.sha256` soubory, metadata JSON a runtime-specific update manifesty; pokud je lokální preview manifest poškozený nebo kontrola aktualizací narazí na chybu sítě, manifestu, otevření odkazu či spuštění updateru, shell zůstane běžet a v dialogu nebo stavovém textu vysvětlí další bezpečný krok
 - pravidelné automatické zálohy do `data/auto-backups` se samostatným intervalem ve dnech a omezením počtu ponechaných souborů
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
@@ -276,6 +277,7 @@ V horním menu najdete tyto části:
 - při importu se původní soubory před přepsáním automaticky odloží do `data/import-backups`
 - v C# Avalonia větvi se při obnově zálohy do `data/import-backups/<čas>` odkládají i spravované přílohy; stavová hláška po importu ukáže konkrétní složku s původními daty i počet obnovených příloh
 - pokud je vybraný `.vehimapbak` soubor nedostupný, poškozený nebo obsahuje neplatná data příloh, C# Avalonia větev nepřeruší shell výjimkou, ale oznámí cestu k záloze a čitelný detail chyby ve stavovém textu
+- pokud uživatel zruší výběr souboru pro export nebo import zálohy v C# Avalonia větvi, stavový text to výslovně oznámí, aby nezůstala čtená stará hláška z předchozí akce
 - oba soubory jsou ve složce `data` vedle aplikace
 - Vehimap zapisuje vozidla ve formátu `# Vehimap data v4`
 - historie používá hlavičku `# Vehimap history v1`
