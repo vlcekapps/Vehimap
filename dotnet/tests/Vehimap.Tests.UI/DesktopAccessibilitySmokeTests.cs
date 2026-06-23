@@ -177,6 +177,34 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Maintenance_workspace_opens_recommended_templates_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("MaintenanceTabButton");
+            session.ClickByAccessibilityId("OpenMaintenanceWindowButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseMaintenanceWindowButton"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenMaintenanceTemplatesButton"));
+
+            session.ClickByAccessibilityId("OpenMaintenanceTemplatesButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleStarterBundleWindow"));
+            Assert.Contains("Doporučené servisní šablony", session.GetNameByAccessibilityId("VehicleStarterBundleWindow"), StringComparison.CurrentCulture);
+            Assert.Contains("servisních šablon", session.GetNameByAccessibilityId("BundleSummaryText"), StringComparison.CurrentCulture);
+            Assert.NotNull(session.WaitForElementByAccessibilityId("BundleItemsListBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("BundleMaintenanceTitleBox"));
+            session.ClickByAccessibilityId("CancelBundleButton");
+        }
+    }
+
+    [Fact]
     public void Main_menu_can_be_invoked_with_f10_without_entering_regular_tab_order_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
