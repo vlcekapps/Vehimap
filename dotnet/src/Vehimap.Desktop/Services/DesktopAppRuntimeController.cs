@@ -111,6 +111,8 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         }).GetTask();
     }
 
+    public Task RequestOpenTrayActionsAsync() => OpenTrayActionsAsync();
+
     public async ValueTask DisposeAsync()
     {
         _dueTimer.Stop();

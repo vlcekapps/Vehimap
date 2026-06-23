@@ -62,6 +62,38 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void App_menu_opens_accessible_tray_actions_dialog_and_routes_current_alert_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickMenuItem("AppMenuRoot", "OpenTrayActionsButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("TrayActionsWindow"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("TrayActionsBackgroundStatusText"));
+            Assert.Equal(
+                "ShowMainWindowTrayActionButton",
+                session.WaitForFocusedAutomationId(12, "ShowMainWindowTrayActionButton"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenBackgroundStatusTrayActionButton"));
+            Assert.False(session.IsEnabledByAccessibilityId("OpenNearestTechnicalTrayActionButton"));
+            Assert.False(session.IsEnabledByAccessibilityId("OpenNearestGreenCardTrayActionButton"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenNearestReminderTrayActionButton"));
+            Assert.True(session.IsEnabledByAccessibilityId("ReviewRecordsTrayActionButton"));
+
+            session.ClickByAccessibilityId("OpenBackgroundStatusTrayActionButton");
+            session.WaitForElementToDisappearByAccessibilityId("TrayActionsWindow");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenReminderWindowButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ReminderListBox"));
+        }
+    }
+
+    [Fact]
     public void Settings_dialog_saves_dashboard_launch_preference_and_updates_dashboard_state_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

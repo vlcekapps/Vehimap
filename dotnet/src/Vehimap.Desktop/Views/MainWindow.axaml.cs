@@ -51,6 +51,7 @@ public partial class MainWindow : Window
 
     public Func<Task>? ExitApplicationRequested { get; set; }
     public Func<Task>? MinimizeToTrayRequested { get; set; }
+    public Func<Task>? OpenTrayActionsRequested { get; set; }
 
     public MainWindow()
     {
@@ -531,6 +532,16 @@ public partial class MainWindow : Window
         }
 
         await MinimizeToTrayRequested().ConfigureAwait(true);
+    }
+
+    private async void OnOpenTrayActionsClick(object? sender, RoutedEventArgs e)
+    {
+        if (OpenTrayActionsRequested is null)
+        {
+            return;
+        }
+
+        await OpenTrayActionsRequested().ConfigureAwait(true);
     }
 
     private void OnCalendarExportClick(object? sender, RoutedEventArgs e)

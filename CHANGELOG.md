@@ -8,8 +8,10 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ### Přidáno
 - Přístupné tray okno `Akce Vehimapu na liště` nově ukazuje aktuální stav pozadí ze stejného snapshotu jako tooltip a desktopové oznámení, takže je čitelný i bez spolehlivé podpory nativního tray tooltipu ve čtečce obrazovky
 - Přístupné tray okno nově umí tlačítkem `Otevřít aktuální upozornění` přejít přímo na nejdůležitější termín k řešení nebo fallback auditní položku
+- Avalonia menu `Aplikace` nově umí otevřít stejné přístupné okno `Akce Vehimapu na liště`, takže není nutné spoléhat jen na nativní tray menu
 - Avalonia menu `Rychlé akce` má stejnou položku `Aktuální upozornění` jako tray okno, včetně vypnutí bez cíle nebo při rozpracované editaci
 - Appium smoke pro Avalonia preview nově skutečně aktivuje položku `Aktuální upozornění` v menu `Rychlé akce` a ověřuje otevření odpovídajícího workspace
+- Appium smoke pro Avalonia preview nově otevírá `Akce Vehimapu na liště` i z menu `Aplikace`, ověřuje první fokus a aktivuje aktuální upozornění do odpovídajícího workspace
 - Appium smoke pro Avalonia preview nově po uložení nového vozidla ověřuje automatické otevření `Balíčku pro vozidlo` včetně servisních plánů, dokladů a připomínek
 - Appium smoke pro Avalonia preview nově ověřuje i ruční spuštění `Balíčku pro vozidlo` z menu `Vozidlo`
 - Appium smoke pro Avalonia preview nově ověřuje otevření `Doporučených servisních šablon` z pracovního okna `Plán údržby`

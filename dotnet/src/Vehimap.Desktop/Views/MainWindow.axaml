@@ -325,6 +325,11 @@
                   IsTabStop="False"
                   AutomationProperties.Name="Nabídka Aplikace"
                   AutomationProperties.AutomationId="AppMenuRoot">
+          <MenuItem x:Name="OpenTrayActionsButton"
+                    Header="Akce na liště"
+                    Click="OnOpenTrayActionsClick"
+                    AutomationProperties.Name="Otevřít přístupné akce Vehimapu na liště"
+                    AutomationProperties.AutomationId="OpenTrayActionsButton" />
           <MenuItem x:Name="MinimizeToTrayButton"
                     Header="Minimalizovat na lištu"
                     Click="OnMinimizeToTrayClick"

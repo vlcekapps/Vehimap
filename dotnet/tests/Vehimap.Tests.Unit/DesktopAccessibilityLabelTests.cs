@@ -225,6 +225,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"OverviewMenuRoot\" Header=\"_Přehledy\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"QuickActionsMenuRoot\" Header=\"_Rychlé akce\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"_Aplikace\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"OpenTrayActionsButton\" Header=\"Akce na liště\" Click=\"OnOpenTrayActionsClick\"", normalizedXaml);
         Assert.Contains("x:Name=\"MinimizeToTrayButton\" Header=\"Minimalizovat na lištu\" Click=\"OnMinimizeToTrayClick\" IsEnabled=\"{Binding IsMinimizeToTrayAvailable}\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupNowMenuItem\"", xaml);
@@ -288,6 +289,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("IsEnabled=\"{Binding CanReviewRecordsQuickAction}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CalendarExportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReloadButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenTrayActionsButton\"", xaml);
         Assert.Contains("InputGesture=\"Ctrl+E\"", xaml);
         Assert.Contains("InputGesture=\"F5\"", xaml);
         Assert.Contains("InputGesture=\"Ctrl+N\"", xaml);
@@ -323,6 +325,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Click=\"OnSettingsClick\"", xaml);
         Assert.Contains("Click=\"OnAboutClick\"", xaml);
         Assert.Contains("Click=\"OnUpdateCheckClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenTrayActionsClick\"", xaml);
         Assert.Contains("Click=\"OnMinimizeToTrayClick\"", xaml);
         Assert.Contains("Click=\"OnExitClick\"", xaml);
         Assert.Contains("x:Name=\"FileExitAppButton\" Header=\"Konec\" Click=\"OnExitClick\"", normalizedXaml);
@@ -618,7 +621,13 @@ public sealed class DesktopAccessibilityLabelTests
     public void Tray_runtime_controller_should_route_quick_actions_to_shell_commands()
     {
         var runtimeController = ReadDesktopServiceFile("DesktopAppRuntimeController.cs");
+        var mainWindowCodeBehind = ReadViewCodeBehind("MainWindow.axaml.cs");
+        var appStartup = ReadDesktopRootFile("App.axaml.cs");
 
+        Assert.Contains("public Task RequestOpenTrayActionsAsync() => OpenTrayActionsAsync();", runtimeController);
+        Assert.Contains("public Func<Task>? OpenTrayActionsRequested { get; set; }", mainWindowCodeBehind);
+        Assert.Contains("await OpenTrayActionsRequested().ConfigureAwait(true);", mainWindowCodeBehind);
+        Assert.Contains("mainWindow.OpenTrayActionsRequested = _runtimeController.RequestOpenTrayActionsAsync;", appStartup);
         Assert.Contains("TrayActionsDialogAction.OpenBackgroundStatus", runtimeController);
         Assert.Contains("_shell.OpenBackgroundNotificationAsync()", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenNearestTechnical", runtimeController);
@@ -1269,6 +1278,21 @@ public sealed class DesktopAccessibilityLabelTests
             "Services"));
 
         return File.ReadAllText(Path.Combine(servicesRoot, fileName));
+    }
+
+    private static string ReadDesktopRootFile(string fileName)
+    {
+        var desktopRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "Vehimap.Desktop"));
+
+        return File.ReadAllText(Path.Combine(desktopRoot, fileName));
     }
 
     private static void AssertAccessibleBoundText(string xaml, string automationId, string bindingName)

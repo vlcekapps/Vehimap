@@ -41,6 +41,7 @@ public partial class App : Avalonia.Application
                 dialogService);
             mainWindow.ExitApplicationRequested = _runtimeController.RequestExitAsync;
             mainWindow.MinimizeToTrayRequested = _runtimeController.RequestMinimizeToTrayAsync;
+            mainWindow.OpenTrayActionsRequested = _runtimeController.RequestOpenTrayActionsAsync;
             desktop.Exit += OnDesktopExit;
             _ = _runtimeController.InitializeAsync();
         }
