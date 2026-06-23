@@ -53,6 +53,59 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
+    public void Settings_dialog_persists_background_options_and_creates_backup_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            Assert.NotNull(session.TemporaryDataPath);
+            var settingsPath = Path.Combine(session.TemporaryDataPath!, "settings.ini");
+            var backupDirectory = Path.Combine(session.TemporaryDataPath!, "auto-backups");
+            var backupCountBefore = Directory.Exists(backupDirectory)
+                ? Directory.GetFiles(backupDirectory, "*.vehimapbak").Length
+                : 0;
+
+            session.ClickMenuItem("AppMenuRoot", "SettingsButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("RunAtStartupCheckBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("HideOnLaunchCheckBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("AutomaticBackupsEnabledCheckBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("AutomaticBackupIntervalDaysBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("AutomaticBackupKeepCountBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CreateAutomaticBackupButton"));
+
+            if (!session.IsSelectedByAccessibilityId("AutomaticBackupsEnabledCheckBox"))
+            {
+                session.ClickByAccessibilityId("AutomaticBackupsEnabledCheckBox");
+            }
+
+            session.WaitUntilCondition(
+                () => session.IsEnabledByAccessibilityId("AutomaticBackupIntervalDaysBox", 1)
+                    && session.IsEnabledByAccessibilityId("AutomaticBackupKeepCountBox", 1),
+                "Po zapnuti automatickych zaloh maji byt pole intervalu a poctu ponechanych zaloh aktivni.");
+            session.ReplaceTextByAccessibilityId("AutomaticBackupIntervalDaysBox", "2");
+            session.ReplaceTextByAccessibilityId("AutomaticBackupKeepCountBox", "5");
+            session.ClickByAccessibilityId("CreateAutomaticBackupButton");
+
+            session.WaitForElementToDisappearByAccessibilityId("SettingsWindow");
+            session.WaitUntilCondition(
+                () => File.ReadAllText(settingsPath).Contains("automatic_backups_enabled=1", StringComparison.Ordinal)
+                    && File.ReadAllText(settingsPath).Contains("automatic_backup_interval_days=2", StringComparison.Ordinal)
+                    && File.ReadAllText(settingsPath).Contains("automatic_backup_keep_count=5", StringComparison.Ordinal),
+                "Ulozeni nastaveni ma zapsat podporovane volby automatickych zaloh do settings.ini.");
+            session.WaitUntilCondition(
+                () => Directory.Exists(backupDirectory)
+                    && Directory.GetFiles(backupDirectory, "*.vehimapbak").Length > backupCountBefore,
+                "Tlacitko Zalohovat ihned v nastaveni ma vytvorit automatickou zalohu v izolovane datove slozce.");
+        }
+    }
+
+    [Fact]
     public void Primary_workspace_headers_are_exposed_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

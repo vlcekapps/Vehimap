@@ -37,6 +37,45 @@ public sealed class DesktopAppShellControllerTests
     }
 
     [Fact]
+    public async Task Open_settings_async_creates_automatic_backup_when_dialog_requests_it()
+    {
+        var rootPath = Path.Combine(Path.GetTempPath(), "vehimap-settings-backup-test", Guid.NewGuid().ToString("N"));
+        var dataRoot = new VehimapDataRoot(rootPath, Path.Combine(rootPath, "data"), true);
+        var backupService = new StubBackupService();
+        var dialogService = new StubAppShellDialogService
+        {
+            SettingsResult = new SettingsDialogResult(
+                new DesktopSupportedSettingsSnapshot(45, 20, 10, 900, false, false, true, true, 2, 14),
+                true)
+        };
+        var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
+        var dataStore = new StubLegacyDataStore(CreateDataSet());
+        var viewModel = CreateViewModel(dataRoot, dataStore, backupService: backupService);
+
+        try
+        {
+            await controller.OpenSettingsAsync(null!, viewModel);
+
+            Assert.True(dialogService.ShowSettingsCalled);
+            Assert.NotNull(backupService.ExportedPath);
+            Assert.StartsWith(Path.Combine(dataRoot.DataPath, "auto-backups"), backupService.ExportedPath, StringComparison.Ordinal);
+            Assert.EndsWith(".vehimapbak", backupService.ExportedPath, StringComparison.OrdinalIgnoreCase);
+            Assert.Equal("1", dataStore.CurrentDataSet.Settings.GetValue("backups", "automatic_backups_enabled"));
+            Assert.Equal("2", dataStore.CurrentDataSet.Settings.GetValue("backups", "automatic_backup_interval_days"));
+            Assert.Equal("14", dataStore.CurrentDataSet.Settings.GetValue("backups", "automatic_backup_keep_count"));
+            Assert.Equal(backupService.ExportedPath, dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_path"));
+            Assert.Contains("Automatick", viewModel.ShellStatus, StringComparison.OrdinalIgnoreCase);
+        }
+        finally
+        {
+            if (Directory.Exists(rootPath))
+            {
+                Directory.Delete(rootPath, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
     public async Task Open_settings_async_reports_save_failure_without_throwing()
     {
         var dialogService = new StubAppShellDialogService
@@ -280,7 +319,8 @@ public sealed class DesktopAppShellControllerTests
         IFileLauncher? fileLauncher = null,
         ITextFileSaveService? textFileSaveService = null,
         IUpdateService? updateService = null,
-        IFileDialogService? fileDialogService = null)
+        IFileDialogService? fileDialogService = null,
+        IBackupService? backupService = null)
     {
         var bootstrapper = new LegacyVehimapBootstrapper(new StubDataRootLocator(dataRoot), dataStore);
         return new MainWindowViewModel(
@@ -293,7 +333,7 @@ public sealed class DesktopAppShellControllerTests
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
             textFileSaveService ?? new StubTextFileSaveService(),
-            new StubBackupService(),
+            backupService ?? new StubBackupService(),
             fileDialogService ?? new StubFileDialogService(),
             new DesktopSupportedSettingsService(),
             new StubBuildInfoProvider(),
@@ -478,8 +518,13 @@ public sealed class DesktopAppShellControllerTests
 
     private sealed class StubBackupService : IBackupService
     {
+        public string? ExportedPath { get; private set; }
+
         public Task<BackupExportResult> ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
-            => Task.FromResult(new BackupExportResult(backupPath, 0, 0));
+        {
+            ExportedPath = backupPath;
+            return Task.FromResult(new BackupExportResult(backupPath, 0, 0));
+        }
 
         public Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
             => Task.FromResult(new VehimapBackupBundle(new VehimapDataSet(), []));
