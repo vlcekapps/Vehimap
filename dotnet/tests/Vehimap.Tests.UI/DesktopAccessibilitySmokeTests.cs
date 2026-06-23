@@ -151,6 +151,32 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Vehicle_menu_opens_starter_bundle_for_selected_vehicle_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("VehicleMenuRoot");
+
+            Assert.Equal("Otevřít balíček pro vybrané vozidlo", session.GetNameByAccessibilityId("OpenVehicleStarterBundleMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenVehicleStarterBundleMenuItem"));
+
+            session.ClickByAccessibilityId("OpenVehicleStarterBundleMenuItem");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleStarterBundleWindow"));
+            Assert.Contains("Balíček pro vozidlo", session.GetNameByAccessibilityId("VehicleStarterBundleWindow"), StringComparison.CurrentCulture);
+            Assert.NotNull(session.WaitForElementByAccessibilityId("BundleItemsListBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CancelBundleButton"));
+            session.ClickByAccessibilityId("CancelBundleButton");
+        }
+    }
+
+    [Fact]
     public void Main_menu_can_be_invoked_with_f10_without_entering_regular_tab_order_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

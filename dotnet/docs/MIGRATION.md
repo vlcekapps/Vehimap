@@ -126,6 +126,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - hlavni menu `Rychle akce` ma stejnou akci pro otevreni aktualniho upozorneni jako tray akcni okno a sdili s nim stejny background snapshot i blokovani pri rozpracovane editaci
 - Appium smoke nad publish buildem uz aktualni upozorneni z menu `Rychle akce` nejen vidi, ale i aktivuje a overuje, ze shell otevre odpovidajici workspace
 - Appium smoke nad publish buildem pri zalozeni noveho vozidla overuje i automaticke otevreni `Balicku pro vozidlo` se servisnimi plany, doklady a pripominkami
+- Appium smoke nad publish buildem overuje i rucni otevreni `Balicku pro vozidlo` z menu `Vozidlo`
 - otevreni aktualni datove slozky z menu `Soubor` i z pristupneho tray akcniho okna pres sdileny multiplatformni file launcher; slozky pouzivaji samostatnou vetev s `explorer.exe` na Windows, `open` na macOS a `xdg-open` na Linuxu
 - okamzita automaticka zaloha a otevreni slozky `data/auto-backups` jsou dostupne z menu `Soubor` i z pristupneho tray akcniho okna a sdileji stejne blokovani datovych akci pri rozpracovane editaci jako export/import zalohy
 - ukonceni aplikace z menu `Soubor` polozkou `Konec` stejnym handlerem jako v menu `Aplikace`, aby F10 cesta zustala blizka AHK i bez ztraty samostatneho app menu
@@ -137,7 +138,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - denni historie desktopovych oznameni v `settings.ini`, vcetne resetu po zmene reminder nastaveni nebo po obnoveni zalohy, aby .NET vetev neoznamovala stejny akutni termin porad dokola
 - Windows resume hook pro background runtime: po probuzeni systemu se po 1500 ms provede stejna kontrola terminu, tray tooltipu a automatickych zaloh jako v AHK; pro macOS/Linux je vrstva pripravena jako no-op, dokud se platformy nebudou stabilizovat
 - regresni kontrola desktop UI zdroju proti typickym mojibake znakum, aby ctecky obrazovky nedostavaly poskozenou UTF-8 diakritiku
-- Appium smoke nad publish buildem kontroluje app-level menu `Soubor`, menu `Rychle akce`, dostupnost zapnutych/vypnutych akci, otevreni aktualniho upozorneni do spravneho workspace, post-create `Balicek pro vozidlo` a rozsirena sada v izolovane portable kopii overuje i realne vytvoreni okamzite automaticke zalohy
+- Appium smoke nad publish buildem kontroluje app-level menu `Soubor`, menu `Rychle akce`, dostupnost zapnutych/vypnutych akci, otevreni aktualniho upozorneni do spravneho workspace, post-create i rucni `Balicek pro vozidlo` a rozsirena sada v izolovane portable kopii overuje i realne vytvoreni okamzite automaticke zalohy
 
 ## Co je dalsi na rade
 
