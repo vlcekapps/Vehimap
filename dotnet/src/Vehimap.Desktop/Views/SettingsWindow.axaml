@@ -140,7 +140,10 @@
             Padding="12"
             Background="#143A4A5A"
             CornerRadius="8">
-      <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding StatusMessage}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.Name="{Binding StatusMessage}"
+                 AutomationProperties.AutomationId="SettingsStatusText" />
     </Border>
 
     <StackPanel Grid.Row="4"

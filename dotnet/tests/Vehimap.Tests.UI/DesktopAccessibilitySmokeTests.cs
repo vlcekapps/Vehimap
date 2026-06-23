@@ -62,6 +62,66 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Settings_dialog_saves_dashboard_launch_preference_and_updates_dashboard_state_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            Assert.NotNull(session.TemporaryDataPath);
+            var settingsPath = Path.Combine(session.TemporaryDataPath!, "settings.ini");
+
+            session.ClickMenuItem("AppMenuRoot", "SettingsButton");
+            Assert.False(session.IsSelectedByAccessibilityId("ShowDashboardOnLaunchCheckBox"));
+
+            session.ClickByAccessibilityId("ShowDashboardOnLaunchCheckBox");
+            Assert.True(session.IsSelectedByAccessibilityId("ShowDashboardOnLaunchCheckBox"));
+
+            session.ClickByAccessibilityId("SaveSettingsButton");
+            session.WaitForElementToDisappearByAccessibilityId("SettingsWindow");
+
+            session.WaitUntilCondition(
+                () => File.ReadAllText(settingsPath).Contains("show_dashboard_on_launch=1", StringComparison.Ordinal),
+                "Ulozeni nastaveni ma zapsat show_dashboard_on_launch=1 do settings.ini.");
+
+            session.ClickByAccessibilityId("DashboardTabButton");
+            session.WaitUntilCondition(
+                () => session.IsSelectedByAccessibilityId("DashboardShowOnLaunchCheckBox", 1),
+                "Dashboard ma po ulozeni nastaveni ukazat zapnutou volbu zobrazeni pri startu.");
+
+            session.ClickMenuItem("AppMenuRoot", "SettingsButton");
+            Assert.True(session.IsSelectedByAccessibilityId("ShowDashboardOnLaunchCheckBox"));
+            session.ClickByAccessibilityId("CancelSettingsButton");
+        }
+    }
+
+    [Fact]
+    public void Settings_dialog_keeps_focusable_error_state_for_invalid_values_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickMenuItem("AppMenuRoot", "SettingsButton");
+
+            session.ReplaceTextByAccessibilityId("TechnicalReminderDaysBox", "abc");
+            session.ClickByAccessibilityId("SaveSettingsButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("SettingsWindow"));
+            Assert.Contains("rozsahu", session.GetNameByAccessibilityId("SettingsStatusText"), StringComparison.CurrentCulture);
+            session.ClickByAccessibilityId("CancelSettingsButton");
+        }
+    }
+
+    [Fact]
     public void File_menu_data_actions_are_accessible_and_create_manual_automatic_backup_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

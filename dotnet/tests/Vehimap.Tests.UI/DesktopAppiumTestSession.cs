@@ -104,9 +104,31 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         return WaitForElementByAccessibilityId(automationId, timeoutSeconds).Enabled;
     }
 
+    public bool IsSelectedByAccessibilityId(string automationId, int timeoutSeconds = 12)
+    {
+        return WaitForElementByAccessibilityId(automationId, timeoutSeconds).Selected;
+    }
+
     public void SendKeysByAccessibilityId(string automationId, string text, int timeoutSeconds = 12)
     {
         WaitForElementByAccessibilityId(automationId, timeoutSeconds).SendKeys(text);
+    }
+
+    public void ReplaceTextByAccessibilityId(string automationId, string text, int timeoutSeconds = 12)
+    {
+        var element = WaitForElementByAccessibilityId(automationId, timeoutSeconds);
+        element.Click();
+        try
+        {
+            element.Clear();
+        }
+        catch (WebDriverException)
+        {
+            element.SendKeys(Keys.Control + "a");
+            element.SendKeys(Keys.Backspace);
+        }
+
+        element.SendKeys(text);
     }
 
     public string GetFocusedAutomationId()
