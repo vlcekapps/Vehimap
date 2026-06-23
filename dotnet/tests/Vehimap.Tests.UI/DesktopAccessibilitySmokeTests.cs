@@ -129,6 +129,28 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Current_background_alert_quick_action_opens_matching_workspace_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("QuickActionsMenuRoot");
+
+            Assert.True(session.IsEnabledByAccessibilityId("OpenBackgroundNotificationMenuItem"));
+
+            session.ClickByAccessibilityId("OpenBackgroundNotificationMenuItem");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenReminderWindowButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ReminderListBox"));
+        }
+    }
+
+    [Fact]
     public void Main_menu_can_be_invoked_with_f10_without_entering_regular_tab_order_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

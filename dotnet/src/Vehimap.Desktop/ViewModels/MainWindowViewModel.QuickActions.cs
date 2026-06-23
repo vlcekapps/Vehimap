@@ -353,7 +353,7 @@ public sealed partial class MainWindowViewModel
 
     public bool CanReviewRecordsQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("record");
 
-    public bool CanOpenBackgroundNotificationQuickAction => CanUseWorkspaceNavigation && BuildBackgroundSnapshot().HasNotification;
+    public bool CanOpenBackgroundNotificationQuickAction => CanOpenBackgroundNotification(BuildBackgroundSnapshot());
 
     internal void NotifyQuickActionAvailabilityChanged()
     {
@@ -382,7 +382,7 @@ public sealed partial class MainWindowViewModel
         return TrayActionsDialogViewModel.CreateDefault() with
         {
             BackgroundStatus = BuildTrayBackgroundStatus(background),
-            CanOpenBackgroundStatus = CanOpenBackgroundNotificationQuickAction,
+            CanOpenBackgroundStatus = CanOpenBackgroundNotification(background),
             CanShowDashboard = CanUseWorkspaceNavigation,
             CanShowUpcomingOverview = CanUseWorkspaceNavigation,
             CanShowOverdueOverview = CanUseWorkspaceNavigation,
@@ -420,6 +420,9 @@ public sealed partial class MainWindowViewModel
             ? "Pozadí je aktivní. Aktuálně není nic k oznámení."
             : $"Pozadí je aktivní. {toolTip}";
     }
+
+    private bool CanOpenBackgroundNotification(DesktopBackgroundSnapshot snapshot) =>
+        CanUseWorkspaceNavigation && snapshot.HasNotification;
 
     private static string NormalizeTrayBackgroundText(string value)
     {
