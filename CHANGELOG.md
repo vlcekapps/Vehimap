@@ -10,6 +10,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Přístupné tray okno nově umí tlačítkem `Otevřít aktuální upozornění` přejít přímo na nejdůležitější termín k řešení nebo fallback auditní položku
 - Avalonia menu `Rychlé akce` má stejnou položku `Aktuální upozornění` jako tray okno, včetně vypnutí bez cíle nebo při rozpracované editaci
 - Appium smoke pro Avalonia preview nově skutečně aktivuje položku `Aktuální upozornění` v menu `Rychlé akce` a ověřuje otevření odpovídajícího workspace
+- Appium smoke pro Avalonia preview nově po uložení nového vozidla ověřuje automatické otevření `Balíčku pro vozidlo` včetně servisních plánů, dokladů a připomínek
 - Samostatná Avalonia pracovní okna pro detail, evidence, přehledy, audit, dashboard, náklady a časovou osu lze zavřít klávesou `Escape`; stejná informace je uvedená v jejich přístupné nápovědě a krytá unit i Appium smoke testem
 - Appium smoke pro Avalonia preview nově hlídá app-level menu `Soubor`, menu `Rychlé akce`, jejich dostupnostní stavy a v rozšířené sadě i skutečné vytvoření okamžité automatické zálohy v izolované portable kopii
 - Avalonia menu `Soubor` i přístupné tray okno umí spustit okamžitou automatickou zálohu a otevřít složku `data/auto-backups`; tyto datové akce se vypínají při rozpracované editaci stejně jako export/import zálohy

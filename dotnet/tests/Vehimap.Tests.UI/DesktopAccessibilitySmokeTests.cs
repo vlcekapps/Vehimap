@@ -435,7 +435,7 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
-    public void Vehicle_detail_editor_runs_in_standalone_window_when_appium_is_available()
+    public void Vehicle_detail_editor_saves_new_vehicle_and_opens_starter_bundle_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -454,11 +454,20 @@ public sealed class DesktopAccessibilitySmokeTests
 
             session.SendKeysByAccessibilityId("VehicleEditorNameBox", "Appium vozidlo");
             session.SendKeysByAccessibilityId("VehicleEditorMakeModelBox", "Test model");
+            session.SendKeysByAccessibilityId("VehicleEditorNextTkBox", "12/2099");
             session.SendKeysByAccessibilityId("VehicleEditorStateBox", "Běžný provoz");
             session.SendKeysByAccessibilityId("VehicleEditorPowertrainBox", "Benzín");
             session.SendKeysByAccessibilityId("VehicleEditorNoteBox", "Vytvořeno UI testem");
             session.ClickByAccessibilityId("SaveVehicleButton");
-            session.WaitForElementToDisappearByAccessibilityId("SaveVehicleButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleStarterBundleWindow"));
+            var summary = session.GetNameByAccessibilityId("BundleSummaryText");
+            Assert.Contains("Servis", summary, StringComparison.CurrentCulture);
+            Assert.Contains("Doklady", summary, StringComparison.CurrentCulture);
+            Assert.Contains("Připomínky", summary, StringComparison.CurrentCulture);
+            Assert.NotNull(session.WaitForElementByAccessibilityId("BundleItemsListBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ApplyBundleButton"));
+            session.ClickByAccessibilityId("CancelBundleButton");
         }
     }
 
