@@ -13,6 +13,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Appium smoke pro Avalonia preview nově skutečně aktivuje položku `Aktuální upozornění` v menu `Rychlé akce` a ověřuje otevření odpovídajícího workspace
 - CI Appium smoke pro Avalonia preview nově otevírá a zavírá `Akce Vehimapu na liště` z menu `Aplikace`, aby se přístupný fallback k tray menu hlídal v běžném Windows běhu
 - CI Appium smoke pro Avalonia preview nově v dialogu `Nastavení` ukládá volby automatických záloh a přes tlačítko `Zálohovat ihned` ověřuje vznik `.vehimapbak` v izolované datové složce
+- CI Appium smoke pro Avalonia preview nově hlídá ruční otevření `Balíčku pro vozidlo` z menu `Vozidlo` i automatickou nabídku balíčku po uložení nového vozidla
 - Appium smoke pro Avalonia preview nově otevírá `Akce Vehimapu na liště` i z menu `Aplikace`, ověřuje první fokus a aktivuje aktuální upozornění do odpovídajícího workspace
 - Appium smoke pro Avalonia preview nově po uložení nového vozidla ověřuje automatické otevření `Balíčku pro vozidlo` včetně servisních plánů, dokladů a připomínek
 - Appium smoke pro Avalonia preview nově ověřuje i ruční spuštění `Balíčku pro vozidlo` z menu `Vozidlo`

@@ -127,8 +127,8 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - Appium smoke nad publish buildem uz aktualni upozorneni z menu `Rychle akce` nejen vidi, ale i aktivuje a overuje, ze shell otevre odpovidajici workspace
 - CI Appium smoke nad publish buildem overuje i otevreni a zavreni pristupnych tray akci z menu `Aplikace`, aby byl klavesnicovy fallback k nativni tray oblasti soucasti bezne Windows kontroly
 - CI Appium smoke nad publish buildem uklada podporovane volby automatickych zaloh v dialogu `Nastaveni` a overuje, ze tlacitko `Zalohovat ihned` vytvori `.vehimapbak` v izolovane datove slozce
-- Appium smoke nad publish buildem pri zalozeni noveho vozidla overuje i automaticke otevreni `Balicku pro vozidlo` se servisnimi plany, doklady a pripominkami
-- Appium smoke nad publish buildem overuje i rucni otevreni `Balicku pro vozidlo` z menu `Vozidlo`
+- CI Appium smoke nad publish buildem pri zalozeni noveho vozidla overuje i automaticke otevreni `Balicku pro vozidlo` se servisnimi plany, doklady a pripominkami
+- CI Appium smoke nad publish buildem overuje i rucni otevreni `Balicku pro vozidlo` z menu `Vozidlo`
 - Appium smoke nad publish buildem overuje i otevreni doporucenych servisnich sablon z pracovniho okna `Plan udrzby`
 - Appium smoke nad publish buildem overuje i otevreni potvrzovaciho dialogu `Splneno` z pracovniho okna `Plan udrzby` i dashboardove akce `Dokoncit servis`
 - Appium smoke nad publish buildem overuje ulozeni volby Dashboardu pri startu z dialogu `Nastaveni`, propsani do Dashboardu i zustani dialogu otevreneho s citelnou validacni chybou pri neplatne hodnote

@@ -106,6 +106,77 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
+    public void Vehicle_menu_opens_manual_starter_bundle_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("VehicleMenuRoot");
+
+            Assert.Equal("Otevřít balíček pro vybrané vozidlo", session.GetNameByAccessibilityId("OpenVehicleStarterBundleMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenVehicleStarterBundleMenuItem"));
+
+            session.ClickByAccessibilityId("OpenVehicleStarterBundleMenuItem");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleStarterBundleWindow"));
+            var summary = session.GetNameByAccessibilityId("BundleSummaryText");
+            Assert.Contains("Servis", summary, StringComparison.CurrentCulture);
+            Assert.Contains("Doklady", summary, StringComparison.CurrentCulture);
+            Assert.Contains("Připomínky", summary, StringComparison.CurrentCulture);
+            Assert.NotNull(session.WaitForElementByAccessibilityId("BundleItemsListBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ApplyBundleButton"));
+
+            session.ClickByAccessibilityId("CancelBundleButton");
+            session.WaitForElementToDisappearByAccessibilityId("VehicleStarterBundleWindow");
+        }
+    }
+
+    [Fact]
+    public void Vehicle_detail_editor_saves_new_vehicle_and_opens_starter_bundle_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("DetailTabButton");
+            session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
+            session.ClickByAccessibilityId("CreateVehicleButton");
+
+            Assert.Equal("Název vozidla", session.GetNameByAccessibilityId("VehicleEditorNameBox"));
+            Assert.Equal("Kategorie vozidla", session.GetNameByAccessibilityId("VehicleEditorCategoryBox"));
+
+            session.SendKeysByAccessibilityId("VehicleEditorNameBox", "CI vozidlo");
+            session.SendKeysByAccessibilityId("VehicleEditorMakeModelBox", "Test model");
+            session.SendKeysByAccessibilityId("VehicleEditorNextTkBox", "12/2099");
+            session.SendKeysByAccessibilityId("VehicleEditorStateBox", "Běžný provoz");
+            session.SendKeysByAccessibilityId("VehicleEditorPowertrainBox", "Benzín");
+            session.SendKeysByAccessibilityId("VehicleEditorNoteBox", "Vytvořeno CI smoke testem");
+            session.ClickByAccessibilityId("SaveVehicleButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleStarterBundleWindow"));
+            var summary = session.GetNameByAccessibilityId("BundleSummaryText");
+            Assert.Contains("Servis", summary, StringComparison.CurrentCulture);
+            Assert.Contains("Doklady", summary, StringComparison.CurrentCulture);
+            Assert.Contains("Připomínky", summary, StringComparison.CurrentCulture);
+            Assert.NotNull(session.WaitForElementByAccessibilityId("BundleItemsListBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ApplyBundleButton"));
+
+            session.ClickByAccessibilityId("CancelBundleButton");
+            session.WaitForElementToDisappearByAccessibilityId("VehicleStarterBundleWindow");
+            session.ClickByAccessibilityId("CloseVehicleDetailWindowButton");
+        }
+    }
+
+    [Fact]
     public void Primary_workspace_headers_are_exposed_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
