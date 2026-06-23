@@ -177,6 +177,111 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
+    public void Maintenance_workspace_opens_recommended_templates_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("MaintenanceTabButton");
+            session.ClickByAccessibilityId("OpenMaintenanceWindowButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseMaintenanceWindowButton"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenMaintenanceTemplatesButton"));
+
+            session.ClickByAccessibilityId("OpenMaintenanceTemplatesButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleStarterBundleWindow"));
+            Assert.Contains("Doporučené servisní šablony", session.GetNameByAccessibilityId("VehicleStarterBundleWindow"), StringComparison.CurrentCulture);
+            Assert.Contains("servisních šablon", session.GetNameByAccessibilityId("BundleSummaryText"), StringComparison.CurrentCulture);
+            Assert.NotNull(session.WaitForElementByAccessibilityId("BundleItemsListBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("BundleMaintenanceTitleBox"));
+
+            session.ClickByAccessibilityId("CancelBundleButton");
+            session.WaitForElementToDisappearByAccessibilityId("VehicleStarterBundleWindow");
+            session.ClickByAccessibilityId("CloseMaintenanceWindowButton");
+        }
+    }
+
+    [Fact]
+    public void Maintenance_workspace_opens_completion_dialog_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("MaintenanceTabButton");
+            session.ClickByAccessibilityId("OpenMaintenanceWindowButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseMaintenanceWindowButton"));
+            session.ClickByAccessibilityId("MaintenanceListBox");
+            Assert.True(session.IsEnabledByAccessibilityId("CompleteMaintenanceButton"));
+
+            session.ClickByAccessibilityId("CompleteMaintenanceButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("MaintenanceCompletionWindow"));
+            Assert.Equal("Datum provedení servisního úkonu", session.GetNameByAccessibilityId("MaintenanceCompletionDateBox"));
+            Assert.Equal("Tachometr při provedení servisního úkonu", session.GetNameByAccessibilityId("MaintenanceCompletionOdometerBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("MaintenanceCompletionAddHistoryCheckBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("MaintenanceCompletionHistoryCostBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("MaintenanceCompletionHistoryNoteBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("SaveMaintenanceCompletionButton"));
+
+            session.ClickByAccessibilityId("CancelMaintenanceCompletionButton");
+            session.WaitForElementToDisappearByAccessibilityId("MaintenanceCompletionWindow");
+            session.ClickByAccessibilityId("CloseMaintenanceWindowButton");
+        }
+    }
+
+    [Fact]
+    public void Dashboard_opens_maintenance_completion_dialog_when_maintenance_term_is_selected()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("DashboardTabButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("DashboardTimelineListBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("DashboardCompleteMaintenanceButton"));
+
+            session.ClickByAccessibilityId("DashboardTimelineListBox");
+            session.SendKeysByAccessibilityId("DashboardTimelineListBox", Keys.Home);
+
+            for (var attempt = 0; attempt < 12 && !session.IsEnabledByAccessibilityId("DashboardCompleteMaintenanceButton", 2); attempt++)
+            {
+                session.SendKeysByAccessibilityId("DashboardTimelineListBox", Keys.ArrowDown, 2);
+            }
+
+            Assert.True(session.IsEnabledByAccessibilityId("DashboardCompleteMaintenanceButton"));
+
+            session.ClickByAccessibilityId("DashboardCompleteMaintenanceButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("MaintenanceCompletionWindow"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("MaintenanceCompletionDateBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("MaintenanceCompletionOdometerBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("MaintenanceCompletionAddHistoryCheckBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("SaveMaintenanceCompletionButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CancelMaintenanceCompletionButton"));
+
+            session.ClickByAccessibilityId("CancelMaintenanceCompletionButton");
+            session.WaitForElementToDisappearByAccessibilityId("MaintenanceCompletionWindow");
+        }
+    }
+
+    [Fact]
     public void Primary_workspace_headers_are_exposed_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

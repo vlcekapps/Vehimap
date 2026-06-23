@@ -129,8 +129,8 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - CI Appium smoke nad publish buildem uklada podporovane volby automatickych zaloh v dialogu `Nastaveni` a overuje, ze tlacitko `Zalohovat ihned` vytvori `.vehimapbak` v izolovane datove slozce
 - CI Appium smoke nad publish buildem pri zalozeni noveho vozidla overuje i automaticke otevreni `Balicku pro vozidlo` se servisnimi plany, doklady a pripominkami
 - CI Appium smoke nad publish buildem overuje i rucni otevreni `Balicku pro vozidlo` z menu `Vozidlo`
-- Appium smoke nad publish buildem overuje i otevreni doporucenych servisnich sablon z pracovniho okna `Plan udrzby`
-- Appium smoke nad publish buildem overuje i otevreni potvrzovaciho dialogu `Splneno` z pracovniho okna `Plan udrzby` i dashboardove akce `Dokoncit servis`
+- CI Appium smoke nad publish buildem overuje i otevreni doporucenych servisnich sablon z pracovniho okna `Plan udrzby`
+- CI Appium smoke nad publish buildem overuje i otevreni potvrzovaciho dialogu `Splneno` z pracovniho okna `Plan udrzby` i dashboardove akce `Dokoncit servis`
 - Appium smoke nad publish buildem overuje ulozeni volby Dashboardu pri startu z dialogu `Nastaveni`, propsani do Dashboardu i zustani dialogu otevreneho s citelnou validacni chybou pri neplatne hodnote
 - Appium smoke nad publish buildem overuje zkopirovani diagnostiky z dialogu `O programu` vcetne pristupneho stavoveho textu a obsahu systemove schranky
 - Appium smoke nad publish buildem overuje zkopirovani detailu z dialogu kontroly aktualizaci vcetne pristupneho stavoveho textu a obsahu systemove schranky
@@ -147,7 +147,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - denni historie desktopovych oznameni v `settings.ini`, vcetne resetu po zmene reminder nastaveni nebo po obnoveni zalohy, aby .NET vetev neoznamovala stejny akutni termin porad dokola
 - Windows resume hook pro background runtime: po probuzeni systemu se po 1500 ms provede stejna kontrola terminu, tray tooltipu a automatickych zaloh jako v AHK; pro macOS/Linux je vrstva pripravena jako no-op, dokud se platformy nebudou stabilizovat
 - regresni kontrola desktop UI zdroju proti typickym mojibake znakum, aby ctecky obrazovky nedostavaly poskozenou UTF-8 diakritiku
-- Appium smoke nad publish buildem kontroluje app-level menu `Soubor`, menu `Rychle akce`, dostupnost zapnutych/vypnutych akci, otevreni aktualniho upozorneni do spravneho workspace, otevreni/zavreni pristupnych tray akci z menu `Aplikace`, ulozeni automatickych zaloh z `Nastaveni` vcetne okamziteho vytvoreni `.vehimapbak`, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony, potvrzeni `Splneno` z udrzby i Dashboardu, ulozeni a validaci `Nastaveni`, kopirovani diagnostiky z `O programu`, kopirovani detailu kontroly aktualizaci, kopirovani vyresene cesty spravovane dokladove prilohy a rozsirena sada v izolovane portable kopii overuje i dalsi realne vytvoreni okamzite automaticke zalohy
+- CI Appium smoke nad publish buildem kontroluje app-level menu `Soubor`, menu `Rychle akce`, dostupnost zapnutych/vypnutych akci, otevreni aktualniho upozorneni do spravneho workspace, otevreni/zavreni pristupnych tray akci z menu `Aplikace`, ulozeni automatickych zaloh z `Nastaveni` vcetne okamziteho vytvoreni `.vehimapbak`, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony a potvrzeni `Splneno` z udrzby i Dashboardu. Rozsirena sada v izolovane portable kopii navic overuje ulozeni a validaci `Nastaveni`, kopirovani diagnostiky z `O programu`, kopirovani detailu kontroly aktualizaci, kopirovani vyresene cesty spravovane dokladove prilohy a dalsi realne vytvoreni okamzite automaticke zalohy
 
 ## Co je dalsi na rade
 
