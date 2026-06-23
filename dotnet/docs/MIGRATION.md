@@ -123,6 +123,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - primy vstup `Export terminu do kalendare (.ics)` v menu `Prehledy`, napojeny na sdileny kalendarovy export se stavovou hlaskou pro uspech, zruseni i selhani exportu
 - nativni `InputGesture` popisky u hlavnich Avalonia menu polozek, aby menu ukazovalo stejne klavesove zkratky jako shell
 - hlavni menu `Rychle akce` pouziva stejne dostupnostni podminky jako pristupne tray akcni okno, takze nejblizsi polozky ani filtrovane kontroly nejsou aktivni bez realneho cile nebo behem rozpracovane editace
+- hlavni menu `Rychle akce` ma stejnou akci pro otevreni aktualniho upozorneni jako tray akcni okno a sdili s nim stejny background snapshot i blokovani pri rozpracovane editaci
 - otevreni aktualni datove slozky z menu `Soubor` i z pristupneho tray akcniho okna pres sdileny multiplatformni file launcher; slozky pouzivaji samostatnou vetev s `explorer.exe` na Windows, `open` na macOS a `xdg-open` na Linuxu
 - okamzita automaticka zaloha a otevreni slozky `data/auto-backups` jsou dostupne z menu `Soubor` i z pristupneho tray akcniho okna a sdileji stejne blokovani datovych akci pri rozpracovane editaci jako export/import zalohy
 - ukonceni aplikace z menu `Soubor` polozkou `Konec` stejnym handlerem jako v menu `Aplikace`, aby F10 cesta zustala blizka AHK i bez ztraty samostatneho app menu

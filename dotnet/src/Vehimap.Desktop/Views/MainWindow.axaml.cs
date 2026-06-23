@@ -662,6 +662,14 @@ public partial class MainWindow : Window
         await OpenOverdueOverviewWindowAsync();
     }
 
+    private async void OnOpenBackgroundNotificationMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel?.OpenBackgroundNotificationQuickActionCommand is { } command)
+        {
+            await command.ExecuteAsync(null);
+        }
+    }
+
     private async void OnOpenNearestTechnicalMenuClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel?.OpenNearestTechnicalCommand is { } command)

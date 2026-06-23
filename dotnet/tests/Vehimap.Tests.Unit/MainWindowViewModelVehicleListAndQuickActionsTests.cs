@@ -362,9 +362,11 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         DesktopFocusTarget? requestedFocus = null;
         viewModel.FocusRequested += target => requestedFocus = target;
 
-        var opened = await viewModel.OpenBackgroundNotificationAsync();
+        Assert.True(viewModel.CanOpenBackgroundNotificationQuickAction);
+        Assert.True(viewModel.OpenBackgroundNotificationQuickActionCommand.CanExecute(null));
 
-        Assert.True(opened);
+        await viewModel.OpenBackgroundNotificationQuickActionCommand.ExecuteAsync(null);
+
         Assert.True(viewModel.IsDetailTabSelected);
         Assert.Equal("Milena", viewModel.SelectedVehicle?.Name);
         Assert.Equal(DesktopFocusTarget.VehicleList, requestedFocus);
@@ -408,6 +410,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.True(activeViewModel.CanReviewRemindersQuickAction);
         Assert.True(activeViewModel.CanReviewMaintenanceQuickAction);
         Assert.True(activeViewModel.CanReviewRecordsQuickAction);
+        Assert.True(activeViewModel.CanOpenBackgroundNotificationQuickAction);
+        Assert.True(activeViewModel.OpenBackgroundNotificationQuickActionCommand.CanExecute(null));
         Assert.True(activeModel.CanOpenNearestTechnical);
         Assert.True(activeModel.CanOpenNearestGreenCard);
         Assert.True(activeModel.CanOpenNearestReminder);
@@ -437,6 +441,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(quietViewModel.CanReviewRemindersQuickAction);
         Assert.False(quietViewModel.CanReviewMaintenanceQuickAction);
         Assert.False(quietViewModel.CanReviewRecordsQuickAction);
+        Assert.False(quietViewModel.CanOpenBackgroundNotificationQuickAction);
+        Assert.False(quietViewModel.OpenBackgroundNotificationQuickActionCommand.CanExecute(null));
         Assert.True(quietModel.CanShowMainWindow);
         Assert.True(quietModel.CanCreateAutomaticBackupNow);
         Assert.True(quietModel.CanOpenAutomaticBackupFolder);
@@ -466,6 +472,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         var model = viewModel.BuildTrayActionsDialogModel();
 
         Assert.False(viewModel.CanOpenNearestTechnicalQuickAction);
+        Assert.False(viewModel.CanOpenBackgroundNotificationQuickAction);
+        Assert.False(viewModel.OpenBackgroundNotificationQuickActionCommand.CanExecute(null));
         Assert.False(viewModel.CanReviewTechnicalQuickAction);
         Assert.False(viewModel.CanUseDataActions);
         Assert.True(model.CanShowMainWindow);

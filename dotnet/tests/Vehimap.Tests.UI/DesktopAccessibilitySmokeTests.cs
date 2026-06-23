@@ -112,8 +112,10 @@ public sealed class DesktopAccessibilitySmokeTests
         {
             session.ClickByAccessibilityId("QuickActionsMenuRoot");
 
+            Assert.Equal("Otevřít aktuální upozornění z pozadí", session.GetNameByAccessibilityId("OpenBackgroundNotificationMenuItem"));
             Assert.Equal("Otevřít nejbližší technickou kontrolu", session.GetNameByAccessibilityId("OpenNearestTechnicalMenuItem"));
             Assert.Equal("Otevřít nejbližší vlastní připomínku", session.GetNameByAccessibilityId("OpenNearestReminderMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenBackgroundNotificationMenuItem"));
             Assert.False(session.IsEnabledByAccessibilityId("OpenNearestTechnicalMenuItem"));
             Assert.False(session.IsEnabledByAccessibilityId("OpenNearestGreenCardMenuItem"));
             Assert.True(session.IsEnabledByAccessibilityId("OpenNearestReminderMenuItem"));

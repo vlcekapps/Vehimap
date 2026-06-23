@@ -24,6 +24,12 @@ public sealed partial class MainWindowViewModel
         OpenTimelineItem(items[0]);
     }
 
+    [RelayCommand(CanExecute = nameof(CanOpenBackgroundNotificationQuickAction))]
+    private async Task OpenBackgroundNotificationQuickActionAsync()
+    {
+        await OpenBackgroundNotificationAsync().ConfigureAwait(true);
+    }
+
     [RelayCommand]
     private async Task ReviewTechnicalAsync()
     {
@@ -347,8 +353,11 @@ public sealed partial class MainWindowViewModel
 
     public bool CanReviewRecordsQuickAction => CanUseWorkspaceNavigation && HasQuickActionTarget("record");
 
+    public bool CanOpenBackgroundNotificationQuickAction => CanUseWorkspaceNavigation && BuildBackgroundSnapshot().HasNotification;
+
     internal void NotifyQuickActionAvailabilityChanged()
     {
+        OnPropertyChanged(nameof(CanOpenBackgroundNotificationQuickAction));
         OnPropertyChanged(nameof(CanOpenNearestTechnicalQuickAction));
         OnPropertyChanged(nameof(CanReviewTechnicalQuickAction));
         OnPropertyChanged(nameof(CanOpenNearestGreenCardQuickAction));
@@ -359,6 +368,7 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanReviewMaintenanceQuickAction));
         OnPropertyChanged(nameof(CanOpenNearestRecordQuickAction));
         OnPropertyChanged(nameof(CanReviewRecordsQuickAction));
+        OpenBackgroundNotificationQuickActionCommand.NotifyCanExecuteChanged();
     }
 
     private bool HasQuickActionTarget(string kind) =>
@@ -372,7 +382,7 @@ public sealed partial class MainWindowViewModel
         return TrayActionsDialogViewModel.CreateDefault() with
         {
             BackgroundStatus = BuildTrayBackgroundStatus(background),
-            CanOpenBackgroundStatus = background.HasNotification && CanUseWorkspaceNavigation,
+            CanOpenBackgroundStatus = CanOpenBackgroundNotificationQuickAction,
             CanShowDashboard = CanUseWorkspaceNavigation,
             CanShowUpcomingOverview = CanUseWorkspaceNavigation,
             CanShowOverdueOverview = CanUseWorkspaceNavigation,

@@ -64,6 +64,8 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             session.SendKeysToActiveElement(Keys.Escape);
 
             session.ClickByAccessibilityId("QuickActionsMenuRoot");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenBackgroundNotificationMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenBackgroundNotificationMenuItem"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("OpenNearestReminderMenuItem"));
             Assert.False(session.IsEnabledByAccessibilityId("OpenNearestTechnicalMenuItem"));
             Assert.True(session.IsEnabledByAccessibilityId("OpenNearestReminderMenuItem"));

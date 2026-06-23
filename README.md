@@ -272,7 +272,7 @@ V horním menu najdete tyto části:
 - `Soubor`: tiskový přehled, export a import zálohy, export budoucích termínů do kalendáře, znovunačtení dat, v C# Avalonia větvi také okamžitá automatická záloha, otevření datové složky a otevření složky automatických záloh a v obou větvích ukončení aplikace
 - `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby, `Časové osy vozidla`, `Balíčku pro vozidlo` a pojištění a dokladů
 - `Přehled` v AHK nebo `Přehledy` v C# Avalonia větvi: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Časová osa vozidla`, blížící se a propadlé termíny, `Audit dat` a export termínů do kalendáře `.ics`
-- `Rychlé akce` v C# Avalonia větvi: nejbližší TK, ZK, připomínka, servis nebo doklad a filtrovaná kontrola těchto termínů v přehledech; kontrola ZK zahrne i vozidla bez vyplněné zelené karty a položky bez aktuálního cíle jsou v menu vypnuté
+- `Rychlé akce` v C# Avalonia větvi: aktuální upozornění z pozadí, nejbližší TK, ZK, připomínka, servis nebo doklad a filtrovaná kontrola těchto termínů v přehledech; kontrola ZK zahrne i vozidla bez vyplněné zelené karty a položky bez aktuálního cíle jsou v menu vypnuté
 - `Nástroje` v AHK aplikaci: `Nastavení`, `Skrýt do lišty`
 - `Nápověda` v AHK aplikaci nebo `Aplikace` v C# Avalonia větvi: `Nastavení`, minimalizace na lištu, `O programu`, kontrola aktualizací a ukončení aplikace
 

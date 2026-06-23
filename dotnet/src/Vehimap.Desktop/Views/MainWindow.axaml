@@ -249,6 +249,13 @@
                   IsTabStop="False"
                   AutomationProperties.Name="Nabídka Rychlé akce"
                   AutomationProperties.AutomationId="QuickActionsMenuRoot">
+          <MenuItem x:Name="OpenBackgroundNotificationMenuItem"
+                    Header="Aktuální upozornění"
+                    Click="OnOpenBackgroundNotificationMenuClick"
+                    IsEnabled="{Binding CanOpenBackgroundNotificationQuickAction}"
+                    AutomationProperties.Name="Otevřít aktuální upozornění z pozadí"
+                    AutomationProperties.AutomationId="OpenBackgroundNotificationMenuItem" />
+          <Separator />
           <MenuItem x:Name="OpenNearestTechnicalMenuItem"
                     Header="Nejbližší TK"
                     Click="OnOpenNearestTechnicalMenuClick"

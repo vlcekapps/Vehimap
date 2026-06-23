@@ -264,6 +264,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenUpcomingOverviewMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenOverdueOverviewMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OverviewCalendarExportMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenBackgroundNotificationMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestTechnicalMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewTechnicalMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestGreenCardMenuItem\"", xaml);
@@ -274,6 +275,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewMaintenanceMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenNearestRecordMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReviewRecordsMenuItem\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenBackgroundNotificationQuickAction}\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanOpenNearestTechnicalQuickAction}\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanReviewTechnicalQuickAction}\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanOpenNearestGreenCardQuickAction}\"", xaml);
@@ -337,6 +339,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Click=\"OnOpenCostMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenUpcomingOverviewMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenOverdueOverviewMenuClick\"", xaml);
+        Assert.Contains("Click=\"OnOpenBackgroundNotificationMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenNearestTechnicalMenuClick\"", xaml);
         Assert.Contains("Click=\"OnOpenNearestReminderMenuClick\"", xaml);
         Assert.Contains("Click=\"OnReviewRemindersMenuClick\"", xaml);
