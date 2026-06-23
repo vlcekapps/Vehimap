@@ -127,7 +127,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - generovat verzovane release balicky pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`
 - pripravit draft release pro `.NET` preview tag `dotnet-preview-v<verze>` pres GitHub Actions
 - publikovat runtime-specific preview manifesty `update/latest-dotnet-preview-<rid>.ini`
-- spoustet Windows Appium smoke i v CI nad publish buildem desktop preview; smoke overuje app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony, potvrzeni `Splneno` z `Planu udrzby` i dashboardove akce `Dokoncit servis`, ulozeni volby Dashboardu pri startu vcetne validacni chyby v `Nastaveni` a kopirovani diagnostiky z `O programu` i detailu kontroly aktualizaci do systemove schranky, zatimco rozsirena sada nad izolovanou portable kopii testuje i realne vytvoreni okamzite automaticke zalohy
+- spoustet Windows Appium smoke i v CI nad publish buildem desktop preview; smoke overuje app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony, potvrzeni `Splneno` z `Planu udrzby` i dashboardove akce `Dokoncit servis`, ulozeni volby Dashboardu pri startu vcetne validacni chyby v `Nastaveni` a kopirovani diagnostiky z `O programu`, detailu kontroly aktualizaci i vyresene cesty spravovane prilohy dokladu do systemove schranky, zatimco rozsirena sada nad izolovanou portable kopii testuje i realne vytvoreni okamzite automaticke zalohy
 
 ## Lokalni build
 

@@ -356,6 +356,10 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         }
 
         Directory.CreateDirectory(dataPath);
+        Directory.CreateDirectory(Path.Combine(dataPath, "attachments", "veh_1"));
+        File.WriteAllText(
+            Path.Combine(dataPath, "attachments", "veh_1", "appium-copy.txt"),
+            "Record attachment for Appium resolved path clipboard smoke.");
 
         var now = DateTime.Now;
         var currentYear = now.Year;
@@ -388,6 +392,7 @@ fuel_1	veh_1	{{fuelDate:dd.MM.yyyy}}	123450	38.5	1890	0	Natural 95	Dálnice
 # Vehimap records v2
 rec_1	veh_1	Povinné ručení	Kooperativa {{currentYear}}	Kooperativa	01/{{currentYear}}	{{futureDate:MM/yyyy}}	2000	external		Platná smlouva
 rec_2	veh_1	Doklad	Propadlá pojistka	Test	01/{{pastDate.Year}}	{{pastDate:MM/yyyy}}	500	external		Původní smlouva
+rec_3	veh_1	Doklad	Appium copy attachment	Test	01/{{currentYear}}		100	managed	attachments/veh_1/appium-copy.txt	File for resolved path clipboard smoke
 """);
         File.WriteAllText(Path.Combine(dataPath, "reminders.tsv"), $$"""
 # Vehimap reminders v2

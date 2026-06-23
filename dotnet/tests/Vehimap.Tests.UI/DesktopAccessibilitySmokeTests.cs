@@ -624,6 +624,54 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Record_workspace_copies_resolved_attachment_path_to_clipboard_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            Assert.NotNull(session.TemporaryDataPath);
+            var expectedPath = Path.Combine(session.TemporaryDataPath!, "attachments", "veh_1", "appium-copy.txt");
+            var originalClipboardText = session.GetWindowsClipboardText();
+            session.SetWindowsClipboardText(string.Empty);
+
+            try
+            {
+                session.ClickByAccessibilityId("RecordTabButton");
+                session.ClickByAccessibilityId("OpenRecordWindowButton");
+                Assert.NotNull(session.WaitForElementByAccessibilityId("CloseRecordsWindowButton"));
+
+                session.ReplaceTextByAccessibilityId("RecordSearchBox", "Appium copy");
+                session.ClickByAccessibilityId("RecordListBox");
+
+                session.WaitUntilCondition(
+                    () => session.IsEnabledByAccessibilityId("CopyRecordPathButton", 1),
+                    "Record with an available attachment should enable path copy.");
+
+                session.ClickByAccessibilityId("CopyRecordPathButton");
+
+                session.WaitUntilCondition(
+                    () => session.GetNameByAccessibilityId("RecordEditorStatusText", 1).Contains("zkop", StringComparison.CurrentCultureIgnoreCase),
+                    "Record workspace should announce that the path was copied.");
+
+                session.WaitUntilCondition(
+                    () => string.Equals(session.GetWindowsClipboardText(), expectedPath, StringComparison.OrdinalIgnoreCase),
+                    "Record workspace should copy the resolved absolute managed attachment path.");
+
+                session.ClickByAccessibilityId("CloseRecordsWindowButton");
+            }
+            finally
+            {
+                session.SetWindowsClipboardText(originalClipboardText);
+            }
+        }
+    }
+
+    [Fact]
     public void History_editor_runs_in_standalone_window_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
