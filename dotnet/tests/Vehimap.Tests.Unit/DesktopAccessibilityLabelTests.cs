@@ -451,6 +451,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"Kontrola aktualizací\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCheckWindow\"", updateXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"UpdateStatusText\"", updateXaml);
         Assert.Contains("Ctrl+Shift+C zkopíruje detaily", updateXaml);
         Assert.Contains("Escape dialog zavře.", updateXaml);
         Assert.Contains("Key.Escape", updateCodeBehind);

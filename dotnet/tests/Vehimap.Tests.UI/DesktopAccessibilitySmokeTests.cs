@@ -169,6 +169,52 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void Update_dialog_copies_result_details_to_clipboard_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            var originalClipboardText = session.GetWindowsClipboardText();
+            session.SetWindowsClipboardText(string.Empty);
+
+            try
+            {
+                session.ClickMenuItem("AppMenuRoot", "UpdateCheckButton");
+                Assert.NotNull(session.WaitForElementByAccessibilityId("UpdateCheckWindow"));
+                Assert.NotNull(session.WaitForElementByAccessibilityId("CopyUpdateDetailsButton"));
+                Assert.NotNull(session.WaitForElementByAccessibilityId("UpdateStatusText"));
+
+                session.ClickByAccessibilityId("CopyUpdateDetailsButton");
+
+                session.WaitUntilCondition(
+                    () => session.GetNameByAccessibilityId("UpdateStatusText", 1).Contains("zkop", StringComparison.CurrentCultureIgnoreCase),
+                    "Dialog kontroly aktualizaci ma po kopirovani oznamit stav zkopirovani.");
+
+                session.WaitUntilCondition(
+                    () =>
+                    {
+                        var clipboardText = session.GetWindowsClipboardText();
+                        return clipboardText.Contains("Vehimap - kontrola aktualizací", StringComparison.Ordinal)
+                            && clipboardText.Contains("Aktuální verze:", StringComparison.Ordinal)
+                            && clipboardText.Contains("Nejnovější verze:", StringComparison.Ordinal);
+                    },
+                    "Dialog kontroly aktualizaci ma zkopirovat detaily vysledku do systemove schranky.");
+
+                session.ClickByAccessibilityId("UpdateCloseButton");
+            }
+            finally
+            {
+                session.SetWindowsClipboardText(originalClipboardText);
+            }
+        }
+    }
+
+    [Fact]
     public void File_menu_data_actions_are_accessible_and_create_manual_automatic_backup_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

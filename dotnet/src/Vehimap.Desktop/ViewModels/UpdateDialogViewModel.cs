@@ -1,8 +1,9 @@
 using Vehimap.Application;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels;
 
-public sealed class UpdateDialogViewModel
+public sealed partial class UpdateDialogViewModel : ObservableObject
 {
     public UpdateDialogViewModel(UpdateCheckResult result)
     {
@@ -35,6 +36,9 @@ public sealed class UpdateDialogViewModel
     public string ClipboardText { get; }
 
     public string PrimaryActionLabel { get; }
+
+    [ObservableProperty]
+    private string statusMessage = "Detaily kontroly jsou připravené ke zkopírování.";
 
     public bool ShowPrimaryAction => Result.IsUpdateAvailable && (Result.CanInstallAutomatically || !string.IsNullOrWhiteSpace(Result.NotesUrl) || !string.IsNullOrWhiteSpace(Result.AssetUrl));
 

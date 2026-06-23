@@ -112,7 +112,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - runtime-specific preview update manifesty `update/latest-dotnet-preview-<rid>.ini`
 - detailni stav automaticke instalace v dialogu kontroly aktualizaci, vcetne duvodu rucniho rezimu
 - asset URL a SHA-256 hash v dialogu kontroly aktualizaci pro overitelnou rucni instalaci
-- kopirovani detailu kontroly aktualizaci do schranky tlacitkem nebo `Ctrl+Shift+C`, aby sla rucni instalace overit bez opisovani URL a hashe
+- kopirovani detailu kontroly aktualizaci do schranky tlacitkem nebo `Ctrl+Shift+C` vcetne pristupneho stavoveho textu vysledku, aby sla rucni instalace overit bez opisovani URL a hashe
 - odolnejsi kontrolu aktualizaci: poskozeny lokalni preview manifest se preskoci a sluzba zkusi vzdaleny manifest
 - odolnejsi aktualizacni orchestrace: chyba site/manifestu, otevreni externiho odkazu nebo spusteni updater helperu zustane uzivatelsky citelna a nespadne mimo shell
 - regresni testy packaging skriptu a generatoru manifestu, vcetne kontroly, ze `.sha256`, metadata a fyzicky balicek souhlasi
@@ -131,6 +131,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - Appium smoke nad publish buildem overuje i otevreni potvrzovaciho dialogu `Splneno` z pracovniho okna `Plan udrzby` i dashboardove akce `Dokoncit servis`
 - Appium smoke nad publish buildem overuje ulozeni volby Dashboardu pri startu z dialogu `Nastaveni`, propsani do Dashboardu i zustani dialogu otevreneho s citelnou validacni chybou pri neplatne hodnote
 - Appium smoke nad publish buildem overuje zkopirovani diagnostiky z dialogu `O programu` vcetne pristupneho stavoveho textu a obsahu systemove schranky
+- Appium smoke nad publish buildem overuje zkopirovani detailu z dialogu kontroly aktualizaci vcetne pristupneho stavoveho textu a obsahu systemove schranky
 - otevreni aktualni datove slozky z menu `Soubor` i z pristupneho tray akcniho okna pres sdileny multiplatformni file launcher; slozky pouzivaji samostatnou vetev s `explorer.exe` na Windows, `open` na macOS a `xdg-open` na Linuxu
 - okamzita automaticka zaloha a otevreni slozky `data/auto-backups` jsou dostupne z menu `Soubor` i z pristupneho tray akcniho okna a sdileji stejne blokovani datovych akci pri rozpracovane editaci jako export/import zalohy
 - ukonceni aplikace z menu `Soubor` polozkou `Konec` stejnym handlerem jako v menu `Aplikace`, aby F10 cesta zustala blizka AHK i bez ztraty samostatneho app menu
@@ -142,7 +143,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - denni historie desktopovych oznameni v `settings.ini`, vcetne resetu po zmene reminder nastaveni nebo po obnoveni zalohy, aby .NET vetev neoznamovala stejny akutni termin porad dokola
 - Windows resume hook pro background runtime: po probuzeni systemu se po 1500 ms provede stejna kontrola terminu, tray tooltipu a automatickych zaloh jako v AHK; pro macOS/Linux je vrstva pripravena jako no-op, dokud se platformy nebudou stabilizovat
 - regresni kontrola desktop UI zdroju proti typickym mojibake znakum, aby ctecky obrazovky nedostavaly poskozenou UTF-8 diakritiku
-- Appium smoke nad publish buildem kontroluje app-level menu `Soubor`, menu `Rychle akce`, dostupnost zapnutych/vypnutych akci, otevreni aktualniho upozorneni do spravneho workspace, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony, potvrzeni `Splneno` z udrzby i Dashboardu, ulozeni a validaci `Nastaveni`, kopirovani diagnostiky z `O programu` a rozsirena sada v izolovane portable kopii overuje i realne vytvoreni okamzite automaticke zalohy
+- Appium smoke nad publish buildem kontroluje app-level menu `Soubor`, menu `Rychle akce`, dostupnost zapnutych/vypnutych akci, otevreni aktualniho upozorneni do spravneho workspace, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony, potvrzeni `Splneno` z udrzby i Dashboardu, ulozeni a validaci `Nastaveni`, kopirovani diagnostiky z `O programu`, kopirovani detailu kontroly aktualizaci a rozsirena sada v izolovane portable kopii overuje i realne vytvoreni okamzite automaticke zalohy
 
 ## Co je dalsi na rade
 

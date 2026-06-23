@@ -17,6 +17,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Appium smoke pro Avalonia preview nově ověřuje stejný potvrzovací dialog `Splněno` i při spuštění z akce `Dokončit servis` na Dashboardu
 - Appium smoke pro Avalonia preview nově ověřuje uložení volby `Zobrazovat Dashboard při startu` v dialogu `Nastavení`, její propsání do Dashboardu a čitelnou validační chybu při neplatné hodnotě
 - Dialog `O programu` v Avalonia větvi nově po kopírování diagnostiky oznámí výsledek přístupným stavovým textem a Appium smoke ověřuje i obsah systémové schránky
+- Dialog kontroly aktualizací v Avalonia větvi nově po kopírování detailů oznámí výsledek přístupným stavovým textem a Appium smoke ověřuje i obsah systémové schránky
 - Samostatná Avalonia pracovní okna pro detail, evidence, přehledy, audit, dashboard, náklady a časovou osu lze zavřít klávesou `Escape`; stejná informace je uvedená v jejich přístupné nápovědě a krytá unit i Appium smoke testem
 - Appium smoke pro Avalonia preview nově hlídá app-level menu `Soubor`, menu `Rychlé akce`, jejich dostupnostní stavy a v rozšířené sadě i skutečné vytvoření okamžité automatické zálohy v izolované portable kopii
 - Avalonia menu `Soubor` i přístupné tray okno umí spustit okamžitou automatickou zálohu a otevřít složku `data/auto-backups`; tyto datové akce se vypínají při rozpracované editaci stejně jako export/import zálohy

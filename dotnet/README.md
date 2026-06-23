@@ -118,7 +118,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - kontrolovat `update/latest.ini` kompatibilne s AHK vetvi a na Windows pripravit automatickou instalaci pres `Vehimap.Updater`
 - v dialogu kontroly aktualizaci ukazat duvod, proc automaticka instalace neni dostupna, napriklad chybejici updater, nepublikovany build, nepodporovanou platformu nebo nekompletni metadata manifestu
 - v dialogu kontroly aktualizaci zobrazit asset URL a SHA-256 hash, aby rucni instalace sla overit bez dohledavani v manifestu
-- v dialogu kontroly aktualizaci zkopirovat cely vysledek vcetne verzi, asset URL a SHA-256 do schranky tlacitkem nebo `Ctrl+Shift+C`
+- v dialogu kontroly aktualizaci zkopirovat cely vysledek vcetne verzi, asset URL a SHA-256 do schranky tlacitkem nebo `Ctrl+Shift+C`; vysledek kopirovani se oznami pristupnym stavovym textem
 - pri poskozenem lokalnim preview manifestu preskocit lokalni override a zkusit bezny vzdaleny manifest, aby testovaci soubor v `update/` nezablokoval kontrolu aktualizaci
 - pri selhani kontroly aktualizaci, otevreni release poznamek, otevreni assetu nebo spusteni updater helperu udrzet shell bezici a ukazat chybu ve stavovem textu nebo aktualizacnim dialogu
 - otevrit modalni export a obnovu dat a pracovat se stejnym `.vehimapbak` formatem jako AHK vetev
@@ -127,7 +127,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - generovat verzovane release balicky pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`
 - pripravit draft release pro `.NET` preview tag `dotnet-preview-v<verze>` pres GitHub Actions
 - publikovat runtime-specific preview manifesty `update/latest-dotnet-preview-<rid>.ini`
-- spoustet Windows Appium smoke i v CI nad publish buildem desktop preview; smoke overuje app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony, potvrzeni `Splneno` z `Planu udrzby` i dashboardove akce `Dokoncit servis`, ulozeni volby Dashboardu pri startu vcetne validacni chyby v `Nastaveni` a kopirovani diagnostiky z `O programu` do systemove schranky, zatimco rozsirena sada nad izolovanou portable kopii testuje i realne vytvoreni okamzite automaticke zalohy
+- spoustet Windows Appium smoke i v CI nad publish buildem desktop preview; smoke overuje app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony, potvrzeni `Splneno` z `Planu udrzby` i dashboardove akce `Dokoncit servis`, ulozeni volby Dashboardu pri startu vcetne validacni chyby v `Nastaveni` a kopirovani diagnostiky z `O programu` i detailu kontroly aktualizaci do systemove schranky, zatimco rozsirena sada nad izolovanou portable kopii testuje i realne vytvoreni okamzite automaticke zalohy
 
 ## Lokalni build
 

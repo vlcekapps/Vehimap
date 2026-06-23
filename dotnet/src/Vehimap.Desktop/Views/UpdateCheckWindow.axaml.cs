@@ -62,11 +62,25 @@ public partial class UpdateCheckWindow : Window
 
     private async Task CopyDetailsAsync()
     {
-        if (DataContext is not UpdateDialogViewModel model || Clipboard is null)
+        if (DataContext is not UpdateDialogViewModel model)
         {
             return;
         }
 
-        await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
+        if (Clipboard is null)
+        {
+            model.StatusMessage = "Schránka není dostupná.";
+            return;
+        }
+
+        try
+        {
+            await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
+            model.StatusMessage = "Detaily kontroly aktualizací byly zkopírovány do schránky.";
+        }
+        catch (Exception ex)
+        {
+            model.StatusMessage = $"Detaily kontroly aktualizací se nepodařilo zkopírovat: {ex.Message}";
+        }
     }
 }
