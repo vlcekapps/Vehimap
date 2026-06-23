@@ -282,6 +282,54 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
+    public void Main_menu_can_be_invoked_with_f10_without_entering_regular_tab_order_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("VehicleListBox");
+            session.SendKeysToActiveElement(Keys.F10);
+
+            var focusedId = session.WaitForFocusedAutomationId(12, "FileMenuRoot", "PrintableReportButton");
+
+            Assert.Contains(focusedId, new[] { "FileMenuRoot", "PrintableReportButton" });
+            Assert.NotNull(session.WaitForElementByAccessibilityId("PrintableReportButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("FileExitAppButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ExitAppButton"));
+        }
+    }
+
+    [Fact]
+    public void Main_menu_roots_are_skipped_by_regular_tab_navigation_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            var menuRoots = new[] { "FileMenuRoot", "VehicleMenuRoot", "OverviewMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" };
+
+            session.ClickByAccessibilityId("HideInactiveVehiclesCheckBox");
+            session.SendKeysToActiveElement(Keys.Tab);
+
+            Assert.DoesNotContain(session.GetFocusedAutomationId(), menuRoots);
+
+            session.ClickByAccessibilityId("VehicleCategoryFilterBox");
+            session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+
+            Assert.DoesNotContain(session.GetFocusedAutomationId(), menuRoots);
+        }
+    }
+
+    [Fact]
     public void Primary_workspace_headers_are_exposed_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
@@ -302,7 +350,7 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
-    public void Main_menu_data_and_quick_actions_expose_expected_action_states_when_appium_is_available()
+    public void Main_menu_data_and_quick_actions_expose_expected_action_states_and_route_current_alert_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
         {
@@ -326,6 +374,11 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             Assert.False(session.IsEnabledByAccessibilityId("OpenNearestTechnicalMenuItem"));
             Assert.True(session.IsEnabledByAccessibilityId("OpenNearestReminderMenuItem"));
             Assert.True(session.IsEnabledByAccessibilityId("ReviewRecordsMenuItem"));
+
+            session.ClickByAccessibilityId("OpenBackgroundNotificationMenuItem");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenReminderWindowButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ReminderListBox"));
         }
     }
 }
