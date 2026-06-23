@@ -438,6 +438,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("CanResize=\"True\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutDetailsScrollViewer\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AboutStatusText\"", aboutXaml);
         Assert.Contains("Ctrl+O otevře release poznámky, Ctrl+Shift+C zkopíruje informace a Escape dialog zavře.", aboutXaml);
         Assert.Contains("Key.Escape", aboutCodeBehind);
         Assert.Contains("Key.O", aboutCodeBehind);

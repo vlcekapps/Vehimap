@@ -14,7 +14,7 @@
         AutomationProperties.Name="O programu"
         AutomationProperties.AutomationId="AboutWindow"
         AutomationProperties.HelpText="Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+Shift+C zkopíruje informace a Escape dialog zavře.">
-  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto,Auto">
     <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
@@ -49,7 +49,18 @@
       </Grid>
     </ScrollViewer>
 
-    <StackPanel Grid.Row="3"
+    <Border Grid.Row="3"
+            Margin="0,18,0,0"
+            Padding="12"
+            Background="#143A4A5A"
+            CornerRadius="8">
+      <TextBlock Text="{Binding StatusMessage}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.Name="{Binding StatusMessage}"
+                 AutomationProperties.AutomationId="AboutStatusText" />
+    </Border>
+
+    <StackPanel Grid.Row="4"
                 Margin="0,18,0,0"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"

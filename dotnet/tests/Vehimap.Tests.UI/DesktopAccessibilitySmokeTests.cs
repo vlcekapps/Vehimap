@@ -122,6 +122,53 @@ public sealed class DesktopAccessibilitySmokeTests
     }
 
     [Fact]
+    public void About_dialog_copies_support_diagnostics_to_clipboard_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            var originalClipboardText = session.GetWindowsClipboardText();
+            session.SetWindowsClipboardText(string.Empty);
+
+            try
+            {
+                session.ClickMenuItem("AppMenuRoot", "AboutButton");
+                Assert.NotNull(session.WaitForElementByAccessibilityId("ReleaseNotesButton"));
+                Assert.NotNull(session.WaitForElementByAccessibilityId("CopyAboutDetailsButton"));
+                Assert.NotNull(session.WaitForElementByAccessibilityId("AboutStatusText"));
+
+                session.ClickByAccessibilityId("CopyAboutDetailsButton");
+
+                session.WaitUntilCondition(
+                    () => session.GetNameByAccessibilityId("AboutStatusText", 1).Contains("zkop", StringComparison.CurrentCultureIgnoreCase),
+                    "Dialog O programu ma po kopirovani oznamit stav zkopirovani.");
+
+                session.WaitUntilCondition(
+                    () =>
+                    {
+                        var clipboardText = session.GetWindowsClipboardText();
+                        return clipboardText.Contains("Vehimap - O programu", StringComparison.Ordinal)
+                            && clipboardText.Contains("Verze aplikace:", StringComparison.Ordinal)
+                            && clipboardText.Contains("Datová složka:", StringComparison.Ordinal)
+                            && clipboardText.Contains("Release poznámky:", StringComparison.Ordinal);
+                    },
+                    "Dialog O programu ma zkopirovat diagnostiku pro podporu do systemove schranky.");
+
+                session.ClickByAccessibilityId("CloseAboutButton");
+            }
+            finally
+            {
+                session.SetWindowsClipboardText(originalClipboardText);
+            }
+        }
+    }
+
+    [Fact]
     public void File_menu_data_actions_are_accessible_and_create_manual_automatic_backup_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

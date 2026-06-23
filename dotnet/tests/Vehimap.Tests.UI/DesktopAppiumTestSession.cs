@@ -1,11 +1,16 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
+using System.Runtime.InteropServices;
 
 namespace Vehimap.Tests.UI;
 
 internal sealed class DesktopAppiumTestSession : IDisposable
 {
+    private const uint ClipboardUnicodeTextFormat = 13;
+    private const uint GlobalMemoryMoveable = 0x0002;
+    private const uint GlobalMemoryZeroInit = 0x0040;
+
     private readonly WindowsDriver _driver;
     private readonly string? _temporaryAppRoot;
 
@@ -129,6 +134,105 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         }
 
         element.SendKeys(text);
+    }
+
+    public void SetWindowsClipboardText(string text)
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return;
+        }
+
+        if (!TryOpenClipboard())
+        {
+            throw new InvalidOperationException("Schranku se nepodarilo otevrit pro zapis.");
+        }
+
+        var memory = IntPtr.Zero;
+        try
+        {
+            EmptyClipboard();
+            var bytes = (text.Length + 1) * sizeof(char);
+            memory = GlobalAlloc(GlobalMemoryMoveable | GlobalMemoryZeroInit, (UIntPtr)bytes);
+            if (memory == IntPtr.Zero)
+            {
+                throw new InvalidOperationException("Schranku se nepodarilo pripravit pro zapis.");
+            }
+
+            var pointer = GlobalLock(memory);
+            if (pointer == IntPtr.Zero)
+            {
+                throw new InvalidOperationException("Schranku se nepodarilo zamknout pro zapis.");
+            }
+
+            try
+            {
+                var chars = text.ToCharArray();
+                Marshal.Copy(chars, 0, pointer, chars.Length);
+                Marshal.WriteInt16(pointer, chars.Length * sizeof(char), 0);
+            }
+            finally
+            {
+                GlobalUnlock(memory);
+            }
+
+            if (SetClipboardData(ClipboardUnicodeTextFormat, memory) == IntPtr.Zero)
+            {
+                throw new InvalidOperationException("Schranku se nepodarilo naplnit textem.");
+            }
+
+            memory = IntPtr.Zero;
+        }
+        finally
+        {
+            if (memory != IntPtr.Zero)
+            {
+                GlobalFree(memory);
+            }
+
+            CloseClipboard();
+        }
+    }
+
+    public string GetWindowsClipboardText()
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return string.Empty;
+        }
+
+        if (!TryOpenClipboard())
+        {
+            throw new InvalidOperationException("Schranku se nepodarilo otevrit pro cteni.");
+        }
+
+        try
+        {
+            var data = GetClipboardData(ClipboardUnicodeTextFormat);
+            if (data == IntPtr.Zero)
+            {
+                return string.Empty;
+            }
+
+            var pointer = GlobalLock(data);
+            if (pointer == IntPtr.Zero)
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                return Marshal.PtrToStringUni(pointer) ?? string.Empty;
+            }
+            finally
+            {
+                GlobalUnlock(data);
+            }
+        }
+        finally
+        {
+            CloseClipboard();
+        }
     }
 
     public string GetFocusedAutomationId()
@@ -329,6 +433,48 @@ show_dashboard_on_launch=0
 
         throw new TimeoutException("Požadovaný UI prvek se v Appium session neobjevil.", lastError);
     }
+
+    private static bool TryOpenClipboard()
+    {
+        for (var attempt = 0; attempt < 10; attempt++)
+        {
+            if (OpenClipboard(IntPtr.Zero))
+            {
+                return true;
+            }
+
+            Thread.Sleep(50);
+        }
+
+        return false;
+    }
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool OpenClipboard(IntPtr owner);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool CloseClipboard();
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool EmptyClipboard();
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr GetClipboardData(uint format);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr SetClipboardData(uint format, IntPtr memory);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr GlobalAlloc(uint flags, UIntPtr bytes);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr GlobalLock(IntPtr memory);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool GlobalUnlock(IntPtr memory);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern IntPtr GlobalFree(IntPtr memory);
 
     private static void WaitUntilMissing(Func<bool> predicate, int timeoutSeconds)
     {

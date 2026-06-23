@@ -48,11 +48,25 @@ public partial class AboutWindow : Window
 
     private async Task CopyDetailsAsync()
     {
-        if (DataContext is not AboutDialogViewModel model || Clipboard is null)
+        if (DataContext is not AboutDialogViewModel model)
         {
             return;
         }
 
-        await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
+        if (Clipboard is null)
+        {
+            model.StatusMessage = "Schránka není dostupná.";
+            return;
+        }
+
+        try
+        {
+            await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
+            model.StatusMessage = "Informace byly zkopírovány do schránky.";
+        }
+        catch (Exception ex)
+        {
+            model.StatusMessage = $"Informace se nepodařilo zkopírovat: {ex.Message}";
+        }
     }
 }
