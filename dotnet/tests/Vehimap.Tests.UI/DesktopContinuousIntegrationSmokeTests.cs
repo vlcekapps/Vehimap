@@ -21,7 +21,34 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("SettingsButton"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("AboutButton"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("UpdateCheckButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenTrayActionsButton"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("ReloadButton"));
+        }
+    }
+
+    [Fact]
+    public void App_menu_opens_accessible_tray_actions_dialog_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickMenuItem("AppMenuRoot", "OpenTrayActionsButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("TrayActionsWindow"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("TrayActionsBackgroundStatusText"));
+            Assert.Equal(
+                "ShowMainWindowTrayActionButton",
+                session.WaitForFocusedAutomationId(12, "ShowMainWindowTrayActionButton"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenBackgroundStatusTrayActionButton"));
+            Assert.True(session.IsEnabledByAccessibilityId("CloseTrayActionsButton"));
+
+            session.ClickByAccessibilityId("CloseTrayActionsButton");
+            session.WaitForElementToDisappearByAccessibilityId("TrayActionsWindow");
         }
     }
 
