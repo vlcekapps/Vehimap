@@ -159,6 +159,7 @@ jobs:
       - metadata
       - test
     runs-on: windows-latest
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: dotnet
@@ -189,6 +190,7 @@ jobs:
           appium driver run windows install-wad
       - name: Run Appium UI smoke
         shell: pwsh
+        timeout-minutes: 15
         run: |
           $stdoutLog = Join-Path $env:GITHUB_WORKSPACE "dotnet\\artifacts\\appium-server.log"
           $stderrLog = Join-Path $env:GITHUB_WORKSPACE "dotnet\\artifacts\\appium-server.err.log"

@@ -325,6 +325,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
 
         CopyDirectory(sourceRoot, targetRoot);
         SeedPortableData(Path.Combine(targetRoot, "data"));
+        SeedLocalUpdateManifests(Path.Combine(targetRoot, "update"));
 
         return (Path.Combine(targetRoot, Path.GetFileName(sourceAppPath)), targetRoot);
     }
@@ -411,6 +412,26 @@ maintenance_reminder_days=21
 maintenance_reminder_km=1000
 show_dashboard_on_launch=0
 """);
+    }
+
+    private static void SeedLocalUpdateManifests(string updatePath)
+    {
+        Directory.CreateDirectory(updatePath);
+        foreach (var (manifestName, channel) in new[]
+        {
+            ("latest-dotnet-win-x64.ini", "stable"),
+            ("latest-dotnet-beta-win-x64.ini", "beta"),
+            ("latest-dotnet-nightly-win-x64.ini", "nightly")
+        })
+        {
+            File.WriteAllText(Path.Combine(updatePath, manifestName), $$"""
+[release]
+version=0.0.0
+published_at=2026-01-01
+notes_url=https://github.com/vlcekapps/Vehimap/releases
+channel={{channel}}
+""");
+        }
     }
 
     private static IWebElement WaitUntil(Func<IWebElement> factory, int timeoutSeconds)
