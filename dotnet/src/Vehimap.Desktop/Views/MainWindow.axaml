@@ -354,6 +354,11 @@
                     Click="OnThankAuthorClick"
                     AutomationProperties.Name="Otevřít stránku pro poděkování autorovi"
                     AutomationProperties.AutomationId="ThankAuthorButton" />
+          <MenuItem x:Name="FeedbackIssueButton"
+                    Header="Nahlásit zpětnou vazbu"
+                    Click="OnFeedbackIssueClick"
+                    AutomationProperties.Name="Otevřít formulář pro nahlášení zpětné vazby k Vehimapu"
+                    AutomationProperties.AutomationId="FeedbackIssueButton" />
           <MenuItem x:Name="UpdateCheckButton"
                     Header="Zkontrolovat aktualizace"
                     Click="OnUpdateCheckClick"

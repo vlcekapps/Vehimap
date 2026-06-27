@@ -125,6 +125,9 @@ internal sealed class DesktopAppShellController
     public Task OpenAuthorSupportAsync(MainWindowViewModel shell, CancellationToken cancellationToken = default) =>
         shell.OpenExternalAsync(AboutDialogViewModel.AuthorSupportUrl, cancellationToken);
 
+    public Task OpenFeedbackIssueAsync(MainWindowViewModel shell, CancellationToken cancellationToken = default) =>
+        shell.OpenExternalAsync(shell.BuildFeedbackIssueUrl(), cancellationToken);
+
     public async Task<bool> CheckForUpdatesAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
         try

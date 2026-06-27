@@ -170,6 +170,25 @@ public sealed class DesktopAppShellControllerTests
     }
 
     [Fact]
+    public async Task Open_feedback_issue_async_opens_prefilled_github_issue()
+    {
+        var fileLauncher = new StubFileLauncher();
+        var controller = new DesktopAppShellController(new StubAppShellDialogService(), new StubUpdateInstallLauncher());
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            fileLauncher: fileLauncher);
+
+        await controller.OpenFeedbackIssueAsync(viewModel);
+
+        Assert.NotNull(fileLauncher.LastOpenedPath);
+        Assert.StartsWith(FeedbackIssueUrlBuilder.IssueBaseUrl, fileLauncher.LastOpenedPath, StringComparison.Ordinal);
+        Assert.Contains("title=", fileLauncher.LastOpenedPath, StringComparison.Ordinal);
+        Assert.Contains("body=", fileLauncher.LastOpenedPath, StringComparison.Ordinal);
+        Assert.Contains("Externí odkaz byl otevřen", viewModel.ShellStatus, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Open_printable_report_async_creates_html_and_opens_it()
     {
         var controller = new DesktopAppShellController(new StubAppShellDialogService(), new StubUpdateInstallLauncher());

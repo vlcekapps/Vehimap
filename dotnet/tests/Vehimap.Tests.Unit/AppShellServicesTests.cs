@@ -7,6 +7,7 @@ using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
@@ -92,6 +93,40 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.True(model.IsDiagnosticsVisible);
         Assert.Equal("Skrýt diagnostická data", model.ToggleDiagnosticsLabel);
         Assert.Contains("Kanál: nightly", model.DiagnosticText, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Feedback_issue_url_prefills_safe_nightly_context_without_private_paths()
+    {
+        var appInfo = new AppBuildInfo(
+            "Vehimap Nightly",
+            "1.0.2-nightly.15.1",
+            "1.0.2.0",
+            "samostatná desktopová aplikace",
+            @"C:\Users\tester\AppData\Local\Programs\Vehimap Nightly\Vehimap.Desktop.exe",
+            "Windows 11 x64",
+            ".NET 10",
+            "https://example.com/latest.ini",
+            "https://example.com/release",
+            @"C:\Users\tester\AppData\Local\Programs\Vehimap Nightly\Vehimap.Updater.exe",
+            true,
+            "nightly");
+
+        var url = FeedbackIssueUrlBuilder.Build(appInfo, "Systémová datová složka", 3, 2);
+        var uri = new Uri(url);
+        var title = ReadQueryValue(uri, "title");
+        var body = ReadQueryValue(uri, "body");
+
+        Assert.Equal("https://github.com/vlcekapps/Vehimap/issues/new", FeedbackIssueUrlBuilder.IssueBaseUrl);
+        Assert.Equal(FeedbackIssueUrlBuilder.IssueBaseUrl, url[..FeedbackIssueUrlBuilder.IssueBaseUrl.Length]);
+        Assert.Contains("Vehimap Nightly: zpětná vazba k nightly 1.0.2-nightly.15.1", title, StringComparison.Ordinal);
+        Assert.Contains("## Co chcete nahlásit nebo navrhnout", body, StringComparison.Ordinal);
+        Assert.Contains("- Kanál: nightly", body, StringComparison.Ordinal);
+        Assert.Contains("- Režim dat: Systémová datová složka", body, StringComparison.Ordinal);
+        Assert.Contains("- Počet vozidel: 3", body, StringComparison.Ordinal);
+        Assert.Contains("- Položky auditu: 2", body, StringComparison.Ordinal);
+        Assert.Contains("veřejný issue nepředvyplňuje datovou složku", body, StringComparison.Ordinal);
+        Assert.DoesNotContain(@"C:\Users\tester", body, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -551,6 +586,21 @@ public sealed class AppShellServicesTests : IDisposable
         }
 
         return "win-x64";
+    }
+
+    private static string ReadQueryValue(Uri uri, string key)
+    {
+        var query = uri.Query.TrimStart('?').Split('&', StringSplitOptions.RemoveEmptyEntries);
+        foreach (var part in query)
+        {
+            var pieces = part.Split('=', 2);
+            if (pieces.Length == 2 && string.Equals(Uri.UnescapeDataString(pieces[0]), key, StringComparison.Ordinal))
+            {
+                return Uri.UnescapeDataString(pieces[1]);
+            }
+        }
+
+        return string.Empty;
     }
 
     private static string FindRepositoryRoot()

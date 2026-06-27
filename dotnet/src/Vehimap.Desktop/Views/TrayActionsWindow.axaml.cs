@@ -176,6 +176,12 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnFeedbackIssueClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ReportFeedback;
+        Close();
+    }
+
     private void OnCheckForUpdatesClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.CheckForUpdates;

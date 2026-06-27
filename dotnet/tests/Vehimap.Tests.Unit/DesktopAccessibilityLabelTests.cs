@@ -248,6 +248,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"AboutButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ThankAuthorButton\"", xaml);
         Assert.Contains("Click=\"OnThankAuthorClick\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FeedbackIssueButton\"", xaml);
+        Assert.Contains("Click=\"OnFeedbackIssueClick\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCheckButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitAppButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateVehicleMenuItem\"", xaml);
@@ -581,6 +583,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDataFolderTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenAboutTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ThankAuthorTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FeedbackIssueTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("IsEnabled=\"{Binding CanReportFeedback}\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CheckForUpdatesTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
@@ -609,6 +613,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OnOpenDataFolderClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenAboutClick", trayActionsCodeBehind);
         Assert.Contains("OnThankAuthorClick", trayActionsCodeBehind);
+        Assert.Contains("OnFeedbackIssueClick", trayActionsCodeBehind);
         Assert.Contains("OnCheckForUpdatesClick", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowUpcomingOverview", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenBackgroundStatus", trayActionsCodeBehind);
@@ -634,6 +639,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("TrayActionsDialogAction.OpenDataFolder", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenAbout", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ThankAuthor", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ReportFeedback", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.CheckForUpdates", trayActionsCodeBehind);
         Assert.Contains("Key.Escape", trayActionsCodeBehind);
     }
@@ -691,8 +697,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("_shell.OpenDataFolderAsync()", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenAbout", runtimeController);
         Assert.Contains("TrayActionsDialogAction.ThankAuthor", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ReportFeedback", runtimeController);
         Assert.Contains("_shell.AppShellController.OpenAboutAsync(_mainWindow, _shell)", runtimeController);
         Assert.Contains("_shell.AppShellController.OpenAuthorSupportAsync(_shell)", runtimeController);
+        Assert.Contains("_shell.AppShellController.OpenFeedbackIssueAsync(_shell)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.CheckForUpdates", runtimeController);
         Assert.Contains("_shell.AppShellController.CheckForUpdatesAsync(_mainWindow, _shell)", runtimeController);
     }

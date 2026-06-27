@@ -32,6 +32,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - pri nedostupnem nebo poskozenem `.vehimapbak` souboru ukazat cestu k zaloze a parser/I/O detail ve stavovem textu misto neobslouzene vyjimky v shellu
 - pri zruseni nebo selhani app-level akci z menu/tray, jako jsou nastaveni, export/import zalohy, O programu a kontrola aktualizaci, zapsat citelnou stavovou hlasku misto neobslouzene vyjimky
 - otevrit stranku `Podekovat autorovi` z menu `Aplikace`, dialogu `O programu` i pristupneho tray okna pres stejny externi launcher jako release poznamky nebo update odkazy
+- otevrit predvyplneny GitHub issue `Nahlasit zpetnou vazbu` z menu `Aplikace` i pristupneho tray okna; sablona doplni verzi, kanal, platformu a zakladni pocty, ale zamerne neobsahuje datovou slozku ani nazvy vozidel
 - pri exportu `.vehimapbak` hlasit pocet zahrnutych spravovanych priloh a pocet chybejicich spravovanych priloh, ktere byly bezpecne preskoceny stejne jako v AHK vetvi
 - skladat sdilene C# use-cases pro audit, nakladove souhrny, cenu za kilometr, casovou osu vozidla a ICS export
 - zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych legacy dat
@@ -106,7 +107,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit modalni `Nastaveni`, `O programu` a `Zkontrolovat aktualizace` primo z desktop shellu
 - ridit dostupnost `Minimalizovat na listu` z viewmodelu podle podpory tray a v nastaveni zneaktivnit intervalova pole, pokud nejsou zapnute pravidelne automaticke zalohy
 - ovladat `Nastaveni` klavesnici: `Ctrl+S` ulozi, `Ctrl+B` ulozi a vytvori zalohu ihned, `Esc` zavre dialog bez ulozeni
-- ovladat app-level dialogy konzistentne klavesnici: `O programu` ukazuje bezny souhrn aplikace, autora `by Vlcek apps` a verzi vcetne kanalu, technickou diagnostiku schovava pod `Zobrazit diagnosticka data`, ma `Ctrl+O` pro release poznamky, `Ctrl+K` pro podekovani autorovi, `Ctrl+Shift+C` pro zkopirovani diagnostiky, pristupny stav vysledku kopirovani a `Esc` pro zavreni; potvrzovaci dialogy, kontrola aktualizaci, upozorneni i tray akce maji `Esc` pro bezpecne zavreni bez nove akce
+- ovladat app-level dialogy a akce konzistentne klavesnici: `O programu` ukazuje bezny souhrn aplikace, autora `by Vlcek apps` a verzi vcetne kanalu, technickou diagnostiku schovava pod `Zobrazit diagnosticka data`, ma `Ctrl+O` pro release poznamky, `Ctrl+K` pro podekovani autorovi, `Ctrl+Shift+C` pro zkopirovani diagnostiky, pristupny stav vysledku kopirovani a `Esc` pro zavreni; `Nahlasit zpetnou vazbu` otevre bezpecne predvyplneny GitHub issue a potvrzovaci dialogy, kontrola aktualizaci, upozorneni i tray akce maji `Esc` pro bezpecne zavreni bez nove akce
 - otevrit pristupne `Akce Vehimapu na liste` i z menu `Aplikace`, aby stejny dialog jako nativni tray slo vyvolat pres F10/Alt bez zavislosti na oznamovaci oblasti
 - ukoncit aplikaci z menu `Soubor` pres polozku `Konec` i z menu `Aplikace`, aby F10 tok odpovidal klasickemu desktopovemu rozvrzeni i AHK parite
 - generovat a testovat autostart zaznamy pro Linux `.desktop` a macOS LaunchAgent vcetne bezpecneho escapovani cest, argumentu a XML znaku

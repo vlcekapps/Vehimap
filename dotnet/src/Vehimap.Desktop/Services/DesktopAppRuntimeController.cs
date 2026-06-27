@@ -373,6 +373,9 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             case TrayActionsDialogAction.ThankAuthor:
                 await ExecuteShellQuickActionAsync(() => _shell.AppShellController.OpenAuthorSupportAsync(_shell)).ConfigureAwait(true);
                 break;
+            case TrayActionsDialogAction.ReportFeedback:
+                await ExecuteShellQuickActionAsync(() => _shell.AppShellController.OpenFeedbackIssueAsync(_shell)).ConfigureAwait(true);
+                break;
             case TrayActionsDialogAction.CheckForUpdates:
                 var shouldExit = false;
                 await ExecuteShellQuickActionAsync(async () =>

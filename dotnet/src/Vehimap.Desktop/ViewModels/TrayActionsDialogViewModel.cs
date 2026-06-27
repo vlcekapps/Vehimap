@@ -30,6 +30,7 @@ public sealed record TrayActionsDialogViewModel(
     string OpenDataFolderLabel,
     string OpenAboutLabel,
     string ThankAuthorLabel,
+    string FeedbackIssueLabel,
     string CheckForUpdatesLabel,
     string ExitLabel,
     string CancelLabel)
@@ -60,6 +61,7 @@ public sealed record TrayActionsDialogViewModel(
     public bool CanOpenDataFolder { get; init; } = true;
     public bool CanOpenAbout { get; init; } = true;
     public bool CanThankAuthor { get; init; } = true;
+    public bool CanReportFeedback { get; init; } = true;
     public bool CanCheckForUpdates { get; init; } = true;
     public bool CanExit { get; init; } = true;
 
@@ -93,6 +95,7 @@ public sealed record TrayActionsDialogViewModel(
         "Otevřít datovou složku",
         "O programu",
         "Poděkovat autorovi",
+        "Nahlásit zpětnou vazbu",
         "Zkontrolovat aktualizace",
         "Ukončit aplikaci",
         "Zavřít");

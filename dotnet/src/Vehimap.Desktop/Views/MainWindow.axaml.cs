@@ -509,6 +509,17 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
+    private async void OnFeedbackIssueClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.AppShellController.OpenFeedbackIssueAsync(_viewModel);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
     private async void OnUpdateCheckClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel is null)

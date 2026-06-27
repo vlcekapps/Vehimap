@@ -30,5 +30,6 @@ public enum TrayActionsDialogAction
     CreateAutomaticBackupNow = 25,
     OpenAutomaticBackupFolder = 26,
     OpenBackgroundStatus = 27,
-    ThankAuthor = 28
+    ThankAuthor = 28,
+    ReportFeedback = 29
 }

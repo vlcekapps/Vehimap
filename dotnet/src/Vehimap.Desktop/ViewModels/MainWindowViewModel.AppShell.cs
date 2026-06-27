@@ -321,6 +321,12 @@ public sealed partial class MainWindowViewModel
             appInfo.ReleaseChannel);
     }
 
+    internal string BuildFeedbackIssueUrl()
+    {
+        var appInfo = _session.GetAppInfo();
+        return FeedbackIssueUrlBuilder.Build(appInfo, DataMode, VehicleCount, AuditCount);
+    }
+
     internal async Task<string> OpenExternalAsync(string path, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(path))
