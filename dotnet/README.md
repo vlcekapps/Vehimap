@@ -189,6 +189,15 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDe
 
 Prvni prikaz je rychla sucha kontrola bez tagu a bez dlouhe readiness brany. Potom zvolte bud druhy prikaz pro vytvoreni lokalniho anotovaneho tagu `dotnet-v<verze>`, nebo treti prikaz pro vytvoreni tagu a jeho okamzite odeslani na GitHub po uspesne readiness brane.
 
+Po dobehnuti GitHub Actions release workflow lze stabilni kanal overit jednim post-release skriptem:
+
+```powershell
+cd dotnet
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64
+```
+
+Skript zkontroluje stabilni `latest-dotnet-win-x64.ini`, prechodovy `latest-dotnet-preview-win-x64.ini`, release notes URL, dostupnost assetu, SHA-256, velikost assetu a nakonec spusti AHK retirement gate. Pokud je potreba jen offline kontrola po commitu manifestu, pridejte `-SkipNetwork`.
+
 Pred finalnim odstranenim AHK vetve spustte jeste retirement report:
 
 ```powershell

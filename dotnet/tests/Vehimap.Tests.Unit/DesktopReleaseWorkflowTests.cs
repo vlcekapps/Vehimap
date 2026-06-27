@@ -64,6 +64,24 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Dry run OK. Tag nebyl vytvoren.", script, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Published_release_verification_script_checks_manifest_release_and_retirement_gate()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetPublishedRelease.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("latest-dotnet-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
+        Assert.Contains("latest-dotnet-preview-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
+        Assert.Contains("asset_sha256", script, StringComparison.Ordinal);
+        Assert.Contains("asset_size", script, StringComparison.Ordinal);
+        Assert.Contains("releases/download/$releaseTag", script, StringComparison.Ordinal);
+        Assert.Contains("Invoke-RemoteHeadCheck", script, StringComparison.Ordinal);
+        Assert.Contains("$SkipNetwork", script, StringComparison.Ordinal);
+        Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("-FailOnBlockers", script, StringComparison.Ordinal);
+        Assert.Contains("publikovany .NET desktop release je overeny", script, StringComparison.Ordinal);
+    }
+
     private static string ReadWorkflow()
     {
         var workflowPath = Path.Combine(FindRepositoryRoot(), ".github", "workflows", "dotnet-desktop.yml");
