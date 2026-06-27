@@ -117,7 +117,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - vystavovat souhrnne, stavove a detailni texty v hlavnim shellu i workspacech pres explicitni pristupne nazvy a stabilni `AutomationId`, aby je mohly cist screen readery a kontrolovat UI testy
 - cist a zapisovat podporovane reminder volby do stejneho `settings.ini` jako AHK verze a respektovat `show_dashboard_on_launch`
 - reportovat stejnou verzi jako root `src/VERSION`, vcetne file version pro desktop buildy
-- kontrolovat `update/latest.ini` kompatibilne s AHK vetvi a na Windows pripravit automatickou instalaci pres `Vehimap.Updater`
+- kontrolovat `update/latest.ini` kompatibilne s AHK vetvi a na Windows pripravit automatickou instalaci pres Inno Setup installer; `Vehimap.Updater` zustava fallback pro starsi archivni/portable balicky
 - v dialogu kontroly aktualizaci ukazat duvod, proc automaticka instalace neni dostupna, napriklad chybejici updater, nepublikovany build, nepodporovanou platformu nebo nekompletni metadata manifestu
 - v dialogu kontroly aktualizaci zobrazit asset URL a SHA-256 hash, aby rucni instalace sla overit bez dohledavani v manifestu
 - v dialogu kontroly aktualizaci zkopirovat cely vysledek vcetne verzi, asset URL a SHA-256 do schranky tlacitkem nebo `Ctrl+Shift+C`; vysledek kopirovani se oznami pristupnym stavovym textem
@@ -153,7 +153,7 @@ dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -r win-x6
 .\build\Package-DesktopRelease.ps1 -PublishDirectory .\artifacts\win-x64\desktop -RuntimeIdentifier win-x64 -Version (Get-Content ..\src\VERSION).Trim() -OutputDirectory .\artifacts\win-x64\release -Channel stable
 ```
 
-Balickovaci skript vynechava `.pdb`, pro Windows vytvori per-user Inno Setup instalator a pro ostatni RID archiv, prida `.sha256` a JSON metadata s `runtimeIdentifier`, `channel`, `assetKind`, nazvem balicku, hashem a velikosti. Generator desktop update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt. Kontrola aktualizaci umi lokalni manifest pouzit jako override, ale pokud je lokalni soubor poskozeny, pokracuje na vzdaleny manifest. Dialog kontroly aktualizaci navic ukazuje, proc je update jen rucni, pokud automaticka instalace neni dostupna, vypise asset URL i SHA-256 pro overeni stazeneho balicku a umi tyto detaily zkopirovat do schranky tlacitkem nebo `Ctrl+Shift+C`.
+Balickovaci skript vynechava `.pdb`, pro Windows vytvori per-user Inno Setup instalator a pro ostatni RID archiv, prida `.sha256` a JSON metadata s `runtimeIdentifier`, `channel`, `assetKind`, nazvem balicku, hashem a velikosti. Windows instalator pri update zavira bezici aplikace pres Inno Setup, ale sam je interaktivni a na konci nabidne checkbox `Spustit Vehimap` / `Spustit Vehimap Beta` / `Spustit Vehimap Nightly`; aplikace po spusteni installeru zavre hlavni okno. Generator desktop update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt. Kontrola aktualizaci umi lokalni manifest pouzit jako override, ale pokud je lokalni soubor poskozeny, pokracuje na vzdaleny manifest. Dialog kontroly aktualizaci navic ukazuje, proc je update jen rucni, pokud automaticka instalace neni dostupna, vypise asset URL i SHA-256 pro overeni stazeneho balicku a umi tyto detaily zkopirovat do schranky tlacitkem nebo `Ctrl+Shift+C`.
 
 CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 

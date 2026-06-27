@@ -7,6 +7,12 @@ internal sealed class ProcessUpdateInstallLauncher : IUpdateInstallLauncher
 {
     public void Launch(UpdateInstallPlan plan)
     {
+        var startInfo = BuildStartInfo(plan);
+        Process.Start(startInfo);
+    }
+
+    internal static ProcessStartInfo BuildStartInfo(UpdateInstallPlan plan)
+    {
         if (string.Equals(plan.InstallKind, "installer", StringComparison.OrdinalIgnoreCase))
         {
             var installerPath = string.IsNullOrWhiteSpace(plan.InstallerPath)
@@ -19,8 +25,9 @@ internal sealed class ProcessUpdateInstallLauncher : IUpdateInstallLauncher
                 WorkingDirectory = Path.GetDirectoryName(installerPath) ?? AppContext.BaseDirectory
             };
 
-            Process.Start(installerStartInfo);
-            return;
+            installerStartInfo.ArgumentList.Add("/CLOSEAPPLICATIONS");
+            installerStartInfo.ArgumentList.Add("/NORESTARTAPPLICATIONS");
+            return installerStartInfo;
         }
 
         var startInfo = new ProcessStartInfo
@@ -39,6 +46,6 @@ internal sealed class ProcessUpdateInstallLauncher : IUpdateInstallLauncher
         startInfo.ArgumentList.Add("--entry");
         startInfo.ArgumentList.Add(plan.EntryPath);
 
-        Process.Start(startInfo);
+        return startInfo;
     }
 }

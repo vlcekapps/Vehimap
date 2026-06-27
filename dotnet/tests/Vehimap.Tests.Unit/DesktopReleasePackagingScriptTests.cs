@@ -171,6 +171,19 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
     }
 
     [Fact]
+    public async Task Inno_template_closes_running_applications_and_offers_postinstall_launch()
+    {
+        var templatePath = Path.Combine(FindRepositoryRoot(), "dotnet", "installer", "windows", "Vehimap.iss.in");
+        var template = await File.ReadAllTextAsync(templatePath);
+
+        Assert.Contains("CloseApplications=yes", template, StringComparison.Ordinal);
+        Assert.Contains("RestartApplications=no", template, StringComparison.Ordinal);
+        Assert.Contains("[Run]", template, StringComparison.Ordinal);
+        Assert.Contains("Filename: \"{app}\\Vehimap.Desktop.exe\"", template, StringComparison.Ordinal);
+        Assert.Contains("Flags: nowait postinstall skipifsilent", template, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Update_manifest_script_rejects_checksum_that_does_not_match_package()
     {
         var powerShell = ResolvePowerShell();

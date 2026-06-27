@@ -229,6 +229,27 @@ public sealed class DesktopAppShellControllerTests
     }
 
     [Fact]
+    public void Installer_update_launcher_uses_interactive_inno_close_arguments()
+    {
+        var installerPath = Path.Combine(Path.GetTempPath(), "vehimap-update-setup.exe");
+        var plan = new UpdateInstallPlan(
+            installerPath,
+            Path.GetTempPath(),
+            AppContext.BaseDirectory,
+            Path.Combine(AppContext.BaseDirectory, "Vehimap.Desktop.exe"),
+            1234,
+            "1.0.9",
+            "installer",
+            installerPath);
+
+        var startInfo = ProcessUpdateInstallLauncher.BuildStartInfo(plan);
+
+        Assert.Equal(installerPath, startInfo.FileName);
+        Assert.True(startInfo.UseShellExecute);
+        Assert.Equal(["/CLOSEAPPLICATIONS", "/NORESTARTAPPLICATIONS"], startInfo.ArgumentList);
+    }
+
+    [Fact]
     public async Task Check_for_updates_async_shows_failure_result_when_check_throws()
     {
         var dialogService = new StubAppShellDialogService();
