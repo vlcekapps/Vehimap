@@ -105,8 +105,8 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - nastaveni `run_at_startup`, `hide_on_launch` a automatickych zaloh vcetne rucni akce `Zalohovat ihned`
 - settings UX pro automaticke zalohy: interval a pocet ponechanych zaloh jsou aktivni jen pri zapnutych pravidelnych zalohach a vypnuta sekce neblokuje ulozeni ostatnich voleb
 - klavesove ovladani dialogu `Nastaveni`: `Ctrl+S`, `Ctrl+B` a `Esc`
-- sjednocene klavesove ovladani app-level dialogu: `O programu` ma `Ctrl+O` pro release poznamky, `Ctrl+Shift+C` pro zkopirovani diagnostiky a pristupny stav vysledku kopirovani, kontrola aktualizaci, potvrzeni, upozorneni a tray akce maji `Esc` pro bezpecne zavreni
-- app-level dialogy `Nastaveni`, `O programu` a `Kontrola aktualizaci` jsou resizable a hlavni obsah maji ve scrollovatelne oblasti, aby delsi cesty nebo vetsi systemove pismo neschovaly akcni tlacitka
+- sjednocene klavesove ovladani app-level dialogu: `O programu` ma bezny souhrn aplikace s autorem `by Vlcek apps` a verzi vcetne kanalu, technickou diagnostiku schovanou pod samostatnym tlacitkem, `Ctrl+O` pro release poznamky, `Ctrl+Shift+C` pro zkopirovani diagnostiky a pristupny stav vysledku kopirovani; kontrola aktualizaci, potvrzeni, upozorneni a tray akce maji `Esc` pro bezpecne zavreni
+- app-level dialogy `Nastaveni` a `Kontrola aktualizaci` jsou resizable a hlavni obsah maji ve scrollovatelne oblasti; `O programu` zustava kratky bezny souhrn a dlouha diagnostika je ve vlastni scrollovatelne casti, aby delsi cesty nebo vetsi systemove pismo neschovaly akcni tlacitka
 - potvrzovaci dialogy, dokonceni udrzby, `Balicek pro vozidlo` a pristupne tray akcni okno maji explicitni resize nebo scroll regiony, aby dlouhy text a vetsi systemove pismo neschovaly primarni akce
 - testovane generovani autostart zaznamu pro Linux `.desktop` a macOS LaunchAgent, vcetne cest s mezerami, uvozovkami a XML znaky
 - multiplatformni publish matrix pro `.NET` desktop release

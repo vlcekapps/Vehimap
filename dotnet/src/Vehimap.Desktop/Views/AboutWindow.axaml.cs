@@ -19,6 +19,14 @@ public partial class AboutWindow : Window
 
     private void OnReleaseNotesClick(object? sender, RoutedEventArgs e) => Close(true);
 
+    private void OnToggleDiagnosticsClick(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is AboutDialogViewModel model)
+        {
+            model.ToggleDiagnostics();
+        }
+    }
+
     private async void OnCopyDetailsClick(object? sender, RoutedEventArgs e) => await CopyDetailsAsync();
 
     private void OnCloseClick(object? sender, RoutedEventArgs e) => Close(false);
@@ -62,11 +70,11 @@ public partial class AboutWindow : Window
         try
         {
             await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
-            model.StatusMessage = "Informace byly zkopírovány do schránky.";
+            model.StatusMessage = "Diagnostická data byla zkopírována do schránky.";
         }
         catch (Exception ex)
         {
-            model.StatusMessage = $"Informace se nepodařilo zkopírovat: {ex.Message}";
+            model.StatusMessage = $"Diagnostická data se nepodařilo zkopírovat: {ex.Message}";
         }
     }
 }

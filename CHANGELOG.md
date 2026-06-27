@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# Avalonia dialog `O programu` je nově běžnější uživatelský dialog s aplikací, autorem `by Vlcek apps` a verzí včetně kanálu; technické údaje jako datová složka, runtime a soubor aplikace jsou schované pod `Zobrazit diagnostická data` a dál je lze zkopírovat pro podporu.
 - C# Avalonia editor `Tankování` nově ukládá i `Detail paliva` a `Místo tankování`; nové zápisy používají kompatibilní `# Vehimap fuel v2`, starší `fuel v1` se dál načítá a nové údaje se promítají do hledání, řazení, detailu položky i časové osy.
 - C# Avalonia karty `Historie` a `Tankování` nově zobrazují akce `Nové`, `Upravit` a `Odstranit` přímo v kartě, zatímco tlačítko `V okně` zůstává pro přehlednější samostatnou práci; editory evidencí, `Dashboard` a `Náklady` mají navíc scrollovací ochranu proti useknutí obsahu při větším písmu.
 - C# desktop shell se nově otevírá maximalizovaný, levý panel seznamu vozidel má odolnější rozložení filtrů a editor vozidla je scrollovatelný, aby při vyšším DPI nebo bez ruční maximalizace nepřekrýval ani neschovával pole.
@@ -99,7 +100,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - menu `Přehledy` v Avalonia větvi má přímou položku `Export termínů do kalendáře (.ics)`, aby odpovídalo AHK menu i původnímu workflow plánu
 
 ### Změněno
-- Avalonia app-level dialogy `Nastavení`, `O programu` a `Kontrola aktualizací` jsou nově zvětšitelné a jejich hlavní obsah je scrollovatelný, takže delší cesty, update detaily a větší systémové písmo neschovají spodní akční tlačítka
+- Avalonia app-level dialogy `Nastavení` a `Kontrola aktualizací` jsou zvětšitelné a jejich hlavní obsah je scrollovatelný; `O programu` zůstává krátký běžný souhrn a dlouhou technickou diagnostiku má ve vlastní scrollovatelné části
 - Avalonia potvrzovací dialogy, dokončení údržby, `Balíček pro vozidlo` a přístupné tray akce mají explicitní resize nebo scroll regiony, aby dlouhý text a větší systémové písmo neschovaly primární akce
 - Avalonia background runtime se po úspěšném uložení evidence, importu zálohy, změně nastavení, ručním reloadu a okamžité automatické záloze synchronizuje hned se shell snapshotem, takže tray tooltip a oznámení nečekají až na další intervalovou kontrolu
 - Avalonia ukládání vozidel a evidenčních editorů nově při selhání zápisu nezavírá rozpracovaný formulář, hlásí chybu v editoru i shellu a vrací fokus na smysluplný prvek

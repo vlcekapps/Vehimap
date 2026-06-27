@@ -104,7 +104,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit modalni `Nastaveni`, `O programu` a `Zkontrolovat aktualizace` primo z desktop shellu
 - ridit dostupnost `Minimalizovat na listu` z viewmodelu podle podpory tray a v nastaveni zneaktivnit intervalova pole, pokud nejsou zapnute pravidelne automaticke zalohy
 - ovladat `Nastaveni` klavesnici: `Ctrl+S` ulozi, `Ctrl+B` ulozi a vytvori zalohu ihned, `Esc` zavre dialog bez ulozeni
-- ovladat app-level dialogy konzistentne klavesnici: `O programu` ma `Ctrl+O` pro release poznamky, `Ctrl+Shift+C` pro zkopirovani diagnostiky, pristupny stav vysledku kopirovani a `Esc` pro zavreni, potvrzovaci dialogy, kontrola aktualizaci, upozorneni i tray akce maji `Esc` pro bezpecne zavreni bez nove akce
+- ovladat app-level dialogy konzistentne klavesnici: `O programu` ukazuje bezny souhrn aplikace, autora `by Vlcek apps` a verzi vcetne kanalu, technickou diagnostiku schovava pod `Zobrazit diagnosticka data`, ma `Ctrl+O` pro release poznamky, `Ctrl+Shift+C` pro zkopirovani diagnostiky, pristupny stav vysledku kopirovani a `Esc` pro zavreni; potvrzovaci dialogy, kontrola aktualizaci, upozorneni i tray akce maji `Esc` pro bezpecne zavreni bez nove akce
 - otevrit pristupne `Akce Vehimapu na liste` i z menu `Aplikace`, aby stejny dialog jako nativni tray slo vyvolat pres F10/Alt bez zavislosti na oznamovaci oblasti
 - ukoncit aplikaci z menu `Soubor` pres polozku `Konec` i z menu `Aplikace`, aby F10 tok odpovidal klasickemu desktopovemu rozvrzeni i AHK parite
 - generovat a testovat autostart zaznamy pro Linux `.desktop` a macOS LaunchAgent vcetne bezpecneho escapovani cest, argumentu a XML znaku

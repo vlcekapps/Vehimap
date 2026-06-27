@@ -4,6 +4,8 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class AboutDialogViewModel : ObservableObject
 {
+    private const string AuthorText = "by Vlcek apps";
+
     public AboutDialogViewModel(
         string title,
         string appVersion,
@@ -14,7 +16,8 @@ public sealed partial class AboutDialogViewModel : ObservableObject
         string platformDescription,
         string frameworkDescription,
         string applicationPath,
-        string releaseNotesUrl)
+        string releaseNotesUrl,
+        string releaseChannel = "stable")
     {
         Title = title;
         AppVersion = appVersion;
@@ -26,13 +29,23 @@ public sealed partial class AboutDialogViewModel : ObservableObject
         FrameworkDescription = frameworkDescription;
         ApplicationPath = applicationPath;
         ReleaseNotesUrl = releaseNotesUrl;
+        ReleaseChannel = string.IsNullOrWhiteSpace(releaseChannel) ? "stable" : releaseChannel.Trim();
     }
 
     public string Title { get; }
 
+    public string Author => AuthorText;
+
     public string AppVersion { get; }
 
     public string FileVersion { get; }
+
+    public string ReleaseChannel { get; }
+
+    public string DisplayVersion =>
+        string.Equals(ReleaseChannel, "stable", StringComparison.OrdinalIgnoreCase)
+            ? AppVersion
+            : $"{AppVersion} ({ReleaseChannel})";
 
     public string RuntimeMode { get; }
 
@@ -49,16 +62,26 @@ public sealed partial class AboutDialogViewModel : ObservableObject
     public string ReleaseNotesUrl { get; }
 
     [ObservableProperty]
-    private string statusMessage = "Informace jsou připravené ke zkopírování.";
+    private bool isDiagnosticsVisible;
 
-    public string ClipboardText => string.Join(
+    public string ToggleDiagnosticsLabel => IsDiagnosticsVisible
+        ? "Skrýt diagnostická data"
+        : "Zobrazit diagnostická data";
+
+    [ObservableProperty]
+    private string statusMessage = "Základní informace o aplikaci jsou zobrazené. Diagnostická data lze zobrazit nebo zkopírovat pro podporu.";
+
+    public string DiagnosticText => string.Join(
         Environment.NewLine,
         new[]
         {
             "Vehimap - O programu",
+            "Diagnostická data",
             $"Název: {Title}",
+            $"Autor: {Author}",
             $"Verze aplikace: {AppVersion}",
             $"Souborová verze: {FileVersion}",
+            $"Kanál: {ReleaseChannel}",
             $"Režim spuštění: {RuntimeMode}",
             $"Datová složka: {DataPath}",
             $"Režim dat: {DataMode}",
@@ -67,4 +90,19 @@ public sealed partial class AboutDialogViewModel : ObservableObject
             $"Soubor aplikace: {ApplicationPath}",
             $"Release poznámky: {ReleaseNotesUrl}"
         });
+
+    public string ClipboardText => DiagnosticText;
+
+    public void ToggleDiagnostics()
+    {
+        IsDiagnosticsVisible = !IsDiagnosticsVisible;
+        StatusMessage = IsDiagnosticsVisible
+            ? "Diagnostická data jsou zobrazená. Lze je zkopírovat pro podporu."
+            : "Diagnostická data jsou skrytá. Běžný pohled obsahuje jen základní informace.";
+    }
+
+    partial void OnIsDiagnosticsVisibleChanged(bool value)
+    {
+        OnPropertyChanged(nameof(ToggleDiagnosticsLabel));
+    }
 }

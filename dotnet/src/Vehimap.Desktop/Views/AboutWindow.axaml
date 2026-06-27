@@ -4,52 +4,97 @@
         x:Class="Vehimap.Desktop.Views.AboutWindow"
         x:DataType="vm:AboutDialogViewModel"
         Width="620"
-        Height="430"
+        Height="390"
         MinWidth="560"
-        MinHeight="390"
+        MinHeight="360"
         CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="O programu"
         AutomationProperties.Name="O programu"
         AutomationProperties.AutomationId="AboutWindow"
-        AutomationProperties.HelpText="Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+Shift+C zkopíruje informace a Escape dialog zavře.">
-  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto,Auto">
-    <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
+        AutomationProperties.HelpText="Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+    <TextBlock FontSize="22"
+               FontWeight="SemiBold"
+               Text="{Binding Title}"
+               AutomationProperties.Name="{Binding Title}"
+               AutomationProperties.AutomationId="AboutTitleText" />
+
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
                Opacity="0.78"
-               Text="Informace o běhu desktopové větve Vehimapu."
-               TextWrapping="Wrap" />
+               Text="Přístupná evidence vozidel pro Windows a postupně další platformy."
+               TextWrapping="Wrap"
+               AutomationProperties.Name="Přístupná evidence vozidel pro Windows a postupně další platformy."
+               AutomationProperties.AutomationId="AboutDescriptionText" />
 
-    <ScrollViewer Grid.Row="2"
-                  Margin="0,18,0,0"
+    <Border Grid.Row="2"
+            Margin="0,18,0,0"
+            Padding="14"
+            Background="#10203040"
+            CornerRadius="8"
+            AutomationProperties.Name="Základní informace o aplikaci"
+            AutomationProperties.AutomationId="AboutSummaryPanel">
+      <Grid ColumnDefinitions="130,*"
+            RowDefinitions="Auto,Auto,Auto"
+            RowSpacing="8">
+        <TextBlock Grid.Row="0" Text="Aplikace" FontWeight="SemiBold" />
+        <TextBlock Grid.Row="0"
+                   Grid.Column="1"
+                   Text="{Binding Title}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding Title}"
+                   AutomationProperties.AutomationId="AboutApplicationText" />
+
+        <TextBlock Grid.Row="1" Text="Autor" FontWeight="SemiBold" />
+        <TextBlock Grid.Row="1"
+                   Grid.Column="1"
+                   Text="{Binding Author}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding Author}"
+                   AutomationProperties.AutomationId="AboutAuthorText" />
+
+        <TextBlock Grid.Row="2" Text="Verze" FontWeight="SemiBold" />
+        <TextBlock Grid.Row="2"
+                   Grid.Column="1"
+                   Text="{Binding DisplayVersion}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding DisplayVersion}"
+                   AutomationProperties.AutomationId="AboutVersionText" />
+      </Grid>
+    </Border>
+
+    <Button x:Name="ToggleAboutDiagnosticsButton"
+            Grid.Row="3"
+            Margin="0,18,0,0"
+            HorizontalAlignment="Left"
+            MinWidth="210"
+            Click="OnToggleDiagnosticsClick"
+            Content="{Binding ToggleDiagnosticsLabel}"
+            AutomationProperties.Name="{Binding ToggleDiagnosticsLabel}"
+            AutomationProperties.AutomationId="ToggleAboutDiagnosticsButton" />
+
+    <ScrollViewer Grid.Row="4"
+                  Margin="0,12,0,0"
+                  MaxHeight="180"
+                  IsVisible="{Binding IsDiagnosticsVisible}"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
-                  AutomationProperties.Name="Informace o aplikaci"
+                  AutomationProperties.Name="Diagnostická data o aplikaci"
                   AutomationProperties.AutomationId="AboutDetailsScrollViewer">
-      <Grid ColumnDefinitions="170,*"
-          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-      <TextBlock Grid.Row="0" Text="Verze aplikace" FontWeight="SemiBold" />
-      <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding AppVersion}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="1" Text="Souborová verze" FontWeight="SemiBold" />
-      <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FileVersion}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="2" Text="Režim spuštění" FontWeight="SemiBold" />
-      <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding RuntimeMode}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="3" Text="Datová složka" FontWeight="SemiBold" />
-      <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding DataPath}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="4" Text="Režim dat" FontWeight="SemiBold" />
-      <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding DataMode}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="5" Text="Platforma" FontWeight="SemiBold" />
-      <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding PlatformDescription}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="6" Text=".NET runtime" FontWeight="SemiBold" />
-      <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding FrameworkDescription}" TextWrapping="Wrap" />
-      <TextBlock Grid.Row="7" Text="Soubor aplikace" FontWeight="SemiBold" />
-      <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding ApplicationPath}" TextWrapping="Wrap" />
-      </Grid>
+      <TextBox x:Name="AboutDiagnosticsTextBox"
+               Text="{Binding DiagnosticText}"
+               IsReadOnly="True"
+               AcceptsReturn="True"
+               TextWrapping="Wrap"
+               BorderThickness="0"
+               Background="Transparent"
+               AutomationProperties.Name="Diagnostická data o aplikaci"
+               AutomationProperties.AutomationId="AboutDiagnosticsTextBox" />
     </ScrollViewer>
 
-    <Border Grid.Row="3"
+    <Border Grid.Row="5"
             Margin="0,18,0,0"
             Padding="12"
             Background="#143A4A5A"
@@ -60,7 +105,7 @@
                  AutomationProperties.AutomationId="AboutStatusText" />
     </Border>
 
-    <StackPanel Grid.Row="4"
+    <StackPanel Grid.Row="6"
                 Margin="0,18,0,0"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
@@ -72,10 +117,10 @@
               AutomationProperties.Name="Otevřít release poznámky"
               AutomationProperties.AutomationId="ReleaseNotesButton" />
       <Button x:Name="CopyAboutDetailsButton"
-              MinWidth="160"
+              MinWidth="190"
               Click="OnCopyDetailsClick"
-              Content="Kopírovat informace"
-              AutomationProperties.Name="Kopírovat informace o aplikaci do schránky"
+              Content="Kopírovat diagnostiku"
+              AutomationProperties.Name="Kopírovat diagnostická data o aplikaci do schránky"
               AutomationProperties.AutomationId="CopyAboutDetailsButton" />
       <Button x:Name="CloseAboutButton"
               MinWidth="110"

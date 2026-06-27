@@ -94,7 +94,7 @@ V hlavním okně:
 - v C# Avalonia větvi lze stejné navazující evidence otevřít přímo z detailu vozidla v bloku `Související evidence`; pokud je detail otevřený jako samostatné okno, po přechodu do evidence se okno zavře
 - položky `Dashboard` a `Globální hledání` v menu `Přehled` nebo `Přehledy` otevřou rychlý souhrn termínů, servisních úkonů, nákladů, problémových stavů a stavu evidencí nebo vyhledání napříč všemi evidencemi
 - položka `Náklady napříč vozidly` v menu `Přehled` nebo `Přehledy` otevře porovnání nákladů za zvolené období mezi všemi vozidly a umožní z přehledu rovnou přejít na detail nákladů, detail vozidla nebo editaci
-- v AHK menu `Nápověda` a v C# Avalonia menu `Aplikace` najdete `O programu` s přehledem verze, cesty k aplikaci a datové složky; v C# větvi lze tyto informace zkopírovat do schránky pro podporu a vedle toho spustit samostatnou ruční kontrolu aktualizací
+- v AHK menu `Nápověda` a v C# Avalonia menu `Aplikace` najdete `O programu`; v C# větvi jde o běžný dialog s názvem aplikace, autorem `by Vlcek apps` a verzí včetně kanálu, zatímco technická diagnostika je skrytá pod volbou `Zobrazit diagnostická data` a lze ji zkopírovat pro podporu
 - v dashboardu souhrn vozidel vypisuje i nejpalčivější problémové stavy podle priority a nákladový souhrn ukazuje nejdražší vozidla i aktivní vozidla bez číselného nákladu v aktuálním roce
 - v dashboardu, `Přehledu termínů` i `Propadlých termínech` se vedle `TK`, `ZK` a vlastních připomínek zobrazují i blížící se nebo propadlé servisní úkony
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
@@ -175,10 +175,10 @@ V hlavním okně:
 - `Ctrl+S`: uloží aktuální formulář nebo nastavení; v C# Avalonia větvi při chybě zápisu zůstane formulář otevřený a čtečka dostane chybový stav v editoru i shellu
 - v `Nastavení` navíc `Ctrl+B`: vytvoří zálohu ihned
 - v `Nastavení` klávesa `Esc` zavře dialog bez uložení
-- v `O programu` zkratka `Ctrl+O` otevře release poznámky, `Ctrl+Shift+C` zkopíruje informace o aplikaci do schránky, výsledek kopírování oznámí stavový text dialogu a `Esc` dialog zavře
+- v `O programu` zkratka `Ctrl+O` otevře release poznámky, `Ctrl+Shift+C` zkopíruje diagnostická data o aplikaci do schránky, výsledek kopírování oznámí stavový text dialogu a `Esc` dialog zavře
 - v aplikačních dialozích jako `Zkontrolovat aktualizace`, potvrzení akce, upozornění nebo `Akce Vehimapu na liště` klávesa `Esc` zavře dialog bez provedení nové akce; v kontrole aktualizací `Ctrl+Shift+C` zkopíruje detail výsledku do schránky, výsledek kopírování oznámí stavový text dialogu a tlačítka se dál aktivují standardně klávesou `Enter` nebo mezerníkem
 - v samostatných pracovních oknech detailu, evidencí a přehledů klávesa `Esc` zavře okno; pokud je uvnitř rozpracovaný editor, Vehimap se nejdřív zeptá na zahození změn
-- v C# Avalonia větvi jsou dialogy `Nastavení`, `O programu` a `Zkontrolovat aktualizace` zvětšitelné a mají scrollovatelný hlavní obsah, takže dlouhé cesty nebo větší systémové písmo neschovají tlačítka `Uložit`, `Zavřít` nebo hlavní aktualizační akci
+- v C# Avalonia větvi jsou dialogy `Nastavení` a `Zkontrolovat aktualizace` zvětšitelné a mají scrollovatelný hlavní obsah; `O programu` má krátký běžný souhrn a případná dlouhá diagnostická data jsou ve vlastní scrollovatelné části
 - v C# Avalonia větvi stejnou ochranu dostaly i potvrzovací dialogy, dokončení údržby, `Balíček pro vozidlo` a přístupné tray okno: dlouhý text nebo větší písmo rolují obsah, zatímco hlavní akce zůstávají dosažitelné
 
 ## Používání detailněji: 

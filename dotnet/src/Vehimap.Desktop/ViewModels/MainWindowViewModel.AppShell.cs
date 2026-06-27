@@ -317,7 +317,8 @@ public sealed partial class MainWindowViewModel
             appInfo.PlatformDescription,
             appInfo.FrameworkDescription,
             appInfo.ApplicationPath,
-            appInfo.ReleaseNotesUrl);
+            appInfo.ReleaseNotesUrl,
+            appInfo.ReleaseChannel);
     }
 
     internal async Task<string> OpenExternalAsync(string path, CancellationToken cancellationToken = default)
