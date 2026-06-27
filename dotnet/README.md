@@ -177,3 +177,12 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetR
 ```
 
 Skript postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi stabilni `latest-dotnet-win-x64.ini` bez preview odkazu.
+
+Pred finalnim odstranenim AHK vetve spustte jeste retirement report:
+
+```powershell
+cd dotnet
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers
+```
+
+Report nic nemaze. Jen zkontroluje, ze stabilni desktop manifest uz existuje, ukazuje na `dotnet-v<verze>` release asset, preview alias pro starsi preview buildy miri na stejny obsah a zbyvajici AHK soubory jsou uz jen vedomy obsah budouciho mazaciho commitu.

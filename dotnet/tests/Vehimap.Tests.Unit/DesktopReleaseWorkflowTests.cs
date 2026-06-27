@@ -31,6 +31,21 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Copy-Item -LiteralPath $outputPath -Destination $legacyPreviewOutputPath -Force", workflow, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Ahk_retirement_readiness_script_guards_final_removal()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Get-AhkRetirementReadiness.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("latest-dotnet-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
+        Assert.Contains("latest-dotnet-preview-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetReleaseReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet-v$version", script, StringComparison.Ordinal);
+        Assert.Contains("src\\Vehimap.ahk", script, StringComparison.Ordinal);
+        Assert.Contains("$FailOnBlockers", script, StringComparison.Ordinal);
+        Assert.Contains("AHK zatim nemazat", script, StringComparison.Ordinal);
+    }
+
     private static string ReadWorkflow()
     {
         var workflowPath = Path.Combine(FindRepositoryRoot(), ".github", "workflows", "dotnet-desktop.yml");

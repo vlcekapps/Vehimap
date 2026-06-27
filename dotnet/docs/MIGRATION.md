@@ -112,6 +112,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - runtime-specific desktop update manifesty `update/latest-dotnet-<rid>.ini`
 - legacy aliasy `update/latest-dotnet-preview-<rid>.ini`, ktere starym preview buildum umozni prejit na prvni stabilni desktop release
 - lokalni release readiness skript `dotnet/build/Test-DotnetReleaseReadiness.ps1`, ktery postavi, otestuje, publikuje, zabali a overi manifest pro vybrany RID pred tagovanim
+- AHK retirement readiness report `dotnet/build/Get-AhkRetirementReadiness.ps1`, ktery pred fyzickym odstranenim AHK vetve zkontroluje stabilni manifest, release workflow, preview alias pro stare buildy a zbyvajici AHK artefakty
 - detailni stav automaticke instalace v dialogu kontroly aktualizaci, vcetne duvodu rucniho rezimu
 - asset URL a SHA-256 hash v dialogu kontroly aktualizaci pro overitelnou rucni instalaci
 - kopirovani detailu kontroly aktualizaci do schranky tlacitkem nebo `Ctrl+Shift+C` vcetne pristupneho stavoveho textu vysledku, aby sla rucni instalace overit bez opisovani URL a hashe
@@ -160,6 +161,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 ## Co je dalsi na rade
 
 1. Dokoncit Windows desktop release gate: spustit `Test-DotnetReleaseReadiness.ps1`, vydat prvni publikovany `dotnet-v<verze>` release, overit update manifest `latest-dotnet-win-x64.ini`, rucni update tok a Windows Appium smoke proti release artefaktu.
-2. Po stabilnim Windows desktop releasu a kratkem realnem pouzivani bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
-3. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
-4. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.
+2. Spustit `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers`; AHK fyzicky odstranit az ve chvili, kdy report nema blockery a zbyvaji jen ocekavane retirement warningy k samotnemu mazacimu commitu.
+3. Po stabilnim Windows desktop releasu a kratkem realnem pouzivani bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
+4. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
+5. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.

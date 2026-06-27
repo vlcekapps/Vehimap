@@ -127,6 +127,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Avalonia shell už se v titulku a přístupném názvu neprezentuje jako preview a dostal samostatnou nabídku `Přehledy` pro otevření hlavních přehledových oken
 - C# desktop release kanál už používá tagy `dotnet-v<verze>`, balíčky `vehimap-desktop-<verze>-<rid>` a update manifesty `update/latest-dotnet-<rid>.ini`; workflow zároveň přechodově zapisuje i `latest-dotnet-preview-<rid>.ini`, aby se starší preview buildy uměly aktualizovat na stabilní desktop release
 - C# desktop release workflow už po zelených testech vytváří publikovaný GitHub release místo draft releasu a má lokální bránu `Test-DotnetReleaseReadiness.ps1` pro ověření balíčku a manifestu před tagováním
+- C# větev má nový nedestruktivní AHK retirement report `Get-AhkRetirementReadiness.ps1`, který před odstraněním AHK zkontroluje stabilní release manifest, preview alias pro starší buildy a zbylé AHK artefakty
 - Avalonia horní menu nově zobrazuje nativní `InputGesture` u hlavních položek se zkratkami, takže menu viditelně odpovídá keyboard-first ovládání
 - klávesové zkratky přehledů v Avalonia shellu jsou sjednocené s hlavní dokumentací: `Ctrl+D` dashboard, `Ctrl+T` blížící se termíny a `Ctrl+Shift+T` propadlé termíny
 - Avalonia ukládání štítků vozidla sjednocuje čárky, středníky, prázdné položky a duplicity stejně jako AHK větev
