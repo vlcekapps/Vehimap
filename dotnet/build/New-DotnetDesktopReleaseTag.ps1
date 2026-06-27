@@ -1,5 +1,7 @@
 param(
     [string]$RuntimeIdentifier = "win-x64",
+    [ValidateSet("stable", "beta", "nightly")]
+    [string]$Channel = "stable",
     [switch]$Push,
     [switch]$DryRun,
     [switch]$SkipReadiness,
@@ -46,10 +48,15 @@ if ([string]::IsNullOrWhiteSpace($version)) {
     throw "Soubor verze '$versionPath' je prazdny."
 }
 
-$tagName = "dotnet-v$version"
+$tagName = switch ($Channel) {
+    "beta" { "dotnet-beta-v$version" }
+    "nightly" { "dotnet-nightly" }
+    default { "dotnet-v$version" }
+}
 
 Write-Host "Vehimap .NET desktop release tag"
 Write-Host "Version: $version"
+Write-Host "Channel: $Channel"
 Write-Host "Tag: $tagName"
 Write-Host "Runtime readiness: $RuntimeIdentifier"
 
@@ -88,7 +95,7 @@ if (-not $SkipReadiness) {
         throw "Chybi release readiness skript '$readinessScript'."
     }
 
-    & $readinessScript -RuntimeIdentifier $RuntimeIdentifier
+    & $readinessScript -RuntimeIdentifier $RuntimeIdentifier -Channel $Channel
 }
 else {
     Write-Host "Readiness gate preskocena na vyzadani (-SkipReadiness)."
@@ -104,7 +111,7 @@ if ($DryRun) {
     exit 0
 }
 
-$message = "Vehimap desktop $version"
+$message = if ($Channel -eq "nightly") { "Vehimap desktop nightly $version" } else { "Vehimap desktop $Channel $version" }
 Invoke-Git tag -a $tagName -m $message | Out-Null
 Write-Host "Vytvoren lokalni tag $tagName."
 

@@ -132,6 +132,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - C# větev má nový bezpečný release tag skript `New-DotnetDesktopReleaseTag.ps1`, který před `dotnet-v<verze>` tagem kontroluje čistý `main`, shodu s `origin/main`, neexistující tag a release readiness bránu; push na GitHub vyžaduje explicitní `-Push`
 - C# větev má nový post-release ověřovací skript `Test-DotnetPublishedRelease.ps1`, který po doběhu GitHub Actions zkontroluje stabilní manifest, preview alias, release notes, asset, SHA-256, velikost a AHK retirement gate
 - C# Windows release artefakt nově používá per-user Inno Setup instalátor místo veřejného portable ZIPu a release tooling rozlišuje oddělené kanály `stable`, `beta` a `nightly`
+- C# release tooling má nový promotion gate `Test-DotnetReleasePromotion.ps1`, který podporuje postup `nightly -> beta -> stable` a před stable vyžaduje existující beta tag pro stejnou verzi
 - Avalonia horní menu nově zobrazuje nativní `InputGesture` u hlavních položek se zkratkami, takže menu viditelně odpovídá keyboard-first ovládání
 - klávesové zkratky přehledů v Avalonia shellu jsou sjednocené s hlavní dokumentací: `Ctrl+D` dashboard, `Ctrl+T` blížící se termíny a `Ctrl+Shift+T` propadlé termíny
 - Avalonia ukládání štítků vozidla sjednocuje čárky, středníky, prázdné položky a duplicity stejně jako AHK větev

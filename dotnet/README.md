@@ -188,11 +188,32 @@ Samotne vytvoreni release tagu je oddelene do bezpecneho skriptu. Ve vychozim re
 ```powershell
 cd dotnet
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -DryRun -SkipReadiness
-powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64
-powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Push
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel stable
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel stable -Push
 ```
 
 Prvni prikaz je rychla sucha kontrola bez tagu a bez dlouhe readiness brany. Potom zvolte bud druhy prikaz pro vytvoreni lokalniho anotovaneho tagu `dotnet-v<verze>`, nebo treti prikaz pro vytvoreni tagu a jeho okamzite odeslani na GitHub po uspesne readiness brane.
+
+## Promotion tok nightly -> beta -> stable
+
+Bezny vyvoj jde pres tri oddelene kanaly:
+
+- `nightly`: rolling prerelease `dotnet-nightly`, vhodny pro prubezne testovani odvaznych zmen.
+- `beta`: verzovany prerelease `dotnet-beta-v<verze>`, povyseny z nightly po zakladnim overeni.
+- `stable`: publikovany release `dotnet-v<verze>`, povyseny z beta po realnem testovani.
+
+Pred povysenim spustte promotion gate. Nic netaguje ani nemaze, jen zkontroluje stav repozitare a rekne presny dalsi prikaz:
+
+```powershell
+cd dotnet
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetReleasePromotion.ps1 -TargetChannel beta -RuntimeIdentifier win-x64 -FailOnBlockers
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel beta -Push
+
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetReleasePromotion.ps1 -TargetChannel stable -RuntimeIdentifier win-x64 -FailOnBlockers
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel stable -Push
+```
+
+Stable promotion vyzaduje existujici beta tag pro stejnou verzi. Beta promotion preferuje existujici `dotnet-nightly` tag, ale nezablokuje vydani, pokud rolling nightly jeste nebyla publikovana; v takovem pripade je to vedome rozhodnuti uvolnit beta po lokalni readiness brane.
 
 Po dobehnuti GitHub Actions release workflow lze stabilni kanal overit jednim post-release skriptem:
 

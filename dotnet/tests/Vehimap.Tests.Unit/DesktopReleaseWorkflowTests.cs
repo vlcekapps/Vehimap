@@ -65,7 +65,11 @@ public sealed class DesktopReleaseWorkflowTests
         var script = File.ReadAllText(scriptPath);
 
         Assert.Contains("dotnet-v$version", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet-beta-v$version", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet-nightly", script, StringComparison.Ordinal);
+        Assert.Contains("[ValidateSet(\"stable\", \"beta\", \"nightly\")]", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetReleaseReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("-Channel $Channel", script, StringComparison.Ordinal);
         Assert.Contains("git @Arguments", script, StringComparison.Ordinal);
         Assert.Contains("status --porcelain", script, StringComparison.Ordinal);
         Assert.Contains("rev-parse origin/main", script, StringComparison.Ordinal);
@@ -73,6 +77,24 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("if ($Push)", script, StringComparison.Ordinal);
         Assert.Contains("push origin $tagName", script, StringComparison.Ordinal);
         Assert.Contains("Dry run OK. Tag nebyl vytvoren.", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Release_promotion_script_guards_beta_and_stable_promotions()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetReleasePromotion.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("[ValidateSet(\"beta\", \"stable\")]", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet-nightly", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet-beta-v$version", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet-v$version", script, StringComparison.Ordinal);
+        Assert.Contains("status --porcelain", script, StringComparison.Ordinal);
+        Assert.Contains("rev-parse origin/main", script, StringComparison.Ordinal);
+        Assert.Contains("ls-remote --tags origin", script, StringComparison.Ordinal);
+        Assert.Contains("New-DotnetDesktopReleaseTag.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("-Channel $TargetChannel -Push", script, StringComparison.Ordinal);
+        Assert.Contains("Pred stable releasem musi existovat beta tag", script, StringComparison.Ordinal);
     }
 
     [Fact]
