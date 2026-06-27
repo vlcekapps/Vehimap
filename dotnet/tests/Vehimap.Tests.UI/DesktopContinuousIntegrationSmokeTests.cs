@@ -443,6 +443,200 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
+    public void Workspace_windows_open_from_selected_tabs_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "DetailTabButton",
+                "OpenVehicleDetailWindowButton",
+                "CloseVehicleDetailWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "HistoryTabButton",
+                "OpenHistoryWindowButton",
+                "CloseHistoryWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "FuelTabButton",
+                "OpenFuelWindowButton",
+                "CloseFuelWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "ReminderTabButton",
+                "OpenReminderWindowButton",
+                "CloseRemindersWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "MaintenanceTabButton",
+                "OpenMaintenanceWindowButton",
+                "CloseMaintenanceWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "TimelineTabButton",
+                "OpenTimelineWindowButton",
+                "CloseTimelineWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "RecordTabButton",
+                "OpenRecordWindowButton",
+                "CloseRecordsWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "AuditTabButton",
+                "OpenAuditWindowButton",
+                "CloseAuditWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "CostTabButton",
+                "OpenCostWindowButton",
+                "CloseCostWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "DashboardTabButton",
+                "OpenDashboardWindowButton",
+                "CloseDashboardWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "SearchTabButton",
+                "OpenGlobalSearchWindowButton",
+                "CloseGlobalSearchWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "UpcomingOverviewTabButton",
+                "OpenUpcomingOverviewWindowButton",
+                "CloseUpcomingOverviewWindowButton");
+            OpenAndCloseWorkspaceWindow(
+                session,
+                "OverdueOverviewTabButton",
+                "OpenOverdueOverviewWindowButton",
+                "CloseOverdueOverviewWindowButton");
+        }
+    }
+
+    [Fact]
+    public void Workspace_window_can_be_closed_with_escape_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("AuditTabButton");
+            session.ClickByAccessibilityId("OpenAuditWindowButton");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CloseAuditWindowButton"));
+
+            session.SendKeysToActiveElement(Keys.Escape);
+
+            session.WaitForElementToDisappearByAccessibilityId("CloseAuditWindowButton");
+        }
+    }
+
+    [Fact]
+    public void Global_search_can_open_matching_record_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("SearchTabButton");
+            session.SendKeysByAccessibilityId("GlobalSearchTextBox", "Kooperativa");
+            session.ClickByAccessibilityId("SearchOpenButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenRecordWindowButton"));
+        }
+    }
+
+    [Fact]
+    public void Timeline_can_open_matching_reminder_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("TimelineTabButton");
+            session.SendKeysByAccessibilityId("TimelineSearchBox", "Objednat servis");
+            session.ClickByAccessibilityId("TimelineOpenButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenReminderWindowButton"));
+        }
+    }
+
+    [Fact]
+    public void Upcoming_overview_can_open_matching_item_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("UpcomingOverviewTabButton");
+            session.SendKeysByAccessibilityId("UpcomingOverviewSearchBox", "Objednat servis");
+            session.ClickByAccessibilityId("UpcomingOverviewOpenButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenReminderWindowButton"));
+        }
+    }
+
+    [Fact]
+    public void Overdue_overview_can_open_matching_item_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("OverdueOverviewTabButton");
+            session.SendKeysByAccessibilityId("OverdueOverviewSearchBox", "Propadlá pojistka");
+            session.ClickByAccessibilityId("OverdueOverviewOpenButton");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenRecordWindowButton"));
+        }
+    }
+
+    [Fact]
+    public void Cost_workspace_can_open_selected_vehicle_with_enter_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("CostTabButton");
+            session.SendKeysByAccessibilityId("CostListBox", Keys.Enter);
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("OpenVehicleDetailWindowButton"));
+        }
+    }
+
+    [Fact]
     public void Main_menu_data_and_quick_actions_expose_expected_action_states_and_route_current_alert_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
@@ -473,5 +667,18 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("OpenReminderWindowButton"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("ReminderListBox"));
         }
+    }
+
+    private static void OpenAndCloseWorkspaceWindow(
+        DesktopAppiumTestSession session,
+        string tabButtonAutomationId,
+        string openButtonAutomationId,
+        string closeButtonAutomationId)
+    {
+        session.ClickByAccessibilityId(tabButtonAutomationId);
+        session.ClickByAccessibilityId(openButtonAutomationId);
+        Assert.NotNull(session.WaitForElementByAccessibilityId(closeButtonAutomationId));
+        session.ClickByAccessibilityId(closeButtonAutomationId);
+        session.WaitForElementToDisappearByAccessibilityId(closeButtonAutomationId);
     }
 }

@@ -18,6 +18,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - CI Appium smoke pro Avalonia preview nově hlídá ruční otevření `Balíčku pro vozidlo` z menu `Vozidlo` i automatickou nabídku balíčku po uložení nového vozidla
 - CI Appium smoke pro Avalonia preview nově hlídá také doporučené servisní šablony, dialog `Splněno` z `Plánu údržby` a stejný dokončovací dialog spuštěný z Dashboardu
 - CI Appium smoke pro Avalonia preview nově regresně hlídá vyvolání hlavního menu klávesou `F10`, přeskočení menu při běžném `Tab` / `Shift+Tab` a skutečné otevření aktuálního upozornění z menu `Rychlé akce`
+- CI Appium smoke pro Avalonia preview nově otevírá a zavírá všechna samostatná pracovní okna, ověřuje zavření workspace klávesou `Escape` a hlídá navigaci z globálního hledání, časové osy, přehledů termínů i nákladů
 - Appium smoke pro Avalonia preview nově otevírá `Akce Vehimapu na liště` i z menu `Aplikace`, ověřuje první fokus a aktivuje aktuální upozornění do odpovídajícího workspace
 - Appium smoke pro Avalonia preview nově po uložení nového vozidla ověřuje automatické otevření `Balíčku pro vozidlo` včetně servisních plánů, dokladů a připomínek
 - Appium smoke pro Avalonia preview nově ověřuje i ruční spuštění `Balíčku pro vozidlo` z menu `Vozidlo`
