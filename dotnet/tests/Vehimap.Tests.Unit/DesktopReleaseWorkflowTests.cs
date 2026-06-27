@@ -126,7 +126,10 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("dotnet-nightly", script, StringComparison.Ordinal);
         Assert.Contains("[ValidateSet(\"stable\", \"beta\", \"nightly\")]", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetReleaseReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetReleasePromotion.ps1", script, StringComparison.Ordinal);
         Assert.Contains("-Channel $Channel", script, StringComparison.Ordinal);
+        Assert.Contains("-TargetChannel $Channel", script, StringComparison.Ordinal);
+        Assert.Contains("-FailOnBlockers", script, StringComparison.Ordinal);
         Assert.Contains("git @Arguments", script, StringComparison.Ordinal);
         Assert.Contains("status --porcelain", script, StringComparison.Ordinal);
         Assert.Contains("rev-parse origin/main", script, StringComparison.Ordinal);
@@ -202,6 +205,14 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("dotnet-nightly", script, StringComparison.Ordinal);
         Assert.Contains("dotnet-beta-v$version", script, StringComparison.Ordinal);
         Assert.Contains("dotnet-v$version", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedRelease.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Read-KeyValueManifest", script, StringComparison.Ordinal);
+        Assert.Contains("latest-dotnet-nightly-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
+        Assert.Contains("latest-dotnet-beta-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
+        Assert.Contains("Zdrojovy nightly manifest ma publikovanou prerelease verzi", script, StringComparison.Ordinal);
+        Assert.Contains("Zdrojovy beta manifest ma verzi $version.", script, StringComparison.Ordinal);
+        Assert.Contains("Zdrojovy manifest neukazuje na ocekavany release asset $sourceTag.", script, StringComparison.Ordinal);
+        Assert.Contains("Zdrojovy manifest neobsahuje platny SHA-256 hash.", script, StringComparison.Ordinal);
         Assert.Contains("status --porcelain", script, StringComparison.Ordinal);
         Assert.Contains("rev-parse origin/main", script, StringComparison.Ordinal);
         Assert.Contains("ls-remote --tags origin", script, StringComparison.Ordinal);
@@ -211,7 +222,9 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Test-DotnetStableReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Doporucena lokalni kontrola:", script, StringComparison.Ordinal);
         Assert.Contains("-File .\\build\\$readinessWrapperScriptName -RuntimeIdentifier $RuntimeIdentifier", script, StringComparison.Ordinal);
+        Assert.Contains("Pred beta releasem musi existovat rolling nightly tag", script, StringComparison.Ordinal);
         Assert.Contains("Pred stable releasem musi existovat beta tag", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("Beta lze stale vytvorit po lokalni readiness gate", script, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -15,14 +15,23 @@ $dotnetRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = Split-Path -Parent $dotnetRoot
 $versionPath = Join-Path $repositoryRoot "src\VERSION"
 $readinessScript = Join-Path $PSScriptRoot "Test-DotnetReleaseReadiness.ps1"
+$promotionScript = Join-Path $PSScriptRoot "Test-DotnetReleasePromotion.ps1"
 
 function Invoke-Git {
     param([Parameter(ValueFromRemainingArguments = $true)][string[]]$Arguments)
 
     Push-Location $repositoryRoot
     try {
-        $output = & git @Arguments 2>&1
-        $exitCode = $LASTEXITCODE
+        $previousErrorActionPreference = $ErrorActionPreference
+        try {
+            $ErrorActionPreference = "Continue"
+            $output = & git @Arguments 2>&1
+            $exitCode = $LASTEXITCODE
+        }
+        finally {
+            $ErrorActionPreference = $previousErrorActionPreference
+        }
+
         if ($exitCode -ne 0) {
             $message = ($output | Out-String).Trim()
             if ([string]::IsNullOrWhiteSpace($message)) {
@@ -93,6 +102,14 @@ if (-not [string]::IsNullOrWhiteSpace($existingRemoteTag)) {
 if (-not $SkipReadiness) {
     if (-not (Test-Path -LiteralPath $readinessScript -PathType Leaf)) {
         throw "Chybi release readiness skript '$readinessScript'."
+    }
+
+    if ($Channel -ne "nightly") {
+        if (-not (Test-Path -LiteralPath $promotionScript -PathType Leaf)) {
+            throw "Chybi release promotion gate '$promotionScript'."
+        }
+
+        & $promotionScript -TargetChannel $Channel -RuntimeIdentifier $RuntimeIdentifier -FailOnBlockers -SkipFetch:$SkipFetch
     }
 
     & $readinessScript -RuntimeIdentifier $RuntimeIdentifier -Channel $Channel

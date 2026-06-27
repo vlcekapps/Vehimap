@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# release promotion gate nyní vyžaduje publikovaný zdrojový kanál: beta musí vycházet z ověřené nightly s tagem i manifestem a stable z ověřené bety; tagovací skript pro beta/stable tuto gate spouští automaticky.
 - C# tooling má nový nedestruktivní `Get-DotnetReleaseTrainStatus.ps1`, který shrne lokální nightly/beta/stable artefakty, manifesty, remote tagy a další doporučený krok bez vytváření tagů nebo release.
 - C# release tooling má nové wrappery `Test-DotnetBetaReadiness.ps1` a `Test-DotnetStableReadiness.ps1`; promotion gate po úspěšné kontrole vypisuje i doporučený lokální readiness příkaz pro cílový kanál, takže cesta `nightly -> beta -> stable` je méně ruční.
 - C# Avalonia má novou akci `Poděkovat autorovi`, dostupnou z menu `Aplikace`, dialogu `O programu` a přístupného tray okna; otevírá stránku podpory autora přes stejný externí launcher jako ostatní webové odkazy.

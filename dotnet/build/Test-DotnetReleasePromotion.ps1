@@ -17,6 +17,7 @@ $repositoryRoot = Split-Path -Parent $dotnetRoot
 $versionPath = Join-Path $repositoryRoot "src\VERSION"
 $tagScript = Join-Path $PSScriptRoot "New-DotnetDesktopReleaseTag.ps1"
 $readinessScript = Join-Path $PSScriptRoot "Test-DotnetReleaseReadiness.ps1"
+$publishedReleaseScript = Join-Path $PSScriptRoot "Test-DotnetPublishedRelease.ps1"
 $readinessWrapperScriptName = if ($TargetChannel -eq "stable") { "Test-DotnetStableReadiness.ps1" } else { "Test-DotnetBetaReadiness.ps1" }
 $readinessWrapperScript = Join-Path $PSScriptRoot $readinessWrapperScriptName
 
@@ -44,8 +45,16 @@ function Invoke-Git {
 
     Push-Location $repositoryRoot
     try {
-        $output = & git @Arguments 2>&1
-        $exitCode = $LASTEXITCODE
+        $previousErrorActionPreference = $ErrorActionPreference
+        try {
+            $ErrorActionPreference = "Continue"
+            $output = & git @Arguments 2>&1
+            $exitCode = $LASTEXITCODE
+        }
+        finally {
+            $ErrorActionPreference = $previousErrorActionPreference
+        }
+
         if ($exitCode -ne 0) {
             $message = ($output | Out-String).Trim()
             if ([string]::IsNullOrWhiteSpace($message)) {
@@ -60,6 +69,19 @@ function Invoke-Git {
     finally {
         Pop-Location
     }
+}
+
+function Read-KeyValueManifest {
+    param([string]$Path)
+
+    $values = @{}
+    foreach ($line in (Get-Content -LiteralPath $Path)) {
+        if ($line -match "^\s*([^=]+?)\s*=(.*)$") {
+            $values[$matches[1].Trim()] = $matches[2].Trim()
+        }
+    }
+
+    return $values
 }
 
 if (-not (Test-Path -LiteralPath $versionPath -PathType Leaf)) {
@@ -79,6 +101,8 @@ else {
 $sourceChannel = if ($TargetChannel -eq "stable") { "beta" } else { "nightly" }
 $targetTag = if ($TargetChannel -eq "stable") { "dotnet-v$version" } else { "dotnet-beta-v$version" }
 $sourceTag = if ($sourceChannel -eq "beta") { "dotnet-beta-v$version" } else { "dotnet-nightly" }
+$sourceManifestFileName = if ($sourceChannel -eq "nightly") { "latest-dotnet-nightly-$RuntimeIdentifier.ini" } else { "latest-dotnet-beta-$RuntimeIdentifier.ini" }
+$sourceManifestPath = Join-Path $repositoryRoot "update\$sourceManifestFileName"
 
 if (-not (Test-Path -LiteralPath $tagScript -PathType Leaf)) {
     Add-Blocker "Chybi tag skript New-DotnetDesktopReleaseTag.ps1."
@@ -94,11 +118,87 @@ else {
     Add-Pass "Existuje release readiness gate pro $TargetChannel kanal."
 }
 
+if (-not (Test-Path -LiteralPath $publishedReleaseScript -PathType Leaf)) {
+    Add-Blocker "Chybi post-release verifier Test-DotnetPublishedRelease.ps1."
+}
+else {
+    Add-Pass "Existuje post-release verifier pro publikovane manifesty."
+}
+
 if (-not (Test-Path -LiteralPath $readinessWrapperScript -PathType Leaf)) {
     Add-Blocker "Chybi kanalovy readiness wrapper $readinessWrapperScriptName."
 }
 else {
     Add-Pass "Existuje kanalovy readiness wrapper $readinessWrapperScriptName."
+}
+
+if (-not (Test-Path -LiteralPath $sourceManifestPath -PathType Leaf)) {
+    Add-Blocker "Chybi publikovany manifest zdrojoveho kanalu update\$sourceManifestFileName."
+}
+else {
+    $sourceManifest = Read-KeyValueManifest -Path $sourceManifestPath
+    $sourceVersion = if ($sourceManifest.ContainsKey("version")) { $sourceManifest["version"] } else { "" }
+    $expectedAssetKind = if ($RuntimeIdentifier -like "win-*") { "installer" } else { "archive" }
+
+    if ($sourceChannel -eq "nightly") {
+        $expectedNightlyVersionRegex = "^" + [regex]::Escape($version) + "-nightly\.\d+\.\d+$"
+        if ($sourceVersion -match $expectedNightlyVersionRegex) {
+            Add-Pass "Zdrojovy nightly manifest ma publikovanou prerelease verzi $sourceVersion."
+        }
+        else {
+            Add-Blocker "Zdrojovy nightly manifest nema ocekavanou prerelease verzi podle $version-nightly.<run>.<attempt>."
+        }
+    }
+    elseif ($sourceVersion -eq $version) {
+        Add-Pass "Zdrojovy beta manifest ma verzi $version."
+    }
+    else {
+        Add-Blocker "Zdrojovy beta manifest nema ocekavanou verzi $version."
+    }
+
+    if ($sourceManifest.ContainsKey("channel") -and $sourceManifest["channel"] -eq $sourceChannel) {
+        Add-Pass "Zdrojovy manifest je v kanalu $sourceChannel."
+    }
+    else {
+        Add-Blocker "Zdrojovy manifest nema channel=$sourceChannel."
+    }
+
+    if ($sourceManifest.ContainsKey("asset_kind") -and $sourceManifest["asset_kind"] -eq $expectedAssetKind) {
+        Add-Pass "Zdrojovy manifest pouziva $expectedAssetKind asset."
+    }
+    else {
+        Add-Blocker "Zdrojovy manifest nepouziva $expectedAssetKind asset."
+    }
+
+    $expectedAssetPart = "releases/download/$sourceTag/"
+    if ($sourceManifest.ContainsKey("asset_url") -and $sourceManifest["asset_url"].Contains($expectedAssetPart)) {
+        Add-Pass "Zdrojovy manifest ukazuje na release asset $sourceTag."
+    }
+    else {
+        Add-Blocker "Zdrojovy manifest neukazuje na ocekavany release asset $sourceTag."
+    }
+
+    if ($sourceManifest.ContainsKey("notes_url") -and $sourceManifest["notes_url"].EndsWith("/releases/tag/$sourceTag")) {
+        Add-Pass "Zdrojovy manifest ukazuje na release notes $sourceTag."
+    }
+    else {
+        Add-Blocker "Zdrojovy manifest nema ocekavanou notes_url pro $sourceTag."
+    }
+
+    if ($sourceManifest.ContainsKey("asset_sha256") -and $sourceManifest["asset_sha256"] -match "^[0-9a-fA-F]{64}$") {
+        Add-Pass "Zdrojovy manifest obsahuje platny SHA-256 hash."
+    }
+    else {
+        Add-Blocker "Zdrojovy manifest neobsahuje platny SHA-256 hash."
+    }
+
+    $sourceAssetSize = 0L
+    if ($sourceManifest.ContainsKey("asset_size") -and [long]::TryParse($sourceManifest["asset_size"], [ref]$sourceAssetSize) -and $sourceAssetSize -gt 0) {
+        Add-Pass "Zdrojovy manifest obsahuje velikost assetu."
+    }
+    else {
+        Add-Blocker "Zdrojovy manifest neobsahuje platnou velikost assetu."
+    }
 }
 
 try {
@@ -140,7 +240,7 @@ try {
         Add-Pass "Zdrojovy tag $sourceTag existuje na origin."
     }
     elseif ($TargetChannel -eq "beta") {
-        Add-Warning "Rolling nightly tag $sourceTag zatim na origin neexistuje. Beta lze stale vytvorit po lokalni readiness gate, ale nebude formalne povysena z publikovane nightly."
+        Add-Blocker "Pred beta releasem musi existovat rolling nightly tag $sourceTag na origin."
     }
     else {
         Add-Blocker "Pred stable releasem musi existovat beta tag $sourceTag na origin."
