@@ -17,6 +17,8 @@ $repositoryRoot = Split-Path -Parent $dotnetRoot
 $versionPath = Join-Path $repositoryRoot "src\VERSION"
 $tagScript = Join-Path $PSScriptRoot "New-DotnetDesktopReleaseTag.ps1"
 $readinessScript = Join-Path $PSScriptRoot "Test-DotnetReleaseReadiness.ps1"
+$readinessWrapperScriptName = if ($TargetChannel -eq "stable") { "Test-DotnetStableReadiness.ps1" } else { "Test-DotnetBetaReadiness.ps1" }
+$readinessWrapperScript = Join-Path $PSScriptRoot $readinessWrapperScriptName
 
 $passed = New-Object System.Collections.Generic.List[string]
 $warnings = New-Object System.Collections.Generic.List[string]
@@ -90,6 +92,13 @@ if (-not (Test-Path -LiteralPath $readinessScript -PathType Leaf)) {
 }
 else {
     Add-Pass "Existuje release readiness gate pro $TargetChannel kanal."
+}
+
+if (-not (Test-Path -LiteralPath $readinessWrapperScript -PathType Leaf)) {
+    Add-Blocker "Chybi kanalovy readiness wrapper $readinessWrapperScriptName."
+}
+else {
+    Add-Pass "Existuje kanalovy readiness wrapper $readinessWrapperScriptName."
 }
 
 try {
@@ -181,6 +190,8 @@ if ($blockers.Count -gt 0) {
 Write-Host ""
 if ($blockers.Count -eq 0) {
     Write-Host "Vysledek: promotion gate je pruchozi pro $TargetChannel."
+    Write-Host "Doporucena lokalni kontrola:"
+    Write-Host "  powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\$readinessWrapperScriptName -RuntimeIdentifier $RuntimeIdentifier"
     Write-Host "Doporuceny prikaz:"
     Write-Host "  powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier $RuntimeIdentifier -Channel $TargetChannel -Push"
 }

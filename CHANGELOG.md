@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# release tooling má nové wrappery `Test-DotnetBetaReadiness.ps1` a `Test-DotnetStableReadiness.ps1`; promotion gate po úspěšné kontrole vypisuje i doporučený lokální readiness příkaz pro cílový kanál, takže cesta `nightly -> beta -> stable` je méně ruční.
 - C# Avalonia má novou akci `Poděkovat autorovi`, dostupnou z menu `Aplikace`, dialogu `O programu` a přístupného tray okna; otevírá stránku podpory autora přes stejný externí launcher jako ostatní webové odkazy.
 - AHK retirement readiness report a lokální Appium fallback pro C# UI testy nově používají kanálové artefakty `dotnet/artifacts/nightly|beta|stable/<rid>/app`, takže před finálním odchodem od AHK i ruční smoke testy míří na stejné složky jako tester.
 - Lokální C# release/readiness výstupy jsou nově rozdělené podle kanálu do `dotnet/artifacts/stable|beta|nightly/<rid>/app` a `release`, aby tester vždy našel správnou aplikaci a instalátor bez hledání mezi historickými artefakty.

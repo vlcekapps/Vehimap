@@ -197,9 +197,11 @@ Pred vytvorenim tagu lze lokalne spustit stejnou release readiness branu:
 cd dotnet
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetReleaseReadiness.ps1 -RuntimeIdentifier win-x64
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetBetaReadiness.ps1 -RuntimeIdentifier win-x64
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetStableReadiness.ps1 -RuntimeIdentifier win-x64
 ```
 
-Skript postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Vystup uklada do `dotnet\artifacts\<kanal>\<rid>\app` pro spustitelnou aplikaci a do `dotnet\artifacts\<kanal>\<rid>\release` pro instalator, metadata a checksum. Pro `stable` kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
+Skript postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Vystup uklada do `dotnet\artifacts\<kanal>\<rid>\app` pro spustitelnou aplikaci a do `dotnet\artifacts\<kanal>\<rid>\release` pro instalator, metadata a checksum. Wrappery `Test-DotnetNightlyReadiness.ps1`, `Test-DotnetBetaReadiness.ps1` a `Test-DotnetStableReadiness.ps1` nastavují kanál bez ručního předávání `-Channel`. Pro `stable` se kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` se vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
 
 Samotne vytvoreni release tagu je oddelene do bezpecneho skriptu. Ve vychozim rezimu zkontroluje cisty `main`, shodu s `origin/main`, neexistujici tag a spusti release readiness branu; tag na GitHub odesle jen s explicitnim `-Push`.
 
@@ -251,13 +253,15 @@ Pred povysenim spustte promotion gate. Nic netaguje ani nemaze, jen zkontroluje 
 ```powershell
 cd dotnet
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetReleasePromotion.ps1 -TargetChannel beta -RuntimeIdentifier win-x64 -FailOnBlockers
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetBetaReadiness.ps1 -RuntimeIdentifier win-x64
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel beta -Push
 
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetReleasePromotion.ps1 -TargetChannel stable -RuntimeIdentifier win-x64 -FailOnBlockers
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetStableReadiness.ps1 -RuntimeIdentifier win-x64
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel stable -Push
 ```
 
-Stable promotion vyzaduje existujici beta tag pro stejnou verzi. Beta promotion preferuje existujici `dotnet-nightly` tag, ale nezablokuje vydani, pokud rolling nightly jeste nebyla publikovana; v takovem pripade je to vedome rozhodnuti uvolnit beta po lokalni readiness brane.
+Stable promotion vyzaduje existujici beta tag pro stejnou verzi. Beta promotion preferuje existujici `dotnet-nightly` tag, ale nezablokuje vydani, pokud rolling nightly jeste nebyla publikovana; v takovem pripade je to vedome rozhodnuti uvolnit beta po lokalni readiness brane. Promotion gate po uspesne kontrole vypise i doporuceny wrapper pro lokalni readiness daneho kanalu, aby se beta/stable pred tagem overovaly stejnou cestou jako nightly.
 
 Po dobehnuti GitHub Actions release workflow lze stabilni i nightly kanal overit jednim post-release skriptem:
 

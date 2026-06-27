@@ -207,7 +207,32 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("ls-remote --tags origin", script, StringComparison.Ordinal);
         Assert.Contains("New-DotnetDesktopReleaseTag.ps1", script, StringComparison.Ordinal);
         Assert.Contains("-Channel $TargetChannel -Push", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetBetaReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetStableReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Doporucena lokalni kontrola:", script, StringComparison.Ordinal);
+        Assert.Contains("-File .\\build\\$readinessWrapperScriptName -RuntimeIdentifier $RuntimeIdentifier", script, StringComparison.Ordinal);
         Assert.Contains("Pred stable releasem musi existovat beta tag", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Beta_and_stable_readiness_wrappers_use_dedicated_channels()
+    {
+        var betaScriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetBetaReadiness.ps1");
+        var stableScriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetStableReadiness.ps1");
+        var betaScript = File.ReadAllText(betaScriptPath);
+        var stableScript = File.ReadAllText(stableScriptPath);
+
+        Assert.Contains("Test-DotnetReleaseReadiness.ps1", betaScript, StringComparison.Ordinal);
+        Assert.Contains("Channel = \"beta\"", betaScript, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"SkipTests\"] = $true", betaScript, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"InstallSmoke\"] = $true", betaScript, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"InstallerSmokeLaunchSeconds\"] = $InstallerSmokeLaunchSeconds", betaScript, StringComparison.Ordinal);
+
+        Assert.Contains("Test-DotnetReleaseReadiness.ps1", stableScript, StringComparison.Ordinal);
+        Assert.Contains("Channel = \"stable\"", stableScript, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"SkipTests\"] = $true", stableScript, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"InstallSmoke\"] = $true", stableScript, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"InstallerSmokeLaunchSeconds\"] = $InstallerSmokeLaunchSeconds", stableScript, StringComparison.Ordinal);
     }
 
     [Fact]
