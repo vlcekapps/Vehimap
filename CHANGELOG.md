@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- GitHub Actions pro C# desktop nově po vygenerování update manifestů spouští `Test-DotnetPublishedRelease.ps1` pro Windows kanál ještě před commitem do `update/`, takže nightly manifest s chybným kanálem, assetem, SHA-256 nebo velikostí neprojde do repozitáře.
 - C# post-release ověřovací skript nově umí kanály `stable`, `beta` i `nightly`; wrapper `Test-DotnetPublishedNightly.ps1` po doběhu GitHub Actions ověří publikovaný nightly manifest, rolling tag `dotnet-nightly`, prerelease verzi, asset, SHA-256, velikost a `channel=nightly` bez spuštění AHK retirement gate.
 - C# release readiness skript nově umí kanály `stable`, `beta` i `nightly`; nový wrapper `Test-DotnetNightlyReadiness.ps1` před ručním nightly vydáním lokálně ověří Inno instalátor, metadata, SHA-256, velikost a `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
 - C# Avalonia dialog `O programu` je nově běžnější uživatelský dialog s aplikací, autorem `by Vlcek apps` a verzí včetně kanálu; technické údaje jako datová složka, runtime a soubor aplikace jsou schované pod `Zobrazit diagnostická data` a dál je lze zkopírovat pro podporu.

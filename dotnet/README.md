@@ -177,6 +177,7 @@ CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 - pro nightly pouzit unikatni efektivni verzi `<verze-ze-src/VERSION>-nightly.<run>.<attempt>`, aby updater poznal kazdy novy nocni instalator jako skutecne novejsi build
 - po release zapsat runtime-specific desktop manifesty do `update/`
 - zapsat i prechodove `latest-dotnet-preview-<rid>.ini` aliasy pro uz vydane preview buildy
+- pred commitem vygenerovanych manifestu overit Windows manifest pres `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel <kanal> -SkipNetwork`; stable pri tom hlida i AHK retirement gate, nightly/beta overuji kanalovy manifest bez stable-only kroku
 - na Windows runneru spustit Appium smoke nad publish buildem desktop release vcetne kontroly app-level menu a dostupnosti rychlych akci
 
 Pred vytvorenim tagu lze lokalne spustit stejnou release readiness branu:

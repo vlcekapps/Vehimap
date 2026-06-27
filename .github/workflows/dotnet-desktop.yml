@@ -390,15 +390,10 @@ jobs:
               Copy-Item -LiteralPath $outputPath -Destination $legacyPreviewOutputPath -Force
             }
           }
-      - name: Verify AHK retirement readiness after manifest generation
+      - name: Verify generated Windows desktop manifest
         shell: pwsh
         run: |
-          if ("${{ needs.metadata.outputs.channel }}" -eq "stable") {
-            .\dotnet\build\Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers
-          }
-          else {
-            Write-Host "AHK retirement readiness se spousti jen pro stable kanal."
-          }
+          .\dotnet\build\Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel "${{ needs.metadata.outputs.channel }}" -SkipNetwork
       - name: Commit desktop manifests
         shell: pwsh
         run: |

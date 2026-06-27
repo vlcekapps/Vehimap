@@ -121,9 +121,10 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - release tag skript `dotnet/build/New-DotnetDesktopReleaseTag.ps1`, ktery vynuti cisty `main`, shodu s `origin/main`, neexistujici `dotnet-v<verze>` tag a readiness branu; push tagu na GitHub je explicitni volba `-Push`
 - release promotion gate `dotnet/build/Test-DotnetReleasePromotion.ps1`, ktery hlida proces `nightly -> beta -> stable` a pred stable vyzaduje existujici beta tag pro stejnou verzi
 - post-release skript `dotnet/build/Test-DotnetPublishedRelease.ps1`, ktery po dobehnuti GitHub Actions overi manifest zvoleneho kanalu, release notes, asset, SHA-256 a velikost; stable navic hlida preview alias a AHK retirement gate, nightly ma vlastni wrapper `Test-DotnetPublishedNightly.ps1`
+- release workflow po vygenerovani manifestu spousti `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel <kanal> -SkipNetwork` jeste pred commitem do `update/`, aby nightly/stable manifest nesel publikovat s chybnym kanalem, assetem, hashem nebo velikosti
 - AHK retirement readiness report `dotnet/build/Get-AhkRetirementReadiness.ps1`, ktery pred fyzickym odstranenim AHK vetve zkontroluje stabilni manifest, release workflow, preview alias pro stare buildy a zbyvajici AHK artefakty
 - channel-aware release readiness pro `stable`, `beta` i `nightly`; wrapper `Test-DotnetNightlyReadiness.ps1` umi pred rucnim nightly vydanim lokalne overit Inno instalator, metadata, SHA-256, velikost a `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`
-- release workflow spousti `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers` hned po vygenerovani manifestu, aby prvni stabilni Windows kanal nesel publikovat s nefunkcnim update odkazem
+- stable vetev release workflow spousti AHK retirement gate neprimo pres `Test-DotnetPublishedRelease.ps1`, aby prvni stabilni Windows kanal nesel publikovat s nefunkcnim update odkazem
 - detailni stav automaticke instalace v dialogu kontroly aktualizaci, vcetne duvodu rucniho rezimu
 - asset URL a SHA-256 hash v dialogu kontroly aktualizaci pro overitelnou rucni instalaci
 - kopirovani detailu kontroly aktualizaci do schranky tlacitkem nebo `Ctrl+Shift+C` vcetne pristupneho stavoveho textu vysledku, aby sla rucni instalace overit bez opisovani URL a hashe

@@ -19,7 +19,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("latest-dotnet-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-\" + $channel + \"-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
         Assert.Contains("Write-DotnetUpdateManifest.ps1", workflow, StringComparison.Ordinal);
-        Assert.Contains("Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers", workflow, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel \"${{ needs.metadata.outputs.channel }}\" -SkipNetwork", workflow, StringComparison.Ordinal);
         Assert.Contains("vehimap-desktop-release-*", workflow, StringComparison.Ordinal);
         Assert.Contains("choco install innosetup", workflow, StringComparison.Ordinal);
         Assert.Contains("-p:VehimapReleaseChannel=${{ needs.metadata.outputs.channel }}", workflow, StringComparison.Ordinal);
@@ -60,6 +60,21 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("latest-dotnet-preview-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
         Assert.Contains("Legacy alias for already published desktop preview builds", workflow, StringComparison.Ordinal);
         Assert.Contains("Copy-Item -LiteralPath $outputPath -Destination $legacyPreviewOutputPath -Force", workflow, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Dotnet_desktop_workflow_verifies_generated_windows_manifest_before_commit()
+    {
+        var workflow = ReadWorkflow();
+
+        Assert.Contains("Verify generated Windows desktop manifest", workflow, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel \"${{ needs.metadata.outputs.channel }}\" -SkipNetwork", workflow, StringComparison.Ordinal);
+        Assert.Contains("Commit desktop manifests", workflow, StringComparison.Ordinal);
+        Assert.True(
+            workflow.IndexOf("Verify generated Windows desktop manifest", StringComparison.Ordinal) <
+            workflow.IndexOf("Commit desktop manifests", StringComparison.Ordinal),
+            "Generated manifest verification must run before committing update manifests.");
+        Assert.DoesNotContain("Verify AHK retirement readiness after manifest generation", workflow, StringComparison.Ordinal);
     }
 
     [Fact]
