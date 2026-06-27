@@ -98,6 +98,8 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - radit evidencni seznamy `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do legacy `settings.ini`
 - mazat rychle hledani stejnym tlacitkem `Vymazat` i v prehledovych workspacech `Casova osa`, `Globalni hledani`, `Audit`, `Naklady`, `Blizici se terminy` a `Propadle terminy`; po smazani se fokus vrati do prislusneho hledani
 - pouzivat kontextove editacni zkratky v evidencnich workspacech: `Ctrl+N` pro novou polozku, `Ctrl+U` nebo `F2` pro upravu vybrane polozky, `Ctrl+S` pro ulozeni aktivniho editoru a v dokladech `Ctrl+O` / `Ctrl+Shift+O` pro otevreni prilohy nebo slozky
+- v hlavni karte `Historie` a `Tankovani` zobrazit editacni akce primo bez nutnosti nejdriv otevrit samostatne okno; tlacitko `V okne` zustava dostupne pro prehlednejsi modalni praci
+- chranit editory evidenci vlastnim svislym scrollem a prehledy `Dashboard` a `Naklady` celostrankovym scrollem, aby vetsi systemove pismo nebo mensi viewport neschovaly spodni obsah
 - otevrit modalni `Nastaveni`, `O programu` a `Zkontrolovat aktualizace` primo z desktop shellu
 - ridit dostupnost `Minimalizovat na listu` z viewmodelu podle podpory tray a v nastaveni zneaktivnit intervalova pole, pokud nejsou zapnute pravidelne automaticke zalohy
 - ovladat `Nastaveni` klavesnici: `Ctrl+S` ulozi, `Ctrl+B` ulozi a vytvori zalohu ihned, `Esc` zavre dialog bez ulozeni

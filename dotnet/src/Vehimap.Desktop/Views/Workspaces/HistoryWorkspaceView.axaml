@@ -89,6 +89,10 @@
             Padding="16"
             Background="#10203040"
             CornerRadius="8">
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    AutomationProperties.Name="Panel historie vozidla"
+                    AutomationProperties.AutomationId="HistoryEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,*">
         <TextBlock FontSize="18"
                    FontWeight="SemiBold"
@@ -152,7 +156,7 @@
                        AutomationProperties.Name="Typ historické události"
                        AutomationProperties.AutomationId="HistoryEditorTypeBox" />
             </StackPanel>
-            <StackPanel Spacing="6">
+            <StackPanel Grid.Column="1" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Tachometr" />
               <TextBox x:Name="HistoryEditorOdometerBox"
                        Text="{Binding HistoryEditorOdometer}"
@@ -195,6 +199,7 @@
                    AutomationProperties.Name="{Binding SelectedHistoryDetail}"
                    AutomationProperties.AutomationId="SelectedHistoryDetailText" />
       </Grid>
+      </ScrollViewer>
     </Border>
   </Grid>
 </UserControl>

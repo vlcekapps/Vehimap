@@ -16,6 +16,10 @@
     <KeyBinding Gesture="Ctrl+U" Command="{Binding EditSelectedDashboardVehicleCommand}" />
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedDashboardVehicleCommand}" />
   </UserControl.KeyBindings>
+  <ScrollViewer VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled"
+                AutomationProperties.Name="Obsah dashboardu"
+                AutomationProperties.AutomationId="DashboardWorkspaceScrollViewer">
   <Grid RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
     <StackPanel Grid.ColumnSpan="3" Spacing="8">
       <TextBlock Text="{Binding AuditSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding AuditSummary}" AutomationProperties.AutomationId="DashboardAuditSummaryText" />
@@ -187,4 +191,5 @@
       </Grid>
     </Border>
   </Grid>
+  </ScrollViewer>
 </UserControl>

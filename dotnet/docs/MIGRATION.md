@@ -98,7 +98,8 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - rezim editace vozidla, viditelnost detailu a nadpis detailniho panelu jsou vlastnene `VehicleDetailWorkspace`; root pouze synchronizuje prikazy, pending-edit ochrany a shellovou navigaci
 - sdilene workspace zkratky pro hledani a otevreni polozek v casove ose, globalnim hledani a terminovych prehledech, stejne v kartach i samostatnych oknech; hlavni shell je routuje kontextove, aby je neprebijely globalni akce vozidla
 - sdilene editacni workspace zkratky pro historii, tankovani, pripominky, udrzbu a doklady; `Ctrl+N`, `Ctrl+U` / `F2`, `Ctrl+S` a dokladove `Ctrl+O` / `Ctrl+Shift+O` funguji stejne v karte i samostatnem okne
-- `Ctrl+N` a `Ctrl+U` / `F2` z hlavni karty evidence oteviraji prislusne modalni workspace okno s viditelnym editorem, aby se v read-only shellu nespoustel skryty inline editor
+- `Ctrl+N` a `Ctrl+U` / `F2` z hlavni karty `Historie` a `Tankovani` pracuji primo s editorem v karte; tlacitko `V okne` zustava pro prehlednejsi modalni praci a ostatni evidencni workflow mohou dal pouzivat samostatne workspace okno tam, kde je to kvuli kontextu bezpecnejsi
+- editacni panely evidenci maji vlastni svisly scroll a prehledy `Dashboard` a `Naklady` maji celostrankovy scroll, aby vetsi systemove pismo nebo mensi viewport neschovaly spodni obsah
 - plny auditni workspace s vlastnim hledanim, vsemi auditnimi polozkami a oddelenym dashboardovym top vyrezem
 - nastaveni `run_at_startup`, `hide_on_launch` a automatickych zaloh vcetne rucni akce `Zalohovat ihned`
 - settings UX pro automaticke zalohy: interval a pocet ponechanych zaloh jsou aktivni jen pri zapnutych pravidelnych zalohach a vypnuta sekce neblokuje ulozeni ostatnich voleb

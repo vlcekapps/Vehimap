@@ -66,6 +66,10 @@
       </ListBox>
     </Grid>
     <Border Grid.Row="1" Grid.Column="1" Margin="12,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    AutomationProperties.Name="Panel dokladů vozidla"
+                    AutomationProperties.AutomationId="RecordEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,*">
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding RecordPanelHeading}" />
         <StackPanel Grid.Row="1" Margin="0,14,0,0" Spacing="8">
@@ -115,7 +119,7 @@
                 <TextBlock FontWeight="SemiBold" Text="Cena" />
                 <TextBox x:Name="RecordEditorPriceBox" Text="{Binding RecordEditorPrice}" AutomationProperties.Name="Cena dokladu" AutomationProperties.AutomationId="RecordEditorPriceBox" />
               </StackPanel>
-              <StackPanel Spacing="6">
+              <StackPanel Grid.Column="1" Spacing="6">
                 <TextBlock FontWeight="SemiBold" Text="Režim přílohy" />
                 <ComboBox ItemsSource="{Binding RecordAttachmentModes}" SelectedItem="{Binding SelectedRecordEditorAttachmentMode}" AutomationProperties.Name="Režim přílohy dokladu" AutomationProperties.AutomationId="RecordAttachmentModeComboBox" />
               </StackPanel>
@@ -139,6 +143,7 @@
         </Border>
         <TextBlock Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsRecordDetailVisible}" Text="{Binding SelectedRecordDetail}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedRecordDetail}" AutomationProperties.AutomationId="SelectedRecordDetailText" />
       </Grid>
+      </ScrollViewer>
     </Border>
   </Grid>
 </UserControl>

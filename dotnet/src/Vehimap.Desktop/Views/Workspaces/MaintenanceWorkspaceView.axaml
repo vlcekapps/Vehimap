@@ -71,6 +71,10 @@
       </ListBox>
     </Grid>
     <Border Grid.Row="1" Grid.Column="1" Margin="12,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    AutomationProperties.Name="Panel plánu údržby"
+                    AutomationProperties.AutomationId="MaintenanceEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,*">
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding MaintenancePanelHeading}" />
         <WrapPanel x:Name="MaintenanceActionPanel" Grid.Row="1" Margin="0,14,0,0" ItemWidth="132" ItemHeight="34">
@@ -100,7 +104,7 @@
               <TextBlock FontWeight="SemiBold" Text="Interval km" />
               <TextBox x:Name="MaintenanceEditorIntervalKmBox" Text="{Binding MaintenanceEditorIntervalKm}" PlaceholderText="Například 15000" AutomationProperties.Name="Interval údržby v kilometrech" AutomationProperties.AutomationId="MaintenanceEditorIntervalKmBox" />
             </StackPanel>
-            <StackPanel Spacing="6">
+            <StackPanel Grid.Column="1" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Interval měsíců" />
               <TextBox x:Name="MaintenanceEditorIntervalMonthsBox" Text="{Binding MaintenanceEditorIntervalMonths}" PlaceholderText="Například 12" AutomationProperties.Name="Interval údržby v měsících" AutomationProperties.AutomationId="MaintenanceEditorIntervalMonthsBox" />
             </StackPanel>
@@ -110,7 +114,7 @@
               <TextBlock FontWeight="SemiBold" Text="Poslední servis - datum" />
               <TextBox x:Name="MaintenanceEditorLastServiceDateBox" Text="{Binding MaintenanceEditorLastServiceDate}" PlaceholderText="Například 15.06.2026" AutomationProperties.Name="Datum posledního servisu" AutomationProperties.AutomationId="MaintenanceEditorLastServiceDateBox" />
             </StackPanel>
-            <StackPanel Spacing="6">
+            <StackPanel Grid.Column="1" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Poslední servis - tachometr" />
               <TextBox x:Name="MaintenanceEditorLastServiceOdometerBox" Text="{Binding MaintenanceEditorLastServiceOdometer}" PlaceholderText="Například 123456" AutomationProperties.Name="Tachometr při posledním servisu" AutomationProperties.AutomationId="MaintenanceEditorLastServiceOdometerBox" />
             </StackPanel>
@@ -122,6 +126,7 @@
         </Border>
         <TextBlock Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsMaintenanceDetailVisible}" Text="{Binding SelectedMaintenanceDetail}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedMaintenanceDetail}" AutomationProperties.AutomationId="SelectedMaintenanceDetailText" />
       </Grid>
+      </ScrollViewer>
     </Border>
   </Grid>
 </UserControl>

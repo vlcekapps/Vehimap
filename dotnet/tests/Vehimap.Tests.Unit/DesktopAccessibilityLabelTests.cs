@@ -326,6 +326,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenGlobalSearchWindowButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenUpcomingOverviewWindowButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenOverdueOverviewWindowButton\"", xaml);
+        Assert.Contains("<workspaces:HistoryWorkspaceView Grid.Row=\"1\" Margin=\"0,16,0,0\" AllowEditing=\"True\"", normalizedXaml);
+        Assert.Contains("<workspaces:FuelWorkspaceView Grid.Row=\"1\" Margin=\"0,16,0,0\" AllowEditing=\"True\"", normalizedXaml);
         Assert.Contains("AllowEditing=\"False\"", xaml);
         Assert.Contains("Click=\"OnSettingsClick\"", xaml);
         Assert.Contains("Click=\"OnAboutClick\"", xaml);
@@ -772,15 +774,22 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"RecordSortComboBox\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"RecordSortDescendingCheckBox\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"RecordListBox\"", recordXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"HistoryEditorScrollViewer\"", historyXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorScrollViewer\"", fuelXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ReminderEditorScrollViewer\"", reminderXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceEditorScrollViewer\"", maintenanceXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"RecordEditorScrollViewer\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorDateBox\"", fuelXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorFuelTypeBox\"", fuelXaml);
         Assert.Contains("<ComboBox x:Name=\"FuelEditorFuelTypeBox\"", fuelXaml);
         Assert.Contains("ItemsSource=\"{Binding FuelTypeOptions}\"", fuelXaml);
+        Assert.Contains("Grid.Column=\"1\" Spacing=\"6\"", fuelXaml);
         Assert.Contains("x:Name=\"FuelEditorOdometerBox\"", fuelXaml);
         Assert.Contains("x:Name=\"FuelEditorLitersBox\"", fuelXaml);
         Assert.Contains("x:Name=\"FuelEditorTotalCostBox\"", fuelXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"HistoryEditorDateBox\"", historyXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"HistoryEditorTypeBox\"", historyXaml);
+        Assert.Contains("Grid.Column=\"1\" Spacing=\"6\"", historyXaml);
         Assert.Contains("x:Name=\"HistoryEditorTypeBox\"", historyXaml);
         Assert.Contains("x:Name=\"HistoryEditorOdometerBox\"", historyXaml);
         Assert.Contains("x:Name=\"HistoryEditorCostBox\"", historyXaml);
@@ -788,6 +797,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceTemplateComboBox\"", maintenanceXaml);
         Assert.Contains("ItemsSource=\"{Binding MaintenanceTemplateOptions}\"", maintenanceXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceEditorIntervalKmBox\"", maintenanceXaml);
+        Assert.Contains("Grid.Column=\"1\" Spacing=\"6\"", maintenanceXaml);
         Assert.Contains("x:Name=\"MaintenanceEditorIntervalKmBox\"", maintenanceXaml);
         Assert.Contains("x:Name=\"MaintenanceEditorIntervalMonthsBox\"", maintenanceXaml);
         Assert.Contains("x:Name=\"MaintenanceEditorLastServiceDateBox\"", maintenanceXaml);
@@ -802,6 +812,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"RecordEditorValidToBox\"", recordXaml);
         Assert.Contains("x:Name=\"RecordEditorPriceBox\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"RecordAttachmentModeComboBox\"", recordXaml);
+        Assert.Contains("Grid.Column=\"1\" Spacing=\"6\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CopyRecordPathButton\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReminderEditorTitleBox\"", reminderXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReminderEditorDueDateBox\"", reminderXaml);
@@ -860,6 +871,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardCostListBox\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardTimelineOpenButton\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DashboardTimelineListBox\"", dashboardXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DashboardWorkspaceScrollViewer\"", dashboardXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TimelineSearchBox\"", timelineXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ClearTimelineSearchButton\"", timelineXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TimelineOpenButton\"", timelineXaml);
@@ -884,6 +896,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewRefreshButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OverdueOverviewOpenButton\"", overdueOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostListBox\"", costXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CostWorkspaceScrollViewer\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostPeriodPresetComboBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostPeriodStartBox\"", costXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CostPeriodEndBox\"", costXaml);

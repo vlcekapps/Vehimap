@@ -13,6 +13,10 @@
     <KeyBinding Gesture="F2" Command="{Binding EditSelectedCostVehicleCommand}" />
   </UserControl.KeyBindings>
 
+  <ScrollViewer VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled"
+                AutomationProperties.Name="Obsah nákladového přehledu"
+                AutomationProperties.AutomationId="CostWorkspaceScrollViewer">
   <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
     <StackPanel Spacing="8">
       <TextBlock FontWeight="SemiBold"
@@ -180,4 +184,5 @@
       </ListBox.ItemTemplate>
     </ListBox>
   </Grid>
+  </ScrollViewer>
 </UserControl>

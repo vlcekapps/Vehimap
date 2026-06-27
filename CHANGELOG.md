@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# Avalonia karty `Historie` a `Tankování` nově zobrazují akce `Nové`, `Upravit` a `Odstranit` přímo v kartě, zatímco tlačítko `V okně` zůstává pro přehlednější samostatnou práci; editory evidencí, `Dashboard` a `Náklady` mají navíc scrollovací ochranu proti useknutí obsahu při větším písmu.
 - C# desktop shell se nově otevírá maximalizovaný, levý panel seznamu vozidel má odolnější rozložení filtrů a editor vozidla je scrollovatelný, aby při vyšším DPI nebo bez ruční maximalizace nepřekrýval ani neschovával pole.
 - C# nightly kanál nově vytváří rolling Inno Setup instalátor automaticky každou noc nebo ručně přes workflow dispatch a používá unikátní prerelease verze, aby updater poznal každý nový nightly build.
 - Windows update tok pro C# Inno Setup instalátory nově spouští ověřený setup interaktivně s požadavkem na zavření běžící aplikace a instalátor na konci nabízí spuštění nově nainstalované verze.

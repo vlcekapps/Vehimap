@@ -60,6 +60,10 @@
       </ListBox>
     </Grid>
     <Border Grid.Row="1" Grid.Column="1" Margin="12,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    AutomationProperties.Name="Panel připomínek vozidla"
+                    AutomationProperties.AutomationId="ReminderEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,*">
         <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding ReminderPanelHeading}" />
         <WrapPanel x:Name="ReminderActionPanel" Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
@@ -93,6 +97,7 @@
         </Border>
         <TextBlock Grid.Row="3" Margin="0,16,0,0" IsVisible="{Binding IsReminderDetailVisible}" Text="{Binding SelectedReminderDetail}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedReminderDetail}" AutomationProperties.AutomationId="SelectedReminderDetailText" />
       </Grid>
+      </ScrollViewer>
     </Border>
   </Grid>
 </UserControl>

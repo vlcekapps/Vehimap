@@ -698,7 +698,7 @@
                       AutomationProperties.AutomationId="OpenHistoryWindowButton" />
               <workspaces:HistoryWorkspaceView Grid.Row="1"
                                               Margin="0,16,0,0"
-                                              AllowEditing="False"
+                                              AllowEditing="True"
                                               DataContext="{Binding HistoryWorkspace}" />
             </Grid>
 
@@ -713,7 +713,7 @@
                       AutomationProperties.AutomationId="OpenFuelWindowButton" />
               <workspaces:FuelWorkspaceView Grid.Row="1"
                                            Margin="0,16,0,0"
-                                           AllowEditing="False"
+                                           AllowEditing="True"
                                            DataContext="{Binding FuelWorkspace}" />
             </Grid>
 
