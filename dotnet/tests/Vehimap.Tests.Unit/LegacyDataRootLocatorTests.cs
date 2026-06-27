@@ -24,4 +24,24 @@ public sealed class LegacyDataRootLocatorTests
             Directory.Delete(tempRoot, true);
         }
     }
+
+    [Fact]
+    public void Resolve_Uses_channel_specific_system_data_folder_when_not_portable()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-root-" + Guid.NewGuid());
+        Directory.CreateDirectory(tempRoot);
+
+        try
+        {
+            var locator = new LegacyDataRootLocator("Vehimap Beta");
+            var root = locator.Resolve(tempRoot);
+
+            Assert.False(root.IsPortable);
+            Assert.EndsWith(Path.Combine("Vehimap Beta"), root.DataPath, StringComparison.Ordinal);
+        }
+        finally
+        {
+            Directory.Delete(tempRoot, true);
+        }
+    }
 }

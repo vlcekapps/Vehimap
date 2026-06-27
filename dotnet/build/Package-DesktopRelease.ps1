@@ -9,13 +9,138 @@ param(
     [string]$Version,
 
     [Parameter(Mandatory = $true)]
-    [string]$OutputDirectory
+    [string]$OutputDirectory,
+
+    [string]$Channel = "stable"
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+function Normalize-ReleaseChannel {
+    param([string]$Channel)
+
+    if ([string]::IsNullOrWhiteSpace($Channel)) {
+        return "stable"
+    }
+
+    switch ($Channel.Trim().ToLowerInvariant()) {
+        "beta" { return "beta" }
+        "nightly" { return "nightly" }
+        default { return "stable" }
+    }
+}
+
+function Get-ChannelAppName {
+    param([string]$Channel)
+
+    switch (Normalize-ReleaseChannel -Channel $Channel) {
+        "beta" { return "Vehimap Beta" }
+        "nightly" { return "Vehimap Nightly" }
+        default { return "Vehimap" }
+    }
+}
+
+function Get-ChannelAppId {
+    param([string]$Channel)
+
+    switch (Normalize-ReleaseChannel -Channel $Channel) {
+        "beta" { return "{{D6BA4F44-3961-4EE0-9645-0C64B00F1D95}" }
+        "nightly" { return "{{F62CE01E-1CB2-4E09-A52D-2865B1F02078}" }
+        default { return "{{C11E3BB4-7B0A-4D4E-91F3-FBC2F3F50D8A}" }
+    }
+}
+
+function Resolve-InnoCompiler {
+    $envPath = $env:INNO_SETUP_COMPILER
+    if (-not [string]::IsNullOrWhiteSpace($envPath) -and (Test-Path -LiteralPath $envPath -PathType Leaf)) {
+        return (Resolve-Path -LiteralPath $envPath).Path
+    }
+
+    $command = Get-Command "ISCC.exe" -ErrorAction SilentlyContinue
+    if ($null -ne $command -and -not [string]::IsNullOrWhiteSpace($command.Source)) {
+        return $command.Source
+    }
+
+    foreach ($candidate in @(
+        "C:\Program Files\Inno Setup 7\ISCC.exe",
+        "C:\Program Files (x86)\Inno Setup 7\ISCC.exe",
+        "C:\Program Files\Inno Setup 6\ISCC.exe",
+        "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+    )) {
+        if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+            return $candidate
+        }
+    }
+
+    throw "Inno Setup compiler ISCC.exe nebyl nalezen. Nastavte INNO_SETUP_COMPILER nebo nainstalujte Inno Setup 7."
+}
+
+function Escape-InnoTemplateValue {
+    param([string]$Value)
+
+    return $Value.Replace('"', '""')
+}
+
+function New-InnoSetupInstaller {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$SourceDirectory,
+
+        [Parameter(Mandatory = $true)]
+        [string]$OutputDirectory,
+
+        [Parameter(Mandatory = $true)]
+        [string]$OutputBaseName,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Version,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Channel
+    )
+
+    $repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+    $templatePath = Join-Path $repositoryRoot "dotnet\installer\windows\Vehimap.iss.in"
+    if (-not (Test-Path -LiteralPath $templatePath -PathType Leaf)) {
+        throw "Inno Setup template '$templatePath' neexistuje."
+    }
+
+    $isccPath = Resolve-InnoCompiler
+    $appName = Get-ChannelAppName -Channel $Channel
+    $appId = Get-ChannelAppId -Channel $Channel
+    $generatedScriptPath = Join-Path ([System.IO.Path]::GetTempPath()) ("vehimap-installer-" + [guid]::NewGuid().ToString("N") + ".iss")
+    $template = Get-Content -Raw -LiteralPath $templatePath
+    $script = $template.Replace("{{APP_ID}}", $appId)
+    $script = $script.Replace("{{APP_NAME}}", $appName)
+    $script = $script.Replace("{{APP_VERSION}}", $Version)
+    $script = $script.Replace("{{INSTALL_FOLDER}}", $appName)
+    $script = $script.Replace("{{OUTPUT_DIR}}", (Escape-InnoTemplateValue -Value $OutputDirectory))
+    $script = $script.Replace("{{OUTPUT_BASE_FILENAME}}", $OutputBaseName)
+    $script = $script.Replace("{{SOURCE_DIR}}", (Escape-InnoTemplateValue -Value $SourceDirectory))
+
+    Set-Content -LiteralPath $generatedScriptPath -Value $script -Encoding UTF8
+    try {
+        $process = Start-Process -FilePath $isccPath `
+            -ArgumentList @("/Qp", $generatedScriptPath) `
+            -NoNewWindow `
+            -Wait `
+            -PassThru
+
+        if ($process.ExitCode -ne 0) {
+            throw "Inno Setup compiler selhal s kodem $($process.ExitCode)."
+        }
+    }
+    finally {
+        if (Test-Path -LiteralPath $generatedScriptPath -PathType Leaf) {
+            Remove-Item -LiteralPath $generatedScriptPath -Force
+        }
+    }
+
+    return Join-Path $OutputDirectory "$OutputBaseName.exe"
+}
 
 function Copy-ReleasePayload {
     param(
@@ -164,14 +289,30 @@ if (-not (Test-Path -LiteralPath $resolvedPublishDirectory -PathType Container))
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 $resolvedOutputDirectory = (Resolve-Path -LiteralPath $OutputDirectory).Path
 
-$packageBaseName = "vehimap-desktop-$Version-$RuntimeIdentifier"
+$normalizedChannel = Normalize-ReleaseChannel -Channel $Channel
+$assetKind = if ($RuntimeIdentifier -like "win-*") { "installer" } else { "archive" }
+$packageBaseName = if ($RuntimeIdentifier -like "win-*") {
+    "vehimap-desktop-$normalizedChannel-$Version-$RuntimeIdentifier-setup"
+}
+else {
+    "vehimap-desktop-$Version-$RuntimeIdentifier"
+}
 $stagingRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("vehimap-release-" + [guid]::NewGuid().ToString("N"))
 $stagingDirectory = Join-Path $stagingRoot $packageBaseName
 
 New-Item -ItemType Directory -Path $stagingDirectory -Force | Out-Null
 
 try {
-    if ($RuntimeIdentifier -like "osx-*") {
+    if ($RuntimeIdentifier -like "win-*") {
+        Copy-ReleasePayload -SourceDirectory $resolvedPublishDirectory -DestinationDirectory $stagingDirectory
+        $archivePath = New-InnoSetupInstaller `
+            -SourceDirectory $stagingDirectory `
+            -OutputDirectory $resolvedOutputDirectory `
+            -OutputBaseName $packageBaseName `
+            -Version $Version `
+            -Channel $normalizedChannel
+    }
+    elseif ($RuntimeIdentifier -like "osx-*") {
         $appBundle = New-MacAppBundle -SourceDirectory $resolvedPublishDirectory -DestinationRoot $stagingDirectory -Version $Version
         $archivePath = Join-Path $resolvedOutputDirectory "$packageBaseName.zip"
         New-ZipArchive -SourceDirectory $stagingDirectory -ArchivePath $archivePath
@@ -197,6 +338,8 @@ try {
     $manifest = [ordered]@{
         version = $Version
         runtimeIdentifier = $RuntimeIdentifier
+        channel = $normalizedChannel
+        assetKind = $assetKind
         packageFile = $artifactName
         checksumFile = (Split-Path -Path $checksum.Path -Leaf)
         sha256 = $checksum.Sha256

@@ -7,6 +7,22 @@ internal sealed class ProcessUpdateInstallLauncher : IUpdateInstallLauncher
 {
     public void Launch(UpdateInstallPlan plan)
     {
+        if (string.Equals(plan.InstallKind, "installer", StringComparison.OrdinalIgnoreCase))
+        {
+            var installerPath = string.IsNullOrWhiteSpace(plan.InstallerPath)
+                ? plan.UpdaterPath
+                : plan.InstallerPath;
+            var installerStartInfo = new ProcessStartInfo
+            {
+                FileName = installerPath,
+                UseShellExecute = true,
+                WorkingDirectory = Path.GetDirectoryName(installerPath) ?? AppContext.BaseDirectory
+            };
+
+            Process.Start(installerStartInfo);
+            return;
+        }
+
         var startInfo = new ProcessStartInfo
         {
             FileName = plan.UpdaterPath,

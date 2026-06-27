@@ -227,10 +227,11 @@ public sealed partial class MainWindowViewModel
     internal DesktopBackgroundSnapshot BuildBackgroundSnapshot()
     {
         var attentionTimelineItems = BuildBackgroundAttentionItems();
+        var appName = _session.GetAppInfo().ApplicationName;
 
         var toolTipLines = new List<string>
         {
-            "Vehimap Desktop",
+            $"{appName} Desktop",
             $"Vozidla: {VehicleCount} | K řešení: {AuditCount} | Termíny: {DashboardUpcomingTimeline.Count}"
         };
 

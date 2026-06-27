@@ -4,6 +4,15 @@ namespace Vehimap.Storage.Legacy;
 
 public sealed class LegacyDataRootLocator : IDataRootLocator
 {
+    private readonly string _applicationDataFolderName;
+
+    public LegacyDataRootLocator(string applicationDataFolderName = "Vehimap")
+    {
+        _applicationDataFolderName = string.IsNullOrWhiteSpace(applicationDataFolderName)
+            ? "Vehimap"
+            : applicationDataFolderName.Trim();
+    }
+
     public VehimapDataRoot Resolve(string appBasePath)
     {
         appBasePath = string.IsNullOrWhiteSpace(appBasePath)
@@ -16,32 +25,32 @@ public sealed class LegacyDataRootLocator : IDataRootLocator
             return new VehimapDataRoot(appBasePath, portableDataPath, true);
         }
 
-        var systemDataPath = ResolveSystemDataPath();
+        var systemDataPath = ResolveSystemDataPath(_applicationDataFolderName);
         return new VehimapDataRoot(appBasePath, systemDataPath, false);
     }
 
-    private static string ResolveSystemDataPath()
+    private static string ResolveSystemDataPath(string applicationDataFolderName)
     {
         if (OperatingSystem.IsWindows())
         {
             return Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "Vehimap");
+                applicationDataFolderName);
         }
 
         if (OperatingSystem.IsMacOS())
         {
             var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return Path.Combine(home, "Library", "Application Support", "Vehimap");
+            return Path.Combine(home, "Library", "Application Support", applicationDataFolderName);
         }
 
         var xdgDataHome = Environment.GetEnvironmentVariable("XDG_DATA_HOME");
         if (!string.IsNullOrWhiteSpace(xdgDataHome))
         {
-            return Path.Combine(xdgDataHome, "Vehimap");
+            return Path.Combine(xdgDataHome, applicationDataFolderName);
         }
 
         var linuxHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        return Path.Combine(linuxHome, ".local", "share", "Vehimap");
+        return Path.Combine(linuxHome, ".local", "share", applicationDataFolderName);
     }
 }

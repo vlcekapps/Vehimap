@@ -1,0 +1,34 @@
+[Setup]
+AppId={{APP_ID}}
+AppName={{APP_NAME}}
+AppVersion={{APP_VERSION}}
+AppPublisher=vlcekapps
+AppPublisherURL=https://github.com/vlcekapps/Vehimap
+AppSupportURL=https://github.com/vlcekapps/Vehimap/issues
+AppUpdatesURL=https://github.com/vlcekapps/Vehimap/releases
+DefaultDirName={localappdata}\Programs\{{INSTALL_FOLDER}}
+DefaultGroupName={{APP_NAME}}
+DisableProgramGroupPage=yes
+PrivilegesRequired=lowest
+OutputDir={{OUTPUT_DIR}}
+OutputBaseFilename={{OUTPUT_BASE_FILENAME}}
+Compression=lzma2
+SolidCompression=yes
+WizardStyle=modern
+UninstallDisplayIcon={app}\Vehimap.Desktop.exe
+SetupLogging=yes
+ArchitecturesAllowed=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
+
+[Tasks]
+Name: "desktopicon"; Description: "Vytvorit zastupce na plose"; GroupDescription: "Zastupci:"; Flags: unchecked
+
+[Files]
+Source: "{{SOURCE_DIR}}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "data\*"
+
+[Icons]
+Name: "{group}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"
+Name: "{userdesktop}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; Tasks: desktopicon
+
+[Run]
+Filename: "{app}\Vehimap.Desktop.exe"; Description: "Spustit {{APP_NAME}}"; Flags: nowait postinstall skipifsilent

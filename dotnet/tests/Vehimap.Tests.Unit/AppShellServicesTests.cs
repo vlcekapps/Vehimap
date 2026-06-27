@@ -33,6 +33,8 @@ public sealed class AppShellServicesTests : IDisposable
         var expectedManifestName = $"latest-dotnet-{ResolveExpectedRuntimeIdentifier()}.ini";
 
         Assert.Equal(expectedVersion, appInfo.AppVersion);
+        Assert.Equal("Vehimap", appInfo.ApplicationName);
+        Assert.Equal("stable", appInfo.ReleaseChannel);
         Assert.Equal(SemVersionService.NormalizeToFileVersion(expectedVersion), appInfo.FileVersion);
         Assert.EndsWith(expectedManifestName, appInfo.UpdateManifestUrl, StringComparison.OrdinalIgnoreCase);
         Assert.StartsWith(AssemblyAppBuildInfoProvider.DefaultReleaseNotesUrl, appInfo.ReleaseNotesUrl, StringComparison.OrdinalIgnoreCase);
@@ -96,6 +98,21 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Equal(expected, Math.Sign(SemVersionService.Compare(left, right)));
     }
 
+    [Theory]
+    [InlineData("stable", "Vehimap", "Vehimap", "latest-dotnet-win-x64.ini")]
+    [InlineData("beta", "Vehimap Beta", "Vehimap Beta", "latest-dotnet-beta-win-x64.ini")]
+    [InlineData("nightly", "Vehimap Nightly", "Vehimap Nightly", "latest-dotnet-nightly-win-x64.ini")]
+    public void Release_channel_service_resolves_names_data_folders_and_manifests(
+        string channel,
+        string expectedAppName,
+        string expectedDataFolder,
+        string expectedManifest)
+    {
+        Assert.Equal(expectedAppName, ReleaseChannelService.GetApplicationName(channel));
+        Assert.Equal(expectedDataFolder, ReleaseChannelService.GetDataFolderName(channel));
+        Assert.Equal(expectedManifest, ReleaseChannelService.GetUpdateManifestFileName(channel, "win-x64"));
+    }
+
     [Fact]
     public void Manifest_parser_reads_valid_latest_ini()
     {
@@ -114,6 +131,29 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Equal("1.0.9", manifest.Version);
         Assert.Equal("2026-04-02", manifest.PublishedAt);
         Assert.Equal(2048, manifest.AssetSize);
+        Assert.Equal("archive", manifest.AssetKind);
+        Assert.Equal("stable", manifest.Channel);
+    }
+
+    [Fact]
+    public void Manifest_parser_reads_installer_asset_and_channel()
+    {
+        const string content = """
+            [release]
+            version=1.0.9
+            published_at=2026-04-02
+            channel=beta
+            asset_kind=installer
+            notes_url=https://example.com/release
+            asset_url=https://example.com/vehimap-setup.exe
+            asset_sha256=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            asset_size=2048
+            """;
+
+        var manifest = LegacyUpdateManifestParser.Parse(content);
+
+        Assert.Equal("installer", manifest.AssetKind);
+        Assert.Equal("beta", manifest.Channel);
     }
 
     [Fact]
@@ -173,6 +213,52 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Equal(AppContext.BaseDirectory, result.InstallPlan.TargetDirectory);
         Assert.Equal("1.0.9", result.InstallPlan.ExpectedVersion);
         Assert.True(File.Exists(Path.Combine(result.InstallPlan.SourceDirectory, "vehimap.exe")));
+    }
+
+    [Fact]
+    public async Task Windows_update_prepare_creates_install_plan_for_inno_installer()
+    {
+        var installerBytes = Encoding.UTF8.GetBytes("setup binary");
+        var sha256 = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(installerBytes)).ToLowerInvariant();
+
+        var buildInfo = new StubBuildInfoProvider(
+            new AppBuildInfo(
+                "Vehimap",
+                "1.0.2",
+                "1.0.2.0",
+                "samostatna desktopova aplikace",
+                Path.Combine(_tempRoot, "Vehimap.Desktop.exe"),
+                "Windows",
+                ".NET 10",
+                "https://example.com/latest.ini",
+                "https://example.com/release",
+                Path.Combine(_tempRoot, "missing", "Vehimap.Updater.exe"),
+                true));
+
+        using var httpClient = new HttpClient(new StubHttpMessageHandler(installerBytes));
+        var service = new LegacyUpdateService(buildInfo, httpClient);
+        var result = await service.PrepareInstallAsync(new UpdateCheckResult(
+            "1.0.2",
+            "1.0.9",
+            true,
+            "2026-04-02",
+            "https://example.com/release",
+            "https://example.com/vehimap-setup.exe",
+            sha256,
+            installerBytes.LongLength,
+            true,
+            "Je dostupna novejsi verze.",
+            null,
+            null,
+            "installer",
+            "stable"));
+
+        Assert.True(result.IsReady);
+        Assert.NotNull(result.InstallPlan);
+        Assert.Equal("installer", result.InstallPlan!.InstallKind);
+        Assert.Equal(result.InstallPlan.UpdaterPath, result.InstallPlan.InstallerPath);
+        Assert.True(File.Exists(result.InstallPlan.InstallerPath));
+        Assert.Equal("1.0.9", result.InstallPlan.ExpectedVersion);
     }
 
     [Fact]

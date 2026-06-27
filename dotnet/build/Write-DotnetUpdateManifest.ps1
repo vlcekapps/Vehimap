@@ -39,6 +39,26 @@ if ([string]::IsNullOrWhiteSpace($metadata.version)) {
     throw "Metadata neobsahuji version."
 }
 
+$assetKind = "archive"
+$metadataAssetKind = $metadata.PSObject.Properties["assetKind"]
+if ($null -ne $metadataAssetKind -and -not [string]::IsNullOrWhiteSpace([string]$metadataAssetKind.Value)) {
+    $assetKind = ([string]$metadataAssetKind.Value).Trim().ToLowerInvariant()
+}
+
+if ($assetKind -notin @("archive", "installer")) {
+    throw "Metadata obsahuji nepodporovany assetKind '$assetKind'."
+}
+
+$channel = "stable"
+$metadataChannel = $metadata.PSObject.Properties["channel"]
+if ($null -ne $metadataChannel -and -not [string]::IsNullOrWhiteSpace([string]$metadataChannel.Value)) {
+    $channel = ([string]$metadataChannel.Value).Trim().ToLowerInvariant()
+}
+
+if ($channel -notin @("stable", "beta", "nightly")) {
+    throw "Metadata obsahuji nepodporovany channel '$channel'."
+}
+
 $packagePath = Join-Path $ArtifactsDirectory $metadata.packageFile
 $checksumPath = Join-Path $ArtifactsDirectory $metadata.checksumFile
 
@@ -101,6 +121,8 @@ $manifestLines = @(
     "[release]"
     "version=$($metadata.version)"
     "published_at=$publishedAt"
+    "channel=$channel"
+    "asset_kind=$assetKind"
     "asset_url=$releaseAssetUrl"
     "asset_sha256=$checksum"
     "asset_size=$($packageInfo.Length)"

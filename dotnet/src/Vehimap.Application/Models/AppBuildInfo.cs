@@ -11,4 +11,5 @@ public sealed record AppBuildInfo(
     string UpdateManifestUrl,
     string ReleaseNotesUrl,
     string UpdaterPath,
-    bool IsPublishedBuild);
+    bool IsPublishedBuild,
+    string ReleaseChannel = "stable");

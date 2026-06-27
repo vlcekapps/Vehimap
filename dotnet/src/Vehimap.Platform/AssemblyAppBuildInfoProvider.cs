@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 
@@ -7,6 +8,7 @@ namespace Vehimap.Platform;
 
 public sealed class AssemblyAppBuildInfoProvider : IAppBuildInfoProvider
 {
+    private const string ReleaseChannelMetadataName = "VehimapReleaseChannel";
     public const string DefaultUpdateManifestBaseUrl = "https://raw.githubusercontent.com/vlcekapps/Vehimap/main/update";
     public const string DefaultReleaseNotesUrl = "https://github.com/vlcekapps/Vehimap/releases";
 
@@ -33,10 +35,13 @@ public sealed class AssemblyAppBuildInfoProvider : IAppBuildInfoProvider
         var updaterExtension = OperatingSystem.IsWindows() ? ".exe" : string.Empty;
         var updaterPath = Path.Combine(AppContext.BaseDirectory, $"Vehimap.Updater{updaterExtension}");
         var runtimeIdentifier = ResolveRuntimeIdentifier();
-        var updateManifestUrl = $"{DefaultUpdateManifestBaseUrl}/latest-dotnet-{runtimeIdentifier}.ini";
+        var releaseChannel = ResolveCurrentReleaseChannel();
+        var applicationName = ReleaseChannelService.GetApplicationName(releaseChannel);
+        var updateManifestFileName = ReleaseChannelService.GetUpdateManifestFileName(releaseChannel, runtimeIdentifier);
+        var updateManifestUrl = $"{DefaultUpdateManifestBaseUrl}/{updateManifestFileName}";
 
         return new AppBuildInfo(
-            "Vehimap",
+            applicationName,
             appVersion,
             fileVersion,
             isPublishedBuild ? "samostatná desktopová aplikace" : "vývojový Avalonia shell",
@@ -46,7 +51,8 @@ public sealed class AssemblyAppBuildInfoProvider : IAppBuildInfoProvider
             updateManifestUrl,
             DefaultReleaseNotesUrl,
             updaterPath,
-            isPublishedBuild);
+            isPublishedBuild,
+            releaseChannel);
     }
 
     internal static string ResolveRuntimeIdentifier()
@@ -81,5 +87,26 @@ public sealed class AssemblyAppBuildInfoProvider : IAppBuildInfoProvider
         }
 
         return "win-x64";
+    }
+
+    public static string ResolveCurrentReleaseChannel()
+    {
+        var entryAssembly = Assembly.GetEntryAssembly();
+        var platformAssembly = typeof(AssemblyAppBuildInfoProvider).Assembly;
+        var channel = ReadReleaseChannel(entryAssembly)
+            ?? ReadReleaseChannel(platformAssembly)
+            ?? Environment.GetEnvironmentVariable("VEHIMAP_RELEASE_CHANNEL");
+        return ReleaseChannelService.Normalize(channel);
+    }
+
+    public static string ResolveCurrentApplicationDataFolderName() =>
+        ReleaseChannelService.GetDataFolderName(ResolveCurrentReleaseChannel());
+
+    private static string? ReadReleaseChannel(Assembly? assembly)
+    {
+        return assembly?
+            .GetCustomAttributes<AssemblyMetadataAttribute>()
+            .FirstOrDefault(attribute => string.Equals(attribute.Key, ReleaseChannelMetadataName, StringComparison.OrdinalIgnoreCase))
+            ?.Value;
     }
 }

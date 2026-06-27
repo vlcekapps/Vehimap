@@ -104,7 +104,7 @@ else {
 }
 
 $releaseTag = "dotnet-v$version"
-$expectedAssetPart = "/$RepositoryFullName/releases/download/$releaseTag/vehimap-desktop-$version-$RuntimeIdentifier"
+$expectedAssetPart = "/$RepositoryFullName/releases/download/$releaseTag/vehimap-desktop-stable-$version-$RuntimeIdentifier-setup.exe"
 $manifestAssetSize = $null
 $assetUrl = ""
 $notesUrl = ""
@@ -127,7 +127,7 @@ else {
     }
 
     if (-not [string]::IsNullOrWhiteSpace($assetUrl) -and $assetUrl.Contains($expectedAssetPart)) {
-        Add-Pass "Stabilni manifest ukazuje na release asset $releaseTag pro $RuntimeIdentifier."
+        Add-Pass "Stabilni manifest ukazuje na Inno Setup release asset $releaseTag pro $RuntimeIdentifier."
     }
     else {
         Add-Blocker "Stabilni manifest neukazuje na ocekavany release asset $releaseTag pro $RuntimeIdentifier."
@@ -147,6 +147,20 @@ else {
 
     if ($manifest.ContainsKey("asset_sha256") -and $manifest["asset_sha256"] -match "^[0-9a-fA-F]{64}$") {
         Add-Pass "Stabilni manifest obsahuje platny SHA-256 hash."
+    }
+
+    if ($manifest.ContainsKey("asset_kind") -and $manifest["asset_kind"] -eq "installer") {
+        Add-Pass "Stabilni Windows manifest pouziva installer asset."
+    }
+    else {
+        Add-Blocker "Stabilni Windows manifest nepouziva installer asset."
+    }
+
+    if ($manifest.ContainsKey("channel") -and $manifest["channel"] -eq "stable") {
+        Add-Pass "Stabilni manifest je ve stable kanalu."
+    }
+    else {
+        Add-Blocker "Stabilni manifest nema channel=stable."
     }
     else {
         Add-Blocker "Stabilni manifest neobsahuje platny SHA-256 hash."

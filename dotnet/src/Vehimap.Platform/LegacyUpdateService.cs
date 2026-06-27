@@ -46,7 +46,9 @@ public sealed class LegacyUpdateService : IUpdateService
                     canInstallAutomatically,
                     $"Je dostupna novejsi verze Vehimap ({manifest.Version}).{sizeText}",
                     null,
-                    automaticInstallUnavailableReason);
+                    automaticInstallUnavailableReason,
+                    manifest.AssetKind,
+                    manifest.Channel);
             }
 
             if (comparison > 0)
@@ -59,9 +61,13 @@ public sealed class LegacyUpdateService : IUpdateService
                     manifest.NotesUrl,
                     manifest.AssetUrl,
                     manifest.AssetSha256,
-                    manifest.AssetSize,
-                    false,
-                    $"Pouzivate novejsi lokalni verzi ({currentVersion}) nez je v manifestu ({manifest.Version}).");
+                manifest.AssetSize,
+                false,
+                $"Pouzivate novejsi lokalni verzi ({currentVersion}) nez je v manifestu ({manifest.Version}).",
+                null,
+                null,
+                manifest.AssetKind,
+                manifest.Channel);
             }
 
             return new UpdateCheckResult(
@@ -74,7 +80,11 @@ public sealed class LegacyUpdateService : IUpdateService
                 manifest.AssetSha256,
                 manifest.AssetSize,
                 false,
-                $"Pouzivate aktualni verzi Vehimap ({currentVersion}).");
+                $"Pouzivate aktualni verzi Vehimap ({currentVersion}).",
+                null,
+                null,
+                manifest.AssetKind,
+                manifest.Channel);
         }
         catch (UpdateManifestUnavailableException ex)
         {
@@ -131,7 +141,7 @@ public sealed class LegacyUpdateService : IUpdateService
             return new UpdateInstallResult(false, validationError, null);
         }
 
-        if (!File.Exists(appInfo.UpdaterPath))
+        if (IsArchiveAsset(update.AssetKind) && !File.Exists(appInfo.UpdaterPath))
         {
             return new UpdateInstallResult(false, "Vedle aplikace chybi Vehimap.Updater, automatickou instalaci proto nelze pripravit.", null);
         }
@@ -141,23 +151,41 @@ public sealed class LegacyUpdateService : IUpdateService
 
         try
         {
-            var downloadPath = Path.Combine(tempRoot, "vehimap-update.zip");
+            var downloadPath = IsInstallerAsset(update.AssetKind)
+                ? Path.Combine(tempRoot, "vehimap-update-setup.exe")
+                : Path.Combine(tempRoot, "vehimap-update.zip");
             var extractRoot = Path.Combine(tempRoot, "payload");
 
             await DownloadAsync(update.AssetUrl!, downloadPath, cancellationToken).ConfigureAwait(false);
             ValidateDownloadedAsset(downloadPath, update.AssetSize!.Value, update.Sha256!);
 
+            if (IsInstallerAsset(update.AssetKind))
+            {
+                var installerPlan = new UpdateInstallPlan(
+                    downloadPath,
+                    tempRoot,
+                    AppContext.BaseDirectory,
+                    appInfo.ApplicationPath,
+                    Process.GetCurrentProcess().Id,
+                    update.LatestVersion,
+                    "installer",
+                    downloadPath);
+
+                return new UpdateInstallResult(true, "Instalator aktualizace je pripraven ke spusteni.", installerPlan);
+            }
+
             ZipFile.ExtractToDirectory(downloadPath, extractRoot);
             var sourceDirectory = ResolvePayloadRoot(extractRoot);
-            var installPlan = new UpdateInstallPlan(
+            var archivePlan = new UpdateInstallPlan(
                 appInfo.UpdaterPath,
                 sourceDirectory,
                 AppContext.BaseDirectory,
                 appInfo.ApplicationPath,
                 Process.GetCurrentProcess().Id,
-                update.LatestVersion);
+                update.LatestVersion,
+                "archive");
 
-            return new UpdateInstallResult(true, "Aktualizace je pripravena k instalaci.", installPlan);
+            return new UpdateInstallResult(true, "Aktualizace je pripravena k instalaci.", archivePlan);
         }
         catch (Exception ex)
         {
@@ -260,7 +288,7 @@ public sealed class LegacyUpdateService : IUpdateService
             return "Automaticka instalace je dostupna jen v publikovanem desktopovem buildu.";
         }
 
-        if (!File.Exists(appInfo.UpdaterPath))
+        if (IsArchiveAsset(manifest.AssetKind) && !File.Exists(appInfo.UpdaterPath))
         {
             return "Vedle aplikace chybi Vehimap.Updater, automatickou instalaci proto nelze pripravit.";
         }
@@ -296,6 +324,13 @@ public sealed class LegacyUpdateService : IUpdateService
         error = string.Empty;
         return true;
     }
+
+    private static bool IsInstallerAsset(string? assetKind) =>
+        string.Equals(assetKind, "installer", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsArchiveAsset(string? assetKind) =>
+        string.IsNullOrWhiteSpace(assetKind)
+        || string.Equals(assetKind, "archive", StringComparison.OrdinalIgnoreCase);
 
     private static bool ValidateInstallMetadata(LegacyUpdateManifest manifest, out string error)
     {

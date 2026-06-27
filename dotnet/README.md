@@ -7,7 +7,7 @@ Aktualni zamer:
 - zachovat soucasny AHK Vehimap funkcni beze zmen
 - vedle nej vybudovat kompatibilni `.NET + Avalonia` aplikaci
 - prvni priorita je prime cteni dnesnich `TSV`, `INI`, `.vehimapbak` a `data/attachments`
-- release priorita je nejdrive stabilni Windows desktop, potom Android, nasledne macOS a nakonec Linux
+- release priorita je nejdrive stabilni Windows desktop pres Inno Setup instalator, potom Android, nasledne macOS a nakonec Linux
 
 ## Struktura
 
@@ -126,7 +126,8 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit modalni export a obnovu dat a pracovat se stejnym `.vehimapbak` formatem jako AHK vetev
 - pri obnoveni zalohy pred prepsanim aktualnich dat vytvorit AHK-kompatibilni kopii puvodnich TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` a po importu ukazat cestu k teto kopii i pocet obnovenych priloh
 - pri selhani obnovy `.vehimapbak` zobrazit cestu k zaloze a konkretni parser detail vcetne chybne radky priloh, pokud je problem v attachment sekci
-- generovat verzovane release balicky pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`
+- generovat verzovane release balicky pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`; Windows verejny artefakt je Inno Setup instalator, macOS/Linux zatim zustavaji archivni balicky
+- rozlisovat desktop kanaly `stable`, `beta` a `nightly`; na Windows maji vlastni nazev aplikace, update manifest i systemovou datovou slozku
 - pripravit publikovany release pro `.NET` desktop tag `dotnet-v<verze>` pres GitHub Actions
 - publikovat runtime-specific desktop manifesty `update/latest-dotnet-<rid>.ini`
 - udrzet prechodovy alias `update/latest-dotnet-preview-<rid>.ini`, aby se uz vydane preview buildy dokazaly aktualizovat na prvni stabilni desktop release
@@ -144,27 +145,31 @@ dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -o .\arti
 
 ## Release balicky
 
-Lokalni packaging publish vystupu:
+Lokalni packaging publish vystupu. Windows RID vytvori Inno Setup instalator, ostatni platformy archiv:
 
 ```powershell
 cd dotnet
-dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -o .\artifacts\win-x64\desktop
-.\build\Package-DesktopRelease.ps1 -PublishDirectory .\artifacts\win-x64\desktop -RuntimeIdentifier win-x64 -Version (Get-Content ..\src\VERSION).Trim() -OutputDirectory .\artifacts\win-x64\release
+dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -p:VehimapReleaseChannel=stable -o .\artifacts\win-x64\desktop
+.\build\Package-DesktopRelease.ps1 -PublishDirectory .\artifacts\win-x64\desktop -RuntimeIdentifier win-x64 -Version (Get-Content ..\src\VERSION).Trim() -OutputDirectory .\artifacts\win-x64\release -Channel stable
 ```
 
-Balickovaci skript vynechava `.pdb`, vytvori archiv pro dany RID, prida `.sha256` a JSON metadata s `runtimeIdentifier`, nazvem balicku, hashem a velikosti. Generator desktop update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt. Kontrola aktualizaci umi lokalni manifest pouzit jako override, ale pokud je lokalni soubor poskozeny, pokracuje na vzdaleny manifest. Dialog kontroly aktualizaci navic ukazuje, proc je update jen rucni, pokud automaticka instalace neni dostupna, vypise asset URL i SHA-256 pro overeni stazeneho balicku a umi tyto detaily zkopirovat do schranky tlacitkem nebo `Ctrl+Shift+C`.
+Balickovaci skript vynechava `.pdb`, pro Windows vytvori per-user Inno Setup instalator a pro ostatni RID archiv, prida `.sha256` a JSON metadata s `runtimeIdentifier`, `channel`, `assetKind`, nazvem balicku, hashem a velikosti. Generator desktop update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt. Kontrola aktualizaci umi lokalni manifest pouzit jako override, ale pokud je lokalni soubor poskozeny, pokracuje na vzdaleny manifest. Dialog kontroly aktualizaci navic ukazuje, proc je update jen rucni, pokud automaticka instalace neni dostupna, vypise asset URL i SHA-256 pro overeni stazeneho balicku a umi tyto detaily zkopirovat do schranky tlacitkem nebo `Ctrl+Shift+C`.
 
 CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 
 - otestovat `.NET` vetev na Windows
 - publikovat self-contained desktop buildy pro Windows, Linux a macOS
 - zabalit je do verzovanych artefaktu:
-  - `vehimap-desktop-<verze>-win-x64.zip`
+  - `vehimap-desktop-stable-<verze>-win-x64-setup.exe`
+  - `vehimap-desktop-beta-<verze>-win-x64-setup.exe`
+  - `vehimap-desktop-nightly-<verze>-win-x64-setup.exe`
   - `vehimap-desktop-<verze>-linux-x64.tar.gz`
   - `vehimap-desktop-<verze>-osx-x64.zip`
   - `vehimap-desktop-<verze>-osx-arm64.zip`
 - pridat ke kazdemu balicku `.sha256` a `.json` metadata
 - pri pushi tagu `dotnet-v<verze>` vytvorit publikovany GitHub release
+- pri pushi tagu `dotnet-beta-v<verze>` vytvorit prerelease pro beta kanal
+- pri schedule nebo tagu `dotnet-nightly` vytvorit/nahradit rolling nightly prerelease
 - po release zapsat runtime-specific desktop manifesty do `update/`
 - zapsat i prechodove `latest-dotnet-preview-<rid>.ini` aliasy pro uz vydane preview buildy
 - na Windows runneru spustit Appium smoke nad publish buildem desktop release vcetne kontroly app-level menu a dostupnosti rychlych akci

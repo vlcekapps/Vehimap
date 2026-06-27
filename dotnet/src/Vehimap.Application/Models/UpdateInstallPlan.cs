@@ -6,4 +6,6 @@ public sealed record UpdateInstallPlan(
     string TargetDirectory,
     string EntryPath,
     int ProcessId,
-    string ExpectedVersion);
+    string ExpectedVersion,
+    string InstallKind = "archive",
+    string? InstallerPath = null);

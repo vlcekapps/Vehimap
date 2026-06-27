@@ -240,7 +240,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public MainWindowViewModel()
         : this(
             new LegacyVehimapDataStore(),
-            new LegacyVehimapBootstrapper(new LegacyDataRootLocator(), new LegacyVehimapDataStore()),
+            CreateDefaultBootstrapper(),
             new ManagedAttachmentPathService(),
             new ProcessFileLauncher(),
             new AvaloniaFilePickerService(),
@@ -260,6 +260,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new AvaloniaAppShellDialogService(),
             new ProcessUpdateInstallLauncher())
     {
+    }
+
+    private static LegacyVehimapBootstrapper CreateDefaultBootstrapper()
+    {
+        return new LegacyVehimapBootstrapper(
+            new LegacyDataRootLocator(AssemblyAppBuildInfoProvider.ResolveCurrentApplicationDataFolderName()),
+            new LegacyVehimapDataStore());
     }
 
     internal MainWindowViewModel(
@@ -1140,11 +1147,16 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         var supportedSettings = _session.ReadSupportedSettings();
+        var appInfo = _session.GetAppInfo();
         ApplyCostPeriodPreferences();
         var costSummary = BuildSelectedCostSummary();
         _currentCostSummary = costSummary;
 
         LoadError = string.Empty;
+        Title = appInfo.ApplicationName;
+        Subtitle = appInfo.ReleaseChannel == ReleaseChannelService.Stable
+            ? "Multiplatformni desktop nad daty Vehimapu."
+            : $"Multiplatformni desktop nad oddelenym kanalem {appInfo.ReleaseChannel}.";
         DataMode = _dataRoot.IsPortable ? "Portable data vedle aplikace" : "Systémová datová složka";
         DataPath = _dataRoot.DataPath;
         OnPropertyChanged(nameof(CanUseDataActions));

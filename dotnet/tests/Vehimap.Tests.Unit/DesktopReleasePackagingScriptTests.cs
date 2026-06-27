@@ -26,6 +26,11 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
             return;
         }
 
+        if (OperatingSystem.IsWindows() && ResolveInnoCompiler() is null)
+        {
+            return;
+        }
+
         var publishDirectory = Path.Combine(_tempRoot, "publish");
         var outputDirectory = Path.Combine(_tempRoot, "release");
         Directory.CreateDirectory(publishDirectory);
@@ -48,21 +53,14 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
 
         Assert.Equal(0, packageResult.ExitCode);
 
-        var packageName = $"vehimap-desktop-{version}-win-x64.zip";
+        var packageName = $"vehimap-desktop-stable-{version}-win-x64-setup.exe";
         var packagePath = Path.Combine(outputDirectory, packageName);
         var checksumPath = packagePath + ".sha256";
-        var metadataPath = Path.Combine(outputDirectory, $"vehimap-desktop-{version}-win-x64.json");
+        var metadataPath = Path.Combine(outputDirectory, $"vehimap-desktop-stable-{version}-win-x64-setup.json");
 
         Assert.True(File.Exists(packagePath), packageResult.CombinedOutput);
         Assert.True(File.Exists(checksumPath), packageResult.CombinedOutput);
         Assert.True(File.Exists(metadataPath), packageResult.CombinedOutput);
-
-        using (var archive = ZipFile.OpenRead(packagePath))
-        {
-            Assert.Contains(archive.Entries, entry => string.Equals(entry.FullName, "Vehimap.Desktop.exe", StringComparison.Ordinal));
-            Assert.Contains(archive.Entries, entry => string.Equals(entry.FullName, "locales/cs.txt", StringComparison.Ordinal) || string.Equals(entry.FullName, "locales\\cs.txt", StringComparison.Ordinal));
-            Assert.DoesNotContain(archive.Entries, entry => entry.FullName.EndsWith(".pdb", StringComparison.OrdinalIgnoreCase));
-        }
 
         var expectedSha256 = Convert.ToHexString(SHA256.HashData(await File.ReadAllBytesAsync(packagePath))).ToLowerInvariant();
         var checksumLine = (await File.ReadAllTextAsync(checksumPath)).Trim();
@@ -73,6 +71,8 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         var root = metadata.RootElement;
         Assert.Equal(version, root.GetProperty("version").GetString());
         Assert.Equal("win-x64", root.GetProperty("runtimeIdentifier").GetString());
+        Assert.Equal("stable", root.GetProperty("channel").GetString());
+        Assert.Equal("installer", root.GetProperty("assetKind").GetString());
         Assert.Equal(packageName, root.GetProperty("packageFile").GetString());
         Assert.Equal(Path.GetFileName(checksumPath), root.GetProperty("checksumFile").GetString());
         Assert.Equal(expectedSha256, root.GetProperty("sha256").GetString());
@@ -91,6 +91,8 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
 
         var updateManifest = await File.ReadAllTextAsync(updateManifestPath);
         Assert.Contains($"version={version}", updateManifest, StringComparison.Ordinal);
+        Assert.Contains("channel=stable", updateManifest, StringComparison.Ordinal);
+        Assert.Contains("asset_kind=installer", updateManifest, StringComparison.Ordinal);
         Assert.Contains($"asset_url=https://github.com/vlcekapps/Vehimap/releases/download/dotnet-v{version}/{packageName}", updateManifest, StringComparison.Ordinal);
         Assert.Contains($"asset_sha256={expectedSha256}", updateManifest, StringComparison.Ordinal);
         Assert.Contains($"asset_size={new FileInfo(packagePath).Length}", updateManifest, StringComparison.Ordinal);
@@ -191,6 +193,37 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
             if (path is not null)
             {
                 return path;
+            }
+        }
+
+        return null;
+    }
+
+    private static string? ResolveInnoCompiler()
+    {
+        var envPath = Environment.GetEnvironmentVariable("INNO_SETUP_COMPILER");
+        if (!string.IsNullOrWhiteSpace(envPath) && File.Exists(envPath))
+        {
+            return envPath;
+        }
+
+        var onPath = FindOnPath("ISCC");
+        if (onPath is not null)
+        {
+            return onPath;
+        }
+
+        foreach (var candidate in new[]
+        {
+            @"C:\Program Files\Inno Setup 7\ISCC.exe",
+            @"C:\Program Files (x86)\Inno Setup 7\ISCC.exe",
+            @"C:\Program Files\Inno Setup 6\ISCC.exe",
+            @"C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+        })
+        {
+            if (File.Exists(candidate))
+            {
+                return candidate;
             }
         }
 

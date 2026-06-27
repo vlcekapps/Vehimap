@@ -10,12 +10,20 @@ public sealed class DesktopReleaseWorkflowTests
         var workflow = ReadWorkflow();
 
         Assert.Contains("\"dotnet-v*\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("\"dotnet-beta-v*\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("\"dotnet-nightly\"", workflow, StringComparison.Ordinal);
         Assert.Contains("release_tag=\"dotnet-v${version}\"", workflow, StringComparison.Ordinal);
         Assert.Contains("release_name=\"Vehimap Desktop ${version}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("release_name=\"Vehimap Desktop Beta ${version}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("release_name=\"Vehimap Desktop Nightly ${version}\"", workflow, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
+        Assert.Contains("latest-dotnet-\" + $channel + \"-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
         Assert.Contains("Write-DotnetUpdateManifest.ps1", workflow, StringComparison.Ordinal);
         Assert.Contains("Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers", workflow, StringComparison.Ordinal);
         Assert.Contains("vehimap-desktop-release-*", workflow, StringComparison.Ordinal);
+        Assert.Contains("choco install innosetup", workflow, StringComparison.Ordinal);
+        Assert.Contains("-p:VehimapReleaseChannel=${{ needs.metadata.outputs.channel }}", workflow, StringComparison.Ordinal);
+        Assert.Contains("--prerelease", workflow, StringComparison.Ordinal);
 
         Assert.DoesNotContain("dotnet-preview-v", workflow, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("--draft", workflow, StringComparison.OrdinalIgnoreCase);
@@ -42,6 +50,9 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("latest-dotnet-preview-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetReleaseReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("dotnet-v$version", script, StringComparison.Ordinal);
+        Assert.Contains("vehimap-desktop-stable-$version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
+        Assert.Contains("asset_kind", script, StringComparison.Ordinal);
+        Assert.Contains("channel", script, StringComparison.Ordinal);
         Assert.Contains("src\\Vehimap.ahk", script, StringComparison.Ordinal);
         Assert.Contains("$FailOnBlockers", script, StringComparison.Ordinal);
         Assert.Contains("AHK zatim nemazat", script, StringComparison.Ordinal);
@@ -74,6 +85,9 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("latest-dotnet-preview-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
         Assert.Contains("asset_sha256", script, StringComparison.Ordinal);
         Assert.Contains("asset_size", script, StringComparison.Ordinal);
+        Assert.Contains("asset_kind", script, StringComparison.Ordinal);
+        Assert.Contains("channel", script, StringComparison.Ordinal);
+        Assert.Contains("vehimap-desktop-stable-$version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
         Assert.Contains("releases/download/$releaseTag", script, StringComparison.Ordinal);
         Assert.Contains("Invoke-RemoteHeadCheck", script, StringComparison.Ordinal);
         Assert.Contains("$SkipNetwork", script, StringComparison.Ordinal);

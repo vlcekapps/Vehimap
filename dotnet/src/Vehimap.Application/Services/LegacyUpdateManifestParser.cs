@@ -1,4 +1,5 @@
 using System.Globalization;
+using Vehimap.Application;
 
 namespace Vehimap.Application.Services;
 
@@ -54,6 +55,8 @@ public static class LegacyUpdateManifestParser
         values.TryGetValue("asset_url", out var assetUrl);
         values.TryGetValue("asset_sha256", out var sha256);
         values.TryGetValue("asset_size", out var assetSizeRaw);
+        values.TryGetValue("asset_kind", out var assetKindRaw);
+        values.TryGetValue("channel", out var channelRaw);
 
         long? assetSize = null;
         if (!string.IsNullOrWhiteSpace(assetSizeRaw))
@@ -66,17 +69,36 @@ public static class LegacyUpdateManifestParser
             assetSize = parsedSize;
         }
 
+        var assetKind = NormalizeAssetKind(assetKindRaw);
+
         return new LegacyUpdateManifest(
             version.Trim(),
             string.IsNullOrWhiteSpace(publishedAt) ? null : publishedAt.Trim(),
             string.IsNullOrWhiteSpace(notesUrl) ? null : notesUrl.Trim(),
             string.IsNullOrWhiteSpace(assetUrl) ? null : assetUrl.Trim(),
             string.IsNullOrWhiteSpace(sha256) ? null : sha256.Trim().ToLowerInvariant(),
-            assetSize);
+            assetSize,
+            assetKind,
+            ReleaseChannelService.Normalize(channelRaw));
     }
 
     private static string Normalize(string content) =>
         content.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
+
+    private static string NormalizeAssetKind(string? assetKind)
+    {
+        if (string.IsNullOrWhiteSpace(assetKind))
+        {
+            return "archive";
+        }
+
+        return assetKind.Trim().ToLowerInvariant() switch
+        {
+            "archive" => "archive",
+            "installer" => "installer",
+            _ => throw new InvalidOperationException($"Manifest obsahuje nepodporovany typ assetu: {assetKind}")
+        };
+    }
 }
 
 public sealed record LegacyUpdateManifest(
@@ -85,4 +107,6 @@ public sealed record LegacyUpdateManifest(
     string? NotesUrl,
     string? AssetUrl,
     string? AssetSha256,
-    long? AssetSize);
+    long? AssetSize,
+    string AssetKind = "archive",
+    string Channel = "stable");

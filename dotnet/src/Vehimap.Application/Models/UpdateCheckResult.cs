@@ -12,4 +12,6 @@ public sealed record UpdateCheckResult(
     bool CanInstallAutomatically,
     string Message,
     string? FailureReason = null,
-    string? AutomaticInstallUnavailableReason = null);
+    string? AutomaticInstallUnavailableReason = null,
+    string AssetKind = "archive",
+    string ReleaseChannel = "stable");

@@ -1,6 +1,7 @@
 param(
     [string]$RuntimeIdentifier = "win-x64",
     [string]$Configuration = "Release",
+    [string]$Channel = "stable",
     [switch]$SkipTests
 )
 
@@ -29,6 +30,7 @@ Write-Host "Vehimap .NET desktop release readiness"
 Write-Host "Version: $version"
 Write-Host "Runtime: $RuntimeIdentifier"
 Write-Host "Configuration: $Configuration"
+Write-Host "Channel: $Channel"
 
 Push-Location $dotnetRoot
 try {
@@ -67,7 +69,8 @@ try {
         -PublishDirectory $publishDirectory `
         -RuntimeIdentifier $RuntimeIdentifier `
         -Version $version `
-        -OutputDirectory $releaseDirectory
+        -OutputDirectory $releaseDirectory `
+        -Channel $Channel
 
     $metadata = Get-ChildItem -LiteralPath $releaseDirectory -Filter "*.json" | Sort-Object Name | Select-Object -First 1
     if ($null -eq $metadata) {
@@ -80,13 +83,18 @@ try {
         -ReleaseTag $releaseTag `
         -OutputPath $manifestPath
 
-    $packagePrefix = "vehimap-desktop-$version-$RuntimeIdentifier"
-    $package = Get-ChildItem -LiteralPath $releaseDirectory -File |
-        Where-Object { $_.Name -like "$packagePrefix.*" -and $_.Extension -ne ".json" -and $_.Extension -ne ".sha256" } |
-        Sort-Object Name |
-        Select-Object -First 1
+    $metadataContent = Get-Content -Raw -LiteralPath $metadata.FullName | ConvertFrom-Json
+    $package = Get-Item -LiteralPath (Join-Path $releaseDirectory $metadataContent.packageFile)
     if ($null -eq $package) {
-        throw "Release balicek '$packagePrefix' nebyl vytvoren."
+        throw "Release balicek '$($metadataContent.packageFile)' nebyl vytvoren."
+    }
+
+    if ($RuntimeIdentifier -like "win-*" -and $metadataContent.assetKind -ne "installer") {
+        throw "Windows release musi byt Inno Setup installer, ne portable archiv."
+    }
+
+    if ($RuntimeIdentifier -like "win-*" -and $package.Extension -ne ".exe") {
+        throw "Windows release musi mit priponu .exe."
     }
 
     $checksumPath = "$($package.FullName).sha256"

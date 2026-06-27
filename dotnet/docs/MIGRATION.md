@@ -110,6 +110,8 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - multiplatformni publish matrix pro `.NET` desktop release
 - publikovany release workflow pro tagy `dotnet-v<verze>` s verzovanymi balicky a checksumy
 - runtime-specific desktop update manifesty `update/latest-dotnet-<rid>.ini`
+- Windows release artefakt jako per-user Inno Setup instalator misto verejneho portable ZIPu
+- oddelene desktop kanaly `stable`, `beta` a `nightly` s vlastnim nazvem aplikace, update manifestem a systemovou datovou slozkou
 - legacy aliasy `update/latest-dotnet-preview-<rid>.ini`, ktere starym preview buildum umozni prejit na prvni stabilni desktop release
 - lokalni release readiness skript `dotnet/build/Test-DotnetReleaseReadiness.ps1`, ktery postavi, otestuje, publikuje, zabali a overi manifest pro vybrany RID pred tagovanim
 - release tag skript `dotnet/build/New-DotnetDesktopReleaseTag.ps1`, ktery vynuti cisty `main`, shodu s `origin/main`, neexistujici `dotnet-v<verze>` tag a readiness branu; push tagu na GitHub je explicitni volba `-Push`
@@ -163,8 +165,8 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 
 ## Co je dalsi na rade
 
-1. Dokoncit Windows desktop release gate: spustit `Test-DotnetReleaseReadiness.ps1`, vytvorit release tag pres `New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Push`, vydat prvni publikovany `dotnet-v<verze>` release a nechat workflow overit `Get-AhkRetirementReadiness.ps1` proti prave vygenerovanemu `latest-dotnet-win-x64.ini`.
-2. Po uspesnem release workflow spustit `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64`; teprve potom rucne overit update tok a Windows Appium smoke proti release artefaktu.
+1. Dokoncit Windows desktop release gate: spustit `Test-DotnetReleaseReadiness.ps1`, vytvorit release tag pres `New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Push`, vydat prvni publikovany `dotnet-v<verze>` release a nechat workflow overit `Get-AhkRetirementReadiness.ps1` proti prave vygenerovanemu `latest-dotnet-win-x64.ini` s `asset_kind=installer`.
+2. Po uspesnem release workflow spustit `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64`; teprve potom rucne overit update tok a Windows Appium smoke proti nainstalovanemu Inno Setup artefaktu.
 3. Spustit `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers` lokalne jako posledni samostatnou kontrolu; AHK fyzicky odstranit az ve chvili, kdy report nema blockery a zbyvaji jen ocekavane retirement warningy k samotnemu mazacimu commitu.
 4. Po stabilnim Windows desktop releasu a kratkem realnem pouzivani bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
 5. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
