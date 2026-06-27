@@ -2,6 +2,10 @@
 
 Komplexní řešení pro evidenci vašich vozidel.
 
+## Stav projektu
+
+C# Avalonia větev je aktuální primární směr Vehimapu. Původní AHK aplikace zůstává v repozitáři jen jako dočasný legacy fallback do chvíle, kdy projde stabilní Windows release, vznikne `update/latest-dotnet-win-x64.ini` a projde `dotnet/build/Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers`. Do AHK větve už nepřidáváme nové funkce; nové workflow, přístupnost, instalátory a update kanály se dokončují v `.NET` větvi.
+
 ## Co umí
 
 - rozdělení vozidel do kategorií `Osobní vozidla`, `Motocykly`, `Nákladní vozidla`, `Autobusy`, `Ostatní`

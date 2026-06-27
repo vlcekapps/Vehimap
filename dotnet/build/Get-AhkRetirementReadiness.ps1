@@ -126,6 +126,9 @@ else {
     if ($manifest.ContainsKey("asset_sha256") -and $manifest["asset_sha256"] -match "^[0-9a-fA-F]{64}$") {
         Add-Pass "Stabilni manifest obsahuje platny SHA-256 hash."
     }
+    else {
+        Add-Blocker "Stabilni manifest neobsahuje platny SHA-256 hash."
+    }
 
     if ($manifest.ContainsKey("asset_kind") -and $manifest["asset_kind"] -eq "installer") {
         Add-Pass "Stabilni Windows manifest pouziva installer asset."
@@ -139,9 +142,6 @@ else {
     }
     else {
         Add-Blocker "Stabilni manifest nema channel=stable."
-    }
-    else {
-        Add-Blocker "Stabilni manifest neobsahuje platny SHA-256 hash."
     }
 
     $assetSize = 0L

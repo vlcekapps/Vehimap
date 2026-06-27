@@ -170,9 +170,10 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 
 ## Co je dalsi na rade
 
-1. Dokoncit Windows desktop release gate: nechat nightly projit zakladnim testovanim, povysit ji pres `Test-DotnetReleasePromotion.ps1 -TargetChannel beta`, po beta overeni povysit pres `Test-DotnetReleasePromotion.ps1 -TargetChannel stable`, vytvorit release tag pres `New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel stable -Push` a nechat workflow overit `Get-AhkRetirementReadiness.ps1` proti prave vygenerovanemu `latest-dotnet-win-x64.ini` s `asset_kind=installer`.
-2. Po uspesnem release workflow spustit `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64`; teprve potom rucne overit update tok a Windows Appium smoke proti nainstalovanemu Inno Setup artefaktu.
+1. Dokoncit Windows desktop release gate: nechat nightly projit zakladnim testovanim, povysit ji pres `Test-DotnetReleasePromotion.ps1 -TargetChannel beta`, po beta overeni povysit pres `Test-DotnetReleasePromotion.ps1 -TargetChannel stable`, vytvorit release tag pres `New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel stable -Push` a nechat workflow vygenerovat `update/latest-dotnet-win-x64.ini` s `asset_kind=installer`, `channel=stable`, platnym `asset_sha256` a velikosti assetu.
+2. Po uspesnem release workflow spustit `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64`; tento skript overi stabilni manifest, preview alias, release notes, asset, hash, velikost a AHK retirement gate. Pred prvnim stable releasem je jediny ocekavany blocker chybejici `update/latest-dotnet-win-x64.ini`.
 3. Spustit `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers` lokalne jako posledni samostatnou kontrolu; AHK fyzicky odstranit az ve chvili, kdy report nema blockery a zbyvaji jen ocekavane retirement warningy k samotnemu mazacimu commitu.
-4. Po stabilnim Windows desktop releasu a kratkem realnem pouzivani bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
-5. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
-6. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.
+4. Finalni AHK retirement commit smi odstranit `src/Vehimap.ahk`, `src/lib`, `src/tests` a navazujici AHK-only dokumentaci az po pruchodu predchoziho bodu; predtim AHK nechat jako zmrazeny legacy fallback bez novych funkci.
+5. Po stabilnim Windows desktop releasu a kratkem realnem pouzivani bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
+6. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
+7. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.

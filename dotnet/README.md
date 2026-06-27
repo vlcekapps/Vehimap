@@ -4,9 +4,10 @@ Tato slozka obsahuje novou C# codebase pro multiplatformni desktopovy Vehimap.
 
 Aktualni zamer:
 
-- zachovat soucasny AHK Vehimap funkcni beze zmen
-- vedle nej vybudovat kompatibilni `.NET + Avalonia` aplikaci
-- prvni priorita je prime cteni dnesnich `TSV`, `INI`, `.vehimapbak` a `data/attachments`
+- brat `.NET + Avalonia` jako primarni desktopovou vetev Vehimapu
+- ponechat AHK v repozitari uz jen jako docasny legacy fallback do finalniho retirement commitu
+- necpat nove funkce do AHK; nove workflow, pristupnost, instalatory a update kanaly jdou do `.NET` vetve
+- zachovat prime cteni dnesnich `TSV`, `INI`, `.vehimapbak` a `data/attachments`
 - release priorita je nejdrive stabilni Windows desktop pres Inno Setup instalator, potom Android, nasledne macOS a nakonec Linux
 
 ## Struktura
@@ -235,6 +236,6 @@ cd dotnet
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers
 ```
 
-Report nic nemaze. Jen zkontroluje, ze stabilni desktop manifest uz existuje, ukazuje na `dotnet-v<verze>` release asset, preview alias pro starsi preview buildy miri na stejny obsah a zbyvajici AHK soubory jsou uz jen vedomy obsah budouciho mazaciho commitu.
+Report nic nemaze. Jen zkontroluje, ze stabilni desktop manifest uz existuje, ukazuje na `dotnet-v<verze>` release asset, preview alias pro starsi preview buildy miri na stejny obsah a zbyvajici AHK soubory jsou uz jen vedomy obsah budouciho mazaciho commitu. Pred prvnim stable releasem je ocekavany blocker chybejici `update/latest-dotnet-win-x64.ini`; v takovem stavu AHK jeste nemazat.
 
 Stejna kontrola bezi i v GitHub Actions po vygenerovani desktop manifestu pro prvni stabilni release. Pokud by `latest-dotnet-win-x64.ini` neukazoval na spravny `dotnet-v<verze>` asset nebo by legacy preview alias nemiril na stejny obsah, release workflow skonci chybou jeste pred commitem manifestu.

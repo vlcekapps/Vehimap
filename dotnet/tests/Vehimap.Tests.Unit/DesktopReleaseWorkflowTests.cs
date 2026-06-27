@@ -75,6 +75,8 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("vehimap-desktop-stable-$version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
         Assert.Contains("asset_kind", script, StringComparison.Ordinal);
         Assert.Contains("channel", script, StringComparison.Ordinal);
+        Assert.Contains("Stabilni manifest neobsahuje platny SHA-256 hash.", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("Add-Blocker \"Stabilni manifest nema channel=stable.\"\n    }\n    else", NormalizeLineEndings(script), StringComparison.Ordinal);
         Assert.Contains("src\\Vehimap.ahk", script, StringComparison.Ordinal);
         Assert.Contains("$FailOnBlockers", script, StringComparison.Ordinal);
         Assert.Contains("AHK zatim nemazat", script, StringComparison.Ordinal);
@@ -131,6 +133,8 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("asset_size", script, StringComparison.Ordinal);
         Assert.Contains("asset_kind", script, StringComparison.Ordinal);
         Assert.Contains("channel", script, StringComparison.Ordinal);
+        Assert.Contains("Stabilni manifest neobsahuje platny SHA-256 hash.", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("Add-Blocker \"Stabilni manifest nema channel=stable.\"\n    }\n    else", NormalizeLineEndings(script), StringComparison.Ordinal);
         Assert.Contains("vehimap-desktop-stable-$version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
         Assert.Contains("releases/download/$releaseTag", script, StringComparison.Ordinal);
         Assert.Contains("Invoke-RemoteHeadCheck", script, StringComparison.Ordinal);
@@ -145,6 +149,9 @@ public sealed class DesktopReleaseWorkflowTests
         var workflowPath = Path.Combine(FindRepositoryRoot(), ".github", "workflows", "dotnet-desktop.yml");
         return File.ReadAllText(workflowPath);
     }
+
+    private static string NormalizeLineEndings(string value) =>
+        value.Replace("\r\n", "\n", StringComparison.Ordinal);
 
     private static string FindRepositoryRoot()
     {

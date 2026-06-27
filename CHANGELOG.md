@@ -100,6 +100,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - menu `Přehledy` v Avalonia větvi má přímou položku `Export termínů do kalendáře (.ics)`, aby odpovídalo AHK menu i původnímu workflow plánu
 
 ### Změněno
+- AHK retirement gate a post-release ověření C# desktopu teď správně blokují stabilní manifest bez platného `asset_sha256`; dokumentace zároveň přepíná `.NET + Avalonia` větev na primární směr a AHK popisuje už jen jako dočasný zmrazený fallback do finálního mazacího commitu.
 - Avalonia app-level dialogy `Nastavení` a `Kontrola aktualizací` jsou zvětšitelné a jejich hlavní obsah je scrollovatelný; `O programu` zůstává krátký běžný souhrn a dlouhou technickou diagnostiku má ve vlastní scrollovatelné části
 - Avalonia potvrzovací dialogy, dokončení údržby, `Balíček pro vozidlo` a přístupné tray akce mají explicitní resize nebo scroll regiony, aby dlouhý text a větší systémové písmo neschovaly primární akce
 - Avalonia background runtime se po úspěšném uložení evidence, importu zálohy, změně nastavení, ručním reloadu a okamžité automatické záloze synchronizuje hned se shell snapshotem, takže tray tooltip a oznámení nečekají až na další intervalovou kontrolu
