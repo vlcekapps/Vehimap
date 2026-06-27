@@ -76,7 +76,7 @@ public sealed class LegacyUpdateService : IUpdateService
                 false,
                 $"Pouzivate aktualni verzi Vehimap ({currentVersion}).");
         }
-        catch (PreviewManifestUnavailableException ex)
+        catch (UpdateManifestUnavailableException ex)
         {
             return new UpdateCheckResult(
                 currentVersion,
@@ -184,9 +184,9 @@ public sealed class LegacyUpdateService : IUpdateService
         using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound && IsPreviewManifestFileName(manifestFileName))
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound && IsDotnetReleaseManifestFileName(manifestFileName))
             {
-                throw new PreviewManifestUnavailableException("Preview kanal aktualizaci pro desktopovou .NET vetev zatim neni publikovany.");
+                throw new UpdateManifestUnavailableException("Desktopovy release kanal aktualizaci pro .NET vetev zatim neni publikovany.");
             }
 
             throw new InvalidOperationException($"Server vratil HTTP {(int)response.StatusCode}.");
@@ -244,8 +244,9 @@ public sealed class LegacyUpdateService : IUpdateService
         return string.IsNullOrWhiteSpace(fallbackName) ? "latest.ini" : fallbackName;
     }
 
-    private static bool IsPreviewManifestFileName(string manifestFileName) =>
-        manifestFileName.Contains("latest-dotnet-preview-", StringComparison.OrdinalIgnoreCase);
+    private static bool IsDotnetReleaseManifestFileName(string manifestFileName) =>
+        manifestFileName.StartsWith("latest-dotnet-", StringComparison.OrdinalIgnoreCase)
+        && manifestFileName.EndsWith(".ini", StringComparison.OrdinalIgnoreCase);
 
     private static string? BuildAutomaticInstallUnavailableReason(AppBuildInfo appInfo, LegacyUpdateManifest manifest)
     {
@@ -392,9 +393,9 @@ public sealed class LegacyUpdateService : IUpdateService
         }
     }
 
-    private sealed class PreviewManifestUnavailableException : Exception
+    private sealed class UpdateManifestUnavailableException : Exception
     {
-        public PreviewManifestUnavailableException(string message)
+        public UpdateManifestUnavailableException(string message)
             : base(message)
         {
         }

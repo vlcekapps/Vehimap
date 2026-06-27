@@ -32,8 +32,8 @@ public sealed class AssemblyAppBuildInfoProvider : IAppBuildInfoProvider
         var isPublishedBuild = !string.Equals(processName, "dotnet", StringComparison.OrdinalIgnoreCase);
         var updaterExtension = OperatingSystem.IsWindows() ? ".exe" : string.Empty;
         var updaterPath = Path.Combine(AppContext.BaseDirectory, $"Vehimap.Updater{updaterExtension}");
-        var runtimeIdentifier = ResolvePreviewRuntimeIdentifier();
-        var updateManifestUrl = $"{DefaultUpdateManifestBaseUrl}/latest-dotnet-preview-{runtimeIdentifier}.ini";
+        var runtimeIdentifier = ResolveRuntimeIdentifier();
+        var updateManifestUrl = $"{DefaultUpdateManifestBaseUrl}/latest-dotnet-{runtimeIdentifier}.ini";
 
         return new AppBuildInfo(
             "Vehimap",
@@ -49,7 +49,7 @@ public sealed class AssemblyAppBuildInfoProvider : IAppBuildInfoProvider
             isPublishedBuild);
     }
 
-    internal static string ResolvePreviewRuntimeIdentifier()
+    internal static string ResolveRuntimeIdentifier()
     {
         if (OperatingSystem.IsWindows())
         {

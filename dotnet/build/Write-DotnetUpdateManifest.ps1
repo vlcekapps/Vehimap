@@ -113,4 +113,4 @@ if (-not [string]::IsNullOrWhiteSpace($outputDirectory)) {
 }
 
 Set-Content -LiteralPath $OutputPath -Value ($manifestLines -join [Environment]::NewLine) -Encoding UTF8
-Write-Host "Wrote preview update manifest: $OutputPath"
+Write-Host "Wrote desktop update manifest: $OutputPath"

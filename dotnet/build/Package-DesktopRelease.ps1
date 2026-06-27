@@ -76,9 +76,9 @@ function New-MacAppBundle {
   <key>CFBundleName</key>
   <string>Vehimap</string>
   <key>CFBundleDisplayName</key>
-  <string>Vehimap Desktop Preview</string>
+  <string>Vehimap</string>
   <key>CFBundleIdentifier</key>
-  <string>com.vlcekapps.vehimap.desktop.preview</string>
+  <string>com.vlcekapps.vehimap.desktop</string>
   <key>CFBundleVersion</key>
   <string>$Version</string>
   <key>CFBundleShortVersionString</key>
@@ -164,7 +164,7 @@ if (-not (Test-Path -LiteralPath $resolvedPublishDirectory -PathType Container))
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 $resolvedOutputDirectory = (Resolve-Path -LiteralPath $OutputDirectory).Path
 
-$packageBaseName = "vehimap-desktop-preview-$Version-$RuntimeIdentifier"
+$packageBaseName = "vehimap-desktop-$Version-$RuntimeIdentifier"
 $stagingRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("vehimap-release-" + [guid]::NewGuid().ToString("N"))
 $stagingDirectory = Join-Path $stagingRoot $packageBaseName
 

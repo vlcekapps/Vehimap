@@ -30,7 +30,7 @@ public sealed class AppShellServicesTests : IDisposable
         var provider = new AssemblyAppBuildInfoProvider();
         var appInfo = provider.GetCurrent();
         var expectedVersion = File.ReadAllText(Path.Combine(FindRepositoryRoot(), "src", "VERSION")).Trim();
-        var expectedManifestName = $"latest-dotnet-preview-{ResolveExpectedRuntimeIdentifier()}.ini";
+        var expectedManifestName = $"latest-dotnet-{ResolveExpectedRuntimeIdentifier()}.ini";
 
         Assert.Equal(expectedVersion, appInfo.AppVersion);
         Assert.Equal(SemVersionService.NormalizeToFileVersion(expectedVersion), appInfo.FileVersion);
@@ -176,7 +176,7 @@ public sealed class AppShellServicesTests : IDisposable
     }
 
     [Fact]
-    public async Task Missing_preview_manifest_returns_friendly_message()
+    public async Task Missing_desktop_release_manifest_returns_friendly_message()
     {
         var buildInfo = new StubBuildInfoProvider(
             new AppBuildInfo(
@@ -187,7 +187,7 @@ public sealed class AppShellServicesTests : IDisposable
                 Path.Combine(_tempRoot, "Vehimap.Desktop.exe"),
                 "Windows",
                 ".NET 10",
-                "https://raw.githubusercontent.com/vlcekapps/Vehimap/main/update/latest-dotnet-preview-missing-test-rid.ini",
+                "https://raw.githubusercontent.com/vlcekapps/Vehimap/main/update/latest-dotnet-missing-test-rid.ini",
                 "https://github.com/vlcekapps/Vehimap/releases",
                 Path.Combine(_tempRoot, "Vehimap.Updater.exe"),
                 true));
@@ -205,7 +205,7 @@ public sealed class AppShellServicesTests : IDisposable
     [Fact]
     public async Task Invalid_local_update_manifest_falls_back_to_remote_manifest()
     {
-        var manifestFileName = $"latest-dotnet-preview-local-fallback-{Guid.NewGuid():N}.ini";
+        var manifestFileName = $"latest-dotnet-local-fallback-{Guid.NewGuid():N}.ini";
         var localUpdateDirectory = Path.Combine(AppContext.BaseDirectory, "update");
         var localManifestPath = Path.Combine(localUpdateDirectory, manifestFileName);
         Directory.CreateDirectory(localUpdateDirectory);
@@ -258,7 +258,7 @@ public sealed class AppShellServicesTests : IDisposable
     [Fact]
     public async Task Check_for_updates_reports_why_automatic_install_is_not_available()
     {
-        var manifestFileName = $"latest-dotnet-preview-auto-reason-{Guid.NewGuid():N}.ini";
+        var manifestFileName = $"latest-dotnet-auto-reason-{Guid.NewGuid():N}.ini";
         var manifest = """
             [release]
             version=1.0.3

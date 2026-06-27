@@ -125,12 +125,13 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - `Audit dat` dostal plné klávesové ovládání ve stylu ostatních přehledů a detail vozidla nově po otevření fokusuje primární akci úpravy
 - formulář dokladu v režimu `Spravovaná kopie` už nevystavuje interní relativní cestu jako běžně editovatelné pole a přehled dokladů nově jasně zobrazuje i režim přílohy
 - Avalonia shell už se v titulku a přístupném názvu neprezentuje jako preview a dostal samostatnou nabídku `Přehledy` pro otevření hlavních přehledových oken
+- C# desktop release kanál už používá tagy `dotnet-v<verze>`, balíčky `vehimap-desktop-<verze>-<rid>` a update manifesty `update/latest-dotnet-<rid>.ini`; workflow zároveň přechodově zapisuje i `latest-dotnet-preview-<rid>.ini`, aby se starší preview buildy uměly aktualizovat na stabilní desktop release
 - Avalonia horní menu nově zobrazuje nativní `InputGesture` u hlavních položek se zkratkami, takže menu viditelně odpovídá keyboard-first ovládání
 - klávesové zkratky přehledů v Avalonia shellu jsou sjednocené s hlavní dokumentací: `Ctrl+D` dashboard, `Ctrl+T` blížící se termíny a `Ctrl+Shift+T` propadlé termíny
 - Avalonia ukládání štítků vozidla sjednocuje čárky, středníky, prázdné položky a duplicity stejně jako AHK větev
 - C# desktop větev používá Avalonia `12.0.4` místo původní release-candidate verze a NuGet restore už nehlásí zranitelný `Tmds.DBus.Protocol`
-- preview release tooling C# větve zapisuje do package metadat i SHA-256 a velikost balíčku a generátor update manifestu ověřuje shodu metadat, `.sha256` souboru i fyzického artefaktu
-- kontrola aktualizací v Avalonia větvi už při poškozeném lokálním preview manifestu zkusí běžný vzdálený manifest místo toho, aby skončila jen chybou lokálního souboru
+- release tooling C# větve zapisuje do package metadat i SHA-256 a velikost balíčku a generátor update manifestu ověřuje shodu metadat, `.sha256` souboru i fyzického artefaktu
+- kontrola aktualizací v Avalonia větvi už při poškozeném lokálním desktop manifestu zkusí běžný vzdálený manifest místo toho, aby skončila jen chybou lokálního souboru
 - dialog kontroly aktualizací v Avalonia větvi nově ukazuje, proč není automatická instalace dostupná, například kvůli chybějícímu updateru, nepublikovanému buildu, nepodporované platformě nebo neúplným manifestovým metadatům
 - dialog kontroly aktualizací v Avalonia větvi zobrazuje u dostupné verze také přímý odkaz na release asset a SHA-256 hash pro ruční ověření staženého balíčku
 - dialog kontroly aktualizací v Avalonia větvi umí tlačítkem `Kopírovat detaily` nebo zkratkou `Ctrl+Shift+C` zkopírovat verze, stav instalace, asset URL a SHA-256 hash do schránky

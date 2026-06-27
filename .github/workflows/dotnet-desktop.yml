@@ -6,15 +6,15 @@ on:
       - "dotnet/**"
       - ".github/workflows/dotnet-desktop.yml"
       - "src/VERSION"
-      - "update/latest-dotnet-preview-*.ini"
+      - "update/latest-dotnet-*.ini"
     tags:
-      - "dotnet-preview-v*"
+      - "dotnet-v*"
   pull_request:
     paths:
       - "dotnet/**"
       - ".github/workflows/dotnet-desktop.yml"
       - "src/VERSION"
-      - "update/latest-dotnet-preview-*.ini"
+      - "update/latest-dotnet-*.ini"
   workflow_dispatch:
 
 permissions:
@@ -34,8 +34,8 @@ jobs:
         shell: bash
         run: |
           version="$(tr -d '\r\n' < src/VERSION)"
-          release_tag="dotnet-preview-v${version}"
-          release_name="Vehimap Desktop Preview ${version}"
+          release_tag="dotnet-v${version}"
+          release_name="Vehimap Desktop ${version}"
           should_release="false"
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             if [[ "${GITHUB_REF_NAME}" != "${release_tag}" ]]; then
@@ -79,7 +79,7 @@ jobs:
     env:
       APPIUM_HOME: ${{ github.workspace }}\dotnet\artifacts\appium-home-ci
       VEHIMAP_APPIUM_SERVER_URL: http://127.0.0.1:4723/
-      VEHIMAP_UI_APP: ${{ github.workspace }}\dotnet\artifacts\desktop-preview\Vehimap.Desktop.exe
+      VEHIMAP_UI_APP: ${{ github.workspace }}\dotnet\artifacts\desktop-release\Vehimap.Desktop.exe
       VEHIMAP_UI_REQUIRE_APPIUM: "1"
     steps:
       - uses: actions/checkout@v6
@@ -93,8 +93,8 @@ jobs:
         run: dotnet restore Vehimap.sln
       - name: Build
         run: dotnet build Vehimap.sln --no-restore --configuration Release -p:UseSharedCompilation=false
-      - name: Publish desktop preview for UI smoke
-        run: dotnet publish src/Vehimap.Desktop/Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -p:UseSharedCompilation=false -o artifacts/desktop-preview
+      - name: Publish desktop release for UI smoke
+        run: dotnet publish src/Vehimap.Desktop/Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -p:UseSharedCompilation=false -o artifacts/desktop-release
       - name: Install Appium Windows driver and WinAppDriver
         shell: pwsh
         run: |
@@ -164,16 +164,16 @@ jobs:
         include:
           - os: windows-latest
             rid: win-x64
-            artifact: vehimap-desktop-preview-win-x64
+            artifact: vehimap-desktop-release-win-x64
           - os: ubuntu-latest
             rid: linux-x64
-            artifact: vehimap-desktop-preview-linux-x64
+            artifact: vehimap-desktop-release-linux-x64
           - os: macos-15-intel
             rid: osx-x64
-            artifact: vehimap-desktop-preview-osx-x64
+            artifact: vehimap-desktop-release-osx-x64
           - os: macos-14
             rid: osx-arm64
-            artifact: vehimap-desktop-preview-osx-arm64
+            artifact: vehimap-desktop-release-osx-arm64
     defaults:
       run:
         working-directory: dotnet
@@ -209,7 +209,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           path: release-artifacts
-          pattern: vehimap-desktop-preview-*
+          pattern: vehimap-desktop-release-*
           merge-multiple: true
       - name: Publish draft release
         shell: bash
@@ -225,7 +225,7 @@ jobs:
 
           notes_file="$(mktemp)"
           cat > "$notes_file" <<'EOF'
-          Desktop preview build pro .NET/Avalonia vetev Vehimapu.
+          Desktop release build pro .NET/Avalonia vetev Vehimapu.
 
           Artefakty:
           - Windows: ZIP portable slozky
@@ -255,9 +255,9 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           path: release-artifacts
-          pattern: vehimap-desktop-preview-*
+          pattern: vehimap-desktop-release-*
           merge-multiple: true
-      - name: Generate runtime-specific preview manifests
+      - name: Generate runtime-specific desktop manifests
         shell: pwsh
         run: |
           $metadataFiles = Get-ChildItem -Path "release-artifacts" -Filter "*.json" | Sort-Object Name
@@ -272,24 +272,28 @@ jobs:
               throw "Metadata '$($metadataFile.Name)' neobsahuji runtimeIdentifier."
             }
 
-            $outputPath = Join-Path "update" ("latest-dotnet-preview-" + $rid + ".ini")
-            .\dotnet\build\Write-DotnetPreviewUpdateManifest.ps1 `
+            $outputPath = Join-Path "update" ("latest-dotnet-" + $rid + ".ini")
+            .\dotnet\build\Write-DotnetUpdateManifest.ps1 `
               -PackageMetadataPath $metadataFile.FullName `
               -ArtifactsDirectory "release-artifacts" `
               -ReleaseTag "${{ needs.metadata.outputs.release_tag }}" `
               -OutputPath $outputPath
+
+            # Legacy alias for already published desktop preview builds. New builds use latest-dotnet-<rid>.ini.
+            $legacyPreviewOutputPath = Join-Path "update" ("latest-dotnet-preview-" + $rid + ".ini")
+            Copy-Item -LiteralPath $outputPath -Destination $legacyPreviewOutputPath -Force
           }
-      - name: Commit preview manifests
+      - name: Commit desktop manifests
         shell: pwsh
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           $status = git status --porcelain -- update
           if ([string]::IsNullOrWhiteSpace($status)) {
-            Write-Host "Preview manifests jsou aktualni."
+            Write-Host "Desktop manifests jsou aktualni."
             exit 0
           }
 
-          git add update/latest-dotnet-preview-*.ini
-          git commit -m "chore(dotnet): update desktop preview manifests for ${{ needs.metadata.outputs.version }}"
+          git add update/latest-dotnet-*.ini
+          git commit -m "chore(dotnet): update desktop manifests for ${{ needs.metadata.outputs.version }}"
           git push origin HEAD:main

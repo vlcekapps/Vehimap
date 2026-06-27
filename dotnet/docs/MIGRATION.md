@@ -107,16 +107,17 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - app-level dialogy `Nastaveni`, `O programu` a `Kontrola aktualizaci` jsou resizable a hlavni obsah maji ve scrollovatelne oblasti, aby delsi cesty nebo vetsi systemove pismo neschovaly akcni tlacitka
 - potvrzovaci dialogy, dokonceni udrzby, `Balicek pro vozidlo` a pristupne tray akcni okno maji explicitni resize nebo scroll regiony, aby dlouhy text a vetsi systemove pismo neschovaly primarni akce
 - testovane generovani autostart zaznamu pro Linux `.desktop` a macOS LaunchAgent, vcetne cest s mezerami, uvozovkami a XML znaky
-- multiplatformni publish matrix pro `.NET` desktop preview
-- draft release workflow pro tagy `dotnet-preview-v<verze>` s verzovanymi balicky a checksumy
-- runtime-specific preview update manifesty `update/latest-dotnet-preview-<rid>.ini`
+- multiplatformni publish matrix pro `.NET` desktop release
+- draft release workflow pro tagy `dotnet-v<verze>` s verzovanymi balicky a checksumy
+- runtime-specific desktop update manifesty `update/latest-dotnet-<rid>.ini`
+- legacy aliasy `update/latest-dotnet-preview-<rid>.ini`, ktere starym preview buildum umozni prejit na prvni stabilni desktop release
 - detailni stav automaticke instalace v dialogu kontroly aktualizaci, vcetne duvodu rucniho rezimu
 - asset URL a SHA-256 hash v dialogu kontroly aktualizaci pro overitelnou rucni instalaci
 - kopirovani detailu kontroly aktualizaci do schranky tlacitkem nebo `Ctrl+Shift+C` vcetne pristupneho stavoveho textu vysledku, aby sla rucni instalace overit bez opisovani URL a hashe
-- odolnejsi kontrolu aktualizaci: poskozeny lokalni preview manifest se preskoci a sluzba zkusi vzdaleny manifest
+- odolnejsi kontrolu aktualizaci: poskozeny lokalni desktop manifest se preskoci a sluzba zkusi vzdaleny manifest
 - odolnejsi aktualizacni orchestrace: chyba site/manifestu, otevreni externiho odkazu nebo spusteni updater helperu zustane uzivatelsky citelna a nespadne mimo shell
 - regresni testy packaging skriptu a generatoru manifestu, vcetne kontroly, ze `.sha256`, metadata a fyzicky balicek souhlasi
-- Windows CI Appium smoke nad publish buildem desktop preview
+- Windows CI Appium smoke nad publish buildem desktop release
 - ulozeni `Tiskoveho prehledu` vozidel jako HTML souboru pres sdilenou exportni sluzbu a otevreni ulozeneho souboru
 - rychle akce v Avalonia menu pro nejblizsi TK, zelenou kartu, vlastni pripominku, servisni udrzbu a doklad i pro filtrovanou kontrolu techto terminu; kontrola zelenych karet umi otevrit i vozidla s chybejici ZK
 - primy vstup `Casova osa vozidla` v menu `Vozidlo`, aby C# shell zachoval stejnou informacni architekturu jako AHK menu
@@ -157,6 +158,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 
 ## Co je dalsi na rade
 
-1. Portovat zbytek aplikacovych toku, ktere jeste v .NET vetvi chybi proti AHK verzi
-2. Rozsirovat Appium smoke a accessibility kontrakty vzdy s kazdym novym dialogem nebo workflow
-3. Rozhodnout, kdy se `.NET` desktop preview kanal zmeni z preview manifestu na plnohodnotny release kanal
+1. Dokoncit Windows desktop release gate: vydat prvni `dotnet-v<verze>` draft release, overit update manifest `latest-dotnet-win-x64.ini`, rucni update tok a Windows Appium smoke proti release artefaktu.
+2. Po stabilnim Windows desktop releasu zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
+3. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
+4. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.

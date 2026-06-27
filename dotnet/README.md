@@ -7,6 +7,7 @@ Aktualni zamer:
 - zachovat soucasny AHK Vehimap funkcni beze zmen
 - vedle nej vybudovat kompatibilni `.NET + Avalonia` aplikaci
 - prvni priorita je prime cteni dnesnich `TSV`, `INI`, `.vehimapbak` a `data/attachments`
+- release priorita je nejdrive stabilni Windows desktop, potom Android, nasledne macOS a nakonec Linux
 
 ## Struktura
 
@@ -24,7 +25,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 
 - postavit celou solution pres `dotnet build`
 - spustit unit a kompatibilitni testy pres `dotnet test`
-- vygenerovat desktopovy preview build pres `dotnet publish`
+- vygenerovat desktopovy release build pres `dotnet publish`
 - primo cist a zapisovat dnesni Vehimap data (`TSV`, `INI`, `.vehimapbak`, managed attachments)
 - pri poskozenem legacy `TSV` nebo `INI` souboru ukazat konkretni nazev souboru, plnou cestu a parser detail v chybovem stavu shellu
 - pri nedostupnem nebo poskozenem `.vehimapbak` souboru ukazat cestu k zaloze a parser/I/O detail ve stavovem textu misto neobslouzene vyjimky v shellu
@@ -120,15 +121,16 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - v dialogu kontroly aktualizaci ukazat duvod, proc automaticka instalace neni dostupna, napriklad chybejici updater, nepublikovany build, nepodporovanou platformu nebo nekompletni metadata manifestu
 - v dialogu kontroly aktualizaci zobrazit asset URL a SHA-256 hash, aby rucni instalace sla overit bez dohledavani v manifestu
 - v dialogu kontroly aktualizaci zkopirovat cely vysledek vcetne verzi, asset URL a SHA-256 do schranky tlacitkem nebo `Ctrl+Shift+C`; vysledek kopirovani se oznami pristupnym stavovym textem
-- pri poskozenem lokalnim preview manifestu preskocit lokalni override a zkusit bezny vzdaleny manifest, aby testovaci soubor v `update/` nezablokoval kontrolu aktualizaci
+- pri poskozenem lokalnim desktop manifestu preskocit lokalni override a zkusit bezny vzdaleny manifest, aby testovaci soubor v `update/` nezablokoval kontrolu aktualizaci
 - pri selhani kontroly aktualizaci, otevreni release poznamek, otevreni assetu nebo spusteni updater helperu udrzet shell bezici a ukazat chybu ve stavovem textu nebo aktualizacnim dialogu
 - otevrit modalni export a obnovu dat a pracovat se stejnym `.vehimapbak` formatem jako AHK vetev
 - pri obnoveni zalohy pred prepsanim aktualnich dat vytvorit AHK-kompatibilni kopii puvodnich TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` a po importu ukazat cestu k teto kopii i pocet obnovenych priloh
 - pri selhani obnovy `.vehimapbak` zobrazit cestu k zaloze a konkretni parser detail vcetne chybne radky priloh, pokud je problem v attachment sekci
 - generovat verzovane release balicky pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`
-- pripravit draft release pro `.NET` preview tag `dotnet-preview-v<verze>` pres GitHub Actions
-- publikovat runtime-specific preview manifesty `update/latest-dotnet-preview-<rid>.ini`
-- spoustet Windows Appium smoke i v CI nad publish buildem desktop preview; CI smoke overuje app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, vyvolani hlavniho menu pres `F10`, vynechani menu pri beznem `Tab` / `Shift+Tab`, otevreni aktualniho upozorneni z menu `Rychle akce`, otevreni a zavreni app-level dialogu `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`, otevreni a zavreni pristupnych tray akci z menu `Aplikace`, otevreni vsech samostatnych pracovnich oken, zavreni workspace pres `Escape`, navigaci z globalniho hledani, casove osy, terminovych prehledu a nakladu, zakladni ulozeni editoru pripominek, dokladu, historie, tankovani a udrzby v samostatnych oknech, navrat `Shift+Tab` z nazvu vozidla na `Zrusit` a potvrzeni pri zavirani rozpracovane editace, ulozeni voleb automatickych zaloh z dialogu `Nastaveni` vcetne okamziteho vytvoreni `.vehimapbak`, ulozeni volby Dashboardu pri startu vcetne validacni chyby, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony a potvrzeni `Splneno` z `Planu udrzby` i Dashboardu, zatimco rozsirena sada nad izolovanou portable kopii testuje kopirovani diagnostiky z `O programu`, detailu kontroly aktualizaci i vyresene cesty spravovane prilohy dokladu do systemove schranky a dalsi realne vytvoreni okamzite automaticke zalohy
+- pripravit draft release pro `.NET` desktop tag `dotnet-v<verze>` pres GitHub Actions
+- publikovat runtime-specific desktop manifesty `update/latest-dotnet-<rid>.ini`
+- udrzet prechodovy alias `update/latest-dotnet-preview-<rid>.ini`, aby se uz vydane preview buildy dokazaly aktualizovat na prvni stabilni desktop release
+- spoustet Windows Appium smoke i v CI nad publish buildem desktop release; CI smoke overuje app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, vyvolani hlavniho menu pres `F10`, vynechani menu pri beznem `Tab` / `Shift+Tab`, otevreni aktualniho upozorneni z menu `Rychle akce`, otevreni a zavreni app-level dialogu `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`, otevreni a zavreni pristupnych tray akci z menu `Aplikace`, otevreni vsech samostatnych pracovnich oken, zavreni workspace pres `Escape`, navigaci z globalniho hledani, casove osy, terminovych prehledu a nakladu, zakladni ulozeni editoru pripominek, dokladu, historie, tankovani a udrzby v samostatnych oknech, navrat `Shift+Tab` z nazvu vozidla na `Zrusit` a potvrzeni pri zavirani rozpracovane editace, ulozeni voleb automatickych zaloh z dialogu `Nastaveni` vcetne okamziteho vytvoreni `.vehimapbak`, ulozeni volby Dashboardu pri startu vcetne validacni chyby, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony a potvrzeni `Splneno` z `Planu udrzby` i Dashboardu, zatimco rozsirena sada nad izolovanou portable kopii testuje kopirovani diagnostiky z `O programu`, detailu kontroly aktualizaci i vyresene cesty spravovane prilohy dokladu do systemove schranky a dalsi realne vytvoreni okamzite automaticke zalohy
 
 ## Lokalni build
 
@@ -137,7 +139,7 @@ cd dotnet
 dotnet restore
 dotnet test
 dotnet build
-dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -o .\artifacts\desktop-preview
+dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -o .\artifacts\desktop-release
 ```
 
 ## Release balicky
@@ -150,18 +152,19 @@ dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -r win-x6
 .\build\Package-DesktopRelease.ps1 -PublishDirectory .\artifacts\win-x64\desktop -RuntimeIdentifier win-x64 -Version (Get-Content ..\src\VERSION).Trim() -OutputDirectory .\artifacts\win-x64\release
 ```
 
-Balickovaci skript vynechava `.pdb`, vytvori archiv pro dany RID, prida `.sha256` a JSON metadata s `runtimeIdentifier`, nazvem balicku, hashem a velikosti. Generator preview update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt. Kontrola aktualizaci umi lokalni preview manifest pouzit jako override, ale pokud je lokalni soubor poskozeny, pokracuje na vzdaleny manifest. Dialog kontroly aktualizaci navic ukazuje, proc je update jen rucni, pokud automaticka instalace neni dostupna, vypise asset URL i SHA-256 pro overeni stazeneho balicku a umi tyto detaily zkopirovat do schranky tlacitkem nebo `Ctrl+Shift+C`.
+Balickovaci skript vynechava `.pdb`, vytvori archiv pro dany RID, prida `.sha256` a JSON metadata s `runtimeIdentifier`, nazvem balicku, hashem a velikosti. Generator desktop update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt. Kontrola aktualizaci umi lokalni manifest pouzit jako override, ale pokud je lokalni soubor poskozeny, pokracuje na vzdaleny manifest. Dialog kontroly aktualizaci navic ukazuje, proc je update jen rucni, pokud automaticka instalace neni dostupna, vypise asset URL i SHA-256 pro overeni stazeneho balicku a umi tyto detaily zkopirovat do schranky tlacitkem nebo `Ctrl+Shift+C`.
 
 CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 
 - otestovat `.NET` vetev na Windows
 - publikovat self-contained desktop buildy pro Windows, Linux a macOS
 - zabalit je do verzovanych artefaktu:
-  - `vehimap-desktop-preview-<verze>-win-x64.zip`
-  - `vehimap-desktop-preview-<verze>-linux-x64.tar.gz`
-  - `vehimap-desktop-preview-<verze>-osx-x64.zip`
-  - `vehimap-desktop-preview-<verze>-osx-arm64.zip`
+  - `vehimap-desktop-<verze>-win-x64.zip`
+  - `vehimap-desktop-<verze>-linux-x64.tar.gz`
+  - `vehimap-desktop-<verze>-osx-x64.zip`
+  - `vehimap-desktop-<verze>-osx-arm64.zip`
 - pridat ke kazdemu balicku `.sha256` a `.json` metadata
-- pri pushi tagu `dotnet-preview-v<verze>` vytvorit draft GitHub release
-- po draft release zapsat runtime-specific preview manifesty do `update/`
-- na Windows runneru spustit Appium smoke nad publish buildem desktop preview vcetne kontroly app-level menu a dostupnosti rychlych akci
+- pri pushi tagu `dotnet-v<verze>` vytvorit draft GitHub release
+- po draft release zapsat runtime-specific desktop manifesty do `update/`
+- zapsat i prechodove `latest-dotnet-preview-<rid>.ini` aliasy pro uz vydane preview buildy
+- na Windows runneru spustit Appium smoke nad publish buildem desktop release vcetne kontroly app-level menu a dostupnosti rychlych akci

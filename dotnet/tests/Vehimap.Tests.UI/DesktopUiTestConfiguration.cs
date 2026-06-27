@@ -61,7 +61,7 @@ internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath,
             return null;
         }
 
-        return Path.Combine(repositoryRoot, "dotnet", "artifacts", "desktop-preview", "Vehimap.Desktop.exe");
+        return Path.Combine(repositoryRoot, "dotnet", "artifacts", "desktop-release", "Vehimap.Desktop.exe");
     }
 
     private static string? FindRepositoryRoot()

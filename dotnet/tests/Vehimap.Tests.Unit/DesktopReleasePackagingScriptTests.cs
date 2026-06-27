@@ -36,7 +36,7 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
 
         const string version = "9.8.7-preview.1";
         var packageScript = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Package-DesktopRelease.ps1");
-        var manifestScript = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Write-DotnetPreviewUpdateManifest.ps1");
+        var manifestScript = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Write-DotnetUpdateManifest.ps1");
 
         var packageResult = await RunPowerShellAsync(
             powerShell,
@@ -48,10 +48,10 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
 
         Assert.Equal(0, packageResult.ExitCode);
 
-        var packageName = $"vehimap-desktop-preview-{version}-win-x64.zip";
+        var packageName = $"vehimap-desktop-{version}-win-x64.zip";
         var packagePath = Path.Combine(outputDirectory, packageName);
         var checksumPath = packagePath + ".sha256";
-        var metadataPath = Path.Combine(outputDirectory, $"vehimap-desktop-preview-{version}-win-x64.json");
+        var metadataPath = Path.Combine(outputDirectory, $"vehimap-desktop-{version}-win-x64.json");
 
         Assert.True(File.Exists(packagePath), packageResult.CombinedOutput);
         Assert.True(File.Exists(checksumPath), packageResult.CombinedOutput);
@@ -78,20 +78,20 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         Assert.Equal(expectedSha256, root.GetProperty("sha256").GetString());
         Assert.Equal(new FileInfo(packagePath).Length, root.GetProperty("packageSize").GetInt64());
 
-        var updateManifestPath = Path.Combine(_tempRoot, "latest-dotnet-preview-win-x64.ini");
+        var updateManifestPath = Path.Combine(_tempRoot, "latest-dotnet-win-x64.ini");
         var manifestResult = await RunPowerShellAsync(
             powerShell,
             manifestScript,
             ("PackageMetadataPath", metadataPath),
             ("ArtifactsDirectory", outputDirectory),
-            ("ReleaseTag", $"dotnet-preview-v{version}"),
+            ("ReleaseTag", $"dotnet-v{version}"),
             ("OutputPath", updateManifestPath));
 
         Assert.Equal(0, manifestResult.ExitCode);
 
         var updateManifest = await File.ReadAllTextAsync(updateManifestPath);
         Assert.Contains($"version={version}", updateManifest, StringComparison.Ordinal);
-        Assert.Contains($"asset_url=https://github.com/vlcekapps/Vehimap/releases/download/dotnet-preview-v{version}/{packageName}", updateManifest, StringComparison.Ordinal);
+        Assert.Contains($"asset_url=https://github.com/vlcekapps/Vehimap/releases/download/dotnet-v{version}/{packageName}", updateManifest, StringComparison.Ordinal);
         Assert.Contains($"asset_sha256={expectedSha256}", updateManifest, StringComparison.Ordinal);
         Assert.Contains($"asset_size={new FileInfo(packagePath).Length}", updateManifest, StringComparison.Ordinal);
     }
@@ -108,12 +108,12 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         var artifactsDirectory = Path.Combine(_tempRoot, "artifacts");
         Directory.CreateDirectory(artifactsDirectory);
 
-        var packagePath = Path.Combine(artifactsDirectory, "vehimap-desktop-preview-9.8.7-win-x64.zip");
+        var packagePath = Path.Combine(artifactsDirectory, "vehimap-desktop-9.8.7-win-x64.zip");
         await File.WriteAllTextAsync(packagePath, "real package bytes");
         var checksumPath = packagePath + ".sha256";
         await File.WriteAllTextAsync(checksumPath, $"{new string('a', 64)}  {Path.GetFileName(packagePath)}");
 
-        var metadataPath = Path.Combine(artifactsDirectory, "vehimap-desktop-preview-9.8.7-win-x64.json");
+        var metadataPath = Path.Combine(artifactsDirectory, "vehimap-desktop-9.8.7-win-x64.json");
         var metadata = new
         {
             version = "9.8.7",
@@ -124,13 +124,13 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         };
         await File.WriteAllTextAsync(metadataPath, JsonSerializer.Serialize(metadata));
 
-        var manifestScript = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Write-DotnetPreviewUpdateManifest.ps1");
+        var manifestScript = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Write-DotnetUpdateManifest.ps1");
         var result = await RunPowerShellAsync(
             powerShell,
             manifestScript,
             ("PackageMetadataPath", metadataPath),
             ("ArtifactsDirectory", artifactsDirectory),
-            ("ReleaseTag", "dotnet-preview-v9.8.7"),
+            ("ReleaseTag", "dotnet-v9.8.7"),
             ("OutputPath", Path.Combine(_tempRoot, "latest.ini")));
 
         Assert.NotEqual(0, result.ExitCode);
