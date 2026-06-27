@@ -44,10 +44,23 @@ public partial class MainWindow : Window
         "OverdueOverviewTabButton"
     ];
 
+    private static readonly string[] MainMenuRootNames =
+    [
+        "FileMenuRoot",
+        "VehicleMenuRoot",
+        "OverviewMenuRoot",
+        "QuickActionsMenuRoot",
+        "AppMenuRoot"
+    ];
+
+    private const int MaxInitialFocusAttempts = 8;
+
     private MainWindowViewModel? _viewModel;
     private bool _initialFocusCompleted;
     private bool _initialFocusScheduled;
+    private int _initialFocusAttempts;
     private bool _syncingVehicleSelection;
+    private Control? _lastNonMenuFocusTarget;
 
     public Func<Task>? ExitApplicationRequested { get; set; }
     public Func<Task>? MinimizeToTrayRequested { get; set; }
@@ -58,6 +71,7 @@ public partial class MainWindow : Window
         AvaloniaXamlLoader.Load(this);
         RegisterTabBoundaryNavigation();
         AddHandler(InputElement.KeyDownEvent, OnWindowKeyDown, RoutingStrategies.Tunnel);
+        AddHandler(InputElement.GotFocusEvent, OnElementGotFocus, RoutingStrategies.Tunnel);
         Opened += OnOpened;
         Activated += OnActivated;
         DataContextChanged += OnDataContextChanged;
@@ -93,6 +107,7 @@ public partial class MainWindow : Window
                 viewModel.AppShellController.ConfirmDiscardPendingChangesAsync(this, viewModel, actionDescription);
             viewModel.ConfirmVehicleDeleteHandler = ConfirmDeleteVehicleAsync;
             SyncVehicleSelectionFromViewModel();
+            ScheduleInitialFocus();
         }
     }
 
@@ -123,8 +138,13 @@ public partial class MainWindow : Window
             DispatcherTimer.RunOnce(() =>
             {
                 _initialFocusScheduled = false;
-                _initialFocusCompleted = TryFocusTarget(DesktopFocusTarget.VehicleList);
-            }, TimeSpan.FromMilliseconds(140));
+                _initialFocusAttempts++;
+                _initialFocusCompleted = TryFocusInitialVehicleList();
+                if (!_initialFocusCompleted && _initialFocusAttempts < MaxInitialFocusAttempts)
+                {
+                    ScheduleInitialFocus();
+                }
+            }, TimeSpan.FromMilliseconds(160));
         }, DispatcherPriority.Loaded);
     }
 
@@ -162,6 +182,7 @@ public partial class MainWindow : Window
 
     private void RegisterTabBoundaryNavigation()
     {
+        RegisterForwardTabToVehicleList("HideInactiveVehiclesCheckBox");
         RegisterForwardTabToHeaders("VehicleListBox");
         RegisterTabHeaderNavigation();
     }
@@ -185,6 +206,24 @@ public partial class MainWindow : Window
         }
     }
 
+    private void RegisterForwardTabToVehicleList(string controlName)
+    {
+        if (this.FindControl<Control>(controlName) is { } control)
+        {
+            control.AddHandler(InputElement.KeyDownEvent, OnForwardTabToVehicleListKeyDown, RoutingStrategies.Tunnel);
+        }
+    }
+
+    private void OnForwardTabToVehicleListKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Tab || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            return;
+        }
+
+        e.Handled = TryFocusTarget(DesktopFocusTarget.VehicleList);
+    }
+
     private void OnForwardTabToHeadersKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key != Key.Tab || e.KeyModifiers.HasFlag(KeyModifiers.Shift))
@@ -199,7 +238,7 @@ public partial class MainWindow : Window
     {
         if (IsMainMenuInvocationKey(e))
         {
-            e.Handled = FocusMainMenuRoot();
+            e.Handled = ToggleMainMenuFocus(e.Source);
             return;
         }
 
@@ -297,6 +336,12 @@ public partial class MainWindow : Window
 
     private void OnTabHeaderKeyDown(object? sender, KeyEventArgs e)
     {
+        if (e.Key == Key.Tab && e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            e.Handled = TryFocusTarget(DesktopFocusTarget.VehicleList);
+            return;
+        }
+
         if (sender is not Control source)
         {
             return;
@@ -366,6 +411,16 @@ public partial class MainWindow : Window
         FocusSelectedTabHeader();
     }
 
+    private void OnElementGotFocus(object? sender, RoutedEventArgs e)
+    {
+        if (e.Source is not Control control || ReferenceEquals(control, this) || IsMainMenuFocusSource(control))
+        {
+            return;
+        }
+
+        _lastNonMenuFocusTarget = control;
+    }
+
     private async void OnVehicleSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_syncingVehicleSelection || _viewModel is null || sender is not ListBox listBox)
@@ -399,11 +454,6 @@ public partial class MainWindow : Window
 
     private static bool FocusListBox(ListBox listBox)
     {
-        if (listBox.ItemCount <= 0)
-        {
-            return listBox.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
-        }
-
         if (listBox.SelectedItem is null && listBox.ItemCount > 0)
         {
             listBox.SelectedIndex = 0;
@@ -412,13 +462,9 @@ public partial class MainWindow : Window
         if (listBox.SelectedItem is not null)
         {
             listBox.ScrollIntoView(listBox.SelectedItem);
-            if (listBox.ContainerFromItem(listBox.SelectedItem) is Control itemContainer)
-            {
-                return itemContainer.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
-            }
         }
 
-        return listBox.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+        return TryFocusControl(listBox, NavigationMethod.Tab);
     }
 
     private async void OnSettingsClick(object? sender, RoutedEventArgs e)
@@ -850,6 +896,21 @@ public partial class MainWindow : Window
         return false;
     }
 
+    private bool ToggleMainMenuFocus(object? source)
+    {
+        if (IsMainMenuFocusSource(source))
+        {
+            return CloseMainMenuAndRestoreFocus();
+        }
+
+        if (source is Control control && !ReferenceEquals(control, this))
+        {
+            _lastNonMenuFocusTarget = control;
+        }
+
+        return FocusMainMenuRoot();
+    }
+
     private bool FocusMainMenuRoot()
     {
         if (this.FindControl<MenuItem>("FileMenuRoot") is not { } fileMenu)
@@ -859,6 +920,54 @@ public partial class MainWindow : Window
 
         return fileMenu.Focus(NavigationMethod.Tab, KeyModifiers.None)
             || fileMenu.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+    }
+
+    private bool CloseMainMenuAndRestoreFocus()
+    {
+        CloseMainMenuRoots();
+        if (_lastNonMenuFocusTarget is { } target && TryFocusControl(target, NavigationMethod.Unspecified))
+        {
+            return true;
+        }
+
+        return TryFocusTarget(DesktopFocusTarget.VehicleList);
+    }
+
+    private void CloseMainMenuRoots()
+    {
+        foreach (var rootName in MainMenuRootNames)
+        {
+            if (this.FindControl<MenuItem>(rootName) is { } menuRoot)
+            {
+                menuRoot.IsSubMenuOpen = false;
+            }
+        }
+    }
+
+    private static bool IsMainMenuFocusSource(object? source)
+    {
+        return source is Menu or MenuItem;
+    }
+
+    private static bool TryFocusControl(Control control, NavigationMethod navigationMethod)
+    {
+        if (!control.IsEnabled || !control.IsVisible)
+        {
+            return false;
+        }
+
+        return control.Focus(navigationMethod, KeyModifiers.None)
+            || control.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+    }
+
+    private bool TryFocusInitialVehicleList()
+    {
+        if (this.FindControl<ListBox>("VehicleListBox") is not { } listBox)
+        {
+            return false;
+        }
+
+        return FocusListBox(listBox);
     }
 
     private async Task<bool> ConfirmDeleteVehicleAsync(string message)

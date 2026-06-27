@@ -18,6 +18,7 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleListBox"));
+            Assert.Equal("VehicleListBox", session.WaitForFocusedAutomationId(12, "VehicleListBox"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("AppMenuBar"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("FileMenuRoot"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleMenuRoot"));
@@ -478,6 +479,12 @@ public sealed class DesktopAccessibilitySmokeTests
 
             Assert.Equal("FileMenuRoot", focusedId);
 
+            session.SendKeysToActiveElement(Keys.F10);
+            Assert.Equal("VehicleListBox", session.WaitForFocusedAutomationId(12, "VehicleListBox"));
+
+            session.SendKeysToActiveElement(Keys.F10);
+            Assert.Equal("FileMenuRoot", session.WaitForFocusedAutomationId(12, "FileMenuRoot"));
+
             session.SendKeysToActiveElement(Keys.ArrowDown);
 
             Assert.NotNull(session.WaitForElementByAccessibilityId("PrintableReportButton"));
@@ -496,17 +503,40 @@ public sealed class DesktopAccessibilitySmokeTests
         var session = startedSession!;
         using (session)
         {
+            var menuRootIds = new[] { "FileMenuRoot", "VehicleMenuRoot", "OverviewMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" };
+            var tabButtonIds = new[]
+            {
+                "DetailTabButton",
+                "HistoryTabButton",
+                "FuelTabButton",
+                "ReminderTabButton",
+                "MaintenanceTabButton",
+                "TimelineTabButton",
+                "RecordTabButton",
+                "AuditTabButton",
+                "CostTabButton",
+                "DashboardTabButton",
+                "SearchTabButton",
+                "UpcomingOverviewTabButton",
+                "OverdueOverviewTabButton"
+            };
+
             session.ClickByAccessibilityId("HideInactiveVehiclesCheckBox");
             session.SendKeysToActiveElement(Keys.Tab);
-            Assert.DoesNotContain(
-                session.GetFocusedAutomationId(),
-                new[] { "FileMenuRoot", "VehicleMenuRoot", "OverviewMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" });
+            Assert.Equal("VehicleListBox", session.WaitForFocusedAutomationId(12, "VehicleListBox"));
+
+            session.SendKeysToActiveElement(Keys.Tab);
+            var focusedTabId = session.WaitForFocusedAutomationId(12, tabButtonIds);
+            Assert.Contains(focusedTabId, tabButtonIds);
+
+            session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+            Assert.Equal("VehicleListBox", session.WaitForFocusedAutomationId(12, "VehicleListBox"));
+
+            Assert.DoesNotContain(session.GetFocusedAutomationId(), menuRootIds);
 
             session.ClickByAccessibilityId("VehicleCategoryFilterBox");
             session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
-            Assert.DoesNotContain(
-                session.GetFocusedAutomationId(),
-                new[] { "FileMenuRoot", "VehicleMenuRoot", "OverviewMenuRoot", "QuickActionsMenuRoot", "AppMenuRoot" });
+            Assert.DoesNotContain(session.GetFocusedAutomationId(), menuRootIds);
         }
     }
 

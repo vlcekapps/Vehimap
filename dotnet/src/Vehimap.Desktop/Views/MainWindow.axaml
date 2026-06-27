@@ -503,6 +503,8 @@
                    Margin="0,12,0,0"
                    ItemsSource="{Binding Vehicles}"
                    IsEnabled="{Binding CanUseVehicleList}"
+                   Focusable="True"
+                   IsTabStop="True"
                    SelectionChanged="OnVehicleSelectionChanged"
                    AutomationProperties.Name="Seznam načtených vozidel"
                    AutomationProperties.AutomationId="VehicleListBox"

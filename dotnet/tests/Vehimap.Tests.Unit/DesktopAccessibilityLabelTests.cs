@@ -375,7 +375,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OpenActiveEditorWindowAsync", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceEditShortcutAsync", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceSaveShortcutAsync", codeBehind);
+        Assert.Contains("ToggleMainMenuFocus(e.Source)", codeBehind);
         Assert.Contains("FocusMainMenuRoot()", codeBehind);
+        Assert.Contains("CloseMainMenuAndRestoreFocus()", codeBehind);
+        Assert.Contains("TryFocusInitialVehicleList()", codeBehind);
+        Assert.Contains("InputElement.GotFocusEvent", codeBehind);
+        Assert.Contains("OnElementGotFocus", codeBehind);
+        Assert.Contains("_lastNonMenuFocusTarget", codeBehind);
         Assert.DoesNotContain("FocusAndOpenMainMenu", codeBehind);
         Assert.DoesNotContain("IsSubMenuOpen = true", codeBehind);
         Assert.Contains("case Key.N", codeBehind);

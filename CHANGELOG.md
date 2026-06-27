@@ -115,6 +115,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - menu `Přehledy` v Avalonia větvi má přímou položku `Export termínů do kalendáře (.ics)`, aby odpovídalo AHK menu i původnímu workflow plánu
 
 ### Změněno
+- C# Avalonia shell má hlavní seznam vozidel jako explicitní klávesový cíl: po startu, návratu z menu i při běžném `Tab` / `Shift+Tab` se focus vrací na seznam jako celek, ne na vnitřní vizuální položku.
 - AHK retirement gate a post-release ověření C# desktopu teď správně blokují stabilní manifest bez platného `asset_sha256`; dokumentace zároveň přepíná `.NET + Avalonia` větev na primární směr a AHK popisuje už jen jako dočasný zmrazený fallback do finálního mazacího commitu.
 - Avalonia app-level dialogy `Nastavení` a `Kontrola aktualizací` jsou zvětšitelné a jejich hlavní obsah je scrollovatelný; `O programu` zůstává krátký běžný souhrn a dlouhou technickou diagnostiku má ve vlastní scrollovatelné části
 - Avalonia potvrzovací dialogy, dokončení údržby, `Balíček pro vozidlo` a přístupné tray akce mají explicitní resize nebo scroll regiony, aby dlouhý text a větší systémové písmo neschovaly primární akce
@@ -190,6 +191,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - přístupné okno `Akce Vehimapu na liště` v Avalonia větvi umí kromě hlavního okna, dashboardu, přehledů a ukončení aplikace otevřít i nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrované kontroly těchto oblastí a vyvolat tiskový přehled, export/import zálohy, export kalendáře, znovunačtení dat, nastavení, `O programu` nebo kontrolu aktualizací
 
 ### Opraveno
+- C# hlavní okno po startu opakovaně čeká na dokončení layoutu a datového kontextu a fokusuje seznam vozidel, aby čtečky obrazovky po otevření aplikace dostaly skutečný první fokus.
+- C# horní menu se po druhém samostatném `Alt` nebo `F10` zavře a vrátí fokus na prvek, ze kterého bylo otevřené, takže se chová blíž klasickému desktopovému menu.
 - C# horní menu po `Alt` nebo `F10` nově pouze fokusuje kořenovou nabídku `Soubor` a nerozbaluje ji automaticky; rozbalení zůstává na šipce dolů, takže šipky vlevo/vpravo nepřeskakují mezi nečekaně otevřenými nabídkami.
 - C# desktopová oznámení už mají platformní rozhodování oddělené od běžícího OS v testech, takže Windows balónková větev i ne-Windows inline fallback jsou regresně ověřené a připravené pro budoucí macOS/Linux CI
 - C# platformní autostart má otestované generování Linux `.desktop` a macOS LaunchAgent záznamů včetně escapování cest, uvozovek a XML znaků; macOS pracovní složka se už neodvozuje podle hostitelského OS běžícího testu

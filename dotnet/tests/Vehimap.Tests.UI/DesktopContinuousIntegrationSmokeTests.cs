@@ -19,6 +19,7 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         using (session)
         {
             Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleListBox"));
+            Assert.Equal("VehicleListBox", session.WaitForFocusedAutomationId(12, "VehicleListBox"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("ShellStatusText"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("DetailTabButton"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("OpenVehicleDetailWindowButton"));
@@ -391,6 +392,12 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             var focusedId = session.WaitForFocusedAutomationId(12, "FileMenuRoot");
 
             Assert.Equal("FileMenuRoot", focusedId);
+
+            session.SendKeysToActiveElement(Keys.F10);
+            Assert.Equal("VehicleListBox", session.WaitForFocusedAutomationId(12, "VehicleListBox"));
+
+            session.SendKeysToActiveElement(Keys.F10);
+            Assert.Equal("FileMenuRoot", session.WaitForFocusedAutomationId(12, "FileMenuRoot"));
 
             session.SendKeysToActiveElement(Keys.ArrowDown);
 
