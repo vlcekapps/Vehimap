@@ -305,6 +305,13 @@ New-Item -ItemType Directory -Path $stagingDirectory -Force | Out-Null
 try {
     if ($RuntimeIdentifier -like "win-*") {
         Copy-ReleasePayload -SourceDirectory $resolvedPublishDirectory -DestinationDirectory $stagingDirectory
+        $repositoryRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+        $sourceIconPath = Join-Path $repositoryRoot "favicon.ico"
+        if (-not (Test-Path -LiteralPath $sourceIconPath -PathType Leaf)) {
+            throw "Windows instalator vyzaduje ikonu '$sourceIconPath'."
+        }
+
+        Copy-Item -LiteralPath $sourceIconPath -Destination (Join-Path $stagingDirectory "Vehimap.ico") -Force
         $archivePath = New-InnoSetupInstaller `
             -SourceDirectory $stagingDirectory `
             -OutputDirectory $resolvedOutputDirectory `

@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# Windows instalátor nově používá kořenový `favicon.ico` jako aplikační ikonu, ikonu odinstalace i ikonu zástupců v nabídce Start a na ploše.
 - C# nightly/tester workflow má novou akci `Nahlásit zpětnou vazbu` v menu `Aplikace` a přístupném tray okně; otevírá předvyplněný GitHub issue s bezpečným kontextem verze, kanálu, platformy a počtů položek bez datové složky nebo názvů vozidel.
 - C# post-release tooling má nové wrappery `Test-DotnetPublishedBeta.ps1` a `Test-DotnetPublishedStable.ps1`, aby se po doběhu GitHub Actions ověřoval správný kanál bez ručního předávání `-Channel`.
 - C# release promotion gate nyní vyžaduje publikovaný zdrojový kanál: beta musí vycházet z ověřené nightly s tagem i manifestem a stable z ověřené bety; tagovací skript pro beta/stable tuto gate spouští automaticky.

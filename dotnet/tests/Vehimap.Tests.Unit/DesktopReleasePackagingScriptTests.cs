@@ -176,11 +176,34 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         var templatePath = Path.Combine(FindRepositoryRoot(), "dotnet", "installer", "windows", "Vehimap.iss.in");
         var template = await File.ReadAllTextAsync(templatePath);
 
+        Assert.Contains("SetupIconFile={{SOURCE_DIR}}\\Vehimap.ico", template, StringComparison.Ordinal);
+        Assert.Contains("UninstallDisplayIcon={app}\\Vehimap.ico", template, StringComparison.Ordinal);
+        Assert.Contains("IconFilename: \"{app}\\Vehimap.ico\"", template, StringComparison.Ordinal);
         Assert.Contains("CloseApplications=yes", template, StringComparison.Ordinal);
         Assert.Contains("RestartApplications=no", template, StringComparison.Ordinal);
         Assert.Contains("[Run]", template, StringComparison.Ordinal);
         Assert.Contains("Filename: \"{app}\\Vehimap.Desktop.exe\"", template, StringComparison.Ordinal);
         Assert.Contains("Flags: nowait postinstall skipifsilent", template, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Windows_packaging_stages_root_favicon_for_installer_shortcuts()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var scriptPath = Path.Combine(repositoryRoot, "dotnet", "build", "Package-DesktopRelease.ps1");
+        var projectPath = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Desktop", "Vehimap.Desktop.csproj");
+        var gitIgnorePath = Path.Combine(repositoryRoot, ".gitignore");
+        var script = await File.ReadAllTextAsync(scriptPath);
+        var project = await File.ReadAllTextAsync(projectPath);
+        var gitIgnore = await File.ReadAllTextAsync(gitIgnorePath);
+
+        Assert.True(File.Exists(Path.Combine(repositoryRoot, "favicon.ico")), "Korenu repozitare musi existovat favicon.ico pro Windows instalator.");
+        Assert.Contains("favicon.ico", script, StringComparison.Ordinal);
+        Assert.Contains("Vehimap.ico", script, StringComparison.Ordinal);
+        Assert.Contains("Windows instalator vyzaduje ikonu", script, StringComparison.Ordinal);
+        Assert.Contains("Copy-Item -LiteralPath $sourceIconPath", script, StringComparison.Ordinal);
+        Assert.Contains("<ApplicationIcon>..\\..\\..\\favicon.ico</ApplicationIcon>", project, StringComparison.Ordinal);
+        Assert.Contains("!favicon.ico", gitIgnore, StringComparison.Ordinal);
     }
 
     [Fact]

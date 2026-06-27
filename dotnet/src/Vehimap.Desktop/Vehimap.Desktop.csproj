@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\..\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
