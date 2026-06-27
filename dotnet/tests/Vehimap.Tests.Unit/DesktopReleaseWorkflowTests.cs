@@ -15,7 +15,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("release_tag=\"dotnet-v${version}\"", workflow, StringComparison.Ordinal);
         Assert.Contains("release_name=\"Vehimap Desktop ${version}\"", workflow, StringComparison.Ordinal);
         Assert.Contains("release_name=\"Vehimap Desktop Beta ${version}\"", workflow, StringComparison.Ordinal);
-        Assert.Contains("release_name=\"Vehimap Desktop Nightly ${version}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("release_name=\"Vehimap Desktop Nightly ${effective_version}\"", workflow, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-\" + $channel + \"-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
         Assert.Contains("Write-DotnetUpdateManifest.ps1", workflow, StringComparison.Ordinal);
@@ -28,6 +28,26 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.DoesNotContain("dotnet-preview-v", workflow, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("--draft", workflow, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("Vehimap Desktop Preview", workflow, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void Dotnet_desktop_workflow_publishes_unique_rolling_nightly_versions()
+    {
+        var workflow = ReadWorkflow();
+
+        Assert.Contains("effective_version: ${{ steps.version.outputs.effective_version }}", workflow, StringComparison.Ordinal);
+        Assert.Contains("effective_version=\"${version}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("effective_version=\"${version}-nightly.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("if [[ \"${GITHUB_EVENT_NAME}\" == \"workflow_dispatch\" ]]; then", workflow, StringComparison.Ordinal);
+        Assert.Contains("if [[ \"${channel}\" == \"nightly\" ]]; then", workflow, StringComparison.Ordinal);
+        Assert.Contains("should_release=\"true\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("echo \"effective_version=${effective_version}\" >> \"$GITHUB_OUTPUT\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("-p:VehimapVersion=${{ needs.metadata.outputs.effective_version }}", workflow, StringComparison.Ordinal);
+        Assert.Contains("-Version \"${{ needs.metadata.outputs.effective_version }}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("for ${{ needs.metadata.outputs.effective_version }}", workflow, StringComparison.Ordinal);
+        Assert.Contains("release_tag=\"dotnet-nightly\"", workflow, StringComparison.Ordinal);
+
+        Assert.DoesNotContain("release_name=\"Vehimap Desktop Nightly ${version}\"", workflow, StringComparison.Ordinal);
     }
 
     [Fact]

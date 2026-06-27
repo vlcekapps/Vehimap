@@ -112,6 +112,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - runtime-specific desktop update manifesty `update/latest-dotnet-<rid>.ini`
 - Windows release artefakt jako per-user Inno Setup instalator misto verejneho portable ZIPu
 - oddelene desktop kanaly `stable`, `beta` a `nightly` s vlastnim nazvem aplikace, update manifestem a systemovou datovou slozkou
+- rolling nightly release se vytvari automaticky kazdou noc nebo rucnim workflow dispatch spustenim kanalu `nightly` a pouziva unikatni prerelease verzi `<verze>-nightly.<run>.<attempt>`, aby se nightly instalace dokazaly aktualizovat mezi jednotlivymi buildy
 - legacy aliasy `update/latest-dotnet-preview-<rid>.ini`, ktere starym preview buildum umozni prejit na prvni stabilni desktop release
 - lokalni release readiness skript `dotnet/build/Test-DotnetReleaseReadiness.ps1`, ktery postavi, otestuje, publikuje, zabali a overi manifest pro vybrany RID pred tagovanim
 - release tag skript `dotnet/build/New-DotnetDesktopReleaseTag.ps1`, ktery vynuti cisty `main`, shodu s `origin/main`, neexistujici `dotnet-v<verze>` tag a readiness branu; push tagu na GitHub je explicitni volba `-Push`

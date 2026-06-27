@@ -99,6 +99,78 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
     }
 
     [Fact]
+    public async Task Package_script_creates_nightly_installer_metadata_and_update_manifest()
+    {
+        var powerShell = ResolvePowerShell();
+        if (powerShell is null)
+        {
+            return;
+        }
+
+        if (ResolveInnoCompiler() is null)
+        {
+            return;
+        }
+
+        var publishDirectory = Path.Combine(_tempRoot, "nightly-publish");
+        var outputDirectory = Path.Combine(_tempRoot, "nightly-release");
+        Directory.CreateDirectory(publishDirectory);
+        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.Desktop.exe"), "desktop nightly binary");
+
+        const string version = "9.8.7-nightly.123.1";
+        var packageScript = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Package-DesktopRelease.ps1");
+        var manifestScript = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Write-DotnetUpdateManifest.ps1");
+
+        var packageResult = await RunPowerShellAsync(
+            powerShell,
+            packageScript,
+            ("PublishDirectory", publishDirectory),
+            ("RuntimeIdentifier", "win-x64"),
+            ("Version", version),
+            ("OutputDirectory", outputDirectory),
+            ("Channel", "nightly"));
+
+        Assert.Equal(0, packageResult.ExitCode);
+
+        var packageName = $"vehimap-desktop-nightly-{version}-win-x64-setup.exe";
+        var packagePath = Path.Combine(outputDirectory, packageName);
+        var checksumPath = packagePath + ".sha256";
+        var metadataPath = Path.Combine(outputDirectory, $"vehimap-desktop-nightly-{version}-win-x64-setup.json");
+
+        Assert.True(File.Exists(packagePath), packageResult.CombinedOutput);
+        Assert.True(File.Exists(checksumPath), packageResult.CombinedOutput);
+        Assert.True(File.Exists(metadataPath), packageResult.CombinedOutput);
+
+        var expectedSha256 = Convert.ToHexString(SHA256.HashData(await File.ReadAllBytesAsync(packagePath))).ToLowerInvariant();
+        using var metadata = JsonDocument.Parse(await File.ReadAllTextAsync(metadataPath));
+        var root = metadata.RootElement;
+        Assert.Equal(version, root.GetProperty("version").GetString());
+        Assert.Equal("win-x64", root.GetProperty("runtimeIdentifier").GetString());
+        Assert.Equal("nightly", root.GetProperty("channel").GetString());
+        Assert.Equal("installer", root.GetProperty("assetKind").GetString());
+        Assert.Equal(packageName, root.GetProperty("packageFile").GetString());
+        Assert.Equal(expectedSha256, root.GetProperty("sha256").GetString());
+
+        var updateManifestPath = Path.Combine(_tempRoot, "latest-dotnet-nightly-win-x64.ini");
+        var manifestResult = await RunPowerShellAsync(
+            powerShell,
+            manifestScript,
+            ("PackageMetadataPath", metadataPath),
+            ("ArtifactsDirectory", outputDirectory),
+            ("ReleaseTag", "dotnet-nightly"),
+            ("OutputPath", updateManifestPath));
+
+        Assert.Equal(0, manifestResult.ExitCode);
+
+        var updateManifest = await File.ReadAllTextAsync(updateManifestPath);
+        Assert.Contains($"version={version}", updateManifest, StringComparison.Ordinal);
+        Assert.Contains("channel=nightly", updateManifest, StringComparison.Ordinal);
+        Assert.Contains("asset_kind=installer", updateManifest, StringComparison.Ordinal);
+        Assert.Contains($"asset_url=https://github.com/vlcekapps/Vehimap/releases/download/dotnet-nightly/{packageName}", updateManifest, StringComparison.Ordinal);
+        Assert.Contains($"asset_sha256={expectedSha256}", updateManifest, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Update_manifest_script_rejects_checksum_that_does_not_match_package()
     {
         var powerShell = ResolvePowerShell();

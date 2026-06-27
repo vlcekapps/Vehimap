@@ -169,7 +169,8 @@ CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 - pridat ke kazdemu balicku `.sha256` a `.json` metadata
 - pri pushi tagu `dotnet-v<verze>` vytvorit publikovany GitHub release
 - pri pushi tagu `dotnet-beta-v<verze>` vytvorit prerelease pro beta kanal
-- pri schedule nebo tagu `dotnet-nightly` vytvorit/nahradit rolling nightly prerelease
+- pri nocnim schedule, rucnim workflow dispatchi s kanalem `nightly` nebo tagu `dotnet-nightly` vytvorit/nahradit rolling nightly prerelease
+- pro nightly pouzit unikatni efektivni verzi `<verze-ze-src/VERSION>-nightly.<run>.<attempt>`, aby updater poznal kazdy novy nocni instalator jako skutecne novejsi build
 - po release zapsat runtime-specific desktop manifesty do `update/`
 - zapsat i prechodove `latest-dotnet-preview-<rid>.ini` aliasy pro uz vydane preview buildy
 - na Windows runneru spustit Appium smoke nad publish buildem desktop release vcetne kontroly app-level menu a dostupnosti rychlych akci

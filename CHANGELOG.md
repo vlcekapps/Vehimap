@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# nightly kanál nově vytváří rolling Inno Setup instalátor automaticky každou noc nebo ručně přes workflow dispatch a používá unikátní prerelease verze, aby updater poznal každý nový nightly build.
 - Přístupné tray okno `Akce Vehimapu na liště` nově ukazuje aktuální stav pozadí ze stejného snapshotu jako tooltip a desktopové oznámení, takže je čitelný i bez spolehlivé podpory nativního tray tooltipu ve čtečce obrazovky
 - Přístupné tray okno nově umí tlačítkem `Otevřít aktuální upozornění` přejít přímo na nejdůležitější termín k řešení nebo fallback auditní položku
 - Avalonia menu `Aplikace` nově umí otevřít stejné přístupné okno `Akce Vehimapu na liště`, takže není nutné spoléhat jen na nativní tray menu

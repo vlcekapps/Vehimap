@@ -39,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
+      effective_version: ${{ steps.version.outputs.effective_version }}
       channel: ${{ steps.version.outputs.channel }}
       release_tag: ${{ steps.version.outputs.release_tag }}
       release_name: ${{ steps.version.outputs.release_name }}
@@ -50,12 +51,17 @@ jobs:
         shell: bash
         run: |
           version="$(tr -d '\r\n' < src/VERSION)"
+          effective_version="${version}"
           channel="stable"
           prerelease="false"
           should_release="false"
 
           if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
             channel="${{ inputs.release_channel }}"
+            if [[ "${channel}" == "nightly" ]]; then
+              prerelease="true"
+              should_release="true"
+            fi
           fi
 
           if [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
@@ -86,6 +92,11 @@ jobs:
             should_release="true"
           fi
 
+          if [[ "${channel}" == "nightly" ]]; then
+            effective_version="${version}-nightly.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
+            prerelease="true"
+          fi
+
           case "${channel}" in
             stable)
               release_tag="dotnet-v${version}"
@@ -98,7 +109,7 @@ jobs:
               ;;
             nightly)
               release_tag="dotnet-nightly"
-              release_name="Vehimap Desktop Nightly ${version}"
+              release_name="Vehimap Desktop Nightly ${effective_version}"
               prerelease="true"
               ;;
             *)
@@ -115,6 +126,7 @@ jobs:
           fi
 
           echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "effective_version=${effective_version}" >> "$GITHUB_OUTPUT"
           echo "channel=${channel}" >> "$GITHUB_OUTPUT"
           echo "release_tag=${release_tag}" >> "$GITHUB_OUTPUT"
           echo "release_name=${release_name}" >> "$GITHUB_OUTPUT"
@@ -168,7 +180,7 @@ jobs:
       - name: Build
         run: dotnet build Vehimap.sln --no-restore --configuration Release -p:UseSharedCompilation=false
       - name: Publish desktop release for UI smoke
-        run: dotnet publish src/Vehimap.Desktop/Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -p:UseSharedCompilation=false -o artifacts/desktop-release
+        run: dotnet publish src/Vehimap.Desktop/Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -p:UseSharedCompilation=false -p:VehimapReleaseChannel=${{ needs.metadata.outputs.channel }} -p:VehimapVersion=${{ needs.metadata.outputs.effective_version }} -o artifacts/desktop-release
       - name: Install Appium Windows driver and WinAppDriver
         shell: pwsh
         run: |
@@ -261,14 +273,14 @@ jobs:
         shell: pwsh
         run: choco install innosetup -y --no-progress
       - name: Publish desktop shell
-        run: dotnet publish src/Vehimap.Desktop/Vehimap.Desktop.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:UseSharedCompilation=false -p:VehimapReleaseChannel=${{ needs.metadata.outputs.channel }} -o artifacts/${{ matrix.rid }}/desktop
+        run: dotnet publish src/Vehimap.Desktop/Vehimap.Desktop.csproj -c Release -r ${{ matrix.rid }} --self-contained true -p:UseSharedCompilation=false -p:VehimapReleaseChannel=${{ needs.metadata.outputs.channel }} -p:VehimapVersion=${{ needs.metadata.outputs.effective_version }} -o artifacts/${{ matrix.rid }}/desktop
       - name: Package release artifact
         shell: pwsh
         run: >
           ./build/Package-DesktopRelease.ps1
           -PublishDirectory "artifacts/${{ matrix.rid }}/desktop"
           -RuntimeIdentifier "${{ matrix.rid }}"
-          -Version "${{ needs.metadata.outputs.version }}"
+          -Version "${{ needs.metadata.outputs.effective_version }}"
           -OutputDirectory "artifacts/${{ matrix.rid }}/release"
           -Channel "${{ needs.metadata.outputs.channel }}"
       - name: Upload packaged artifact
@@ -397,5 +409,5 @@ jobs:
           }
 
           git add update/latest-dotnet-*.ini
-          git commit -m "chore(dotnet): update ${{ needs.metadata.outputs.channel }} desktop manifests for ${{ needs.metadata.outputs.version }}"
+          git commit -m "chore(dotnet): update ${{ needs.metadata.outputs.channel }} desktop manifests for ${{ needs.metadata.outputs.effective_version }}"
           git push origin HEAD:main

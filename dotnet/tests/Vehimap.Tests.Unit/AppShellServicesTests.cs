@@ -93,6 +93,9 @@ public sealed class AppShellServicesTests : IDisposable
     [InlineData("1.0.1", "1.0.0", 1)]
     [InlineData("1.0.0-beta.1", "1.0.0", -1)]
     [InlineData("1.0.0-beta.2", "1.0.0-beta.1", 1)]
+    [InlineData("1.0.0-nightly.124.1", "1.0.0-nightly.123.2", 1)]
+    [InlineData("1.0.0-nightly.124.2", "1.0.0-nightly.124.1", 1)]
+    [InlineData("1.0.0-nightly.124.1", "1.0.0-beta.1", 1)]
     public void Semver_compare_matches_expected_rules(string left, string right, int expected)
     {
         Assert.Equal(expected, Math.Sign(SemVersionService.Compare(left, right)));
