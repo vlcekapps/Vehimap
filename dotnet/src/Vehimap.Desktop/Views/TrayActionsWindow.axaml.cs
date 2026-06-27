@@ -170,6 +170,12 @@ public partial class TrayActionsWindow : Window
         Close();
     }
 
+    private void OnThankAuthorClick(object? sender, RoutedEventArgs e)
+    {
+        Result = TrayActionsDialogAction.ThankAuthor;
+        Close();
+    }
+
     private void OnCheckForUpdatesClick(object? sender, RoutedEventArgs e)
     {
         Result = TrayActionsDialogAction.CheckForUpdates;

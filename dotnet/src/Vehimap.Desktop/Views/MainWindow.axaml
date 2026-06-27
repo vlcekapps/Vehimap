@@ -349,6 +349,11 @@
                     Click="OnAboutClick"
                     AutomationProperties.Name="Otevřít dialog O programu"
                     AutomationProperties.AutomationId="AboutButton" />
+          <MenuItem x:Name="ThankAuthorButton"
+                    Header="Poděkovat autorovi"
+                    Click="OnThankAuthorClick"
+                    AutomationProperties.Name="Otevřít stránku pro poděkování autorovi"
+                    AutomationProperties.AutomationId="ThankAuthorButton" />
           <MenuItem x:Name="UpdateCheckButton"
                     Header="Zkontrolovat aktualizace"
                     Click="OnUpdateCheckClick"

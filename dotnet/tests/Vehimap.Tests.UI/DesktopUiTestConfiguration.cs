@@ -61,6 +61,15 @@ internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath,
             return null;
         }
 
+        foreach (var channel in new[] { "nightly", "beta", "stable" })
+        {
+            var channelPath = Path.Combine(repositoryRoot, "dotnet", "artifacts", channel, "win-x64", "app", "Vehimap.Desktop.exe");
+            if (File.Exists(channelPath))
+            {
+                return channelPath;
+            }
+        }
+
         return Path.Combine(repositoryRoot, "dotnet", "artifacts", "desktop-release", "Vehimap.Desktop.exe");
     }
 

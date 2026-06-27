@@ -103,17 +103,17 @@ internal sealed class DesktopAppShellController
         try
         {
             var aboutModel = shell.BuildAboutDialogModel();
-            var openReleaseNotes = await _dialogService
+            var action = await _dialogService
                 .ShowAboutAsync(owner, aboutModel)
                 .ConfigureAwait(true);
-            if (!openReleaseNotes)
+            switch (action)
             {
-                return;
-            }
-
-            if (!string.IsNullOrWhiteSpace(aboutModel.ReleaseNotesUrl))
-            {
-                await shell.OpenExternalAsync(aboutModel.ReleaseNotesUrl, cancellationToken).ConfigureAwait(true);
+                case AboutDialogAction.OpenReleaseNotes when !string.IsNullOrWhiteSpace(aboutModel.ReleaseNotesUrl):
+                    await shell.OpenExternalAsync(aboutModel.ReleaseNotesUrl, cancellationToken).ConfigureAwait(true);
+                    break;
+                case AboutDialogAction.ThankAuthor:
+                    await OpenAuthorSupportAsync(shell, cancellationToken).ConfigureAwait(true);
+                    break;
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
@@ -121,6 +121,9 @@ internal sealed class DesktopAppShellController
             shell.ShellStatus = $"Dialog O programu se nepodařilo dokončit: {ex.Message}";
         }
     }
+
+    public Task OpenAuthorSupportAsync(MainWindowViewModel shell, CancellationToken cancellationToken = default) =>
+        shell.OpenExternalAsync(AboutDialogViewModel.AuthorSupportUrl, cancellationToken);
 
     public async Task<bool> CheckForUpdatesAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {

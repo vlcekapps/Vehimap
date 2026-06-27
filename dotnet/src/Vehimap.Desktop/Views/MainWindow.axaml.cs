@@ -498,6 +498,17 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
+    private async void OnThankAuthorClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.AppShellController.OpenAuthorSupportAsync(_viewModel);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
     private async void OnUpdateCheckClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel is null)

@@ -6,6 +6,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# Avalonia má novou akci `Poděkovat autorovi`, dostupnou z menu `Aplikace`, dialogu `O programu` a přístupného tray okna; otevírá stránku podpory autora přes stejný externí launcher jako ostatní webové odkazy.
+- AHK retirement readiness report a lokální Appium fallback pro C# UI testy nově používají kanálové artefakty `dotnet/artifacts/nightly|beta|stable/<rid>/app`, takže před finálním odchodem od AHK i ruční smoke testy míří na stejné složky jako tester.
 - Lokální C# release/readiness výstupy jsou nově rozdělené podle kanálu do `dotnet/artifacts/stable|beta|nightly/<rid>/app` a `release`, aby tester vždy našel správnou aplikaci a instalátor bez hledání mezi historickými artefakty.
 - GitHub Actions pro C# desktop nově před uploadem Windows release artefaktu spouští `Test-DotnetInstallerSmoke.ps1`, takže vadný Inno Setup EXE, checksum nebo JSON metadata neprojdou z publish jobu do release artefaktů.
 - C# release readiness nyní u Windows balíčků automaticky spouští installer smoke bez instalace a volitelně přes `-InstallSmoke` provede i izolovanou tichou instalaci, krátký portable launch a odinstalaci přímo jako součást nightly/stable brány.

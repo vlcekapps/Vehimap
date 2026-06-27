@@ -52,14 +52,14 @@ internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
         return await confirmation.ShowDialog<bool>(owner);
     }
 
-    public async Task<bool> ShowAboutAsync(Window owner, AboutDialogViewModel model)
+    public async Task<AboutDialogAction> ShowAboutAsync(Window owner, AboutDialogViewModel model)
     {
         var dialog = new AboutWindow
         {
             DataContext = model
         };
 
-        return await dialog.ShowDialog<bool>(owner);
+        return await dialog.ShowDialog<AboutDialogAction>(owner);
     }
 
     public async Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model)

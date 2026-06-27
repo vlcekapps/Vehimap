@@ -60,6 +60,7 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Contains(@"Datová složka: C:\vehimap\data", model.ClipboardText, StringComparison.Ordinal);
         Assert.Contains(@"Soubor aplikace: C:\vehimap\Vehimap.Desktop.exe", model.ClipboardText, StringComparison.Ordinal);
         Assert.Contains("Release poznámky: https://example.com/release", model.ClipboardText, StringComparison.Ordinal);
+        Assert.Contains($"Poděkování autorovi: {AboutDialogViewModel.AuthorSupportUrl}", model.ClipboardText, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -79,6 +80,8 @@ public sealed class AppShellServicesTests : IDisposable
             "nightly");
 
         Assert.Equal("by Vlcek apps", model.Author);
+        Assert.Equal("Poděkovat autorovi", model.ThankAuthorLabel);
+        Assert.Equal("Otevře stránku, kde můžete autorovi poděkovat podporou tvorby.", model.ThankAuthorHelpText);
         Assert.Equal("1.2.3-nightly.45.1 (nightly)", model.DisplayVersion);
         Assert.False(model.IsDiagnosticsVisible);
         Assert.Equal("Zobrazit diagnostická data", model.ToggleDiagnosticsLabel);

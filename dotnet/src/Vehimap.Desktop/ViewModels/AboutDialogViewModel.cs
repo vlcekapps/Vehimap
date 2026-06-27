@@ -5,6 +5,7 @@ namespace Vehimap.Desktop.ViewModels;
 public sealed partial class AboutDialogViewModel : ObservableObject
 {
     private const string AuthorText = "by Vlcek apps";
+    public const string AuthorSupportUrl = "https://obchod.pvlcek.cz/produkt/kupte-autorovi-kavu-podpora-tvorby-podcastu-a-karosy/";
 
     public AboutDialogViewModel(
         string title,
@@ -35,6 +36,10 @@ public sealed partial class AboutDialogViewModel : ObservableObject
     public string Title { get; }
 
     public string Author => AuthorText;
+
+    public string ThankAuthorLabel => "Poděkovat autorovi";
+
+    public string ThankAuthorHelpText => "Otevře stránku, kde můžete autorovi poděkovat podporou tvorby.";
 
     public string AppVersion { get; }
 
@@ -88,7 +93,8 @@ public sealed partial class AboutDialogViewModel : ObservableObject
             $"Platforma: {PlatformDescription}",
             $".NET runtime: {FrameworkDescription}",
             $"Soubor aplikace: {ApplicationPath}",
-            $"Release poznámky: {ReleaseNotesUrl}"
+            $"Release poznámky: {ReleaseNotesUrl}",
+            $"Poděkování autorovi: {AuthorSupportUrl}"
         });
 
     public string ClipboardText => DiagnosticText;

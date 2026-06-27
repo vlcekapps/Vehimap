@@ -53,6 +53,7 @@ public sealed class DesktopAccessibilitySmokeTests
 
             session.ClickMenuItem("AppMenuRoot", "AboutButton");
             Assert.NotNull(session.WaitForElementByAccessibilityId("ReleaseNotesButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ThankAuthorButton"));
             session.ClickByAccessibilityId("CloseAboutButton");
 
             session.ClickMenuItem("AppMenuRoot", "UpdateCheckButton");
@@ -171,6 +172,7 @@ public sealed class DesktopAccessibilitySmokeTests
             {
                 session.ClickMenuItem("AppMenuRoot", "AboutButton");
                 Assert.NotNull(session.WaitForElementByAccessibilityId("ReleaseNotesButton"));
+                Assert.NotNull(session.WaitForElementByAccessibilityId("ThankAuthorButton"));
                 Assert.NotNull(session.WaitForElementByAccessibilityId("CopyAboutDetailsButton"));
                 Assert.NotNull(session.WaitForElementByAccessibilityId("AboutStatusText"));
 

@@ -102,7 +102,7 @@ public sealed class DesktopAppShellControllerTests
     {
         var dialogService = new StubAppShellDialogService
         {
-            AboutResult = true
+            AboutResult = AboutDialogAction.OpenReleaseNotes
         };
         var fileLauncher = new StubFileLauncher();
         var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
@@ -121,7 +121,7 @@ public sealed class DesktopAppShellControllerTests
     {
         var dialogService = new StubAppShellDialogService
         {
-            AboutResult = true
+            AboutResult = AboutDialogAction.OpenReleaseNotes
         };
         var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
         var viewModel = CreateViewModel(
@@ -133,6 +133,40 @@ public sealed class DesktopAppShellControllerTests
 
         Assert.Contains("Externí odkaz se nepodařilo otevřít", viewModel.ShellStatus);
         Assert.Contains("Prohlížeč není dostupný", viewModel.ShellStatus);
+    }
+
+    [Fact]
+    public async Task Open_about_async_opens_author_support_when_dialog_requests_it()
+    {
+        var dialogService = new StubAppShellDialogService
+        {
+            AboutResult = AboutDialogAction.ThankAuthor
+        };
+        var fileLauncher = new StubFileLauncher();
+        var controller = new DesktopAppShellController(dialogService, new StubUpdateInstallLauncher());
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            fileLauncher: fileLauncher);
+
+        await controller.OpenAboutAsync(null!, viewModel);
+
+        Assert.Equal(AboutDialogViewModel.AuthorSupportUrl, fileLauncher.LastOpenedPath);
+    }
+
+    [Fact]
+    public async Task Open_author_support_async_opens_thank_author_page()
+    {
+        var fileLauncher = new StubFileLauncher();
+        var controller = new DesktopAppShellController(new StubAppShellDialogService(), new StubUpdateInstallLauncher());
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            fileLauncher: fileLauncher);
+
+        await controller.OpenAuthorSupportAsync(viewModel);
+
+        Assert.Equal(AboutDialogViewModel.AuthorSupportUrl, fileLauncher.LastOpenedPath);
     }
 
     [Fact]
@@ -617,7 +651,7 @@ public sealed class DesktopAppShellControllerTests
     private sealed class StubAppShellDialogService : IAppShellDialogService
     {
         public SettingsDialogResult? SettingsResult { get; set; }
-        public bool AboutResult { get; set; }
+        public AboutDialogAction AboutResult { get; set; }
         public UpdateDialogAction UpdateResult { get; set; }
         public bool ConfirmDiscardResult { get; set; } = true;
         public bool ShowSettingsCalled { get; private set; }
@@ -643,7 +677,7 @@ public sealed class DesktopAppShellControllerTests
             return Task.FromResult(ConfirmDiscardResult);
         }
 
-        public Task<bool> ShowAboutAsync(Window owner, AboutDialogViewModel model) => Task.FromResult(AboutResult);
+        public Task<AboutDialogAction> ShowAboutAsync(Window owner, AboutDialogViewModel model) => Task.FromResult(AboutResult);
 
         public Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model)
         {

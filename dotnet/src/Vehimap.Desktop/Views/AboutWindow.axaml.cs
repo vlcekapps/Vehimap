@@ -17,7 +17,9 @@ public partial class AboutWindow : Window
         Opened += (_, _) => Dispatcher.UIThread.Post(() => this.FindControl<Button>("ReleaseNotesButton")?.Focus());
     }
 
-    private void OnReleaseNotesClick(object? sender, RoutedEventArgs e) => Close(true);
+    private void OnReleaseNotesClick(object? sender, RoutedEventArgs e) => Close(AboutDialogAction.OpenReleaseNotes);
+
+    private void OnThankAuthorClick(object? sender, RoutedEventArgs e) => Close(AboutDialogAction.ThankAuthor);
 
     private void OnToggleDiagnosticsClick(object? sender, RoutedEventArgs e)
     {
@@ -29,14 +31,14 @@ public partial class AboutWindow : Window
 
     private async void OnCopyDetailsClick(object? sender, RoutedEventArgs e) => await CopyDetailsAsync();
 
-    private void OnCloseClick(object? sender, RoutedEventArgs e) => Close(false);
+    private void OnCloseClick(object? sender, RoutedEventArgs e) => Close(AboutDialogAction.None);
 
     private async void OnAboutKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
         {
             e.Handled = true;
-            Close(false);
+            Close(AboutDialogAction.None);
             return;
         }
 
@@ -50,7 +52,14 @@ public partial class AboutWindow : Window
         if (e.Key == Key.O && e.KeyModifiers == KeyModifiers.Control)
         {
             e.Handled = true;
-            Close(true);
+            Close(AboutDialogAction.OpenReleaseNotes);
+            return;
+        }
+
+        if (e.Key == Key.K && e.KeyModifiers == KeyModifiers.Control)
+        {
+            e.Handled = true;
+            Close(AboutDialogAction.ThankAuthor);
         }
     }
 

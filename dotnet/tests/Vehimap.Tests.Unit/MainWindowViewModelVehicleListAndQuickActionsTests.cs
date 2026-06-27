@@ -478,6 +478,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(viewModel.CanUseDataActions);
         Assert.True(model.CanShowMainWindow);
         Assert.True(model.CanOpenAbout);
+        Assert.True(model.CanThankAuthor);
         Assert.True(model.CanCheckForUpdates);
         Assert.True(model.CanExit);
         Assert.False(model.CanShowDashboard);

@@ -13,7 +13,7 @@ $workflowPath = Join-Path $repositoryRoot ".github\workflows\dotnet-desktop.yml"
 $stableManifestPath = Join-Path $repositoryRoot "update\latest-dotnet-$RuntimeIdentifier.ini"
 $legacyPreviewManifestPath = Join-Path $repositoryRoot "update\latest-dotnet-preview-$RuntimeIdentifier.ini"
 $releaseReadinessScript = Join-Path $PSScriptRoot "Test-DotnetReleaseReadiness.ps1"
-$desktopExePath = Join-Path $dotnetRoot "artifacts\desktop-release\Vehimap.Desktop.exe"
+$desktopExePath = Join-Path $dotnetRoot "artifacts\stable\$RuntimeIdentifier\app\Vehimap.Desktop.exe"
 
 $passed = New-Object System.Collections.Generic.List[string]
 $warnings = New-Object System.Collections.Generic.List[string]
@@ -178,10 +178,10 @@ else {
 }
 
 if (Test-Path -LiteralPath $desktopExePath -PathType Leaf) {
-    Add-Pass "Lokalni desktop-release build existuje: $desktopExePath."
+    Add-Pass "Lokalni stable desktop build existuje: $desktopExePath."
 }
 else {
-    Add-Warning "Lokalni desktop-release build zatim neexistuje. Spustte dotnet publish nebo Test-DotnetReleaseReadiness.ps1."
+    Add-Warning "Lokalni stable desktop build zatim neexistuje. Spustte Test-DotnetReleaseReadiness.ps1 -RuntimeIdentifier $RuntimeIdentifier -Channel stable."
 }
 
 foreach ($relativePath in @("src\Vehimap.ahk", "src\lib", "src\tests")) {

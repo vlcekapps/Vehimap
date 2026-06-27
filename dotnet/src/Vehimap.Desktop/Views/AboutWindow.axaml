@@ -4,16 +4,16 @@
         x:Class="Vehimap.Desktop.Views.AboutWindow"
         x:DataType="vm:AboutDialogViewModel"
         Width="620"
-        Height="390"
+        Height="430"
         MinWidth="560"
-        MinHeight="360"
+        MinHeight="390"
         CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         Title="O programu"
         AutomationProperties.Name="O programu"
         AutomationProperties.AutomationId="AboutWindow"
-        AutomationProperties.HelpText="Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.">
+        AutomationProperties.HelpText="Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+K otevře poděkování autorovi, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.">
   <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
     <TextBlock FontSize="22"
                FontWeight="SemiBold"
@@ -107,27 +107,41 @@
 
     <StackPanel Grid.Row="6"
                 Margin="0,18,0,0"
-                Orientation="Horizontal"
+                Orientation="Vertical"
                 HorizontalAlignment="Right"
-                Spacing="10">
-      <Button x:Name="ReleaseNotesButton"
-              MinWidth="170"
-              Click="OnReleaseNotesClick"
-              Content="Release poznámky"
-              AutomationProperties.Name="Otevřít release poznámky"
-              AutomationProperties.AutomationId="ReleaseNotesButton" />
-      <Button x:Name="CopyAboutDetailsButton"
-              MinWidth="190"
-              Click="OnCopyDetailsClick"
-              Content="Kopírovat diagnostiku"
-              AutomationProperties.Name="Kopírovat diagnostická data o aplikaci do schránky"
-              AutomationProperties.AutomationId="CopyAboutDetailsButton" />
-      <Button x:Name="CloseAboutButton"
-              MinWidth="110"
-              Click="OnCloseClick"
-              Content="Zavřít"
-              AutomationProperties.Name="Zavřít dialog O programu"
-              AutomationProperties.AutomationId="CloseAboutButton" />
+                Spacing="8">
+      <StackPanel Orientation="Horizontal"
+                  HorizontalAlignment="Right"
+                  Spacing="10">
+        <Button x:Name="ReleaseNotesButton"
+                MinWidth="170"
+                Click="OnReleaseNotesClick"
+                Content="Release poznámky"
+                AutomationProperties.Name="Otevřít release poznámky"
+                AutomationProperties.AutomationId="ReleaseNotesButton" />
+        <Button x:Name="ThankAuthorButton"
+                MinWidth="170"
+                Click="OnThankAuthorClick"
+                Content="{Binding ThankAuthorLabel}"
+                AutomationProperties.Name="{Binding ThankAuthorHelpText}"
+                AutomationProperties.AutomationId="ThankAuthorButton" />
+      </StackPanel>
+      <StackPanel Orientation="Horizontal"
+                  HorizontalAlignment="Right"
+                  Spacing="10">
+        <Button x:Name="CopyAboutDetailsButton"
+                MinWidth="190"
+                Click="OnCopyDetailsClick"
+                Content="Kopírovat diagnostiku"
+                AutomationProperties.Name="Kopírovat diagnostická data o aplikaci do schránky"
+                AutomationProperties.AutomationId="CopyAboutDetailsButton" />
+        <Button x:Name="CloseAboutButton"
+                MinWidth="110"
+                Click="OnCloseClick"
+                Content="Zavřít"
+                AutomationProperties.Name="Zavřít dialog O programu"
+                AutomationProperties.AutomationId="CloseAboutButton" />
+      </StackPanel>
     </StackPanel>
   </Grid>
 </Window>

@@ -194,8 +194,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Equal("Načíst data znovu", model.ReloadDataLabel);
         Assert.Equal("Otevřít datovou složku", model.OpenDataFolderLabel);
         Assert.Equal("O programu", model.OpenAboutLabel);
+        Assert.Equal("Poděkovat autorovi", model.ThankAuthorLabel);
         Assert.Equal("Zkontrolovat aktualizace", model.CheckForUpdatesLabel);
         Assert.Equal("Ukončit aplikaci", model.ExitLabel);
+        Assert.True(model.CanThankAuthor);
     }
 
     [Fact]
@@ -244,6 +246,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"MinimizeToTrayButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SettingsButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ThankAuthorButton\"", xaml);
+        Assert.Contains("Click=\"OnThankAuthorClick\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCheckButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitAppButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateVehicleMenuItem\"", xaml);
@@ -453,10 +457,12 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"AboutDetailsScrollViewer\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutDiagnosticsTextBox\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ThankAuthorButton\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutStatusText\"", aboutXaml);
-        Assert.Contains("Ctrl+O otevře release poznámky, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.", aboutXaml);
+        Assert.Contains("Ctrl+O otevře release poznámky, Ctrl+K otevře poděkování autorovi, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.", aboutXaml);
         Assert.Contains("Key.Escape", aboutCodeBehind);
         Assert.Contains("Key.O", aboutCodeBehind);
+        Assert.Contains("Key.K", aboutCodeBehind);
         Assert.Contains("Key.C", aboutCodeBehind);
         Assert.Contains("KeyModifiers.Control | KeyModifiers.Shift", aboutCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"CopyAboutDetailsButton\"", aboutXaml);
@@ -574,6 +580,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ReloadDataTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDataFolderTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenAboutTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ThankAuthorTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CheckForUpdatesTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
@@ -601,6 +608,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OnReloadDataClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenDataFolderClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenAboutClick", trayActionsCodeBehind);
+        Assert.Contains("OnThankAuthorClick", trayActionsCodeBehind);
         Assert.Contains("OnCheckForUpdatesClick", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.ShowUpcomingOverview", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenBackgroundStatus", trayActionsCodeBehind);
@@ -625,6 +633,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("TrayActionsDialogAction.ReloadData", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenDataFolder", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.OpenAbout", trayActionsCodeBehind);
+        Assert.Contains("TrayActionsDialogAction.ThankAuthor", trayActionsCodeBehind);
         Assert.Contains("TrayActionsDialogAction.CheckForUpdates", trayActionsCodeBehind);
         Assert.Contains("Key.Escape", trayActionsCodeBehind);
     }
@@ -681,7 +690,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("TrayActionsDialogAction.OpenDataFolder", runtimeController);
         Assert.Contains("_shell.OpenDataFolderAsync()", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenAbout", runtimeController);
+        Assert.Contains("TrayActionsDialogAction.ThankAuthor", runtimeController);
         Assert.Contains("_shell.AppShellController.OpenAboutAsync(_mainWindow, _shell)", runtimeController);
+        Assert.Contains("_shell.AppShellController.OpenAuthorSupportAsync(_shell)", runtimeController);
         Assert.Contains("TrayActionsDialogAction.CheckForUpdates", runtimeController);
         Assert.Contains("_shell.AppShellController.CheckForUpdatesAsync(_mainWindow, _shell)", runtimeController);
     }

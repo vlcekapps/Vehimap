@@ -103,9 +103,12 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Test-DotnetReleaseReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("dotnet-v$version", script, StringComparison.Ordinal);
         Assert.Contains("vehimap-desktop-stable-$version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
+        Assert.Contains("artifacts\\stable\\$RuntimeIdentifier\\app\\Vehimap.Desktop.exe", script, StringComparison.Ordinal);
+        Assert.Contains("Lokalni stable desktop build existuje", script, StringComparison.Ordinal);
         Assert.Contains("asset_kind", script, StringComparison.Ordinal);
         Assert.Contains("channel", script, StringComparison.Ordinal);
         Assert.Contains("Stabilni manifest neobsahuje platny SHA-256 hash.", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("artifacts\\desktop-release\\Vehimap.Desktop.exe", script, StringComparison.Ordinal);
         Assert.DoesNotContain("Add-Blocker \"Stabilni manifest nema channel=stable.\"\n    }\n    else", NormalizeLineEndings(script), StringComparison.Ordinal);
         Assert.Contains("src\\Vehimap.ahk", script, StringComparison.Ordinal);
         Assert.Contains("$FailOnBlockers", script, StringComparison.Ordinal);
@@ -162,6 +165,17 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("$installerSmokeArguments[\"Install\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$installerSmokeArguments[\"LaunchSeconds\"] = $InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
         Assert.DoesNotContain("artifacts\\release-readiness\\$channelName", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Desktop_ui_test_configuration_prefers_channel_artifacts_for_local_smoke()
+    {
+        var configurationPath = Path.Combine(FindRepositoryRoot(), "dotnet", "tests", "Vehimap.Tests.UI", "DesktopUiTestConfiguration.cs");
+        var configuration = File.ReadAllText(configurationPath);
+
+        Assert.Contains("new[] { \"nightly\", \"beta\", \"stable\" }", configuration, StringComparison.Ordinal);
+        Assert.Contains("\"artifacts\", channel, \"win-x64\", \"app\", \"Vehimap.Desktop.exe\"", configuration, StringComparison.Ordinal);
+        Assert.Contains("\"desktop-release\", \"Vehimap.Desktop.exe\"", configuration, StringComparison.Ordinal);
     }
 
     [Fact]

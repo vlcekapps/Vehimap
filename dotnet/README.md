@@ -31,6 +31,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - pri poskozenem legacy `TSV` nebo `INI` souboru ukazat konkretni nazev souboru, plnou cestu a parser detail v chybovem stavu shellu
 - pri nedostupnem nebo poskozenem `.vehimapbak` souboru ukazat cestu k zaloze a parser/I/O detail ve stavovem textu misto neobslouzene vyjimky v shellu
 - pri zruseni nebo selhani app-level akci z menu/tray, jako jsou nastaveni, export/import zalohy, O programu a kontrola aktualizaci, zapsat citelnou stavovou hlasku misto neobslouzene vyjimky
+- otevrit stranku `Podekovat autorovi` z menu `Aplikace`, dialogu `O programu` i pristupneho tray okna pres stejny externi launcher jako release poznamky nebo update odkazy
 - pri exportu `.vehimapbak` hlasit pocet zahrnutych spravovanych priloh a pocet chybejicich spravovanych priloh, ktere byly bezpecne preskoceny stejne jako v AHK vetvi
 - skladat sdilene C# use-cases pro audit, nakladove souhrny, cenu za kilometr, casovou osu vozidla a ICS export
 - zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych legacy dat
@@ -105,7 +106,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit modalni `Nastaveni`, `O programu` a `Zkontrolovat aktualizace` primo z desktop shellu
 - ridit dostupnost `Minimalizovat na listu` z viewmodelu podle podpory tray a v nastaveni zneaktivnit intervalova pole, pokud nejsou zapnute pravidelne automaticke zalohy
 - ovladat `Nastaveni` klavesnici: `Ctrl+S` ulozi, `Ctrl+B` ulozi a vytvori zalohu ihned, `Esc` zavre dialog bez ulozeni
-- ovladat app-level dialogy konzistentne klavesnici: `O programu` ukazuje bezny souhrn aplikace, autora `by Vlcek apps` a verzi vcetne kanalu, technickou diagnostiku schovava pod `Zobrazit diagnosticka data`, ma `Ctrl+O` pro release poznamky, `Ctrl+Shift+C` pro zkopirovani diagnostiky, pristupny stav vysledku kopirovani a `Esc` pro zavreni; potvrzovaci dialogy, kontrola aktualizaci, upozorneni i tray akce maji `Esc` pro bezpecne zavreni bez nove akce
+- ovladat app-level dialogy konzistentne klavesnici: `O programu` ukazuje bezny souhrn aplikace, autora `by Vlcek apps` a verzi vcetne kanalu, technickou diagnostiku schovava pod `Zobrazit diagnosticka data`, ma `Ctrl+O` pro release poznamky, `Ctrl+K` pro podekovani autorovi, `Ctrl+Shift+C` pro zkopirovani diagnostiky, pristupny stav vysledku kopirovani a `Esc` pro zavreni; potvrzovaci dialogy, kontrola aktualizaci, upozorneni i tray akce maji `Esc` pro bezpecne zavreni bez nove akce
 - otevrit pristupne `Akce Vehimapu na liste` i z menu `Aplikace`, aby stejny dialog jako nativni tray slo vyvolat pres F10/Alt bez zavislosti na oznamovaci oblasti
 - ukoncit aplikaci z menu `Soubor` pres polozku `Konec` i z menu `Aplikace`, aby F10 tok odpovidal klasickemu desktopovemu rozvrzeni i AHK parite
 - generovat a testovat autostart zaznamy pro Linux `.desktop` a macOS LaunchAgent vcetne bezpecneho escapovani cest, argumentu a XML znaku
@@ -135,7 +136,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - pripravit publikovany release pro `.NET` desktop tag `dotnet-v<verze>` pres GitHub Actions
 - publikovat runtime-specific desktop manifesty `update/latest-dotnet-<rid>.ini`
 - udrzet prechodovy alias `update/latest-dotnet-preview-<rid>.ini`, aby se uz vydane preview buildy dokazaly aktualizovat na prvni stabilni desktop release
-- spoustet Windows Appium smoke i v CI nad publish buildem desktop release; CI smoke overuje app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, vyvolani hlavniho menu pres `F10`, vynechani menu pri beznem `Tab` / `Shift+Tab`, otevreni aktualniho upozorneni z menu `Rychle akce`, otevreni a zavreni app-level dialogu `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`, otevreni a zavreni pristupnych tray akci z menu `Aplikace`, otevreni vsech samostatnych pracovnich oken, zavreni workspace pres `Escape`, navigaci z globalniho hledani, casove osy, terminovych prehledu a nakladu, zakladni ulozeni editoru pripominek, dokladu, historie, tankovani a udrzby v samostatnych oknech, navrat `Shift+Tab` z nazvu vozidla na `Zrusit` a potvrzeni pri zavirani rozpracovane editace, ulozeni voleb automatickych zaloh z dialogu `Nastaveni` vcetne okamziteho vytvoreni `.vehimapbak`, ulozeni volby Dashboardu pri startu vcetne validacni chyby, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony a potvrzeni `Splneno` z `Planu udrzby` i Dashboardu, zatimco rozsirena sada nad izolovanou portable kopii testuje kopirovani diagnostiky z `O programu`, detailu kontroly aktualizaci i vyresene cesty spravovane prilohy dokladu do systemove schranky a dalsi realne vytvoreni okamzite automaticke zalohy
+- spoustet Windows Appium smoke i v CI nad publish buildem desktop release; CI smoke overuje app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, vyvolani hlavniho menu pres `F10`, vynechani menu pri beznem `Tab` / `Shift+Tab`, otevreni aktualniho upozorneni z menu `Rychle akce`, otevreni a zavreni app-level dialogu `Nastaveni`, `O programu` vcetne tlacitka `Podekovat autorovi` a `Zkontrolovat aktualizace`, otevreni a zavreni pristupnych tray akci z menu `Aplikace`, otevreni vsech samostatnych pracovnich oken, zavreni workspace pres `Escape`, navigaci z globalniho hledani, casove osy, terminovych prehledu a nakladu, zakladni ulozeni editoru pripominek, dokladu, historie, tankovani a udrzby v samostatnych oknech, navrat `Shift+Tab` z nazvu vozidla na `Zrusit` a potvrzeni pri zavirani rozpracovane editace, ulozeni voleb automatickych zaloh z dialogu `Nastaveni` vcetne okamziteho vytvoreni `.vehimapbak`, ulozeni volby Dashboardu pri startu vcetne validacni chyby, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony a potvrzeni `Splneno` z `Planu udrzby` i Dashboardu, zatimco rozsirena sada nad izolovanou portable kopii testuje kopirovani diagnostiky z `O programu`, detailu kontroly aktualizaci i vyresene cesty spravovane prilohy dokladu do systemove schranky a dalsi realne vytvoreni okamzite automaticke zalohy
 
 ## Lokalni build
 
@@ -144,7 +145,7 @@ cd dotnet
 dotnet restore
 dotnet test
 dotnet build
-dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -o .\artifacts\desktop-release
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64 -SkipTests
 ```
 
 ## Release balicky
@@ -275,6 +276,6 @@ cd dotnet
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers
 ```
 
-Report nic nemaze. Jen zkontroluje, ze stabilni desktop manifest uz existuje, ukazuje na `dotnet-v<verze>` release asset, preview alias pro starsi preview buildy miri na stejny obsah a zbyvajici AHK soubory jsou uz jen vedomy obsah budouciho mazaciho commitu. Pred prvnim stable releasem je ocekavany blocker chybejici `update/latest-dotnet-win-x64.ini`; v takovem stavu AHK jeste nemazat.
+Report nic nemaze. Jen zkontroluje, ze stabilni desktop manifest uz existuje, ukazuje na `dotnet-v<verze>` release asset, preview alias pro starsi preview buildy miri na stejny obsah, lokalni stable build lezi v `dotnet/artifacts/stable/win-x64/app` a zbyvajici AHK soubory jsou uz jen vedomy obsah budouciho mazaciho commitu. Pred prvnim stable releasem je ocekavany blocker chybejici `update/latest-dotnet-win-x64.ini`; v takovem stavu AHK jeste nemazat.
 
 Stejna kontrola bezi i v GitHub Actions po vygenerovani desktop manifestu pro prvni stabilni release. Pokud by `latest-dotnet-win-x64.ini` neukazoval na spravny `dotnet-v<verze>` asset nebo by legacy preview alias nemiril na stejny obsah, release workflow skonci chybou jeste pred commitem manifestu.

@@ -195,6 +195,12 @@
                   IsEnabled="{Binding CanOpenAbout}"
                   AutomationProperties.Name="Otevřít dialog O programu"
                   AutomationProperties.AutomationId="OpenAboutTrayActionButton" />
+          <Button x:Name="ThankAuthorTrayActionButton"
+                  Click="OnThankAuthorClick"
+                  Content="{Binding ThankAuthorLabel}"
+                  IsEnabled="{Binding CanThankAuthor}"
+                  AutomationProperties.Name="Otevřít stránku pro poděkování autorovi"
+                  AutomationProperties.AutomationId="ThankAuthorTrayActionButton" />
           <Button x:Name="CheckForUpdatesTrayActionButton"
                   Click="OnCheckForUpdatesClick"
                   Content="{Binding CheckForUpdatesLabel}"

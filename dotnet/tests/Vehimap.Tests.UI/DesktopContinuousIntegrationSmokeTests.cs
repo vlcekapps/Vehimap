@@ -126,6 +126,7 @@ public sealed class DesktopContinuousIntegrationSmokeTests
 
             session.ClickMenuItem("AppMenuRoot", "AboutButton");
             Assert.NotNull(session.WaitForElementByAccessibilityId("ReleaseNotesButton"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ThankAuthorButton"));
             session.ClickByAccessibilityId("CloseAboutButton");
             session.WaitForElementToDisappearByAccessibilityId("AboutWindow");
 
