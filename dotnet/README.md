@@ -184,9 +184,10 @@ Pred vytvorenim tagu lze lokalne spustit stejnou release readiness branu:
 ```powershell
 cd dotnet
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetReleaseReadiness.ps1 -RuntimeIdentifier win-x64
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64
 ```
 
-Skript postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi stabilni `latest-dotnet-win-x64.ini` bez preview odkazu.
+Skript postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Pro `stable` kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
 
 Samotne vytvoreni release tagu je oddelene do bezpecneho skriptu. Ve vychozim rezimu zkontroluje cisty `main`, shodu s `origin/main`, neexistujici tag a spusti release readiness branu; tag na GitHub odesle jen s explicitnim `-Push`.
 
@@ -198,6 +199,15 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDe
 ```
 
 Prvni prikaz je rychla sucha kontrola bez tagu a bez dlouhe readiness brany. Potom zvolte bud druhy prikaz pro vytvoreni lokalniho anotovaneho tagu `dotnet-v<verze>`, nebo treti prikaz pro vytvoreni tagu a jeho okamzite odeslani na GitHub po uspesne readiness brane.
+
+Pro rychlou lokalni kontrolu nightly pred rucnim workflow dispatch staci:
+
+```powershell
+cd dotnet
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64
+```
+
+Wrapper vola stejnou release readiness branu s kanalem `nightly`, takze se overi skutecny nightly nazev instalatoru, metadata, hash, velikost, `asset_kind=installer`, `channel=nightly` a manifest pro rolling release `dotnet-nightly`.
 
 ## Promotion tok nightly -> beta -> stable
 

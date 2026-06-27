@@ -1,7 +1,9 @@
 param(
     [string]$RuntimeIdentifier = "win-x64",
     [string]$Configuration = "Release",
+    [ValidateSet("stable", "beta", "nightly")]
     [string]$Channel = "stable",
+    [string]$EffectiveVersion,
     [switch]$SkipTests
 )
 
@@ -20,17 +22,46 @@ if ([string]::IsNullOrWhiteSpace($version)) {
     throw "Soubor verze '$versionPath' je prazdny."
 }
 
-$releaseTag = "dotnet-v$version"
-$readinessRoot = Join-Path $dotnetRoot "artifacts\release-readiness\$RuntimeIdentifier"
+$channelName = $Channel.ToLowerInvariant()
+if ([string]::IsNullOrWhiteSpace($EffectiveVersion)) {
+    if ($channelName -eq "nightly") {
+        $timestamp = [DateTime]::UtcNow.ToString("yyyyMMddHHmmss", [System.Globalization.CultureInfo]::InvariantCulture)
+        $effectiveVersion = "$version-nightly.local.$timestamp"
+    }
+    else {
+        $effectiveVersion = $version
+    }
+}
+else {
+    $effectiveVersion = $EffectiveVersion.Trim()
+    if ([string]::IsNullOrWhiteSpace($effectiveVersion)) {
+        throw "EffectiveVersion nesmi byt prazdna hodnota."
+    }
+}
+
+$releaseTag = switch ($channelName) {
+    "beta" { "dotnet-beta-v$version" }
+    "nightly" { "dotnet-nightly" }
+    default { "dotnet-v$version" }
+}
+$manifestFileName = if ($channelName -eq "stable") {
+    "latest-dotnet-$RuntimeIdentifier.ini"
+}
+else {
+    "latest-dotnet-$channelName-$RuntimeIdentifier.ini"
+}
+$readinessRoot = Join-Path $dotnetRoot "artifacts\release-readiness\$channelName\$RuntimeIdentifier"
 $publishDirectory = Join-Path $readinessRoot "publish"
 $releaseDirectory = Join-Path $readinessRoot "release"
-$manifestPath = Join-Path $readinessRoot "latest-dotnet-$RuntimeIdentifier.ini"
+$manifestPath = Join-Path $readinessRoot $manifestFileName
 
 Write-Host "Vehimap .NET desktop release readiness"
-Write-Host "Version: $version"
+Write-Host "Base version: $version"
+Write-Host "Effective version: $effectiveVersion"
 Write-Host "Runtime: $RuntimeIdentifier"
 Write-Host "Configuration: $Configuration"
-Write-Host "Channel: $Channel"
+Write-Host "Channel: $channelName"
+Write-Host "Release tag: $releaseTag"
 
 Push-Location $dotnetRoot
 try {
@@ -60,7 +91,7 @@ try {
         Remove-Item -LiteralPath $readinessRoot -Recurse -Force
     }
 
-    dotnet publish src\Vehimap.Desktop\Vehimap.Desktop.csproj -c $Configuration -r $RuntimeIdentifier --self-contained true -p:UseSharedCompilation=false -o $publishDirectory
+    dotnet publish src\Vehimap.Desktop\Vehimap.Desktop.csproj -c $Configuration -r $RuntimeIdentifier --self-contained true -p:UseSharedCompilation=false "-p:VehimapReleaseChannel=$channelName" "-p:VehimapVersion=$effectiveVersion" -o $publishDirectory
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
@@ -68,9 +99,9 @@ try {
     & (Join-Path $PSScriptRoot "Package-DesktopRelease.ps1") `
         -PublishDirectory $publishDirectory `
         -RuntimeIdentifier $RuntimeIdentifier `
-        -Version $version `
+        -Version $effectiveVersion `
         -OutputDirectory $releaseDirectory `
-        -Channel $Channel
+        -Channel $channelName
 
     $metadata = Get-ChildItem -LiteralPath $releaseDirectory -Filter "*.json" | Sort-Object Name | Select-Object -First 1
     if ($null -eq $metadata) {
@@ -110,8 +141,17 @@ try {
         }
     }
 
-    if (-not $manifestValues.ContainsKey("version") -or $manifestValues["version"] -ne $version) {
-        throw "Update manifest neobsahuje ocekavanou verzi '$version'."
+    if (-not $manifestValues.ContainsKey("version") -or $manifestValues["version"] -ne $effectiveVersion) {
+        throw "Update manifest neobsahuje ocekavanou verzi '$effectiveVersion'."
+    }
+
+    if (-not $manifestValues.ContainsKey("channel") -or $manifestValues["channel"] -ne $channelName) {
+        throw "Update manifest neobsahuje ocekavany kanal '$channelName'."
+    }
+
+    $expectedAssetKind = if ($RuntimeIdentifier -like "win-*") { "installer" } else { "archive" }
+    if (-not $manifestValues.ContainsKey("asset_kind") -or $manifestValues["asset_kind"] -ne $expectedAssetKind) {
+        throw "Update manifest neobsahuje ocekavany typ assetu '$expectedAssetKind'."
     }
 
     $assetUrl = if ($manifestValues.ContainsKey("asset_url")) { $manifestValues["asset_url"] } else { "" }
@@ -120,7 +160,17 @@ try {
         throw "Update manifest neukazuje na release tag '$releaseTag' a balicek '$($package.Name)'."
     }
 
-    if ($manifestContent -match "preview") {
+    $assetSha256 = if ($manifestValues.ContainsKey("asset_sha256")) { $manifestValues["asset_sha256"] } else { "" }
+    if ($assetSha256 -notmatch "^[a-fA-F0-9]{64}$") {
+        throw "Update manifest neobsahuje platny SHA-256 hash assetu."
+    }
+
+    $assetSize = 0L
+    if (-not $manifestValues.ContainsKey("asset_size") -or -not [long]::TryParse($manifestValues["asset_size"], [ref]$assetSize) -or $assetSize -ne $package.Length) {
+        throw "Update manifest neobsahuje ocekavanou velikost assetu '$($package.Length)'."
+    }
+
+    if ($channelName -eq "stable" -and $manifestContent -match "preview") {
         throw "Stable update manifest nesmi obsahovat preview oznaceni."
     }
 

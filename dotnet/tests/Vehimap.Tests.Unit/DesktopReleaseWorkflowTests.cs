@@ -104,6 +104,38 @@ public sealed class DesktopReleaseWorkflowTests
     }
 
     [Fact]
+    public void Release_readiness_script_is_channel_aware_for_nightly()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetReleaseReadiness.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("[ValidateSet(\"stable\", \"beta\", \"nightly\")]", script, StringComparison.Ordinal);
+        Assert.Contains("[string]$EffectiveVersion", script, StringComparison.Ordinal);
+        Assert.Contains("$version-nightly.local.$timestamp", script, StringComparison.Ordinal);
+        Assert.Contains("\"nightly\" { \"dotnet-nightly\" }", script, StringComparison.Ordinal);
+        Assert.Contains("\"latest-dotnet-$channelName-$RuntimeIdentifier.ini\"", script, StringComparison.Ordinal);
+        Assert.Contains("\"-p:VehimapReleaseChannel=$channelName\"", script, StringComparison.Ordinal);
+        Assert.Contains("\"-p:VehimapVersion=$effectiveVersion\"", script, StringComparison.Ordinal);
+        Assert.Contains("-Version $effectiveVersion", script, StringComparison.Ordinal);
+        Assert.Contains("-Channel $channelName", script, StringComparison.Ordinal);
+        Assert.Contains("Update manifest neobsahuje ocekavany kanal '$channelName'.", script, StringComparison.Ordinal);
+        Assert.Contains("Update manifest neobsahuje platny SHA-256 hash assetu.", script, StringComparison.Ordinal);
+        Assert.Contains("if ($channelName -eq \"stable\" -and $manifestContent -match \"preview\")", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Nightly_readiness_wrapper_uses_nightly_channel()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetNightlyReadiness.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("Test-DotnetReleaseReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Channel = \"nightly\"", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"EffectiveVersion\"] = $EffectiveVersion", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"SkipTests\"] = $true", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Release_promotion_script_guards_beta_and_stable_promotions()
     {
         var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetReleasePromotion.ps1");
