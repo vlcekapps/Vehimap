@@ -14,6 +14,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("release_name=\"Vehimap Desktop ${version}\"", workflow, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
         Assert.Contains("Write-DotnetUpdateManifest.ps1", workflow, StringComparison.Ordinal);
+        Assert.Contains("Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers", workflow, StringComparison.Ordinal);
         Assert.Contains("vehimap-desktop-release-*", workflow, StringComparison.Ordinal);
 
         Assert.DoesNotContain("dotnet-preview-v", workflow, StringComparison.OrdinalIgnoreCase);

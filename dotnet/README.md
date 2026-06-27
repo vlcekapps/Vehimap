@@ -186,3 +186,5 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Get-AhkRetir
 ```
 
 Report nic nemaze. Jen zkontroluje, ze stabilni desktop manifest uz existuje, ukazuje na `dotnet-v<verze>` release asset, preview alias pro starsi preview buildy miri na stejny obsah a zbyvajici AHK soubory jsou uz jen vedomy obsah budouciho mazaciho commitu.
+
+Stejna kontrola bezi i v GitHub Actions po vygenerovani desktop manifestu pro prvni stabilni release. Pokud by `latest-dotnet-win-x64.ini` neukazoval na spravny `dotnet-v<verze>` asset nebo by legacy preview alias nemiril na stejny obsah, release workflow skonci chybou jeste pred commitem manifestu.

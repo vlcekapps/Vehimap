@@ -282,6 +282,9 @@ jobs:
             $legacyPreviewOutputPath = Join-Path "update" ("latest-dotnet-preview-" + $rid + ".ini")
             Copy-Item -LiteralPath $outputPath -Destination $legacyPreviewOutputPath -Force
           }
+      - name: Verify AHK retirement readiness after manifest generation
+        shell: pwsh
+        run: .\dotnet\build\Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers
       - name: Commit desktop manifests
         shell: pwsh
         run: |
