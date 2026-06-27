@@ -108,9 +108,10 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - potvrzovaci dialogy, dokonceni udrzby, `Balicek pro vozidlo` a pristupne tray akcni okno maji explicitni resize nebo scroll regiony, aby dlouhy text a vetsi systemove pismo neschovaly primarni akce
 - testovane generovani autostart zaznamu pro Linux `.desktop` a macOS LaunchAgent, vcetne cest s mezerami, uvozovkami a XML znaky
 - multiplatformni publish matrix pro `.NET` desktop release
-- draft release workflow pro tagy `dotnet-v<verze>` s verzovanymi balicky a checksumy
+- publikovany release workflow pro tagy `dotnet-v<verze>` s verzovanymi balicky a checksumy
 - runtime-specific desktop update manifesty `update/latest-dotnet-<rid>.ini`
 - legacy aliasy `update/latest-dotnet-preview-<rid>.ini`, ktere starym preview buildum umozni prejit na prvni stabilni desktop release
+- lokalni release readiness skript `dotnet/build/Test-DotnetReleaseReadiness.ps1`, ktery postavi, otestuje, publikuje, zabali a overi manifest pro vybrany RID pred tagovanim
 - detailni stav automaticke instalace v dialogu kontroly aktualizaci, vcetne duvodu rucniho rezimu
 - asset URL a SHA-256 hash v dialogu kontroly aktualizaci pro overitelnou rucni instalaci
 - kopirovani detailu kontroly aktualizaci do schranky tlacitkem nebo `Ctrl+Shift+C` vcetne pristupneho stavoveho textu vysledku, aby sla rucni instalace overit bez opisovani URL a hashe
@@ -158,7 +159,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 
 ## Co je dalsi na rade
 
-1. Dokoncit Windows desktop release gate: vydat prvni `dotnet-v<verze>` draft release, overit update manifest `latest-dotnet-win-x64.ini`, rucni update tok a Windows Appium smoke proti release artefaktu.
-2. Po stabilnim Windows desktop releasu zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
+1. Dokoncit Windows desktop release gate: spustit `Test-DotnetReleaseReadiness.ps1`, vydat prvni publikovany `dotnet-v<verze>` release, overit update manifest `latest-dotnet-win-x64.ini`, rucni update tok a Windows Appium smoke proti release artefaktu.
+2. Po stabilnim Windows desktop releasu a kratkem realnem pouzivani bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
 3. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
 4. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.

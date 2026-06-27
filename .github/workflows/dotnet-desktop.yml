@@ -211,7 +211,7 @@ jobs:
           path: release-artifacts
           pattern: vehimap-desktop-release-*
           merge-multiple: true
-      - name: Publish draft release
+      - name: Publish release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -236,7 +236,6 @@ jobs:
           gh release create "$tag" release-artifacts/* \
             --repo "$GITHUB_REPOSITORY" \
             --title "$name" \
-            --draft \
             --generate-notes \
             --notes-file "$notes_file"
 
