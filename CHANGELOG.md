@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- Lokální C# release/readiness výstupy jsou nově rozdělené podle kanálu do `dotnet/artifacts/stable|beta|nightly/<rid>/app` a `release`, aby tester vždy našel správnou aplikaci a instalátor bez hledání mezi historickými artefakty.
 - GitHub Actions pro C# desktop nově před uploadem Windows release artefaktu spouští `Test-DotnetInstallerSmoke.ps1`, takže vadný Inno Setup EXE, checksum nebo JSON metadata neprojdou z publish jobu do release artefaktů.
 - C# release readiness nyní u Windows balíčků automaticky spouští installer smoke bez instalace a volitelně přes `-InstallSmoke` provede i izolovanou tichou instalaci, krátký portable launch a odinstalaci přímo jako součást nightly/stable brány.
 - C# tooling má nový `Test-DotnetInstallerSmoke.ps1`, který pro Windows setup EXE ověří checksum a metadata a s explicitním `-Install` provede izolovanou tichou instalaci, krátké spuštění v portable režimu a odinstalaci.

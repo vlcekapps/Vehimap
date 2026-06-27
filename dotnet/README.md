@@ -153,11 +153,20 @@ Lokalni packaging publish vystupu. Windows RID vytvori Inno Setup instalator, os
 
 ```powershell
 cd dotnet
-dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -p:VehimapReleaseChannel=stable -o .\artifacts\win-x64\desktop
-.\build\Package-DesktopRelease.ps1 -PublishDirectory .\artifacts\win-x64\desktop -RuntimeIdentifier win-x64 -Version (Get-Content ..\src\VERSION).Trim() -OutputDirectory .\artifacts\win-x64\release -Channel stable
+dotnet publish .\src\Vehimap.Desktop\Vehimap.Desktop.csproj -c Release -r win-x64 --self-contained true -p:VehimapReleaseChannel=stable -o .\artifacts\stable\win-x64\app
+.\build\Package-DesktopRelease.ps1 -PublishDirectory .\artifacts\stable\win-x64\app -RuntimeIdentifier win-x64 -Version (Get-Content ..\src\VERSION).Trim() -OutputDirectory .\artifacts\stable\win-x64\release -Channel stable
 ```
 
 Balickovaci skript vynechava `.pdb`, pro Windows vytvori per-user Inno Setup instalator a pro ostatni RID archiv, prida `.sha256` a JSON metadata s `runtimeIdentifier`, `channel`, `assetKind`, nazvem balicku, hashem a velikosti. Windows instalator pri update zavira bezici aplikace pres Inno Setup, ale sam je interaktivni a na konci nabidne checkbox `Spustit Vehimap` / `Spustit Vehimap Beta` / `Spustit Vehimap Nightly`; aplikace po spusteni installeru zavre hlavni okno. Generator desktop update manifestu z techto metadat znovu overuje fyzicky hash i velikost balicku, aby manifest nemohl ukazovat na poskozeny nebo zamereny artefakt. Kontrola aktualizaci umi lokalni manifest pouzit jako override, ale pokud je lokalni soubor poskozeny, pokracuje na vzdaleny manifest. Dialog kontroly aktualizaci navic ukazuje, proc je update jen rucni, pokud automaticka instalace neni dostupna, vypise asset URL i SHA-256 pro overeni stazeneho balicku a umi tyto detaily zkopirovat do schranky tlacitkem nebo `Ctrl+Shift+C`.
+
+Lokalni testovaci vystupy jsou rozdelene podle kanalu, aby tester nemusel hledat mezi technickymi artefakty:
+
+- aktualni nightly aplikace: `dotnet\artifacts\nightly\win-x64\app\Vehimap.Desktop.exe`
+- aktualni nightly instalator: `dotnet\artifacts\nightly\win-x64\release\vehimap-desktop-nightly-<verze>-win-x64-setup.exe`
+- budouci beta aplikace a instalator: `dotnet\artifacts\beta\win-x64\app` a `dotnet\artifacts\beta\win-x64\release`
+- budouci stable aplikace a instalator: `dotnet\artifacts\stable\win-x64\app` a `dotnet\artifacts\stable\win-x64\release`
+
+Stare lokalni slozky jako `desktop-preview`, `desktop-release`, `release-readiness`, `win-x64` nebo `nightly-version-check` jsou historicke/technicke vystupy ze starsich skriptu a pri beznem testovani je lze ignorovat.
 
 CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 
@@ -189,7 +198,7 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetR
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64
 ```
 
-Skript postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Pro `stable` kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
+Skript postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Vystup uklada do `dotnet\artifacts\<kanal>\<rid>\app` pro spustitelnou aplikaci a do `dotnet\artifacts\<kanal>\<rid>\release` pro instalator, metadata a checksum. Pro `stable` kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
 
 Samotne vytvoreni release tagu je oddelene do bezpecneho skriptu. Ve vychozim rezimu zkontroluje cisty `main`, shodu s `origin/main`, neexistujici tag a spusti release readiness branu; tag na GitHub odesle jen s explicitnim `-Push`.
 
@@ -215,7 +224,7 @@ Windows instalator lze po vytvoreni balicku overit samostatnym smoke skriptem. B
 
 ```powershell
 cd dotnet
-$release = Get-ChildItem .\artifacts\release-readiness\nightly\win-x64\release\*.json | Select-Object -First 1
+$release = Get-ChildItem .\artifacts\nightly\win-x64\release\*.json | Select-Object -First 1
 $installer = Join-Path $release.DirectoryName ((Get-Content -Raw $release.FullName | ConvertFrom-Json).packageFile)
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetInstallerSmoke.ps1 -InstallerPath $installer -PackageMetadataPath $release.FullName
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetInstallerSmoke.ps1 -InstallerPath $installer -PackageMetadataPath $release.FullName -Install

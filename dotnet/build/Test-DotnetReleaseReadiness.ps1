@@ -52,8 +52,8 @@ $manifestFileName = if ($channelName -eq "stable") {
 else {
     "latest-dotnet-$channelName-$RuntimeIdentifier.ini"
 }
-$readinessRoot = Join-Path $dotnetRoot "artifacts\release-readiness\$channelName\$RuntimeIdentifier"
-$publishDirectory = Join-Path $readinessRoot "publish"
+$readinessRoot = Join-Path $dotnetRoot "artifacts\$channelName\$RuntimeIdentifier"
+$publishDirectory = Join-Path $readinessRoot "app"
 $releaseDirectory = Join-Path $readinessRoot "release"
 $manifestPath = Join-Path $readinessRoot $manifestFileName
 $installerSmokeScript = Join-Path $PSScriptRoot "Test-DotnetInstallerSmoke.ps1"
@@ -196,6 +196,8 @@ try {
     }
 
     Write-Host "Release readiness OK"
+    Write-Host "Artifact root: $readinessRoot"
+    Write-Host "App: $(Join-Path $publishDirectory 'Vehimap.Desktop.exe')"
     Write-Host "Package: $($package.FullName)"
     Write-Host "Manifest: $manifestPath"
 }

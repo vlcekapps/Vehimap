@@ -146,6 +146,10 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("$version-nightly.local.$timestamp", script, StringComparison.Ordinal);
         Assert.Contains("\"nightly\" { \"dotnet-nightly\" }", script, StringComparison.Ordinal);
         Assert.Contains("\"latest-dotnet-$channelName-$RuntimeIdentifier.ini\"", script, StringComparison.Ordinal);
+        Assert.Contains("\"artifacts\\$channelName\\$RuntimeIdentifier\"", script, StringComparison.Ordinal);
+        Assert.Contains("Join-Path $readinessRoot \"app\"", script, StringComparison.Ordinal);
+        Assert.Contains("Artifact root:", script, StringComparison.Ordinal);
+        Assert.Contains("App:", script, StringComparison.Ordinal);
         Assert.Contains("\"-p:VehimapReleaseChannel=$channelName\"", script, StringComparison.Ordinal);
         Assert.Contains("\"-p:VehimapVersion=$effectiveVersion\"", script, StringComparison.Ordinal);
         Assert.Contains("-Version $effectiveVersion", script, StringComparison.Ordinal);
@@ -157,6 +161,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("$installerSmokeArguments", script, StringComparison.Ordinal);
         Assert.Contains("$installerSmokeArguments[\"Install\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$installerSmokeArguments[\"LaunchSeconds\"] = $InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("artifacts\\release-readiness\\$channelName", script, StringComparison.Ordinal);
     }
 
     [Fact]
