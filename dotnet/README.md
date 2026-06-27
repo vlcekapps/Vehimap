@@ -267,11 +267,12 @@ Po dobehnuti GitHub Actions release workflow lze stabilni i nightly kanal overit
 
 ```powershell
 cd dotnet
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Get-DotnetReleaseTrainStatus.ps1 -RuntimeIdentifier win-x64
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64
 ```
 
-Nightly wrapper kontroluje `latest-dotnet-nightly-win-x64.ini`, rolling tag `dotnet-nightly`, prerelease verzi, release notes URL, dostupnost assetu, SHA-256, velikost assetu a `channel=nightly`; AHK retirement gate se u nightly nespousti. Stable prikaz zkontroluje `latest-dotnet-win-x64.ini`, prechodovy `latest-dotnet-preview-win-x64.ini`, release notes URL, dostupnost assetu, SHA-256, velikost assetu a nakonec spusti AHK retirement gate. Pokud je potreba jen offline kontrola po commitu manifestu, pridejte `-SkipNetwork`.
+Release train status nic netaguje ani nepublikuje. Jen shrne lokalni artefakty `nightly`, `beta` a `stable`, existenci manifestu v `update/`, dostupnost release skriptu, remote tagy a na konci vypise dalsi doporuceny krok. Nightly wrapper kontroluje `latest-dotnet-nightly-win-x64.ini`, rolling tag `dotnet-nightly`, prerelease verzi, release notes URL, dostupnost assetu, SHA-256, velikost assetu a `channel=nightly`; AHK retirement gate se u nightly nespousti. Stable prikaz zkontroluje `latest-dotnet-win-x64.ini`, prechodovy `latest-dotnet-preview-win-x64.ini`, release notes URL, dostupnost assetu, SHA-256, velikost assetu a nakonec spusti AHK retirement gate. Pokud je potreba jen offline kontrola po commitu manifestu, pridejte `-SkipNetwork`.
 
 Pred finalnim odstranenim AHK vetve spustte jeste retirement report:
 

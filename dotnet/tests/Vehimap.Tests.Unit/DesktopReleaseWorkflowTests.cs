@@ -236,6 +236,34 @@ public sealed class DesktopReleaseWorkflowTests
     }
 
     [Fact]
+    public void Release_train_status_script_summarizes_channels_without_publishing()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Get-DotnetReleaseTrainStatus.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("[switch]$SkipFetch", script, StringComparison.Ordinal);
+        Assert.Contains("[switch]$FailOnBlockers", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetNightlyReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetBetaReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetStableReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetReleasePromotion.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedNightly.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedRelease.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("\"artifacts\\$channel\\$RuntimeIdentifier\"", script, StringComparison.Ordinal);
+        Assert.Contains("vehimap-desktop-$channel-$version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
+        Assert.Contains("vehimap-desktop-nightly-*-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet-nightly", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet-beta-v$Version", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet-v$Version", script, StringComparison.Ordinal);
+        Assert.Contains("Dalsi doporuceny krok:", script, StringComparison.Ordinal);
+        Assert.Contains("bez -SkipFetch", script, StringComparison.Ordinal);
+        Assert.Contains("-Channel beta", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier $RuntimeIdentifier -Channel stable -Push", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("gh release create", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Published_release_verification_script_checks_manifest_release_and_retirement_gate()
     {
         var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetPublishedRelease.ps1");
