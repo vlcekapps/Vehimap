@@ -3,10 +3,11 @@ using Xunit;
 
 namespace Vehimap.Tests.UI;
 
-[Trait("UiProfile", "Smoke")]
+[Trait("UiProfile", "Extended")]
 public sealed class DesktopContinuousIntegrationSmokeTests
 {
     [Fact]
+    [Trait("UiProfile", "Smoke")]
     public void Main_shell_exposes_vehicle_list_and_app_shell_actions_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
