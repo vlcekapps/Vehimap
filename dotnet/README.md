@@ -230,14 +230,15 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDe
 
 Stable promotion vyzaduje existujici beta tag pro stejnou verzi. Beta promotion preferuje existujici `dotnet-nightly` tag, ale nezablokuje vydani, pokud rolling nightly jeste nebyla publikovana; v takovem pripade je to vedome rozhodnuti uvolnit beta po lokalni readiness brane.
 
-Po dobehnuti GitHub Actions release workflow lze stabilni kanal overit jednim post-release skriptem:
+Po dobehnuti GitHub Actions release workflow lze stabilni i nightly kanal overit jednim post-release skriptem:
 
 ```powershell
 cd dotnet
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64
 ```
 
-Skript zkontroluje stabilni `latest-dotnet-win-x64.ini`, prechodovy `latest-dotnet-preview-win-x64.ini`, release notes URL, dostupnost assetu, SHA-256, velikost assetu a nakonec spusti AHK retirement gate. Pokud je potreba jen offline kontrola po commitu manifestu, pridejte `-SkipNetwork`.
+Nightly wrapper kontroluje `latest-dotnet-nightly-win-x64.ini`, rolling tag `dotnet-nightly`, prerelease verzi, release notes URL, dostupnost assetu, SHA-256, velikost assetu a `channel=nightly`; AHK retirement gate se u nightly nespousti. Stable prikaz zkontroluje `latest-dotnet-win-x64.ini`, prechodovy `latest-dotnet-preview-win-x64.ini`, release notes URL, dostupnost assetu, SHA-256, velikost assetu a nakonec spusti AHK retirement gate. Pokud je potreba jen offline kontrola po commitu manifestu, pridejte `-SkipNetwork`.
 
 Pred finalnim odstranenim AHK vetve spustte jeste retirement report:
 

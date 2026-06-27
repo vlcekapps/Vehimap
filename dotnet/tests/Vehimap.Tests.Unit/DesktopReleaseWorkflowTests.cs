@@ -159,21 +159,38 @@ public sealed class DesktopReleaseWorkflowTests
         var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetPublishedRelease.ps1");
         var script = File.ReadAllText(scriptPath);
 
+        Assert.Contains("[ValidateSet(\"stable\", \"beta\", \"nightly\")]", script, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
+        Assert.Contains("latest-dotnet-$channelName-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-preview-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
+        Assert.Contains("\"nightly\" { return \"dotnet-nightly\" }", script, StringComparison.Ordinal);
+        Assert.Contains("vehimap-desktop-$Channel-$Version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
+        Assert.Contains("-nightly\\.\\d+\\.\\d+$", script, StringComparison.Ordinal);
         Assert.Contains("asset_sha256", script, StringComparison.Ordinal);
         Assert.Contains("asset_size", script, StringComparison.Ordinal);
         Assert.Contains("asset_kind", script, StringComparison.Ordinal);
         Assert.Contains("channel", script, StringComparison.Ordinal);
-        Assert.Contains("Stabilni manifest neobsahuje platny SHA-256 hash.", script, StringComparison.Ordinal);
+        Assert.Contains("$channelDisplayName manifest neobsahuje platny SHA-256 hash.", script, StringComparison.Ordinal);
         Assert.DoesNotContain("Add-Blocker \"Stabilni manifest nema channel=stable.\"\n    }\n    else", NormalizeLineEndings(script), StringComparison.Ordinal);
-        Assert.Contains("vehimap-desktop-stable-$version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
         Assert.Contains("releases/download/$releaseTag", script, StringComparison.Ordinal);
         Assert.Contains("Invoke-RemoteHeadCheck", script, StringComparison.Ordinal);
         Assert.Contains("$SkipNetwork", script, StringComparison.Ordinal);
         Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("-FailOnBlockers", script, StringComparison.Ordinal);
+        Assert.Contains("Preview alias a AHK retirement gate se overuji jen pro stable kanal.", script, StringComparison.Ordinal);
+        Assert.Contains("AHK retirement gate se spousti jen pro stable kanal.", script, StringComparison.Ordinal);
         Assert.Contains("publikovany .NET desktop release je overeny", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Published_nightly_wrapper_uses_nightly_channel()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetPublishedNightly.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("Test-DotnetPublishedRelease.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Channel = \"nightly\"", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"SkipNetwork\"] = $true", script, StringComparison.Ordinal);
     }
 
     private static string ReadWorkflow()

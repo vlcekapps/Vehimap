@@ -1,5 +1,7 @@
 param(
     [string]$RuntimeIdentifier = "win-x64",
+    [ValidateSet("stable", "beta", "nightly")]
+    [string]$Channel = "stable",
     [string]$RepositoryFullName = "vlcekapps/Vehimap",
     [switch]$SkipNetwork,
     [switch]$SkipRetirementGate
@@ -11,7 +13,13 @@ $ErrorActionPreference = "Stop"
 $dotnetRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = Split-Path -Parent $dotnetRoot
 $versionPath = Join-Path $repositoryRoot "src\VERSION"
-$stableManifestPath = Join-Path $repositoryRoot "update\latest-dotnet-$RuntimeIdentifier.ini"
+$channelName = $Channel.Trim().ToLowerInvariant()
+$manifestPath = if ($channelName -eq "stable") {
+    Join-Path $repositoryRoot "update\latest-dotnet-$RuntimeIdentifier.ini"
+}
+else {
+    Join-Path $repositoryRoot "update\latest-dotnet-$channelName-$RuntimeIdentifier.ini"
+}
 $legacyPreviewManifestPath = Join-Path $repositoryRoot "update\latest-dotnet-preview-$RuntimeIdentifier.ini"
 $retirementReadinessScript = Join-Path $PSScriptRoot "Get-AhkRetirementReadiness.ps1"
 
@@ -45,6 +53,47 @@ function Read-KeyValueManifest {
     }
 
     return $values
+}
+
+function Get-ChannelDisplayName {
+    param([string]$Channel)
+
+    switch ($Channel) {
+        "beta" { return "Beta" }
+        "nightly" { return "Nightly" }
+        default { return "Stabilni" }
+    }
+}
+
+function Get-ReleaseTag {
+    param(
+        [string]$Channel,
+        [string]$Version
+    )
+
+    switch ($Channel) {
+        "beta" { return "dotnet-beta-v$Version" }
+        "nightly" { return "dotnet-nightly" }
+        default { return "dotnet-v$Version" }
+    }
+}
+
+function Get-ExpectedPackageFileName {
+    param(
+        [string]$Channel,
+        [string]$Version,
+        [string]$RuntimeIdentifier
+    )
+
+    if ($RuntimeIdentifier -like "win-*") {
+        return "vehimap-desktop-$Channel-$Version-$RuntimeIdentifier-setup.exe"
+    }
+
+    if ($RuntimeIdentifier -like "linux-*") {
+        return "vehimap-desktop-$Version-$RuntimeIdentifier.tar.gz"
+    }
+
+    return "vehimap-desktop-$Version-$RuntimeIdentifier.zip"
 }
 
 function Invoke-RemoteHeadCheck {
@@ -103,34 +152,53 @@ else {
     }
 }
 
-$releaseTag = "dotnet-v$version"
-$expectedAssetPart = "/$RepositoryFullName/releases/download/$releaseTag/vehimap-desktop-stable-$version-$RuntimeIdentifier-setup.exe"
+$channelDisplayName = Get-ChannelDisplayName -Channel $channelName
+$releaseTag = Get-ReleaseTag -Channel $channelName -Version $version
 $manifestAssetSize = $null
 $assetUrl = ""
 $notesUrl = ""
+$manifestVersion = ""
+$expectedPackageFileName = ""
 
-if (-not (Test-Path -LiteralPath $stableManifestPath -PathType Leaf)) {
-    Add-Blocker "Chybi stabilni manifest update\latest-dotnet-$RuntimeIdentifier.ini. Nejdrive pockejte na dobeh release workflow."
+if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+    Add-Blocker "Chybi $channelName manifest '$manifestPath'. Nejdrive pockejte na dobeh release workflow."
 }
 else {
-    $manifest = Read-KeyValueManifest -Path $stableManifestPath
+    $manifest = Read-KeyValueManifest -Path $manifestPath
 
-    if ($manifest.ContainsKey("version") -and $manifest["version"] -eq $version) {
-        Add-Pass "Stabilni manifest ma verzi $version."
+    if ($manifest.ContainsKey("version")) {
+        $manifestVersion = $manifest["version"]
+    }
+
+    if ($channelName -eq "nightly") {
+        $expectedVersionRegex = "^" + [regex]::Escape($version) + "-nightly\.\d+\.\d+$"
+        if ($manifestVersion -match $expectedVersionRegex) {
+            Add-Pass "Nightly manifest ma publikovanou prerelease verzi $manifestVersion."
+        }
+        else {
+            Add-Blocker "Nightly manifest nema ocekavanou prerelease verzi podle $version-nightly.<run>.<attempt>."
+        }
+    }
+    elseif ($manifestVersion -eq $version) {
+        Add-Pass "$channelDisplayName manifest ma verzi $version."
     }
     else {
-        Add-Blocker "Stabilni manifest nema ocekavanou verzi $version."
+        Add-Blocker "$channelDisplayName manifest nema ocekavanou verzi $version."
     }
+
+    $effectiveVersion = if ([string]::IsNullOrWhiteSpace($manifestVersion)) { $version } else { $manifestVersion }
+    $expectedPackageFileName = Get-ExpectedPackageFileName -Channel $channelName -Version $effectiveVersion -RuntimeIdentifier $RuntimeIdentifier
 
     if ($manifest.ContainsKey("asset_url")) {
         $assetUrl = $manifest["asset_url"]
     }
 
+    $expectedAssetPart = "/$RepositoryFullName/releases/download/$releaseTag/$expectedPackageFileName"
     if (-not [string]::IsNullOrWhiteSpace($assetUrl) -and $assetUrl.Contains($expectedAssetPart)) {
-        Add-Pass "Stabilni manifest ukazuje na Inno Setup release asset $releaseTag pro $RuntimeIdentifier."
+        Add-Pass "$channelDisplayName manifest ukazuje na release asset $releaseTag pro $RuntimeIdentifier."
     }
     else {
-        Add-Blocker "Stabilni manifest neukazuje na ocekavany release asset $releaseTag pro $RuntimeIdentifier."
+        Add-Blocker "$channelDisplayName manifest neukazuje na ocekavany release asset $releaseTag pro $RuntimeIdentifier."
     }
 
     if ($manifest.ContainsKey("notes_url")) {
@@ -139,55 +207,61 @@ else {
 
     $expectedNotesUrl = "https://github.com/$RepositoryFullName/releases/tag/$releaseTag"
     if ($notesUrl -eq $expectedNotesUrl) {
-        Add-Pass "Stabilni manifest ukazuje na release notes pro $releaseTag."
+        Add-Pass "$channelDisplayName manifest ukazuje na release notes pro $releaseTag."
     }
     else {
-        Add-Blocker "Stabilni manifest nema ocekavanou notes_url pro $releaseTag."
+        Add-Blocker "$channelDisplayName manifest nema ocekavanou notes_url pro $releaseTag."
     }
 
     if ($manifest.ContainsKey("asset_sha256") -and $manifest["asset_sha256"] -match "^[0-9a-fA-F]{64}$") {
-        Add-Pass "Stabilni manifest obsahuje platny SHA-256 hash."
+        Add-Pass "$channelDisplayName manifest obsahuje platny SHA-256 hash."
     }
     else {
-        Add-Blocker "Stabilni manifest neobsahuje platny SHA-256 hash."
+        Add-Blocker "$channelDisplayName manifest neobsahuje platny SHA-256 hash."
     }
 
-    if ($manifest.ContainsKey("asset_kind") -and $manifest["asset_kind"] -eq "installer") {
-        Add-Pass "Stabilni Windows manifest pouziva installer asset."
+    $expectedAssetKind = if ($RuntimeIdentifier -like "win-*") { "installer" } else { "archive" }
+    if ($manifest.ContainsKey("asset_kind") -and $manifest["asset_kind"] -eq $expectedAssetKind) {
+        Add-Pass "$channelDisplayName manifest pouziva $expectedAssetKind asset."
     }
     else {
-        Add-Blocker "Stabilni Windows manifest nepouziva installer asset."
+        Add-Blocker "$channelDisplayName manifest nepouziva $expectedAssetKind asset."
     }
 
-    if ($manifest.ContainsKey("channel") -and $manifest["channel"] -eq "stable") {
-        Add-Pass "Stabilni manifest je ve stable kanalu."
+    if ($manifest.ContainsKey("channel") -and $manifest["channel"] -eq $channelName) {
+        Add-Pass "$channelDisplayName manifest je v kanalu $channelName."
     }
     else {
-        Add-Blocker "Stabilni manifest nema channel=stable."
+        Add-Blocker "$channelDisplayName manifest nema channel=$channelName."
     }
 
     $assetSize = 0L
     if ($manifest.ContainsKey("asset_size") -and [long]::TryParse($manifest["asset_size"], [ref]$assetSize) -and $assetSize -gt 0) {
         $manifestAssetSize = $assetSize
-        Add-Pass "Stabilni manifest obsahuje velikost assetu."
+        Add-Pass "$channelDisplayName manifest obsahuje velikost assetu."
     }
     else {
-        Add-Blocker "Stabilni manifest neobsahuje platnou velikost assetu."
+        Add-Blocker "$channelDisplayName manifest neobsahuje platnou velikost assetu."
     }
 }
 
-if (-not (Test-Path -LiteralPath $legacyPreviewManifestPath -PathType Leaf)) {
-    Add-Warning "Chybi prechodovy preview manifest update\latest-dotnet-preview-$RuntimeIdentifier.ini."
+if ($channelName -eq "stable") {
+    if (-not (Test-Path -LiteralPath $legacyPreviewManifestPath -PathType Leaf)) {
+        Add-Warning "Chybi prechodovy preview manifest update\latest-dotnet-preview-$RuntimeIdentifier.ini."
+    }
+    elseif (Test-Path -LiteralPath $manifestPath -PathType Leaf) {
+        $stableContent = Get-Content -Raw -LiteralPath $manifestPath
+        $legacyContent = Get-Content -Raw -LiteralPath $legacyPreviewManifestPath
+        if ($stableContent -eq $legacyContent) {
+            Add-Pass "Prechodovy preview manifest odpovida stabilnimu manifestu."
+        }
+        else {
+            Add-Blocker "Prechodovy preview manifest neodpovida stabilnimu manifestu."
+        }
+    }
 }
-elseif (Test-Path -LiteralPath $stableManifestPath -PathType Leaf) {
-    $stableContent = Get-Content -Raw -LiteralPath $stableManifestPath
-    $legacyContent = Get-Content -Raw -LiteralPath $legacyPreviewManifestPath
-    if ($stableContent -eq $legacyContent) {
-        Add-Pass "Prechodovy preview manifest odpovida stabilnimu manifestu."
-    }
-    else {
-        Add-Blocker "Prechodovy preview manifest neodpovida stabilnimu manifestu."
-    }
+else {
+    Add-Warning "Preview alias a AHK retirement gate se overuji jen pro stable kanal."
 }
 
 if ($SkipNetwork) {
@@ -198,7 +272,10 @@ else {
     Invoke-RemoteHeadCheck -Name "Release notes" -Url $notesUrl -ExpectedSize $null
 }
 
-if ($SkipRetirementGate) {
+if ($channelName -ne "stable") {
+    Add-Warning "AHK retirement gate se spousti jen pro stable kanal."
+}
+elseif ($SkipRetirementGate) {
     Add-Warning "AHK retirement gate byl preskocen."
 }
 elseif (-not (Test-Path -LiteralPath $retirementReadinessScript -PathType Leaf)) {
@@ -227,8 +304,15 @@ else {
 
 Write-Host "Vehimap published .NET release verification"
 Write-Host "Runtime: $RuntimeIdentifier"
-Write-Host "Version: $version"
+Write-Host "Channel: $channelName"
+Write-Host "Base version: $version"
+if (-not [string]::IsNullOrWhiteSpace($manifestVersion)) {
+    Write-Host "Published version: $manifestVersion"
+}
 Write-Host "Tag: $releaseTag"
+if (-not [string]::IsNullOrWhiteSpace($expectedPackageFileName)) {
+    Write-Host "Expected package: $expectedPackageFileName"
+}
 Write-Host ""
 
 Write-Host "Splneno:"
