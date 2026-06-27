@@ -112,6 +112,8 @@ foreach ($scriptName in @(
         "Test-DotnetReleasePromotion.ps1",
         "New-DotnetDesktopReleaseTag.ps1",
         "Test-DotnetPublishedNightly.ps1",
+        "Test-DotnetPublishedBeta.ps1",
+        "Test-DotnetPublishedStable.ps1",
         "Test-DotnetPublishedRelease.ps1",
         "Get-AhkRetirementReadiness.ps1")) {
     $scriptPath = Join-Path $PSScriptRoot $scriptName
@@ -238,7 +240,7 @@ elseif (-not $SkipFetch -and -not $channelStates["beta"].RemoteTagExists) {
     "Spustte .\build\Test-DotnetReleasePromotion.ps1 -TargetChannel beta -RuntimeIdentifier $RuntimeIdentifier a po uspesne kontrole vytvorte beta tag."
 }
 elseif (-not $channelStates["beta"].RepositoryManifestExists) {
-    "Pockejte na beta release workflow, commit update\$(Get-ManifestFileName -Channel beta) a potom spustte .\build\Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier $RuntimeIdentifier -Channel beta."
+    "Pockejte na beta release workflow, commit update\$(Get-ManifestFileName -Channel beta) a potom spustte .\build\Test-DotnetPublishedBeta.ps1 -RuntimeIdentifier $RuntimeIdentifier."
 }
 elseif (-not $channelStates["stable"].PackageExists -or -not $channelStates["stable"].LocalManifestExists) {
     "Spustte .\build\Test-DotnetStableReadiness.ps1 -RuntimeIdentifier $RuntimeIdentifier."
@@ -250,7 +252,7 @@ elseif (-not $SkipFetch -and -not $channelStates["stable"].RemoteTagExists) {
     "Spustte .\build\Test-DotnetReleasePromotion.ps1 -TargetChannel stable -RuntimeIdentifier $RuntimeIdentifier a po uspesne kontrole vytvorte stable tag."
 }
 elseif (-not $channelStates["stable"].RepositoryManifestExists) {
-    "Pockejte na stable release workflow, commit update/latest-dotnet-$RuntimeIdentifier.ini a potom spustte .\build\Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier $RuntimeIdentifier."
+    "Pockejte na stable release workflow, commit update/latest-dotnet-$RuntimeIdentifier.ini a potom spustte .\build\Test-DotnetPublishedStable.ps1 -RuntimeIdentifier $RuntimeIdentifier."
 }
 else {
     "Spustte .\build\Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier $RuntimeIdentifier -FailOnBlockers a pripravte finalni AHK retirement commit."

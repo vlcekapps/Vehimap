@@ -261,6 +261,8 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Test-DotnetStableReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetReleasePromotion.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedNightly.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedBeta.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedStable.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedRelease.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("\"artifacts\\$channel\\$RuntimeIdentifier\"", script, StringComparison.Ordinal);
@@ -271,7 +273,8 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("dotnet-v$Version", script, StringComparison.Ordinal);
         Assert.Contains("Dalsi doporuceny krok:", script, StringComparison.Ordinal);
         Assert.Contains("bez -SkipFetch", script, StringComparison.Ordinal);
-        Assert.Contains("-Channel beta", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedBeta.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedStable.ps1", script, StringComparison.Ordinal);
         Assert.DoesNotContain("New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier $RuntimeIdentifier -Channel stable -Push", script, StringComparison.Ordinal);
         Assert.DoesNotContain("gh release create", script, StringComparison.Ordinal);
     }
@@ -313,6 +316,28 @@ public sealed class DesktopReleaseWorkflowTests
 
         Assert.Contains("Test-DotnetPublishedRelease.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Channel = \"nightly\"", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"SkipNetwork\"] = $true", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Published_beta_wrapper_uses_beta_channel()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetPublishedBeta.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("Test-DotnetPublishedRelease.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Channel = \"beta\"", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"SkipNetwork\"] = $true", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Published_stable_wrapper_uses_stable_channel()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetPublishedStable.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("Test-DotnetPublishedRelease.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Channel = \"stable\"", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"SkipNetwork\"] = $true", script, StringComparison.Ordinal);
     }
 
