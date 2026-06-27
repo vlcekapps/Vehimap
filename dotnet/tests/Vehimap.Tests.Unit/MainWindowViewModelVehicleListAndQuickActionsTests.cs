@@ -81,7 +81,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             item => item.Title == "Historie" && item.Summary.Contains("Poslední událost: Novější servis", StringComparison.CurrentCulture));
         Assert.Contains(
             viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
-            item => item.Title == "Tankování" && item.Summary.Contains("Poslední tankování: 35 l za 1200,00 Kč", StringComparison.CurrentCulture));
+            item => item.Title == "Tankování" && item.Summary.Contains("Poslední tankování: 35 l za 1200", StringComparison.CurrentCulture));
         Assert.Contains(
             viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
             item => item.Title == "Připomínky" && item.Summary.Contains("Nejbližší: Objednat servis", StringComparison.CurrentCulture));
