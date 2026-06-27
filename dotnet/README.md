@@ -210,6 +210,16 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetN
 
 Wrapper vola stejnou release readiness branu s kanalem `nightly`, takze se overi skutecny nightly nazev instalatoru, metadata, hash, velikost, `asset_kind=installer`, `channel=nightly` a manifest pro rolling release `dotnet-nightly`.
 
+Windows instalator lze po vytvoreni balicku overit samostatnym smoke skriptem. Bez `-Install` se kontroluji jen soubory, metadata a SHA-256; s `-Install` skript provede tichou instalaci do izolovane slozky, vytvori vedle EXE portable `data`, kratce spusti aplikaci a zase ji odinstaluje.
+
+```powershell
+cd dotnet
+$release = Get-ChildItem .\artifacts\release-readiness\nightly\win-x64\release\*.json | Select-Object -First 1
+$installer = Join-Path $release.DirectoryName ((Get-Content -Raw $release.FullName | ConvertFrom-Json).packageFile)
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetInstallerSmoke.ps1 -InstallerPath $installer -PackageMetadataPath $release.FullName
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetInstallerSmoke.ps1 -InstallerPath $installer -PackageMetadataPath $release.FullName -Install
+```
+
 ## Promotion tok nightly -> beta -> stable
 
 Bezny vyvoj jde pres tri oddelene kanaly:

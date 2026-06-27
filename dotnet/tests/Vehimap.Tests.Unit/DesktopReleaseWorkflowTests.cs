@@ -208,6 +208,30 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("$arguments[\"SkipNetwork\"] = $true", script, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Installer_smoke_script_verifies_package_before_optional_install()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetInstallerSmoke.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("[Parameter(Mandatory = $true)]", script, StringComparison.Ordinal);
+        Assert.Contains("[string]$InstallerPath", script, StringComparison.Ordinal);
+        Assert.Contains("[switch]$Install", script, StringComparison.Ordinal);
+        Assert.Contains("Test-ChecksumFile", script, StringComparison.Ordinal);
+        Assert.Contains("Test-PackageMetadata", script, StringComparison.Ordinal);
+        Assert.Contains("assetKind=installer", script, StringComparison.Ordinal);
+        Assert.Contains("if (-not $Install)", script, StringComparison.Ordinal);
+        Assert.Contains("Pro tichou izolovanou instalaci pridejte -Install.", script, StringComparison.Ordinal);
+        Assert.Contains("/VERYSILENT", script, StringComparison.Ordinal);
+        Assert.Contains("/DIR=", script, StringComparison.Ordinal);
+        Assert.Contains("/LOG=", script, StringComparison.Ordinal);
+        Assert.Contains("$installFullPath", script, StringComparison.Ordinal);
+        Assert.Contains("Join-Path $installFullPath \"data\"", script, StringComparison.Ordinal);
+        Assert.Contains("Vehimap.Desktop.exe", script, StringComparison.Ordinal);
+        Assert.Contains("unins000.exe", script, StringComparison.Ordinal);
+        Assert.Contains("Remove-Item -LiteralPath $installFullPath -Recurse -Force", script, StringComparison.Ordinal);
+    }
+
     private static string ReadWorkflow()
     {
         var workflowPath = Path.Combine(FindRepositoryRoot(), ".github", "workflows", "dotnet-desktop.yml");
