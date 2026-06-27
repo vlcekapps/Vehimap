@@ -190,6 +190,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - přístupné okno `Akce Vehimapu na liště` v Avalonia větvi umí kromě hlavního okna, dashboardu, přehledů a ukončení aplikace otevřít i nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrované kontroly těchto oblastí a vyvolat tiskový přehled, export/import zálohy, export kalendáře, znovunačtení dat, nastavení, `O programu` nebo kontrolu aktualizací
 
 ### Opraveno
+- C# horní menu po `Alt` nebo `F10` nově pouze fokusuje kořenovou nabídku `Soubor` a nerozbaluje ji automaticky; rozbalení zůstává na šipce dolů, takže šipky vlevo/vpravo nepřeskakují mezi nečekaně otevřenými nabídkami.
 - C# desktopová oznámení už mají platformní rozhodování oddělené od běžícího OS v testech, takže Windows balónková větev i ne-Windows inline fallback jsou regresně ověřené a připravené pro budoucí macOS/Linux CI
 - C# platformní autostart má otestované generování Linux `.desktop` a macOS LaunchAgent záznamů včetně escapování cest, uvozovek a XML znaků; macOS pracovní složka se už neodvozuje podle hostitelského OS běžícího testu
 - C# legacy načítání dat nově při poškozeném `TSV` nebo `INI` souboru hlásí konkrétní název souboru, plnou cestu a původní parser detail místo samotné neukotvené chyby řádku

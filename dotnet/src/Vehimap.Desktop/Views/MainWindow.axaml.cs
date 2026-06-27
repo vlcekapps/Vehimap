@@ -199,7 +199,7 @@ public partial class MainWindow : Window
     {
         if (IsMainMenuInvocationKey(e))
         {
-            e.Handled = FocusAndOpenMainMenu();
+            e.Handled = FocusMainMenuRoot();
             return;
         }
 
@@ -850,17 +850,15 @@ public partial class MainWindow : Window
         return false;
     }
 
-    private bool FocusAndOpenMainMenu()
+    private bool FocusMainMenuRoot()
     {
         if (this.FindControl<MenuItem>("FileMenuRoot") is not { } fileMenu)
         {
             return false;
         }
 
-        var focused = fileMenu.Focus(NavigationMethod.Tab, KeyModifiers.None)
+        return fileMenu.Focus(NavigationMethod.Tab, KeyModifiers.None)
             || fileMenu.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
-        fileMenu.IsSubMenuOpen = true;
-        return focused || fileMenu.IsSubMenuOpen;
     }
 
     private async Task<bool> ConfirmDeleteVehicleAsync(string message)
