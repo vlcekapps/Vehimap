@@ -112,6 +112,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - runtime-specific desktop update manifesty `update/latest-dotnet-<rid>.ini`
 - legacy aliasy `update/latest-dotnet-preview-<rid>.ini`, ktere starym preview buildum umozni prejit na prvni stabilni desktop release
 - lokalni release readiness skript `dotnet/build/Test-DotnetReleaseReadiness.ps1`, ktery postavi, otestuje, publikuje, zabali a overi manifest pro vybrany RID pred tagovanim
+- release tag skript `dotnet/build/New-DotnetDesktopReleaseTag.ps1`, ktery vynuti cisty `main`, shodu s `origin/main`, neexistujici `dotnet-v<verze>` tag a readiness branu; push tagu na GitHub je explicitni volba `-Push`
 - AHK retirement readiness report `dotnet/build/Get-AhkRetirementReadiness.ps1`, ktery pred fyzickym odstranenim AHK vetve zkontroluje stabilni manifest, release workflow, preview alias pro stare buildy a zbyvajici AHK artefakty
 - release workflow spousti `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers` hned po vygenerovani manifestu, aby prvni stabilni Windows kanal nesel publikovat s nefunkcnim update odkazem
 - detailni stav automaticke instalace v dialogu kontroly aktualizaci, vcetne duvodu rucniho rezimu
@@ -161,7 +162,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 
 ## Co je dalsi na rade
 
-1. Dokoncit Windows desktop release gate: spustit `Test-DotnetReleaseReadiness.ps1`, vydat prvni publikovany `dotnet-v<verze>` release a nechat workflow overit `Get-AhkRetirementReadiness.ps1` proti prave vygenerovanemu `latest-dotnet-win-x64.ini`.
+1. Dokoncit Windows desktop release gate: spustit `Test-DotnetReleaseReadiness.ps1`, vytvorit release tag pres `New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Push`, vydat prvni publikovany `dotnet-v<verze>` release a nechat workflow overit `Get-AhkRetirementReadiness.ps1` proti prave vygenerovanemu `latest-dotnet-win-x64.ini`.
 2. Po uspesnem release workflow rucne overit update tok a Windows Appium smoke proti release artefaktu.
 3. Spustit `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers` lokalne; AHK fyzicky odstranit az ve chvili, kdy report nema blockery a zbyvaji jen ocekavane retirement warningy k samotnemu mazacimu commitu.
 4. Po stabilnim Windows desktop releasu a kratkem realnem pouzivani bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.

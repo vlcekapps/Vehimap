@@ -178,6 +178,17 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetR
 
 Skript postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi stabilni `latest-dotnet-win-x64.ini` bez preview odkazu.
 
+Samotne vytvoreni release tagu je oddelene do bezpecneho skriptu. Ve vychozim rezimu zkontroluje cisty `main`, shodu s `origin/main`, neexistujici tag a spusti release readiness branu; tag na GitHub odesle jen s explicitnim `-Push`.
+
+```powershell
+cd dotnet
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -DryRun -SkipReadiness
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Push
+```
+
+Prvni prikaz je rychla sucha kontrola bez tagu a bez dlouhe readiness brany. Potom zvolte bud druhy prikaz pro vytvoreni lokalniho anotovaneho tagu `dotnet-v<verze>`, nebo treti prikaz pro vytvoreni tagu a jeho okamzite odeslani na GitHub po uspesne readiness brane.
+
 Pred finalnim odstranenim AHK vetve spustte jeste retirement report:
 
 ```powershell

@@ -47,6 +47,23 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("AHK zatim nemazat", script, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Release_tag_script_requires_readiness_and_explicit_push()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "New-DotnetDesktopReleaseTag.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("dotnet-v$version", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetReleaseReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("git @Arguments", script, StringComparison.Ordinal);
+        Assert.Contains("status --porcelain", script, StringComparison.Ordinal);
+        Assert.Contains("rev-parse origin/main", script, StringComparison.Ordinal);
+        Assert.Contains("tag -a $tagName", script, StringComparison.Ordinal);
+        Assert.Contains("if ($Push)", script, StringComparison.Ordinal);
+        Assert.Contains("push origin $tagName", script, StringComparison.Ordinal);
+        Assert.Contains("Dry run OK. Tag nebyl vytvoren.", script, StringComparison.Ordinal);
+    }
+
     private static string ReadWorkflow()
     {
         var workflowPath = Path.Combine(FindRepositoryRoot(), ".github", "workflows", "dotnet-desktop.yml");

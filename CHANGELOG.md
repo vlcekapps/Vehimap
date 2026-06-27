@@ -129,6 +129,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - C# desktop release workflow už po zelených testech vytváří publikovaný GitHub release místo draft releasu a má lokální bránu `Test-DotnetReleaseReadiness.ps1` pro ověření balíčku a manifestu před tagováním
 - C# větev má nový nedestruktivní AHK retirement report `Get-AhkRetirementReadiness.ps1`, který před odstraněním AHK zkontroluje stabilní release manifest, preview alias pro starší buildy a zbylé AHK artefakty
 - Release workflow C# větve teď po vygenerování manifestů spouští AHK retirement report s `-FailOnBlockers`, aby první stabilní Windows kanál neprošel s nefunkčním update odkazem
+- C# větev má nový bezpečný release tag skript `New-DotnetDesktopReleaseTag.ps1`, který před `dotnet-v<verze>` tagem kontroluje čistý `main`, shodu s `origin/main`, neexistující tag a release readiness bránu; push na GitHub vyžaduje explicitní `-Push`
 - Avalonia horní menu nově zobrazuje nativní `InputGesture` u hlavních položek se zkratkami, takže menu viditelně odpovídá keyboard-first ovládání
 - klávesové zkratky přehledů v Avalonia shellu jsou sjednocené s hlavní dokumentací: `Ctrl+D` dashboard, `Ctrl+T` blížící se termíny a `Ctrl+Shift+T` propadlé termíny
 - Avalonia ukládání štítků vozidla sjednocuje čárky, středníky, prázdné položky a duplicity stejně jako AHK větev
