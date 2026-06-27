@@ -285,6 +285,18 @@ jobs:
           -Version "${{ needs.metadata.outputs.effective_version }}"
           -OutputDirectory "artifacts/${{ matrix.rid }}/release"
           -Channel "${{ needs.metadata.outputs.channel }}"
+      - name: Smoke test Windows installer package
+        if: startsWith(matrix.rid, 'win-')
+        shell: pwsh
+        run: |
+          $metadata = Get-ChildItem -Path "artifacts/${{ matrix.rid }}/release" -Filter "*.json" | Sort-Object Name | Select-Object -First 1
+          if ($null -eq $metadata) {
+            throw "Nebyla nalezena package metadata pro Windows installer."
+          }
+
+          $package = Get-Content -Raw -LiteralPath $metadata.FullName | ConvertFrom-Json
+          $installerPath = Join-Path $metadata.DirectoryName $package.packageFile
+          ./build/Test-DotnetInstallerSmoke.ps1 -InstallerPath $installerPath -PackageMetadataPath $metadata.FullName
       - name: Upload packaged artifact
         uses: actions/upload-artifact@v7
         with:

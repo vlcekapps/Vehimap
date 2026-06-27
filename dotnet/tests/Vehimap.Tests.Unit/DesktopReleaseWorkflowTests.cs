@@ -78,6 +78,21 @@ public sealed class DesktopReleaseWorkflowTests
     }
 
     [Fact]
+    public void Dotnet_desktop_workflow_smokes_windows_installer_before_upload()
+    {
+        var workflow = ReadWorkflow();
+
+        Assert.Contains("Smoke test Windows installer package", workflow, StringComparison.Ordinal);
+        Assert.Contains("if: startsWith(matrix.rid, 'win-')", workflow, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetInstallerSmoke.ps1 -InstallerPath $installerPath -PackageMetadataPath $metadata.FullName", workflow, StringComparison.Ordinal);
+        Assert.Contains("Upload packaged artifact", workflow, StringComparison.Ordinal);
+        Assert.True(
+            workflow.IndexOf("Smoke test Windows installer package", StringComparison.Ordinal) <
+            workflow.IndexOf("Upload packaged artifact", StringComparison.Ordinal),
+            "Windows installer smoke must run before uploading packaged artifacts.");
+    }
+
+    [Fact]
     public void Ahk_retirement_readiness_script_guards_final_removal()
     {
         var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Get-AhkRetirementReadiness.ps1");

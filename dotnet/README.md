@@ -178,6 +178,7 @@ CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 - po release zapsat runtime-specific desktop manifesty do `update/`
 - zapsat i prechodove `latest-dotnet-preview-<rid>.ini` aliasy pro uz vydane preview buildy
 - pred commitem vygenerovanych manifestu overit Windows manifest pres `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel <kanal> -SkipNetwork`; stable pri tom hlida i AHK retirement gate, nightly/beta overuji kanalovy manifest bez stable-only kroku
+- pred uploadem Windows release artefaktu spustit `Test-DotnetInstallerSmoke.ps1`, aby se setup EXE, `.sha256` a JSON metadata overily uz v publish jobu
 - na Windows runneru spustit Appium smoke nad publish buildem desktop release vcetne kontroly app-level menu a dostupnosti rychlych akci
 
 Pred vytvorenim tagu lze lokalne spustit stejnou release readiness branu:
