@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Desktop.Services;
 using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
@@ -16,6 +17,9 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.FuelWindowTitle;
     public ObservableCollection<VehicleFuelItemViewModel> SelectedVehicleFuel { get; } = [];
     public ObservableCollection<VehicleFuelItemViewModel> VisibleFuelItems { get; } = [];
+    public ObservableCollection<FuelConsumptionSegmentItemViewModel> FuelConsumptionSegments { get; } = [];
+    public ObservableCollection<FuelGroupSummaryItemViewModel> FuelGroupSummaries { get; } = [];
+    public ObservableCollection<FuelAnalysisWarningItemViewModel> FuelAnalysisWarnings { get; } = [];
 
     [ObservableProperty]
     private string fuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
@@ -25,6 +29,9 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
 
     [ObservableProperty]
     private string fuelSearchSummary = "Ctrl+F přesune fokus do hledání tankování.";
+
+    [ObservableProperty]
+    private string fuelAnalysisSummaryText = "Analýza tankování se zobrazí po výběru vozidla.";
 
     [ObservableProperty]
     private string selectedFuelSortOption = WorkspaceSortHelpers.DateSortLabel;
@@ -43,6 +50,15 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
 
     [ObservableProperty]
     private string selectedFuelDetail = "Vyberte tankování a zobrazí se detail položky.";
+
+    [ObservableProperty]
+    private FuelConsumptionSegmentItemViewModel? selectedFuelConsumptionSegment;
+
+    [ObservableProperty]
+    private FuelGroupSummaryItemViewModel? selectedFuelGroupSummary;
+
+    [ObservableProperty]
+    private FuelAnalysisWarningItemViewModel? selectedFuelAnalysisWarning;
 
     [ObservableProperty]
     private string fuelPanelHeading = "Detail tankování";
@@ -81,6 +97,12 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     private string fuelEditorNote = string.Empty;
 
     public bool IsFuelDetailVisible => !IsEditingFuel;
+    public bool HasFuelConsumptionSegments => FuelConsumptionSegments.Count > 0;
+    public bool HasFuelGroupSummaries => FuelGroupSummaries.Count > 0;
+    public bool HasFuelAnalysisWarnings => FuelAnalysisWarnings.Count > 0;
+    public bool CanOpenSelectedFuelConsumptionSegment => !string.IsNullOrWhiteSpace(SelectedFuelConsumptionSegment?.FuelEntryId);
+    public bool CanOpenSelectedFuelGroupSummary => !string.IsNullOrWhiteSpace(SelectedFuelGroupSummary?.FuelEntryId);
+    public bool CanOpenSelectedFuelAnalysisWarning => !string.IsNullOrWhiteSpace(SelectedFuelAnalysisWarning?.FuelEntryId);
 
     public ICommand CreateFuelCommand => Root.CreateFuelCommand;
     public ICommand EditSelectedFuelCommand => Root.EditSelectedFuelCommand;
@@ -99,6 +121,64 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     {
         FuelSearchText = string.Empty;
         RequestFocus(DesktopFocusTarget.FuelSearch);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedFuelConsumptionSegment))]
+    private void OpenSelectedFuelConsumptionSegment()
+    {
+        Root.SelectFuelAnalysisTarget(SelectedFuelConsumptionSegment?.FuelEntryId);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedFuelGroupSummary))]
+    private void OpenSelectedFuelGroupSummary()
+    {
+        Root.SelectFuelAnalysisTarget(SelectedFuelGroupSummary?.FuelEntryId);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanOpenSelectedFuelAnalysisWarning))]
+    private void OpenSelectedFuelAnalysisWarning()
+    {
+        Root.SelectFuelAnalysisTarget(SelectedFuelAnalysisWarning?.FuelEntryId);
+    }
+
+    internal void ApplyFuelAnalysis(DesktopFuelAnalysisProjection projection)
+    {
+        FuelAnalysisSummaryText = projection.Summary;
+
+        FuelConsumptionSegments.Clear();
+        foreach (var item in projection.ConsumptionSegments)
+        {
+            FuelConsumptionSegments.Add(item);
+        }
+
+        FuelGroupSummaries.Clear();
+        foreach (var item in projection.GroupSummaries)
+        {
+            FuelGroupSummaries.Add(item);
+        }
+
+        FuelAnalysisWarnings.Clear();
+        foreach (var item in projection.Warnings)
+        {
+            FuelAnalysisWarnings.Add(item);
+        }
+
+        SelectedFuelConsumptionSegment = FuelConsumptionSegments.FirstOrDefault();
+        SelectedFuelGroupSummary = FuelGroupSummaries.FirstOrDefault();
+        SelectedFuelAnalysisWarning = FuelAnalysisWarnings.FirstOrDefault();
+        NotifyFuelAnalysisStateChanged();
+    }
+
+    internal void ClearFuelAnalysis()
+    {
+        FuelAnalysisSummaryText = "Analýza tankování se zobrazí po výběru vozidla.";
+        FuelConsumptionSegments.Clear();
+        FuelGroupSummaries.Clear();
+        FuelAnalysisWarnings.Clear();
+        SelectedFuelConsumptionSegment = null;
+        SelectedFuelGroupSummary = null;
+        SelectedFuelAnalysisWarning = null;
+        NotifyFuelAnalysisStateChanged();
     }
 
     public void RefreshVisibleFuelItems(bool preserveSelection = true)
@@ -135,6 +215,21 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
             : $"Datum: {value.Date}\nPalivo: {value.FuelType}\nDetail paliva: {value.FuelDetail}\nMísto tankování: {value.Station}\nMnožství: {value.Liters}\nCena celkem: {value.TotalCost}\nTachometr: {value.Odometer}\nStav nádrže: {value.TankState}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
 
         Root.NotifyFuelWorkspaceSelectionChanged();
+    }
+
+    partial void OnSelectedFuelConsumptionSegmentChanged(FuelConsumptionSegmentItemViewModel? value)
+    {
+        OpenSelectedFuelConsumptionSegmentCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnSelectedFuelGroupSummaryChanged(FuelGroupSummaryItemViewModel? value)
+    {
+        OpenSelectedFuelGroupSummaryCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnSelectedFuelAnalysisWarningChanged(FuelAnalysisWarningItemViewModel? value)
+    {
+        OpenSelectedFuelAnalysisWarningCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnFuelSearchTextChanged(string value)
@@ -195,6 +290,19 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
         FuelSearchSummary = VisibleFuelItems.Count == 0
             ? $"Hledání „{FuelSearchText.Trim()}“ nenašlo v tankování žádný záznam."
             : $"Hledání „{FuelSearchText.Trim()}“ našlo {VisibleFuelItems.Count} tankování.";
+    }
+
+    private void NotifyFuelAnalysisStateChanged()
+    {
+        OnPropertyChanged(nameof(HasFuelConsumptionSegments));
+        OnPropertyChanged(nameof(HasFuelGroupSummaries));
+        OnPropertyChanged(nameof(HasFuelAnalysisWarnings));
+        OnPropertyChanged(nameof(CanOpenSelectedFuelConsumptionSegment));
+        OnPropertyChanged(nameof(CanOpenSelectedFuelGroupSummary));
+        OnPropertyChanged(nameof(CanOpenSelectedFuelAnalysisWarning));
+        OpenSelectedFuelConsumptionSegmentCommand.NotifyCanExecuteChanged();
+        OpenSelectedFuelGroupSummaryCommand.NotifyCanExecuteChanged();
+        OpenSelectedFuelAnalysisWarningCommand.NotifyCanExecuteChanged();
     }
 
     private static bool Contains(string value, string query) =>

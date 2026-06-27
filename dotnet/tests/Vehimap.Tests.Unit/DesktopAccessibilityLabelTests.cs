@@ -994,6 +994,14 @@ public sealed class DesktopAccessibilityLabelTests
         AssertAccessibleBoundText(fuelXaml, "FuelSearchSummaryText", "FuelSearchSummary");
         AssertAccessibleBoundText(fuelXaml, "FuelEditorStatusText", "FuelEditorStatus");
         AssertAccessibleBoundText(fuelXaml, "SelectedFuelDetailText", "SelectedFuelDetail");
+        AssertAccessibleBoundText(fuelXaml, "FuelAnalysisSummaryText", "FuelAnalysisSummaryText");
+        Assert.Contains("AutomationProperties.AutomationId=\"FuelConsumptionSegmentsListBox\"", fuelXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FuelGroupSummariesListBox\"", fuelXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FuelAnalysisWarningsListBox\"", fuelXaml);
+        Assert.Contains("x:DataType=\"itemvm:FuelConsumptionSegmentItemViewModel\"", fuelXaml);
+        Assert.Contains("x:DataType=\"itemvm:FuelGroupSummaryItemViewModel\"", fuelXaml);
+        Assert.Contains("x:DataType=\"itemvm:FuelAnalysisWarningItemViewModel\"", fuelXaml);
+        Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", fuelXaml);
         AssertAccessibleBoundText(reminderXaml, "ReminderSummaryText", "ReminderSummary");
         AssertAccessibleBoundText(reminderXaml, "ReminderSearchSummaryText", "ReminderSearchSummary");
         AssertAccessibleBoundText(reminderXaml, "ReminderEditorStatusText", "ReminderEditorStatus");
@@ -1095,6 +1103,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedFuelCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedFuelCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"Ctrl+S\" Command=\"{Binding SaveFuelCommand}\"", fuelXaml);
+        Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedFuelConsumptionSegmentCommand}\"", fuelXaml);
+        Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedFuelGroupSummaryCommand}\"", fuelXaml);
+        Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedFuelAnalysisWarningCommand}\"", fuelXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", reminderXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateReminderCommand}\"", reminderXaml);

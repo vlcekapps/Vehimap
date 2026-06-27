@@ -137,102 +137,207 @@
                    TextWrapping="Wrap"
                    AutomationProperties.Name="{Binding FuelEditorStatus}"
                    AutomationProperties.AutomationId="FuelEditorStatusText" />
-        <Border x:Name="FuelEditorHost"
-                Grid.Row="3"
-                Margin="0,16,0,0">
-          <Grid IsVisible="{Binding IsEditingFuel}"
-                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
-          <Grid ColumnDefinitions="*,160">
-            <StackPanel Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Datum" />
-              <TextBox x:Name="FuelEditorDateBox"
-                       Text="{Binding FuelEditorDate}"
-                       PlaceholderText="Například 15.06.2026"
-                       AutomationProperties.Name="Datum tankování"
-                       AutomationProperties.AutomationId="FuelEditorDateBox" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Typ paliva" />
-              <ComboBox x:Name="FuelEditorFuelTypeBox"
-                        ItemsSource="{Binding FuelTypeOptions}"
-                        SelectedItem="{Binding FuelEditorFuelType}"
-                        AutomationProperties.Name="Typ paliva"
-                        AutomationProperties.AutomationId="FuelEditorFuelTypeBox" />
-            </StackPanel>
-          </Grid>
-          <Grid Grid.Row="1"
-                Margin="0,14,0,0"
-                ColumnDefinitions="*,*">
-            <StackPanel Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Detail paliva" />
-              <TextBox x:Name="FuelEditorFuelDetailBox"
-                       Text="{Binding FuelEditorFuelDetail}"
-                       PlaceholderText="Například Natural 95, V-Power nebo FuelSave"
-                       AutomationProperties.Name="Detail paliva"
-                       AutomationProperties.AutomationId="FuelEditorFuelDetailBox" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Místo tankování" />
-              <TextBox x:Name="FuelEditorStationBox"
-                       Text="{Binding FuelEditorStation}"
-                       PlaceholderText="Například Shell Brno Vídeňská"
-                       AutomationProperties.Name="Místo tankování"
-                       AutomationProperties.AutomationId="FuelEditorStationBox" />
-            </StackPanel>
-          </Grid>
-          <Grid Grid.Row="2"
-                Margin="0,14,0,0"
-                ColumnDefinitions="*,*,*">
-            <StackPanel Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Množství" />
-              <TextBox x:Name="FuelEditorLitersBox"
-                       Text="{Binding FuelEditorLiters}"
-                       AutomationProperties.Name="Množství tankovaného paliva"
-                       AutomationProperties.AutomationId="FuelEditorLitersBox" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Cena celkem" />
-              <TextBox x:Name="FuelEditorTotalCostBox"
-                       Text="{Binding FuelEditorTotalCost}"
-                       AutomationProperties.Name="Cena tankování celkem"
-                       AutomationProperties.AutomationId="FuelEditorTotalCostBox" />
-            </StackPanel>
-            <StackPanel Grid.Column="2" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Tachometr" />
-              <TextBox x:Name="FuelEditorOdometerBox"
-                       Text="{Binding FuelEditorOdometer}"
-                       AutomationProperties.Name="Tachometr při tankování"
-                       AutomationProperties.AutomationId="FuelEditorOdometerBox" />
-            </StackPanel>
-          </Grid>
-          <CheckBox Grid.Row="3"
-                    Margin="0,14,0,0"
-                    IsChecked="{Binding FuelEditorFullTank}"
-                    Content="Plná nádrž"
-                    AutomationProperties.Name="Tankování do plné nádrže"
-                    AutomationProperties.AutomationId="FuelEditorFullTankCheckBox" />
-          <TextBlock Grid.Row="4"
-                     Margin="0,14,0,0"
-                     FontWeight="SemiBold"
-                     Text="Poznámka" />
-          <TextBox Grid.Row="5"
-                   Margin="0,6,0,0"
-                   Height="120"
-                   AcceptsReturn="True"
-                   TextWrapping="Wrap"
-                   VerticalContentAlignment="Top"
-                   Text="{Binding FuelEditorNote}"
-                   AutomationProperties.Name="Poznámka k tankování"
-                   AutomationProperties.AutomationId="FuelEditorNoteBox" />
-          </Grid>
-        </Border>
-        <TextBlock Grid.Row="3"
-                   Margin="0,16,0,0"
-                   IsVisible="{Binding IsFuelDetailVisible}"
-                   Text="{Binding SelectedFuelDetail}"
-                   TextWrapping="Wrap"
-                   AutomationProperties.Name="{Binding SelectedFuelDetail}"
-                   AutomationProperties.AutomationId="SelectedFuelDetailText" />
+        <StackPanel Grid.Row="3"
+                    Margin="0,16,0,0"
+                    Spacing="18">
+          <Border x:Name="FuelEditorHost">
+            <Grid IsVisible="{Binding IsEditingFuel}"
+                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+            <Grid ColumnDefinitions="*,160">
+              <StackPanel Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Datum" />
+                <TextBox x:Name="FuelEditorDateBox"
+                         Text="{Binding FuelEditorDate}"
+                         PlaceholderText="Například 15.06.2026"
+                         AutomationProperties.Name="Datum tankování"
+                         AutomationProperties.AutomationId="FuelEditorDateBox" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Typ paliva" />
+                <ComboBox x:Name="FuelEditorFuelTypeBox"
+                          ItemsSource="{Binding FuelTypeOptions}"
+                          SelectedItem="{Binding FuelEditorFuelType}"
+                          AutomationProperties.Name="Typ paliva"
+                          AutomationProperties.AutomationId="FuelEditorFuelTypeBox" />
+              </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1"
+                  Margin="0,14,0,0"
+                  ColumnDefinitions="*,*">
+              <StackPanel Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Detail paliva" />
+                <TextBox x:Name="FuelEditorFuelDetailBox"
+                         Text="{Binding FuelEditorFuelDetail}"
+                         PlaceholderText="Například Natural 95, V-Power nebo FuelSave"
+                         AutomationProperties.Name="Detail paliva"
+                         AutomationProperties.AutomationId="FuelEditorFuelDetailBox" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Místo tankování" />
+                <TextBox x:Name="FuelEditorStationBox"
+                         Text="{Binding FuelEditorStation}"
+                         PlaceholderText="Například Shell Brno Vídeňská"
+                         AutomationProperties.Name="Místo tankování"
+                         AutomationProperties.AutomationId="FuelEditorStationBox" />
+              </StackPanel>
+            </Grid>
+            <Grid Grid.Row="2"
+                  Margin="0,14,0,0"
+                  ColumnDefinitions="*,*,*">
+              <StackPanel Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Množství" />
+                <TextBox x:Name="FuelEditorLitersBox"
+                         Text="{Binding FuelEditorLiters}"
+                         AutomationProperties.Name="Množství tankovaného paliva"
+                         AutomationProperties.AutomationId="FuelEditorLitersBox" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Cena celkem" />
+                <TextBox x:Name="FuelEditorTotalCostBox"
+                         Text="{Binding FuelEditorTotalCost}"
+                         AutomationProperties.Name="Cena tankování celkem"
+                         AutomationProperties.AutomationId="FuelEditorTotalCostBox" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="Tachometr" />
+                <TextBox x:Name="FuelEditorOdometerBox"
+                         Text="{Binding FuelEditorOdometer}"
+                         AutomationProperties.Name="Tachometr při tankování"
+                         AutomationProperties.AutomationId="FuelEditorOdometerBox" />
+              </StackPanel>
+            </Grid>
+            <CheckBox Grid.Row="3"
+                      Margin="0,14,0,0"
+                      IsChecked="{Binding FuelEditorFullTank}"
+                      Content="Plná nádrž"
+                      AutomationProperties.Name="Tankování do plné nádrže"
+                      AutomationProperties.AutomationId="FuelEditorFullTankCheckBox" />
+            <TextBlock Grid.Row="4"
+                       Margin="0,14,0,0"
+                       FontWeight="SemiBold"
+                       Text="Poznámka" />
+            <TextBox Grid.Row="5"
+                     Margin="0,6,0,0"
+                     Height="120"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalContentAlignment="Top"
+                     Text="{Binding FuelEditorNote}"
+                     AutomationProperties.Name="Poznámka k tankování"
+                     AutomationProperties.AutomationId="FuelEditorNoteBox" />
+            </Grid>
+          </Border>
+          <StackPanel IsVisible="{Binding IsFuelDetailVisible}"
+                      Spacing="16">
+            <TextBlock Text="{Binding SelectedFuelDetail}"
+                       TextWrapping="Wrap"
+                       AutomationProperties.Name="{Binding SelectedFuelDetail}"
+                       AutomationProperties.AutomationId="SelectedFuelDetailText" />
+            <Border Height="1" Background="#20304050" />
+            <TextBlock FontSize="18"
+                       FontWeight="SemiBold"
+                       Text="Analýza tankování"
+                       AutomationProperties.Name="Analýza tankování"
+                       AutomationProperties.AutomationId="FuelAnalysisHeadingText" />
+            <TextBlock Text="{Binding FuelAnalysisSummaryText}"
+                       TextWrapping="Wrap"
+                       AutomationProperties.Name="{Binding FuelAnalysisSummaryText}"
+                       AutomationProperties.AutomationId="FuelAnalysisSummaryText" />
+            <TextBlock FontWeight="SemiBold"
+                       Text="Vývoj spotřeby" />
+            <ListBox MinHeight="110"
+                     MaxHeight="180"
+                     ItemsSource="{Binding FuelConsumptionSegments}"
+                     SelectedItem="{Binding SelectedFuelConsumptionSegment}"
+                     AutomationProperties.Name="Vývoj spotřeby tankování"
+                     AutomationProperties.AutomationId="FuelConsumptionSegmentsListBox">
+              <ListBox.KeyBindings>
+                <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedFuelConsumptionSegmentCommand}" />
+              </ListBox.KeyBindings>
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="itemvm:FuelConsumptionSegmentItemViewModel">
+                  <Border Padding="10"
+                          Margin="0,0,0,6"
+                          Background="#10203040"
+                          CornerRadius="6"
+                          AutomationProperties.Name="{Binding AccessibleLabel}">
+                    <StackPanel>
+                      <TextBlock Text="{Binding Period}" />
+                      <TextBlock Opacity="0.78" Text="{Binding Consumption}" />
+                      <TextBlock Opacity="0.78" Text="{Binding Distance}" />
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Command="{Binding OpenSelectedFuelConsumptionSegmentCommand}"
+                    Content="Otevřít tankování úseku"
+                    AutomationProperties.Name="Otevřít tankování vybraného úseku spotřeby"
+                    AutomationProperties.AutomationId="OpenFuelConsumptionSegmentButton" />
+            <TextBlock FontWeight="SemiBold"
+                       Text="Místa a paliva" />
+            <ListBox MinHeight="110"
+                     MaxHeight="180"
+                     ItemsSource="{Binding FuelGroupSummaries}"
+                     SelectedItem="{Binding SelectedFuelGroupSummary}"
+                     AutomationProperties.Name="Místa tankování a paliva"
+                     AutomationProperties.AutomationId="FuelGroupSummariesListBox">
+              <ListBox.KeyBindings>
+                <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedFuelGroupSummaryCommand}" />
+              </ListBox.KeyBindings>
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="itemvm:FuelGroupSummaryItemViewModel">
+                  <Border Padding="10"
+                          Margin="0,0,0,6"
+                          Background="#10203040"
+                          CornerRadius="6"
+                          AutomationProperties.Name="{Binding AccessibleLabel}">
+                    <StackPanel>
+                      <TextBlock Text="{Binding Station}" />
+                      <TextBlock Opacity="0.78" Text="{Binding Fuel}" />
+                      <TextBlock Opacity="0.78" Text="{Binding AveragePricePerLiter}" />
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Command="{Binding OpenSelectedFuelGroupSummaryCommand}"
+                    Content="Otevřít poslední tankování skupiny"
+                    AutomationProperties.Name="Otevřít poslední tankování vybrané skupiny místa a paliva"
+                    AutomationProperties.AutomationId="OpenFuelGroupSummaryButton" />
+            <TextBlock FontWeight="SemiBold"
+                       Text="Upozornění" />
+            <ListBox MinHeight="110"
+                     MaxHeight="180"
+                     ItemsSource="{Binding FuelAnalysisWarnings}"
+                     SelectedItem="{Binding SelectedFuelAnalysisWarning}"
+                     AutomationProperties.Name="Upozornění analýzy tankování"
+                     AutomationProperties.AutomationId="FuelAnalysisWarningsListBox">
+              <ListBox.KeyBindings>
+                <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedFuelAnalysisWarningCommand}" />
+              </ListBox.KeyBindings>
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="itemvm:FuelAnalysisWarningItemViewModel">
+                  <Border Padding="10"
+                          Margin="0,0,0,6"
+                          Background="#10203040"
+                          CornerRadius="6"
+                          AutomationProperties.Name="{Binding AccessibleLabel}">
+                    <StackPanel>
+                      <TextBlock Text="{Binding Title}" />
+                      <TextBlock Opacity="0.78" Text="{Binding Severity}" />
+                      <TextBlock Opacity="0.78" Text="{Binding Description}" TextWrapping="Wrap" />
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Command="{Binding OpenSelectedFuelAnalysisWarningCommand}"
+                    Content="Otevřít související tankování"
+                    AutomationProperties.Name="Otevřít tankování související s vybraným upozorněním"
+                    AutomationProperties.AutomationId="OpenFuelAnalysisWarningButton" />
+          </StackPanel>
+        </StackPanel>
       </Grid>
       </ScrollViewer>
     </Border>

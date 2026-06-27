@@ -70,6 +70,16 @@ public static class VehimapValueParser
 
     public static bool TryParseMoney(string? text, out decimal value)
     {
+        return TryParseDecimalCore(text, out value, stripCommonMoneyMarkers: true);
+    }
+
+    public static bool TryParseDecimalNumber(string? text, out decimal value)
+    {
+        return TryParseDecimalCore(text, out value, stripCommonMoneyMarkers: false);
+    }
+
+    private static bool TryParseDecimalCore(string? text, out decimal value, bool stripCommonMoneyMarkers)
+    {
         value = 0m;
         var clean = (text ?? string.Empty).Trim().ToLowerInvariant();
         if (string.IsNullOrWhiteSpace(clean))
@@ -77,9 +87,14 @@ public static class VehimapValueParser
             return false;
         }
 
+        if (stripCommonMoneyMarkers)
+        {
+            clean = clean
+                .Replace("kč", string.Empty, StringComparison.Ordinal)
+                .Replace("czk", string.Empty, StringComparison.Ordinal);
+        }
+
         clean = clean
-            .Replace("kč", string.Empty, StringComparison.Ordinal)
-            .Replace("czk", string.Empty, StringComparison.Ordinal)
             .Replace("\u00A0", string.Empty, StringComparison.Ordinal)
             .Replace(" ", string.Empty, StringComparison.Ordinal)
             .Replace(",-", string.Empty, StringComparison.Ordinal)

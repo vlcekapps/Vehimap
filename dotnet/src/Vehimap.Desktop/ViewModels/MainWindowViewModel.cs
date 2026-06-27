@@ -36,6 +36,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly IClipboardService _clipboardService;
     private readonly IGlobalSearchService _globalSearchService;
     private readonly ITimelineService _timelineService;
+    private readonly IFuelAnalysisService _fuelAnalysisService;
     private readonly ICalendarExportService _calendarExportService;
     private readonly ITextFileSaveService _fileSaveService;
     private readonly IFileDialogService _fileDialogService;
@@ -290,7 +291,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         DesktopPrintableVehicleReportService? printableVehicleReportService = null,
         IAppShellDialogService? appShellDialogService = null,
         IUpdateInstallLauncher? updateInstallLauncher = null,
-        IClipboardService? clipboardService = null)
+        IClipboardService? clipboardService = null,
+        IFuelAnalysisService? fuelAnalysisService = null)
     {
         var sessionBackupService = backupService ?? new LegacyBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
@@ -314,6 +316,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _clipboardService = clipboardService ?? new AvaloniaClipboardService();
         _globalSearchService = globalSearchService;
         _timelineService = timelineService;
+        _fuelAnalysisService = fuelAnalysisService ?? new LegacyFuelAnalysisService();
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
@@ -391,6 +394,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             ApplyVehicleDetailProjection(_projectionService.BuildVehicleDetail(_dataSet, null));
             HistoryWorkspace.HistorySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
             FuelWorkspace.FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
+            FuelWorkspace.ClearFuelAnalysis();
             ReminderWorkspace.ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
             MaintenanceWorkspace.MaintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
             TimelineWorkspace.TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
@@ -1246,6 +1250,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         FuelWorkspace.FuelSummary = projection.Summary;
+        FuelWorkspace.ApplyFuelAnalysis(_projectionService.BuildFuelAnalysis(
+            _fuelAnalysisService.BuildVehicleFuelAnalysis(_dataSet, vehicleId)));
         FuelWorkspace.RefreshVisibleFuelItems(preserveSelection: false);
     }
 

@@ -646,6 +646,34 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
+    public void Fuel_analysis_block_is_accessible_and_can_open_related_fuel_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("FuelTabButton");
+
+            var summary = session.GetNameByAccessibilityId("FuelAnalysisSummaryText");
+            Assert.Contains("Průměrná spotřeba", summary, StringComparison.Ordinal);
+            Assert.Equal("Vývoj spotřeby tankování", session.GetNameByAccessibilityId("FuelConsumptionSegmentsListBox"));
+            Assert.Equal("Místa tankování a paliva", session.GetNameByAccessibilityId("FuelGroupSummariesListBox"));
+            Assert.Equal("Upozornění analýzy tankování", session.GetNameByAccessibilityId("FuelAnalysisWarningsListBox"));
+
+            session.ClickByAccessibilityId("OpenFuelConsumptionSegmentButton");
+
+            Assert.Contains(
+                "Související tankování bylo vybráno",
+                session.GetNameByAccessibilityId("FuelEditorStatusText"),
+                StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
     public void Reminder_editor_runs_in_standalone_window_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

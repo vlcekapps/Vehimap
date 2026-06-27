@@ -461,6 +461,36 @@ public sealed partial class MainWindowViewModel
 
     internal string FormatWorkspaceValue(string? value, string fallback) => FormatValue(value, fallback);
 
+    internal void SelectFuelAnalysisTarget(string? fuelEntryId)
+    {
+        if (string.IsNullOrWhiteSpace(fuelEntryId))
+        {
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(FuelWorkspace.FuelSearchText))
+        {
+            FuelWorkspace.FuelSearchText = string.Empty;
+        }
+        else
+        {
+            FuelWorkspace.RefreshVisibleFuelItems();
+        }
+
+        var target = FuelWorkspace.VisibleFuelItems.FirstOrDefault(item => string.Equals(item.Id, fuelEntryId, StringComparison.Ordinal));
+        if (target is null)
+        {
+            FuelEditorStatus = "Související tankování se nepodařilo najít v aktuálním seznamu.";
+            RequestFocus(DesktopFocusTarget.FuelList);
+            return;
+        }
+
+        SelectedVehicleTabIndex = FuelTabIndex;
+        SelectedFuel = target;
+        FuelEditorStatus = "Související tankování bylo vybráno ze souhrnu analýzy.";
+        RequestFocus(DesktopFocusTarget.FuelList);
+    }
+
     internal void NotifyHistoryWorkspaceSelectionChanged()
     {
         EditSelectedHistoryCommand.NotifyCanExecuteChanged();

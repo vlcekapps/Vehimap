@@ -367,6 +367,8 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         var futureDate = now.AddMonths(2);
         var pastDate = now.AddMonths(-2);
         var historyDate = now.AddDays(-30);
+        var firstFuelDate = now.AddDays(-45);
+        var partialFuelDate = now.AddDays(-30);
         var fuelDate = now.AddDays(-15);
 
         File.WriteAllText(Path.Combine(dataPath, "vehicles.tsv"), """
@@ -386,8 +388,10 @@ veh_2	Veterán		benzín
 hist_1	veh_1	{{historyDate:dd.MM.yyyy}}	Servis	123000	2500	Výměna oleje
 """);
         File.WriteAllText(Path.Combine(dataPath, "fuel.tsv"), $$"""
-# Vehimap fuel v1
-fuel_1	veh_1	{{fuelDate:dd.MM.yyyy}}	123450	38.5	1890	0	Natural 95	Dálnice
+# Vehimap fuel v2
+fuel_0	veh_1	{{firstFuelDate:dd.MM.yyyy}}	122900	35	1600	1	Natural 95	FuelSave	Shell Brno	Doplňovací plná nádrž pro analýzu
+fuel_partial	veh_1	{{partialFuelDate:dd.MM.yyyy}}	123100	18	900	0	Natural 95	FuelSave	Shell Brno	Mezilehlé tankování pro analýzu
+fuel_1	veh_1	{{fuelDate:dd.MM.yyyy}}	123450	38.5	1890	1	Natural 95	FuelSave	Shell Brno	Dálnice
 """);
         File.WriteAllText(Path.Combine(dataPath, "records.tsv"), $$"""
 # Vehimap records v2

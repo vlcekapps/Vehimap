@@ -215,6 +215,66 @@ internal sealed class DesktopProjectionService
         return new DesktopListProjection<VehicleFuelItemViewModel>(items, summary);
     }
 
+    public DesktopFuelAnalysisProjection BuildFuelAnalysis(FuelAnalysisSummary analysis)
+    {
+        var summaryLines = new List<string>
+        {
+            $"Počet tankování: {analysis.EntryCount}. Celkem palivo: {FormatLiters(analysis.TotalLiters)}. Celkové náklady: {FormatMoney(analysis.TotalCost)}. Průměrná cena za litr: {FormatOptionalPricePerLiter(analysis.AveragePricePerLiter)}.",
+            $"Průměrná spotřeba: {FormatOptionalConsumption(analysis.AverageConsumptionLitersPer100Km)}. {analysis.Status}"
+        };
+
+        if (analysis.BestConsumptionSegment is not null)
+        {
+            summaryLines.Add($"Nejlepší úsek: {FormatConsumptionSegmentPeriod(analysis.BestConsumptionSegment)} se spotřebou {FormatConsumption(analysis.BestConsumptionSegment.ConsumptionLitersPer100Km)}.");
+        }
+
+        if (analysis.WorstConsumptionSegment is not null
+            && !string.Equals(analysis.WorstConsumptionSegment.Id, analysis.BestConsumptionSegment?.Id, StringComparison.Ordinal))
+        {
+            summaryLines.Add($"Nejvyšší spotřeba: {FormatConsumptionSegmentPeriod(analysis.WorstConsumptionSegment)} se spotřebou {FormatConsumption(analysis.WorstConsumptionSegment.ConsumptionLitersPer100Km)}.");
+        }
+
+        return new DesktopFuelAnalysisProjection(
+            string.Join(Environment.NewLine, summaryLines),
+            analysis.ConsumptionSegments
+                .OrderByDescending(item => item.EndDate)
+                .Select(item => new FuelConsumptionSegmentItemViewModel(
+                    item.Id,
+                    item.EndFuelEntryId,
+                    FormatConsumptionSegmentPeriod(item),
+                    $"{item.DistanceKm} km",
+                    FormatLiters(item.Liters),
+                    FormatConsumption(item.ConsumptionLitersPer100Km),
+                    FormatOptionalPricePerLiter(item.PricePerLiter),
+                    item.CostPerKm.HasValue ? $"{item.CostPerKm.Value:0.00} Kč/km" : "nedostupné"))
+                .ToList(),
+            analysis.GroupSummaries
+                .Select(item => new FuelGroupSummaryItemViewModel(
+                    item.Id,
+                    item.LatestFuelEntryId,
+                    item.Station,
+                    BuildFuelGroupLabel(item.FuelType, item.FuelDetail),
+                    $"{item.EntryCount} záznamů",
+                    FormatLiters(item.Liters),
+                    FormatMoney(item.TotalCost),
+                    FormatOptionalPricePerLiter(item.AveragePricePerLiter),
+                    item.LatestDate.HasValue ? item.LatestDate.Value.ToString("dd.MM.yyyy") : "bez data"))
+                .ToList(),
+            analysis.Warnings
+                .Select(item => new FuelAnalysisWarningItemViewModel(
+                    item.Id,
+                    item.FuelEntryId ?? string.Empty,
+                    item.Severity switch
+                    {
+                        FuelAnalysisWarningSeverity.Error => "Chyba",
+                        FuelAnalysisWarningSeverity.Warning => "Upozornění",
+                        _ => "Info"
+                    },
+                    item.Title,
+                    item.Description))
+                .ToList());
+    }
+
     public DesktopListProjection<VehicleReminderItemViewModel> BuildReminders(VehimapDataSet dataSet, string vehicleId, DateOnly today)
     {
         var items = dataSet.Reminders
@@ -1061,6 +1121,29 @@ internal sealed class DesktopProjectionService
 
     private static string FormatMoney(decimal value) => $"{value:0.00} Kč";
 
+    private static string FormatLiters(decimal value) => $"{value:0.##} l";
+
+    private static string FormatConsumption(decimal value) => $"{value:0.00} l/100 km";
+
+    private static string FormatOptionalConsumption(decimal? value) =>
+        value.HasValue ? FormatConsumption(value.Value) : "nedostupná";
+
+    private static string FormatOptionalPricePerLiter(decimal? value) =>
+        value.HasValue ? $"{value.Value:0.00} Kč/l" : "nedostupná";
+
+    private static string FormatConsumptionSegmentPeriod(FuelConsumptionSegment segment) =>
+        $"{segment.StartDate:dd.MM.yyyy} až {segment.EndDate:dd.MM.yyyy}";
+
+    private static string BuildFuelGroupLabel(string fuelType, string fuelDetail)
+    {
+        if (string.IsNullOrWhiteSpace(fuelDetail) || string.Equals(fuelDetail, "Bez detailu", StringComparison.CurrentCultureIgnoreCase))
+        {
+            return fuelType;
+        }
+
+        return $"{fuelType} | {fuelDetail}";
+    }
+
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;
 
@@ -1207,6 +1290,12 @@ internal sealed record DesktopVehicleDetailProjection(
 internal sealed record DesktopListProjection<TItem>(
     IReadOnlyList<TItem> Items,
     string Summary);
+
+internal sealed record DesktopFuelAnalysisProjection(
+    string Summary,
+    IReadOnlyList<FuelConsumptionSegmentItemViewModel> ConsumptionSegments,
+    IReadOnlyList<FuelGroupSummaryItemViewModel> GroupSummaries,
+    IReadOnlyList<FuelAnalysisWarningItemViewModel> Warnings);
 
 internal sealed record DesktopVehicleListFilters(
     string SearchText,

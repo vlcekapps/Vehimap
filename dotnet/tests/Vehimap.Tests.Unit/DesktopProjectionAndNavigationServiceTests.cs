@@ -113,4 +113,81 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("rem_1", item.EntryId);
         Assert.Contains("Po filtru zobrazeno: 1", projection.Summary);
     }
+
+    [Fact]
+    public void Projection_service_builds_accessible_fuel_analysis_items()
+    {
+        var projectionService = new DesktopProjectionService();
+        var analysis = new FuelAnalysisSummary(
+            "veh_1",
+            2,
+            82m,
+            4100m,
+            50m,
+            8.2m,
+            new FuelConsumptionSegment(
+                "segment_1",
+                "fuel_1",
+                "fuel_2",
+                new DateOnly(2026, 1, 1),
+                new DateOnly(2026, 1, 15),
+                10000,
+                10500,
+                500,
+                41m,
+                2050m,
+                8.2m,
+                50m,
+                4.1m),
+            new FuelConsumptionSegment(
+                "segment_1",
+                "fuel_1",
+                "fuel_2",
+                new DateOnly(2026, 1, 1),
+                new DateOnly(2026, 1, 15),
+                10000,
+                10500,
+                500,
+                41m,
+                2050m,
+                8.2m,
+                50m,
+                4.1m),
+            "Spotřeba je spočítaná z 1 použitelného úseku.",
+            [
+                new FuelConsumptionSegment(
+                    "segment_1",
+                    "fuel_1",
+                    "fuel_2",
+                    new DateOnly(2026, 1, 1),
+                    new DateOnly(2026, 1, 15),
+                    10000,
+                    10500,
+                    500,
+                    41m,
+                    2050m,
+                    8.2m,
+                    50m,
+                    4.1m)
+            ],
+            [
+                new FuelGroupSummary("group_1", "fuel_2", "Shell", "Natural 95", "FuelSave", 2, 82m, 4100m, 50m, new DateOnly(2026, 1, 15))
+            ],
+            [
+                new FuelAnalysisWarning("warn_1", "fuel_2", FuelAnalysisWarningSeverity.Info, "Kontrola", "Upozornění pro test.")
+            ]);
+
+        var projection = projectionService.BuildFuelAnalysis(analysis);
+
+        Assert.Contains("Průměrná spotřeba: 8,20 l/100 km", projection.Summary, StringComparison.Ordinal);
+        var segment = Assert.Single(projection.ConsumptionSegments);
+        Assert.Equal("fuel_2", segment.FuelEntryId);
+        Assert.Contains("Úsek spotřeby", segment.AccessibleLabel, StringComparison.Ordinal);
+        var group = Assert.Single(projection.GroupSummaries);
+        Assert.Equal("Shell", group.Station);
+        Assert.Contains("Natural 95", group.AccessibleLabel, StringComparison.Ordinal);
+        var warning = Assert.Single(projection.Warnings);
+        Assert.Equal("Info", warning.Severity);
+        Assert.Contains("související tankování", warning.AccessibleLabel, StringComparison.Ordinal);
+    }
 }
