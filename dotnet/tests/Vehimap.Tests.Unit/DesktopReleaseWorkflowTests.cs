@@ -126,6 +126,8 @@ public sealed class DesktopReleaseWorkflowTests
 
         Assert.Contains("[ValidateSet(\"stable\", \"beta\", \"nightly\")]", script, StringComparison.Ordinal);
         Assert.Contains("[string]$EffectiveVersion", script, StringComparison.Ordinal);
+        Assert.Contains("[switch]$InstallSmoke", script, StringComparison.Ordinal);
+        Assert.Contains("[int]$InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
         Assert.Contains("$version-nightly.local.$timestamp", script, StringComparison.Ordinal);
         Assert.Contains("\"nightly\" { \"dotnet-nightly\" }", script, StringComparison.Ordinal);
         Assert.Contains("\"latest-dotnet-$channelName-$RuntimeIdentifier.ini\"", script, StringComparison.Ordinal);
@@ -136,6 +138,10 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Update manifest neobsahuje ocekavany kanal '$channelName'.", script, StringComparison.Ordinal);
         Assert.Contains("Update manifest neobsahuje platny SHA-256 hash assetu.", script, StringComparison.Ordinal);
         Assert.Contains("if ($channelName -eq \"stable\" -and $manifestContent -match \"preview\")", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetInstallerSmoke.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("$installerSmokeArguments", script, StringComparison.Ordinal);
+        Assert.Contains("$installerSmokeArguments[\"Install\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$installerSmokeArguments[\"LaunchSeconds\"] = $InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -148,6 +154,8 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Channel = \"nightly\"", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"EffectiveVersion\"] = $EffectiveVersion", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"SkipTests\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"InstallSmoke\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"InstallerSmokeLaunchSeconds\"] = $InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
     }
 
     [Fact]

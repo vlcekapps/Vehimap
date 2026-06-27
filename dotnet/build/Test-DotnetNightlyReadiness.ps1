@@ -2,6 +2,8 @@ param(
     [string]$RuntimeIdentifier = "win-x64",
     [string]$Configuration = "Release",
     [string]$EffectiveVersion,
+    [switch]$InstallSmoke,
+    [int]$InstallerSmokeLaunchSeconds = 8,
     [switch]$SkipTests
 )
 
@@ -20,6 +22,11 @@ if (-not [string]::IsNullOrWhiteSpace($EffectiveVersion)) {
 
 if ($SkipTests) {
     $arguments["SkipTests"] = $true
+}
+
+if ($InstallSmoke) {
+    $arguments["InstallSmoke"] = $true
+    $arguments["InstallerSmokeLaunchSeconds"] = $InstallerSmokeLaunchSeconds
 }
 
 & (Join-Path $PSScriptRoot "Test-DotnetReleaseReadiness.ps1") @arguments

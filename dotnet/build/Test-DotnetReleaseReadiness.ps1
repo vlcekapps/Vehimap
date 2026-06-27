@@ -4,6 +4,8 @@ param(
     [ValidateSet("stable", "beta", "nightly")]
     [string]$Channel = "stable",
     [string]$EffectiveVersion,
+    [switch]$InstallSmoke,
+    [int]$InstallerSmokeLaunchSeconds = 8,
     [switch]$SkipTests
 )
 
@@ -54,6 +56,7 @@ $readinessRoot = Join-Path $dotnetRoot "artifacts\release-readiness\$channelName
 $publishDirectory = Join-Path $readinessRoot "publish"
 $releaseDirectory = Join-Path $readinessRoot "release"
 $manifestPath = Join-Path $readinessRoot $manifestFileName
+$installerSmokeScript = Join-Path $PSScriptRoot "Test-DotnetInstallerSmoke.ps1"
 
 Write-Host "Vehimap .NET desktop release readiness"
 Write-Host "Base version: $version"
@@ -131,6 +134,24 @@ try {
     $checksumPath = "$($package.FullName).sha256"
     if (-not (Test-Path -LiteralPath $checksumPath -PathType Leaf)) {
         throw "Checksum '$checksumPath' nebyl vytvoren."
+    }
+
+    if ($RuntimeIdentifier -like "win-*") {
+        if (-not (Test-Path -LiteralPath $installerSmokeScript -PathType Leaf)) {
+            throw "Chybi installer smoke skript '$installerSmokeScript'."
+        }
+
+        $installerSmokeArguments = @{
+            InstallerPath = $package.FullName
+            PackageMetadataPath = $metadata.FullName
+        }
+
+        if ($InstallSmoke) {
+            $installerSmokeArguments["Install"] = $true
+            $installerSmokeArguments["LaunchSeconds"] = $InstallerSmokeLaunchSeconds
+        }
+
+        & $installerSmokeScript @installerSmokeArguments
     }
 
     $manifestContent = Get-Content -Raw -LiteralPath $manifestPath

@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# release readiness nyní u Windows balíčků automaticky spouští installer smoke bez instalace a volitelně přes `-InstallSmoke` provede i izolovanou tichou instalaci, krátký portable launch a odinstalaci přímo jako součást nightly/stable brány.
 - C# tooling má nový `Test-DotnetInstallerSmoke.ps1`, který pro Windows setup EXE ověří checksum a metadata a s explicitním `-Install` provede izolovanou tichou instalaci, krátké spuštění v portable režimu a odinstalaci.
 - GitHub Actions pro C# desktop nově po vygenerování update manifestů spouští `Test-DotnetPublishedRelease.ps1` pro Windows kanál ještě před commitem do `update/`, takže nightly manifest s chybným kanálem, assetem, SHA-256 nebo velikostí neprojde do repozitáře.
 - C# post-release ověřovací skript nově umí kanály `stable`, `beta` i `nightly`; wrapper `Test-DotnetPublishedNightly.ps1` po doběhu GitHub Actions ověří publikovaný nightly manifest, rolling tag `dotnet-nightly`, prerelease verzi, asset, SHA-256, velikost a `channel=nightly` bez spuštění AHK retirement gate.

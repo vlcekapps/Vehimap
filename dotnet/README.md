@@ -208,7 +208,7 @@ cd dotnet
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64
 ```
 
-Wrapper vola stejnou release readiness branu s kanalem `nightly`, takze se overi skutecny nightly nazev instalatoru, metadata, hash, velikost, `asset_kind=installer`, `channel=nightly` a manifest pro rolling release `dotnet-nightly`.
+Wrapper vola stejnou release readiness branu s kanalem `nightly`, takze se overi skutecny nightly nazev instalatoru, metadata, hash, velikost, `asset_kind=installer`, `channel=nightly`, manifest pro rolling release `dotnet-nightly` a u Windows balicku i setup EXE pres installer smoke bez tiche instalace.
 
 Windows instalator lze po vytvoreni balicku overit samostatnym smoke skriptem. Bez `-Install` se kontroluji jen soubory, metadata a SHA-256; s `-Install` skript provede tichou instalaci do izolovane slozky, vytvori vedle EXE portable `data`, kratce spusti aplikaci a zase ji odinstaluje.
 
@@ -218,6 +218,13 @@ $release = Get-ChildItem .\artifacts\release-readiness\nightly\win-x64\release\*
 $installer = Join-Path $release.DirectoryName ((Get-Content -Raw $release.FullName | ConvertFrom-Json).packageFile)
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetInstallerSmoke.ps1 -InstallerPath $installer -PackageMetadataPath $release.FullName
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetInstallerSmoke.ps1 -InstallerPath $installer -PackageMetadataPath $release.FullName -Install
+```
+
+Stejny plny instalacni smoke lze spustit primo v release readiness brane:
+
+```powershell
+cd dotnet
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64 -InstallSmoke
 ```
 
 ## Promotion tok nightly -> beta -> stable
