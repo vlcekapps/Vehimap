@@ -205,6 +205,7 @@ public sealed class DesktopAccessibilityLabelTests
         var normalizedXaml = Regex.Replace(xaml, "\\s+", " ");
 
         Assert.Contains("AutomationProperties.Name=\"Vehimap\"", xaml);
+        Assert.Contains("WindowState=\"Maximized\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppMenuBar\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FileMenuRoot\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleMenuRoot\"", xaml);
@@ -308,6 +309,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleSearchBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleStatusFilterBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ClearVehicleFiltersButton\"", xaml);
+        Assert.Contains("TextWrapping=\"Wrap\" AutomationProperties.Name=\"{Binding VehicleListSummary}\"", normalizedXaml);
+        Assert.Contains("ColumnDefinitions=\"*,*\" RowDefinitions=\"Auto,Auto,Auto,Auto\"", normalizedXaml);
+        Assert.Contains("Grid.Row=\"1\" Grid.ColumnSpan=\"2\" Margin=\"0,12,0,0\"", normalizedXaml);
+        Assert.DoesNotContain("ColumnDefinitions=\"170,*,220,Auto\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"HideInactiveVehiclesCheckBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleListBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleListLockStatusText\"", xaml);
@@ -811,6 +816,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("ItemsSource=\"{Binding VehicleCategoryOptions}\"", vehicleDetailXaml);
         Assert.Contains("x:Name=\"VehicleEditorMakeModelBox\"", vehicleDetailXaml);
         Assert.Contains("x:Name=\"VehicleEditorYearBox\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorScrollViewer\"", vehicleDetailXaml);
+        Assert.Contains("Text=\"Výkon v kW\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.Name=\"Výkon vozidla v kilowattech\"", vehicleDetailXaml);
         Assert.Contains("x:Name=\"VehicleEditorLastTkBox\"", vehicleDetailXaml);
         Assert.Contains("x:Name=\"VehicleEditorNextTkBox\"", vehicleDetailXaml);
         Assert.Contains("x:Name=\"VehicleEditorGreenCardFromBox\"", vehicleDetailXaml);

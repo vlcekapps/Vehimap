@@ -66,9 +66,18 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         }
 
         await ViewModel.SaveVehicleCommand.ExecuteAsync(null);
-        if (ViewModel.TryConsumePendingVehicleStarterBundleOffer())
+        if (!ViewModel.TryConsumePendingVehicleStarterBundleOffer())
+        {
+            return;
+        }
+
+        try
         {
             await OpenVehicleStarterBundleDialogAsync(postCreateOffer: true);
+        }
+        catch (Exception ex)
+        {
+            ViewModel.SetVehicleStarterBundleStatus($"Nové vozidlo bylo uloženo, ale navazující balíček se nepodařilo otevřít: {ex.Message}");
         }
     }
 

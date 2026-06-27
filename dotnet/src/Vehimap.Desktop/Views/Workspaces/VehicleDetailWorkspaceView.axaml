@@ -58,6 +58,10 @@
     <Border x:Name="VehicleEditorHost"
             Grid.Row="3"
             Margin="0,16,0,0">
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    AutomationProperties.Name="Editor vozidla"
+                    AutomationProperties.AutomationId="VehicleEditorScrollViewer">
       <Grid IsVisible="{Binding IsEditingVehicle}"
             RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
       <Grid ColumnDefinitions="*,200">
@@ -106,9 +110,9 @@
                    AutomationProperties.AutomationId="VehicleEditorYearBox" />
         </StackPanel>
         <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-          <TextBlock FontWeight="SemiBold" Text="Výkon" />
+          <TextBlock FontWeight="SemiBold" Text="Výkon v kW" />
           <TextBox Text="{Binding VehicleEditorPower}"
-                   AutomationProperties.Name="Výkon vozidla"
+                   AutomationProperties.Name="Výkon vozidla v kilowattech"
                    AutomationProperties.AutomationId="VehicleEditorPowerBox" />
         </StackPanel>
         <StackPanel Grid.Column="2" Spacing="6">
@@ -210,6 +214,7 @@
                  Text="Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu."
                  TextWrapping="Wrap" />
       </Grid>
+      </ScrollViewer>
     </Border>
 
     <ScrollViewer Grid.Row="3"

@@ -8,6 +8,7 @@
         Height="920"
         MinWidth="1120"
         MinHeight="760"
+        WindowState="Maximized"
         Title="{Binding Title}"
         AutomationProperties.Name="Vehimap"
         AutomationProperties.AutomationId="MainWindow"
@@ -428,12 +429,13 @@
           <TextBlock FontSize="18"
                      FontWeight="SemiBold"
                      Text="{Binding VehicleListSummary}"
+                     TextWrapping="Wrap"
                      AutomationProperties.Name="{Binding VehicleListSummary}"
                      AutomationProperties.AutomationId="VehicleListSummaryText" />
           <Grid Grid.Row="1"
                 Margin="0,12,0,0"
-                ColumnDefinitions="170,*,220,Auto"
-                RowDefinitions="Auto,Auto">
+                ColumnDefinitions="*,*"
+                RowDefinitions="Auto,Auto,Auto,Auto">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Kategorie" />
               <ComboBox x:Name="VehicleCategoryFilterBox"
@@ -443,16 +445,7 @@
                         AutomationProperties.Name="Filtr kategorie vozidel"
                         AutomationProperties.AutomationId="VehicleCategoryFilterBox" />
             </StackPanel>
-            <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Hledání v seznamu vozidel" />
-              <TextBox x:Name="VehicleSearchBox"
-                       Text="{Binding VehicleSearchText}"
-                       PlaceholderText="Název, značka, SPZ, poznámka nebo štítek"
-                       IsEnabled="{Binding CanUseVehicleList}"
-                       AutomationProperties.Name="Hledání v seznamu vozidel"
-                       AutomationProperties.AutomationId="VehicleSearchBox" />
-            </StackPanel>
-            <StackPanel Grid.Column="2" Margin="0,0,12,0" Spacing="6">
+            <StackPanel Grid.Column="1" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Filtr seznamu" />
               <ComboBox x:Name="VehicleStatusFilterBox"
                         ItemsSource="{Binding VehicleStatusFilters}"
@@ -461,15 +454,26 @@
                         AutomationProperties.Name="Filtr stavu vozidel"
                         AutomationProperties.AutomationId="VehicleStatusFilterBox" />
             </StackPanel>
-            <Button Grid.Column="3"
-                    Margin="0,24,0,0"
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,12,0,0" Spacing="6">
+              <TextBlock FontWeight="SemiBold" Text="Hledání v seznamu vozidel" />
+              <TextBox x:Name="VehicleSearchBox"
+                       Text="{Binding VehicleSearchText}"
+                       PlaceholderText="Název, značka, SPZ, poznámka nebo štítek"
+                       IsEnabled="{Binding CanUseVehicleList}"
+                       AutomationProperties.Name="Hledání v seznamu vozidel"
+                       AutomationProperties.AutomationId="VehicleSearchBox" />
+            </StackPanel>
+            <Button Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Margin="0,12,0,0"
                     MinWidth="120"
+                    HorizontalAlignment="Right"
                     Command="{Binding ClearVehicleFiltersCommand}"
                     Content="Vymazat filtry"
                     AutomationProperties.Name="Vymazat filtry seznamu vozidel"
                     AutomationProperties.AutomationId="ClearVehicleFiltersButton" />
-            <CheckBox Grid.Row="1"
-                      Grid.ColumnSpan="4"
+            <CheckBox Grid.Row="3"
+                      Grid.ColumnSpan="2"
                       Margin="0,12,0,0"
                       IsChecked="{Binding HideInactiveVehicles}"
                       IsEnabled="{Binding CanUseVehicleList}"
