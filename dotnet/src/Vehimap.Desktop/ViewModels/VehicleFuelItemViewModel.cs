@@ -8,10 +8,12 @@ public sealed record VehicleFuelItemViewModel(
     string TotalCost,
     string Odometer,
     string TankState,
+    string FuelDetail,
+    string Station,
     string Note)
 {
     public string AccessibleLabel =>
-        $"{Date}, {FuelType}, {Liters}, cena {TotalCost}, tachometr {Odometer}, {TankState}, poznámka {Note}";
+        $"{Date}, {FuelType}, detail paliva {FuelDetail}, místo tankování {Station}, {Liters}, cena {TotalCost}, tachometr {Odometer}, {TankState}, poznámka {Note}";
 
     public override string ToString() => AccessibleLabel;
 }

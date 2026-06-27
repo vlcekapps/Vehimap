@@ -78,6 +78,63 @@ public sealed class LegacyDataStoreCompatibilityTests
     }
 
     [Fact]
+    public async Task Load_maps_fuel_v1_note_and_save_roundtrip_writes_fuel_v2_detail_and_station()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-fuel-compat-" + Guid.NewGuid());
+        var dataRoot = new Vehimap.Application.Abstractions.VehimapDataRoot(tempRoot, Path.Combine(tempRoot, "data"), true);
+        var store = new LegacyVehimapDataStore();
+        var fuelPath = Path.Combine(dataRoot.DataPath, "fuel.tsv");
+
+        try
+        {
+            Directory.CreateDirectory(dataRoot.DataPath);
+            await File.WriteAllTextAsync(
+                fuelPath,
+                "# Vehimap fuel v1\nfuel_1\tveh_1\t20.10.2026\t123789\t38.5\t1890\t1\tBenzín\tPůvodní poznámka\n");
+
+            var loadedV1 = await store.LoadAsync(dataRoot);
+            var legacyFuel = Assert.Single(loadedV1.FuelEntries);
+
+            Assert.Equal("Původní poznámka", legacyFuel.Note);
+            Assert.Equal(string.Empty, legacyFuel.FuelDetail);
+            Assert.Equal(string.Empty, legacyFuel.Station);
+
+            loadedV1.FuelEntries.Clear();
+            loadedV1.FuelEntries.Add(new FuelEntry(
+                "fuel_2",
+                "veh_1",
+                "21.10.2026",
+                "123900",
+                "40",
+                "1999",
+                true,
+                "Benzín",
+                "Nová poznámka",
+                "Natural 98 V-Power",
+                "Shell Brno Vídeňská"));
+
+            await store.SaveAsync(dataRoot, loadedV1);
+            var savedFuelContent = await File.ReadAllTextAsync(fuelPath);
+            var loadedV2 = await store.LoadAsync(dataRoot);
+            var savedFuel = Assert.Single(loadedV2.FuelEntries);
+
+            Assert.StartsWith("# Vehimap fuel v2", savedFuelContent, StringComparison.Ordinal);
+            Assert.Contains("Natural 98 V-Power", savedFuelContent, StringComparison.Ordinal);
+            Assert.Contains("Shell Brno Vídeňská", savedFuelContent, StringComparison.Ordinal);
+            Assert.Equal("Nová poznámka", savedFuel.Note);
+            Assert.Equal("Natural 98 V-Power", savedFuel.FuelDetail);
+            Assert.Equal("Shell Brno Vídeňská", savedFuel.Station);
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
     public async Task Backup_roundtrip_restores_dataset_and_attachments()
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-backup-" + Guid.NewGuid());

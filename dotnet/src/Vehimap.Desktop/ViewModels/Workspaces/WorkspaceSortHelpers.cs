@@ -10,6 +10,8 @@ internal static class WorkspaceSortHelpers
     public const string CostSortLabel = "Cena";
     public const string NoteSortLabel = "Poznámka";
     public const string FuelTypeSortLabel = "Palivo";
+    public const string FuelDetailSortLabel = "Detail paliva";
+    public const string FuelStationSortLabel = "Místo tankování";
     public const string LitersSortLabel = "Litry";
     public const string TotalCostSortLabel = "Cena celkem";
     public const string TankStateSortLabel = "Stav nádrže";
@@ -41,6 +43,8 @@ internal static class WorkspaceSortHelpers
     [
         DateSortLabel,
         FuelTypeSortLabel,
+        FuelDetailSortLabel,
+        FuelStationSortLabel,
         LitersSortLabel,
         TotalCostSortLabel,
         OdometerSortLabel,
@@ -133,6 +137,8 @@ internal static class WorkspaceSortHelpers
         return NormalizeSortOption(selectedOption, FuelSortOptions, DateSortLabel) switch
         {
             FuelTypeSortLabel => OrderByText(items, descending, item => item.FuelType, item => item.Date),
+            FuelDetailSortLabel => OrderByText(items, descending, item => item.FuelDetail, item => item.Date),
+            FuelStationSortLabel => OrderByText(items, descending, item => item.Station, item => item.Date),
             LitersSortLabel => OrderByMoney(items, descending, item => TryParseMoney(item.Liters), item => item.Date),
             TotalCostSortLabel => OrderByMoney(items, descending, item => TryParseMoney(item.TotalCost), item => item.Date),
             OdometerSortLabel => OrderByNumber(items, descending, item => TryParseOdometer(item.Odometer), item => item.Date),

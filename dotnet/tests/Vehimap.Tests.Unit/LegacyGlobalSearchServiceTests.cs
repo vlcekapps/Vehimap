@@ -79,6 +79,19 @@ public sealed class LegacyGlobalSearchServiceTests
         Assert.Equal("rec_2", recordResult.EntityId);
     }
 
+    [Fact]
+    public void Search_should_find_fuel_detail_and_station()
+    {
+        var service = new LegacyGlobalSearchService(new StubAttachmentService());
+        var dataSet = CreateDataSet();
+
+        var detailResults = service.Search(DataRoot, dataSet, "FuelSave");
+        var stationResults = service.Search(DataRoot, dataSet, "Station 42");
+
+        Assert.Contains(detailResults, item => item.EntityKind == "Tankování" && item.EntityId == "fuel_1");
+        Assert.Contains(stationResults, item => item.EntityKind == "Tankování" && item.EntityId == "fuel_1");
+    }
+
     private static VehimapDataSet CreateDataSet() =>
         new()
         {
@@ -96,7 +109,7 @@ public sealed class LegacyGlobalSearchServiceTests
             ],
             FuelEntries =
             [
-                new FuelEntry("fuel_1", "veh_1", "02.04.2026", "12400", "32", "1200", true, "Benzín", "Plná nádrž před srazem")
+                new FuelEntry("fuel_1", "veh_1", "02.04.2026", "12400", "32", "1200", true, "Benzín", "Plná nádrž před srazem", "Shell FuelSave Natural 95", "Shell Station 42")
             ],
             Records =
             [

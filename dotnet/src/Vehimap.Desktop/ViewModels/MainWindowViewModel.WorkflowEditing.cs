@@ -176,6 +176,8 @@ public sealed partial class MainWindowViewModel
         _editingFuelId = null;
         FuelEditorDate = string.Empty;
         FuelEditorFuelType = string.Empty;
+        FuelEditorFuelDetail = string.Empty;
+        FuelEditorStation = string.Empty;
         FuelEditorLiters = string.Empty;
         FuelEditorTotalCost = string.Empty;
         FuelEditorOdometer = string.Empty;
@@ -199,6 +201,8 @@ public sealed partial class MainWindowViewModel
         _editingFuelId = entry.Id;
         FuelEditorDate = entry.EntryDate;
         FuelEditorFuelType = LegacyVehicleValueNormalization.NormalizeFuelType(entry.FuelType);
+        FuelEditorFuelDetail = entry.FuelDetail;
+        FuelEditorStation = entry.Station;
         FuelEditorLiters = entry.Liters;
         FuelEditorTotalCost = entry.TotalCost;
         FuelEditorOdometer = entry.Odometer;
@@ -277,7 +281,9 @@ public sealed partial class MainWindowViewModel
             totalCost,
             FuelEditorFullTank,
             LegacyVehicleValueNormalization.NormalizeFuelType(FuelEditorFuelType),
-            (FuelEditorNote ?? string.Empty).Trim());
+            (FuelEditorNote ?? string.Empty).Trim(),
+            (FuelEditorFuelDetail ?? string.Empty).Trim(),
+            (FuelEditorStation ?? string.Empty).Trim());
 
         var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertFuelEntry(updatedEntry);
@@ -775,6 +781,8 @@ public sealed partial class MainWindowViewModel
         IsEditingFuel = false;
         FuelEditorDate = string.Empty;
         FuelEditorFuelType = string.Empty;
+        FuelEditorFuelDetail = string.Empty;
+        FuelEditorStation = string.Empty;
         FuelEditorLiters = string.Empty;
         FuelEditorTotalCost = string.Empty;
         FuelEditorOdometer = string.Empty;

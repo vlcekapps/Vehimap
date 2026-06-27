@@ -59,6 +59,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - primo vytvaret, upravovat a mazat `historii`
 - primo vytvaret, upravovat a mazat `tankovani`
 - v editoru tankovani pouzivat AHK-kompatibilni rozbalovaci hodnoty pro typ paliva
+- v editoru tankovani evidovat i detail paliva, napr. Natural 95/98 nebo komercni produkt, a misto tankovani; nove zapisy jdou do `# Vehimap fuel v2`, zatimco `fuel v1` se stale nacita jako kompatibilni legacy format
 - pri ukladani evidencnich editoru validovat a normalizovat datumy, tachometr, litry, castky, intervaly udrzby, terminy pripominek a platnost dokladu podle legacy AHK pravidel s navratem fokusu na chybne pole
 - pri selhani zapisu evidencnich editoru ponechat rozpracovany editor otevreny, zapsat chybu do stavoveho textu editoru i shellu a vratit fokus na smysluplny prvek
 - pri selhani zapisu vratit session dataset na snapshot pred zmenou a mazat managed prilohy nebo slozku priloh vozidla az po uspesnem persistu

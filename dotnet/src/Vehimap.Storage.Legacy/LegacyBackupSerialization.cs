@@ -70,7 +70,7 @@ internal static class LegacyBackupSerialization
         var settingsContent = Slice(payload, ref offset, settingsLength);
         var vehiclesContent = Slice(payload, ref offset, vehiclesLength);
         var historyContent = historyLength > 0 ? Slice(payload, ref offset, historyLength) : $"{LegacySectionSerialization.HistoryHeaderV1}\n";
-        var fuelContent = fuelLength > 0 ? Slice(payload, ref offset, fuelLength) : $"{LegacySectionSerialization.FuelHeaderV1}\n";
+        var fuelContent = fuelLength > 0 ? Slice(payload, ref offset, fuelLength) : $"{LegacySectionSerialization.FuelHeaderV2}\n";
         var recordsContent = recordsLength > 0 ? Slice(payload, ref offset, recordsLength) : $"{LegacySectionSerialization.RecordsHeaderV2}\n";
         var metaContent = metaLength > 0 ? Slice(payload, ref offset, metaLength) : $"{LegacySectionSerialization.MetaHeaderV2}\n";
         var remindersContent = remindersLength > 0 ? Slice(payload, ref offset, remindersLength) : $"{LegacySectionSerialization.RemindersHeaderV1}\n";

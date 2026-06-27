@@ -418,6 +418,8 @@ public sealed class WorkspaceCompositionTests
             "FuelEditorStatus",
             "FuelEditorDate",
             "FuelEditorFuelType",
+            "FuelEditorFuelDetail",
+            "FuelEditorStation",
             "FuelEditorLiters",
             "FuelEditorTotalCost",
             "FuelEditorOdometer",

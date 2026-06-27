@@ -294,7 +294,7 @@ V horním menu najdete tyto části:
 - oba soubory jsou ve složce `data` vedle aplikace
 - Vehimap zapisuje vozidla ve formátu `# Vehimap data v4`
 - historie používá hlavičku `# Vehimap history v1`
-- kilometry a tankování používají hlavičku `# Vehimap fuel v1`
+- kilometry a tankování v C# Avalonia větvi zapisují hlavičku `# Vehimap fuel v2`, která k typu paliva přidává detail paliva a místo tankování; starší `# Vehimap fuel v1` se dál načítá kompatibilně
 - pojištění a doklady používají hlavičku `# Vehimap records v2`
 - plány údržby používají hlavičku `# Vehimap maintenance v1`
 - export vytváří jeden soubor se zálohou ve formátu `.vehimapbak`, který nově zahrnuje i spravované přílohy dokladů; pokud některá spravovaná příloha na disku chybí, export pokračuje a v C# Avalonia větvi to uvede ve výsledkové hlášce

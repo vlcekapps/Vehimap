@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# Avalonia editor `Tankování` nově ukládá i `Detail paliva` a `Místo tankování`; nové zápisy používají kompatibilní `# Vehimap fuel v2`, starší `fuel v1` se dál načítá a nové údaje se promítají do hledání, řazení, detailu položky i časové osy.
 - C# Avalonia karty `Historie` a `Tankování` nově zobrazují akce `Nové`, `Upravit` a `Odstranit` přímo v kartě, zatímco tlačítko `V okně` zůstává pro přehlednější samostatnou práci; editory evidencí, `Dashboard` a `Náklady` mají navíc scrollovací ochranu proti useknutí obsahu při větším písmu.
 - C# desktop shell se nově otevírá maximalizovaný, levý panel seznamu vozidel má odolnější rozložení filtrů a editor vozidla je scrollovatelný, aby při vyšším DPI nebo bez ruční maximalizace nepřekrýval ani neschovával pole.
 - C# nightly kanál nově vytváří rolling Inno Setup instalátor automaticky každou noc nebo ručně přes workflow dispatch a používá unikátní prerelease verze, aby updater poznal každý nový nightly build.

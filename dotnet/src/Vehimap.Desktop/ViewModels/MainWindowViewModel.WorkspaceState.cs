@@ -111,6 +111,18 @@ public sealed partial class MainWindowViewModel
         set => FuelWorkspace.FuelEditorFuelType = value;
     }
 
+    private string FuelEditorFuelDetail
+    {
+        get => FuelWorkspace.FuelEditorFuelDetail;
+        set => FuelWorkspace.FuelEditorFuelDetail = value;
+    }
+
+    private string FuelEditorStation
+    {
+        get => FuelWorkspace.FuelEditorStation;
+        set => FuelWorkspace.FuelEditorStation = value;
+    }
+
     private string FuelEditorLiters
     {
         get => FuelWorkspace.FuelEditorLiters;

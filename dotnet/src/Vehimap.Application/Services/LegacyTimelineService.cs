@@ -59,7 +59,7 @@ public sealed class LegacyTimelineService : ITimelineService
                 date,
                 FormatEventDate(date),
                 "Tankování",
-                JoinParts(FormatOdometerText(entry.Odometer), FormatFuelLiters(entry.Liters), entry.FuelType, entry.Note),
+                JoinParts(FormatOdometerText(entry.Odometer), FormatFuelLiters(entry.Liters), entry.FuelType, entry.FuelDetail, entry.Station, entry.Note),
                 FormatCostStatus(entry.TotalCost),
                 entry.Id,
                 entry.Note,

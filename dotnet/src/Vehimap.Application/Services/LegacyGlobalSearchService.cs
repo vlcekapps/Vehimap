@@ -126,6 +126,8 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 FormatOdometer(entry.Odometer),
                 FormatMoneyValue(entry.TotalCost),
                 entry.FullTank ? "Plná nádrž" : string.Empty,
+                ValueOrFallback(entry.FuelDetail, string.Empty),
+                ValueOrFallback(entry.Station, string.Empty),
                 ValueOrFallback(entry.Note, string.Empty));
             var searchTexts = BuildSearchTexts(
                 BuildVehicleSearchTexts(vehicle, meta, timeline),
@@ -136,6 +138,8 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 entry.FullTank ? "ano" : "ne",
                 entry.FullTank ? "Plná nádrž" : string.Empty,
                 entry.FuelType,
+                entry.FuelDetail,
+                entry.Station,
                 entry.Note);
 
             var rank = ComputeRank(searchTexts, needle);
@@ -474,9 +478,10 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     {
         if (!string.IsNullOrWhiteSpace(entry.Liters) || !string.IsNullOrWhiteSpace(entry.TotalCost))
         {
-            return string.IsNullOrWhiteSpace(entry.FuelType)
+            var fuelLabel = JoinParts(entry.FuelType, entry.FuelDetail);
+            return string.IsNullOrWhiteSpace(fuelLabel)
                 ? "Tankování"
-                : $"Tankování - {entry.FuelType.Trim()}";
+                : $"Tankování - {fuelLabel}";
         }
 
         return "Stav tachometru";

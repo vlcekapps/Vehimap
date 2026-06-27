@@ -203,6 +203,8 @@ internal sealed class DesktopProjectionService
                 FormatCostValue(item.Item.TotalCost),
                 FormatOdometerValue(item.Item.Odometer),
                 item.Item.FullTank ? "Plná nádrž" : "Částečné tankování",
+                FormatValue(item.Item.FuelDetail, "bez detailu paliva"),
+                FormatValue(item.Item.Station, "bez místa"),
                 FormatValue(item.Item.Note, "bez poznámky")))
             .ToList();
 

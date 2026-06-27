@@ -109,7 +109,7 @@ public sealed class LegacyVehimapDataStore : ILegacyDataStore
 
         await EnsureFileAsync(GetPath(dataRoot, LegacySectionSerialization.VehiclesFileName), $"{LegacySectionSerialization.VehiclesHeaderV4}\n", cancellationToken).ConfigureAwait(false);
         await EnsureFileAsync(GetPath(dataRoot, LegacySectionSerialization.HistoryFileName), $"{LegacySectionSerialization.HistoryHeaderV1}\n", cancellationToken).ConfigureAwait(false);
-        await EnsureFileAsync(GetPath(dataRoot, LegacySectionSerialization.FuelFileName), $"{LegacySectionSerialization.FuelHeaderV1}\n", cancellationToken).ConfigureAwait(false);
+        await EnsureFileAsync(GetPath(dataRoot, LegacySectionSerialization.FuelFileName), $"{LegacySectionSerialization.FuelHeaderV2}\n", cancellationToken).ConfigureAwait(false);
         await EnsureFileAsync(GetPath(dataRoot, LegacySectionSerialization.RecordsFileName), $"{LegacySectionSerialization.RecordsHeaderV2}\n", cancellationToken).ConfigureAwait(false);
         await EnsureFileAsync(GetPath(dataRoot, LegacySectionSerialization.MetaFileName), $"{LegacySectionSerialization.MetaHeaderV2}\n", cancellationToken).ConfigureAwait(false);
         await EnsureFileAsync(GetPath(dataRoot, LegacySectionSerialization.RemindersFileName), $"{LegacySectionSerialization.RemindersHeaderV2}\n", cancellationToken).ConfigureAwait(false);

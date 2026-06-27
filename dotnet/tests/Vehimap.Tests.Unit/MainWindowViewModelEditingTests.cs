@@ -473,6 +473,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.CreateFuelCommand.Execute(null);
         viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
         viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
+        viewModel.FuelWorkspace.FuelEditorFuelDetail = "Shell FuelSave";
+        viewModel.FuelWorkspace.FuelEditorStation = "Shell Brno Vídeňská";
         viewModel.FuelWorkspace.FuelEditorLiters = "38.5";
         viewModel.FuelWorkspace.FuelEditorTotalCost = "1890";
         viewModel.FuelWorkspace.FuelEditorOdometer = "123789";
@@ -483,7 +485,13 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         Assert.NotNull(viewModel.FuelWorkspace.SelectedFuel);
         Assert.Equal("Nafta", viewModel.FuelWorkspace.SelectedFuel!.FuelType);
-        Assert.Contains(dataStore.CurrentDataSet.FuelEntries, item => item.FuelType == "Nafta" && item.VehicleId == "veh_1");
+        Assert.Contains(dataStore.CurrentDataSet.FuelEntries, item =>
+            item.FuelType == "Nafta"
+            && item.FuelDetail == "Shell FuelSave"
+            && item.Station == "Shell Brno Vídeňská"
+            && item.VehicleId == "veh_1");
+        Assert.Contains("Shell FuelSave", viewModel.FuelWorkspace.SelectedFuelDetail, StringComparison.Ordinal);
+        Assert.Contains("Shell Brno Vídeňská", viewModel.FuelWorkspace.SelectedFuelDetail, StringComparison.Ordinal);
         Assert.Equal("Nové tankování bylo uloženo.", viewModel.FuelWorkspace.FuelEditorStatus);
     }
 

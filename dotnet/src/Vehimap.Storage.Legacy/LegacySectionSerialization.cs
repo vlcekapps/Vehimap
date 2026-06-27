@@ -9,6 +9,7 @@ internal static class LegacySectionSerialization
     public const string VehiclesHeaderV3 = "# Vehimap data v3";
     public const string HistoryHeaderV1 = "# Vehimap history v1";
     public const string FuelHeaderV1 = "# Vehimap fuel v1";
+    public const string FuelHeaderV2 = "# Vehimap fuel v2";
     public const string RecordsHeaderV1 = "# Vehimap records v1";
     public const string RecordsHeaderV2 = "# Vehimap records v2";
     public const string MetaHeaderV1 = "# Vehimap meta v1";
@@ -252,14 +253,16 @@ internal static class LegacySectionSerialization
     public static List<FuelEntry> ParseFuel(string content)
     {
         var (header, rows) = ReadDataRows(content);
-        EnsureAllowedHeader(header, FuelHeaderV1);
+        EnsureAllowedHeader(header, FuelHeaderV1, FuelHeaderV2);
+        var isV2 = string.Equals(header, FuelHeaderV2, StringComparison.Ordinal);
 
         return rows.Select((row, index) =>
         {
             var fields = SplitTabRow(row);
-            if (fields.Count != 9)
+            var expected = isV2 ? 11 : 9;
+            if (fields.Count != expected)
             {
-                throw new FormatException($"Řádek tankování {index + 2} musí obsahovat 9 polí.");
+                throw new FormatException($"Řádek tankování {index + 2} musí obsahovat {expected} polí.");
             }
 
             return new FuelEntry(
@@ -271,13 +274,15 @@ internal static class LegacySectionSerialization
                 UnescapeField(fields[5]),
                 UnescapeField(fields[6]) == "1",
                 UnescapeField(fields[7]),
-                UnescapeField(fields[8]));
+                isV2 ? UnescapeField(fields[10]) : UnescapeField(fields[8]),
+                isV2 ? UnescapeField(fields[8]) : string.Empty,
+                isV2 ? UnescapeField(fields[9]) : string.Empty);
         }).ToList();
     }
 
     public static string SerializeFuel(IEnumerable<FuelEntry> items)
     {
-        var lines = new List<string> { FuelHeaderV1 };
+        var lines = new List<string> { FuelHeaderV2 };
         foreach (var item in items)
         {
             lines.Add(string.Join('\t',
@@ -289,6 +294,8 @@ internal static class LegacySectionSerialization
                 EscapeField(item.TotalCost),
                 EscapeField(item.FullTank ? "1" : "0"),
                 EscapeField(item.FuelType),
+                EscapeField(item.FuelDetail),
+                EscapeField(item.Station),
                 EscapeField(item.Note)));
         }
 

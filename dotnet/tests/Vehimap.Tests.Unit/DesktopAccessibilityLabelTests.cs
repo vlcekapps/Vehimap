@@ -783,6 +783,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorFuelTypeBox\"", fuelXaml);
         Assert.Contains("<ComboBox x:Name=\"FuelEditorFuelTypeBox\"", fuelXaml);
         Assert.Contains("ItemsSource=\"{Binding FuelTypeOptions}\"", fuelXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorFuelDetailBox\"", fuelXaml);
+        Assert.Contains("AutomationProperties.Name=\"Detail paliva\"", fuelXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorStationBox\"", fuelXaml);
+        Assert.Contains("AutomationProperties.Name=\"Místo tankování\"", fuelXaml);
         Assert.Contains("Grid.Column=\"1\" Spacing=\"6\"", fuelXaml);
         Assert.Contains("x:Name=\"FuelEditorOdometerBox\"", fuelXaml);
         Assert.Contains("x:Name=\"FuelEditorLitersBox\"", fuelXaml);

@@ -732,9 +732,13 @@ public sealed class DesktopContinuousIntegrationSmokeTests
 
             Assert.Equal("Datum tankování", session.GetNameByAccessibilityId("FuelEditorDateBox"));
             Assert.Equal("Typ paliva", session.GetNameByAccessibilityId("FuelEditorFuelTypeBox"));
+            Assert.Equal("Detail paliva", session.GetNameByAccessibilityId("FuelEditorFuelDetailBox"));
+            Assert.Equal("Místo tankování", session.GetNameByAccessibilityId("FuelEditorStationBox"));
 
             session.SendKeysByAccessibilityId("FuelEditorDateBox", "20.10.2026");
             session.SendKeysByAccessibilityId("FuelEditorFuelTypeBox", "Nafta");
+            session.SendKeysByAccessibilityId("FuelEditorFuelDetailBox", "Shell FuelSave");
+            session.SendKeysByAccessibilityId("FuelEditorStationBox", "Shell Brno Vídeňská");
             session.SendKeysByAccessibilityId("FuelEditorLitersBox", "38.5");
             session.SendKeysByAccessibilityId("FuelEditorTotalCostBox", "1890");
             session.SendKeysByAccessibilityId("FuelEditorOdometerBox", "123789");

@@ -37,7 +37,7 @@ public sealed class LegacyTimelineServiceTests
             ],
             FuelEntries =
             [
-                new FuelEntry("fuel_1", "veh_1", "28.03.2026", "12450", "40", "300", true, "Diesel", "")
+                new FuelEntry("fuel_1", "veh_1", "28.03.2026", "12450", "40", "300", true, "Diesel", "", "Shell FuelSave Diesel", "Shell Station 42")
             ],
             Reminders =
             [
@@ -62,6 +62,8 @@ public sealed class LegacyTimelineServiceTests
         Assert.Contains(timeline, item => item.Kind == "maintenance");
         Assert.Contains(timeline, item => item.Kind == "fuel");
         Assert.Contains(timeline, item => item.Kind == "history");
+        Assert.Contains("Shell FuelSave Diesel", timeline.First(item => item.Kind == "fuel").Detail, StringComparison.Ordinal);
+        Assert.Contains("Shell Station 42", timeline.First(item => item.Kind == "fuel").Detail, StringComparison.Ordinal);
 
         Assert.True(timeline[0].IsFuture);
         Assert.True(timeline.TakeWhile(item => item.IsFuture).SequenceEqual(timeline.Where(item => item.IsFuture).OrderBy(item => item.Date)));

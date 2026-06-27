@@ -9,4 +9,6 @@ public sealed record FuelEntry(
     string TotalCost,
     bool FullTank,
     string FuelType,
-    string Note);
+    string Note,
+    string FuelDetail = "",
+    string Station = "");

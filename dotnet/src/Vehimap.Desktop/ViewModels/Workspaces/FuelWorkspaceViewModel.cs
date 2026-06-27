@@ -60,6 +60,12 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     private string fuelEditorFuelType = string.Empty;
 
     [ObservableProperty]
+    private string fuelEditorFuelDetail = string.Empty;
+
+    [ObservableProperty]
+    private string fuelEditorStation = string.Empty;
+
+    [ObservableProperty]
     private string fuelEditorLiters = string.Empty;
 
     [ObservableProperty]
@@ -126,7 +132,7 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     {
         SelectedFuelDetail = value is null
             ? "Vyberte tankování a zobrazí se detail položky."
-            : $"Datum: {value.Date}\nPalivo: {value.FuelType}\nMnožství: {value.Liters}\nCena celkem: {value.TotalCost}\nTachometr: {value.Odometer}\nStav nádrže: {value.TankState}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+            : $"Datum: {value.Date}\nPalivo: {value.FuelType}\nDetail paliva: {value.FuelDetail}\nMísto tankování: {value.Station}\nMnožství: {value.Liters}\nCena celkem: {value.TotalCost}\nTachometr: {value.Odometer}\nStav nádrže: {value.TankState}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
 
         Root.NotifyFuelWorkspaceSelectionChanged();
     }
@@ -168,6 +174,8 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
         var query = FuelSearchText.Trim();
         return Contains(item.Date, query)
             || Contains(item.FuelType, query)
+            || Contains(item.FuelDetail, query)
+            || Contains(item.Station, query)
             || Contains(item.Liters, query)
             || Contains(item.TotalCost, query)
             || Contains(item.Odometer, query)
