@@ -26,6 +26,7 @@ public partial class MainWindow : Window
     private const int SearchTabIndex = DesktopTabIndexes.Search;
     private const int UpcomingOverviewTabIndex = DesktopTabIndexes.UpcomingOverview;
     private const int OverdueOverviewTabIndex = DesktopTabIndexes.OverdueOverview;
+    private const int SmartAdvisorTabIndex = DesktopTabIndexes.SmartAdvisor;
 
     private static readonly string[] TabHeaderButtonNames =
     [
@@ -41,7 +42,8 @@ public partial class MainWindow : Window
         "DashboardTabButton",
         "SearchTabButton",
         "UpcomingOverviewTabButton",
-        "OverdueOverviewTabButton"
+        "OverdueOverviewTabButton",
+        "SmartAdvisorTabButton"
     ];
 
     private static readonly string[] MainMenuRootNames =
@@ -754,6 +756,11 @@ public partial class MainWindow : Window
         await OpenOverdueOverviewWindowAsync();
     }
 
+    private async void OnOpenSmartAdvisorMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenSmartAdvisorWindowAsync();
+    }
+
     private async void OnOpenBackgroundNotificationMenuClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel?.OpenBackgroundNotificationQuickActionCommand is { } command)
@@ -885,6 +892,8 @@ public partial class MainWindow : Window
     private async void OnOpenUpcomingOverviewWindowClick(object? sender, RoutedEventArgs e) => await OpenUpcomingOverviewWindowAsync();
 
     private async void OnOpenOverdueOverviewWindowClick(object? sender, RoutedEventArgs e) => await OpenOverdueOverviewWindowAsync();
+
+    private async void OnOpenSmartAdvisorWindowClick(object? sender, RoutedEventArgs e) => await OpenSmartAdvisorWindowAsync();
 
     private bool FocusSelectedTabHeader()
     {
@@ -1411,6 +1420,20 @@ public partial class MainWindow : Window
             _viewModel.OverdueOverviewWorkspace,
             DesktopFocusTarget.OverdueOverviewSearch,
             "otevřít propadlé termíny").ConfigureAwait(true);
+    }
+
+    private async Task OpenSmartAdvisorWindowAsync()
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await ShowWorkspaceWindowAsync<SmartAdvisorWindow>(
+            SmartAdvisorTabIndex,
+            _viewModel.SmartAdvisorWorkspace,
+            DesktopFocusTarget.SmartAdvisorList,
+            "otevřít chytrého poradce").ConfigureAwait(true);
     }
 
     private async Task OpenRecordsWindowAsync(bool allowActiveEditor = false)

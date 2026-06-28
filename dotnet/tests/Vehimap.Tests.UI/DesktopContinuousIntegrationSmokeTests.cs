@@ -260,6 +260,34 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
+    public void Overview_menu_opens_accessible_smart_advisor_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("OverviewMenuRoot");
+
+            Assert.Equal("Otevřít chytrého poradce", session.GetNameByAccessibilityId("OpenSmartAdvisorMenuItem"));
+
+            session.ClickByAccessibilityId("OpenSmartAdvisorMenuItem");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("SmartAdvisorWindow"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("SmartAdvisorSummaryText"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("SmartAdvisorSearchBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("SmartAdvisorListBox"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("SmartAdvisorOpenItemButton"));
+
+            session.ClickByAccessibilityId("CloseSmartAdvisorWindowButton");
+            session.WaitForElementToDisappearByAccessibilityId("SmartAdvisorWindow");
+        }
+    }
+
+    [Fact]
     public void Vehicle_detail_editor_saves_new_vehicle_and_opens_starter_bundle_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

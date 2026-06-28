@@ -64,5 +64,7 @@ public enum DesktopFocusTarget
     CostDetail,
     DashboardAuditList,
     DashboardCostList,
-    DashboardTimelineList
+    DashboardTimelineList,
+    SmartAdvisorSearch,
+    SmartAdvisorList
 }

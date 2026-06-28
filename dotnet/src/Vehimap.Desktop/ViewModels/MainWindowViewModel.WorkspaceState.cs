@@ -491,6 +491,65 @@ public sealed partial class MainWindowViewModel
         RequestFocus(DesktopFocusTarget.FuelList);
     }
 
+    internal async Task<bool> OpenSmartAdvisorItemAsync(SmartAdvisorItemViewModel? item)
+    {
+        if (item is null)
+        {
+            return false;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít doporučení chytrého poradce").ConfigureAwait(true))
+        {
+            return false;
+        }
+
+        if (string.Equals(item.EntityKind, "Náklady", StringComparison.Ordinal))
+        {
+            SelectSmartAdvisorVehicle(item.VehicleId);
+            SelectedVehicleTabIndex = CostTabIndex;
+            CostWorkspace.SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault(vehicle =>
+                string.Equals(vehicle.VehicleId, item.VehicleId, StringComparison.Ordinal));
+            CostWorkspace.RefreshVisibleCostVehicles();
+            ShellStatus = "Chytrý poradce otevřel nákladový přehled doporučeného vozidla.";
+            RequestFocus(DesktopFocusTarget.CostList);
+            return true;
+        }
+
+        SelectVehicleAndOpenEntity(item.VehicleId, item.EntityKind, item.EntityId);
+        ShellStatus = "Chytrý poradce otevřel související evidenci.";
+        return true;
+    }
+
+    internal async Task<bool> OpenSmartAdvisorVehicleAsync(SmartAdvisorItemViewModel? item)
+    {
+        if (item is null)
+        {
+            return false;
+        }
+
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zobrazit vozidlo z chytrého poradce").ConfigureAwait(true))
+        {
+            return false;
+        }
+
+        SelectSmartAdvisorVehicle(item.VehicleId);
+        SelectedVehicleTabIndex = DetailTabIndex;
+        ShellStatus = "Chytrý poradce zobrazil doporučené vozidlo.";
+        RequestFocus(DesktopFocusTarget.VehicleList);
+        return true;
+    }
+
+    private void SelectSmartAdvisorVehicle(string vehicleId)
+    {
+        if (string.IsNullOrWhiteSpace(vehicleId))
+        {
+            return;
+        }
+
+        SelectedVehicle = Vehicles.FirstOrDefault(vehicle => string.Equals(vehicle.Id, vehicleId, StringComparison.Ordinal))
+            ?? SelectedVehicle;
+    }
+
     internal void NotifyHistoryWorkspaceSelectionChanged()
     {
         EditSelectedHistoryCommand.NotifyCanExecuteChanged();
@@ -662,6 +721,7 @@ public sealed partial class MainWindowViewModel
 
         AuditWorkspace.RefreshVisibleAuditItems();
         DashboardWorkspace.NotifyDashboardSummariesChanged();
+        RefreshSmartAdvisorProjection();
 
         ShellStatus = "Audit dat byl obnoven.";
         RequestFocus(AuditWorkspace.VisibleAuditItems.Count == 0 ? DesktopFocusTarget.AuditSearch : DesktopFocusTarget.AuditList);
@@ -703,6 +763,7 @@ public sealed partial class MainWindowViewModel
         ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
         OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
+        RefreshSmartAdvisorProjection();
 
         CostWorkspace.CostExportStatus = "Nákladový přehled byl obnoven.";
         ShellStatus = "Nákladový přehled byl obnoven.";
@@ -768,6 +829,7 @@ public sealed partial class MainWindowViewModel
         ExportSelectedVehicleCostDetailCommand.NotifyCanExecuteChanged();
         ExportSelectedVehicleCostReportCommand.NotifyCanExecuteChanged();
         OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
+        RefreshSmartAdvisorProjection();
 
         ShellStatus = "Dashboard byl obnoven.";
         RequestFocus(GetDashboardRefreshFocusTarget());
@@ -911,5 +973,30 @@ public sealed partial class MainWindowViewModel
     {
         OpenSelectedOverdueOverviewItemCommand.NotifyCanExecuteChanged();
         OpenSelectedOverdueOverviewVehicleCommand.NotifyCanExecuteChanged();
+    }
+
+    internal void NotifySmartAdvisorWorkspaceSelectionChanged()
+    {
+        SmartAdvisorWorkspace.OpenSelectedSmartAdvisorItemCommand.NotifyCanExecuteChanged();
+        SmartAdvisorWorkspace.OpenSelectedSmartAdvisorVehicleCommand.NotifyCanExecuteChanged();
+    }
+
+    internal void RefreshSmartAdvisorWorkspace()
+    {
+        RefreshSmartAdvisorProjection();
+        ShellStatus = "Chytrý poradce byl obnoven.";
+        RequestFocus(SmartAdvisorWorkspace.VisibleSmartAdvisorItems.Count == 0
+            ? DesktopFocusTarget.SmartAdvisorSearch
+            : DesktopFocusTarget.SmartAdvisorList);
+    }
+
+    private void RefreshSmartAdvisorProjection(bool preserveSelection = true)
+    {
+        var summary = _smartAdvisorService.BuildSmartAdvisor(
+            _dataSet,
+            _auditItems,
+            _currentCostSummary,
+            DateOnly.FromDateTime(DateTime.Today));
+        SmartAdvisorWorkspace.ApplyProjection(_projectionService.BuildSmartAdvisor(summary), preserveSelection);
     }
 }

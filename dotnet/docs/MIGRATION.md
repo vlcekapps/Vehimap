@@ -35,6 +35,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - manualni ICS export budouciho kalendare z nove C# vetve vcetne foldingu dlouhych iCalendar radku
 - akcni casovou osu, ktera umi otevrit souvisejici historii, doklad, pripominku nebo plan udrzby na spravne karte shellu
 - pristupnou `Servisni knizku` vybraneho vozidla jako novou C# nightly funkci mimo AHK paritu; cte soucasnou historii, servisni plany a servisne relevantni doklady bez zmeny datovych formatu, umi otevrit souvisejici evidenci a exportovat HTML pro tisk nebo archivaci
+- offline `Chytry poradce` jako novou C# nightly funkci mimo AHK paritu; bez AI/API sklada konzervativni doporuceni z auditu, terminu, udrzby, tankovani, dokladovych priloh a nakladovych signalu, podporuje filtry a umi prejit na souvisejici evidenci
 - prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
 - globalni hledani napric vozidly a hlavnim evidencemi s otevrenim na spravnou kartu a polozku
 - flotilovy `Prehled terminu` a `Propadle terminy`, ktere umi otevrit spravne vozidlo nebo souvisejici evidenci

@@ -53,6 +53,31 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Smart_advisor_items_should_expose_human_readable_labels()
+    {
+        var item = new SmartAdvisorItemViewModel(
+            "advisor_1",
+            "Naléhavé",
+            "Termíny",
+            "Milena",
+            "veh_1",
+            "Vozidlo",
+            string.Empty,
+            "Technická kontrola: Příští TK",
+            "Po termínu. 05/2026.",
+            "SPZ 1A2 3456",
+            "Otevřít vozidlo",
+            "31.05.2026",
+            3);
+
+        Assert.Equal(item.AccessibleLabel, item.ToString());
+        Assert.Contains("Naléhavé", item.AccessibleLabel);
+        Assert.Contains("Milena", item.AccessibleLabel);
+        Assert.Contains("Otevřít vozidlo", item.AccessibleLabel);
+        Assert.DoesNotContain(nameof(SmartAdvisorItemViewModel), item.AccessibleLabel);
+    }
+
+    [Fact]
     public void Vehicle_detail_evidence_summary_items_should_expose_human_readable_labels()
     {
         var item = new VehicleDetailEvidenceSummaryItemViewModel(
@@ -270,6 +295,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenGlobalSearchMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenAuditMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDashboardMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenSmartAdvisorMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenCostMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenUpcomingOverviewMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenOverdueOverviewMenuItem\"", xaml);
@@ -334,6 +360,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenGlobalSearchWindowButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenUpcomingOverviewWindowButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenOverdueOverviewWindowButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorTabButton\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenSmartAdvisorWindowButton\"", xaml);
+        Assert.Contains("<workspaces:SmartAdvisorWorkspaceView Grid.Row=\"1\" Margin=\"0,16,0,0\"", normalizedXaml);
         Assert.Contains("<workspaces:HistoryWorkspaceView Grid.Row=\"1\" Margin=\"0,16,0,0\" AllowEditing=\"True\"", normalizedXaml);
         Assert.Contains("<workspaces:FuelWorkspaceView Grid.Row=\"1\" Margin=\"0,16,0,0\" AllowEditing=\"True\"", normalizedXaml);
         Assert.Contains("AllowEditing=\"False\"", xaml);
@@ -445,6 +474,7 @@ public sealed class DesktopAccessibilityLabelTests
         var globalSearchXaml = ReadViewFile("GlobalSearchWindow.axaml");
         var upcomingOverviewXaml = ReadViewFile("UpcomingOverviewWindow.axaml");
         var overdueOverviewXaml = ReadViewFile("OverdueOverviewWindow.axaml");
+        var smartAdvisorXaml = ReadViewFile("SmartAdvisorWindow.axaml");
         var bundleXaml = ReadViewFile("VehicleStarterBundleWindow.axaml");
         var bundleCodeBehind = ReadViewCodeBehind("VehicleStarterBundleWindow.axaml.cs");
         var confirmationXaml = ReadViewFile("ConfirmationWindow.axaml");
@@ -542,6 +572,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedServiceBookItemCommand}\"", serviceBookXaml);
         Assert.Contains("Gesture=\"Ctrl+S\" Command=\"{Binding ExportHtmlCommand}\"", serviceBookXaml);
         Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedServiceBookItemCommand}\"", serviceBookXaml);
+
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorWindow\"", smartAdvisorXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseSmartAdvisorWindowButton\"", smartAdvisorXaml);
+        Assert.Contains("SmartAdvisorWorkspaceHost", smartAdvisorXaml);
         Assert.Contains("Key.Escape", serviceBookCodeBehind);
         Assert.Contains("FocusFirstLogicalControl", serviceBookCodeBehind);
         Assert.Contains("CanResize=\"True\"", bundleXaml);
@@ -767,6 +801,7 @@ public sealed class DesktopAccessibilityLabelTests
             "RecordsWindow.axaml",
             "RemindersWindow.axaml",
             "SettingsWindow.axaml",
+            "SmartAdvisorWindow.axaml",
             "TimelineWindow.axaml",
             "TrayActionsWindow.axaml",
             "UpcomingOverviewWindow.axaml",
@@ -799,6 +834,7 @@ public sealed class DesktopAccessibilityLabelTests
         var upcomingOverviewXaml = ReadWorkspaceOrView("UpcomingOverviewWorkspaceView.axaml", true);
         var overdueOverviewXaml = ReadWorkspaceOrView("OverdueOverviewWorkspaceView.axaml", true);
         var costXaml = ReadWorkspaceOrView("CostWorkspaceView.axaml", true);
+        var smartAdvisorXaml = ReadWorkspaceOrView("SmartAdvisorWorkspaceView.axaml", true);
         var vehicleDetailXaml = ReadWorkspaceOrView("VehicleDetailWorkspaceView.axaml", true);
 
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
@@ -828,6 +864,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"RecordSortComboBox\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"RecordSortDescendingCheckBox\"", recordXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"RecordListBox\"", recordXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorSearchBox\"", smartAdvisorXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorPriorityFilterBox\"", smartAdvisorXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorCategoryFilterBox\"", smartAdvisorXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorVehicleFilterBox\"", smartAdvisorXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorListBox\"", smartAdvisorXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorOpenItemButton\"", smartAdvisorXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorOpenVehicleButton\"", smartAdvisorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"HistoryEditorScrollViewer\"", historyXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorScrollViewer\"", fuelXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ReminderEditorScrollViewer\"", reminderXaml);
@@ -1000,6 +1043,7 @@ public sealed class DesktopAccessibilityLabelTests
         var upcomingOverviewXaml = ReadWorkspaceOrView("UpcomingOverviewWorkspaceView.axaml", true);
         var overdueOverviewXaml = ReadWorkspaceOrView("OverdueOverviewWorkspaceView.axaml", true);
         var costXaml = ReadWorkspaceOrView("CostWorkspaceView.axaml", true);
+        var smartAdvisorXaml = ReadWorkspaceOrView("SmartAdvisorWorkspaceView.axaml", true);
         var vehicleDetailXaml = ReadWorkspaceOrView("VehicleDetailWorkspaceView.axaml", true);
 
         AssertAccessibleBoundText(mainXaml, "LoadErrorText", "LoadError");
@@ -1053,6 +1097,11 @@ public sealed class DesktopAccessibilityLabelTests
         AssertAccessibleBoundText(costXaml, "CostComparisonText", "CostComparison");
         AssertAccessibleBoundText(costXaml, "CostPeriodStatusText", "CostPeriodStatus");
         AssertAccessibleBoundText(costXaml, "CostSearchSummaryText", "CostSearchSummary");
+        AssertAccessibleBoundText(smartAdvisorXaml, "SmartAdvisorSummaryText", "SmartAdvisorSummary");
+        AssertAccessibleBoundText(smartAdvisorXaml, "SmartAdvisorSelectedDetailText", "SelectedSmartAdvisorDetail");
+        Assert.Contains("AutomationProperties.AutomationId=\"SmartAdvisorKeyboardHelpText\"", smartAdvisorXaml);
+        Assert.Contains("x:DataType=\"itemvm:SmartAdvisorItemViewModel\"", smartAdvisorXaml);
+        Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", smartAdvisorXaml);
         AssertAccessibleBoundText(dashboardXaml, "DashboardAuditSummaryText", "AuditSummary");
         AssertAccessibleBoundText(dashboardXaml, "DashboardCostSummaryText", "CostSummary");
         AssertAccessibleBoundText(dashboardXaml, "DashboardCostComparisonText", "CostComparison");
@@ -1074,6 +1123,7 @@ public sealed class DesktopAccessibilityLabelTests
         var globalSearchXaml = ReadWorkspaceOrView("GlobalSearchWorkspaceView.axaml", true);
         var upcomingOverviewXaml = ReadWorkspaceOrView("UpcomingOverviewWorkspaceView.axaml", true);
         var overdueOverviewXaml = ReadWorkspaceOrView("OverdueOverviewWorkspaceView.axaml", true);
+        var smartAdvisorXaml = ReadWorkspaceOrView("SmartAdvisorWorkspaceView.axaml", true);
         var historyXaml = ReadWorkspaceOrView("HistoryWorkspaceView.axaml", true);
         var fuelXaml = ReadWorkspaceOrView("FuelWorkspaceView.axaml", true);
         var reminderXaml = ReadWorkspaceOrView("ReminderWorkspaceView.axaml", true);
@@ -1113,6 +1163,12 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedOverdueOverviewVehicleCommand}\"", overdueOverviewXaml);
         Assert.Contains("Gesture=\"Ctrl+P\" Command=\"{Binding OpenSelectedOverdueOverviewItemCommand}\"", overdueOverviewXaml);
         Assert.Contains("Command=\"{Binding ClearOverdueOverviewSearchCommand}\"", overdueOverviewXaml);
+
+        Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", smartAdvisorXaml);
+        Assert.Contains("Gesture=\"Ctrl+R\" Command=\"{Binding RefreshSmartAdvisorCommand}\"", smartAdvisorXaml);
+        Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedSmartAdvisorItemCommand}\"", smartAdvisorXaml);
+        Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedSmartAdvisorItemCommand}\"", smartAdvisorXaml);
+        Assert.Contains("Command=\"{Binding ClearSmartAdvisorFiltersCommand}\"", smartAdvisorXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", historyXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateHistoryCommand}\"", historyXaml);
@@ -1189,6 +1245,7 @@ public sealed class DesktopAccessibilityLabelTests
             ("OverdueOverviewWindow.axaml.cs", "OverdueOverviewWorkspaceHost"),
             ("RecordsWindow.axaml.cs", "RecordWorkspaceHost"),
             ("RemindersWindow.axaml.cs", "ReminderWorkspaceHost"),
+            ("SmartAdvisorWindow.axaml.cs", "SmartAdvisorWorkspaceHost"),
             ("TimelineWindow.axaml.cs", "TimelineWorkspaceHost"),
             ("UpcomingOverviewWindow.axaml.cs", "UpcomingOverviewWorkspaceHost"),
             ("VehicleDetailWindow.axaml.cs", "VehicleDetailWorkspaceHost")

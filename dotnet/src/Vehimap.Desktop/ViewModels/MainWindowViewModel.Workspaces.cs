@@ -17,6 +17,7 @@ public sealed partial class MainWindowViewModel
     public GlobalSearchWorkspaceViewModel GlobalSearchWorkspace { get; private set; } = null!;
     public UpcomingOverviewWorkspaceViewModel UpcomingOverviewWorkspace { get; private set; } = null!;
     public OverdueOverviewWorkspaceViewModel OverdueOverviewWorkspace { get; private set; } = null!;
+    public SmartAdvisorWorkspaceViewModel SmartAdvisorWorkspace { get; private set; } = null!;
 
     private void InitializeWorkspaces()
     {
@@ -33,6 +34,7 @@ public sealed partial class MainWindowViewModel
         GlobalSearchWorkspace = new GlobalSearchWorkspaceViewModel(this);
         UpcomingOverviewWorkspace = new UpcomingOverviewWorkspaceViewModel(this);
         OverdueOverviewWorkspace = new OverdueOverviewWorkspaceViewModel(this);
+        SmartAdvisorWorkspace = new SmartAdvisorWorkspaceViewModel(this);
     }
 
     internal void RequestWorkspaceFocus(DesktopFocusTarget target)

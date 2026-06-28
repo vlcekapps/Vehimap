@@ -15,4 +15,5 @@ internal static class DesktopTabIndexes
     public const int Search = 10;
     public const int UpcomingOverview = 11;
     public const int OverdueOverview = 12;
+    public const int SmartAdvisor = 13;
 }

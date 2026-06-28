@@ -2,6 +2,7 @@ using Vehimap.Application.Abstractions;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
@@ -29,6 +30,7 @@ public sealed class WorkspaceCompositionTests
         Assert.NotNull(viewModel.GlobalSearchWorkspace);
         Assert.NotNull(viewModel.UpcomingOverviewWorkspace);
         Assert.NotNull(viewModel.OverdueOverviewWorkspace);
+        Assert.NotNull(viewModel.SmartAdvisorWorkspace);
         Assert.Equal("Detail - Octavia", viewModel.VehicleDetailWorkspace.WindowTitle);
         Assert.Equal("Historie - Octavia", viewModel.HistoryWorkspace.WindowTitle);
         Assert.Equal("Tankování - Octavia", viewModel.FuelWorkspace.WindowTitle);
@@ -42,6 +44,7 @@ public sealed class WorkspaceCompositionTests
         Assert.Equal("Globální hledání", viewModel.GlobalSearchWorkspace.WindowTitle);
         Assert.Equal("Blížící se termíny", viewModel.UpcomingOverviewWorkspace.WindowTitle);
         Assert.Equal("Propadlé termíny", viewModel.OverdueOverviewWorkspace.WindowTitle);
+        Assert.Equal("Chytrý poradce", viewModel.SmartAdvisorWorkspace.WindowTitle);
     }
 
     [Fact]
@@ -111,6 +114,56 @@ public sealed class WorkspaceCompositionTests
         Assert.NotNull(viewModel.CostWorkspace.CostVehicles);
         Assert.Same(viewModel.CostWorkspace.CostVehicles, viewModel.DashboardWorkspace.CostVehicles);
         Assert.NotNull(viewModel.DashboardWorkspace.DashboardUpcomingTimeline);
+        Assert.NotNull(viewModel.SmartAdvisorWorkspace.SmartAdvisorItems);
+        Assert.NotNull(viewModel.SmartAdvisorWorkspace.VisibleSmartAdvisorItems);
+    }
+
+    [Fact]
+    public void Smart_advisor_workspace_filters_and_preserves_selection()
+    {
+        var viewModel = CreateViewModel();
+        var workspace = viewModel.SmartAdvisorWorkspace;
+        var first = new SmartAdvisorItemViewModel(
+            "advisor_1",
+            "Naléhavé",
+            "Termíny",
+            "Milena",
+            "veh_1",
+            "Vozidlo",
+            string.Empty,
+            "Technická kontrola",
+            "Po termínu.",
+            "Detail termínu.",
+            "Otevřít vozidlo",
+            "31.05.2026",
+            3);
+        var second = new SmartAdvisorItemViewModel(
+            "advisor_2",
+            "Doporučení",
+            "Náklady",
+            "Božena",
+            "veh_2",
+            "Náklady",
+            "veh_2",
+            "Cena na kilometr",
+            "Chybí výpočet.",
+            "Doplňte tachometr.",
+            "Otevřít náklady",
+            "bez termínu",
+            1);
+
+        workspace.ApplyProjection(new DesktopSmartAdvisorProjection("2 položky", [first, second]), preserveSelection: false);
+        workspace.SelectedSmartAdvisorItem = second;
+        workspace.SmartAdvisorSearchText = "tachometr";
+
+        Assert.Single(workspace.VisibleSmartAdvisorItems);
+        Assert.Equal("advisor_2", workspace.SelectedSmartAdvisorItem?.Id);
+        Assert.Contains("tachometr", workspace.SelectedSmartAdvisorDetail, StringComparison.CurrentCultureIgnoreCase);
+
+        workspace.ClearSmartAdvisorFiltersCommand.Execute(null);
+
+        Assert.Equal(2, workspace.VisibleSmartAdvisorItems.Count);
+        Assert.Equal(SmartAdvisorWorkspaceViewModel.AllPrioritiesLabel, workspace.SelectedSmartAdvisorPriorityFilter);
     }
 
     [Fact]

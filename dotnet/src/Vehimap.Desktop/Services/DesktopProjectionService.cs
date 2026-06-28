@@ -88,6 +88,26 @@ internal sealed class DesktopProjectionService
             .Take(8)
             .ToList();
 
+    public DesktopSmartAdvisorProjection BuildSmartAdvisor(SmartAdvisorSummary summary) =>
+        new(
+            summary.Status,
+            summary.Items
+                .Select(item => new SmartAdvisorItemViewModel(
+                    item.Id,
+                    FormatSmartAdvisorPriority(item.Priority),
+                    FormatSmartAdvisorCategory(item.Category),
+                    FormatValue(item.VehicleName, "Neznámé vozidlo"),
+                    item.VehicleId,
+                    item.EntityKind,
+                    item.EntityId,
+                    item.Title,
+                    item.Summary,
+                    item.Detail,
+                    item.ActionLabel,
+                    item.DueDate.HasValue ? item.DueDate.Value.ToString("dd.MM.yyyy", CzechCulture) : "bez termínu",
+                    (int)item.Priority))
+                .ToList());
+
     public IReadOnlyList<CostVehicleItemViewModel> BuildDashboardCostVehicles(CostAnalysisSummary costSummary) =>
         costSummary.Vehicles
             .Where(item => item.TotalCost > 0m || item.Status != "Neaktivní")
@@ -1123,6 +1143,27 @@ internal sealed class DesktopProjectionService
         value.HasValue ? $"{value.Value} km" : "neznámý";
 
     private static string FormatMoney(decimal value) => $"{value.ToString("0.00", CzechCulture)} Kč";
+
+    private static string FormatSmartAdvisorPriority(SmartAdvisorPriority priority) =>
+        priority switch
+        {
+            SmartAdvisorPriority.Critical => "Naléhavé",
+            SmartAdvisorPriority.Warning => "Upozornění",
+            SmartAdvisorPriority.Recommendation => "Doporučení",
+            _ => "Informace"
+        };
+
+    private static string FormatSmartAdvisorCategory(SmartAdvisorCategory category) =>
+        category switch
+        {
+            SmartAdvisorCategory.Data => "Data",
+            SmartAdvisorCategory.Deadlines => "Termíny",
+            SmartAdvisorCategory.Maintenance => "Údržba",
+            SmartAdvisorCategory.Fuel => "Tankování",
+            SmartAdvisorCategory.Attachments => "Přílohy",
+            SmartAdvisorCategory.Costs => "Náklady",
+            _ => "Ostatní"
+        };
 
     private static string FormatLiters(decimal value) => $"{value.ToString("0.##", CzechCulture)} l";
 

@@ -29,6 +29,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private const int SearchTabIndex = DesktopTabIndexes.Search;
     private const int UpcomingOverviewTabIndex = DesktopTabIndexes.UpcomingOverview;
     private const int OverdueOverviewTabIndex = DesktopTabIndexes.OverdueOverview;
+    private const int SmartAdvisorTabIndex = DesktopTabIndexes.SmartAdvisor;
 
     private readonly DesktopSessionController _session;
     private readonly IFileLauncher _fileLauncher;
@@ -38,6 +39,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly ITimelineService _timelineService;
     private readonly IFuelAnalysisService _fuelAnalysisService;
     private readonly IServiceBookService _serviceBookService;
+    private readonly ISmartAdvisorService _smartAdvisorService;
     private readonly ICalendarExportService _calendarExportService;
     private readonly ITextFileSaveService _fileSaveService;
     private readonly IFileDialogService _fileDialogService;
@@ -201,6 +203,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     internal string OverdueOverviewWindowTitle => "Propadlé termíny";
 
+    internal string SmartAdvisorWindowTitle => "Chytrý poradce";
+
     public bool IsDetailTabSelected => SelectedVehicleTabIndex == DetailTabIndex;
 
     public bool IsHistoryTabSelected => SelectedVehicleTabIndex == HistoryTabIndex;
@@ -227,11 +231,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool IsOverdueOverviewTabSelected => SelectedVehicleTabIndex == OverdueOverviewTabIndex;
 
+    public bool IsSmartAdvisorTabSelected => SelectedVehicleTabIndex == SmartAdvisorTabIndex;
+
     public bool IsCurrentWorkspacePrimaryOpenShortcutContext =>
-        SelectedVehicleTabIndex is RecordTabIndex or AuditTabIndex or CostTabIndex or DashboardTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+        SelectedVehicleTabIndex is RecordTabIndex or AuditTabIndex or CostTabIndex or DashboardTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex or SmartAdvisorTabIndex;
 
     public bool IsCurrentWorkspaceItemOpenShortcutContext =>
-        SelectedVehicleTabIndex is TimelineTabIndex or AuditTabIndex or CostTabIndex or DashboardTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex;
+        SelectedVehicleTabIndex is TimelineTabIndex or AuditTabIndex or CostTabIndex or DashboardTabIndex or SearchTabIndex or UpcomingOverviewTabIndex or OverdueOverviewTabIndex or SmartAdvisorTabIndex;
 
     public bool IsCurrentWorkspaceCreateShortcutContext =>
         SelectedVehicleTabIndex is HistoryTabIndex or FuelTabIndex or ReminderTabIndex or MaintenanceTabIndex or RecordTabIndex;
@@ -298,7 +304,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IClipboardService? clipboardService = null,
         IFuelAnalysisService? fuelAnalysisService = null,
         IServiceBookService? serviceBookService = null,
-        DesktopServiceBookExportService? serviceBookExportService = null)
+        DesktopServiceBookExportService? serviceBookExportService = null,
+        ISmartAdvisorService? smartAdvisorService = null)
     {
         var sessionBackupService = backupService ?? new LegacyBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
@@ -324,6 +331,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _timelineService = timelineService;
         _fuelAnalysisService = fuelAnalysisService ?? new LegacyFuelAnalysisService();
         _serviceBookService = serviceBookService ?? new LegacyServiceBookService();
+        _smartAdvisorService = smartAdvisorService ?? new LegacySmartAdvisorService(_timelineService, _fuelAnalysisService);
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
@@ -363,6 +371,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(IsSearchTabSelected));
         OnPropertyChanged(nameof(IsUpcomingOverviewTabSelected));
         OnPropertyChanged(nameof(IsOverdueOverviewTabSelected));
+        OnPropertyChanged(nameof(IsSmartAdvisorTabSelected));
         OnPropertyChanged(nameof(IsCurrentWorkspacePrimaryOpenShortcutContext));
         OnPropertyChanged(nameof(IsCurrentWorkspaceItemOpenShortcutContext));
         OnPropertyChanged(nameof(IsCurrentWorkspaceCreateShortcutContext));
@@ -532,6 +541,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             SearchTabIndex => DesktopFocusTarget.GlobalSearchBox,
             UpcomingOverviewTabIndex => DesktopFocusTarget.UpcomingOverviewSearch,
             OverdueOverviewTabIndex => DesktopFocusTarget.OverdueOverviewSearch,
+            SmartAdvisorTabIndex => DesktopFocusTarget.SmartAdvisorSearch,
             _ => DesktopFocusTarget.VehicleSearch
         };
 
@@ -577,7 +587,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void SelectVehicleTab(int tabIndex)
     {
-        if (tabIndex < DetailTabIndex || tabIndex > OverdueOverviewTabIndex)
+        if (tabIndex < DetailTabIndex || tabIndex > SmartAdvisorTabIndex)
         {
             return;
         }
@@ -676,6 +686,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             case OverdueOverviewTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedOverdueOverviewVehicleCommand).ConfigureAwait(true);
                 return true;
+            case SmartAdvisorTabIndex:
+                await ExecuteWorkspaceShortcutAsync(SmartAdvisorWorkspace.OpenSelectedSmartAdvisorVehicleCommand).ConfigureAwait(true);
+                return true;
             default:
                 return false;
         }
@@ -705,6 +718,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 return true;
             case OverdueOverviewTabIndex:
                 await ExecuteWorkspaceShortcutAsync(OpenSelectedOverdueOverviewItemCommand).ConfigureAwait(true);
+                return true;
+            case SmartAdvisorTabIndex:
+                await ExecuteWorkspaceShortcutAsync(SmartAdvisorWorkspace.OpenSelectedSmartAdvisorItemCommand).ConfigureAwait(true);
                 return true;
             default:
                 return false;
@@ -1217,6 +1233,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         PopulateDashboardTimeline();
         RefreshFleetOverviews();
         RefreshGlobalSearch();
+        RefreshSmartAdvisorProjection(preserveSelection: false);
         NotifyQuickActionAvailabilityChanged();
         AuditWorkspace.RefreshVisibleAuditItems(preserveSelection: false);
         CostWorkspace.RefreshVisibleCostVehicles(preserveSelection: false);
@@ -1230,7 +1247,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         {
             SelectedVehicleTabIndex = DashboardTabIndex;
         }
-        else if (preferredTabIndex.HasValue && preferredTabIndex.Value >= DetailTabIndex && preferredTabIndex.Value <= OverdueOverviewTabIndex)
+        else if (preferredTabIndex.HasValue && preferredTabIndex.Value >= DetailTabIndex && preferredTabIndex.Value <= SmartAdvisorTabIndex)
         {
             SelectedVehicleTabIndex = preferredTabIndex.Value;
         }

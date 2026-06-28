@@ -225,6 +225,11 @@
                     Click="OnOpenDashboardMenuClick"
                     AutomationProperties.Name="Otevřít dashboard"
                     AutomationProperties.AutomationId="OpenDashboardMenuItem" />
+          <MenuItem x:Name="OpenSmartAdvisorMenuItem"
+                    Header="Chytrý poradce"
+                    Click="OnOpenSmartAdvisorMenuClick"
+                    AutomationProperties.Name="Otevřít chytrého poradce"
+                    AutomationProperties.AutomationId="OpenSmartAdvisorMenuItem" />
           <MenuItem x:Name="OpenCostMenuItem"
                     Header="Náklady napříč vozidly"
                     Click="OnOpenCostMenuClick"
@@ -676,6 +681,16 @@
                       Content="Propadlé"
                       AutomationProperties.Name="Karta Propadlé termíny"
                       AutomationProperties.AutomationId="OverdueOverviewTabButton" />
+              <RadioButton x:Name="SmartAdvisorTabButton"
+                      Classes="tab-header"
+                      GroupName="VehicleTabs"
+                      IsChecked="{Binding IsSmartAdvisorTabSelected}"
+                      IsTabStop="{Binding IsSmartAdvisorTabSelected}"
+                      Tag="13"
+                      Click="OnTabHeaderClick"
+                      Content="Poradce"
+                      AutomationProperties.Name="Karta Chytrý poradce"
+                      AutomationProperties.AutomationId="SmartAdvisorTabButton" />
             </WrapPanel>
             <TextBlock Grid.Row="2"
                        Margin="0,10,0,0"
@@ -877,6 +892,20 @@
                                                        Margin="0,16,0,0"
                                                        DataContext="{Binding OverdueOverviewWorkspace}" />
             </Grid>
+
+            <Grid IsVisible="{Binding IsSmartAdvisorTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
+              <Button Width="128"
+                      x:Name="OpenSmartAdvisorWindowButton"
+                      HorizontalAlignment="Left"
+                      Click="OnOpenSmartAdvisorWindowClick"
+                      IsEnabled="{Binding CanUseWorkspaceNavigation}"
+                      Content="V okně"
+                      AutomationProperties.Name="Otevřít chytrého poradce v samostatném okně"
+                      AutomationProperties.AutomationId="OpenSmartAdvisorWindowButton" />
+              <workspaces:SmartAdvisorWorkspaceView Grid.Row="1"
+                                                    Margin="0,16,0,0"
+                                                    DataContext="{Binding SmartAdvisorWorkspace}" />
+            </Grid>
           </Grid>
         </Grid>
       </Border>
@@ -885,7 +914,7 @@
     <TextBlock Grid.Row="4"
                Margin="0,16,0,0"
                Opacity="0.75"
-               Text="Vehimap pracuje nad stejnými daty jako původní AHK verze a nabízí detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard, globální hledání i přehled termínů. Editace se otevírá v samostatných oknech s dotaženou přístupností a návratem přes Zrušit."
+               Text="Vehimap pracuje nad stejnými daty jako původní AHK verze a nabízí detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard, chytrého poradce, globální hledání i přehled termínů. Editace se otevírá v samostatných oknech s dotaženou přístupností a návratem přes Zrušit."
                TextWrapping="Wrap" />
   </Grid>
 </Window>

@@ -36,6 +36,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - pri exportu `.vehimapbak` hlasit pocet zahrnutych spravovanych priloh a pocet chybejicich spravovanych priloh, ktere byly bezpecne preskoceny stejne jako v AHK vetvi
 - skladat sdilene C# use-cases pro audit, nakladove souhrny, cenu za kilometr, casovou osu vozidla a ICS export
 - otevrit pristupnou `Servisni knizku` vybraneho vozidla z menu `Vozidlo` nebo detailu vozidla; sklada historii, servisni plany a servisni doklady ze soucasnych dat bez migrace, umi prejit na souvisejici evidenci a exportovat HTML pro tisk nebo archivaci
+- otevrit offline `Chytry poradce` z menu `Prehledy`, karty shellu nebo samostatneho okna; pravidla jsou deterministicka, nepouzivaji AI ani externi API a skladaji doporuceni z auditu, terminu, udrzby, tankovaci analyzy, dokladovych priloh a zakladnich nakladovych signalu
 - zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych legacy dat
 - v detailu vozidla zobrazit stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby stejne jako rychla kontrolni plocha v AHK verzi
 - prejit z detailu vozidla pres pristupny blok `Souvisejici evidence` rovnou do historie, tankovani, pripominek, udrzby, dokladu, casove osy, servisni knizky nebo nakladu vybraneho vozidla
@@ -53,6 +54,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - v dashboardu pouzit horni akce `Hledat`, `Souhrn nakladu`, `Blizici se`, `Propadle`, `Zobrazit vozidlo`, `Historie vozidla`, `Naklady vozidla`, `Dokoncit servis` a `Upravit vozidlo`; stejne akce maji zkratky `Ctrl+F`, `Ctrl+T`, `Ctrl+Shift+T`, `Ctrl+O`, `Ctrl+P`, `Ctrl+H`, `Ctrl+L` a `Ctrl+U` / `F2`
 - v dashboardu prepnout `Zobrazovat dashboard pri startu`; zmena se uklada do stejneho `settings.ini` jako dialog `Nastaveni`
 - pouzit plny auditni workspace se samostatnym hledanim, tlacitky `Vymazat` a `Obnovit`, zkratkami `Ctrl+F`, `Ctrl+R`, `Ctrl+O`, `Ctrl+P`, `Ctrl+U` / `F2` a oddelenym dashboardovym top vyrezem
+- pouzit workspace `Chytry poradce` se souhrnem doporuceni, filtry podle priority, kategorie, vozidla a textu, zkratkami `Ctrl+F`, `Ctrl+R`, `Enter` / `Ctrl+O` a navigaci na souvisejici vozidlo nebo evidenci bez rucniho hledani
 - pouzit nakladovy workspace s volbou predvolby obdobi nebo vlastniho datumoveho rozsahu, rychlym hledanim vozidel, tlacitky `Vymazat` a `Obnovit` a zkratkami `Ctrl+F` pro hledani, `Ctrl+R` pro obnovu prehledu, `Ctrl+P` pro precteni rozpadu nakladu, `Ctrl+O` nebo `Enter` pro otevreni vozidla a `Ctrl+U` / `F2` pro upravu vozidla
 - ovladat shell vice klavesnici: `F5` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+D` pro dashboard, `Ctrl+T` pro blizici se terminy, `Ctrl+Shift+T` pro propadle terminy, kontextove `Ctrl+F` pro hledani v aktivni pracovni plose, `Ctrl+Shift+F` pro globalni hledani a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech, dashboardu i ve vysledcich hledani
 - primo vytvaret, upravovat a mazat `pripominky`
