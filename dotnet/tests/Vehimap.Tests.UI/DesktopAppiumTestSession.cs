@@ -1,4 +1,5 @@
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
 using System.Runtime.InteropServices;
@@ -237,7 +238,12 @@ internal sealed class DesktopAppiumTestSession : IDisposable
 
     public string GetFocusedAutomationId()
     {
-        return _driver.SwitchTo().ActiveElement().GetAttribute("AutomationId") ?? string.Empty;
+        if (TryGetActiveElement(out var activeElement))
+        {
+            return activeElement.GetAttribute("AutomationId") ?? string.Empty;
+        }
+
+        return GetFocusedAutomationIdFromAutomationTree();
     }
 
     public string WaitForFocusedAutomationId(int timeoutSeconds = 12, params string[] automationIds)
@@ -260,6 +266,12 @@ internal sealed class DesktopAppiumTestSession : IDisposable
                 return current;
             }
 
+            current = GetFocusedExpectedAutomationId(expected);
+            if (expected.Contains(current))
+            {
+                return current;
+            }
+
             Thread.Sleep(150);
         }
 
@@ -268,7 +280,13 @@ internal sealed class DesktopAppiumTestSession : IDisposable
 
     public void SendKeysToActiveElement(string text)
     {
-        _driver.SwitchTo().ActiveElement().SendKeys(text);
+        if (TryGetActiveElement(out var activeElement))
+        {
+            activeElement.SendKeys(text);
+            return;
+        }
+
+        new Actions(_driver).SendKeys(text).Perform();
     }
 
     public void WaitForElementToDisappearByAccessibilityId(string automationId, int timeoutSeconds = 12)
@@ -462,6 +480,96 @@ channel={{channel}}
         }
 
         throw new TimeoutException("Požadovaný UI prvek se v Appium session neobjevil.", lastError);
+    }
+
+    private bool TryGetActiveElement(out IWebElement element)
+    {
+        try
+        {
+            element = _driver.SwitchTo().ActiveElement();
+            return true;
+        }
+        catch (WebDriverException)
+        {
+            element = null!;
+            return false;
+        }
+        catch (InvalidOperationException)
+        {
+            element = null!;
+            return false;
+        }
+    }
+
+    private string GetFocusedAutomationIdFromAutomationTree()
+    {
+        foreach (var element in FindFocusedElements())
+        {
+            var automationId = element.GetAttribute("AutomationId") ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(automationId))
+            {
+                return automationId;
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private string GetFocusedExpectedAutomationId(IReadOnlySet<string> expectedAutomationIds)
+    {
+        foreach (var automationId in expectedAutomationIds)
+        {
+            try
+            {
+                foreach (var element in _driver.FindElements(MobileBy.AccessibilityId(automationId)))
+                {
+                    if (IsElementFocused(element))
+                    {
+                        return automationId;
+                    }
+                }
+            }
+            catch (WebDriverException)
+            {
+            }
+        }
+
+        return string.Empty;
+    }
+
+    private IReadOnlyCollection<IWebElement> FindFocusedElements()
+    {
+        try
+        {
+            return _driver.FindElements(By.XPath("//*[@HasKeyboardFocus='True' or @HasKeyboardFocus='true' or @HasKeyboardFocus='1']"));
+        }
+        catch (WebDriverException)
+        {
+            return Array.Empty<IWebElement>();
+        }
+    }
+
+    private static bool IsElementFocused(IWebElement element)
+    {
+        foreach (var attributeName in new[] { "HasKeyboardFocus", "Focused", "focused" })
+        {
+            string value;
+            try
+            {
+                value = element.GetAttribute(attributeName) ?? string.Empty;
+            }
+            catch (WebDriverException)
+            {
+                continue;
+            }
+
+            if (value.Equals("true", StringComparison.OrdinalIgnoreCase) || value.Equals("1", StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static bool TryOpenClipboard()

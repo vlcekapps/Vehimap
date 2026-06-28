@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# Appium UI smoke testy nově umí fallback pro CI runner, kde Windows driver nepodporuje WebDriver `ActiveElement`; fokus se ověřuje přes `HasKeyboardFocus`, aby ruční nightly vydání nespadlo na rozdílu Appium implementace.
 - C# Windows packaging umí volitelně podepsat Inno Setup instalátor a uninstaller přes `VEHIMAP_INNO_SIGNTOOL_COMMAND`, takže podpis půjde nastavit v CI nebo lokálně bez nepřístupného Inno Setup dialogu `Manage Sign Tools`.
 - C# release tooling má nový wrapper `Test-DotnetWindowsHardening.ps1`, který před beta kanálem spustí release train status, celé `dotnet test`, nightly readiness s instalačním smoke testem, volitelně publikovanou nightly kontrolu a připomene AHK retirement gate.
 - C# Avalonia má novou přístupnou `Servisní knížku` pro vybrané vozidlo: skládá historii, servisní plány a servisně relevantní doklady bez změny datových formátů, jde otevřít z menu `Vozidlo` i detailu vozidla, umí skočit na související evidenci a exportovat HTML pro tisk nebo archivaci.
