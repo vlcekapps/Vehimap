@@ -259,6 +259,10 @@ Bezny vyvoj jde pres tri oddelene kanaly:
 - `beta`: verzovany prerelease `dotnet-beta-v<verze>`, povyseny z nightly po zakladnim overeni.
 - `stable`: publikovany release `dotnet-v<verze>`, povyseny z beta po realnem testovani.
 
+Branch model je zamerne jednoduchy: dlouhodobe existuje jen `main`. Nightly, beta a stable nejsou oddelene vetve, ale release kanaly nad konkretnimi commity z `main`, oddelene tagy, manifesty, instalatory, AppId a systemovou datovou slozkou. Trvale vetve `beta` a `stable` zatim nezavadet; kratkodobou vetev `release/<verze>` zalozit jen vyjimecne, pokud by bylo potreba udrzovat starsi beta/stable kandidat a soucasne uz rozjet dalsi velke nightly zmeny.
+
+Po vytvoreni beta tagu plati kratky release freeze pro `main`: do stable smi jit jen P0/P1 opravy, dokumentace, release tooling nebo bezpecne overovaci opravy. Nove funkce pockaji az po stable. Pokud beta najde zasadni blocker, oprava jde nejdrive do `main`, potom se zvysi `src/VERSION` a vyda se nova beta s novym tagem; existujici `dotnet-beta-v<verze>` tag se neprepisuje. P2 a drobnosti se odlozi po stable, pokud nejsou vyslovene nutne pro release.
+
 Pred povysenim spustte promotion gate. Nic netaguje ani nemaze, jen zkontroluje stav repozitare a rekne presny dalsi prikaz:
 
 ```powershell
@@ -272,7 +276,7 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetS
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel stable -Push
 ```
 
-Beta promotion vyzaduje existujici rolling tag `dotnet-nightly` i publikovany `update/latest-dotnet-nightly-win-x64.ini` manifest s ocekavanou nightly prerelease verzi, kanalem, hashem, velikosti a odkazem na release asset. Stable promotion stejne vyzaduje existujici beta tag `dotnet-beta-v<verze>` i publikovany beta manifest. Tagovaci skript pro `beta` a `stable` vola promotion gate automaticky pred release readiness branou, takze nejde omylem preskocit proces `nightly -> beta -> stable`. Promotion gate po uspesne kontrole vypise i doporuceny wrapper pro lokalni readiness daneho kanalu, aby se beta/stable pred tagem overovaly stejnou cestou jako nightly.
+Beta promotion vyzaduje existujici rolling tag `dotnet-nightly` i publikovany `update/latest-dotnet-nightly-win-x64.ini` manifest s ocekavanou nightly prerelease verzi, kanalem, hashem, velikosti a odkazem na release asset. Stable promotion stejne vyzaduje existujici beta tag `dotnet-beta-v<verze>` i publikovany beta manifest a predpoklada testerskou vlnu bez P0/P1 blockeru. Tagovaci skript pro `beta` a `stable` vola promotion gate automaticky pred release readiness branou, takze nejde omylem preskocit proces `nightly -> beta -> stable`. Promotion gate po uspesne kontrole vypise i doporuceny wrapper pro lokalni readiness daneho kanalu, aby se beta/stable pred tagem overovaly stejnou cestou jako nightly.
 
 Po dobehnuti GitHub Actions release workflow lze stabilni i nightly kanal overit jednim post-release skriptem:
 

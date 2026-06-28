@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# release dokumentace nově výslovně popisuje model `main + tagy`: nightly, beta a stable zůstávají oddělené kanály bez trvalých `beta`/`stable` větví, po beta tagu platí krátký freeze pro nové funkce a případná opravná beta vyžaduje bump `src/VERSION`.
 - C# Avalonia katalog ručních šablon v `Plánu údržby` je rozšířený a členěný na oblasti `Motor`, `Podvozek`, `Výfukové potrubí` a `Elektronika`; přibyly šablony pro svíčky/žhaviče, snímače, sání, turbo, brzdy, ramena, silentbloky, stabilizátor, čepy, tlumiče, pružiny, výfukové díly, žárovky, baterii, pojistky a senzory.
 - C# Avalonia editor `Plán údržby` má novou ruční šablonu `Pravidelný servis`, která jedním plánem předvyplní souhrnný servisní úkon pro výměnu motorového oleje, olejového filtru a běžných filtrů.
 - C# Windows update tok nově po volbě `Stáhnout a nainstalovat` otevírá přístupný dialog `Stahování aktualizace` s progressbarem podle stažených bajtů, stavem ověřování SHA-256 a tlačítkem `Zrušit`; po spuštění Inno Setup instalátoru aplikace používá skutečné ukončení přes runtime místo prostého `Close()`, takže nezůstane schovaná v tray a neblokuje instalátor.
