@@ -37,12 +37,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly IGlobalSearchService _globalSearchService;
     private readonly ITimelineService _timelineService;
     private readonly IFuelAnalysisService _fuelAnalysisService;
+    private readonly IServiceBookService _serviceBookService;
     private readonly ICalendarExportService _calendarExportService;
     private readonly ITextFileSaveService _fileSaveService;
     private readonly IFileDialogService _fileDialogService;
     private readonly DesktopProjectionService _projectionService;
     private readonly DesktopNavigationCoordinator _navigationCoordinator;
     private readonly DesktopPrintableVehicleReportService _printableVehicleReportService;
+    private readonly DesktopServiceBookExportService _serviceBookExportService;
     private readonly DesktopCostExportService _costExportService = new();
     private VehimapDataRoot? _dataRoot => _session.DataRoot;
     private VehimapDataSet _dataSet => _session.DataSet;
@@ -141,6 +143,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool CanOpenVehicleDetailWindow => SelectedVehicle is not null && CanUseWorkspaceNavigation;
 
     public bool CanOpenSelectedVehicleCosts => SelectedVehicle is not null && !HasPendingEdits;
+
+    public bool CanOpenSelectedVehicleServiceBook => SelectedVehicle is not null && !HasPendingEdits;
 
     public bool CanUseDataActions => _session.IsLoaded && !HasPendingEdits;
 
@@ -292,7 +296,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IAppShellDialogService? appShellDialogService = null,
         IUpdateInstallLauncher? updateInstallLauncher = null,
         IClipboardService? clipboardService = null,
-        IFuelAnalysisService? fuelAnalysisService = null)
+        IFuelAnalysisService? fuelAnalysisService = null,
+        IServiceBookService? serviceBookService = null,
+        DesktopServiceBookExportService? serviceBookExportService = null)
     {
         var sessionBackupService = backupService ?? new LegacyBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
@@ -317,12 +323,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _globalSearchService = globalSearchService;
         _timelineService = timelineService;
         _fuelAnalysisService = fuelAnalysisService ?? new LegacyFuelAnalysisService();
+        _serviceBookService = serviceBookService ?? new LegacyServiceBookService();
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
         _projectionService = projectionService ?? new DesktopProjectionService();
         _navigationCoordinator = navigationCoordinator ?? new DesktopNavigationCoordinator();
         _printableVehicleReportService = printableVehicleReportService ?? new DesktopPrintableVehicleReportService();
+        _serviceBookExportService = serviceBookExportService ?? new DesktopServiceBookExportService();
         AppShellController = new DesktopAppShellController(
             appShellDialogService ?? new AvaloniaAppShellDialogService(),
             updateInstallLauncher ?? new ProcessUpdateInstallLauncher());
@@ -368,6 +376,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(CanEditSelectedVehicle));
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
         OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
+        OnPropertyChanged(nameof(CanOpenSelectedVehicleServiceBook));
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
         DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
         OpenSelectedVehicleCostsCommand.NotifyCanExecuteChanged();

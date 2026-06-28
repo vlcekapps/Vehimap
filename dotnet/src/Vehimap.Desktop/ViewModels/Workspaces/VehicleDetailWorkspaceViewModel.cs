@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Services;
 using Vehimap.Storage.Legacy;
 
@@ -278,6 +279,9 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
         await Root.OpenSelectedVehicleCostsCommand.ExecuteAsync(null).ConfigureAwait(true);
         return Root.SelectedVehicleTabIndex == DesktopTabIndexes.Cost;
     }
+
+    public ServiceBookWindowViewModel? BuildVehicleServiceBookModel() =>
+        CanOpenVehicleRelatedWorkspace ? Root.BuildSelectedVehicleServiceBookModel() : null;
 
     internal void SetVehicleEditingState(bool isEditing, bool isNewVehicle)
     {

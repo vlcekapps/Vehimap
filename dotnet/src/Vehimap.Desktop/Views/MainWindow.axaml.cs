@@ -698,6 +698,11 @@ public partial class MainWindow : Window
         await OpenVehicleStarterBundleDialogAsync();
     }
 
+    private async void OnOpenServiceBookMenuClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenServiceBookWindowAsync();
+    }
+
     private async void OnOpenSelectedVehicleCostsMenuClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel?.OpenSelectedVehicleCostsCommand.CanExecute(null) == true)
@@ -1286,6 +1291,34 @@ public partial class MainWindow : Window
             _viewModel.TimelineWorkspace,
             DesktopFocusTarget.TimelineSearch,
             "otevřít časovou osu vybraného vozidla").ConfigureAwait(true);
+    }
+
+    private async Task OpenServiceBookWindowAsync()
+    {
+        if (_viewModel?.SelectedVehicle is null || !_viewModel.CanOpenSelectedVehicleServiceBook)
+        {
+            return;
+        }
+
+        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít servisní knížku vybraného vozidla").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        var model = _viewModel.BuildSelectedVehicleServiceBookModel();
+        if (model is null)
+        {
+            RequestFocus(DesktopFocusTarget.VehicleList);
+            return;
+        }
+
+        var dialog = new ServiceBookWindow
+        {
+            DataContext = model
+        };
+
+        await dialog.ShowDialog(this).ConfigureAwait(true);
+        RequestFocus(model.DidOpenSelectedItem ? DesktopFocusTarget.SelectedVehicleTabHeader : DesktopFocusTarget.VehicleList);
     }
 
     private async Task OpenAuditWindowAsync()

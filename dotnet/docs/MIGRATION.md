@@ -34,6 +34,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - casova osa vozidla v Avalonia vetvi si pamatuje posledni filtr `Vse` / `Budouci` / `Minule` v `settings.ini`, ale rychle textove hledani zustava jen docasne
 - manualni ICS export budouciho kalendare z nove C# vetve vcetne foldingu dlouhych iCalendar radku
 - akcni casovou osu, ktera umi otevrit souvisejici historii, doklad, pripominku nebo plan udrzby na spravne karte shellu
+- pristupnou `Servisni knizku` vybraneho vozidla jako novou C# nightly funkci mimo AHK paritu; cte soucasnou historii, servisni plany a servisne relevantni doklady bez zmeny datovych formatu, umi otevrit souvisejici evidenci a exportovat HTML pro tisk nebo archivaci
 - prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
 - globalni hledani napric vozidly a hlavnim evidencemi s otevrenim na spravnou kartu a polozku
 - flotilovy `Prehled terminu` a `Propadle terminy`, ktere umi otevrit spravne vozidlo nebo souvisejici evidenci
@@ -47,7 +48,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - keyboard-first vrstvu shellu s focus managementem, shortcuty, enter-akcemi na hlavnich seznamech a explicitnim tab stopem hlavniho seznamu vozidel
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
 - detail vozidla v Avalonia vetvi ukazuje stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby, aby se priblizil kontrolnimu detailu z AHK verze
-- detail vozidla v Avalonia vetvi umi z pristupneho bloku `Souvisejici evidence` prepnout na historii, tankovani, pripominky, udrzbu, doklady, casovou osu nebo naklady vybraneho vozidla
+- detail vozidla v Avalonia vetvi umi z pristupneho bloku `Souvisejici evidence` prepnout na historii, tankovani, pripominky, udrzbu, doklady, casovou osu, servisni knizku nebo naklady vybraneho vozidla
 - hlavni seznam vozidel v Avalonia shellu si pamatuje posledni rozbalovaci filtr kategorie a stavovy filtr v `settings.ini`, ale rychle textove hledani zustava jen docasne
 - globalni hledani v Avalonia vetvi prohledava rozsirena metadata vozidla, stavove texty z casove osy a u navazujicich evidenci bere v uvahu i nazev vozidla, SPZ a znacku/model stejne jako AHK implementace
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh, AHK-kompatibilni validace/normalizace datumu, tachometru, castek, intervalu, typu paliva a platnosti dokladu i rozbalovacich hodnot pro typ dokladu a opakovani pripominky v beznych editorech i v balicku pro vozidlo

@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# Avalonia má novou přístupnou `Servisní knížku` pro vybrané vozidlo: skládá historii, servisní plány a servisně relevantní doklady bez změny datových formátů, jde otevřít z menu `Vozidlo` i detailu vozidla, umí skočit na související evidenci a exportovat HTML pro tisk nebo archivaci.
 - C# Avalonia karta `Tankování` má nový přístupný blok `Analýza tankování`: počítá cenu za litr, spotřebu z úseků mezi plnými nádržemi, souhrny podle místa/paliva a konzervativní upozornění na nepoužitelné nebo podezřelé záznamy bez změny formátu `fuel.tsv`.
 - C# Windows instalátor nově používá kořenový `favicon.ico` jako aplikační ikonu, ikonu odinstalace i ikonu zástupců v nabídce Start a na ploše.
 - C# nightly/tester workflow má novou akci `Nahlásit zpětnou vazbu` v menu `Aplikace` a přístupném tray okně; otevírá předvyplněný GitHub issue s bezpečným kontextem verze, kanálu, platformy a počtů položek bez datové složky nebo názvů vozidel.

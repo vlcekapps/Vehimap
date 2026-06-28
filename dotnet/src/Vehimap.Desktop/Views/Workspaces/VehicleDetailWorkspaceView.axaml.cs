@@ -152,6 +152,28 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         CloseVehicleDetailWindowIfNeeded(ViewModel?.OpenVehicleTimelineWorkspace() == true);
     }
 
+    private async void OnOpenVehicleServiceBookClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (ViewModel is null || TopLevel.GetTopLevel(this) is not Window owner)
+        {
+            return;
+        }
+
+        var model = ViewModel.BuildVehicleServiceBookModel();
+        if (model is null)
+        {
+            return;
+        }
+
+        var dialog = new ServiceBookWindow
+        {
+            DataContext = model
+        };
+
+        await dialog.ShowDialog(owner);
+        CloseVehicleDetailWindowIfNeeded(model.DidOpenSelectedItem);
+    }
+
     private async void OnOpenVehicleCostsWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         if (ViewModel is null)

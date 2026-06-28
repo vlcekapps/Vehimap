@@ -304,6 +304,11 @@
                       IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
                       AutomationProperties.Name="Otevřít časovou osu vybraného vozidla"
                       AutomationProperties.AutomationId="OpenDetailTimelineButton" />
+              <Button Click="OnOpenVehicleServiceBookClick"
+                      Content="Servisní knížka"
+                      IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
+                      AutomationProperties.Name="Otevřít servisní knížku vybraného vozidla"
+                      AutomationProperties.AutomationId="OpenDetailServiceBookButton" />
               <Button Click="OnOpenVehicleCostsWorkspaceClick"
                       Content="Náklady"
                       IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"

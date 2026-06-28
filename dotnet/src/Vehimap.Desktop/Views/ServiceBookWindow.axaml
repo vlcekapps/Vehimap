@@ -1,0 +1,201 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.ServiceBookWindow"
+        x:DataType="vm:ServiceBookWindowViewModel"
+        Width="1180"
+        Height="760"
+        MinWidth="980"
+        MinHeight="620"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding WindowTitle}"
+        AutomationProperties.Name="{Binding WindowTitle}"
+        AutomationProperties.AutomationId="ServiceBookWindow"
+        AutomationProperties.HelpText="Servisní knížka vybraného vozidla. Ctrl+O otevře vybranou položku, Ctrl+S exportuje HTML a Escape okno zavře.">
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Ctrl+O" Command="{Binding OpenSelectedServiceBookItemCommand}" />
+    <KeyBinding Gesture="Ctrl+S" Command="{Binding ExportHtmlCommand}" />
+  </Window.KeyBindings>
+  <Grid Margin="20" RowDefinitions="Auto,*,Auto">
+    <Grid ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="6">
+        <TextBlock FontSize="24"
+                   FontWeight="SemiBold"
+                   Text="{Binding WindowTitle}" />
+        <TextBlock Text="{Binding VehicleSummary}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding VehicleSummary}"
+                   AutomationProperties.AutomationId="ServiceBookVehicleSummaryText" />
+        <TextBlock Text="{Binding CostSummary}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding CostSummary}"
+                   AutomationProperties.AutomationId="ServiceBookCostSummaryText" />
+        <TextBlock Text="{Binding StatusText}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding StatusText}"
+                   AutomationProperties.AutomationId="ServiceBookStatusText" />
+      </StackPanel>
+      <Button Grid.Column="1"
+              x:Name="CloseServiceBookWindowButton"
+              Width="120"
+              Height="34"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít servisní knížku"
+              AutomationProperties.AutomationId="CloseServiceBookWindowButton" />
+    </Grid>
+
+    <ScrollViewer Grid.Row="1"
+                  Margin="0,18,0,0"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  AutomationProperties.Name="Obsah servisní knížky"
+                  AutomationProperties.AutomationId="ServiceBookContentScrollViewer">
+      <StackPanel Spacing="18">
+        <Border Padding="14" Background="#10203040" CornerRadius="8">
+          <TextBlock Text="{Binding SelectedItemDetail}"
+                     TextWrapping="Wrap"
+                     AutomationProperties.Name="{Binding SelectedItemDetail}"
+                     AutomationProperties.AutomationId="ServiceBookSelectedItemDetailText" />
+        </Border>
+
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Záznamy historie a servisu" />
+        <TextBlock IsVisible="{Binding !HasHistoryItems}"
+                   Text="V historii vozidla zatím není žádný záznam."
+                   AutomationProperties.Name="V historii vozidla zatím není žádný záznam."
+                   AutomationProperties.AutomationId="ServiceBookHistoryEmptyText" />
+        <ListBox x:Name="ServiceBookHistoryListBox"
+                 MinHeight="120"
+                 MaxHeight="220"
+                 IsVisible="{Binding HasHistoryItems}"
+                 ItemsSource="{Binding HistoryItems}"
+                 SelectedItem="{Binding SelectedHistoryItem}"
+                 AutomationProperties.Name="Záznamy historie a servisu v servisní knížce"
+                 AutomationProperties.AutomationId="ServiceBookHistoryListBox">
+          <ListBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedServiceBookItemCommand}" />
+          </ListBox.KeyBindings>
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ServiceBookItemViewModel">
+              <Border Padding="10"
+                      Margin="0,0,0,6"
+                      Background="#08102030"
+                      CornerRadius="6"
+                      AutomationProperties.Name="{Binding AccessibleLabel}">
+                <Grid ColumnDefinitions="110,1.2*,2*,130">
+                  <TextBlock Text="{Binding Primary}" />
+                  <TextBlock Grid.Column="1" Text="{Binding Secondary}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="2" Text="{Binding Detail}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="3" Text="{Binding Status}" TextWrapping="Wrap" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Servisní plány" />
+        <TextBlock IsVisible="{Binding !HasMaintenanceItems}"
+                   Text="V plánu údržby zatím není žádný servisní plán."
+                   AutomationProperties.Name="V plánu údržby zatím není žádný servisní plán."
+                   AutomationProperties.AutomationId="ServiceBookMaintenanceEmptyText" />
+        <ListBox x:Name="ServiceBookMaintenanceListBox"
+                 MinHeight="120"
+                 MaxHeight="220"
+                 IsVisible="{Binding HasMaintenanceItems}"
+                 ItemsSource="{Binding MaintenanceItems}"
+                 SelectedItem="{Binding SelectedMaintenanceItem}"
+                 AutomationProperties.Name="Servisní plány v servisní knížce"
+                 AutomationProperties.AutomationId="ServiceBookMaintenanceListBox">
+          <ListBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedServiceBookItemCommand}" />
+          </ListBox.KeyBindings>
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ServiceBookItemViewModel">
+              <Border Padding="10"
+                      Margin="0,0,0,6"
+                      Background="#08102030"
+                      CornerRadius="6"
+                      AutomationProperties.Name="{Binding AccessibleLabel}">
+                <Grid ColumnDefinitions="1.2*,140,2*,160">
+                  <TextBlock Text="{Binding Primary}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="1" Text="{Binding Secondary}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="2" Text="{Binding Detail}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="3" Text="{Binding Status}" TextWrapping="Wrap" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Servisní doklady" />
+        <TextBlock IsVisible="{Binding !HasRecordItems}"
+                   Text="Zatím nejsou uložené žádné doklady rozpoznané jako servisní."
+                   AutomationProperties.Name="Zatím nejsou uložené žádné doklady rozpoznané jako servisní."
+                   AutomationProperties.AutomationId="ServiceBookRecordsEmptyText" />
+        <ListBox x:Name="ServiceBookRecordListBox"
+                 MinHeight="120"
+                 MaxHeight="220"
+                 IsVisible="{Binding HasRecordItems}"
+                 ItemsSource="{Binding RecordItems}"
+                 SelectedItem="{Binding SelectedRecordItem}"
+                 AutomationProperties.Name="Servisní doklady v servisní knížce"
+                 AutomationProperties.AutomationId="ServiceBookRecordListBox">
+          <ListBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedServiceBookItemCommand}" />
+          </ListBox.KeyBindings>
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ServiceBookItemViewModel">
+              <Border Padding="10"
+                      Margin="0,0,0,6"
+                      Background="#08102030"
+                      CornerRadius="6"
+                      AutomationProperties.Name="{Binding AccessibleLabel}">
+                <Grid ColumnDefinitions="1.2*,130,2*,180">
+                  <TextBlock Text="{Binding Primary}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="1" Text="{Binding Secondary}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="2" Text="{Binding Detail}" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="3" Text="{Binding Status}" TextWrapping="Wrap" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2"
+          Margin="0,16,0,0"
+          ColumnDefinitions="*,Auto,Auto,Auto">
+      <TextBlock VerticalAlignment="Center"
+                 Opacity="0.72"
+                 Text="Enter nebo Ctrl+O otevře vybranou položku. Ctrl+S uloží HTML pro tisk."
+                 TextWrapping="Wrap" />
+      <Button Grid.Column="1"
+              Width="190"
+              Height="34"
+              Margin="12,0,0,0"
+              Command="{Binding OpenSelectedServiceBookItemCommand}"
+              Content="Otevřít položku"
+              AutomationProperties.Name="Otevřít vybranou položku servisní knížky"
+              AutomationProperties.AutomationId="OpenServiceBookItemButton" />
+      <Button Grid.Column="2"
+              Width="170"
+              Height="34"
+              Margin="12,0,0,0"
+              Command="{Binding ExportHtmlCommand}"
+              Content="Exportovat HTML"
+              AutomationProperties.Name="Exportovat servisní knížku do HTML"
+              AutomationProperties.AutomationId="ExportServiceBookHtmlButton" />
+      <Button Grid.Column="3"
+              Width="120"
+              Height="34"
+              Margin="12,0,0,0"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít servisní knížku"
+              AutomationProperties.AutomationId="CloseServiceBookFooterButton" />
+    </Grid>
+  </Grid>
+</Window>

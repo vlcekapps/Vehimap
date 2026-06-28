@@ -177,6 +177,12 @@
                     IsEnabled="{Binding CanOpenVehicleDetailWindow}"
                     AutomationProperties.Name="Otevřít časovou osu vybraného vozidla"
                     AutomationProperties.AutomationId="OpenVehicleTimelineMenuItem" />
+          <MenuItem x:Name="OpenServiceBookMenuItem"
+                    Header="Servisní knížka"
+                    Click="OnOpenServiceBookMenuClick"
+                    IsEnabled="{Binding CanOpenSelectedVehicleServiceBook}"
+                    AutomationProperties.Name="Otevřít servisní knížku vybraného vozidla"
+                    AutomationProperties.AutomationId="OpenServiceBookMenuItem" />
           <MenuItem x:Name="OpenVehicleStarterBundleMenuItem"
                     Header="Balíček pro vozidlo"
                     Click="OnOpenVehicleStarterBundleMenuClick"

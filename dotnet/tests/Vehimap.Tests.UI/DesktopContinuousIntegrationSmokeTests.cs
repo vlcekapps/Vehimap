@@ -231,6 +231,35 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
+    public void Vehicle_menu_opens_accessible_service_book_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("VehicleMenuRoot");
+
+            Assert.Equal("Otevřít servisní knížku vybraného vozidla", session.GetNameByAccessibilityId("OpenServiceBookMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("OpenServiceBookMenuItem"));
+
+            session.ClickByAccessibilityId("OpenServiceBookMenuItem");
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ServiceBookWindow"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ServiceBookVehicleSummaryText"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ServiceBookStatusText"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ServiceBookContentScrollViewer"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("ExportServiceBookHtmlButton"));
+
+            session.ClickByAccessibilityId("CloseServiceBookWindowButton");
+            session.WaitForElementToDisappearByAccessibilityId("ServiceBookWindow");
+        }
+    }
+
+    [Fact]
     public void Vehicle_detail_editor_saves_new_vehicle_and_opens_starter_bundle_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))

@@ -262,6 +262,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenRemindersMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenMaintenanceMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleTimelineMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenServiceBookMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít servisní knížku vybraného vozidla\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleStarterBundleMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenSelectedVehicleCostsMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenTimelineMenuItem\"", xaml);
@@ -410,9 +412,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.Name=\"Otevřít doklady a přílohy vybraného vozidla\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailTimelineButton\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"Otevřít časovou osu vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailServiceBookButton\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít servisní knížku vybraného vozidla\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailCostsButton\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"Otevřít náklady vybraného vozidla\"", xaml);
-        Assert.Equal(7, Regex.Matches(xaml, "IsEnabled=\"\\{Binding CanOpenVehicleRelatedWorkspace\\}\"").Count);
+        Assert.Equal(8, Regex.Matches(xaml, "IsEnabled=\"\\{Binding CanOpenVehicleRelatedWorkspace\\}\"").Count);
     }
 
     [Fact]
@@ -447,6 +451,8 @@ public sealed class DesktopAccessibilityLabelTests
         var confirmationCodeBehind = ReadViewCodeBehind("ConfirmationWindow.axaml.cs");
         var trayActionsXaml = ReadViewFile("TrayActionsWindow.axaml");
         var trayActionsCodeBehind = ReadViewCodeBehind("TrayActionsWindow.axaml.cs");
+        var serviceBookXaml = ReadViewFile("ServiceBookWindow.axaml");
+        var serviceBookCodeBehind = ReadViewCodeBehind("ServiceBookWindow.axaml.cs");
 
         Assert.Contains("CanResize=\"True\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SettingsContentScrollViewer\"", settingsXaml);
@@ -522,6 +528,22 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CloseGlobalSearchWindowButton\"", globalSearchXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseUpcomingOverviewWindowButton\"", upcomingOverviewXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseOverdueOverviewWindowButton\"", overdueOverviewXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ServiceBookWindow\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ServiceBookVehicleSummaryText\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ServiceBookCostSummaryText\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ServiceBookStatusText\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ServiceBookHistoryListBox\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ServiceBookMaintenanceListBox\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ServiceBookRecordListBox\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenServiceBookItemButton\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ExportServiceBookHtmlButton\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseServiceBookWindowButton\"", serviceBookXaml);
+        Assert.Contains("Ctrl+O otevře vybranou položku, Ctrl+S exportuje HTML a Escape okno zavře.", serviceBookXaml);
+        Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedServiceBookItemCommand}\"", serviceBookXaml);
+        Assert.Contains("Gesture=\"Ctrl+S\" Command=\"{Binding ExportHtmlCommand}\"", serviceBookXaml);
+        Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedServiceBookItemCommand}\"", serviceBookXaml);
+        Assert.Contains("Key.Escape", serviceBookCodeBehind);
+        Assert.Contains("FocusFirstLogicalControl", serviceBookCodeBehind);
         Assert.Contains("CanResize=\"True\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"BundleItemsListBox\"", bundleXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"BundleSummaryText\"", bundleXaml);

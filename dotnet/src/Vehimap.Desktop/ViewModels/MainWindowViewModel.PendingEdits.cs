@@ -163,6 +163,7 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanEditSelectedVehicle));
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
         OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
+        OnPropertyChanged(nameof(CanOpenSelectedVehicleServiceBook));
         OnPropertyChanged(nameof(CanUseDataActions));
         OnPropertyChanged(nameof(CanOpenDataFolder));
         OnPropertyChanged(nameof(CanCreateAutomaticBackupNow));
