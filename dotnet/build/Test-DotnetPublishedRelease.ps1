@@ -103,6 +103,13 @@ function Invoke-RemoteHeadCheck {
         [nullable[long]]$ExpectedSize
     )
 
+    $expectedSizeValue = 0L
+    $hasExpectedSize = $false
+    if ($null -ne $ExpectedSize) {
+        $expectedSizeValue = [long]$ExpectedSize
+        $hasExpectedSize = $expectedSizeValue -gt 0
+    }
+
     if ([string]::IsNullOrWhiteSpace($Url)) {
         Add-Blocker "$Name nema URL."
         return
@@ -121,8 +128,8 @@ function Invoke-RemoteHeadCheck {
         if ($null -ne $contentLengthHeader -and -not [string]::IsNullOrWhiteSpace([string]$contentLengthHeader)) {
             $contentLength = 0L
             if ([long]::TryParse([string]$contentLengthHeader, [ref]$contentLength)) {
-                if ($ExpectedSize.HasValue -and $ExpectedSize.Value -gt 0 -and $contentLength -ne $ExpectedSize.Value) {
-                    Add-Blocker "$Name ma jinou vzdalenou velikost ($contentLength) nez manifest ($($ExpectedSize.Value))."
+                if ($hasExpectedSize -and $contentLength -ne $expectedSizeValue) {
+                    Add-Blocker "$Name ma jinou vzdalenou velikost ($contentLength) nez manifest ($expectedSizeValue)."
                 }
                 else {
                     Add-Pass "$Name vzdalenou velikosti odpovida manifestu."
