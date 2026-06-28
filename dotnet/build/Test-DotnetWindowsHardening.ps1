@@ -4,6 +4,7 @@ param(
     [int]$InstallerSmokeLaunchSeconds = 8,
     [switch]$SkipTests,
     [switch]$SkipInstallSmoke,
+    [switch]$AllowLocalInstallSmoke,
     [switch]$SkipFetch,
     [switch]$VerifyPublishedNightly,
     [switch]$SkipRetirementStatus
@@ -41,7 +42,9 @@ Write-Host "Vehimap Windows hardening gate"
 Write-Host "Runtime: $RuntimeIdentifier"
 Write-Host "Configuration: $Configuration"
 Write-Host "Tests: $(-not $SkipTests)"
-Write-Host "Install smoke: $(-not $SkipInstallSmoke)"
+$isGitHubActions = [string]::Equals($env:GITHUB_ACTIONS, "true", [System.StringComparison]::OrdinalIgnoreCase)
+$runFullInstallSmoke = -not $SkipInstallSmoke -and ($isGitHubActions -or $AllowLocalInstallSmoke)
+Write-Host "Install smoke: $runFullInstallSmoke"
 Write-Host "Published nightly verification: $VerifyPublishedNightly"
 
 $releaseTrainArguments = @{
@@ -72,9 +75,17 @@ $nightlyReadinessArguments = @{
     Configuration = $Configuration
 }
 $nightlyReadinessArguments["SkipTests"] = $true
-if (-not $SkipInstallSmoke) {
+if ($runFullInstallSmoke) {
     $nightlyReadinessArguments["InstallSmoke"] = $true
     $nightlyReadinessArguments["InstallerSmokeLaunchSeconds"] = $InstallerSmokeLaunchSeconds
+    if ($AllowLocalInstallSmoke) {
+        $nightlyReadinessArguments["AllowLocalInstallSmoke"] = $true
+    }
+}
+elseif (-not $SkipInstallSmoke) {
+    Write-Host ""
+    Write-Host "Plny lokalni install smoke je preskocen kvuli ochrane existujici instalace stejneho kanalu."
+    Write-Host "Pro vedome spusteni v izolovane VM pridejte -AllowLocalInstallSmoke."
 }
 
 Invoke-HardeningStep "Nightly readiness" {

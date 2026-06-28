@@ -148,6 +148,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("[ValidateSet(\"stable\", \"beta\", \"nightly\")]", script, StringComparison.Ordinal);
         Assert.Contains("[string]$EffectiveVersion", script, StringComparison.Ordinal);
         Assert.Contains("[switch]$InstallSmoke", script, StringComparison.Ordinal);
+        Assert.Contains("[switch]$AllowLocalInstallSmoke", script, StringComparison.Ordinal);
         Assert.Contains("[int]$InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
         Assert.Contains("$version-nightly.local.$timestamp", script, StringComparison.Ordinal);
         Assert.Contains("\"nightly\" { \"dotnet-nightly\" }", script, StringComparison.Ordinal);
@@ -166,6 +167,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Test-DotnetInstallerSmoke.ps1", script, StringComparison.Ordinal);
         Assert.Contains("$installerSmokeArguments", script, StringComparison.Ordinal);
         Assert.Contains("$installerSmokeArguments[\"Install\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$installerSmokeArguments[\"AllowLocalInstall\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$installerSmokeArguments[\"LaunchSeconds\"] = $InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
         Assert.DoesNotContain("artifacts\\release-readiness\\$channelName", script, StringComparison.Ordinal);
     }
@@ -192,6 +194,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("$arguments[\"EffectiveVersion\"] = $EffectiveVersion", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"SkipTests\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"InstallSmoke\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"AllowLocalInstallSmoke\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"InstallerSmokeLaunchSeconds\"] = $InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
     }
 
@@ -239,12 +242,14 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Channel = \"beta\"", betaScript, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"SkipTests\"] = $true", betaScript, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"InstallSmoke\"] = $true", betaScript, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"AllowLocalInstallSmoke\"] = $true", betaScript, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"InstallerSmokeLaunchSeconds\"] = $InstallerSmokeLaunchSeconds", betaScript, StringComparison.Ordinal);
 
         Assert.Contains("Test-DotnetReleaseReadiness.ps1", stableScript, StringComparison.Ordinal);
         Assert.Contains("Channel = \"stable\"", stableScript, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"SkipTests\"] = $true", stableScript, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"InstallSmoke\"] = $true", stableScript, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"AllowLocalInstallSmoke\"] = $true", stableScript, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"InstallerSmokeLaunchSeconds\"] = $InstallerSmokeLaunchSeconds", stableScript, StringComparison.Ordinal);
     }
 
@@ -259,7 +264,10 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("dotnet test $solutionPath", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetNightlyReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("$nightlyReadinessArguments[\"SkipTests\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$runFullInstallSmoke", script, StringComparison.Ordinal);
         Assert.Contains("$nightlyReadinessArguments[\"InstallSmoke\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$nightlyReadinessArguments[\"AllowLocalInstallSmoke\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("Plny lokalni install smoke je preskocen kvuli ochrane existujici instalace stejneho kanalu.", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedNightly.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetReleasePromotion.ps1", script, StringComparison.Ordinal);
@@ -372,11 +380,14 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("[Parameter(Mandatory = $true)]", script, StringComparison.Ordinal);
         Assert.Contains("[string]$InstallerPath", script, StringComparison.Ordinal);
         Assert.Contains("[switch]$Install", script, StringComparison.Ordinal);
+        Assert.Contains("[switch]$AllowLocalInstall", script, StringComparison.Ordinal);
         Assert.Contains("Test-ChecksumFile", script, StringComparison.Ordinal);
         Assert.Contains("Test-PackageMetadata", script, StringComparison.Ordinal);
         Assert.Contains("assetKind=installer", script, StringComparison.Ordinal);
         Assert.Contains("if (-not $Install)", script, StringComparison.Ordinal);
         Assert.Contains("Pro tichou izolovanou instalaci pridejte -Install.", script, StringComparison.Ordinal);
+        Assert.Contains("GITHUB_ACTIONS", script, StringComparison.Ordinal);
+        Assert.Contains("muze na lokalnim PC prepsat uninstall registr", script, StringComparison.Ordinal);
         Assert.Contains("/VERYSILENT", script, StringComparison.Ordinal);
         Assert.Contains("/DIR=", script, StringComparison.Ordinal);
         Assert.Contains("/LOG=", script, StringComparison.Ordinal);

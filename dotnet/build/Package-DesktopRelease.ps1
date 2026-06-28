@@ -84,6 +84,25 @@ function Escape-InnoTemplateValue {
     return $Value.Replace('"', '""')
 }
 
+function Get-InnoSigningConfiguration {
+    $signToolCommand = $env:VEHIMAP_INNO_SIGNTOOL_COMMAND
+    if ([string]::IsNullOrWhiteSpace($signToolCommand)) {
+        return [pscustomobject]@{
+            Directives = ""
+            CompilerArguments = @()
+        }
+    }
+
+    if ($signToolCommand -notmatch '\$f') {
+        throw "VEHIMAP_INNO_SIGNTOOL_COMMAND musi obsahovat Inno placeholder `$f pro podepisovany soubor."
+    }
+
+    return [pscustomobject]@{
+        Directives = "SignTool=vehimap`r`nSignedUninstaller=yes`r`nSignToolRetryCount=3`r`nSignToolRetryDelay=10000"
+        CompilerArguments = @("/Svehimap=$signToolCommand")
+    }
+}
+
 function New-InnoSetupInstaller {
     param(
         [Parameter(Mandatory = $true)]
@@ -111,6 +130,7 @@ function New-InnoSetupInstaller {
     $isccPath = Resolve-InnoCompiler
     $appName = Get-ChannelAppName -Channel $Channel
     $appId = Get-ChannelAppId -Channel $Channel
+    $signing = Get-InnoSigningConfiguration
     $generatedScriptPath = Join-Path ([System.IO.Path]::GetTempPath()) ("vehimap-installer-" + [guid]::NewGuid().ToString("N") + ".iss")
     $template = Get-Content -Raw -LiteralPath $templatePath
     $script = $template.Replace("{{APP_ID}}", $appId)
@@ -120,11 +140,16 @@ function New-InnoSetupInstaller {
     $script = $script.Replace("{{OUTPUT_DIR}}", (Escape-InnoTemplateValue -Value $OutputDirectory))
     $script = $script.Replace("{{OUTPUT_BASE_FILENAME}}", $OutputBaseName)
     $script = $script.Replace("{{SOURCE_DIR}}", (Escape-InnoTemplateValue -Value $SourceDirectory))
+    $script = $script.Replace("{{SIGNING_DIRECTIVES}}", $signing.Directives)
 
     Set-Content -LiteralPath $generatedScriptPath -Value $script -Encoding UTF8
     try {
+        $compilerArguments = @("/Qp")
+        $compilerArguments += $signing.CompilerArguments
+        $compilerArguments += $generatedScriptPath
+
         $process = Start-Process -FilePath $isccPath `
-            -ArgumentList @("/Qp", $generatedScriptPath) `
+            -ArgumentList $compilerArguments `
             -NoNewWindow `
             -Wait `
             -PassThru

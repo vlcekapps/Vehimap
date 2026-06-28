@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Threading;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -177,7 +179,21 @@ public sealed class DesktopProjectionAndNavigationServiceTests
                 new FuelAnalysisWarning("warn_1", "fuel_2", FuelAnalysisWarningSeverity.Info, "Kontrola", "Upozornění pro test.")
             ]);
 
-        var projection = projectionService.BuildFuelAnalysis(analysis);
+        var originalCulture = Thread.CurrentThread.CurrentCulture;
+        var originalUiCulture = Thread.CurrentThread.CurrentUICulture;
+        Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+        Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+
+        DesktopFuelAnalysisProjection projection;
+        try
+        {
+            projection = projectionService.BuildFuelAnalysis(analysis);
+        }
+        finally
+        {
+            Thread.CurrentThread.CurrentCulture = originalCulture;
+            Thread.CurrentThread.CurrentUICulture = originalUiCulture;
+        }
 
         Assert.Contains("Průměrná spotřeba: 8,20 l/100 km", projection.Summary, StringComparison.Ordinal);
         var segment = Assert.Single(projection.ConsumptionSegments);

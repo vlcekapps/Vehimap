@@ -8,6 +8,8 @@ param(
 
     [switch]$Install,
 
+    [switch]$AllowLocalInstall,
+
     [int]$LaunchSeconds = 8
 )
 
@@ -115,6 +117,11 @@ Test-PackageMetadata -Path $PackageMetadataPath -InstallerFullPath $installerFul
 if (-not $Install) {
     Write-Host "Install smoke byl preskocen. Pro tichou izolovanou instalaci pridejte -Install."
     exit 0
+}
+
+$isGitHubActions = [string]::Equals($env:GITHUB_ACTIONS, "true", [System.StringComparison]::OrdinalIgnoreCase)
+if (-not $isGitHubActions -and -not $AllowLocalInstall) {
+    throw "Plny instalacni smoke realneho Inno instalatoru muze na lokalnim PC prepsat uninstall registr a zastupce stejneho kanalu. Spoustejte ho jen na CI nebo v izolovane VM; lokalne pridejte -AllowLocalInstall, pokud riziko vedome prijimate."
 }
 
 if ([string]::IsNullOrWhiteSpace($InstallRoot)) {

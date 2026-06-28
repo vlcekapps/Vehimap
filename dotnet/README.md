@@ -207,7 +207,7 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetS
 
 Skript release readiness postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Vystup uklada do `dotnet\artifacts\<kanal>\<rid>\app` pro spustitelnou aplikaci a do `dotnet\artifacts\<kanal>\<rid>\release` pro instalator, metadata a checksum. Wrappery `Test-DotnetNightlyReadiness.ps1`, `Test-DotnetBetaReadiness.ps1` a `Test-DotnetStableReadiness.ps1` nastavují kanál bez ručního předávání `-Channel`. Pro `stable` se kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` se vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
 
-`Test-DotnetWindowsHardening.ps1` je pred-beta wrapper pro Windows stabilizaci: nejdrive vypise release train status, potom spusti cele `dotnet test`, nasledne nightly readiness s tichou izolovanou instalaci a nakonec pripomene AHK retirement status. Po dobehu GitHub Actions lze pridat `-VerifyPublishedNightly`, aby stejny skript overil i publikovany nightly manifest a asset.
+`Test-DotnetWindowsHardening.ps1` je pred-beta wrapper pro Windows stabilizaci: nejdrive vypise release train status, potom spusti cele `dotnet test`, nasledne nightly readiness a nakonec pripomene AHK retirement status. Plny instalacni smoke realneho Inno setupu se spousti automaticky jen v GitHub Actions; lokalne se kvuli ochrane existujici instalace stejneho kanalu drzi bezpecne overeni metadat/checksumu, pokud vedome nepridate `-AllowLocalInstallSmoke`. Po dobehu GitHub Actions lze pridat `-VerifyPublishedNightly`, aby stejny skript overil i publikovany nightly manifest a asset.
 
 Samotne vytvoreni release tagu je oddelene do bezpecneho skriptu. Ve vychozim rezimu zkontroluje cisty `main`, shodu s `origin/main`, neexistujici tag a spusti release readiness branu; tag na GitHub odesle jen s explicitnim `-Push`.
 
@@ -239,12 +239,14 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetI
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetInstallerSmoke.ps1 -InstallerPath $installer -PackageMetadataPath $release.FullName -Install
 ```
 
-Stejny plny instalacni smoke lze spustit primo v release readiness brane:
+Stejny plny instalacni smoke lze spustit primo v release readiness brane. Pozor: na lokalnim PC muze realna Inno instalace se stejnym `AppId` prepsat uninstall registr a zastupce existujici nightly/beta/stable instalace. Pouzivejte ho bez dalsiho potvrzeni jen v CI nebo ve VM; lokalne pridejte `-AllowLocalInstallSmoke`, pokud riziko vedome prijimate.
 
 ```powershell
 cd dotnet
-powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64 -InstallSmoke
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64 -InstallSmoke -AllowLocalInstallSmoke
 ```
+
+Podepisovani Windows instalatoru se nastavuje bez Inno GUI pres promennou prostredi `VEHIMAP_INNO_SIGNTOOL_COMMAND`. Hodnota musi byt Inno sign tool command s placeholderem `$f`, napr. volani `signtool.exe sign ... $f`; pokud neni nastavena, build zustane nepodepsany a dal projde bez certifikatu.
 
 ## Promotion tok nightly -> beta -> stable
 

@@ -2,6 +2,7 @@ param(
     [string]$RuntimeIdentifier = "win-x64",
     [string]$Configuration = "Release",
     [switch]$InstallSmoke,
+    [switch]$AllowLocalInstallSmoke,
     [int]$InstallerSmokeLaunchSeconds = 8,
     [switch]$SkipTests
 )
@@ -22,6 +23,9 @@ if ($SkipTests) {
 if ($InstallSmoke) {
     $arguments["InstallSmoke"] = $true
     $arguments["InstallerSmokeLaunchSeconds"] = $InstallerSmokeLaunchSeconds
+    if ($AllowLocalInstallSmoke) {
+        $arguments["AllowLocalInstallSmoke"] = $true
+    }
 }
 
 & (Join-Path $PSScriptRoot "Test-DotnetReleaseReadiness.ps1") @arguments

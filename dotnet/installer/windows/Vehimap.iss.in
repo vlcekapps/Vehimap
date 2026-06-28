@@ -22,6 +22,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 CloseApplications=yes
 RestartApplications=no
+{{SIGNING_DIRECTIVES}}
 
 [Tasks]
 Name: "desktopicon"; Description: "Vytvorit zastupce na plose"; GroupDescription: "Zastupci:"; Flags: unchecked

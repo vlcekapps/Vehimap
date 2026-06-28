@@ -5,6 +5,7 @@ param(
     [string]$Channel = "stable",
     [string]$EffectiveVersion,
     [switch]$InstallSmoke,
+    [switch]$AllowLocalInstallSmoke,
     [int]$InstallerSmokeLaunchSeconds = 8,
     [switch]$SkipTests
 )
@@ -149,6 +150,9 @@ try {
         if ($InstallSmoke) {
             $installerSmokeArguments["Install"] = $true
             $installerSmokeArguments["LaunchSeconds"] = $InstallerSmokeLaunchSeconds
+            if ($AllowLocalInstallSmoke) {
+                $installerSmokeArguments["AllowLocalInstall"] = $true
+            }
         }
 
         & $installerSmokeScript @installerSmokeArguments

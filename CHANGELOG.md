@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# Windows packaging umí volitelně podepsat Inno Setup instalátor a uninstaller přes `VEHIMAP_INNO_SIGNTOOL_COMMAND`, takže podpis půjde nastavit v CI nebo lokálně bez nepřístupného Inno Setup dialogu `Manage Sign Tools`.
 - C# release tooling má nový wrapper `Test-DotnetWindowsHardening.ps1`, který před beta kanálem spustí release train status, celé `dotnet test`, nightly readiness s instalačním smoke testem, volitelně publikovanou nightly kontrolu a připomene AHK retirement gate.
 - C# Avalonia má novou přístupnou `Servisní knížku` pro vybrané vozidlo: skládá historii, servisní plány a servisně relevantní doklady bez změny datových formátů, jde otevřít z menu `Vozidlo` i detailu vozidla, umí skočit na související evidenci a exportovat HTML pro tisk nebo archivaci.
 - C# Avalonia karta `Tankování` má nový přístupný blok `Analýza tankování`: počítá cenu za litr, spotřebu z úseků mezi plnými nádržemi, souhrny podle místa/paliva a konzervativní upozornění na nepoužitelné nebo podezřelé záznamy bez změny formátu `fuel.tsv`.
@@ -194,6 +195,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - přístupné okno `Akce Vehimapu na liště` v Avalonia větvi umí kromě hlavního okna, dashboardu, přehledů a ukončení aplikace otevřít i nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrované kontroly těchto oblastí a vyvolat tiskový přehled, export/import zálohy, export kalendáře, znovunačtení dat, nastavení, `O programu` nebo kontrolu aktualizací
 
 ### Opraveno
+- Lokální `-InstallSmoke` už bez explicitního potvrzení nespouští reálnou Inno instalaci se stejným `AppId`, aby testovací odinstalace nemohla odstranit zástupce nebo záznam v Přidat/Odebrat programy skutečné instalace.
 - C# hlavní okno po startu opakovaně čeká na dokončení layoutu a datového kontextu a fokusuje seznam vozidel, aby čtečky obrazovky po otevření aplikace dostaly skutečný první fokus.
 - C# horní menu se po druhém samostatném `Alt` nebo `F10` zavře a vrátí fokus na prvek, ze kterého bylo otevřené, takže se chová blíž klasickému desktopovému menu.
 - C# horní menu po `Alt` nebo `F10` nově pouze fokusuje kořenovou nabídku `Soubor` a nerozbaluje ji automaticky; rozbalení zůstává na šipce dolů, takže šipky vlevo/vpravo nepřeskakují mezi nečekaně otevřenými nabídkami.

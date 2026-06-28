@@ -181,6 +181,7 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         Assert.Contains("IconFilename: \"{app}\\Vehimap.ico\"", template, StringComparison.Ordinal);
         Assert.Contains("CloseApplications=yes", template, StringComparison.Ordinal);
         Assert.Contains("RestartApplications=no", template, StringComparison.Ordinal);
+        Assert.Contains("{{SIGNING_DIRECTIVES}}", template, StringComparison.Ordinal);
         Assert.Contains("[Run]", template, StringComparison.Ordinal);
         Assert.Contains("Filename: \"{app}\\Vehimap.Desktop.exe\"", template, StringComparison.Ordinal);
         Assert.Contains("Flags: nowait postinstall skipifsilent", template, StringComparison.Ordinal);
@@ -204,6 +205,24 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         Assert.Contains("Copy-Item -LiteralPath $sourceIconPath", script, StringComparison.Ordinal);
         Assert.Contains("<ApplicationIcon>..\\..\\..\\favicon.ico</ApplicationIcon>", project, StringComparison.Ordinal);
         Assert.Contains("!favicon.ico", gitIgnore, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Windows_packaging_supports_optional_inno_signing_without_ui_configuration()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var scriptPath = Path.Combine(repositoryRoot, "dotnet", "build", "Package-DesktopRelease.ps1");
+        var templatePath = Path.Combine(repositoryRoot, "dotnet", "installer", "windows", "Vehimap.iss.in");
+        var script = await File.ReadAllTextAsync(scriptPath);
+        var template = await File.ReadAllTextAsync(templatePath);
+
+        Assert.Contains("VEHIMAP_INNO_SIGNTOOL_COMMAND", script, StringComparison.Ordinal);
+        Assert.Contains("musi obsahovat Inno placeholder `$f", script, StringComparison.Ordinal);
+        Assert.Contains("SignTool=vehimap", script, StringComparison.Ordinal);
+        Assert.Contains("SignedUninstaller=yes", script, StringComparison.Ordinal);
+        Assert.Contains("SignToolRetryCount=3", script, StringComparison.Ordinal);
+        Assert.Contains("/Svehimap=$signToolCommand", script, StringComparison.Ordinal);
+        Assert.Contains("{{SIGNING_DIRECTIVES}}", template, StringComparison.Ordinal);
     }
 
     [Fact]

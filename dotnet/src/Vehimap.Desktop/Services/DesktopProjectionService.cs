@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -10,6 +11,8 @@ namespace Vehimap.Desktop.Services;
 
 internal sealed class DesktopProjectionService
 {
+    private static readonly CultureInfo CzechCulture = CultureInfo.GetCultureInfo("cs-CZ");
+
     public DesktopListProjection<VehicleListItemViewModel> BuildVehicleList(
         VehimapDataSet dataSet,
         IReadOnlyDictionary<string, VehicleMeta> metaByVehicleId,
@@ -246,7 +249,7 @@ internal sealed class DesktopProjectionService
                     FormatLiters(item.Liters),
                     FormatConsumption(item.ConsumptionLitersPer100Km),
                     FormatOptionalPricePerLiter(item.PricePerLiter),
-                    item.CostPerKm.HasValue ? $"{item.CostPerKm.Value:0.00} Kč/km" : "nedostupné"))
+                    item.CostPerKm.HasValue ? $"{item.CostPerKm.Value.ToString("0.00", CzechCulture)} Kč/km" : "nedostupné"))
                 .ToList(),
             analysis.GroupSummaries
                 .Select(item => new FuelGroupSummaryItemViewModel(
@@ -258,7 +261,7 @@ internal sealed class DesktopProjectionService
                     FormatLiters(item.Liters),
                     FormatMoney(item.TotalCost),
                     FormatOptionalPricePerLiter(item.AveragePricePerLiter),
-                    item.LatestDate.HasValue ? item.LatestDate.Value.ToString("dd.MM.yyyy") : "bez data"))
+                    item.LatestDate.HasValue ? item.LatestDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "bez data"))
                 .ToList(),
             analysis.Warnings
                 .Select(item => new FuelAnalysisWarningItemViewModel(
@@ -1119,17 +1122,17 @@ internal sealed class DesktopProjectionService
     private static string FormatCurrentOdometer(int? value) =>
         value.HasValue ? $"{value.Value} km" : "neznámý";
 
-    private static string FormatMoney(decimal value) => $"{value:0.00} Kč";
+    private static string FormatMoney(decimal value) => $"{value.ToString("0.00", CzechCulture)} Kč";
 
-    private static string FormatLiters(decimal value) => $"{value:0.##} l";
+    private static string FormatLiters(decimal value) => $"{value.ToString("0.##", CzechCulture)} l";
 
-    private static string FormatConsumption(decimal value) => $"{value:0.00} l/100 km";
+    private static string FormatConsumption(decimal value) => $"{value.ToString("0.00", CzechCulture)} l/100 km";
 
     private static string FormatOptionalConsumption(decimal? value) =>
         value.HasValue ? FormatConsumption(value.Value) : "nedostupná";
 
     private static string FormatOptionalPricePerLiter(decimal? value) =>
-        value.HasValue ? $"{value.Value:0.00} Kč/l" : "nedostupná";
+        value.HasValue ? $"{value.Value.ToString("0.00", CzechCulture)} Kč/l" : "nedostupná";
 
     private static string FormatConsumptionSegmentPeriod(FuelConsumptionSegment segment) =>
         $"{segment.StartDate:dd.MM.yyyy} až {segment.EndDate:dd.MM.yyyy}";
