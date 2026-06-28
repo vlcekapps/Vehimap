@@ -7,6 +7,7 @@ public sealed class VehicleStarterBundleService
 {
     private static readonly VehicleStarterBundleTemplate[] MaintenanceTemplates =
     [
+        new(VehicleStarterBundleSection.Maintenance, "Servis", "Pravidelný servis", "15000", "12", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Souhrnný servisní úkon: výměna motorového oleje a olejového filtru, kontrola nebo výměna vzduchového, kabinového a podle pohonu také palivového filtru."),
         new(VehicleStarterBundleSection.Maintenance, "Servis", "Motorový olej a filtr", "15000", "12", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Pravidelná výměna oleje a olejového filtru."),
         new(VehicleStarterBundleSection.Maintenance, "Servis", "Palivový filtr", "30000", "24", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Výměna palivového filtru podle provozu a doporučení výrobce."),
         new(VehicleStarterBundleSection.Maintenance, "Servis", "Vzduchový filtr", "30000", "24", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Zkontrolovat nebo vyměnit vzduchový filtr."),

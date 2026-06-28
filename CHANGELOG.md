@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# Avalonia editor `Plán údržby` má novou ruční šablonu `Pravidelný servis`, která jedním plánem předvyplní souhrnný servisní úkon pro výměnu motorového oleje, olejového filtru a běžných filtrů.
 - C# Windows update tok nově po volbě `Stáhnout a nainstalovat` otevírá přístupný dialog `Stahování aktualizace` s progressbarem podle stažených bajtů, stavem ověřování SHA-256 a tlačítkem `Zrušit`; po spuštění Inno Setup instalátoru aplikace používá skutečné ukončení přes runtime místo prostého `Close()`, takže nezůstane schovaná v tray a neblokuje instalátor.
 - C# Appium UI smoke testy nově umí fallback pro CI runner, kde Windows driver nepodporuje WebDriver `ActiveElement`; fokus se ověřuje přes `HasKeyboardFocus`, aby ruční nightly vydání nespadlo na rozdílu Appium implementace.
 - C# post-release validátor publikované nightly správně ověřuje vzdálenou velikost assetu i v PowerShellu, kde očekávaná velikost nepřichází jako nullable objekt s `HasValue`.

@@ -9,6 +9,21 @@ public sealed class VehicleStarterBundleServiceTests
     private readonly VehicleStarterBundleService _service = new();
 
     [Fact]
+    public void Maintenance_catalog_contains_regular_service_template()
+    {
+        var template = Assert.Single(
+            VehicleStarterBundleService.GetMaintenanceTemplateCatalog(),
+            item => item.Title == "Pravidelný servis");
+
+        Assert.Equal("15000", template.IntervalKm);
+        Assert.Equal("12", template.IntervalMonths);
+        Assert.Contains("motorového oleje", template.Note, StringComparison.CurrentCultureIgnoreCase);
+        Assert.Contains("olejového filtru", template.Note, StringComparison.CurrentCultureIgnoreCase);
+        Assert.Contains("vzduchového", template.Note, StringComparison.CurrentCultureIgnoreCase);
+        Assert.Contains("kabinového", template.Note, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    [Fact]
     public void Build_preview_uses_full_service_profile_for_recommendations()
     {
         var dataSet = new VehimapDataSet

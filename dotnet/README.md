@@ -71,6 +71,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - posunout opakovanou `pripominku` na dalsi termin tlacitkem `Dalsi termin` nebo zkratkou `Ctrl+Shift+N`
 - primo vytvaret, upravovat a mazat `plan udrzby`
 - v editoru `planu udrzby` vybrat beznou servisni sablonu, ktera predvyplni nazev ukonu, intervaly a poznamku
+- v editoru `planu udrzby` pouzit rucni sablonu `Pravidelny servis` pro jeden souhrnny ukon zahrnujici motorovy olej, olejovy filtr a bezne filtry
 - doplnit chybejici doporucene servisni sablony v `Planu udrzby` tlacitkem `Doporucene` nebo zkratkou `Ctrl+Shift+N`; dialog pouziva stejny katalog jako balicek pro vozidlo, ale prida jen servisni plany
 - oznacit vybrany servisni plan jako splneny tlacitkem `Splneno` nebo zkratkou `Ctrl+L`; akce otevre potvrzovaci dialog s datem, tachometrem a volitelnym zapisem stejne udalosti do historie vozidla
 - primo vytvaret, upravovat a mazat `vozidla`, vcetne stitku, stavu vozidla, zakladniho servisniho profilu, AHK-kompatibilni normalizace stitku, kategorie, SPZ, terminu TK/ZK a rozbalovacich hodnot servisniho profilu, potvrzeni kaskadoveho odstraneni evidenci a uklidu spravovanych priloh
