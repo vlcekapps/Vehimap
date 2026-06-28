@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- C# release tooling má nový wrapper `Test-DotnetWindowsHardening.ps1`, který před beta kanálem spustí release train status, celé `dotnet test`, nightly readiness s instalačním smoke testem, volitelně publikovanou nightly kontrolu a připomene AHK retirement gate.
 - C# Avalonia má novou přístupnou `Servisní knížku` pro vybrané vozidlo: skládá historii, servisní plány a servisně relevantní doklady bez změny datových formátů, jde otevřít z menu `Vozidlo` i detailu vozidla, umí skočit na související evidenci a exportovat HTML pro tisk nebo archivaci.
 - C# Avalonia karta `Tankování` má nový přístupný blok `Analýza tankování`: počítá cenu za litr, spotřebu z úseků mezi plnými nádržemi, souhrny podle místa/paliva a konzervativní upozornění na nepoužitelné nebo podezřelé záznamy bez změny formátu `fuel.tsv`.
 - C# Windows instalátor nově používá kořenový `favicon.ico` jako aplikační ikonu, ikonu odinstalace i ikonu zástupců v nabídce Start a na ploše.

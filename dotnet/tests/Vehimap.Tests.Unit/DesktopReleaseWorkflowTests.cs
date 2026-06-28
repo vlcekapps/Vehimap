@@ -249,6 +249,27 @@ public sealed class DesktopReleaseWorkflowTests
     }
 
     [Fact]
+    public void Windows_hardening_script_orchestrates_nightly_gate_before_beta()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetWindowsHardening.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("Windows hardening gate", script, StringComparison.Ordinal);
+        Assert.Contains("Get-DotnetReleaseTrainStatus.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet test $solutionPath", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetNightlyReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("$nightlyReadinessArguments[\"SkipTests\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$nightlyReadinessArguments[\"InstallSmoke\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedNightly.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetReleasePromotion.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("TargetChannel beta", script, StringComparison.Ordinal);
+        Assert.Contains("artifacts\\nightly\\$RuntimeIdentifier\\app\\Vehimap.Desktop.exe", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("New-DotnetDesktopReleaseTag.ps1", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("TargetChannel stable", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Release_train_status_script_summarizes_channels_without_publishing()
     {
         var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Get-DotnetReleaseTrainStatus.ps1");
@@ -256,6 +277,7 @@ public sealed class DesktopReleaseWorkflowTests
 
         Assert.Contains("[switch]$SkipFetch", script, StringComparison.Ordinal);
         Assert.Contains("[switch]$FailOnBlockers", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetWindowsHardening.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetNightlyReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetBetaReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetStableReadiness.ps1", script, StringComparison.Ordinal);

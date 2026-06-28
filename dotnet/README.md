@@ -199,12 +199,15 @@ Pred vytvorenim tagu lze lokalne spustit stejnou release readiness branu:
 ```powershell
 cd dotnet
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetReleaseReadiness.ps1 -RuntimeIdentifier win-x64
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetWindowsHardening.ps1 -RuntimeIdentifier win-x64
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetBetaReadiness.ps1 -RuntimeIdentifier win-x64
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetStableReadiness.ps1 -RuntimeIdentifier win-x64
 ```
 
-Skript postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Vystup uklada do `dotnet\artifacts\<kanal>\<rid>\app` pro spustitelnou aplikaci a do `dotnet\artifacts\<kanal>\<rid>\release` pro instalator, metadata a checksum. Wrappery `Test-DotnetNightlyReadiness.ps1`, `Test-DotnetBetaReadiness.ps1` a `Test-DotnetStableReadiness.ps1` nastavují kanál bez ručního předávání `-Channel`. Pro `stable` se kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` se vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
+Skript release readiness postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Vystup uklada do `dotnet\artifacts\<kanal>\<rid>\app` pro spustitelnou aplikaci a do `dotnet\artifacts\<kanal>\<rid>\release` pro instalator, metadata a checksum. Wrappery `Test-DotnetNightlyReadiness.ps1`, `Test-DotnetBetaReadiness.ps1` a `Test-DotnetStableReadiness.ps1` nastavují kanál bez ručního předávání `-Channel`. Pro `stable` se kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` se vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
+
+`Test-DotnetWindowsHardening.ps1` je pred-beta wrapper pro Windows stabilizaci: nejdrive vypise release train status, potom spusti cele `dotnet test`, nasledne nightly readiness s tichou izolovanou instalaci a nakonec pripomene AHK retirement status. Po dobehu GitHub Actions lze pridat `-VerifyPublishedNightly`, aby stejny skript overil i publikovany nightly manifest a asset.
 
 Samotne vytvoreni release tagu je oddelene do bezpecneho skriptu. Ve vychozim rezimu zkontroluje cisty `main`, shodu s `origin/main`, neexistujici tag a spusti release readiness branu; tag na GitHub odesle jen s explicitnim `-Push`.
 

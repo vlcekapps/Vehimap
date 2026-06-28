@@ -106,6 +106,7 @@ else {
 }
 
 foreach ($scriptName in @(
+        "Test-DotnetWindowsHardening.ps1",
         "Test-DotnetNightlyReadiness.ps1",
         "Test-DotnetBetaReadiness.ps1",
         "Test-DotnetStableReadiness.ps1",
