@@ -17,5 +17,10 @@ internal interface IAppShellDialogService
 
     Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model);
 
+    Task<UpdateInstallResult> ShowUpdateInstallProgressAsync(
+        Window owner,
+        UpdateInstallProgressDialogViewModel model,
+        Func<IProgress<UpdateInstallProgress>, CancellationToken, Task<UpdateInstallResult>> prepareInstallAsync);
+
     Task<TrayActionsDialogAction> ShowTrayActionsAsync(Window? owner, TrayActionsDialogViewModel model);
 }

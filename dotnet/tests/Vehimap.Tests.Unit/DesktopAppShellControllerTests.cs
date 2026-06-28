@@ -277,8 +277,34 @@ public sealed class DesktopAppShellControllerTests
         var shouldClose = await controller.CheckForUpdatesAsync(null!, viewModel);
 
         Assert.True(shouldClose);
+        Assert.True(dialogService.ShowUpdateInstallProgressCalled);
+        Assert.NotNull(updateService.LastProgress);
         Assert.NotNull(launcher.LastPlan);
         Assert.Equal("1.0.9", launcher.LastPlan!.ExpectedVersion);
+    }
+
+    [Fact]
+    public async Task Check_for_updates_async_can_cancel_download_without_launching_installer()
+    {
+        var dialogService = new StubAppShellDialogService
+        {
+            UpdateResult = UpdateDialogAction.PrimaryAction,
+            ConfirmDiscardResult = true,
+            ProgressResult = new UpdateInstallResult(false, "Stahování aktualizace bylo zrušeno.", null)
+        };
+        var launcher = new StubUpdateInstallLauncher();
+        var controller = new DesktopAppShellController(dialogService, launcher);
+        var viewModel = CreateViewModel(
+            new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true),
+            new StubLegacyDataStore(CreateDataSet()),
+            updateService: new StubUpdateService());
+
+        var shouldClose = await controller.CheckForUpdatesAsync(null!, viewModel);
+
+        Assert.False(shouldClose);
+        Assert.True(dialogService.ShowUpdateInstallProgressCalled);
+        Assert.Null(launcher.LastPlan);
+        Assert.Contains("zrušeno", viewModel.ShellStatus, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -622,8 +648,16 @@ public sealed class DesktopAppShellControllerTests
                 true,
                 "Je dostupná novější verze."));
 
-        public Task<UpdateInstallResult> PrepareInstallAsync(UpdateCheckResult update, CancellationToken cancellationToken = default)
-            => Task.FromResult(new UpdateInstallResult(
+        public IProgress<UpdateInstallProgress>? LastProgress { get; private set; }
+
+        public Task<UpdateInstallResult> PrepareInstallAsync(
+            UpdateCheckResult update,
+            IProgress<UpdateInstallProgress>? progress = null,
+            CancellationToken cancellationToken = default)
+        {
+            LastProgress = progress;
+            progress?.Report(new UpdateInstallProgress("Stahuji testovací aktualizaci.", 2048, 2048));
+            return Task.FromResult(new UpdateInstallResult(
                 true,
                 "Aktualizace je připravená k instalaci.",
                 new UpdateInstallPlan(
@@ -633,6 +667,7 @@ public sealed class DesktopAppShellControllerTests
                     @"C:\vehimap\Vehimap.Desktop.exe",
                     1234,
                     update.LatestVersion)));
+        }
     }
 
     private sealed class FailingUpdateService : IUpdateService
@@ -661,7 +696,10 @@ public sealed class DesktopAppShellControllerTests
                     true,
                     "Je dostupná novější verze."));
 
-        public Task<UpdateInstallResult> PrepareInstallAsync(UpdateCheckResult update, CancellationToken cancellationToken = default)
+        public Task<UpdateInstallResult> PrepareInstallAsync(
+            UpdateCheckResult update,
+            IProgress<UpdateInstallProgress>? progress = null,
+            CancellationToken cancellationToken = default)
             => _prepareException is not null
                 ? Task.FromException<UpdateInstallResult>(_prepareException)
                 : Task.FromResult(new UpdateInstallResult(false, "Testovací aktualizace není připravená.", null));
@@ -676,7 +714,9 @@ public sealed class DesktopAppShellControllerTests
         public bool ShowSettingsCalled { get; private set; }
         public bool ConfirmBackupImportCalled { get; private set; }
         public bool ConfirmDiscardPendingChangesCalled { get; private set; }
+        public bool ShowUpdateInstallProgressCalled { get; private set; }
         public UpdateDialogViewModel? LastUpdateModel { get; private set; }
+        public UpdateInstallResult? ProgressResult { get; set; }
 
         public Task<SettingsDialogResult?> ShowSettingsAsync(Window owner, DesktopSupportedSettingsSnapshot snapshot, string automaticBackupStatus)
         {
@@ -702,6 +742,20 @@ public sealed class DesktopAppShellControllerTests
         {
             LastUpdateModel = model;
             return Task.FromResult(UpdateResult);
+        }
+
+        public async Task<UpdateInstallResult> ShowUpdateInstallProgressAsync(
+            Window owner,
+            UpdateInstallProgressDialogViewModel model,
+            Func<IProgress<UpdateInstallProgress>, CancellationToken, Task<UpdateInstallResult>> prepareInstallAsync)
+        {
+            ShowUpdateInstallProgressCalled = true;
+            if (ProgressResult is not null)
+            {
+                return ProgressResult;
+            }
+
+            return await prepareInstallAsync(new Progress<UpdateInstallProgress>(model.ApplyProgress), CancellationToken.None);
         }
 
         public Task<TrayActionsDialogAction> ShowTrayActionsAsync(Window? owner, TrayActionsDialogViewModel model)

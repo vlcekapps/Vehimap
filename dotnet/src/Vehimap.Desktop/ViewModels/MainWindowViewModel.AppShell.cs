@@ -431,11 +431,14 @@ public sealed partial class MainWindowViewModel
         }
     }
 
-    internal async Task<UpdateInstallResult> PrepareUpdateInstallAsync(UpdateCheckResult result, CancellationToken cancellationToken = default)
+    internal async Task<UpdateInstallResult> PrepareUpdateInstallAsync(
+        UpdateCheckResult result,
+        IProgress<UpdateInstallProgress>? progress = null,
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            var installResult = await _session.PrepareInstallAsync(result, cancellationToken).ConfigureAwait(false);
+            var installResult = await _session.PrepareInstallAsync(result, progress, cancellationToken).ConfigureAwait(false);
             ShellStatus = installResult.Message;
             return installResult;
         }

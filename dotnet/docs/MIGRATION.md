@@ -115,7 +115,7 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - publikovany release workflow pro tagy `dotnet-v<verze>` s verzovanymi balicky a checksumy
 - runtime-specific desktop update manifesty `update/latest-dotnet-<rid>.ini`
 - Windows release artefakt jako per-user Inno Setup instalator misto verejneho portable ZIPu
-- Windows update tok pro Inno Setup installer: aplikace stahne a overi setup EXE, spusti ho interaktivne s pozadavkem na zavreni bezicich aplikaci, sama zavre hlavni okno a installer na konci nabidne spusteni nove verze
+- Windows update tok pro Inno Setup installer: aplikace stahne a overi setup EXE v samostatnem progress dialogu se zrusenim, spusti ho interaktivne, pozada runtime o skutecne ukonceni aplikace misto schovani do tray a installer na konci nabidne spusteni nove verze
 - oddelene desktop kanaly `stable`, `beta` a `nightly` s vlastnim nazvem aplikace, update manifestem a systemovou datovou slozkou
 - rolling nightly release se vytvari automaticky kazdou noc nebo rucnim workflow dispatch spustenim kanalu `nightly` a pouziva unikatni prerelease verzi `<verze>-nightly.<run>.<attempt>`, aby se nightly instalace dokazaly aktualizovat mezi jednotlivymi buildy
 - legacy aliasy `update/latest-dotnet-preview-<rid>.ini`, ktere starym preview buildum umozni prejit na prvni stabilni desktop release

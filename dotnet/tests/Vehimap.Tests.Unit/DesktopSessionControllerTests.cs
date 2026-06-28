@@ -760,7 +760,10 @@ public sealed class DesktopSessionControllerTests
             return Task.FromResult(_checkResult);
         }
 
-        public Task<UpdateInstallResult> PrepareInstallAsync(UpdateCheckResult update, CancellationToken cancellationToken = default)
+        public Task<UpdateInstallResult> PrepareInstallAsync(
+            UpdateCheckResult update,
+            IProgress<UpdateInstallProgress>? progress = null,
+            CancellationToken cancellationToken = default)
             => Task.FromResult(_installResult);
     }
 

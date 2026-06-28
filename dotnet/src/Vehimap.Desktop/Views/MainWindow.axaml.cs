@@ -575,7 +575,15 @@ public partial class MainWindow : Window
 
         if (await _viewModel.AppShellController.CheckForUpdatesAsync(this, _viewModel))
         {
-            Close();
+            if (ExitApplicationRequested is not null)
+            {
+                await ExitApplicationRequested().ConfigureAwait(true);
+            }
+            else
+            {
+                Close();
+            }
+
             return;
         }
         RequestFocus(DesktopFocusTarget.VehicleList);

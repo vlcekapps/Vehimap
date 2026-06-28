@@ -117,7 +117,10 @@ public sealed class LegacyUpdateService : IUpdateService
         }
     }
 
-    public async Task<UpdateInstallResult> PrepareInstallAsync(UpdateCheckResult update, CancellationToken cancellationToken = default)
+    public async Task<UpdateInstallResult> PrepareInstallAsync(
+        UpdateCheckResult update,
+        IProgress<UpdateInstallProgress>? progress = null,
+        CancellationToken cancellationToken = default)
     {
         var appInfo = _appBuildInfoProvider.GetCurrent();
 
@@ -156,11 +159,15 @@ public sealed class LegacyUpdateService : IUpdateService
                 : Path.Combine(tempRoot, "vehimap-update.zip");
             var extractRoot = Path.Combine(tempRoot, "payload");
 
-            await DownloadAsync(update.AssetUrl!, downloadPath, cancellationToken).ConfigureAwait(false);
+            var totalBytes = update.AssetSize!.Value;
+            progress?.Report(new UpdateInstallProgress("Stahuji aktualizační balíček.", 0, totalBytes));
+            await DownloadAsync(update.AssetUrl!, downloadPath, totalBytes, progress, cancellationToken).ConfigureAwait(false);
+            progress?.Report(new UpdateInstallProgress("Ověřuji velikost a SHA-256 staženého balíčku.", totalBytes, totalBytes, true));
             ValidateDownloadedAsset(downloadPath, update.AssetSize!.Value, update.Sha256!);
 
             if (IsInstallerAsset(update.AssetKind))
             {
+                progress?.Report(new UpdateInstallProgress("Instalátor aktualizace je ověřený a připravený ke spuštění.", totalBytes, totalBytes));
                 var installerPlan = new UpdateInstallPlan(
                     downloadPath,
                     tempRoot,
@@ -175,6 +182,7 @@ public sealed class LegacyUpdateService : IUpdateService
             }
 
             ZipFile.ExtractToDirectory(downloadPath, extractRoot);
+            progress?.Report(new UpdateInstallProgress("Rozbalená aktualizace je připravená k instalaci.", totalBytes, totalBytes));
             var sourceDirectory = ResolvePayloadRoot(extractRoot);
             var archivePlan = new UpdateInstallPlan(
                 appInfo.UpdaterPath,
@@ -349,7 +357,12 @@ public sealed class LegacyUpdateService : IUpdateService
             out error);
     }
 
-    private async Task DownloadAsync(string downloadUrl, string destinationPath, CancellationToken cancellationToken)
+    private async Task DownloadAsync(
+        string downloadUrl,
+        string destinationPath,
+        long expectedSize,
+        IProgress<UpdateInstallProgress>? progress,
+        CancellationToken cancellationToken)
     {
         using var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
@@ -357,9 +370,25 @@ public sealed class LegacyUpdateService : IUpdateService
             throw new InvalidOperationException($"Stazeni assetu selhalo (HTTP {(int)response.StatusCode}).");
         }
 
+        var totalBytes = response.Content.Headers.ContentLength is > 0
+            ? response.Content.Headers.ContentLength.Value
+            : expectedSize;
+        var receivedBytes = 0L;
+        var buffer = new byte[81920];
         await using var sourceStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
         await using var destinationStream = File.Create(destinationPath);
-        await sourceStream.CopyToAsync(destinationStream, cancellationToken).ConfigureAwait(false);
+        while (true)
+        {
+            var read = await sourceStream.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false);
+            if (read == 0)
+            {
+                break;
+            }
+
+            await destinationStream.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
+            receivedBytes += read;
+            progress?.Report(new UpdateInstallProgress("Stahuji aktualizační balíček.", receivedBytes, totalBytes));
+        }
     }
 
     private static void ValidateDownloadedAsset(string archivePath, long expectedSize, string expectedSha256)

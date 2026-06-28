@@ -146,12 +146,19 @@ internal sealed class DesktopAppShellController
                             return false;
                         }
 
-                        var installResult = await shell.PrepareUpdateInstallAsync(result, cancellationToken).ConfigureAwait(true);
+                        var installResult = await _dialogService.ShowUpdateInstallProgressAsync(
+                                owner,
+                                new UpdateInstallProgressDialogViewModel(),
+                                (progress, progressCancellationToken) => shell.PrepareUpdateInstallAsync(result, progress, progressCancellationToken))
+                            .ConfigureAwait(true);
                         if (installResult.IsReady && installResult.InstallPlan is not null)
                         {
                             _updateInstallLauncher.Launch(installResult.InstallPlan);
+                            shell.ShellStatus = "Instalátor aktualizace byl spuštěn. Vehimap se nyní ukončí, aby instalace mohla pokračovat.";
                             return true;
                         }
+
+                        shell.ShellStatus = installResult.Message;
 
                         await _dialogService.ShowUpdateAsync(
                                 owner,

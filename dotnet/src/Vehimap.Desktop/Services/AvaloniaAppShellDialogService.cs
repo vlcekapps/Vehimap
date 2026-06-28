@@ -72,6 +72,20 @@ internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
         return await dialog.ShowDialog<UpdateDialogAction>(owner);
     }
 
+    public async Task<UpdateInstallResult> ShowUpdateInstallProgressAsync(
+        Window owner,
+        UpdateInstallProgressDialogViewModel model,
+        Func<IProgress<UpdateInstallProgress>, CancellationToken, Task<UpdateInstallResult>> prepareInstallAsync)
+    {
+        var dialog = new UpdateInstallProgressWindow
+        {
+            DataContext = model,
+            PrepareInstallAsync = prepareInstallAsync
+        };
+
+        return await dialog.ShowDialog<UpdateInstallResult>(owner);
+    }
+
     public async Task<TrayActionsDialogAction> ShowTrayActionsAsync(Window? owner, TrayActionsDialogViewModel model)
     {
         var dialog = new TrayActionsWindow

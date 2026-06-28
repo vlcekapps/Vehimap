@@ -221,8 +221,11 @@ internal sealed class DesktopSessionController
     public Task<UpdateCheckResult> CheckForUpdatesAsync(CancellationToken cancellationToken = default) =>
         _updateService.CheckForUpdatesAsync(_appBuildInfoProvider.GetCurrent().AppVersion, cancellationToken);
 
-    public Task<UpdateInstallResult> PrepareInstallAsync(UpdateCheckResult result, CancellationToken cancellationToken = default) =>
-        _updateService.PrepareInstallAsync(result, cancellationToken);
+    public Task<UpdateInstallResult> PrepareInstallAsync(
+        UpdateCheckResult result,
+        IProgress<UpdateInstallProgress>? progress = null,
+        CancellationToken cancellationToken = default) =>
+        _updateService.PrepareInstallAsync(result, progress, cancellationToken);
 
     public string ResolveManagedAttachmentPath(string relativePath)
     {
