@@ -17,10 +17,45 @@ public sealed class VehicleStarterBundleServiceTests
 
         Assert.Equal("15000", template.IntervalKm);
         Assert.Equal("12", template.IntervalMonths);
+        Assert.Equal("Servis", template.Category);
+        Assert.Equal("Souhrn", template.Subcategory);
+        Assert.Equal("Servis / Souhrn - Pravidelný servis", VehicleStarterBundleService.BuildMaintenanceTemplateDisplayName(template));
         Assert.Contains("motorového oleje", template.Note, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("olejového filtru", template.Note, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("vzduchového", template.Note, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("kabinového", template.Note, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    [Fact]
+    public void Maintenance_catalog_contains_tester_requested_groups_and_templates()
+    {
+        var catalog = VehicleStarterBundleService.GetMaintenanceTemplateCatalog();
+
+        AssertMaintenanceTemplate(catalog, "Motor", "Zapalování a žhavení", "Svíčky / žhaviče");
+        AssertMaintenanceTemplate(catalog, "Motor", "Snímače", "Snímače motoru");
+        AssertMaintenanceTemplate(catalog, "Motor", "Sání a přeplňování", "Sání motoru");
+        AssertMaintenanceTemplate(catalog, "Motor", "Sání a přeplňování", "Turbo");
+
+        AssertMaintenanceTemplate(catalog, "Podvozek", "Brzdy", "Brzdové kotouče / bubny");
+        AssertMaintenanceTemplate(catalog, "Podvozek", "Brzdy", "Brzdové destičky / obložení");
+        AssertMaintenanceTemplate(catalog, "Podvozek", "Uložení a ramena", "Silentbloky");
+        AssertMaintenanceTemplate(catalog, "Podvozek", "Uložení a ramena", "Ramena náprav");
+        AssertMaintenanceTemplate(catalog, "Podvozek", "Stabilizátor", "Kosti stabilizátoru");
+        AssertMaintenanceTemplate(catalog, "Podvozek", "Řízení a čepy", "Čepy řízení a náprav");
+        AssertMaintenanceTemplate(catalog, "Podvozek", "Tlumení", "Tlumiče");
+        AssertMaintenanceTemplate(catalog, "Podvozek", "Tlumení", "Pružiny");
+
+        AssertMaintenanceTemplate(catalog, "Výfukové potrubí", "Emise", "Katalyzátor");
+        AssertMaintenanceTemplate(catalog, "Výfukové potrubí", "Emise", "Lambda sonda");
+        AssertMaintenanceTemplate(catalog, "Výfukové potrubí", "Koncové díly", "Koncovka výfuku");
+        AssertMaintenanceTemplate(catalog, "Výfukové potrubí", "Tlumení", "Tlumič výfuku");
+        AssertMaintenanceTemplate(catalog, "Výfukové potrubí", "Potrubí", "Výfukové trubky");
+
+        AssertMaintenanceTemplate(catalog, "Elektronika", "Osvětlení", "Žárovky a osvětlení");
+        AssertMaintenanceTemplate(catalog, "Elektronika", "Napájení", "Baterie");
+        AssertMaintenanceTemplate(catalog, "Elektronika", "Jištění", "Pojistky");
+        AssertMaintenanceTemplate(catalog, "Elektronika", "Snímače", "Parkovací senzory");
+        AssertMaintenanceTemplate(catalog, "Elektronika", "Snímače", "Ostatní snímače a senzory");
     }
 
     [Fact]
@@ -77,5 +112,18 @@ public sealed class VehicleStarterBundleServiceTests
         Assert.DoesNotContain(preview.Items, item => item.Title == "Motorový olej a filtr");
         Assert.DoesNotContain(preview.Items, item => item.SectionLabel == "Doklad" && item.Title == "Povinné ručení");
         Assert.DoesNotContain(preview.Items, item => item.SectionLabel == "Připomínka" && item.Title == "Pravidelná kontrola stavu vozidla");
+    }
+
+    private static void AssertMaintenanceTemplate(
+        IReadOnlyList<Vehimap.Application.Models.VehicleStarterBundleTemplate> catalog,
+        string category,
+        string subcategory,
+        string title)
+    {
+        var template = Assert.Single(catalog, item => item.Title == title);
+        Assert.Equal(category, template.Category);
+        Assert.Equal(subcategory, template.Subcategory);
+        Assert.Equal($"{category} / {subcategory} - {title}", VehicleStarterBundleService.BuildMaintenanceTemplateDisplayName(template));
+        Assert.True(!string.IsNullOrWhiteSpace(template.IntervalKm) || !string.IsNullOrWhiteSpace(template.IntervalMonths));
     }
 }

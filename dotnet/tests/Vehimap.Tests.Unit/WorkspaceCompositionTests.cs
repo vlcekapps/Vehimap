@@ -121,8 +121,8 @@ public sealed class WorkspaceCompositionTests
         Assert.Contains("Vlastní období", viewModel.CostWorkspace.CostPeriodPresets);
         Assert.Contains("Datové nedostatky", viewModel.UpcomingOverviewWorkspace.OverviewFilters);
         Assert.DoesNotContain("Datové nedostatky", viewModel.OverdueOverviewWorkspace.OverviewFilters);
-        Assert.Contains("Pravidelný servis", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
-        Assert.Contains("Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
+        Assert.Contains("Servis / Souhrn - Pravidelný servis", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
+        Assert.Contains("Motor / Olej a filtry - Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
         Assert.Contains("Spravovaná kopie", viewModel.RecordWorkspace.RecordAttachmentModes);
     }
 

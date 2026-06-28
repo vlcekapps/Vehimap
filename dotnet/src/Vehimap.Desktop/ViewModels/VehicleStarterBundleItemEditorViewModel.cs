@@ -26,6 +26,8 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
             ? LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(template.RepeatMode)
             : template.RepeatMode;
         Note = template.Note;
+        Category = template.Category;
+        Subcategory = template.Subcategory;
     }
 
     public VehicleStarterBundleSection Section { get; }
@@ -38,7 +40,26 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
 
     public bool IsReminder => Section == VehicleStarterBundleSection.Reminder;
 
-    public string AccessibleLabel => $"{SectionLabel}: {Title}";
+    public string Category { get; }
+
+    public string Subcategory { get; }
+
+    public string AccessibleLabel
+    {
+        get
+        {
+            var category = Category.Trim();
+            var subcategory = Subcategory.Trim();
+            if (!string.IsNullOrWhiteSpace(category) && !string.IsNullOrWhiteSpace(subcategory))
+            {
+                return $"{SectionLabel}, {category}, {subcategory}: {Title}";
+            }
+
+            return string.IsNullOrWhiteSpace(category)
+                ? $"{SectionLabel}: {Title}"
+                : $"{SectionLabel}, {category}: {Title}";
+        }
+    }
 
     [ObservableProperty]
     private bool isSelected = true;
@@ -106,6 +127,8 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
             DueDate.Trim(),
             ReminderDays.Trim(),
             repeatMode,
-            Note.Trim());
+            Note.Trim(),
+            Category.Trim(),
+            Subcategory.Trim());
     }
 }

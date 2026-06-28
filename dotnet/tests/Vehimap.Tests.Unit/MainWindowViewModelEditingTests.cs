@@ -622,15 +622,17 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.CreateMaintenanceCommand.Execute(null);
 
-        Assert.Contains("Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
+        var cabinFilterOption = VehicleStarterBundleService.BuildMaintenanceTemplateDisplayName(
+            Assert.Single(VehicleStarterBundleService.GetMaintenanceTemplateCatalog(), item => item.Title == "Kabinový filtr"));
+        Assert.Contains(cabinFilterOption, viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
         Assert.Equal("Vlastní položka", viewModel.MaintenanceWorkspace.SelectedMaintenanceTemplate);
 
-        viewModel.MaintenanceWorkspace.SelectedMaintenanceTemplate = "Kabinový filtr";
+        viewModel.MaintenanceWorkspace.SelectedMaintenanceTemplate = cabinFilterOption;
 
         Assert.Equal("Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceEditorTitle);
         Assert.Equal("15000", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm);
         Assert.Equal("12", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalMonths);
-        Assert.Equal("Pravidelná výměna pylového filtru.", viewModel.MaintenanceWorkspace.MaintenanceEditorNote);
+        Assert.Equal("Pravidelná výměna pylového nebo kabinového filtru.", viewModel.MaintenanceWorkspace.MaintenanceEditorNote);
         Assert.Contains("předvyplnila", viewModel.MaintenanceWorkspace.MaintenanceEditorStatus);
 
         viewModel.CancelMaintenanceEditCommand.Execute(null);

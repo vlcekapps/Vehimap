@@ -25,7 +25,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public IReadOnlyList<string> MaintenanceTemplateOptions { get; } =
     [
         CustomMaintenanceTemplateLabel,
-        .. VehicleStarterBundleService.GetMaintenanceTemplateCatalog().Select(item => item.Title)
+        .. VehicleStarterBundleService.GetMaintenanceTemplateCatalog().Select(VehicleStarterBundleService.BuildMaintenanceTemplateDisplayName)
     ];
 
     public event EventHandler? MaintenanceTemplatesRequested;
@@ -236,8 +236,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
             return;
         }
 
-        var template = VehicleStarterBundleService.GetMaintenanceTemplateCatalog()
-            .FirstOrDefault(item => string.Equals(item.Title, value, StringComparison.Ordinal));
+        var template = VehicleStarterBundleService.FindMaintenanceTemplateByDisplayName(value);
         if (template is null)
         {
             return;
@@ -247,7 +246,10 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         MaintenanceEditorIntervalKm = template.IntervalKm;
         MaintenanceEditorIntervalMonths = template.IntervalMonths;
         MaintenanceEditorNote = template.Note;
-        MaintenanceEditorStatus = $"Šablona {template.Title} předvyplnila název, intervaly a poznámku.";
+        var categoryText = string.IsNullOrWhiteSpace(template.Category)
+            ? string.Empty
+            : $" ze skupiny {template.Category}";
+        MaintenanceEditorStatus = $"Šablona {template.Title}{categoryText} předvyplnila název, intervaly a poznámku.";
         RequestFocus(DesktopFocusTarget.MaintenanceEditorTitle);
     }
 

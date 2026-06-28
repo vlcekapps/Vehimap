@@ -14,4 +14,6 @@ public sealed record VehicleStarterBundleTemplate(
     string DueDate,
     string ReminderDays,
     string RepeatMode,
-    string Note);
+    string Note,
+    string Category = "",
+    string Subcategory = "");

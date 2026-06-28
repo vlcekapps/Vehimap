@@ -163,6 +163,7 @@ V hlavním okně:
 - `Plán údržby`: `Ctrl+F` přesune fokus do hledání, `Ctrl+N` přidá úkon, `Ctrl+Shift+N` nabídne doporučené šablony, `Ctrl+U` nebo `F2` upraví vybraný úkon, `Ctrl+L` jej označí jako splněný a `Ctrl+D` otevře detail vozidla
 - v C# Avalonia větvi má editor údržby rozbalovací `Šablonu úkonu`, která při ručním přidání rychle předvyplní název, intervaly a poznámku běžného servisu
 - v C# Avalonia větvi je v ručních šablonách údržby také `Pravidelný servis`, tedy jeden souhrnný úkon pro výměnu motorového oleje, olejového filtru a běžných filtrů, jak to často účtují autoservisy
+- v C# Avalonia větvi jsou ruční šablony údržby členěné podle oblastí `Motor`, `Podvozek`, `Výfukové potrubí` a `Elektronika`, takže lze rychle založit servisní plán například pro brzdy, ramena, čepy, tlumiče, turbo, sání, výfuk, žárovky, baterii nebo senzory
 - v C# Avalonia větvi je výběr doporučených servisních šablon dostupný i tlačítkem `Doporučené` ve sdíleném workspace údržby a funguje stejně v hlavní kartě i samostatném okně
 - v C# Avalonia větvi je označení servisu jako splněného dostupné i tlačítkem `Splněno`; otevře potvrzovací dialog s datem, tachometrem a volitelným zápisem stejné události do historie vozidla
 - `Výběr doporučených šablon` a `Balíček pro vozidlo`: `Ctrl+S` přidá vybrané položky, `Ctrl+A` vybere vše, `Ctrl+Shift+A` výběr vymaže, `Escape` dialog zavře a mezerník v seznamu přepne, zda se právě vybraná položka přidá
@@ -220,6 +221,7 @@ V plánu údržby:
 - `Poslední servis dne`, `Stav tachometru při posledním servisu`, `Poznámka` a volba aktivního plánu jsou volitelné
 - nahoře lze zvolit šablonu běžného servisního úkonu, která předvyplní název, intervaly i doporučenou poznámku
 - šablona `Pravidelný servis` je určená pro pravidelný souhrnný servis, kde servis obvykle řeší olej, olejový filtr a běžné filtry v jednom úkonu
+- ruční šablony jsou v rozbalovacím seznamu popsané i kategorií a podkategorií; po výběru se do plánu uloží čistý název úkonu a intervaly i poznámku lze před uložením upravit
 - tlačítko `Doporučené šablony` otevře výběrový dialog, ve kterém lze doporučené plány podle kategorie a servisního profilu vozidla před přidáním odškrtnout nebo doladit
 - po uložení nového vozidla může Vehimap stejný výběr doporučených šablon nabídnout automaticky hned v navazujícím kroku
 - tlačítko `Označit splněno` uloží nové datum a tachometr posledního servisu a volitelně zapíše stejnou událost i do historie vozidla

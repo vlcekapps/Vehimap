@@ -7,16 +7,38 @@ public sealed class VehicleStarterBundleService
 {
     private static readonly VehicleStarterBundleTemplate[] MaintenanceTemplates =
     [
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Pravidelný servis", "15000", "12", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Souhrnný servisní úkon: výměna motorového oleje a olejového filtru, kontrola nebo výměna vzduchového, kabinového a podle pohonu také palivového filtru."),
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Motorový olej a filtr", "15000", "12", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Pravidelná výměna oleje a olejového filtru."),
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Palivový filtr", "30000", "24", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Výměna palivového filtru podle provozu a doporučení výrobce."),
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Vzduchový filtr", "30000", "24", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Zkontrolovat nebo vyměnit vzduchový filtr."),
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Kabinový filtr", "15000", "12", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Pravidelná výměna pylového filtru."),
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Brzdová kapalina", string.Empty, "24", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Pravidelná výměna brzdové kapaliny."),
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Chladicí kapalina", string.Empty, "60", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Kontrola a obnova chladicí kapaliny."),
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Rozvody", "90000", "60", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Rozvodový řemen nebo řetěz podle doporučení výrobce."),
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Převodový olej", "60000", "48", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Kontrola nebo výměna převodového oleje."),
-        new(VehicleStarterBundleSection.Maintenance, "Servis", "Klimatizace a dezinfekce", string.Empty, "12", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Servis klimatizace a dezinfekce okruhu.")
+        Maintenance("Servis", "Souhrn", "Pravidelný servis", "15000", "12", "Souhrnný servisní úkon: výměna motorového oleje a olejového filtru, kontrola nebo výměna vzduchového, kabinového a podle pohonu také palivového filtru."),
+        Maintenance("Motor", "Olej a filtry", "Motorový olej a filtr", "15000", "12", "Pravidelná výměna oleje a olejového filtru."),
+        Maintenance("Motor", "Olej a filtry", "Palivový filtr", "30000", "24", "Výměna palivového filtru podle provozu a doporučení výrobce."),
+        Maintenance("Motor", "Olej a filtry", "Vzduchový filtr", "30000", "24", "Zkontrolovat nebo vyměnit vzduchový filtr."),
+        Maintenance("Motor", "Olej a filtry", "Kabinový filtr", "15000", "12", "Pravidelná výměna pylového nebo kabinového filtru."),
+        Maintenance("Podvozek", "Brzdy", "Brzdová kapalina", string.Empty, "24", "Pravidelná výměna brzdové kapaliny."),
+        Maintenance("Motor", "Kapaliny", "Chladicí kapalina", string.Empty, "60", "Kontrola a obnova chladicí kapaliny."),
+        Maintenance("Motor", "Rozvody", "Rozvody", "90000", "60", "Rozvodový řemen nebo řetěz podle doporučení výrobce."),
+        Maintenance("Motor", "Převody", "Převodový olej", "60000", "48", "Kontrola nebo výměna převodového oleje."),
+        Maintenance("Elektronika", "Komfort", "Klimatizace a dezinfekce", string.Empty, "12", "Servis klimatizace a dezinfekce okruhu."),
+        Maintenance("Motor", "Zapalování a žhavení", "Svíčky / žhaviče", "60000", "48", "Kontrola nebo výměna zapalovacích svíček u benzinu, případně žhavičů u naftového motoru."),
+        Maintenance("Motor", "Snímače", "Snímače motoru", "60000", "48", "Kontrola nebo výměna motorových snímačů a senzorů podle diagnostiky a chování vozidla."),
+        Maintenance("Motor", "Sání a přeplňování", "Sání motoru", "60000", "48", "Kontrola, čištění nebo servis sání motoru podle provozu a zanesení."),
+        Maintenance("Motor", "Sání a přeplňování", "Turbo", "90000", "60", "Kontrola nebo servis turbodmychadla, hadic a regulace přeplňování."),
+        Maintenance("Podvozek", "Brzdy", "Brzdové kotouče / bubny", "60000", "48", "Kontrola nebo výměna brzdových kotoučů, bubnů a souvisejících dílů."),
+        Maintenance("Podvozek", "Brzdy", "Brzdové destičky / obložení", "30000", "24", "Kontrola nebo výměna brzdových destiček, čelistí nebo obložení podle opotřebení."),
+        Maintenance("Podvozek", "Uložení a ramena", "Silentbloky", "60000", "48", "Kontrola nebo výměna silentbloků náprav, ramen nebo stabilizátoru."),
+        Maintenance("Podvozek", "Uložení a ramena", "Ramena náprav", "60000", "48", "Kontrola nebo výměna ramen náprav a jejich uložení."),
+        Maintenance("Podvozek", "Stabilizátor", "Kosti stabilizátoru", "40000", "36", "Kontrola nebo výměna táhel stabilizátoru a souvisejícího uložení."),
+        Maintenance("Podvozek", "Řízení a čepy", "Čepy řízení a náprav", "60000", "48", "Kontrola nebo výměna čepů řízení, kulových čepů a souvisejících dílů náprav."),
+        Maintenance("Podvozek", "Tlumení", "Tlumiče", "80000", "60", "Kontrola nebo výměna tlumičů podle stavu, úniku kapaliny a jízdního projevu."),
+        Maintenance("Podvozek", "Tlumení", "Pružiny", "80000", "60", "Kontrola nebo výměna pružin a jejich uložení."),
+        Maintenance("Výfukové potrubí", "Emise", "Katalyzátor", "120000", "72", "Kontrola nebo výměna katalyzátoru podle emisí, diagnostiky a stavu výfuku."),
+        Maintenance("Výfukové potrubí", "Emise", "Lambda sonda", "90000", "60", "Kontrola nebo výměna lambda sondy podle diagnostiky a spotřeby."),
+        Maintenance("Výfukové potrubí", "Koncové díly", "Koncovka výfuku", "90000", "60", "Kontrola nebo výměna koncovky výfuku."),
+        Maintenance("Výfukové potrubí", "Tlumení", "Tlumič výfuku", "90000", "60", "Kontrola nebo výměna tlumiče výfuku."),
+        Maintenance("Výfukové potrubí", "Potrubí", "Výfukové trubky", "90000", "60", "Kontrola nebo výměna výfukových trubek, spojů a závěsů."),
+        Maintenance("Elektronika", "Osvětlení", "Žárovky a osvětlení", string.Empty, "12", "Pravidelná kontrola a výměna žárovek, světelných zdrojů a osvětlení vozidla."),
+        Maintenance("Elektronika", "Napájení", "Baterie", string.Empty, "48", "Kontrola nebo výměna startovací baterie, svorek a dobíjení."),
+        Maintenance("Elektronika", "Jištění", "Pojistky", string.Empty, "24", "Kontrola pojistek, pojistkové skříně a souvisejících elektrických závad."),
+        Maintenance("Elektronika", "Snímače", "Parkovací senzory", string.Empty, "24", "Kontrola nebo výměna parkovacích senzorů a jejich kabeláže."),
+        Maintenance("Elektronika", "Snímače", "Ostatní snímače a senzory", string.Empty, "24", "Kontrola nebo výměna ostatních snímačů a senzorů, které nesouvisí přímo s motorem.")
     ];
 
     private static readonly VehicleStarterBundleTemplate[] RoadRecordTemplates =
@@ -33,6 +55,23 @@ public sealed class VehicleStarterBundleService
 
     public static IReadOnlyList<VehicleStarterBundleTemplate> GetMaintenanceTemplateCatalog() =>
         MaintenanceTemplates;
+
+    public static string BuildMaintenanceTemplateDisplayName(VehicleStarterBundleTemplate template)
+    {
+        var category = template.Category.Trim();
+        var subcategory = template.Subcategory.Trim();
+        return (category, subcategory) switch
+        {
+            ("", "") => template.Title,
+            (_, "") => $"{category} - {template.Title}",
+            _ => $"{category} / {subcategory} - {template.Title}"
+        };
+    }
+
+    public static VehicleStarterBundleTemplate? FindMaintenanceTemplateByDisplayName(string value) =>
+        MaintenanceTemplates.FirstOrDefault(item =>
+            string.Equals(item.Title, value, StringComparison.Ordinal)
+            || string.Equals(BuildMaintenanceTemplateDisplayName(item), value, StringComparison.Ordinal));
 
     public VehicleStarterBundlePreview BuildPreview(VehimapDataSet dataSet, string vehicleId, DateOnly today)
     {
@@ -213,6 +252,31 @@ public sealed class VehicleStarterBundleService
 
     private static VehicleStarterBundleTemplate? GetMaintenanceTemplateByTitle(string title) =>
         MaintenanceTemplates.FirstOrDefault(item => string.Equals(item.Title, title, StringComparison.Ordinal));
+
+    private static VehicleStarterBundleTemplate Maintenance(
+        string category,
+        string subcategory,
+        string title,
+        string intervalKm,
+        string intervalMonths,
+        string note) =>
+        new(
+            VehicleStarterBundleSection.Maintenance,
+            "Servis",
+            title,
+            intervalKm,
+            intervalMonths,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            note,
+            category,
+            subcategory);
 
     private static string BuildProfileLabel(Vehicle vehicle, VehicleMeta? meta)
     {
