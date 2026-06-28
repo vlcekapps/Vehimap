@@ -145,6 +145,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - publikovat runtime-specific desktop manifesty `update/latest-dotnet-<rid>.ini`
 - udrzet prechodovy alias `update/latest-dotnet-preview-<rid>.ini`, aby se uz vydane preview buildy dokazaly aktualizovat na prvni stabilni desktop release
 - spoustet Windows Appium smoke i v CI nad publish buildem desktop release; CI smoke overuje prvni fokus po startu na seznamu vozidel, dostupnost seznamu pres `Tab` z filtru, navrat `Shift+Tab` z vybrane pracovni karty zpet na seznam, app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, vyvolani hlavniho menu pres `F10` bez automatickeho rozbaleni, zavreni menu druhym `F10` zpet na puvodni fokus, rozbaleni nabidky az sipkou dolu, vynechani menu pri beznem `Tab` / `Shift+Tab`, otevreni aktualniho upozorneni z menu `Rychle akce`, otevreni a zavreni app-level dialogu `Nastaveni`, `O programu` vcetne tlacitka `Podekovat autorovi` a `Zkontrolovat aktualizace`, otevreni a zavreni pristupnych tray akci z menu `Aplikace`, otevreni vsech samostatnych pracovnich oken, zavreni workspace pres `Escape`, navigaci z globalniho hledani, casove osy, terminovych prehledu a nakladu, zakladni ulozeni editoru pripominek, dokladu, historie, tankovani a udrzby v samostatnych oknech, navrat `Shift+Tab` z nazvu vozidla na `Zrusit` a potvrzeni pri zavirani rozpracovane editace, ulozeni voleb automatickych zaloh z dialogu `Nastaveni` vcetne okamziteho vytvoreni `.vehimapbak`, ulozeni volby Dashboardu pri startu vcetne validacni chyby, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony a potvrzeni `Splneno` z `Planu udrzby` i Dashboardu, zatimco rozsirena sada nad izolovanou portable kopii testuje kopirovani diagnostiky z `O programu`, detailu kontroly aktualizaci i vyresene cesty spravovane prilohy dokladu do systemove schranky a dalsi realne vytvoreni okamzite automaticke zalohy
+- kontrolovat migracni paritu AHK modulu pres `dotnet\build\Get-DotnetMigrationParity.ps1`; Windows hardening i AHK retirement gate tim overuji, ze kazdy soucasny `src/lib/*.ahk` modul ma pojmenovanou .NET evidence vrstvu a nejde omylem smazat AHK fallback bez mapy pokryti
 
 ## Lokalni build
 
@@ -213,6 +214,14 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetS
 Skript release readiness postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Vystup uklada do `dotnet\artifacts\<kanal>\<rid>\app` pro spustitelnou aplikaci a do `dotnet\artifacts\<kanal>\<rid>\release` pro instalator, metadata a checksum. Wrappery `Test-DotnetNightlyReadiness.ps1`, `Test-DotnetBetaReadiness.ps1` a `Test-DotnetStableReadiness.ps1` nastavují kanál bez ručního předávání `-Channel`. Pro `stable` se kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` se vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
 
 `Test-DotnetWindowsHardening.ps1` je pred-beta wrapper pro Windows stabilizaci: nejdrive vypise release train status, potom spusti cele `dotnet test`, nasledne nightly readiness a nakonec pripomene AHK retirement status. Plny instalacni smoke realneho Inno setupu se spousti automaticky jen v GitHub Actions; lokalne se kvuli ochrane existujici instalace stejneho kanalu drzi bezpecne overeni metadat/checksumu, pokud vedome nepridate `-AllowLocalInstallSmoke`. Po dobehu GitHub Actions lze pridat `-VerifyPublishedNightly`, aby stejny skript overil i publikovany nightly manifest a asset.
+
+Pred samotnym hardeningem lze samostatne spustit i migracni parity kontrolu:
+
+```powershell
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Get-DotnetMigrationParity.ps1 -FailOnBlockers
+```
+
+Kontrola nic nemeni. Jen porovna soucasne AHK moduly v `src\lib` s udrzovanou mapou .NET evidence souboru, aby bylo pred betou i pred finalnim AHK retirement commitem jasne, ze zadny legacy modul nezmizel z rozhodovani.
 
 Samotne vytvoreni release tagu je oddelene do bezpecneho skriptu. Ve vychozim rezimu zkontroluje cisty `main`, shodu s `origin/main`, neexistujici tag a spusti release readiness branu; tag na GitHub odesle jen s explicitnim `-Push`.
 

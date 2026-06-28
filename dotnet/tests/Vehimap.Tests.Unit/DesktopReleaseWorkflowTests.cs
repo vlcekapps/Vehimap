@@ -98,6 +98,8 @@ public sealed class DesktopReleaseWorkflowTests
         var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Get-AhkRetirementReadiness.ps1");
         var script = File.ReadAllText(scriptPath);
 
+        Assert.Contains("Get-DotnetMigrationParity.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Migracni parity mapa AHK -> .NET je pruchozi.", script, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-preview-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetReleaseReadiness.ps1", script, StringComparison.Ordinal);
@@ -113,6 +115,28 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("src\\Vehimap.ahk", script, StringComparison.Ordinal);
         Assert.Contains("$FailOnBlockers", script, StringComparison.Ordinal);
         Assert.Contains("AHK zatim nemazat", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Migration_parity_script_maps_every_current_ahk_module_to_dotnet_evidence()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var scriptPath = Path.Combine(repositoryRoot, "dotnet", "build", "Get-DotnetMigrationParity.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        foreach (var modulePath in Directory.GetFiles(Path.Combine(repositoryRoot, "src", "lib"), "*.ahk"))
+        {
+            var moduleName = Path.GetFileName(modulePath);
+            Assert.Contains($"Module = \"{moduleName}\"", script, StringComparison.Ordinal);
+        }
+
+        Assert.Contains("LegacyAuditService.cs", script, StringComparison.Ordinal);
+        Assert.Contains("LegacyBackupService.cs", script, StringComparison.Ordinal);
+        Assert.Contains("LegacyVehimapDataStore.cs", script, StringComparison.Ordinal);
+        Assert.Contains("VehicleStarterBundleService.cs", script, StringComparison.Ordinal);
+        Assert.Contains("VehicleDetailWorkspaceViewModel.cs", script, StringComparison.Ordinal);
+        Assert.Contains("$FailOnBlockers", script, StringComparison.Ordinal);
+        Assert.Contains("migracni parity mapa je pruchozi", script, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -261,6 +285,8 @@ public sealed class DesktopReleaseWorkflowTests
 
         Assert.Contains("Windows hardening gate", script, StringComparison.Ordinal);
         Assert.Contains("Get-DotnetReleaseTrainStatus.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Get-DotnetMigrationParity.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("AHK migration parity", script, StringComparison.Ordinal);
         Assert.Contains("dotnet test $solutionPath", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetNightlyReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("$nightlyReadinessArguments[\"SkipTests\"] = $true", script, StringComparison.Ordinal);

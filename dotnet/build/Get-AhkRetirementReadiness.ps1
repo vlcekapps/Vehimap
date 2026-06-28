@@ -13,6 +13,7 @@ $workflowPath = Join-Path $repositoryRoot ".github\workflows\dotnet-desktop.yml"
 $stableManifestPath = Join-Path $repositoryRoot "update\latest-dotnet-$RuntimeIdentifier.ini"
 $legacyPreviewManifestPath = Join-Path $repositoryRoot "update\latest-dotnet-preview-$RuntimeIdentifier.ini"
 $releaseReadinessScript = Join-Path $PSScriptRoot "Test-DotnetReleaseReadiness.ps1"
+$migrationParityScript = Join-Path $PSScriptRoot "Get-DotnetMigrationParity.ps1"
 $desktopExePath = Join-Path $dotnetRoot "artifacts\stable\$RuntimeIdentifier\app\Vehimap.Desktop.exe"
 
 $passed = New-Object System.Collections.Generic.List[string]
@@ -66,6 +67,19 @@ if (Test-Path -LiteralPath $releaseReadinessScript -PathType Leaf) {
 }
 else {
     Add-Blocker "Chybi Test-DotnetReleaseReadiness.ps1; pred odstranenim AHK neni lokalni release gate."
+}
+
+if (Test-Path -LiteralPath $migrationParityScript -PathType Leaf) {
+    try {
+        & $migrationParityScript -FailOnBlockers
+        Add-Pass "Migracni parity mapa AHK -> .NET je pruchozi."
+    }
+    catch {
+        Add-Blocker "Migracni parity mapa AHK -> .NET neni pruchozi: $($_.Exception.Message)"
+    }
+}
+else {
+    Add-Blocker "Chybi Get-DotnetMigrationParity.ps1; pred odstranenim AHK neni kontrola parity modulu."
 }
 
 if (-not (Test-Path -LiteralPath $workflowPath -PathType Leaf)) {

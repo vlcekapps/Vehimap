@@ -58,6 +58,10 @@ Invoke-HardeningStep "Release train status" {
     & (Join-Path $PSScriptRoot "Get-DotnetReleaseTrainStatus.ps1") @releaseTrainArguments
 }
 
+Invoke-HardeningStep "AHK migration parity" {
+    & (Join-Path $PSScriptRoot "Get-DotnetMigrationParity.ps1") -FailOnBlockers
+}
+
 if (-not $SkipTests) {
     Invoke-HardeningStep "dotnet test" {
         Push-Location $dotnetRoot
