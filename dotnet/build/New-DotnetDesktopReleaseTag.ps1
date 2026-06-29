@@ -129,11 +129,11 @@ if ($DryRun) {
 }
 
 $message = if ($Channel -eq "nightly") { "Vehimap desktop nightly $version" } else { "Vehimap desktop $Channel $version" }
-Invoke-Git tag -a $tagName -m $message | Out-Null
+Invoke-Git -Arguments @("tag", "-a", $tagName, "-m", $message) | Out-Null
 Write-Host "Vytvoren lokalni tag $tagName."
 
 if ($Push) {
-    Invoke-Git push origin $tagName | Out-Null
+    Invoke-Git -Arguments @("push", "origin", $tagName) | Out-Null
     Write-Host "Tag $tagName byl odeslan na origin. GitHub Actions spusti desktop release workflow."
 }
 else {

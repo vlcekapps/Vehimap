@@ -158,9 +158,9 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("git @Arguments", script, StringComparison.Ordinal);
         Assert.Contains("status --porcelain", script, StringComparison.Ordinal);
         Assert.Contains("rev-parse origin/main", script, StringComparison.Ordinal);
-        Assert.Contains("tag -a $tagName", script, StringComparison.Ordinal);
+        Assert.Contains("\"tag\", \"-a\", $tagName, \"-m\", $message", script, StringComparison.Ordinal);
         Assert.Contains("if ($Push)", script, StringComparison.Ordinal);
-        Assert.Contains("push origin $tagName", script, StringComparison.Ordinal);
+        Assert.Contains("\"push\", \"origin\", $tagName", script, StringComparison.Ordinal);
         Assert.Contains("Dry run OK. Tag nebyl vytvoren.", script, StringComparison.Ordinal);
     }
 
