@@ -82,6 +82,32 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Record_workspace_path_accessible_names_include_current_values()
+    {
+        var viewModel = CreateViewModel();
+        var workspace = viewModel.RecordWorkspace;
+        var changedProperties = new List<string>();
+        workspace.PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName is not null)
+            {
+                changedProperties.Add(args.PropertyName);
+            }
+        };
+
+        Assert.Equal("Uložená cesta přílohy: nevyplněno", workspace.RecordEditorStoredPathAccessibleName);
+        Assert.Equal("Vyřešená cesta přílohy: nevyplněno", workspace.RecordEditorResolvedPathAccessibleName);
+
+        workspace.RecordEditorStoredPath = "attachments/veh_1/faktura.pdf";
+        workspace.RecordEditorResolvedPath = @"C:\Data\Vehimap\attachments\veh_1\faktura.pdf";
+
+        Assert.Equal("Uložená cesta přílohy: attachments/veh_1/faktura.pdf", workspace.RecordEditorStoredPathAccessibleName);
+        Assert.Equal(@"Vyřešená cesta přílohy: C:\Data\Vehimap\attachments\veh_1\faktura.pdf", workspace.RecordEditorResolvedPathAccessibleName);
+        Assert.Contains(nameof(RecordWorkspaceViewModel.RecordEditorStoredPathAccessibleName), changedProperties);
+        Assert.Contains(nameof(RecordWorkspaceViewModel.RecordEditorResolvedPathAccessibleName), changedProperties);
+    }
+
+    [Fact]
     public void Timeline_and_search_workspaces_own_state_and_collections()
     {
         var viewModel = CreateViewModel();

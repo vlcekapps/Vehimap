@@ -1112,6 +1112,8 @@ public sealed class DesktopAccessibilityLabelTests
         AssertAccessibleBoundText(recordXaml, "SelectedRecordDetailText", "SelectedRecordDetail");
         AssertAccessibleTextId(recordXaml, "RecordEditorStoredPathText");
         AssertAccessibleTextId(recordXaml, "RecordEditorResolvedPathText");
+        Assert.Contains("AutomationProperties.Name=\"{Binding RecordEditorStoredPathAccessibleName}\"", recordXaml);
+        Assert.Contains("AutomationProperties.Name=\"{Binding RecordEditorResolvedPathAccessibleName}\"", recordXaml);
         AssertAccessibleBoundText(timelineXaml, "TimelineSummaryText", "TimelineSummary");
         AssertAccessibleBoundText(timelineXaml, "TimelineExportStatusText", "ExportStatus");
         AssertAccessibleBoundText(timelineXaml, "SelectedTimelineDetailText", "SelectedTimelineDetail");
@@ -1202,6 +1204,41 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.True(
             failures.Count == 0,
             "TextBlock s AutomationId je důležitý obsah nebo diagnostika a musí mít explicitní accessible Name:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void Selectable_text_blocks_should_include_values_in_accessible_names()
+    {
+        var selectableTextBlockPattern = new Regex(
+            "<SelectableTextBlock(?<attributes>[\\s\\S]*?AutomationProperties\\.AutomationId=\"(?<id>[^\"]+)\"[\\s\\S]*?)(?:/>|>)",
+            RegexOptions.Singleline);
+        var namePattern = new Regex(
+            "AutomationProperties\\.Name=\"\\{Binding (?<binding>[^\"]+)\\}\"",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in selectableTextBlockPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                var automationId = match.Groups["id"].Value;
+                var nameMatch = namePattern.Match(attributes);
+                if (nameMatch.Success
+                    && nameMatch.Groups["binding"].Value.EndsWith("AccessibleName", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} SelectableTextBlock {automationId} musí mít AutomationProperties.Name navázaný na *AccessibleName vlastnost.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Selektovatelný text s AutomationId obvykle obsahuje kopírovatelnou hodnotu; accessible Name musí zahrnout popisek i aktuální hodnotu:"
                 + Environment.NewLine
                 + string.Join(Environment.NewLine, failures));
     }

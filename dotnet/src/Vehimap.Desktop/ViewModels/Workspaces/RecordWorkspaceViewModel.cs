@@ -95,6 +95,8 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public string RecordEditorPathInputHelp => IsRecordEditorManaged
         ? "Vybraný soubor se po uložení zkopíruje do spravovaných příloh."
         : "Zadejte nebo vyberte externí cestu, která se nebude kopírovat.";
+    public string RecordEditorStoredPathAccessibleName => BuildPathAccessibleName("Uložená cesta přílohy", RecordEditorStoredPath);
+    public string RecordEditorResolvedPathAccessibleName => BuildPathAccessibleName("Vyřešená cesta přílohy", RecordEditorResolvedPath);
 
     public ICommand CreateRecordCommand => Root.CreateRecordCommand;
     public ICommand EditSelectedRecordCommand => Root.EditSelectedRecordCommand;
@@ -196,6 +198,16 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
         Root.HandleRecordAttachmentPathChanged();
     }
 
+    partial void OnRecordEditorStoredPathChanged(string value)
+    {
+        OnPropertyChanged(nameof(RecordEditorStoredPathAccessibleName));
+    }
+
+    partial void OnRecordEditorResolvedPathChanged(string value)
+    {
+        OnPropertyChanged(nameof(RecordEditorResolvedPathAccessibleName));
+    }
+
     private bool MatchesSearch(VehicleRecordItemViewModel item)
     {
         if (string.IsNullOrWhiteSpace(RecordSearchText))
@@ -232,4 +244,9 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
 
     private static bool Contains(string value, string query) =>
         value.Contains(query, StringComparison.CurrentCultureIgnoreCase);
+
+    private static string BuildPathAccessibleName(string label, string value) =>
+        string.IsNullOrWhiteSpace(value)
+            ? $"{label}: nevyplněno"
+            : $"{label}: {value}";
 }

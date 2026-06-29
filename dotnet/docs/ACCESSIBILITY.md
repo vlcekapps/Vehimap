@@ -31,6 +31,9 @@ for a future ACR/VPAT-style report if one is needed.
 - Any `TextBlock` with an `AutomationProperties.AutomationId` is considered important
   content or diagnostics and must also expose an explicit `AutomationProperties.Name`.
   Do not rely on implicit text extraction for support-oriented summaries or details.
+- Any `SelectableTextBlock` with an `AutomationId` is considered a copyable value. Its
+  accessible name must include both the user-facing label and the current value through
+  a dedicated `*AccessibleName` binding.
 - For label + field forms, keep the visible label and accessible name synchronized. Use
   `LabeledBy` where it is stable in our target Avalonia version; otherwise keep the
   explicit `Name` and note the reason in tests or comments.

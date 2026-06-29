@@ -26,6 +26,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - C# Avalonia pole s `PlaceholderText` nově vystavují stejnou instrukci i přes `AutomationProperties.HelpText`, aby příklady hodnot a filtrovací nápovědy zůstaly dostupné pro čtečky obrazovky i po nafocusování pole.
 - C# Avalonia destruktivní a datově nahrazující akce, jako mazání vozidel/záznamů a obnova ze zálohy, mají nově přístupný `HelpText` s dopadem akce; guard test hlídá, aby čtečka nedostala jen krátké “Odstranit” bez kontextu.
 - C# Avalonia důležité informační texty s `AutomationId` nově musí mít explicitní `AutomationProperties.Name`; doplněno pro diagnostiku datové sady 2.0 a kontrolu aktualizací.
+- C# Avalonia selektovatelné cesty příloh v editoru dokladů nově vystavují pro čtečky popisek i aktuální hodnotu v jednom přístupném jménu; guard test hlídá stejné pravidlo pro další `SelectableTextBlock`.
 - C# Avalonia rozbalovací seznamy nově dědí globální přístupnou nápovědu pro ovládání šipkami, takže čtečky dostanou konzistentní instrukci k otevření a výběru hodnoty.
 - C# Appium accessibility regrese pro textová pole, rozbalovací seznamy a fokus po uložení vozidla nově posílají klávesy do skutečně aktivního prvku, aby lépe odpovídaly ručnímu ovládání klávesnicí a čtečkou obrazovky.
 - C# Avalonia má dočasný live-region fallback pro editaci textových polí: při šipkách, Home/End, Backspace/Delete nebo výběru textu oznamuje název pole, pozici kurzoru a okolní znak, dokud Avalonia neposkytne spolehlivější nativní UIA textovou podporu pro NVDA.

@@ -64,6 +64,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - accessibility evidence slozku `dotnet/docs/accessibility-evidence/` pro rucni NVDA/Narrator a pozdeji VoiceOver/Orca zaznamy, aby slo pred 2.0 beta/stable dolozit realne screen-reader scenare
 - staticke guard testy, ktere hlidaji `AutomationId` a lidske pristupne jmeno u interaktivnich Avalonia prvku a blokují nove rucni `KeyDown` handlery bez dokumentovane vyjimky
 - staticke guard testy pro dulezite informacni `TextBlock` prvky s `AutomationId`, aby souhrny a diagnosticke detaily mely explicitni `AutomationProperties.Name`
+- staticke guard testy pro kopirovatelne `SelectableTextBlock` hodnoty s `AutomationId`, aby cesta nebo jina technicka hodnota nebyla pro ctecku skryta za obecnym popiskem
 - staticke guard testy pro live regiony u stavovych/chybovych/prubehovych textu, jeden hlavni `HeadingLevel=1` nadpis v kazdem samostatnem okne/dialogu a `AccessibilityView=Control` u landmarku
 - staticke guard testy pro `AutomationProperties.AcceleratorKey` u menu zkratek a citelna accessibility metadata u progress baru
 - staticke guard testy pro `AutomationProperties.ItemType` u seznamovych polozek s `AccessibleLabel` a konzervativni `AutomationProperties.ItemStatus` jen pro skutecny stav, prioritu nebo dostupnost
