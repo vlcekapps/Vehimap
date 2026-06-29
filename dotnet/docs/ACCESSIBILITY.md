@@ -23,7 +23,8 @@ for a future ACR/VPAT-style report if one is needed.
 - Prefer standard Avalonia controls before custom controls. If a custom `Control` or
   `TemplatedControl` becomes necessary, it must have an automation peer strategy before
   it ships.
-- Every interactive control must have a stable `AutomationProperties.AutomationId`.
+- Every interactive control must have a stable `AutomationProperties.AutomationId`,
+  including menu items and radio-button based navigation controls.
 - Every interactive control must have a human accessible name through visible content
   or `AutomationProperties.Name`. `AutomationProperties.LabeledBy` is allowed for
   targeted experiments, but it is not the mandatory baseline yet because the local
@@ -67,10 +68,10 @@ for a future ACR/VPAT-style report if one is needed.
   validation errors, save results, import/restore results, update progress and shell
   status. Use `Polite` for routine progress and save/status messages; reserve
   `Assertive` for validation errors, load failures and other blocking errors.
-- Every top-level window or modal dialog must expose exactly one primary heading with
-  `AutomationProperties.HeadingLevel="1"`, a stable `AutomationId` and a human
-  accessible name. Long dialogs and dense workspaces may use `HeadingLevel="2"` for
-  visible section headings.
+- Every heading must expose a stable `AutomationId` and a human accessible name. Every
+  top-level window or modal dialog must expose exactly one primary heading with
+  `AutomationProperties.HeadingLevel="1"`. Long dialogs and dense workspaces may use
+  `HeadingLevel="2"` for visible section headings.
 - Use `AutomationProperties.LandmarkType` conservatively for the main shell,
   navigation, search areas and primary content. Every landmark must also set
   `AutomationProperties.AccessibilityView="Control"` so it is exposed reliably through

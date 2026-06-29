@@ -1149,7 +1149,7 @@ public sealed class DesktopAccessibilityLabelTests
     public void Interactive_desktop_controls_should_have_stable_accessibility_metadata()
     {
         var interactiveControlPattern = new Regex(
-            "<(?<type>TextBox|ComboBox|CheckBox|Button|ListBox)(?=[\\s>/])(?<attributes>[\\s\\S]*?)(?:/>|>)",
+            "<(?<type>TextBox|ComboBox|CheckBox|Button|ListBox|MenuItem|RadioButton)(?=[\\s>/])(?<attributes>[\\s\\S]*?)(?:/>|>)",
             RegexOptions.Singleline);
         var failures = new List<string>();
 
@@ -1175,6 +1175,39 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.True(
             failures.Count == 0,
             "Interaktivní Avalonia prvky musí mít stabilní AutomationId a lidské jméno přes AutomationProperties.Name nebo LabeledBy:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void Heading_texts_should_have_stable_accessibility_metadata()
+    {
+        var headingPattern = new Regex(
+            "<TextBlock(?<attributes>[\\s\\S]*?AutomationProperties\\.HeadingLevel=\"(?<level>[^\"]+)\"[\\s\\S]*?)(?:/>|>)",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in headingPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                var hasAutomationId = attributes.Contains("AutomationProperties.AutomationId=", StringComparison.Ordinal);
+                var hasAccessibleName = attributes.Contains("AutomationProperties.Name=", StringComparison.Ordinal);
+
+                if (hasAutomationId && hasAccessibleName)
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} H{match.Groups["level"].Value} nadpis postrádá "
+                    + (hasAutomationId ? "přístupné jméno" : "AutomationId"));
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Každý nadpis musí mít stabilní AutomationId a lidské jméno, aby mohl sloužit jako spolehlivý orientační bod:"
                 + Environment.NewLine
                 + string.Join(Environment.NewLine, failures));
     }

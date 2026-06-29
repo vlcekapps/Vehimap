@@ -141,7 +141,8 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - hlidat desktop UI zdroje proti typickym mojibake znakum, aby se poskozena UTF-8 diakritika nevratila do pristupnych nazvu ani textu pro ctecky obrazovky
 - vest `dotnet/docs/ACCESSIBILITY.md` jako Avalonia accessibility checklist s jasnym stavem `accessibility-oriented / pre-conformance`, dokumentovanymi keyboard/focus vyjimkami a odkazy na oficialni Avalonia pravidla
 - ukladat rucni screen-reader dukazy do `dotnet/docs/accessibility-evidence/`, aby pozdejsi ACR/VPAT audit nebyl rekonstruovan az z pameti
-- staticky hlidat, ze interaktivni Avalonia prvky maji stabilni `AutomationId` a lidske pristupne jmeno a ze nove rucni `KeyDown` handlery nevzniknou bez vedome dokumentovane vyjimky
+- staticky hlidat, ze interaktivni Avalonia prvky vcetne `MenuItem` a kartovych `RadioButton` maji stabilni `AutomationId` a lidske pristupne jmeno a ze nove rucni `KeyDown` handlery nevzniknou bez vedome dokumentovane vyjimky
+- staticky hlidat, ze vsechny nadpisy s `AutomationProperties.HeadingLevel` maji stabilni `AutomationId` a pristupne jmeno, nejen hlavni nadpisy samostatnych oken
 - staticky hlidat, ze dulezite informacni `TextBlock` prvky s `AutomationId` maji explicitni `AutomationProperties.Name`, hlavne u diagnostiky a podpory
 - staticky hlidat, ze kopirovatelne `SelectableTextBlock` hodnoty s `AutomationId` vystavuji popisek i aktualni hodnotu pres `*AccessibleName` binding
 - staticky hlidat live regiony u stavovych, chybovych a prubehovych textu, jeden hlavni nadpis kazdeho samostatneho okna/dialogu a `AccessibilityView=Control` u landmarku podle oficialniho Avalonia accessibility modelu
