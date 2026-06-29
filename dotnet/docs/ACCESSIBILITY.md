@@ -35,6 +35,11 @@ for a future ACR/VPAT-style report if one is needed.
 - Non-interactive but important controls such as `ProgressBar` still need a stable
   `AutomationId`, a human accessible name and short `HelpText` describing what is being
   measured.
+- Meaningful list item templates whose root exposes
+  `AutomationProperties.Name="{Binding AccessibleLabel}"` must also expose
+  `AutomationProperties.ItemType`, for example vehicle, document, audit item or fuel
+  warning. Use `AutomationProperties.ItemStatus` only for a real status, priority or
+  availability value; never use it as a duplicate title, summary or detail text.
 - Use `AutomationProperties.LiveSetting` for status changes that should be announced:
   validation errors, save results, import/restore results, update progress and shell
   status. Use `Polite` for routine progress and save/status messages; reserve

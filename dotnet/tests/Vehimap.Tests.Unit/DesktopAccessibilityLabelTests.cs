@@ -1292,6 +1292,112 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Accessible_label_item_templates_should_define_item_type()
+    {
+        const string accessibleLabelBinding = "AutomationProperties.Name=\"{Binding AccessibleLabel}\"";
+        var failures = new List<string>();
+
+        foreach (var template in ReadDataTemplateRoots())
+        {
+            if (!template.TemplateContent.Contains(accessibleLabelBinding, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (!template.RootAttributes.Contains(accessibleLabelBinding, StringComparison.Ordinal))
+            {
+                failures.Add($"{template.RelativePath}:{GetLineNumber(template.Xaml, template.RootAbsoluteIndex)} DataTemplate {template.ViewModelType} používá AccessibleLabel mimo kořen položky.");
+                continue;
+            }
+
+            if (!template.RootAttributes.Contains("AutomationProperties.ItemType=", StringComparison.Ordinal))
+            {
+                failures.Add($"{template.RelativePath}:{GetLineNumber(template.Xaml, template.RootAbsoluteIndex)} DataTemplate {template.ViewModelType} postrádá AutomationProperties.ItemType.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Kořen každé seznamové položky s AccessibleLabel musí vystavit ItemType, aby čtečka znala druh položky:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void Accessible_item_status_should_only_expose_real_status_properties()
+    {
+        var expectedStatusBindings = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["AuditItemViewModel"] = "Severity",
+            ["CostVehicleItemViewModel"] = "Status",
+            ["FuelAnalysisWarningItemViewModel"] = "Severity",
+            ["ServiceBookItemViewModel"] = "Status",
+            ["SmartAdvisorItemViewModel"] = "Priority",
+            ["VehicleFuelItemViewModel"] = "TankState",
+            ["VehicleListItemViewModel"] = "StatusSummary",
+            ["VehicleMaintenanceItemViewModel"] = "Status",
+            ["VehicleRecordItemViewModel"] = "AttachmentState",
+            ["VehicleReminderItemViewModel"] = "Status",
+            ["VehicleTimelineItemViewModel"] = "Status"
+        };
+        var forbiddenStatusBindings = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "AccessibleLabel",
+            "Detail",
+            "SectionLabel",
+            "Summary",
+            "Title"
+        };
+        var statusPattern = new Regex(
+            "AutomationProperties\\.ItemStatus=\"\\{Binding (?<property>[^}\\s]+)\\}\"",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var template in ReadDataTemplateRoots())
+        {
+            if (!template.RootAttributes.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            var viewModelType = GetShortXamlTypeName(template.ViewModelType);
+            var statusMatch = statusPattern.Match(template.RootAttributes);
+            if (statusMatch.Success
+                && forbiddenStatusBindings.Contains(statusMatch.Groups["property"].Value))
+            {
+                failures.Add($"{template.RelativePath}:{GetLineNumber(template.Xaml, template.RootAbsoluteIndex)} DataTemplate {template.ViewModelType} používá ItemStatus pro popis/detail místo skutečného stavu.");
+            }
+
+            if (expectedStatusBindings.TryGetValue(viewModelType, out var expectedProperty))
+            {
+                if (!statusMatch.Success)
+                {
+                    failures.Add($"{template.RelativePath}:{GetLineNumber(template.Xaml, template.RootAbsoluteIndex)} DataTemplate {template.ViewModelType} postrádá AutomationProperties.ItemStatus.");
+                    continue;
+                }
+
+                if (!string.Equals(statusMatch.Groups["property"].Value, expectedProperty, StringComparison.Ordinal))
+                {
+                    failures.Add($"{template.RelativePath}:{GetLineNumber(template.Xaml, template.RootAbsoluteIndex)} DataTemplate {template.ViewModelType} má ItemStatus navázaný na {statusMatch.Groups["property"].Value}, očekává se {expectedProperty}.");
+                }
+
+                continue;
+            }
+
+            if (statusMatch.Success)
+            {
+                failures.Add($"{template.RelativePath}:{GetLineNumber(template.Xaml, template.RootAbsoluteIndex)} DataTemplate {template.ViewModelType} má ItemStatus bez schválené stavové vlastnosti.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "ItemStatus smí být použitý jen pro skutečný stav, prioritu nebo dostupnost a na schválených viewmodelech:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Desktop_windows_should_define_one_primary_accessible_heading()
     {
         var headingPattern = new Regex(
@@ -1405,6 +1511,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("We do not claim formal WCAG", accessibilityDocs);
         Assert.Contains("dotnet/docs/accessibility-evidence/", accessibilityDocs);
         Assert.Contains("Avalonia accessibility", accessibilityDocs);
+        Assert.Contains("AutomationProperties.ItemType", accessibilityDocs);
+        Assert.Contains("AutomationProperties.ItemStatus", accessibilityDocs);
         Assert.Contains("Date:", evidenceReadme);
         Assert.Contains("Screen reader:", evidenceReadme);
         Assert.Contains("Known issues:", evidenceReadme);
@@ -1773,6 +1881,42 @@ public sealed class DesktopAccessibilityLabelTests
         }
     }
 
+    private static IEnumerable<(
+        string RelativePath,
+        string Xaml,
+        string ViewModelType,
+        string TemplateContent,
+        string RootAttributes,
+        int RootAbsoluteIndex)> ReadDataTemplateRoots()
+    {
+        var templatePattern = new Regex(
+            "<DataTemplate\\s+x:DataType=\"(?<type>[^\"]+)\"[^>]*>(?<content>[\\s\\S]*?)</DataTemplate>",
+            RegexOptions.Singleline);
+        var rootPattern = new Regex(
+            "^\\s*<(?<element>[A-Za-z][A-Za-z0-9.:]*)(?<attributes>[^>]*)>",
+            RegexOptions.Singleline);
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match templateMatch in templatePattern.Matches(xaml))
+            {
+                var content = templateMatch.Groups["content"].Value;
+                var rootMatch = rootPattern.Match(content);
+                Assert.True(
+                    rootMatch.Success,
+                    $"{relativePath}:{GetLineNumber(xaml, templateMatch.Index)} DataTemplate nemá čitelný kořenový prvek.");
+
+                yield return (
+                    relativePath,
+                    xaml,
+                    templateMatch.Groups["type"].Value,
+                    content,
+                    rootMatch.Groups["attributes"].Value,
+                    templateMatch.Groups["content"].Index + rootMatch.Index);
+            }
+        }
+    }
+
     private static IEnumerable<(string RelativePath, string Content)> ReadTopLevelDesktopWindowXamlFiles()
     {
         var repositoryRoot = FindRepositoryRoot();
@@ -1807,6 +1951,14 @@ public sealed class DesktopAccessibilityLabelTests
         }
 
         return line;
+    }
+
+    private static string GetShortXamlTypeName(string xamlType)
+    {
+        var separatorIndex = xamlType.LastIndexOf(':');
+        return separatorIndex >= 0
+            ? xamlType[(separatorIndex + 1)..]
+            : xamlType;
     }
 
     private static void AssertAccessibleBoundText(string xaml, string automationId, string bindingName)

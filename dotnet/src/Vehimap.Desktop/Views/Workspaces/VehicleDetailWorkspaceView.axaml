@@ -260,7 +260,8 @@
                       Margin="0,0,0,6"
                       Background="#08102030"
                       CornerRadius="6"
-                      AutomationProperties.Name="{Binding AccessibleLabel}">
+                      AutomationProperties.Name="{Binding AccessibleLabel}"
+                      AutomationProperties.ItemType="Souhrn evidence vozidla">
                 <Grid ColumnDefinitions="130,*">
                   <TextBlock FontWeight="SemiBold"
                              Text="{Binding Title}" />
@@ -340,7 +341,7 @@
                  AutomationProperties.AutomationId="VehicleDetailRecentHistoryListBox">
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="itemvm:VehicleHistoryItemViewModel">
-              <Border Padding="8" Margin="0,0,0,6" Background="#08102030" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+              <Border Padding="8" Margin="0,0,0,6" Background="#08102030" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Historický záznam">
                 <Grid ColumnDefinitions="110,*,110,120">
                   <TextBlock Text="{Binding Date}" />
                   <TextBlock Grid.Column="1" Text="{Binding EventType}" TextWrapping="Wrap" />

@@ -49,7 +49,8 @@
                         Margin="0,0,0,8"
                         Background="#10203040"
                         CornerRadius="6"
-                        AutomationProperties.Name="{Binding AccessibleLabel}">
+                        AutomationProperties.Name="{Binding AccessibleLabel}"
+                        AutomationProperties.ItemType="Položka balíčku pro vozidlo">
                   <Grid ColumnDefinitions="Auto,*">
                     <CheckBox IsChecked="{Binding IsSelected}"
                               VerticalAlignment="Top"

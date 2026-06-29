@@ -92,7 +92,9 @@
                       Margin="0,0,0,6"
                       Background="#08102030"
                       CornerRadius="6"
-                      AutomationProperties.Name="{Binding AccessibleLabel}">
+                      AutomationProperties.Name="{Binding AccessibleLabel}"
+                      AutomationProperties.ItemType="Položka servisní knížky"
+                      AutomationProperties.ItemStatus="{Binding Status}">
                 <Grid ColumnDefinitions="110,1.2*,2*,130">
                   <TextBlock Text="{Binding Primary}" />
                   <TextBlock Grid.Column="1" Text="{Binding Secondary}" TextWrapping="Wrap" />
@@ -131,7 +133,9 @@
                       Margin="0,0,0,6"
                       Background="#08102030"
                       CornerRadius="6"
-                      AutomationProperties.Name="{Binding AccessibleLabel}">
+                      AutomationProperties.Name="{Binding AccessibleLabel}"
+                      AutomationProperties.ItemType="Položka servisní knížky"
+                      AutomationProperties.ItemStatus="{Binding Status}">
                 <Grid ColumnDefinitions="1.2*,140,2*,160">
                   <TextBlock Text="{Binding Primary}" TextWrapping="Wrap" />
                   <TextBlock Grid.Column="1" Text="{Binding Secondary}" TextWrapping="Wrap" />
@@ -170,7 +174,9 @@
                       Margin="0,0,0,6"
                       Background="#08102030"
                       CornerRadius="6"
-                      AutomationProperties.Name="{Binding AccessibleLabel}">
+                      AutomationProperties.Name="{Binding AccessibleLabel}"
+                      AutomationProperties.ItemType="Položka servisní knížky"
+                      AutomationProperties.ItemStatus="{Binding Status}">
                 <Grid ColumnDefinitions="1.2*,130,2*,180">
                   <TextBlock Text="{Binding Primary}" TextWrapping="Wrap" />
                   <TextBlock Grid.Column="1" Text="{Binding Secondary}" TextWrapping="Wrap" />

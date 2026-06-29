@@ -114,7 +114,9 @@
                     Margin="0,0,0,8"
                     Background="#10203040"
                     CornerRadius="6"
-                    AutomationProperties.Name="{Binding AccessibleLabel}">
+                    AutomationProperties.Name="{Binding AccessibleLabel}"
+                    AutomationProperties.ItemType="Doporučení chytrého poradce"
+                    AutomationProperties.ItemStatus="{Binding Priority}">
               <Grid ColumnDefinitions="120,140,1.4*,1.2*">
                 <TextBlock Grid.Column="0"
                            FontWeight="SemiBold"

@@ -70,7 +70,9 @@
                     Margin="0,0,0,8"
                     Background="#10203040"
                     CornerRadius="6"
-                    AutomationProperties.Name="{Binding AccessibleLabel}">
+                    AutomationProperties.Name="{Binding AccessibleLabel}"
+                    AutomationProperties.ItemType="Tankování"
+                    AutomationProperties.ItemStatus="{Binding TankState}">
               <Grid ColumnDefinitions="120,1.5*,110,110,110,1.2*,*">
                 <TextBlock Grid.Column="0" Text="{Binding Date}" />
                 <StackPanel Grid.Column="1">
@@ -265,7 +267,8 @@
                           Margin="0,0,0,6"
                           Background="#10203040"
                           CornerRadius="6"
-                          AutomationProperties.Name="{Binding AccessibleLabel}">
+                          AutomationProperties.Name="{Binding AccessibleLabel}"
+                          AutomationProperties.ItemType="Úsek spotřeby">
                     <StackPanel>
                       <TextBlock Text="{Binding Period}" />
                       <TextBlock Opacity="0.78" Text="{Binding Consumption}" />
@@ -299,7 +302,8 @@
                           Margin="0,0,0,6"
                           Background="#10203040"
                           CornerRadius="6"
-                          AutomationProperties.Name="{Binding AccessibleLabel}">
+                          AutomationProperties.Name="{Binding AccessibleLabel}"
+                          AutomationProperties.ItemType="Souhrn místa a paliva">
                     <StackPanel>
                       <TextBlock Text="{Binding Station}" />
                       <TextBlock Opacity="0.78" Text="{Binding Fuel}" />
@@ -333,7 +337,9 @@
                           Margin="0,0,0,6"
                           Background="#10203040"
                           CornerRadius="6"
-                          AutomationProperties.Name="{Binding AccessibleLabel}">
+                          AutomationProperties.Name="{Binding AccessibleLabel}"
+                          AutomationProperties.ItemType="Upozornění analýzy tankování"
+                          AutomationProperties.ItemStatus="{Binding Severity}">
                     <StackPanel>
                       <TextBlock Text="{Binding Title}" />
                       <TextBlock Opacity="0.78" Text="{Binding Severity}" />

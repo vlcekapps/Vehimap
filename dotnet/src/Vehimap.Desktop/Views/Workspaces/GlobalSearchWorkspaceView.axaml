@@ -94,7 +94,8 @@
                   Margin="0,0,0,8"
                   Background="#10203040"
                   CornerRadius="6"
-                  AutomationProperties.Name="{Binding AccessibleLabel}">
+                  AutomationProperties.Name="{Binding AccessibleLabel}"
+                  AutomationProperties.ItemType="Výsledek hledání">
             <StackPanel Spacing="4">
               <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
               <TextBlock Opacity="0.82" Text="{Binding SectionLabel}" />

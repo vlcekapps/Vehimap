@@ -144,6 +144,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - staticky hlidat, ze interaktivni Avalonia prvky maji stabilni `AutomationId` a lidske pristupne jmeno a ze nove rucni `KeyDown` handlery nevzniknou bez vedome dokumentovane vyjimky
 - staticky hlidat live regiony u stavovych, chybovych a prubehovych textu, jeden hlavni nadpis kazdeho samostatneho okna/dialogu a `AccessibilityView=Control` u landmarku podle oficialniho Avalonia accessibility modelu
 - staticky hlidat, ze menu zkratky viditelne pres `InputGesture` jsou vystavene i jako `AutomationProperties.AcceleratorKey` a ze progress bary maji citelny nazev, ID i napovedu
+- staticky hlidat, ze seznamove polozky s `AccessibleLabel` maji `AutomationProperties.ItemType` a ze `AutomationProperties.ItemStatus` pouzivaji jen skutecne stavove, prioritni nebo dostupnostni vlastnosti
 - vystavovat souhrnne, stavove a detailni texty v hlavnim shellu i workspacech pres explicitni pristupne nazvy a stabilni `AutomationId`, aby je mohly cist screen readery a kontrolovat UI testy
 - cist a zapisovat podporovane reminder volby do nastaveni datove sady a respektovat `show_dashboard_on_launch`
 - reportovat stejnou verzi jako root `src/VERSION`, vcetne file version pro desktop buildy

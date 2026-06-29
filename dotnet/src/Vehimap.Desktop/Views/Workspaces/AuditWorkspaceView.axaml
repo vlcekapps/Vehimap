@@ -93,7 +93,7 @@
       </ListBox.KeyBindings>
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="itemvm:AuditItemViewModel">
-          <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+          <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Auditní položka" AutomationProperties.ItemStatus="{Binding Severity}">
             <StackPanel Spacing="4">
               <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
               <TextBlock Text="{Binding VehicleName}" />

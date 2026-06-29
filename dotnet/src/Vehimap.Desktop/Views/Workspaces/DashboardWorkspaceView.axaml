@@ -121,7 +121,7 @@
           </ListBox.KeyBindings>
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="itemvm:AuditItemViewModel">
-              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Auditní položka" AutomationProperties.ItemStatus="{Binding Severity}">
                 <StackPanel Spacing="4">
                   <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
                   <TextBlock Text="{Binding VehicleName}" />
@@ -155,7 +155,7 @@
           </ListBox.KeyBindings>
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="itemvm:CostVehicleItemViewModel">
-              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Nákladový souhrn vozidla" AutomationProperties.ItemStatus="{Binding Status}">
                 <StackPanel Spacing="4">
                   <TextBlock FontWeight="SemiBold" Text="{Binding VehicleName}" />
                   <TextBlock Opacity="0.8" Text="{Binding Category}" />
@@ -191,7 +191,7 @@
           </ListBox.KeyBindings>
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="itemvm:VehicleTimelineItemViewModel">
-              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}">
+              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Položka časové osy" AutomationProperties.ItemStatus="{Binding Status}">
                 <StackPanel Spacing="4">
                   <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
                   <TextBlock Text="{Binding VehicleName}" />
