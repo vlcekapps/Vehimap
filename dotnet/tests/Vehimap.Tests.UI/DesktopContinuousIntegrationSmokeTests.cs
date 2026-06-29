@@ -924,7 +924,13 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             session.ClickByAccessibilityId("VehicleEditorNameBox");
             Assert.Equal("VehicleEditorNameBox", session.WaitForFocusedAutomationId(12, "VehicleEditorNameBox"));
 
-            session.SendKeysToActiveElement(Keys.ArrowLeft + Keys.ArrowLeft + Keys.Backspace + "X");
+            session.SendKeysToActiveElement(Keys.ArrowLeft + Keys.ArrowLeft);
+            session.WaitUntilCondition(
+                () => session.GetNameByAccessibilityId("TextEditingLiveRegion", 1).Contains("pozice 2 z 4", StringComparison.CurrentCulture),
+                "Textový live region neoznámil očekávanou pozici kurzoru.",
+                timeoutSeconds: 6);
+
+            session.SendKeysToActiveElement(Keys.Backspace + "X");
 
             Assert.Equal("AXcd", session.CopyTextByAccessibilityId("VehicleEditorNameBox"));
         }
@@ -979,6 +985,32 @@ public sealed class DesktopContinuousIntegrationSmokeTests
 
             session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
             Assert.Equal("EditVehicleButton", session.WaitForFocusedAutomationId(12, "EditVehicleButton"));
+        }
+    }
+
+    [Fact]
+    public void Vehicle_detail_cancel_returns_focus_to_primary_action_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("DetailTabButton");
+            session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
+            session.ClickByAccessibilityId("EditVehicleButton");
+            session.ReplaceTextByAccessibilityId("VehicleEditorNameBox", "Milena cancel accessibility test");
+
+            session.ClickByAccessibilityId("CancelVehicleButton");
+            session.WaitForElementToDisappearByAccessibilityId("CancelVehicleButton");
+
+            Assert.Equal("EditVehicleButton", session.WaitForFocusedAutomationId(12, "EditVehicleButton"));
+
+            session.SendKeysToActiveElement(Keys.Tab);
+            Assert.Equal("DeleteVehicleButton", session.WaitForFocusedAutomationId(12, "DeleteVehicleButton"));
         }
     }
 

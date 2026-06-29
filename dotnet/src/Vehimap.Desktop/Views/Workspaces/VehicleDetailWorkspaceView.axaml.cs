@@ -13,7 +13,6 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
     public VehicleDetailWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
-        RegisterShiftTabBackNavigation(DesktopFocusTarget.VehicleEditorCancel, "VehicleEditorNameBox");
         ApplyHostMode();
     }
 
@@ -88,6 +87,11 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
             ViewModel.SetVehicleStarterBundleStatus($"Nové vozidlo bylo uloženo, ale navazující balíček se nepodařilo otevřít: {ex.Message}");
             FocusPrimaryActionAfterLayout();
         }
+    }
+
+    private void OnCancelVehicleClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        FocusPrimaryActionAfterLayout();
     }
 
     private async void OnOpenVehicleStarterBundleClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

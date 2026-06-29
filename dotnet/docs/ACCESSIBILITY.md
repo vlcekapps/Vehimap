@@ -65,6 +65,12 @@ for a future ACR/VPAT-style report if one is needed.
 - Keyboard access must work without a mouse. `Tab` moves forward, `Shift+Tab` moves
   backward, `Alt`/`F10` opens and closes the main menu, and form text boxes keep normal
   editing navigation.
+- Text fields must stay standard Avalonia `TextBox` controls. Until Avalonia exposes
+  enough native UIA text/caret information for our NVDA target, see
+  [AvaloniaUI/Avalonia#9770](https://github.com/AvaloniaUI/Avalonia/issues/9770), the
+  desktop shell may add a tested live-region fallback that announces field name, caret
+  position and nearby characters after keyboard navigation. This is a temporary
+  `TextBox UIA text fallback`, not a replacement for standard controls.
 - Prefer Avalonia `HotKey`, `KeyBinding` and commands. A manual `KeyDown` handler is an
   exception, not the default.
 - Do not encode critical state only with color, icon shape, visual position or tooltip.
@@ -82,8 +88,9 @@ Avalonia shell. New entries require a regression test.
   selected workspace tab header.
 - `WorkspaceViewBase.cs`: reverse tab boundary from embedded workspace content back to
   the selected shell tab header when a workspace is hosted inside the main window.
-- `KeyboardAccessibilityHelper.cs`: let text boxes keep standard cursor/editing keys and
-  let combo boxes open with plain up/down arrows. The helper is registered on every
+- `KeyboardAccessibilityHelper.cs`: let text boxes keep standard cursor/editing keys,
+  let combo boxes open with plain up/down arrows and provide the temporary `TextBox UIA
+  text fallback` live region for caret context. The helper is registered on every
   top-level window that has keyboard shortcuts and resolves controls through logical,
   templated and visual tree parents before a global shortcut can handle the key.
 - `ModalWorkspaceWindowHelpers.cs` and app-level dialogs: `Escape` closes modal windows

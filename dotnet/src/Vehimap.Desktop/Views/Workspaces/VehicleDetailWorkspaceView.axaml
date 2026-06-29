@@ -55,6 +55,7 @@
               AutomationProperties.AutomationId="SaveVehicleButton" />
       <Button x:Name="CancelVehicleButton"
               Command="{Binding CancelVehicleEditCommand}"
+              Click="OnCancelVehicleClick"
               Content="Zrušit"
               IsVisible="{Binding IsEditingVehicle}"
               AutomationProperties.Name="Zrušit úpravu vozidla"

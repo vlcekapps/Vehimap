@@ -1,4 +1,5 @@
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Desktop.Views;
 using Vehimap.Application.Models;
 using Xunit;
 using System.Text.RegularExpressions;
@@ -1638,6 +1639,32 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Textbox_keyboard_fallback_should_announce_caret_context()
+    {
+        var announcement = KeyboardAccessibilityHelper.BuildTextBoxEditingAnnouncement(
+            "Název vozidla",
+            "Abcd",
+            caretIndex: 2,
+            selectionStart: 2,
+            selectionEnd: 2);
+
+        Assert.Contains("Název vozidla", announcement);
+        Assert.Contains("za znakem b", announcement);
+        Assert.Contains("před znakem c", announcement);
+        Assert.Contains("pozice 2 z 4", announcement);
+
+        var selectionAnnouncement = KeyboardAccessibilityHelper.BuildTextBoxEditingAnnouncement(
+            "Název vozidla",
+            "Abcd",
+            caretIndex: 2,
+            selectionStart: 1,
+            selectionEnd: 3);
+
+        Assert.Contains("vybráno 2 znaků", selectionAnnouncement);
+        Assert.Contains("bc", selectionAnnouncement);
+    }
+
+    [Fact]
     public void Accessibility_documentation_should_record_pre_conformance_status_and_evidence_path()
     {
         var accessibilityDocs = ReadDocumentationFile("ACCESSIBILITY.md");
@@ -1656,6 +1683,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Date:", evidenceReadme);
         Assert.Contains("Screen reader:", evidenceReadme);
         Assert.Contains("Known issues:", evidenceReadme);
+        Assert.Contains("TextBox UIA", accessibilityDocs);
+        Assert.Contains("text fallback", accessibilityDocs);
     }
 
     [Fact]
