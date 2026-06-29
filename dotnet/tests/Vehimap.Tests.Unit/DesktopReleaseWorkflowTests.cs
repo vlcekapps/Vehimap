@@ -112,9 +112,15 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Stabilni manifest neobsahuje platny SHA-256 hash.", script, StringComparison.Ordinal);
         Assert.DoesNotContain("artifacts\\desktop-release\\Vehimap.Desktop.exe", script, StringComparison.Ordinal);
         Assert.DoesNotContain("Add-Blocker \"Stabilni manifest nema channel=stable.\"\n    }\n    else", NormalizeLineEndings(script), StringComparison.Ordinal);
+        Assert.Contains("src\\GeneratedBuildInfo.ahk", script, StringComparison.Ordinal);
         Assert.Contains("src\\Vehimap.ahk", script, StringComparison.Ordinal);
+        Assert.Contains("src\\changelog.html", script, StringComparison.Ordinal);
+        Assert.Contains("src\\readme.html", script, StringComparison.Ordinal);
+        Assert.Contains("AHK-only artefakt stale existuje po retirement commitu", script, StringComparison.Ordinal);
+        Assert.Contains("AHK-only artefakt je odstranen", script, StringComparison.Ordinal);
         Assert.Contains("$FailOnBlockers", script, StringComparison.Ordinal);
-        Assert.Contains("AHK zatim nemazat", script, StringComparison.Ordinal);
+        Assert.Contains("AHK retirement gate ma blockery", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("AHK zatim nemazat", script, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -124,12 +130,38 @@ public sealed class DesktopReleaseWorkflowTests
         var scriptPath = Path.Combine(repositoryRoot, "dotnet", "build", "Get-DotnetMigrationParity.ps1");
         var script = File.ReadAllText(scriptPath);
 
-        foreach (var modulePath in Directory.GetFiles(Path.Combine(repositoryRoot, "src", "lib"), "*.ahk"))
+        var historicalAhkModules = new[]
         {
-            var moduleName = Path.GetFileName(modulePath);
+            "AppRuntime.ahk",
+            "AuditTools.ahk",
+            "BackupsAndAlerts.ahk",
+            "CoreHelpers.ahk",
+            "Costs.ahk",
+            "Dashboard.ahk",
+            "DataStore.ahk",
+            "FuelDialog.ahk",
+            "GlobalSearch.ahk",
+            "HelpAndUpdates.ahk",
+            "HistoryDialog.ahk",
+            "ImportExport.ahk",
+            "MaintenancePlans.ahk",
+            "MainWindow.ahk",
+            "Overviews.ahk",
+            "RecordsDialog.ahk",
+            "ReminderDialog.ahk",
+            "SettingsDialog.ahk",
+            "TimelineAndCalendar.ahk",
+            "VehicleBundles.ahk",
+            "VehicleDialogs.ahk"
+        };
+
+        foreach (var moduleName in historicalAhkModules)
+        {
             Assert.Contains($"Module = \"{moduleName}\"", script, StringComparison.Ordinal);
         }
 
+        Assert.Contains("Legacy slozka src\\lib je po finalnim AHK retirement commitu odstranena", script, StringComparison.Ordinal);
+        Assert.Contains("Korenovy AHK skript src\\Vehimap.ahk je po finalnim AHK retirement commitu odstranen", script, StringComparison.Ordinal);
         Assert.Contains("LegacyAuditService.cs", script, StringComparison.Ordinal);
         Assert.Contains("LegacyBackupService.cs", script, StringComparison.Ordinal);
         Assert.Contains("LegacyVehimapDataStore.cs", script, StringComparison.Ordinal);
@@ -332,6 +364,8 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("bez -SkipFetch", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedBeta.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedStable.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("AHK-only artefakty jsou po retirement commitu odstranene.", script, StringComparison.Ordinal);
+        Assert.Contains("AHK retirement je hotovy", script, StringComparison.Ordinal);
         Assert.DoesNotContain("New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier $RuntimeIdentifier -Channel stable -Push", script, StringComparison.Ordinal);
         Assert.DoesNotContain("gh release create", script, StringComparison.Ordinal);
     }

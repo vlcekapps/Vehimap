@@ -219,7 +219,7 @@ $coverage = @(
 )
 
 if (-not (Test-Path -LiteralPath $legacyLibRoot -PathType Container)) {
-    Add-Warning "Legacy slozka src\lib uz neexistuje. Pokud uz probehl finalni AHK retirement commit, je to ocekavane."
+    Add-Pass "Legacy slozka src\lib je po finalnim AHK retirement commitu odstranena; parity mapa zustava historickou kontrolou pokryti."
 }
 else {
     $actualModules = @(Get-ChildItem -LiteralPath $legacyLibRoot -Filter "*.ahk" -File | ForEach-Object { $_.Name } | Sort-Object)
@@ -260,10 +260,10 @@ foreach ($entry in $coverage) {
 
 $rootScriptPath = Join-Path $repositoryRoot "src\Vehimap.ahk"
 if (Test-Path -LiteralPath $rootScriptPath -PathType Leaf) {
-    Add-Pass "Korenovy AHK skript src\Vehimap.ahk stale existuje jako zmrzly fallback pred retirement commitem."
+    Add-Warning "Korenovy AHK skript src\Vehimap.ahk stale existuje. Po finalnim AHK retirement commitu ma byt odstranen."
 }
 else {
-    Add-Warning "Korenovy AHK skript src\Vehimap.ahk uz neexistuje. Pokud uz probehl retirement commit, je to ocekavane."
+    Add-Pass "Korenovy AHK skript src\Vehimap.ahk je po finalnim AHK retirement commitu odstranen."
 }
 
 Write-Host "Vehimap AHK -> .NET migration parity"

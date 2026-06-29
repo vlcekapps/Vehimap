@@ -1,8 +1,8 @@
 # Migrace AHK -> .NET
 
-Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla nova aplikace bez vazby na realitu.
+Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, knihovny a smoke testy byly po prvnim stabilnim Windows release odstraneny; dokument zustava jako historicka mapa parity a dalsich kroku multiplatformni vetve.
 
-## AHK moduly -> .NET vrstvy
+## Historicka mapa AHK modulu -> .NET vrstvy
 
 - `src/lib/DataStore.ahk`
   - `Vehimap.Storage.Legacy`
@@ -128,9 +128,9 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 - publish workflow pred uploadem Windows artefaktu spousti `Test-DotnetInstallerSmoke.ps1`, aby se chybny Inno setup, checksum nebo JSON metadata nedostaly ani do GitHub release artefaktu
 - release train status `dotnet/build/Get-DotnetReleaseTrainStatus.ps1`, ktery bez tagovani nebo publikovani shrne lokalni artefakty `nightly`, `beta`, `stable`, manifesty, remote tagy a dalsi doporuceny krok
 - Windows hardening wrapper `dotnet/build/Test-DotnetWindowsHardening.ps1`, ktery pred beta kanalem spoji release train status, cele `dotnet test`, nightly readiness, volitelnou kontrolu publikovane nightly a informativni AHK retirement status; plny lokalni install smoke blokuje bez explicitniho `-AllowLocalInstallSmoke`, aby neprepsal uninstall registr existujici instalace stejneho kanalu
-- AHK retirement readiness report `dotnet/build/Get-AhkRetirementReadiness.ps1`, ktery pred fyzickym odstranenim AHK vetve zkontroluje stabilni manifest, release workflow, preview alias pro stare buildy a zbyvajici AHK artefakty
-- migracni parity report `dotnet/build/Get-DotnetMigrationParity.ps1`, ktery mapuje kazdy soucasny `src/lib/*.ahk` modul na konkretni .NET evidence soubory; Windows hardening i retirement gate ho spousti s `-FailOnBlockers`, aby pred betou ani pred smazanim AHK nevznikla slepa skvrna v pokryti modulu
-- AHK retirement readiness report pouziva stejnou kanalovou strukturu lokalnich artefaktu jako tester, tedy `dotnet/artifacts/stable/<rid>/app/Vehimap.Desktop.exe` pro stable build misto historickeho `desktop-release`
+- AHK retirement readiness report `dotnet/build/Get-AhkRetirementReadiness.ps1`, ktery po stable release kontroluje stabilni manifest, release workflow, preview alias pro stare buildy a to, ze AHK-only artefakty zustavaji odstranene
+- migracni parity report `dotnet/build/Get-DotnetMigrationParity.ps1`, ktery mapuje historicke `src/lib/*.ahk` moduly na konkretni .NET evidence soubory; Windows hardening i retirement gate ho spousti s `-FailOnBlockers`, aby po odstraneni AHK zustala dohledatelna parita modulu
+- AHK retirement readiness report pouziva stejnou kanalovou strukturu lokalnich artefaktu jako tester, tedy `dotnet/artifacts/stable/<rid>/app/Vehimap.Desktop.exe` pro stable build misto historickeho `desktop-release`, a blokuje navrat `src/Vehimap.ahk`, `src/lib`, `src/tests` nebo generovanych AHK HTML vystupu
 - channel-aware release readiness pro `stable`, `beta` i `nightly`; wrappery `Test-DotnetNightlyReadiness.ps1`, `Test-DotnetBetaReadiness.ps1` a `Test-DotnetStableReadiness.ps1` umi pred rucnim vydanim lokalne overit Inno instalator, metadata, SHA-256, velikost, odpovidajici update manifest a Windows setup EXE pres installer smoke
 - lokalni release/readiness vystupy podle kanalu v `dotnet/artifacts/<stable|beta|nightly>/<rid>/app` pro spustitelnou aplikaci a `dotnet/artifacts/<stable|beta|nightly>/<rid>/release` pro instalator, metadata, checksum a manifest, aby tester nemusel vybirat mezi historickymi technickymi artefakty
 - installer smoke `dotnet/build/Test-DotnetInstallerSmoke.ps1`, ktery ve vychozim rezimu overi Windows setup EXE, `.sha256` a JSON metadata a v CI nebo s explicitnim lokalnim potvrzenim provede izolovanou tichou instalaci, portable launch smoke a odinstalaci
@@ -193,12 +193,9 @@ Tato mapa drzi prvni prepis v C# navazany na soucasny Vehimap, misto aby vznikla
 
 ## Co je dalsi na rade
 
-1. Drzet vyvoj ve Windows nightly kanalu, dokud testeri nedokonci aktualni seznam uprav: pred beta rozhodnutim spustit `Get-DotnetMigrationParity.ps1 -FailOnBlockers` nebo rovnou `Test-DotnetWindowsHardening.ps1 -RuntimeIdentifier win-x64`, lokalne testovat aplikaci z `dotnet/artifacts/nightly/win-x64/app/Vehimap.Desktop.exe` a instalator z `dotnet/artifacts/nightly/win-x64/release`, po dobehu GitHub Actions overit publikovanou nightly stejnym wrapperem s `-VerifyPublishedNightly` nebo primo pres `Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64` a sbirat pripominky pres app-level akci `Nahlasit zpetnou vazbu`.
-2. Beta ani stable nevydavat bez splnene promotion gate. Teprve az nightly projde zakladnim testovanim bez zasadnich UX/a11y blockeru, povysit ji pres `Test-DotnetReleasePromotion.ps1 -TargetChannel beta`, overit beta kanal pres `Test-DotnetBetaReadiness.ps1 -RuntimeIdentifier win-x64`, vytvorit beta tag pres `New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel beta -Push` a po dobehu beta workflow overit publikovanou betu pres `Test-DotnetPublishedBeta.ps1 -RuntimeIdentifier win-x64`.
-3. Po beta tagu zmrazit `main` pro nove funkce. Pokud beta najde P0/P1 blocker, opravit ho na `main`, zvysit `src/VERSION`, vydat novou nightly a novou betu s novym tagem. Pokud beta projde bez P0/P1, povysit ji pres `Test-DotnetReleasePromotion.ps1 -TargetChannel stable`, overit stable kanal pres `Test-DotnetStableReadiness.ps1 -RuntimeIdentifier win-x64`, vytvorit release tag pres `New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier win-x64 -Channel stable -Push` a nechat workflow vygenerovat `update/latest-dotnet-win-x64.ini` s `asset_kind=installer`, `channel=stable`, platnym `asset_sha256` a velikosti assetu.
-4. Po uspesnem stable release workflow spustit `Test-DotnetPublishedStable.ps1 -RuntimeIdentifier win-x64`; tento wrapper overi stabilni manifest, preview alias, release notes, asset, hash, velikost a AHK retirement gate. Pred prvnim stable releasem je jediny ocekavany blocker chybejici `update/latest-dotnet-win-x64.ini`.
-5. Spustit `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers` lokalne jako posledni samostatnou kontrolu; report ma hledat lokalni stable build v `dotnet/artifacts/stable/win-x64/app`, AHK fyzicky odstranit az ve chvili, kdy report nema blockery a zbyvaji jen ocekavane retirement warningy k samotnemu mazacimu commitu.
-6. Finalni AHK retirement commit smi odstranit `src/Vehimap.ahk`, `src/lib`, `src/tests` a navazujici AHK-only dokumentaci az po pruchodu predchoziho bodu; predtim AHK nechat jako zmrazeny legacy fallback bez novych funkci.
-7. Po stabilnim Windows desktop releasu a kratkem realnem pouzivani bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
-8. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
-9. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.
+1. Udrzet Windows stable kanal jako baseline: po kazde release/tooling zmene spustit `Test-DotnetPublishedStable.ps1 -RuntimeIdentifier win-x64 -SkipNetwork` a `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers`, aby stable manifest, preview alias i odstraneni AHK-only artefaktu zustaly v zelenem stavu.
+2. Dalsi bezny vyvoj delat znovu pres `nightly` na `main`: lokalne testovat `dotnet/artifacts/nightly/win-x64/app/Vehimap.Desktop.exe`, pred vetsim posunem spustit `Test-DotnetWindowsHardening.ps1 -RuntimeIdentifier win-x64` a po GitHub Actions overit publikovanou nightly pres `Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64`.
+3. `Vehimap.Storage.Legacy` ponechat jako podporovanou kompatibilitni vrstvu. AHK aplikace je odstranena, ale soucasna data (`TSV`, `INI`, `.vehimapbak`, `data/attachments`) zustavaji primarni format prvni generace C# aplikace.
+4. Po kratkem realnem pouzivani Windows stable bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
+5. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
+6. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.

@@ -198,10 +198,22 @@ else {
     Add-Warning "Lokalni stable desktop build zatim neexistuje. Spustte Test-DotnetReleaseReadiness.ps1 -RuntimeIdentifier $RuntimeIdentifier -Channel stable."
 }
 
-foreach ($relativePath in @("src\Vehimap.ahk", "src\lib", "src\tests")) {
+$retiredAhkArtifacts = @(
+    "src\GeneratedBuildInfo.ahk",
+    "src\Vehimap.ahk",
+    "src\changelog.html",
+    "src\lib",
+    "src\readme.html",
+    "src\tests"
+)
+
+foreach ($relativePath in $retiredAhkArtifacts) {
     $path = Join-Path $repositoryRoot $relativePath
     if (Test-Path -LiteralPath $path) {
-        Add-Warning "AHK artefakt stale existuje: $relativePath. To je v poradku pred finalnim retirement commitem, ale ne po nem."
+        Add-Blocker "AHK-only artefakt stale existuje po retirement commitu: $relativePath."
+    }
+    else {
+        Add-Pass "AHK-only artefakt je odstranen: $relativePath."
     }
 }
 
@@ -236,7 +248,7 @@ if ($blockers.Count -eq 0) {
     Write-Host "Vysledek: AHK retirement gate je pruchozi pro $RuntimeIdentifier."
 }
 else {
-    Write-Host "Vysledek: AHK zatim nemazat. Nejdrive odstrante blockery vyse."
+    Write-Host "Vysledek: AHK retirement gate ma blockery. Nejdrive odstrante blockery vyse."
 }
 
 if ($FailOnBlockers -and $blockers.Count -gt 0) {

@@ -5,8 +5,12 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ## [Unreleased]
 
+### Odstraněno
+- Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.
+
 ### Přidáno
-- C# release tooling má nový `Get-DotnetMigrationParity.ps1`, který mapuje současné AHK moduly na konkrétní .NET evidence soubory a je zapojený do Windows hardening i AHK retirement gate, aby před betou ani před smazáním AHK nevznikla slepá skvrna v pokrytí.
+- AHK retirement gate teď po stable release blokuje návrat AHK-only artefaktů a migration parity report drží historickou mapu odstraněných AHK modulů na konkrétní `.NET` vrstvy.
+- C# release tooling má `Get-DotnetMigrationParity.ps1`, který mapuje historické AHK moduly na konkrétní .NET evidence soubory a je zapojený do Windows hardening i AHK retirement gate, aby po smazání AHK zůstala dohledatelná parita funkcí.
 - C# Avalonia má nového offline `Chytrého poradce`: bez AI/API skládá doporučení napříč vozidly z auditu, termínů, údržby, tankovací analýzy, dokladových příloh a základních nákladových signálů, jde filtrovat podle vozidla/priority/kategorie/textu a z každé položky otevře související evidenci.
 - C# release dokumentace nově výslovně popisuje model `main + tagy`: nightly, beta a stable zůstávají oddělené kanály bez trvalých `beta`/`stable` větví, po beta tagu platí krátký freeze pro nové funkce a případná opravná beta vyžaduje bump `src/VERSION`.
 - C# Avalonia katalog ručních šablon v `Plánu údržby` je rozšířený a členěný na oblasti `Motor`, `Podvozek`, `Výfukové potrubí` a `Elektronika`; přibyly šablony pro svíčky/žhaviče, snímače, sání, turbo, brzdy, ramena, silentbloky, stabilizátor, čepy, tlumiče, pružiny, výfukové díly, žárovky, baterii, pojistky a senzory.

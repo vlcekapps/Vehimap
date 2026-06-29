@@ -4,7 +4,7 @@ Komplexní řešení pro evidenci vašich vozidel.
 
 ## Stav projektu
 
-C# Avalonia větev je aktuální primární směr Vehimapu. Původní AHK aplikace zůstává v repozitáři jen jako dočasný legacy fallback do chvíle, kdy projde stabilní Windows release, vznikne `update/latest-dotnet-win-x64.ini` a projde `dotnet/build/Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers`. Do AHK větve už nepřidáváme nové funkce; nové workflow, přístupnost, instalátory a update kanály se dokončují v `.NET` větvi.
+C# Avalonia aplikace je aktuální a jediná aktivní větev Vehimapu. Původní AHK aplikace byla po prvním stabilním Windows release odstraněna z repozitáře; zachovaná zůstává kompatibilita datových formátů přes `.NET` vrstvu `Vehimap.Storage.Legacy`, aby šlo dál číst současné `TSV`, `INI`, `.vehimapbak` a spravované přílohy.
 
 ## Co umí
 
@@ -16,7 +16,7 @@ C# Avalonia větev je aktuální primární směr Vehimapu. Původní AHK aplika
 - volitelné skrytí archivovaných a odstavených vozidel v hlavním seznamu, aniž by zmizela z dat a přehledů
 - v C# Avalonia větvi se poslední zvolená kategorie a stavový filtr hlavního seznamu ukládají do `settings.ini`; textové hledání zůstává jen dočasné, aby po startu neschovalo očekávaná vozidla
 - detail vozidla se souhrnem údajů, stavem platností, posledními událostmi z historie a souhrnem tankování i dokladů
-- v C# Avalonia větvi detail vozidla ukazuje i poslední historické záznamy, poslední známý tachometr a samostatné stavové souhrny historie, tankování, připomínek, dokladů a údržby, takže odpovídá rychlé kontrolní ploše z AHK verze
+- v C# Avalonia větvi detail vozidla ukazuje i poslední historické záznamy, poslední známý tachometr a samostatné stavové souhrny historie, tankování, připomínek, dokladů a údržby, takže funguje jako rychlá kontrolní plocha vozidla
 - v C# Avalonia větvi má detail vozidla přístupný blok `Související evidence`, ze kterého lze rovnou přejít do historie, tankování, připomínek, údržby, dokladů, časové osy nebo nákladů vybraného vozidla
 - historii událostí pro každé vozidlo, včetně přidání, úpravy a odstranění servisních nebo jiných záznamů
 - samostatnou evidenci `Kilometry a tankování` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů
@@ -68,7 +68,7 @@ C# Avalonia větev je aktuální primární směr Vehimapu. Původní AHK aplika
 - samostatné nastavení počtu dnů pro upozornění na `TK`, `ZK` i servisní plány a kilometrového limitu pro blížící se údržbu
 - volby `Spustit po startu počítače`, `Automaticky skrýt na lištu` a `Zobrazovat dashboard při startu`
 - v C# Avalonia větvi jsou generátory autostartu připravené i pro budoucí macOS/Linux stabilizaci; Linux `.desktop` a macOS LaunchAgent výstupy mají regresní testy na escapování cest a argumentů
-- horní menu; v AHK aplikaci `Soubor`, `Vozidlo`, `Přehled`, `Nástroje` a `Nápověda`, v C# Avalonia větvi `Soubor`, `Vozidlo`, `Přehledy`, `Rychlé akce` a `Aplikace`
+- horní menu C# Avalonia aplikace: `Soubor`, `Vozidlo`, `Přehledy`, `Rychlé akce` a `Aplikace`
 - v C# Avalonia větvi lze z hlavního menu i přístupného tray okna otevřít aktuální datovou složku i složku automatických záloh; složky se otevírají oddělenou multiplatformní cestou (`explorer.exe` na Windows, `open` na macOS, `xdg-open` na Linuxu), což pomáhá při kontrole portable dat, záloh a spravovaných příloh
 - přístupné tray okno pro rychlé zobrazení hlavního okna, otevření aktuálního upozornění z pozadí, dashboardu, blížících se termínů, propadlých termínů, nejbližší TK/ZK/připomínky/servisu/dokladu, filtrovaných kontrol, tiskového přehledu, ručního exportu/importu zálohy, okamžité automatické zálohy, exportu kalendáře, znovunačtení dat, otevření datové složky nebo složky automatických záloh, nastavení, dialogu `O programu`, kontroly aktualizací a ukončení aplikace; stejné okno lze otevřít i z menu `Aplikace`, aby nebylo nutné spoléhat jen na nativní tray menu; rychlé akce bez aktuálního cíle nebo akce blokované rozpracovanou editací jsou vypnuté v tray okně i v hlavním menu `Rychlé akce`
 - v C# Avalonia větvi mají stavové, souhrnné a detailní texty hlavního shellu i workspace obrazovek vlastní přístupný název a stabilní `AutomationId`, aby je šlo spolehlivě číst čtečkou obrazovky i ověřovat UI testy
@@ -98,7 +98,7 @@ V hlavním okně:
 - v C# Avalonia větvi lze stejné navazující evidence otevřít přímo z detailu vozidla v bloku `Související evidence`; pokud je detail otevřený jako samostatné okno, po přechodu do evidence se okno zavře
 - položky `Dashboard` a `Globální hledání` v menu `Přehled` nebo `Přehledy` otevřou rychlý souhrn termínů, servisních úkonů, nákladů, problémových stavů a stavu evidencí nebo vyhledání napříč všemi evidencemi
 - položka `Náklady napříč vozidly` v menu `Přehled` nebo `Přehledy` otevře porovnání nákladů za zvolené období mezi všemi vozidly a umožní z přehledu rovnou přejít na detail nákladů, detail vozidla nebo editaci
-- v AHK menu `Nápověda` a v C# Avalonia menu `Aplikace` najdete `O programu`; v C# větvi jde o běžný dialog s názvem aplikace, autorem `by Vlcek apps` a verzí včetně kanálu, zatímco technická diagnostika je skrytá pod volbou `Zobrazit diagnostická data` a lze ji zkopírovat pro podporu
+- v menu `Aplikace` najdete `O programu`; jde o běžný dialog s názvem aplikace, autorem `by Vlcek apps` a verzí včetně kanálu, zatímco technická diagnostika je skrytá pod volbou `Zobrazit diagnostická data` a lze ji zkopírovat pro podporu
 - v dashboardu souhrn vozidel vypisuje i nejpalčivější problémové stavy podle priority a nákladový souhrn ukazuje nejdražší vozidla i aktivní vozidla bez číselného nákladu v aktuálním roce
 - v dashboardu, `Přehledu termínů` i `Propadlých termínech` se vedle `TK`, `ZK` a vlastních připomínek zobrazují i blížící se nebo propadlé servisní úkony
 - v dashboardu se v seznamu zobrazují nejen nejbližší termíny, ale i datové nedostatky jako chybějící SPZ, chybějící příští TK nebo problémové dokladové přílohy
@@ -169,7 +169,7 @@ V hlavním okně:
 - `Výběr doporučených šablon` a `Balíček pro vozidlo`: `Ctrl+S` přidá vybrané položky, `Ctrl+A` vybere vše, `Ctrl+Shift+A` výběr vymaže, `Escape` dialog zavře a mezerník v seznamu přepne, zda se právě vybraná položka přidá
 - v těchto čtyřech seznamech `Enter` upraví vybraný záznam a `Delete` jej odstraní
 - v `Plánu údržby` klávesa `Enter` upraví vybraný úkon a `Delete` jej odstraní
-- v AHK aplikaci kliknutí na hlavičku sloupce v evidencích přepíná řazení podle vybraného sloupce; v C# Avalonia větvi se stejná volba provádí přes přístupné ovladače `Řadit` a `Sestupně`, aby byla dobře čitelná i pro screen readery
+- řazení v evidencích se provádí přes přístupné ovladače `Řadit` a `Sestupně`, aby bylo dobře čitelné i pro screen readery
 - v `Pojištění a dokladech` navíc `Ctrl+O` otevře soubor u vybraného záznamu, `Ctrl+Shift+O` jeho složku a `Ctrl+Shift+C` zkopíruje uloženou cestu
 - v C# Avalonia větvi je stejná dokladová akce dostupná i tlačítkem `Kopírovat cestu`; kopíruje vyřešenou cestu, tedy použitelnou absolutní cestu ke spravované i externí příloze, a případný problém se schránkou nebo otevřením souboru oznámí stavovou hláškou místo tichého selhání
 - ve `Vlastních připomínkách` navíc `Ctrl+Shift+N` posune vybranou opakovanou připomínku na další termín
@@ -210,7 +210,7 @@ V evidenci kilometrů a tankování:
 - `Datum záznamu` a `Stav tachometru` jsou povinné
 - datum záznamu se zadává jako `DD.MM.RRRR`, například `26.03.2026`
 - v C# Avalonia větvi se při uložení datum, tachometr, litry a cena normalizují; pokud je vyplněná cena tankování, musí být vyplněné i litry
-- v C# Avalonia větvi je `Typ paliva` rozbalovací seznam se stejnými hodnotami jako v AHK aplikaci; starší uložené volné texty zůstávají v seznamech čitelné
+- v C# Avalonia větvi je `Typ paliva` rozbalovací seznam se stejnými hodnotami jako v původních datech; starší uložené volné texty zůstávají v seznamech čitelné
 - `Natankováno litrů`, `Cena celkem v Kč`, `Typ paliva`, `Plná nádrž` a `Poznámka` jsou volitelné
 
 V plánu údržby:
@@ -229,7 +229,7 @@ V plánu údržby:
 V evidenci pojištění a dokladů:
 
 - `Druh záznamu` a `Název záznamu` jsou povinné
-- v C# Avalonia větvi je `Druh záznamu` rozbalovací seznam se stejnými hodnotami jako v AHK aplikaci
+- v C# Avalonia větvi je `Druh záznamu` rozbalovací seznam se stejnými hodnotami jako v původních datech
 - `Platné od` a `Platné do` se zadávají jako `MM/RRRR`, například `04/2026`
 - v C# Avalonia větvi se platnost při uložení normalizuje a hlídá se, aby `Platné od` nebylo později než `Platné do`; cena dokladu musí být číselná částka
 - `Poskytovatel / vydavatel`, `Cena / částka`, `Režim přílohy`, `Příloha` a `Poznámka` jsou volitelné
@@ -278,12 +278,11 @@ Pro upozornění aplikace používá pole `Příští TK`, `Zelená karta do` a 
 
 V horním menu najdete tyto části:
 
-- `Soubor`: tiskový přehled, export a import zálohy, export budoucích termínů do kalendáře, znovunačtení dat, v C# Avalonia větvi také okamžitá automatická záloha, otevření datové složky a otevření složky automatických záloh a v obou větvích ukončení aplikace
+- `Soubor`: tiskový přehled, export a import zálohy, export budoucích termínů do kalendáře, znovunačtení dat, okamžitá automatická záloha, otevření datové složky, otevření složky automatických záloh a ukončení aplikace
 - `Vozidlo`: práce s vybraným vozidlem včetně detailu, historie, kilometrů a tankování, plánu údržby, `Časové osy vozidla`, `Balíčku pro vozidlo` a pojištění a dokladů
-- `Přehled` v AHK nebo `Přehledy` v C# Avalonia větvi: `Dashboard`, `Náklady napříč vozidly`, `Globální hledání`, `Časová osa vozidla`, blížící se a propadlé termíny, `Audit dat` a export termínů do kalendáře `.ics`
-- `Rychlé akce` v C# Avalonia větvi: aktuální upozornění z pozadí, nejbližší TK, ZK, připomínka, servis nebo doklad a filtrovaná kontrola těchto termínů v přehledech; kontrola ZK zahrne i vozidla bez vyplněné zelené karty a položky bez aktuálního cíle jsou v menu vypnuté
-- `Nástroje` v AHK aplikaci: `Nastavení`, `Skrýt do lišty`
-- `Nápověda` v AHK aplikaci nebo `Aplikace` v C# Avalonia větvi: `Nastavení`, `Akce na liště`, minimalizace na lištu, `O programu`, kontrola aktualizací a ukončení aplikace
+- `Přehledy`: `Dashboard`, `Chytrý poradce`, `Náklady napříč vozidly`, `Globální hledání`, `Časová osa vozidla`, blížící se a propadlé termíny, `Audit dat` a export termínů do kalendáře `.ics`
+- `Rychlé akce`: aktuální upozornění z pozadí, nejbližší TK, ZK, připomínka, servis nebo doklad a filtrovaná kontrola těchto termínů v přehledech; kontrola ZK zahrne i vozidla bez vyplněné zelené karty a položky bez aktuálního cíle jsou v menu vypnuté
+- `Aplikace`: `Nastavení`, `Akce na liště`, minimalizace na lištu, `O programu`, `Poděkovat autorovi`, `Nahlásit zpětnou vazbu`, kontrola aktualizací a ukončení aplikace
 
 ## Ukládání dat
 
