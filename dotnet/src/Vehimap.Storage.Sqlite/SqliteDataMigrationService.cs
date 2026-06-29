@@ -5,6 +5,8 @@ namespace Vehimap.Storage.Sqlite;
 
 public sealed class SqliteDataMigrationService : IDataMigrationService
 {
+    private const string RemovedLegacyFilesDirectoryName = "removed-from-data-root";
+
     private static readonly string[] LegacyFileNames =
     [
         "vehicles.tsv",
@@ -28,14 +30,34 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
 
     public async Task<DataMigrationResult> MigrateIfNeededAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
     {
+        Directory.CreateDirectory(dataRoot.DataPath);
+
         var databasePath = SqliteStoragePaths.GetDatabasePath(dataRoot);
         if (File.Exists(databasePath))
         {
+            var remainingLegacyFiles = GetLiveLegacyFiles(dataRoot);
+            if (remainingLegacyFiles.Count > 0)
+            {
+                var cleanupBackupPath = CreateMigrationBackupDirectory(dataRoot);
+                var sqliteData = await _targetDataStore.LoadAsync(dataRoot, cancellationToken).ConfigureAwait(false);
+                ArchiveLiveLegacyFiles(dataRoot, cleanupBackupPath, remainingLegacyFiles, cancellationToken);
+
+                sqliteData.Settings.SetValue("migration", "legacy_cleanup_utc", DateTime.UtcNow.ToString("O"));
+                sqliteData.Settings.SetValue("migration", "pre_migration_backup_path", cleanupBackupPath);
+                sqliteData.Settings.SetValue("migration", "legacy_cleanup_file_count", remainingLegacyFiles.Count.ToString());
+                await _targetDataStore.SaveAsync(dataRoot, sqliteData, cancellationToken).ConfigureAwait(false);
+
+                return new DataMigrationResult(
+                    false,
+                    cleanupBackupPath,
+                    $"Datová sada 2.0 je připravena. Zbylé původní TSV/INI soubory byly přesunuty mimo živou datovou složku do {cleanupBackupPath}.");
+            }
+
             return DataMigrationResult.NotNeeded;
         }
 
-        Directory.CreateDirectory(dataRoot.DataPath);
-        if (!HasLegacyData(dataRoot))
+        var legacyFiles = GetLiveLegacyFiles(dataRoot);
+        if (legacyFiles.Count == 0)
         {
             return DataMigrationResult.NotNeeded;
         }
@@ -46,29 +68,23 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
         legacyData.Settings.SetValue("migration", "migrated_utc", DateTime.UtcNow.ToString("O"));
         legacyData.Settings.SetValue("migration", "pre_migration_backup_path", backupPath);
         await _targetDataStore.SaveAsync(dataRoot, legacyData, cancellationToken).ConfigureAwait(false);
+        await _targetDataStore.LoadAsync(dataRoot, cancellationToken).ConfigureAwait(false);
+        ArchiveLiveLegacyFiles(dataRoot, backupPath, legacyFiles, cancellationToken);
 
         return new DataMigrationResult(
             true,
             backupPath,
-            $"Data byla automaticky migrována do datové sady 2.0. Původní soubory byly odloženy do {backupPath}.");
+            $"Data byla automaticky migrována do datové sady 2.0. Původní TSV/INI soubory byly po ověření SQLite přesunuty mimo živou datovou složku do {backupPath}.");
     }
 
-    private static bool HasLegacyData(VehimapDataRoot dataRoot) =>
-        LegacyFileNames.Any(fileName => File.Exists(Path.Combine(dataRoot.DataPath, fileName)));
+    private static IReadOnlyList<string> GetLiveLegacyFiles(VehimapDataRoot dataRoot) =>
+        LegacyFileNames
+            .Where(fileName => File.Exists(Path.Combine(dataRoot.DataPath, fileName)))
+            .ToArray();
 
     private static string BackupLegacyData(VehimapDataRoot dataRoot, CancellationToken cancellationToken)
     {
-        var backupRoot = Path.Combine(dataRoot.DataPath, SqliteStoragePaths.MigrationBackupsDirectoryName);
-        Directory.CreateDirectory(backupRoot);
-
-        var baseName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-        var backupPath = Path.Combine(backupRoot, baseName);
-        for (var suffix = 2; Directory.Exists(backupPath); suffix++)
-        {
-            backupPath = Path.Combine(backupRoot, $"{baseName}-{suffix}");
-        }
-
-        Directory.CreateDirectory(backupPath);
+        var backupPath = CreateMigrationBackupDirectory(dataRoot);
         foreach (var fileName in LegacyFileNames)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -86,6 +102,48 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
         }
 
         return backupPath;
+    }
+
+    private static string CreateMigrationBackupDirectory(VehimapDataRoot dataRoot)
+    {
+        var backupRoot = Path.Combine(dataRoot.DataPath, SqliteStoragePaths.MigrationBackupsDirectoryName);
+        Directory.CreateDirectory(backupRoot);
+
+        var baseName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        var backupPath = Path.Combine(backupRoot, baseName);
+        for (var suffix = 2; Directory.Exists(backupPath); suffix++)
+        {
+            backupPath = Path.Combine(backupRoot, $"{baseName}-{suffix}");
+        }
+
+        Directory.CreateDirectory(backupPath);
+        return backupPath;
+    }
+
+    private static void ArchiveLiveLegacyFiles(
+        VehimapDataRoot dataRoot,
+        string backupPath,
+        IReadOnlyList<string> legacyFiles,
+        CancellationToken cancellationToken)
+    {
+        if (legacyFiles.Count == 0)
+        {
+            return;
+        }
+
+        var archivePath = Path.Combine(backupPath, RemovedLegacyFilesDirectoryName);
+        Directory.CreateDirectory(archivePath);
+        foreach (var fileName in legacyFiles)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var sourcePath = Path.Combine(dataRoot.DataPath, fileName);
+            if (!File.Exists(sourcePath))
+            {
+                continue;
+            }
+
+            File.Move(sourcePath, Path.Combine(archivePath, fileName));
+        }
     }
 
     private static void CopyDirectory(string sourceDirectory, string targetDirectory, CancellationToken cancellationToken)

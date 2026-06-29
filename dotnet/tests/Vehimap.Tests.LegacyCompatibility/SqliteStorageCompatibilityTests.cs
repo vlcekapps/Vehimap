@@ -9,6 +9,18 @@ namespace Vehimap.Tests.LegacyCompatibility;
 
 public sealed class SqliteStorageCompatibilityTests
 {
+    private static readonly string[] LegacyFileNames =
+    [
+        "vehicles.tsv",
+        "history.tsv",
+        "fuel.tsv",
+        "records.tsv",
+        "vehicle_meta.tsv",
+        "reminders.tsv",
+        "maintenance.tsv",
+        "settings.ini"
+    ];
+
     [Fact]
     public async Task Sqlite_roundtrip_preserves_all_domain_entities_and_czech_text()
     {
@@ -59,13 +71,59 @@ public sealed class SqliteStorageCompatibilityTests
             Assert.NotNull(result.PreMigrationBackupPath);
             Assert.True(Directory.Exists(result.PreMigrationBackupPath));
             Assert.True(File.Exists(Path.Combine(result.PreMigrationBackupPath!, "vehicles.tsv")));
+            Assert.True(File.Exists(Path.Combine(result.PreMigrationBackupPath!, "removed-from-data-root", "vehicles.tsv")));
             Assert.True(File.Exists(Path.Combine(result.PreMigrationBackupPath!, "attachments", "veh_1", "faktura.pdf")));
             Assert.True(File.Exists(Path.Combine(dataRoot.DataPath, "vehimap.db")));
+            Assert.True(File.Exists(Path.Combine(dataRoot.DataPath, "attachments", "veh_1", "faktura.pdf")));
+            foreach (var fileName in LegacyFileNames)
+            {
+                Assert.False(File.Exists(Path.Combine(dataRoot.DataPath, fileName)));
+            }
+
             Assert.Equal("Božena", loaded.Vehicles[0].Name);
             Assert.Equal("Technická kontrola", loaded.Reminders[0].Title);
 
             var secondRun = await migrationService.MigrateIfNeededAsync(dataRoot);
             Assert.False(secondRun.Migrated);
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
+    public async Task Migration_cleanup_moves_remaining_legacy_files_without_reimporting_them()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-cleanup");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var legacyStore = new LegacyVehimapDataStore();
+        var sqliteStore = new SqliteVehimapDataStore();
+        var migrationService = new SqliteDataMigrationService(legacyStore, sqliteStore);
+
+        try
+        {
+            await sqliteStore.SaveAsync(dataRoot, BuildSampleDataSet("SQLite Božena"));
+            await legacyStore.SaveAsync(dataRoot, BuildSampleDataSet("Legacy Božena"));
+            Directory.CreateDirectory(Path.Combine(dataRoot.DataPath, "attachments", "veh_1"));
+            await File.WriteAllBytesAsync(Path.Combine(dataRoot.DataPath, "attachments", "veh_1", "faktura.pdf"), [1, 2, 3]);
+
+            var result = await migrationService.MigrateIfNeededAsync(dataRoot);
+            var loaded = await sqliteStore.LoadAsync(dataRoot);
+
+            Assert.False(result.Migrated);
+            Assert.NotNull(result.PreMigrationBackupPath);
+            Assert.True(File.Exists(Path.Combine(dataRoot.DataPath, "vehimap.db")));
+            Assert.True(File.Exists(Path.Combine(dataRoot.DataPath, "attachments", "veh_1", "faktura.pdf")));
+            Assert.True(File.Exists(Path.Combine(result.PreMigrationBackupPath!, "removed-from-data-root", "vehicles.tsv")));
+            foreach (var fileName in LegacyFileNames)
+            {
+                Assert.False(File.Exists(Path.Combine(dataRoot.DataPath, fileName)));
+            }
+
+            Assert.Equal("SQLite Božena", loaded.Vehicles[0].Name);
+            Assert.Equal(result.PreMigrationBackupPath, loaded.Settings.GetValue("migration", "pre_migration_backup_path"));
+            Assert.NotEmpty(loaded.Settings.GetValue("migration", "legacy_cleanup_utc"));
         }
         finally
         {
@@ -187,7 +245,7 @@ public sealed class SqliteStorageCompatibilityTests
         }
     }
 
-    private static VehimapDataSet BuildSampleDataSet()
+    private static VehimapDataSet BuildSampleDataSet(string vehicleName = "Božena")
     {
         var settings = new VehimapSettings();
         settings.SetValue("reminders", "technical_reminder_days", "45");
@@ -197,7 +255,7 @@ public sealed class SqliteStorageCompatibilityTests
             Settings = settings,
             Vehicles =
             [
-                new Vehicle("veh_1", "Božena", "Osobní vozidla", "Žluťoučký kůň\nmultiline", "Škoda 100", "", "1972", "35 kW", "05/2024", "05/2026", "05/2025", "05/2026")
+                new Vehicle("veh_1", vehicleName, "Osobní vozidla", "Žluťoučký kůň\nmultiline", "Škoda 100", "", "1972", "35 kW", "05/2024", "05/2026", "05/2025", "05/2026")
             ],
             VehicleMetaEntries =
             [

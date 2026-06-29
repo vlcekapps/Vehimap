@@ -1177,9 +1177,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
         {
             _session.LoadAsync(AppContext.BaseDirectory).GetAwaiter().GetResult();
             RefreshShellFromSessionState(preferredVehicleId, preferredTabIndex, applyLaunchTabPreference);
-            if (_session.LastMigrationResult?.Migrated == true)
+            if (_session.LastMigrationResult is { } migrationResult
+                && (migrationResult.Migrated || !string.IsNullOrWhiteSpace(migrationResult.PreMigrationBackupPath)))
             {
-                ShellStatus = _session.LastMigrationResult.Message;
+                ShellStatus = migrationResult.Message;
             }
         }
         catch (Exception ex)

@@ -6,9 +6,10 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Změněno
-- Nightly větev začíná datovou řadu Vehimap 2.0: runtime úložiště se přepíná z průběžného zápisu legacy `TSV/INI` na primární SQLite databázi `data/vehimap.db`; legacy soubory z 1.0.2 zůstávají jako jednorázový migrační vstup a staré `.vehimapbak` zálohy se dál importují přes kompatibilní parser.
+- Nightly větev začíná datovou řadu Vehimap 2.0: runtime úložiště se přepíná z průběžného zápisu legacy `TSV/INI` na primární SQLite databázi `data/vehimap.db`; legacy soubory z 1.0.2 zůstávají jen jako jednorázový migrační vstup, po ověřené migraci se přesunou do `data/migration-backups/.../removed-from-data-root/` a staré `.vehimapbak` zálohy se dál importují přes kompatibilní parser.
 - Export/import `.vehimapbak` v C# větvi má nový SQLite formát se souborem `vehimap.db` a referenced spravovanými přílohami; před obnovou se dál vytváří ochranná kopie aktuální databáze, legacy souborů i `data/attachments`.
 - Desktop shell po načtení hlásí `Datová sada 2.0 (SQLite)` a při prvním startu nad legacy daty oznámí automatickou migraci včetně cesty k předmigrační záloze.
+- Pokud uživatel spustil první SQLite nightly, která po migraci nechala v živé datové složce původní TSV/INI soubory, další start je bezpečně odloží do nové migrační zálohy bez opětovného importu a bez přesunu aktivních `data/attachments`.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.

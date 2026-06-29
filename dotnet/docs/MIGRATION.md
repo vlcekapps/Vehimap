@@ -5,8 +5,8 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 ## Storage 2.0
 
 - Vehimap 2.0 pouziva jako primarni runtime storage SQLite databazi `data/vehimap.db`.
-- Legacy `TSV/INI` soubory z 1.0.2 se pouzivaji jen jako jednorazovy migracni vstup: pri prvnim startu bez `vehimap.db` aplikace vytvori `data/migration-backups/<cas>`, zkopiruje puvodni soubory i `data/attachments`, nacte data pres `Vehimap.Storage.Legacy` a ulozi je do SQLite.
-- Po uspesne migraci se legacy soubory automaticky nemazou, ale aplikace uz runtime zapisuje jen SQLite.
+- Legacy `TSV/INI` soubory z 1.0.2 se pouzivaji jen jako jednorazovy migracni vstup: pri prvnim startu bez `vehimap.db` aplikace vytvori `data/migration-backups/<cas>`, zkopiruje puvodni soubory i `data/attachments`, nacte data pres `Vehimap.Storage.Legacy`, ulozi je do SQLite a po overenem nacteni databaze presune zive TSV/INI soubory do `data/migration-backups/<cas>/removed-from-data-root/`.
+- Pokud uz `vehimap.db` existuje a v koreni `data/` zustaly legacy TSV/INI soubory po starsi nightly, start aplikace je odlozi do nove migracni zalohy bez opakovaneho importu. Aktivni `data/attachments` zustava na miste, protoze spravovane prilohy jsou soucasti datove sady 2.0.
 - Nove `.vehimapbak` zalohy jsou SQLite backupy s `vehimap.db` a referenced spravovanymi prilohami; starsi textove `.vehimapbak` zustavaji podporovane jako importni/migracni vstup.
 - Jedno vozidlo lze prenaset uzivatelskym balickem `*.vehimapvehicle`, ktery obsahuje vozidlo, jeho evidence a relevantni spravovane prilohy bez zmeny hlavni databaze mimo explicitni import.
 - `Vehimap.Storage.Legacy` zustava read-only kompatibilitni vrstva pro migraci a import starsich zaloh, ne dlouhodoby runtime format 2.x.
@@ -32,7 +32,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - desktop shell v Avalonia
 - portable/system data root locator
 - primarni cteni a zapis datove sady 2.0 do SQLite `data/vehimap.db`
-- jednorazovou automatickou migraci legacy TSV/INI souboru do SQLite s predmigracni kopii puvodnich dat
+- jednorazovou automatickou migraci legacy TSV/INI souboru do SQLite s predmigracni kopii puvodnich dat a presunem zivych TSV/INI mimo runtime koren `data/`
 - diagnostiku poskozenych legacy TSV/INI souboru s nazvem souboru, plnou cestou a puvodnim parser detailem pro shell i testy
 - import/export `.vehimapbak` vcetne spravovanych priloh; nova 2.0 zaloha obsahuje SQLite databazi a starsi textove zalohy se importuji pres legacy parser s citelnou diagnostikou
 - prvni C# audit engine nad sdilenym datasetem bez zavislosti na konkretni runtime storage vrstve

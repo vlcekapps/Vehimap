@@ -8,7 +8,7 @@ Aktualni zamer:
 - drzet C# Avalonia jako jedinou aktivni aplikaci po finalnim AHK retirement commitu
 - pouzivat od rady 2.0 primarne SQLite databazi `data/vehimap.db`
 - zachovat legacy kompatibilitu dat jako jednorazovou migraci/import bez navratu AHK-only runtime, knihoven nebo testu
-- cist legacy `TSV`, `INI`, starsi `.vehimapbak` a `data/attachments` pres `Vehimap.Storage.Legacy` jen pro migraci z 1.0.2 a import starsich zaloh
+- cist legacy `TSV`, `INI`, starsi `.vehimapbak` a `data/attachments` pres `Vehimap.Storage.Legacy` jen pro migraci z 1.0.2 a import starsich zaloh; po uspesne migraci zive TSV/INI soubory z `data/` odlozit mimo runtime koren
 - release priorita je nejdrive stabilni Windows desktop pres Inno Setup instalator, potom Android, nasledne macOS a nakonec Linux
 
 ## Struktura
@@ -30,8 +30,9 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - spustit unit a kompatibilitni testy pres `dotnet test`
 - vygenerovat desktopovy release build pres `dotnet publish`
 - primarne cist a zapisovat datovou sadu 2.0 v SQLite `data/vehimap.db`
-- pri prvnim startu nad daty 1.0.2 automaticky vytvorit predmigracni kopii v `data/migration-backups/<cas>`, nacist legacy `TSV/INI` a zapsat data do SQLite v jedne transakcni storage ceste
+- pri prvnim startu nad daty 1.0.2 automaticky vytvorit predmigracni kopii v `data/migration-backups/<cas>`, nacist legacy `TSV/INI`, zapsat data do SQLite v jedne transakcni storage ceste a po overenem nacteni `vehimap.db` presunout zive TSV/INI do `data/migration-backups/<cas>/removed-from-data-root/`
 - ulozit cestu k predmigracni kopii do nastaveni datove sady a otevrit ji z menu `Soubor`, pokud tato slozka existuje
+- pri startu s uz existujicim `vehimap.db` uklidit pripadne zbytky TSV/INI po prvni SQLite nightly bez opakovaneho importu; `data/attachments` zustava aktivni slozka spravovanych priloh
 - importovat starsi textove `.vehimapbak` zalohy pres legacy parser a obnovit je uz do SQLite runtime storage
 - exportovat nove `.vehimapbak` zalohy jako SQLite backup s `vehimap.db` a referenced spravovanymi prilohami
 - exportovat a importovat jedno vozidlo jako `*.vehimapvehicle` balicek vcetne historie, tankovani, dokladu, pripominek, udrzby a relevantnich spravovanych priloh
