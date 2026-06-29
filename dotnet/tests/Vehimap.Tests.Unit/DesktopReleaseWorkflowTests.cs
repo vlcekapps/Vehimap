@@ -311,7 +311,7 @@ public sealed class DesktopReleaseWorkflowTests
     }
 
     [Fact]
-    public void Windows_hardening_script_orchestrates_nightly_gate_before_beta()
+    public void Windows_hardening_script_orchestrates_nightly_gate_before_storage_gate()
     {
         var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetWindowsHardening.ps1");
         var script = File.ReadAllText(scriptPath);
@@ -329,10 +329,12 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Plny lokalni install smoke je preskocen kvuli ochrane existujici instalace stejneho kanalu.", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedNightly.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
-        Assert.Contains("Test-DotnetReleasePromotion.ps1", script, StringComparison.Ordinal);
-        Assert.Contains("TargetChannel beta", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetStorageNightlyGate.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Dalsi krok v dlouhe 2.0 nightly etape", script, StringComparison.Ordinal);
         Assert.Contains("artifacts\\nightly\\$RuntimeIdentifier\\app\\Vehimap.Desktop.exe", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("Test-DotnetReleasePromotion.ps1", script, StringComparison.Ordinal);
         Assert.DoesNotContain("New-DotnetDesktopReleaseTag.ps1", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("TargetChannel beta", script, StringComparison.Ordinal);
         Assert.DoesNotContain("TargetChannel stable", script, StringComparison.Ordinal);
     }
 
@@ -345,6 +347,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("[switch]$SkipFetch", script, StringComparison.Ordinal);
         Assert.Contains("[switch]$FailOnBlockers", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetWindowsHardening.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetStorageNightlyGate.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetNightlyReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetBetaReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetStableReadiness.ps1", script, StringComparison.Ordinal);
@@ -361,6 +364,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("dotnet-beta-v$Version", script, StringComparison.Ordinal);
         Assert.Contains("dotnet-v$Version", script, StringComparison.Ordinal);
         Assert.Contains("Dalsi doporuceny krok:", script, StringComparison.Ordinal);
+        Assert.Contains("Rada 2.x zustava v dlouhe nightly etape.", script, StringComparison.Ordinal);
         Assert.Contains("bez -SkipFetch", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedBeta.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedStable.ps1", script, StringComparison.Ordinal);

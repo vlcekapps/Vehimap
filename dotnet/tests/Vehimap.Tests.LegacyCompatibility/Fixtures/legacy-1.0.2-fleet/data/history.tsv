@@ -1,0 +1,6 @@
+# Vehimap history v1
+hist_fixture_1	veh_fixture_1	01.04.2026	Servis	120000	6500	Pravidelný servis oleje a filtrů
+hist_fixture_2	veh_fixture_1	15.05.2026	Oprava	121200	2300	Výměna žárovky a kontrola elektroinstalace
+hist_fixture_3	veh_fixture_2	20.03.2026	Technická kontrola	654321	1800	TK bez závad
+hist_fixture_4	veh_fixture_2	22.04.2026	Servis	655000	12500	Brzdy a kontrola podvozku
+hist_fixture_5	veh_fixture_3	10.06.2026	Údržba	45678	900	Doplnění kapalin

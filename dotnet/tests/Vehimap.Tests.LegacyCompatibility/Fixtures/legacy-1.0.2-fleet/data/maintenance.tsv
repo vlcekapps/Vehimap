@@ -1,0 +1,5 @@
+# Vehimap maintenance v1
+maint_fixture_1	veh_fixture_1	Pravidelný servis	15000	12	01.04.2026	120000	1	Olej a všechny běžné filtry
+maint_fixture_2	veh_fixture_1	Brzdová kapalina		24	01.05.2025	110000	1	Dvouletý interval
+maint_fixture_3	veh_fixture_2	Kontrola brzd	10000	6	22.04.2026	655000	1	Autobusový provoz
+maint_fixture_4	veh_fixture_3	Kontrola kapalin	5000	6	10.06.2026	45678	1	Pracovní stroj

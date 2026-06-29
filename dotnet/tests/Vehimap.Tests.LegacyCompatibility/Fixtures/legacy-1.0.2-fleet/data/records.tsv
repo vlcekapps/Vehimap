@@ -1,0 +1,6 @@
+# Vehimap records v2
+rec_fixture_1	veh_fixture_1	Povinné ručení	Zelená karta Žofka	Pojišťovna Alfa	05/2025	05/2026	5200	managed	attachments/veh_fixture_1/pojisteni.pdf	Aktivní spravovaná kopie
+rec_fixture_2	veh_fixture_1	Faktura	Servisní faktura olej	Servis Praha	01.04.2026	01.04.2028	6500	managed	attachments/veh_fixture_1/servis-faktura.pdf	Daňový doklad
+rec_fixture_3	veh_fixture_1	Doklad	Externí návod	Výrobce				external	C:\ExterniDoklady\navod-zofka.pdf	Externí cesta se nemigruje
+rec_fixture_4	veh_fixture_2	Technická kontrola	Protokol TK	Stanice TK	20.03.2026	20.03.2028	1800	managed	attachments/veh_fixture_2/tk.pdf	Protokol v přílohách
+rec_fixture_5	veh_fixture_3	Doklad	Chybějící spravovaná příloha				0	managed	attachments/veh_fixture_3/chybejici.pdf	Záměrně chybí kvůli tolerantní záloze

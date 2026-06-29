@@ -1,0 +1,5 @@
+# Vehimap reminders v2
+rem_fixture_1	veh_fixture_1	Výměna pneumatik	10/2026	30	Ročně	Zimní sada
+rem_fixture_2	veh_fixture_1	Kontrola baterie	15.11.2026	14	Ročně	Před zimou
+rem_fixture_3	veh_fixture_2	Revize hasicích přístrojů	09/2026	20	Ročně	Autobusová výbava
+rem_fixture_4	veh_fixture_3	Kontrola hydrauliky	12/2026	30	Bez opakování	Pracovní údržba

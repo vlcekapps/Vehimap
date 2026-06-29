@@ -1,0 +1,6 @@
+# Vehimap fuel v2
+fuel_fixture_1	veh_fixture_1	02.04.2026	120050	42.5	1690	1	Benzín	Natural 95	Orlen Praha	Plná nádrž po servisu
+fuel_fixture_2	veh_fixture_1	18.04.2026	120620	38.2	1585	1	Benzín	Natural 98	Shell Brno	Dálniční cesta
+fuel_fixture_3	veh_fixture_1	01.05.2026	121050	31.0	1299	0	Benzín	Natural 95	MOL Jihlava	Neplná nádrž
+fuel_fixture_4	veh_fixture_2	21.03.2026	654400	85.0	3655	1	Nafta	Diesel	EuroOil Tábor	Po TK
+fuel_fixture_5	veh_fixture_2	28.04.2026	655250	92.4	3980	1	Nafta	Diesel Plus	Shell Plzeň	Dlouhá linka

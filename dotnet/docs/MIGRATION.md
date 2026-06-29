@@ -204,9 +204,10 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 ## Co je dalsi na rade
 
 1. Udrzet Windows stable kanal jako baseline: po kazde release/tooling zmene spustit `Test-DotnetPublishedStable.ps1 -RuntimeIdentifier win-x64 -SkipNetwork` a `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers`, aby stable manifest, preview alias i odstraneni AHK-only artefaktu zustaly v zelenem stavu.
-2. Dalsi bezny vyvoj delat znovu pres `nightly` na `main`: lokalne testovat `dotnet/artifacts/nightly/win-x64/app/Vehimap.Desktop.exe`, pred vetsim posunem spustit `Test-DotnetWindowsHardening.ps1 -RuntimeIdentifier win-x64` a po GitHub Actions overit publikovanou nightly pres `Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64`.
-3. Dalsi nightly cyklus dotahovat nad SQLite 2.0: pridavat migracni fixture z realnych anonymizovanych dat 1.0.2, hlidat `vehimap.db`, nove `.vehimapbak` a `*.vehimapvehicle` balicky v release gate a legacy vrstvu pouzivat jen pro import/migraci.
-4. `Vehimap.Storage.Legacy` ponechat jako podporovanou kompatibilitni vrstvu po celou radu 2.x, ale nevracet ji jako runtime zapisovy format.
-5. Po stabilizaci Windows 2.0 storage zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, SQLite storage a read-only shell nad testovacimi daty.
-6. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
-7. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.
+2. Radu 2.0 zatim drzet jako dlouhou nightly etapu, ne jako beta kandidata. Dalsi bezny vyvoj delat pres `nightly` na `main` a lokalne testovat `dotnet/artifacts/nightly/win-x64/app/Vehimap.Desktop.exe`.
+3. Pred vetsimi storage nebo migracnimi zmenami spustit `Test-DotnetStorageNightlyGate.ps1 -RuntimeIdentifier win-x64`; gate pouziva anonymizovany legacy fixture balicek 1.0.2 a overuje migraci do SQLite, odklizeni zivych TSV/INI, nove SQLite `.vehimapbak`, import stare `.vehimapbak` a `*.vehimapvehicle` balicky.
+4. Pred vetsim nightly posunem spustit `Test-DotnetWindowsHardening.ps1 -RuntimeIdentifier win-x64` a po GitHub Actions overit publikovanou nightly pres `Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64`.
+5. `Vehimap.Storage.Legacy` ponechat jako podporovanou kompatibilitni vrstvu po celou radu 2.x, ale nevracet ji jako runtime zapisovy format.
+6. Po stabilizaci Windows 2.0 storage zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, SQLite storage a read-only shell nad testovacimi daty.
+7. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
+8. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.

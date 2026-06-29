@@ -15,6 +15,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.
 
 ### Přidáno
+- C# 2.0 nightly větev má nový storage gate `Test-DotnetStorageNightlyGate.ps1` a anonymizovaný legacy fixture balíček 1.0.2 s více vozidly, evidencemi, přílohami a nastavením; compatibility testy nad ním ověřují migraci do SQLite, odklizení živých TSV/INI, SQLite `.vehimapbak`, import staré zálohy i export/import `*.vehimapvehicle`.
 - Přibyla nová vrstva `Vehimap.Storage.Sqlite` s obecným `IVehimapDataStore`, automatickou migrací z legacy dat, SQLite round-trip testy a přímou referencí na novější `SQLitePCLRaw.bundle_e_sqlite3`, aby nový storage nezačínal se známým zranitelným transitive balíčkem.
 - Menu `Soubor` má položku `Otevřít složku předmigrační zálohy`, která je aktivní jen po zaznamenané automatické migraci a otevírá bezpečnou kopii původních dat.
 - Přibyl uživatelský export/import balíčku jednoho vozidla `*.vehimapvehicle` dostupný z menu `Vozidlo`; balíček obsahuje vozidlo, historii, tankování, doklady, připomínky, údržbu a relevantní spravované přílohy a při importu bezpečně přemapuje kolidující ID.

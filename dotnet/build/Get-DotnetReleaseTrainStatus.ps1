@@ -107,6 +107,7 @@ else {
 
 foreach ($scriptName in @(
         "Test-DotnetWindowsHardening.ps1",
+        "Test-DotnetStorageNightlyGate.ps1",
         "Test-DotnetNightlyReadiness.ps1",
         "Test-DotnetBetaReadiness.ps1",
         "Test-DotnetStableReadiness.ps1",
@@ -256,6 +257,9 @@ elseif (-not $SkipFetch -and -not $channelStates["nightly"].RemoteTagExists) {
 }
 elseif (-not $channelStates["nightly"].RepositoryManifestExists) {
     "Pockejte na nightly release workflow, commit update\$(Get-ManifestFileName -Channel nightly) a potom spustte .\build\Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier $RuntimeIdentifier."
+}
+elseif ($version -like "2.*") {
+    "Rada 2.x zustava v dlouhe nightly etape. Spustte .\build\Test-DotnetStorageNightlyGate.ps1 -RuntimeIdentifier $RuntimeIdentifier a pokracujte v nightly overovani pred dalsimi vetsimi zmenami."
 }
 elseif (-not $channelStates["beta"].PackageExists -or -not $channelStates["beta"].LocalManifestExists) {
     "Spustte .\build\Test-DotnetBetaReadiness.ps1 -RuntimeIdentifier $RuntimeIdentifier."

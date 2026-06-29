@@ -17,4 +17,10 @@
     <ProjectReference Include="..\..\src\Vehimap.Storage.Legacy\Vehimap.Storage.Legacy.csproj" />
     <ProjectReference Include="..\..\src\Vehimap.Storage.Sqlite\Vehimap.Storage.Sqlite.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Fixtures\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

@@ -132,6 +132,119 @@ public sealed class SqliteStorageCompatibilityTests
     }
 
     [Fact]
+    public async Task Fixture_legacy_fleet_migrates_to_sqlite_and_archives_runtime_legacy_files()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-fixture-migration");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var legacyStore = new LegacyVehimapDataStore();
+        var sqliteStore = new SqliteVehimapDataStore();
+        var migrationService = new SqliteDataMigrationService(legacyStore, sqliteStore);
+
+        try
+        {
+            CopyFixtureDataTo(dataRoot.DataPath);
+
+            var result = await migrationService.MigrateIfNeededAsync(dataRoot);
+            var loaded = await sqliteStore.LoadAsync(dataRoot);
+
+            Assert.True(result.Migrated);
+            Assert.NotNull(result.PreMigrationBackupPath);
+            AssertFixtureFleetLoaded(loaded);
+            AssertLegacyFilesArchived(dataRoot, result.PreMigrationBackupPath!);
+            Assert.True(File.Exists(Path.Combine(dataRoot.DataPath, "attachments", "veh_fixture_1", "pojisteni.pdf")));
+            Assert.True(File.Exists(Path.Combine(dataRoot.DataPath, "attachments", "veh_fixture_2", "tk.pdf")));
+            Assert.True(File.Exists(Path.Combine(result.PreMigrationBackupPath!, "attachments", "veh_fixture_1", "servis-faktura.pdf")));
+
+            var secondRun = await migrationService.MigrateIfNeededAsync(dataRoot);
+            var reloaded = await sqliteStore.LoadAsync(dataRoot);
+
+            Assert.False(secondRun.Migrated);
+            AssertFixtureFleetLoaded(reloaded);
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
+    public async Task Fixture_storage_gate_roundtrips_backups_and_vehicle_package()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-fixture-gate");
+        var sourceRoot = CreateDataRoot(Path.Combine(tempRoot, "source"));
+        var sqliteRestoreRoot = CreateDataRoot(Path.Combine(tempRoot, "sqlite-restore"));
+        var legacyBackupSourceRoot = CreateDataRoot(Path.Combine(tempRoot, "legacy-backup-source"));
+        var legacyRestoreRoot = CreateDataRoot(Path.Combine(tempRoot, "legacy-restore"));
+        var packageTargetRoot = CreateDataRoot(Path.Combine(tempRoot, "package-target"));
+        var legacyStore = new LegacyVehimapDataStore();
+        var sqliteStore = new SqliteVehimapDataStore();
+        var migrationService = new SqliteDataMigrationService(legacyStore, sqliteStore);
+        var sqliteBackupService = new SqliteBackupService();
+        var legacyBackupService = new LegacyBackupService();
+        var packageService = new VehiclePackageService();
+
+        try
+        {
+            CopyFixtureDataTo(sourceRoot.DataPath);
+            await migrationService.MigrateIfNeededAsync(sourceRoot);
+            var migrated = await sqliteStore.LoadAsync(sourceRoot);
+
+            var sqliteBackupPath = Path.Combine(tempRoot, "fixture-v7.vehimapbak");
+            var sqliteExport = await sqliteBackupService.ExportAsync(sqliteBackupPath, sourceRoot, migrated);
+            var sqliteImported = await sqliteBackupService.ImportAsync(sqliteBackupPath);
+            var sqliteRestore = await sqliteBackupService.RestoreAsync(sqliteRestoreRoot, sqliteImported);
+            var sqliteRestored = await sqliteStore.LoadAsync(sqliteRestoreRoot);
+
+            Assert.Equal(3, sqliteExport.IncludedManagedAttachmentCount);
+            Assert.Equal(1, sqliteExport.MissingManagedAttachmentCount);
+            Assert.Equal(3, sqliteRestore.RestoredAttachmentCount);
+            AssertFixtureFleetLoaded(sqliteRestored);
+            Assert.True(File.Exists(Path.Combine(sqliteRestoreRoot.DataPath, "attachments", "veh_fixture_1", "pojisteni.pdf")));
+
+            CopyFixtureDataTo(legacyBackupSourceRoot.DataPath);
+            var legacyData = await legacyStore.LoadAsync(legacyBackupSourceRoot);
+            var legacyBackupPath = Path.Combine(tempRoot, "fixture-legacy.vehimapbak");
+            var legacyExport = await legacyBackupService.ExportAsync(legacyBackupPath, legacyBackupSourceRoot, legacyData);
+            var legacyImported = await sqliteBackupService.ImportAsync(legacyBackupPath);
+            var legacyRestore = await sqliteBackupService.RestoreAsync(legacyRestoreRoot, legacyImported);
+            var legacyRestored = await sqliteStore.LoadAsync(legacyRestoreRoot);
+
+            Assert.Equal(3, legacyExport.IncludedManagedAttachmentCount);
+            Assert.Equal(1, legacyExport.MissingManagedAttachmentCount);
+            Assert.Equal(3, legacyRestore.RestoredAttachmentCount);
+            Assert.True(File.Exists(Path.Combine(legacyRestoreRoot.DataPath, "vehimap.db")));
+            AssertFixtureFleetLoaded(legacyRestored);
+
+            var packagePath = Path.Combine(tempRoot, "zofka.vehimapvehicle");
+            var packageTargetData = new VehimapDataSet
+            {
+                Vehicles =
+                [
+                    new Vehicle("veh_fixture_1", "Kolizní vozidlo", "Osobní vozidla", "", "Test", "", "", "", "", "", "", "")
+                ]
+            };
+
+            var packageExport = await packageService.ExportVehicleAsync(packagePath, sourceRoot, migrated, "veh_fixture_1");
+            var packageImport = await packageService.ImportVehicleAsync(packagePath, packageTargetRoot, packageTargetData);
+            var importedVehicle = packageImport.DataSet.Vehicles.Single(item => item.Name == "Žofka");
+            var importedManagedRecords = packageImport.DataSet.Records
+                .Where(item => item.VehicleId == importedVehicle.Id && item.AttachmentMode == VehicleRecordAttachmentMode.Managed)
+                .ToList();
+
+            Assert.Equal(2, packageExport.IncludedAttachmentCount);
+            Assert.Equal(0, packageExport.MissingAttachmentCount);
+            Assert.NotEqual("veh_fixture_1", importedVehicle.Id);
+            Assert.Equal(2, packageImport.RestoredAttachmentCount);
+            Assert.Equal(2, importedManagedRecords.Count);
+            Assert.All(importedManagedRecords, item => Assert.StartsWith($"attachments/{importedVehicle.Id}/", item.FilePath, StringComparison.Ordinal));
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
     public async Task Sqlite_backup_roundtrip_restores_database_and_managed_attachments()
     {
         var tempRoot = CreateTempRoot("vehimap-sqlite-backup");
@@ -287,6 +400,71 @@ public sealed class SqliteStorageCompatibilityTests
 
     private static VehimapDataRoot CreateDataRoot(string rootPath) =>
         new(rootPath, Path.Combine(rootPath, "data"), true);
+
+    private static void AssertFixtureFleetLoaded(VehimapDataSet dataSet)
+    {
+        Assert.Equal(3, dataSet.Vehicles.Count);
+        Assert.Equal(5, dataSet.HistoryEntries.Count);
+        Assert.Equal(5, dataSet.FuelEntries.Count);
+        Assert.Equal(5, dataSet.Records.Count);
+        Assert.Equal(3, dataSet.VehicleMetaEntries.Count);
+        Assert.Equal(4, dataSet.Reminders.Count);
+        Assert.Equal(4, dataSet.MaintenancePlans.Count);
+
+        var vehicle = dataSet.Vehicles.Single(item => item.Id == "veh_fixture_1");
+        Assert.Equal("Žofka", vehicle.Name);
+        Assert.Equal("Rodinné auto\nanonymizovaná poznámka", vehicle.VehicleNote);
+        Assert.Equal("45", dataSet.Settings.GetValue("reminders", "technical_reminder_days"));
+        Assert.Equal("1", dataSet.Settings.GetValue("dashboard", "show_dashboard_on_launch"));
+        Assert.Contains(dataSet.FuelEntries, item => item.Station == "Shell Brno" && item.FuelDetail == "Natural 98");
+        Assert.Equal(4, dataSet.Records.Count(item => item.AttachmentMode == VehicleRecordAttachmentMode.Managed));
+        Assert.Equal(1, dataSet.Records.Count(item => item.AttachmentMode == VehicleRecordAttachmentMode.External));
+        Assert.Contains(dataSet.MaintenancePlans, item => item.Title == "Pravidelný servis" && item.VehicleId == "veh_fixture_1");
+    }
+
+    private static void AssertLegacyFilesArchived(VehimapDataRoot dataRoot, string backupPath)
+    {
+        foreach (var fileName in LegacyFileNames)
+        {
+            Assert.False(File.Exists(Path.Combine(dataRoot.DataPath, fileName)));
+            Assert.True(File.Exists(Path.Combine(backupPath, fileName)));
+            Assert.True(File.Exists(Path.Combine(backupPath, "removed-from-data-root", fileName)));
+        }
+    }
+
+    private static void CopyFixtureDataTo(string targetDataPath)
+    {
+        var fixtureDataPath = Path.Combine(AppContext.BaseDirectory, "Fixtures", "legacy-1.0.2-fleet", "data");
+        if (!Directory.Exists(fixtureDataPath))
+        {
+            throw new DirectoryNotFoundException($"Fixture data nebyla nalezena: {fixtureDataPath}");
+        }
+
+        CopyDirectory(fixtureDataPath, targetDataPath);
+    }
+
+    private static void CopyDirectory(string sourceDirectory, string targetDirectory)
+    {
+        Directory.CreateDirectory(targetDirectory);
+        foreach (var directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
+        {
+            var relativePath = Path.GetRelativePath(sourceDirectory, directory);
+            Directory.CreateDirectory(Path.Combine(targetDirectory, relativePath));
+        }
+
+        foreach (var file in Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories))
+        {
+            var relativePath = Path.GetRelativePath(sourceDirectory, file);
+            var targetPath = Path.Combine(targetDirectory, relativePath);
+            var parent = Path.GetDirectoryName(targetPath);
+            if (!string.IsNullOrWhiteSpace(parent))
+            {
+                Directory.CreateDirectory(parent);
+            }
+
+            File.Copy(file, targetPath, overwrite: true);
+        }
+    }
 
     private static string CreateTempRoot(string prefix)
     {
