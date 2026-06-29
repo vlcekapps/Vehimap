@@ -63,6 +63,7 @@ public partial class MainWindow : Window
     private int _initialFocusAttempts;
     private bool _syncingVehicleSelection;
     private bool _vehicleEditorDialogOpen;
+    private bool _workspaceEditorDialogOpen;
     private Control? _lastNonMenuFocusTarget;
 
     public Func<Task>? ExitApplicationRequested { get; set; }
@@ -97,6 +98,7 @@ public partial class MainWindow : Window
         {
             _viewModel.FocusRequested -= OnFocusRequested;
             _viewModel.VehicleEditorDialogRequested -= OnVehicleEditorDialogRequested;
+            _viewModel.WorkspaceEditorDialogRequested -= OnWorkspaceEditorDialogRequested;
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.ConfirmPendingEditsHandler = null;
             _viewModel.ConfirmVehicleDeleteHandler = null;
@@ -108,6 +110,7 @@ public partial class MainWindow : Window
             var viewModel = _viewModel;
             viewModel.FocusRequested += OnFocusRequested;
             viewModel.VehicleEditorDialogRequested += OnVehicleEditorDialogRequested;
+            viewModel.WorkspaceEditorDialogRequested += OnWorkspaceEditorDialogRequested;
             viewModel.PropertyChanged += OnViewModelPropertyChanged;
             viewModel.ConfirmPendingEditsHandler = actionDescription =>
                 viewModel.AppShellController.ConfirmDiscardPendingChangesAsync(this, viewModel, actionDescription);
@@ -128,6 +131,11 @@ public partial class MainWindow : Window
     private async void OnVehicleEditorDialogRequested(object? sender, VehicleEditorDialogRequest request)
     {
         await ShowVehicleEditorDialogAsync(request.ReturnFocusTarget).ConfigureAwait(true);
+    }
+
+    private async void OnWorkspaceEditorDialogRequested(object? sender, WorkspaceEditorDialogRequest request)
+    {
+        await ShowWorkspaceEditorDialogAsync(request).ConfigureAwait(true);
     }
 
     private void OnFocusRequested(DesktopFocusTarget target)
@@ -1176,7 +1184,7 @@ public partial class MainWindow : Window
         }
 
         command.Execute(null);
-        return await OpenActiveEditorWindowAsync().ConfigureAwait(true);
+        return true;
     }
 
     private async Task<bool> OpenActiveEditorWindowAsync()
@@ -1194,31 +1202,41 @@ public partial class MainWindow : Window
 
         if (_viewModel.HistoryWorkspace.IsEditingHistory)
         {
-            await OpenHistoryWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            await ShowWorkspaceEditorDialogAsync(new WorkspaceEditorDialogRequest(
+                WorkspaceEditorKind.History,
+                DesktopFocusTarget.HistoryList)).ConfigureAwait(true);
             return true;
         }
 
         if (_viewModel.FuelWorkspace.IsEditingFuel)
         {
-            await OpenFuelWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            await ShowWorkspaceEditorDialogAsync(new WorkspaceEditorDialogRequest(
+                WorkspaceEditorKind.Fuel,
+                DesktopFocusTarget.FuelList)).ConfigureAwait(true);
             return true;
         }
 
         if (_viewModel.ReminderWorkspace.IsEditingReminder)
         {
-            await OpenRemindersWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            await ShowWorkspaceEditorDialogAsync(new WorkspaceEditorDialogRequest(
+                WorkspaceEditorKind.Reminder,
+                DesktopFocusTarget.ReminderList)).ConfigureAwait(true);
             return true;
         }
 
         if (_viewModel.MaintenanceWorkspace.IsEditingMaintenance)
         {
-            await OpenMaintenanceWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            await ShowWorkspaceEditorDialogAsync(new WorkspaceEditorDialogRequest(
+                WorkspaceEditorKind.Maintenance,
+                DesktopFocusTarget.MaintenanceList)).ConfigureAwait(true);
             return true;
         }
 
         if (_viewModel.RecordWorkspace.IsEditingRecord)
         {
-            await OpenRecordsWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            await ShowWorkspaceEditorDialogAsync(new WorkspaceEditorDialogRequest(
+                WorkspaceEditorKind.Record,
+                DesktopFocusTarget.RecordList)).ConfigureAwait(true);
             return true;
         }
 
@@ -1267,6 +1285,36 @@ public partial class MainWindow : Window
         {
             _vehicleEditorDialogOpen = false;
             RequestFocus(viewModel.HasPendingEdits ? viewModel.GetPendingEditFocusTarget() : returnFocusTarget);
+        }
+    }
+
+    private async Task ShowWorkspaceEditorDialogAsync(WorkspaceEditorDialogRequest request)
+    {
+        var viewModel = _viewModel;
+        if (viewModel is null || _workspaceEditorDialogOpen)
+        {
+            return;
+        }
+
+        _workspaceEditorDialogOpen = true;
+        try
+        {
+            Window dialog = request.Kind switch
+            {
+                WorkspaceEditorKind.History => new HistoryEditorWindow { DataContext = viewModel.HistoryWorkspace },
+                WorkspaceEditorKind.Fuel => new FuelEditorWindow { DataContext = viewModel.FuelWorkspace },
+                WorkspaceEditorKind.Reminder => new ReminderEditorWindow { DataContext = viewModel.ReminderWorkspace },
+                WorkspaceEditorKind.Maintenance => new MaintenanceEditorWindow { DataContext = viewModel.MaintenanceWorkspace },
+                WorkspaceEditorKind.Record => new RecordEditorWindow { DataContext = viewModel.RecordWorkspace },
+                _ => throw new InvalidOperationException("Neznámý typ editoru.")
+            };
+
+            await dialog.ShowDialog<bool?>(this).ConfigureAwait(true);
+        }
+        finally
+        {
+            _workspaceEditorDialogOpen = false;
+            RequestFocus(viewModel.HasPendingEdits ? viewModel.GetPendingEditFocusTarget() : request.ReturnFocusTarget);
         }
     }
 

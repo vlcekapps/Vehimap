@@ -867,7 +867,9 @@ public sealed class MainWindowViewModelNavigationTests
     {
         var viewModel = CreateViewModel();
         DesktopFocusTarget? requestedFocus = null;
+        WorkspaceEditorDialogRequest? dialogRequest = null;
         viewModel.FocusRequested += target => requestedFocus = target;
+        viewModel.WorkspaceEditorDialogRequested += (_, request) => dialogRequest = request;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Audit;
         viewModel.AuditWorkspace.SelectedDashboardAuditItem = viewModel.AuditWorkspace.AuditItems.First(item => item.EntityId == "rec_2");
@@ -878,7 +880,10 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal(DesktopTabIndexes.Record, viewModel.SelectedVehicleTabIndex);
         Assert.True(viewModel.RecordWorkspace.IsEditingRecord);
         Assert.Equal("Asistence", viewModel.RecordWorkspace.RecordEditorTitle);
-        Assert.Equal(DesktopFocusTarget.RecordEditorTitle, requestedFocus);
+        Assert.Equal(DesktopFocusTarget.RecordList, requestedFocus);
+        Assert.NotNull(dialogRequest);
+        Assert.Equal(WorkspaceEditorKind.Record, dialogRequest.Kind);
+        Assert.Equal(DesktopFocusTarget.AuditList, dialogRequest.ReturnFocusTarget);
     }
 
     [Fact]
@@ -886,7 +891,9 @@ public sealed class MainWindowViewModelNavigationTests
     {
         var viewModel = CreateViewModel();
         DesktopFocusTarget? requestedFocus = null;
+        WorkspaceEditorDialogRequest? dialogRequest = null;
         viewModel.FocusRequested += target => requestedFocus = target;
+        viewModel.WorkspaceEditorDialogRequested += (_, request) => dialogRequest = request;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.History;
 
@@ -895,7 +902,10 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.True(handled);
         Assert.True(viewModel.HistoryWorkspace.IsEditingHistory);
         Assert.Equal(DesktopTabIndexes.History, viewModel.SelectedVehicleTabIndex);
-        Assert.Equal(DesktopFocusTarget.HistoryEditorDate, requestedFocus);
+        Assert.Null(requestedFocus);
+        Assert.NotNull(dialogRequest);
+        Assert.Equal(WorkspaceEditorKind.History, dialogRequest.Kind);
+        Assert.Equal(DesktopFocusTarget.HistoryList, dialogRequest.ReturnFocusTarget);
     }
 
     [Fact]
@@ -903,7 +913,9 @@ public sealed class MainWindowViewModelNavigationTests
     {
         var viewModel = CreateViewModel();
         DesktopFocusTarget? requestedFocus = null;
+        WorkspaceEditorDialogRequest? dialogRequest = null;
         viewModel.FocusRequested += target => requestedFocus = target;
+        viewModel.WorkspaceEditorDialogRequested += (_, request) => dialogRequest = request;
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Record;
         viewModel.RecordWorkspace.SelectedRecord = viewModel.RecordWorkspace.SelectedVehicleRecords.Single(item => item.Id == "rec_2");
@@ -914,7 +926,10 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.True(viewModel.RecordWorkspace.IsEditingRecord);
         Assert.Equal("Asistence", viewModel.RecordWorkspace.RecordEditorTitle);
         Assert.Equal(DesktopTabIndexes.Record, viewModel.SelectedVehicleTabIndex);
-        Assert.Equal(DesktopFocusTarget.RecordEditorTitle, requestedFocus);
+        Assert.Null(requestedFocus);
+        Assert.NotNull(dialogRequest);
+        Assert.Equal(WorkspaceEditorKind.Record, dialogRequest.Kind);
+        Assert.Equal(DesktopFocusTarget.RecordList, dialogRequest.ReturnFocusTarget);
     }
 
     [Fact]

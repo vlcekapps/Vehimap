@@ -50,7 +50,7 @@ public sealed partial class MainWindowViewModel
         ReminderEditorStatus = "Vyplňte připomínku a uložte ji.";
         IsEditingReminder = true;
         SelectedVehicleTabIndex = ReminderTabIndex;
-        RequestFocus(DesktopFocusTarget.ReminderEditorTitle);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.Reminder, DesktopFocusTarget.ReminderList);
     }
 
     [RelayCommand(CanExecute = nameof(CanEditSelectedReminder))]
@@ -71,7 +71,7 @@ public sealed partial class MainWindowViewModel
         ReminderEditorStatus = "Upravte připomínku a uložte změny.";
         IsEditingReminder = true;
         SelectedVehicleTabIndex = ReminderTabIndex;
-        RequestFocus(DesktopFocusTarget.ReminderEditorTitle);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.Reminder, DesktopFocusTarget.ReminderList);
     }
 
     [RelayCommand(CanExecute = nameof(CanSaveReminder))]
@@ -234,7 +234,7 @@ public sealed partial class MainWindowViewModel
         RecordEditorStatus = "Vyplňte doklad a podle potřeby vyberte přílohu.";
         IsEditingRecord = true;
         SelectedVehicleTabIndex = RecordTabIndex;
-        RequestFocus(DesktopFocusTarget.RecordEditorTitle);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.Record, DesktopFocusTarget.RecordList);
     }
 
     [RelayCommand(CanExecute = nameof(CanEditSelectedRecord))]
@@ -458,7 +458,7 @@ public sealed partial class MainWindowViewModel
         IsEditingRecord = true;
         RefreshRecordEditorAttachmentPreview();
         SelectedVehicleTabIndex = RecordTabIndex;
-        RequestFocus(DesktopFocusTarget.RecordEditorTitle);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.Record, DesktopFocusTarget.RecordList);
     }
 
     private VehicleReminder? GetSelectedReminderModel()

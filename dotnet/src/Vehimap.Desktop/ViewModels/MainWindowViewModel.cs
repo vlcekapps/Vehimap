@@ -997,6 +997,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return false;
         }
 
+        SetNextWorkspaceEditorReturnFocusTarget(DesktopFocusTarget.AuditList);
         StartEditForCurrentAuditTarget(item?.EntityKind ?? string.Empty);
         return true;
     }

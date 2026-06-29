@@ -906,6 +906,52 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         }
     }
 
+    [Theory]
+    [InlineData("DetailTabButton", "CreateVehicleButton", "VehicleEditorWindow", "VehicleEditorNameBox", "VehicleEditorCategoryBox", "CancelVehicleButton")]
+    [InlineData("HistoryTabButton", "CreateHistoryButton", "HistoryEditorWindow", "HistoryEditorDateBox", "HistoryEditorTypeBox", "CancelHistoryButton")]
+    [InlineData("FuelTabButton", "CreateFuelButton", "FuelEditorWindow", "FuelEditorDateBox", "FuelEditorFuelTypeBox", "CancelFuelButton")]
+    [InlineData("ReminderTabButton", "CreateReminderButton", "ReminderEditorWindow", "ReminderEditorTitleBox", "ReminderEditorDueDateBox", "CancelReminderButton")]
+    [InlineData("MaintenanceTabButton", "CreateMaintenanceButton", "MaintenanceEditorWindow", "MaintenanceTemplateComboBox", "MaintenanceEditorTitleBox", "CancelMaintenanceButton")]
+    [InlineData("RecordTabButton", "CreateRecordButton", "RecordEditorWindow", "RecordEditorTypeBox", "RecordEditorTitleBox", "CancelRecordButton")]
+    public void Editor_dialog_shift_tab_wraps_only_from_first_field_when_appium_is_available(
+        string tabButtonAutomationId,
+        string createButtonAutomationId,
+        string editorWindowAutomationId,
+        string firstFieldAutomationId,
+        string secondFieldAutomationId,
+        string cancelButtonAutomationId)
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId(tabButtonAutomationId);
+            session.ClickByAccessibilityId(createButtonAutomationId);
+
+            Assert.NotNull(session.WaitForElementByAccessibilityId(editorWindowAutomationId));
+            Assert.Equal(firstFieldAutomationId, session.WaitForFocusedAutomationId(12, firstFieldAutomationId));
+
+            session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+            Assert.Equal(cancelButtonAutomationId, session.WaitForFocusedAutomationId(12, cancelButtonAutomationId));
+
+            session.ClickByAccessibilityId(firstFieldAutomationId);
+            Assert.Equal(firstFieldAutomationId, session.WaitForFocusedAutomationId(12, firstFieldAutomationId));
+
+            session.SendKeysToActiveElement(Keys.Tab);
+            Assert.Equal(secondFieldAutomationId, session.WaitForFocusedAutomationId(12, secondFieldAutomationId));
+
+            session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+            Assert.Equal(firstFieldAutomationId, session.WaitForFocusedAutomationId(12, firstFieldAutomationId));
+
+            session.SendKeysToActiveElement(Keys.Escape);
+            session.WaitForElementToDisappearByAccessibilityId(editorWindowAutomationId);
+        }
+    }
+
     [Fact]
     public void Vehicle_detail_editor_keeps_standard_textbox_cursor_navigation_when_appium_is_available()
     {

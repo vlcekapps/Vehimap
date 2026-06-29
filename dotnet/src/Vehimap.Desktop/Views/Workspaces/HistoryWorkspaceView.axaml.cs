@@ -10,30 +10,22 @@ public partial class HistoryWorkspaceView : WorkspaceViewBase<HistoryWorkspaceVi
     public HistoryWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
-        RegisterShiftTabBackNavigation("HistoryListBox", "HistoryEditorDateBox");
+        RegisterShiftTabBackNavigation("HistoryListBox");
         ApplyHostMode();
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
-        ViewModel?.IsEditingHistory == true ? DesktopFocusTarget.HistoryEditorDate : DesktopFocusTarget.HistoryList;
+        DesktopFocusTarget.HistoryList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
         target is DesktopFocusTarget.HistorySearch
-            or DesktopFocusTarget.HistoryList
-            or DesktopFocusTarget.HistoryEditorDate
-            or DesktopFocusTarget.HistoryEditorType
-            or DesktopFocusTarget.HistoryEditorOdometer
-            or DesktopFocusTarget.HistoryEditorCost;
+            or DesktopFocusTarget.HistoryList;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
             DesktopFocusTarget.HistorySearch => this.FindControl<TextBox>("HistorySearchBox"),
             DesktopFocusTarget.HistoryList => this.FindControl<ListBox>("HistoryListBox"),
-            DesktopFocusTarget.HistoryEditorDate => this.FindControl<TextBox>("HistoryEditorDateBox"),
-            DesktopFocusTarget.HistoryEditorType => this.FindControl<TextBox>("HistoryEditorTypeBox"),
-            DesktopFocusTarget.HistoryEditorOdometer => this.FindControl<TextBox>("HistoryEditorOdometerBox"),
-            DesktopFocusTarget.HistoryEditorCost => this.FindControl<TextBox>("HistoryEditorCostBox"),
             _ => null
         };
 
@@ -47,11 +39,6 @@ public partial class HistoryWorkspaceView : WorkspaceViewBase<HistoryWorkspaceVi
         if (this.FindControl<Control>("HistoryActionPanel") is { } actionPanel)
         {
             actionPanel.IsVisible = AllowEditing;
-        }
-
-        if (this.FindControl<Control>("HistoryEditorHost") is { } editorHost)
-        {
-            editorHost.IsVisible = AllowEditing;
         }
     }
 }

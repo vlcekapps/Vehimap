@@ -14,6 +14,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Oprava editorových a11y regresí je nově zapojená jako sdílená top-level keyboard guard vrstva v hlavním okně i modalních dialozích; rozpoznávání `TextBox`/`ComboBox` prochází logical, templated i visual tree a po uložení vozidla se primární akce doostří až po přepočtu layoutu.
 - Editor vozidla je prvním dialogovým editorem: `Přidat vozidlo` a `Upravit vozidlo` se otevírají v modalním okně s prvním fokusem na `Název vozidla`, `Shift+Tab` z prvního pole vrací na `Zrušit`, `Esc` zahodí změny a po zavření se fokus vrací na původní pracovní místo.
 - Editor vozidla už nemíchá formulář s tlačítky detailu vozidla; řízený `Shift+Tab` návrat na `Zrušit` je nově zdokumentovaný sdílený dialogový pattern místo skryté inline pasti.
+- Zbývající inline editory `Historie`, `Tankování`, `Připomínky`, `Plán údržby` a `Doklady` byly převedené na samostatné modalní dialogy; workspace karty a samostatná workspace okna zůstávají přehledy se seznamem, detailem a akcemi `Nové`, `Upravit`, `Odstranit`, zatímco `Ctrl+S`, `Esc`, validace a návrat fokusu řeší jednotný dialogový pattern.
+- Dialogové editory teď sdílejí jeden lifecycle helper pro uložení, zrušení, zavření, validační fokus a návrat fokusu; `Shift+Tab` skáče na `Zrušit` jen z prvního logického pole, zatímco z dalších polí zůstává standardní krok na předchozí prvek.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.

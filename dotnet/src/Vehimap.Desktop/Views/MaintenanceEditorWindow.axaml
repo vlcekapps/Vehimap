@@ -1,0 +1,133 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+        x:Class="Vehimap.Desktop.Views.MaintenanceEditorWindow"
+        x:DataType="vm:MaintenanceWorkspaceViewModel"
+        Width="760"
+        Height="660"
+        MinWidth="660"
+        MinHeight="520"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding MaintenanceEditorHeading}"
+        AutomationProperties.Name="{Binding MaintenanceEditorHeading}"
+        AutomationProperties.AutomationId="MaintenanceEditorWindow"
+        AutomationProperties.HelpText="Samostatný editor servisního plánu. Ctrl+S uloží, Escape nebo Zrušit zavře bez uložení.">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
+    <TextBlock FontSize="20"
+               FontWeight="SemiBold"
+               Text="{Binding MaintenanceEditorHeading}"
+               AutomationProperties.Name="{Binding MaintenanceEditorHeading}"
+               AutomationProperties.AutomationId="MaintenanceEditorHeadingText"
+               AutomationProperties.HeadingLevel="1" />
+    <TextBlock Grid.Row="1"
+               Margin="0,12,0,0"
+               Opacity="0.82"
+               Text="{Binding MaintenanceEditorStatus}"
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding MaintenanceEditorStatus}"
+               AutomationProperties.AutomationId="MaintenanceEditorStatusText"
+               AutomationProperties.LiveSetting="Polite" />
+    <ScrollViewer Grid.Row="2"
+                  Margin="0,16,0,0"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  AutomationProperties.Name="Pole editoru servisního plánu"
+                  AutomationProperties.AutomationId="MaintenanceEditorScrollViewer">
+      <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+        <TextBlock FontWeight="SemiBold" Text="Šablona úkonu" />
+        <ComboBox x:Name="MaintenanceTemplateComboBox"
+                  Grid.Row="1"
+                  Margin="0,6,0,0"
+                  ItemsSource="{Binding MaintenanceTemplateOptions}"
+                  SelectedItem="{Binding SelectedMaintenanceTemplate}"
+                  AutomationProperties.Name="Šablona servisního úkonu"
+                  AutomationProperties.AutomationId="MaintenanceTemplateComboBox" />
+        <TextBlock Grid.Row="2" Margin="0,14,0,0" FontWeight="SemiBold" Text="Název úkonu" />
+        <TextBox x:Name="MaintenanceEditorTitleBox"
+                 Grid.Row="3"
+                 Margin="0,6,0,0"
+                 Text="{Binding MaintenanceEditorTitle}"
+                 PlaceholderText="Například Motorový olej"
+                 AutomationProperties.Name="Název servisního úkonu"
+                 AutomationProperties.HelpText="Například Motorový olej"
+                 AutomationProperties.AutomationId="MaintenanceEditorTitleBox"
+                 AutomationProperties.IsRequiredForForm="True" />
+        <Grid Grid.Row="4" Margin="0,14,0,0" ColumnDefinitions="*,*">
+          <StackPanel Margin="0,0,12,0" Spacing="6">
+            <TextBlock FontWeight="SemiBold" Text="Interval km" />
+            <TextBox x:Name="MaintenanceEditorIntervalKmBox"
+                     Text="{Binding MaintenanceEditorIntervalKm}"
+                     PlaceholderText="Například 15000"
+                     AutomationProperties.Name="Interval údržby v kilometrech"
+                     AutomationProperties.HelpText="Například 15000"
+                     AutomationProperties.AutomationId="MaintenanceEditorIntervalKmBox" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Spacing="6">
+            <TextBlock FontWeight="SemiBold" Text="Interval měsíců" />
+            <TextBox x:Name="MaintenanceEditorIntervalMonthsBox"
+                     Text="{Binding MaintenanceEditorIntervalMonths}"
+                     PlaceholderText="Například 12"
+                     AutomationProperties.Name="Interval údržby v měsících"
+                     AutomationProperties.HelpText="Například 12"
+                     AutomationProperties.AutomationId="MaintenanceEditorIntervalMonthsBox" />
+          </StackPanel>
+        </Grid>
+        <Grid Grid.Row="5" Margin="0,14,0,0" ColumnDefinitions="*,*">
+          <StackPanel Margin="0,0,12,0" Spacing="6">
+            <TextBlock FontWeight="SemiBold" Text="Poslední servis - datum" />
+            <TextBox x:Name="MaintenanceEditorLastServiceDateBox"
+                     Text="{Binding MaintenanceEditorLastServiceDate}"
+                     PlaceholderText="Například 15.06.2026"
+                     AutomationProperties.Name="Datum posledního servisu"
+                     AutomationProperties.HelpText="Například 15.06.2026"
+                     AutomationProperties.AutomationId="MaintenanceEditorLastServiceDateBox" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Spacing="6">
+            <TextBlock FontWeight="SemiBold" Text="Poslední servis - tachometr" />
+            <TextBox x:Name="MaintenanceEditorLastServiceOdometerBox"
+                     Text="{Binding MaintenanceEditorLastServiceOdometer}"
+                     PlaceholderText="Například 123456"
+                     AutomationProperties.Name="Tachometr při posledním servisu"
+                     AutomationProperties.HelpText="Například 123456"
+                     AutomationProperties.AutomationId="MaintenanceEditorLastServiceOdometerBox" />
+          </StackPanel>
+        </Grid>
+        <CheckBox Grid.Row="6"
+                  Margin="0,14,0,0"
+                  IsChecked="{Binding MaintenanceEditorIsActive}"
+                  Content="Aktivní servisní plán"
+                  AutomationProperties.Name="Servisní plán je aktivní"
+                  AutomationProperties.AutomationId="MaintenanceEditorIsActiveCheckBox" />
+        <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
+        <TextBox Grid.Row="8"
+                 Margin="0,6,0,0"
+                 Height="120"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 VerticalContentAlignment="Top"
+                 Text="{Binding MaintenanceEditorNote}"
+                 AutomationProperties.Name="Poznámka k servisnímu plánu"
+                 AutomationProperties.AutomationId="MaintenanceEditorNoteBox" />
+      </Grid>
+    </ScrollViewer>
+    <StackPanel Grid.Row="3"
+                Margin="0,18,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="10">
+      <Button x:Name="CancelMaintenanceButton"
+              MinWidth="110"
+              Content="Zrušit"
+              Click="OnCancelClick"
+              AutomationProperties.Name="Zrušit úpravu servisního plánu"
+              AutomationProperties.AutomationId="CancelMaintenanceButton" />
+      <Button MinWidth="110"
+              Content="Uložit"
+              IsEnabled="{Binding IsEditingMaintenance}"
+              Click="OnSaveClick"
+              AutomationProperties.Name="Uložit servisní plán"
+              AutomationProperties.AutomationId="SaveMaintenanceButton" />
+    </StackPanel>
+  </Grid>
+</Window>

@@ -10,30 +10,22 @@ public partial class FuelWorkspaceView : WorkspaceViewBase<FuelWorkspaceViewMode
     public FuelWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
-        RegisterShiftTabBackNavigation("FuelListBox", "FuelEditorDateBox");
+        RegisterShiftTabBackNavigation("FuelListBox");
         ApplyHostMode();
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
-        ViewModel?.IsEditingFuel == true ? DesktopFocusTarget.FuelEditorDate : DesktopFocusTarget.FuelList;
+        DesktopFocusTarget.FuelList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
         target is DesktopFocusTarget.FuelSearch
-            or DesktopFocusTarget.FuelList
-            or DesktopFocusTarget.FuelEditorDate
-            or DesktopFocusTarget.FuelEditorOdometer
-            or DesktopFocusTarget.FuelEditorLiters
-            or DesktopFocusTarget.FuelEditorTotalCost;
+            or DesktopFocusTarget.FuelList;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
             DesktopFocusTarget.FuelSearch => this.FindControl<TextBox>("FuelSearchBox"),
             DesktopFocusTarget.FuelList => this.FindControl<ListBox>("FuelListBox"),
-            DesktopFocusTarget.FuelEditorDate => this.FindControl<TextBox>("FuelEditorDateBox"),
-            DesktopFocusTarget.FuelEditorOdometer => this.FindControl<TextBox>("FuelEditorOdometerBox"),
-            DesktopFocusTarget.FuelEditorLiters => this.FindControl<TextBox>("FuelEditorLitersBox"),
-            DesktopFocusTarget.FuelEditorTotalCost => this.FindControl<TextBox>("FuelEditorTotalCostBox"),
             _ => null
         };
 
@@ -47,11 +39,6 @@ public partial class FuelWorkspaceView : WorkspaceViewBase<FuelWorkspaceViewMode
         if (this.FindControl<Control>("FuelActionPanel") is { } actionPanel)
         {
             actionPanel.IsVisible = AllowEditing;
-        }
-
-        if (this.FindControl<Control>("FuelEditorHost") is { } editorHost)
-        {
-            editorHost.IsVisible = AllowEditing;
         }
     }
 }

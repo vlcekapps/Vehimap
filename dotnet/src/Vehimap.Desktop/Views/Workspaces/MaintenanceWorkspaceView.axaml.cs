@@ -13,35 +13,23 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
     public MaintenanceWorkspaceView()
     {
         AvaloniaXamlLoader.Load(this);
-        RegisterShiftTabBackNavigation("MaintenanceListBox", "MaintenanceTemplateComboBox");
+        RegisterShiftTabBackNavigation("MaintenanceListBox");
         DataContextChanged += OnMaintenanceDataContextChanged;
         ApplyHostMode();
     }
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget() =>
-        ViewModel?.IsEditingMaintenance == true ? DesktopFocusTarget.MaintenanceEditorTemplate : DesktopFocusTarget.MaintenanceList;
+        DesktopFocusTarget.MaintenanceList;
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
         target is DesktopFocusTarget.MaintenanceSearch
-            or DesktopFocusTarget.MaintenanceList
-            or DesktopFocusTarget.MaintenanceEditorTemplate
-            or DesktopFocusTarget.MaintenanceEditorTitle
-            or DesktopFocusTarget.MaintenanceEditorIntervalKm
-            or DesktopFocusTarget.MaintenanceEditorIntervalMonths
-            or DesktopFocusTarget.MaintenanceEditorLastServiceDate
-            or DesktopFocusTarget.MaintenanceEditorLastServiceOdometer;
+            or DesktopFocusTarget.MaintenanceList;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
             DesktopFocusTarget.MaintenanceSearch => this.FindControl<TextBox>("MaintenanceSearchBox"),
             DesktopFocusTarget.MaintenanceList => this.FindControl<ListBox>("MaintenanceListBox"),
-            DesktopFocusTarget.MaintenanceEditorTemplate => this.FindControl<ComboBox>("MaintenanceTemplateComboBox"),
-            DesktopFocusTarget.MaintenanceEditorTitle => this.FindControl<TextBox>("MaintenanceEditorTitleBox"),
-            DesktopFocusTarget.MaintenanceEditorIntervalKm => this.FindControl<TextBox>("MaintenanceEditorIntervalKmBox"),
-            DesktopFocusTarget.MaintenanceEditorIntervalMonths => this.FindControl<TextBox>("MaintenanceEditorIntervalMonthsBox"),
-            DesktopFocusTarget.MaintenanceEditorLastServiceDate => this.FindControl<TextBox>("MaintenanceEditorLastServiceDateBox"),
-            DesktopFocusTarget.MaintenanceEditorLastServiceOdometer => this.FindControl<TextBox>("MaintenanceEditorLastServiceOdometerBox"),
             _ => null
         };
 
@@ -55,11 +43,6 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
         if (this.FindControl<Control>("MaintenanceActionPanel") is { } actionPanel)
         {
             actionPanel.IsVisible = AllowEditing;
-        }
-
-        if (this.FindControl<Control>("MaintenanceEditorHost") is { } editorHost)
-        {
-            editorHost.IsVisible = AllowEditing;
         }
     }
 

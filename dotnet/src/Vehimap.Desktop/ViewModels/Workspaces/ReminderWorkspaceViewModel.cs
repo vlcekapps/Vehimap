@@ -47,6 +47,9 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     private string reminderPanelHeading = "Detail připomínky";
 
     [ObservableProperty]
+    private string reminderEditorHeading = "Nová připomínka";
+
+    [ObservableProperty]
     private bool isEditingReminder;
 
     [ObservableProperty]
@@ -144,9 +147,10 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnIsEditingReminderChanged(bool value)
     {
-        ReminderPanelHeading = value
-            ? (Root.GetEditingReminderId() is null ? "Nová připomínka" : "Upravit připomínku")
-            : "Detail připomínky";
+        if (value)
+        {
+            ReminderEditorHeading = Root.GetEditingReminderId() is null ? "Nová připomínka" : "Upravit připomínku";
+        }
 
         OnPropertyChanged(nameof(IsReminderDetailVisible));
         Root.NotifyReminderWorkspaceEditingChanged();

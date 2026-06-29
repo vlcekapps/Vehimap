@@ -61,6 +61,9 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     private string maintenancePanelHeading = "Detail údržby";
 
     [ObservableProperty]
+    private string maintenanceEditorHeading = "Nový servisní plán";
+
+    [ObservableProperty]
     private bool isEditingMaintenance;
 
     [ObservableProperty]
@@ -255,9 +258,12 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
 
     partial void OnIsEditingMaintenanceChanged(bool value)
     {
-        MaintenancePanelHeading = value
-            ? (Root.GetEditingMaintenanceId() is null ? "Nový servisní plán" : "Upravit údržbu")
-            : "Detail údržby";
+        if (value)
+        {
+            MaintenanceEditorHeading = Root.GetEditingMaintenanceId() is null
+                ? "Nový servisní plán"
+                : "Upravit servisní plán";
+        }
 
         if (!value)
         {

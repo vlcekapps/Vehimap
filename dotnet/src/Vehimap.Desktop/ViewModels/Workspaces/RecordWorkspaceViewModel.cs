@@ -47,6 +47,9 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     private string recordPanelHeading = "Detail dokladu";
 
     [ObservableProperty]
+    private string recordEditorHeading = "Nový doklad";
+
+    [ObservableProperty]
     private bool isEditingRecord;
 
     [ObservableProperty]
@@ -177,9 +180,10 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnIsEditingRecordChanged(bool value)
     {
-        RecordPanelHeading = value
-            ? (Root.GetEditingRecordId() is null ? "Nový doklad" : "Upravit doklad")
-            : "Detail dokladu";
+        if (value)
+        {
+            RecordEditorHeading = Root.GetEditingRecordId() is null ? "Nový doklad" : "Upravit doklad";
+        }
 
         OnPropertyChanged(nameof(IsRecordDetailVisible));
         Root.NotifyRecordWorkspaceEditingChanged();

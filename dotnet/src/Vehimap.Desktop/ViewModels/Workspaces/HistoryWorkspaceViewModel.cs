@@ -45,6 +45,9 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     private string historyPanelHeading = "Detail historie";
 
     [ObservableProperty]
+    private string historyEditorHeading = "Nový historický záznam";
+
+    [ObservableProperty]
     private bool isEditingHistory;
 
     [ObservableProperty]
@@ -141,9 +144,12 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnIsEditingHistoryChanged(bool value)
     {
-        HistoryPanelHeading = value
-            ? (Root.GetEditingHistoryId() is null ? "Nový záznam historie" : "Upravit historii")
-            : "Detail historie";
+        if (value)
+        {
+            HistoryEditorHeading = Root.GetEditingHistoryId() is null
+                ? "Nový historický záznam"
+                : "Upravit historický záznam";
+        }
 
         OnPropertyChanged(nameof(IsHistoryDetailVisible));
         Root.NotifyHistoryWorkspaceEditingChanged();

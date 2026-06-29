@@ -52,7 +52,8 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych dat po legacy migraci nebo primo ze SQLite
 - v detailu vozidla zobrazit stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby stejne jako rychla kontrolni plocha v AHK verzi
 - prejit z detailu vozidla pres pristupny blok `Souvisejici evidence` rovnou do historie, tankovani, pripominek, udrzby, dokladu, casove osy, servisni knizky nebo nakladu vybraneho vozidla
-- vytvaret a upravovat vozidla v samostatnem modalnim `Editoru vozidla`; detail vozidla zustava cteci pracovni plocha a dialog ma vlastni fokus, `Esc`/`Zrusit`, live status a navrat fokusu na misto, odkud byl otevreny
+- vytvaret a upravovat vozidla v samostatnem modalnim `Editoru vozidla`; detail vozidla zustava cteci pracovni plocha a dialog ma vlastni fokus, `Esc`/`Zrusit`, live status, `Shift+Tab` z prvniho pole na `Zrusit` a jinak standardni tab order s navratem fokusu na misto, odkud byl otevreny
+- vytvaret a upravovat historii, tankovani, pripominky, servisni plany a doklady v samostatnych modalnich editorech; workspace karty a samostatna workspace okna zustavaji prehledy se seznamem, detailem a akcemi, bez inline formularu maticich kontext `Novy` vs. `Upravit`, a vsechny editory sdileji stejne `Ctrl+S`/`Esc`/focus chovani
 - vyhledavat napric vozidly, historii, tankovanim, doklady, pripominkami a planem udrzby v nove karte `Hledani`, vcetne stitku, stavu, servisniho profilu, timeline statusu a identity vozidla u souvisejicich evidenci
 - zobrazit flotilovy `Prehled terminu` a `Propadle terminy` nad stejnymi daty jako AHK verze a z obou pohledu skocit na spravne vozidlo nebo evidenci
 - v `Blizicich se terminech` volitelne zobrazit i vozidla bez zelene karty a datove nedostatky z auditu; volby se ukladaji do nastaveni datove sady
@@ -70,13 +71,13 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - pouzit workspace `Chytry poradce` se souhrnem doporuceni, filtry podle priority, kategorie, vozidla a textu, zkratkami `Ctrl+F`, `Ctrl+R`, `Enter` / `Ctrl+O` a navigaci na souvisejici vozidlo nebo evidenci bez rucniho hledani
 - pouzit nakladovy workspace s volbou predvolby obdobi nebo vlastniho datumoveho rozsahu, rychlym hledanim vozidel, tlacitky `Vymazat` a `Obnovit` a zkratkami `Ctrl+F` pro hledani, `Ctrl+R` pro obnovu prehledu, `Ctrl+P` pro precteni rozpadu nakladu, `Ctrl+O` nebo `Enter` pro otevreni vozidla a `Ctrl+U` / `F2` pro upravu vozidla
 - ovladat shell vice klavesnici: `F5` pro znovunacteni, `Ctrl+E` pro export kalendare, `Ctrl+D` pro dashboard, `Ctrl+T` pro blizici se terminy, `Ctrl+Shift+T` pro propadle terminy, kontextove `Ctrl+F` pro hledani v aktivni pracovni plose, `Ctrl+Shift+F` pro globalni hledani a `Enter` pro otevreni vybranych polozek v casove ose, auditu, nakladech, dashboardu i ve vysledcich hledani
-- primo vytvaret, upravovat a mazat `pripominky`
-- primo vytvaret, upravovat a mazat `doklady`, vcetne volby `Spravovana kopie` vs `Externi cesta` a importu souboru do spravovanych priloh
+- primo vytvaret, upravovat a mazat `pripominky` pres samostatny dialogovy editor
+- primo vytvaret, upravovat a mazat `doklady` pres samostatny dialogovy editor, vcetne volby `Spravovana kopie` vs `Externi cesta` a importu souboru do spravovanych priloh
 - v editorech dokladu a pripominek pouzivat AHK-kompatibilni rozbalovaci hodnoty pro typ dokladu a opakovani pripominky
 - v dialogu `Balicek pro vozidlo` pouzivat stejne rozbalovaci hodnoty a normalizaci pro typ dokladu a opakovani pripominky jako v beznych editorech
 - u dokladu otevrit prilozeny soubor, otevrit jeho slozku a zkopirovat vyresenou cestu pres `Ctrl+Shift+C` nebo tlacitko `Kopirovat cestu`; uspech i chyba techto akci se propisuje do stavoveho textu dokladu i hlavniho shellu
-- primo vytvaret, upravovat a mazat `historii`
-- primo vytvaret, upravovat a mazat `tankovani`
+- primo vytvaret, upravovat a mazat `historii` pres samostatny dialogovy editor
+- primo vytvaret, upravovat a mazat `tankovani` pres samostatny dialogovy editor
 - v editoru tankovani pouzivat AHK-kompatibilni rozbalovaci hodnoty pro typ paliva
 - v editoru tankovani evidovat i detail paliva, napr. Natural 95/98 nebo komercni produkt, a misto tankovani; nove zapisy jdou do `# Vehimap fuel v2`, zatimco `fuel v1` se stale nacita jako kompatibilni legacy format
 - v karte i samostatnem okne `Tankovani` zobrazit pristupnou analyzu bez zmeny datoveho formatu: spotrebu mezi plnymi nadrzemi, prumernou cenu za litr, souhrny podle mista/paliva a opatrna upozorneni na neciselne hodnoty, klesajici tachometr nebo vyrazne odchylky
@@ -85,7 +86,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - pri selhani zapisu evidencnich editoru ponechat rozpracovany editor otevreny, zapsat chybu do stavoveho textu editoru i shellu a vratit fokus na smysluplny prvek
 - pri selhani zapisu vratit session dataset na snapshot pred zmenou a mazat managed prilohy nebo slozku priloh vozidla az po uspesnem persistu
 - posunout opakovanou `pripominku` na dalsi termin tlacitkem `Dalsi termin` nebo zkratkou `Ctrl+Shift+N`
-- primo vytvaret, upravovat a mazat `plan udrzby`
+- primo vytvaret, upravovat a mazat `plan udrzby` pres samostatny dialogovy editor
 - v editoru `planu udrzby` vybrat beznou servisni sablonu, ktera predvyplni nazev ukonu, intervaly a poznamku
 - v editoru `planu udrzby` pouzit rucni sablonu `Pravidelny servis` pro jeden souhrnny ukon zahrnujici motorovy olej, olejovy filtr a bezne filtry
 - v editoru `planu udrzby` vybirat rozsirene rucni sablony clenene podle oblasti `Motor`, `Podvozek`, `Vyfukove potrubi` a `Elektronika`
@@ -121,7 +122,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - filtrovat evidencni seznamy `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` vlastnim rychlym hledanim; tlacitko `Vymazat` filtr smaze, vrati fokus do hledani, filtr zachova vyber podle ID a pri prazdnem vysledku vypne akce nad vybranou polozkou
 - radit evidencni seznamy `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do nastaveni datove sady
 - mazat rychle hledani stejnym tlacitkem `Vymazat` i v prehledovych workspacech `Casova osa`, `Globalni hledani`, `Audit`, `Naklady`, `Blizici se terminy` a `Propadle terminy`; po smazani se fokus vrati do prislusneho hledani
-- pouzivat kontextove editacni zkratky v evidencnich workspacech: `Ctrl+N` pro novou polozku, `Ctrl+U` nebo `F2` pro upravu vybrane polozky, `Ctrl+S` pro ulozeni aktivniho editoru a v dokladech `Ctrl+O` / `Ctrl+Shift+O` pro otevreni prilohy nebo slozky
+- pouzivat kontextove editacni zkratky v evidencnich workspacech: `Ctrl+N` pro novou polozku a `Ctrl+U` nebo `F2` pro upravu vybrane polozky oteviraji samostatny editorovy dialog; `Ctrl+S` uklada az v dialogu a v dokladech `Ctrl+O` / `Ctrl+Shift+O` oteviraji prilohu nebo slozku z prehledu
 - v hlavni karte `Historie` a `Tankovani` zobrazit editacni akce primo bez nutnosti nejdriv otevrit samostatne okno; tlacitko `V okne` zustava dostupne pro prehlednejsi modalni praci
 - chranit editory evidenci vlastnim svislym scrollem a prehledy `Dashboard` a `Naklady` celostrankovym scrollem, aby vetsi systemove pismo nebo mensi viewport neschovaly spodni obsah
 - otevrit modalni `Nastaveni`, `O programu` a `Zkontrolovat aktualizace` primo z desktop shellu

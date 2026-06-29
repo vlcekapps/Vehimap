@@ -29,7 +29,7 @@ public sealed partial class MainWindowViewModel
         HistoryEditorStatus = "Vyplňte nový historický záznam a uložte jej.";
         IsEditingHistory = true;
         SelectedVehicleTabIndex = HistoryTabIndex;
-        RequestFocus(DesktopFocusTarget.HistoryEditorDate);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.History, DesktopFocusTarget.HistoryList);
     }
 
     [RelayCommand(CanExecute = nameof(CanEditSelectedHistory))]
@@ -50,7 +50,7 @@ public sealed partial class MainWindowViewModel
         HistoryEditorStatus = "Upravte historický záznam a uložte změny.";
         IsEditingHistory = true;
         SelectedVehicleTabIndex = HistoryTabIndex;
-        RequestFocus(DesktopFocusTarget.HistoryEditorDate);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.History, DesktopFocusTarget.HistoryList);
     }
 
     [RelayCommand(CanExecute = nameof(CanSaveHistory))]
@@ -186,7 +186,7 @@ public sealed partial class MainWindowViewModel
         FuelEditorStatus = "Vyplňte nové tankování a uložte jej.";
         IsEditingFuel = true;
         SelectedVehicleTabIndex = FuelTabIndex;
-        RequestFocus(DesktopFocusTarget.FuelEditorDate);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.Fuel, DesktopFocusTarget.FuelList);
     }
 
     [RelayCommand(CanExecute = nameof(CanEditSelectedFuel))]
@@ -211,7 +211,7 @@ public sealed partial class MainWindowViewModel
         FuelEditorStatus = "Upravte tankování a uložte změny.";
         IsEditingFuel = true;
         SelectedVehicleTabIndex = FuelTabIndex;
-        RequestFocus(DesktopFocusTarget.FuelEditorDate);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.Fuel, DesktopFocusTarget.FuelList);
     }
 
     [RelayCommand(CanExecute = nameof(CanSaveFuel))]
@@ -357,7 +357,7 @@ public sealed partial class MainWindowViewModel
         MaintenanceEditorStatus = "Vyplňte servisní plán a uložte jej.";
         IsEditingMaintenance = true;
         SelectedVehicleTabIndex = MaintenanceTabIndex;
-        RequestFocus(DesktopFocusTarget.MaintenanceEditorTemplate);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.Maintenance, DesktopFocusTarget.MaintenanceList);
     }
 
     [RelayCommand(CanExecute = nameof(CanEditSelectedMaintenance))]
@@ -380,7 +380,7 @@ public sealed partial class MainWindowViewModel
         MaintenanceEditorStatus = "Upravte servisní plán a uložte změny.";
         IsEditingMaintenance = true;
         SelectedVehicleTabIndex = MaintenanceTabIndex;
-        RequestFocus(DesktopFocusTarget.MaintenanceEditorTitle);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.Maintenance, DesktopFocusTarget.MaintenanceList);
     }
 
     [RelayCommand(CanExecute = nameof(CanSaveMaintenance))]

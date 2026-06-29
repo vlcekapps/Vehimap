@@ -64,6 +64,9 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     private string fuelPanelHeading = "Detail tankování";
 
     [ObservableProperty]
+    private string fuelEditorHeading = "Nové tankování";
+
+    [ObservableProperty]
     private bool isEditingFuel;
 
     [ObservableProperty]
@@ -251,9 +254,10 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
 
     partial void OnIsEditingFuelChanged(bool value)
     {
-        FuelPanelHeading = value
-            ? (Root.GetEditingFuelId() is null ? "Nové tankování" : "Upravit tankování")
-            : "Detail tankování";
+        if (value)
+        {
+            FuelEditorHeading = Root.GetEditingFuelId() is null ? "Nové tankování" : "Upravit tankování";
+        }
 
         OnPropertyChanged(nameof(IsFuelDetailVisible));
         Root.NotifyFuelWorkspaceEditingChanged();

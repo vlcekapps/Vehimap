@@ -1,0 +1,111 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
+        x:Class="Vehimap.Desktop.Views.HistoryEditorWindow"
+        x:DataType="vm:HistoryWorkspaceViewModel"
+        Width="720"
+        Height="620"
+        MinWidth="620"
+        MinHeight="500"
+        CanResize="True"
+        WindowStartupLocation="CenterOwner"
+        Title="{Binding HistoryEditorHeading}"
+        AutomationProperties.Name="{Binding HistoryEditorHeading}"
+        AutomationProperties.AutomationId="HistoryEditorWindow"
+        AutomationProperties.HelpText="Samostatný editor historického záznamu. Ctrl+S uloží, Escape nebo Zrušit zavře bez uložení.">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
+    <TextBlock FontSize="20"
+               FontWeight="SemiBold"
+               Text="{Binding HistoryEditorHeading}"
+               AutomationProperties.Name="{Binding HistoryEditorHeading}"
+               AutomationProperties.AutomationId="HistoryEditorHeadingText"
+               AutomationProperties.HeadingLevel="1" />
+    <TextBlock Grid.Row="1"
+               Margin="0,12,0,0"
+               Opacity="0.82"
+               Text="{Binding HistoryEditorStatus}"
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding HistoryEditorStatus}"
+               AutomationProperties.AutomationId="HistoryEditorStatusText"
+               AutomationProperties.LiveSetting="Polite" />
+    <ScrollViewer Grid.Row="2"
+                  Margin="0,16,0,0"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  AutomationProperties.Name="Pole editoru historického záznamu"
+                  AutomationProperties.AutomationId="HistoryEditorScrollViewer">
+      <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+        <TextBlock FontWeight="SemiBold" Text="Datum" />
+        <TextBox x:Name="HistoryEditorDateBox"
+                 Grid.Row="1"
+                 Margin="0,6,0,0"
+                 Text="{Binding HistoryEditorDate}"
+                 PlaceholderText="Například 15.06.2026"
+                 AutomationProperties.Name="Datum historického záznamu"
+                 AutomationProperties.HelpText="Například 15.06.2026"
+                 AutomationProperties.AutomationId="HistoryEditorDateBox"
+                 AutomationProperties.IsRequiredForForm="True" />
+        <Grid Grid.Row="2"
+              Margin="0,14,0,0"
+              ColumnDefinitions="*,160">
+          <StackPanel Margin="0,0,12,0" Spacing="6">
+            <TextBlock FontWeight="SemiBold" Text="Typ události" />
+            <TextBox x:Name="HistoryEditorTypeBox"
+                     Text="{Binding HistoryEditorType}"
+                     PlaceholderText="Například Servis"
+                     AutomationProperties.Name="Typ historické události"
+                     AutomationProperties.HelpText="Například Servis"
+                     AutomationProperties.AutomationId="HistoryEditorTypeBox"
+                     AutomationProperties.IsRequiredForForm="True" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Spacing="6">
+            <TextBlock FontWeight="SemiBold" Text="Tachometr" />
+            <TextBox x:Name="HistoryEditorOdometerBox"
+                     Text="{Binding HistoryEditorOdometer}"
+                     PlaceholderText="Například 123456"
+                     AutomationProperties.Name="Tachometr historického záznamu"
+                     AutomationProperties.HelpText="Například 123456"
+                     AutomationProperties.AutomationId="HistoryEditorOdometerBox" />
+          </StackPanel>
+        </Grid>
+        <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="Cena" />
+        <TextBox x:Name="HistoryEditorCostBox"
+                 Grid.Row="4"
+                 Margin="0,6,0,0"
+                 Text="{Binding HistoryEditorCost}"
+                 PlaceholderText="Například 2500"
+                 AutomationProperties.Name="Cena historického záznamu"
+                 AutomationProperties.HelpText="Například 2500"
+                 AutomationProperties.AutomationId="HistoryEditorCostBox" />
+        <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
+        <TextBox Grid.Row="6"
+                 Margin="0,6,0,0"
+                 Height="120"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 VerticalContentAlignment="Top"
+                 Text="{Binding HistoryEditorNote}"
+                 AutomationProperties.Name="Poznámka k historickému záznamu"
+                 AutomationProperties.AutomationId="HistoryEditorNoteBox" />
+      </Grid>
+    </ScrollViewer>
+    <StackPanel Grid.Row="3"
+                Margin="0,18,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="10">
+      <Button x:Name="CancelHistoryButton"
+              MinWidth="110"
+              Content="Zrušit"
+              Click="OnCancelClick"
+              AutomationProperties.Name="Zrušit úpravu historického záznamu"
+              AutomationProperties.AutomationId="CancelHistoryButton" />
+      <Button MinWidth="110"
+              Content="Uložit"
+              IsEnabled="{Binding IsEditingHistory}"
+              Click="OnSaveClick"
+              AutomationProperties.Name="Uložit historický záznam"
+              AutomationProperties.AutomationId="SaveHistoryButton" />
+    </StackPanel>
+  </Grid>
+</Window>
