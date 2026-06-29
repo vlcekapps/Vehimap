@@ -245,6 +245,53 @@ public sealed class SqliteStorageCompatibilityTests
     }
 
     [Fact]
+    public async Task Runtime_save_after_migration_writes_only_sqlite_and_keeps_live_legacy_files_absent()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-runtime-write");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var legacyStore = new LegacyVehimapDataStore();
+        var sqliteStore = new SqliteVehimapDataStore();
+        var migrationService = new SqliteDataMigrationService(legacyStore, sqliteStore);
+
+        try
+        {
+            CopyFixtureDataTo(dataRoot.DataPath);
+            await migrationService.MigrateIfNeededAsync(dataRoot);
+            var migrated = await sqliteStore.LoadAsync(dataRoot);
+
+            migrated.Settings.SetValue("app", "show_dashboard_on_launch", "1");
+            migrated.Vehicles[0] = migrated.Vehicles[0] with { Name = "SQLite runtime zápis" };
+            migrated.FuelEntries.Add(new FuelEntry(
+                "fuel_runtime",
+                migrated.Vehicles[0].Id,
+                "29.06.2026",
+                "98765",
+                "44.4",
+                "1999",
+                true,
+                "Natural 95",
+                "Runtime save smoke",
+                "V-Power",
+                "Shell Test"));
+            migrated.Records[0] = migrated.Records[0] with { Title = "Doklad uložený přes SQLite" };
+
+            await sqliteStore.SaveAsync(dataRoot, migrated);
+            var reloaded = await sqliteStore.LoadAsync(dataRoot);
+
+            Assert.True(File.Exists(Path.Combine(dataRoot.DataPath, "vehimap.db")));
+            Assert.Equal("1", reloaded.Settings.GetValue("app", "show_dashboard_on_launch"));
+            Assert.Equal("SQLite runtime zápis", reloaded.Vehicles[0].Name);
+            Assert.Contains(reloaded.FuelEntries, item => item.Id == "fuel_runtime" && item.Station == "Shell Test");
+            Assert.Equal("Doklad uložený přes SQLite", reloaded.Records[0].Title);
+            AssertLiveLegacyFilesAbsent(dataRoot);
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
     public async Task Sqlite_backup_roundtrip_restores_database_and_managed_attachments()
     {
         var tempRoot = CreateTempRoot("vehimap-sqlite-backup");
@@ -429,6 +476,14 @@ public sealed class SqliteStorageCompatibilityTests
             Assert.False(File.Exists(Path.Combine(dataRoot.DataPath, fileName)));
             Assert.True(File.Exists(Path.Combine(backupPath, fileName)));
             Assert.True(File.Exists(Path.Combine(backupPath, "removed-from-data-root", fileName)));
+        }
+    }
+
+    private static void AssertLiveLegacyFilesAbsent(VehimapDataRoot dataRoot)
+    {
+        foreach (var fileName in LegacyFileNames)
+        {
+            Assert.False(File.Exists(Path.Combine(dataRoot.DataPath, fileName)));
         }
     }
 

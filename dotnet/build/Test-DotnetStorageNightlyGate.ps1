@@ -8,17 +8,23 @@ $ErrorActionPreference = "Stop"
 
 $dotnetRoot = Split-Path -Parent $PSScriptRoot
 $compatibilityProject = Join-Path $dotnetRoot "tests\Vehimap.Tests.LegacyCompatibility\Vehimap.Tests.LegacyCompatibility.csproj"
+$unitProject = Join-Path $dotnetRoot "tests\Vehimap.Tests.Unit\Vehimap.Tests.Unit.csproj"
 
 Write-Host "Vehimap SQLite 2.0 storage nightly gate"
 Write-Host "Runtime: $RuntimeIdentifier"
 Write-Host "Configuration: $Configuration"
 Write-Host "Project: $compatibilityProject"
 Write-Host ""
-Write-Host "Overuji migraci legacy fixture dat, SQLite backup, import stare zalohy a balicek vozidla."
+Write-Host "Overuji migraci legacy fixture dat, SQLite-only runtime zapis, SQLite backup, import stare zalohy a balicek vozidla."
 
 Push-Location $dotnetRoot
 try {
     dotnet test $compatibilityProject --configuration $Configuration --filter "FullyQualifiedName~Vehimap.Tests.LegacyCompatibility.SqliteStorageCompatibilityTests" -p:UseSharedCompilation=false
+    if ($LASTEXITCODE -ne 0) {
+        exit $LASTEXITCODE
+    }
+
+    dotnet test $unitProject --configuration $Configuration --filter "FullyQualifiedName~Vehimap.Tests.Unit.RuntimeStorageWriteGuardTests" -p:UseSharedCompilation=false
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }

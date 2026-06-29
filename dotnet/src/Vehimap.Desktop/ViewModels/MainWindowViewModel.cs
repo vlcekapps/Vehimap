@@ -320,7 +320,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         ISmartAdvisorService? smartAdvisorService = null,
         IVehiclePackageService? vehiclePackageService = null)
     {
-        var sessionBackupService = backupService ?? new LegacyBackupService();
+        var sessionBackupService = backupService ?? new SqliteBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
         var sessionAppBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider();
         var sessionAutostartService = autostartService ?? new PlatformAutostartService();

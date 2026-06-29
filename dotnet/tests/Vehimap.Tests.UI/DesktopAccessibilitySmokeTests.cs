@@ -6,6 +6,18 @@ namespace Vehimap.Tests.UI;
 [Trait("UiProfile", "Extended")]
 public sealed class DesktopAccessibilitySmokeTests
 {
+    private static readonly string[] LegacyFileNames =
+    [
+        "vehicles.tsv",
+        "history.tsv",
+        "fuel.tsv",
+        "records.tsv",
+        "vehicle_meta.tsv",
+        "reminders.tsv",
+        "maintenance.tsv",
+        "settings.ini"
+    ];
+
     [Fact]
     public void Main_shell_exposes_vehicle_list_and_menu_actions_when_appium_is_available()
     {
@@ -107,7 +119,6 @@ public sealed class DesktopAccessibilitySmokeTests
         using (session)
         {
             Assert.NotNull(session.TemporaryDataPath);
-            var settingsPath = Path.Combine(session.TemporaryDataPath!, "settings.ini");
 
             session.ClickMenuItem("AppMenuRoot", "SettingsButton");
             Assert.False(session.IsSelectedByAccessibilityId("ShowDashboardOnLaunchCheckBox"));
@@ -117,10 +128,7 @@ public sealed class DesktopAccessibilitySmokeTests
 
             session.ClickByAccessibilityId("SaveSettingsButton");
             session.WaitForElementToDisappearByAccessibilityId("SettingsWindow");
-
-            session.WaitUntilCondition(
-                () => File.ReadAllText(settingsPath).Contains("show_dashboard_on_launch=1", StringComparison.Ordinal),
-                "Ulozeni nastaveni ma zapsat show_dashboard_on_launch=1 do settings.ini.");
+            AssertSqliteRuntimeDataOnly(session.TemporaryDataPath!);
 
             session.ClickByAccessibilityId("DashboardTabButton");
             session.WaitUntilCondition(
@@ -130,6 +138,15 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickMenuItem("AppMenuRoot", "SettingsButton");
             Assert.True(session.IsSelectedByAccessibilityId("ShowDashboardOnLaunchCheckBox"));
             session.ClickByAccessibilityId("CancelSettingsButton");
+        }
+    }
+
+    private static void AssertSqliteRuntimeDataOnly(string dataPath)
+    {
+        Assert.True(File.Exists(Path.Combine(dataPath, "vehimap.db")));
+        foreach (var fileName in LegacyFileNames)
+        {
+            Assert.False(File.Exists(Path.Combine(dataPath, fileName)));
         }
     }
 

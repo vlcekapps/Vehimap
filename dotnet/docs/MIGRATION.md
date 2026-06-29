@@ -9,6 +9,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Pokud uz `vehimap.db` existuje a v koreni `data/` zustaly legacy TSV/INI soubory po starsi nightly, start aplikace je odlozi do nove migracni zalohy bez opakovaneho importu. Aktivni `data/attachments` zustava na miste, protoze spravovane prilohy jsou soucasti datove sady 2.0.
 - Nove `.vehimapbak` zalohy jsou SQLite backupy s `vehimap.db` a referenced spravovanymi prilohami; starsi textove `.vehimapbak` zustavaji podporovane jako importni/migracni vstup.
 - Jedno vozidlo lze prenaset uzivatelskym balickem `*.vehimapvehicle`, ktery obsahuje vozidlo, jeho evidence a relevantni spravovane prilohy bez zmeny hlavni databaze mimo explicitni import.
+- Runtime zapis po migraci je hlidany SQLite-only gate: bezne ulozeni nastaveni, vozidla, tankovani nebo dokladu smi menit `vehimap.db`, ale nesmi znovu vytvorit zive legacy TSV/INI soubory v `data/`.
 - `Vehimap.Storage.Legacy` zustava read-only kompatibilitni vrstva pro migraci a import starsich zaloh, ne dlouhodoby runtime format 2.x.
 
 ## Historicka mapa AHK modulu -> .NET vrstvy
@@ -205,7 +206,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 
 1. Udrzet Windows stable kanal jako baseline: po kazde release/tooling zmene spustit `Test-DotnetPublishedStable.ps1 -RuntimeIdentifier win-x64 -SkipNetwork` a `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers`, aby stable manifest, preview alias i odstraneni AHK-only artefaktu zustaly v zelenem stavu.
 2. Radu 2.0 zatim drzet jako dlouhou nightly etapu, ne jako beta kandidata. Dalsi bezny vyvoj delat pres `nightly` na `main` a lokalne testovat `dotnet/artifacts/nightly/win-x64/app/Vehimap.Desktop.exe`.
-3. Pred vetsimi storage nebo migracnimi zmenami spustit `Test-DotnetStorageNightlyGate.ps1 -RuntimeIdentifier win-x64`; gate pouziva anonymizovany legacy fixture balicek 1.0.2 a overuje migraci do SQLite, odklizeni zivych TSV/INI, nove SQLite `.vehimapbak`, import stare `.vehimapbak` a `*.vehimapvehicle` balicky.
+3. Pred vetsimi storage nebo migracnimi zmenami spustit `Test-DotnetStorageNightlyGate.ps1 -RuntimeIdentifier win-x64`; gate pouziva anonymizovany legacy fixture balicek 1.0.2 a overuje migraci do SQLite, odklizeni zivych TSV/INI, SQLite-only runtime zapis, nove SQLite `.vehimapbak`, import stare `.vehimapbak`, `*.vehimapvehicle` balicky a source guard proti navratu legacy runtime zapisu.
 4. Pred vetsim nightly posunem spustit `Test-DotnetWindowsHardening.ps1 -RuntimeIdentifier win-x64` a po GitHub Actions overit publikovanou nightly pres `Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64`.
 5. `Vehimap.Storage.Legacy` ponechat jako podporovanou kompatibilitni vrstvu po celou radu 2.x, ale nevracet ji jako runtime zapisovy format.
 6. Po stabilizaci Windows 2.0 storage zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, SQLite storage a read-only shell nad testovacimi daty.

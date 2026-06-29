@@ -6,6 +6,18 @@ namespace Vehimap.Tests.UI;
 [Trait("UiProfile", "Extended")]
 public sealed class DesktopContinuousIntegrationSmokeTests
 {
+    private static readonly string[] LegacyFileNames =
+    [
+        "vehicles.tsv",
+        "history.tsv",
+        "fuel.tsv",
+        "records.tsv",
+        "vehicle_meta.tsv",
+        "reminders.tsv",
+        "maintenance.tsv",
+        "settings.ini"
+    ];
+
     [Fact]
     [Trait("UiProfile", "Smoke")]
     public void Main_shell_exposes_visible_startup_controls_when_appium_is_available()
@@ -64,7 +76,6 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         using (session)
         {
             Assert.NotNull(session.TemporaryDataPath);
-            var settingsPath = Path.Combine(session.TemporaryDataPath!, "settings.ini");
             var backupDirectory = Path.Combine(session.TemporaryDataPath!, "auto-backups");
             var backupCountBefore = Directory.Exists(backupDirectory)
                 ? Directory.GetFiles(backupDirectory, "*.vehimapbak").Length
@@ -94,14 +105,10 @@ public sealed class DesktopContinuousIntegrationSmokeTests
 
             session.WaitForElementToDisappearByAccessibilityId("SettingsWindow");
             session.WaitUntilCondition(
-                () => File.ReadAllText(settingsPath).Contains("automatic_backups_enabled=1", StringComparison.Ordinal)
-                    && File.ReadAllText(settingsPath).Contains("automatic_backup_interval_days=2", StringComparison.Ordinal)
-                    && File.ReadAllText(settingsPath).Contains("automatic_backup_keep_count=5", StringComparison.Ordinal),
-                "Ulozeni nastaveni ma zapsat podporovane volby automatickych zaloh do settings.ini.");
-            session.WaitUntilCondition(
                 () => Directory.Exists(backupDirectory)
                     && Directory.GetFiles(backupDirectory, "*.vehimapbak").Length > backupCountBefore,
                 "Tlacitko Zalohovat ihned v nastaveni ma vytvorit automatickou zalohu v izolovane datove slozce.");
+            AssertSqliteRuntimeDataOnly(session.TemporaryDataPath!);
         }
     }
 
@@ -150,7 +157,6 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         using (session)
         {
             Assert.NotNull(session.TemporaryDataPath);
-            var settingsPath = Path.Combine(session.TemporaryDataPath!, "settings.ini");
 
             session.ClickMenuItem("AppMenuRoot", "SettingsButton");
             Assert.False(session.IsSelectedByAccessibilityId("ShowDashboardOnLaunchCheckBox"));
@@ -160,10 +166,7 @@ public sealed class DesktopContinuousIntegrationSmokeTests
 
             session.ClickByAccessibilityId("SaveSettingsButton");
             session.WaitForElementToDisappearByAccessibilityId("SettingsWindow");
-
-            session.WaitUntilCondition(
-                () => File.ReadAllText(settingsPath).Contains("show_dashboard_on_launch=1", StringComparison.Ordinal),
-                "Ulozeni nastaveni ma zapsat show_dashboard_on_launch=1 do settings.ini.");
+            AssertSqliteRuntimeDataOnly(session.TemporaryDataPath!);
 
             session.ClickByAccessibilityId("DashboardTabButton");
             session.WaitUntilCondition(
@@ -174,6 +177,15 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             Assert.True(session.IsSelectedByAccessibilityId("ShowDashboardOnLaunchCheckBox"));
             session.ClickByAccessibilityId("CancelSettingsButton");
             session.WaitForElementToDisappearByAccessibilityId("SettingsWindow");
+        }
+    }
+
+    private static void AssertSqliteRuntimeDataOnly(string dataPath)
+    {
+        Assert.True(File.Exists(Path.Combine(dataPath, "vehimap.db")));
+        foreach (var fileName in LegacyFileNames)
+        {
+            Assert.False(File.Exists(Path.Combine(dataPath, fileName)));
         }
     }
 
