@@ -36,6 +36,9 @@ for a future ACR/VPAT-style report if one is needed.
   same instruction through `AutomationProperties.HelpText`. Placeholder text is a
   visual hint, not a reliable accessible instruction once the field has focus or
   contains a value.
+- `ComboBox` controls inherit a global `AutomationProperties.HelpText` that explains
+  arrow-key opening and selection. Keep that global hint unless a specific combo box
+  needs a more precise local instruction.
 - If a menu item exposes a visible `InputGesture`, it must also expose the same shortcut
   through `AutomationProperties.AcceleratorKey` so assistive technologies can announce
   the accelerator consistently.

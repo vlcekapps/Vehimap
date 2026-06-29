@@ -4,6 +4,9 @@
              x:Class="Vehimap.Desktop.App">
   <Application.Styles>
     <themes:FluentTheme />
+    <Style Selector="ComboBox">
+      <Setter Property="AutomationProperties.HelpText" Value="Šipkami nahoru nebo dolů otevřete seznam a vyberte hodnotu." />
+    </Style>
     <Style Selector="RadioButton.tab-header">
       <Setter Property="Margin" Value="0,0,8,8" />
       <Setter Property="Padding" Value="12,8" />

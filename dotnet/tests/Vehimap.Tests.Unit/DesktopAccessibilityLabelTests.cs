@@ -1213,6 +1213,16 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Combo_boxes_should_inherit_accessible_keyboard_help_text()
+    {
+        var appXaml = ReadDesktopRootFile("App.axaml");
+
+        Assert.Contains("<Style Selector=\"ComboBox\">", appXaml);
+        Assert.Contains("Property=\"AutomationProperties.HelpText\"", appXaml);
+        Assert.Contains("Šipkami nahoru nebo dolů otevřete seznam", appXaml);
+    }
+
+    [Fact]
     public void Required_editor_fields_should_expose_required_for_form_metadata()
     {
         var requiredFields = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -1640,6 +1650,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.ItemStatus", accessibilityDocs);
         Assert.Contains("PlaceholderText", accessibilityDocs);
         Assert.Contains("AutomationProperties.HelpText", accessibilityDocs);
+        Assert.Contains("ComboBox", accessibilityDocs);
         Assert.Contains("AutomationProperties.IsRequiredForForm", accessibilityDocs);
         Assert.Contains("Date:", evidenceReadme);
         Assert.Contains("Screen reader:", evidenceReadme);
