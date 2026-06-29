@@ -184,6 +184,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - hlavni menu `Rychle akce` ma stejnou akci pro otevreni aktualniho upozorneni jako tray akcni okno a sdili s nim stejny background snapshot i blokovani pri rozpracovane editaci
 - Appium smoke nad publish buildem uz aktualni upozorneni z menu `Rychle akce` nejen vidi, ale i aktivuje a overuje, ze shell otevre odpovidajici workspace
 - CI Appium smoke nad publish buildem overuje i otevreni a zavreni pristupnych tray akci z menu `Aplikace`, aby byl klavesnicovy fallback k nativni tray oblasti soucasti bezne Windows kontroly
+- nativni Windows tray menu v Avalonia zustava jen kratka convenience nabidka `Zobrazit Vehimap`, `Otevrit dashboard`, `Ukoncit Vehimap`; polozka `Akce Vehimapu` byla odstranena, protoze problem pro ctecky vznikal uz pri otevreni nativniho menu, a oficialni pristupna cesta je ted menu `Aplikace -> Akce na liste` nebo `Ctrl+Shift+Y`
 - CI Appium smoke nad publish buildem uklada podporovane volby automatickych zaloh v dialogu `Nastaveni` a overuje, ze tlacitko `Zalohovat ihned` vytvori `.vehimapbak` v izolovane datove slozce
 - CI Appium smoke nad publish buildem otevira a zavira app-level dialogy `Nastaveni`, `O programu` a `Zkontrolovat aktualizace` z menu `Aplikace`
 - CI Appium smoke nad publish buildem overuje ulozeni volby Dashboardu pri startu z dialogu `Nastaveni`, propsani do Dashboardu i zustani dialogu otevreneho s citelnou validacni chybou pri neplatne hodnote

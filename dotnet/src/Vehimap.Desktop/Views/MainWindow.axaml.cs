@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.Windows.Input;
 using Vehimap.Application.Models;
@@ -69,10 +70,17 @@ public partial class MainWindow : Window
     public Func<Task>? ExitApplicationRequested { get; set; }
     public Func<Task>? MinimizeToTrayRequested { get; set; }
     public Func<Task>? OpenTrayActionsRequested { get; set; }
+    public ICommand OpenTrayActionsCommand { get; }
 
     public MainWindow()
     {
+        OpenTrayActionsCommand = new AsyncRelayCommand(OpenTrayActionsAsync);
         AvaloniaXamlLoader.Load(this);
+        KeyBindings.Add(new KeyBinding
+        {
+            Gesture = KeyGesture.Parse("Ctrl+Shift+Y"),
+            Command = OpenTrayActionsCommand
+        });
         KeyboardAccessibilityHelper.RegisterWindow(this);
         RegisterTabBoundaryNavigation();
         AddHandler(InputElement.KeyDownEvent, OnWindowKeyDown, RoutingStrategies.Tunnel);
@@ -657,6 +665,11 @@ public partial class MainWindow : Window
     }
 
     private async void OnOpenTrayActionsClick(object? sender, RoutedEventArgs e)
+    {
+        await OpenTrayActionsAsync().ConfigureAwait(true);
+    }
+
+    private async Task OpenTrayActionsAsync()
     {
         if (OpenTrayActionsRequested is null)
         {

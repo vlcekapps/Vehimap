@@ -89,11 +89,6 @@ internal sealed class AvaloniaTrayService : ITrayService
     private static NativeMenu BuildTrayMenu(TrayServiceConfiguration configuration)
     {
         var menu = new NativeMenu();
-        menu.Add(new NativeMenuItem("Akce Vehimapu…")
-        {
-            Command = new AsyncRelayCommand(configuration.OpenTrayActionsAsync)
-        });
-        menu.Add(new NativeMenuItemSeparator());
         menu.Add(new NativeMenuItem("Zobrazit Vehimap")
         {
             Command = new AsyncRelayCommand(configuration.ShowMainWindowAsync)

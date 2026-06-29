@@ -17,6 +17,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Zbývající inline editory `Historie`, `Tankování`, `Připomínky`, `Plán údržby` a `Doklady` byly převedené na samostatné modalní dialogy; workspace karty a samostatná workspace okna zůstávají přehledy se seznamem, detailem a akcemi `Nové`, `Upravit`, `Odstranit`, zatímco `Ctrl+S`, `Esc`, validace a návrat fokusu řeší jednotný dialogový pattern.
 - Dialogové editory teď sdílejí jeden lifecycle helper pro uložení, zrušení, zavření, validační fokus a návrat fokusu; `Shift+Tab` skáče na `Zrušit` jen z prvního logického pole, zatímco z dalších polí zůstává standardní krok na předchozí prvek.
 - C# desktop používá kanálově oddělený single-instance režim: opakované spuštění stejného kanálu `stable`/`beta`/`nightly` už nevytvoří nové okno, ale pošle běžící instanci požadavek na obnovení hlavního okna z lišty.
+- Nativní Windows tray menu v C# větvi je zkrácené na `Zobrazit Vehimap`, `Otevřít dashboard` a `Ukončit Vehimap`; položka `Akce Vehimapu…` byla odstraněna, protože čtečka problém nehlásila až u položky, ale už při otevření nativního menu. Přístupná cesta k tray akcím je nově menu `Aplikace -> Akce na liště` nebo zkratka `Ctrl+Shift+Y`.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.

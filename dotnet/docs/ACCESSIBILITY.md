@@ -125,6 +125,14 @@ Avalonia shell. New entries require a regression test.
   logical field to the cancel button. This exists so all evidence editors can leave
   read-only overview screens without losing the predictable keyboard loop; new editor
   dialogs should reuse the helper instead of adding one-off tab traps.
+- `AvaloniaTrayService.cs`: native Windows notification-area context menus are exposed
+  by Avalonia as `TrayIcon` + `NativeMenu`, not as normal Avalonia controls. In NVDA
+  testing the menu can open without announcing itself until the user presses an arrow
+  key, so Vehimap does not treat the native tray menu as a screen-reader-first path.
+  The accessible path is `Aplikace -> Akce na liste` or `Ctrl+Shift+Y`, which opens
+  the standard Avalonia `TrayActionsWindow`. Keep the native tray menu short and do not
+  add accessibility-only items inside it, because they are discovered only after the
+  problematic menu-open step.
 - `ModalWorkspaceWindowHelpers.cs` and app-level dialogs: `Escape` closes modal windows
   only when it is safe for the current workflow.
 - `VehicleStarterBundleWindow.axaml.cs`: list keyboard shortcuts for selecting/clearing
@@ -169,4 +177,5 @@ Manual evidence lives in `dotnet/docs/accessibility-evidence/`. Each run should 
 - [Avalonia accessibility](https://docs.avaloniaui.net/docs/app-development/accessibility)
 - [Avalonia focus](https://docs.avaloniaui.net/docs/input-interaction/focus)
 - [Avalonia keyboard and hotkeys](https://docs.avaloniaui.net/docs/input-interaction/keyboard-and-hotkeys)
+- [Avalonia TrayIcon](https://docs.avaloniaui.net/controls/navigation/trayicon/)
 - [Avalonia Linux platform guide](https://docs.avaloniaui.net/docs/platform-specific-guides/linux)

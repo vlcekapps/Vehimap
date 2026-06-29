@@ -254,7 +254,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"OverviewMenuRoot\" Header=\"_Přehledy\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"QuickActionsMenuRoot\" Header=\"_Rychlé akce\" IsTabStop=\"False\"", normalizedXaml);
         Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"_Aplikace\" IsTabStop=\"False\"", normalizedXaml);
-        Assert.Contains("x:Name=\"OpenTrayActionsButton\" Header=\"Akce na liště\" Click=\"OnOpenTrayActionsClick\"", normalizedXaml);
+        Assert.Contains("x:Name=\"OpenTrayActionsButton\" Header=\"Akce na liště\" InputGesture=\"Ctrl+Shift+Y\" Click=\"OnOpenTrayActionsClick\"", normalizedXaml);
+        Assert.Contains("AutomationProperties.AcceleratorKey=\"Ctrl+Shift+Y\"", xaml);
         Assert.Contains("x:Name=\"MinimizeToTrayButton\" Header=\"Minimalizovat na lištu\" Click=\"OnMinimizeToTrayClick\" IsEnabled=\"{Binding IsMinimizeToTrayAvailable}\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupNowMenuItem\"", xaml);
@@ -353,6 +354,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("InputGesture=\"Ctrl+D\"", xaml);
         Assert.Contains("InputGesture=\"Ctrl+T\"", xaml);
         Assert.Contains("InputGesture=\"Ctrl+Shift+T\"", xaml);
+        Assert.Contains("InputGesture=\"Ctrl+Shift+Y\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleCategoryFilterBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleSearchBox\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleStatusFilterBox\"", xaml);
@@ -742,6 +744,7 @@ public sealed class DesktopAccessibilityLabelTests
     public void Tray_runtime_controller_should_route_quick_actions_to_shell_commands()
     {
         var runtimeController = ReadDesktopServiceFile("DesktopAppRuntimeController.cs");
+        var trayService = ReadDesktopServiceFile("AvaloniaTrayService.cs");
         var mainWindowCodeBehind = ReadViewCodeBehind("MainWindow.axaml.cs");
         var appStartup = ReadDesktopRootFile("App.axaml.cs");
         var programStartup = ReadDesktopRootFile("Program.cs");
@@ -751,9 +754,16 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("SingleInstanceCoordinator?.SetActivationHandler(_runtimeController.RequestShowMainWindowAsync);", appStartup);
         Assert.Contains("public Task RequestShowMainWindowAsync() => ShowMainWindowAsync();", runtimeController);
         Assert.Contains("public Task RequestOpenTrayActionsAsync() => OpenTrayActionsAsync();", runtimeController);
+        Assert.Contains("OpenTrayActionsCommand = new AsyncRelayCommand(OpenTrayActionsAsync);", mainWindowCodeBehind);
+        Assert.Contains("Gesture = KeyGesture.Parse(\"Ctrl+Shift+Y\")", mainWindowCodeBehind);
         Assert.Contains("public Func<Task>? OpenTrayActionsRequested { get; set; }", mainWindowCodeBehind);
         Assert.Contains("await OpenTrayActionsRequested().ConfigureAwait(true);", mainWindowCodeBehind);
         Assert.Contains("mainWindow.OpenTrayActionsRequested = _runtimeController.RequestOpenTrayActionsAsync;", appStartup);
+        Assert.Contains("Command = new AsyncRelayCommand(configuration.OpenTrayActionsAsync)", trayService);
+        Assert.DoesNotContain("new NativeMenuItem(\"Akce Vehimapu", trayService);
+        Assert.Contains("new NativeMenuItem(\"Zobrazit Vehimap\")", trayService);
+        Assert.Contains("new NativeMenuItem(\"Otevřít dashboard\")", trayService);
+        Assert.Contains("new NativeMenuItem(\"Ukončit Vehimap\")", trayService);
         Assert.Contains("TrayActionsDialogAction.OpenBackgroundStatus", runtimeController);
         Assert.Contains("_shell.OpenBackgroundNotificationAsync()", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenNearestTechnical", runtimeController);
@@ -1922,6 +1932,8 @@ public sealed class DesktopAccessibilityLabelTests
         var accessibilityDocs = ReadDocumentationFile("ACCESSIBILITY.md");
         Assert.Contains("Documented keyboard/focus exceptions", accessibilityDocs);
         Assert.Contains("MainWindow.axaml.cs", accessibilityDocs);
+        Assert.Contains("AvaloniaTrayService.cs", accessibilityDocs);
+        Assert.Contains("Ctrl+Shift+Y", accessibilityDocs);
         Assert.Contains("KeyboardAccessibilityHelper.cs", accessibilityDocs);
         Assert.Contains("EditorDialogFocusHelpers.cs", accessibilityDocs);
         Assert.Contains("WorkspaceViewBase.cs", accessibilityDocs);
