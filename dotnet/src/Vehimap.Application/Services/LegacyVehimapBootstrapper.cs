@@ -5,18 +5,31 @@ namespace Vehimap.Application.Services;
 public sealed class LegacyVehimapBootstrapper
 {
     private readonly IDataRootLocator _dataRootLocator;
-    private readonly ILegacyDataStore _legacyDataStore;
+    private readonly IVehimapDataStore _dataStore;
+    private readonly IDataMigrationService? _dataMigrationService;
 
     public LegacyVehimapBootstrapper(IDataRootLocator dataRootLocator, ILegacyDataStore legacyDataStore)
+        : this(dataRootLocator, (IVehimapDataStore)legacyDataStore, null)
+    {
+    }
+
+    public LegacyVehimapBootstrapper(
+        IDataRootLocator dataRootLocator,
+        IVehimapDataStore dataStore,
+        IDataMigrationService? dataMigrationService = null)
     {
         _dataRootLocator = dataRootLocator;
-        _legacyDataStore = legacyDataStore;
+        _dataStore = dataStore;
+        _dataMigrationService = dataMigrationService;
     }
 
     public async Task<VehimapBootstrapResult> LoadAsync(string appBasePath, CancellationToken cancellationToken = default)
     {
         var dataRoot = _dataRootLocator.Resolve(appBasePath);
-        var dataSet = await _legacyDataStore.LoadAsync(dataRoot, cancellationToken).ConfigureAwait(false);
-        return new VehimapBootstrapResult(dataRoot, dataSet);
+        var migrationResult = _dataMigrationService is null
+            ? null
+            : await _dataMigrationService.MigrateIfNeededAsync(dataRoot, cancellationToken).ConfigureAwait(false);
+        var dataSet = await _dataStore.LoadAsync(dataRoot, cancellationToken).ConfigureAwait(false);
+        return new VehimapBootstrapResult(dataRoot, dataSet, migrationResult);
     }
 }

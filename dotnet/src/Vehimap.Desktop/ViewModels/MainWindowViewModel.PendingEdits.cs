@@ -164,10 +164,13 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
         OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
         OnPropertyChanged(nameof(CanOpenSelectedVehicleServiceBook));
+        OnPropertyChanged(nameof(CanExportSelectedVehiclePackage));
+        OnPropertyChanged(nameof(CanImportVehiclePackage));
         OnPropertyChanged(nameof(CanUseDataActions));
         OnPropertyChanged(nameof(CanOpenDataFolder));
         OnPropertyChanged(nameof(CanCreateAutomaticBackupNow));
         OnPropertyChanged(nameof(CanOpenAutomaticBackupFolder));
+        OnPropertyChanged(nameof(CanOpenPreMigrationBackupFolder));
         OnPropertyChanged(nameof(CanOpenVehicleStarterBundle));
         OnPropertyChanged(nameof(CanOpenMaintenanceRecommendations));
         OnPropertyChanged(nameof(CanEditSelectedDashboardVehicle));

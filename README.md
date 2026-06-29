@@ -4,7 +4,9 @@ Komplexní řešení pro evidenci vašich vozidel.
 
 ## Stav projektu
 
-C# Avalonia aplikace je aktuální a jediná aktivní větev Vehimapu. Původní AHK aplikace byla po prvním stabilním Windows release odstraněna z repozitáře; zachovaná zůstává kompatibilita datových formátů přes `.NET` vrstvu `Vehimap.Storage.Legacy`, aby šlo dál číst současné `TSV`, `INI`, `.vehimapbak` a spravované přílohy.
+C# Avalonia aplikace je aktuální a jediná aktivní větev Vehimapu. Původní AHK aplikace byla po prvním stabilním Windows release odstraněna z repozitáře.
+
+Od řady 2.0 je primární datové úložiště SQLite databáze `data/vehimap.db`. Data z řady 1.0.2 (`TSV`, `INI`, starší `.vehimapbak` a `data/attachments`) se při prvním startu automaticky zmigrují se zálohou do `data/migration-backups/<čas>`; legacy parsery v `.NET` vrstvě zůstávají pro bezpečný import starších dat.
 
 ## Co umí
 
@@ -14,7 +16,7 @@ C# Avalonia aplikace je aktuální a jediná aktivní větev Vehimapu. Původní
 - globální hledání napříč vozidly, historií událostí, kilometry a tankováním, pojištěním a doklady, vlastními připomínkami i plány údržby
 - filtr hlavního seznamu na všechna vozidla, vozidla s blížícím se termínem, vozidla po termínu a vozidla bez vyplněné zelené karty
 - volitelné skrytí archivovaných a odstavených vozidel v hlavním seznamu, aniž by zmizela z dat a přehledů
-- v C# Avalonia větvi se poslední zvolená kategorie a stavový filtr hlavního seznamu ukládají do `settings.ini`; textové hledání zůstává jen dočasné, aby po startu neschovalo očekávaná vozidla
+- v C# Avalonia větvi se poslední zvolená kategorie a stavový filtr hlavního seznamu ukládají do nastavení datové sady; textové hledání zůstává jen dočasné, aby po startu neschovalo očekávaná vozidla
 - detail vozidla se souhrnem údajů, stavem platností, posledními událostmi z historie a souhrnem tankování i dokladů
 - v C# Avalonia větvi detail vozidla ukazuje i poslední historické záznamy, poslední známý tachometr a samostatné stavové souhrny historie, tankování, připomínek, dokladů a údržby, takže funguje jako rychlá kontrolní plocha vozidla
 - v C# Avalonia větvi má detail vozidla přístupný blok `Související evidence`, ze kterého lze rovnou přejít do historie, tankování, připomínek, údržby, dokladů, časové osy nebo nákladů vybraného vozidla
@@ -26,7 +28,7 @@ C# Avalonia aplikace je aktuální a jediná aktivní větev Vehimapu. Původní
 - samostatnou evidenci `Pojištění a doklady` pro každé vozidlo, včetně přidání, úpravy a odstranění záznamů, volby mezi `Externí cestou` a `Spravovanou kopií`, přesunu přílohy do interní složky aplikace, znovu propojení chybějícího souboru, otevření navázaného souboru i jeho složky, kopírování cesty a zobrazení stavu dostupnosti přílohy; v C# Avalonia větvi se úspěch i selhání těchto akcí hlásí ve stavovém textu dokladů i hlavního shellu
 - `Náklady a souhrny` pro každé vozidlo s přehledem podle roku i s výběrem vlastního období po měsících v rámci zvoleného roku, včetně `Ujeto km`, `Ceny / km` a srovnání s předchozím stejně dlouhým obdobím
 - samostatný přehled `Náklady napříč vozidly` pro vybrané období s porovnáním vozidel, rozpadnutím částek podle skupin, `Ujeto km`, `Cenou / km`, upozorněním na aktivní vozidla bez číselného nákladu a se stavy k řešení přímo u jednotlivých vozidel
-- v C# Avalonia větvi lze v přehledu `Náklady napříč vozidly` zvolit období přes předvolby nebo vlastní datumový rozsah; poslední volba se ukládá do `settings.ini` a používá se i v dashboardu a exportech
+- v C# Avalonia větvi lze v přehledu `Náklady napříč vozidly` zvolit období přes předvolby nebo vlastní datumový rozsah; poslední volba se ukládá do nastavení datové sady a používá se i v dashboardu a exportech
 - export nákladových přehledů do `TSV souhrnu`, `TSV detailu` a `HTML sestavy`; v C# Avalonia větvi se úspěch, zrušení i chyba exportu hlásí ve stavovém textu nákladů i hlavního shellu a uložená HTML sestava jasně oznámí i případné selhání otevření v prohlížeči
 - vlastní připomínky i s volbou opakování `Neopakovat`, `Každý rok`, `Každé 2 roky` a `Každých 5 let`
 - upozornění na blížící se nebo propadlou technickou kontrolu
@@ -37,6 +39,9 @@ C# Avalonia aplikace je aktuální a jediná aktivní větev Vehimapu. Původní
 - `Tiskový přehled` všech vozidel ve formátu HTML; v C# Avalonia větvi se nejprve uloží jako běžný soubor a po uložení se otevře v prohlížeči pro tisk přes `Ctrl+P`
 - `Export dat` do jednoho záložního souboru `.vehimapbak` včetně plánů údržby a spravovaných příloh dokladů; v C# Avalonia větvi výsledná hláška uvádí i počet zahrnutých a přeskočených chybějících spravovaných příloh
 - `Import dat` z dříve vytvořené zálohy včetně automatické zálohy původních souborů před přepsáním, obnovení plánů údržby i návratu spravovaných příloh dokladů
+- v C# Avalonia řadě 2.0 se runtime zápis provádí do `data/vehimap.db`; staré `TSV/INI` soubory se automaticky použijí jen jako jednorázový migrační vstup a po migraci se samy nemažou
+- pokud proběhne automatická migrace z 1.0.2, menu `Soubor` nabídne `Otevřít složku předmigrační zálohy`, kde je bezpečná kopie původních souborů a spravovaných příloh
+- export/import balíčku jednoho vozidla `*.vehimapvehicle` z menu `Vozidlo`; balíček přenese vybrané vozidlo s historií, tankováním, doklady, připomínkami, údržbou a relevantními spravovanými přílohami
 - v C# Avalonia větvi se po úspěšné obnově zálohy okamžitě synchronizuje i běžící session stav aplikace, tedy data, audit, meta údaje a podporovaná nastavení; pokud samotné obnovení selže, původní běžící data zůstanou zachovaná a chyba se oznámí stavovou hláškou
 - Avalonia shell po obnovení zálohy promítá do seznamů a přehledů přímo obnovený session stav, takže výběr vozidla, audit, dashboard, náklady i rychlé akce odpovídají nové záloze bez dalšího ručního reloadu
 - v C# Avalonia větvi používá start aplikace, ruční znovunačtení dat i obnova zálohy stejnou refresh cestu shellu, takže seznam vozidel, dashboard, audit, přehledy, náklady a rychlé akce zůstávají konzistentní napříč těmito vstupy
@@ -74,11 +79,11 @@ C# Avalonia aplikace je aktuální a jediná aktivní větev Vehimapu. Původní
 - v C# Avalonia větvi mají stavové, souhrnné a detailní texty hlavního shellu i workspace obrazovek vlastní přístupný název a stabilní `AutomationId`, aby je šlo spolehlivě číst čtečkou obrazovky i ověřovat UI testy
 - v C# Avalonia větvi selhání zápisu při uložení vozidla, historie, tankování, připomínky, dokladu, údržby nebo balíčku nezavře rozpracovaný editor; chyba se zapíše do stavového textu editoru i hlavního shellu a fokus se vrátí na smysluplný prvek
 - v C# Avalonia větvi se při selhání zápisu vrací i interní pracovní data před neúspěšnou změnu; mazání spravovaných příloh a složek vozidla proběhne až po úspěšném uložení dat, aby chybový stav nerozbil existující doklady
-- v C# Avalonia větvi má stejnou ochranu i průběžné ukládání filtrů, řazení, časové osy, přehledů termínů a období nákladů; pokud `settings.ini` nejde zapsat, aplikace chybu oznámí a neuložená preference se nepřimíchá do pozdějšího uložení jiné evidence
-- v C# Avalonia větvi se při chybě zápisu `settings.ini` vrací i session-level hodnoty z dialogu `Nastavení`, historie denních oznámení a metadata poslední automatické zálohy; aplikace tak neukazuje nepravdivý stav jen proto, že export zálohy nebo změna nastavení proběhly napůl
+- v C# Avalonia větvi má stejnou ochranu i průběžné ukládání filtrů, řazení, časové osy, přehledů termínů a období nákladů; pokud nastavení nejde zapsat, aplikace chybu oznámí a neuložená preference se nepřimíchá do pozdějšího uložení jiné evidence
+- v C# Avalonia větvi se při chybě zápisu nastavení vrací i session-level hodnoty z dialogu `Nastavení`, historie denních oznámení a metadata poslední automatické zálohy; aplikace tak neukazuje nepravdivý stav jen proto, že export zálohy nebo změna nastavení proběhly napůl
 - automatickou kontrolu termínů, připomínek a servisních plánů každých 15 minut a znovu po probuzení počítače ze spánku; v C# Avalonia větvi se probuzení zatím napojuje přes Windows systémovou událost a akutní termíny v oznámeních a tooltipu lišty mají přednost před obecnými auditními nedostatky
 - v C# Avalonia větvi jsou desktopová oznámení připravená na více platforem: Windows používá systémové balónkové oznámení a ostatní platformy přístupné inline okno; obě větve jsou testované nezávisle na aktuálním OS testovacího runneru
-- v C# Avalonia větvi se poslední denní desktopové oznámení ukládá do `settings.ini`, takže stejný akutní termín neotravuje opakovaně během jednoho dne; změna nastavení upozornění nebo obnova zálohy tuto historii bezpečně vynuluje
+- v C# Avalonia větvi se poslední denní desktopové oznámení ukládá do nastavení datové sady, takže stejný akutní termín neotravuje opakovaně během jednoho dne; změna nastavení upozornění nebo obnova zálohy tuto historii bezpečně vynuluje
 - v C# Avalonia větvi se po úspěšném uložení evidence, obnovení zálohy, změně nastavení nebo okamžité automatické záloze hned přepočítá tray tooltip a stav oznámení, takže pozadí nečeká až na další patnáctiminutový interval
 
 ## Jak se používá
@@ -111,10 +116,10 @@ V hlavním okně:
 - v C# Avalonia větvi si `Časová osa vozidla` pamatuje poslední filtr `Vše`, `Budoucí` nebo `Minulé`; rychlé textové hledání v ose zůstává jen dočasné
 - v `Přehledu` lze nově ručně exportovat budoucí termíny do kalendářového souboru `.ics`, včetně TK, ZK, připomínek, expirací dokladů a servisních úkolů s datem; C# Avalonia větev navíc skládá dlouhé iCalendar řádky podle pravidel `.ics`, aby se neztrácely delší české popisy, a výsledek nebo chybu exportu hlásí i v hlavním stavovém textu shellu
 - v `Přehledu termínů` lze pod hledáním zapnout i datové nedostatky, takže se vedle termínů zobrazí i chybějící SPZ, příští TK nebo problémové dokladové přílohy
-- v C# Avalonia větvi lze v `Blížících se termínech` zapnout i vozidla bez zelené karty a datové nedostatky z auditu; obě volby i rozbalovací filtr typu položky se ukládají do `settings.ini`, otevření datového nedostatku skočí rovnou na správnou evidenci a rychlá akce `Zkontrolovat ZK` umí přehled otevřít i tehdy, když je problémem jen chybějící zelená karta
+- v C# Avalonia větvi lze v `Blížících se termínech` zapnout i vozidla bez zelené karty a datové nedostatky z auditu; obě volby i rozbalovací filtr typu položky se ukládají do nastavení datové sady, otevření datového nedostatku skočí rovnou na správnou evidenci a rychlá akce `Zkontrolovat ZK` umí přehled otevřít i tehdy, když je problémem jen chybějící zelená karta
 - v C# Avalonia větvi si `Blížící se termíny` i `Propadlé termíny` pamatují poslední rozbalovací filtr, sloupec řazení a směr řazení, ale rychlé textové hledání zůstává jen dočasné
 - `Audit dat` teď funguje stejně klávesnicově jako ostatní přehledy: jde z něj rovnou otevřít řešenou položku, detail vozidla nebo přejít do úpravy
-- v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které mění stejnou volbu jako dialog `Nastavení` a uloží ji ihned do `settings.ini`
+- v dashboardu je i zaškrtávátko `Zobrazovat dashboard při startu`, které mění stejnou volbu jako dialog `Nastavení` a uloží ji ihned do nastavení datové sady
 
 ## Klávesové zkratky v hlavním okně:
 
@@ -138,8 +143,8 @@ V hlavním okně:
 - v C# Avalonia větvi jsou v kartách evidencí kontextové i `Ctrl+N`, `Ctrl+U` / `F2` a `Ctrl+S`: v kartách `Historie` a `Tankování` lze záznamy přidat nebo upravit přímo bez mezikroku, tlačítko `V okně` zůstává pro přehlednější samostatnou práci a mimo evidenci zůstávají `Ctrl+N` a `Ctrl+U` / `F2` globálními akcemi vozidla
 - v C# Avalonia větvi mají editory evidencí scrollovatelný pravý panel a `Dashboard` i `Náklady napříč vozidly` mají svislý scroll, aby větší systémové písmo nebo menší pracovní plocha neschovaly spodní obsah
 - v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` vlastní rychlé hledání; `Ctrl+F` přesune fokus do filtru, tlačítko `Vymazat` filtr smaže a vrátí fokus do hledání, seznam zachová výběr podle položky a při prázdném výsledku vypne akce nad výběrem
-- v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` přístupné ovladače `Řadit` a `Sestupně`; zvolený sloupec i směr řazení se ukládají do `settings.ini`
-- v C# Avalonia větvi mají `Globální hledání` a `Audit dat` stejné přístupné ovladače `Řadit` a `Sestupně`; poslední volba se ukládá do `settings.ini`, zatímco samotný hledaný text zůstává dočasný
+- v C# Avalonia větvi mají evidence `Historie`, `Kilometry a tankování`, `Pojištění a doklady`, `Vlastní připomínky` a `Plán údržby` přístupné ovladače `Řadit` a `Sestupně`; zvolený sloupec i směr řazení se ukládají do nastavení datové sady
+- v C# Avalonia větvi mají `Globální hledání` a `Audit dat` stejné přístupné ovladače `Řadit` a `Sestupně`; poslední volba se ukládá do nastavení datové sady, zatímco samotný hledaný text zůstává dočasný
 - v C# Avalonia větvi `Globální hledání` prohledává i štítky, stav, servisní profil a stavové texty z časové osy; u historie, tankování, dokladů, připomínek a údržby bere v úvahu také název vozidla, SPZ a značku/model stejně jako AHK verze
 
 ## Klávesové zkratky v dashboardu a přehledech:
@@ -292,7 +297,7 @@ V horním menu najdete tyto části:
 - pojištění a doklady se ukládají do souboru `data/records.tsv`
 - spravované přílohy dokladů se ukládají do složky `data/attachments/<id vozidla>/`
 - plány údržby se ukládají do souboru `data/maintenance.tsv`
-- nastavení upozornění a chování aplikace se ukládá do souboru `data/settings.ini`
+- od řady 2.0 se nastavení upozornění a chování aplikace ukládá do SQLite databáze `data/vehimap.db`; starší `data/settings.ini` se použije jen při automatické migraci z 1.0.2
 - automatické zálohy se ukládají do složky `data/auto-backups`
 - při importu se původní soubory před přepsáním automaticky odloží do `data/import-backups`
 - v C# Avalonia větvi se při obnově zálohy do `data/import-backups/<čas>` odkládají i spravované přílohy; stavová hláška po importu ukáže konkrétní složku s původními daty i počet obnovených příloh
@@ -304,11 +309,11 @@ V horním menu najdete tyto části:
 - kilometry a tankování v C# Avalonia větvi zapisují hlavičku `# Vehimap fuel v2`, která k typu paliva přidává detail paliva a místo tankování; starší `# Vehimap fuel v1` se dál načítá kompatibilně
 - pojištění a doklady používají hlavičku `# Vehimap records v2`
 - plány údržby používají hlavičku `# Vehimap maintenance v1`
-- export vytváří jeden soubor se zálohou ve formátu `.vehimapbak`, který nově zahrnuje i spravované přílohy dokladů; pokud některá spravovaná příloha na disku chybí, export pokračuje a v C# Avalonia větvi to uvede ve výsledkové hlášce
+- export vytváří jeden soubor se zálohou ve formátu `.vehimapbak`; v řadě 2.0 obsahuje SQLite databázi `vehimap.db` a spravované přílohy dokladů, pokud jsou v dokladech opravdu referencované a existují na disku; pokud některá spravovaná příloha chybí, export pokračuje a uvede to ve výsledkové hlášce
 
 ## Poznámka k oznamovací oblasti
 
-Zavření hlavního okna aplikaci neukončí. Vehimap se schová do oznamovací oblasti a dál hlídá technické kontroly, zelené karty, vlastní připomínky i plány údržby. Kontrola běží průběžně na pozadí každých 15 minut a znovu se vyvolá i po probuzení počítače ze spánku; v C# Avalonia větvi je toto explicitní napojení zatím Windows-only a na ostatních platformách zůstávají bezpečným fallbackem pravidelné intervaly. Stejným způsobem se na pozadí jednou za hodinu ověřuje i potřeba automatické zálohy. Pokud je vše v pořádku, tooltip tray ikony zůstává jen `Vehimap`; pokud ne, zobrazí souhrn propadlých a brzy končících `TK`, `ZK`, připomínek i servisních úkonů. V C# Avalonia větvi se jako první oznámení vybírá nejbližší termín k řešení; audit dat se použije jako fallback, když žádný termín právě nevyžaduje pozornost. Poslední zobrazené desktopové oznámení se pamatuje v `settings.ini` po dnech, aby se stejný akutní termín neoznamoval opakovaně při každé kontrole. Po úspěšném uložení dat, importu zálohy nebo změně nastavení se tento tray/background snapshot obnoví hned, bez čekání na další plánovanou kontrolu.
+Zavření hlavního okna aplikaci neukončí. Vehimap se schová do oznamovací oblasti a dál hlídá technické kontroly, zelené karty, vlastní připomínky i plány údržby. Kontrola běží průběžně na pozadí každých 15 minut a znovu se vyvolá i po probuzení počítače ze spánku; v C# Avalonia větvi je toto explicitní napojení zatím Windows-only a na ostatních platformách zůstávají bezpečným fallbackem pravidelné intervaly. Stejným způsobem se na pozadí jednou za hodinu ověřuje i potřeba automatické zálohy. Pokud je vše v pořádku, tooltip tray ikony zůstává jen `Vehimap`; pokud ne, zobrazí souhrn propadlých a brzy končících `TK`, `ZK`, připomínek i servisních úkonů. V C# Avalonia větvi se jako první oznámení vybírá nejbližší termín k řešení; audit dat se použije jako fallback, když žádný termín právě nevyžaduje pozornost. Poslední zobrazené desktopové oznámení se pamatuje v nastavení datové sady po dnech, aby se stejný akutní termín neoznamoval opakovaně při každé kontrole. Po úspěšném uložení dat, importu zálohy nebo změně nastavení se tento tray/background snapshot obnoví hned, bez čekání na další plánovanou kontrolu.
 
 V C# Avalonia větvi nativní menu lišty i položka `Akce na liště` v menu `Aplikace` otevírají vlastní přístupné okno `Akce Vehimapu na liště`. Hned nahoře ukazuje aktuální stav pozadí ze stejného snapshotu jako tooltip a desktopové oznámení, takže jej lze přečíst i tehdy, když čtečka obrazovky neumí spolehlivě oznámit nativní tray tooltip. Tlačítko `Otevřít aktuální upozornění` z tohoto stavu skočí přímo na nejdůležitější termín k řešení, případně na první auditní položku, pokud žádný termín právě pozornost nevyžaduje. Z okna lze klávesnicí a čtečkou obrazovky zobrazit hlavní okno, otevřít `Dashboard`, přejít rovnou do `Blížících se termínů` nebo `Propadlých termínů`, otevřít nejbližší TK, ZK, připomínku, servisní úkon nebo doklad, spustit filtrovanou kontrolu těchto oblastí, uložit tiskový přehled, exportovat nebo obnovit zálohu, vytvořit okamžitou automatickou zálohu, exportovat budoucí termíny do kalendáře, znovu načíst data, otevřít datovou složku nebo složku automatických záloh, otevřít nastavení, zobrazit `O programu`, zkontrolovat aktualizace, případně aplikaci ukončit. Tlačítka pro nejbližší položky a filtrované kontroly jsou aktivní jen tehdy, když existuje odpovídající termín k řešení; navigační a datové akce se při rozpracované editaci vypnou, aby nedošlo ke ztrátě neuložených změn.
 

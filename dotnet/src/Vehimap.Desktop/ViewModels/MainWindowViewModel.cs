@@ -11,6 +11,7 @@ using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
 using Vehimap.Storage.Legacy;
+using Vehimap.Storage.Sqlite;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -40,6 +41,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly IFuelAnalysisService _fuelAnalysisService;
     private readonly IServiceBookService _serviceBookService;
     private readonly ISmartAdvisorService _smartAdvisorService;
+    private readonly IVehiclePackageService _vehiclePackageService;
     private readonly ICalendarExportService _calendarExportService;
     private readonly ITextFileSaveService _fileSaveService;
     private readonly IFileDialogService _fileDialogService;
@@ -148,6 +150,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public bool CanOpenSelectedVehicleServiceBook => SelectedVehicle is not null && !HasPendingEdits;
 
+    public bool CanExportSelectedVehiclePackage => SelectedVehicle is not null && CanUseDataActions;
+
+    public bool CanImportVehiclePackage => CanUseDataActions;
+
     public bool CanUseDataActions => _session.IsLoaded && !HasPendingEdits;
 
     public bool CanOpenDataFolder => CanUseDataActions && _dataRoot is not null && !string.IsNullOrWhiteSpace(_dataRoot.DataPath);
@@ -155,6 +161,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool CanCreateAutomaticBackupNow => CanUseDataActions;
 
     public bool CanOpenAutomaticBackupFolder => CanUseDataActions && !string.IsNullOrWhiteSpace(_session.GetAutomaticBackupDirectoryPath());
+
+    public bool CanOpenPreMigrationBackupFolder =>
+        CanUseDataActions && Directory.Exists(_session.GetPreMigrationBackupPath());
 
     internal string HistoryWindowTitle =>
         SelectedVehicle is null
@@ -250,7 +259,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel()
         : this(
-            new LegacyVehimapDataStore(),
+            new SqliteVehimapDataStore(),
             CreateDefaultBootstrapper(),
             new ManagedAttachmentPathService(),
             new ProcessFileLauncher(),
@@ -259,7 +268,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
             new AvaloniaTextFileSaveService(),
-            new LegacyBackupService(),
+            new SqliteBackupService(),
             new AvaloniaFileDialogService(),
             new DesktopSupportedSettingsService(),
             new AssemblyAppBuildInfoProvider(),
@@ -275,13 +284,16 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     private static LegacyVehimapBootstrapper CreateDefaultBootstrapper()
     {
+        var sqliteDataStore = new SqliteVehimapDataStore();
+        var legacyDataStore = new LegacyVehimapDataStore();
         return new LegacyVehimapBootstrapper(
             new LegacyDataRootLocator(AssemblyAppBuildInfoProvider.ResolveCurrentApplicationDataFolderName()),
-            new LegacyVehimapDataStore());
+            sqliteDataStore,
+            new SqliteDataMigrationService(legacyDataStore, sqliteDataStore));
     }
 
     internal MainWindowViewModel(
-        ILegacyDataStore legacyDataStore,
+        IVehimapDataStore dataStore,
         LegacyVehimapBootstrapper bootstrapper,
         IFileAttachmentService attachmentService,
         IFileLauncher fileLauncher,
@@ -305,7 +317,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IFuelAnalysisService? fuelAnalysisService = null,
         IServiceBookService? serviceBookService = null,
         DesktopServiceBookExportService? serviceBookExportService = null,
-        ISmartAdvisorService? smartAdvisorService = null)
+        ISmartAdvisorService? smartAdvisorService = null,
+        IVehiclePackageService? vehiclePackageService = null)
     {
         var sessionBackupService = backupService ?? new LegacyBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
@@ -315,7 +328,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         _session = new DesktopSessionController(
             bootstrapper,
-            legacyDataStore,
+            dataStore,
             attachmentService,
             new LegacyAuditService(attachmentService),
             new LegacyCostAnalysisService(),
@@ -332,6 +345,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _fuelAnalysisService = fuelAnalysisService ?? new LegacyFuelAnalysisService();
         _serviceBookService = serviceBookService ?? new LegacyServiceBookService();
         _smartAdvisorService = smartAdvisorService ?? new LegacySmartAdvisorService(_timelineService, _fuelAnalysisService);
+        _vehiclePackageService = vehiclePackageService ?? new VehiclePackageService();
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
@@ -386,6 +400,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         OnPropertyChanged(nameof(CanDeleteSelectedVehicle));
         OnPropertyChanged(nameof(CanOpenSelectedVehicleCosts));
         OnPropertyChanged(nameof(CanOpenSelectedVehicleServiceBook));
+        OnPropertyChanged(nameof(CanExportSelectedVehiclePackage));
+        OnPropertyChanged(nameof(CanImportVehiclePackage));
         EditSelectedVehicleCommand.NotifyCanExecuteChanged();
         DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
         OpenSelectedVehicleCostsCommand.NotifyCanExecuteChanged();
@@ -1161,6 +1177,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
         {
             _session.LoadAsync(AppContext.BaseDirectory).GetAwaiter().GetResult();
             RefreshShellFromSessionState(preferredVehicleId, preferredTabIndex, applyLaunchTabPreference);
+            if (_session.LastMigrationResult?.Migrated == true)
+            {
+                ShellStatus = _session.LastMigrationResult.Message;
+            }
         }
         catch (Exception ex)
         {
@@ -1186,12 +1206,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
         Subtitle = appInfo.ReleaseChannel == ReleaseChannelService.Stable
             ? "Multiplatformni desktop nad daty Vehimapu."
             : $"Multiplatformni desktop nad oddelenym kanalem {appInfo.ReleaseChannel}.";
-        DataMode = _dataRoot.IsPortable ? "Portable data vedle aplikace" : "Systémová datová složka";
+        DataMode = _dataRoot.IsPortable
+            ? "Datová sada 2.0 (SQLite), portable data vedle aplikace"
+            : "Datová sada 2.0 (SQLite), systémová datová složka";
         DataPath = _dataRoot.DataPath;
         OnPropertyChanged(nameof(CanUseDataActions));
         OnPropertyChanged(nameof(CanOpenDataFolder));
         OnPropertyChanged(nameof(CanCreateAutomaticBackupNow));
         OnPropertyChanged(nameof(CanOpenAutomaticBackupFolder));
+        OnPropertyChanged(nameof(CanOpenPreMigrationBackupFolder));
+        OnPropertyChanged(nameof(CanExportSelectedVehiclePackage));
+        OnPropertyChanged(nameof(CanImportVehiclePackage));
         DashboardWorkspace.SyncShowDashboardOnLaunch(supportedSettings.ShowDashboardOnLaunch);
         VehicleCount = _dataSet.Vehicles.Count;
         HistoryCount = _dataSet.HistoryEntries.Count;

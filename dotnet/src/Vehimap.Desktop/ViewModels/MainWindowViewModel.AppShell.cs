@@ -21,6 +21,26 @@ public sealed partial class MainWindowViewModel
             .ConfigureAwait(false);
     }
 
+    internal async Task<string?> PickVehiclePackageExportPathAsync(CancellationToken cancellationToken = default)
+    {
+        if (SelectedVehicle is null)
+        {
+            return null;
+        }
+
+        var suggestedFileName = $"vehimap-vozidlo-{BuildSafeFileName(SelectedVehicle.Name)}.vehimapvehicle";
+        return await _fileDialogService
+            .PickSaveFileAsync("Export balíčku vozidla", suggestedFileName, "Balíček vozidla Vehimap", "vehimapvehicle", cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    internal async Task<string?> PickVehiclePackageImportPathAsync(CancellationToken cancellationToken = default)
+    {
+        return await _fileDialogService
+            .PickOpenFileAsync("Import balíčku vozidla", "Balíček vozidla Vehimap", "vehimapvehicle", cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     internal async Task<string> ExportBackupAsync(string backupPath, CancellationToken cancellationToken = default)
     {
         if (!_session.IsLoaded)
@@ -77,6 +97,86 @@ public sealed partial class MainWindowViewModel
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             ShellStatus = $"Obnova ze zálohy se nepodařila: {ex.Message}";
+        }
+
+        return ShellStatus;
+    }
+
+    internal async Task<string> ExportSelectedVehiclePackageAsync(string packagePath, CancellationToken cancellationToken = default)
+    {
+        if (SelectedVehicle is null)
+        {
+            ShellStatus = "Balíček vozidla nelze exportovat, protože není vybrané žádné vozidlo.";
+            return ShellStatus;
+        }
+
+        if (_dataRoot is null)
+        {
+            ShellStatus = "Balíček vozidla nelze exportovat, protože nejsou načtená data.";
+            return ShellStatus;
+        }
+
+        if (BlockDataActionIfEditing("exportovat balíček vozidla"))
+        {
+            return ShellStatus;
+        }
+
+        try
+        {
+            var result = await _vehiclePackageService
+                .ExportVehicleAsync(packagePath, _dataRoot, _dataSet, SelectedVehicle.Id, cancellationToken)
+                .ConfigureAwait(false);
+            ShellStatus = $"Balíček vozidla {result.VehicleName} byl uložen do {result.PackagePath}.";
+            if (result.IncludedAttachmentCount > 0)
+            {
+                ShellStatus += $" Přiložených spravovaných příloh: {result.IncludedAttachmentCount}.";
+            }
+
+            if (result.MissingAttachmentCount > 0)
+            {
+                ShellStatus += $" Přeskočených chybějících příloh: {result.MissingAttachmentCount}.";
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            ShellStatus = $"Export balíčku vozidla se nepodařil: {ex.Message}";
+        }
+
+        return ShellStatus;
+    }
+
+    internal async Task<string> ImportVehiclePackageAsync(string packagePath, CancellationToken cancellationToken = default)
+    {
+        if (_dataRoot is null)
+        {
+            ShellStatus = "Balíček vozidla nelze importovat, protože nejsou načtená data.";
+            return ShellStatus;
+        }
+
+        if (BlockDataActionIfEditing("importovat balíček vozidla"))
+        {
+            return ShellStatus;
+        }
+
+        try
+        {
+            var result = await _vehiclePackageService
+                .ImportVehicleAsync(packagePath, _dataRoot, _dataSet, cancellationToken)
+                .ConfigureAwait(false);
+            _session.RestoreDataSet(result.DataSet);
+            await _session.PersistAsync(cancellationToken).ConfigureAwait(false);
+            RefreshShellFromSessionState(result.ImportedVehicleId, DetailTabIndex, applyLaunchTabPreference: false);
+            ShellStatus = $"Balíček vozidla {result.ImportedVehicleName} byl importován.";
+            if (result.RestoredAttachmentCount > 0)
+            {
+                ShellStatus += $" Obnoveno spravovaných příloh: {result.RestoredAttachmentCount}.";
+            }
+
+            RequestBackgroundRefresh();
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            ShellStatus = $"Import balíčku vozidla se nepodařil: {ex.Message}";
         }
 
         return ShellStatus;
@@ -404,6 +504,33 @@ public sealed partial class MainWindowViewModel
         return ShellStatus;
     }
 
+    internal async Task<string> OpenPreMigrationBackupFolderAsync(CancellationToken cancellationToken = default)
+    {
+        var backupDirectory = _session.GetPreMigrationBackupPath();
+        if (string.IsNullOrWhiteSpace(backupDirectory) || !Directory.Exists(backupDirectory))
+        {
+            ShellStatus = "Složku předmigrační zálohy zatím nelze otevřít, protože žádná migrace v této datové sadě nebyla zaznamenána.";
+            return ShellStatus;
+        }
+
+        if (BlockDataActionIfEditing("otevřít složku předmigrační zálohy"))
+        {
+            return ShellStatus;
+        }
+
+        try
+        {
+            await _fileLauncher.OpenFolderAsync(backupDirectory, cancellationToken).ConfigureAwait(false);
+            ShellStatus = $"Složka předmigrační zálohy byla otevřena: {backupDirectory}.";
+        }
+        catch (Exception ex)
+        {
+            ShellStatus = $"Složku předmigrační zálohy se nepodařilo otevřít: {ex.Message}";
+        }
+
+        return ShellStatus;
+    }
+
     internal async Task<UpdateCheckResult> CheckForUpdatesAsync(CancellationToken cancellationToken = default)
     {
         var appInfo = _session.GetAppInfo();
@@ -447,5 +574,13 @@ public sealed partial class MainWindowViewModel
             ShellStatus = $"Příprava instalace aktualizace se nepodařila: {ex.Message}";
             return new UpdateInstallResult(false, ShellStatus, null);
         }
+    }
+
+    private static string BuildSafeFileName(string value)
+    {
+        var safeName = string.Join("_", value.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries)).Trim();
+        return string.IsNullOrWhiteSpace(safeName)
+            ? "vozidlo"
+            : safeName;
     }
 }

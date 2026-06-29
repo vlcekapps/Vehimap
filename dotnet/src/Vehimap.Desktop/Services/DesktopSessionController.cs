@@ -4,7 +4,6 @@ using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Models;
-using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.Services;
 
@@ -29,7 +28,7 @@ internal sealed class DesktopSessionController
     ];
 
     private readonly LegacyVehimapBootstrapper _bootstrapper;
-    private readonly ILegacyDataStore _legacyDataStore;
+    private readonly IVehimapDataStore _dataStore;
     private readonly IAuditService _auditService;
     private readonly ICostAnalysisService _costAnalysisService;
     private readonly IBackupService _backupService;
@@ -42,7 +41,7 @@ internal sealed class DesktopSessionController
 
     public DesktopSessionController(
         LegacyVehimapBootstrapper bootstrapper,
-        ILegacyDataStore legacyDataStore,
+        IVehimapDataStore dataStore,
         IFileAttachmentService attachmentService,
         IAuditService auditService,
         ICostAnalysisService costAnalysisService,
@@ -53,7 +52,7 @@ internal sealed class DesktopSessionController
         IUpdateService updateService)
     {
         _bootstrapper = bootstrapper;
-        _legacyDataStore = legacyDataStore;
+        _dataStore = dataStore;
         _attachmentService = attachmentService;
         _auditService = auditService;
         _costAnalysisService = costAnalysisService;
@@ -72,6 +71,8 @@ internal sealed class DesktopSessionController
 
     public IReadOnlyDictionary<string, VehicleMeta> MetaByVehicleId => _metaByVehicleId;
 
+    public DataMigrationResult? LastMigrationResult { get; private set; }
+
     public DesktopSupportedSettingsSnapshot CurrentSupportedSettings { get; private set; } =
         new(30, 30, 31, 1000, false, false, false, false, 1, 30);
 
@@ -82,6 +83,7 @@ internal sealed class DesktopSessionController
         var result = await _bootstrapper.LoadAsync(appBasePath, cancellationToken).ConfigureAwait(false);
         DataRoot = result.DataRoot;
         DataSet = result.DataSet;
+        LastMigrationResult = result.MigrationResult;
         AuditItems = _auditService.BuildAudit(result.DataRoot, result.DataSet);
 
         RebuildMetaLookup();
@@ -115,7 +117,7 @@ internal sealed class DesktopSessionController
             return;
         }
 
-        await _legacyDataStore.SaveAsync(DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
+        await _dataStore.SaveAsync(DataRoot, DataSet, cancellationToken).ConfigureAwait(false);
     }
 
     public void RestoreDataSet(VehimapDataSet dataSet)
@@ -259,6 +261,17 @@ internal sealed class DesktopSessionController
 
     public string GetAutomaticBackupDirectoryPath() =>
         GetAutomaticBackupDirectory();
+
+    public string GetPreMigrationBackupPath()
+    {
+        var lastRunPath = LastMigrationResult?.PreMigrationBackupPath;
+        if (!string.IsNullOrWhiteSpace(lastRunPath))
+        {
+            return lastRunPath;
+        }
+
+        return DataSet.Settings.GetValue("migration", "pre_migration_backup_path", string.Empty).Trim();
+    }
 
     public async Task<AutomaticBackupResult> RunAutomaticBackupCheckAsync(bool force = false, CancellationToken cancellationToken = default)
     {

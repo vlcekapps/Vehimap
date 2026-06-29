@@ -2,6 +2,15 @@
 
 Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, knihovny a smoke testy byly po prvnim stabilnim Windows release odstraneny; dokument zustava jako historicka mapa parity a dalsich kroku multiplatformni vetve.
 
+## Storage 2.0
+
+- Vehimap 2.0 pouziva jako primarni runtime storage SQLite databazi `data/vehimap.db`.
+- Legacy `TSV/INI` soubory z 1.0.2 se pouzivaji jen jako jednorazovy migracni vstup: pri prvnim startu bez `vehimap.db` aplikace vytvori `data/migration-backups/<cas>`, zkopiruje puvodni soubory i `data/attachments`, nacte data pres `Vehimap.Storage.Legacy` a ulozi je do SQLite.
+- Po uspesne migraci se legacy soubory automaticky nemazou, ale aplikace uz runtime zapisuje jen SQLite.
+- Nove `.vehimapbak` zalohy jsou SQLite backupy s `vehimap.db` a referenced spravovanymi prilohami; starsi textove `.vehimapbak` zustavaji podporovane jako importni/migracni vstup.
+- Jedno vozidlo lze prenaset uzivatelskym balickem `*.vehimapvehicle`, ktery obsahuje vozidlo, jeho evidence a relevantni spravovane prilohy bez zmeny hlavni databaze mimo explicitni import.
+- `Vehimap.Storage.Legacy` zustava read-only kompatibilitni vrstva pro migraci a import starsich zaloh, ne dlouhodoby runtime format 2.x.
+
 ## Historicka mapa AHK modulu -> .NET vrstvy
 
 - `src/lib/DataStore.ahk`
@@ -22,16 +31,17 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - zalozene solution a projekty
 - desktop shell v Avalonia
 - portable/system data root locator
-- prime cteni a zapis soucasnych TSV/INI souboru
+- primarni cteni a zapis datove sady 2.0 do SQLite `data/vehimap.db`
+- jednorazovou automatickou migraci legacy TSV/INI souboru do SQLite s predmigracni kopii puvodnich dat
 - diagnostiku poskozenych legacy TSV/INI souboru s nazvem souboru, plnou cestou a puvodnim parser detailem pro shell i testy
-- import/export `.vehimapbak` vcetne spravovanych priloh, exportni hlasky s poctem zahrnutych i preskocenych chybejicich managed souboru a citelne diagnostiky importu s cestou k zaloze a parser detailem
-- prvni C# audit engine nad legacy daty
+- import/export `.vehimapbak` vcetne spravovanych priloh; nova 2.0 zaloha obsahuje SQLite databazi a starsi textove zalohy se importuji pres legacy parser s citelnou diagnostikou
+- prvni C# audit engine nad sdilenym datasetem bez zavislosti na konkretni runtime storage vrstve
 - prvni C# nakladovy souhrn vcetne `Cena / km` a srovnani proti stejne dlouhemu obdobi loni
 - klavesove dotazeni nakladoveho workspace: `Ctrl+P` cte rozpad vybraneho vozidla, `Ctrl+O` nebo `Enter` otevre vozidlo a `Ctrl+U` / `F2` otevre editor vozidla
-- nakladovy workspace v Avalonia vetvi umi zvolit predvolbu obdobi nebo vlastni datumovy rozsah; volba se uklada do `settings.ini` a sdili ji dashboard i exporty
+- nakladovy workspace v Avalonia vetvi umi zvolit predvolbu obdobi nebo vlastni datumovy rozsah; volba se uklada do nastaveni datove sady a sdili ji dashboard i exporty
 - exporty nakladoveho workspace hlasi uspech, zruseni i selhani ve stavovem textu workspace i hlavniho shellu vcetne situace, kdy je HTML soubor ulozeny, ale nejde otevrit
 - builder casove osy vozidla nad historii, tankovanim, pripominkami, doklady, TK/ZK a planem udrzby
-- casova osa vozidla v Avalonia vetvi si pamatuje posledni filtr `Vse` / `Budouci` / `Minule` v `settings.ini`, ale rychle textove hledani zustava jen docasne
+- casova osa vozidla v Avalonia vetvi si pamatuje posledni filtr `Vse` / `Budouci` / `Minule` v nastaveni datove sady, ale rychle textove hledani zustava jen docasne
 - manualni ICS export budouciho kalendare z nove C# vetve vcetne foldingu dlouhych iCalendar radku
 - akcni casovou osu, ktera umi otevrit souvisejici historii, doklad, pripominku nebo plan udrzby na spravne karte shellu
 - pristupnou `Servisni knizku` vybraneho vozidla jako novou C# nightly funkci mimo AHK paritu; cte soucasnou historii, servisni plany a servisne relevantni doklady bez zmeny datovych formatu, umi otevrit souvisejici evidenci a exportovat HTML pro tisk nebo archivaci
@@ -40,26 +50,26 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - globalni hledani napric vozidly a hlavnim evidencemi s otevrenim na spravnou kartu a polozku
 - flotilovy `Prehled terminu` a `Propadle terminy`, ktere umi otevrit spravne vozidlo nebo souvisejici evidenci
 - Avalonia `Blizici se terminy` umi volitelne pridat vozidla bez zelene karty a datove nedostatky z auditu; otevreni datoveho nedostatku pouziva stejnou navigaci jako `Audit dat`
-- terminove prehledy v Avalonia vetvi si pamatuji posledni rozbalovaci filtr typu polozky i pristupne razeni v `settings.ini`, ale rychle textove hledani zustava jen docasne
-- `Audit dat` a `Globalni hledani` v Avalonia vetvi si pamatuji posledni pristupne razeni v `settings.ini`, ale rychle textove hledani zustava jen docasne
+- terminove prehledy v Avalonia vetvi si pamatuji posledni rozbalovaci filtr typu polozky i pristupne razeni v nastaveni datove sady, ale rychle textove hledani zustava jen docasne
+- `Audit dat` a `Globalni hledani` v Avalonia vetvi si pamatuji posledni pristupne razeni v nastaveni datove sady, ale rychle textove hledani zustava jen docasne
 - dashboard v Avalonia vetvi ma sdilene `Obnovit` / `Ctrl+R`, ktere prepocita auditni vyrez, naklady a nejblizsi terminy bez ztraty vyberu
 - dashboard v Avalonia vetvi umi primo prepnout `show_dashboard_on_launch`, stejne jako AHK dashboard a dialog nastaveni
 - dashboard v Avalonia vetvi ma primy vstup do historie vozidla, nakladu vozidla, flotiloveho souhrnu nakladu a dokonceni vybraneho servisniho terminu pres stejny modalni dialog jako plan udrzby
 - terminove prehledy v Avalonia vetvi maji sdilene `Obnovit` / `Ctrl+R`, ktere prepocita seznam bez ztraty vyberu
 - keyboard-first vrstvu shellu s focus managementem, shortcuty, enter-akcemi na hlavnich seznamech a explicitnim tab stopem hlavniho seznamu vozidel
-- desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych legacy dat
+- desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych dat po legacy migraci nebo primo ze SQLite
 - detail vozidla v Avalonia vetvi ukazuje stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby, aby se priblizil kontrolnimu detailu z AHK verze
 - detail vozidla v Avalonia vetvi umi z pristupneho bloku `Souvisejici evidence` prepnout na historii, tankovani, pripominky, udrzbu, doklady, casovou osu, servisni knizku nebo naklady vybraneho vozidla
-- hlavni seznam vozidel v Avalonia shellu si pamatuje posledni rozbalovaci filtr kategorie a stavovy filtr v `settings.ini`, ale rychle textove hledani zustava jen docasne
+- hlavni seznam vozidel v Avalonia shellu si pamatuje posledni rozbalovaci filtr kategorie a stavovy filtr v nastaveni datove sady, ale rychle textove hledani zustava jen docasne
 - globalni hledani v Avalonia vetvi prohledava rozsirena metadata vozidla, stavove texty z casove osy a u navazujicich evidenci bere v uvahu i nazev vozidla, SPZ a znacku/model stejne jako AHK implementace
 - editacni workflow pro pripominky, doklady, historii, tankovani a plan udrzby, vcetne importu spravovanych priloh, AHK-kompatibilni validace/normalizace datumu, tachometru, castek, intervalu, typu paliva a platnosti dokladu i rozbalovacich hodnot pro typ dokladu a opakovani pripominky v beznych editorech i v balicku pro vozidlo
 - tankovani v .NET vetvi uz zapisuje `# Vehimap fuel v2` s detailem paliva a mistem tankovani; parser zustava kompatibilni se starsim `fuel v1`
 - tankovani ma samostatnou odvozenou analyzu bez zmeny `fuel.tsv`: spotreba se pocita jen z pouzitelnych useku mezi plnymi nadrzemi, UI ukazuje cenu za litr, mista/paliva a konzervativni upozorneni s moznosti skocit na souvisejici tankovani
 - persist chyb evidencnich editoru je osetreny pres sdileny helper: editor zustane otevreny, chyba se precte ve workspace statusu i shellu a fokus se vrati na editor nebo seznam
-- evidencni persist helper umi rollback session datasetu na snapshot pred mutaci; fyzicke mazani managed priloh se provadi az po uspesnem zapsani legacy dat
-- prubezne ukladane preference shellu, filtru, razeni, casove osy, terminovych prehledu a nakladoveho obdobi pouzivaji sdilenou serializovanou persist frontu se snapshot rollbackem, aby selhani zapisu `settings.ini` neprosaklo do pozdejsiho ulozeni dat
-- session-level zapisy `settings.ini` pro dialog Nastaveni, historii dennich desktopovych oznameni a metadata posledni automaticke zalohy maji vlastni snapshot rollback v `DesktopSessionController`, takze selhani zapisu nenecha v pameti nepravdivy ulozeny stav
-- pristupne razeni evidencnich workspace `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` pres ovladace `Radit` a `Sestupne`; posledni volba se uklada do legacy `settings.ini`
+- evidencni persist helper umi rollback session datasetu na snapshot pred mutaci; fyzicke mazani managed priloh se provadi az po uspesnem zapsani datove sady
+- prubezne ukladane preference shellu, filtru, razeni, casove osy, terminovych prehledu a nakladoveho obdobi pouzivaji sdilenou serializovanou persist frontu se snapshot rollbackem, aby selhani zapisu nastaveni neprosaklo do pozdejsiho ulozeni dat
+- session-level zapisy nastaveni pro dialog Nastaveni, historii dennich desktopovych oznameni a metadata posledni automaticke zalohy maji vlastni snapshot rollback v `DesktopSessionController`, takze selhani zapisu nenecha v pameti nepravdivy ulozeny stav
+- pristupne razeni evidencnich workspace `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` pres ovladace `Radit` a `Sestupne`; posledni volba se uklada do datove sady
 - dokladove akce pro otevreni souboru, otevreni slozky a zkopirovani vyresene cesty prilohy pres `Ctrl+Shift+C`, vcetne citelneho stavoveho vysledku pri uspechu i selhani
 - posun opakovanych pripominek na dalsi termin v Avalonia workspace, vcetne zkratky `Ctrl+Shift+N`
 - oznaceni servisniho planu jako splneneho v Avalonia workspace, vcetne zkratky `Ctrl+L`, potvrzeni data a tachometru a volitelneho zapisu stejne udalosti do historie vozidla
@@ -70,11 +80,11 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - samostatna desktopova okna pro `Historii`, `Tankovani`, `Pripominky`, `Udrzbu`, `Doklady`, `Detail vozidla`, `Audit` a `Dashboard`
 - app-level dialogy `Nastaveni`, `O programu` a `Zkontrolovat aktualizace`
 - app-level controller hlasi zruseni a selhani nastaveni, exportu/importu zalohy, otevreni release poznamek, kontroly aktualizaci a spusteni updateru pres stavovy text nebo aktualizacni dialog misto padu shellu
-- typed vrstvu nad podporovanymi hodnotami ze `settings.ini`, ktera umi menit reminder thresholdy a `show_dashboard_on_launch`
+- typed vrstvu nad podporovanymi hodnotami nastaveni, ktera umi menit reminder thresholdy a `show_dashboard_on_launch`
 - centralizovane build info z root `src/VERSION`, ktere desktop vetvi dava stejnou semver a file version jako AHK release tok
 - kompatibilni parser `update/latest.ini` a Windows pripravu automaticke instalace pres `Vehimap.Updater`
-- modalni workflow pro `Export dat` a `Obnovit data`, ktere pouziva stejny `.vehimapbak` format jako AHK verze
-- pred obnovou zalohy vytvari stejnou ochrannou kopii aktualnich TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` jako AHK verze a shell po importu hlasi konkretni cestu i pocet obnovenych priloh
+- modalni workflow pro `Export dat` a `Obnovit data`, ktere ve 2.0 pouziva SQLite `.vehimapbak` a starsi AHK/C# 1.x zalohy umi importovat pres legacy parser
+- pred obnovou zalohy vytvari ochrannou kopii aktualni SQLite databaze, pripadnych legacy TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` a shell po importu hlasi konkretni cestu i pocet obnovenych priloh
 - po uspesne obnove zalohy `DesktopSessionController` synchronizuje in-memory dataset, meta lookupy, audit a podporovane nastaveni; selhani restore ponecha predchozi session stav beze zmen
 - hlavni Avalonia shell po importu zalohy obnovuje projekce, seznamy, audit, dashboard, naklady a rychle akce z aktualni session, ne pres druhy okamzity reload legacy store
 - start shellu, rucni reload a import zalohy pouzivaji jednu sdilenou refresh cestu nad aktualni session, aby se hlavni projekce a action-state stavy nerozchazely mezi workflow
@@ -178,7 +188,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - background snapshot pro tray tooltip a oznameni preferuje akutni terminy pred obecnym auditem dat a audit pouziva jako fallback, pokud zadny termin prave nevyzaduje pozornost
 - background runtime se po uspesnem ulozeni evidence, importu zalohy, zmene nastaveni, rucnim reloadu nebo okamzite automaticke zaloze synchronizuje ze shell snapshotu hned a bez druheho legacy reloadu
 - platformne oddelene desktopove oznameni: Windows balonkova vetev a ne-Windows inline fallback jsou testovane bez zavislosti na aktualnim OS runneru
-- denni historie desktopovych oznameni v `settings.ini`, vcetne resetu po zmene reminder nastaveni nebo po obnoveni zalohy, aby .NET vetev neoznamovala stejny akutni termin porad dokola
+- denni historie desktopovych oznameni v nastaveni datove sady, vcetne resetu po zmene reminder nastaveni nebo po obnoveni zalohy, aby .NET vetev neoznamovala stejny akutni termin porad dokola
 - Windows resume hook pro background runtime: po probuzeni systemu se po 1500 ms provede stejna kontrola terminu, tray tooltipu a automatickych zaloh jako v AHK; pro macOS/Linux je vrstva pripravena jako no-op, dokud se platformy nebudou stabilizovat
 - regresni kontrola desktop UI zdroju proti typickym mojibake znakum, aby ctecky obrazovky nedostavaly poskozenou UTF-8 diakritiku
 - CI Appium smoke nad publish buildem kontroluje prvni fokus po startu na seznamu vozidel, dostupnost seznamu pres `Tab` z filtru, navrat `Shift+Tab` z vybrane pracovni karty zpet na seznam, app-level menu `Soubor`, menu `Rychle akce`, dostupnost zapnutych/vypnutych akci, vyvolani hlavniho menu pres `F10`, zavreni menu druhym `F10` zpet na puvodni fokus, vynechani menu pri beznem `Tab` / `Shift+Tab`, otevreni aktualniho upozorneni do spravneho workspace, otevreni/zavreni app-level dialogu a pristupnych tray akci z menu `Aplikace`, samostatna pracovni okna vcetne `Escape` zavreni, navigaci z globalniho hledani, casove osy, terminovych prehledu a nakladu, zakladni ulozeni editoru evidenci v samostatnych oknech, focus regresi `Shift+Tab` v editoru vozidla, ochranu rozpracovane editace, ulozeni automatickych zaloh z `Nastaveni` vcetne okamziteho vytvoreni `.vehimapbak`, ulozeni a validaci volby Dashboardu pri startu, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony a potvrzeni `Splneno` z udrzby i Dashboardu. Rozsirena sada v izolovane portable kopii navic overuje kopirovani diagnostiky z `O programu`, kopirovani detailu kontroly aktualizaci, kopirovani vyresene cesty spravovane dokladove prilohy a dalsi realne vytvoreni okamzite automaticke zalohy
@@ -195,7 +205,8 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 
 1. Udrzet Windows stable kanal jako baseline: po kazde release/tooling zmene spustit `Test-DotnetPublishedStable.ps1 -RuntimeIdentifier win-x64 -SkipNetwork` a `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers`, aby stable manifest, preview alias i odstraneni AHK-only artefaktu zustaly v zelenem stavu.
 2. Dalsi bezny vyvoj delat znovu pres `nightly` na `main`: lokalne testovat `dotnet/artifacts/nightly/win-x64/app/Vehimap.Desktop.exe`, pred vetsim posunem spustit `Test-DotnetWindowsHardening.ps1 -RuntimeIdentifier win-x64` a po GitHub Actions overit publikovanou nightly pres `Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64`.
-3. `Vehimap.Storage.Legacy` ponechat jako podporovanou kompatibilitni vrstvu. AHK aplikace je odstranena, ale soucasna data (`TSV`, `INI`, `.vehimapbak`, `data/attachments`) zustavaji primarni format prvni generace C# aplikace.
-4. Po kratkem realnem pouzivani Windows stable bez regresi zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, legacy storage a read-only shell nad testovacimi daty.
-5. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
-6. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.
+3. Dalsi nightly cyklus dotahovat nad SQLite 2.0: pridavat migracni fixture z realnych anonymizovanych dat 1.0.2, hlidat `vehimap.db`, nove `.vehimapbak` a `*.vehimapvehicle` balicky v release gate a legacy vrstvu pouzivat jen pro import/migraci.
+4. `Vehimap.Storage.Legacy` ponechat jako podporovanou kompatibilitni vrstvu po celou radu 2.x, ale nevracet ji jako runtime zapisovy format.
+5. Po stabilizaci Windows 2.0 storage zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, SQLite storage a read-only shell nad testovacimi daty.
+6. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
+7. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.

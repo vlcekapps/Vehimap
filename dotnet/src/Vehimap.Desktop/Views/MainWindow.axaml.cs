@@ -513,6 +513,17 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
+    private async void OnOpenPreMigrationBackupFolderClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.OpenPreMigrationBackupFolderAsync().ConfigureAwait(true);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
     private async void OnCreateAutomaticBackupNowClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel is null)
@@ -706,6 +717,28 @@ public partial class MainWindow : Window
     private async void OnOpenVehicleStarterBundleMenuClick(object? sender, RoutedEventArgs e)
     {
         await OpenVehicleStarterBundleDialogAsync();
+    }
+
+    private async void OnExportVehiclePackageMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.AppShellController.ExportVehiclePackageAsync(this, _viewModel).ConfigureAwait(true);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
+    private async void OnImportVehiclePackageMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.AppShellController.ImportVehiclePackageAsync(this, _viewModel).ConfigureAwait(true);
+        RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
     private async void OnOpenServiceBookMenuClick(object? sender, RoutedEventArgs e)

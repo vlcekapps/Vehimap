@@ -9,6 +9,7 @@
     <ProjectReference Include="..\Vehimap.Application\Vehimap.Application.csproj" />
     <ProjectReference Include="..\Vehimap.Platform\Vehimap.Platform.csproj" />
     <ProjectReference Include="..\Vehimap.Storage.Legacy\Vehimap.Storage.Legacy.csproj" />
+    <ProjectReference Include="..\Vehimap.Storage.Sqlite\Vehimap.Storage.Sqlite.csproj" />
     <ProjectReference Include="..\Vehimap.Updater\Vehimap.Updater.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 

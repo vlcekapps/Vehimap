@@ -15,5 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vehimap.Domain\Vehimap.Domain.csproj" />
     <ProjectReference Include="..\..\src\Vehimap.Storage.Legacy\Vehimap.Storage.Legacy.csproj" />
+    <ProjectReference Include="..\..\src\Vehimap.Storage.Sqlite\Vehimap.Storage.Sqlite.csproj" />
   </ItemGroup>
 </Project>

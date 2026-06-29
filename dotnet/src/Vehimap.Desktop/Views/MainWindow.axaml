@@ -96,6 +96,12 @@
                     IsEnabled="{Binding CanOpenDataFolder}"
                     AutomationProperties.Name="Otevřít datovou složku Vehimapu"
                     AutomationProperties.AutomationId="OpenDataFolderMenuItem" />
+          <MenuItem x:Name="OpenPreMigrationBackupFolderMenuItem"
+                    Header="Otevřít složku předmigrační zálohy"
+                    Click="OnOpenPreMigrationBackupFolderClick"
+                    IsEnabled="{Binding CanOpenPreMigrationBackupFolder}"
+                    AutomationProperties.Name="Otevřít složku předmigrační zálohy"
+                    AutomationProperties.AutomationId="OpenPreMigrationBackupFolderMenuItem" />
           <Separator />
           <MenuItem x:Name="FileExitAppButton"
                     Header="Konec"
@@ -189,6 +195,20 @@
                     IsEnabled="{Binding CanOpenVehicleStarterBundle}"
                     AutomationProperties.Name="Otevřít balíček pro vybrané vozidlo"
                     AutomationProperties.AutomationId="OpenVehicleStarterBundleMenuItem" />
+          <Separator />
+          <MenuItem x:Name="ExportVehiclePackageMenuItem"
+                    Header="Exportovat balíček vozidla"
+                    Click="OnExportVehiclePackageMenuClick"
+                    IsEnabled="{Binding CanExportSelectedVehiclePackage}"
+                    AutomationProperties.Name="Exportovat vybrané vozidlo do balíčku"
+                    AutomationProperties.AutomationId="ExportVehiclePackageMenuItem" />
+          <MenuItem x:Name="ImportVehiclePackageMenuItem"
+                    Header="Importovat balíček vozidla"
+                    Click="OnImportVehiclePackageMenuClick"
+                    IsEnabled="{Binding CanImportVehiclePackage}"
+                    AutomationProperties.Name="Importovat vozidlo z balíčku"
+                    AutomationProperties.AutomationId="ImportVehiclePackageMenuItem" />
+          <Separator />
           <MenuItem x:Name="OpenSelectedVehicleCostsMenuItem"
                     Header="Náklady a souhrny"
                     Click="OnOpenSelectedVehicleCostsMenuClick"

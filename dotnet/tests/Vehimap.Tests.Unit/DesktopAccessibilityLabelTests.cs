@@ -259,6 +259,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupNowMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenAutomaticBackupFolderMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDataFolderMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenPreMigrationBackupFolderMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Otevřít složku předmigrační zálohy\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanOpenPreMigrationBackupFolder}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FileExitAppButton\"", xaml);
         Assert.Contains("x:Name=\"FileExitAppButton\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"Ukončit aplikaci z nabídky Soubor\"", xaml);
@@ -290,6 +293,12 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenServiceBookMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"Otevřít servisní knížku vybraného vozidla\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleStarterBundleMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ExportVehiclePackageMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Exportovat vybrané vozidlo do balíčku\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanExportSelectedVehiclePackage}\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ImportVehiclePackageMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Importovat vozidlo z balíčku\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanImportVehiclePackage}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenSelectedVehicleCostsMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenTimelineMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenGlobalSearchMenuItem\"", xaml);

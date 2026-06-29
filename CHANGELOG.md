@@ -5,10 +5,18 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ## [Unreleased]
 
+### Změněno
+- Nightly větev začíná datovou řadu Vehimap 2.0: runtime úložiště se přepíná z průběžného zápisu legacy `TSV/INI` na primární SQLite databázi `data/vehimap.db`; legacy soubory z 1.0.2 zůstávají jako jednorázový migrační vstup a staré `.vehimapbak` zálohy se dál importují přes kompatibilní parser.
+- Export/import `.vehimapbak` v C# větvi má nový SQLite formát se souborem `vehimap.db` a referenced spravovanými přílohami; před obnovou se dál vytváří ochranná kopie aktuální databáze, legacy souborů i `data/attachments`.
+- Desktop shell po načtení hlásí `Datová sada 2.0 (SQLite)` a při prvním startu nad legacy daty oznámí automatickou migraci včetně cesty k předmigrační záloze.
+
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.
 
 ### Přidáno
+- Přibyla nová vrstva `Vehimap.Storage.Sqlite` s obecným `IVehimapDataStore`, automatickou migrací z legacy dat, SQLite round-trip testy a přímou referencí na novější `SQLitePCLRaw.bundle_e_sqlite3`, aby nový storage nezačínal se známým zranitelným transitive balíčkem.
+- Menu `Soubor` má položku `Otevřít složku předmigrační zálohy`, která je aktivní jen po zaznamenané automatické migraci a otevírá bezpečnou kopii původních dat.
+- Přibyl uživatelský export/import balíčku jednoho vozidla `*.vehimapvehicle` dostupný z menu `Vozidlo`; balíček obsahuje vozidlo, historii, tankování, doklady, připomínky, údržbu a relevantní spravované přílohy a při importu bezpečně přemapuje kolidující ID.
 - AHK retirement gate teď po stable release blokuje návrat AHK-only artefaktů a migration parity report drží historickou mapu odstraněných AHK modulů na konkrétní `.NET` vrstvy.
 - C# release tooling má `Get-DotnetMigrationParity.ps1`, který mapuje historické AHK moduly na konkrétní .NET evidence soubory a je zapojený do Windows hardening i AHK retirement gate, aby po smazání AHK zůstala dohledatelná parita funkcí.
 - C# Avalonia má nového offline `Chytrého poradce`: bez AI/API skládá doporučení napříč vozidly z auditu, termínů, údržby, tankovací analýzy, dokladových příloh a základních nákladových signálů, jde filtrovat podle vozidla/priority/kategorie/textu a z každé položky otevře související evidenci.

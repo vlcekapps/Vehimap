@@ -6,15 +6,17 @@ Aktualni zamer:
 
 - brat `.NET + Avalonia` jako primarni desktopovou vetev Vehimapu
 - drzet C# Avalonia jako jedinou aktivni aplikaci po finalnim AHK retirement commitu
-- zachovat legacy kompatibilitu dat bez navratu AHK-only runtime, knihoven nebo testu
-- zachovat prime cteni dnesnich `TSV`, `INI`, `.vehimapbak` a `data/attachments`
+- pouzivat od rady 2.0 primarne SQLite databazi `data/vehimap.db`
+- zachovat legacy kompatibilitu dat jako jednorazovou migraci/import bez navratu AHK-only runtime, knihoven nebo testu
+- cist legacy `TSV`, `INI`, starsi `.vehimapbak` a `data/attachments` pres `Vehimap.Storage.Legacy` jen pro migraci z 1.0.2 a import starsich zaloh
 - release priorita je nejdrive stabilni Windows desktop pres Inno Setup instalator, potom Android, nasledne macOS a nakonec Linux
 
 ## Struktura
 
 - `src/Vehimap.Domain` - ciste domenove modely
 - `src/Vehimap.Application` - use cases a interni rozhrani
-- `src/Vehimap.Storage.Legacy` - kompatibilita se soucasnymi AHK daty
+- `src/Vehimap.Storage.Legacy` - kompatibilita a migrace soucasnych AHK/1.0.2 dat
+- `src/Vehimap.Storage.Sqlite` - primarni runtime storage Vehimapu 2.0
 - `src/Vehimap.Platform` - platform-specific adaptery
 - `src/Vehimap.Desktop` - Avalonia desktop shell
 - `src/Vehimap.Updater` - separatni helper pro update
@@ -27,7 +29,12 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - postavit celou solution pres `dotnet build`
 - spustit unit a kompatibilitni testy pres `dotnet test`
 - vygenerovat desktopovy release build pres `dotnet publish`
-- primo cist a zapisovat dnesni Vehimap data (`TSV`, `INI`, `.vehimapbak`, managed attachments)
+- primarne cist a zapisovat datovou sadu 2.0 v SQLite `data/vehimap.db`
+- pri prvnim startu nad daty 1.0.2 automaticky vytvorit predmigracni kopii v `data/migration-backups/<cas>`, nacist legacy `TSV/INI` a zapsat data do SQLite v jedne transakcni storage ceste
+- ulozit cestu k predmigracni kopii do nastaveni datove sady a otevrit ji z menu `Soubor`, pokud tato slozka existuje
+- importovat starsi textove `.vehimapbak` zalohy pres legacy parser a obnovit je uz do SQLite runtime storage
+- exportovat nove `.vehimapbak` zalohy jako SQLite backup s `vehimap.db` a referenced spravovanymi prilohami
+- exportovat a importovat jedno vozidlo jako `*.vehimapvehicle` balicek vcetne historie, tankovani, dokladu, pripominek, udrzby a relevantnich spravovanych priloh
 - pri poskozenem legacy `TSV` nebo `INI` souboru ukazat konkretni nazev souboru, plnou cestu a parser detail v chybovem stavu shellu
 - pri nedostupnem nebo poskozenem `.vehimapbak` souboru ukazat cestu k zaloze a parser/I/O detail ve stavovem textu misto neobslouzene vyjimky v shellu
 - pri zruseni nebo selhani app-level akci z menu/tray, jako jsou nastaveni, export/import zalohy, O programu a kontrola aktualizaci, zapsat citelnou stavovou hlasku misto neobslouzene vyjimky
@@ -37,22 +44,22 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - skladat sdilene C# use-cases pro audit, nakladove souhrny, cenu za kilometr, casovou osu vozidla a ICS export
 - otevrit pristupnou `Servisni knizku` vybraneho vozidla z menu `Vozidlo` nebo detailu vozidla; sklada historii, servisni plany a servisni doklady ze soucasnych dat bez migrace, umi prejit na souvisejici evidenci a exportovat HTML pro tisk nebo archivaci
 - otevrit offline `Chytry poradce` z menu `Prehledy`, karty shellu nebo samostatneho okna; pravidla jsou deterministicka, nepouzivaji AI ani externi API a skladaji doporuceni z auditu, terminu, udrzby, tankovaci analyzy, dokladovych priloh a zakladnich nakladovych signalu
-- zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych legacy dat
+- zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych dat po legacy migraci nebo primo ze SQLite
 - v detailu vozidla zobrazit stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby stejne jako rychla kontrolni plocha v AHK verzi
 - prejit z detailu vozidla pres pristupny blok `Souvisejici evidence` rovnou do historie, tankovani, pripominek, udrzby, dokladu, casove osy, servisni knizky nebo nakladu vybraneho vozidla
 - vyhledavat napric vozidly, historii, tankovanim, doklady, pripominkami a planem udrzby v nove karte `Hledani`, vcetne stitku, stavu, servisniho profilu, timeline statusu a identity vozidla u souvisejicich evidenci
 - zobrazit flotilovy `Prehled terminu` a `Propadle terminy` nad stejnymi daty jako AHK verze a z obou pohledu skocit na spravne vozidlo nebo evidenci
-- v `Blizicich se terminech` volitelne zobrazit i vozidla bez zelene karty a datove nedostatky z auditu; volby se ukladaji do legacy `settings.ini`
+- v `Blizicich se terminech` volitelne zobrazit i vozidla bez zelene karty a datove nedostatky z auditu; volby se ukladaji do nastaveni datove sady
 - v terminovych prehledech pouzit `Obnovit` nebo `Ctrl+R`; refresh zachova vyber a fokus vrati na seznam, pokud je v nem polozka
-- radit terminove prehledy `Blizici se terminy` a `Propadle terminy` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do legacy `settings.ini`
-- radit `Audit` a `Globalni hledani` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do legacy `settings.ini`, hledany text zustava jen docasny
+- radit terminove prehledy `Blizici se terminy` a `Propadle terminy` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do nastaveni datove sady
+- radit `Audit` a `Globalni hledani` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do nastaveni datove sady, hledany text zustava jen docasny
 - vyexportovat budouci terminy do `.ics` primo z nove C# vetve vcetne foldingu dlouhych iCalendar radku pro delsi popisy
 - hlasit uspech, zruseni i selhani exportu `.ics` ve stavovem textu casove osy i hlavniho shellu, aby menu a tray akce neskoncily neobslouzenou vyjimkou
 - otevrit z casove osy souvisejici historii, doklad, pripominku nebo servisni plan primo na odpovidajici karte shellu; `Obnovit` nebo `Ctrl+R` prepocita casovou osu bez ztraty vyberu a vrati fokus na seznam
 - pouzit prvni dashboard nad auditem, naklady a nejblizsimi terminy napric vozidly
 - v dashboardu pouzit `Obnovit` nebo `Ctrl+R`; refresh prepocita auditni vyrez, naklady i nejblizsi terminy a zachova aktualni vyber
 - v dashboardu pouzit horni akce `Hledat`, `Souhrn nakladu`, `Blizici se`, `Propadle`, `Zobrazit vozidlo`, `Historie vozidla`, `Naklady vozidla`, `Dokoncit servis` a `Upravit vozidlo`; stejne akce maji zkratky `Ctrl+F`, `Ctrl+T`, `Ctrl+Shift+T`, `Ctrl+O`, `Ctrl+P`, `Ctrl+H`, `Ctrl+L` a `Ctrl+U` / `F2`
-- v dashboardu prepnout `Zobrazovat dashboard pri startu`; zmena se uklada do stejneho `settings.ini` jako dialog `Nastaveni`
+- v dashboardu prepnout `Zobrazovat dashboard pri startu`; zmena se uklada do stejneho nastaveni datove sady jako dialog `Nastaveni`
 - pouzit plny auditni workspace se samostatnym hledanim, tlacitky `Vymazat` a `Obnovit`, zkratkami `Ctrl+F`, `Ctrl+R`, `Ctrl+O`, `Ctrl+P`, `Ctrl+U` / `F2` a oddelenym dashboardovym top vyrezem
 - pouzit workspace `Chytry poradce` se souhrnem doporuceni, filtry podle priority, kategorie, vozidla a textu, zkratkami `Ctrl+F`, `Ctrl+R`, `Enter` / `Ctrl+O` a navigaci na souvisejici vozidlo nebo evidenci bez rucniho hledani
 - pouzit nakladovy workspace s volbou predvolby obdobi nebo vlastniho datumoveho rozsahu, rychlym hledanim vozidel, tlacitky `Vymazat` a `Obnovit` a zkratkami `Ctrl+F` pro hledani, `Ctrl+R` pro obnovu prehledu, `Ctrl+P` pro precteni rozpadu nakladu, `Ctrl+O` nebo `Enter` pro otevreni vozidla a `Ctrl+U` / `F2` pro upravu vozidla
@@ -105,7 +112,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - zamknout hlavni seznam vozidel, jeho filtry, prepinani pracovnich karet a otevirani jinych workspace oken po dobu aktivni editace, aby se nedalo omylem odejit z rozpracovane prace pred ulozenim nebo zrusenim editoru
 - pouzivat stejne workspace zkratky v kartach i samostatnych oknech: `Ctrl+F` pro hledani, `Ctrl+R` pro obnovu prehledovych vysledku, `Ctrl+O` pro vozidlo/vysledek a `Ctrl+P` pro otevreni resene polozky v casove ose, hledani i terminovych prehledech; v nakladech `Ctrl+P` presune fokus na rozpad vybraneho vozidla a v hlavnim shellu maji kontextove zkratky prednost pred globalnim otevrenim vozidla nebo dokladu
 - filtrovat evidencni seznamy `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` vlastnim rychlym hledanim; tlacitko `Vymazat` filtr smaze, vrati fokus do hledani, filtr zachova vyber podle ID a pri prazdnem vysledku vypne akce nad vybranou polozkou
-- radit evidencni seznamy `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do legacy `settings.ini`
+- radit evidencni seznamy `Historie`, `Tankovani`, `Pripominky`, `Plan udrzby` a `Doklady` pres pristupne ovladace `Radit` a `Sestupne`; posledni sloupec i smer razeni se ukladaji do nastaveni datove sady
 - mazat rychle hledani stejnym tlacitkem `Vymazat` i v prehledovych workspacech `Casova osa`, `Globalni hledani`, `Audit`, `Naklady`, `Blizici se terminy` a `Propadle terminy`; po smazani se fokus vrati do prislusneho hledani
 - pouzivat kontextove editacni zkratky v evidencnich workspacech: `Ctrl+N` pro novou polozku, `Ctrl+U` nebo `F2` pro upravu vybrane polozky, `Ctrl+S` pro ulozeni aktivniho editoru a v dokladech `Ctrl+O` / `Ctrl+Shift+O` pro otevreni prilohy nebo slozky
 - v hlavni karte `Historie` a `Tankovani` zobrazit editacni akce primo bez nutnosti nejdriv otevrit samostatne okno; tlacitko `V okne` zustava dostupne pro prehlednejsi modalni praci
@@ -123,11 +130,11 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - otevrit z pristupneho tray okna hlavni okno, dashboard, blizici se terminy, propadle terminy, nejblizsi TK/ZK/pripominku/servis/doklad, filtrovanou kontrolu techto oblasti, tiskovy prehled, export/import zalohy, okamzitou automatickou zalohu, slozku automatickych zaloh, export kalendare, znovunacteni dat, nastaveni, O programu, kontrolu aktualizaci nebo ukoncit aplikaci bez nativniho focus problemu tray menu; tlacitka bez aktualniho cile nebo blokovana rozpracovanou editaci jsou v dialogu neaktivni
 - v background snapshotu pro tray tooltip a oznameni uprednostnit akutni terminy pred obecnym auditem dat, aby propadle nebo blizici se TK/ZK/pripominky/servis/doklady nezapadly za mene nalehavym datovym nedostatkem
 - testovat desktopova oznameni bez vazby na OS runneru: Windows vetev pouziva balonkove oznameni a ne-Windows vetev pristupne inline okno
-- pamatovat posledni desktopove oznameni v legacy `settings.ini` po dnech, aby se stejny akutni termin neoznamoval opakovane pri kazde background kontrole; zmena reminder nastaveni a obnoveni zalohy historii resetuji
+- pamatovat posledni desktopove oznameni v nastaveni datove sady po dnech, aby se stejny akutni termin neoznamoval opakovane pri kazde background kontrole; zmena reminder nastaveni a obnoveni zalohy historii resetuji
 - po probuzeni Windows zachytit systemovy resume signal a po stejne kratke prodleve jako AHK znovu spustit background kontrolu terminu, tooltipu a automatickych zaloh; na ostatnich platformach zatim zustava bezpecny no-op fallback
 - hlidat desktop UI zdroje proti typickym mojibake znakum, aby se poskozena UTF-8 diakritika nevratila do pristupnych nazvu ani textu pro ctecky obrazovky
 - vystavovat souhrnne, stavove a detailni texty v hlavnim shellu i workspacech pres explicitni pristupne nazvy a stabilni `AutomationId`, aby je mohly cist screen readery a kontrolovat UI testy
-- cist a zapisovat podporovane reminder volby do stejneho `settings.ini` jako AHK verze a respektovat `show_dashboard_on_launch`
+- cist a zapisovat podporovane reminder volby do nastaveni datove sady a respektovat `show_dashboard_on_launch`
 - reportovat stejnou verzi jako root `src/VERSION`, vcetne file version pro desktop buildy
 - kontrolovat `update/latest.ini` kompatibilne s AHK vetvi a na Windows pripravit automatickou instalaci pres Inno Setup installer; `Vehimap.Updater` zustava fallback pro starsi archivni/portable balicky
 - v dialogu kontroly aktualizaci ukazat duvod, proc automaticka instalace neni dostupna, napriklad chybejici updater, nepublikovany build, nepodporovanou platformu nebo nekompletni metadata manifestu
@@ -136,8 +143,8 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - pri automaticke instalaci ukazat samostatny dialog `Stahovani aktualizace` s progressbarem, stavem overovani a tlacitkem `Zrusit`; po spusteni Inno Setup instalatoru shell pozada runtime o skutecne ukonceni aplikace, aby Vehimap nezustal schovany v tray a neblokoval update
 - pri poskozenem lokalnim desktop manifestu preskocit lokalni override a zkusit bezny vzdaleny manifest, aby testovaci soubor v `update/` nezablokoval kontrolu aktualizaci
 - pri selhani kontroly aktualizaci, otevreni release poznamek, otevreni assetu nebo spusteni updater helperu udrzet shell bezici a ukazat chybu ve stavovem textu nebo aktualizacnim dialogu
-- otevrit modalni export a obnovu dat a pracovat se stejnym `.vehimapbak` formatem jako AHK vetev
-- pri obnoveni zalohy pred prepsanim aktualnich dat vytvorit AHK-kompatibilni kopii puvodnich TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` a po importu ukazat cestu k teto kopii i pocet obnovenych priloh
+- otevrit modalni export a obnovu dat a pracovat s novym SQLite `.vehimapbak` formatem, zatimco starsi AHK/C# 1.x zalohy zustavaji importovatelne pres legacy parser
+- pri obnoveni zalohy pred prepsanim aktualnich dat vytvorit ochrannou kopii SQLite databaze, pripadnych puvodnich TSV/INI souboru i spravovanych priloh v `data/import-backups/<cas>` a po importu ukazat cestu k teto kopii i pocet obnovenych priloh
 - pri selhani obnovy `.vehimapbak` zobrazit cestu k zaloze a konkretni parser detail vcetne chybne radky priloh, pokud je problem v attachment sekci
 - generovat verzovane release balicky pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`; Windows verejny artefakt je Inno Setup instalator, macOS/Linux zatim zustavaji archivni balicky
 - rozlisovat desktop kanaly `stable`, `beta` a `nightly`; na Windows maji vlastni nazev aplikace, update manifest i systemovou datovou slozku

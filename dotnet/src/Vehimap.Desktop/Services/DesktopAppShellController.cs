@@ -66,6 +66,50 @@ internal sealed class DesktopAppShellController
     public Task OpenPrintableReportAsync(MainWindowViewModel shell, CancellationToken cancellationToken = default) =>
         shell.OpenPrintableVehicleReportAsync(cancellationToken);
 
+    public async Task ExportVehiclePackageAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var packagePath = await shell.PickVehiclePackageExportPathAsync(cancellationToken).ConfigureAwait(true);
+            if (string.IsNullOrWhiteSpace(packagePath))
+            {
+                shell.ShellStatus = "Export balíčku vozidla byl zrušen.";
+                return;
+            }
+
+            await shell.ExportSelectedVehiclePackageAsync(packagePath, cancellationToken).ConfigureAwait(true);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            shell.ShellStatus = $"Export balíčku vozidla se nepodařilo spustit: {ex.Message}";
+        }
+    }
+
+    public async Task ImportVehiclePackageAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "importovat balíček vozidla").ConfigureAwait(true))
+            {
+                shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
+                return;
+            }
+
+            var packagePath = await shell.PickVehiclePackageImportPathAsync(cancellationToken).ConfigureAwait(true);
+            if (string.IsNullOrWhiteSpace(packagePath))
+            {
+                shell.ShellStatus = "Import balíčku vozidla byl zrušen.";
+                return;
+            }
+
+            await shell.ImportVehiclePackageAsync(packagePath, cancellationToken).ConfigureAwait(true);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            shell.ShellStatus = $"Import balíčku vozidla se nepodařilo spustit: {ex.Message}";
+        }
+    }
+
     public async Task ImportBackupAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
         try
