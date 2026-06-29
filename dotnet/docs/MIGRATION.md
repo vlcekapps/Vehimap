@@ -33,6 +33,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - zalozene solution a projekty
 - desktop shell v Avalonia
 - portable/system data root locator
+- kanalove oddeleny single-instance desktop runtime: opakovane spusteni stejneho kanalu `stable`, `beta` nebo `nightly` misto nove instance obnovi bezici hlavni okno z listy
 - primarni cteni a zapis datove sady 2.0 do SQLite `data/vehimap.db`
 - jednorazovou automatickou migraci legacy TSV/INI souboru do SQLite s predmigracni kopii puvodnich dat a presunem zivych TSV/INI mimo runtime koren `data/`
 - diagnostiku poskozenych legacy TSV/INI souboru s nazvem souboru, plnou cestou a puvodnim parser detailem pro shell i testy

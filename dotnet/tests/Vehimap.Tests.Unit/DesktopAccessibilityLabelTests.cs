@@ -744,7 +744,12 @@ public sealed class DesktopAccessibilityLabelTests
         var runtimeController = ReadDesktopServiceFile("DesktopAppRuntimeController.cs");
         var mainWindowCodeBehind = ReadViewCodeBehind("MainWindow.axaml.cs");
         var appStartup = ReadDesktopRootFile("App.axaml.cs");
+        var programStartup = ReadDesktopRootFile("Program.cs");
 
+        Assert.Contains("DesktopSingleInstanceCoordinator.Acquire", programStartup);
+        Assert.Contains("TrySignalExistingInstanceAsync", programStartup);
+        Assert.Contains("SingleInstanceCoordinator?.SetActivationHandler(_runtimeController.RequestShowMainWindowAsync);", appStartup);
+        Assert.Contains("public Task RequestShowMainWindowAsync() => ShowMainWindowAsync();", runtimeController);
         Assert.Contains("public Task RequestOpenTrayActionsAsync() => OpenTrayActionsAsync();", runtimeController);
         Assert.Contains("public Func<Task>? OpenTrayActionsRequested { get; set; }", mainWindowCodeBehind);
         Assert.Contains("await OpenTrayActionsRequested().ConfigureAwait(true);", mainWindowCodeBehind);

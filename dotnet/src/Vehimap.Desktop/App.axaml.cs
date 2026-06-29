@@ -9,7 +9,13 @@ namespace Vehimap.Desktop;
 
 public partial class App : Avalonia.Application
 {
+    private static DesktopSingleInstanceCoordinator? SingleInstanceCoordinator;
     private DesktopAppRuntimeController? _runtimeController;
+
+    internal static void SetSingleInstanceCoordinator(DesktopSingleInstanceCoordinator? coordinator)
+    {
+        SingleInstanceCoordinator = coordinator;
+    }
 
     public override void Initialize()
     {
@@ -42,6 +48,7 @@ public partial class App : Avalonia.Application
             mainWindow.ExitApplicationRequested = _runtimeController.RequestExitAsync;
             mainWindow.MinimizeToTrayRequested = _runtimeController.RequestMinimizeToTrayAsync;
             mainWindow.OpenTrayActionsRequested = _runtimeController.RequestOpenTrayActionsAsync;
+            SingleInstanceCoordinator?.SetActivationHandler(_runtimeController.RequestShowMainWindowAsync);
             desktop.Exit += OnDesktopExit;
             _ = _runtimeController.InitializeAsync();
         }
@@ -56,6 +63,10 @@ public partial class App : Avalonia.Application
             await _runtimeController.DisposeAsync().ConfigureAwait(false);
             _runtimeController = null;
         }
+
+        SingleInstanceCoordinator?.ClearActivationHandler();
+        SingleInstanceCoordinator?.Dispose();
+        SingleInstanceCoordinator = null;
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
