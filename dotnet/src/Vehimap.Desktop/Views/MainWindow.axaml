@@ -13,7 +13,7 @@
         Title="{Binding Title}"
         AutomationProperties.Name="Vehimap"
         AutomationProperties.AutomationId="MainWindow"
-        AutomationProperties.HelpText="Multiplatformní Vehimap. Po otevření je fokus v seznamu vozidel vlevo.">
+        AutomationProperties.HelpText="{i18n:Loc Shell.HelpText}">
   <Window.KeyBindings>
     <KeyBinding Gesture="F5" Command="{Binding ReloadCommand}" />
     <KeyBinding Gesture="Ctrl+E" Command="{Binding ExportCalendarCommand}" />
@@ -41,350 +41,350 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             IsTabStop="False"
-            AutomationProperties.Name="Hlavní nabídka aplikace"
+            AutomationProperties.Name="{i18n:Loc MainMenu.Name}"
             AutomationProperties.AutomationId="AppMenuBar"
             AutomationProperties.LandmarkType="Navigation"
             AutomationProperties.AccessibilityView="Control">
         <MenuItem x:Name="FileMenuRoot"
                   Header="{i18n:Loc MainMenu.File}"
                   IsTabStop="False"
-                  AutomationProperties.Name="Nabídka Soubor"
+                  AutomationProperties.Name="{i18n:Loc MainMenu.File.Name}"
                   AutomationProperties.AutomationId="FileMenuRoot">
           <MenuItem x:Name="PrintableReportButton"
-                    Header="Tiskový přehled"
+                    Header="{i18n:Loc MainMenu.File.PrintableReport}"
                     Click="OnPrintableReportClick"
                     IsEnabled="{Binding CanUseDataActions}"
-                    AutomationProperties.Name="Otevřít tiskový přehled vozidel"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.PrintableReportName}"
                     AutomationProperties.AutomationId="PrintableReportButton" />
           <Separator />
           <MenuItem x:Name="BackupExportButton"
-                    Header="Export dat do zálohy"
+                    Header="{i18n:Loc MainMenu.File.BackupExport}"
                     Click="OnBackupExportClick"
                     IsEnabled="{Binding CanUseDataActions}"
-                    AutomationProperties.Name="Exportovat data aplikace do zálohy"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.BackupExportName}"
                     AutomationProperties.AutomationId="BackupExportButton" />
           <MenuItem x:Name="BackupImportButton"
-                    Header="Obnovit data ze zálohy"
+                    Header="{i18n:Loc MainMenu.File.BackupImport}"
                     Click="OnBackupImportClick"
                     IsEnabled="{Binding CanUseDataActions}"
-                    AutomationProperties.Name="Obnovit data aplikace ze zálohy"
-                    AutomationProperties.HelpText="Vybere záložní soubor a po potvrzení nahradí aktuální datovou sadu. Před obnovou se vytvoří ochranná kopie současných dat."
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.BackupImportName}"
+                    AutomationProperties.HelpText="{i18n:Loc MainMenu.File.BackupImportHelp}"
                     AutomationProperties.AutomationId="BackupImportButton" />
           <MenuItem x:Name="CreateAutomaticBackupNowMenuItem"
-                    Header="Zálohovat ihned"
+                    Header="{i18n:Loc MainMenu.File.BackupNow}"
                     Click="OnCreateAutomaticBackupNowClick"
                     IsEnabled="{Binding CanCreateAutomaticBackupNow}"
-                    AutomationProperties.Name="Vytvořit automatickou zálohu ihned"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.BackupNowName}"
                     AutomationProperties.AutomationId="CreateAutomaticBackupNowMenuItem" />
           <MenuItem x:Name="OpenAutomaticBackupFolderMenuItem"
-                    Header="Otevřít složku automatických záloh"
+                    Header="{i18n:Loc MainMenu.File.OpenAutomaticBackupFolder}"
                     Click="OnOpenAutomaticBackupFolderClick"
                     IsEnabled="{Binding CanOpenAutomaticBackupFolder}"
-                    AutomationProperties.Name="Otevřít složku automatických záloh"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.OpenAutomaticBackupFolder}"
                     AutomationProperties.AutomationId="OpenAutomaticBackupFolderMenuItem" />
           <Separator />
           <MenuItem x:Name="CalendarExportButton"
-                    Header="Exportovat budoucí termíny do kalendáře"
+                    Header="{i18n:Loc MainMenu.File.ExportCalendar}"
                     InputGesture="Ctrl+E"
                     Click="OnCalendarExportClick"
                     IsEnabled="{Binding CanUseDataActions}"
-                    AutomationProperties.Name="Exportovat budoucí termíny do kalendáře"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.ExportCalendarName}"
                     AutomationProperties.AcceleratorKey="Ctrl+E"
                     AutomationProperties.AutomationId="CalendarExportButton" />
           <MenuItem x:Name="ReloadButton"
-                    Header="Načíst data znovu"
+                    Header="{i18n:Loc MainMenu.File.Reload}"
                     InputGesture="F5"
                     Click="OnReloadClick"
                     IsEnabled="{Binding CanUseDataActions}"
-                    AutomationProperties.Name="Znovu načíst data"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.ReloadName}"
                     AutomationProperties.AcceleratorKey="F5"
                     AutomationProperties.AutomationId="ReloadButton" />
           <MenuItem x:Name="OpenDataFolderMenuItem"
-                    Header="Otevřít datovou složku"
+                    Header="{i18n:Loc MainMenu.File.OpenDataFolder}"
                     Click="OnOpenDataFolderClick"
                     IsEnabled="{Binding CanOpenDataFolder}"
-                    AutomationProperties.Name="Otevřít datovou složku Vehimapu"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.OpenDataFolderName}"
                     AutomationProperties.AutomationId="OpenDataFolderMenuItem" />
           <MenuItem x:Name="CheckDataStoreHealthMenuItem"
-                    Header="Zkontrolovat datovou sadu 2.0"
+                    Header="{i18n:Loc MainMenu.File.CheckDataStoreHealth}"
                     Click="OnCheckDataStoreHealthClick"
                     IsEnabled="{Binding CanCheckDataStoreHealth}"
-                    AutomationProperties.Name="Zkontrolovat datovou sadu 2.0"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.CheckDataStoreHealth}"
                     AutomationProperties.AutomationId="CheckDataStoreHealthMenuItem" />
           <MenuItem x:Name="OpenPreMigrationBackupFolderMenuItem"
-                    Header="Otevřít složku předmigrační zálohy"
+                    Header="{i18n:Loc MainMenu.File.OpenPreMigrationBackupFolder}"
                     Click="OnOpenPreMigrationBackupFolderClick"
                     IsEnabled="{Binding CanOpenPreMigrationBackupFolder}"
-                    AutomationProperties.Name="Otevřít složku předmigrační zálohy"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.OpenPreMigrationBackupFolder}"
                     AutomationProperties.AutomationId="OpenPreMigrationBackupFolderMenuItem" />
           <Separator />
           <MenuItem x:Name="FileExitAppButton"
-                    Header="Konec"
+                    Header="{i18n:Loc MainMenu.File.Exit}"
                     Click="OnExitClick"
-                    AutomationProperties.Name="Ukončit aplikaci z nabídky Soubor"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.File.ExitName}"
                     AutomationProperties.AutomationId="FileExitAppButton" />
         </MenuItem>
         <MenuItem x:Name="VehicleMenuRoot"
                   Header="{i18n:Loc MainMenu.Vehicle}"
                   IsTabStop="False"
-                  AutomationProperties.Name="Nabídka Vozidlo"
+                  AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.Name}"
                   AutomationProperties.AutomationId="VehicleMenuRoot">
           <MenuItem x:Name="CreateVehicleMenuItem"
-                    Header="Přidat vozidlo"
+                    Header="{i18n:Loc MainMenu.Vehicle.Create}"
                     InputGesture="Ctrl+N"
                     Click="OnCreateVehicleMenuClick"
                     IsEnabled="{Binding CanCreateVehicle}"
-                    AutomationProperties.Name="Přidat nové vozidlo"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.CreateName}"
                     AutomationProperties.AcceleratorKey="Ctrl+N"
                     AutomationProperties.AutomationId="CreateVehicleMenuItem" />
           <MenuItem x:Name="EditVehicleMenuItem"
-                    Header="Upravit vybrané vozidlo"
+                    Header="{i18n:Loc MainMenu.Vehicle.Edit}"
                     InputGesture="Ctrl+U"
                     Click="OnEditVehicleMenuClick"
                     IsEnabled="{Binding CanEditSelectedVehicle}"
-                    AutomationProperties.Name="Upravit vybrané vozidlo"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.EditName}"
                     AutomationProperties.AcceleratorKey="Ctrl+U"
                     AutomationProperties.AutomationId="EditVehicleMenuItem" />
           <MenuItem x:Name="DeleteVehicleMenuItem"
-                    Header="Odstranit vybrané vozidlo"
+                    Header="{i18n:Loc MainMenu.Vehicle.Delete}"
                     Click="OnDeleteVehicleMenuClick"
                     IsEnabled="{Binding CanDeleteSelectedVehicle}"
-                    AutomationProperties.Name="Odstranit vybrané vozidlo"
-                    AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybrané vozidlo včetně jeho souvisejících evidencí."
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.DeleteName}"
+                    AutomationProperties.HelpText="{i18n:Loc MainMenu.Vehicle.DeleteHelp}"
                     AutomationProperties.AutomationId="DeleteVehicleMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenVehicleDetailMenuItem"
-                    Header="Detail vybraného vozidla"
+                    Header="{i18n:Loc MainMenu.Vehicle.Detail}"
                     InputGesture="Ctrl+O"
                     Click="OnOpenVehicleDetailMenuClick"
                     IsEnabled="{Binding CanOpenVehicleDetailWindow}"
-                    AutomationProperties.Name="Otevřít detail vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.DetailName}"
                     AutomationProperties.AcceleratorKey="Ctrl+O"
                     AutomationProperties.AutomationId="OpenVehicleDetailMenuItem" />
           <MenuItem x:Name="OpenHistoryMenuItem"
-                    Header="Historie vybraného vozidla"
+                    Header="{i18n:Loc MainMenu.Vehicle.History}"
                     InputGesture="Ctrl+H"
                     Click="OnOpenHistoryMenuClick"
                     IsEnabled="{Binding CanOpenHistoryWindow}"
-                    AutomationProperties.Name="Otevřít historii vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.HistoryName}"
                     AutomationProperties.AcceleratorKey="Ctrl+H"
                     AutomationProperties.AutomationId="OpenHistoryMenuItem" />
           <MenuItem x:Name="OpenFuelMenuItem"
-                    Header="Kilometry a tankování"
+                    Header="{i18n:Loc MainMenu.Vehicle.Fuel}"
                     InputGesture="Ctrl+K"
                     Click="OnOpenFuelMenuClick"
                     IsEnabled="{Binding CanOpenFuelWindow}"
-                    AutomationProperties.Name="Otevřít tankování vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.FuelName}"
                     AutomationProperties.AcceleratorKey="Ctrl+K"
                     AutomationProperties.AutomationId="OpenFuelMenuItem" />
           <MenuItem x:Name="OpenRecordsMenuItem"
-                    Header="Pojištění a doklady"
+                    Header="{i18n:Loc MainMenu.Vehicle.Records}"
                     InputGesture="Ctrl+P"
                     Click="OnOpenRecordsMenuClick"
                     IsEnabled="{Binding CanOpenRecordWindow}"
-                    AutomationProperties.Name="Otevřít doklady vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.RecordsName}"
                     AutomationProperties.AcceleratorKey="Ctrl+P"
                     AutomationProperties.AutomationId="OpenRecordsMenuItem" />
           <MenuItem x:Name="OpenRemindersMenuItem"
-                    Header="Vlastní připomínky"
+                    Header="{i18n:Loc MainMenu.Vehicle.Reminders}"
                     InputGesture="Ctrl+R"
                     Click="OnOpenRemindersMenuClick"
                     IsEnabled="{Binding CanOpenReminderWindow}"
-                    AutomationProperties.Name="Otevřít připomínky vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.RemindersName}"
                     AutomationProperties.AcceleratorKey="Ctrl+R"
                     AutomationProperties.AutomationId="OpenRemindersMenuItem" />
           <MenuItem x:Name="OpenMaintenanceMenuItem"
-                    Header="Plán údržby"
+                    Header="{i18n:Loc MainMenu.Vehicle.Maintenance}"
                     InputGesture="Ctrl+M"
                     Click="OnOpenMaintenanceMenuClick"
                     IsEnabled="{Binding CanOpenMaintenanceWindow}"
-                    AutomationProperties.Name="Otevřít plán údržby vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.MaintenanceName}"
                     AutomationProperties.AcceleratorKey="Ctrl+M"
                     AutomationProperties.AutomationId="OpenMaintenanceMenuItem" />
           <MenuItem x:Name="OpenVehicleTimelineMenuItem"
-                    Header="Časová osa vozidla"
+                    Header="{i18n:Loc MainMenu.Vehicle.Timeline}"
                     Click="OnOpenTimelineMenuClick"
                     IsEnabled="{Binding CanOpenVehicleDetailWindow}"
-                    AutomationProperties.Name="Otevřít časovou osu vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.TimelineName}"
                     AutomationProperties.AutomationId="OpenVehicleTimelineMenuItem" />
           <MenuItem x:Name="OpenServiceBookMenuItem"
-                    Header="Servisní knížka"
+                    Header="{i18n:Loc MainMenu.Vehicle.ServiceBook}"
                     Click="OnOpenServiceBookMenuClick"
                     IsEnabled="{Binding CanOpenSelectedVehicleServiceBook}"
-                    AutomationProperties.Name="Otevřít servisní knížku vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.ServiceBookName}"
                     AutomationProperties.AutomationId="OpenServiceBookMenuItem" />
           <MenuItem x:Name="OpenVehicleStarterBundleMenuItem"
-                    Header="Balíček pro vozidlo"
+                    Header="{i18n:Loc MainMenu.Vehicle.StarterBundle}"
                     Click="OnOpenVehicleStarterBundleMenuClick"
                     IsEnabled="{Binding CanOpenVehicleStarterBundle}"
-                    AutomationProperties.Name="Otevřít balíček pro vybrané vozidlo"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.StarterBundleName}"
                     AutomationProperties.AutomationId="OpenVehicleStarterBundleMenuItem" />
           <Separator />
           <MenuItem x:Name="ExportVehiclePackageMenuItem"
-                    Header="Exportovat balíček vozidla"
+                    Header="{i18n:Loc MainMenu.Vehicle.ExportPackage}"
                     Click="OnExportVehiclePackageMenuClick"
                     IsEnabled="{Binding CanExportSelectedVehiclePackage}"
-                    AutomationProperties.Name="Exportovat vybrané vozidlo do balíčku"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.ExportPackageName}"
                     AutomationProperties.AutomationId="ExportVehiclePackageMenuItem" />
           <MenuItem x:Name="ImportVehiclePackageMenuItem"
-                    Header="Importovat balíček vozidla"
+                    Header="{i18n:Loc MainMenu.Vehicle.ImportPackage}"
                     Click="OnImportVehiclePackageMenuClick"
                     IsEnabled="{Binding CanImportVehiclePackage}"
-                    AutomationProperties.Name="Importovat vozidlo z balíčku"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.ImportPackageName}"
                     AutomationProperties.AutomationId="ImportVehiclePackageMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenSelectedVehicleCostsMenuItem"
-                    Header="Náklady a souhrny"
+                    Header="{i18n:Loc MainMenu.Vehicle.Costs}"
                     Click="OnOpenSelectedVehicleCostsMenuClick"
                     IsEnabled="{Binding CanOpenSelectedVehicleCosts}"
-                    AutomationProperties.Name="Otevřít náklady a souhrny vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.CostsName}"
                     AutomationProperties.AutomationId="OpenSelectedVehicleCostsMenuItem" />
         </MenuItem>
         <MenuItem x:Name="OverviewMenuRoot"
                   Header="{i18n:Loc MainMenu.Overview}"
                   IsTabStop="False"
-                  AutomationProperties.Name="Nabídka Přehledy"
+                  AutomationProperties.Name="{i18n:Loc MainMenu.Overview.Name}"
                   AutomationProperties.AutomationId="OverviewMenuRoot">
           <MenuItem x:Name="OpenTimelineMenuItem"
-                    Header="Časová osa vozidla"
+                    Header="{i18n:Loc MainMenu.Overview.Timeline}"
                     Click="OnOpenTimelineMenuClick"
                     IsEnabled="{Binding CanOpenVehicleDetailWindow}"
-                    AutomationProperties.Name="Otevřít časovou osu vybraného vozidla"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Overview.TimelineName}"
                     AutomationProperties.AutomationId="OpenTimelineMenuItem" />
           <MenuItem x:Name="OpenGlobalSearchMenuItem"
-                    Header="Globální hledání"
+                    Header="{i18n:Loc MainMenu.Overview.GlobalSearch}"
                     InputGesture="Ctrl+Shift+F"
                     Click="OnOpenGlobalSearchMenuClick"
-                    AutomationProperties.Name="Otevřít globální hledání"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Overview.GlobalSearchName}"
                     AutomationProperties.AcceleratorKey="Ctrl+Shift+F"
                     AutomationProperties.AutomationId="OpenGlobalSearchMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenAuditMenuItem"
-                    Header="Audit dat"
+                    Header="{i18n:Loc MainMenu.Overview.Audit}"
                     Click="OnOpenAuditMenuClick"
-                    AutomationProperties.Name="Otevřít audit dat"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Overview.AuditName}"
                     AutomationProperties.AutomationId="OpenAuditMenuItem" />
           <MenuItem x:Name="OpenDashboardMenuItem"
-                    Header="Dashboard"
+                    Header="{i18n:Loc MainMenu.Overview.Dashboard}"
                     InputGesture="Ctrl+D"
                     Click="OnOpenDashboardMenuClick"
-                    AutomationProperties.Name="Otevřít dashboard"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Overview.DashboardName}"
                     AutomationProperties.AcceleratorKey="Ctrl+D"
                     AutomationProperties.AutomationId="OpenDashboardMenuItem" />
           <MenuItem x:Name="OpenSmartAdvisorMenuItem"
-                    Header="Chytrý poradce"
+                    Header="{i18n:Loc MainMenu.Overview.SmartAdvisor}"
                     Click="OnOpenSmartAdvisorMenuClick"
-                    AutomationProperties.Name="Otevřít chytrého poradce"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Overview.SmartAdvisorName}"
                     AutomationProperties.AutomationId="OpenSmartAdvisorMenuItem" />
           <MenuItem x:Name="OpenCostMenuItem"
-                    Header="Náklady napříč vozidly"
+                    Header="{i18n:Loc MainMenu.Overview.Cost}"
                     Click="OnOpenCostMenuClick"
-                    AutomationProperties.Name="Otevřít náklady napříč vozidly"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Overview.CostName}"
                     AutomationProperties.AutomationId="OpenCostMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenUpcomingOverviewMenuItem"
-                    Header="Blížící se termíny"
+                    Header="{i18n:Loc MainMenu.Overview.Upcoming}"
                     InputGesture="Ctrl+T"
                     Click="OnOpenUpcomingOverviewMenuClick"
-                    AutomationProperties.Name="Otevřít blížící se termíny"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Overview.UpcomingName}"
                     AutomationProperties.AcceleratorKey="Ctrl+T"
                     AutomationProperties.AutomationId="OpenUpcomingOverviewMenuItem" />
           <MenuItem x:Name="OpenOverdueOverviewMenuItem"
-                    Header="Propadlé termíny"
+                    Header="{i18n:Loc MainMenu.Overview.Overdue}"
                     InputGesture="Ctrl+Shift+T"
                     Click="OnOpenOverdueOverviewMenuClick"
-                    AutomationProperties.Name="Otevřít propadlé termíny"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Overview.OverdueName}"
                     AutomationProperties.AcceleratorKey="Ctrl+Shift+T"
                     AutomationProperties.AutomationId="OpenOverdueOverviewMenuItem" />
           <Separator />
           <MenuItem x:Name="OverviewCalendarExportMenuItem"
-                    Header="Export termínů do kalendáře (.ics)"
+                    Header="{i18n:Loc MainMenu.Overview.CalendarExport}"
                     InputGesture="Ctrl+E"
                     Click="OnCalendarExportClick"
-                    AutomationProperties.Name="Exportovat termíny do kalendáře z nabídky Přehledy"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.Overview.CalendarExportName}"
                     AutomationProperties.AcceleratorKey="Ctrl+E"
                     AutomationProperties.AutomationId="OverviewCalendarExportMenuItem" />
         </MenuItem>
         <MenuItem x:Name="QuickActionsMenuRoot"
                   Header="{i18n:Loc MainMenu.QuickActions}"
                   IsTabStop="False"
-                  AutomationProperties.Name="Nabídka Rychlé akce"
+                  AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.Name}"
                   AutomationProperties.AutomationId="QuickActionsMenuRoot">
           <MenuItem x:Name="OpenBackgroundNotificationMenuItem"
-                    Header="Aktuální upozornění"
+                    Header="{i18n:Loc MainMenu.QuickActions.BackgroundNotification}"
                     Click="OnOpenBackgroundNotificationMenuClick"
                     IsEnabled="{Binding CanOpenBackgroundNotificationQuickAction}"
-                    AutomationProperties.Name="Otevřít aktuální upozornění z pozadí"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.BackgroundNotificationName}"
                     AutomationProperties.AutomationId="OpenBackgroundNotificationMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenNearestTechnicalMenuItem"
-                    Header="Nejbližší TK"
+                    Header="{i18n:Loc MainMenu.QuickActions.NearestTechnical}"
                     Click="OnOpenNearestTechnicalMenuClick"
                     IsEnabled="{Binding CanOpenNearestTechnicalQuickAction}"
-                    AutomationProperties.Name="Otevřít nejbližší technickou kontrolu"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.NearestTechnicalName}"
                     AutomationProperties.AutomationId="OpenNearestTechnicalMenuItem" />
           <MenuItem x:Name="ReviewTechnicalMenuItem"
-                    Header="Zkontrolovat TK"
+                    Header="{i18n:Loc MainMenu.QuickActions.ReviewTechnical}"
                     Click="OnReviewTechnicalMenuClick"
                     IsEnabled="{Binding CanReviewTechnicalQuickAction}"
-                    AutomationProperties.Name="Zkontrolovat technické kontroly"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.ReviewTechnicalName}"
                     AutomationProperties.AutomationId="ReviewTechnicalMenuItem" />
           <MenuItem x:Name="OpenNearestGreenCardMenuItem"
-                    Header="Nejbližší ZK"
+                    Header="{i18n:Loc MainMenu.QuickActions.NearestGreenCard}"
                     Click="OnOpenNearestGreenCardMenuClick"
                     IsEnabled="{Binding CanOpenNearestGreenCardQuickAction}"
-                    AutomationProperties.Name="Otevřít nejbližší zelenou kartu"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.NearestGreenCardName}"
                     AutomationProperties.AutomationId="OpenNearestGreenCardMenuItem" />
           <MenuItem x:Name="ReviewGreenCardsMenuItem"
-                    Header="Zkontrolovat ZK"
+                    Header="{i18n:Loc MainMenu.QuickActions.ReviewGreenCards}"
                     Click="OnReviewGreenCardsMenuClick"
                     IsEnabled="{Binding CanReviewGreenCardsQuickAction}"
-                    AutomationProperties.Name="Zkontrolovat zelené karty"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.ReviewGreenCardsName}"
                     AutomationProperties.AutomationId="ReviewGreenCardsMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenNearestReminderMenuItem"
-                    Header="Nejbližší připomínka"
+                    Header="{i18n:Loc MainMenu.QuickActions.NearestReminder}"
                     Click="OnOpenNearestReminderMenuClick"
                     IsEnabled="{Binding CanOpenNearestReminderQuickAction}"
-                    AutomationProperties.Name="Otevřít nejbližší vlastní připomínku"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.NearestReminderName}"
                     AutomationProperties.AutomationId="OpenNearestReminderMenuItem" />
           <MenuItem x:Name="ReviewRemindersMenuItem"
-                    Header="Zkontrolovat připomínky"
+                    Header="{i18n:Loc MainMenu.QuickActions.ReviewReminders}"
                     Click="OnReviewRemindersMenuClick"
                     IsEnabled="{Binding CanReviewRemindersQuickAction}"
-                    AutomationProperties.Name="Zkontrolovat vlastní připomínky"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.ReviewRemindersName}"
                     AutomationProperties.AutomationId="ReviewRemindersMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenNearestMaintenanceMenuItem"
-                    Header="Nejbližší servis"
+                    Header="{i18n:Loc MainMenu.QuickActions.NearestMaintenance}"
                     Click="OnOpenNearestMaintenanceMenuClick"
                     IsEnabled="{Binding CanOpenNearestMaintenanceQuickAction}"
-                    AutomationProperties.Name="Otevřít nejbližší servisní úkon"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.NearestMaintenanceName}"
                     AutomationProperties.AutomationId="OpenNearestMaintenanceMenuItem" />
           <MenuItem x:Name="ReviewMaintenanceMenuItem"
-                    Header="Zkontrolovat údržbu"
+                    Header="{i18n:Loc MainMenu.QuickActions.ReviewMaintenance}"
                     Click="OnReviewMaintenanceMenuClick"
                     IsEnabled="{Binding CanReviewMaintenanceQuickAction}"
-                    AutomationProperties.Name="Zkontrolovat plán údržby"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.ReviewMaintenanceName}"
                     AutomationProperties.AutomationId="ReviewMaintenanceMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenNearestRecordMenuItem"
-                    Header="Nejbližší doklad"
+                    Header="{i18n:Loc MainMenu.QuickActions.NearestRecord}"
                     Click="OnOpenNearestRecordMenuClick"
                     IsEnabled="{Binding CanOpenNearestRecordQuickAction}"
-                    AutomationProperties.Name="Otevřít nejbližší doklad"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.NearestRecordName}"
                     AutomationProperties.AutomationId="OpenNearestRecordMenuItem" />
           <MenuItem x:Name="ReviewRecordsMenuItem"
-                    Header="Zkontrolovat doklady"
+                    Header="{i18n:Loc MainMenu.QuickActions.ReviewRecords}"
                     Click="OnReviewRecordsMenuClick"
                     IsEnabled="{Binding CanReviewRecordsQuickAction}"
-                    AutomationProperties.Name="Zkontrolovat doklady"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.QuickActions.ReviewRecordsName}"
                     AutomationProperties.AutomationId="ReviewRecordsMenuItem" />
         </MenuItem>
         <MenuItem x:Name="AppMenuRoot"
                   Header="{i18n:Loc MainMenu.App}"
                   IsTabStop="False"
-                  AutomationProperties.Name="Nabídka Aplikace"
+                  AutomationProperties.Name="{i18n:Loc MainMenu.App.Name}"
                   AutomationProperties.AutomationId="AppMenuRoot">
           <MenuItem x:Name="OpenTrayActionsButton"
                     Header="{i18n:Loc MainMenu.App.ActionsOnTray}"
@@ -440,9 +440,9 @@
           Margin="0,18,0,0"
           ColumnDefinitions="180,*"
           RowDefinitions="Auto,Auto,Auto,Auto">
-      <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="SemiBold" Text="Režim dat" />
+      <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="SemiBold" Text="{i18n:Loc Shell.DataModeLabel}" />
       <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DataMode}" AutomationProperties.Name="{Binding DataMode}" AutomationProperties.AutomationId="DataModeText" />
-      <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" Text="Datová složka" />
+      <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" Text="{i18n:Loc Shell.DataPathLabel}" />
       <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataPath}" TextWrapping="Wrap" AutomationProperties.Name="{Binding DataPath}" AutomationProperties.AutomationId="DataPathText" />
       <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Foreground="IndianRed" Text="{Binding LoadError}" TextWrapping="Wrap" AutomationProperties.Name="{Binding LoadError}" AutomationProperties.AutomationId="LoadErrorText" AutomationProperties.LiveSetting="Assertive" />
       <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="0,8,0,0" Text="{Binding ShellStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ShellStatus}" AutomationProperties.AutomationId="ShellStatusText" AutomationProperties.LiveSetting="Polite" />
@@ -453,43 +453,43 @@
           ColumnDefinitions="*,*,*,*,*,*,*">
       <Border Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
         <StackPanel>
-          <TextBlock FontWeight="SemiBold" Text="Vozidla" />
+          <TextBlock FontWeight="SemiBold" Text="{i18n:Loc Shell.VehicleCount}" />
           <TextBlock FontSize="22" Text="{Binding VehicleCount}" />
         </StackPanel>
       </Border>
       <Border Grid.Column="1" Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
         <StackPanel>
-          <TextBlock FontWeight="SemiBold" Text="Historie" />
+          <TextBlock FontWeight="SemiBold" Text="{i18n:Loc Shell.HistoryCount}" />
           <TextBlock FontSize="22" Text="{Binding HistoryCount}" />
         </StackPanel>
       </Border>
       <Border Grid.Column="2" Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
         <StackPanel>
-          <TextBlock FontWeight="SemiBold" Text="Tankování" />
+          <TextBlock FontWeight="SemiBold" Text="{i18n:Loc Shell.FuelCount}" />
           <TextBlock FontSize="22" Text="{Binding FuelCount}" />
         </StackPanel>
       </Border>
       <Border Grid.Column="3" Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
         <StackPanel>
-          <TextBlock FontWeight="SemiBold" Text="Doklady" />
+          <TextBlock FontWeight="SemiBold" Text="{i18n:Loc Shell.RecordsCount}" />
           <TextBlock FontSize="22" Text="{Binding RecordsCount}" />
         </StackPanel>
       </Border>
       <Border Grid.Column="4" Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
         <StackPanel>
-          <TextBlock FontWeight="SemiBold" Text="Připomínky" />
+          <TextBlock FontWeight="SemiBold" Text="{i18n:Loc Shell.RemindersCount}" />
           <TextBlock FontSize="22" Text="{Binding RemindersCount}" />
         </StackPanel>
       </Border>
       <Border Grid.Column="5" Margin="0,0,8,0" Padding="12" Background="#143A4A5A" CornerRadius="8">
         <StackPanel>
-          <TextBlock FontWeight="SemiBold" Text="Údržba" />
+          <TextBlock FontWeight="SemiBold" Text="{i18n:Loc Shell.MaintenanceCount}" />
           <TextBlock FontSize="22" Text="{Binding MaintenanceCount}" />
         </StackPanel>
       </Border>
       <Border Grid.Column="6" Padding="12" Background="#143A4A5A" CornerRadius="8">
         <StackPanel>
-          <TextBlock FontWeight="SemiBold" Text="Audit" />
+          <TextBlock FontWeight="SemiBold" Text="{i18n:Loc Shell.AuditCount}" />
           <TextBlock FontSize="22" Text="{Binding AuditCount}" />
         </StackPanel>
       </Border>
@@ -511,31 +511,31 @@
                 AutomationProperties.LandmarkType="Search"
                 AutomationProperties.AccessibilityView="Control">
             <StackPanel Margin="0,0,12,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Kategorie" />
+              <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleList.Category}" />
               <ComboBox x:Name="VehicleCategoryFilterBox"
                         ItemsSource="{Binding VehicleCategoryFilters}"
                         SelectedItem="{Binding SelectedVehicleCategoryFilter}"
                         IsEnabled="{Binding CanUseVehicleList}"
-                        AutomationProperties.Name="Filtr kategorie vozidel"
+                        AutomationProperties.Name="{i18n:Loc VehicleList.CategoryFilterName}"
                         AutomationProperties.AutomationId="VehicleCategoryFilterBox" />
             </StackPanel>
             <StackPanel Grid.Column="1" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Filtr seznamu" />
+              <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleList.StatusFilter}" />
               <ComboBox x:Name="VehicleStatusFilterBox"
                         ItemsSource="{Binding VehicleStatusFilters}"
                         SelectedItem="{Binding SelectedVehicleStatusFilter}"
                         IsEnabled="{Binding CanUseVehicleList}"
-                        AutomationProperties.Name="Filtr stavu vozidel"
+                        AutomationProperties.Name="{i18n:Loc VehicleList.StatusFilterName}"
                         AutomationProperties.AutomationId="VehicleStatusFilterBox" />
             </StackPanel>
             <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,12,0,0" Spacing="6">
-              <TextBlock FontWeight="SemiBold" Text="Hledání v seznamu vozidel" />
+              <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleList.SearchHeading}" />
               <TextBox x:Name="VehicleSearchBox"
                        Text="{Binding VehicleSearchText}"
-                       PlaceholderText="Název, značka, SPZ, poznámka nebo štítek"
+                       PlaceholderText="{i18n:Loc VehicleList.SearchPlaceholder}"
                        IsEnabled="{Binding CanUseVehicleList}"
-                       AutomationProperties.Name="Hledání v seznamu vozidel"
-                       AutomationProperties.HelpText="Název, značka, SPZ, poznámka nebo štítek"
+                       AutomationProperties.Name="{i18n:Loc VehicleList.SearchHeading}"
+                       AutomationProperties.HelpText="{i18n:Loc VehicleList.SearchPlaceholder}"
                        AutomationProperties.AutomationId="VehicleSearchBox" />
             </StackPanel>
             <Button Grid.Row="2"
@@ -544,16 +544,16 @@
                     MinWidth="120"
                     HorizontalAlignment="Right"
                     Command="{Binding ClearVehicleFiltersCommand}"
-                    Content="Vymazat filtry"
-                    AutomationProperties.Name="Vymazat filtry seznamu vozidel"
+                    Content="{i18n:Loc VehicleList.ClearFilters}"
+                    AutomationProperties.Name="{i18n:Loc VehicleList.ClearFiltersName}"
                     AutomationProperties.AutomationId="ClearVehicleFiltersButton" />
             <CheckBox Grid.Row="3"
                       Grid.ColumnSpan="2"
                       Margin="0,12,0,0"
                       IsChecked="{Binding HideInactiveVehicles}"
                       IsEnabled="{Binding CanUseVehicleList}"
-                      Content="Skrýt archivovaná a odstavená vozidla"
-                      AutomationProperties.Name="Skrýt archivovaná a odstavená vozidla"
+                      Content="{i18n:Loc VehicleList.HideInactive}"
+                      AutomationProperties.Name="{i18n:Loc VehicleList.HideInactive}"
                       AutomationProperties.AutomationId="HideInactiveVehiclesCheckBox" />
           </Grid>
           <TextBlock Grid.Row="2"
@@ -572,9 +572,9 @@
                    Focusable="True"
                    IsTabStop="True"
                    SelectionChanged="OnVehicleSelectionChanged"
-                   AutomationProperties.Name="Seznam načtených vozidel"
+                   AutomationProperties.Name="{i18n:Loc VehicleList.ListName}"
                    AutomationProperties.AutomationId="VehicleListBox"
-                   AutomationProperties.HelpText="Šipkami vyberte vozidlo. Detail a související evidence se zobrazí vpravo.">
+                   AutomationProperties.HelpText="{i18n:Loc VehicleList.ListHelp}">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:VehicleListItemViewModel">
                 <Border Padding="10"
@@ -582,7 +582,7 @@
                         Background="#10203040"
                         CornerRadius="6"
                         AutomationProperties.Name="{Binding AccessibleLabel}"
-                        AutomationProperties.ItemType="Vozidlo"
+                        AutomationProperties.ItemType="{i18n:Loc VehicleList.ItemType}"
                         AutomationProperties.ItemStatus="{Binding StatusSummary}">
                   <StackPanel Spacing="4">
                     <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
@@ -602,12 +602,12 @@
         <Grid RowDefinitions="Auto,*">
           <Grid RowDefinitions="Auto,Auto,Auto">
             <TextBlock FontWeight="SemiBold"
-                       Text="Hlavní pracovní karty vybraného vozidla" />
+                       Text="{i18n:Loc WorkspaceTabs.Heading}" />
             <WrapPanel Grid.Row="1"
                        Margin="0,12,0,0"
                        IsEnabled="{Binding CanUseWorkspaceNavigation}"
-                       AutomationProperties.Name="Hlavní pracovní karty vybraného vozidla"
-                       AutomationProperties.HelpText="Tabem přejdete na právě vybranou kartu. Šipkami vlevo a vpravo můžete změnit kartu.">
+                       AutomationProperties.Name="{i18n:Loc WorkspaceTabs.Heading}"
+                       AutomationProperties.HelpText="{i18n:Loc WorkspaceTabs.Help}">
               <RadioButton x:Name="DetailTabButton"
                       Classes="tab-header"
                       GroupName="VehicleTabs"
@@ -615,8 +615,8 @@
                       IsTabStop="{Binding IsDetailTabSelected}"
                       Tag="0"
                       Click="OnTabHeaderClick"
-                      Content="Detail"
-                      AutomationProperties.Name="Karta Detail"
+                      Content="{i18n:Loc WorkspaceTabs.Detail}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.DetailName}"
                       AutomationProperties.AutomationId="DetailTabButton" />
               <RadioButton x:Name="HistoryTabButton"
                       Classes="tab-header"
@@ -625,8 +625,8 @@
                       IsTabStop="{Binding IsHistoryTabSelected}"
                       Tag="1"
                       Click="OnTabHeaderClick"
-                      Content="Historie"
-                      AutomationProperties.Name="Karta Historie"
+                      Content="{i18n:Loc WorkspaceTabs.History}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.HistoryName}"
                       AutomationProperties.AutomationId="HistoryTabButton" />
               <RadioButton x:Name="FuelTabButton"
                       Classes="tab-header"
@@ -635,8 +635,8 @@
                       IsTabStop="{Binding IsFuelTabSelected}"
                       Tag="2"
                       Click="OnTabHeaderClick"
-                      Content="Tankování"
-                      AutomationProperties.Name="Karta Tankování"
+                      Content="{i18n:Loc WorkspaceTabs.Fuel}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.FuelName}"
                       AutomationProperties.AutomationId="FuelTabButton" />
               <RadioButton x:Name="ReminderTabButton"
                       Classes="tab-header"
@@ -645,8 +645,8 @@
                       IsTabStop="{Binding IsReminderTabSelected}"
                       Tag="3"
                       Click="OnTabHeaderClick"
-                      Content="Připomínky"
-                      AutomationProperties.Name="Karta Připomínky"
+                      Content="{i18n:Loc WorkspaceTabs.Reminder}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.ReminderName}"
                       AutomationProperties.AutomationId="ReminderTabButton" />
               <RadioButton x:Name="MaintenanceTabButton"
                       Classes="tab-header"
@@ -655,8 +655,8 @@
                       IsTabStop="{Binding IsMaintenanceTabSelected}"
                       Tag="4"
                       Click="OnTabHeaderClick"
-                      Content="Údržba"
-                      AutomationProperties.Name="Karta Údržba"
+                      Content="{i18n:Loc WorkspaceTabs.Maintenance}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.MaintenanceName}"
                       AutomationProperties.AutomationId="MaintenanceTabButton" />
               <RadioButton x:Name="TimelineTabButton"
                       Classes="tab-header"
@@ -665,8 +665,8 @@
                       IsTabStop="{Binding IsTimelineTabSelected}"
                       Tag="5"
                       Click="OnTabHeaderClick"
-                      Content="Časová osa"
-                      AutomationProperties.Name="Karta Časová osa"
+                      Content="{i18n:Loc WorkspaceTabs.Timeline}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.TimelineName}"
                       AutomationProperties.AutomationId="TimelineTabButton" />
               <RadioButton x:Name="RecordTabButton"
                       Classes="tab-header"
@@ -675,8 +675,8 @@
                       IsTabStop="{Binding IsRecordTabSelected}"
                       Tag="6"
                       Click="OnTabHeaderClick"
-                      Content="Doklady"
-                      AutomationProperties.Name="Karta Doklady"
+                      Content="{i18n:Loc WorkspaceTabs.Record}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.RecordName}"
                       AutomationProperties.AutomationId="RecordTabButton" />
               <RadioButton x:Name="AuditTabButton"
                       Classes="tab-header"
@@ -685,8 +685,8 @@
                       IsTabStop="{Binding IsAuditTabSelected}"
                       Tag="7"
                       Click="OnTabHeaderClick"
-                      Content="Audit"
-                      AutomationProperties.Name="Karta Audit"
+                      Content="{i18n:Loc WorkspaceTabs.Audit}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.AuditName}"
                       AutomationProperties.AutomationId="AuditTabButton" />
               <RadioButton x:Name="CostTabButton"
                       Classes="tab-header"
@@ -695,8 +695,8 @@
                       IsTabStop="{Binding IsCostTabSelected}"
                       Tag="8"
                       Click="OnTabHeaderClick"
-                      Content="Náklady"
-                      AutomationProperties.Name="Karta Náklady"
+                      Content="{i18n:Loc WorkspaceTabs.Cost}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.CostName}"
                       AutomationProperties.AutomationId="CostTabButton" />
               <RadioButton x:Name="DashboardTabButton"
                       Classes="tab-header"
@@ -705,8 +705,8 @@
                       IsTabStop="{Binding IsDashboardTabSelected}"
                       Tag="9"
                       Click="OnTabHeaderClick"
-                      Content="Dashboard"
-                      AutomationProperties.Name="Karta Dashboard"
+                      Content="{i18n:Loc WorkspaceTabs.Dashboard}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.DashboardName}"
                       AutomationProperties.AutomationId="DashboardTabButton" />
               <RadioButton x:Name="SearchTabButton"
                       Classes="tab-header"
@@ -715,8 +715,8 @@
                       IsTabStop="{Binding IsSearchTabSelected}"
                       Tag="10"
                       Click="OnTabHeaderClick"
-                      Content="Hledání"
-                      AutomationProperties.Name="Karta Hledání"
+                      Content="{i18n:Loc WorkspaceTabs.GlobalSearch}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.GlobalSearchName}"
                       AutomationProperties.AutomationId="SearchTabButton" />
               <RadioButton x:Name="UpcomingOverviewTabButton"
                       Classes="tab-header"
@@ -725,8 +725,8 @@
                       IsTabStop="{Binding IsUpcomingOverviewTabSelected}"
                       Tag="11"
                       Click="OnTabHeaderClick"
-                      Content="Termíny"
-                      AutomationProperties.Name="Karta Termíny"
+                      Content="{i18n:Loc WorkspaceTabs.Upcoming}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.UpcomingName}"
                       AutomationProperties.AutomationId="UpcomingOverviewTabButton" />
               <RadioButton x:Name="OverdueOverviewTabButton"
                       Classes="tab-header"
@@ -735,8 +735,8 @@
                       IsTabStop="{Binding IsOverdueOverviewTabSelected}"
                       Tag="12"
                       Click="OnTabHeaderClick"
-                      Content="Propadlé"
-                      AutomationProperties.Name="Karta Propadlé termíny"
+                      Content="{i18n:Loc WorkspaceTabs.Overdue}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.OverdueName}"
                       AutomationProperties.AutomationId="OverdueOverviewTabButton" />
               <RadioButton x:Name="SmartAdvisorTabButton"
                       Classes="tab-header"
@@ -745,8 +745,8 @@
                       IsTabStop="{Binding IsSmartAdvisorTabSelected}"
                       Tag="13"
                       Click="OnTabHeaderClick"
-                      Content="Poradce"
-                      AutomationProperties.Name="Karta Chytrý poradce"
+                      Content="{i18n:Loc WorkspaceTabs.SmartAdvisor}"
+                      AutomationProperties.Name="{i18n:Loc WorkspaceTabs.SmartAdvisorName}"
                       AutomationProperties.AutomationId="SmartAdvisorTabButton" />
             </WrapPanel>
             <TextBlock Grid.Row="2"
@@ -761,16 +761,16 @@
 
           <Grid Grid.Row="1"
                 Margin="0,16,0,0"
-                AutomationProperties.Name="Obsah vybrané hlavní pracovní karty"
-                AutomationProperties.HelpText="Obsah se mění podle zvolené karty nahoře.">
+                AutomationProperties.Name="{i18n:Loc WorkspaceTabs.ContentName}"
+                AutomationProperties.HelpText="{i18n:Loc WorkspaceTabs.ContentHelp}">
             <Grid IsVisible="{Binding IsDetailTabSelected}" Margin="0,8,0,0" RowDefinitions="Auto,*">
               <Button Width="128"
                       x:Name="OpenVehicleDetailWindowButton"
                       HorizontalAlignment="Left"
                       Click="OnOpenVehicleDetailWindowClick"
                       IsEnabled="{Binding CanOpenVehicleDetailWindow}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít detail vozidla v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Detail}"
                       AutomationProperties.AutomationId="OpenVehicleDetailWindowButton" />
               <workspaces:VehicleDetailWorkspaceView Grid.Row="1"
                                                     Margin="0,16,0,0"
@@ -784,8 +784,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenHistoryWindowClick"
                       IsEnabled="{Binding CanOpenHistoryWindow}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít historii v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.History}"
                       AutomationProperties.AutomationId="OpenHistoryWindowButton" />
               <workspaces:HistoryWorkspaceView Grid.Row="1"
                                               Margin="0,16,0,0"
@@ -799,8 +799,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenFuelWindowClick"
                       IsEnabled="{Binding CanOpenFuelWindow}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít tankování v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Fuel}"
                       AutomationProperties.AutomationId="OpenFuelWindowButton" />
               <workspaces:FuelWorkspaceView Grid.Row="1"
                                            Margin="0,16,0,0"
@@ -814,8 +814,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenRemindersWindowClick"
                       IsEnabled="{Binding CanOpenReminderWindow}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít připomínky v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Reminder}"
                       AutomationProperties.AutomationId="OpenReminderWindowButton" />
               <workspaces:ReminderWorkspaceView Grid.Row="1"
                                                Margin="0,16,0,0"
@@ -829,8 +829,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenMaintenanceWindowClick"
                       IsEnabled="{Binding CanOpenMaintenanceWindow}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít plán údržby v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Maintenance}"
                       AutomationProperties.AutomationId="OpenMaintenanceWindowButton" />
               <workspaces:MaintenanceWorkspaceView Grid.Row="1"
                                                   Margin="0,16,0,0"
@@ -844,8 +844,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenTimelineWindowClick"
                       IsEnabled="{Binding CanOpenVehicleDetailWindow}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít časovou osu v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Timeline}"
                       AutomationProperties.AutomationId="OpenTimelineWindowButton" />
               <workspaces:TimelineWorkspaceView Grid.Row="1"
                                                 Margin="0,16,0,0"
@@ -858,8 +858,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenRecordsWindowClick"
                       IsEnabled="{Binding CanOpenRecordWindow}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít doklady v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Record}"
                       AutomationProperties.AutomationId="OpenRecordWindowButton" />
               <workspaces:RecordWorkspaceView Grid.Row="1"
                                              Margin="0,16,0,0"
@@ -873,8 +873,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenAuditWindowClick"
                       IsEnabled="{Binding CanUseWorkspaceNavigation}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít audit v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Audit}"
                       AutomationProperties.AutomationId="OpenAuditWindowButton" />
               <workspaces:AuditWorkspaceView Grid.Row="1"
                                             Margin="0,16,0,0"
@@ -887,8 +887,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenCostWindowClick"
                       IsEnabled="{Binding CanUseWorkspaceNavigation}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít náklady v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Cost}"
                       AutomationProperties.AutomationId="OpenCostWindowButton" />
               <workspaces:CostWorkspaceView Grid.Row="1"
                                            Margin="0,16,0,0"
@@ -901,8 +901,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenDashboardWindowClick"
                       IsEnabled="{Binding CanUseWorkspaceNavigation}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít dashboard v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Dashboard}"
                       AutomationProperties.AutomationId="OpenDashboardWindowButton" />
               <workspaces:DashboardWorkspaceView Grid.Row="1"
                                                 Margin="0,16,0,0"
@@ -915,8 +915,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenGlobalSearchWindowClick"
                       IsEnabled="{Binding CanUseWorkspaceNavigation}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít globální hledání v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.GlobalSearch}"
                       AutomationProperties.AutomationId="OpenGlobalSearchWindowButton" />
               <workspaces:GlobalSearchWorkspaceView Grid.Row="1"
                                                     Margin="0,16,0,0"
@@ -929,8 +929,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenUpcomingOverviewWindowClick"
                       IsEnabled="{Binding CanUseWorkspaceNavigation}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít blížící se termíny v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Upcoming}"
                       AutomationProperties.AutomationId="OpenUpcomingOverviewWindowButton" />
               <workspaces:UpcomingOverviewWorkspaceView Grid.Row="1"
                                                         Margin="0,16,0,0"
@@ -943,8 +943,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenOverdueOverviewWindowClick"
                       IsEnabled="{Binding CanUseWorkspaceNavigation}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít propadlé termíny v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.Overdue}"
                       AutomationProperties.AutomationId="OpenOverdueOverviewWindowButton" />
               <workspaces:OverdueOverviewWorkspaceView Grid.Row="1"
                                                        Margin="0,16,0,0"
@@ -957,8 +957,8 @@
                       HorizontalAlignment="Left"
                       Click="OnOpenSmartAdvisorWindowClick"
                       IsEnabled="{Binding CanUseWorkspaceNavigation}"
-                      Content="V okně"
-                      AutomationProperties.Name="Otevřít chytrého poradce v samostatném okně"
+                      Content="{i18n:Loc WorkspaceTabs.OpenInWindow}"
+                      AutomationProperties.Name="{i18n:Loc OpenWorkspaceWindow.SmartAdvisor}"
                       AutomationProperties.AutomationId="OpenSmartAdvisorWindowButton" />
               <workspaces:SmartAdvisorWorkspaceView Grid.Row="1"
                                                     Margin="0,16,0,0"
@@ -972,7 +972,7 @@
     <TextBlock Grid.Row="4"
                Margin="0,16,0,0"
                Opacity="0.75"
-               Text="Vehimap pracuje nad stejnými daty jako původní AHK verze a nabízí detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard, chytrého poradce, globální hledání i přehled termínů. Editace se otevírá v samostatných oknech s dotaženou přístupností a návratem přes Zrušit."
+               Text="{i18n:Loc Shell.Footer}"
                TextWrapping="Wrap" />
   </Grid>
 </Window>

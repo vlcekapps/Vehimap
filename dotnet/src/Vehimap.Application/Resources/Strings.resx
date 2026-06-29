@@ -14,10 +14,26 @@
   <data name="About.CopyDiagnosticsName" xml:space="preserve"><value>Copy application diagnostics to the clipboard</value></data>
   <data name="About.Description" xml:space="preserve"><value>Accessible vehicle records for Windows and gradually more platforms.</value></data>
   <data name="About.DiagnosticsName" xml:space="preserve"><value>Application diagnostic data</value></data>
+  <data name="About.Diagnostics.ApplicationPath" xml:space="preserve"><value>Application file: {0}</value></data>
+  <data name="About.Diagnostics.AppVersion" xml:space="preserve"><value>Application version: {0}</value></data>
+  <data name="About.Diagnostics.Author" xml:space="preserve"><value>Author: {0}</value></data>
+  <data name="About.Diagnostics.AuthorSupport" xml:space="preserve"><value>Thank the author: {0}</value></data>
+  <data name="About.Diagnostics.DataMode" xml:space="preserve"><value>Data mode: {0}</value></data>
+  <data name="About.Diagnostics.DataPath" xml:space="preserve"><value>Data folder: {0}</value></data>
+  <data name="About.Diagnostics.FileVersion" xml:space="preserve"><value>File version: {0}</value></data>
+  <data name="About.Diagnostics.Framework" xml:space="preserve"><value>.NET runtime: {0}</value></data>
+  <data name="About.Diagnostics.Header" xml:space="preserve"><value>Vehimap - About</value></data>
+  <data name="About.Diagnostics.Platform" xml:space="preserve"><value>Platform: {0}</value></data>
+  <data name="About.Diagnostics.ReleaseChannel" xml:space="preserve"><value>Channel: {0}</value></data>
+  <data name="About.Diagnostics.ReleaseNotes" xml:space="preserve"><value>Release notes: {0}</value></data>
+  <data name="About.Diagnostics.RuntimeMode" xml:space="preserve"><value>Run mode: {0}</value></data>
+  <data name="About.Diagnostics.Title" xml:space="preserve"><value>Name: {0}</value></data>
   <data name="About.HelpText" xml:space="preserve"><value>Information about Vehimap. Ctrl+O opens release notes, Ctrl+K opens the author support page, Ctrl+Shift+C copies diagnostic data and Escape closes the dialog.</value></data>
   <data name="About.Status.Basic" xml:space="preserve"><value>Basic application information is displayed. Diagnostic data can be shown or copied for support.</value></data>
   <data name="About.Status.DiagnosticsHidden" xml:space="preserve"><value>Diagnostic data is hidden. The standard view contains only basic information.</value></data>
   <data name="About.Status.DiagnosticsVisible" xml:space="preserve"><value>Diagnostic data is displayed. It can be copied for support.</value></data>
+  <data name="About.Toggle.HideDiagnostics" xml:space="preserve"><value>Hide diagnostic data</value></data>
+  <data name="About.Toggle.ShowDiagnostics" xml:space="preserve"><value>Show diagnostic data</value></data>
   <data name="About.ReleaseNotesName" xml:space="preserve"><value>Open release notes</value></data>
   <data name="About.ThankAuthorHelpText" xml:space="preserve"><value>Open the page where you can thank the author by supporting the work.</value></data>
   <data name="About.Title" xml:space="preserve"><value>About</value></data>
@@ -31,15 +47,126 @@
   <data name="MainMenu.App.Exit" xml:space="preserve"><value>Exit application</value></data>
   <data name="MainMenu.App.Feedback" xml:space="preserve"><value>Report feedback</value></data>
   <data name="MainMenu.App.MinimizeToTray" xml:space="preserve"><value>Minimize to tray</value></data>
+  <data name="MainMenu.App.Name" xml:space="preserve"><value>Application menu</value></data>
   <data name="MainMenu.App.OpenAboutName" xml:space="preserve"><value>Open the About dialog</value></data>
   <data name="MainMenu.App.OpenSettingsName" xml:space="preserve"><value>Open application settings</value></data>
   <data name="MainMenu.App.OpenTrayActionsName" xml:space="preserve"><value>Open accessible Vehimap tray actions</value></data>
   <data name="MainMenu.App.Settings" xml:space="preserve"><value>Settings</value></data>
   <data name="MainMenu.App.ThankAuthor" xml:space="preserve"><value>Thank the author</value></data>
   <data name="MainMenu.File" xml:space="preserve"><value>_File</value></data>
+  <data name="MainMenu.Name" xml:space="preserve"><value>Main application menu</value></data>
+  <data name="MainMenu.File.BackupExport" xml:space="preserve"><value>Export data backup</value></data>
+  <data name="MainMenu.File.BackupExportName" xml:space="preserve"><value>Export application data to a backup</value></data>
+  <data name="MainMenu.File.BackupImport" xml:space="preserve"><value>Restore data from backup</value></data>
+  <data name="MainMenu.File.BackupImportHelp" xml:space="preserve"><value>Selects a backup file and replaces the current data set after confirmation. A protective copy of current data is created before restore.</value></data>
+  <data name="MainMenu.File.BackupImportName" xml:space="preserve"><value>Restore application data from backup</value></data>
+  <data name="MainMenu.File.BackupNow" xml:space="preserve"><value>Back up now</value></data>
+  <data name="MainMenu.File.BackupNowName" xml:space="preserve"><value>Create an automatic backup now</value></data>
+  <data name="MainMenu.File.CheckDataStoreHealth" xml:space="preserve"><value>Check data set 2.0</value></data>
+  <data name="MainMenu.File.Exit" xml:space="preserve"><value>Exit</value></data>
+  <data name="MainMenu.File.ExitName" xml:space="preserve"><value>Exit the application from the File menu</value></data>
+  <data name="MainMenu.File.ExportCalendar" xml:space="preserve"><value>Export future due dates to calendar</value></data>
+  <data name="MainMenu.File.ExportCalendarName" xml:space="preserve"><value>Export future due dates to calendar</value></data>
+  <data name="MainMenu.File.Name" xml:space="preserve"><value>File menu</value></data>
+  <data name="MainMenu.File.OpenAutomaticBackupFolder" xml:space="preserve"><value>Open automatic backup folder</value></data>
+  <data name="MainMenu.File.OpenDataFolder" xml:space="preserve"><value>Open data folder</value></data>
+  <data name="MainMenu.File.OpenDataFolderName" xml:space="preserve"><value>Open the Vehimap data folder</value></data>
+  <data name="MainMenu.File.OpenPreMigrationBackupFolder" xml:space="preserve"><value>Open pre-migration backup folder</value></data>
+  <data name="MainMenu.File.PrintableReport" xml:space="preserve"><value>Printable overview</value></data>
+  <data name="MainMenu.File.PrintableReportName" xml:space="preserve"><value>Open printable vehicle overview</value></data>
+  <data name="MainMenu.File.Reload" xml:space="preserve"><value>Reload data</value></data>
+  <data name="MainMenu.File.ReloadName" xml:space="preserve"><value>Reload data</value></data>
   <data name="MainMenu.Overview" xml:space="preserve"><value>_Overviews</value></data>
+  <data name="MainMenu.Overview.Audit" xml:space="preserve"><value>Data audit</value></data>
+  <data name="MainMenu.Overview.AuditName" xml:space="preserve"><value>Open data audit</value></data>
+  <data name="MainMenu.Overview.CalendarExport" xml:space="preserve"><value>Export due dates to calendar (.ics)</value></data>
+  <data name="MainMenu.Overview.CalendarExportName" xml:space="preserve"><value>Export due dates to calendar from the Overviews menu</value></data>
+  <data name="MainMenu.Overview.Cost" xml:space="preserve"><value>Costs across vehicles</value></data>
+  <data name="MainMenu.Overview.CostName" xml:space="preserve"><value>Open costs across vehicles</value></data>
+  <data name="MainMenu.Overview.Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="MainMenu.Overview.DashboardName" xml:space="preserve"><value>Open dashboard</value></data>
+  <data name="MainMenu.Overview.GlobalSearch" xml:space="preserve"><value>Global search</value></data>
+  <data name="MainMenu.Overview.GlobalSearchName" xml:space="preserve"><value>Open global search</value></data>
+  <data name="MainMenu.Overview.Name" xml:space="preserve"><value>Overviews menu</value></data>
+  <data name="MainMenu.Overview.Overdue" xml:space="preserve"><value>Overdue due dates</value></data>
+  <data name="MainMenu.Overview.OverdueName" xml:space="preserve"><value>Open overdue due dates</value></data>
+  <data name="MainMenu.Overview.SmartAdvisor" xml:space="preserve"><value>Smart advisor</value></data>
+  <data name="MainMenu.Overview.SmartAdvisorName" xml:space="preserve"><value>Open smart advisor</value></data>
+  <data name="MainMenu.Overview.Timeline" xml:space="preserve"><value>Vehicle timeline</value></data>
+  <data name="MainMenu.Overview.TimelineName" xml:space="preserve"><value>Open selected vehicle timeline</value></data>
+  <data name="MainMenu.Overview.Upcoming" xml:space="preserve"><value>Upcoming due dates</value></data>
+  <data name="MainMenu.Overview.UpcomingName" xml:space="preserve"><value>Open upcoming due dates</value></data>
   <data name="MainMenu.QuickActions" xml:space="preserve"><value>_Quick actions</value></data>
+  <data name="MainMenu.QuickActions.BackgroundNotification" xml:space="preserve"><value>Current notification</value></data>
+  <data name="MainMenu.QuickActions.BackgroundNotificationName" xml:space="preserve"><value>Open the current background notification</value></data>
+  <data name="MainMenu.QuickActions.Name" xml:space="preserve"><value>Quick actions menu</value></data>
+  <data name="MainMenu.QuickActions.NearestGreenCard" xml:space="preserve"><value>Nearest green card</value></data>
+  <data name="MainMenu.QuickActions.NearestGreenCardName" xml:space="preserve"><value>Open the nearest green card</value></data>
+  <data name="MainMenu.QuickActions.NearestMaintenance" xml:space="preserve"><value>Nearest service</value></data>
+  <data name="MainMenu.QuickActions.NearestMaintenanceName" xml:space="preserve"><value>Open the nearest service task</value></data>
+  <data name="MainMenu.QuickActions.NearestRecord" xml:space="preserve"><value>Nearest document</value></data>
+  <data name="MainMenu.QuickActions.NearestRecordName" xml:space="preserve"><value>Open the nearest document</value></data>
+  <data name="MainMenu.QuickActions.NearestReminder" xml:space="preserve"><value>Nearest reminder</value></data>
+  <data name="MainMenu.QuickActions.NearestReminderName" xml:space="preserve"><value>Open the nearest custom reminder</value></data>
+  <data name="MainMenu.QuickActions.NearestTechnical" xml:space="preserve"><value>Nearest technical inspection</value></data>
+  <data name="MainMenu.QuickActions.NearestTechnicalName" xml:space="preserve"><value>Open the nearest technical inspection</value></data>
+  <data name="MainMenu.QuickActions.ReviewGreenCards" xml:space="preserve"><value>Check green cards</value></data>
+  <data name="MainMenu.QuickActions.ReviewGreenCardsName" xml:space="preserve"><value>Check green cards</value></data>
+  <data name="MainMenu.QuickActions.ReviewMaintenance" xml:space="preserve"><value>Check maintenance</value></data>
+  <data name="MainMenu.QuickActions.ReviewMaintenanceName" xml:space="preserve"><value>Check maintenance plan</value></data>
+  <data name="MainMenu.QuickActions.ReviewRecords" xml:space="preserve"><value>Check documents</value></data>
+  <data name="MainMenu.QuickActions.ReviewRecordsName" xml:space="preserve"><value>Check documents</value></data>
+  <data name="MainMenu.QuickActions.ReviewReminders" xml:space="preserve"><value>Check reminders</value></data>
+  <data name="MainMenu.QuickActions.ReviewRemindersName" xml:space="preserve"><value>Check custom reminders</value></data>
+  <data name="MainMenu.QuickActions.ReviewTechnical" xml:space="preserve"><value>Check technical inspections</value></data>
+  <data name="MainMenu.QuickActions.ReviewTechnicalName" xml:space="preserve"><value>Check technical inspections</value></data>
   <data name="MainMenu.Vehicle" xml:space="preserve"><value>_Vehicle</value></data>
+  <data name="MainMenu.Vehicle.Costs" xml:space="preserve"><value>Costs and summaries</value></data>
+  <data name="MainMenu.Vehicle.CostsName" xml:space="preserve"><value>Open costs and summaries for selected vehicle</value></data>
+  <data name="MainMenu.Vehicle.Create" xml:space="preserve"><value>Add vehicle</value></data>
+  <data name="MainMenu.Vehicle.CreateName" xml:space="preserve"><value>Add a new vehicle</value></data>
+  <data name="MainMenu.Vehicle.Delete" xml:space="preserve"><value>Delete selected vehicle</value></data>
+  <data name="MainMenu.Vehicle.DeleteHelp" xml:space="preserve"><value>Opens a confirmation and deletes the selected vehicle including related records if confirmed.</value></data>
+  <data name="MainMenu.Vehicle.DeleteName" xml:space="preserve"><value>Delete selected vehicle</value></data>
+  <data name="MainMenu.Vehicle.Detail" xml:space="preserve"><value>Selected vehicle detail</value></data>
+  <data name="MainMenu.Vehicle.DetailName" xml:space="preserve"><value>Open selected vehicle detail</value></data>
+  <data name="MainMenu.Vehicle.Edit" xml:space="preserve"><value>Edit selected vehicle</value></data>
+  <data name="MainMenu.Vehicle.EditName" xml:space="preserve"><value>Edit selected vehicle</value></data>
+  <data name="MainMenu.Vehicle.ExportPackage" xml:space="preserve"><value>Export vehicle package</value></data>
+  <data name="MainMenu.Vehicle.ExportPackageName" xml:space="preserve"><value>Export selected vehicle to a package</value></data>
+  <data name="MainMenu.Vehicle.Fuel" xml:space="preserve"><value>Mileage and fuel</value></data>
+  <data name="MainMenu.Vehicle.FuelName" xml:space="preserve"><value>Open selected vehicle fuel records</value></data>
+  <data name="MainMenu.Vehicle.History" xml:space="preserve"><value>Selected vehicle history</value></data>
+  <data name="MainMenu.Vehicle.HistoryName" xml:space="preserve"><value>Open selected vehicle history</value></data>
+  <data name="MainMenu.Vehicle.ImportPackage" xml:space="preserve"><value>Import vehicle package</value></data>
+  <data name="MainMenu.Vehicle.ImportPackageName" xml:space="preserve"><value>Import vehicle from a package</value></data>
+  <data name="MainMenu.Vehicle.Maintenance" xml:space="preserve"><value>Maintenance plan</value></data>
+  <data name="MainMenu.Vehicle.MaintenanceName" xml:space="preserve"><value>Open selected vehicle maintenance plan</value></data>
+  <data name="MainMenu.Vehicle.Name" xml:space="preserve"><value>Vehicle menu</value></data>
+  <data name="MainMenu.Vehicle.Records" xml:space="preserve"><value>Insurance and documents</value></data>
+  <data name="MainMenu.Vehicle.RecordsName" xml:space="preserve"><value>Open selected vehicle documents</value></data>
+  <data name="MainMenu.Vehicle.Reminders" xml:space="preserve"><value>Custom reminders</value></data>
+  <data name="MainMenu.Vehicle.RemindersName" xml:space="preserve"><value>Open selected vehicle reminders</value></data>
+  <data name="MainMenu.Vehicle.ServiceBook" xml:space="preserve"><value>Service book</value></data>
+  <data name="MainMenu.Vehicle.ServiceBookName" xml:space="preserve"><value>Open selected vehicle service book</value></data>
+  <data name="MainMenu.Vehicle.StarterBundle" xml:space="preserve"><value>Vehicle package</value></data>
+  <data name="MainMenu.Vehicle.StarterBundleName" xml:space="preserve"><value>Open package for selected vehicle</value></data>
+  <data name="MainMenu.Vehicle.Timeline" xml:space="preserve"><value>Vehicle timeline</value></data>
+  <data name="MainMenu.Vehicle.TimelineName" xml:space="preserve"><value>Open selected vehicle timeline</value></data>
+  <data name="OpenWorkspaceWindow.Audit" xml:space="preserve"><value>Open data audit in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Cost" xml:space="preserve"><value>Open costs in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Dashboard" xml:space="preserve"><value>Open dashboard in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Detail" xml:space="preserve"><value>Open vehicle detail in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Fuel" xml:space="preserve"><value>Open fuel records in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.GlobalSearch" xml:space="preserve"><value>Open global search in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.History" xml:space="preserve"><value>Open history in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Maintenance" xml:space="preserve"><value>Open maintenance plan in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Overdue" xml:space="preserve"><value>Open overdue due dates in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Record" xml:space="preserve"><value>Open documents in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Reminder" xml:space="preserve"><value>Open reminders in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.SmartAdvisor" xml:space="preserve"><value>Open smart advisor in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Timeline" xml:space="preserve"><value>Open timeline in a separate window</value></data>
+  <data name="OpenWorkspaceWindow.Upcoming" xml:space="preserve"><value>Open upcoming due dates in a separate window</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Back up now</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Close the settings dialog</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Save settings</value></data>
@@ -93,6 +220,62 @@
   <data name="Shell.SettingsCanceled" xml:space="preserve"><value>Settings were closed without saving.</value></data>
   <data name="Shell.SettingsFailed" xml:space="preserve"><value>Settings could not be completed: {0}</value></data>
   <data name="Shell.SettingsSaved" xml:space="preserve"><value>Settings were saved and overviews were recalculated.</value></data>
+  <data name="Shell.AuditCount" xml:space="preserve"><value>Audit</value></data>
+  <data name="Shell.DataModeLabel" xml:space="preserve"><value>Data mode</value></data>
+  <data name="Shell.DataPathLabel" xml:space="preserve"><value>Data folder</value></data>
+  <data name="Shell.Footer" xml:space="preserve"><value>Vehimap works with the same data as the original AHK version and offers vehicle detail, history, fuel, documents, reminders, maintenance, timeline, audit, costs, dashboard, smart advisor, global search and due date overviews. Editing opens in separate windows with accessible focus handling and Cancel return.</value></data>
+  <data name="Shell.FuelCount" xml:space="preserve"><value>Fuel</value></data>
+  <data name="Shell.HelpText" xml:space="preserve"><value>Multiplatform Vehimap. After opening, focus is in the vehicle list on the left.</value></data>
+  <data name="Shell.HistoryCount" xml:space="preserve"><value>History</value></data>
+  <data name="Shell.MaintenanceCount" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="Shell.RecordsCount" xml:space="preserve"><value>Documents</value></data>
+  <data name="Shell.RemindersCount" xml:space="preserve"><value>Reminders</value></data>
+  <data name="Shell.VehicleCount" xml:space="preserve"><value>Vehicles</value></data>
+  <data name="VehicleList.Category" xml:space="preserve"><value>Category</value></data>
+  <data name="VehicleList.CategoryFilterName" xml:space="preserve"><value>Vehicle category filter</value></data>
+  <data name="VehicleList.ClearFilters" xml:space="preserve"><value>Clear filters</value></data>
+  <data name="VehicleList.ClearFiltersName" xml:space="preserve"><value>Clear vehicle list filters</value></data>
+  <data name="VehicleList.HideInactive" xml:space="preserve"><value>Hide archived and parked vehicles</value></data>
+  <data name="VehicleList.ItemType" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="VehicleList.ListHelp" xml:space="preserve"><value>Use arrow keys to select a vehicle. Detail and related records are shown on the right.</value></data>
+  <data name="VehicleList.ListName" xml:space="preserve"><value>Loaded vehicle list</value></data>
+  <data name="VehicleList.SearchHeading" xml:space="preserve"><value>Search in vehicle list</value></data>
+  <data name="VehicleList.SearchPlaceholder" xml:space="preserve"><value>Name, make, license plate, note or tag</value></data>
+  <data name="VehicleList.StatusFilter" xml:space="preserve"><value>List filter</value></data>
+  <data name="VehicleList.StatusFilterName" xml:space="preserve"><value>Vehicle status filter</value></data>
+  <data name="WorkspaceTabs.Audit" xml:space="preserve"><value>Audit</value></data>
+  <data name="WorkspaceTabs.AuditName" xml:space="preserve"><value>Audit tab</value></data>
+  <data name="WorkspaceTabs.ContentHelp" xml:space="preserve"><value>Content changes based on the selected tab above.</value></data>
+  <data name="WorkspaceTabs.ContentName" xml:space="preserve"><value>Selected main workspace tab content</value></data>
+  <data name="WorkspaceTabs.Cost" xml:space="preserve"><value>Costs</value></data>
+  <data name="WorkspaceTabs.CostName" xml:space="preserve"><value>Costs tab</value></data>
+  <data name="WorkspaceTabs.Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="WorkspaceTabs.DashboardName" xml:space="preserve"><value>Dashboard tab</value></data>
+  <data name="WorkspaceTabs.Detail" xml:space="preserve"><value>Detail</value></data>
+  <data name="WorkspaceTabs.DetailName" xml:space="preserve"><value>Detail tab</value></data>
+  <data name="WorkspaceTabs.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="WorkspaceTabs.FuelName" xml:space="preserve"><value>Fuel tab</value></data>
+  <data name="WorkspaceTabs.GlobalSearch" xml:space="preserve"><value>Search</value></data>
+  <data name="WorkspaceTabs.GlobalSearchName" xml:space="preserve"><value>Search tab</value></data>
+  <data name="WorkspaceTabs.Heading" xml:space="preserve"><value>Main workspace tabs for the selected vehicle</value></data>
+  <data name="WorkspaceTabs.Help" xml:space="preserve"><value>Tab moves to the currently selected tab. Left and right arrows change the selected tab.</value></data>
+  <data name="WorkspaceTabs.History" xml:space="preserve"><value>History</value></data>
+  <data name="WorkspaceTabs.HistoryName" xml:space="preserve"><value>History tab</value></data>
+  <data name="WorkspaceTabs.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="WorkspaceTabs.MaintenanceName" xml:space="preserve"><value>Maintenance tab</value></data>
+  <data name="WorkspaceTabs.Overdue" xml:space="preserve"><value>Overdue</value></data>
+  <data name="WorkspaceTabs.OverdueName" xml:space="preserve"><value>Overdue due dates tab</value></data>
+  <data name="WorkspaceTabs.Record" xml:space="preserve"><value>Documents</value></data>
+  <data name="WorkspaceTabs.RecordName" xml:space="preserve"><value>Documents tab</value></data>
+  <data name="WorkspaceTabs.Reminder" xml:space="preserve"><value>Reminders</value></data>
+  <data name="WorkspaceTabs.ReminderName" xml:space="preserve"><value>Reminders tab</value></data>
+  <data name="WorkspaceTabs.SmartAdvisor" xml:space="preserve"><value>Advisor</value></data>
+  <data name="WorkspaceTabs.SmartAdvisorName" xml:space="preserve"><value>Smart advisor tab</value></data>
+  <data name="WorkspaceTabs.Timeline" xml:space="preserve"><value>Timeline</value></data>
+  <data name="WorkspaceTabs.TimelineName" xml:space="preserve"><value>Timeline tab</value></data>
+  <data name="WorkspaceTabs.Upcoming" xml:space="preserve"><value>Due dates</value></data>
+  <data name="WorkspaceTabs.UpcomingName" xml:space="preserve"><value>Upcoming due dates tab</value></data>
+  <data name="WorkspaceTabs.OpenInWindow" xml:space="preserve"><value>Open window</value></data>
   <data name="VehicleEditor.Category" xml:space="preserve"><value>Category</value></data>
   <data name="VehicleEditor.CategoryName" xml:space="preserve"><value>Vehicle category</value></data>
   <data name="VehicleEditor.Climate" xml:space="preserve"><value>Air conditioning</value></data>

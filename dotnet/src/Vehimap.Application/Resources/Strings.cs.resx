@@ -14,10 +14,26 @@
   <data name="About.CopyDiagnosticsName" xml:space="preserve"><value>Kopírovat diagnostická data o aplikaci do schránky</value></data>
   <data name="About.Description" xml:space="preserve"><value>Přístupná evidence vozidel pro Windows a postupně další platformy.</value></data>
   <data name="About.DiagnosticsName" xml:space="preserve"><value>Diagnostická data o aplikaci</value></data>
+  <data name="About.Diagnostics.ApplicationPath" xml:space="preserve"><value>Soubor aplikace: {0}</value></data>
+  <data name="About.Diagnostics.AppVersion" xml:space="preserve"><value>Verze aplikace: {0}</value></data>
+  <data name="About.Diagnostics.Author" xml:space="preserve"><value>Autor: {0}</value></data>
+  <data name="About.Diagnostics.AuthorSupport" xml:space="preserve"><value>Poděkování autorovi: {0}</value></data>
+  <data name="About.Diagnostics.DataMode" xml:space="preserve"><value>Režim dat: {0}</value></data>
+  <data name="About.Diagnostics.DataPath" xml:space="preserve"><value>Datová složka: {0}</value></data>
+  <data name="About.Diagnostics.FileVersion" xml:space="preserve"><value>Souborová verze: {0}</value></data>
+  <data name="About.Diagnostics.Framework" xml:space="preserve"><value>.NET runtime: {0}</value></data>
+  <data name="About.Diagnostics.Header" xml:space="preserve"><value>Vehimap - O programu</value></data>
+  <data name="About.Diagnostics.Platform" xml:space="preserve"><value>Platforma: {0}</value></data>
+  <data name="About.Diagnostics.ReleaseChannel" xml:space="preserve"><value>Kanál: {0}</value></data>
+  <data name="About.Diagnostics.ReleaseNotes" xml:space="preserve"><value>Release poznámky: {0}</value></data>
+  <data name="About.Diagnostics.RuntimeMode" xml:space="preserve"><value>Režim spuštění: {0}</value></data>
+  <data name="About.Diagnostics.Title" xml:space="preserve"><value>Název: {0}</value></data>
   <data name="About.HelpText" xml:space="preserve"><value>Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+K otevře poděkování autorovi, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.</value></data>
   <data name="About.Status.Basic" xml:space="preserve"><value>Základní informace o aplikaci jsou zobrazené. Diagnostická data lze zobrazit nebo zkopírovat pro podporu.</value></data>
   <data name="About.Status.DiagnosticsHidden" xml:space="preserve"><value>Diagnostická data jsou skrytá. Běžný pohled obsahuje jen základní informace.</value></data>
   <data name="About.Status.DiagnosticsVisible" xml:space="preserve"><value>Diagnostická data jsou zobrazená. Lze je zkopírovat pro podporu.</value></data>
+  <data name="About.Toggle.HideDiagnostics" xml:space="preserve"><value>Skrýt diagnostická data</value></data>
+  <data name="About.Toggle.ShowDiagnostics" xml:space="preserve"><value>Zobrazit diagnostická data</value></data>
   <data name="About.ReleaseNotesName" xml:space="preserve"><value>Otevřít release poznámky</value></data>
   <data name="About.ThankAuthorHelpText" xml:space="preserve"><value>Otevře stránku, kde můžete autorovi poděkovat podporou tvorby.</value></data>
   <data name="About.Title" xml:space="preserve"><value>O programu</value></data>
@@ -31,15 +47,126 @@
   <data name="MainMenu.App.Exit" xml:space="preserve"><value>Ukončit aplikaci</value></data>
   <data name="MainMenu.App.Feedback" xml:space="preserve"><value>Nahlásit zpětnou vazbu</value></data>
   <data name="MainMenu.App.MinimizeToTray" xml:space="preserve"><value>Minimalizovat na lištu</value></data>
+  <data name="MainMenu.App.Name" xml:space="preserve"><value>Nabídka Aplikace</value></data>
   <data name="MainMenu.App.OpenAboutName" xml:space="preserve"><value>Otevřít dialog O programu</value></data>
   <data name="MainMenu.App.OpenSettingsName" xml:space="preserve"><value>Otevřít nastavení aplikace</value></data>
   <data name="MainMenu.App.OpenTrayActionsName" xml:space="preserve"><value>Otevřít přístupné akce Vehimapu na liště</value></data>
   <data name="MainMenu.App.Settings" xml:space="preserve"><value>Nastavení</value></data>
   <data name="MainMenu.App.ThankAuthor" xml:space="preserve"><value>Poděkovat autorovi</value></data>
   <data name="MainMenu.File" xml:space="preserve"><value>_Soubor</value></data>
+  <data name="MainMenu.Name" xml:space="preserve"><value>Hlavní nabídka aplikace</value></data>
+  <data name="MainMenu.File.BackupExport" xml:space="preserve"><value>Export dat do zálohy</value></data>
+  <data name="MainMenu.File.BackupExportName" xml:space="preserve"><value>Exportovat data aplikace do zálohy</value></data>
+  <data name="MainMenu.File.BackupImport" xml:space="preserve"><value>Obnovit data ze zálohy</value></data>
+  <data name="MainMenu.File.BackupImportHelp" xml:space="preserve"><value>Vybere záložní soubor a po potvrzení nahradí aktuální datovou sadu. Před obnovou se vytvoří ochranná kopie současných dat.</value></data>
+  <data name="MainMenu.File.BackupImportName" xml:space="preserve"><value>Obnovit data aplikace ze zálohy</value></data>
+  <data name="MainMenu.File.BackupNow" xml:space="preserve"><value>Zálohovat ihned</value></data>
+  <data name="MainMenu.File.BackupNowName" xml:space="preserve"><value>Vytvořit automatickou zálohu ihned</value></data>
+  <data name="MainMenu.File.CheckDataStoreHealth" xml:space="preserve"><value>Zkontrolovat datovou sadu 2.0</value></data>
+  <data name="MainMenu.File.Exit" xml:space="preserve"><value>Konec</value></data>
+  <data name="MainMenu.File.ExitName" xml:space="preserve"><value>Ukončit aplikaci z nabídky Soubor</value></data>
+  <data name="MainMenu.File.ExportCalendar" xml:space="preserve"><value>Exportovat budoucí termíny do kalendáře</value></data>
+  <data name="MainMenu.File.ExportCalendarName" xml:space="preserve"><value>Exportovat budoucí termíny do kalendáře</value></data>
+  <data name="MainMenu.File.Name" xml:space="preserve"><value>Nabídka Soubor</value></data>
+  <data name="MainMenu.File.OpenAutomaticBackupFolder" xml:space="preserve"><value>Otevřít složku automatických záloh</value></data>
+  <data name="MainMenu.File.OpenDataFolder" xml:space="preserve"><value>Otevřít datovou složku</value></data>
+  <data name="MainMenu.File.OpenDataFolderName" xml:space="preserve"><value>Otevřít datovou složku Vehimapu</value></data>
+  <data name="MainMenu.File.OpenPreMigrationBackupFolder" xml:space="preserve"><value>Otevřít složku předmigrační zálohy</value></data>
+  <data name="MainMenu.File.PrintableReport" xml:space="preserve"><value>Tiskový přehled</value></data>
+  <data name="MainMenu.File.PrintableReportName" xml:space="preserve"><value>Otevřít tiskový přehled vozidel</value></data>
+  <data name="MainMenu.File.Reload" xml:space="preserve"><value>Načíst data znovu</value></data>
+  <data name="MainMenu.File.ReloadName" xml:space="preserve"><value>Znovu načíst data</value></data>
   <data name="MainMenu.Overview" xml:space="preserve"><value>_Přehledy</value></data>
+  <data name="MainMenu.Overview.Audit" xml:space="preserve"><value>Audit dat</value></data>
+  <data name="MainMenu.Overview.AuditName" xml:space="preserve"><value>Otevřít audit dat</value></data>
+  <data name="MainMenu.Overview.CalendarExport" xml:space="preserve"><value>Export termínů do kalendáře (.ics)</value></data>
+  <data name="MainMenu.Overview.CalendarExportName" xml:space="preserve"><value>Exportovat termíny do kalendáře z nabídky Přehledy</value></data>
+  <data name="MainMenu.Overview.Cost" xml:space="preserve"><value>Náklady napříč vozidly</value></data>
+  <data name="MainMenu.Overview.CostName" xml:space="preserve"><value>Otevřít náklady napříč vozidly</value></data>
+  <data name="MainMenu.Overview.Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="MainMenu.Overview.DashboardName" xml:space="preserve"><value>Otevřít dashboard</value></data>
+  <data name="MainMenu.Overview.GlobalSearch" xml:space="preserve"><value>Globální hledání</value></data>
+  <data name="MainMenu.Overview.GlobalSearchName" xml:space="preserve"><value>Otevřít globální hledání</value></data>
+  <data name="MainMenu.Overview.Name" xml:space="preserve"><value>Nabídka Přehledy</value></data>
+  <data name="MainMenu.Overview.Overdue" xml:space="preserve"><value>Propadlé termíny</value></data>
+  <data name="MainMenu.Overview.OverdueName" xml:space="preserve"><value>Otevřít propadlé termíny</value></data>
+  <data name="MainMenu.Overview.SmartAdvisor" xml:space="preserve"><value>Chytrý poradce</value></data>
+  <data name="MainMenu.Overview.SmartAdvisorName" xml:space="preserve"><value>Otevřít chytrého poradce</value></data>
+  <data name="MainMenu.Overview.Timeline" xml:space="preserve"><value>Časová osa vozidla</value></data>
+  <data name="MainMenu.Overview.TimelineName" xml:space="preserve"><value>Otevřít časovou osu vybraného vozidla</value></data>
+  <data name="MainMenu.Overview.Upcoming" xml:space="preserve"><value>Blížící se termíny</value></data>
+  <data name="MainMenu.Overview.UpcomingName" xml:space="preserve"><value>Otevřít blížící se termíny</value></data>
   <data name="MainMenu.QuickActions" xml:space="preserve"><value>_Rychlé akce</value></data>
+  <data name="MainMenu.QuickActions.BackgroundNotification" xml:space="preserve"><value>Aktuální upozornění</value></data>
+  <data name="MainMenu.QuickActions.BackgroundNotificationName" xml:space="preserve"><value>Otevřít aktuální upozornění z pozadí</value></data>
+  <data name="MainMenu.QuickActions.Name" xml:space="preserve"><value>Nabídka Rychlé akce</value></data>
+  <data name="MainMenu.QuickActions.NearestGreenCard" xml:space="preserve"><value>Nejbližší ZK</value></data>
+  <data name="MainMenu.QuickActions.NearestGreenCardName" xml:space="preserve"><value>Otevřít nejbližší zelenou kartu</value></data>
+  <data name="MainMenu.QuickActions.NearestMaintenance" xml:space="preserve"><value>Nejbližší servis</value></data>
+  <data name="MainMenu.QuickActions.NearestMaintenanceName" xml:space="preserve"><value>Otevřít nejbližší servisní úkon</value></data>
+  <data name="MainMenu.QuickActions.NearestRecord" xml:space="preserve"><value>Nejbližší doklad</value></data>
+  <data name="MainMenu.QuickActions.NearestRecordName" xml:space="preserve"><value>Otevřít nejbližší doklad</value></data>
+  <data name="MainMenu.QuickActions.NearestReminder" xml:space="preserve"><value>Nejbližší připomínka</value></data>
+  <data name="MainMenu.QuickActions.NearestReminderName" xml:space="preserve"><value>Otevřít nejbližší vlastní připomínku</value></data>
+  <data name="MainMenu.QuickActions.NearestTechnical" xml:space="preserve"><value>Nejbližší TK</value></data>
+  <data name="MainMenu.QuickActions.NearestTechnicalName" xml:space="preserve"><value>Otevřít nejbližší technickou kontrolu</value></data>
+  <data name="MainMenu.QuickActions.ReviewGreenCards" xml:space="preserve"><value>Zkontrolovat ZK</value></data>
+  <data name="MainMenu.QuickActions.ReviewGreenCardsName" xml:space="preserve"><value>Zkontrolovat zelené karty</value></data>
+  <data name="MainMenu.QuickActions.ReviewMaintenance" xml:space="preserve"><value>Zkontrolovat údržbu</value></data>
+  <data name="MainMenu.QuickActions.ReviewMaintenanceName" xml:space="preserve"><value>Zkontrolovat plán údržby</value></data>
+  <data name="MainMenu.QuickActions.ReviewRecords" xml:space="preserve"><value>Zkontrolovat doklady</value></data>
+  <data name="MainMenu.QuickActions.ReviewRecordsName" xml:space="preserve"><value>Zkontrolovat doklady</value></data>
+  <data name="MainMenu.QuickActions.ReviewReminders" xml:space="preserve"><value>Zkontrolovat připomínky</value></data>
+  <data name="MainMenu.QuickActions.ReviewRemindersName" xml:space="preserve"><value>Zkontrolovat vlastní připomínky</value></data>
+  <data name="MainMenu.QuickActions.ReviewTechnical" xml:space="preserve"><value>Zkontrolovat TK</value></data>
+  <data name="MainMenu.QuickActions.ReviewTechnicalName" xml:space="preserve"><value>Zkontrolovat technické kontroly</value></data>
   <data name="MainMenu.Vehicle" xml:space="preserve"><value>_Vozidlo</value></data>
+  <data name="MainMenu.Vehicle.Costs" xml:space="preserve"><value>Náklady a souhrny</value></data>
+  <data name="MainMenu.Vehicle.CostsName" xml:space="preserve"><value>Otevřít náklady a souhrny vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.Create" xml:space="preserve"><value>Přidat vozidlo</value></data>
+  <data name="MainMenu.Vehicle.CreateName" xml:space="preserve"><value>Přidat nové vozidlo</value></data>
+  <data name="MainMenu.Vehicle.Delete" xml:space="preserve"><value>Odstranit vybrané vozidlo</value></data>
+  <data name="MainMenu.Vehicle.DeleteHelp" xml:space="preserve"><value>Otevře potvrzení a při potvrzení odstraní vybrané vozidlo včetně jeho souvisejících evidencí.</value></data>
+  <data name="MainMenu.Vehicle.DeleteName" xml:space="preserve"><value>Odstranit vybrané vozidlo</value></data>
+  <data name="MainMenu.Vehicle.Detail" xml:space="preserve"><value>Detail vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.DetailName" xml:space="preserve"><value>Otevřít detail vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.Edit" xml:space="preserve"><value>Upravit vybrané vozidlo</value></data>
+  <data name="MainMenu.Vehicle.EditName" xml:space="preserve"><value>Upravit vybrané vozidlo</value></data>
+  <data name="MainMenu.Vehicle.ExportPackage" xml:space="preserve"><value>Exportovat balíček vozidla</value></data>
+  <data name="MainMenu.Vehicle.ExportPackageName" xml:space="preserve"><value>Exportovat vybrané vozidlo do balíčku</value></data>
+  <data name="MainMenu.Vehicle.Fuel" xml:space="preserve"><value>Kilometry a tankování</value></data>
+  <data name="MainMenu.Vehicle.FuelName" xml:space="preserve"><value>Otevřít tankování vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.History" xml:space="preserve"><value>Historie vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.HistoryName" xml:space="preserve"><value>Otevřít historii vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.ImportPackage" xml:space="preserve"><value>Importovat balíček vozidla</value></data>
+  <data name="MainMenu.Vehicle.ImportPackageName" xml:space="preserve"><value>Importovat vozidlo z balíčku</value></data>
+  <data name="MainMenu.Vehicle.Maintenance" xml:space="preserve"><value>Plán údržby</value></data>
+  <data name="MainMenu.Vehicle.MaintenanceName" xml:space="preserve"><value>Otevřít plán údržby vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.Name" xml:space="preserve"><value>Nabídka Vozidlo</value></data>
+  <data name="MainMenu.Vehicle.Records" xml:space="preserve"><value>Pojištění a doklady</value></data>
+  <data name="MainMenu.Vehicle.RecordsName" xml:space="preserve"><value>Otevřít doklady vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.Reminders" xml:space="preserve"><value>Vlastní připomínky</value></data>
+  <data name="MainMenu.Vehicle.RemindersName" xml:space="preserve"><value>Otevřít připomínky vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.ServiceBook" xml:space="preserve"><value>Servisní knížka</value></data>
+  <data name="MainMenu.Vehicle.ServiceBookName" xml:space="preserve"><value>Otevřít servisní knížku vybraného vozidla</value></data>
+  <data name="MainMenu.Vehicle.StarterBundle" xml:space="preserve"><value>Balíček pro vozidlo</value></data>
+  <data name="MainMenu.Vehicle.StarterBundleName" xml:space="preserve"><value>Otevřít balíček pro vybrané vozidlo</value></data>
+  <data name="MainMenu.Vehicle.Timeline" xml:space="preserve"><value>Časová osa vozidla</value></data>
+  <data name="MainMenu.Vehicle.TimelineName" xml:space="preserve"><value>Otevřít časovou osu vybraného vozidla</value></data>
+  <data name="OpenWorkspaceWindow.Audit" xml:space="preserve"><value>Otevřít audit v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Cost" xml:space="preserve"><value>Otevřít náklady v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Dashboard" xml:space="preserve"><value>Otevřít dashboard v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Detail" xml:space="preserve"><value>Otevřít detail vozidla v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Fuel" xml:space="preserve"><value>Otevřít tankování v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.GlobalSearch" xml:space="preserve"><value>Otevřít globální hledání v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.History" xml:space="preserve"><value>Otevřít historii v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Maintenance" xml:space="preserve"><value>Otevřít plán údržby v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Overdue" xml:space="preserve"><value>Otevřít propadlé termíny v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Record" xml:space="preserve"><value>Otevřít doklady v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Reminder" xml:space="preserve"><value>Otevřít připomínky v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.SmartAdvisor" xml:space="preserve"><value>Otevřít chytrého poradce v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Timeline" xml:space="preserve"><value>Otevřít časovou osu v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Upcoming" xml:space="preserve"><value>Otevřít blížící se termíny v samostatném okně</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Zálohovat ihned</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Zavřít dialog nastavení</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Uložit nastavení</value></data>
@@ -93,6 +220,62 @@
   <data name="Shell.SettingsCanceled" xml:space="preserve"><value>Nastavení bylo zavřeno bez uložení.</value></data>
   <data name="Shell.SettingsFailed" xml:space="preserve"><value>Nastavení se nepodařilo dokončit: {0}</value></data>
   <data name="Shell.SettingsSaved" xml:space="preserve"><value>Nastavení byla uložena a přehledy byly přepočítány.</value></data>
+  <data name="Shell.AuditCount" xml:space="preserve"><value>Audit</value></data>
+  <data name="Shell.DataModeLabel" xml:space="preserve"><value>Režim dat</value></data>
+  <data name="Shell.DataPathLabel" xml:space="preserve"><value>Datová složka</value></data>
+  <data name="Shell.Footer" xml:space="preserve"><value>Vehimap pracuje nad stejnými daty jako původní AHK verze a nabízí detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard, chytrého poradce, globální hledání i přehled termínů. Editace se otevírá v samostatných oknech s dotaženou přístupností a návratem přes Zrušit.</value></data>
+  <data name="Shell.FuelCount" xml:space="preserve"><value>Tankování</value></data>
+  <data name="Shell.HelpText" xml:space="preserve"><value>Multiplatformní Vehimap. Po otevření je fokus v seznamu vozidel vlevo.</value></data>
+  <data name="Shell.HistoryCount" xml:space="preserve"><value>Historie</value></data>
+  <data name="Shell.MaintenanceCount" xml:space="preserve"><value>Údržba</value></data>
+  <data name="Shell.RecordsCount" xml:space="preserve"><value>Doklady</value></data>
+  <data name="Shell.RemindersCount" xml:space="preserve"><value>Připomínky</value></data>
+  <data name="Shell.VehicleCount" xml:space="preserve"><value>Vozidla</value></data>
+  <data name="VehicleList.Category" xml:space="preserve"><value>Kategorie</value></data>
+  <data name="VehicleList.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie vozidel</value></data>
+  <data name="VehicleList.ClearFilters" xml:space="preserve"><value>Vymazat filtry</value></data>
+  <data name="VehicleList.ClearFiltersName" xml:space="preserve"><value>Vymazat filtry seznamu vozidel</value></data>
+  <data name="VehicleList.HideInactive" xml:space="preserve"><value>Skrýt archivovaná a odstavená vozidla</value></data>
+  <data name="VehicleList.ItemType" xml:space="preserve"><value>Vozidlo</value></data>
+  <data name="VehicleList.ListHelp" xml:space="preserve"><value>Šipkami vyberte vozidlo. Detail a související evidence se zobrazí vpravo.</value></data>
+  <data name="VehicleList.ListName" xml:space="preserve"><value>Seznam načtených vozidel</value></data>
+  <data name="VehicleList.SearchHeading" xml:space="preserve"><value>Hledání v seznamu vozidel</value></data>
+  <data name="VehicleList.SearchPlaceholder" xml:space="preserve"><value>Název, značka, SPZ, poznámka nebo štítek</value></data>
+  <data name="VehicleList.StatusFilter" xml:space="preserve"><value>Filtr seznamu</value></data>
+  <data name="VehicleList.StatusFilterName" xml:space="preserve"><value>Filtr stavu vozidel</value></data>
+  <data name="WorkspaceTabs.Audit" xml:space="preserve"><value>Audit</value></data>
+  <data name="WorkspaceTabs.AuditName" xml:space="preserve"><value>Karta Audit</value></data>
+  <data name="WorkspaceTabs.ContentHelp" xml:space="preserve"><value>Obsah se mění podle zvolené karty nahoře.</value></data>
+  <data name="WorkspaceTabs.ContentName" xml:space="preserve"><value>Obsah vybrané hlavní pracovní karty</value></data>
+  <data name="WorkspaceTabs.Cost" xml:space="preserve"><value>Náklady</value></data>
+  <data name="WorkspaceTabs.CostName" xml:space="preserve"><value>Karta Náklady</value></data>
+  <data name="WorkspaceTabs.Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="WorkspaceTabs.DashboardName" xml:space="preserve"><value>Karta Dashboard</value></data>
+  <data name="WorkspaceTabs.Detail" xml:space="preserve"><value>Detail</value></data>
+  <data name="WorkspaceTabs.DetailName" xml:space="preserve"><value>Karta Detail</value></data>
+  <data name="WorkspaceTabs.Fuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="WorkspaceTabs.FuelName" xml:space="preserve"><value>Karta Tankování</value></data>
+  <data name="WorkspaceTabs.GlobalSearch" xml:space="preserve"><value>Hledání</value></data>
+  <data name="WorkspaceTabs.GlobalSearchName" xml:space="preserve"><value>Karta Hledání</value></data>
+  <data name="WorkspaceTabs.Heading" xml:space="preserve"><value>Hlavní pracovní karty vybraného vozidla</value></data>
+  <data name="WorkspaceTabs.Help" xml:space="preserve"><value>Tabem přejdete na právě vybranou kartu. Šipkami vlevo a vpravo můžete změnit kartu.</value></data>
+  <data name="WorkspaceTabs.History" xml:space="preserve"><value>Historie</value></data>
+  <data name="WorkspaceTabs.HistoryName" xml:space="preserve"><value>Karta Historie</value></data>
+  <data name="WorkspaceTabs.Maintenance" xml:space="preserve"><value>Údržba</value></data>
+  <data name="WorkspaceTabs.MaintenanceName" xml:space="preserve"><value>Karta Údržba</value></data>
+  <data name="WorkspaceTabs.Overdue" xml:space="preserve"><value>Propadlé</value></data>
+  <data name="WorkspaceTabs.OverdueName" xml:space="preserve"><value>Karta Propadlé termíny</value></data>
+  <data name="WorkspaceTabs.Record" xml:space="preserve"><value>Doklady</value></data>
+  <data name="WorkspaceTabs.RecordName" xml:space="preserve"><value>Karta Doklady</value></data>
+  <data name="WorkspaceTabs.Reminder" xml:space="preserve"><value>Připomínky</value></data>
+  <data name="WorkspaceTabs.ReminderName" xml:space="preserve"><value>Karta Připomínky</value></data>
+  <data name="WorkspaceTabs.SmartAdvisor" xml:space="preserve"><value>Poradce</value></data>
+  <data name="WorkspaceTabs.SmartAdvisorName" xml:space="preserve"><value>Karta Chytrý poradce</value></data>
+  <data name="WorkspaceTabs.Timeline" xml:space="preserve"><value>Časová osa</value></data>
+  <data name="WorkspaceTabs.TimelineName" xml:space="preserve"><value>Karta Časová osa</value></data>
+  <data name="WorkspaceTabs.Upcoming" xml:space="preserve"><value>Termíny</value></data>
+  <data name="WorkspaceTabs.UpcomingName" xml:space="preserve"><value>Karta Termíny</value></data>
+  <data name="WorkspaceTabs.OpenInWindow" xml:space="preserve"><value>V okně</value></data>
   <data name="VehicleEditor.Category" xml:space="preserve"><value>Kategorie</value></data>
   <data name="VehicleEditor.CategoryName" xml:space="preserve"><value>Kategorie vozidla</value></data>
   <data name="VehicleEditor.Climate" xml:space="preserve"><value>Klimatizace</value></data>

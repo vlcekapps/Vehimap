@@ -77,8 +77,8 @@ public sealed partial class AboutDialogViewModel : ObservableObject
     private bool isDiagnosticsVisible;
 
     public string ToggleDiagnosticsLabel => IsDiagnosticsVisible
-        ? "Skrýt diagnostická data"
-        : "Zobrazit diagnostická data";
+        ? _localizer.GetString("About.Toggle.HideDiagnostics")
+        : _localizer.GetString("About.Toggle.ShowDiagnostics");
 
     [ObservableProperty]
     private string statusMessage = string.Empty;
@@ -87,21 +87,21 @@ public sealed partial class AboutDialogViewModel : ObservableObject
         Environment.NewLine,
         new[]
         {
-            "Vehimap - O programu",
+            _localizer.GetString("About.Diagnostics.Header"),
             _localizer.GetString("About.DiagnosticsName"),
-            $"Název: {Title}",
-            $"Autor: {Author}",
-            $"Verze aplikace: {AppVersion}",
-            $"Souborová verze: {FileVersion}",
-            $"Kanál: {ReleaseChannel}",
-            $"Režim spuštění: {RuntimeMode}",
-            $"Datová složka: {DataPath}",
-            $"Režim dat: {DataMode}",
-            $"Platforma: {PlatformDescription}",
-            $".NET runtime: {FrameworkDescription}",
-            $"Soubor aplikace: {ApplicationPath}",
-            $"Release poznámky: {ReleaseNotesUrl}",
-            $"Poděkování autorovi: {AuthorSupportUrl}"
+            _localizer.Format("About.Diagnostics.Title", Title),
+            _localizer.Format("About.Diagnostics.Author", Author),
+            _localizer.Format("About.Diagnostics.AppVersion", AppVersion),
+            _localizer.Format("About.Diagnostics.FileVersion", FileVersion),
+            _localizer.Format("About.Diagnostics.ReleaseChannel", ReleaseChannel),
+            _localizer.Format("About.Diagnostics.RuntimeMode", RuntimeMode),
+            _localizer.Format("About.Diagnostics.DataPath", DataPath),
+            _localizer.Format("About.Diagnostics.DataMode", DataMode),
+            _localizer.Format("About.Diagnostics.Platform", PlatformDescription),
+            _localizer.Format("About.Diagnostics.Framework", FrameworkDescription),
+            _localizer.Format("About.Diagnostics.ApplicationPath", ApplicationPath),
+            _localizer.Format("About.Diagnostics.ReleaseNotes", ReleaseNotesUrl),
+            _localizer.Format("About.Diagnostics.AuthorSupport", AuthorSupportUrl)
         });
 
     public string ClipboardText => DiagnosticText;

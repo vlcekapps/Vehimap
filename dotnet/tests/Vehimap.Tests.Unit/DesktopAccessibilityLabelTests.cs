@@ -3,6 +3,7 @@ using Vehimap.Desktop.Views;
 using Vehimap.Application.Models;
 using Xunit;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace Vehimap.Tests.Unit;
 
@@ -264,13 +265,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CheckDataStoreHealthMenuItem\"", xaml);
         Assert.Contains("Click=\"OnCheckDataStoreHealthClick\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanCheckDataStoreHealth}\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Zkontrolovat datovou sadu 2.0\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MainMenu.File.CheckDataStoreHealth}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenPreMigrationBackupFolderMenuItem\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít složku předmigrační zálohy\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MainMenu.File.OpenPreMigrationBackupFolder}\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanOpenPreMigrationBackupFolder}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FileExitAppButton\"", xaml);
         Assert.Contains("x:Name=\"FileExitAppButton\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Ukončit aplikaci z nabídky Soubor\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MainMenu.File.ExitName}\"", xaml);
         Assert.Contains("Click=\"OnOpenDataFolderClick\"", xaml);
         Assert.Contains("Click=\"OnCreateAutomaticBackupNowClick\"", xaml);
         Assert.Contains("Click=\"OnOpenAutomaticBackupFolderClick\"", xaml);
@@ -297,13 +298,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenMaintenanceMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleTimelineMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenServiceBookMenuItem\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít servisní knížku vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MainMenu.Vehicle.ServiceBookName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenVehicleStarterBundleMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExportVehiclePackageMenuItem\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Exportovat vybrané vozidlo do balíčku\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MainMenu.Vehicle.ExportPackageName}\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanExportSelectedVehiclePackage}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ImportVehiclePackageMenuItem\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Importovat vozidlo z balíčku\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MainMenu.Vehicle.ImportPackageName}\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanImportVehiclePackage}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenSelectedVehicleCostsMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenTimelineMenuItem\"", xaml);
@@ -388,7 +389,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Click=\"OnOpenTrayActionsClick\"", xaml);
         Assert.Contains("Click=\"OnMinimizeToTrayClick\"", xaml);
         Assert.Contains("Click=\"OnExitClick\"", xaml);
-        Assert.Contains("x:Name=\"FileExitAppButton\" Header=\"Konec\" Click=\"OnExitClick\"", normalizedXaml);
+        Assert.Contains("x:Name=\"FileExitAppButton\" Header=\"{i18n:Loc MainMenu.File.Exit}\" Click=\"OnExitClick\"", normalizedXaml);
         Assert.Contains("Click=\"OnPrintableReportClick\"", xaml);
         Assert.Contains("Click=\"OnCalendarExportClick\"", xaml);
         Assert.Contains("Click=\"OnReloadClick\"", xaml);
@@ -1494,13 +1495,15 @@ public sealed class DesktopAccessibilityLabelTests
 
                 seen.Add(automationId);
                 var attributes = match.Groups["attributes"].Value;
-                if (!attributes.Contains("AutomationProperties.HelpText=", StringComparison.Ordinal))
+                var helpText = ExtractAttributeValue(attributes, "AutomationProperties.HelpText");
+                if (string.IsNullOrWhiteSpace(helpText))
                 {
                     failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} {automationId} postrádá AutomationProperties.HelpText.");
                     continue;
                 }
 
-                if (!attributes.Contains(expectedFragment, StringComparison.Ordinal))
+                var resolvedHelpText = ResolveCzechLocalizedAttributeValue(helpText);
+                if (!resolvedHelpText.Contains(expectedFragment, StringComparison.Ordinal))
                 {
                     failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} {automationId} má HelpText bez očekávaného dopadu akce: {expectedFragment}.");
                 }
@@ -2458,6 +2461,44 @@ public sealed class DesktopAccessibilityLabelTests
     private static void AssertAccessibleTextId(string xaml, string automationId)
     {
         Assert.Contains($"AutomationProperties.AutomationId=\"{automationId}\"", xaml);
+    }
+
+    private static string? ExtractAttributeValue(string attributes, string attributeName)
+    {
+        var match = Regex.Match(
+            attributes,
+            Regex.Escape(attributeName) + "=\"(?<value>[^\"]*)\"",
+            RegexOptions.Singleline);
+        return match.Success ? match.Groups["value"].Value : null;
+    }
+
+    private static string ResolveCzechLocalizedAttributeValue(string value)
+    {
+        var localizedMatch = Regex.Match(value, "^\\{i18n:Loc (?<key>[^}]+)\\}$", RegexOptions.Singleline);
+        if (!localizedMatch.Success)
+        {
+            return value;
+        }
+
+        var resources = ReadCzechResourceValues();
+        var key = localizedMatch.Groups["key"].Value;
+        return resources.TryGetValue(key, out var localizedValue)
+            ? localizedValue
+            : value;
+    }
+
+    private static IReadOnlyDictionary<string, string> ReadCzechResourceValues()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var path = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs.resx");
+        var document = XDocument.Load(path);
+        return document.Root!
+            .Elements("data")
+            .Where(element => !string.IsNullOrWhiteSpace(element.Attribute("name")?.Value))
+            .ToDictionary(
+                element => element.Attribute("name")!.Value,
+                element => element.Element("value")?.Value ?? string.Empty,
+                StringComparer.Ordinal);
     }
 
     private static string FindRepositoryRoot()

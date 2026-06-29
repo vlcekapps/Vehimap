@@ -17,7 +17,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 
 - Vehimap 2.0 nightly zavadi lokalizacni a formatovaci zaklad pred dalsimi velkymi funkcemi a pred Android UI.
 - Primarni cesta je `.resx`: `Strings.resx` jako anglicky fallback a `Strings.cs.resx` jako ceska verze.
-- Pilotni oblasti jsou `Nastaveni`, `O programu`, hlavni/app menu a `Editor vozidla`.
+- Pilotni oblasti jsou `Nastaveni`, `O programu`, `Editor vozidla`, hlavni shell, hlavni menu, levy panel seznamu vozidel a nazvy pracovnich karet.
 - Nastaveni uz nese jazyk, oddelovac tisicu, oddelovac desetin, jednotku vzdalenosti a jednotku objemu paliva.
 - Podporovane jednotky jsou kilometry/mile a litry/US galony/imperialni galony.
 - Interni data zustavaji invariantni a SQLite storage se kvuli lokalizaci nemeni; zobrazeni, vstup a exporty budou postupne pouzivat formatovaci sluzby.

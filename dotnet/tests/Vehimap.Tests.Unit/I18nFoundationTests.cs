@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -172,11 +173,28 @@ public sealed class I18nFoundationTests
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", mainWindow);
         Assert.Contains("Header=\"{i18n:Loc MainMenu.App}\"", mainWindow);
         Assert.Contains("Header=\"{i18n:Loc MainMenu.App.Settings}\"", mainWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MainMenu.Name}\"", mainWindow);
+        Assert.Contains("Header=\"{i18n:Loc MainMenu.File.PrintableReport}\"", mainWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MainMenu.Vehicle.ServiceBookName}\"", mainWindow);
+        Assert.Contains("Text=\"{i18n:Loc VehicleList.SearchHeading}\"", mainWindow);
+        Assert.Contains("Content=\"{i18n:Loc WorkspaceTabs.OpenInWindow}\"", mainWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc WorkspaceTabs.ContentName}\"", mainWindow);
         Assert.Contains("Title=\"{i18n:Loc Settings.Title}\"", settingsWindow);
         Assert.Contains("Settings.LocaleFormattingHeading", settingsWindow);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc About.Title}\"", aboutWindow);
         Assert.Contains("VehicleEditor.HelpText", vehicleEditorWindow);
         Assert.Contains("VehicleEditor.CancelName", vehicleEditorWindow);
+    }
+
+    [Fact]
+    public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
+    {
+        var root = FindRepositoryRoot();
+        var mainWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "MainWindow.axaml"));
+        var aboutDialogViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "AboutDialogViewModel.cs"));
+
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), mainWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), aboutDialogViewModel);
     }
 
     private static SortedSet<string> ReadResourceKeys(string path)
@@ -189,6 +207,9 @@ public sealed class I18nFoundationTests
             .Where(name => !string.IsNullOrWhiteSpace(name))!,
             StringComparer.Ordinal);
     }
+
+    private static Regex CzechDiacriticsRegex() =>
+        new("[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]", RegexOptions.Compiled);
 
     private static string CreateTempDirectory()
     {
