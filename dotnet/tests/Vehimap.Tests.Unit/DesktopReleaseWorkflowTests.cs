@@ -154,6 +154,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("-Channel $Channel", script, StringComparison.Ordinal);
         Assert.Contains("-TargetChannel $Channel", script, StringComparison.Ordinal);
         Assert.Contains("-FailOnBlockers", script, StringComparison.Ordinal);
+        Assert.Contains("Position = 0, ValueFromRemainingArguments = $true", script, StringComparison.Ordinal);
         Assert.Contains("git @Arguments", script, StringComparison.Ordinal);
         Assert.Contains("status --porcelain", script, StringComparison.Ordinal);
         Assert.Contains("rev-parse origin/main", script, StringComparison.Ordinal);

@@ -18,7 +18,7 @@ $readinessScript = Join-Path $PSScriptRoot "Test-DotnetReleaseReadiness.ps1"
 $promotionScript = Join-Path $PSScriptRoot "Test-DotnetReleasePromotion.ps1"
 
 function Invoke-Git {
-    param([Parameter(ValueFromRemainingArguments = $true)][string[]]$Arguments)
+    param([Parameter(Position = 0, ValueFromRemainingArguments = $true)][string[]]$Arguments)
 
     Push-Location $repositoryRoot
     try {
