@@ -1214,6 +1214,64 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Destructive_and_data_replacing_actions_should_expose_accessible_help_text()
+    {
+        var requiredHelpTextFragments = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["BackupImportButton"] = "nahradí aktuální datovou sadu",
+            ["ImportBackupTrayActionButton"] = "nahradí aktuální datovou sadu",
+            ["DeleteVehicleMenuItem"] = "odstraní vybrané vozidlo",
+            ["DeleteVehicleButton"] = "odstraní vybrané vozidlo",
+            ["DeleteHistoryButton"] = "odstraní vybraný historický záznam",
+            ["DeleteFuelButton"] = "odstraní vybraný záznam tankování",
+            ["DeleteReminderButton"] = "odstraní vybranou připomínku",
+            ["DeleteMaintenanceButton"] = "odstraní vybraný servisní plán",
+            ["DeleteRecordButton"] = "odstraní vybraný doklad"
+        };
+        var actionPattern = new Regex(
+            "<(?<type>Button|MenuItem)(?=[\\s>/])(?<attributes>[\\s\\S]*?AutomationProperties\\.AutomationId=\"(?<id>[^\"]+)\"[\\s\\S]*?)(?:/>|>)",
+            RegexOptions.Singleline);
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in actionPattern.Matches(xaml))
+            {
+                var automationId = match.Groups["id"].Value;
+                if (!requiredHelpTextFragments.TryGetValue(automationId, out var expectedFragment))
+                {
+                    continue;
+                }
+
+                seen.Add(automationId);
+                var attributes = match.Groups["attributes"].Value;
+                if (!attributes.Contains("AutomationProperties.HelpText=", StringComparison.Ordinal))
+                {
+                    failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} {automationId} postrádá AutomationProperties.HelpText.");
+                    continue;
+                }
+
+                if (!attributes.Contains(expectedFragment, StringComparison.Ordinal))
+                {
+                    failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} {automationId} má HelpText bez očekávaného dopadu akce: {expectedFragment}.");
+                }
+            }
+        }
+
+        foreach (var missingId in requiredHelpTextFragments.Keys.Except(seen, StringComparer.Ordinal))
+        {
+            failures.Add($"{missingId} nebylo nalezeno mezi rizikovými akcemi.");
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Mazání a obnova dat musí čtečce oznámit dopad akce, ne jen krátký popisek tlačítka:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Combo_boxes_should_inherit_accessible_keyboard_help_text()
     {
         var appXaml = ReadDesktopRootFile("App.axaml");

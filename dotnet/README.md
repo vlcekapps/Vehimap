@@ -147,6 +147,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - staticky hlidat, ze seznamove polozky s `AccessibleLabel` maji `AutomationProperties.ItemType` a ze `AutomationProperties.ItemStatus` pouzivaji jen skutecne stavove, prioritni nebo dostupnostni vlastnosti
 - staticky hlidat, ze runtime povinna editorova pole vystavuji `AutomationProperties.IsRequiredForForm` a volitelna pole se za povinna nevydavaji
 - staticky hlidat, ze pole s `PlaceholderText` maji stejnou instrukci i v `AutomationProperties.HelpText`, protoze placeholder je vizualni napoveda a ctecka se na nej nemuze spolehlive spolehnout
+- staticky hlidat, ze destruktivni nebo datove nahrazujici akce maji `AutomationProperties.HelpText` s jasnym dopadem akce, nejen kratky popisek tlacitka
 - drzet globalni `AutomationProperties.HelpText` pro `ComboBox`, aby rozbalovaci seznamy konzistentne hlasily ovladani sipkami a vyber hodnoty
 - registrovat sdilenou keyboard guard vrstvu na top-level oknech s vlastnimi zkratkami, aby `TextBox` kurzorove klavesy a `ComboBox` otevreni sipkami nebyly zavisle na nahodnem `e.Source` z control templatu
 - drzet docasny `TextBox` live-region fallback pro NVDA, ktery pri kurzorove navigaci oznamuje nazev pole, pozici kurzoru a okolni znak do doby, nez bude nativni Avalonia UIA textova podpora pro nase scenare dostatecna

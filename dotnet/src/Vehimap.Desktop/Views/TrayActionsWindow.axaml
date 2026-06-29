@@ -156,6 +156,7 @@
                   Content="{Binding ImportBackupLabel}"
                   IsEnabled="{Binding CanImportBackup}"
                   AutomationProperties.Name="Obnovit data aplikace ze zálohy"
+                  AutomationProperties.HelpText="Vybere záložní soubor a po potvrzení nahradí aktuální datovou sadu. Před obnovou se vytvoří ochranná kopie současných dat."
                   AutomationProperties.AutomationId="ImportBackupTrayActionButton" />
           <Button x:Name="CreateAutomaticBackupNowTrayActionButton"
                   Click="OnCreateAutomaticBackupNowClick"

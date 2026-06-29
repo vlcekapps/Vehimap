@@ -115,6 +115,7 @@
           <Button Command="{Binding DeleteSelectedHistoryCommand}"
                   Content="Odstranit"
                   AutomationProperties.Name="Odstranit vybraný historický záznam"
+                  AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybraný historický záznam vozidla."
                   AutomationProperties.AutomationId="DeleteHistoryButton" />
           <Button Command="{Binding SaveHistoryCommand}"
                   Content="Uložit"

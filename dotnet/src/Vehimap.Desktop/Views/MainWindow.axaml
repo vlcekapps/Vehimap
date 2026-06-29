@@ -67,6 +67,7 @@
                     Click="OnBackupImportClick"
                     IsEnabled="{Binding CanUseDataActions}"
                     AutomationProperties.Name="Obnovit data aplikace ze zálohy"
+                    AutomationProperties.HelpText="Vybere záložní soubor a po potvrzení nahradí aktuální datovou sadu. Před obnovou se vytvoří ochranná kopie současných dat."
                     AutomationProperties.AutomationId="BackupImportButton" />
           <MenuItem x:Name="CreateAutomaticBackupNowMenuItem"
                     Header="Zálohovat ihned"
@@ -148,6 +149,7 @@
                     Click="OnDeleteVehicleMenuClick"
                     IsEnabled="{Binding CanDeleteSelectedVehicle}"
                     AutomationProperties.Name="Odstranit vybrané vozidlo"
+                    AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybrané vozidlo včetně jeho souvisejících evidencí."
                     AutomationProperties.AutomationId="DeleteVehicleMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenVehicleDetailMenuItem"

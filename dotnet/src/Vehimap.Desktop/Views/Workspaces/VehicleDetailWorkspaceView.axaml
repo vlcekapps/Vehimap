@@ -39,6 +39,7 @@
               Content="Odstranit"
               IsVisible="{Binding IsVehicleDetailVisible}"
               AutomationProperties.Name="Odstranit vybrané vozidlo"
+              AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybrané vozidlo včetně jeho souvisejících evidencí."
               AutomationProperties.AutomationId="DeleteVehicleButton" />
       <Button x:Name="OpenVehicleStarterBundleButton"
               Click="OnOpenVehicleStarterBundleClick"

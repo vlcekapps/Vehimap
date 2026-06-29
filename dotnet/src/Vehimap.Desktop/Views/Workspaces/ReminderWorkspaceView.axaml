@@ -75,7 +75,7 @@
         <WrapPanel x:Name="ReminderActionPanel" Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
           <Button Command="{Binding CreateReminderCommand}" Content="Nová" AutomationProperties.Name="Vytvořit novou připomínku" AutomationProperties.AutomationId="CreateReminderButton" />
           <Button Command="{Binding EditSelectedReminderCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybranou připomínku" AutomationProperties.AutomationId="EditReminderButton" />
-          <Button Command="{Binding DeleteSelectedReminderCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybranou připomínku" AutomationProperties.AutomationId="DeleteReminderButton" />
+          <Button Command="{Binding DeleteSelectedReminderCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybranou připomínku" AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybranou připomínku." AutomationProperties.AutomationId="DeleteReminderButton" />
           <Button Command="{Binding AdvanceSelectedReminderCommand}" Content="Další termín" AutomationProperties.Name="Posunout vybranou opakovanou připomínku na další termín" AutomationProperties.AutomationId="AdvanceReminderButton" />
           <Button Command="{Binding SaveReminderCommand}" Content="Uložit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Uložit připomínku" AutomationProperties.AutomationId="SaveReminderButton" />
           <Button Command="{Binding CancelReminderEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Zrušit úpravu připomínky" AutomationProperties.AutomationId="CancelReminderButton" />

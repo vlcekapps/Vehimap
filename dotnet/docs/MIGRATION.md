@@ -68,6 +68,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - staticke guard testy pro `AutomationProperties.ItemType` u seznamovych polozek s `AccessibleLabel` a konzervativni `AutomationProperties.ItemStatus` jen pro skutecny stav, prioritu nebo dostupnost
 - staticke guard testy pro `AutomationProperties.IsRequiredForForm` u editorovych poli, ktera runtime validace opravdu vyzaduje
 - staticke guard testy pro `PlaceholderText` v textovych polich, aby priklady hodnot a filtracni napovedy byly vystavene i pres `AutomationProperties.HelpText`
+- staticke guard testy pro destruktivni nebo datove nahrazujici akce, aby mazani a obnova dat mely `AutomationProperties.HelpText` s dopadem akce pro ctecky
 - globalni accessibility styl pro `ComboBox`, ktery rozbalovacim seznamum dava jednotnou napovedu pro otevreni sipkami a vyber hodnoty
 - sdilenou top-level keyboard guard vrstvu, ktera chrani standardni editaci `TextBox`, otevirani `ComboBox` sipkami a focus po ulozeni vozidla proti regresim z control templatu nebo modalnich oken
 - docasny `TextBox` live-region fallback pro NVDA, ktery pri kurzorove navigaci oznamuje nazev pole, pozici a okolni znak jako testovanou vyjimku do doby, nez bude nativni UIA textova podpora Avalonie dostatecna

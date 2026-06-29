@@ -82,7 +82,7 @@
           <WrapPanel x:Name="RecordEditActionPanel" ItemWidth="138" ItemHeight="34">
             <Button Command="{Binding CreateRecordCommand}" Content="Nový doklad" AutomationProperties.Name="Vytvořit nový doklad" AutomationProperties.AutomationId="CreateRecordButton" />
             <Button Command="{Binding EditSelectedRecordCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybraný doklad" AutomationProperties.AutomationId="EditRecordButton" />
-            <Button Command="{Binding DeleteSelectedRecordCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybraný doklad" AutomationProperties.AutomationId="DeleteRecordButton" />
+            <Button Command="{Binding DeleteSelectedRecordCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybraný doklad" AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybraný doklad z evidence; související spravovaná příloha zůstane řešená podle bezpečnostních pravidel aplikace." AutomationProperties.AutomationId="DeleteRecordButton" />
             <Button Command="{Binding MoveSelectedRecordToManagedCommand}" Content="Přesunout do příloh" AutomationProperties.Name="Převést vybraný doklad na spravovanou kopii" AutomationProperties.AutomationId="MoveRecordToManagedButton" />
             <Button Command="{Binding SaveRecordCommand}" Content="Uložit" IsVisible="{Binding IsEditingRecord}" AutomationProperties.Name="Uložit doklad" AutomationProperties.AutomationId="SaveRecordButton" />
             <Button Command="{Binding CancelRecordEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingRecord}" AutomationProperties.Name="Zrušit úpravu dokladu" AutomationProperties.AutomationId="CancelRecordButton" />

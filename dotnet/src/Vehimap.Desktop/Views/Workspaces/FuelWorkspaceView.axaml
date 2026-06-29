@@ -121,6 +121,7 @@
           <Button Command="{Binding DeleteSelectedFuelCommand}"
                   Content="Odstranit"
                   AutomationProperties.Name="Odstranit vybrané tankování"
+                  AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybraný záznam tankování."
                   AutomationProperties.AutomationId="DeleteFuelButton" />
           <Button Command="{Binding SaveFuelCommand}"
                   Content="Uložit"
