@@ -1,4 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Vehimap.Application.Abstractions;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -18,8 +20,10 @@ public sealed partial class AboutDialogViewModel : ObservableObject
         string frameworkDescription,
         string applicationPath,
         string releaseNotesUrl,
-        string releaseChannel = "stable")
+        string releaseChannel = "stable",
+        IAppLocalizer? localizer = null)
     {
+        _localizer = localizer ?? new ResourceAppLocalizer();
         Title = title;
         AppVersion = appVersion;
         FileVersion = fileVersion;
@@ -31,15 +35,18 @@ public sealed partial class AboutDialogViewModel : ObservableObject
         ApplicationPath = applicationPath;
         ReleaseNotesUrl = releaseNotesUrl;
         ReleaseChannel = string.IsNullOrWhiteSpace(releaseChannel) ? "stable" : releaseChannel.Trim();
+        StatusMessage = _localizer.GetString("About.Status.Basic");
     }
 
     public string Title { get; }
 
     public string Author => AuthorText;
 
-    public string ThankAuthorLabel => "Poděkovat autorovi";
+    private readonly IAppLocalizer _localizer;
 
-    public string ThankAuthorHelpText => "Otevře stránku, kde můžete autorovi poděkovat podporou tvorby.";
+    public string ThankAuthorLabel => _localizer.GetString("MainMenu.App.ThankAuthor");
+
+    public string ThankAuthorHelpText => _localizer.GetString("About.ThankAuthorHelpText");
 
     public string AppVersion { get; }
 
@@ -74,14 +81,14 @@ public sealed partial class AboutDialogViewModel : ObservableObject
         : "Zobrazit diagnostická data";
 
     [ObservableProperty]
-    private string statusMessage = "Základní informace o aplikaci jsou zobrazené. Diagnostická data lze zobrazit nebo zkopírovat pro podporu.";
+    private string statusMessage = string.Empty;
 
     public string DiagnosticText => string.Join(
         Environment.NewLine,
         new[]
         {
             "Vehimap - O programu",
-            "Diagnostická data",
+            _localizer.GetString("About.DiagnosticsName"),
             $"Název: {Title}",
             $"Autor: {Author}",
             $"Verze aplikace: {AppVersion}",
@@ -103,8 +110,8 @@ public sealed partial class AboutDialogViewModel : ObservableObject
     {
         IsDiagnosticsVisible = !IsDiagnosticsVisible;
         StatusMessage = IsDiagnosticsVisible
-            ? "Diagnostická data jsou zobrazená. Lze je zkopírovat pro podporu."
-            : "Diagnostická data jsou skrytá. Běžný pohled obsahuje jen základní informace.";
+            ? _localizer.GetString("About.Status.DiagnosticsVisible")
+            : _localizer.GetString("About.Status.DiagnosticsHidden");
     }
 
     partial void OnIsDiagnosticsVisibleChanged(bool value)

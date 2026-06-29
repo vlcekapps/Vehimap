@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Views;
 
@@ -11,7 +12,7 @@ internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
     {
         var dialog = new SettingsWindow
         {
-            DataContext = SettingsDialogViewModel.FromSnapshot(snapshot, automaticBackupStatus)
+            DataContext = SettingsDialogViewModel.FromSnapshot(snapshot, automaticBackupStatus, DesktopLocalization.Localizer)
         };
 
         return await dialog.ShowDialog<SettingsDialogResult?>(owner);

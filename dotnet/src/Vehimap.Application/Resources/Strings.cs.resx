@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="About.Action.Close" xml:space="preserve"><value>Zavřít</value></data>
+  <data name="About.Action.CopyDiagnostics" xml:space="preserve"><value>Kopírovat diagnostiku</value></data>
+  <data name="About.Action.ReleaseNotes" xml:space="preserve"><value>Release poznámky</value></data>
+  <data name="About.Application" xml:space="preserve"><value>Aplikace</value></data>
+  <data name="About.Author" xml:space="preserve"><value>Autor</value></data>
+  <data name="About.BasicInfo" xml:space="preserve"><value>Základní informace o aplikaci</value></data>
+  <data name="About.CloseName" xml:space="preserve"><value>Zavřít dialog O programu</value></data>
+  <data name="About.CopyDiagnosticsName" xml:space="preserve"><value>Kopírovat diagnostická data o aplikaci do schránky</value></data>
+  <data name="About.Description" xml:space="preserve"><value>Přístupná evidence vozidel pro Windows a postupně další platformy.</value></data>
+  <data name="About.DiagnosticsName" xml:space="preserve"><value>Diagnostická data o aplikaci</value></data>
+  <data name="About.HelpText" xml:space="preserve"><value>Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+K otevře poděkování autorovi, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.</value></data>
+  <data name="About.Status.Basic" xml:space="preserve"><value>Základní informace o aplikaci jsou zobrazené. Diagnostická data lze zobrazit nebo zkopírovat pro podporu.</value></data>
+  <data name="About.Status.DiagnosticsHidden" xml:space="preserve"><value>Diagnostická data jsou skrytá. Běžný pohled obsahuje jen základní informace.</value></data>
+  <data name="About.Status.DiagnosticsVisible" xml:space="preserve"><value>Diagnostická data jsou zobrazená. Lze je zkopírovat pro podporu.</value></data>
+  <data name="About.ReleaseNotesName" xml:space="preserve"><value>Otevřít release poznámky</value></data>
+  <data name="About.ThankAuthorHelpText" xml:space="preserve"><value>Otevře stránku, kde můžete autorovi poděkovat podporou tvorby.</value></data>
+  <data name="About.Title" xml:space="preserve"><value>O programu</value></data>
+  <data name="About.Version" xml:space="preserve"><value>Verze</value></data>
+  <data name="Common.Cancel" xml:space="preserve"><value>Zrušit</value></data>
+  <data name="Common.Save" xml:space="preserve"><value>Uložit</value></data>
+  <data name="MainMenu.App" xml:space="preserve"><value>_Aplikace</value></data>
+  <data name="MainMenu.App.About" xml:space="preserve"><value>O programu</value></data>
+  <data name="MainMenu.App.ActionsOnTray" xml:space="preserve"><value>Akce na liště</value></data>
+  <data name="MainMenu.App.CheckUpdates" xml:space="preserve"><value>Zkontrolovat aktualizace</value></data>
+  <data name="MainMenu.App.Exit" xml:space="preserve"><value>Ukončit aplikaci</value></data>
+  <data name="MainMenu.App.Feedback" xml:space="preserve"><value>Nahlásit zpětnou vazbu</value></data>
+  <data name="MainMenu.App.MinimizeToTray" xml:space="preserve"><value>Minimalizovat na lištu</value></data>
+  <data name="MainMenu.App.OpenAboutName" xml:space="preserve"><value>Otevřít dialog O programu</value></data>
+  <data name="MainMenu.App.OpenSettingsName" xml:space="preserve"><value>Otevřít nastavení aplikace</value></data>
+  <data name="MainMenu.App.OpenTrayActionsName" xml:space="preserve"><value>Otevřít přístupné akce Vehimapu na liště</value></data>
+  <data name="MainMenu.App.Settings" xml:space="preserve"><value>Nastavení</value></data>
+  <data name="MainMenu.App.ThankAuthor" xml:space="preserve"><value>Poděkovat autorovi</value></data>
+  <data name="MainMenu.File" xml:space="preserve"><value>_Soubor</value></data>
+  <data name="MainMenu.Overview" xml:space="preserve"><value>_Přehledy</value></data>
+  <data name="MainMenu.QuickActions" xml:space="preserve"><value>_Rychlé akce</value></data>
+  <data name="MainMenu.Vehicle" xml:space="preserve"><value>_Vozidlo</value></data>
+  <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Zálohovat ihned</value></data>
+  <data name="Settings.Action.CancelName" xml:space="preserve"><value>Zavřít dialog nastavení</value></data>
+  <data name="Settings.Action.SaveName" xml:space="preserve"><value>Uložit nastavení</value></data>
+  <data name="Settings.AutomaticBackupKeepCount" xml:space="preserve"><value>Ponechat posledních automatických záloh</value></data>
+  <data name="Settings.AutomaticBackupKeepCountHelp" xml:space="preserve"><value>Aktivní jen když je zapnuté pravidelné vytváření automatických záloh. Zadejte počet ponechaných automatických záloh.</value></data>
+  <data name="Settings.AutomaticBackupStatusInitial" xml:space="preserve"><value>Upravte podporované volby a potvrďte je tlačítkem Uložit.</value></data>
+  <data name="Settings.AutomaticBackupsEnabled" xml:space="preserve"><value>Pravidelně vytvářet automatické zálohy</value></data>
+  <data name="Settings.AutomaticBackupsHelp" xml:space="preserve"><value>Když je zapnuto, Vehimap podle zadaného intervalu vytváří automatické zálohy datové sady.</value></data>
+  <data name="Settings.AutomaticBackupsIntervalDays" xml:space="preserve"><value>Interval automatické zálohy ve dnech</value></data>
+  <data name="Settings.AutomaticBackupsIntervalHelp" xml:space="preserve"><value>Aktivní jen když je zapnuté pravidelné vytváření automatických záloh. Zadejte počet dnů mezi automatickými zálohami.</value></data>
+  <data name="Settings.DecimalSeparator" xml:space="preserve"><value>Oddělovač desetin</value></data>
+  <data name="Settings.Description" xml:space="preserve"><value>Zde nastavíte upozornění, chování aplikace po spuštění, automatické zálohy, jazyk a formát čísel.</value></data>
+  <data name="Settings.DistanceUnit" xml:space="preserve"><value>Jednotka vzdálenosti</value></data>
+  <data name="Settings.GreenCardReminderDays" xml:space="preserve"><value>Upozornění na zelenou kartu (dny)</value></data>
+  <data name="Settings.GreenCardReminderDaysName" xml:space="preserve"><value>Upozornění na zelenou kartu ve dnech</value></data>
+  <data name="Settings.HelpText" xml:space="preserve"><value>Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.</value></data>
+  <data name="Settings.HideOnLaunch" xml:space="preserve"><value>Po spuštění automaticky skrýt do lišty</value></data>
+  <data name="Settings.Language" xml:space="preserve"><value>Jazyk</value></data>
+  <data name="Settings.LanguageRestartNotice" xml:space="preserve"><value>Změna jazyka se uloží hned, ale celé uživatelské rozhraní ji použije až po restartu Vehimapu.</value></data>
+  <data name="Settings.LocaleFormattingHeading" xml:space="preserve"><value>Jazyk, čísla a jednotky</value></data>
+  <data name="Settings.MaintenanceReminderDays" xml:space="preserve"><value>Upozornění na údržbu (dny)</value></data>
+  <data name="Settings.MaintenanceReminderDaysName" xml:space="preserve"><value>Upozornění na údržbu ve dnech</value></data>
+  <data name="Settings.MaintenanceReminderKm" xml:space="preserve"><value>Upozornění na údržbu (km)</value></data>
+  <data name="Settings.MaintenanceReminderKmName" xml:space="preserve"><value>Upozornění na údržbu v kilometrech</value></data>
+  <data name="Settings.NumberFormattingHeading" xml:space="preserve"><value>Jazyk a formát čísel</value></data>
+  <data name="Settings.Option.Culture" xml:space="preserve"><value>Podle jazyka</value></data>
+  <data name="Settings.Option.Czech" xml:space="preserve"><value>Čeština</value></data>
+  <data name="Settings.Option.DecimalComma" xml:space="preserve"><value>Čárka</value></data>
+  <data name="Settings.Option.DecimalDot" xml:space="preserve"><value>Tečka</value></data>
+  <data name="Settings.Option.English" xml:space="preserve"><value>Angličtina</value></data>
+  <data name="Settings.Option.ImperialGallons" xml:space="preserve"><value>Imperiální galony</value></data>
+  <data name="Settings.Option.Kilometers" xml:space="preserve"><value>Kilometry</value></data>
+  <data name="Settings.Option.Liters" xml:space="preserve"><value>Litry</value></data>
+  <data name="Settings.Option.Miles" xml:space="preserve"><value>Míle</value></data>
+  <data name="Settings.Option.NoThousands" xml:space="preserve"><value>Žádný</value></data>
+  <data name="Settings.Option.System" xml:space="preserve"><value>Podle systému</value></data>
+  <data name="Settings.Option.ThousandsComma" xml:space="preserve"><value>Čárka</value></data>
+  <data name="Settings.Option.ThousandsDot" xml:space="preserve"><value>Tečka</value></data>
+  <data name="Settings.Option.ThousandsSpace" xml:space="preserve"><value>Mezera</value></data>
+  <data name="Settings.Option.UsGallons" xml:space="preserve"><value>Americké galony</value></data>
+  <data name="Settings.RestartRequiredStatus" xml:space="preserve"><value>Nastavení byla uložena. Vybraný jazyk se plně projeví po restartu Vehimapu.</value></data>
+  <data name="Settings.RunAtStartup" xml:space="preserve"><value>Spustit po startu počítače</value></data>
+  <data name="Settings.ShowDashboardOnLaunch" xml:space="preserve"><value>Po spuštění otevřít Dashboard místo Detailu</value></data>
+  <data name="Settings.StartupNotice" xml:space="preserve"><value>Pokud je zapnuté automatické skrytí, Dashboard se při startu neotevře.</value></data>
+  <data name="Settings.TechnicalReminderDays" xml:space="preserve"><value>Upozornění na TK (dny)</value></data>
+  <data name="Settings.TechnicalReminderDaysName" xml:space="preserve"><value>Upozornění na technickou kontrolu ve dnech</value></data>
+  <data name="Settings.ThousandsSeparator" xml:space="preserve"><value>Oddělovač tisíců</value></data>
+  <data name="Settings.Title" xml:space="preserve"><value>Nastavení Vehimapu</value></data>
+  <data name="Settings.Validation.IntegerRange" xml:space="preserve"><value>{0} musí být celé číslo v rozsahu {1} až {2}.</value></data>
+  <data name="Settings.VolumeUnit" xml:space="preserve"><value>Jednotka objemu paliva</value></data>
+  <data name="Shell.SettingsCanceled" xml:space="preserve"><value>Nastavení bylo zavřeno bez uložení.</value></data>
+  <data name="Shell.SettingsFailed" xml:space="preserve"><value>Nastavení se nepodařilo dokončit: {0}</value></data>
+  <data name="Shell.SettingsSaved" xml:space="preserve"><value>Nastavení byla uložena a přehledy byly přepočítány.</value></data>
+  <data name="VehicleEditor.Category" xml:space="preserve"><value>Kategorie</value></data>
+  <data name="VehicleEditor.CategoryName" xml:space="preserve"><value>Kategorie vozidla</value></data>
+  <data name="VehicleEditor.Climate" xml:space="preserve"><value>Klimatizace</value></data>
+  <data name="VehicleEditor.ClimateName" xml:space="preserve"><value>Klimatizace vozidla</value></data>
+  <data name="VehicleEditor.FieldsName" xml:space="preserve"><value>Pole editoru vozidla</value></data>
+  <data name="VehicleEditor.GreenCardFrom" xml:space="preserve"><value>Zelená karta od</value></data>
+  <data name="VehicleEditor.GreenCardTo" xml:space="preserve"><value>Zelená karta do</value></data>
+  <data name="VehicleEditor.HelpText" xml:space="preserve"><value>Samostatný editor vozidla. Ctrl+S uloží, Escape nebo Zrušit zavře bez uložení.</value></data>
+  <data name="VehicleEditor.LastTk" xml:space="preserve"><value>Poslední TK</value></data>
+  <data name="VehicleEditor.MakeModel" xml:space="preserve"><value>Značka a model</value></data>
+  <data name="VehicleEditor.MakeModelHelp" xml:space="preserve"><value>Například Škoda 120L</value></data>
+  <data name="VehicleEditor.MakeModelName" xml:space="preserve"><value>Značka a model vozidla</value></data>
+  <data name="VehicleEditor.Name" xml:space="preserve"><value>Název vozidla</value></data>
+  <data name="VehicleEditor.NameHelp" xml:space="preserve"><value>Například Milena</value></data>
+  <data name="VehicleEditor.NextTk" xml:space="preserve"><value>Příští TK</value></data>
+  <data name="VehicleEditor.Note" xml:space="preserve"><value>Poznámka k vozidlu</value></data>
+  <data name="VehicleEditor.NoteName" xml:space="preserve"><value>Poznámka k vozidlu</value></data>
+  <data name="VehicleEditor.Plate" xml:space="preserve"><value>SPZ</value></data>
+  <data name="VehicleEditor.PlateHelp" xml:space="preserve"><value>Například 1AB2345</value></data>
+  <data name="VehicleEditor.PlateName" xml:space="preserve"><value>Státní poznávací značka vozidla</value></data>
+  <data name="VehicleEditor.Power" xml:space="preserve"><value>Výkon v kW</value></data>
+  <data name="VehicleEditor.PowerName" xml:space="preserve"><value>Výkon vozidla v kilowattech</value></data>
+  <data name="VehicleEditor.Powertrain" xml:space="preserve"><value>Pohon</value></data>
+  <data name="VehicleEditor.PowertrainName" xml:space="preserve"><value>Pohon vozidla</value></data>
+  <data name="VehicleEditor.SaveName" xml:space="preserve"><value>Uložit vozidlo</value></data>
+  <data name="VehicleEditor.ServiceProfile" xml:space="preserve"><value>Servisní profil</value></data>
+  <data name="VehicleEditor.State" xml:space="preserve"><value>Stav vozidla</value></data>
+  <data name="VehicleEditor.StateName" xml:space="preserve"><value>Stav vozidla</value></data>
+  <data name="VehicleEditor.Tags" xml:space="preserve"><value>Štítky</value></data>
+  <data name="VehicleEditor.TagsHelp" xml:space="preserve"><value>Například rodina, veterán, pracovní</value></data>
+  <data name="VehicleEditor.TimingDrive" xml:space="preserve"><value>Rozvody</value></data>
+  <data name="VehicleEditor.TimingDriveName" xml:space="preserve"><value>Typ rozvodů vozidla</value></data>
+  <data name="VehicleEditor.Transmission" xml:space="preserve"><value>Převodovka</value></data>
+  <data name="VehicleEditor.TransmissionName" xml:space="preserve"><value>Převodovka vozidla</value></data>
+  <data name="VehicleEditor.Warning" xml:space="preserve"><value>Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu.</value></data>
+  <data name="VehicleEditor.Year" xml:space="preserve"><value>Rok</value></data>
+  <data name="VehicleEditor.YearName" xml:space="preserve"><value>Rok vozidla</value></data>
+  <data name="VehicleEditor.CancelName" xml:space="preserve"><value>Zrušit úpravu vozidla</value></data>
+</root>

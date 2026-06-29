@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
         x:Class="Vehimap.Desktop.Views.VehicleEditorWindow"
         x:DataType="vm:VehicleDetailWorkspaceViewModel"
@@ -12,7 +13,7 @@
         Title="{Binding VehicleEditorHeading}"
         AutomationProperties.Name="{Binding VehicleEditorHeading}"
         AutomationProperties.AutomationId="VehicleEditorWindow"
-        AutomationProperties.HelpText="Samostatný editor vozidla. Ctrl+S uloží, Escape nebo Zrušit zavře bez uložení.">
+        AutomationProperties.HelpText="{i18n:Loc VehicleEditor.HelpText}">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
     <TextBlock FontSize="20"
                FontWeight="SemiBold"
@@ -34,26 +35,26 @@
                   Margin="0,16,0,0"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
-                  AutomationProperties.Name="Pole editoru vozidla"
+                  AutomationProperties.Name="{i18n:Loc VehicleEditor.FieldsName}"
                   AutomationProperties.AutomationId="VehicleEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
         <Grid ColumnDefinitions="*,220">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Název vozidla" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Name}" />
             <TextBox x:Name="VehicleEditorNameBox"
                      Text="{Binding VehicleEditorName}"
-                     PlaceholderText="Například Milena"
-                     AutomationProperties.Name="Název vozidla"
-                     AutomationProperties.HelpText="Například Milena"
+                     PlaceholderText="{i18n:Loc VehicleEditor.NameHelp}"
+                     AutomationProperties.Name="{i18n:Loc VehicleEditor.Name}"
+                     AutomationProperties.HelpText="{i18n:Loc VehicleEditor.NameHelp}"
                      AutomationProperties.AutomationId="VehicleEditorNameBox"
                      AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Kategorie" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Category}" />
             <ComboBox x:Name="VehicleEditorCategoryBox"
                       ItemsSource="{Binding VehicleCategoryOptions}"
                       SelectedItem="{Binding VehicleEditorCategory}"
-                      AutomationProperties.Name="Kategorie vozidla"
+                      AutomationProperties.Name="{i18n:Loc VehicleEditor.CategoryName}"
                       AutomationProperties.AutomationId="VehicleEditorCategoryBox"
                       AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>
@@ -61,64 +62,64 @@
 
         <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="*,220">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Značka a model" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.MakeModel}" />
             <TextBox x:Name="VehicleEditorMakeModelBox"
                      Text="{Binding VehicleEditorMakeModel}"
-                     PlaceholderText="Například Škoda 120L"
-                     AutomationProperties.Name="Značka a model vozidla"
-                     AutomationProperties.HelpText="Například Škoda 120L"
+                     PlaceholderText="{i18n:Loc VehicleEditor.MakeModelHelp}"
+                     AutomationProperties.Name="{i18n:Loc VehicleEditor.MakeModelName}"
+                     AutomationProperties.HelpText="{i18n:Loc VehicleEditor.MakeModelHelp}"
                      AutomationProperties.AutomationId="VehicleEditorMakeModelBox"
                      AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="SPZ" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Plate}" />
             <TextBox x:Name="VehicleEditorPlateBox"
                      Text="{Binding VehicleEditorPlate}"
-                     PlaceholderText="Například 1AB2345"
-                     AutomationProperties.Name="Státní poznávací značka vozidla"
-                     AutomationProperties.HelpText="Například 1AB2345"
+                     PlaceholderText="{i18n:Loc VehicleEditor.PlateHelp}"
+                     AutomationProperties.Name="{i18n:Loc VehicleEditor.PlateName}"
+                     AutomationProperties.HelpText="{i18n:Loc VehicleEditor.PlateHelp}"
                      AutomationProperties.AutomationId="VehicleEditorPlateBox" />
           </StackPanel>
         </Grid>
 
         <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="160,160,*">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Rok" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Year}" />
             <TextBox x:Name="VehicleEditorYearBox"
                      Text="{Binding VehicleEditorYear}"
-                     AutomationProperties.Name="Rok vozidla"
+                     AutomationProperties.Name="{i18n:Loc VehicleEditor.YearName}"
                      AutomationProperties.AutomationId="VehicleEditorYearBox" />
           </StackPanel>
           <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Výkon v kW" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Power}" />
             <TextBox x:Name="VehicleEditorPowerBox"
                      Text="{Binding VehicleEditorPower}"
-                     AutomationProperties.Name="Výkon vozidla v kilowattech"
+                     AutomationProperties.Name="{i18n:Loc VehicleEditor.PowerName}"
                      AutomationProperties.AutomationId="VehicleEditorPowerBox" />
           </StackPanel>
           <StackPanel Grid.Column="2" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Stav vozidla" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.State}" />
             <ComboBox x:Name="VehicleEditorStateBox"
                       ItemsSource="{Binding VehicleStateOptions}"
                       SelectedItem="{Binding VehicleEditorState}"
-                      AutomationProperties.Name="Stav vozidla"
+                      AutomationProperties.Name="{i18n:Loc VehicleEditor.StateName}"
                       AutomationProperties.AutomationId="VehicleEditorStateBox" />
           </StackPanel>
         </Grid>
 
         <Grid Grid.Row="3" Margin="0,14,0,0" ColumnDefinitions="*,*">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Poslední TK" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.LastTk}" />
             <TextBox x:Name="VehicleEditorLastTkBox"
                      Text="{Binding VehicleEditorLastTk}"
-                     AutomationProperties.Name="Poslední technická kontrola"
+                     AutomationProperties.Name="{i18n:Loc VehicleEditor.LastTk}"
                      AutomationProperties.AutomationId="VehicleEditorLastTkBox" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Příští TK" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.NextTk}" />
             <TextBox x:Name="VehicleEditorNextTkBox"
                      Text="{Binding VehicleEditorNextTk}"
-                     AutomationProperties.Name="Příští technická kontrola"
+                     AutomationProperties.Name="{i18n:Loc VehicleEditor.NextTk}"
                      AutomationProperties.AutomationId="VehicleEditorNextTkBox"
                      AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>
@@ -126,68 +127,68 @@
 
         <Grid Grid.Row="4" Margin="0,14,0,0" ColumnDefinitions="*,*">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Zelená karta od" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.GreenCardFrom}" />
             <TextBox x:Name="VehicleEditorGreenCardFromBox"
                      Text="{Binding VehicleEditorGreenCardFrom}"
-                     AutomationProperties.Name="Zelená karta od"
+                     AutomationProperties.Name="{i18n:Loc VehicleEditor.GreenCardFrom}"
                      AutomationProperties.AutomationId="VehicleEditorGreenCardFromBox" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Zelená karta do" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.GreenCardTo}" />
             <TextBox x:Name="VehicleEditorGreenCardToBox"
                      Text="{Binding VehicleEditorGreenCardTo}"
-                     AutomationProperties.Name="Zelená karta do"
+                     AutomationProperties.Name="{i18n:Loc VehicleEditor.GreenCardTo}"
                      AutomationProperties.AutomationId="VehicleEditorGreenCardToBox" />
           </StackPanel>
         </Grid>
 
-        <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Servisní profil" />
+        <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.ServiceProfile}" />
         <Grid Grid.Row="6" Margin="0,6,0,0" ColumnDefinitions="*,*,*,*">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Pohon" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Powertrain}" />
             <ComboBox x:Name="VehicleEditorPowertrainBox"
                       ItemsSource="{Binding VehiclePowertrainOptions}"
                       SelectedItem="{Binding VehicleEditorPowertrain}"
-                      AutomationProperties.Name="Pohon vozidla"
+                      AutomationProperties.Name="{i18n:Loc VehicleEditor.PowertrainName}"
                       AutomationProperties.AutomationId="VehicleEditorPowertrainBox" />
           </StackPanel>
           <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Klimatizace" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Climate}" />
             <ComboBox x:Name="VehicleEditorClimateProfileBox"
                       ItemsSource="{Binding VehicleClimateProfileOptions}"
                       SelectedItem="{Binding VehicleEditorClimateProfile}"
-                      AutomationProperties.Name="Klimatizace vozidla"
+                      AutomationProperties.Name="{i18n:Loc VehicleEditor.ClimateName}"
                       AutomationProperties.AutomationId="VehicleEditorClimateProfileBox" />
           </StackPanel>
           <StackPanel Grid.Column="2" Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Rozvody" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.TimingDrive}" />
             <ComboBox x:Name="VehicleEditorTimingDriveBox"
                       ItemsSource="{Binding VehicleTimingDriveOptions}"
                       SelectedItem="{Binding VehicleEditorTimingDrive}"
-                      AutomationProperties.Name="Typ rozvodů vozidla"
+                      AutomationProperties.Name="{i18n:Loc VehicleEditor.TimingDriveName}"
                       AutomationProperties.AutomationId="VehicleEditorTimingDriveBox" />
           </StackPanel>
           <StackPanel Grid.Column="3" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Převodovka" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Transmission}" />
             <ComboBox x:Name="VehicleEditorTransmissionBox"
                       ItemsSource="{Binding VehicleTransmissionOptions}"
                       SelectedItem="{Binding VehicleEditorTransmission}"
-                      AutomationProperties.Name="Převodovka vozidla"
+                      AutomationProperties.Name="{i18n:Loc VehicleEditor.TransmissionName}"
                       AutomationProperties.AutomationId="VehicleEditorTransmissionBox" />
           </StackPanel>
         </Grid>
 
-        <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="Štítky" />
+        <TextBlock Grid.Row="7" Margin="0,14,0,0" FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Tags}" />
         <TextBox x:Name="VehicleEditorTagsBox"
                  Grid.Row="8"
                  Margin="0,6,0,0"
                  Text="{Binding VehicleEditorTags}"
-                 PlaceholderText="Například rodina, veterán, pracovní"
-                 AutomationProperties.Name="Štítky vozidla"
-                 AutomationProperties.HelpText="Například rodina, veterán, pracovní"
+                 PlaceholderText="{i18n:Loc VehicleEditor.TagsHelp}"
+                 AutomationProperties.Name="{i18n:Loc VehicleEditor.Tags}"
+                 AutomationProperties.HelpText="{i18n:Loc VehicleEditor.TagsHelp}"
                  AutomationProperties.AutomationId="VehicleEditorTagsBox" />
 
-        <TextBlock Grid.Row="9" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka k vozidlu" />
+        <TextBlock Grid.Row="9" Margin="0,14,0,0" FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Note}" />
         <TextBox x:Name="VehicleEditorNoteBox"
                  Grid.Row="10"
                  Margin="0,6,0,0"
@@ -196,12 +197,12 @@
                  TextWrapping="Wrap"
                  VerticalContentAlignment="Top"
                  Text="{Binding VehicleEditorNote}"
-                 AutomationProperties.Name="Poznámka k vozidlu"
+                 AutomationProperties.Name="{i18n:Loc VehicleEditor.NoteName}"
                  AutomationProperties.AutomationId="VehicleEditorNoteBox" />
         <TextBlock Grid.Row="11"
                    Margin="0,14,0,0"
                    Opacity="0.72"
-                   Text="Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu."
+                   Text="{i18n:Loc VehicleEditor.Warning}"
                    TextWrapping="Wrap" />
       </Grid>
     </ScrollViewer>
@@ -213,13 +214,13 @@
                 Spacing="10">
       <Button x:Name="SaveVehicleButton"
               Click="OnSaveClick"
-              Content="Uložit"
-              AutomationProperties.Name="Uložit vozidlo"
+              Content="{i18n:Loc Common.Save}"
+              AutomationProperties.Name="{i18n:Loc VehicleEditor.SaveName}"
               AutomationProperties.AutomationId="SaveVehicleButton" />
       <Button x:Name="CancelVehicleButton"
               Click="OnCancelClick"
-              Content="Zrušit"
-              AutomationProperties.Name="Zrušit úpravu vozidla"
+              Content="{i18n:Loc Common.Cancel}"
+              AutomationProperties.Name="{i18n:Loc VehicleEditor.CancelName}"
               AutomationProperties.AutomationId="CancelVehicleButton" />
     </StackPanel>
   </Grid>

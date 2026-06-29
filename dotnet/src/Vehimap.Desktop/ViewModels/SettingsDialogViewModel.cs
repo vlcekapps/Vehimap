@@ -1,10 +1,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class SettingsDialogViewModel : ObservableObject
 {
+    private IAppLocalizer _localizer = new ResourceAppLocalizer();
+
     [ObservableProperty]
     private string technicalReminderDays = string.Empty;
 
@@ -39,14 +43,50 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
     private string automaticBackupStatus = string.Empty;
 
     [ObservableProperty]
-    private string statusMessage = "Upravte podporované volby a potvrďte je tlačítkem Uložit.";
+    private string statusMessage = string.Empty;
+
+    [ObservableProperty]
+    private SettingsOptionViewModel? selectedLanguageOption;
+
+    [ObservableProperty]
+    private SettingsOptionViewModel? selectedThousandsSeparatorOption;
+
+    [ObservableProperty]
+    private SettingsOptionViewModel? selectedDecimalSeparatorOption;
+
+    [ObservableProperty]
+    private SettingsOptionViewModel? selectedDistanceUnitOption;
+
+    [ObservableProperty]
+    private SettingsOptionViewModel? selectedVolumeUnitOption;
+
+    public IReadOnlyList<SettingsOptionViewModel> LanguageOptions { get; private init; } = [];
+
+    public IReadOnlyList<SettingsOptionViewModel> ThousandsSeparatorOptions { get; private init; } = [];
+
+    public IReadOnlyList<SettingsOptionViewModel> DecimalSeparatorOptions { get; private init; } = [];
+
+    public IReadOnlyList<SettingsOptionViewModel> DistanceUnitOptions { get; private init; } = [];
+
+    public IReadOnlyList<SettingsOptionViewModel> VolumeUnitOptions { get; private init; } = [];
 
     public bool CanConfigureAutomaticBackups => AutomaticBackupsEnabled;
 
-    public static SettingsDialogViewModel FromSnapshot(DesktopSupportedSettingsSnapshot snapshot, string automaticBackupStatus)
+    public static SettingsDialogViewModel FromSnapshot(
+        DesktopSupportedSettingsSnapshot snapshot,
+        string automaticBackupStatus,
+        IAppLocalizer? localizer = null)
     {
+        var effectiveLocalizer = localizer ?? new ResourceAppLocalizer();
+        var languageOptions = BuildLanguageOptions(effectiveLocalizer);
+        var thousandsOptions = BuildThousandsSeparatorOptions(effectiveLocalizer);
+        var decimalOptions = BuildDecimalSeparatorOptions(effectiveLocalizer);
+        var distanceUnitOptions = BuildDistanceUnitOptions(effectiveLocalizer);
+        var volumeUnitOptions = BuildVolumeUnitOptions(effectiveLocalizer);
+
         return new SettingsDialogViewModel
         {
+            _localizer = effectiveLocalizer,
             TechnicalReminderDays = snapshot.TechnicalReminderDays.ToString(),
             GreenCardReminderDays = snapshot.GreenCardReminderDays.ToString(),
             MaintenanceReminderDays = snapshot.MaintenanceReminderDays.ToString(),
@@ -57,16 +97,27 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             AutomaticBackupsEnabled = snapshot.AutomaticBackupsEnabled,
             AutomaticBackupIntervalDays = snapshot.AutomaticBackupIntervalDays.ToString(),
             AutomaticBackupKeepCount = snapshot.AutomaticBackupKeepCount.ToString(),
-            AutomaticBackupStatus = automaticBackupStatus
+            AutomaticBackupStatus = automaticBackupStatus,
+            LanguageOptions = languageOptions,
+            ThousandsSeparatorOptions = thousandsOptions,
+            DecimalSeparatorOptions = decimalOptions,
+            DistanceUnitOptions = distanceUnitOptions,
+            VolumeUnitOptions = volumeUnitOptions,
+            SelectedLanguageOption = FindOption(languageOptions, AppCultureService.NormalizeLanguage(snapshot.Language)),
+            SelectedThousandsSeparatorOption = FindOption(thousandsOptions, AppCultureService.NormalizeThousandsSeparator(snapshot.ThousandsSeparator)),
+            SelectedDecimalSeparatorOption = FindOption(decimalOptions, AppCultureService.NormalizeDecimalSeparator(snapshot.DecimalSeparator)),
+            SelectedDistanceUnitOption = FindOption(distanceUnitOptions, AppUnitFormatService.NormalizeDistanceUnit(snapshot.DistanceUnit)),
+            SelectedVolumeUnitOption = FindOption(volumeUnitOptions, AppUnitFormatService.NormalizeVolumeUnit(snapshot.VolumeUnit)),
+            StatusMessage = effectiveLocalizer.GetString("Settings.AutomaticBackupStatusInitial")
         };
     }
 
     public bool TryBuildSnapshot(out DesktopSupportedSettingsSnapshot snapshot, out string errorMessage)
     {
-        if (!TryParseBoundedInt(TechnicalReminderDays, 0, 3650, "Upozornění na TK", out var technicalReminderDays, out errorMessage)
-            || !TryParseBoundedInt(GreenCardReminderDays, 0, 3650, "Upozornění na zelenou kartu", out var greenCardReminderDays, out errorMessage)
-            || !TryParseBoundedInt(MaintenanceReminderDays, 0, 3650, "Upozornění na údržbu podle dnů", out var maintenanceReminderDays, out errorMessage)
-            || !TryParseBoundedInt(MaintenanceReminderKm, 1, 999999, "Upozornění na údržbu podle km", out var maintenanceReminderKm, out errorMessage))
+        if (!TryParseBoundedIntLocalized(TechnicalReminderDays, 0, 3650, _localizer.GetString("Settings.TechnicalReminderDaysName"), out var technicalReminderDays, out errorMessage)
+            || !TryParseBoundedIntLocalized(GreenCardReminderDays, 0, 3650, _localizer.GetString("Settings.GreenCardReminderDaysName"), out var greenCardReminderDays, out errorMessage)
+            || !TryParseBoundedIntLocalized(MaintenanceReminderDays, 0, 3650, _localizer.GetString("Settings.MaintenanceReminderDaysName"), out var maintenanceReminderDays, out errorMessage)
+            || !TryParseBoundedIntLocalized(MaintenanceReminderKm, 1, 999999, _localizer.GetString("Settings.MaintenanceReminderKmName"), out var maintenanceReminderKm, out errorMessage))
         {
             snapshot = default!;
             return false;
@@ -75,8 +126,8 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
         var automaticBackupIntervalDays = 1;
         var automaticBackupKeepCount = 30;
         if (AutomaticBackupsEnabled
-            && (!TryParseBoundedInt(AutomaticBackupIntervalDays, 1, 999, "Interval automatické zálohy ve dnech", out automaticBackupIntervalDays, out errorMessage)
-                || !TryParseBoundedInt(AutomaticBackupKeepCount, 1, 999, "Počet ponechaných automatických záloh", out automaticBackupKeepCount, out errorMessage)))
+            && (!TryParseBoundedIntLocalized(AutomaticBackupIntervalDays, 1, 999, _localizer.GetString("Settings.AutomaticBackupsIntervalDays"), out automaticBackupIntervalDays, out errorMessage)
+                || !TryParseBoundedIntLocalized(AutomaticBackupKeepCount, 1, 999, _localizer.GetString("Settings.AutomaticBackupKeepCount"), out automaticBackupKeepCount, out errorMessage)))
         {
             snapshot = default!;
             return false;
@@ -84,12 +135,12 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
 
         if (!AutomaticBackupsEnabled)
         {
-            if (TryParseBoundedInt(AutomaticBackupIntervalDays, 1, 999, "Interval automatické zálohy ve dnech", out var parsedIntervalDays, out _))
+            if (TryParseBoundedIntLocalized(AutomaticBackupIntervalDays, 1, 999, _localizer.GetString("Settings.AutomaticBackupsIntervalDays"), out var parsedIntervalDays, out _))
             {
                 automaticBackupIntervalDays = parsedIntervalDays;
             }
 
-            if (TryParseBoundedInt(AutomaticBackupKeepCount, 1, 999, "Počet ponechaných automatických záloh", out var parsedKeepCount, out _))
+            if (TryParseBoundedIntLocalized(AutomaticBackupKeepCount, 1, 999, _localizer.GetString("Settings.AutomaticBackupKeepCount"), out var parsedKeepCount, out _))
             {
                 automaticBackupKeepCount = parsedKeepCount;
             }
@@ -105,7 +156,12 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             ShowDashboardOnLaunch,
             AutomaticBackupsEnabled,
             automaticBackupIntervalDays,
-            automaticBackupKeepCount);
+            automaticBackupKeepCount,
+            SelectedLanguageOption?.Value ?? AppCultureService.SystemLanguage,
+            SelectedThousandsSeparatorOption?.Value ?? AppCultureService.CultureSeparator,
+            SelectedDecimalSeparatorOption?.Value ?? AppCultureService.CultureSeparator,
+            SelectedDistanceUnitOption?.Value ?? AppUnitFormatService.Kilometers,
+            SelectedVolumeUnitOption?.Value ?? AppUnitFormatService.Liters);
         errorMessage = string.Empty;
         return true;
     }
@@ -115,15 +171,55 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
         OnPropertyChanged(nameof(CanConfigureAutomaticBackups));
     }
 
-    private static bool TryParseBoundedInt(string value, int minValue, int maxValue, string label, out int parsedValue, out string errorMessage)
+    private bool TryParseBoundedIntLocalized(string value, int minValue, int maxValue, string label, out int parsedValue, out string errorMessage)
     {
         if (!int.TryParse(value.Trim(), out parsedValue) || parsedValue < minValue || parsedValue > maxValue)
         {
-            errorMessage = $"{label} musí být celé číslo v rozsahu {minValue} až {maxValue}.";
+            errorMessage = _localizer.Format("Settings.Validation.IntegerRange", label, minValue, maxValue);
             return false;
         }
 
         errorMessage = string.Empty;
         return true;
     }
+
+    private static IReadOnlyList<SettingsOptionViewModel> BuildLanguageOptions(IAppLocalizer localizer) =>
+        [
+            new(AppCultureService.SystemLanguage, localizer.GetString("Settings.Option.System")),
+            new(AppCultureService.CzechLanguage, localizer.GetString("Settings.Option.Czech")),
+            new(AppCultureService.EnglishLanguage, localizer.GetString("Settings.Option.English"))
+        ];
+
+    private static IReadOnlyList<SettingsOptionViewModel> BuildThousandsSeparatorOptions(IAppLocalizer localizer) =>
+        [
+            new(AppCultureService.CultureSeparator, localizer.GetString("Settings.Option.Culture")),
+            new(AppCultureService.SpaceSeparator, localizer.GetString("Settings.Option.ThousandsSpace")),
+            new(AppCultureService.CommaSeparator, localizer.GetString("Settings.Option.ThousandsComma")),
+            new(AppCultureService.DotSeparator, localizer.GetString("Settings.Option.ThousandsDot")),
+            new(AppCultureService.NoSeparator, localizer.GetString("Settings.Option.NoThousands"))
+        ];
+
+    private static IReadOnlyList<SettingsOptionViewModel> BuildDecimalSeparatorOptions(IAppLocalizer localizer) =>
+        [
+            new(AppCultureService.CultureSeparator, localizer.GetString("Settings.Option.Culture")),
+            new(AppCultureService.CommaSeparator, localizer.GetString("Settings.Option.DecimalComma")),
+            new(AppCultureService.DotSeparator, localizer.GetString("Settings.Option.DecimalDot"))
+        ];
+
+    private static IReadOnlyList<SettingsOptionViewModel> BuildDistanceUnitOptions(IAppLocalizer localizer) =>
+        [
+            new(AppUnitFormatService.Kilometers, localizer.GetString("Settings.Option.Kilometers")),
+            new(AppUnitFormatService.Miles, localizer.GetString("Settings.Option.Miles"))
+        ];
+
+    private static IReadOnlyList<SettingsOptionViewModel> BuildVolumeUnitOptions(IAppLocalizer localizer) =>
+        [
+            new(AppUnitFormatService.Liters, localizer.GetString("Settings.Option.Liters")),
+            new(AppUnitFormatService.UsGallons, localizer.GetString("Settings.Option.UsGallons")),
+            new(AppUnitFormatService.ImperialGallons, localizer.GetString("Settings.Option.ImperialGallons"))
+        ];
+
+    private static SettingsOptionViewModel FindOption(IReadOnlyList<SettingsOptionViewModel> options, string value) =>
+        options.FirstOrDefault(option => string.Equals(option.Value, value, StringComparison.OrdinalIgnoreCase))
+        ?? options[0];
 }

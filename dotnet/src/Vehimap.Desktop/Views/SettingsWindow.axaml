@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.SettingsWindow"
         x:DataType="vm:SettingsDialogViewModel"
@@ -10,21 +11,21 @@
         CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="Nastavení"
-        AutomationProperties.Name="Nastavení Vehimapu"
+        Title="{i18n:Loc Settings.Title}"
+        AutomationProperties.Name="{i18n:Loc Settings.Title}"
         AutomationProperties.AutomationId="SettingsWindow"
-        AutomationProperties.HelpText="Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.">
+        AutomationProperties.HelpText="{i18n:Loc Settings.HelpText}">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto,Auto">
     <TextBlock FontSize="22"
                FontWeight="SemiBold"
-               Text="Nastavení Vehimapu"
-               AutomationProperties.Name="Nastavení Vehimapu"
+               Text="{i18n:Loc Settings.Title}"
+               AutomationProperties.Name="{i18n:Loc Settings.Title}"
                AutomationProperties.AutomationId="SettingsHeadingText"
                AutomationProperties.HeadingLevel="1" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
                Opacity="0.78"
-               Text="Zde nastavíte upozornění, chování aplikace po spuštění a automatické zálohy desktopové větve."
+               Text="{i18n:Loc Settings.Description}"
                TextWrapping="Wrap" />
 
     <ScrollViewer Grid.Row="2"
@@ -35,45 +36,105 @@
                   AutomationProperties.AutomationId="SettingsContentScrollViewer">
       <StackPanel Spacing="18">
       <Border Padding="14" Background="#143A4A5A" CornerRadius="8">
+        <Grid ColumnDefinitions="280,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+          <TextBlock Grid.Row="0"
+                     Grid.ColumnSpan="2"
+                     FontWeight="SemiBold"
+                     Text="{i18n:Loc Settings.LocaleFormattingHeading}" />
+          <TextBlock Grid.Row="1" Margin="0,14,0,0" Text="{i18n:Loc Settings.Language}" VerticalAlignment="Center" />
+          <ComboBox x:Name="LanguageOptionBox"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,14,0,0"
+                    ItemsSource="{Binding LanguageOptions}"
+                    SelectedItem="{Binding SelectedLanguageOption}"
+                    AutomationProperties.Name="{i18n:Loc Settings.Language}"
+                    AutomationProperties.AutomationId="LanguageOptionBox" />
+          <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="{i18n:Loc Settings.ThousandsSeparator}" VerticalAlignment="Center" />
+          <ComboBox x:Name="ThousandsSeparatorOptionBox"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="0,12,0,0"
+                    ItemsSource="{Binding ThousandsSeparatorOptions}"
+                    SelectedItem="{Binding SelectedThousandsSeparatorOption}"
+                    AutomationProperties.Name="{i18n:Loc Settings.ThousandsSeparator}"
+                    AutomationProperties.AutomationId="ThousandsSeparatorOptionBox" />
+          <TextBlock Grid.Row="3" Margin="0,12,0,0" Text="{i18n:Loc Settings.DecimalSeparator}" VerticalAlignment="Center" />
+          <ComboBox x:Name="DecimalSeparatorOptionBox"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="0,12,0,0"
+                    ItemsSource="{Binding DecimalSeparatorOptions}"
+                    SelectedItem="{Binding SelectedDecimalSeparatorOption}"
+                    AutomationProperties.Name="{i18n:Loc Settings.DecimalSeparator}"
+                    AutomationProperties.AutomationId="DecimalSeparatorOptionBox" />
+          <TextBlock Grid.Row="4" Margin="0,12,0,0" Text="{i18n:Loc Settings.DistanceUnit}" VerticalAlignment="Center" />
+          <ComboBox x:Name="DistanceUnitOptionBox"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Margin="0,12,0,0"
+                    ItemsSource="{Binding DistanceUnitOptions}"
+                    SelectedItem="{Binding SelectedDistanceUnitOption}"
+                    AutomationProperties.Name="{i18n:Loc Settings.DistanceUnit}"
+                    AutomationProperties.AutomationId="DistanceUnitOptionBox" />
+          <TextBlock Grid.Row="5" Margin="0,12,0,0" Text="{i18n:Loc Settings.VolumeUnit}" VerticalAlignment="Center" />
+          <ComboBox x:Name="VolumeUnitOptionBox"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Margin="0,12,0,0"
+                    ItemsSource="{Binding VolumeUnitOptions}"
+                    SelectedItem="{Binding SelectedVolumeUnitOption}"
+                    AutomationProperties.Name="{i18n:Loc Settings.VolumeUnit}"
+                    AutomationProperties.AutomationId="VolumeUnitOptionBox" />
+        </Grid>
+      </Border>
+
+      <TextBlock Opacity="0.78"
+                 Text="{i18n:Loc Settings.LanguageRestartNotice}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.Name="{i18n:Loc Settings.LanguageRestartNotice}"
+                 AutomationProperties.AutomationId="LanguageRestartNoticeText" />
+
+      <Border Padding="14" Background="#143A4A5A" CornerRadius="8">
         <Grid ColumnDefinitions="280,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
-          <TextBlock Grid.Row="0" Text="Upozornění na TK (dny)" VerticalAlignment="Center" />
+          <TextBlock Grid.Row="0" Text="{i18n:Loc Settings.TechnicalReminderDays}" VerticalAlignment="Center" />
           <TextBox x:Name="TechnicalReminderDaysBox"
                    Grid.Row="0"
                    Grid.Column="1"
                    Text="{Binding TechnicalReminderDays}"
-                   AutomationProperties.Name="Upozornění na technickou kontrolu ve dnech"
+                   AutomationProperties.Name="{i18n:Loc Settings.TechnicalReminderDaysName}"
                    AutomationProperties.AutomationId="TechnicalReminderDaysBox" />
 
-          <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="Upozornění na zelenou kartu (dny)" VerticalAlignment="Center" />
+          <TextBlock Grid.Row="1" Margin="0,12,0,0" Text="{i18n:Loc Settings.GreenCardReminderDays}" VerticalAlignment="Center" />
           <TextBox Grid.Row="1"
                    Grid.Column="1"
                    Margin="0,12,0,0"
                    Text="{Binding GreenCardReminderDays}"
-                   AutomationProperties.Name="Upozornění na zelenou kartu ve dnech"
+                   AutomationProperties.Name="{i18n:Loc Settings.GreenCardReminderDaysName}"
                    AutomationProperties.AutomationId="GreenCardReminderDaysBox" />
 
-          <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="Upozornění na údržbu (dny)" VerticalAlignment="Center" />
+          <TextBlock Grid.Row="2" Margin="0,12,0,0" Text="{i18n:Loc Settings.MaintenanceReminderDays}" VerticalAlignment="Center" />
           <TextBox Grid.Row="2"
                    Grid.Column="1"
                    Margin="0,12,0,0"
                    Text="{Binding MaintenanceReminderDays}"
-                   AutomationProperties.Name="Upozornění na údržbu ve dnech"
+                   AutomationProperties.Name="{i18n:Loc Settings.MaintenanceReminderDaysName}"
                    AutomationProperties.AutomationId="MaintenanceReminderDaysBox" />
 
-          <TextBlock Grid.Row="3" Margin="0,12,0,0" Text="Upozornění na údržbu (km)" VerticalAlignment="Center" />
+          <TextBlock Grid.Row="3" Margin="0,12,0,0" Text="{i18n:Loc Settings.MaintenanceReminderKm}" VerticalAlignment="Center" />
           <TextBox Grid.Row="3"
                    Grid.Column="1"
                    Margin="0,12,0,0"
                    Text="{Binding MaintenanceReminderKm}"
-                   AutomationProperties.Name="Upozornění na údržbu v kilometrech"
+                   AutomationProperties.Name="{i18n:Loc Settings.MaintenanceReminderKmName}"
                    AutomationProperties.AutomationId="MaintenanceReminderKmBox" />
 
           <CheckBox Grid.Row="4"
                     Grid.ColumnSpan="2"
                     Margin="0,18,0,0"
                     IsChecked="{Binding ShowDashboardOnLaunch}"
-                    Content="Po spuštění otevřít Dashboard místo Detailu"
-                    AutomationProperties.Name="Po spuštění otevřít Dashboard místo Detailu"
+                    Content="{i18n:Loc Settings.ShowDashboardOnLaunch}"
+                    AutomationProperties.Name="{i18n:Loc Settings.ShowDashboardOnLaunch}"
                     AutomationProperties.AutomationId="ShowDashboardOnLaunchCheckBox" />
         </Grid>
       </Border>
@@ -82,15 +143,15 @@
         <StackPanel Spacing="10">
           <CheckBox x:Name="RunAtStartupCheckBox"
                     IsChecked="{Binding RunAtStartup}"
-                    Content="Spustit po startu počítače"
-                    AutomationProperties.Name="Spustit po startu počítače"
+                    Content="{i18n:Loc Settings.RunAtStartup}"
+                    AutomationProperties.Name="{i18n:Loc Settings.RunAtStartup}"
                     AutomationProperties.AutomationId="RunAtStartupCheckBox" />
           <CheckBox IsChecked="{Binding HideOnLaunch}"
-                    Content="Po spuštění automaticky skrýt do lišty"
-                    AutomationProperties.Name="Po spuštění automaticky skrýt do lišty"
+                    Content="{i18n:Loc Settings.HideOnLaunch}"
+                    AutomationProperties.Name="{i18n:Loc Settings.HideOnLaunch}"
                     AutomationProperties.AutomationId="HideOnLaunchCheckBox" />
           <TextBlock Opacity="0.76"
-                     Text="Pokud je zapnuté automatické skrytí, Dashboard se při startu neotevře."
+                     Text="{i18n:Loc Settings.StartupNotice}"
                      TextWrapping="Wrap" />
         </StackPanel>
       </Border>
@@ -100,14 +161,14 @@
           <CheckBox Grid.Row="0"
                     Grid.ColumnSpan="2"
                     IsChecked="{Binding AutomaticBackupsEnabled}"
-                    Content="Pravidelně vytvářet automatické zálohy"
-                    AutomationProperties.Name="Pravidelně vytvářet automatické zálohy"
-                    AutomationProperties.HelpText="Když je zapnuto, Vehimap podle zadaného intervalu vytváří automatické zálohy datové sady."
+                    Content="{i18n:Loc Settings.AutomaticBackupsEnabled}"
+                    AutomationProperties.Name="{i18n:Loc Settings.AutomaticBackupsEnabled}"
+                    AutomationProperties.HelpText="{i18n:Loc Settings.AutomaticBackupsHelp}"
                     AutomationProperties.AutomationId="AutomaticBackupsEnabledCheckBox" />
 
           <TextBlock Grid.Row="1"
                      Margin="0,14,0,0"
-                     Text="Interval automatické zálohy ve dnech"
+                     Text="{i18n:Loc Settings.AutomaticBackupsIntervalDays}"
                      VerticalAlignment="Center"
                      IsEnabled="{Binding CanConfigureAutomaticBackups}" />
           <TextBox Grid.Row="1"
@@ -115,13 +176,13 @@
                    Margin="0,14,0,0"
                    Text="{Binding AutomaticBackupIntervalDays}"
                    IsEnabled="{Binding CanConfigureAutomaticBackups}"
-                   AutomationProperties.Name="Interval automatické zálohy ve dnech"
-                   AutomationProperties.HelpText="Aktivní jen když je zapnuté pravidelné vytváření automatických záloh. Zadejte počet dnů mezi automatickými zálohami."
+                   AutomationProperties.Name="{i18n:Loc Settings.AutomaticBackupsIntervalDays}"
+                   AutomationProperties.HelpText="{i18n:Loc Settings.AutomaticBackupsIntervalHelp}"
                    AutomationProperties.AutomationId="AutomaticBackupIntervalDaysBox" />
 
           <TextBlock Grid.Row="2"
                      Margin="0,12,0,0"
-                     Text="Ponechat posledních automatických záloh"
+                     Text="{i18n:Loc Settings.AutomaticBackupKeepCount}"
                      VerticalAlignment="Center"
                      IsEnabled="{Binding CanConfigureAutomaticBackups}" />
           <TextBox Grid.Row="2"
@@ -129,8 +190,8 @@
                    Margin="0,12,0,0"
                    Text="{Binding AutomaticBackupKeepCount}"
                    IsEnabled="{Binding CanConfigureAutomaticBackups}"
-                   AutomationProperties.Name="Počet ponechaných automatických záloh"
-                   AutomationProperties.HelpText="Aktivní jen když je zapnuté pravidelné vytváření automatických záloh. Zadejte počet ponechaných automatických záloh."
+                   AutomationProperties.Name="{i18n:Loc Settings.AutomaticBackupKeepCount}"
+                   AutomationProperties.HelpText="{i18n:Loc Settings.AutomaticBackupKeepCountHelp}"
                    AutomationProperties.AutomationId="AutomaticBackupKeepCountBox" />
 
           <TextBlock Grid.Row="3"
@@ -166,20 +227,20 @@
       <Button x:Name="CreateAutomaticBackupButton"
               MinWidth="150"
               Click="OnBackupNowClick"
-              Content="Zálohovat ihned"
-              AutomationProperties.Name="Vytvořit automatickou zálohu ihned"
+              Content="{i18n:Loc Settings.Action.BackupNow}"
+              AutomationProperties.Name="{i18n:Loc Settings.Action.BackupNow}"
               AutomationProperties.AutomationId="CreateAutomaticBackupButton" />
       <Button x:Name="SaveSettingsButton"
               MinWidth="110"
               Click="OnSaveClick"
-              Content="Uložit"
-              AutomationProperties.Name="Uložit nastavení"
+              Content="{i18n:Loc Common.Save}"
+              AutomationProperties.Name="{i18n:Loc Settings.Action.SaveName}"
               AutomationProperties.AutomationId="SaveSettingsButton" />
       <Button x:Name="CancelSettingsButton"
               MinWidth="110"
               Click="OnCancelClick"
-              Content="Zrušit"
-              AutomationProperties.Name="Zavřít dialog nastavení"
+              Content="{i18n:Loc Common.Cancel}"
+              AutomationProperties.Name="{i18n:Loc Settings.Action.CancelName}"
               AutomationProperties.AutomationId="CancelSettingsButton" />
     </StackPanel>
   </Grid>

@@ -1,5 +1,7 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Platform;
@@ -28,6 +30,11 @@ public partial class App : Avalonia.Application
         {
             var buildInfoProvider = new AssemblyAppBuildInfoProvider();
             var mainWindowViewModel = new MainWindowViewModel();
+            var supportedSettings = mainWindowViewModel.GetSupportedSettingsSnapshot();
+DesktopLocalization.Configure(new AppCulturePreferences(
+    supportedSettings.Language,
+    supportedSettings.ThousandsSeparator,
+    supportedSettings.DecimalSeparator));
             var mainWindow = new MainWindow
             {
                 DataContext = mainWindowViewModel

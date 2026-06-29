@@ -18,7 +18,12 @@ public sealed class DesktopSupportedSettingsService
             ReadBool(settings, "app", "show_dashboard_on_launch", false),
             ReadBool(settings, "backups", "automatic_backups_enabled", false),
             ReadBoundedInt(settings, "backups", "automatic_backup_interval_days", 1, 1, 999),
-            ReadBoundedInt(settings, "backups", "automatic_backup_keep_count", 30, 1, 999));
+            ReadBoundedInt(settings, "backups", "automatic_backup_keep_count", 30, 1, 999),
+            AppCultureService.NormalizeLanguage(settings.GetValue("app", "language", AppCultureService.SystemLanguage)),
+            AppCultureService.NormalizeThousandsSeparator(settings.GetValue("app", "thousands_separator", AppCultureService.CultureSeparator)),
+            AppCultureService.NormalizeDecimalSeparator(settings.GetValue("app", "decimal_separator", AppCultureService.CultureSeparator)),
+            AppUnitFormatService.NormalizeDistanceUnit(settings.GetValue("app", "distance_unit", AppUnitFormatService.Kilometers)),
+            AppUnitFormatService.NormalizeVolumeUnit(settings.GetValue("app", "volume_unit", AppUnitFormatService.Liters)));
     }
 
     public void Apply(VehimapSettings settings, DesktopSupportedSettingsSnapshot snapshot)
@@ -33,6 +38,11 @@ public sealed class DesktopSupportedSettingsService
         settings.SetValue("backups", "automatic_backups_enabled", snapshot.AutomaticBackupsEnabled ? "1" : "0");
         settings.SetValue("backups", "automatic_backup_interval_days", snapshot.AutomaticBackupIntervalDays.ToString(CultureInfo.InvariantCulture));
         settings.SetValue("backups", "automatic_backup_keep_count", snapshot.AutomaticBackupKeepCount.ToString(CultureInfo.InvariantCulture));
+        settings.SetValue("app", "language", AppCultureService.NormalizeLanguage(snapshot.Language));
+        settings.SetValue("app", "thousands_separator", AppCultureService.NormalizeThousandsSeparator(snapshot.ThousandsSeparator));
+        settings.SetValue("app", "decimal_separator", AppCultureService.NormalizeDecimalSeparator(snapshot.DecimalSeparator));
+        settings.SetValue("app", "distance_unit", AppUnitFormatService.NormalizeDistanceUnit(snapshot.DistanceUnit));
+        settings.SetValue("app", "volume_unit", AppUnitFormatService.NormalizeVolumeUnit(snapshot.VolumeUnit));
     }
 
     private static bool ReadBool(VehimapSettings settings, string section, string key, bool defaultValue)

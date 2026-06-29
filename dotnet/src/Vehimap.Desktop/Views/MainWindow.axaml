@@ -1,5 +1,6 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         xmlns:workspaces="using:Vehimap.Desktop.Views.Workspaces"
         x:Class="Vehimap.Desktop.Views.MainWindow"
@@ -45,7 +46,7 @@
             AutomationProperties.LandmarkType="Navigation"
             AutomationProperties.AccessibilityView="Control">
         <MenuItem x:Name="FileMenuRoot"
-                  Header="_Soubor"
+                  Header="{i18n:Loc MainMenu.File}"
                   IsTabStop="False"
                   AutomationProperties.Name="Nabídka Soubor"
                   AutomationProperties.AutomationId="FileMenuRoot">
@@ -124,7 +125,7 @@
                     AutomationProperties.AutomationId="FileExitAppButton" />
         </MenuItem>
         <MenuItem x:Name="VehicleMenuRoot"
-                  Header="_Vozidlo"
+                  Header="{i18n:Loc MainMenu.Vehicle}"
                   IsTabStop="False"
                   AutomationProperties.Name="Nabídka Vozidlo"
                   AutomationProperties.AutomationId="VehicleMenuRoot">
@@ -240,7 +241,7 @@
                     AutomationProperties.AutomationId="OpenSelectedVehicleCostsMenuItem" />
         </MenuItem>
         <MenuItem x:Name="OverviewMenuRoot"
-                  Header="_Přehledy"
+                  Header="{i18n:Loc MainMenu.Overview}"
                   IsTabStop="False"
                   AutomationProperties.Name="Nabídka Přehledy"
                   AutomationProperties.AutomationId="OverviewMenuRoot">
@@ -305,7 +306,7 @@
                     AutomationProperties.AutomationId="OverviewCalendarExportMenuItem" />
         </MenuItem>
         <MenuItem x:Name="QuickActionsMenuRoot"
-                  Header="_Rychlé akce"
+                  Header="{i18n:Loc MainMenu.QuickActions}"
                   IsTabStop="False"
                   AutomationProperties.Name="Nabídka Rychlé akce"
                   AutomationProperties.AutomationId="QuickActionsMenuRoot">
@@ -381,55 +382,55 @@
                     AutomationProperties.AutomationId="ReviewRecordsMenuItem" />
         </MenuItem>
         <MenuItem x:Name="AppMenuRoot"
-                  Header="_Aplikace"
+                  Header="{i18n:Loc MainMenu.App}"
                   IsTabStop="False"
                   AutomationProperties.Name="Nabídka Aplikace"
                   AutomationProperties.AutomationId="AppMenuRoot">
           <MenuItem x:Name="OpenTrayActionsButton"
-                    Header="Akce na liště"
+                    Header="{i18n:Loc MainMenu.App.ActionsOnTray}"
                     InputGesture="Ctrl+Shift+Y"
                     Click="OnOpenTrayActionsClick"
-                    AutomationProperties.Name="Otevřít přístupné akce Vehimapu na liště"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.App.OpenTrayActionsName}"
                     AutomationProperties.AcceleratorKey="Ctrl+Shift+Y"
                     AutomationProperties.AutomationId="OpenTrayActionsButton" />
           <MenuItem x:Name="MinimizeToTrayButton"
-                    Header="Minimalizovat na lištu"
+                    Header="{i18n:Loc MainMenu.App.MinimizeToTray}"
                     Click="OnMinimizeToTrayClick"
                     IsEnabled="{Binding IsMinimizeToTrayAvailable}"
-                    AutomationProperties.Name="Minimalizovat aplikaci na lištu"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.App.MinimizeToTray}"
                     AutomationProperties.AutomationId="MinimizeToTrayButton" />
           <Separator />
           <MenuItem x:Name="SettingsButton"
-                    Header="Nastavení"
+                    Header="{i18n:Loc MainMenu.App.Settings}"
                     Click="OnSettingsClick"
                     IsEnabled="{Binding CanUseDataActions}"
-                    AutomationProperties.Name="Otevřít nastavení aplikace"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.App.OpenSettingsName}"
                     AutomationProperties.AutomationId="SettingsButton" />
           <MenuItem x:Name="AboutButton"
-                    Header="O programu"
+                    Header="{i18n:Loc MainMenu.App.About}"
                     Click="OnAboutClick"
-                    AutomationProperties.Name="Otevřít dialog O programu"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.App.OpenAboutName}"
                     AutomationProperties.AutomationId="AboutButton" />
           <MenuItem x:Name="ThankAuthorButton"
-                    Header="Poděkovat autorovi"
+                    Header="{i18n:Loc MainMenu.App.ThankAuthor}"
                     Click="OnThankAuthorClick"
-                    AutomationProperties.Name="Otevřít stránku pro poděkování autorovi"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.App.ThankAuthor}"
                     AutomationProperties.AutomationId="ThankAuthorButton" />
           <MenuItem x:Name="FeedbackIssueButton"
-                    Header="Nahlásit zpětnou vazbu"
+                    Header="{i18n:Loc MainMenu.App.Feedback}"
                     Click="OnFeedbackIssueClick"
-                    AutomationProperties.Name="Otevřít formulář pro nahlášení zpětné vazby k Vehimapu"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.App.Feedback}"
                     AutomationProperties.AutomationId="FeedbackIssueButton" />
           <MenuItem x:Name="UpdateCheckButton"
-                    Header="Zkontrolovat aktualizace"
+                    Header="{i18n:Loc MainMenu.App.CheckUpdates}"
                     Click="OnUpdateCheckClick"
-                    AutomationProperties.Name="Zkontrolovat aktualizace aplikace"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.App.CheckUpdates}"
                     AutomationProperties.AutomationId="UpdateCheckButton" />
           <Separator />
           <MenuItem x:Name="ExitAppButton"
-                    Header="Ukončit aplikaci"
+                    Header="{i18n:Loc MainMenu.App.Exit}"
                     Click="OnExitClick"
-                    AutomationProperties.Name="Ukončit aplikaci"
+                    AutomationProperties.Name="{i18n:Loc MainMenu.App.Exit}"
                     AutomationProperties.AutomationId="ExitAppButton" />
         </MenuItem>
       </Menu>

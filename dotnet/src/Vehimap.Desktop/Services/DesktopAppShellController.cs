@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Vehimap.Application;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Views;
 
@@ -28,7 +29,7 @@ internal sealed class DesktopAppShellController
                 .ConfigureAwait(true);
             if (result is null)
             {
-                shell.ShellStatus = "Nastavení bylo zavřeno bez uložení.";
+                shell.ShellStatus = DesktopLocalization.Localizer.GetString("Shell.SettingsCanceled");
                 return;
             }
 
@@ -40,7 +41,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = $"Nastavení se nepodařilo dokončit: {ex.Message}";
+            shell.ShellStatus = DesktopLocalization.Localizer.Format("Shell.SettingsFailed", ex.Message);
         }
     }
 

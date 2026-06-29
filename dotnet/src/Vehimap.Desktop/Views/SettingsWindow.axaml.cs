@@ -14,7 +14,7 @@ public partial class SettingsWindow : Window
         AvaloniaXamlLoader.Load(this);
         KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnSettingsKeyDown, RoutingStrategies.Tunnel);
-        Opened += (_, _) => Dispatcher.UIThread.Post(() => this.FindControl<TextBox>("TechnicalReminderDaysBox")?.Focus());
+        Opened += (_, _) => Dispatcher.UIThread.Post(() => this.FindControl<ComboBox>("LanguageOptionBox")?.Focus());
     }
 
     private void OnSaveClick(object? sender, RoutedEventArgs e) => SaveAndClose(createBackupNow: false);

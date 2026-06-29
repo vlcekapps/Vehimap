@@ -10,4 +10,9 @@ public sealed record DesktopSupportedSettingsSnapshot(
     bool ShowDashboardOnLaunch,
     bool AutomaticBackupsEnabled,
     int AutomaticBackupIntervalDays,
-    int AutomaticBackupKeepCount);
+    int AutomaticBackupKeepCount,
+    string Language = "system",
+    string ThousandsSeparator = "culture",
+    string DecimalSeparator = "culture",
+    string DistanceUnit = "km",
+    string VolumeUnit = "l");

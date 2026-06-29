@@ -11,17 +11,32 @@ Aktualni zamer:
 - cist legacy `TSV`, `INI`, starsi `.vehimapbak` a `data/attachments` pres `Vehimap.Storage.Legacy` jen pro migraci z 1.0.2 a import starsich zaloh; po uspesne migraci zive TSV/INI soubory z `data/` odlozit mimo runtime koren
 - release priorita je nejdrive stabilni Windows desktop pres Inno Setup instalator, potom Android, nasledne macOS a nakonec Linux
 - rada 2.0 zustava po zavedeni SQLite v delsi nightly stabilizaci; beta/stable se neplanuji, dokud storage gate a testerska vlna nebudou bez blockeru
+- lokalizacni zaklad se zavadi pred dalsimi velkymi funkcemi a pred Android UI; prvni pilot pokryva nastaveni, O programu, hlavni/app menu a editor vozidla pres `.resx` zdroje
+- preference jazyka, oddelovacu cisel a jednotek vzdalenosti/objemu se ukladaji do nastaveni datove sady; internim ulozistem zustavaji invariantni hodnoty, UI a exporty je budou formatovat podle preferenci
 
 ## Struktura
 
 - `src/Vehimap.Domain` - ciste domenove modely
 - `src/Vehimap.Application` - use cases a interni rozhrani
+- `src/Vehimap.Application/Resources` - anglicke a ceske `.resx` texty pro postupne lokalizovanou UI vrstvu
 - `src/Vehimap.Storage.Legacy` - kompatibilita a migrace soucasnych AHK/1.0.2 dat
 - `src/Vehimap.Storage.Sqlite` - primarni runtime storage Vehimapu 2.0
 - `src/Vehimap.Platform` - platform-specific adaptery
 - `src/Vehimap.Desktop` - Avalonia desktop shell
 - `src/Vehimap.Updater` - separatni helper pro update
 - `tests/*` - unit, compat a UI testy
+
+## Lokalizace
+
+Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
+
+- anglictina je fallback v `Strings.resx`
+- cestina je v `Strings.cs.resx`
+- nove UI texty v lokalizovanych pilotnich castech patri do obou resource souboru
+- commit messages zustavaji vzdy anglicky
+- prekladatele mohou pro upravy `.resx` pouzit Local ResX Editor: https://apps.microsoft.com/detail/9pkht426fq1k
+- jazyk se v prvni fazi plne projevi po restartu aplikace
+- kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
 
 ## Aktualni stav
 

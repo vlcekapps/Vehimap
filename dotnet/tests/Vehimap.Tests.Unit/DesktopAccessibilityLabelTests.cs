@@ -249,14 +249,14 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.DoesNotContain("Gesture=\"Ctrl+F\" Command=\"{Binding FocusTimelineSearchCommand}\"", xaml);
         Assert.DoesNotContain("Gesture=\"Ctrl+Shift+D\"", xaml);
         Assert.Contains("x:Name=\"AppMenuBar\"", xaml);
-        Assert.Contains("x:Name=\"FileMenuRoot\" Header=\"_Soubor\" IsTabStop=\"False\"", normalizedXaml);
-        Assert.Contains("x:Name=\"VehicleMenuRoot\" Header=\"_Vozidlo\" IsTabStop=\"False\"", normalizedXaml);
-        Assert.Contains("x:Name=\"OverviewMenuRoot\" Header=\"_Přehledy\" IsTabStop=\"False\"", normalizedXaml);
-        Assert.Contains("x:Name=\"QuickActionsMenuRoot\" Header=\"_Rychlé akce\" IsTabStop=\"False\"", normalizedXaml);
-        Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"_Aplikace\" IsTabStop=\"False\"", normalizedXaml);
-        Assert.Contains("x:Name=\"OpenTrayActionsButton\" Header=\"Akce na liště\" InputGesture=\"Ctrl+Shift+Y\" Click=\"OnOpenTrayActionsClick\"", normalizedXaml);
+        Assert.Contains("x:Name=\"FileMenuRoot\" Header=\"{i18n:Loc MainMenu.File}\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"VehicleMenuRoot\" Header=\"{i18n:Loc MainMenu.Vehicle}\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"OverviewMenuRoot\" Header=\"{i18n:Loc MainMenu.Overview}\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"QuickActionsMenuRoot\" Header=\"{i18n:Loc MainMenu.QuickActions}\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"AppMenuRoot\" Header=\"{i18n:Loc MainMenu.App}\" IsTabStop=\"False\"", normalizedXaml);
+        Assert.Contains("x:Name=\"OpenTrayActionsButton\" Header=\"{i18n:Loc MainMenu.App.ActionsOnTray}\" InputGesture=\"Ctrl+Shift+Y\" Click=\"OnOpenTrayActionsClick\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AcceleratorKey=\"Ctrl+Shift+Y\"", xaml);
-        Assert.Contains("x:Name=\"MinimizeToTrayButton\" Header=\"Minimalizovat na lištu\" Click=\"OnMinimizeToTrayClick\" IsEnabled=\"{Binding IsMinimizeToTrayAvailable}\"", normalizedXaml);
+        Assert.Contains("x:Name=\"MinimizeToTrayButton\" Header=\"{i18n:Loc MainMenu.App.MinimizeToTray}\" Click=\"OnMinimizeToTrayClick\" IsEnabled=\"{Binding IsMinimizeToTrayAvailable}\"", normalizedXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"PrintableReportButton\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupNowMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenAutomaticBackupFolderMenuItem\"", xaml);
@@ -506,7 +506,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("CanResize=\"True\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SettingsContentScrollViewer\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
-        Assert.Contains("Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.", settingsXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc Settings.HelpText}\"", settingsXaml);
         Assert.Contains("IsEnabled=\"{Binding CanConfigureAutomaticBackups}\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AutomaticBackupStatusText\"", settingsXaml);
         Assert.Contains("AutomationProperties.LiveSetting=\"Polite\"", settingsXaml);
@@ -537,14 +537,14 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ReleaseNotesButton\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ThankAuthorButton\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutStatusText\"", aboutXaml);
-        Assert.Contains("Ctrl+O otevře release poznámky, Ctrl+K otevře poděkování autorovi, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.", aboutXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc About.HelpText}\"", aboutXaml);
         Assert.Contains("Key.Escape", aboutCodeBehind);
         Assert.Contains("Key.O", aboutCodeBehind);
         Assert.Contains("Key.K", aboutCodeBehind);
         Assert.Contains("Key.C", aboutCodeBehind);
         Assert.Contains("KeyModifiers.Control | KeyModifiers.Shift", aboutCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"CopyAboutDetailsButton\"", aboutXaml);
-        Assert.Contains("AutomationProperties.Name=\"Kopírovat diagnostická data o aplikaci do schránky\"", aboutXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc About.CopyDiagnosticsName}\"", aboutXaml);
         Assert.Contains("CanResize=\"True\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateDetailsScrollViewer\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"UpdateCloseButton\"", updateXaml);
@@ -990,13 +990,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"VehicleEditorMakeModelBox\"", vehicleEditorXaml);
         Assert.Contains("x:Name=\"VehicleEditorYearBox\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorScrollViewer\"", vehicleEditorXaml);
-        Assert.Contains("Text=\"Výkon v kW\"", vehicleEditorXaml);
-        Assert.Contains("AutomationProperties.Name=\"Výkon vozidla v kilowattech\"", vehicleEditorXaml);
+        Assert.Contains("Text=\"{i18n:Loc VehicleEditor.Power}\"", vehicleEditorXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleEditor.PowerName}\"", vehicleEditorXaml);
         Assert.Contains("x:Name=\"VehicleEditorLastTkBox\"", vehicleEditorXaml);
         Assert.Contains("x:Name=\"VehicleEditorNextTkBox\"", vehicleEditorXaml);
         Assert.Contains("x:Name=\"VehicleEditorGreenCardFromBox\"", vehicleEditorXaml);
         Assert.Contains("x:Name=\"VehicleEditorGreenCardToBox\"", vehicleEditorXaml);
-        Assert.Contains("AutomationProperties.Name=\"Štítky vozidla\"", vehicleEditorXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleEditor.Tags}\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTagsBox\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorClimateProfileBox\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTimingDriveBox\"", vehicleEditorXaml);
@@ -1113,8 +1113,14 @@ public sealed class DesktopAccessibilityLabelTests
             Assert.Contains(cancelButtonId, code);
             Assert.Contains("AutomationProperties.HeadingLevel=\"1\"", xaml);
             Assert.Contains("AutomationProperties.LiveSetting=\"Polite\"", xaml);
-            Assert.Contains("Ctrl+S uloží", xaml);
-            Assert.Contains("Escape nebo Zrušit zavře bez uložení", xaml);
+            Assert.True(
+                xaml.Contains("Ctrl+S uloží", StringComparison.Ordinal)
+                    || xaml.Contains("AutomationProperties.HelpText=\"{i18n:Loc VehicleEditor.HelpText}\"", StringComparison.Ordinal),
+                $"{xamlFile} must expose Ctrl+S editor help text directly or through a localized resource.");
+            Assert.True(
+                xaml.Contains("Escape nebo Zrušit zavře bez uložení", StringComparison.Ordinal)
+                    || xaml.Contains("AutomationProperties.HelpText=\"{i18n:Loc VehicleEditor.HelpText}\"", StringComparison.Ordinal),
+                $"{xamlFile} must expose Escape/Cancel editor help text directly or through a localized resource.");
             Assert.Contains($"AutomationProperties.AutomationId=\"{cancelButtonId}\"", xaml);
             Assert.Contains($"AutomationProperties.AutomationId=\"{saveButtonId}\"", xaml);
         }
@@ -1369,7 +1375,9 @@ public sealed class DesktopAccessibilityLabelTests
                 continue;
             }
 
-            if (!attributes.Contains("Aktivní jen když je zapnuté pravidelné vytváření automatických záloh", StringComparison.Ordinal))
+            if (!attributes.Contains("Aktivní jen když je zapnuté pravidelné vytváření automatických záloh", StringComparison.Ordinal)
+                && !attributes.Contains("Settings.AutomaticBackupsIntervalHelp", StringComparison.Ordinal)
+                && !attributes.Contains("Settings.AutomaticBackupKeepCountHelp", StringComparison.Ordinal))
             {
                 failures.Add($"{controlLabel} nevysvětluje, proč je prvek bez zapnutých automatických záloh vypnutý.");
             }

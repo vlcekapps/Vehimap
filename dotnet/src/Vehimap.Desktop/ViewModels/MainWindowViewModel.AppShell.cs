@@ -1,5 +1,6 @@
 using Vehimap.Application;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 
 namespace Vehimap.Desktop.ViewModels;
@@ -216,9 +217,12 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        var previous = _session.ReadSupportedSettings();
         await _session.ApplySupportedSettingsAsync(snapshot).ConfigureAwait(false);
         Load(SelectedVehicle?.Id, SelectedVehicleTabIndex, applyLaunchTabPreference: false);
-        ShellStatus = "Nastavení byla uložena a přehledy byly přepočítány.";
+        ShellStatus = string.Equals(previous.Language, snapshot.Language, StringComparison.OrdinalIgnoreCase)
+            ? DesktopLocalization.Localizer.GetString("Shell.SettingsSaved")
+            : DesktopLocalization.Localizer.GetString("Settings.RestartRequiredStatus");
         RequestBackgroundRefresh();
     }
 
@@ -436,7 +440,8 @@ public sealed partial class MainWindowViewModel
             appInfo.FrameworkDescription,
             appInfo.ApplicationPath,
             appInfo.ReleaseNotesUrl,
-            appInfo.ReleaseChannel);
+            appInfo.ReleaseChannel,
+            DesktopLocalization.Localizer);
     }
 
     internal string BuildFeedbackIssueUrl()

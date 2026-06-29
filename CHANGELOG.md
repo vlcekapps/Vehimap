@@ -23,6 +23,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.
 
 ### Přidáno
+- C# 2.0 nightly má první lokalizační základ: anglické a české `.resx` zdroje, pilotně lokalizované `Nastavení`, `O programu`, hlavní aplikační menu a `Editor vozidla`, plus nastavení jazyka, oddělovačů čísel a jednotek vzdálenosti/objemu včetně mil, amerických galonů a imperiálních galonů.
+- Přibyly i18n guard testy pro shodu resource klíčů, formátování čísel, převody jednotek a round-trip podporovaných nastavení bez ztráty ostatních hodnot.
 - C# Avalonia má nový accessibility conformance checklist `dotnet/docs/ACCESSIBILITY.md` se stavem `accessibility-oriented / pre-conformance`, evidencí známých keyboard/focus výjimek, složkou `dotnet/docs/accessibility-evidence/` pro ruční screen-reader důkazy a guard testy pro interaktivní metadata i nezdokumentované `KeyDown` handlery.
 - C# Avalonia accessibility guardy nově hlídají live regiony u stavových/chybových/průběhových textů, jeden hlavní nadpis `HeadingLevel=1` v každém samostatném okně/dialogu a `AccessibilityView=Control` u landmarků; workspace sekce jako dashboard, servisní knížka a analýza tankování dostaly dohledatelné nadpisy pro čtečky.
 - C# Avalonia menu položky s viditelnou zkratkou `InputGesture` nově vystavují stejnou zkratku i přes `AutomationProperties.AcceleratorKey`; guard testy zároveň hlídají dostupné popisky u progress barů.

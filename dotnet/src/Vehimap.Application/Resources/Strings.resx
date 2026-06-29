@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="About.Action.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="About.Action.CopyDiagnostics" xml:space="preserve"><value>Copy diagnostics</value></data>
+  <data name="About.Action.ReleaseNotes" xml:space="preserve"><value>Release notes</value></data>
+  <data name="About.Application" xml:space="preserve"><value>Application</value></data>
+  <data name="About.Author" xml:space="preserve"><value>Author</value></data>
+  <data name="About.BasicInfo" xml:space="preserve"><value>Basic application information</value></data>
+  <data name="About.CloseName" xml:space="preserve"><value>Close the About dialog</value></data>
+  <data name="About.CopyDiagnosticsName" xml:space="preserve"><value>Copy application diagnostics to the clipboard</value></data>
+  <data name="About.Description" xml:space="preserve"><value>Accessible vehicle records for Windows and gradually more platforms.</value></data>
+  <data name="About.DiagnosticsName" xml:space="preserve"><value>Application diagnostic data</value></data>
+  <data name="About.HelpText" xml:space="preserve"><value>Information about Vehimap. Ctrl+O opens release notes, Ctrl+K opens the author support page, Ctrl+Shift+C copies diagnostic data and Escape closes the dialog.</value></data>
+  <data name="About.Status.Basic" xml:space="preserve"><value>Basic application information is displayed. Diagnostic data can be shown or copied for support.</value></data>
+  <data name="About.Status.DiagnosticsHidden" xml:space="preserve"><value>Diagnostic data is hidden. The standard view contains only basic information.</value></data>
+  <data name="About.Status.DiagnosticsVisible" xml:space="preserve"><value>Diagnostic data is displayed. It can be copied for support.</value></data>
+  <data name="About.ReleaseNotesName" xml:space="preserve"><value>Open release notes</value></data>
+  <data name="About.ThankAuthorHelpText" xml:space="preserve"><value>Open the page where you can thank the author by supporting the work.</value></data>
+  <data name="About.Title" xml:space="preserve"><value>About</value></data>
+  <data name="About.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="Common.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Common.Save" xml:space="preserve"><value>Save</value></data>
+  <data name="MainMenu.App" xml:space="preserve"><value>_Application</value></data>
+  <data name="MainMenu.App.About" xml:space="preserve"><value>About</value></data>
+  <data name="MainMenu.App.ActionsOnTray" xml:space="preserve"><value>Tray actions</value></data>
+  <data name="MainMenu.App.CheckUpdates" xml:space="preserve"><value>Check for updates</value></data>
+  <data name="MainMenu.App.Exit" xml:space="preserve"><value>Exit application</value></data>
+  <data name="MainMenu.App.Feedback" xml:space="preserve"><value>Report feedback</value></data>
+  <data name="MainMenu.App.MinimizeToTray" xml:space="preserve"><value>Minimize to tray</value></data>
+  <data name="MainMenu.App.OpenAboutName" xml:space="preserve"><value>Open the About dialog</value></data>
+  <data name="MainMenu.App.OpenSettingsName" xml:space="preserve"><value>Open application settings</value></data>
+  <data name="MainMenu.App.OpenTrayActionsName" xml:space="preserve"><value>Open accessible Vehimap tray actions</value></data>
+  <data name="MainMenu.App.Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="MainMenu.App.ThankAuthor" xml:space="preserve"><value>Thank the author</value></data>
+  <data name="MainMenu.File" xml:space="preserve"><value>_File</value></data>
+  <data name="MainMenu.Overview" xml:space="preserve"><value>_Overviews</value></data>
+  <data name="MainMenu.QuickActions" xml:space="preserve"><value>_Quick actions</value></data>
+  <data name="MainMenu.Vehicle" xml:space="preserve"><value>_Vehicle</value></data>
+  <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Back up now</value></data>
+  <data name="Settings.Action.CancelName" xml:space="preserve"><value>Close the settings dialog</value></data>
+  <data name="Settings.Action.SaveName" xml:space="preserve"><value>Save settings</value></data>
+  <data name="Settings.AutomaticBackupKeepCount" xml:space="preserve"><value>Keep latest automatic backups</value></data>
+  <data name="Settings.AutomaticBackupKeepCountHelp" xml:space="preserve"><value>Available only when regular automatic backups are enabled. Enter how many automatic backups to keep.</value></data>
+  <data name="Settings.AutomaticBackupStatusInitial" xml:space="preserve"><value>Edit supported options and confirm them with Save.</value></data>
+  <data name="Settings.AutomaticBackupsEnabled" xml:space="preserve"><value>Create automatic backups regularly</value></data>
+  <data name="Settings.AutomaticBackupsHelp" xml:space="preserve"><value>When enabled, Vehimap creates automatic backups of the data set using the selected interval.</value></data>
+  <data name="Settings.AutomaticBackupsIntervalDays" xml:space="preserve"><value>Automatic backup interval in days</value></data>
+  <data name="Settings.AutomaticBackupsIntervalHelp" xml:space="preserve"><value>Available only when regular automatic backups are enabled. Enter the number of days between automatic backups.</value></data>
+  <data name="Settings.DecimalSeparator" xml:space="preserve"><value>Decimal separator</value></data>
+  <data name="Settings.Description" xml:space="preserve"><value>Configure reminders, startup behavior, automatic backups, language and number formatting.</value></data>
+  <data name="Settings.DistanceUnit" xml:space="preserve"><value>Distance unit</value></data>
+  <data name="Settings.GreenCardReminderDays" xml:space="preserve"><value>Green card reminder (days)</value></data>
+  <data name="Settings.GreenCardReminderDaysName" xml:space="preserve"><value>Green card reminder in days</value></data>
+  <data name="Settings.HelpText" xml:space="preserve"><value>Ctrl+S saves settings, Ctrl+B creates a backup now and Escape closes the dialog without saving.</value></data>
+  <data name="Settings.HideOnLaunch" xml:space="preserve"><value>Automatically hide to tray on launch</value></data>
+  <data name="Settings.Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Settings.LanguageRestartNotice" xml:space="preserve"><value>Changing the language is saved immediately, but the whole user interface will use it after restarting Vehimap.</value></data>
+  <data name="Settings.LocaleFormattingHeading" xml:space="preserve"><value>Language, numbers and units</value></data>
+  <data name="Settings.MaintenanceReminderDays" xml:space="preserve"><value>Maintenance reminder (days)</value></data>
+  <data name="Settings.MaintenanceReminderDaysName" xml:space="preserve"><value>Maintenance reminder in days</value></data>
+  <data name="Settings.MaintenanceReminderKm" xml:space="preserve"><value>Maintenance reminder (km)</value></data>
+  <data name="Settings.MaintenanceReminderKmName" xml:space="preserve"><value>Maintenance reminder in kilometers</value></data>
+  <data name="Settings.NumberFormattingHeading" xml:space="preserve"><value>Language and number formatting</value></data>
+  <data name="Settings.Option.Culture" xml:space="preserve"><value>Use language default</value></data>
+  <data name="Settings.Option.Czech" xml:space="preserve"><value>Czech</value></data>
+  <data name="Settings.Option.DecimalComma" xml:space="preserve"><value>Comma</value></data>
+  <data name="Settings.Option.DecimalDot" xml:space="preserve"><value>Dot</value></data>
+  <data name="Settings.Option.English" xml:space="preserve"><value>English</value></data>
+  <data name="Settings.Option.ImperialGallons" xml:space="preserve"><value>Imperial gallons</value></data>
+  <data name="Settings.Option.Kilometers" xml:space="preserve"><value>Kilometers</value></data>
+  <data name="Settings.Option.Liters" xml:space="preserve"><value>Liters</value></data>
+  <data name="Settings.Option.Miles" xml:space="preserve"><value>Miles</value></data>
+  <data name="Settings.Option.NoThousands" xml:space="preserve"><value>No separator</value></data>
+  <data name="Settings.Option.System" xml:space="preserve"><value>System language</value></data>
+  <data name="Settings.Option.ThousandsComma" xml:space="preserve"><value>Comma</value></data>
+  <data name="Settings.Option.ThousandsDot" xml:space="preserve"><value>Dot</value></data>
+  <data name="Settings.Option.ThousandsSpace" xml:space="preserve"><value>Space</value></data>
+  <data name="Settings.Option.UsGallons" xml:space="preserve"><value>US gallons</value></data>
+  <data name="Settings.RestartRequiredStatus" xml:space="preserve"><value>Settings were saved. The selected language will fully apply after restarting Vehimap.</value></data>
+  <data name="Settings.RunAtStartup" xml:space="preserve"><value>Start with the computer</value></data>
+  <data name="Settings.ShowDashboardOnLaunch" xml:space="preserve"><value>Open Dashboard instead of Detail after launch</value></data>
+  <data name="Settings.StartupNotice" xml:space="preserve"><value>If automatic hiding is enabled, Dashboard will not open at startup.</value></data>
+  <data name="Settings.TechnicalReminderDays" xml:space="preserve"><value>Technical inspection reminder (days)</value></data>
+  <data name="Settings.TechnicalReminderDaysName" xml:space="preserve"><value>Technical inspection reminder in days</value></data>
+  <data name="Settings.ThousandsSeparator" xml:space="preserve"><value>Thousands separator</value></data>
+  <data name="Settings.Title" xml:space="preserve"><value>Vehimap settings</value></data>
+  <data name="Settings.Validation.IntegerRange" xml:space="preserve"><value>{0} must be an integer between {1} and {2}.</value></data>
+  <data name="Settings.VolumeUnit" xml:space="preserve"><value>Fuel volume unit</value></data>
+  <data name="Shell.SettingsCanceled" xml:space="preserve"><value>Settings were closed without saving.</value></data>
+  <data name="Shell.SettingsFailed" xml:space="preserve"><value>Settings could not be completed: {0}</value></data>
+  <data name="Shell.SettingsSaved" xml:space="preserve"><value>Settings were saved and overviews were recalculated.</value></data>
+  <data name="VehicleEditor.Category" xml:space="preserve"><value>Category</value></data>
+  <data name="VehicleEditor.CategoryName" xml:space="preserve"><value>Vehicle category</value></data>
+  <data name="VehicleEditor.Climate" xml:space="preserve"><value>Air conditioning</value></data>
+  <data name="VehicleEditor.ClimateName" xml:space="preserve"><value>Vehicle air conditioning</value></data>
+  <data name="VehicleEditor.FieldsName" xml:space="preserve"><value>Vehicle editor fields</value></data>
+  <data name="VehicleEditor.GreenCardFrom" xml:space="preserve"><value>Green card from</value></data>
+  <data name="VehicleEditor.GreenCardTo" xml:space="preserve"><value>Green card to</value></data>
+  <data name="VehicleEditor.HelpText" xml:space="preserve"><value>Standalone vehicle editor. Ctrl+S saves, Escape or Cancel closes without saving.</value></data>
+  <data name="VehicleEditor.LastTk" xml:space="preserve"><value>Last technical inspection</value></data>
+  <data name="VehicleEditor.MakeModel" xml:space="preserve"><value>Make and model</value></data>
+  <data name="VehicleEditor.MakeModelHelp" xml:space="preserve"><value>For example Skoda 120L</value></data>
+  <data name="VehicleEditor.MakeModelName" xml:space="preserve"><value>Vehicle make and model</value></data>
+  <data name="VehicleEditor.Name" xml:space="preserve"><value>Vehicle name</value></data>
+  <data name="VehicleEditor.NameHelp" xml:space="preserve"><value>For example Milena</value></data>
+  <data name="VehicleEditor.NextTk" xml:space="preserve"><value>Next technical inspection</value></data>
+  <data name="VehicleEditor.Note" xml:space="preserve"><value>Vehicle note</value></data>
+  <data name="VehicleEditor.NoteName" xml:space="preserve"><value>Vehicle note</value></data>
+  <data name="VehicleEditor.Plate" xml:space="preserve"><value>License plate</value></data>
+  <data name="VehicleEditor.PlateHelp" xml:space="preserve"><value>For example 1AB2345</value></data>
+  <data name="VehicleEditor.PlateName" xml:space="preserve"><value>Vehicle license plate</value></data>
+  <data name="VehicleEditor.Power" xml:space="preserve"><value>Power in kW</value></data>
+  <data name="VehicleEditor.PowerName" xml:space="preserve"><value>Vehicle power in kilowatts</value></data>
+  <data name="VehicleEditor.Powertrain" xml:space="preserve"><value>Powertrain</value></data>
+  <data name="VehicleEditor.PowertrainName" xml:space="preserve"><value>Vehicle powertrain</value></data>
+  <data name="VehicleEditor.SaveName" xml:space="preserve"><value>Save vehicle</value></data>
+  <data name="VehicleEditor.ServiceProfile" xml:space="preserve"><value>Service profile</value></data>
+  <data name="VehicleEditor.State" xml:space="preserve"><value>Vehicle state</value></data>
+  <data name="VehicleEditor.StateName" xml:space="preserve"><value>Vehicle state</value></data>
+  <data name="VehicleEditor.Tags" xml:space="preserve"><value>Tags</value></data>
+  <data name="VehicleEditor.TagsHelp" xml:space="preserve"><value>For example family, veteran, work</value></data>
+  <data name="VehicleEditor.TimingDrive" xml:space="preserve"><value>Timing drive</value></data>
+  <data name="VehicleEditor.TimingDriveName" xml:space="preserve"><value>Vehicle timing drive type</value></data>
+  <data name="VehicleEditor.Transmission" xml:space="preserve"><value>Transmission</value></data>
+  <data name="VehicleEditor.TransmissionName" xml:space="preserve"><value>Vehicle transmission</value></data>
+  <data name="VehicleEditor.Warning" xml:space="preserve"><value>Changing the vehicle keeps related history, fuel records, documents, reminders and maintenance.</value></data>
+  <data name="VehicleEditor.Year" xml:space="preserve"><value>Year</value></data>
+  <data name="VehicleEditor.YearName" xml:space="preserve"><value>Vehicle year</value></data>
+  <data name="VehicleEditor.CancelName" xml:space="preserve"><value>Cancel vehicle editing</value></data>
+</root>

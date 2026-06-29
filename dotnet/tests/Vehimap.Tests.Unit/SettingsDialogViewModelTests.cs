@@ -1,4 +1,5 @@
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Desktop.ViewModels;
 using Xunit;
 
@@ -43,12 +44,53 @@ public sealed class SettingsDialogViewModelTests
     {
         var viewModel = SettingsDialogViewModel.FromSnapshot(
             new DesktopSupportedSettingsSnapshot(30, 30, 31, 1000, false, false, true, true, 7, 10),
-            "Bez automatické zálohy.");
+            "Bez automatické zálohy.",
+            new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo("cs-CZ")));
         viewModel.AutomaticBackupIntervalDays = "0";
 
         var valid = viewModel.TryBuildSnapshot(out _, out var errorMessage);
 
         Assert.False(valid);
         Assert.Contains("Interval automatické zálohy", errorMessage);
+    }
+
+    [Fact]
+    public void Localization_and_unit_options_round_trip_through_snapshot()
+    {
+        var viewModel = SettingsDialogViewModel.FromSnapshot(
+            new DesktopSupportedSettingsSnapshot(
+                30,
+                30,
+                31,
+                1000,
+                false,
+                false,
+                true,
+                false,
+                7,
+                10,
+                "en-US",
+                "comma",
+                "dot",
+                "mi",
+                "us_gal"),
+            "Bez automatické zálohy.",
+            new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
+
+        Assert.Equal("en-US", viewModel.SelectedLanguageOption?.Value);
+        Assert.Equal("comma", viewModel.SelectedThousandsSeparatorOption?.Value);
+        Assert.Equal("dot", viewModel.SelectedDecimalSeparatorOption?.Value);
+        Assert.Equal("mi", viewModel.SelectedDistanceUnitOption?.Value);
+        Assert.Equal("us_gal", viewModel.SelectedVolumeUnitOption?.Value);
+
+        var valid = viewModel.TryBuildSnapshot(out var snapshot, out var errorMessage);
+
+        Assert.True(valid);
+        Assert.Empty(errorMessage);
+        Assert.Equal("en-US", snapshot.Language);
+        Assert.Equal("comma", snapshot.ThousandsSeparator);
+        Assert.Equal("dot", snapshot.DecimalSeparator);
+        Assert.Equal("mi", snapshot.DistanceUnit);
+        Assert.Equal("us_gal", snapshot.VolumeUnit);
     }
 }

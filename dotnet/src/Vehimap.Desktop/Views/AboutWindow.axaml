@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.AboutWindow"
         x:DataType="vm:AboutDialogViewModel"
@@ -10,10 +11,10 @@
         CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="O programu"
-        AutomationProperties.Name="O programu"
+        Title="{i18n:Loc About.Title}"
+        AutomationProperties.Name="{i18n:Loc About.Title}"
         AutomationProperties.AutomationId="AboutWindow"
-        AutomationProperties.HelpText="Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+K otevře poděkování autorovi, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.">
+        AutomationProperties.HelpText="{i18n:Loc About.HelpText}">
   <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
     <TextBlock FontSize="22"
                FontWeight="SemiBold"
@@ -25,9 +26,9 @@
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
                Opacity="0.78"
-               Text="Přístupná evidence vozidel pro Windows a postupně další platformy."
+               Text="{i18n:Loc About.Description}"
                TextWrapping="Wrap"
-               AutomationProperties.Name="Přístupná evidence vozidel pro Windows a postupně další platformy."
+               AutomationProperties.Name="{i18n:Loc About.Description}"
                AutomationProperties.AutomationId="AboutDescriptionText" />
 
     <Border Grid.Row="2"
@@ -35,12 +36,12 @@
             Padding="14"
             Background="#10203040"
             CornerRadius="8"
-            AutomationProperties.Name="Základní informace o aplikaci"
+            AutomationProperties.Name="{i18n:Loc About.BasicInfo}"
             AutomationProperties.AutomationId="AboutSummaryPanel">
       <Grid ColumnDefinitions="130,*"
             RowDefinitions="Auto,Auto,Auto"
             RowSpacing="8">
-        <TextBlock Grid.Row="0" Text="Aplikace" FontWeight="SemiBold" />
+        <TextBlock Grid.Row="0" Text="{i18n:Loc About.Application}" FontWeight="SemiBold" />
         <TextBlock Grid.Row="0"
                    Grid.Column="1"
                    Text="{Binding Title}"
@@ -48,7 +49,7 @@
                    AutomationProperties.Name="{Binding Title}"
                    AutomationProperties.AutomationId="AboutApplicationText" />
 
-        <TextBlock Grid.Row="1" Text="Autor" FontWeight="SemiBold" />
+        <TextBlock Grid.Row="1" Text="{i18n:Loc About.Author}" FontWeight="SemiBold" />
         <TextBlock Grid.Row="1"
                    Grid.Column="1"
                    Text="{Binding Author}"
@@ -56,7 +57,7 @@
                    AutomationProperties.Name="{Binding Author}"
                    AutomationProperties.AutomationId="AboutAuthorText" />
 
-        <TextBlock Grid.Row="2" Text="Verze" FontWeight="SemiBold" />
+        <TextBlock Grid.Row="2" Text="{i18n:Loc About.Version}" FontWeight="SemiBold" />
         <TextBlock Grid.Row="2"
                    Grid.Column="1"
                    Text="{Binding DisplayVersion}"
@@ -82,7 +83,7 @@
                   IsVisible="{Binding IsDiagnosticsVisible}"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
-                  AutomationProperties.Name="Diagnostická data o aplikaci"
+                  AutomationProperties.Name="{i18n:Loc About.DiagnosticsName}"
                   AutomationProperties.AutomationId="AboutDetailsScrollViewer">
       <TextBox x:Name="AboutDiagnosticsTextBox"
                Text="{Binding DiagnosticText}"
@@ -91,7 +92,7 @@
                TextWrapping="Wrap"
                BorderThickness="0"
                Background="Transparent"
-               AutomationProperties.Name="Diagnostická data o aplikaci"
+               AutomationProperties.Name="{i18n:Loc About.DiagnosticsName}"
                AutomationProperties.AutomationId="AboutDiagnosticsTextBox" />
     </ScrollViewer>
 
@@ -118,8 +119,8 @@
         <Button x:Name="ReleaseNotesButton"
                 MinWidth="170"
                 Click="OnReleaseNotesClick"
-                Content="Release poznámky"
-                AutomationProperties.Name="Otevřít release poznámky"
+                Content="{i18n:Loc About.Action.ReleaseNotes}"
+                AutomationProperties.Name="{i18n:Loc About.ReleaseNotesName}"
                 AutomationProperties.AutomationId="ReleaseNotesButton" />
         <Button x:Name="ThankAuthorButton"
                 MinWidth="170"
@@ -134,14 +135,14 @@
         <Button x:Name="CopyAboutDetailsButton"
                 MinWidth="190"
                 Click="OnCopyDetailsClick"
-                Content="Kopírovat diagnostiku"
-                AutomationProperties.Name="Kopírovat diagnostická data o aplikaci do schránky"
+                Content="{i18n:Loc About.Action.CopyDiagnostics}"
+                AutomationProperties.Name="{i18n:Loc About.CopyDiagnosticsName}"
                 AutomationProperties.AutomationId="CopyAboutDetailsButton" />
         <Button x:Name="CloseAboutButton"
                 MinWidth="110"
                 Click="OnCloseClick"
-                Content="Zavřít"
-                AutomationProperties.Name="Zavřít dialog O programu"
+                Content="{i18n:Loc About.Action.Close}"
+                AutomationProperties.Name="{i18n:Loc About.CloseName}"
                 AutomationProperties.AutomationId="CloseAboutButton" />
       </StackPanel>
     </StackPanel>

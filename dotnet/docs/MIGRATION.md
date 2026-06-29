@@ -13,6 +13,16 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Zdravi datove sady 2.0 lze overit rucne z menu `Soubor -> Zkontrolovat datovou sadu 2.0`; health check overuje otevreni `vehimap.db`, `PRAGMA quick_check`, ocekavane tabulky, schema marker, zapisovatelnost datove slozky, aktivni `attachments` a zbytky legacy TSV/INI bez automatickeho mazani nebo oprav databaze.
 - `Vehimap.Storage.Legacy` zustava read-only kompatibilitni vrstva pro migraci a import starsich zaloh, ne dlouhodoby runtime format 2.x.
 
+## Lokalizace pred Androidem
+
+- Vehimap 2.0 nightly zavadi lokalizacni a formatovaci zaklad pred dalsimi velkymi funkcemi a pred Android UI.
+- Primarni cesta je `.resx`: `Strings.resx` jako anglicky fallback a `Strings.cs.resx` jako ceska verze.
+- Pilotni oblasti jsou `Nastaveni`, `O programu`, hlavni/app menu a `Editor vozidla`.
+- Nastaveni uz nese jazyk, oddelovac tisicu, oddelovac desetin, jednotku vzdalenosti a jednotku objemu paliva.
+- Podporovane jednotky jsou kilometry/mile a litry/US galony/imperialni galony.
+- Interni data zustavaji invariantni a SQLite storage se kvuli lokalizaci nemeni; zobrazeni, vstup a exporty budou postupne pouzivat formatovaci sluzby.
+- Prekladatelska pravidla jsou v `dotnet/docs/I18N.md`; commit messages zustavaji vyhradne anglicky.
+
 ## Historicka mapa AHK modulu -> .NET vrstvy
 
 - `src/lib/DataStore.ahk`
