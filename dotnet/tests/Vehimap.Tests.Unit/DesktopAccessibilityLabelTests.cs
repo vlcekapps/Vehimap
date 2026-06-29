@@ -506,6 +506,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"TechnicalReminderDaysBox\"", settingsXaml);
         Assert.Contains("Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.", settingsXaml);
         Assert.Contains("IsEnabled=\"{Binding CanConfigureAutomaticBackups}\"", settingsXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AutomaticBackupStatusText\"", settingsXaml);
+        Assert.Contains("AutomationProperties.LiveSetting=\"Polite\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupButton\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SaveSettingsButton\"", settingsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CancelSettingsButton\"", settingsXaml);
@@ -1237,6 +1239,45 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.True(
             failures.Count == 0,
             "TextBlock s AutomationId je důležitý obsah nebo diagnostika a musí mít explicitní accessible Name:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void Disabled_dependent_settings_controls_should_explain_their_prerequisite()
+    {
+        var settingsXaml = ReadViewFile("SettingsWindow.axaml");
+        var dependentControlPattern = new Regex(
+            "<(?<type>TextBox|ComboBox|CheckBox|Button)(?=[\\s>/])(?<attributes>[^>]*IsEnabled=\"\\{Binding CanConfigureAutomaticBackups\\}\"[^>]*)(?:/>|>)",
+            RegexOptions.Singleline);
+        var automationIdPattern = new Regex(
+            "AutomationProperties\\.AutomationId=\"(?<id>[^\"]+)\"",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (Match match in dependentControlPattern.Matches(settingsXaml))
+        {
+            var attributes = match.Groups["attributes"].Value;
+            var automationIdMatch = automationIdPattern.Match(attributes);
+            var controlLabel = automationIdMatch.Success
+                ? automationIdMatch.Groups["id"].Value
+                : $"<{match.Groups["type"].Value}>";
+
+            if (!attributes.Contains("AutomationProperties.HelpText=", StringComparison.Ordinal))
+            {
+                failures.Add($"{controlLabel} postrádá AutomationProperties.HelpText.");
+                continue;
+            }
+
+            if (!attributes.Contains("Aktivní jen když je zapnuté pravidelné vytváření automatických záloh", StringComparison.Ordinal))
+            {
+                failures.Add($"{controlLabel} nevysvětluje, proč je prvek bez zapnutých automatických záloh vypnutý.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Podmíněně vypnutá nastavení musí čtečce oznámit, co je odemkne:"
                 + Environment.NewLine
                 + string.Join(Environment.NewLine, failures));
     }

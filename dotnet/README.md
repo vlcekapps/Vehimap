@@ -145,6 +145,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - staticky hlidat, ze vsechny nadpisy s `AutomationProperties.HeadingLevel` maji stabilni `AutomationId` a pristupne jmeno, nejen hlavni nadpisy samostatnych oken
 - staticky hlidat, ze dulezite informacni `TextBlock` prvky s `AutomationId` maji explicitni `AutomationProperties.Name`, hlavne u diagnostiky a podpory
 - staticky hlidat, ze kopirovatelne `SelectableTextBlock` hodnoty s `AutomationId` vystavuji popisek i aktualni hodnotu pres `*AccessibleName` binding
+- staticky hlidat, ze podminene vypnuta nastaveni pres `AutomationProperties.HelpText` vysvetluji, ktera volba je znovu aktivuje
 - staticky hlidat live regiony u stavovych, chybovych a prubehovych textu, jeden hlavni nadpis kazdeho samostatneho okna/dialogu a `AccessibilityView=Control` u landmarku podle oficialniho Avalonia accessibility modelu
 - staticky hlidat, ze menu zkratky viditelne pres `InputGesture` jsou vystavene i jako `AutomationProperties.AcceleratorKey` a ze progress bary maji citelny nazev, ID i napovedu
 - staticky hlidat, ze seznamove polozky s `AccessibleLabel` maji `AutomationProperties.ItemType` a ze `AutomationProperties.ItemStatus` pouzivaji jen skutecne stavove, prioritni nebo dostupnostni vlastnosti

@@ -43,6 +43,9 @@ for a future ACR/VPAT-style report if one is needed.
   explicit conditional requirements, never for helpful-but-optional values.
 - Use `AutomationProperties.HelpText` only for extra instructions, never as the only
   label for a field.
+- Conditionally disabled controls must use `AutomationProperties.HelpText` to explain
+  the prerequisite that enables them. A screen-reader user must not have to infer why a
+  field is disabled from visual grouping alone.
 - Destructive or data-replacing actions must use `AutomationProperties.HelpText` to
   describe the consequence in user language. Examples: deleting a vehicle or record,
   restoring from backup, or installing an update that will replace the running app.

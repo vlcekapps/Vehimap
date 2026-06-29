@@ -66,6 +66,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - staticke guard testy pro vsechny nadpisy s `AutomationProperties.HeadingLevel`, aby hlavni i sekcni nadpisy mely stabilni `AutomationId` a pristupne jmeno
 - staticke guard testy pro dulezite informacni `TextBlock` prvky s `AutomationId`, aby souhrny a diagnosticke detaily mely explicitni `AutomationProperties.Name`
 - staticke guard testy pro kopirovatelne `SelectableTextBlock` hodnoty s `AutomationId`, aby cesta nebo jina technicka hodnota nebyla pro ctecku skryta za obecnym popiskem
+- staticke guard testy pro podminene vypnuta nastaveni, aby screen-reader uzivatel slysel, ktera volba je znovu aktivuje
 - staticke guard testy pro live regiony u stavovych/chybovych/prubehovych textu, jeden hlavni `HeadingLevel=1` nadpis v kazdem samostatnem okne/dialogu a `AccessibilityView=Control` u landmarku
 - staticke guard testy pro `AutomationProperties.AcceleratorKey` u menu zkratek a citelna accessibility metadata u progress baru
 - staticke guard testy pro `AutomationProperties.ItemType` u seznamovych polozek s `AccessibleLabel` a konzervativni `AutomationProperties.ItemStatus` jen pro skutecny stav, prioritu nebo dostupnost

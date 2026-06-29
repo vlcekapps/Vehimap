@@ -102,6 +102,7 @@
                     IsChecked="{Binding AutomaticBackupsEnabled}"
                     Content="Pravidelně vytvářet automatické zálohy"
                     AutomationProperties.Name="Pravidelně vytvářet automatické zálohy"
+                    AutomationProperties.HelpText="Když je zapnuto, Vehimap podle zadaného intervalu vytváří automatické zálohy datové sady."
                     AutomationProperties.AutomationId="AutomaticBackupsEnabledCheckBox" />
 
           <TextBlock Grid.Row="1"
@@ -115,6 +116,7 @@
                    Text="{Binding AutomaticBackupIntervalDays}"
                    IsEnabled="{Binding CanConfigureAutomaticBackups}"
                    AutomationProperties.Name="Interval automatické zálohy ve dnech"
+                   AutomationProperties.HelpText="Aktivní jen když je zapnuté pravidelné vytváření automatických záloh. Zadejte počet dnů mezi automatickými zálohami."
                    AutomationProperties.AutomationId="AutomaticBackupIntervalDaysBox" />
 
           <TextBlock Grid.Row="2"
@@ -128,13 +130,17 @@
                    Text="{Binding AutomaticBackupKeepCount}"
                    IsEnabled="{Binding CanConfigureAutomaticBackups}"
                    AutomationProperties.Name="Počet ponechaných automatických záloh"
+                   AutomationProperties.HelpText="Aktivní jen když je zapnuté pravidelné vytváření automatických záloh. Zadejte počet ponechaných automatických záloh."
                    AutomationProperties.AutomationId="AutomaticBackupKeepCountBox" />
 
           <TextBlock Grid.Row="3"
                      Grid.ColumnSpan="2"
                      Margin="0,16,0,0"
                      Text="{Binding AutomaticBackupStatus}"
-                     TextWrapping="Wrap" />
+                     TextWrapping="Wrap"
+                     AutomationProperties.Name="{Binding AutomaticBackupStatus}"
+                     AutomationProperties.AutomationId="AutomaticBackupStatusText"
+                     AutomationProperties.LiveSetting="Polite" />
         </Grid>
       </Border>
       </StackPanel>
