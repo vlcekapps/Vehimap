@@ -153,7 +153,8 @@
                          Text="{Binding FuelEditorDate}"
                          PlaceholderText="Například 15.06.2026"
                          AutomationProperties.Name="Datum tankování"
-                         AutomationProperties.AutomationId="FuelEditorDateBox" />
+                         AutomationProperties.AutomationId="FuelEditorDateBox"
+                         AutomationProperties.IsRequiredForForm="True" />
               </StackPanel>
               <StackPanel Grid.Column="1" Spacing="6">
                 <TextBlock FontWeight="SemiBold" Text="Typ paliva" />
@@ -206,7 +207,8 @@
                 <TextBox x:Name="FuelEditorOdometerBox"
                          Text="{Binding FuelEditorOdometer}"
                          AutomationProperties.Name="Tachometr při tankování"
-                         AutomationProperties.AutomationId="FuelEditorOdometerBox" />
+                         AutomationProperties.AutomationId="FuelEditorOdometerBox"
+                         AutomationProperties.IsRequiredForForm="True" />
               </StackPanel>
             </Grid>
             <CheckBox Grid.Row="3"

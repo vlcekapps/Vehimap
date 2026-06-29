@@ -146,7 +146,8 @@
                    Text="{Binding HistoryEditorDate}"
                    PlaceholderText="Například 15.06.2026"
                    AutomationProperties.Name="Datum historického záznamu"
-                   AutomationProperties.AutomationId="HistoryEditorDateBox" />
+                   AutomationProperties.AutomationId="HistoryEditorDateBox"
+                   AutomationProperties.IsRequiredForForm="True" />
           <Grid Grid.Row="2"
                 Margin="0,14,0,0"
                 ColumnDefinitions="*,160">
@@ -156,7 +157,8 @@
                        Text="{Binding HistoryEditorType}"
                        PlaceholderText="Například Servis"
                        AutomationProperties.Name="Typ historické události"
-                       AutomationProperties.AutomationId="HistoryEditorTypeBox" />
+                       AutomationProperties.AutomationId="HistoryEditorTypeBox"
+                       AutomationProperties.IsRequiredForForm="True" />
             </StackPanel>
             <StackPanel Grid.Column="1" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Tachometr" />

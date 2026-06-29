@@ -27,6 +27,9 @@ for a future ACR/VPAT-style report if one is needed.
 - For label + field forms, keep the visible label and accessible name synchronized. Use
   `LabeledBy` where it is stable in our target Avalonia version; otherwise keep the
   explicit `Name` and note the reason in tests or comments.
+- Fields that runtime validation truly rejects as empty must expose
+  `AutomationProperties.IsRequiredForForm`. Use it only for real required fields or
+  explicit conditional requirements, never for helpful-but-optional values.
 - Use `AutomationProperties.HelpText` only for extra instructions, never as the only
   label for a field.
 - If a menu item exposes a visible `InputGesture`, it must also expose the same shortcut

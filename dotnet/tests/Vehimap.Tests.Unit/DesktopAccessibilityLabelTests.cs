@@ -1177,6 +1177,95 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Required_editor_fields_should_expose_required_for_form_metadata()
+    {
+        var requiredFields = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["FuelEditorDateBox"] = "True",
+            ["FuelEditorOdometerBox"] = "True",
+            ["HistoryEditorDateBox"] = "True",
+            ["HistoryEditorTypeBox"] = "True",
+            ["MaintenanceCompletionDateBox"] = "True",
+            ["MaintenanceCompletionOdometerBox"] = "{Binding RequiresOdometer}",
+            ["MaintenanceEditorTitleBox"] = "True",
+            ["RecordEditorTitleBox"] = "True",
+            ["RecordEditorTypeBox"] = "True",
+            ["ReminderEditorDaysBox"] = "True",
+            ["ReminderEditorDueDateBox"] = "True",
+            ["ReminderEditorTitleBox"] = "True",
+            ["VehicleEditorCategoryBox"] = "True",
+            ["VehicleEditorMakeModelBox"] = "True",
+            ["VehicleEditorNameBox"] = "True",
+            ["VehicleEditorNextTkBox"] = "True"
+        };
+        var formControlPattern = new Regex(
+            "<(?<type>TextBox|ComboBox)(?=[\\s>/])(?<attributes>[\\s\\S]*?)(?:/>|>)",
+            RegexOptions.Singleline);
+        var automationIdPattern = new Regex(
+            "AutomationProperties\\.AutomationId=\"(?<id>[^\"]+)\"",
+            RegexOptions.Singleline);
+        var requiredPattern = new Regex(
+            "AutomationProperties\\.IsRequiredForForm=\"(?<value>[^\"]+)\"",
+            RegexOptions.Singleline);
+        var seenRequiredFields = new HashSet<string>(StringComparer.Ordinal);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in formControlPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                var automationIdMatch = automationIdPattern.Match(attributes);
+                var requiredMatch = requiredPattern.Match(attributes);
+                if (requiredMatch.Success && !automationIdMatch.Success)
+                {
+                    failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} <{match.Groups["type"].Value}> používá IsRequiredForForm bez AutomationId.");
+                    continue;
+                }
+
+                if (!automationIdMatch.Success)
+                {
+                    continue;
+                }
+
+                var automationId = automationIdMatch.Groups["id"].Value;
+                if (requiredFields.TryGetValue(automationId, out var expectedValue))
+                {
+                    seenRequiredFields.Add(automationId);
+                    if (!requiredMatch.Success)
+                    {
+                        failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} {automationId} postrádá AutomationProperties.IsRequiredForForm.");
+                        continue;
+                    }
+
+                    if (!string.Equals(requiredMatch.Groups["value"].Value, expectedValue, StringComparison.Ordinal))
+                    {
+                        failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} {automationId} má IsRequiredForForm={requiredMatch.Groups["value"].Value}, očekává se {expectedValue}.");
+                    }
+
+                    continue;
+                }
+
+                if (requiredMatch.Success)
+                {
+                    failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} {automationId} je označené jako povinné, ale není ve schváleném seznamu skutečně vyžadovaných polí.");
+                }
+            }
+        }
+
+        foreach (var missingId in requiredFields.Keys.Except(seenRequiredFields, StringComparer.Ordinal))
+        {
+            failures.Add($"{missingId} nebylo nalezeno mezi formulářovými poli.");
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Pole, která runtime validace odmítá prázdná, musí vystavit IsRequiredForForm; volitelná pole jej používat nesmí:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Status_error_and_progress_texts_should_define_live_regions()
     {
         var textBlockPattern = new Regex(
@@ -1513,6 +1602,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Avalonia accessibility", accessibilityDocs);
         Assert.Contains("AutomationProperties.ItemType", accessibilityDocs);
         Assert.Contains("AutomationProperties.ItemStatus", accessibilityDocs);
+        Assert.Contains("AutomationProperties.IsRequiredForForm", accessibilityDocs);
         Assert.Contains("Date:", evidenceReadme);
         Assert.Contains("Screen reader:", evidenceReadme);
         Assert.Contains("Known issues:", evidenceReadme);

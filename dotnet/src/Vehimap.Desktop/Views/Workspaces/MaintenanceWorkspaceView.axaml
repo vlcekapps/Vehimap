@@ -103,7 +103,7 @@
                     AutomationProperties.Name="Šablona servisního úkonu"
                     AutomationProperties.AutomationId="MaintenanceTemplateComboBox" />
           <TextBlock Grid.Row="2" Margin="0,14,0,0" FontWeight="SemiBold" Text="Název úkonu" />
-          <TextBox x:Name="MaintenanceEditorTitleBox" Grid.Row="3" Margin="0,6,0,0" Text="{Binding MaintenanceEditorTitle}" PlaceholderText="Například Motorový olej" AutomationProperties.Name="Název servisního úkonu" AutomationProperties.AutomationId="MaintenanceEditorTitleBox" />
+          <TextBox x:Name="MaintenanceEditorTitleBox" Grid.Row="3" Margin="0,6,0,0" Text="{Binding MaintenanceEditorTitle}" PlaceholderText="Například Motorový olej" AutomationProperties.Name="Název servisního úkonu" AutomationProperties.AutomationId="MaintenanceEditorTitleBox" AutomationProperties.IsRequiredForForm="True" />
           <Grid Grid.Row="4" Margin="0,14,0,0" ColumnDefinitions="*,*">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Interval km" />

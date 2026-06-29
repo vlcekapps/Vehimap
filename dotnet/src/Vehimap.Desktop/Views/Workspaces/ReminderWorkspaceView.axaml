@@ -83,15 +83,15 @@
         <Border x:Name="ReminderEditorHost" Grid.Row="3" Margin="0,16,0,0">
           <Grid IsVisible="{Binding IsEditingReminder}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
           <TextBlock FontWeight="SemiBold" Text="Název připomínky" />
-          <TextBox x:Name="ReminderEditorTitleBox" Grid.Row="1" Margin="0,6,0,0" Text="{Binding ReminderEditorTitle}" PlaceholderText="Například objednat servis" AutomationProperties.Name="Název připomínky" AutomationProperties.AutomationId="ReminderEditorTitleBox" />
+          <TextBox x:Name="ReminderEditorTitleBox" Grid.Row="1" Margin="0,6,0,0" Text="{Binding ReminderEditorTitle}" PlaceholderText="Například objednat servis" AutomationProperties.Name="Název připomínky" AutomationProperties.AutomationId="ReminderEditorTitleBox" AutomationProperties.IsRequiredForForm="True" />
           <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="*,140">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Termín" />
-              <TextBox x:Name="ReminderEditorDueDateBox" Text="{Binding ReminderEditorDueDate}" PlaceholderText="Například 15.06.2026" AutomationProperties.Name="Termín připomínky" AutomationProperties.AutomationId="ReminderEditorDueDateBox" />
+              <TextBox x:Name="ReminderEditorDueDateBox" Text="{Binding ReminderEditorDueDate}" PlaceholderText="Například 15.06.2026" AutomationProperties.Name="Termín připomínky" AutomationProperties.AutomationId="ReminderEditorDueDateBox" AutomationProperties.IsRequiredForForm="True" />
             </StackPanel>
             <StackPanel Grid.Column="1" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Předstih dnů" />
-              <TextBox x:Name="ReminderEditorDaysBox" Text="{Binding ReminderEditorDays}" PlaceholderText="Například 30" AutomationProperties.Name="Předstih připomínky ve dnech" AutomationProperties.AutomationId="ReminderEditorDaysBox" />
+              <TextBox x:Name="ReminderEditorDaysBox" Text="{Binding ReminderEditorDays}" PlaceholderText="Například 30" AutomationProperties.Name="Předstih připomínky ve dnech" AutomationProperties.AutomationId="ReminderEditorDaysBox" AutomationProperties.IsRequiredForForm="True" />
             </StackPanel>
           </Grid>
           <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="Opakování" />

@@ -77,7 +77,8 @@
                    Text="{Binding VehicleEditorName}"
                    PlaceholderText="Například Milena"
                    AutomationProperties.Name="Název vozidla"
-                   AutomationProperties.AutomationId="VehicleEditorNameBox" />
+                   AutomationProperties.AutomationId="VehicleEditorNameBox"
+                   AutomationProperties.IsRequiredForForm="True" />
         </StackPanel>
         <StackPanel Grid.Column="1" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="Kategorie" />
@@ -85,7 +86,8 @@
                     ItemsSource="{Binding VehicleCategoryOptions}"
                     SelectedItem="{Binding VehicleEditorCategory}"
                     AutomationProperties.Name="Kategorie vozidla"
-                    AutomationProperties.AutomationId="VehicleEditorCategoryBox" />
+                    AutomationProperties.AutomationId="VehicleEditorCategoryBox"
+                    AutomationProperties.IsRequiredForForm="True" />
         </StackPanel>
       </Grid>
 
@@ -96,7 +98,8 @@
                    Text="{Binding VehicleEditorMakeModel}"
                    PlaceholderText="Například Škoda 120L"
                    AutomationProperties.Name="Značka a model vozidla"
-                   AutomationProperties.AutomationId="VehicleEditorMakeModelBox" />
+                   AutomationProperties.AutomationId="VehicleEditorMakeModelBox"
+                   AutomationProperties.IsRequiredForForm="True" />
         </StackPanel>
         <StackPanel Grid.Column="1" Spacing="6">
           <TextBlock FontWeight="SemiBold" Text="SPZ" />
@@ -143,7 +146,8 @@
           <TextBox x:Name="VehicleEditorNextTkBox"
                    Text="{Binding VehicleEditorNextTk}"
                    AutomationProperties.Name="Příští technická kontrola"
-                   AutomationProperties.AutomationId="VehicleEditorNextTkBox" />
+                   AutomationProperties.AutomationId="VehicleEditorNextTkBox"
+                   AutomationProperties.IsRequiredForForm="True" />
         </StackPanel>
       </Grid>
 
