@@ -77,6 +77,7 @@
                    Text="{Binding VehicleEditorName}"
                    PlaceholderText="Například Milena"
                    AutomationProperties.Name="Název vozidla"
+                   AutomationProperties.HelpText="Například Milena"
                    AutomationProperties.AutomationId="VehicleEditorNameBox"
                    AutomationProperties.IsRequiredForForm="True" />
         </StackPanel>
@@ -98,6 +99,7 @@
                    Text="{Binding VehicleEditorMakeModel}"
                    PlaceholderText="Například Škoda 120L"
                    AutomationProperties.Name="Značka a model vozidla"
+                   AutomationProperties.HelpText="Například Škoda 120L"
                    AutomationProperties.AutomationId="VehicleEditorMakeModelBox"
                    AutomationProperties.IsRequiredForForm="True" />
         </StackPanel>
@@ -106,6 +108,7 @@
           <TextBox Text="{Binding VehicleEditorPlate}"
                    PlaceholderText="Například 1AB2345"
                    AutomationProperties.Name="Státní poznávací značka vozidla"
+                   AutomationProperties.HelpText="Například 1AB2345"
                    AutomationProperties.AutomationId="VehicleEditorPlateBox" />
         </StackPanel>
       </Grid>
@@ -206,6 +209,7 @@
                Text="{Binding VehicleEditorTags}"
                PlaceholderText="Například rodina, veterán, pracovní"
                AutomationProperties.Name="Štítky vozidla"
+               AutomationProperties.HelpText="Například rodina, veterán, pracovní"
                AutomationProperties.AutomationId="VehicleEditorTagsBox" />
 
       <TextBlock Grid.Row="9" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka k vozidlu" />

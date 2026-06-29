@@ -33,6 +33,7 @@
                  Text="{Binding CostPeriodStartText}"
                  PlaceholderText="Od"
                  AutomationProperties.Name="Začátek období nákladů"
+                 AutomationProperties.HelpText="Datum začátku období, například 01.01.2026"
                  AutomationProperties.AutomationId="CostPeriodStartBox" />
         <TextBlock Grid.Column="2"
                    HorizontalAlignment="Center"
@@ -43,6 +44,7 @@
                  Text="{Binding CostPeriodEndText}"
                  PlaceholderText="Do"
                  AutomationProperties.Name="Konec období nákladů"
+                 AutomationProperties.HelpText="Datum konce období, například 31.12.2026"
                  AutomationProperties.AutomationId="CostPeriodEndBox" />
         <Button Grid.Column="4"
                 Margin="12,0,0,0"
@@ -139,6 +141,7 @@
                Text="{Binding CostSearchText}"
                PlaceholderText="Vozidlo, kategorie, částka, cena za km nebo stav výpočtu..."
                AutomationProperties.Name="Hledání v nákladovém přehledu"
+               AutomationProperties.HelpText="Vozidlo, kategorie, částka, cena za km nebo stav výpočtu"
                AutomationProperties.AutomationId="CostSearchBox" />
       <Button Grid.Column="2"
               Margin="12,0,0,0"

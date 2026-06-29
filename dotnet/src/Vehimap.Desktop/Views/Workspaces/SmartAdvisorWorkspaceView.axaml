@@ -28,6 +28,7 @@
                Text="{Binding SmartAdvisorSearchText}"
                PlaceholderText="Vozidlo, priorita, kategorie nebo text doporučení..."
                AutomationProperties.Name="Hledání v chytrém poradci"
+               AutomationProperties.HelpText="Vozidlo, priorita, kategorie nebo text doporučení"
                AutomationProperties.AutomationId="SmartAdvisorSearchBox" />
       <Button Grid.Column="2"
               Margin="12,0,0,0"

@@ -30,6 +30,7 @@
                Text="{Binding OverdueOverviewSearchText}"
                PlaceholderText="Vozidlo, SPZ, termín nebo položka..."
                AutomationProperties.Name="Hledání v přehledu propadlých termínů"
+               AutomationProperties.HelpText="Vozidlo, SPZ, termín nebo položka"
                AutomationProperties.AutomationId="OverdueOverviewSearchBox" />
       <Button Grid.Column="2"
               x:Name="ClearOverdueOverviewSearchButton"

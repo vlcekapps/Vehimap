@@ -24,6 +24,7 @@
                Text="{Binding AuditSearchText}"
                PlaceholderText="Vozidlo, SPZ, evidence nebo popis problému..."
                AutomationProperties.Name="Hledání v auditu dat"
+               AutomationProperties.HelpText="Vozidlo, SPZ, evidence nebo popis problému"
                AutomationProperties.AutomationId="AuditSearchBox" />
       <Button Grid.Column="2"
               Margin="12,0,0,0"

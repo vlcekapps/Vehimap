@@ -30,6 +30,7 @@
                Text="{Binding UpcomingOverviewSearchText}"
                PlaceholderText="Vozidlo, SPZ, termín nebo položka..."
                AutomationProperties.Name="Hledání v přehledu blížících se termínů"
+               AutomationProperties.HelpText="Vozidlo, SPZ, termín nebo položka"
                AutomationProperties.AutomationId="UpcomingOverviewSearchBox" />
       <Button Grid.Column="2"
               x:Name="ClearUpcomingOverviewSearchButton"

@@ -1177,6 +1177,42 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Placeholder_fields_should_expose_accessible_help_text()
+    {
+        var placeholderControlPattern = new Regex(
+            "<(?<type>TextBox|ComboBox)(?=[\\s>/])(?<attributes>[^>]*PlaceholderText=\"[^\"]+\"[^>]*)>",
+            RegexOptions.Singleline);
+        var automationIdPattern = new Regex(
+            "AutomationProperties\\.AutomationId=\"(?<id>[^\"]+)\"",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in placeholderControlPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                if (attributes.Contains("AutomationProperties.HelpText=", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                var automationIdMatch = automationIdPattern.Match(attributes);
+                var controlLabel = automationIdMatch.Success
+                    ? automationIdMatch.Groups["id"].Value
+                    : $"<{match.Groups["type"].Value}>";
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} {controlLabel} má PlaceholderText bez AutomationProperties.HelpText.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "PlaceholderText je vizuální nápověda; stejná instrukce musí být dostupná i přes AutomationProperties.HelpText:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Required_editor_fields_should_expose_required_for_form_metadata()
     {
         var requiredFields = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -1602,6 +1638,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Avalonia accessibility", accessibilityDocs);
         Assert.Contains("AutomationProperties.ItemType", accessibilityDocs);
         Assert.Contains("AutomationProperties.ItemStatus", accessibilityDocs);
+        Assert.Contains("PlaceholderText", accessibilityDocs);
+        Assert.Contains("AutomationProperties.HelpText", accessibilityDocs);
         Assert.Contains("AutomationProperties.IsRequiredForForm", accessibilityDocs);
         Assert.Contains("Date:", evidenceReadme);
         Assert.Contains("Screen reader:", evidenceReadme);

@@ -32,6 +32,10 @@ for a future ACR/VPAT-style report if one is needed.
   explicit conditional requirements, never for helpful-but-optional values.
 - Use `AutomationProperties.HelpText` only for extra instructions, never as the only
   label for a field.
+- If a field uses `PlaceholderText` for an example value or filter hint, expose the
+  same instruction through `AutomationProperties.HelpText`. Placeholder text is a
+  visual hint, not a reliable accessible instruction once the field has focus or
+  contains a value.
 - If a menu item exposes a visible `InputGesture`, it must also expose the same shortcut
   through `AutomationProperties.AcceleratorKey` so assistive technologies can announce
   the accelerator consistently.

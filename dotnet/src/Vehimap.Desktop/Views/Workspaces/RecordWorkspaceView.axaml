@@ -25,6 +25,7 @@
                  Text="{Binding RecordSearchText}"
                  PlaceholderText="Typ, název, poskytovatel, platnost, příloha nebo poznámka..."
                  AutomationProperties.Name="Hledání v dokladech vozidla"
+                 AutomationProperties.HelpText="Typ, název, poskytovatel, platnost, příloha nebo poznámka"
                  AutomationProperties.AutomationId="RecordSearchBox" />
         <Button Grid.Column="2"
                 Margin="12,0,0,0"
@@ -102,7 +103,13 @@
               </StackPanel>
               <StackPanel Grid.Column="1" Spacing="6">
                 <TextBlock FontWeight="SemiBold" Text="Název" />
-                <TextBox x:Name="RecordEditorTitleBox" Text="{Binding RecordEditorTitle}" PlaceholderText="Například Allianz 2026" AutomationProperties.Name="Název dokladu" AutomationProperties.AutomationId="RecordEditorTitleBox" AutomationProperties.IsRequiredForForm="True" />
+                <TextBox x:Name="RecordEditorTitleBox"
+                         Text="{Binding RecordEditorTitle}"
+                         PlaceholderText="Například Allianz 2026"
+                         AutomationProperties.Name="Název dokladu"
+                         AutomationProperties.HelpText="Například Allianz 2026"
+                         AutomationProperties.AutomationId="RecordEditorTitleBox"
+                         AutomationProperties.IsRequiredForForm="True" />
               </StackPanel>
             </Grid>
             <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="1.2*,*,*">
@@ -131,7 +138,13 @@
             </Grid>
             <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="{Binding RecordEditorPathInputLabel}" />
             <Grid Grid.Row="4" Margin="0,6,0,0" ColumnDefinitions="*,150">
-              <TextBox x:Name="RecordEditorPathInputBox" IsReadOnly="{Binding IsRecordEditorManaged}" Text="{Binding RecordEditorPathInput}" PlaceholderText="{Binding RecordEditorPathInputHelp}" AutomationProperties.Name="{Binding RecordEditorPathInputLabel}" AutomationProperties.AutomationId="RecordEditorPathInputBox" />
+              <TextBox x:Name="RecordEditorPathInputBox"
+                       IsReadOnly="{Binding IsRecordEditorManaged}"
+                       Text="{Binding RecordEditorPathInput}"
+                       PlaceholderText="{Binding RecordEditorPathInputHelp}"
+                       AutomationProperties.Name="{Binding RecordEditorPathInputLabel}"
+                       AutomationProperties.HelpText="{Binding RecordEditorPathInputHelp}"
+                       AutomationProperties.AutomationId="RecordEditorPathInputBox" />
               <Button Grid.Column="1" Margin="12,0,0,0" Command="{Binding BrowseRecordAttachmentCommand}" Content="Vybrat soubor" AutomationProperties.Name="Vybrat soubor pro doklad" AutomationProperties.AutomationId="BrowseRecordAttachmentButton" />
             </Grid>
             <TextBlock Grid.Row="5" Margin="0,8,0,0" Opacity="0.74" Text="{Binding RecordEditorPathInputHelp}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordEditorPathInputHelp}" AutomationProperties.AutomationId="RecordEditorPathInputHelpText" />

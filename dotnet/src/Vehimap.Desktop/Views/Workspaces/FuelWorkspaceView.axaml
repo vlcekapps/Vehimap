@@ -27,6 +27,7 @@
                  Text="{Binding FuelSearchText}"
                  PlaceholderText="Datum, palivo, detail, místo, litry, cena, tachometr nebo poznámka..."
                  AutomationProperties.Name="Hledání v tankování vozidla"
+                 AutomationProperties.HelpText="Datum, palivo, detail, místo, litry, cena, tachometr nebo poznámka"
                  AutomationProperties.AutomationId="FuelSearchBox" />
         <Button Grid.Column="2"
                 Margin="12,0,0,0"
@@ -153,6 +154,7 @@
                          Text="{Binding FuelEditorDate}"
                          PlaceholderText="Například 15.06.2026"
                          AutomationProperties.Name="Datum tankování"
+                         AutomationProperties.HelpText="Například 15.06.2026"
                          AutomationProperties.AutomationId="FuelEditorDateBox"
                          AutomationProperties.IsRequiredForForm="True" />
               </StackPanel>
@@ -174,6 +176,7 @@
                          Text="{Binding FuelEditorFuelDetail}"
                          PlaceholderText="Například Natural 95, V-Power nebo FuelSave"
                          AutomationProperties.Name="Detail paliva"
+                         AutomationProperties.HelpText="Například Natural 95, V-Power nebo FuelSave"
                          AutomationProperties.AutomationId="FuelEditorFuelDetailBox" />
               </StackPanel>
               <StackPanel Grid.Column="1" Spacing="6">
@@ -182,6 +185,7 @@
                          Text="{Binding FuelEditorStation}"
                          PlaceholderText="Například Shell Brno Vídeňská"
                          AutomationProperties.Name="Místo tankování"
+                         AutomationProperties.HelpText="Například Shell Brno Vídeňská"
                          AutomationProperties.AutomationId="FuelEditorStationBox" />
               </StackPanel>
             </Grid>

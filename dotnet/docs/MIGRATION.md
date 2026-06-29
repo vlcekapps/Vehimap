@@ -67,6 +67,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - staticke guard testy pro `AutomationProperties.AcceleratorKey` u menu zkratek a citelna accessibility metadata u progress baru
 - staticke guard testy pro `AutomationProperties.ItemType` u seznamovych polozek s `AccessibleLabel` a konzervativni `AutomationProperties.ItemStatus` jen pro skutecny stav, prioritu nebo dostupnost
 - staticke guard testy pro `AutomationProperties.IsRequiredForForm` u editorovych poli, ktera runtime validace opravdu vyzaduje
+- staticke guard testy pro `PlaceholderText` v textovych polich, aby priklady hodnot a filtracni napovedy byly vystavene i pres `AutomationProperties.HelpText`
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych dat po legacy migraci nebo primo ze SQLite
 - detail vozidla v Avalonia vetvi ukazuje stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby, aby se priblizil kontrolnimu detailu z AHK verze
 - detail vozidla v Avalonia vetvi umi z pristupneho bloku `Souvisejici evidence` prepnout na historii, tankovani, pripominky, udrzbu, doklady, casovou osu, servisni knizku nebo naklady vybraneho vozidla

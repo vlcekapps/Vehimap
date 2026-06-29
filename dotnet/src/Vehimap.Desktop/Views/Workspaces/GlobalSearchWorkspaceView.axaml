@@ -30,6 +30,7 @@
                Text="{Binding GlobalSearchText}"
                PlaceholderText="Vozidlo, SPZ, doklad, připomínka, údržba..."
                AutomationProperties.Name="Globální hledání ve Vehimapu"
+               AutomationProperties.HelpText="Vozidlo, SPZ, doklad, připomínka, údržba"
                AutomationProperties.AutomationId="GlobalSearchTextBox" />
       <Button Grid.Column="2"
               x:Name="ClearGlobalSearchButton"

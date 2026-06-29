@@ -34,6 +34,7 @@
                Text="{Binding TimelineSearchText}"
                PlaceholderText="Položka, stav nebo poznámka"
                AutomationProperties.Name="Hledání v časové ose"
+               AutomationProperties.HelpText="Položka, stav nebo poznámka"
                AutomationProperties.AutomationId="TimelineSearchBox" />
       <Button Grid.Column="4"
               x:Name="ClearTimelineSearchButton"

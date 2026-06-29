@@ -530,6 +530,7 @@
                        PlaceholderText="Název, značka, SPZ, poznámka nebo štítek"
                        IsEnabled="{Binding CanUseVehicleList}"
                        AutomationProperties.Name="Hledání v seznamu vozidel"
+                       AutomationProperties.HelpText="Název, značka, SPZ, poznámka nebo štítek"
                        AutomationProperties.AutomationId="VehicleSearchBox" />
             </StackPanel>
             <Button Grid.Row="2"
