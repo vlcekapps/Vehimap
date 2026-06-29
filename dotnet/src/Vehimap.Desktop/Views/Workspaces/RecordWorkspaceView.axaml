@@ -71,7 +71,12 @@
                     AutomationProperties.Name="Panel dokladů vozidla"
                     AutomationProperties.AutomationId="RecordEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,*">
-        <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding RecordPanelHeading}" />
+        <TextBlock FontSize="18"
+                   FontWeight="SemiBold"
+                   Text="{Binding RecordPanelHeading}"
+                   AutomationProperties.Name="{Binding RecordPanelHeading}"
+                   AutomationProperties.AutomationId="RecordPanelHeadingText"
+                   AutomationProperties.HeadingLevel="2" />
         <StackPanel Grid.Row="1" Margin="0,14,0,0" Spacing="8">
           <WrapPanel x:Name="RecordEditActionPanel" ItemWidth="138" ItemHeight="34">
             <Button Command="{Binding CreateRecordCommand}" Content="Nový doklad" AutomationProperties.Name="Vytvořit nový doklad" AutomationProperties.AutomationId="CreateRecordButton" />
@@ -87,7 +92,7 @@
             <Button Command="{Binding CopySelectedRecordPathCommand}" Content="Kopírovat cestu" IsVisible="{Binding IsRecordDetailVisible}" AutomationProperties.Name="Kopírovat vyřešenou cestu přílohy dokladu" AutomationProperties.AutomationId="CopyRecordPathButton" />
           </WrapPanel>
         </StackPanel>
-        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding RecordEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordEditorStatus}" AutomationProperties.AutomationId="RecordEditorStatusText" />
+        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding RecordEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordEditorStatus}" AutomationProperties.AutomationId="RecordEditorStatusText" AutomationProperties.LiveSetting="Polite" />
         <Border x:Name="RecordEditorHost" Grid.Row="3" Margin="0,16,0,0">
           <Grid IsVisible="{Binding IsEditingRecord}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
             <Grid ColumnDefinitions="1.1*,1.4*">

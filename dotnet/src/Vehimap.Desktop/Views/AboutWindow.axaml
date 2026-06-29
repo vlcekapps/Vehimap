@@ -19,7 +19,8 @@
                FontWeight="SemiBold"
                Text="{Binding Title}"
                AutomationProperties.Name="{Binding Title}"
-               AutomationProperties.AutomationId="AboutTitleText" />
+               AutomationProperties.AutomationId="AboutTitleText"
+               AutomationProperties.HeadingLevel="1" />
 
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
@@ -102,7 +103,8 @@
       <TextBlock Text="{Binding StatusMessage}"
                  TextWrapping="Wrap"
                  AutomationProperties.Name="{Binding StatusMessage}"
-                 AutomationProperties.AutomationId="AboutStatusText" />
+                 AutomationProperties.AutomationId="AboutStatusText"
+                 AutomationProperties.LiveSetting="Polite" />
     </Border>
 
     <StackPanel Grid.Row="6"

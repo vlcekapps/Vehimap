@@ -158,7 +158,10 @@
           <StackPanel Spacing="12">
             <TextBlock FontSize="18"
                        FontWeight="SemiBold"
-                       Text="Detail doporučení" />
+                       Text="Detail doporučení"
+                       AutomationProperties.Name="Detail doporučení"
+                       AutomationProperties.AutomationId="SmartAdvisorDetailHeadingText"
+                       AutomationProperties.HeadingLevel="2" />
             <TextBlock Text="{Binding SelectedSmartAdvisorDetail}"
                        TextWrapping="Wrap"
                        AutomationProperties.Name="{Binding SelectedSmartAdvisorDetail}"

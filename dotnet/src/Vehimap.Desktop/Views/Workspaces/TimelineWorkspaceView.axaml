@@ -91,7 +91,12 @@
             Background="#10203040"
             CornerRadius="8">
       <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
-        <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail časové osy" />
+        <TextBlock FontSize="18"
+                   FontWeight="SemiBold"
+                   Text="Detail časové osy"
+                   AutomationProperties.Name="Detail časové osy"
+                   AutomationProperties.AutomationId="TimelineDetailHeadingText"
+                   AutomationProperties.HeadingLevel="2" />
         <Button Grid.Row="1"
                 x:Name="TimelineOpenButton"
                 Margin="0,12,0,0"
@@ -107,7 +112,8 @@
                    Text="{Binding ExportStatus}"
                    TextWrapping="Wrap"
                    AutomationProperties.Name="{Binding ExportStatus}"
-                   AutomationProperties.AutomationId="TimelineExportStatusText" />
+                   AutomationProperties.AutomationId="TimelineExportStatusText"
+                   AutomationProperties.LiveSetting="Polite" />
         <TextBlock Grid.Row="3"
                    Margin="0,12,0,0"
                    Opacity="0.75"

@@ -16,7 +16,12 @@
         AutomationProperties.HelpText="Dialog pro potvrzení dokončeného servisního úkonu. Ctrl+S uloží, Escape zavře bez změn.">
   <Grid Margin="20" RowDefinitions="Auto,*,Auto">
     <StackPanel Spacing="6">
-      <TextBlock FontSize="22" FontWeight="SemiBold" Text="Označit servisní úkon jako splněný" />
+      <TextBlock FontSize="22"
+                 FontWeight="SemiBold"
+                 Text="Označit servisní úkon jako splněný"
+                 AutomationProperties.Name="Označit servisní úkon jako splněný"
+                 AutomationProperties.AutomationId="MaintenanceCompletionHeadingText"
+                 AutomationProperties.HeadingLevel="1" />
       <TextBlock Text="{Binding VehicleName}" />
       <TextBlock FontWeight="SemiBold" Text="{Binding PlanTitle}" />
       <TextBlock Opacity="0.78" Text="{Binding CurrentStatus}" TextWrapping="Wrap" />
@@ -81,7 +86,8 @@
                    Text="{Binding ErrorMessage}"
                    TextWrapping="Wrap"
                    AutomationProperties.Name="{Binding ErrorMessage}"
-                   AutomationProperties.AutomationId="MaintenanceCompletionStatusText" />
+                   AutomationProperties.AutomationId="MaintenanceCompletionStatusText"
+                   AutomationProperties.LiveSetting="Assertive" />
       </Grid>
     </ScrollViewer>
 

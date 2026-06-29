@@ -15,7 +15,12 @@
         AutomationProperties.AutomationId="ConfirmationWindow"
         AutomationProperties.HelpText="Potvrzovací dialog. Fokus je na potvrzovacím tlačítku; Escape akci zruší.">
   <Grid Margin="20" RowDefinitions="Auto,*,Auto">
-    <TextBlock FontSize="22" FontWeight="SemiBold" Text="{Binding Title}" />
+    <TextBlock FontSize="22"
+               FontWeight="SemiBold"
+               Text="{Binding Title}"
+               AutomationProperties.Name="{Binding Title}"
+               AutomationProperties.AutomationId="ConfirmationHeadingText"
+               AutomationProperties.HeadingLevel="1" />
     <ScrollViewer Grid.Row="1"
                   Margin="0,16,0,0"
                   VerticalScrollBarVisibility="Auto"

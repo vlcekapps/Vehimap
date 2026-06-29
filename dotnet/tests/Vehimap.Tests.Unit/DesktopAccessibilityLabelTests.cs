@@ -1177,6 +1177,101 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Status_error_and_progress_texts_should_define_live_regions()
+    {
+        var textBlockPattern = new Regex(
+            "<TextBlock(?<attributes>[^>]*)>",
+            RegexOptions.Singleline);
+        var liveRegionIdPattern = new Regex(
+            "AutomationProperties\\.AutomationId=\"(?<id>[^\"]*(?:StatusText|ErrorText|ProgressText))\"",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in textBlockPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                var automationIdMatch = liveRegionIdPattern.Match(attributes);
+                if (!automationIdMatch.Success
+                    || attributes.Contains("AutomationProperties.LiveSetting=", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} TextBlock {automationIdMatch.Groups["id"].Value} postrádá LiveSetting.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Stavové, chybové a průběhové texty musí být live regiony, aby je čtečka mohla oznámit:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void Desktop_windows_should_define_one_primary_accessible_heading()
+    {
+        var headingPattern = new Regex(
+            "<TextBlock(?<attributes>[^>]*AutomationProperties\\.HeadingLevel=\"1\"[^>]*)>",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadTopLevelDesktopWindowXamlFiles())
+        {
+            var headings = headingPattern.Matches(xaml);
+            if (headings.Count != 1)
+            {
+                failures.Add($"{relativePath}: očekáván právě jeden hlavní nadpis HeadingLevel=1, nalezeno {headings.Count}.");
+                continue;
+            }
+
+            var attributes = headings[0].Groups["attributes"].Value;
+            if (!attributes.Contains("AutomationProperties.AutomationId=", StringComparison.Ordinal)
+                || !attributes.Contains("AutomationProperties.Name=", StringComparison.Ordinal))
+            {
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, headings[0].Index)} hlavní nadpis postrádá AutomationId nebo Name.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Každé samostatné okno/dialog musí mít jeden dohledatelný hlavní nadpis s AutomationId a Name:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void Landmark_elements_should_be_exposed_in_control_accessibility_view()
+    {
+        var landmarkPattern = new Regex(
+            "<(?<type>[A-Za-z][A-Za-z0-9.:]*)(?<attributes>[^>]*AutomationProperties\\.LandmarkType=\"[^\"]+\"[^>]*)>",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in landmarkPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                if (attributes.Contains("AutomationProperties.AccessibilityView=\"Control\"", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} <{match.Groups["type"].Value}> má LandmarkType bez AccessibilityView=Control.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Každý Avalonia landmark musí být zároveň v Control accessibility view, aby byl spolehlivě viditelný přes UIA:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Manual_keydown_handlers_should_stay_documented_accessibility_exceptions()
     {
         var expectedOccurrencesByFile = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
@@ -1243,6 +1338,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.LandmarkType=\"Navigation\"", mainXaml);
         Assert.Contains("AutomationProperties.LandmarkType=\"Search\"", mainXaml);
         Assert.Contains("AutomationProperties.LandmarkType=\"Main\"", mainXaml);
+        Assert.Contains("AutomationProperties.AccessibilityView=\"Control\"", mainXaml);
         Assert.Contains("AutomationProperties.HeadingLevel=\"1\"", mainXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppTitleText\"", mainXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShellStatusText\" AutomationProperties.LiveSetting=\"Polite\"", mainXaml);
@@ -1591,6 +1687,17 @@ public sealed class DesktopAccessibilityLabelTests
         var viewsRoot = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Desktop", "Views");
 
         foreach (var file in Directory.EnumerateFiles(viewsRoot, "*.axaml", SearchOption.AllDirectories))
+        {
+            yield return (Path.GetRelativePath(repositoryRoot, file), File.ReadAllText(file));
+        }
+    }
+
+    private static IEnumerable<(string RelativePath, string Content)> ReadTopLevelDesktopWindowXamlFiles()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var viewsRoot = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Desktop", "Views");
+
+        foreach (var file in Directory.EnumerateFiles(viewsRoot, "*.axaml", SearchOption.TopDirectoryOnly))
         {
             yield return (Path.GetRelativePath(repositoryRoot, file), File.ReadAllText(file));
         }

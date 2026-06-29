@@ -19,7 +19,10 @@
       <TextBlock FontSize="22"
                  FontWeight="SemiBold"
                  Text="{Binding Title}"
-                 TextWrapping="Wrap" />
+                 TextWrapping="Wrap"
+                 AutomationProperties.Name="{Binding Title}"
+                 AutomationProperties.AutomationId="TrayActionsHeadingText"
+                 AutomationProperties.HeadingLevel="1" />
       <TextBlock Grid.Row="1"
                  Opacity="0.82"
                  Text="{Binding Description}"
@@ -32,7 +35,8 @@
           <TextBlock Text="{Binding BackgroundStatus}"
                      TextWrapping="Wrap"
                      AutomationProperties.Name="{Binding BackgroundStatus}"
-                     AutomationProperties.AutomationId="TrayActionsBackgroundStatusText" />
+                     AutomationProperties.AutomationId="TrayActionsBackgroundStatusText"
+                     AutomationProperties.LiveSetting="Polite" />
           <Button x:Name="OpenBackgroundStatusTrayActionButton"
                   Click="OnOpenBackgroundStatusClick"
                   Content="{Binding OpenBackgroundStatusLabel}"

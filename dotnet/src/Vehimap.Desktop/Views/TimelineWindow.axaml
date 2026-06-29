@@ -18,7 +18,10 @@
       <StackPanel Spacing="4">
         <TextBlock FontSize="24"
                    FontWeight="SemiBold"
-                   Text="{Binding WindowTitle}" />
+                   Text="{Binding WindowTitle}"
+                   AutomationProperties.Name="{Binding WindowTitle}"
+                   AutomationProperties.AutomationId="TimelineWindowHeadingText"
+                   AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.78"
                    Text="{Binding TimelineSummary}"
                    TextWrapping="Wrap" />

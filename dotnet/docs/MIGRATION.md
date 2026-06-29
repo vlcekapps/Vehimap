@@ -63,6 +63,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Avalonia accessibility checklist v `dotnet/docs/ACCESSIBILITY.md`, ktery drzi stav `accessibility-oriented / pre-conformance`, dokumentuje povolene keyboard/focus vyjimky a napojuje unit testy na oficialni Avalonia model misto nahodnych workaroundu
 - accessibility evidence slozku `dotnet/docs/accessibility-evidence/` pro rucni NVDA/Narrator a pozdeji VoiceOver/Orca zaznamy, aby slo pred 2.0 beta/stable dolozit realne screen-reader scenare
 - staticke guard testy, ktere hlidaji `AutomationId` a lidske pristupne jmeno u interaktivnich Avalonia prvku a blokují nove rucni `KeyDown` handlery bez dokumentovane vyjimky
+- staticke guard testy pro live regiony u stavovych/chybovych/prubehovych textu, jeden hlavni `HeadingLevel=1` nadpis v kazdem samostatnem okne/dialogu a `AccessibilityView=Control` u landmarku
 - desktopovy shell, ktery uz ukazuje vozidla, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, audit, naklady a casovou osu z realnych dat po legacy migraci nebo primo ze SQLite
 - detail vozidla v Avalonia vetvi ukazuje stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby, aby se priblizil kontrolnimu detailu z AHK verze
 - detail vozidla v Avalonia vetvi umi z pristupneho bloku `Souvisejici evidence` prepnout na historii, tankovani, pripominky, udrzbu, doklady, casovou osu, servisni knizku nebo naklady vybraneho vozidla

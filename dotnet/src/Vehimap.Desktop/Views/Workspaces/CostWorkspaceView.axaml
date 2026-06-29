@@ -57,7 +57,8 @@
                    Text="{Binding CostPeriodStatus}"
                    TextWrapping="Wrap"
                    AutomationProperties.Name="{Binding CostPeriodStatus}"
-                   AutomationProperties.AutomationId="CostPeriodStatusText" />
+                   AutomationProperties.AutomationId="CostPeriodStatusText"
+                   AutomationProperties.LiveSetting="Polite" />
       </Grid>
     </StackPanel>
 
@@ -117,7 +118,8 @@
                Text="{Binding CostExportStatus}"
                TextWrapping="Wrap"
                AutomationProperties.Name="{Binding CostExportStatus}"
-               AutomationProperties.AutomationId="CostExportStatusText" />
+               AutomationProperties.AutomationId="CostExportStatusText"
+               AutomationProperties.LiveSetting="Polite" />
     <Border x:Name="SelectedCostVehicleDetailHost"
             Grid.Row="6"
             Margin="0,12,0,0"

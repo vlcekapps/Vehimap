@@ -20,8 +20,10 @@ for a future ACR/VPAT-style report if one is needed.
   `TemplatedControl` becomes necessary, it must have an automation peer strategy before
   it ships.
 - Every interactive control must have a stable `AutomationProperties.AutomationId`.
-- Every interactive control must have a human accessible name through visible content,
-  `AutomationProperties.Name`, or `AutomationProperties.LabeledBy`.
+- Every interactive control must have a human accessible name through visible content
+  or `AutomationProperties.Name`. `AutomationProperties.LabeledBy` is allowed for
+  targeted experiments, but it is not the mandatory baseline yet because the local
+  Avalonia 12.0.4 UIA documentation marks `LabeledByPropertyId` as not implemented.
 - For label + field forms, keep the visible label and accessible name synchronized. Use
   `LabeledBy` where it is stable in our target Avalonia version; otherwise keep the
   explicit `Name` and note the reason in tests or comments.
@@ -29,9 +31,16 @@ for a future ACR/VPAT-style report if one is needed.
   label for a field.
 - Use `AutomationProperties.LiveSetting` for status changes that should be announced:
   validation errors, save results, import/restore results, update progress and shell
-  status.
-- Use `AutomationProperties.LandmarkType` and `HeadingLevel` conservatively for the
-  main shell, navigation, search areas, primary content and long dialogs.
+  status. Use `Polite` for routine progress and save/status messages; reserve
+  `Assertive` for validation errors, load failures and other blocking errors.
+- Every top-level window or modal dialog must expose exactly one primary heading with
+  `AutomationProperties.HeadingLevel="1"`, a stable `AutomationId` and a human
+  accessible name. Long dialogs and dense workspaces may use `HeadingLevel="2"` for
+  visible section headings.
+- Use `AutomationProperties.LandmarkType` conservatively for the main shell,
+  navigation, search areas and primary content. Every landmark must also set
+  `AutomationProperties.AccessibilityView="Control"` so it is exposed reliably through
+  UI Automation.
 - Keyboard access must work without a mouse. `Tab` moves forward, `Shift+Tab` moves
   backward, `Alt`/`F10` opens and closes the main menu, and form text boxes keep normal
   editing navigation.

@@ -76,7 +76,12 @@
                     AutomationProperties.Name="Panel plánu údržby"
                     AutomationProperties.AutomationId="MaintenanceEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,*">
-        <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding MaintenancePanelHeading}" />
+        <TextBlock FontSize="18"
+                   FontWeight="SemiBold"
+                   Text="{Binding MaintenancePanelHeading}"
+                   AutomationProperties.Name="{Binding MaintenancePanelHeading}"
+                   AutomationProperties.AutomationId="MaintenancePanelHeadingText"
+                   AutomationProperties.HeadingLevel="2" />
         <WrapPanel x:Name="MaintenanceActionPanel" Grid.Row="1" Margin="0,14,0,0" ItemWidth="132" ItemHeight="34">
           <Button Command="{Binding CreateMaintenanceCommand}" Content="Nový plán" AutomationProperties.Name="Vytvořit nový servisní plán" AutomationProperties.AutomationId="CreateMaintenanceButton" />
           <Button Command="{Binding OpenMaintenanceTemplatesCommand}" Content="Doporučené" IsEnabled="{Binding CanOpenMaintenanceRecommendations}" AutomationProperties.Name="Otevřít doporučené servisní šablony" AutomationProperties.AutomationId="OpenMaintenanceTemplatesButton" />
@@ -86,7 +91,7 @@
           <Button Command="{Binding SaveMaintenanceCommand}" Content="Uložit" IsVisible="{Binding IsEditingMaintenance}" AutomationProperties.Name="Uložit servisní plán" AutomationProperties.AutomationId="SaveMaintenanceButton" />
           <Button Command="{Binding CancelMaintenanceEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingMaintenance}" AutomationProperties.Name="Zrušit úpravu servisního plánu" AutomationProperties.AutomationId="CancelMaintenanceButton" />
         </WrapPanel>
-        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding MaintenanceEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding MaintenanceEditorStatus}" AutomationProperties.AutomationId="MaintenanceEditorStatusText" />
+        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding MaintenanceEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding MaintenanceEditorStatus}" AutomationProperties.AutomationId="MaintenanceEditorStatusText" AutomationProperties.LiveSetting="Polite" />
         <Border x:Name="MaintenanceEditorHost" Grid.Row="3" Margin="0,16,0,0">
           <Grid IsVisible="{Binding IsEditingMaintenance}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
           <TextBlock FontWeight="SemiBold" Text="Šablona úkonu" />

@@ -65,7 +65,12 @@
                     AutomationProperties.Name="Panel připomínek vozidla"
                     AutomationProperties.AutomationId="ReminderEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,*">
-        <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding ReminderPanelHeading}" />
+        <TextBlock FontSize="18"
+                   FontWeight="SemiBold"
+                   Text="{Binding ReminderPanelHeading}"
+                   AutomationProperties.Name="{Binding ReminderPanelHeading}"
+                   AutomationProperties.AutomationId="ReminderPanelHeadingText"
+                   AutomationProperties.HeadingLevel="2" />
         <WrapPanel x:Name="ReminderActionPanel" Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
           <Button Command="{Binding CreateReminderCommand}" Content="Nová" AutomationProperties.Name="Vytvořit novou připomínku" AutomationProperties.AutomationId="CreateReminderButton" />
           <Button Command="{Binding EditSelectedReminderCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybranou připomínku" AutomationProperties.AutomationId="EditReminderButton" />
@@ -74,7 +79,7 @@
           <Button Command="{Binding SaveReminderCommand}" Content="Uložit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Uložit připomínku" AutomationProperties.AutomationId="SaveReminderButton" />
           <Button Command="{Binding CancelReminderEditCommand}" Content="Zrušit" IsVisible="{Binding IsEditingReminder}" AutomationProperties.Name="Zrušit úpravu připomínky" AutomationProperties.AutomationId="CancelReminderButton" />
         </WrapPanel>
-        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding ReminderEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ReminderEditorStatus}" AutomationProperties.AutomationId="ReminderEditorStatusText" />
+        <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding ReminderEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ReminderEditorStatus}" AutomationProperties.AutomationId="ReminderEditorStatusText" AutomationProperties.LiveSetting="Polite" />
         <Border x:Name="ReminderEditorHost" Grid.Row="3" Margin="0,16,0,0">
           <Grid IsVisible="{Binding IsEditingReminder}" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
           <TextBlock FontWeight="SemiBold" Text="Název připomínky" />

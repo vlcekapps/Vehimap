@@ -17,13 +17,17 @@
   <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*,Auto">
     <TextBlock FontSize="22"
                FontWeight="SemiBold"
-               Text="{Binding Heading}" />
+               Text="{Binding Heading}"
+               AutomationProperties.Name="{Binding Heading}"
+               AutomationProperties.AutomationId="UpdateInstallProgressHeadingText"
+               AutomationProperties.HeadingLevel="1" />
     <TextBlock Grid.Row="1"
                Margin="0,12,0,0"
                Text="{Binding StatusMessage}"
                TextWrapping="Wrap"
                AutomationProperties.Name="{Binding StatusMessage}"
-               AutomationProperties.AutomationId="UpdateInstallProgressStatusText" />
+               AutomationProperties.AutomationId="UpdateInstallProgressStatusText"
+               AutomationProperties.LiveSetting="Polite" />
     <ProgressBar Grid.Row="2"
                  Margin="0,18,0,0"
                  Minimum="0"
@@ -37,7 +41,8 @@
                Text="{Binding ProgressText}"
                TextWrapping="Wrap"
                AutomationProperties.Name="{Binding ProgressText}"
-               AutomationProperties.AutomationId="UpdateInstallProgressText" />
+               AutomationProperties.AutomationId="UpdateInstallProgressText"
+               AutomationProperties.LiveSetting="Polite" />
     <Button x:Name="CancelButton"
             Grid.Row="4"
             Margin="0,18,0,0"

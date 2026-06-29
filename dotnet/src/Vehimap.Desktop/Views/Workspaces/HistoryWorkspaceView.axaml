@@ -131,7 +131,8 @@
                    Text="{Binding HistoryEditorStatus}"
                    TextWrapping="Wrap"
                    AutomationProperties.Name="{Binding HistoryEditorStatus}"
-                   AutomationProperties.AutomationId="HistoryEditorStatusText" />
+                   AutomationProperties.AutomationId="HistoryEditorStatusText"
+                   AutomationProperties.LiveSetting="Polite" />
         <Border x:Name="HistoryEditorHost"
                 Grid.Row="3"
                 Margin="0,16,0,0">

@@ -15,7 +15,12 @@
         AutomationProperties.AutomationId="SettingsWindow"
         AutomationProperties.HelpText="Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto,Auto">
-    <TextBlock FontSize="22" FontWeight="SemiBold" Text="Nastavení Vehimapu" />
+    <TextBlock FontSize="22"
+               FontWeight="SemiBold"
+               Text="Nastavení Vehimapu"
+               AutomationProperties.Name="Nastavení Vehimapu"
+               AutomationProperties.AutomationId="SettingsHeadingText"
+               AutomationProperties.HeadingLevel="1" />
     <TextBlock Grid.Row="1"
                Margin="0,8,0,0"
                Opacity="0.78"
@@ -143,7 +148,8 @@
       <TextBlock Text="{Binding StatusMessage}"
                  TextWrapping="Wrap"
                  AutomationProperties.Name="{Binding StatusMessage}"
-                 AutomationProperties.AutomationId="SettingsStatusText" />
+                 AutomationProperties.AutomationId="SettingsStatusText"
+                 AutomationProperties.LiveSetting="Polite" />
     </Border>
 
     <StackPanel Grid.Row="4"

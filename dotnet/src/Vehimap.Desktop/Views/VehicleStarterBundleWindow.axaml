@@ -14,7 +14,12 @@
         AutomationProperties.HelpText="{Binding DialogHelpText}">
   <Grid Margin="18" RowDefinitions="Auto,Auto,*,Auto">
     <StackPanel Spacing="4">
-      <TextBlock FontSize="24" FontWeight="SemiBold" Text="{Binding DialogTitle}" />
+      <TextBlock FontSize="24"
+                 FontWeight="SemiBold"
+                 Text="{Binding DialogTitle}"
+                 AutomationProperties.Name="{Binding DialogTitle}"
+                 AutomationProperties.AutomationId="VehicleStarterBundleHeadingText"
+                 AutomationProperties.HeadingLevel="1" />
       <TextBlock Text="{Binding VehicleName}" />
       <TextBlock Opacity="0.8" Text="{Binding ProfileLabel}" />
     </StackPanel>
@@ -79,7 +84,12 @@
                       AutomationProperties.Name="Detail položky balíčku"
                       AutomationProperties.AutomationId="BundleDetailScrollViewer">
           <StackPanel Spacing="12">
-            <TextBlock FontSize="18" FontWeight="SemiBold" Text="Detail vybrané položky" />
+            <TextBlock FontSize="18"
+                       FontWeight="SemiBold"
+                       Text="Detail vybrané položky"
+                       AutomationProperties.Name="Detail vybrané položky balíčku pro vozidlo"
+                       AutomationProperties.AutomationId="BundleDetailHeadingText"
+                       AutomationProperties.HeadingLevel="2" />
             <TextBlock Opacity="0.78"
                        Text="{Binding DetailHint}"
                        AutomationProperties.Name="{Binding DetailHint}"

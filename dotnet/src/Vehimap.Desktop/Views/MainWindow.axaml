@@ -42,7 +42,8 @@
             IsTabStop="False"
             AutomationProperties.Name="Hlavní nabídka aplikace"
             AutomationProperties.AutomationId="AppMenuBar"
-            AutomationProperties.LandmarkType="Navigation">
+            AutomationProperties.LandmarkType="Navigation"
+            AutomationProperties.AccessibilityView="Control">
         <MenuItem x:Name="FileMenuRoot"
                   Header="_Soubor"
                   IsTabStop="False"
@@ -475,7 +476,7 @@
     </Grid>
 
     <Grid Grid.Row="3" Margin="0,18,0,0" ColumnDefinitions="420,*">
-      <Border Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10" AutomationProperties.LandmarkType="Navigation">
+      <Border Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10" AutomationProperties.LandmarkType="Navigation" AutomationProperties.AccessibilityView="Control">
         <Grid RowDefinitions="Auto,Auto,Auto,*">
           <TextBlock FontSize="18"
                      FontWeight="SemiBold"
@@ -487,7 +488,8 @@
                 Margin="0,12,0,0"
                 ColumnDefinitions="*,*"
                 RowDefinitions="Auto,Auto,Auto,Auto"
-                AutomationProperties.LandmarkType="Search">
+                AutomationProperties.LandmarkType="Search"
+                AutomationProperties.AccessibilityView="Control">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Kategorie" />
               <ComboBox x:Name="VehicleCategoryFilterBox"
@@ -539,7 +541,8 @@
                      Text="{Binding VehicleListLockStatus}"
                      TextWrapping="Wrap"
                      AutomationProperties.Name="{Binding VehicleListLockStatus}"
-                     AutomationProperties.AutomationId="VehicleListLockStatusText" />
+                     AutomationProperties.AutomationId="VehicleListLockStatusText"
+                     AutomationProperties.LiveSetting="Polite" />
           <ListBox x:Name="VehicleListBox"
                    Grid.Row="3"
                    Margin="0,12,0,0"
@@ -572,7 +575,7 @@
         </Grid>
       </Border>
 
-      <Border Grid.Column="1" Margin="16,0,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10" AutomationProperties.LandmarkType="Main">
+      <Border Grid.Column="1" Margin="16,0,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10" AutomationProperties.LandmarkType="Main" AutomationProperties.AccessibilityView="Control">
         <Grid RowDefinitions="Auto,*">
           <Grid RowDefinitions="Auto,Auto,Auto">
             <TextBlock FontWeight="SemiBold"
@@ -729,7 +732,8 @@
                        Text="{Binding WorkspaceNavigationLockStatus}"
                        TextWrapping="Wrap"
                        AutomationProperties.Name="{Binding WorkspaceNavigationLockStatus}"
-                       AutomationProperties.AutomationId="WorkspaceNavigationLockStatusText" />
+                       AutomationProperties.AutomationId="WorkspaceNavigationLockStatusText"
+                       AutomationProperties.LiveSetting="Polite" />
           </Grid>
 
           <Grid Grid.Row="1"

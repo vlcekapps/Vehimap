@@ -142,6 +142,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - vest `dotnet/docs/ACCESSIBILITY.md` jako Avalonia accessibility checklist s jasnym stavem `accessibility-oriented / pre-conformance`, dokumentovanymi keyboard/focus vyjimkami a odkazy na oficialni Avalonia pravidla
 - ukladat rucni screen-reader dukazy do `dotnet/docs/accessibility-evidence/`, aby pozdejsi ACR/VPAT audit nebyl rekonstruovan az z pameti
 - staticky hlidat, ze interaktivni Avalonia prvky maji stabilni `AutomationId` a lidske pristupne jmeno a ze nove rucni `KeyDown` handlery nevzniknou bez vedome dokumentovane vyjimky
+- staticky hlidat live regiony u stavovych, chybovych a prubehovych textu, jeden hlavni nadpis kazdeho samostatneho okna/dialogu a `AccessibilityView=Control` u landmarku podle oficialniho Avalonia accessibility modelu
 - vystavovat souhrnne, stavove a detailni texty v hlavnim shellu i workspacech pres explicitni pristupne nazvy a stabilni `AutomationId`, aby je mohly cist screen readery a kontrolovat UI testy
 - cist a zapisovat podporovane reminder volby do nastaveni datove sady a respektovat `show_dashboard_on_launch`
 - reportovat stejnou verzi jako root `src/VERSION`, vcetne file version pro desktop buildy
