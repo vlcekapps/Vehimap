@@ -44,6 +44,11 @@ public partial class UpdateCheckWindow : Window
 
     private async void OnUpdateCheckKeyDown(object? sender, KeyEventArgs e)
     {
+        if (KeyboardAccessibilityHelper.ShouldSkipGlobalShortcut(e))
+        {
+            return;
+        }
+
         if (e.Key == Key.C && e.KeyModifiers == (KeyModifiers.Control | KeyModifiers.Shift))
         {
             e.Handled = true;

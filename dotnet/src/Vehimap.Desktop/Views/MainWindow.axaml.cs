@@ -238,6 +238,11 @@ public partial class MainWindow : Window
 
     private async void OnWindowKeyDown(object? sender, KeyEventArgs e)
     {
+        if (KeyboardAccessibilityHelper.ShouldSkipGlobalShortcut(e))
+        {
+            return;
+        }
+
         if (IsMainMenuInvocationKey(e))
         {
             e.Handled = ToggleMainMenuFocus(e.Source);

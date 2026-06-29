@@ -115,11 +115,13 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(owner);
         if (result is null)
         {
+            ViewModel.RequestWorkspaceFocus(DesktopFocusTarget.VehicleDetailPrimaryAction);
             return;
         }
 
         var message = await ViewModel.ApplyVehicleStarterBundleAsync(result.SelectedItems);
         ViewModel.SetVehicleStarterBundleStatus(message);
+        ViewModel.RequestWorkspaceFocus(DesktopFocusTarget.VehicleDetailPrimaryAction);
     }
 
     private void OnOpenVehicleHistoryWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

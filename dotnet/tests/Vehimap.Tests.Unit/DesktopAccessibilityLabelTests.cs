@@ -419,6 +419,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("OpenActiveEditorWindowAsync", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceEditShortcutAsync", codeBehind);
         Assert.Contains("HandleCurrentWorkspaceSaveShortcutAsync", codeBehind);
+        Assert.Contains("KeyboardAccessibilityHelper.ShouldSkipGlobalShortcut(e)", codeBehind);
         Assert.Contains("ToggleMainMenuFocus(e.Source)", codeBehind);
         Assert.Contains("FocusMainMenuRoot()", codeBehind);
         Assert.Contains("CloseMainMenuAndRestoreFocus()", codeBehind);
@@ -624,7 +625,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.S", bundleCodeBehind);
         Assert.Contains("Key.A", bundleCodeBehind);
         Assert.Contains("Key.Space", bundleCodeBehind);
-        Assert.Contains("e.Source is TextBox or ComboBox", bundleCodeBehind);
+        Assert.Contains("KeyboardAccessibilityHelper.ShouldSkipGlobalShortcut(e)", bundleCodeBehind);
         Assert.Contains("CanResize=\"True\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationMessageScrollViewer\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationConfirmButton\"", confirmationXaml);

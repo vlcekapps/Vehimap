@@ -19,6 +19,11 @@ public partial class VehicleStarterBundleWindow : Window
 
     private void OnWindowKeyDown(object? sender, KeyEventArgs e)
     {
+        if (KeyboardAccessibilityHelper.ShouldSkipGlobalShortcut(e))
+        {
+            return;
+        }
+
         if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
         {
             e.Handled = true;
@@ -35,11 +40,6 @@ public partial class VehicleStarterBundleWindow : Window
 
         if (e.Key == Key.A && e.KeyModifiers is KeyModifiers.Control or (KeyModifiers.Control | KeyModifiers.Shift))
         {
-            if (e.Source is TextBox or ComboBox)
-            {
-                return;
-            }
-
             if (DataContext is not VehicleStarterBundleDialogViewModel viewModel)
             {
                 return;

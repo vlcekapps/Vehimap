@@ -75,7 +75,7 @@ internal static class ModalWorkspaceWindowHelpers
 
     private static void OnWorkspaceWindowKeyDown(Window window, KeyEventArgs e)
     {
-        if (e.Handled)
+        if (KeyboardAccessibilityHelper.ShouldSkipGlobalShortcut(e))
         {
             return;
         }

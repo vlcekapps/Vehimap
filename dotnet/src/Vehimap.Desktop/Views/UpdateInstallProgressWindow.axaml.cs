@@ -91,6 +91,11 @@ public partial class UpdateInstallProgressWindow : Window
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
     {
+        if (KeyboardAccessibilityHelper.ShouldSkipGlobalShortcut(e))
+        {
+            return;
+        }
+
         if (e.Key != Key.Escape || e.KeyModifiers != KeyModifiers.None)
         {
             return;

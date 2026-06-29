@@ -137,6 +137,17 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         element.SendKeys(text);
     }
 
+    public string CopyTextByAccessibilityId(string automationId, int timeoutSeconds = 12)
+    {
+        var element = WaitForElementByAccessibilityId(automationId, timeoutSeconds);
+        SetWindowsClipboardText(string.Empty);
+        element.Click();
+        element.SendKeys(Keys.Control + "a");
+        element.SendKeys(Keys.Control + "c");
+        Thread.Sleep(150);
+        return GetWindowsClipboardText();
+    }
+
     public void SetWindowsClipboardText(string text)
     {
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

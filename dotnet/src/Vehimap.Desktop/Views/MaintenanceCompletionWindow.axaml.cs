@@ -25,6 +25,11 @@ public partial class MaintenanceCompletionWindow : Window
 
     private void OnMaintenanceCompletionKeyDown(object? sender, KeyEventArgs e)
     {
+        if (KeyboardAccessibilityHelper.ShouldSkipGlobalShortcut(e))
+        {
+            return;
+        }
+
         if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
         {
             e.Handled = true;

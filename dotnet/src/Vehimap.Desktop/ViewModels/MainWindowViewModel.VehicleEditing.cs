@@ -289,7 +289,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorStatus = wasNew
             ? "Nové vozidlo bylo uloženo."
             : "Vozidlo bylo upraveno.";
-        RequestFocus(DesktopFocusTarget.VehicleList);
+        RequestFocus(DesktopFocusTarget.VehicleDetailPrimaryAction);
     }
 
     [RelayCommand(CanExecute = nameof(CanCancelVehicleEdit))]

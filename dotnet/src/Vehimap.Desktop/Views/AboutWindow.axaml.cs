@@ -35,6 +35,11 @@ public partial class AboutWindow : Window
 
     private async void OnAboutKeyDown(object? sender, KeyEventArgs e)
     {
+        if (KeyboardAccessibilityHelper.ShouldSkipGlobalShortcut(e))
+        {
+            return;
+        }
+
         if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
         {
             e.Handled = true;

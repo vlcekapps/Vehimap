@@ -906,6 +906,81 @@ public sealed class DesktopContinuousIntegrationSmokeTests
     }
 
     [Fact]
+    public void Vehicle_detail_editor_keeps_standard_textbox_cursor_navigation_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("DetailTabButton");
+            session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
+            session.ClickByAccessibilityId("EditVehicleButton");
+            session.ReplaceTextByAccessibilityId("VehicleEditorNameBox", "Abcd");
+
+            session.SendKeysByAccessibilityId(
+                "VehicleEditorNameBox",
+                Keys.ArrowLeft + Keys.ArrowLeft + Keys.Backspace + "X");
+
+            Assert.Equal("AXcd", session.CopyTextByAccessibilityId("VehicleEditorNameBox"));
+        }
+    }
+
+    [Fact]
+    public void Vehicle_detail_editor_opens_combobox_with_arrow_key_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("DetailTabButton");
+            session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
+            session.ClickByAccessibilityId("EditVehicleButton");
+            session.ClickByAccessibilityId("VehicleEditorCategoryBox");
+
+            session.SendKeysByAccessibilityId("VehicleEditorCategoryBox", Keys.ArrowDown);
+
+            Assert.NotNull(session.WaitForElementByName("Motocykly", 6));
+        }
+    }
+
+    [Fact]
+    public void Vehicle_detail_save_returns_focus_to_primary_action_when_appium_is_available()
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        {
+            return;
+        }
+
+        var session = startedSession!;
+        using (session)
+        {
+            session.ClickByAccessibilityId("DetailTabButton");
+            session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
+            session.ClickByAccessibilityId("EditVehicleButton");
+            session.ReplaceTextByAccessibilityId("VehicleEditorNameBox", "Milena accessibility test");
+
+            session.ClickByAccessibilityId("SaveVehicleButton");
+            session.WaitForElementToDisappearByAccessibilityId("SaveVehicleButton");
+
+            Assert.Equal("EditVehicleButton", session.WaitForFocusedAutomationId(12, "EditVehicleButton"));
+
+            session.SendKeysToActiveElement(Keys.Tab);
+            Assert.Equal("DeleteVehicleButton", session.WaitForFocusedAutomationId(12, "DeleteVehicleButton"));
+
+            session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+            Assert.Equal("EditVehicleButton", session.WaitForFocusedAutomationId(12, "EditVehicleButton"));
+        }
+    }
+
+    [Fact]
     public void Closing_standalone_editor_with_pending_changes_prompts_for_discard_when_appium_is_available()
     {
         if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
