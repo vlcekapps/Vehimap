@@ -1211,6 +1211,87 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Menu_items_with_input_gestures_should_expose_accelerator_keys()
+    {
+        var menuItemPattern = new Regex(
+            "<MenuItem(?<attributes>[^>]*)>",
+            RegexOptions.Singleline);
+        var inputGesturePattern = new Regex(
+            "InputGesture=\"(?<gesture>[^\"]+)\"",
+            RegexOptions.Singleline);
+        var acceleratorKeyPattern = new Regex(
+            "AutomationProperties\\.AcceleratorKey=\"(?<accelerator>[^\"]+)\"",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in menuItemPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                var inputGesture = inputGesturePattern.Match(attributes);
+                if (!inputGesture.Success)
+                {
+                    continue;
+                }
+
+                var acceleratorKey = acceleratorKeyPattern.Match(attributes);
+                if (acceleratorKey.Success
+                    && string.Equals(
+                        inputGesture.Groups["gesture"].Value,
+                        acceleratorKey.Groups["accelerator"].Value,
+                        StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} MenuItem se zkratkou {inputGesture.Groups["gesture"].Value} postrádá shodný AcceleratorKey.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Menu položky s InputGesture musí zkratku vystavit i přes AutomationProperties.AcceleratorKey:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void Progress_bars_should_expose_name_id_and_help_text()
+    {
+        var progressBarPattern = new Regex(
+            "<ProgressBar(?<attributes>[^>]*)>",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in progressBarPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                var hasAutomationId = attributes.Contains("AutomationProperties.AutomationId=", StringComparison.Ordinal);
+                var hasAccessibleName = attributes.Contains("AutomationProperties.Name=", StringComparison.Ordinal);
+                var hasHelpText = attributes.Contains("AutomationProperties.HelpText=", StringComparison.Ordinal);
+                if (hasAutomationId && hasAccessibleName && hasHelpText)
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} ProgressBar postrádá "
+                    + (hasAutomationId ? string.Empty : "AutomationId ")
+                    + (hasAccessibleName ? string.Empty : "Name ")
+                    + (hasHelpText ? string.Empty : "HelpText"));
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Progress bary musí mít stabilní AutomationId, lidský název a doplňkovou nápovědu:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Desktop_windows_should_define_one_primary_accessible_heading()
     {
         var headingPattern = new Regex(

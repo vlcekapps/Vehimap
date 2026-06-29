@@ -87,6 +87,7 @@
                     Click="OnCalendarExportClick"
                     IsEnabled="{Binding CanUseDataActions}"
                     AutomationProperties.Name="Exportovat budoucí termíny do kalendáře"
+                    AutomationProperties.AcceleratorKey="Ctrl+E"
                     AutomationProperties.AutomationId="CalendarExportButton" />
           <MenuItem x:Name="ReloadButton"
                     Header="Načíst data znovu"
@@ -94,6 +95,7 @@
                     Click="OnReloadClick"
                     IsEnabled="{Binding CanUseDataActions}"
                     AutomationProperties.Name="Znovu načíst data"
+                    AutomationProperties.AcceleratorKey="F5"
                     AutomationProperties.AutomationId="ReloadButton" />
           <MenuItem x:Name="OpenDataFolderMenuItem"
                     Header="Otevřít datovou složku"
@@ -131,6 +133,7 @@
                     Click="OnCreateVehicleMenuClick"
                     IsEnabled="{Binding CanCreateVehicle}"
                     AutomationProperties.Name="Přidat nové vozidlo"
+                    AutomationProperties.AcceleratorKey="Ctrl+N"
                     AutomationProperties.AutomationId="CreateVehicleMenuItem" />
           <MenuItem x:Name="EditVehicleMenuItem"
                     Header="Upravit vybrané vozidlo"
@@ -138,6 +141,7 @@
                     Click="OnEditVehicleMenuClick"
                     IsEnabled="{Binding CanEditSelectedVehicle}"
                     AutomationProperties.Name="Upravit vybrané vozidlo"
+                    AutomationProperties.AcceleratorKey="Ctrl+U"
                     AutomationProperties.AutomationId="EditVehicleMenuItem" />
           <MenuItem x:Name="DeleteVehicleMenuItem"
                     Header="Odstranit vybrané vozidlo"
@@ -152,6 +156,7 @@
                     Click="OnOpenVehicleDetailMenuClick"
                     IsEnabled="{Binding CanOpenVehicleDetailWindow}"
                     AutomationProperties.Name="Otevřít detail vybraného vozidla"
+                    AutomationProperties.AcceleratorKey="Ctrl+O"
                     AutomationProperties.AutomationId="OpenVehicleDetailMenuItem" />
           <MenuItem x:Name="OpenHistoryMenuItem"
                     Header="Historie vybraného vozidla"
@@ -159,6 +164,7 @@
                     Click="OnOpenHistoryMenuClick"
                     IsEnabled="{Binding CanOpenHistoryWindow}"
                     AutomationProperties.Name="Otevřít historii vybraného vozidla"
+                    AutomationProperties.AcceleratorKey="Ctrl+H"
                     AutomationProperties.AutomationId="OpenHistoryMenuItem" />
           <MenuItem x:Name="OpenFuelMenuItem"
                     Header="Kilometry a tankování"
@@ -166,6 +172,7 @@
                     Click="OnOpenFuelMenuClick"
                     IsEnabled="{Binding CanOpenFuelWindow}"
                     AutomationProperties.Name="Otevřít tankování vybraného vozidla"
+                    AutomationProperties.AcceleratorKey="Ctrl+K"
                     AutomationProperties.AutomationId="OpenFuelMenuItem" />
           <MenuItem x:Name="OpenRecordsMenuItem"
                     Header="Pojištění a doklady"
@@ -173,6 +180,7 @@
                     Click="OnOpenRecordsMenuClick"
                     IsEnabled="{Binding CanOpenRecordWindow}"
                     AutomationProperties.Name="Otevřít doklady vybraného vozidla"
+                    AutomationProperties.AcceleratorKey="Ctrl+P"
                     AutomationProperties.AutomationId="OpenRecordsMenuItem" />
           <MenuItem x:Name="OpenRemindersMenuItem"
                     Header="Vlastní připomínky"
@@ -180,6 +188,7 @@
                     Click="OnOpenRemindersMenuClick"
                     IsEnabled="{Binding CanOpenReminderWindow}"
                     AutomationProperties.Name="Otevřít připomínky vybraného vozidla"
+                    AutomationProperties.AcceleratorKey="Ctrl+R"
                     AutomationProperties.AutomationId="OpenRemindersMenuItem" />
           <MenuItem x:Name="OpenMaintenanceMenuItem"
                     Header="Plán údržby"
@@ -187,6 +196,7 @@
                     Click="OnOpenMaintenanceMenuClick"
                     IsEnabled="{Binding CanOpenMaintenanceWindow}"
                     AutomationProperties.Name="Otevřít plán údržby vybraného vozidla"
+                    AutomationProperties.AcceleratorKey="Ctrl+M"
                     AutomationProperties.AutomationId="OpenMaintenanceMenuItem" />
           <MenuItem x:Name="OpenVehicleTimelineMenuItem"
                     Header="Časová osa vozidla"
@@ -243,6 +253,7 @@
                     InputGesture="Ctrl+Shift+F"
                     Click="OnOpenGlobalSearchMenuClick"
                     AutomationProperties.Name="Otevřít globální hledání"
+                    AutomationProperties.AcceleratorKey="Ctrl+Shift+F"
                     AutomationProperties.AutomationId="OpenGlobalSearchMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenAuditMenuItem"
@@ -255,6 +266,7 @@
                     InputGesture="Ctrl+D"
                     Click="OnOpenDashboardMenuClick"
                     AutomationProperties.Name="Otevřít dashboard"
+                    AutomationProperties.AcceleratorKey="Ctrl+D"
                     AutomationProperties.AutomationId="OpenDashboardMenuItem" />
           <MenuItem x:Name="OpenSmartAdvisorMenuItem"
                     Header="Chytrý poradce"
@@ -272,12 +284,14 @@
                     InputGesture="Ctrl+T"
                     Click="OnOpenUpcomingOverviewMenuClick"
                     AutomationProperties.Name="Otevřít blížící se termíny"
+                    AutomationProperties.AcceleratorKey="Ctrl+T"
                     AutomationProperties.AutomationId="OpenUpcomingOverviewMenuItem" />
           <MenuItem x:Name="OpenOverdueOverviewMenuItem"
                     Header="Propadlé termíny"
                     InputGesture="Ctrl+Shift+T"
                     Click="OnOpenOverdueOverviewMenuClick"
                     AutomationProperties.Name="Otevřít propadlé termíny"
+                    AutomationProperties.AcceleratorKey="Ctrl+Shift+T"
                     AutomationProperties.AutomationId="OpenOverdueOverviewMenuItem" />
           <Separator />
           <MenuItem x:Name="OverviewCalendarExportMenuItem"
@@ -285,6 +299,7 @@
                     InputGesture="Ctrl+E"
                     Click="OnCalendarExportClick"
                     AutomationProperties.Name="Exportovat termíny do kalendáře z nabídky Přehledy"
+                    AutomationProperties.AcceleratorKey="Ctrl+E"
                     AutomationProperties.AutomationId="OverviewCalendarExportMenuItem" />
         </MenuItem>
         <MenuItem x:Name="QuickActionsMenuRoot"

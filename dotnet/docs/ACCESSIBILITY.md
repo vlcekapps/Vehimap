@@ -29,6 +29,12 @@ for a future ACR/VPAT-style report if one is needed.
   explicit `Name` and note the reason in tests or comments.
 - Use `AutomationProperties.HelpText` only for extra instructions, never as the only
   label for a field.
+- If a menu item exposes a visible `InputGesture`, it must also expose the same shortcut
+  through `AutomationProperties.AcceleratorKey` so assistive technologies can announce
+  the accelerator consistently.
+- Non-interactive but important controls such as `ProgressBar` still need a stable
+  `AutomationId`, a human accessible name and short `HelpText` describing what is being
+  measured.
 - Use `AutomationProperties.LiveSetting` for status changes that should be announced:
   validation errors, save results, import/restore results, update progress and shell
   status. Use `Polite` for routine progress and save/status messages; reserve

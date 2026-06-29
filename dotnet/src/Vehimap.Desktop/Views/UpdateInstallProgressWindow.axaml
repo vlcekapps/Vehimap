@@ -35,7 +35,8 @@
                  Value="{Binding ProgressValue}"
                  IsIndeterminate="{Binding IsIndeterminate}"
                  AutomationProperties.Name="{Binding ProgressText}"
-                 AutomationProperties.AutomationId="UpdateInstallProgressBar" />
+                 AutomationProperties.AutomationId="UpdateInstallProgressBar"
+                 AutomationProperties.HelpText="Průběh stahování a ověřování aktualizace v procentech." />
     <TextBlock Grid.Row="3"
                Margin="0,8,0,0"
                Text="{Binding ProgressText}"
