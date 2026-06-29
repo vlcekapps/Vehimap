@@ -311,8 +311,9 @@ public sealed class WorkspaceCompositionTests
         viewModel.CreateVehicleCommand.Execute(null);
 
         Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
-        Assert.False(viewModel.VehicleDetailWorkspace.IsVehicleDetailVisible);
-        Assert.Equal("Nové vozidlo", viewModel.VehicleDetailWorkspace.VehiclePanelHeading);
+        Assert.True(viewModel.VehicleDetailWorkspace.IsVehicleDetailVisible);
+        Assert.Equal("Detail vozidla", viewModel.VehicleDetailWorkspace.VehiclePanelHeading);
+        Assert.Equal("Nové vozidlo", viewModel.VehicleDetailWorkspace.VehicleEditorHeading);
 
         viewModel.VehicleDetailWorkspace.VehicleEditorStatus = "Editor má vlastní stav.";
         viewModel.VehicleDetailWorkspace.VehicleEditorName = "Božena";
@@ -357,6 +358,7 @@ public sealed class WorkspaceCompositionTests
         Assert.False(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
         Assert.True(viewModel.VehicleDetailWorkspace.IsVehicleDetailVisible);
         Assert.Equal("Detail vozidla", viewModel.VehicleDetailWorkspace.VehiclePanelHeading);
+        Assert.Equal("Editor vozidla", viewModel.VehicleDetailWorkspace.VehicleEditorHeading);
     }
 
     [Fact]

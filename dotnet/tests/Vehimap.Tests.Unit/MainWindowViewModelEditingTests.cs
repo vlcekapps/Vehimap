@@ -805,7 +805,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
                 && item.TimingDrive == "Řemen"
                 && item.Transmission == "Manuální");
         Assert.Equal("Nové vozidlo bylo uloženo.", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
-        Assert.Equal(DesktopFocusTarget.VehicleDetailPrimaryAction, requestedTargets.Last());
+        Assert.Equal(DesktopFocusTarget.VehicleList, requestedTargets.Last());
         Assert.True(viewModel.TryConsumePendingVehicleStarterBundleOffer(viewModel.SelectedVehicle.Id));
     }
 
@@ -872,7 +872,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Řetěz", savedMeta.TimingDrive);
         Assert.Equal("Automatická", savedMeta.Transmission);
         Assert.Equal("Vozidlo bylo upraveno.", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
-        Assert.Equal(DesktopFocusTarget.VehicleDetailPrimaryAction, requestedTargets.Last());
+        Assert.Equal(DesktopFocusTarget.VehicleList, requestedTargets.Last());
     }
 
     [Fact]

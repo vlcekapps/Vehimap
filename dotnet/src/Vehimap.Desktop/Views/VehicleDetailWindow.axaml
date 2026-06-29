@@ -12,7 +12,7 @@
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="Detail vozidla"
         AutomationProperties.AutomationId="VehicleDetailWindow"
-        AutomationProperties.HelpText="Samostatné okno pro detail a úpravu vybraného vozidla. Escape okno zavře.">
+        AutomationProperties.HelpText="Samostatné okno pro detail vybraného vozidla a související evidence. Escape okno zavře.">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">

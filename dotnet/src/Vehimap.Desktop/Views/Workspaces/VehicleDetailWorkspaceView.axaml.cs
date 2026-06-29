@@ -18,80 +18,22 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
 
     protected override DesktopFocusTarget? GetDefaultFocusTarget()
     {
-        if (ViewModel?.IsEditingVehicle == true)
-        {
-            return DesktopFocusTarget.VehicleEditorName;
-        }
-
         return AllowEditing ? DesktopFocusTarget.VehicleDetailPrimaryAction : null;
     }
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.VehicleDetailPrimaryAction
-            or DesktopFocusTarget.VehicleEditorName
-            or DesktopFocusTarget.VehicleEditorCategory
-            or DesktopFocusTarget.VehicleEditorMakeModel
-            or DesktopFocusTarget.VehicleEditorYear
-            or DesktopFocusTarget.VehicleEditorLastTk
-            or DesktopFocusTarget.VehicleEditorNextTk
-            or DesktopFocusTarget.VehicleEditorGreenCardFrom
-            or DesktopFocusTarget.VehicleEditorGreenCardTo
-            or DesktopFocusTarget.VehicleEditorCancel;
+        target is DesktopFocusTarget.VehicleDetailPrimaryAction;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
             DesktopFocusTarget.VehicleDetailPrimaryAction => ResolvePrimaryAction(),
-            DesktopFocusTarget.VehicleEditorName => this.FindControl<TextBox>("VehicleEditorNameBox"),
-            DesktopFocusTarget.VehicleEditorCategory => this.FindControl<ComboBox>("VehicleEditorCategoryBox"),
-            DesktopFocusTarget.VehicleEditorMakeModel => this.FindControl<TextBox>("VehicleEditorMakeModelBox"),
-            DesktopFocusTarget.VehicleEditorYear => this.FindControl<TextBox>("VehicleEditorYearBox"),
-            DesktopFocusTarget.VehicleEditorLastTk => this.FindControl<TextBox>("VehicleEditorLastTkBox"),
-            DesktopFocusTarget.VehicleEditorNextTk => this.FindControl<TextBox>("VehicleEditorNextTkBox"),
-            DesktopFocusTarget.VehicleEditorGreenCardFrom => this.FindControl<TextBox>("VehicleEditorGreenCardFromBox"),
-            DesktopFocusTarget.VehicleEditorGreenCardTo => this.FindControl<TextBox>("VehicleEditorGreenCardToBox"),
-            DesktopFocusTarget.VehicleEditorCancel => this.FindControl<Button>("CancelVehicleButton"),
             _ => null
         };
 
     protected override void OnAllowEditingChanged()
     {
         ApplyHostMode();
-    }
-
-    private async void OnSaveVehicleClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        if (ViewModel is null)
-        {
-            return;
-        }
-
-        await ViewModel.SaveVehicleCommand.ExecuteAsync(null);
-        if (ViewModel.IsEditingVehicle)
-        {
-            return;
-        }
-
-        if (!ViewModel.TryConsumePendingVehicleStarterBundleOffer())
-        {
-            FocusPrimaryActionAfterLayout();
-            return;
-        }
-
-        try
-        {
-            await OpenVehicleStarterBundleDialogAsync(postCreateOffer: true);
-        }
-        catch (Exception ex)
-        {
-            ViewModel.SetVehicleStarterBundleStatus($"Nové vozidlo bylo uloženo, ale navazující balíček se nepodařilo otevřít: {ex.Message}");
-            FocusPrimaryActionAfterLayout();
-        }
-    }
-
-    private void OnCancelVehicleClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-    {
-        FocusPrimaryActionAfterLayout();
     }
 
     private async void OnOpenVehicleStarterBundleClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -240,11 +182,6 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         if (this.FindControl<Control>("VehicleActionPanel") is { } actionPanel)
         {
             actionPanel.IsVisible = AllowEditing;
-        }
-
-        if (this.FindControl<Control>("VehicleEditorHost") is { } editorHost)
-        {
-            editorHost.IsVisible = AllowEditing;
         }
     }
 }

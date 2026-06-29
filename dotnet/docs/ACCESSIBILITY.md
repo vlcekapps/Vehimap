@@ -82,6 +82,10 @@ for a future ACR/VPAT-style report if one is needed.
 - Keyboard access must work without a mouse. `Tab` moves forward, `Shift+Tab` moves
   backward, `Alt`/`F10` opens and closes the main menu, and form text boxes keep normal
   editing navigation.
+- Prefer modal dialog editors for complex forms that can otherwise mix with unrelated
+  host-window actions. A dialog editor must have one primary heading, first focus on the
+  first logical field, `Escape`/`Zrusit` for discard, a live status region and an
+  explicit return-focus target chosen by the workflow that opened it.
 - Text fields must stay standard Avalonia `TextBox` controls. Until Avalonia exposes
   enough native UIA text/caret information for our NVDA target, see
   [AvaloniaUI/Avalonia#9770](https://github.com/AvaloniaUI/Avalonia/issues/9770), the
@@ -110,6 +114,14 @@ Avalonia shell. New entries require a regression test.
   text fallback` live region for caret context. The helper is registered on every
   top-level window that has keyboard shortcuts and resolves controls through logical,
   templated and visual tree parents before a global shortcut can handle the key.
+- `EditorDialogFocusHelpers.cs`: shared dialog-editor boundary behavior for first
+  focus, `Escape` discard and `Shift+Tab` from the first field to the cancel button.
+  This exists so vehicle editing can leave the read-only detail screen without losing
+  the predictable keyboard loop; future editor dialogs should reuse the helper instead
+  of adding one-off tab traps.
+- `VehicleEditorWindow.axaml.cs`: `Ctrl+S` save shortcut and validation-aware close
+  behavior for the first migrated dialog editor. It keeps invalid forms open and lets
+  the host restore focus to the origin after successful save or cancel.
 - `ModalWorkspaceWindowHelpers.cs` and app-level dialogs: `Escape` closes modal windows
   only when it is safe for the current workflow.
 - `VehicleStarterBundleWindow.axaml.cs`: list keyboard shortcuts for selecting/clearing

@@ -52,6 +52,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - zobrazit v Avalonia shellu seznam vozidel, detail vybraneho vozidla, historii, tankovani, doklady, pripominky, plan udrzby, auditni frontu, naklady a casovou osu z realnych dat po legacy migraci nebo primo ze SQLite
 - v detailu vozidla zobrazit stav, stitky, posledni historicke zaznamy, posledni znamy tachometr a samostatne stavove souhrny historie, tankovani, pripominek, dokladu a udrzby stejne jako rychla kontrolni plocha v AHK verzi
 - prejit z detailu vozidla pres pristupny blok `Souvisejici evidence` rovnou do historie, tankovani, pripominek, udrzby, dokladu, casove osy, servisni knizky nebo nakladu vybraneho vozidla
+- vytvaret a upravovat vozidla v samostatnem modalnim `Editoru vozidla`; detail vozidla zustava cteci pracovni plocha a dialog ma vlastni fokus, `Esc`/`Zrusit`, live status a navrat fokusu na misto, odkud byl otevreny
 - vyhledavat napric vozidly, historii, tankovanim, doklady, pripominkami a planem udrzby v nove karte `Hledani`, vcetne stitku, stavu, servisniho profilu, timeline statusu a identity vozidla u souvisejicich evidenci
 - zobrazit flotilovy `Prehled terminu` a `Propadle terminy` nad stejnymi daty jako AHK verze a z obou pohledu skocit na spravne vozidlo nebo evidenci
 - v `Blizicich se terminech` volitelne zobrazit i vozidla bez zelene karty a datove nedostatky z auditu; volby se ukladaji do nastaveni datove sady

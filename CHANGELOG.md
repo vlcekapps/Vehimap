@@ -12,7 +12,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Pokud uživatel spustil první SQLite nightly, která po migraci nechala v živé datové složce původní TSV/INI soubory, další start je bezpečně odloží do nové migrační zálohy bez opětovného importu a bez přesunu aktivních `data/attachments`.
 - C# Avalonia editory mají zpřesněné keyboard-first chování: globální zkratky už nepřebírají standardní navigaci v textových polích, rozbalovací seznamy lze otevřít šipkou nahoru/dolů bez `Alt+Down` a po uložení vozidla se fokus vrací na první logickou akci `Upravit vozidlo`.
 - Oprava editorových a11y regresí je nově zapojená jako sdílená top-level keyboard guard vrstva v hlavním okně i modalních dialozích; rozpoznávání `TextBox`/`ComboBox` prochází logical, templated i visual tree a po uložení vozidla se primární akce doostří až po přepočtu layoutu.
-- Editor vozidla už nepoužívá ruční `Shift+Tab` past z pole `Název vozidla`; návrat na `Zrušit` vychází z přirozeného tab orderu a po `Zrušit` se fokus stejně jako po uložení vrací na první logickou akci detailu.
+- Editor vozidla je prvním dialogovým editorem: `Přidat vozidlo` a `Upravit vozidlo` se otevírají v modalním okně s prvním fokusem na `Název vozidla`, `Shift+Tab` z prvního pole vrací na `Zrušit`, `Esc` zahodí změny a po zavření se fokus vrací na původní pracovní místo.
+- Editor vozidla už nemíchá formulář s tlačítky detailu vozidla; řízený `Shift+Tab` návrat na `Zrušit` je nově zdokumentovaný sdílený dialogový pattern místo skryté inline pasti.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.

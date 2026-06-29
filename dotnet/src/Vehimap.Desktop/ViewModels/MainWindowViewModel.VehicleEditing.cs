@@ -12,6 +12,9 @@ public sealed partial class MainWindowViewModel
     private readonly VehicleStarterBundleService _vehicleStarterBundleService = new();
     private string? _editingVehicleId;
     private string? _pendingVehicleStarterBundleOfferVehicleId;
+    private DesktopFocusTarget? _nextVehicleEditorReturnFocusTarget;
+
+    internal event EventHandler<VehicleEditorDialogRequest>? VehicleEditorDialogRequested;
 
     public bool CanCreateVehicle => !HasPendingEdits;
 
@@ -67,8 +70,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorTransmission = string.Empty;
         VehicleDetailWorkspace.VehicleEditorStatus = "Vyplňte základní údaje o vozidle a uložte je.";
         SetVehicleEditingState(true);
-        SelectedVehicleTabIndex = DetailTabIndex;
-        RequestFocus(DesktopFocusTarget.VehicleEditorName);
+        RequestVehicleEditorDialog();
     }
 
     [RelayCommand(CanExecute = nameof(CanEditSelectedVehicle))]
@@ -101,8 +103,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorTransmission = LegacyVehicleValueNormalization.NormalizeVehicleTransmission(meta?.Transmission);
         VehicleDetailWorkspace.VehicleEditorStatus = "Upravte údaje vozidla a uložte změny.";
         SetVehicleEditingState(true);
-        SelectedVehicleTabIndex = DetailTabIndex;
-        RequestFocus(DesktopFocusTarget.VehicleEditorName);
+        RequestVehicleEditorDialog();
     }
 
     [RelayCommand(CanExecute = nameof(CanDeleteSelectedVehicle))]
@@ -289,13 +290,24 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorStatus = wasNew
             ? "Nové vozidlo bylo uloženo."
             : "Vozidlo bylo upraveno.";
-        RequestFocus(DesktopFocusTarget.VehicleDetailPrimaryAction);
     }
 
     [RelayCommand(CanExecute = nameof(CanCancelVehicleEdit))]
     private void CancelVehicleEdit()
     {
         CancelVehicleEditCore(clearStatus: true);
+    }
+
+    internal void SetNextVehicleEditorReturnFocusTarget(DesktopFocusTarget target)
+    {
+        _nextVehicleEditorReturnFocusTarget = target;
+    }
+
+    private void RequestVehicleEditorDialog()
+    {
+        var returnFocusTarget = _nextVehicleEditorReturnFocusTarget ?? DesktopFocusTarget.VehicleDetailPrimaryAction;
+        _nextVehicleEditorReturnFocusTarget = null;
+        VehicleEditorDialogRequested?.Invoke(this, new VehicleEditorDialogRequest(returnFocusTarget));
     }
 
     internal VehicleStarterBundlePreview BuildVehicleStarterBundlePreview(string vehicleId) =>

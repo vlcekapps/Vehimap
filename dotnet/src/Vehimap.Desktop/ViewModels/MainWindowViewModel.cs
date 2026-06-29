@@ -970,6 +970,28 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     internal async Task<bool> EditAuditItemAsync(AuditItemViewModel? item)
     {
+        if (item is null)
+        {
+            return false;
+        }
+
+        if (IsVehicleAuditTarget(item))
+        {
+            if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("upravit vozidlo z auditu").ConfigureAwait(true))
+            {
+                return false;
+            }
+
+            if (!SelectVehicleById(item.VehicleId))
+            {
+                return false;
+            }
+
+            SetNextVehicleEditorReturnFocusTarget(DesktopFocusTarget.AuditList);
+            ExecuteWorkspaceShortcut(EditSelectedVehicleCommand);
+            return true;
+        }
+
         if (!await OpenAuditItemAsync(item).ConfigureAwait(true))
         {
             return false;
@@ -991,7 +1013,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return false;
         }
 
-        SelectVehicleAndOpenEntity(item.VehicleId, "Vozidlo", item.VehicleId);
+        if (!SelectVehicleById(item.VehicleId))
+        {
+            return false;
+        }
+
+        SetNextVehicleEditorReturnFocusTarget(DesktopFocusTarget.CostList);
         ExecuteWorkspaceShortcut(EditSelectedVehicleCommand);
         return true;
     }
@@ -1027,7 +1054,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        SelectVehicleAndOpenEntity(vehicleId, "Vozidlo", vehicleId);
+        if (!SelectVehicleById(vehicleId))
+        {
+            return;
+        }
+
+        SetNextVehicleEditorReturnFocusTarget(GetDashboardVehicleReturnFocusTarget(vehicleId));
         ExecuteWorkspaceShortcut(EditSelectedVehicleCommand);
     }
 
@@ -1587,6 +1619,45 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         var plan = _navigationCoordinator.BuildForEntity(vehicleId, entityKind, entityId);
         ApplyNavigationPlan(plan);
+    }
+
+    private bool SelectVehicleById(string vehicleId)
+    {
+        if (string.IsNullOrWhiteSpace(vehicleId))
+        {
+            return false;
+        }
+
+        var vehicle = Vehicles.FirstOrDefault(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal));
+        if (vehicle is null)
+        {
+            return false;
+        }
+
+        SelectedVehicle = vehicle;
+        return true;
+    }
+
+    private DesktopFocusTarget GetDashboardVehicleReturnFocusTarget(string vehicleId)
+    {
+        if (string.Equals(CostWorkspace.SelectedDashboardCostVehicle?.VehicleId, vehicleId, StringComparison.Ordinal))
+        {
+            return DesktopFocusTarget.DashboardCostList;
+        }
+
+        if (string.Equals(DashboardWorkspace.SelectedDashboardTimelineItem?.VehicleId, vehicleId, StringComparison.Ordinal))
+        {
+            return DesktopFocusTarget.DashboardTimelineList;
+        }
+
+        return DesktopFocusTarget.DashboardAuditList;
+    }
+
+    private static bool IsVehicleAuditTarget(AuditItemViewModel item)
+    {
+        return string.IsNullOrWhiteSpace(item.EntityKind)
+            || string.Equals(item.EntityKind, "Vozidlo", StringComparison.Ordinal)
+            || string.Equals(item.EntityId, item.VehicleId, StringComparison.Ordinal);
     }
 
     private void ApplyNavigationPlan(DesktopNavigationPlan plan, VehicleTimelineItemViewModel? timelineSelection = null)

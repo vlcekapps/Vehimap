@@ -9,7 +9,7 @@ public partial class VehicleDetailWindow : Window
     public VehicleDetailWindow()
     {
         AvaloniaXamlLoader.Load(this);
-        ModalWorkspaceWindowHelpers.RegisterWorkspaceLifecycle(this, "VehicleDetailWorkspaceHost", "zavřít editor vozidla");
+        ModalWorkspaceWindowHelpers.RegisterWorkspaceLifecycle(this, "VehicleDetailWorkspaceHost");
     }
 
     private void OnCloseClick(object? sender, RoutedEventArgs e) => Close();

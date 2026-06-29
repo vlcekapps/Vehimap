@@ -12,6 +12,7 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 {
     private bool isEditingVehicle;
     private string vehiclePanelHeading = "Detail vozidla";
+    private string vehicleEditorHeading = "Editor vozidla";
     private string selectedVehicleHeading = "Nevybrané vozidlo";
     private string selectedVehicleOverview = "Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.";
     private string selectedVehicleDates = string.Empty;
@@ -48,6 +49,12 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     {
         get => vehiclePanelHeading;
         private set => SetProperty(ref vehiclePanelHeading, value);
+    }
+
+    public string VehicleEditorHeading
+    {
+        get => vehicleEditorHeading;
+        private set => SetProperty(ref vehicleEditorHeading, value);
     }
 
     public string SelectedVehicleHeading
@@ -102,7 +109,7 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
         }
     }
 
-    public bool IsVehicleDetailVisible => !IsEditingVehicle;
+    public bool IsVehicleDetailVisible => true;
 
     public string VehicleEditorStatus
     {
@@ -285,9 +292,10 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 
     internal void SetVehicleEditingState(bool isEditing, bool isNewVehicle)
     {
-        VehiclePanelHeading = isEditing
+        VehiclePanelHeading = "Detail vozidla";
+        VehicleEditorHeading = isEditing
             ? (isNewVehicle ? "Nové vozidlo" : "Upravit vozidlo")
-            : "Detail vozidla";
+            : "Editor vozidla";
         IsEditingVehicle = isEditing;
         NotifyVehicleRelatedWorkspaceStateChanged();
     }

@@ -62,6 +62,7 @@ public partial class MainWindow : Window
     private bool _initialFocusScheduled;
     private int _initialFocusAttempts;
     private bool _syncingVehicleSelection;
+    private bool _vehicleEditorDialogOpen;
     private Control? _lastNonMenuFocusTarget;
 
     public Func<Task>? ExitApplicationRequested { get; set; }
@@ -95,6 +96,7 @@ public partial class MainWindow : Window
         if (_viewModel is not null)
         {
             _viewModel.FocusRequested -= OnFocusRequested;
+            _viewModel.VehicleEditorDialogRequested -= OnVehicleEditorDialogRequested;
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _viewModel.ConfirmPendingEditsHandler = null;
             _viewModel.ConfirmVehicleDeleteHandler = null;
@@ -105,6 +107,7 @@ public partial class MainWindow : Window
         {
             var viewModel = _viewModel;
             viewModel.FocusRequested += OnFocusRequested;
+            viewModel.VehicleEditorDialogRequested += OnVehicleEditorDialogRequested;
             viewModel.PropertyChanged += OnViewModelPropertyChanged;
             viewModel.ConfirmPendingEditsHandler = actionDescription =>
                 viewModel.AppShellController.ConfirmDiscardPendingChangesAsync(this, viewModel, actionDescription);
@@ -120,6 +123,11 @@ public partial class MainWindow : Window
         {
             SyncVehicleSelectionFromViewModel();
         }
+    }
+
+    private async void OnVehicleEditorDialogRequested(object? sender, VehicleEditorDialogRequest request)
+    {
+        await ShowVehicleEditorDialogAsync(request.ReturnFocusTarget).ConfigureAwait(true);
     }
 
     private void OnFocusRequested(DesktopFocusTarget target)
@@ -259,7 +267,7 @@ public partial class MainWindow : Window
                 return;
             }
 
-            _ = OpenVehicleDetailWindowAsync(startEdit: true);
+            OpenVehicleEditorFromCommand(_viewModel?.EditSelectedVehicleCommand, DesktopFocusTarget.VehicleDetailPrimaryAction);
             e.Handled = true;
             return;
         }
@@ -279,7 +287,7 @@ public partial class MainWindow : Window
                     break;
                 }
 
-                _ = OpenVehicleDetailWindowAsync(startCreate: true);
+                OpenVehicleEditorFromCommand(_viewModel?.CreateVehicleCommand, DesktopFocusTarget.VehicleList);
                 e.Handled = true;
                 break;
             case Key.U:
@@ -290,7 +298,7 @@ public partial class MainWindow : Window
                     break;
                 }
 
-                _ = OpenVehicleDetailWindowAsync(startEdit: true);
+                OpenVehicleEditorFromCommand(_viewModel?.EditSelectedVehicleCommand, GetShellVehicleEditReturnFocusTarget());
                 e.Handled = true;
                 break;
             case Key.S:
@@ -681,14 +689,14 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
-    private async void OnCreateVehicleMenuClick(object? sender, RoutedEventArgs e)
+    private void OnCreateVehicleMenuClick(object? sender, RoutedEventArgs e)
     {
-        await OpenVehicleDetailWindowAsync(startCreate: true);
+        OpenVehicleEditorFromCommand(_viewModel?.CreateVehicleCommand, DesktopFocusTarget.VehicleList);
     }
 
-    private async void OnEditVehicleMenuClick(object? sender, RoutedEventArgs e)
+    private void OnEditVehicleMenuClick(object? sender, RoutedEventArgs e)
     {
-        await OpenVehicleDetailWindowAsync(startEdit: true);
+        OpenVehicleEditorFromCommand(_viewModel?.EditSelectedVehicleCommand, DesktopFocusTarget.VehicleList);
     }
 
     private async void OnOpenVehicleDetailMenuClick(object? sender, RoutedEventArgs e)
@@ -1151,6 +1159,11 @@ public partial class MainWindow : Window
                     return false;
                 }
 
+                if (_viewModel.VehicleDetailWorkspace.IsEditingVehicle)
+                {
+                    return true;
+                }
+
                 return await OpenActiveEditorWindowAsync().ConfigureAwait(true);
         }
     }
@@ -1175,7 +1188,7 @@ public partial class MainWindow : Window
 
         if (_viewModel.VehicleDetailWorkspace.IsEditingVehicle)
         {
-            await OpenVehicleDetailWindowAsync(allowActiveEditor: true).ConfigureAwait(true);
+            await ShowVehicleEditorDialogAsync(GetShellVehicleEditReturnFocusTarget()).ConfigureAwait(true);
             return true;
         }
 
@@ -1210,6 +1223,89 @@ public partial class MainWindow : Window
         }
 
         return false;
+    }
+
+    private void OpenVehicleEditorFromCommand(ICommand? command, DesktopFocusTarget returnFocusTarget)
+    {
+        if (_viewModel is null || command?.CanExecute(null) != true)
+        {
+            return;
+        }
+
+        _viewModel.SetNextVehicleEditorReturnFocusTarget(returnFocusTarget);
+        command.Execute(null);
+    }
+
+    private DesktopFocusTarget GetShellVehicleEditReturnFocusTarget() =>
+        _viewModel?.SelectedVehicleTabIndex == DetailTabIndex
+            ? DesktopFocusTarget.VehicleDetailPrimaryAction
+            : DesktopFocusTarget.VehicleList;
+
+    private async Task ShowVehicleEditorDialogAsync(DesktopFocusTarget returnFocusTarget)
+    {
+        var viewModel = _viewModel;
+        if (viewModel is null || _vehicleEditorDialogOpen)
+        {
+            return;
+        }
+
+        _vehicleEditorDialogOpen = true;
+        try
+        {
+            var dialog = new VehicleEditorWindow
+            {
+                DataContext = viewModel.VehicleDetailWorkspace
+            };
+
+            var saved = await dialog.ShowDialog<bool?>(this).ConfigureAwait(true) == true;
+            if (saved)
+            {
+                await OfferPendingVehicleStarterBundleAsync().ConfigureAwait(true);
+            }
+        }
+        finally
+        {
+            _vehicleEditorDialogOpen = false;
+            RequestFocus(viewModel.HasPendingEdits ? viewModel.GetPendingEditFocusTarget() : returnFocusTarget);
+        }
+    }
+
+    private async Task OfferPendingVehicleStarterBundleAsync()
+    {
+        if (_viewModel is null || !_viewModel.VehicleDetailWorkspace.TryConsumePendingVehicleStarterBundleOffer())
+        {
+            return;
+        }
+
+        try
+        {
+            var workspace = _viewModel.VehicleDetailWorkspace;
+            var preview = workspace.BuildVehicleStarterBundlePreview();
+            if (preview.TotalMissingCount == 0)
+            {
+                workspace.SetVehicleStarterBundleStatus("Nové vozidlo bylo uloženo. Balíček pro vozidlo už neměl žádné nové položky.");
+                return;
+            }
+
+            var dialog = new VehicleStarterBundleWindow
+            {
+                DataContext = new VehicleStarterBundleDialogViewModel(preview)
+            };
+
+            var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(this).ConfigureAwait(true);
+            if (result is null)
+            {
+                return;
+            }
+
+            var message = await workspace.ApplyVehicleStarterBundleAsync(result.SelectedItems).ConfigureAwait(true);
+            workspace.SetVehicleStarterBundleStatus(message);
+        }
+        catch (Exception ex)
+        {
+            _viewModel.VehicleDetailWorkspace.SetVehicleStarterBundleStatus(
+                $"Nové vozidlo bylo uloženo, ale navazující balíček se nepodařilo otevřít: {ex.Message}");
+        }
     }
 
     private async Task ShowWorkspaceWindowAsync<TWindow>(
@@ -1249,21 +1345,13 @@ public partial class MainWindow : Window
 
         if (startCreate)
         {
-            if (_viewModel.CreateVehicleCommand.CanExecute(null) != true)
-            {
-                return;
-            }
-
-            _viewModel.CreateVehicleCommand.Execute(null);
+            OpenVehicleEditorFromCommand(_viewModel.CreateVehicleCommand, DesktopFocusTarget.VehicleList);
+            return;
         }
         else if (startEdit)
         {
-            if (_viewModel.EditSelectedVehicleCommand.CanExecute(null) != true)
-            {
-                return;
-            }
-
-            _viewModel.EditSelectedVehicleCommand.Execute(null);
+            OpenVehicleEditorFromCommand(_viewModel.EditSelectedVehicleCommand, GetShellVehicleEditReturnFocusTarget());
+            return;
         }
         else
         {

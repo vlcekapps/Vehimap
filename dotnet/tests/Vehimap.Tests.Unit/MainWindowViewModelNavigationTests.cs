@@ -604,7 +604,9 @@ public sealed class MainWindowViewModelNavigationTests
     {
         var viewModel = CreateViewModel();
         var requestedTargets = new List<DesktopFocusTarget>();
+        var editorRequests = new List<VehicleEditorDialogRequest>();
         viewModel.FocusRequested += requestedTargets.Add;
+        viewModel.VehicleEditorDialogRequested += (_, request) => editorRequests.Add(request);
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Dashboard;
         viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostWorkspace.CostVehicles.Single(item => item.VehicleId == "veh_1");
@@ -633,8 +635,10 @@ public sealed class MainWindowViewModelNavigationTests
 
         Assert.True(editHandled);
         Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
-        Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
-        Assert.Contains(DesktopFocusTarget.VehicleEditorName, requestedTargets);
+        Assert.Equal(DesktopTabIndexes.Dashboard, viewModel.SelectedVehicleTabIndex);
+        var editorRequest = Assert.Single(editorRequests);
+        Assert.Equal(DesktopFocusTarget.DashboardCostList, editorRequest.ReturnFocusTarget);
+        Assert.DoesNotContain(DesktopFocusTarget.VehicleEditorName, requestedTargets);
     }
 
     [Fact]
@@ -1077,7 +1081,9 @@ public sealed class MainWindowViewModelNavigationTests
     {
         var viewModel = CreateViewModel();
         var requestedTargets = new List<DesktopFocusTarget>();
+        var editorRequests = new List<VehicleEditorDialogRequest>();
         viewModel.FocusRequested += requestedTargets.Add;
+        viewModel.VehicleEditorDialogRequested += (_, request) => editorRequests.Add(request);
 
         viewModel.SelectedVehicleTabIndex = DesktopTabIndexes.Cost;
         viewModel.CostWorkspace.SelectedDashboardCostVehicle = viewModel.CostWorkspace.CostVehicles.Single(item => item.VehicleId == "veh_1");
@@ -1100,8 +1106,10 @@ public sealed class MainWindowViewModelNavigationTests
 
         Assert.True(editHandled);
         Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
-        Assert.Equal(DesktopTabIndexes.Detail, viewModel.SelectedVehicleTabIndex);
-        Assert.Contains(DesktopFocusTarget.VehicleEditorName, requestedTargets);
+        Assert.Equal(DesktopTabIndexes.Cost, viewModel.SelectedVehicleTabIndex);
+        var editorRequest = Assert.Single(editorRequests);
+        Assert.Equal(DesktopFocusTarget.CostList, editorRequest.ReturnFocusTarget);
+        Assert.DoesNotContain(DesktopFocusTarget.VehicleEditorName, requestedTargets);
     }
 
     [Fact]
