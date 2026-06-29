@@ -28,6 +28,9 @@ for a future ACR/VPAT-style report if one is needed.
   or `AutomationProperties.Name`. `AutomationProperties.LabeledBy` is allowed for
   targeted experiments, but it is not the mandatory baseline yet because the local
   Avalonia 12.0.4 UIA documentation marks `LabeledByPropertyId` as not implemented.
+- Any `TextBlock` with an `AutomationProperties.AutomationId` is considered important
+  content or diagnostics and must also expose an explicit `AutomationProperties.Name`.
+  Do not rely on implicit text extraction for support-oriented summaries or details.
 - For label + field forms, keep the visible label and accessible name synchronized. Use
   `LabeledBy` where it is stable in our target Avalonia version; otherwise keep the
   explicit `Name` and note the reason in tests or comments.

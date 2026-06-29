@@ -38,6 +38,7 @@
                     AutomationProperties.AutomationId="DataStoreHealthDetailsScrollViewer">
         <TextBlock Text="{Binding Details}"
                    TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding Details}"
                    AutomationProperties.AutomationId="DataStoreHealthDetailsText" />
       </ScrollViewer>
     </Border>

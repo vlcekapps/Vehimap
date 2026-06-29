@@ -1178,6 +1178,35 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Important_text_blocks_should_have_explicit_accessible_names()
+    {
+        var textBlockPattern = new Regex(
+            "<TextBlock(?<attributes>[\\s\\S]*?AutomationProperties\\.AutomationId=\"(?<id>[^\"]+)\"[\\s\\S]*?)(?:/>|>)",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in textBlockPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                if (attributes.Contains("AutomationProperties.Name=", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} TextBlock {match.Groups["id"].Value} má AutomationId bez AutomationProperties.Name.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "TextBlock s AutomationId je důležitý obsah nebo diagnostika a musí mít explicitní accessible Name:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Placeholder_fields_should_expose_accessible_help_text()
     {
         var placeholderControlPattern = new Regex(

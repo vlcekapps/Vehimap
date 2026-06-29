@@ -25,6 +25,7 @@
                Margin="0,10,0,0"
                Text="{Binding Summary}"
                TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding Summary}"
                AutomationProperties.AutomationId="UpdateSummaryText" />
     <Border Grid.Row="2"
             Margin="0,18,0,0"
@@ -37,6 +38,7 @@
                     AutomationProperties.AutomationId="UpdateDetailsScrollViewer">
         <TextBlock Text="{Binding Details}"
                    TextWrapping="Wrap"
+                   AutomationProperties.Name="{Binding Details}"
                    AutomationProperties.AutomationId="UpdateDetailsText" />
       </ScrollViewer>
     </Border>
