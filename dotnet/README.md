@@ -309,6 +309,8 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetN
 
 Podepisovani Windows instalatoru se nastavuje bez Inno GUI pres promennou prostredi `VEHIMAP_INNO_SIGNTOOL_COMMAND`. Hodnota musi byt Inno sign tool command s placeholderem `$f`, napr. volani `signtool.exe sign ... $f`; pokud neni nastavena, build zustane nepodepsany a dal projde bez certifikatu.
 
+Windows instalator pro C# vetev nabizi anglictinu a cestinu. Zvoleny jazyk se do aplikace predava jednorazovym souborem `installer-preferences.json` v datove slozce kanalu, nikoli pres legacy `settings.ini`. Pri prvnim startu Vehimap doplni jen chybejici hodnoty do SQLite: cestina pouzije kilometry, litry, desetinou carku a zadny oddelovac tisicu; anglictina pouzije mile, US galony, desetinnou tecku a carku pro tisice. Existujici uzivatelske nastaveni se neprepisuje, pouze rucni zmena jazyka v aplikaci smi zmenit `app/language`.
+
 ## Promotion tok nightly -> beta -> stable
 
 Bezny vyvoj jde pres tri oddelene kanaly:

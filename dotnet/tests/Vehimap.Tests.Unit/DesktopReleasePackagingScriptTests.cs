@@ -182,6 +182,14 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         Assert.Contains("CloseApplications=yes", template, StringComparison.Ordinal);
         Assert.Contains("RestartApplications=no", template, StringComparison.Ordinal);
         Assert.Contains("{{SIGNING_DIRECTIVES}}", template, StringComparison.Ordinal);
+        Assert.Contains("[Languages]", template, StringComparison.Ordinal);
+        Assert.Contains("Name: \"english\"; MessagesFile: \"compiler:Default.isl\"", template, StringComparison.Ordinal);
+        Assert.Contains("Name: \"czech\"; MessagesFile: \"compiler:Languages\\Czech.isl\"", template, StringComparison.Ordinal);
+        Assert.Contains("installer-preferences.json", template, StringComparison.Ordinal);
+        Assert.Contains("{{DATA_FOLDER}}", template, StringComparison.Ordinal);
+        Assert.Contains("{\"language\":\"cs-CZ\"}", template, StringComparison.Ordinal);
+        Assert.Contains("{\"language\":\"en-US\"}", template, StringComparison.Ordinal);
+        Assert.DoesNotContain("settings.ini", template, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("[Run]", template, StringComparison.Ordinal);
         Assert.Contains("Filename: \"{app}\\Vehimap.Desktop.exe\"", template, StringComparison.Ordinal);
         Assert.Contains("Flags: nowait postinstall skipifsilent", template, StringComparison.Ordinal);
@@ -203,6 +211,8 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         Assert.Contains("Vehimap.ico", script, StringComparison.Ordinal);
         Assert.Contains("Windows instalator vyzaduje ikonu", script, StringComparison.Ordinal);
         Assert.Contains("Copy-Item -LiteralPath $sourceIconPath", script, StringComparison.Ordinal);
+        Assert.Contains("$dataFolder = $appName", script, StringComparison.Ordinal);
+        Assert.Contains("{{DATA_FOLDER}}", script, StringComparison.Ordinal);
         Assert.Contains("<ApplicationIcon>..\\..\\..\\favicon.ico</ApplicationIcon>", project, StringComparison.Ordinal);
         Assert.Contains("!favicon.ico", gitIgnore, StringComparison.Ordinal);
     }

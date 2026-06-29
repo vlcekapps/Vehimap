@@ -1,7 +1,9 @@
 using System.Globalization;
 using System.Xml.Linq;
+using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Domain.Models;
 using Xunit;
 
 namespace Vehimap.Tests.Unit;
@@ -60,6 +62,104 @@ public sealed class I18nFoundationTests
         Assert.InRange(service.ConvertVolumeToLiters(2.64172m, new AppUnitPreferences("km", "us_gal")), 9.999m, 10.001m);
     }
 
+    [Theory]
+    [InlineData("cs-CZ", "none", "comma", "km", "l")]
+    [InlineData("en-US", "comma", "dot", "mi", "us_gal")]
+    public void Locale_defaults_match_installer_language_policy(
+        string language,
+        string thousandsSeparator,
+        string decimalSeparator,
+        string distanceUnit,
+        string volumeUnit)
+    {
+        var defaults = new AppLocaleDefaultsService().GetDefaultsForLanguage(language);
+
+        Assert.Equal(language, defaults.Language);
+        Assert.Equal(thousandsSeparator, defaults.ThousandsSeparator);
+        Assert.Equal(decimalSeparator, defaults.DecimalSeparator);
+        Assert.Equal(distanceUnit, defaults.DistanceUnit);
+        Assert.Equal(volumeUnit, defaults.VolumeUnit);
+    }
+
+    [Fact]
+    public void Supported_settings_service_uses_language_defaults_for_missing_formatting_and_units()
+    {
+        var settings = new VehimapSettings();
+        settings.SetValue("app", "language", "en-US");
+
+        var snapshot = new DesktopSupportedSettingsService().Read(settings);
+
+        Assert.Equal("en-US", snapshot.Language);
+        Assert.Equal("comma", snapshot.ThousandsSeparator);
+        Assert.Equal("dot", snapshot.DecimalSeparator);
+        Assert.Equal("mi", snapshot.DistanceUnit);
+        Assert.Equal("us_gal", snapshot.VolumeUnit);
+    }
+
+    [Fact]
+    public async Task Installer_locale_seed_applies_only_missing_settings_and_is_removed_after_completion()
+    {
+        var tempRoot = CreateTempDirectory();
+        try
+        {
+            var dataRoot = new VehimapDataRoot(tempRoot, tempRoot, false);
+            var seedPath = InstallerLocaleSeedService.GetSeedPath(dataRoot);
+            await File.WriteAllTextAsync(seedPath, """{"language":"en-US"}""");
+            var settings = new VehimapSettings();
+            settings.SetValue("app", "language", "cs-CZ");
+            settings.SetValue("app", "decimal_separator", "comma");
+
+            var service = new InstallerLocaleSeedService();
+            var result = await service.ApplyIfPresentAsync(dataRoot, settings);
+            service.CompleteSeed(result);
+
+            Assert.True(result.SeedFound);
+            Assert.True(result.SeedValid);
+            Assert.True(result.SettingsChanged);
+            Assert.Equal("cs-CZ", settings.GetValue("app", "language"));
+            Assert.Equal("none", settings.GetValue("app", "thousands_separator"));
+            Assert.Equal("comma", settings.GetValue("app", "decimal_separator"));
+            Assert.Equal("km", settings.GetValue("app", "distance_unit"));
+            Assert.Equal("l", settings.GetValue("app", "volume_unit"));
+            Assert.False(File.Exists(seedPath));
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task Installer_locale_seed_sets_english_defaults_for_fresh_data_set()
+    {
+        var tempRoot = CreateTempDirectory();
+        try
+        {
+            var dataRoot = new VehimapDataRoot(tempRoot, tempRoot, false);
+            await File.WriteAllTextAsync(InstallerLocaleSeedService.GetSeedPath(dataRoot), """{"language":"en-US"}""");
+            var settings = new VehimapSettings();
+
+            var result = await new InstallerLocaleSeedService().ApplyIfPresentAsync(dataRoot, settings);
+
+            Assert.True(result.SettingsChanged);
+            Assert.Equal("en-US", settings.GetValue("app", "language"));
+            Assert.Equal("comma", settings.GetValue("app", "thousands_separator"));
+            Assert.Equal("dot", settings.GetValue("app", "decimal_separator"));
+            Assert.Equal("mi", settings.GetValue("app", "distance_unit"));
+            Assert.Equal("us_gal", settings.GetValue("app", "volume_unit"));
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
     [Fact]
     public void Pilot_xaml_uses_resource_localization_for_main_pilot_surfaces()
     {
@@ -88,6 +188,13 @@ public sealed class I18nFoundationTests
             .Select(element => element.Attribute("name")?.Value)
             .Where(name => !string.IsNullOrWhiteSpace(name))!,
             StringComparer.Ordinal);
+    }
+
+    private static string CreateTempDirectory()
+    {
+        var path = Path.Combine(Path.GetTempPath(), "vehimap-i18n-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(path);
+        return path;
     }
 
     private static string FindRepositoryRoot()

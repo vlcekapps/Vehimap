@@ -24,8 +24,20 @@ CloseApplications=yes
 RestartApplications=no
 {{SIGNING_DIRECTIVES}}
 
+[Languages]
+Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "czech"; MessagesFile: "compiler:Languages\Czech.isl"
+
+[CustomMessages]
+english.DesktopIconTask=Create a desktop shortcut
+czech.DesktopIconTask=Vytvořit zástupce na ploše
+english.ShortcutsGroup=Shortcuts:
+czech.ShortcutsGroup=Zástupci:
+english.LaunchApp=Launch {{APP_NAME}}
+czech.LaunchApp=Spustit {{APP_NAME}}
+
 [Tasks]
-Name: "desktopicon"; Description: "Vytvorit zastupce na plose"; GroupDescription: "Zastupci:"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:DesktopIconTask}"; GroupDescription: "{cm:ShortcutsGroup}"; Flags: unchecked
 
 [Files]
 Source: "{{SOURCE_DIR}}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "data\*"
@@ -35,4 +47,33 @@ Name: "{group}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilenam
 Name: "{userdesktop}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\Vehimap.Desktop.exe"; Description: "Spustit {{APP_NAME}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Vehimap.Desktop.exe"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+function GetInstallerSeedJson(): String;
+begin
+  if ActiveLanguage = 'czech' then
+  begin
+    Result := '{"language":"cs-CZ"}';
+  end
+  else
+  begin
+    Result := '{"language":"en-US"}';
+  end;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  SeedDirectory: String;
+  SeedPath: String;
+begin
+  if CurStep = ssPostInstall then
+  begin
+    SeedDirectory := ExpandConstant('{userappdata}\{{DATA_FOLDER}}');
+    if ForceDirectories(SeedDirectory) then
+    begin
+      SeedPath := SeedDirectory + '\installer-preferences.json';
+      SaveStringToFile(SeedPath, GetInstallerSeedJson(), False);
+    end;
+  end;
+end;

@@ -241,6 +241,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 3. Pred vetsimi storage nebo migracnimi zmenami spustit `Test-DotnetStorageNightlyGate.ps1 -RuntimeIdentifier win-x64`; gate pouziva anonymizovany legacy fixture balicek 1.0.2 a overuje migraci do SQLite, SQLite health check vcetne poskozene databaze, odklizeni zivych TSV/INI, SQLite-only runtime zapis, nove SQLite `.vehimapbak`, import stare `.vehimapbak`, `*.vehimapvehicle` balicky a source guard proti navratu legacy runtime zapisu.
 4. Pred vetsim nightly posunem spustit `Test-DotnetWindowsHardening.ps1 -RuntimeIdentifier win-x64` a po GitHub Actions overit publikovanou nightly pres `Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64`.
 5. `Vehimap.Storage.Legacy` ponechat jako podporovanou kompatibilitni vrstvu po celou radu 2.x, ale nevracet ji jako runtime zapisovy format.
-6. Po stabilizaci Windows 2.0 storage zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, SQLite storage a read-only shell nad testovacimi daty.
-7. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
-8. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.
+6. Lokalizacni zaklad pred Androidem drzet jako sdilenou infrastrukturu: Windows instalator predava vybrany jazyk pres jednorazovy `installer-preferences.json`, aplikace doplni chybejici locale/jednotkove volby do SQLite a aktivni runtime uz nepouziva `settings.ini`.
+7. Po stabilizaci Windows 2.0 storage a i18n zakladu zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, SQLite storage a read-only shell nad testovacimi daty.
+8. Po Android zakladu stabilizovat macOS desktop, hlavne VoiceOver, notarizaci, app bundle a rucni update tok.
+9. Linux brat jako posledni platformu; az po macOS doresit distribuci, X11/Wayland pristupnost a Orca smoke.

@@ -6,8 +6,23 @@ namespace Vehimap.Application.Services;
 
 public sealed class DesktopSupportedSettingsService
 {
+    private readonly AppLocaleDefaultsService _localeDefaultsService;
+
+    public DesktopSupportedSettingsService()
+        : this(new AppLocaleDefaultsService())
+    {
+    }
+
+    public DesktopSupportedSettingsService(AppLocaleDefaultsService localeDefaultsService)
+    {
+        _localeDefaultsService = localeDefaultsService;
+    }
+
     public DesktopSupportedSettingsSnapshot Read(VehimapSettings settings, bool? runAtStartupOverride = null)
     {
+        var language = AppCultureService.NormalizeLanguage(settings.GetValue("app", "language", AppCultureService.SystemLanguage));
+        var localeDefaults = _localeDefaultsService.GetDefaultsForLanguage(language);
+
         return new DesktopSupportedSettingsSnapshot(
             ReadBoundedInt(settings, "notifications", "technical_reminder_days", 30, 0, 3650),
             ReadBoundedInt(settings, "notifications", "green_card_reminder_days", 30, 0, 3650),
@@ -19,11 +34,11 @@ public sealed class DesktopSupportedSettingsService
             ReadBool(settings, "backups", "automatic_backups_enabled", false),
             ReadBoundedInt(settings, "backups", "automatic_backup_interval_days", 1, 1, 999),
             ReadBoundedInt(settings, "backups", "automatic_backup_keep_count", 30, 1, 999),
-            AppCultureService.NormalizeLanguage(settings.GetValue("app", "language", AppCultureService.SystemLanguage)),
-            AppCultureService.NormalizeThousandsSeparator(settings.GetValue("app", "thousands_separator", AppCultureService.CultureSeparator)),
-            AppCultureService.NormalizeDecimalSeparator(settings.GetValue("app", "decimal_separator", AppCultureService.CultureSeparator)),
-            AppUnitFormatService.NormalizeDistanceUnit(settings.GetValue("app", "distance_unit", AppUnitFormatService.Kilometers)),
-            AppUnitFormatService.NormalizeVolumeUnit(settings.GetValue("app", "volume_unit", AppUnitFormatService.Liters)));
+            language,
+            AppCultureService.NormalizeThousandsSeparator(settings.GetValue("app", "thousands_separator", localeDefaults.ThousandsSeparator)),
+            AppCultureService.NormalizeDecimalSeparator(settings.GetValue("app", "decimal_separator", localeDefaults.DecimalSeparator)),
+            AppUnitFormatService.NormalizeDistanceUnit(settings.GetValue("app", "distance_unit", localeDefaults.DistanceUnit)),
+            AppUnitFormatService.NormalizeVolumeUnit(settings.GetValue("app", "volume_unit", localeDefaults.VolumeUnit)));
     }
 
     public void Apply(VehimapSettings settings, DesktopSupportedSettingsSnapshot snapshot)

@@ -129,6 +129,7 @@ function New-InnoSetupInstaller {
 
     $isccPath = Resolve-InnoCompiler
     $appName = Get-ChannelAppName -Channel $Channel
+    $dataFolder = $appName
     $appId = Get-ChannelAppId -Channel $Channel
     $signing = Get-InnoSigningConfiguration
     $generatedScriptPath = Join-Path ([System.IO.Path]::GetTempPath()) ("vehimap-installer-" + [guid]::NewGuid().ToString("N") + ".iss")
@@ -137,6 +138,7 @@ function New-InnoSetupInstaller {
     $script = $script.Replace("{{APP_NAME}}", $appName)
     $script = $script.Replace("{{APP_VERSION}}", $Version)
     $script = $script.Replace("{{INSTALL_FOLDER}}", $appName)
+    $script = $script.Replace("{{DATA_FOLDER}}", $dataFolder)
     $script = $script.Replace("{{OUTPUT_DIR}}", (Escape-InnoTemplateValue -Value $OutputDirectory))
     $script = $script.Replace("{{OUTPUT_BASE_FILENAME}}", $OutputBaseName)
     $script = $script.Replace("{{SOURCE_DIR}}", (Escape-InnoTemplateValue -Value $SourceDirectory))

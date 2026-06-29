@@ -23,6 +23,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.
 
 ### Přidáno
+- Windows Inno Setup instalátor pro C# větev nově nabízí češtinu a angličtinu a předává zvolený jazyk aplikaci přes jednorázový `installer-preferences.json`; aplikace při startu doplní jen chybějící locale/jednotkové volby do SQLite, nepoužívá legacy `settings.ini` a existující uživatelské nastavení nepřepisuje.
 - C# 2.0 nightly má první lokalizační základ: anglické a české `.resx` zdroje, pilotně lokalizované `Nastavení`, `O programu`, hlavní aplikační menu a `Editor vozidla`, plus nastavení jazyka, oddělovačů čísel a jednotek vzdálenosti/objemu včetně mil, amerických galonů a imperiálních galonů.
 - Přibyly i18n guard testy pro shodu resource klíčů, formátování čísel, převody jednotek a round-trip podporovaných nastavení bez ztráty ostatních hodnot.
 - C# Avalonia má nový accessibility conformance checklist `dotnet/docs/ACCESSIBILITY.md` se stavem `accessibility-oriented / pre-conformance`, evidencí známých keyboard/focus výjimek, složkou `dotnet/docs/accessibility-evidence/` pro ruční screen-reader důkazy a guard testy pro interaktivní metadata i nezdokumentované `KeyDown` handlery.

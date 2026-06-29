@@ -38,6 +38,7 @@ internal sealed class DesktopSessionController
     private readonly IUpdateService _updateService;
     private readonly IFileAttachmentService _attachmentService;
     private readonly IDataStoreHealthService _dataStoreHealthService;
+    private readonly InstallerLocaleSeedService _installerLocaleSeedService;
     private readonly Dictionary<string, VehicleMeta> _metaByVehicleId = new(StringComparer.Ordinal);
 
     public DesktopSessionController(
@@ -51,7 +52,8 @@ internal sealed class DesktopSessionController
         DesktopSupportedSettingsService supportedSettingsService,
         IAppBuildInfoProvider appBuildInfoProvider,
         IUpdateService updateService,
-        IDataStoreHealthService? dataStoreHealthService = null)
+        IDataStoreHealthService? dataStoreHealthService = null,
+        InstallerLocaleSeedService? installerLocaleSeedService = null)
     {
         _bootstrapper = bootstrapper;
         _dataStore = dataStore;
@@ -64,6 +66,7 @@ internal sealed class DesktopSessionController
         _appBuildInfoProvider = appBuildInfoProvider;
         _updateService = updateService;
         _dataStoreHealthService = dataStoreHealthService ?? new NoOpDataStoreHealthService();
+        _installerLocaleSeedService = installerLocaleSeedService ?? new InstallerLocaleSeedService();
     }
 
     public VehimapDataRoot? DataRoot { get; private set; }
@@ -89,6 +92,15 @@ internal sealed class DesktopSessionController
         DataRoot = result.DataRoot;
         DataSet = result.DataSet;
         LastMigrationResult = result.MigrationResult;
+        var installerLocaleSeedResult = await _installerLocaleSeedService
+            .ApplyIfPresentAsync(result.DataRoot, result.DataSet.Settings, cancellationToken)
+            .ConfigureAwait(false);
+        if (installerLocaleSeedResult.SettingsChanged)
+        {
+            await _dataStore.SaveAsync(result.DataRoot, result.DataSet, cancellationToken).ConfigureAwait(false);
+        }
+
+        _installerLocaleSeedService.CompleteSeed(installerLocaleSeedResult);
         AuditItems = _auditService.BuildAudit(result.DataRoot, result.DataSet);
 
         RebuildMetaLookup();
