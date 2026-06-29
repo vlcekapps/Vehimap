@@ -12,6 +12,7 @@ public partial class MaintenanceCompletionWindow : Window
     public MaintenanceCompletionWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnMaintenanceCompletionKeyDown, RoutingStrategies.Tunnel);
         Opened += (_, _) => Dispatcher.UIThread.Post(() => this.FindControl<TextBox>("MaintenanceCompletionDateBox")?.Focus());
     }

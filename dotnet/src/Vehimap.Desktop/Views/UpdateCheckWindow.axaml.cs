@@ -20,6 +20,7 @@ public partial class UpdateCheckWindow : Window
     public UpdateCheckWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnUpdateCheckKeyDown, RoutingStrategies.Tunnel);
         Opened += (_, _) => Dispatcher.UIThread.Post(() =>
         {

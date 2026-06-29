@@ -12,6 +12,7 @@ public partial class SettingsWindow : Window
     public SettingsWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnSettingsKeyDown, RoutingStrategies.Tunnel);
         Opened += (_, _) => Dispatcher.UIThread.Post(() => this.FindControl<TextBox>("TechnicalReminderDaysBox")?.Focus());
     }

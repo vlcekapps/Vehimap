@@ -12,6 +12,7 @@ public partial class VehicleStarterBundleWindow : Window
     public VehicleStarterBundleWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnWindowKeyDown, RoutingStrategies.Tunnel);
         this.FindControl<ListBox>("BundleItemsListBox")?.AddHandler(InputElement.KeyDownEvent, OnBundleItemsListKeyDown, RoutingStrategies.Tunnel);
         Opened += (_, _) => Dispatcher.UIThread.Post(() => this.FindControl<ListBox>("BundleItemsListBox")?.Focus());

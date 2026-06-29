@@ -1601,6 +1601,7 @@ public sealed class DesktopAccessibilityLabelTests
             ["AboutWindow.axaml.cs"] = 1,
             ["ConfirmationWindow.axaml.cs"] = 1,
             ["DataStoreHealthWindow.axaml.cs"] = 1,
+            ["KeyboardAccessibilityHelper.cs"] = 1,
             ["MainWindow.axaml.cs"] = 4,
             ["MaintenanceCompletionWindow.axaml.cs"] = 1,
             ["ModalWorkspaceWindowHelpers.cs"] = 1,

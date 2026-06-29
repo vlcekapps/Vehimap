@@ -148,6 +148,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - staticky hlidat, ze runtime povinna editorova pole vystavuji `AutomationProperties.IsRequiredForForm` a volitelna pole se za povinna nevydavaji
 - staticky hlidat, ze pole s `PlaceholderText` maji stejnou instrukci i v `AutomationProperties.HelpText`, protoze placeholder je vizualni napoveda a ctecka se na nej nemuze spolehlive spolehnout
 - drzet globalni `AutomationProperties.HelpText` pro `ComboBox`, aby rozbalovaci seznamy konzistentne hlasily ovladani sipkami a vyber hodnoty
+- registrovat sdilenou keyboard guard vrstvu na top-level oknech s vlastnimi zkratkami, aby `TextBox` kurzorove klavesy a `ComboBox` otevreni sipkami nebyly zavisle na nahodnem `e.Source` z control templatu
 - vystavovat souhrnne, stavove a detailni texty v hlavnim shellu i workspacech pres explicitni pristupne nazvy a stabilni `AutomationId`, aby je mohly cist screen readery a kontrolovat UI testy
 - cist a zapisovat podporovane reminder volby do nastaveni datove sady a respektovat `show_dashboard_on_launch`
 - reportovat stejnou verzi jako root `src/VERSION`, vcetne file version pro desktop buildy

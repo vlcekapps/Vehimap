@@ -71,6 +71,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         RegisterTabBoundaryNavigation();
         AddHandler(InputElement.KeyDownEvent, OnWindowKeyDown, RoutingStrategies.Tunnel);
         AddHandler(InputElement.GotFocusEvent, OnElementGotFocus, RoutingStrategies.Tunnel);

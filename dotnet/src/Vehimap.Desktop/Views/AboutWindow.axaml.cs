@@ -13,6 +13,7 @@ public partial class AboutWindow : Window
     public AboutWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnAboutKeyDown, RoutingStrategies.Tunnel);
         Opened += (_, _) => Dispatcher.UIThread.Post(() => this.FindControl<Button>("ReleaseNotesButton")?.Focus());
     }

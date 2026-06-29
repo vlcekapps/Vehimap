@@ -14,6 +14,7 @@ public partial class NotificationWindow : Window
     public NotificationWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnNotificationKeyDown, RoutingStrategies.Tunnel);
     }
 

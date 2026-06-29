@@ -83,7 +83,9 @@ Avalonia shell. New entries require a regression test.
 - `WorkspaceViewBase.cs`: reverse tab boundary from embedded workspace content back to
   the selected shell tab header when a workspace is hosted inside the main window.
 - `KeyboardAccessibilityHelper.cs`: let text boxes keep standard cursor/editing keys and
-  let combo boxes open with plain up/down arrows.
+  let combo boxes open with plain up/down arrows. The helper is registered on every
+  top-level window that has keyboard shortcuts and resolves controls through logical,
+  templated and visual tree parents before a global shortcut can handle the key.
 - `ModalWorkspaceWindowHelpers.cs` and app-level dialogs: `Escape` closes modal windows
   only when it is safe for the current workflow.
 - `VehicleStarterBundleWindow.axaml.cs`: list keyboard shortcuts for selecting/clearing

@@ -11,6 +11,7 @@ public partial class ConfirmationWindow : Window
     public ConfirmationWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnConfirmationKeyDown, RoutingStrategies.Tunnel);
         Opened += (_, _) => Dispatcher.UIThread.Post(() => this.FindControl<Button>("ConfirmButton")?.Focus());
     }

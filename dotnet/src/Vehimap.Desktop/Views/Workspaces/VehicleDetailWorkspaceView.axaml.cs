@@ -1,5 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Desktop.Views;
@@ -66,8 +68,14 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         }
 
         await ViewModel.SaveVehicleCommand.ExecuteAsync(null);
+        if (ViewModel.IsEditingVehicle)
+        {
+            return;
+        }
+
         if (!ViewModel.TryConsumePendingVehicleStarterBundleOffer())
         {
+            FocusPrimaryActionAfterLayout();
             return;
         }
 
@@ -78,6 +86,7 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         catch (Exception ex)
         {
             ViewModel.SetVehicleStarterBundleStatus($"Nové vozidlo bylo uloženo, ale navazující balíček se nepodařilo otevřít: {ex.Message}");
+            FocusPrimaryActionAfterLayout();
         }
     }
 
@@ -99,11 +108,13 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
             ViewModel.SetVehicleStarterBundleStatus(postCreateOffer
                 ? "Nové vozidlo bylo uloženo. Balíček pro vozidlo už neměl žádné nové položky."
                 : "Balíček pro vozidlo už nemá žádné chybějící položky.");
+            FocusPrimaryActionAfterLayout();
             return;
         }
 
         if (TopLevel.GetTopLevel(this) is not Window owner)
         {
+            FocusPrimaryActionAfterLayout();
             return;
         }
 
@@ -115,13 +126,13 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(owner);
         if (result is null)
         {
-            ViewModel.RequestWorkspaceFocus(DesktopFocusTarget.VehicleDetailPrimaryAction);
+            FocusPrimaryActionAfterLayout();
             return;
         }
 
         var message = await ViewModel.ApplyVehicleStarterBundleAsync(result.SelectedItems);
         ViewModel.SetVehicleStarterBundleStatus(message);
-        ViewModel.RequestWorkspaceFocus(DesktopFocusTarget.VehicleDetailPrimaryAction);
+        FocusPrimaryActionAfterLayout();
     }
 
     private void OnOpenVehicleHistoryWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -196,6 +207,15 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         }
 
         return this.FindControl<Button>("CreateVehicleButton");
+    }
+
+    private void FocusPrimaryActionAfterLayout()
+    {
+        Dispatcher.UIThread.Post(
+            () => DispatcherTimer.RunOnce(
+                () => ResolvePrimaryAction()?.Focus(NavigationMethod.Unspecified, KeyModifiers.None),
+                TimeSpan.FromMilliseconds(80)),
+            DispatcherPriority.Loaded);
     }
 
     private void CloseVehicleDetailWindowIfNeeded(bool navigationSucceeded)

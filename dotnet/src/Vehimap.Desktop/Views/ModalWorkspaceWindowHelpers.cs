@@ -11,6 +11,7 @@ internal static class ModalWorkspaceWindowHelpers
 {
     public static void RegisterWorkspaceLifecycle(Window window, string workspaceHostName, string? closeActionDescription = null)
     {
+        KeyboardAccessibilityHelper.RegisterWindow(window);
         window.Opened += (_, _) => FocusDefaultWorkspaceControl(window, workspaceHostName);
         window.AddHandler(
             InputElement.KeyDownEvent,

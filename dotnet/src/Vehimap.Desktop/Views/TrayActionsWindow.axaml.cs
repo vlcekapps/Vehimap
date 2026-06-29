@@ -14,6 +14,7 @@ public partial class TrayActionsWindow : Window
     public TrayActionsWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnTrayActionsKeyDown, RoutingStrategies.Tunnel);
         Opened += (_, _) => Dispatcher.UIThread.Post(
             () => this.FindControl<Button>("ShowMainWindowTrayActionButton")?.Focus(),

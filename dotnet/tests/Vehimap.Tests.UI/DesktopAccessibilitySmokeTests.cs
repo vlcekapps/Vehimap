@@ -899,7 +899,8 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
             session.ClickByAccessibilityId("CreateVehicleButton");
             session.ClickByAccessibilityId("VehicleEditorNameBox");
-            session.SendKeysByAccessibilityId("VehicleEditorNameBox", Keys.Shift + Keys.Tab);
+            Assert.Equal("VehicleEditorNameBox", session.WaitForFocusedAutomationId(12, "VehicleEditorNameBox"));
+            session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
 
             Assert.Equal("CancelVehicleButton", session.GetFocusedAutomationId());
         }

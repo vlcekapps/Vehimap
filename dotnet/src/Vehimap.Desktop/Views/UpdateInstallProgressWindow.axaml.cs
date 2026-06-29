@@ -17,6 +17,7 @@ public partial class UpdateInstallProgressWindow : Window
     public UpdateInstallProgressWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnKeyDown, RoutingStrategies.Tunnel);
         Opened += OnOpened;
     }

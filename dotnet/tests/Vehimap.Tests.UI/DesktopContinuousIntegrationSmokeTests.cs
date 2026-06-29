@@ -899,7 +899,8 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
             session.ClickByAccessibilityId("CreateVehicleButton");
             session.ClickByAccessibilityId("VehicleEditorNameBox");
-            session.SendKeysByAccessibilityId("VehicleEditorNameBox", Keys.Shift + Keys.Tab);
+            Assert.Equal("VehicleEditorNameBox", session.WaitForFocusedAutomationId(12, "VehicleEditorNameBox"));
+            session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
 
             Assert.Equal("CancelVehicleButton", session.GetFocusedAutomationId());
         }
@@ -920,10 +921,10 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
             session.ClickByAccessibilityId("EditVehicleButton");
             session.ReplaceTextByAccessibilityId("VehicleEditorNameBox", "Abcd");
+            session.ClickByAccessibilityId("VehicleEditorNameBox");
+            Assert.Equal("VehicleEditorNameBox", session.WaitForFocusedAutomationId(12, "VehicleEditorNameBox"));
 
-            session.SendKeysByAccessibilityId(
-                "VehicleEditorNameBox",
-                Keys.ArrowLeft + Keys.ArrowLeft + Keys.Backspace + "X");
+            session.SendKeysToActiveElement(Keys.ArrowLeft + Keys.ArrowLeft + Keys.Backspace + "X");
 
             Assert.Equal("AXcd", session.CopyTextByAccessibilityId("VehicleEditorNameBox"));
         }
@@ -944,8 +945,9 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
             session.ClickByAccessibilityId("EditVehicleButton");
             session.ClickByAccessibilityId("VehicleEditorCategoryBox");
+            Assert.Equal("VehicleEditorCategoryBox", session.WaitForFocusedAutomationId(12, "VehicleEditorCategoryBox"));
 
-            session.SendKeysByAccessibilityId("VehicleEditorCategoryBox", Keys.ArrowDown);
+            session.SendKeysToActiveElement(Keys.ArrowDown);
 
             Assert.NotNull(session.WaitForElementByName("Motocykly", 6));
         }

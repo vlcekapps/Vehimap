@@ -1,11 +1,22 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 
 namespace Vehimap.Desktop.Views;
 
 internal static class KeyboardAccessibilityHelper
 {
+    public static void RegisterWindow(Window window)
+    {
+        window.AddHandler(
+            InputElement.KeyDownEvent,
+            OnPreviewKeyboardAccessibilityKeyDown,
+            RoutingStrategies.Tunnel,
+            handledEventsToo: true);
+    }
+
     public static bool ShouldSkipGlobalShortcut(KeyEventArgs e)
     {
         if (e.Handled)
@@ -19,6 +30,11 @@ internal static class KeyboardAccessibilityHelper
         }
 
         return IsTextBoxEditingKey(e);
+    }
+
+    private static void OnPreviewKeyboardAccessibilityKeyDown(object? sender, KeyEventArgs e)
+    {
+        TryPrepareComboBoxArrowNavigation(e);
     }
 
     private static bool TryPrepareComboBoxArrowNavigation(KeyEventArgs e)
@@ -78,14 +94,36 @@ internal static class KeyboardAccessibilityHelper
     private static TControl? FindSourceControl<TControl>(object? source)
         where TControl : Control
     {
-        for (var current = source as StyledElement; current is not null; current = current.Parent)
+        var visited = new HashSet<object>(ReferenceEqualityComparer.Instance);
+        for (var current = source; current is not null && visited.Add(current);)
         {
             if (current is TControl control)
             {
                 return control;
             }
+
+            if (current is StyledElement { TemplatedParent: TControl templatedControl })
+            {
+                return templatedControl;
+            }
+
+            if (current is StyledElement styledElement)
+            {
+                current = styledElement.Parent
+                    ?? styledElement.TemplatedParent
+                    ?? (styledElement as Visual)?.GetVisualParent();
+                continue;
+            }
+
+            if (current is Visual visual)
+            {
+                current = visual.GetVisualParent();
+                continue;
+            }
+
+            break;
         }
 
-        return source as TControl;
+        return null;
     }
 }

@@ -13,6 +13,7 @@ public partial class DataStoreHealthWindow : Window
     public DataStoreHealthWindow()
     {
         AvaloniaXamlLoader.Load(this);
+        KeyboardAccessibilityHelper.RegisterWindow(this);
         AddHandler(InputElement.KeyDownEvent, OnHealthKeyDown, RoutingStrategies.Tunnel);
         Opened += (_, _) => Dispatcher.UIThread.Post(() => this.FindControl<Button>("CopyHealthDetailsButton")?.Focus());
     }
