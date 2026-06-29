@@ -1143,6 +1143,116 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Interactive_desktop_controls_should_have_stable_accessibility_metadata()
+    {
+        var interactiveControlPattern = new Regex(
+            "<(?<type>TextBox|ComboBox|CheckBox|Button|ListBox)(?=[\\s>/])(?<attributes>[\\s\\S]*?)(?:/>|>)",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in interactiveControlPattern.Matches(xaml))
+            {
+                var attributes = match.Groups["attributes"].Value;
+                var hasAutomationId = attributes.Contains("AutomationProperties.AutomationId=", StringComparison.Ordinal);
+                var hasAccessibleName = attributes.Contains("AutomationProperties.Name=", StringComparison.Ordinal)
+                    || attributes.Contains("AutomationProperties.LabeledBy=", StringComparison.Ordinal);
+
+                if (hasAutomationId && hasAccessibleName)
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} <{match.Groups["type"].Value}> postrádá "
+                    + (hasAutomationId ? "přístupné jméno" : "AutomationId"));
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Interaktivní Avalonia prvky musí mít stabilní AutomationId a lidské jméno přes AutomationProperties.Name nebo LabeledBy:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void Manual_keydown_handlers_should_stay_documented_accessibility_exceptions()
+    {
+        var expectedOccurrencesByFile = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["AboutWindow.axaml.cs"] = 1,
+            ["ConfirmationWindow.axaml.cs"] = 1,
+            ["DataStoreHealthWindow.axaml.cs"] = 1,
+            ["MainWindow.axaml.cs"] = 4,
+            ["MaintenanceCompletionWindow.axaml.cs"] = 1,
+            ["ModalWorkspaceWindowHelpers.cs"] = 1,
+            ["NotificationWindow.axaml.cs"] = 1,
+            ["ServiceBookWindow.axaml.cs"] = 1,
+            ["SettingsWindow.axaml.cs"] = 1,
+            ["TrayActionsWindow.axaml.cs"] = 1,
+            ["UpdateCheckWindow.axaml.cs"] = 1,
+            ["UpdateInstallProgressWindow.axaml.cs"] = 1,
+            ["VehicleStarterBundleWindow.axaml.cs"] = 2,
+            ["WorkspaceViewBase.cs"] = 1
+        };
+        var actualOccurrencesByFile = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var (relativePath, code) in ReadAllDesktopViewCodeFiles())
+        {
+            var count = Regex.Matches(code, "InputElement\\.KeyDownEvent").Count;
+            if (count > 0)
+            {
+                actualOccurrencesByFile[Path.GetFileName(relativePath)] = count;
+            }
+        }
+
+        Assert.Equal(
+            expectedOccurrencesByFile.OrderBy(pair => pair.Key).ToArray(),
+            actualOccurrencesByFile.OrderBy(pair => pair.Key).ToArray());
+
+        var accessibilityDocs = ReadDocumentationFile("ACCESSIBILITY.md");
+        Assert.Contains("Documented keyboard/focus exceptions", accessibilityDocs);
+        Assert.Contains("MainWindow.axaml.cs", accessibilityDocs);
+        Assert.Contains("KeyboardAccessibilityHelper.cs", accessibilityDocs);
+        Assert.Contains("WorkspaceViewBase.cs", accessibilityDocs);
+        Assert.Contains("VehicleStarterBundleWindow.axaml.cs", accessibilityDocs);
+    }
+
+    [Fact]
+    public void Accessibility_documentation_should_record_pre_conformance_status_and_evidence_path()
+    {
+        var accessibilityDocs = ReadDocumentationFile("ACCESSIBILITY.md");
+        var evidenceReadme = ReadDocumentationFile(Path.Combine("accessibility-evidence", "README.md"));
+
+        Assert.Contains("accessibility-oriented / pre-conformance", accessibilityDocs);
+        Assert.Contains("We do not claim formal WCAG", accessibilityDocs);
+        Assert.Contains("dotnet/docs/accessibility-evidence/", accessibilityDocs);
+        Assert.Contains("Avalonia accessibility", accessibilityDocs);
+        Assert.Contains("Date:", evidenceReadme);
+        Assert.Contains("Screen reader:", evidenceReadme);
+        Assert.Contains("Known issues:", evidenceReadme);
+    }
+
+    [Fact]
+    public void Main_shell_should_use_conservative_avalonia_landmarks_headings_and_live_statuses()
+    {
+        var mainXaml = ReadViewFile("MainWindow.axaml");
+        var vehicleDetailXaml = ReadWorkspaceOrView("VehicleDetailWorkspaceView.axaml", true);
+
+        Assert.Contains("AutomationProperties.LandmarkType=\"Navigation\"", mainXaml);
+        Assert.Contains("AutomationProperties.LandmarkType=\"Search\"", mainXaml);
+        Assert.Contains("AutomationProperties.LandmarkType=\"Main\"", mainXaml);
+        Assert.Contains("AutomationProperties.HeadingLevel=\"1\"", mainXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AppTitleText\"", mainXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"ShellStatusText\" AutomationProperties.LiveSetting=\"Polite\"", mainXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"LoadErrorText\" AutomationProperties.LiveSetting=\"Assertive\"", mainXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorStatusText\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.LiveSetting=\"Polite\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.HeadingLevel=\"2\"", vehicleDetailXaml);
+    }
+
+    [Fact]
     public void Overview_workspace_xaml_should_define_keyboard_first_shortcuts()
     {
         var timelineXaml = ReadWorkspaceOrView("TimelineWorkspaceView.axaml", true);
@@ -1467,6 +1577,48 @@ public sealed class DesktopAccessibilityLabelTests
             "Vehimap.Desktop"));
 
         return File.ReadAllText(Path.Combine(desktopRoot, fileName));
+    }
+
+    private static string ReadDocumentationFile(string relativePath)
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        return File.ReadAllText(Path.Combine(repositoryRoot, "dotnet", "docs", relativePath));
+    }
+
+    private static IEnumerable<(string RelativePath, string Content)> ReadAllDesktopXamlFiles()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var viewsRoot = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Desktop", "Views");
+
+        foreach (var file in Directory.EnumerateFiles(viewsRoot, "*.axaml", SearchOption.AllDirectories))
+        {
+            yield return (Path.GetRelativePath(repositoryRoot, file), File.ReadAllText(file));
+        }
+    }
+
+    private static IEnumerable<(string RelativePath, string Content)> ReadAllDesktopViewCodeFiles()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var viewsRoot = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Desktop", "Views");
+
+        foreach (var file in Directory.EnumerateFiles(viewsRoot, "*.cs", SearchOption.AllDirectories))
+        {
+            yield return (Path.GetRelativePath(repositoryRoot, file), File.ReadAllText(file));
+        }
+    }
+
+    private static int GetLineNumber(string content, int index)
+    {
+        var line = 1;
+        for (var i = 0; i < index && i < content.Length; i++)
+        {
+            if (content[i] == '\n')
+            {
+                line++;
+            }
+        }
+
+        return line;
     }
 
     private static void AssertAccessibleBoundText(string xaml, string automationId, string bindingName)

@@ -27,7 +27,10 @@
       <StackPanel Spacing="4">
         <TextBlock FontSize="28"
                    FontWeight="SemiBold"
-                   Text="{Binding Title}" />
+                   Text="{Binding Title}"
+                   AutomationProperties.Name="{Binding Title}"
+                   AutomationProperties.AutomationId="AppTitleText"
+                   AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.75"
                    Text="{Binding Subtitle}" />
       </StackPanel>
@@ -38,7 +41,8 @@
             VerticalAlignment="Center"
             IsTabStop="False"
             AutomationProperties.Name="Hlavní nabídka aplikace"
-            AutomationProperties.AutomationId="AppMenuBar">
+            AutomationProperties.AutomationId="AppMenuBar"
+            AutomationProperties.LandmarkType="Navigation">
         <MenuItem x:Name="FileMenuRoot"
                   Header="_Soubor"
                   IsTabStop="False"
@@ -419,8 +423,8 @@
       <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding DataMode}" AutomationProperties.Name="{Binding DataMode}" AutomationProperties.AutomationId="DataModeText" />
       <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" Text="Datová složka" />
       <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataPath}" TextWrapping="Wrap" AutomationProperties.Name="{Binding DataPath}" AutomationProperties.AutomationId="DataPathText" />
-      <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Foreground="IndianRed" Text="{Binding LoadError}" TextWrapping="Wrap" AutomationProperties.Name="{Binding LoadError}" AutomationProperties.AutomationId="LoadErrorText" />
-      <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="0,8,0,0" Text="{Binding ShellStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ShellStatus}" AutomationProperties.AutomationId="ShellStatusText" />
+      <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Foreground="IndianRed" Text="{Binding LoadError}" TextWrapping="Wrap" AutomationProperties.Name="{Binding LoadError}" AutomationProperties.AutomationId="LoadErrorText" AutomationProperties.LiveSetting="Assertive" />
+      <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Margin="0,8,0,0" Text="{Binding ShellStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ShellStatus}" AutomationProperties.AutomationId="ShellStatusText" AutomationProperties.LiveSetting="Polite" />
     </Grid>
 
     <Grid Grid.Row="2"
@@ -471,7 +475,7 @@
     </Grid>
 
     <Grid Grid.Row="3" Margin="0,18,0,0" ColumnDefinitions="420,*">
-      <Border Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
+      <Border Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10" AutomationProperties.LandmarkType="Navigation">
         <Grid RowDefinitions="Auto,Auto,Auto,*">
           <TextBlock FontSize="18"
                      FontWeight="SemiBold"
@@ -482,7 +486,8 @@
           <Grid Grid.Row="1"
                 Margin="0,12,0,0"
                 ColumnDefinitions="*,*"
-                RowDefinitions="Auto,Auto,Auto,Auto">
+                RowDefinitions="Auto,Auto,Auto,Auto"
+                AutomationProperties.LandmarkType="Search">
             <StackPanel Margin="0,0,12,0" Spacing="6">
               <TextBlock FontWeight="SemiBold" Text="Kategorie" />
               <ComboBox x:Name="VehicleCategoryFilterBox"
@@ -567,7 +572,7 @@
         </Grid>
       </Border>
 
-      <Border Grid.Column="1" Margin="16,0,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10">
+      <Border Grid.Column="1" Margin="16,0,0,0" Padding="16" BorderBrush="#304050" BorderThickness="1" CornerRadius="10" AutomationProperties.LandmarkType="Main">
         <Grid RowDefinitions="Auto,*">
           <Grid RowDefinitions="Auto,Auto,Auto">
             <TextBlock FontWeight="SemiBold"

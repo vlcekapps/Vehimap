@@ -5,14 +5,20 @@
              x:Class="Vehimap.Desktop.Views.Workspaces.VehicleDetailWorkspaceView"
              x:DataType="vm:VehicleDetailWorkspaceViewModel">
   <Grid RowDefinitions="Auto,Auto,Auto,*">
-    <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding VehiclePanelHeading}" />
+    <TextBlock FontSize="18"
+               FontWeight="SemiBold"
+               Text="{Binding VehiclePanelHeading}"
+               AutomationProperties.Name="{Binding VehiclePanelHeading}"
+               AutomationProperties.AutomationId="VehiclePanelHeadingText"
+               AutomationProperties.HeadingLevel="2" />
     <TextBlock Grid.Row="1"
                Margin="0,12,0,0"
                Opacity="0.82"
                Text="{Binding VehicleEditorStatus}"
                TextWrapping="Wrap"
                AutomationProperties.Name="{Binding VehicleEditorStatus}"
-               AutomationProperties.AutomationId="VehicleEditorStatusText" />
+               AutomationProperties.AutomationId="VehicleEditorStatusText"
+               AutomationProperties.LiveSetting="Polite" />
     <WrapPanel x:Name="VehicleActionPanel"
                Grid.Row="2"
                Margin="0,14,0,0"
@@ -221,7 +227,12 @@
                   Margin="0,16,0,0"
                   IsVisible="{Binding IsVehicleDetailVisible}">
       <StackPanel Spacing="14">
-        <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding SelectedVehicleHeading}" />
+        <TextBlock FontSize="18"
+                   FontWeight="SemiBold"
+                   Text="{Binding SelectedVehicleHeading}"
+                   AutomationProperties.Name="{Binding SelectedVehicleHeading}"
+                   AutomationProperties.AutomationId="SelectedVehicleHeadingText"
+                   AutomationProperties.HeadingLevel="2" />
         <TextBlock Text="{Binding SelectedVehicleOverview}"
                    TextWrapping="Wrap"
                    AutomationProperties.Name="{Binding SelectedVehicleOverview}"

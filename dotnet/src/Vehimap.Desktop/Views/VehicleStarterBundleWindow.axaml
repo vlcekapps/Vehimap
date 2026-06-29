@@ -48,7 +48,8 @@
                   <Grid ColumnDefinitions="Auto,*">
                     <CheckBox IsChecked="{Binding IsSelected}"
                               VerticalAlignment="Top"
-                              AutomationProperties.Name="{Binding AccessibleLabel}" />
+                              AutomationProperties.Name="{Binding AccessibleLabel}"
+                              AutomationProperties.AutomationId="BundleItemSelectedCheckBox" />
                     <StackPanel Grid.Column="1" Margin="10,0,0,0" Spacing="4">
                       <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
                       <TextBlock Opacity="0.8" Text="{Binding SectionLabel}" />
