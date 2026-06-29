@@ -96,6 +96,12 @@
                     IsEnabled="{Binding CanOpenDataFolder}"
                     AutomationProperties.Name="Otevřít datovou složku Vehimapu"
                     AutomationProperties.AutomationId="OpenDataFolderMenuItem" />
+          <MenuItem x:Name="CheckDataStoreHealthMenuItem"
+                    Header="Zkontrolovat datovou sadu 2.0"
+                    Click="OnCheckDataStoreHealthClick"
+                    IsEnabled="{Binding CanCheckDataStoreHealth}"
+                    AutomationProperties.Name="Zkontrolovat datovou sadu 2.0"
+                    AutomationProperties.AutomationId="CheckDataStoreHealthMenuItem" />
           <MenuItem x:Name="OpenPreMigrationBackupFolderMenuItem"
                     Header="Otevřít složku předmigrační zálohy"
                     Click="OnOpenPreMigrationBackupFolderClick"

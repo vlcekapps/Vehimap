@@ -715,6 +715,7 @@ public sealed class DesktopAppShellControllerTests
         public bool ConfirmBackupImportCalled { get; private set; }
         public bool ConfirmDiscardPendingChangesCalled { get; private set; }
         public bool ShowUpdateInstallProgressCalled { get; private set; }
+        public bool ShowDataStoreHealthCalled { get; private set; }
         public UpdateDialogViewModel? LastUpdateModel { get; private set; }
         public UpdateInstallResult? ProgressResult { get; set; }
 
@@ -737,6 +738,12 @@ public sealed class DesktopAppShellControllerTests
         }
 
         public Task<AboutDialogAction> ShowAboutAsync(Window owner, AboutDialogViewModel model) => Task.FromResult(AboutResult);
+
+        public Task<DataStoreHealthDialogAction> ShowDataStoreHealthAsync(Window owner, DataStoreHealthDialogViewModel model)
+        {
+            ShowDataStoreHealthCalled = true;
+            return Task.FromResult(DataStoreHealthDialogAction.None);
+        }
 
         public Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model)
         {

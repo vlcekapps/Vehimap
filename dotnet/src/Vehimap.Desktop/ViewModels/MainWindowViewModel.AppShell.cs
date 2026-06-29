@@ -102,6 +102,24 @@ public sealed partial class MainWindowViewModel
         return ShellStatus;
     }
 
+    internal async Task<DataStoreHealthReport> CheckDataStoreHealthAsync(CancellationToken cancellationToken = default)
+    {
+        if (BlockDataActionIfEditing("zkontrolovat datovou sadu 2.0"))
+        {
+            return new DataStoreHealthReport(
+                DataStoreHealthStatus.Warning,
+                "Kontrola datové sady byla odložena kvůli rozpracovaným úpravám.",
+                [ShellStatus],
+                _dataRoot is null ? string.Empty : Path.Combine(_dataRoot.DataPath, "vehimap.db"),
+                _dataRoot?.DataPath ?? string.Empty,
+                _session.GetPreMigrationBackupPath());
+        }
+
+        var report = await _session.CheckDataStoreHealthAsync(cancellationToken).ConfigureAwait(false);
+        ShellStatus = BuildDataStoreHealthShellMessage(report, manual: true);
+        return report;
+    }
+
     internal async Task<string> ExportSelectedVehiclePackageAsync(string packagePath, CancellationToken cancellationToken = default)
     {
         if (SelectedVehicle is null)
@@ -529,6 +547,16 @@ public sealed partial class MainWindowViewModel
         }
 
         return ShellStatus;
+    }
+
+    private static string BuildDataStoreHealthShellMessage(DataStoreHealthReport report, bool manual)
+    {
+        return report.Status switch
+        {
+            DataStoreHealthStatus.Healthy when manual => "Kontrola datové sady 2.0 proběhla v pořádku.",
+            DataStoreHealthStatus.Healthy => "Datová sada 2.0 je v pořádku.",
+            _ => $"Kontrola datové sady 2.0: {report.Summary}"
+        };
     }
 
     internal async Task<UpdateCheckResult> CheckForUpdatesAsync(CancellationToken cancellationToken = default)

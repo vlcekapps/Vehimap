@@ -1,4 +1,6 @@
+using Microsoft.Data.Sqlite;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Storage.Legacy;
@@ -284,6 +286,115 @@ public sealed class SqliteStorageCompatibilityTests
             Assert.Contains(reloaded.FuelEntries, item => item.Id == "fuel_runtime" && item.Station == "Shell Test");
             Assert.Equal("Doklad uložený přes SQLite", reloaded.Records[0].Title);
             AssertLiveLegacyFilesAbsent(dataRoot);
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
+    public async Task Health_check_reports_healthy_sqlite_database()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-health-healthy");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var store = new SqliteVehimapDataStore();
+        var healthService = new SqliteDataStoreHealthService();
+
+        try
+        {
+            await store.SaveAsync(dataRoot, BuildSampleDataSet());
+            Directory.CreateDirectory(Path.Combine(dataRoot.DataPath, "attachments", "veh_1"));
+
+            var report = await healthService.CheckAsync(dataRoot);
+
+            Assert.Equal(DataStoreHealthStatus.Healthy, report.Status);
+            Assert.Contains(report.Details, item => item.Contains("quick_check", StringComparison.OrdinalIgnoreCase));
+            Assert.Contains(report.Details, item => item.Contains("schema marker", StringComparison.OrdinalIgnoreCase));
+            Assert.Equal(Path.Combine(dataRoot.DataPath, "vehimap.db"), report.DatabasePath);
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
+    public async Task Health_check_reports_error_for_corrupted_sqlite_database_without_deleting_it()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-health-corrupt");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var healthService = new SqliteDataStoreHealthService();
+        var databasePath = Path.Combine(dataRoot.DataPath, "vehimap.db");
+
+        try
+        {
+            Directory.CreateDirectory(dataRoot.DataPath);
+            await File.WriteAllTextAsync(databasePath, "tohle neni sqlite databaze");
+
+            var report = await healthService.CheckAsync(dataRoot);
+
+            Assert.Equal(DataStoreHealthStatus.Error, report.Status);
+            Assert.True(File.Exists(databasePath));
+            Assert.Contains(report.Details, item => item.Contains("nepodařilo otevřít", StringComparison.OrdinalIgnoreCase)
+                || item.Contains("SQLite quick_check", StringComparison.OrdinalIgnoreCase));
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
+    public async Task Health_check_reports_error_for_missing_schema_marker()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-health-schema");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var store = new SqliteVehimapDataStore();
+        var healthService = new SqliteDataStoreHealthService();
+        var databasePath = Path.Combine(dataRoot.DataPath, "vehimap.db");
+
+        try
+        {
+            await store.SaveAsync(dataRoot, BuildSampleDataSet());
+            Directory.CreateDirectory(Path.Combine(dataRoot.DataPath, "attachments", "veh_1"));
+            await using (var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = databasePath, Pooling = false }.ToString()))
+            {
+                await connection.OpenAsync();
+                await using var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM schema_migrations;";
+                await command.ExecuteNonQueryAsync();
+            }
+
+            var report = await healthService.CheckAsync(dataRoot);
+
+            Assert.Equal(DataStoreHealthStatus.Error, report.Status);
+            Assert.Contains(report.Details, item => item.Contains("schema marker", StringComparison.OrdinalIgnoreCase));
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
+    public async Task Health_check_reports_warning_for_live_legacy_files_next_to_sqlite()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-health-legacy");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var store = new SqliteVehimapDataStore();
+        var healthService = new SqliteDataStoreHealthService();
+
+        try
+        {
+            await store.SaveAsync(dataRoot, BuildSampleDataSet());
+            Directory.CreateDirectory(Path.Combine(dataRoot.DataPath, "attachments", "veh_1"));
+            await File.WriteAllTextAsync(Path.Combine(dataRoot.DataPath, "settings.ini"), "[app]");
+
+            var report = await healthService.CheckAsync(dataRoot);
+
+            Assert.Equal(DataStoreHealthStatus.Warning, report.Status);
+            Assert.Contains(report.Details, item => item.Contains("legacy TSV/INI", StringComparison.OrdinalIgnoreCase));
         }
         finally
         {

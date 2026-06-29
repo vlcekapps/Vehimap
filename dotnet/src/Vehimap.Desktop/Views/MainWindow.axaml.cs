@@ -513,6 +513,17 @@ public partial class MainWindow : Window
         RequestFocus(DesktopFocusTarget.VehicleList);
     }
 
+    private async void OnCheckDataStoreHealthClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is null)
+        {
+            return;
+        }
+
+        await _viewModel.AppShellController.OpenDataStoreHealthAsync(this, _viewModel).ConfigureAwait(true);
+        RequestFocus(DesktopFocusTarget.VehicleList);
+    }
+
     private async void OnOpenPreMigrationBackupFolderClick(object? sender, RoutedEventArgs e)
     {
         if (_viewModel is null)

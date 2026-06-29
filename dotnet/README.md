@@ -36,6 +36,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - pri startu s uz existujicim `vehimap.db` uklidit pripadne zbytky TSV/INI po prvni SQLite nightly bez opakovaneho importu; `data/attachments` zustava aktivni slozka spravovanych priloh
 - overit SQLite 2.0 storage cestu nad anonymizovanym legacy fixture balickem prikazem `dotnet\build\Test-DotnetStorageNightlyGate.ps1 -RuntimeIdentifier win-x64`
 - hlidat SQLite-only runtime zapis stejnou storage nightly branou: po migraci bezny save meni `vehimap.db`, nevytvari zive `TSV/INI` soubory a source guard blokuje navrat legacy backup/storage konstrukci do desktop runtime vrstev
+- zkontrolovat zdravi datove sady 2.0 rucne z menu `Soubor -> Zkontrolovat datovou sadu 2.0`; kontrola overi `vehimap.db`, `PRAGMA quick_check`, schema, zapisovatelnost datove slozky, aktivni `attachments` a pripadne zbytky legacy `TSV/INI`, pricemz poskozenou databazi sama nemaze ani neopravuje
 - importovat starsi textove `.vehimapbak` zalohy pres legacy parser a obnovit je uz do SQLite runtime storage
 - exportovat nove `.vehimapbak` zalohy jako SQLite backup s `vehimap.db` a referenced spravovanymi prilohami
 - exportovat a importovat jedno vozidlo jako `*.vehimapvehicle` balicek vcetne historie, tankovani, dokladu, pripominek, udrzby a relevantnich spravovanych priloh

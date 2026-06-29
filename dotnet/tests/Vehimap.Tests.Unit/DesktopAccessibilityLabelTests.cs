@@ -259,6 +259,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CreateAutomaticBackupNowMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenAutomaticBackupFolderMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDataFolderMenuItem\"", xaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CheckDataStoreHealthMenuItem\"", xaml);
+        Assert.Contains("Click=\"OnCheckDataStoreHealthClick\"", xaml);
+        Assert.Contains("IsEnabled=\"{Binding CanCheckDataStoreHealth}\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"Zkontrolovat datovou sadu 2.0\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenPreMigrationBackupFolderMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"Otevřít složku předmigrační zálohy\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanOpenPreMigrationBackupFolder}\"", xaml);
@@ -462,6 +466,8 @@ public sealed class DesktopAccessibilityLabelTests
     {
         var settingsXaml = ReadViewFile("SettingsWindow.axaml");
         var settingsCodeBehind = ReadViewCodeBehind("SettingsWindow.axaml.cs");
+        var dataStoreHealthXaml = ReadViewFile("DataStoreHealthWindow.axaml");
+        var dataStoreHealthCodeBehind = ReadViewCodeBehind("DataStoreHealthWindow.axaml.cs");
         var aboutXaml = ReadViewFile("AboutWindow.axaml");
         var aboutCodeBehind = ReadViewCodeBehind("AboutWindow.axaml.cs");
         var updateXaml = ReadViewFile("UpdateCheckWindow.axaml");
@@ -504,6 +510,17 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.Escape", settingsCodeBehind);
         Assert.Contains("case Key.S", settingsCodeBehind);
         Assert.Contains("case Key.B", settingsCodeBehind);
+        Assert.Contains("CanResize=\"True\"", dataStoreHealthXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DataStoreHealthWindow\"", dataStoreHealthXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"DataStoreHealthDetailsScrollViewer\"", dataStoreHealthXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CopyDataStoreHealthDetailsButton\"", dataStoreHealthXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenHealthDataFolderButton\"", dataStoreHealthXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenHealthPreMigrationBackupButton\"", dataStoreHealthXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"CloseDataStoreHealthButton\"", dataStoreHealthXaml);
+        Assert.Contains("Ctrl+Shift+C zkopíruje diagnostiku a Escape dialog zavře.", dataStoreHealthXaml);
+        Assert.Contains("Key.Escape", dataStoreHealthCodeBehind);
+        Assert.Contains("Key.C", dataStoreHealthCodeBehind);
+        Assert.Contains("KeyModifiers.Control | KeyModifiers.Shift", dataStoreHealthCodeBehind);
         Assert.Contains("CanResize=\"True\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutSummaryPanel\"", aboutXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AboutAuthorText\"", aboutXaml);

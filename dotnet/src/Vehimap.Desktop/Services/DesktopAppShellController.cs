@@ -142,6 +142,30 @@ internal sealed class DesktopAppShellController
         }
     }
 
+    public async Task OpenDataStoreHealthAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var report = await shell.CheckDataStoreHealthAsync(cancellationToken).ConfigureAwait(true);
+            var action = await _dialogService
+                .ShowDataStoreHealthAsync(owner, new DataStoreHealthDialogViewModel(report))
+                .ConfigureAwait(true);
+            switch (action)
+            {
+                case DataStoreHealthDialogAction.OpenDataFolder:
+                    await shell.OpenDataFolderAsync(cancellationToken).ConfigureAwait(true);
+                    break;
+                case DataStoreHealthDialogAction.OpenPreMigrationBackupFolder:
+                    await shell.OpenPreMigrationBackupFolderAsync(cancellationToken).ConfigureAwait(true);
+                    break;
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            shell.ShellStatus = $"Kontrolu datové sady se nepodařilo dokončit: {ex.Message}";
+        }
+    }
+
     public async Task OpenAboutAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
         try

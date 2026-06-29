@@ -10,6 +10,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Nove `.vehimapbak` zalohy jsou SQLite backupy s `vehimap.db` a referenced spravovanymi prilohami; starsi textove `.vehimapbak` zustavaji podporovane jako importni/migracni vstup.
 - Jedno vozidlo lze prenaset uzivatelskym balickem `*.vehimapvehicle`, ktery obsahuje vozidlo, jeho evidence a relevantni spravovane prilohy bez zmeny hlavni databaze mimo explicitni import.
 - Runtime zapis po migraci je hlidany SQLite-only gate: bezne ulozeni nastaveni, vozidla, tankovani nebo dokladu smi menit `vehimap.db`, ale nesmi znovu vytvorit zive legacy TSV/INI soubory v `data/`.
+- Zdravi datove sady 2.0 lze overit rucne z menu `Soubor -> Zkontrolovat datovou sadu 2.0`; health check overuje otevreni `vehimap.db`, `PRAGMA quick_check`, ocekavane tabulky, schema marker, zapisovatelnost datove slozky, aktivni `attachments` a zbytky legacy TSV/INI bez automatickeho mazani nebo oprav databaze.
 - `Vehimap.Storage.Legacy` zustava read-only kompatibilitni vrstva pro migraci a import starsich zaloh, ne dlouhodoby runtime format 2.x.
 
 ## Historicka mapa AHK modulu -> .NET vrstvy
@@ -36,6 +37,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - jednorazovou automatickou migraci legacy TSV/INI souboru do SQLite s predmigracni kopii puvodnich dat a presunem zivych TSV/INI mimo runtime koren `data/`
 - diagnostiku poskozenych legacy TSV/INI souboru s nazvem souboru, plnou cestou a puvodnim parser detailem pro shell i testy
 - import/export `.vehimapbak` vcetne spravovanych priloh; nova 2.0 zaloha obsahuje SQLite databazi a starsi textove zalohy se importuji pres legacy parser s citelnou diagnostikou
+- SQLite 2.0 health check s rucnim dialogem, kopirovanim diagnostiky a testy pro zdravou databazi, poskozeny soubor, chybejici schema marker i zive legacy soubory vedle existujici databaze
 - prvni C# audit engine nad sdilenym datasetem bez zavislosti na konkretni runtime storage vrstve
 - prvni C# nakladovy souhrn vcetne `Cena / km` a srovnani proti stejne dlouhemu obdobi loni
 - klavesove dotazeni nakladoveho workspace: `Ctrl+P` cte rozpad vybraneho vozidla, `Ctrl+O` nebo `Enter` otevre vozidlo a `Ctrl+U` / `F2` otevre editor vozidla
@@ -206,7 +208,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 
 1. Udrzet Windows stable kanal jako baseline: po kazde release/tooling zmene spustit `Test-DotnetPublishedStable.ps1 -RuntimeIdentifier win-x64 -SkipNetwork` a `Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers`, aby stable manifest, preview alias i odstraneni AHK-only artefaktu zustaly v zelenem stavu.
 2. Radu 2.0 zatim drzet jako dlouhou nightly etapu, ne jako beta kandidata. Dalsi bezny vyvoj delat pres `nightly` na `main` a lokalne testovat `dotnet/artifacts/nightly/win-x64/app/Vehimap.Desktop.exe`.
-3. Pred vetsimi storage nebo migracnimi zmenami spustit `Test-DotnetStorageNightlyGate.ps1 -RuntimeIdentifier win-x64`; gate pouziva anonymizovany legacy fixture balicek 1.0.2 a overuje migraci do SQLite, odklizeni zivych TSV/INI, SQLite-only runtime zapis, nove SQLite `.vehimapbak`, import stare `.vehimapbak`, `*.vehimapvehicle` balicky a source guard proti navratu legacy runtime zapisu.
+3. Pred vetsimi storage nebo migracnimi zmenami spustit `Test-DotnetStorageNightlyGate.ps1 -RuntimeIdentifier win-x64`; gate pouziva anonymizovany legacy fixture balicek 1.0.2 a overuje migraci do SQLite, SQLite health check vcetne poskozene databaze, odklizeni zivych TSV/INI, SQLite-only runtime zapis, nove SQLite `.vehimapbak`, import stare `.vehimapbak`, `*.vehimapvehicle` balicky a source guard proti navratu legacy runtime zapisu.
 4. Pred vetsim nightly posunem spustit `Test-DotnetWindowsHardening.ps1 -RuntimeIdentifier win-x64` a po GitHub Actions overit publikovanou nightly pres `Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier win-x64`.
 5. `Vehimap.Storage.Legacy` ponechat jako podporovanou kompatibilitni vrstvu po celou radu 2.x, ale nevracet ji jako runtime zapisovy format.
 6. Po stabilizaci Windows 2.0 storage zacit Android vetvi jako dalsi platformu; nejdrive jen sdilena domena, SQLite storage a read-only shell nad testovacimi daty.

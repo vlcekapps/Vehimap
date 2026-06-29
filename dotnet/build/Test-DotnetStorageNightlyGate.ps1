@@ -15,7 +15,7 @@ Write-Host "Runtime: $RuntimeIdentifier"
 Write-Host "Configuration: $Configuration"
 Write-Host "Project: $compatibilityProject"
 Write-Host ""
-Write-Host "Overuji migraci legacy fixture dat, SQLite-only runtime zapis, SQLite backup, import stare zalohy a balicek vozidla."
+Write-Host "Overuji migraci legacy fixture dat, health check SQLite databaze, SQLite-only runtime zapis, SQLite backup, import stare zalohy a balicek vozidla."
 
 Push-Location $dotnetRoot
 try {

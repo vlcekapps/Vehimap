@@ -37,6 +37,7 @@ internal sealed class DesktopSessionController
     private readonly IAppBuildInfoProvider _appBuildInfoProvider;
     private readonly IUpdateService _updateService;
     private readonly IFileAttachmentService _attachmentService;
+    private readonly IDataStoreHealthService _dataStoreHealthService;
     private readonly Dictionary<string, VehicleMeta> _metaByVehicleId = new(StringComparer.Ordinal);
 
     public DesktopSessionController(
@@ -49,7 +50,8 @@ internal sealed class DesktopSessionController
         IAutostartService autostartService,
         DesktopSupportedSettingsService supportedSettingsService,
         IAppBuildInfoProvider appBuildInfoProvider,
-        IUpdateService updateService)
+        IUpdateService updateService,
+        IDataStoreHealthService? dataStoreHealthService = null)
     {
         _bootstrapper = bootstrapper;
         _dataStore = dataStore;
@@ -61,6 +63,7 @@ internal sealed class DesktopSessionController
         _supportedSettingsService = supportedSettingsService;
         _appBuildInfoProvider = appBuildInfoProvider;
         _updateService = updateService;
+        _dataStoreHealthService = dataStoreHealthService ?? new NoOpDataStoreHealthService();
     }
 
     public VehimapDataRoot? DataRoot { get; private set; }
@@ -72,6 +75,8 @@ internal sealed class DesktopSessionController
     public IReadOnlyDictionary<string, VehicleMeta> MetaByVehicleId => _metaByVehicleId;
 
     public DataMigrationResult? LastMigrationResult { get; private set; }
+
+    public DataStoreHealthReport? LastDataStoreHealthReport { get; private set; }
 
     public DesktopSupportedSettingsSnapshot CurrentSupportedSettings { get; private set; } =
         new(30, 30, 31, 1000, false, false, false, false, 1, 30);
@@ -100,6 +105,7 @@ internal sealed class DesktopSessionController
         }
 
         CurrentSupportedSettings = _supportedSettingsService.Read(result.DataSet.Settings, autostartEnabled);
+        LastDataStoreHealthReport = await _dataStoreHealthService.CheckAsync(result.DataRoot, cancellationToken).ConfigureAwait(false);
 
         return new DesktopSessionLoadResult(
             result.DataRoot,
@@ -158,7 +164,24 @@ internal sealed class DesktopSessionController
         ResetNotificationHistory(bundle.Data.Settings);
         var result = await _backupService.RestoreAsync(DataRoot, bundle, cancellationToken).ConfigureAwait(false);
         RestoreDataSet(CloneDataSet(bundle.Data));
+        LastDataStoreHealthReport = await _dataStoreHealthService.CheckAsync(DataRoot, cancellationToken).ConfigureAwait(false);
         return result;
+    }
+
+    public async Task<DataStoreHealthReport> CheckDataStoreHealthAsync(CancellationToken cancellationToken = default)
+    {
+        if (DataRoot is null)
+        {
+            return new DataStoreHealthReport(
+                DataStoreHealthStatus.Error,
+                "Datová sada není načtená.",
+                ["Kontrolu datové sady 2.0 nelze spustit bez načtené datové složky."],
+                string.Empty,
+                string.Empty);
+        }
+
+        LastDataStoreHealthReport = await _dataStoreHealthService.CheckAsync(DataRoot, cancellationToken).ConfigureAwait(false);
+        return LastDataStoreHealthReport;
     }
 
     public DesktopSupportedSettingsSnapshot ReadSupportedSettings() =>
@@ -470,6 +493,19 @@ internal sealed class DesktopSessionController
         foreach (var key in NotificationHistoryKeys)
         {
             settings.SetValue(NotificationsSection, key, string.Empty);
+        }
+    }
+
+    private sealed class NoOpDataStoreHealthService : IDataStoreHealthService
+    {
+        public Task<DataStoreHealthReport> CheckAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(new DataStoreHealthReport(
+                DataStoreHealthStatus.Healthy,
+                "Kontrola datové sady 2.0 nebyla v testovací session zapojená.",
+                ["Testovací session nepoužila konkrétní health službu."],
+                Path.Combine(dataRoot.DataPath, "vehimap.db"),
+                dataRoot.DataPath));
         }
     }
 }

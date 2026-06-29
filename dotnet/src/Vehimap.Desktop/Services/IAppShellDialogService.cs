@@ -13,6 +13,8 @@ internal interface IAppShellDialogService
 
     Task<bool> ConfirmDiscardPendingChangesAsync(Window owner, string pendingEditLabel, string actionDescription);
 
+    Task<DataStoreHealthDialogAction> ShowDataStoreHealthAsync(Window owner, DataStoreHealthDialogViewModel model);
+
     Task<AboutDialogAction> ShowAboutAsync(Window owner, AboutDialogViewModel model);
 
     Task<UpdateDialogAction> ShowUpdateAsync(Window owner, UpdateDialogViewModel model);

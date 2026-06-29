@@ -165,6 +165,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public bool CanOpenPreMigrationBackupFolder =>
         CanUseDataActions && Directory.Exists(_session.GetPreMigrationBackupPath());
 
+    public bool CanCheckDataStoreHealth => CanUseDataActions;
+
     internal string HistoryWindowTitle =>
         SelectedVehicle is null
             ? "Historie vozidla"
@@ -318,7 +320,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IServiceBookService? serviceBookService = null,
         DesktopServiceBookExportService? serviceBookExportService = null,
         ISmartAdvisorService? smartAdvisorService = null,
-        IVehiclePackageService? vehiclePackageService = null)
+        IVehiclePackageService? vehiclePackageService = null,
+        IDataStoreHealthService? dataStoreHealthService = null)
     {
         var sessionBackupService = backupService ?? new SqliteBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
@@ -336,7 +339,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
             sessionAutostartService,
             sessionSupportedSettingsService,
             sessionAppBuildInfoProvider,
-            sessionUpdateService);
+            sessionUpdateService,
+            dataStoreHealthService ?? new SqliteDataStoreHealthService());
         _fileLauncher = fileLauncher;
         _filePickerService = filePickerService;
         _clipboardService = clipboardService ?? new AvaloniaClipboardService();
@@ -1182,11 +1186,49 @@ public sealed partial class MainWindowViewModel : ObservableObject
             {
                 ShellStatus = migrationResult.Message;
             }
+
+            ApplyDataStoreHealthStatusToShell();
         }
         catch (Exception ex)
         {
-            LoadError = ex.Message;
+            LoadError = BuildDataStoreLoadError(ex);
         }
+    }
+
+    private static string BuildDataStoreLoadError(Exception exception)
+    {
+        try
+        {
+            var dataRoot = new LegacyDataRootLocator(AssemblyAppBuildInfoProvider.ResolveCurrentApplicationDataFolderName())
+                .Resolve(AppContext.BaseDirectory);
+            var databasePath = Path.Combine(dataRoot.DataPath, "vehimap.db");
+            return string.Join(
+                Environment.NewLine,
+                [
+                    exception.Message,
+                    string.Empty,
+                    $"Databáze datové sady 2.0: {databasePath}",
+                    $"Datová složka: {dataRoot.DataPath}",
+                    "Vehimap poškozenou databázi automaticky nemaže ani neopravuje. Obnovte poslední .vehimapbak nebo otevřete předmigrační zálohu, pokud existuje."
+                ]);
+        }
+        catch
+        {
+            return exception.Message;
+        }
+    }
+
+    private void ApplyDataStoreHealthStatusToShell()
+    {
+        if (_session.LastDataStoreHealthReport is not { HasWarningsOrErrors: true } report)
+        {
+            return;
+        }
+
+        var message = BuildDataStoreHealthShellMessage(report, manual: false);
+        ShellStatus = string.IsNullOrWhiteSpace(ShellStatus) || string.Equals(ShellStatus, "Desktopová větev je připravená.", StringComparison.Ordinal)
+            ? message
+            : $"{ShellStatus} {message}";
     }
 
     private void RefreshShellFromSessionState(string? preferredVehicleId = null, int? preferredTabIndex = null, bool applyLaunchTabPreference = false)
@@ -1213,6 +1255,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         DataPath = _dataRoot.DataPath;
         OnPropertyChanged(nameof(CanUseDataActions));
         OnPropertyChanged(nameof(CanOpenDataFolder));
+        OnPropertyChanged(nameof(CanCheckDataStoreHealth));
         OnPropertyChanged(nameof(CanCreateAutomaticBackupNow));
         OnPropertyChanged(nameof(CanOpenAutomaticBackupFolder));
         OnPropertyChanged(nameof(CanOpenPreMigrationBackupFolder));

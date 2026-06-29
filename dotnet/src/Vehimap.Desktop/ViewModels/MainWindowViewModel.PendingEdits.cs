@@ -168,6 +168,7 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(CanImportVehiclePackage));
         OnPropertyChanged(nameof(CanUseDataActions));
         OnPropertyChanged(nameof(CanOpenDataFolder));
+        OnPropertyChanged(nameof(CanCheckDataStoreHealth));
         OnPropertyChanged(nameof(CanCreateAutomaticBackupNow));
         OnPropertyChanged(nameof(CanOpenAutomaticBackupFolder));
         OnPropertyChanged(nameof(CanOpenPreMigrationBackupFolder));

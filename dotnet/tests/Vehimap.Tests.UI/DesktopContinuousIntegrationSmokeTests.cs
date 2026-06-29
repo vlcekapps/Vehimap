@@ -946,6 +946,14 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("OpenAutomaticBackupFolderMenuItem"));
             Assert.True(session.IsEnabledByAccessibilityId("CreateAutomaticBackupNowMenuItem"));
             Assert.True(session.IsEnabledByAccessibilityId("OpenAutomaticBackupFolderMenuItem"));
+            Assert.True(session.IsEnabledByAccessibilityId("CheckDataStoreHealthMenuItem"));
+            session.ClickByAccessibilityId("CheckDataStoreHealthMenuItem");
+            Assert.NotNull(session.WaitForElementByAccessibilityId("DataStoreHealthWindow"));
+            Assert.NotNull(session.WaitForElementByAccessibilityId("CopyDataStoreHealthDetailsButton"));
+            session.ClickByAccessibilityId("CloseDataStoreHealthButton");
+            session.WaitForElementToDisappearByAccessibilityId("DataStoreHealthWindow");
+
+            session.ClickByAccessibilityId("FileMenuRoot");
             session.SendKeysToActiveElement(Keys.Escape);
 
             session.ClickByAccessibilityId("QuickActionsMenuRoot");

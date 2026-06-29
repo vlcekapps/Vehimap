@@ -52,6 +52,16 @@ internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
         return await confirmation.ShowDialog<bool>(owner);
     }
 
+    public async Task<DataStoreHealthDialogAction> ShowDataStoreHealthAsync(Window owner, DataStoreHealthDialogViewModel model)
+    {
+        var dialog = new DataStoreHealthWindow
+        {
+            DataContext = model
+        };
+
+        return await dialog.ShowDialog<DataStoreHealthDialogAction>(owner);
+    }
+
     public async Task<AboutDialogAction> ShowAboutAsync(Window owner, AboutDialogViewModel model)
     {
         var dialog = new AboutWindow

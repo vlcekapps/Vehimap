@@ -1,0 +1,86 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.DataStoreHealthWindow"
+        x:DataType="vm:DataStoreHealthDialogViewModel"
+        Width="680"
+        Height="520"
+        MinWidth="600"
+        MinHeight="420"
+        CanResize="True"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Kontrola datové sady 2.0"
+        AutomationProperties.Name="Kontrola datové sady 2.0"
+        AutomationProperties.AutomationId="DataStoreHealthWindow"
+        AutomationProperties.HelpText="Výsledek kontroly SQLite datové sady. Fokus je na kopírování diagnostiky; Ctrl+Shift+C zkopíruje diagnostiku a Escape dialog zavře.">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto,Auto">
+    <TextBlock FontSize="22"
+               FontWeight="SemiBold"
+               Text="{Binding Heading}"
+               AutomationProperties.AutomationId="DataStoreHealthHeadingText" />
+    <TextBlock Grid.Row="1"
+               Margin="0,10,0,0"
+               Text="{Binding Summary}"
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding Summary}"
+               AutomationProperties.AutomationId="DataStoreHealthSummaryText" />
+    <Border Grid.Row="2"
+            Margin="0,18,0,0"
+            Padding="12"
+            Background="#143A4A5A"
+            CornerRadius="8">
+      <ScrollViewer VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    AutomationProperties.Name="Detaily kontroly datové sady 2.0"
+                    AutomationProperties.AutomationId="DataStoreHealthDetailsScrollViewer">
+        <TextBlock Text="{Binding Details}"
+                   TextWrapping="Wrap"
+                   AutomationProperties.AutomationId="DataStoreHealthDetailsText" />
+      </ScrollViewer>
+    </Border>
+    <Border Grid.Row="3"
+            Margin="0,18,0,0"
+            Padding="12"
+            Background="#143A4A5A"
+            CornerRadius="8">
+      <TextBlock Text="{Binding StatusMessage}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.Name="{Binding StatusMessage}"
+                 AutomationProperties.AutomationId="DataStoreHealthStatusText" />
+    </Border>
+
+    <StackPanel Grid.Row="4"
+                Margin="0,18,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="10">
+      <Button x:Name="CopyHealthDetailsButton"
+              MinWidth="170"
+              Click="OnCopyDetailsClick"
+              Content="Kopírovat diagnostiku"
+              AutomationProperties.Name="Kopírovat diagnostiku datové sady 2.0 do schránky"
+              AutomationProperties.AutomationId="CopyDataStoreHealthDetailsButton" />
+      <Button x:Name="OpenHealthDataFolderButton"
+              MinWidth="150"
+              IsEnabled="{Binding CanOpenDataFolder}"
+              Click="OnOpenDataFolderClick"
+              Content="Datová složka"
+              AutomationProperties.Name="Otevřít datovou složku"
+              AutomationProperties.AutomationId="OpenHealthDataFolderButton" />
+      <Button x:Name="OpenHealthPreMigrationBackupButton"
+              MinWidth="210"
+              IsEnabled="{Binding CanOpenPreMigrationBackupFolder}"
+              Click="OnOpenPreMigrationBackupFolderClick"
+              Content="Předmigrační záloha"
+              AutomationProperties.Name="Otevřít předmigrační zálohu"
+              AutomationProperties.AutomationId="OpenHealthPreMigrationBackupButton" />
+      <Button x:Name="CloseHealthButton"
+              MinWidth="110"
+              Click="OnCloseClick"
+              Content="Zavřít"
+              AutomationProperties.Name="Zavřít kontrolu datové sady 2.0"
+              AutomationProperties.AutomationId="CloseDataStoreHealthButton" />
+    </StackPanel>
+  </Grid>
+</Window>
