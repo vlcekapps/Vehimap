@@ -13,6 +13,10 @@ for a future ACR/VPAT-style report if one is needed.
   storage and UI stabilization.
 - We do not claim formal WCAG, EN 301 549, Section 508, or VPAT conformance yet.
 - Known exceptions must stay documented, tested, and either retired or explicitly kept.
+- The current `TextBox UIA text fallback` is an explicitly temporary workaround for
+  [AvaloniaUI/Avalonia#9770](https://github.com/AvaloniaUI/Avalonia/issues/9770). It
+  improves practical NVDA usability in nightly builds, but it is not acceptable as a
+  final answer for a formal ACR/VPAT claim.
 
 ## Avalonia rules for new UI
 
@@ -99,6 +103,28 @@ Avalonia shell. New entries require a regression test.
   bundle items.
 - `ServiceBookWindow.axaml.cs`: modal service-book keyboard commands that mirror the
   visible buttons.
+
+## Temporary TextBox fallback retirement
+
+The `KeyboardAccessibilityHelper.cs` live-region fallback for text editing exists only
+because Avalonia currently does not expose enough native UIA caret/text navigation
+information for screen readers in our tested scenario:
+[AvaloniaUI/Avalonia#9770](https://github.com/AvaloniaUI/Avalonia/issues/9770).
+
+Retire this fallback when all of the following are true:
+
+- The upstream Avalonia issue is closed or otherwise confirmed fixed for the desktop UIA
+  path.
+- Vehimap has upgraded to an Avalonia version that contains the fix.
+- Manual NVDA testing confirms that standard `TextBox` cursor navigation announces
+  characters, words, selection and caret context without the Vehimap live region.
+- The Appium accessibility regressions still pass after removing the fallback.
+
+Retirement work must remove the live-region code from `KeyboardAccessibilityHelper.cs`,
+remove or rewrite tests that assert `TextEditingLiveRegion`, and update this document
+from `accessibility-oriented / pre-conformance` toward the then-current conformance
+position. Until that happens, the fallback remains a documented exception, not a
+conformance strategy.
 
 ## Evidence log
 
