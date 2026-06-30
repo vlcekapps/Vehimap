@@ -46,12 +46,13 @@
                  AutomationProperties.AutomationId="MaintenanceCompletionDateBox"
                  AutomationProperties.IsRequiredForForm="True" />
 
-        <TextBlock Grid.Row="2" Margin="0,14,0,0" FontWeight="SemiBold" Text="Tachometr při provedení" />
+        <TextBlock Grid.Row="2" Margin="0,14,0,0" FontWeight="SemiBold" Text="{Binding CompletedOdometerLabel}" />
         <TextBox x:Name="MaintenanceCompletionOdometerBox"
                  Grid.Row="3"
                  Margin="0,6,0,0"
                  Text="{Binding CompletedOdometer}"
-                 AutomationProperties.Name="Tachometr při provedení servisního úkonu"
+                 AutomationProperties.Name="{Binding CompletedOdometerName}"
+                 AutomationProperties.HelpText="{Binding CompletedOdometerHelp}"
                  AutomationProperties.AutomationId="MaintenanceCompletionOdometerBox"
                  AutomationProperties.IsRequiredForForm="{Binding RequiresOdometer}" />
 

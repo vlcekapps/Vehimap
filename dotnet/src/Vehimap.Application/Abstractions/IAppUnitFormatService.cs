@@ -14,5 +14,7 @@ public interface IAppUnitFormatService
 
     string FormatVolumeFromLiters(decimal liters, AppCulturePreferences culturePreferences, AppUnitPreferences unitPreferences, int decimalPlaces = 2);
 
+    decimal ConvertVolumeFromLiters(decimal liters, AppUnitPreferences unitPreferences);
+
     decimal ConvertVolumeToLiters(decimal value, AppUnitPreferences unitPreferences);
 }

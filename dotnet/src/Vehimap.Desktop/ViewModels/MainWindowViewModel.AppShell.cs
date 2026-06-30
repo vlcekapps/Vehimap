@@ -220,6 +220,7 @@ public sealed partial class MainWindowViewModel
         var previous = _session.ReadSupportedSettings();
         await _session.ApplySupportedSettingsAsync(snapshot).ConfigureAwait(false);
         Load(SelectedVehicle?.Id, SelectedVehicleTabIndex, applyLaunchTabPreference: false);
+        NotifyEditorUnitMetadataChanged();
         ShellStatus = string.Equals(previous.Language, snapshot.Language, StringComparison.OrdinalIgnoreCase)
             ? DesktopLocalization.Localizer.GetString("Shell.SettingsSaved")
             : DesktopLocalization.Localizer.GetString("Settings.RestartRequiredStatus");

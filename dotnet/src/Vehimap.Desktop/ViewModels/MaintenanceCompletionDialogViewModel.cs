@@ -1,18 +1,27 @@
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObject
 {
+    private static readonly AppNumberFormatService NumberFormatService = new();
+    private static readonly AppUnitFormatService UnitFormatService = new();
+
+    private readonly AppCulturePreferences _culturePreferences;
+    private readonly AppUnitPreferences _unitPreferences;
+
     public MaintenanceCompletionDialogViewModel(
         string vehicleName,
         string planTitle,
         string currentStatus,
         bool requiresOdometer,
         string completedDate,
-        string completedOdometer)
+        string completedOdometer,
+        AppCulturePreferences? culturePreferences = null,
+        AppUnitPreferences? unitPreferences = null)
     {
         VehicleName = vehicleName;
         PlanTitle = planTitle;
@@ -20,6 +29,8 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         RequiresOdometer = requiresOdometer;
         CompletedDate = completedDate;
         CompletedOdometer = completedOdometer;
+        _culturePreferences = culturePreferences ?? new AppCulturePreferences();
+        _unitPreferences = UnitFormatService.Normalize(unitPreferences ?? new AppUnitPreferences());
     }
 
     public string VehicleName { get; }
@@ -29,6 +40,17 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
     public string CurrentStatus { get; }
 
     public bool RequiresOdometer { get; }
+
+    public string DistanceUnitLabel =>
+        string.Equals(_unitPreferences.DistanceUnit, AppUnitFormatService.Miles, StringComparison.Ordinal)
+            ? "mi"
+            : "km";
+
+    public string CompletedOdometerLabel => $"Tachometr při provedení ({DistanceUnitLabel})";
+
+    public string CompletedOdometerName => $"Tachometr při provedení servisního úkonu v {DistanceUnitLabel}";
+
+    public string CompletedOdometerHelp => $"Zadejte stav tachometru v {DistanceUnitLabel}. Vehimap hodnotu uloží interně v kilometrech.";
 
     [ObservableProperty]
     private string completedDate = string.Empty;
@@ -66,13 +88,15 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         var normalizedOdometer = string.Empty;
         if (!string.IsNullOrWhiteSpace(completedOdometerText))
         {
-            if (!VehimapValueParser.TryParseOdometer(completedOdometerText, out var parsedOdometer))
+            if (!NumberFormatService.TryParseDecimal(completedOdometerText, _culturePreferences, out var parsedOdometer)
+                || parsedOdometer < 0m)
             {
-                SetError("Tachometr při provedení zadejte jako celé číslo.", "MaintenanceCompletionOdometerBox");
+                SetError($"Tachometr při provedení zadejte jako číslo v {DistanceUnitLabel}.", "MaintenanceCompletionOdometerBox");
                 return false;
             }
 
-            normalizedOdometer = parsedOdometer.ToString(CultureInfo.InvariantCulture);
+            var convertedKilometers = UnitFormatService.ConvertDistanceToKilometers(parsedOdometer, _unitPreferences);
+            normalizedOdometer = ((int)Math.Round(convertedKilometers, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture);
         }
         else if (RequiresOdometer)
         {

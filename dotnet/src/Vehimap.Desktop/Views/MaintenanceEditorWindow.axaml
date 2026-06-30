@@ -55,12 +55,12 @@
                  AutomationProperties.IsRequiredForForm="True" />
         <Grid Grid.Row="4" Margin="0,14,0,0" ColumnDefinitions="*,*">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Interval km" />
+            <TextBlock FontWeight="SemiBold" Text="{Binding MaintenanceEditorIntervalDistanceLabel}" />
             <TextBox x:Name="MaintenanceEditorIntervalKmBox"
                      Text="{Binding MaintenanceEditorIntervalKm}"
                      PlaceholderText="Například 15000"
-                     AutomationProperties.Name="Interval údržby v kilometrech"
-                     AutomationProperties.HelpText="Například 15000"
+                     AutomationProperties.Name="{Binding MaintenanceEditorIntervalDistanceName}"
+                     AutomationProperties.HelpText="{Binding MaintenanceEditorIntervalDistanceHelp}"
                      AutomationProperties.AutomationId="MaintenanceEditorIntervalKmBox" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">
@@ -84,12 +84,12 @@
                      AutomationProperties.AutomationId="MaintenanceEditorLastServiceDateBox" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Poslední servis - tachometr" />
+            <TextBlock FontWeight="SemiBold" Text="{Binding MaintenanceEditorLastServiceOdometerLabel}" />
             <TextBox x:Name="MaintenanceEditorLastServiceOdometerBox"
                      Text="{Binding MaintenanceEditorLastServiceOdometer}"
                      PlaceholderText="Například 123456"
-                     AutomationProperties.Name="Tachometr při posledním servisu"
-                     AutomationProperties.HelpText="Například 123456"
+                     AutomationProperties.Name="{Binding MaintenanceEditorLastServiceOdometerName}"
+                     AutomationProperties.HelpText="{Binding MaintenanceEditorLastServiceOdometerHelp}"
                      AutomationProperties.AutomationId="MaintenanceEditorLastServiceOdometerBox" />
           </StackPanel>
         </Grid>

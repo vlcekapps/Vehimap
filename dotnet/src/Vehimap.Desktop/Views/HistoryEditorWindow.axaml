@@ -59,12 +59,12 @@
                      AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Tachometr" />
+            <TextBlock FontWeight="SemiBold" Text="{Binding HistoryEditorOdometerLabel}" />
             <TextBox x:Name="HistoryEditorOdometerBox"
                      Text="{Binding HistoryEditorOdometer}"
                      PlaceholderText="Například 123456"
-                     AutomationProperties.Name="Tachometr historického záznamu"
-                     AutomationProperties.HelpText="Například 123456"
+                     AutomationProperties.Name="{Binding HistoryEditorOdometerName}"
+                     AutomationProperties.HelpText="{Binding HistoryEditorOdometerHelp}"
                      AutomationProperties.AutomationId="HistoryEditorOdometerBox" />
           </StackPanel>
         </Grid>

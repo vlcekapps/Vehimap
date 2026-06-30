@@ -172,4 +172,72 @@ public sealed class SettingsDialogViewModelTests
         Assert.Equal(1000, snapshot.MaintenanceReminderKm);
         Assert.Equal("mi", snapshot.DistanceUnit);
     }
+
+    [Fact]
+    public void Changing_number_separators_reformats_maintenance_reminder_without_changing_storage_meaning()
+    {
+        var viewModel = SettingsDialogViewModel.FromSnapshot(
+            new DesktopSupportedSettingsSnapshot(
+                30,
+                30,
+                31,
+                999999,
+                false,
+                false,
+                true,
+                false,
+                7,
+                10,
+                "en-US",
+                "comma",
+                "dot",
+                "km",
+                "l"),
+            "No automatic backup.",
+            new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
+
+        Assert.Equal("999,999", viewModel.MaintenanceReminderKm);
+
+        viewModel.SelectedThousandsSeparatorOption = viewModel.ThousandsSeparatorOptions.First(option => option.Value == "none");
+
+        Assert.Equal("999999", viewModel.MaintenanceReminderKm);
+
+        var valid = viewModel.TryBuildSnapshot(out var snapshot, out var errorMessage);
+
+        Assert.True(valid);
+        Assert.Empty(errorMessage);
+        Assert.Equal(999999, snapshot.MaintenanceReminderKm);
+        Assert.Equal("none", snapshot.ThousandsSeparator);
+    }
+
+    [Fact]
+    public void Conflicting_number_separators_are_rejected_before_ambiguous_parsing()
+    {
+        var viewModel = SettingsDialogViewModel.FromSnapshot(
+            new DesktopSupportedSettingsSnapshot(
+                30,
+                30,
+                31,
+                1000,
+                false,
+                false,
+                true,
+                false,
+                7,
+                10,
+                "en-US",
+                "comma",
+                "dot",
+                "mi",
+                "us_gal"),
+            "No automatic backup.",
+            new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
+
+        viewModel.SelectedDecimalSeparatorOption = viewModel.DecimalSeparatorOptions.First(option => option.Value == "comma");
+
+        var valid = viewModel.TryBuildSnapshot(out _, out var errorMessage);
+
+        Assert.False(valid);
+        Assert.Equal("The thousands separator and decimal separator must be different. Choose no thousands separator or a different symbol.", errorMessage);
+    }
 }

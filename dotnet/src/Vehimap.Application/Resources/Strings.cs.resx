@@ -220,6 +220,7 @@
   <data name="Settings.Title" xml:space="preserve"><value>Nastavení Vehimapu</value></data>
   <data name="Settings.Validation.IntegerRange" xml:space="preserve"><value>{0} musí být celé číslo v rozsahu {1} až {2}.</value></data>
   <data name="Settings.Validation.NumberRange" xml:space="preserve"><value>{0} musí být číslo v rozsahu {1} až {2}.</value></data>
+  <data name="Settings.Validation.SeparatorsMustDiffer" xml:space="preserve"><value>Oddělovač tisíců a oddělovač desetin se nesmí shodovat. Zvolte žádný oddělovač tisíců nebo jiný znak.</value></data>
   <data name="Settings.VolumeUnit" xml:space="preserve"><value>Jednotka objemu paliva</value></data>
   <data name="Shell.SettingsCanceled" xml:space="preserve"><value>Nastavení bylo zavřeno bez uložení.</value></data>
   <data name="Shell.SettingsFailed" xml:space="preserve"><value>Nastavení se nepodařilo dokončit: {0}</value></data>

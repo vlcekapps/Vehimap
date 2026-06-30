@@ -38,6 +38,8 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - jazyk se v prvni fazi plne projevi po restartu aplikace
 - kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
 - vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry
+- tachometry v historii/tankovani, servisni intervaly, dokonceni udrzby a objem tankovani se v editorech zobrazuji a zadavaji ve zvolenych jednotkach, zatimco SQLite zustava v kanonickych km/l
+- zmena oddelovacu cisel jen znovu vykresli viditelne hodnoty; nejednoznacne kombinace, kde je oddelovac tisicu stejny jako desetinni oddelovac, nastaveni odmitne
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 
 ## Aktualni stav

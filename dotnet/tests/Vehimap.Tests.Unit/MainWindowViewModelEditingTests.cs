@@ -436,6 +436,31 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
+    public async Task History_editor_displays_selected_distance_unit_and_saves_canonical_kilometers()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        ConfigureUnits(dataSet, distanceUnit: "mi", volumeUnit: "us_gal");
+        dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_1", "veh_1", "15.10.2026", "Servis", "161", "2500", "Test"));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.EditSelectedHistoryCommand.Execute(null);
+
+        Assert.Equal("100", viewModel.HistoryWorkspace.HistoryEditorOdometer);
+        Assert.Equal("Tachometr (mi)", viewModel.HistoryWorkspace.HistoryEditorOdometerLabel);
+
+        viewModel.HistoryWorkspace.HistoryEditorOdometer = "200";
+
+        await viewModel.SaveHistoryCommand.ExecuteAsync(null);
+
+        var saved = Assert.Single(dataStore.CurrentDataSet.HistoryEntries);
+        Assert.Equal("322", saved.Odometer);
+    }
+
+    [Fact]
     public async Task Save_history_command_rejects_invalid_cost_and_focuses_field()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
@@ -493,6 +518,57 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Contains("Shell FuelSave", viewModel.FuelWorkspace.SelectedFuelDetail, StringComparison.Ordinal);
         Assert.Contains("Shell Brno Vídeňská", viewModel.FuelWorkspace.SelectedFuelDetail, StringComparison.Ordinal);
         Assert.Equal("Nové tankování bylo uloženo.", viewModel.FuelWorkspace.FuelEditorStatus);
+    }
+
+    [Fact]
+    public async Task Fuel_editor_displays_selected_units_and_saves_canonical_kilometers_and_liters()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        ConfigureUnits(dataSet, distanceUnit: "mi", volumeUnit: "us_gal");
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateFuelCommand.Execute(null);
+
+        Assert.Equal("Tachometr (mi)", viewModel.FuelWorkspace.FuelEditorOdometerLabel);
+        Assert.Equal("Množství (US gal)", viewModel.FuelWorkspace.FuelEditorVolumeLabel);
+
+        viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
+        viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
+        viewModel.FuelWorkspace.FuelEditorLiters = "10";
+        viewModel.FuelWorkspace.FuelEditorOdometer = "100";
+
+        await viewModel.SaveFuelCommand.ExecuteAsync(null);
+
+        var saved = Assert.Single(dataStore.CurrentDataSet.FuelEntries);
+        Assert.Equal("161", saved.Odometer);
+        Assert.Equal("37.85", saved.Liters);
+    }
+
+    [Fact]
+    public async Task Fuel_editor_accepts_selected_decimal_separator_and_saves_invariant_liters()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        ConfigureNumberFormatAndUnits(dataSet, language: "cs-CZ", thousandsSeparator: "none", decimalSeparator: "comma", distanceUnit: "km", volumeUnit: "l");
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateFuelCommand.Execute(null);
+        viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
+        viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
+        viewModel.FuelWorkspace.FuelEditorLiters = "10,5";
+        viewModel.FuelWorkspace.FuelEditorOdometer = "123456";
+
+        await viewModel.SaveFuelCommand.ExecuteAsync(null);
+
+        var saved = Assert.Single(dataStore.CurrentDataSet.FuelEntries);
+        Assert.Equal("10.5", saved.Liters);
     }
 
     [Fact]
@@ -584,6 +660,34 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Motorový olej", viewModel.MaintenanceWorkspace.SelectedMaintenance!.Title);
         Assert.Contains(dataStore.CurrentDataSet.MaintenancePlans, item => item.Title == "Motorový olej" && item.VehicleId == "veh_1");
         Assert.Equal("Nový servisní plán byl uložen.", viewModel.MaintenanceWorkspace.MaintenanceEditorStatus);
+    }
+
+    [Fact]
+    public async Task Maintenance_editor_displays_selected_distance_unit_and_saves_canonical_kilometers()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        ConfigureUnits(dataSet, distanceUnit: "mi", volumeUnit: "l");
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateMaintenanceCommand.Execute(null);
+
+        Assert.Equal("Interval vzdálenosti (mi)", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalDistanceLabel);
+        Assert.Equal("Poslední servis - tachometr (mi)", viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceOdometerLabel);
+
+        viewModel.MaintenanceWorkspace.MaintenanceEditorTitle = "Motorový olej";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm = "100";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceDate = "01.04.2026";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceOdometer = "200";
+
+        await viewModel.SaveMaintenanceCommand.ExecuteAsync(null);
+
+        var saved = Assert.Single(dataStore.CurrentDataSet.MaintenancePlans);
+        Assert.Equal("161", saved.IntervalKm);
+        Assert.Equal("322", saved.LastServiceOdometer);
     }
 
     [Fact]
@@ -700,6 +804,35 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Zapsáno z plánu údržby.", history.Note);
         Assert.Contains("historie", message);
         Assert.Equal("mnt_1", viewModel.MaintenanceWorkspace.SelectedMaintenance?.Id);
+    }
+
+    [Fact]
+    public async Task Maintenance_completion_dialog_displays_selected_distance_unit_and_saves_canonical_kilometers()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        ConfigureUnits(dataSet, distanceUnit: "mi", volumeUnit: "l");
+        dataSet.MaintenancePlans.Add(new MaintenancePlan("mnt_1", "veh_1", "Motorový olej", "161", "12", "01.04.2025", "161", true, "Roční servis"));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        var dialogViewModel = viewModel.BuildMaintenanceCompletionDialogViewModel();
+
+        Assert.NotNull(dialogViewModel);
+        Assert.Equal("100", dialogViewModel!.CompletedOdometer);
+        Assert.Equal("Tachometr při provedení (mi)", dialogViewModel.CompletedOdometerLabel);
+
+        dialogViewModel.CompletedOdometer = "200";
+        Assert.True(dialogViewModel.TryBuildResult(out var result));
+        Assert.NotNull(result);
+
+        var message = await viewModel.ApplyMaintenanceCompletionAsync(result!);
+
+        var savedPlan = Assert.Single(dataStore.CurrentDataSet.MaintenancePlans);
+        Assert.Equal("322", savedPlan.LastServiceOdometer);
+        Assert.Contains("322 km", message);
     }
 
     [Fact]
@@ -1141,6 +1274,26 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
                 new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
             ]
         };
+    }
+
+    private static void ConfigureUnits(VehimapDataSet dataSet, string distanceUnit, string volumeUnit)
+    {
+        ConfigureNumberFormatAndUnits(dataSet, "en-US", "comma", "dot", distanceUnit, volumeUnit);
+    }
+
+    private static void ConfigureNumberFormatAndUnits(
+        VehimapDataSet dataSet,
+        string language,
+        string thousandsSeparator,
+        string decimalSeparator,
+        string distanceUnit,
+        string volumeUnit)
+    {
+        dataSet.Settings.SetValue("app", "language", language);
+        dataSet.Settings.SetValue("app", "thousands_separator", thousandsSeparator);
+        dataSet.Settings.SetValue("app", "decimal_separator", decimalSeparator);
+        dataSet.Settings.SetValue("app", "distance_unit", distanceUnit);
+        dataSet.Settings.SetValue("app", "volume_unit", volumeUnit);
     }
 
     private sealed class MutableStubLegacyDataStore : ILegacyDataStore

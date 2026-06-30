@@ -220,6 +220,7 @@
   <data name="Settings.Title" xml:space="preserve"><value>Vehimap settings</value></data>
   <data name="Settings.Validation.IntegerRange" xml:space="preserve"><value>{0} must be an integer between {1} and {2}.</value></data>
   <data name="Settings.Validation.NumberRange" xml:space="preserve"><value>{0} must be a number between {1} and {2}.</value></data>
+  <data name="Settings.Validation.SeparatorsMustDiffer" xml:space="preserve"><value>The thousands separator and decimal separator must be different. Choose no thousands separator or a different symbol.</value></data>
   <data name="Settings.VolumeUnit" xml:space="preserve"><value>Fuel volume unit</value></data>
   <data name="Shell.SettingsCanceled" xml:space="preserve"><value>Settings were closed without saving.</value></data>
   <data name="Shell.SettingsFailed" xml:space="preserve"><value>Settings could not be completed: {0}</value></data>

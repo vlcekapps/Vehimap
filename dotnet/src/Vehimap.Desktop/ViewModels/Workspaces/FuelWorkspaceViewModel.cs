@@ -87,11 +87,23 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string fuelEditorLiters = string.Empty;
 
+    public string FuelEditorVolumeLabel => $"Množství ({Root.CurrentVolumeUnitLabel})";
+
+    public string FuelEditorVolumeName => $"Množství tankovaného paliva v {Root.CurrentVolumeUnitLabel}";
+
+    public string FuelEditorVolumeHelp => $"Zadejte objem paliva v {Root.CurrentVolumeUnitLabel}. Vehimap hodnotu uloží interně v litrech.";
+
     [ObservableProperty]
     private string fuelEditorTotalCost = string.Empty;
 
     [ObservableProperty]
     private string fuelEditorOdometer = string.Empty;
+
+    public string FuelEditorOdometerLabel => $"Tachometr ({Root.CurrentDistanceUnitLabel})";
+
+    public string FuelEditorOdometerName => $"Tachometr při tankování v {Root.CurrentDistanceUnitLabel}";
+
+    public string FuelEditorOdometerHelp => $"Zadejte stav tachometru v {Root.CurrentDistanceUnitLabel}. Vehimap hodnotu uloží interně v kilometrech.";
 
     [ObservableProperty]
     private bool fuelEditorFullTank = true;
@@ -257,6 +269,7 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
         if (value)
         {
             FuelEditorHeading = Root.GetEditingFuelId() is null ? "Nové tankování" : "Upravit tankování";
+            NotifyUnitMetadataChanged();
         }
 
         OnPropertyChanged(nameof(IsFuelDetailVisible));
@@ -311,4 +324,14 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
 
     private static bool Contains(string value, string query) =>
         value.Contains(query, StringComparison.CurrentCultureIgnoreCase);
+
+    internal void NotifyUnitMetadataChanged()
+    {
+        OnPropertyChanged(nameof(FuelEditorVolumeLabel));
+        OnPropertyChanged(nameof(FuelEditorVolumeName));
+        OnPropertyChanged(nameof(FuelEditorVolumeHelp));
+        OnPropertyChanged(nameof(FuelEditorOdometerLabel));
+        OnPropertyChanged(nameof(FuelEditorOdometerName));
+        OnPropertyChanged(nameof(FuelEditorOdometerHelp));
+    }
 }

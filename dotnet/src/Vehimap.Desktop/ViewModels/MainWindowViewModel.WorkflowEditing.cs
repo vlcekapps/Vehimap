@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Globalization;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Models;
 using Vehimap.Storage.Legacy;
@@ -8,9 +9,147 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
+    private static readonly AppNumberFormatService EditorNumberFormatService = new();
+    private static readonly AppUnitFormatService EditorUnitFormatService = new();
+
     private string? _editingHistoryId;
     private string? _editingFuelId;
     private string? _editingMaintenanceId;
+
+    internal string CurrentDistanceUnitLabel =>
+        string.Equals(CurrentUnitPreferences.DistanceUnit, AppUnitFormatService.Miles, StringComparison.Ordinal)
+            ? "mi"
+            : "km";
+
+    internal string CurrentVolumeUnitLabel =>
+        CurrentUnitPreferences.VolumeUnit switch
+        {
+            AppUnitFormatService.UsGallons => "US gal",
+            AppUnitFormatService.ImperialGallons => "imp gal",
+            _ => "l"
+        };
+
+    private DesktopSupportedSettingsSnapshot CurrentSupportedSettings => _session.ReadSupportedSettings();
+
+    private AppCulturePreferences CurrentCulturePreferences =>
+        new(
+            CurrentSupportedSettings.Language,
+            CurrentSupportedSettings.ThousandsSeparator,
+            CurrentSupportedSettings.DecimalSeparator);
+
+    private AppUnitPreferences CurrentUnitPreferences =>
+        new(
+            CurrentSupportedSettings.DistanceUnit,
+            CurrentSupportedSettings.VolumeUnit);
+
+    internal string FormatCanonicalDistanceForEditor(string? canonicalKilometers) =>
+        FormatCanonicalDistanceForEditor(canonicalKilometers, allowDecimalMiles: true);
+
+    private string FormatCanonicalOdometerForEditor(string? canonicalKilometers) =>
+        FormatCanonicalDistanceForEditor(canonicalKilometers, allowDecimalMiles: false);
+
+    private string FormatCanonicalDistanceForEditor(string? canonicalKilometers, bool allowDecimalMiles)
+    {
+        var value = (canonicalKilometers ?? string.Empty).Trim();
+        if (value.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        if (!VehimapValueParser.TryParseDecimalNumber(value, out var kilometers))
+        {
+            return value;
+        }
+
+        var units = CurrentUnitPreferences;
+        var decimalPlaces = allowDecimalMiles && string.Equals(AppUnitFormatService.NormalizeDistanceUnit(units.DistanceUnit), AppUnitFormatService.Miles, StringComparison.Ordinal)
+            ? 1
+            : 0;
+        var distance = EditorUnitFormatService.ConvertDistanceFromKilometers(kilometers, units);
+        return EditorNumberFormatService.FormatDecimal(distance, CurrentCulturePreferences, decimalPlaces);
+    }
+
+    private string FormatCanonicalVolumeForEditor(string? canonicalLiters)
+    {
+        var value = (canonicalLiters ?? string.Empty).Trim();
+        if (value.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        if (!VehimapValueParser.TryParseDecimalNumber(value, out var liters))
+        {
+            return value;
+        }
+
+        var units = CurrentUnitPreferences;
+        var volume = EditorUnitFormatService.ConvertVolumeFromLiters(liters, units);
+        var decimalPlaces = string.Equals(AppUnitFormatService.NormalizeVolumeUnit(units.VolumeUnit), AppUnitFormatService.Liters, StringComparison.Ordinal)
+            ? 2
+            : 3;
+        return EditorNumberFormatService.FormatDecimal(volume, CurrentCulturePreferences, decimalPlaces);
+    }
+
+    private bool TryNormalizeEditorDistanceToKilometers(string? text, bool allowEmpty, out string kilometers)
+    {
+        var value = (text ?? string.Empty).Trim();
+        if (value.Length == 0)
+        {
+            kilometers = string.Empty;
+            return allowEmpty;
+        }
+
+        if (!TryParseEditorDecimal(value, out var distance) || distance < 0m)
+        {
+            kilometers = string.Empty;
+            return false;
+        }
+
+        var convertedKilometers = EditorUnitFormatService.ConvertDistanceToKilometers(distance, CurrentUnitPreferences);
+        kilometers = ((int)Math.Round(convertedKilometers, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture);
+        return true;
+    }
+
+    private bool TryNormalizeEditorPositiveDistanceToKilometers(string? text, bool allowEmpty, out string kilometers)
+    {
+        if (!TryNormalizeEditorDistanceToKilometers(text, allowEmpty, out kilometers))
+        {
+            return false;
+        }
+
+        return kilometers.Length == 0 || int.Parse(kilometers, CultureInfo.InvariantCulture) > 0;
+    }
+
+    private bool TryNormalizeEditorVolumeToLiters(string? text, bool allowEmpty, out string liters)
+    {
+        var value = (text ?? string.Empty).Trim();
+        if (value.Length == 0)
+        {
+            liters = string.Empty;
+            return allowEmpty;
+        }
+
+        if (!TryParseEditorDecimal(value, out var volume) || volume < 0m)
+        {
+            liters = string.Empty;
+            return false;
+        }
+
+        var convertedLiters = EditorUnitFormatService.ConvertVolumeToLiters(volume, CurrentUnitPreferences);
+        liters = convertedLiters.ToString("0.##", CultureInfo.InvariantCulture);
+        return true;
+    }
+
+    private bool TryParseEditorDecimal(string value, out decimal number) =>
+        EditorNumberFormatService.TryParseDecimal(value, CurrentCulturePreferences, out number)
+        || VehimapValueParser.TryParseDecimalNumber(value, out number);
+
+    private void NotifyEditorUnitMetadataChanged()
+    {
+        HistoryWorkspace.NotifyUnitMetadataChanged();
+        FuelWorkspace.NotifyUnitMetadataChanged();
+        MaintenanceWorkspace.NotifyUnitMetadataChanged();
+    }
 
     [RelayCommand(CanExecute = nameof(CanCreateHistory))]
     private void CreateHistory()
@@ -44,7 +183,7 @@ public sealed partial class MainWindowViewModel
         _editingHistoryId = entry.Id;
         HistoryEditorDate = entry.EventDate;
         HistoryEditorType = entry.EventType;
-        HistoryEditorOdometer = entry.Odometer;
+        HistoryEditorOdometer = FormatCanonicalOdometerForEditor(entry.Odometer);
         HistoryEditorCost = entry.Cost;
         HistoryEditorNote = entry.Note;
         HistoryEditorStatus = "Upravte historický záznam a uložte změny.";
@@ -65,7 +204,7 @@ public sealed partial class MainWindowViewModel
         var eventDate = LegacyVehicleValueNormalization.NormalizeEventDate(eventDateText);
         var eventType = (HistoryEditorType ?? string.Empty).Trim();
         var odometerText = (HistoryEditorOdometer ?? string.Empty).Trim();
-        var odometer = LegacyVehicleValueNormalization.NormalizeOdometer(odometerText);
+        var odometer = string.Empty;
         var costText = (HistoryEditorCost ?? string.Empty).Trim();
         var cost = string.Empty;
 
@@ -83,9 +222,9 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (odometerText.Length > 0 && odometer.Length == 0)
+        if (!TryNormalizeEditorDistanceToKilometers(odometerText, allowEmpty: true, out odometer))
         {
-            HistoryEditorStatus = "Stav tachometru zadejte jen jako celé číslo, nebo pole nechte prázdné.";
+            HistoryEditorStatus = $"Stav tachometru zadejte jako číslo v {CurrentDistanceUnitLabel}, nebo pole nechte prázdné.";
             RequestFocus(DesktopFocusTarget.HistoryEditorOdometer);
             return;
         }
@@ -203,9 +342,9 @@ public sealed partial class MainWindowViewModel
         FuelEditorFuelType = LegacyVehicleValueNormalization.NormalizeFuelType(entry.FuelType);
         FuelEditorFuelDetail = entry.FuelDetail;
         FuelEditorStation = entry.Station;
-        FuelEditorLiters = entry.Liters;
+        FuelEditorLiters = FormatCanonicalVolumeForEditor(entry.Liters);
         FuelEditorTotalCost = entry.TotalCost;
-        FuelEditorOdometer = entry.Odometer;
+        FuelEditorOdometer = FormatCanonicalOdometerForEditor(entry.Odometer);
         FuelEditorFullTank = entry.FullTank;
         FuelEditorNote = entry.Note;
         FuelEditorStatus = "Upravte tankování a uložte změny.";
@@ -225,9 +364,9 @@ public sealed partial class MainWindowViewModel
         var entryDateText = (FuelEditorDate ?? string.Empty).Trim();
         var entryDate = LegacyVehicleValueNormalization.NormalizeEventDate(entryDateText);
         var odometerText = (FuelEditorOdometer ?? string.Empty).Trim();
-        var odometer = LegacyVehicleValueNormalization.NormalizeOdometer(odometerText);
+        var odometer = string.Empty;
         var litersText = (FuelEditorLiters ?? string.Empty).Trim();
-        var liters = LegacyVehicleValueNormalization.NormalizeDecimal(litersText);
+        var liters = string.Empty;
         var totalCostText = (FuelEditorTotalCost ?? string.Empty).Trim();
         var totalCost = string.Empty;
 
@@ -238,16 +377,16 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (odometer.Length == 0)
+        if (!TryNormalizeEditorDistanceToKilometers(odometerText, allowEmpty: false, out odometer))
         {
-            FuelEditorStatus = "Pole Stav tachometru je povinné a musí obsahovat celé číslo.";
+            FuelEditorStatus = $"Pole Stav tachometru je povinné a musí obsahovat číslo v {CurrentDistanceUnitLabel}.";
             RequestFocus(DesktopFocusTarget.FuelEditorOdometer);
             return;
         }
 
-        if (litersText.Length > 0 && liters.Length == 0)
+        if (!TryNormalizeEditorVolumeToLiters(litersText, allowEmpty: true, out liters))
         {
-            FuelEditorStatus = "Natankované litry zadejte jako číslo, například 42,5.";
+            FuelEditorStatus = $"Množství paliva zadejte jako číslo v {CurrentVolumeUnitLabel}.";
             RequestFocus(DesktopFocusTarget.FuelEditorLiters);
             return;
         }
@@ -371,10 +510,10 @@ public sealed partial class MainWindowViewModel
 
         _editingMaintenanceId = plan.Id;
         MaintenanceEditorTitle = plan.Title;
-        MaintenanceEditorIntervalKm = plan.IntervalKm;
+        MaintenanceEditorIntervalKm = FormatCanonicalDistanceForEditor(plan.IntervalKm);
         MaintenanceEditorIntervalMonths = plan.IntervalMonths;
         MaintenanceEditorLastServiceDate = plan.LastServiceDate;
-        MaintenanceEditorLastServiceOdometer = plan.LastServiceOdometer;
+        MaintenanceEditorLastServiceOdometer = FormatCanonicalOdometerForEditor(plan.LastServiceOdometer);
         MaintenanceEditorIsActive = plan.IsActive;
         MaintenanceEditorNote = plan.Note;
         MaintenanceEditorStatus = "Upravte servisní plán a uložte změny.";
@@ -401,23 +540,23 @@ public sealed partial class MainWindowViewModel
 
         var intervalKmText = (MaintenanceEditorIntervalKm ?? string.Empty).Trim();
         var intervalMonthsText = (MaintenanceEditorIntervalMonths ?? string.Empty).Trim();
-        var intervalKm = LegacyVehicleValueNormalization.NormalizePositiveInteger(intervalKmText);
+        var intervalKm = string.Empty;
         var intervalMonths = LegacyVehicleValueNormalization.NormalizePositiveInteger(intervalMonthsText);
         var lastServiceDateText = (MaintenanceEditorLastServiceDate ?? string.Empty).Trim();
         var lastServiceDate = LegacyVehicleValueNormalization.NormalizeEventDate(lastServiceDateText);
         var lastServiceOdometerText = (MaintenanceEditorLastServiceOdometer ?? string.Empty).Trim();
-        var lastServiceOdometer = LegacyVehicleValueNormalization.NormalizeOdometer(lastServiceOdometerText);
+        var lastServiceOdometer = string.Empty;
 
-        if (intervalKm.Length == 0 && intervalMonths.Length == 0)
+        if (!TryNormalizeEditorPositiveDistanceToKilometers(intervalKmText, allowEmpty: true, out intervalKm))
         {
-            MaintenanceEditorStatus = "Plán údržby musí mít vyplněný interval kilometrů, měsíců nebo obojí.";
+            MaintenanceEditorStatus = $"Interval vzdálenosti zadejte jako kladné číslo v {CurrentDistanceUnitLabel}.";
             RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalKm);
             return;
         }
 
-        if (intervalKmText.Length > 0 && intervalKm.Length == 0)
+        if (intervalKm.Length == 0 && intervalMonths.Length == 0)
         {
-            MaintenanceEditorStatus = "Interval kilometrů zadejte jako kladné celé číslo.";
+            MaintenanceEditorStatus = "Plán údržby musí mít vyplněný interval kilometrů, měsíců nebo obojí.";
             RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalKm);
             return;
         }
@@ -443,9 +582,9 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (lastServiceOdometerText.Length > 0 && lastServiceOdometer.Length == 0)
+        if (!TryNormalizeEditorDistanceToKilometers(lastServiceOdometerText, allowEmpty: true, out lastServiceOdometer))
         {
-            MaintenanceEditorStatus = "Stav tachometru posledního servisu zadejte jako celé číslo.";
+            MaintenanceEditorStatus = $"Stav tachometru posledního servisu zadejte jako číslo v {CurrentDistanceUnitLabel}.";
             RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceOdometer);
             return;
         }
@@ -564,7 +703,9 @@ public sealed partial class MainWindowViewModel
             SelectedMaintenance?.Status ?? "Aktuální stav není k dispozici.",
             !string.IsNullOrWhiteSpace(plan.IntervalKm),
             completedDate,
-            completedOdometer);
+            FormatCanonicalOdometerForEditor(completedOdometer),
+            CurrentCulturePreferences,
+            CurrentUnitPreferences);
     }
 
     internal async Task<string> ApplyMaintenanceCompletionAsync(MaintenanceCompletionDialogResult completion)

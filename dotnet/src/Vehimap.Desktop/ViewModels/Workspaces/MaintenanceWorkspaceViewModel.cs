@@ -78,6 +78,12 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     [ObservableProperty]
     private string maintenanceEditorIntervalKm = string.Empty;
 
+    public string MaintenanceEditorIntervalDistanceLabel => $"Interval vzdálenosti ({Root.CurrentDistanceUnitLabel})";
+
+    public string MaintenanceEditorIntervalDistanceName => $"Interval údržby v {Root.CurrentDistanceUnitLabel}";
+
+    public string MaintenanceEditorIntervalDistanceHelp => $"Zadejte vzdálenostní interval v {Root.CurrentDistanceUnitLabel}. Vehimap hodnotu uloží interně v kilometrech.";
+
     [ObservableProperty]
     private string maintenanceEditorIntervalMonths = string.Empty;
 
@@ -86,6 +92,12 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
 
     [ObservableProperty]
     private string maintenanceEditorLastServiceOdometer = string.Empty;
+
+    public string MaintenanceEditorLastServiceOdometerLabel => $"Poslední servis - tachometr ({Root.CurrentDistanceUnitLabel})";
+
+    public string MaintenanceEditorLastServiceOdometerName => $"Tachometr při posledním servisu v {Root.CurrentDistanceUnitLabel}";
+
+    public string MaintenanceEditorLastServiceOdometerHelp => $"Zadejte stav tachometru v {Root.CurrentDistanceUnitLabel}. Vehimap hodnotu uloží interně v kilometrech.";
 
     [ObservableProperty]
     private bool maintenanceEditorIsActive = true;
@@ -246,7 +258,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         }
 
         MaintenanceEditorTitle = template.Title;
-        MaintenanceEditorIntervalKm = template.IntervalKm;
+        MaintenanceEditorIntervalKm = Root.FormatCanonicalDistanceForEditor(template.IntervalKm);
         MaintenanceEditorIntervalMonths = template.IntervalMonths;
         MaintenanceEditorNote = template.Note;
         var categoryText = string.IsNullOrWhiteSpace(template.Category)
@@ -263,6 +275,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
             MaintenanceEditorHeading = Root.GetEditingMaintenanceId() is null
                 ? "Nový servisní plán"
                 : "Upravit servisní plán";
+            NotifyUnitMetadataChanged();
         }
 
         if (!value)
@@ -305,4 +318,14 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
 
     private static bool Contains(string value, string query) =>
         value.Contains(query, StringComparison.CurrentCultureIgnoreCase);
+
+    internal void NotifyUnitMetadataChanged()
+    {
+        OnPropertyChanged(nameof(MaintenanceEditorIntervalDistanceLabel));
+        OnPropertyChanged(nameof(MaintenanceEditorIntervalDistanceName));
+        OnPropertyChanged(nameof(MaintenanceEditorIntervalDistanceHelp));
+        OnPropertyChanged(nameof(MaintenanceEditorLastServiceOdometerLabel));
+        OnPropertyChanged(nameof(MaintenanceEditorLastServiceOdometerName));
+        OnPropertyChanged(nameof(MaintenanceEditorLastServiceOdometerHelp));
+    }
 }

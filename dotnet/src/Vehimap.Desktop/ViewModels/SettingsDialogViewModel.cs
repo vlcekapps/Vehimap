@@ -134,6 +134,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
         if (!TryParseBoundedIntLocalized(TechnicalReminderDays, 0, 3650, _localizer.GetString("Settings.TechnicalReminderDaysName"), out var technicalReminderDays, out errorMessage)
             || !TryParseBoundedIntLocalized(GreenCardReminderDays, 0, 3650, _localizer.GetString("Settings.GreenCardReminderDaysName"), out var greenCardReminderDays, out errorMessage)
             || !TryParseBoundedIntLocalized(MaintenanceReminderDays, 0, 3650, _localizer.GetString("Settings.MaintenanceReminderDaysName"), out var maintenanceReminderDays, out errorMessage)
+            || !TryValidateDistinctNumberSeparators(out errorMessage)
             || !TryParseMaintenanceReminderDistance(out var maintenanceReminderKm, out errorMessage))
         {
             snapshot = default!;
@@ -179,6 +180,20 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             SelectedDecimalSeparatorOption?.Value ?? AppCultureService.CultureSeparator,
             SelectedDistanceUnitOption?.Value ?? AppUnitFormatService.Kilometers,
             SelectedVolumeUnitOption?.Value ?? AppUnitFormatService.Liters);
+        errorMessage = string.Empty;
+        return true;
+    }
+
+    private bool TryValidateDistinctNumberSeparators(out string errorMessage)
+    {
+        var format = new AppNumberFormatService().CreateNumberFormat(BuildCulturePreferences());
+        if (!string.IsNullOrEmpty(format.NumberGroupSeparator)
+            && string.Equals(format.NumberGroupSeparator, format.NumberDecimalSeparator, StringComparison.Ordinal))
+        {
+            errorMessage = _localizer.GetString("Settings.Validation.SeparatorsMustDiffer");
+            return false;
+        }
+
         errorMessage = string.Empty;
         return true;
     }

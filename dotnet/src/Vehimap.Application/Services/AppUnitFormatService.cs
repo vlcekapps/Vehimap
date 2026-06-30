@@ -62,13 +62,25 @@ public sealed class AppUnitFormatService : IAppUnitFormatService
     public string FormatVolumeFromLiters(decimal liters, AppCulturePreferences culturePreferences, AppUnitPreferences unitPreferences, int decimalPlaces = 2)
     {
         var normalized = Normalize(unitPreferences);
-        var (value, unitLabel) = normalized.VolumeUnit switch
+        var value = ConvertVolumeFromLiters(liters, normalized);
+        var unitLabel = normalized.VolumeUnit switch
         {
-            UsGallons => (liters / LitersPerUsGallon, "US gal"),
-            ImperialGallons => (liters / LitersPerImperialGallon, "imp gal"),
-            _ => (liters, "l")
+            UsGallons => "US gal",
+            ImperialGallons => "imp gal",
+            _ => "l"
         };
         return _numberFormatService.FormatDecimal(value, culturePreferences, decimalPlaces) + " " + unitLabel;
+    }
+
+    public decimal ConvertVolumeFromLiters(decimal liters, AppUnitPreferences unitPreferences)
+    {
+        var normalized = Normalize(unitPreferences);
+        return normalized.VolumeUnit switch
+        {
+            UsGallons => liters / LitersPerUsGallon,
+            ImperialGallons => liters / LitersPerImperialGallon,
+            _ => liters
+        };
     }
 
     public decimal ConvertVolumeToLiters(decimal value, AppUnitPreferences unitPreferences)
