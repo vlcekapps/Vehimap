@@ -1025,6 +1025,50 @@ Vehicle: {2}
   <data name="OverdueOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, license plate, due date or item...</value></data>
   <data name="OverdueOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Sort overdue due dates descending</value></data>
   <data name="OverdueOverviewWorkspace.SortName" xml:space="preserve"><value>Overdue due date sort order</value></data>
+  <data name="DashboardTimeline.Detail.Empty" xml:space="preserve"><value>Select the nearest due date to open the related vehicle or record.</value></data>
+  <data name="DashboardTimeline.Detail.Selected" xml:space="preserve"><value>Vehicle: {0}
+Date: {1}
+Type: {2}
+Item: {3}
+Status: {4}
+Detail: {5}</value></data>
+  <data name="Overview.DataIssue.Date" xml:space="preserve"><value>To complete</value></data>
+  <data name="Overview.DataIssue.Detail" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Overview.DataIssue.KindLabel" xml:space="preserve"><value>Data issue</value></data>
+  <data name="Overview.DataIssue.Severity.Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Overview.DataIssue.Severity.Info" xml:space="preserve"><value>Info</value></data>
+  <data name="Overview.DataIssue.Severity.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Overview.Detail.EmptyOverdue" xml:space="preserve"><value>Select an overdue due date to open the related vehicle or record.</value></data>
+  <data name="Overview.Detail.EmptyUpcoming" xml:space="preserve"><value>Select a due date to open the related vehicle or record.</value></data>
+  <data name="Overview.Detail.Selected" xml:space="preserve"><value>{0}
+{1} | {2}
+{3}
+{4}
+Status: {5}</value></data>
+  <data name="Overview.Filter.All" xml:space="preserve"><value>All</value></data>
+  <data name="Overview.Filter.DataIssues" xml:space="preserve"><value>Data issues</value></data>
+  <data name="Overview.Filter.GreenCards" xml:space="preserve"><value>Green cards</value></data>
+  <data name="Overview.Filter.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="Overview.Filter.Records" xml:space="preserve"><value>Documents</value></data>
+  <data name="Overview.Filter.Reminders" xml:space="preserve"><value>Reminders</value></data>
+  <data name="Overview.Filter.Technical" xml:space="preserve"><value>Technical inspections</value></data>
+  <data name="Overview.MissingGreen.Date" xml:space="preserve"><value>Not filled</value></data>
+  <data name="Overview.MissingGreen.Status" xml:space="preserve"><value>Missing</value></data>
+  <data name="Overview.MissingGreen.Title" xml:space="preserve"><value>Missing green card</value></data>
+  <data name="Overview.Persistence.Error" xml:space="preserve"><value>Failed to save due date overview preferences</value></data>
+  <data name="Overview.Summary.DashboardEmpty" xml:space="preserve"><value>The available data does not contain any future due dates with a concrete date yet.</value></data>
+  <data name="Overview.Summary.DashboardInitial" xml:space="preserve"><value>Nearest due dates across vehicles will appear after the data is loaded.</value></data>
+  <data name="Overview.Summary.DashboardWithItems" xml:space="preserve"><value>The nearest {0} future due dates across all vehicles are ready to open.</value></data>
+  <data name="Overview.Summary.OverdueEmpty" xml:space="preserve"><value>The available data does not contain any overdue due dates with a concrete date yet.</value></data>
+  <data name="Overview.Summary.OverdueInitial" xml:space="preserve"><value>Overdue due dates across vehicles will appear after the data is loaded.</value></data>
+  <data name="Overview.Summary.OverdueWithItems" xml:space="preserve"><value>Overdue due dates: {0}. Select an item to open the record or vehicle.</value></data>
+  <data name="Overview.Summary.UpcomingDataIssuesHidden" xml:space="preserve"><value>The audit has {0} data issues; you can add them with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingEmpty" xml:space="preserve"><value>The available data does not contain any upcoming due dates with a concrete date yet.</value></data>
+  <data name="Overview.Summary.UpcomingEmptyWithDataIssues" xml:space="preserve"><value>The available data does not contain any upcoming due dates or data issues to complete yet.</value></data>
+  <data name="Overview.Summary.UpcomingInitial" xml:space="preserve"><value>Upcoming due dates across vehicles will appear after the data is loaded.</value></data>
+  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden" xml:space="preserve"><value>{0} vehicles do not have a filled green card; you can add them with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingVisibleDataIssues" xml:space="preserve"><value>Data issues included: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems" xml:space="preserve"><value>Upcoming items: {0}. Select an item to open the record or vehicle.</value></data>
   <data name="Timeline.Detail.DateAndOdometer" xml:space="preserve"><value>{0} | {1}</value></data>
   <data name="Timeline.Kind.Fuel" xml:space="preserve"><value>Fuel</value></data>
   <data name="Timeline.Kind.GreenCard" xml:space="preserve"><value>Green card</value></data>

@@ -21,10 +21,10 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
     private bool showDashboardOnLaunch;
 
     [ObservableProperty]
-    private string dashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
+    private string dashboardTimelineSummary = L("Overview.Summary.DashboardInitial");
 
     [ObservableProperty]
-    private string selectedDashboardTimelineDetail = "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.";
+    private string selectedDashboardTimelineDetail = L("DashboardTimeline.Detail.Empty");
 
     [ObservableProperty]
     private VehicleTimelineItemViewModel? selectedDashboardTimelineItem;
@@ -155,8 +155,15 @@ public sealed partial class DashboardWorkspaceViewModel : WorkspaceViewModelBase
     partial void OnSelectedDashboardTimelineItemChanged(VehicleTimelineItemViewModel? value)
     {
         SelectedDashboardTimelineDetail = value is null
-            ? "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci."
-            : $"Vozidlo: {value.VehicleName}\nDatum: {value.Date}\nDruh: {value.KindLabel}\nPoložka: {value.Title}\nStav: {Root.FormatWorkspaceValue(value.Status, "-")}\nDetail: {Root.FormatWorkspaceValue(value.Detail, "-")}";
+            ? L("DashboardTimeline.Detail.Empty")
+            : LF(
+                "DashboardTimeline.Detail.Selected",
+                value.VehicleName,
+                value.Date,
+                value.KindLabel,
+                value.Title,
+                Root.FormatWorkspaceValue(value.Status, "-"),
+                Root.FormatWorkspaceValue(value.Detail, "-"));
 
         Root.NotifyDashboardWorkspaceTimelineSelectionChanged();
         NotifyDashboardActionStateChanged();

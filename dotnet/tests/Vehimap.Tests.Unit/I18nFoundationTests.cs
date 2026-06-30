@@ -604,6 +604,30 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Domain_due_overviews_use_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var upcomingWorkspaceViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "UpcomingOverviewWorkspaceViewModel.cs"));
+        var overdueWorkspaceViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "OverdueOverviewWorkspaceViewModel.cs"));
+        var dashboardWorkspaceViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "DashboardWorkspaceViewModel.cs"));
+        var overviewsViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.Overviews.cs"));
+        var projectionService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopProjectionService.cs"));
+
+        Assert.Contains("Overview.Filter.All", upcomingWorkspaceViewModel);
+        Assert.Contains("Overview.Detail.Selected", upcomingWorkspaceViewModel);
+        Assert.Contains("Overview.Filter.DataIssues", upcomingWorkspaceViewModel);
+        Assert.Contains("Overview.Detail.EmptyOverdue", overdueWorkspaceViewModel);
+        Assert.Contains("DashboardTimeline.Detail.Selected", dashboardWorkspaceViewModel);
+        Assert.Contains("Overview.Summary.UpcomingWithItems", overviewsViewModel);
+        Assert.Contains("Overview.MissingGreen.Title", overviewsViewModel);
+        Assert.Contains("Overview.DataIssue.KindLabel", overviewsViewModel);
+        Assert.Contains("Overview.Summary.DashboardWithItems", projectionService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), upcomingWorkspaceViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), overdueWorkspaceViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), dashboardWorkspaceViewModel);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

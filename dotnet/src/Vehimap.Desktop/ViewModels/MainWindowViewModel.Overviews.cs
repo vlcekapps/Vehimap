@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Models;
 
@@ -10,9 +11,20 @@ namespace Vehimap.Desktop.ViewModels;
 public sealed partial class MainWindowViewModel
 {
     private const string OverviewDataIssueKind = "data_issue";
-    private const string OverviewDataIssueFilterLabel = "Datové nedostatky";
-    private const string OverviewMissingGreenDateLabel = "Nevyplněno";
-    private const string OverviewAllFilterLabel = "Vše";
+    private const string OverviewAllFilterLegacyCzech = "V\u0161e";
+    private const string OverviewTechnicalFilterLegacyCzech = "Technick\u00E9 kontroly";
+    private const string OverviewGreenCardsFilterLegacyCzech = "Zelen\u00E9 karty";
+    private const string OverviewRemindersFilterLegacyCzech = "P\u0159ipom\u00EDnky";
+    private const string OverviewRecordsFilterLegacyCzech = "Doklady";
+    private const string OverviewMaintenanceFilterLegacyCzech = "\u00DAdr\u017Eba";
+    private const string OverviewDataIssuesFilterLegacyCzech = "Datov\u00E9 nedostatky";
+    private const string OverviewAllFilterLegacyEnglish = "All";
+    private const string OverviewTechnicalFilterLegacyEnglish = "Technical inspections";
+    private const string OverviewGreenCardsFilterLegacyEnglish = "Green cards";
+    private const string OverviewRemindersFilterLegacyEnglish = "Reminders";
+    private const string OverviewRecordsFilterLegacyEnglish = "Documents";
+    private const string OverviewMaintenanceFilterLegacyEnglish = "Maintenance";
+    private const string OverviewDataIssuesFilterLegacyEnglish = "Data issues";
     private const string OverviewIncludeMissingGreenSettingKey = "include_missing_green";
     private const string OverviewIncludeDataIssuesSettingKey = "include_data_issues";
     private const string OverviewUpcomingFilterSettingKey = "upcoming_filter";
@@ -26,6 +38,16 @@ public sealed partial class MainWindowViewModel
     private ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems => UpcomingOverviewWorkspace.UpcomingOverviewItems;
 
     private ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems => OverdueOverviewWorkspace.OverdueOverviewItems;
+
+    private static string OverviewAllFilterLabel => LO("Overview.Filter.All");
+
+    private static string OverviewDataIssueFilterLabel => LO("Overview.Filter.DataIssues");
+
+    private static string OverviewMissingGreenDateLabel => LO("Overview.MissingGreen.Date");
+
+    private static string LO(string key) => DesktopLocalization.Localizer.GetString(key);
+
+    private static string LFO(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewItem))]
     private async Task OpenSelectedUpcomingOverviewItemAsync()
@@ -160,7 +182,7 @@ public sealed partial class MainWindowViewModel
                 settings.SetValue("overview", OverviewOverdueSortSettingKey, overdueSort);
                 settings.SetValue("overview", OverviewOverdueSortDescendingSettingKey, overdueDescending);
             },
-            "Nepodařilo se uložit volby přehledu termínů");
+            LO("Overview.Persistence.Error"));
     }
 
     private string NormalizeUpcomingOverviewFilter(string? value) =>
@@ -171,11 +193,57 @@ public sealed partial class MainWindowViewModel
 
     private static string NormalizeOverviewFilter(string? value, IReadOnlyList<string> supportedFilters)
     {
-        var normalized = string.IsNullOrWhiteSpace(value) ? OverviewAllFilterLabel : value.Trim();
+        var normalized = string.IsNullOrWhiteSpace(value)
+            ? OverviewAllFilterLabel
+            : NormalizeOverviewFilterAlias(value.Trim());
         return supportedFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
             ? normalized
             : OverviewAllFilterLabel;
     }
+
+    private static string NormalizeOverviewFilterAlias(string value)
+    {
+        if (IsOverviewFilterValue(value, "Overview.Filter.All", OverviewAllFilterLegacyCzech, OverviewAllFilterLegacyEnglish))
+        {
+            return OverviewAllFilterLabel;
+        }
+
+        if (IsOverviewFilterValue(value, "Overview.Filter.Technical", OverviewTechnicalFilterLegacyCzech, OverviewTechnicalFilterLegacyEnglish))
+        {
+            return LO("Overview.Filter.Technical");
+        }
+
+        if (IsOverviewFilterValue(value, "Overview.Filter.GreenCards", OverviewGreenCardsFilterLegacyCzech, OverviewGreenCardsFilterLegacyEnglish))
+        {
+            return LO("Overview.Filter.GreenCards");
+        }
+
+        if (IsOverviewFilterValue(value, "Overview.Filter.Reminders", OverviewRemindersFilterLegacyCzech, OverviewRemindersFilterLegacyEnglish))
+        {
+            return LO("Overview.Filter.Reminders");
+        }
+
+        if (IsOverviewFilterValue(value, "Overview.Filter.Records", OverviewRecordsFilterLegacyCzech, OverviewRecordsFilterLegacyEnglish))
+        {
+            return LO("Overview.Filter.Records");
+        }
+
+        if (IsOverviewFilterValue(value, "Overview.Filter.Maintenance", OverviewMaintenanceFilterLegacyCzech, OverviewMaintenanceFilterLegacyEnglish))
+        {
+            return LO("Overview.Filter.Maintenance");
+        }
+
+        if (IsOverviewFilterValue(value, "Overview.Filter.DataIssues", OverviewDataIssuesFilterLegacyCzech, OverviewDataIssuesFilterLegacyEnglish))
+        {
+            return OverviewDataIssueFilterLabel;
+        }
+
+        return value;
+    }
+
+    private static bool IsOverviewFilterValue(string value, string resourceKey, params string[] aliases) =>
+        string.Equals(value, LO(resourceKey), StringComparison.OrdinalIgnoreCase)
+        || aliases.Any(alias => string.Equals(value, alias, StringComparison.OrdinalIgnoreCase));
 
     private void RefreshUpcomingOverview()
     {
@@ -202,7 +270,7 @@ public sealed partial class MainWindowViewModel
         UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = FindById(UpcomingOverviewItems, BuildOverviewSelectionKey, previousKey) ?? UpcomingOverviewItems.FirstOrDefault();
         if (UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem is null)
         {
-            UpcomingOverviewWorkspace.SelectedUpcomingOverviewDetail = "Vyberte termín a můžete přejít na související vozidlo nebo evidenci.";
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewDetail = LO("Overview.Detail.EmptyUpcoming");
             NotifyUpcomingOverviewWorkspaceSelectionChanged();
         }
     }
@@ -223,13 +291,13 @@ public sealed partial class MainWindowViewModel
         }
 
         OverdueOverviewWorkspace.OverdueOverviewSummary = items.Count == 0
-            ? "V dostupných datech zatím nejsou žádné propadlé termíny s konkrétním datem."
-            : $"Propadlých termínů: {items.Count}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.";
+            ? LO("Overview.Summary.OverdueEmpty")
+            : LFO("Overview.Summary.OverdueWithItems", items.Count);
 
         OverdueOverviewWorkspace.SelectedOverdueOverviewItem = FindById(OverdueOverviewItems, BuildOverviewSelectionKey, previousKey) ?? OverdueOverviewItems.FirstOrDefault();
         if (OverdueOverviewWorkspace.SelectedOverdueOverviewItem is null)
         {
-            OverdueOverviewWorkspace.SelectedOverdueOverviewDetail = "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci.";
+            OverdueOverviewWorkspace.SelectedOverdueOverviewDetail = LO("Overview.Detail.EmptyOverdue");
             NotifyOverdueOverviewWorkspaceSelectionChanged();
         }
     }
@@ -275,16 +343,41 @@ public sealed partial class MainWindowViewModel
 
     private static bool MatchesOverviewFilter(VehicleTimelineItemViewModel item, string? filter)
     {
-        return filter switch
+        var normalizedFilter = string.IsNullOrWhiteSpace(filter)
+            ? OverviewAllFilterLabel
+            : NormalizeOverviewFilterAlias(filter.Trim());
+
+        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.Technical", OverviewTechnicalFilterLegacyCzech, OverviewTechnicalFilterLegacyEnglish))
         {
-            "Technické kontroly" => item.Kind == "technical",
-            "Zelené karty" => item.Kind == "green",
-            "Připomínky" => item.Kind == "custom",
-            "Doklady" => item.Kind == "record",
-            "Údržba" => item.Kind == "maintenance",
-            OverviewDataIssueFilterLabel => item.Kind == OverviewDataIssueKind,
-            _ => true
-        };
+            return item.Kind == "technical";
+        }
+
+        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.GreenCards", OverviewGreenCardsFilterLegacyCzech, OverviewGreenCardsFilterLegacyEnglish))
+        {
+            return item.Kind == "green";
+        }
+
+        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.Reminders", OverviewRemindersFilterLegacyCzech, OverviewRemindersFilterLegacyEnglish))
+        {
+            return item.Kind == "custom";
+        }
+
+        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.Records", OverviewRecordsFilterLegacyCzech, OverviewRecordsFilterLegacyEnglish))
+        {
+            return item.Kind == "record";
+        }
+
+        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.Maintenance", OverviewMaintenanceFilterLegacyCzech, OverviewMaintenanceFilterLegacyEnglish))
+        {
+            return item.Kind == "maintenance";
+        }
+
+        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.DataIssues", OverviewDataIssuesFilterLegacyCzech, OverviewDataIssuesFilterLegacyEnglish))
+        {
+            return item.Kind == OverviewDataIssueKind;
+        }
+
+        return true;
     }
 
     private static bool MatchesOverviewSearch(VehicleTimelineItemViewModel item, string? search)
@@ -322,11 +415,11 @@ public sealed partial class MainWindowViewModel
             .Select(vehicle => new FleetOverviewProjection(
                 new VehicleTimelineItemViewModel(
                     "green",
-                    "Zelená karta",
+                    LO("Timeline.Kind.GreenCard"),
                     OverviewMissingGreenDateLabel,
-                    "Chybí zelená karta",
+                    LO("Overview.MissingGreen.Title"),
                     BuildOverviewVehicleDetail(vehicle),
-                    "Chybí",
+                    LO("Overview.MissingGreen.Status"),
                     vehicle.Name,
                     vehicle.Id,
                     string.Empty,
@@ -344,15 +437,15 @@ public sealed partial class MainWindowViewModel
             .Select(item => new FleetOverviewProjection(
                 new VehicleTimelineItemViewModel(
                     OverviewDataIssueKind,
-                    "Datový nedostatek",
-                    "Doplnit",
+                    LO("Overview.DataIssue.KindLabel"),
+                    LO("Overview.DataIssue.Date"),
                     item.Title,
-                    $"{item.Category}: {item.Message}",
+                    LFO("Overview.DataIssue.Detail", item.Category, item.Message),
                     item.Severity switch
                     {
-                        AuditSeverity.Error => "Chyba",
-                        AuditSeverity.Warning => "Upozornění",
-                        _ => "Info"
+                        AuditSeverity.Error => LO("Overview.DataIssue.Severity.Error"),
+                        AuditSeverity.Warning => LO("Overview.DataIssue.Severity.Warning"),
+                        _ => LO("Overview.DataIssue.Severity.Info")
                     },
                     item.VehicleName,
                     item.VehicleId,
@@ -372,23 +465,23 @@ public sealed partial class MainWindowViewModel
 
         var summary = items.Count == 0
             ? UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview
-                ? "V dostupných datech zatím nejsou žádné blížící se termíny ani datové nedostatky k doplnění."
-                : "V dostupných datech zatím nejsou žádné blížící se termíny s konkrétním datem."
-            : $"Blížících se položek: {items.Count}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.";
+                ? LO("Overview.Summary.UpcomingEmptyWithDataIssues")
+                : LO("Overview.Summary.UpcomingEmpty")
+            : LFO("Overview.Summary.UpcomingWithItems", items.Count);
 
         if (visibleDataIssueCount > 0)
         {
-            summary += $" Z toho datových nedostatků: {visibleDataIssueCount}.";
+            summary += " " + LFO("Overview.Summary.UpcomingVisibleDataIssues", visibleDataIssueCount);
         }
 
         if (missingGreenCount > 0 && !UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview)
         {
-            summary += $" U {missingGreenCount} vozidel není vyplněná zelená karta; můžete je přidat volbou pod filtrem.";
+            summary += " " + LFO("Overview.Summary.UpcomingMissingGreenCardsHidden", missingGreenCount);
         }
 
         if (dataIssueCount > 0 && !UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview)
         {
-            summary += $" Audit eviduje {dataIssueCount} datových nedostatků; můžete je přidat volbou pod filtrem.";
+            summary += " " + LFO("Overview.Summary.UpcomingDataIssuesHidden", dataIssueCount);
         }
 
         return summary;

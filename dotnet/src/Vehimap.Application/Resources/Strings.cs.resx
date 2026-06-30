@@ -1025,6 +1025,50 @@ Vozidlo: {2}
   <data name="OverdueOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, SPZ, termín nebo položka...</value></data>
   <data name="OverdueOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit přehled propadlých termínů sestupně</value></data>
   <data name="OverdueOverviewWorkspace.SortName" xml:space="preserve"><value>Řazení přehledu propadlých termínů</value></data>
+  <data name="DashboardTimeline.Detail.Empty" xml:space="preserve"><value>Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.</value></data>
+  <data name="DashboardTimeline.Detail.Selected" xml:space="preserve"><value>Vozidlo: {0}
+Datum: {1}
+Druh: {2}
+Položka: {3}
+Stav: {4}
+Detail: {5}</value></data>
+  <data name="Overview.DataIssue.Date" xml:space="preserve"><value>Doplnit</value></data>
+  <data name="Overview.DataIssue.Detail" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Overview.DataIssue.KindLabel" xml:space="preserve"><value>Datový nedostatek</value></data>
+  <data name="Overview.DataIssue.Severity.Error" xml:space="preserve"><value>Chyba</value></data>
+  <data name="Overview.DataIssue.Severity.Info" xml:space="preserve"><value>Info</value></data>
+  <data name="Overview.DataIssue.Severity.Warning" xml:space="preserve"><value>Upozornění</value></data>
+  <data name="Overview.Detail.EmptyOverdue" xml:space="preserve"><value>Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci.</value></data>
+  <data name="Overview.Detail.EmptyUpcoming" xml:space="preserve"><value>Vyberte termín a můžete přejít na související vozidlo nebo evidenci.</value></data>
+  <data name="Overview.Detail.Selected" xml:space="preserve"><value>{0}
+{1} | {2}
+{3}
+{4}
+Stav: {5}</value></data>
+  <data name="Overview.Filter.All" xml:space="preserve"><value>Vše</value></data>
+  <data name="Overview.Filter.DataIssues" xml:space="preserve"><value>Datové nedostatky</value></data>
+  <data name="Overview.Filter.GreenCards" xml:space="preserve"><value>Zelené karty</value></data>
+  <data name="Overview.Filter.Maintenance" xml:space="preserve"><value>Údržba</value></data>
+  <data name="Overview.Filter.Records" xml:space="preserve"><value>Doklady</value></data>
+  <data name="Overview.Filter.Reminders" xml:space="preserve"><value>Připomínky</value></data>
+  <data name="Overview.Filter.Technical" xml:space="preserve"><value>Technické kontroly</value></data>
+  <data name="Overview.MissingGreen.Date" xml:space="preserve"><value>Nevyplněno</value></data>
+  <data name="Overview.MissingGreen.Status" xml:space="preserve"><value>Chybí</value></data>
+  <data name="Overview.MissingGreen.Title" xml:space="preserve"><value>Chybí zelená karta</value></data>
+  <data name="Overview.Persistence.Error" xml:space="preserve"><value>Nepodařilo se uložit volby přehledu termínů</value></data>
+  <data name="Overview.Summary.DashboardEmpty" xml:space="preserve"><value>V dostupných datech zatím nejsou žádné budoucí termíny s konkrétním datem.</value></data>
+  <data name="Overview.Summary.DashboardInitial" xml:space="preserve"><value>Nejbližší termíny napříč vozidly se zobrazí po načtení dat.</value></data>
+  <data name="Overview.Summary.DashboardWithItems" xml:space="preserve"><value>Napříč všemi vozidly je nejbližších {0} budoucích termínů připravených k otevření.</value></data>
+  <data name="Overview.Summary.OverdueEmpty" xml:space="preserve"><value>V dostupných datech zatím nejsou žádné propadlé termíny s konkrétním datem.</value></data>
+  <data name="Overview.Summary.OverdueInitial" xml:space="preserve"><value>Propadlé termíny napříč vozidly se zobrazí po načtení dat.</value></data>
+  <data name="Overview.Summary.OverdueWithItems" xml:space="preserve"><value>Propadlých termínů: {0}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.</value></data>
+  <data name="Overview.Summary.UpcomingDataIssuesHidden" xml:space="preserve"><value>Audit eviduje {0} datových nedostatků; můžete je přidat volbou pod filtrem.</value></data>
+  <data name="Overview.Summary.UpcomingEmpty" xml:space="preserve"><value>V dostupných datech zatím nejsou žádné blížící se termíny s konkrétním datem.</value></data>
+  <data name="Overview.Summary.UpcomingEmptyWithDataIssues" xml:space="preserve"><value>V dostupných datech zatím nejsou žádné blížící se termíny ani datové nedostatky k doplnění.</value></data>
+  <data name="Overview.Summary.UpcomingInitial" xml:space="preserve"><value>Blížící se termíny napříč vozidly se zobrazí po načtení dat.</value></data>
+  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden" xml:space="preserve"><value>U {0} vozidel není vyplněná zelená karta; můžete je přidat volbou pod filtrem.</value></data>
+  <data name="Overview.Summary.UpcomingVisibleDataIssues" xml:space="preserve"><value>Z toho datových nedostatků: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems" xml:space="preserve"><value>Blížících se položek: {0}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.</value></data>
   <data name="Timeline.Detail.DateAndOdometer" xml:space="preserve"><value>{0} | {1}</value></data>
   <data name="Timeline.Kind.Fuel" xml:space="preserve"><value>Tankování</value></data>
   <data name="Timeline.Kind.GreenCard" xml:space="preserve"><value>Zelená karta</value></data>

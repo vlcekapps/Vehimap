@@ -16,7 +16,7 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     private string upcomingOverviewSearchText = string.Empty;
 
     [ObservableProperty]
-    private string selectedUpcomingOverviewFilter = "Vše";
+    private string selectedUpcomingOverviewFilter = L("Overview.Filter.All");
 
     [ObservableProperty]
     private string selectedUpcomingOverviewSortOption = WorkspaceSortHelpers.DateSortLabel;
@@ -31,10 +31,10 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     private bool includeDataIssuesInUpcomingOverview;
 
     [ObservableProperty]
-    private string upcomingOverviewSummary = "Blížící se termíny napříč vozidly se zobrazí po načtení dat.";
+    private string upcomingOverviewSummary = L("Overview.Summary.UpcomingInitial");
 
     [ObservableProperty]
-    private string selectedUpcomingOverviewDetail = "Vyberte termín a můžete přejít na související vozidlo nebo evidenci.";
+    private string selectedUpcomingOverviewDetail = L("Overview.Detail.EmptyUpcoming");
 
     [ObservableProperty]
     private VehicleTimelineItemViewModel? selectedUpcomingOverviewItem;
@@ -45,13 +45,13 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
 
     public IReadOnlyList<string> OverviewFilters { get; } =
     [
-        "Vše",
-        "Technické kontroly",
-        "Zelené karty",
-        "Připomínky",
-        "Doklady",
-        "Údržba",
-        "Datové nedostatky"
+        L("Overview.Filter.All"),
+        L("Overview.Filter.Technical"),
+        L("Overview.Filter.GreenCards"),
+        L("Overview.Filter.Reminders"),
+        L("Overview.Filter.Records"),
+        L("Overview.Filter.Maintenance"),
+        L("Overview.Filter.DataIssues")
     ];
 
     public IReadOnlyList<string> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
@@ -115,8 +115,15 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     partial void OnSelectedUpcomingOverviewItemChanged(VehicleTimelineItemViewModel? value)
     {
         SelectedUpcomingOverviewDetail = value is null
-            ? "Vyberte termín a můžete přejít na související vozidlo nebo evidenci."
-            : $"{value.VehicleName}\n{value.Date} | {value.KindLabel}\n{value.Title}\n{value.Detail}\nStav: {value.Status}";
+            ? L("Overview.Detail.EmptyUpcoming")
+            : LF(
+                "Overview.Detail.Selected",
+                value.VehicleName,
+                value.Date,
+                value.KindLabel,
+                value.Title,
+                Root.FormatWorkspaceValue(value.Detail, "-"),
+                Root.FormatWorkspaceValue(value.Status, "-"));
 
         Root.NotifyUpcomingOverviewWorkspaceSelectionChanged();
     }

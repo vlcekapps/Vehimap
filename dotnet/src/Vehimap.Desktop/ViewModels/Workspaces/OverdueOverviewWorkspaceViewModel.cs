@@ -16,7 +16,7 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
     private string overdueOverviewSearchText = string.Empty;
 
     [ObservableProperty]
-    private string selectedOverdueOverviewFilter = "Vše";
+    private string selectedOverdueOverviewFilter = L("Overview.Filter.All");
 
     [ObservableProperty]
     private string selectedOverdueOverviewSortOption = WorkspaceSortHelpers.DateSortLabel;
@@ -25,10 +25,10 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
     private bool overdueOverviewSortDescending;
 
     [ObservableProperty]
-    private string overdueOverviewSummary = "Propadlé termíny napříč vozidly se zobrazí po načtení dat.";
+    private string overdueOverviewSummary = L("Overview.Summary.OverdueInitial");
 
     [ObservableProperty]
-    private string selectedOverdueOverviewDetail = "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci.";
+    private string selectedOverdueOverviewDetail = L("Overview.Detail.EmptyOverdue");
 
     [ObservableProperty]
     private VehicleTimelineItemViewModel? selectedOverdueOverviewItem;
@@ -39,12 +39,12 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
 
     public IReadOnlyList<string> OverviewFilters { get; } =
     [
-        "Vše",
-        "Technické kontroly",
-        "Zelené karty",
-        "Připomínky",
-        "Doklady",
-        "Údržba"
+        L("Overview.Filter.All"),
+        L("Overview.Filter.Technical"),
+        L("Overview.Filter.GreenCards"),
+        L("Overview.Filter.Reminders"),
+        L("Overview.Filter.Records"),
+        L("Overview.Filter.Maintenance")
     ];
 
     public IReadOnlyList<string> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
@@ -98,8 +98,15 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
     partial void OnSelectedOverdueOverviewItemChanged(VehicleTimelineItemViewModel? value)
     {
         SelectedOverdueOverviewDetail = value is null
-            ? "Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci."
-            : $"{value.VehicleName}\n{value.Date} | {value.KindLabel}\n{value.Title}\n{value.Detail}\nStav: {value.Status}";
+            ? L("Overview.Detail.EmptyOverdue")
+            : LF(
+                "Overview.Detail.Selected",
+                value.VehicleName,
+                value.Date,
+                value.KindLabel,
+                value.Title,
+                Root.FormatWorkspaceValue(value.Detail, "-"),
+                Root.FormatWorkspaceValue(value.Status, "-"));
 
         Root.NotifyOverdueOverviewWorkspaceSelectionChanged();
     }
