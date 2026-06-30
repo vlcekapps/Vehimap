@@ -628,6 +628,26 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Domain_quick_actions_use_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var quickActionsViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.QuickActions.cs"));
+        var workspaceStateViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.WorkspaceState.cs"));
+        var appShellViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.AppShell.cs"));
+
+        Assert.Contains("QuickActions.Status.NearestTechnical", quickActionsViewModel);
+        Assert.Contains("QuickActions.Status.ReviewRecordOpened", quickActionsViewModel);
+        Assert.Contains("QuickActions.Status.OpenedBackgroundTimeline", quickActionsViewModel);
+        Assert.Contains("Timeline.Status.NoAlert", quickActionsViewModel);
+        Assert.Contains("Overview.Filter.GreenCards", quickActionsViewModel);
+        Assert.Contains("Overview.MissingGreen.Title", quickActionsViewModel);
+        Assert.Contains("IsTimelineStatusAttention(item.Status)", appShellViewModel);
+        Assert.Contains("WorkspaceStatus.TimelineRefreshed", workspaceStateViewModel);
+        Assert.Contains("WorkspaceStatus.SmartAdvisorOpenedEntity", workspaceStateViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), quickActionsViewModel);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

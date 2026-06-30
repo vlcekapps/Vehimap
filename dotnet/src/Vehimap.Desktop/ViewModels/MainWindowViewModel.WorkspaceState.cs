@@ -480,14 +480,14 @@ public sealed partial class MainWindowViewModel
         var target = FuelWorkspace.VisibleFuelItems.FirstOrDefault(item => string.Equals(item.Id, fuelEntryId, StringComparison.Ordinal));
         if (target is null)
         {
-            FuelEditorStatus = "Související tankování se nepodařilo najít v aktuálním seznamu.";
+            FuelEditorStatus = LO("WorkspaceStatus.FuelAnalysisTargetMissing");
             RequestFocus(DesktopFocusTarget.FuelList);
             return;
         }
 
         SelectedVehicleTabIndex = FuelTabIndex;
         SelectedFuel = target;
-        FuelEditorStatus = "Související tankování bylo vybráno ze souhrnu analýzy.";
+        FuelEditorStatus = LO("WorkspaceStatus.FuelAnalysisTargetSelected");
         RequestFocus(DesktopFocusTarget.FuelList);
     }
 
@@ -510,13 +510,13 @@ public sealed partial class MainWindowViewModel
             CostWorkspace.SelectedDashboardCostVehicle = CostVehicles.FirstOrDefault(vehicle =>
                 string.Equals(vehicle.VehicleId, item.VehicleId, StringComparison.Ordinal));
             CostWorkspace.RefreshVisibleCostVehicles();
-            ShellStatus = "Chytrý poradce otevřel nákladový přehled doporučeného vozidla.";
+            ShellStatus = LO("WorkspaceStatus.SmartAdvisorOpenedCosts");
             RequestFocus(DesktopFocusTarget.CostList);
             return true;
         }
 
         SelectVehicleAndOpenEntity(item.VehicleId, item.EntityKind, item.EntityId);
-        ShellStatus = "Chytrý poradce otevřel související evidenci.";
+        ShellStatus = LO("WorkspaceStatus.SmartAdvisorOpenedEntity");
         return true;
     }
 
@@ -534,7 +534,7 @@ public sealed partial class MainWindowViewModel
 
         SelectSmartAdvisorVehicle(item.VehicleId);
         SelectedVehicleTabIndex = DetailTabIndex;
-        ShellStatus = "Chytrý poradce zobrazil doporučené vozidlo.";
+        ShellStatus = LO("WorkspaceStatus.SmartAdvisorOpenedVehicle");
         RequestFocus(DesktopFocusTarget.VehicleList);
         return true;
     }
@@ -686,7 +686,7 @@ public sealed partial class MainWindowViewModel
     internal void RefreshTimelineWorkspace()
     {
         RefreshTimeline();
-        ShellStatus = "Časová osa byla obnovena.";
+        ShellStatus = LO("WorkspaceStatus.TimelineRefreshed");
         RequestFocus(SelectedVehicleTimeline.Count == 0 ? DesktopFocusTarget.TimelineSearch : DesktopFocusTarget.TimelineList);
     }
 
@@ -723,7 +723,7 @@ public sealed partial class MainWindowViewModel
         DashboardWorkspace.NotifyDashboardSummariesChanged();
         RefreshSmartAdvisorProjection();
 
-        ShellStatus = "Audit dat byl obnoven.";
+        ShellStatus = LO("WorkspaceStatus.AuditRefreshed");
         RequestFocus(AuditWorkspace.VisibleAuditItems.Count == 0 ? DesktopFocusTarget.AuditSearch : DesktopFocusTarget.AuditList);
     }
 
@@ -765,8 +765,8 @@ public sealed partial class MainWindowViewModel
         OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
         RefreshSmartAdvisorProjection();
 
-        CostWorkspace.CostExportStatus = "Nákladový přehled byl obnoven.";
-        ShellStatus = "Nákladový přehled byl obnoven.";
+        CostWorkspace.CostExportStatus = LO("WorkspaceStatus.CostRefreshed");
+        ShellStatus = LO("WorkspaceStatus.CostRefreshed");
         RequestFocus(CostWorkspace.VisibleCostVehicles.Count == 0 ? DesktopFocusTarget.CostSearch : DesktopFocusTarget.CostList);
     }
 
@@ -831,7 +831,7 @@ public sealed partial class MainWindowViewModel
         OpenDashboardCostOverviewCommand.NotifyCanExecuteChanged();
         RefreshSmartAdvisorProjection();
 
-        ShellStatus = "Dashboard byl obnoven.";
+        ShellStatus = LO("WorkspaceStatus.DashboardRefreshed");
         RequestFocus(GetDashboardRefreshFocusTarget());
     }
 
@@ -861,7 +861,7 @@ public sealed partial class MainWindowViewModel
     internal void RefreshGlobalSearchWorkspace()
     {
         RefreshGlobalSearch();
-        ShellStatus = "Globální hledání bylo obnoveno.";
+        ShellStatus = LO("WorkspaceStatus.GlobalSearchRefreshed");
         RequestFocus(GlobalSearchResults.Count == 0 ? DesktopFocusTarget.GlobalSearchBox : DesktopFocusTarget.GlobalSearchList);
     }
 
@@ -918,7 +918,7 @@ public sealed partial class MainWindowViewModel
     internal void RefreshUpcomingOverviewWorkspace()
     {
         RefreshUpcomingOverview();
-        ShellStatus = "Přehled blížících se termínů byl obnoven.";
+        ShellStatus = LO("WorkspaceStatus.UpcomingOverviewRefreshed");
         RequestFocus(UpcomingOverviewItems.Count == 0 ? DesktopFocusTarget.UpcomingOverviewSearch : DesktopFocusTarget.UpcomingOverviewList);
     }
 
@@ -965,7 +965,7 @@ public sealed partial class MainWindowViewModel
     internal void RefreshOverdueOverviewWorkspace()
     {
         RefreshOverdueOverview();
-        ShellStatus = "Přehled propadlých termínů byl obnoven.";
+        ShellStatus = LO("WorkspaceStatus.OverdueOverviewRefreshed");
         RequestFocus(OverdueOverviewItems.Count == 0 ? DesktopFocusTarget.OverdueOverviewSearch : DesktopFocusTarget.OverdueOverviewList);
     }
 
@@ -984,7 +984,7 @@ public sealed partial class MainWindowViewModel
     internal void RefreshSmartAdvisorWorkspace()
     {
         RefreshSmartAdvisorProjection();
-        ShellStatus = "Chytrý poradce byl obnoven.";
+        ShellStatus = LO("WorkspaceStatus.SmartAdvisorRefreshed");
         RequestFocus(SmartAdvisorWorkspace.VisibleSmartAdvisorItems.Count == 0
             ? DesktopFocusTarget.SmartAdvisorSearch
             : DesktopFocusTarget.SmartAdvisorList);

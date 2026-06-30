@@ -468,6 +468,38 @@ Vozidlo: {2}
   <data name="MainMenu.QuickActions.ReviewRemindersName" xml:space="preserve"><value>Zkontrolovat vlastní připomínky</value></data>
   <data name="MainMenu.QuickActions.ReviewTechnical" xml:space="preserve"><value>Zkontrolovat TK</value></data>
   <data name="MainMenu.QuickActions.ReviewTechnicalName" xml:space="preserve"><value>Zkontrolovat technické kontroly</value></data>
+  <data name="QuickActions.Action.OpenBackgroundNotification" xml:space="preserve"><value>otevřít aktuální upozornění</value></data>
+  <data name="QuickActions.Action.OpenNearestGreenCard" xml:space="preserve"><value>otevřít nejbližší zelenou kartu</value></data>
+  <data name="QuickActions.Action.OpenNearestMaintenance" xml:space="preserve"><value>otevřít nejbližší servisní úkon</value></data>
+  <data name="QuickActions.Action.OpenNearestRecord" xml:space="preserve"><value>otevřít nejbližší doklad</value></data>
+  <data name="QuickActions.Action.OpenNearestReminder" xml:space="preserve"><value>otevřít nejbližší připomínku</value></data>
+  <data name="QuickActions.Action.OpenNearestTechnical" xml:space="preserve"><value>otevřít nejbližší technickou kontrolu</value></data>
+  <data name="QuickActions.Action.ReviewGreenCards" xml:space="preserve"><value>zkontrolovat zelené karty</value></data>
+  <data name="QuickActions.Action.ReviewMaintenance" xml:space="preserve"><value>zkontrolovat plán údržby</value></data>
+  <data name="QuickActions.Action.ReviewRecords" xml:space="preserve"><value>zkontrolovat doklady</value></data>
+  <data name="QuickActions.Action.ReviewReminders" xml:space="preserve"><value>zkontrolovat připomínky</value></data>
+  <data name="QuickActions.Action.ReviewTechnical" xml:space="preserve"><value>zkontrolovat technické kontroly</value></data>
+  <data name="QuickActions.Status.MissingGreenCardsOpened" xml:space="preserve"><value>Vozidla bez zelené karty k doplnění: {0}. Otevřen je přehled blížících se termínů.</value></data>
+  <data name="QuickActions.Status.NearestGreenCard" xml:space="preserve"><value>Nejbližší zelená karta: {0} - {1}.</value></data>
+  <data name="QuickActions.Status.NearestMaintenance" xml:space="preserve"><value>Nejbližší servis: {0} - {1} ({2}).</value></data>
+  <data name="QuickActions.Status.NearestRecord" xml:space="preserve"><value>Nejbližší doklad: {0} - {1} ({2}).</value></data>
+  <data name="QuickActions.Status.NearestReminder" xml:space="preserve"><value>Nejbližší připomínka: {0} - {1} ({2}).</value></data>
+  <data name="QuickActions.Status.NearestTechnical" xml:space="preserve"><value>Nejbližší technická kontrola: {0} - {1}.</value></data>
+  <data name="QuickActions.Status.NoBackgroundNotification" xml:space="preserve"><value>Momentálně není žádné aktuální upozornění k otevření.</value></data>
+  <data name="QuickActions.Status.NoGreenCardsConfigured" xml:space="preserve"><value>U žádného vozidla není vyplněná zelená karta. Můžete ji doplnit v detailu vozidla.</value></data>
+  <data name="QuickActions.Status.NoGreenCardsDue" xml:space="preserve"><value>Žádná vyplněná zelená karta teď nevyžaduje upozornění.</value></data>
+  <data name="QuickActions.Status.NoGreenCardsDueWithMissing" xml:space="preserve"><value>Žádná vyplněná zelená karta teď nevyžaduje upozornění. U některých vozidel zelená karta vyplněná není.</value></data>
+  <data name="QuickActions.Status.NoMaintenance" xml:space="preserve"><value>Momentálně není žádný servisní úkon s blížícím se nebo propadlým termínem.</value></data>
+  <data name="QuickActions.Status.NoRecord" xml:space="preserve"><value>Momentálně není žádný doklad s blížící se nebo propadlou platností.</value></data>
+  <data name="QuickActions.Status.NoReminder" xml:space="preserve"><value>Momentálně není žádná vlastní připomínka s blížícím se nebo propadlým termínem.</value></data>
+  <data name="QuickActions.Status.NoTechnical" xml:space="preserve"><value>Momentálně není žádné vozidlo s blížící se nebo propadlou technickou kontrolou.</value></data>
+  <data name="QuickActions.Status.OpenedBackgroundAudit" xml:space="preserve"><value>Otevřena auditní položka: {0} - {1}.</value></data>
+  <data name="QuickActions.Status.OpenedBackgroundTimeline" xml:space="preserve"><value>Otevřeno aktuální upozornění: {0} - {1} ({2}).</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened" xml:space="preserve"><value>Zelené karty k prověření: {0}. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewMaintenanceOpened" xml:space="preserve"><value>Údržba k prověření: {0}. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewRecordOpened" xml:space="preserve"><value>Doklady k prověření: {0}. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewReminderOpened" xml:space="preserve"><value>Připomínky k prověření: {0}. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewTechnicalOpened" xml:space="preserve"><value>Technické kontroly k prověření: {0}. Otevřen je příslušný přehled.</value></data>
   <data name="MainMenu.Vehicle" xml:space="preserve"><value>_Vozidlo</value></data>
   <data name="MainMenu.Vehicle.Costs" xml:space="preserve"><value>Náklady a souhrny</value></data>
   <data name="MainMenu.Vehicle.CostsName" xml:space="preserve"><value>Otevřít náklady a souhrny vybraného vozidla</value></data>
@@ -816,6 +848,19 @@ Vozidlo: {2}
   <data name="Shell.SettingsCanceled" xml:space="preserve"><value>Nastavení bylo zavřeno bez uložení.</value></data>
   <data name="Shell.SettingsFailed" xml:space="preserve"><value>Nastavení se nepodařilo dokončit: {0}</value></data>
   <data name="Shell.SettingsSaved" xml:space="preserve"><value>Nastavení byla uložena a přehledy byly přepočítány.</value></data>
+  <data name="WorkspaceStatus.AuditRefreshed" xml:space="preserve"><value>Audit dat byl obnoven.</value></data>
+  <data name="WorkspaceStatus.CostRefreshed" xml:space="preserve"><value>Nákladový přehled byl obnoven.</value></data>
+  <data name="WorkspaceStatus.DashboardRefreshed" xml:space="preserve"><value>Dashboard byl obnoven.</value></data>
+  <data name="WorkspaceStatus.FuelAnalysisTargetMissing" xml:space="preserve"><value>Související tankování se nepodařilo najít v aktuálním seznamu.</value></data>
+  <data name="WorkspaceStatus.FuelAnalysisTargetSelected" xml:space="preserve"><value>Související tankování bylo vybráno ze souhrnu analýzy.</value></data>
+  <data name="WorkspaceStatus.GlobalSearchRefreshed" xml:space="preserve"><value>Globální hledání bylo obnoveno.</value></data>
+  <data name="WorkspaceStatus.OverdueOverviewRefreshed" xml:space="preserve"><value>Přehled propadlých termínů byl obnoven.</value></data>
+  <data name="WorkspaceStatus.SmartAdvisorOpenedCosts" xml:space="preserve"><value>Chytrý poradce otevřel nákladový přehled doporučeného vozidla.</value></data>
+  <data name="WorkspaceStatus.SmartAdvisorOpenedEntity" xml:space="preserve"><value>Chytrý poradce otevřel související evidenci.</value></data>
+  <data name="WorkspaceStatus.SmartAdvisorOpenedVehicle" xml:space="preserve"><value>Chytrý poradce zobrazil doporučené vozidlo.</value></data>
+  <data name="WorkspaceStatus.SmartAdvisorRefreshed" xml:space="preserve"><value>Chytrý poradce byl obnoven.</value></data>
+  <data name="WorkspaceStatus.TimelineRefreshed" xml:space="preserve"><value>Časová osa byla obnovena.</value></data>
+  <data name="WorkspaceStatus.UpcomingOverviewRefreshed" xml:space="preserve"><value>Přehled blížících se termínů byl obnoven.</value></data>
   <data name="Shell.AuditCount" xml:space="preserve"><value>Audit</value></data>
   <data name="Shell.DataModeLabel" xml:space="preserve"><value>Režim dat</value></data>
   <data name="Shell.DataPathLabel" xml:space="preserve"><value>Datová složka</value></data>

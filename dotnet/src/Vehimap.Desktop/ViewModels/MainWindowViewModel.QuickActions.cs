@@ -6,10 +6,13 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
+    private const string QuickActionNoAlertLegacyCzech = "Bez upozorn\u011Bn\u00ED";
+    private const string QuickActionNoAlertLegacyEnglish = "No alert";
+
     [RelayCommand]
     private async Task OpenNearestTechnicalAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít nejbližší technickou kontrolu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.OpenNearestTechnical")).ConfigureAwait(true))
         {
             return;
         }
@@ -17,11 +20,11 @@ public sealed partial class MainWindowViewModel
         var items = BuildQuickActionItems("technical");
         if (items.Count == 0)
         {
-            ShellStatus = "Momentálně není žádné vozidlo s blížící se nebo propadlou technickou kontrolou.";
+            ShellStatus = LO("QuickActions.Status.NoTechnical");
             return;
         }
 
-        ShellStatus = $"Nejbližší technická kontrola: {items[0].VehicleName} - {items[0].Date}.";
+        ShellStatus = LFO("QuickActions.Status.NearestTechnical", items[0].VehicleName, items[0].Date);
         OpenTimelineItem(items[0]);
     }
 
@@ -34,29 +37,29 @@ public sealed partial class MainWindowViewModel
     [RelayCommand]
     private async Task ReviewTechnicalAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zkontrolovat technické kontroly").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.ReviewTechnical")).ConfigureAwait(true))
         {
             return;
         }
 
         OpenQuickActionOverview(
             "technical",
-            AttentionVehicleStatusFilterLabel,
-            "Technické kontroly",
-            "Žádná vozidla teď nevyžadují upozornění na technickou kontrolu.");
+            LO("Overview.Filter.Technical"),
+            LO("QuickActions.Status.NoTechnical"),
+            "QuickActions.Status.ReviewTechnicalOpened");
     }
 
     [RelayCommand]
     private async Task OpenNearestGreenCardAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít nejbližší zelenou kartu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.OpenNearestGreenCard")).ConfigureAwait(true))
         {
             return;
         }
 
         if (!HasAnyGreenCardConfigured())
         {
-            ShellStatus = "U žádného vozidla není vyplněná zelená karta. Můžete ji doplnit v detailu vozidla.";
+            ShellStatus = LO("QuickActions.Status.NoGreenCardsConfigured");
             return;
         }
 
@@ -64,19 +67,19 @@ public sealed partial class MainWindowViewModel
         if (items.Count == 0)
         {
             ShellStatus = HasAnyMissingGreenCard()
-                ? "Žádná vyplněná zelená karta teď nevyžaduje upozornění. U některých vozidel zelená karta vyplněná není."
-                : "Žádná vyplněná zelená karta teď nevyžaduje upozornění.";
+                ? LO("QuickActions.Status.NoGreenCardsDueWithMissing")
+                : LO("QuickActions.Status.NoGreenCardsDue");
             return;
         }
 
-        ShellStatus = $"Nejbližší zelená karta: {items[0].VehicleName} - {items[0].Date}.";
+        ShellStatus = LFO("QuickActions.Status.NearestGreenCard", items[0].VehicleName, items[0].Date);
         OpenTimelineItem(items[0]);
     }
 
     [RelayCommand]
     private async Task ReviewGreenCardsAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zkontrolovat zelené karty").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.ReviewGreenCards")).ConfigureAwait(true))
         {
             return;
         }
@@ -92,23 +95,23 @@ public sealed partial class MainWindowViewModel
         if (greenCardItems.Count == 0)
         {
             ShellStatus = HasAnyGreenCardConfigured()
-                ? "Žádná vyplněná zelená karta teď nevyžaduje upozornění."
-                : "U žádného vozidla není vyplněná zelená karta. Můžete ji doplnit v detailu vozidla.";
+                ? LO("QuickActions.Status.NoGreenCardsDue")
+                : LO("QuickActions.Status.NoGreenCardsConfigured");
             return;
         }
 
         OpenQuickActionOverview(
             "green",
-            MissingGreenVehicleStatusFilterLabel,
-            "Zelené karty",
-            "Žádná vyplněná zelená karta teď nevyžaduje upozornění.",
+            LO("Overview.Filter.GreenCards"),
+            LO("QuickActions.Status.NoGreenCardsDue"),
+            "QuickActions.Status.ReviewGreenOpened",
             includeMissingGreenCards: hasMissingGreenCard);
     }
 
     [RelayCommand]
     private async Task OpenNearestReminderAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít nejbližší připomínku").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.OpenNearestReminder")).ConfigureAwait(true))
         {
             return;
         }
@@ -116,33 +119,33 @@ public sealed partial class MainWindowViewModel
         var items = BuildQuickActionItems("custom");
         if (items.Count == 0)
         {
-            ShellStatus = "Momentálně není žádná vlastní připomínka s blížícím se nebo propadlým termínem.";
+            ShellStatus = LO("QuickActions.Status.NoReminder");
             return;
         }
 
-        ShellStatus = $"Nejbližší připomínka: {items[0].VehicleName} - {items[0].Title} ({items[0].Date}).";
+        ShellStatus = LFO("QuickActions.Status.NearestReminder", items[0].VehicleName, items[0].Title, items[0].Date);
         OpenTimelineItem(items[0]);
     }
 
     [RelayCommand]
     private async Task ReviewRemindersAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zkontrolovat připomínky").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.ReviewReminders")).ConfigureAwait(true))
         {
             return;
         }
 
         OpenQuickActionOverview(
             "custom",
-            AttentionVehicleStatusFilterLabel,
-            "Připomínky",
-            "Žádné vlastní připomínky teď nevyžadují upozornění.");
+            LO("Overview.Filter.Reminders"),
+            LO("QuickActions.Status.NoReminder"),
+            "QuickActions.Status.ReviewReminderOpened");
     }
 
     [RelayCommand]
     private async Task OpenNearestMaintenanceAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít nejbližší servisní úkon").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.OpenNearestMaintenance")).ConfigureAwait(true))
         {
             return;
         }
@@ -150,33 +153,33 @@ public sealed partial class MainWindowViewModel
         var items = BuildQuickActionItems("maintenance");
         if (items.Count == 0)
         {
-            ShellStatus = "Momentálně není žádný servisní úkon s blížícím se nebo propadlým termínem.";
+            ShellStatus = LO("QuickActions.Status.NoMaintenance");
             return;
         }
 
-        ShellStatus = $"Nejbližší servis: {items[0].VehicleName} - {items[0].Title} ({items[0].Date}).";
+        ShellStatus = LFO("QuickActions.Status.NearestMaintenance", items[0].VehicleName, items[0].Title, items[0].Date);
         OpenTimelineItem(items[0]);
     }
 
     [RelayCommand]
     private async Task ReviewMaintenanceAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zkontrolovat plán údržby").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.ReviewMaintenance")).ConfigureAwait(true))
         {
             return;
         }
 
         OpenQuickActionOverview(
             "maintenance",
-            AttentionVehicleStatusFilterLabel,
-            "Údržba",
-            "Žádné servisní úkony teď nevyžadují upozornění.");
+            LO("Overview.Filter.Maintenance"),
+            LO("QuickActions.Status.NoMaintenance"),
+            "QuickActions.Status.ReviewMaintenanceOpened");
     }
 
     [RelayCommand]
     private async Task OpenNearestRecordAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít nejbližší doklad").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.OpenNearestRecord")).ConfigureAwait(true))
         {
             return;
         }
@@ -184,27 +187,27 @@ public sealed partial class MainWindowViewModel
         var items = BuildQuickActionItems("record");
         if (items.Count == 0)
         {
-            ShellStatus = "Momentálně není žádný doklad s blížící se nebo propadlou platností.";
+            ShellStatus = LO("QuickActions.Status.NoRecord");
             return;
         }
 
-        ShellStatus = $"Nejbližší doklad: {items[0].VehicleName} - {items[0].Title} ({items[0].Date}).";
+        ShellStatus = LFO("QuickActions.Status.NearestRecord", items[0].VehicleName, items[0].Title, items[0].Date);
         OpenTimelineItem(items[0]);
     }
 
     [RelayCommand]
     private async Task ReviewRecordsAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zkontrolovat doklady").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.ReviewRecords")).ConfigureAwait(true))
         {
             return;
         }
 
         OpenQuickActionOverview(
             "record",
-            AttentionVehicleStatusFilterLabel,
-            "Doklady",
-            "Žádné doklady teď nevyžadují upozornění.");
+            LO("Overview.Filter.Records"),
+            LO("QuickActions.Status.NoRecord"),
+            "QuickActions.Status.ReviewRecordOpened");
     }
 
     private List<VehicleTimelineItemViewModel> BuildQuickActionItems(string kind)
@@ -212,7 +215,7 @@ public sealed partial class MainWindowViewModel
         return _dataSet.Vehicles
             .SelectMany(vehicle => _timelineService.BuildVehicleTimeline(_dataSet, vehicle.Id, DateOnly.FromDateTime(DateTime.Today)))
             .Where(item => string.Equals(item.Kind, kind, StringComparison.Ordinal))
-            .Where(item => !string.IsNullOrWhiteSpace(item.Status) && !string.Equals(item.Status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase))
+            .Where(item => IsTimelineStatusAttention(item.Status))
             .OrderBy(item => item.IsFuture ? 1 : 0)
             .ThenBy(item => item.IsFuture ? item.Date.DayNumber : -item.Date.DayNumber)
             .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)
@@ -234,7 +237,7 @@ public sealed partial class MainWindowViewModel
 
     internal async Task<bool> OpenBackgroundNotificationAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít aktuální upozornění").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("QuickActions.Action.OpenBackgroundNotification")).ConfigureAwait(true))
         {
             return false;
         }
@@ -242,27 +245,27 @@ public sealed partial class MainWindowViewModel
         var attentionItems = BuildBackgroundAttentionItems();
         if (attentionItems.FirstOrDefault() is { } timelineItem)
         {
-            ShellStatus = $"Otevřeno aktuální upozornění: {timelineItem.VehicleName} - {timelineItem.Title} ({timelineItem.Date}).";
+            ShellStatus = LFO("QuickActions.Status.OpenedBackgroundTimeline", timelineItem.VehicleName, timelineItem.Title, timelineItem.Date);
             OpenTimelineItem(timelineItem);
             return true;
         }
 
         if (AuditItems.FirstOrDefault() is { } auditItem)
         {
-            ShellStatus = $"Otevřena auditní položka: {auditItem.VehicleName} - {auditItem.Title}.";
+            ShellStatus = LFO("QuickActions.Status.OpenedBackgroundAudit", auditItem.VehicleName, auditItem.Title);
             SelectVehicleAndOpenEntity(auditItem.VehicleId, auditItem.EntityKind, auditItem.EntityId);
             return true;
         }
 
-        ShellStatus = "Momentálně není žádné aktuální upozornění k otevření.";
+        ShellStatus = LO("QuickActions.Status.NoBackgroundNotification");
         return false;
     }
 
     private void OpenQuickActionOverview(
         string kind,
-        string emptyFilterStatusMessage,
         string overviewFilterLabel,
         string emptyMessage,
+        string openedStatusResourceKey,
         bool includeMissingGreenCards = false)
     {
         var items = BuildQuickActionItems(kind);
@@ -302,15 +305,7 @@ public sealed partial class MainWindowViewModel
             RequestFocus(DesktopFocusTarget.OverdueOverviewList);
         }
 
-        ShellStatus = kind switch
-        {
-            "technical" => $"Technické kontroly k prověření: {items.Count}. Otevřen je příslušný přehled.",
-            "green" => $"Zelené karty k prověření: {items.Count}. Otevřen je příslušný přehled.",
-            "custom" => $"Připomínky k prověření: {items.Count}. Otevřen je příslušný přehled.",
-            "maintenance" => $"Údržba k prověření: {items.Count}. Otevřen je příslušný přehled.",
-            "record" => $"Doklady k prověření: {items.Count}. Otevřen je příslušný přehled.",
-            _ => emptyFilterStatusMessage
-        };
+        ShellStatus = LFO(openedStatusResourceKey, items.Count);
     }
 
     private void OpenMissingGreenCardsOverview()
@@ -318,14 +313,27 @@ public sealed partial class MainWindowViewModel
         var missingCount = _dataSet.Vehicles.Count(vehicle => string.IsNullOrWhiteSpace(vehicle.GreenCardTo));
         UpcomingOverviewWorkspace.UpcomingOverviewSearchText = string.Empty;
         UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = true;
-        UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = "Zelené karty";
+        UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = LO("Overview.Filter.GreenCards");
         RefreshUpcomingOverview();
         SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
         UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem =
-            UpcomingOverviewItems.FirstOrDefault(item => string.Equals(item.Title, "Chybí zelená karta", StringComparison.CurrentCultureIgnoreCase))
+            UpcomingOverviewItems.FirstOrDefault(item => string.Equals(item.Title, LO("Overview.MissingGreen.Title"), StringComparison.CurrentCultureIgnoreCase))
             ?? UpcomingOverviewItems.FirstOrDefault();
         RequestFocus(DesktopFocusTarget.UpcomingOverviewList);
-        ShellStatus = $"Vozidla bez zelené karty k doplnění: {missingCount}. Otevřen je přehled blížících se termínů.";
+        ShellStatus = LFO("QuickActions.Status.MissingGreenCardsOpened", missingCount);
+    }
+
+    private static bool IsTimelineStatusAttention(string? status)
+    {
+        if (string.IsNullOrWhiteSpace(status))
+        {
+            return false;
+        }
+
+        var normalizedStatus = status.Trim();
+        return !string.Equals(normalizedStatus, LO("Timeline.Status.NoAlert"), StringComparison.CurrentCultureIgnoreCase)
+            && !string.Equals(normalizedStatus, QuickActionNoAlertLegacyCzech, StringComparison.CurrentCultureIgnoreCase)
+            && !string.Equals(normalizedStatus, QuickActionNoAlertLegacyEnglish, StringComparison.OrdinalIgnoreCase);
     }
 
     private bool HasAnyGreenCardConfigured() =>

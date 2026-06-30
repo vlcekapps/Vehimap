@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
@@ -464,6 +465,23 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
     }
 
     [Fact]
+    public void Quick_actions_treat_english_no_alert_status_as_quiet()
+    {
+        var viewModel = CreateViewModel(
+            BuildQuietQuickActionDataSet(),
+            new LegacyTimelineService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"))));
+        var model = viewModel.BuildTrayActionsDialogModel();
+
+        Assert.False(viewModel.CanOpenNearestTechnicalQuickAction);
+        Assert.False(viewModel.CanOpenNearestGreenCardQuickAction);
+        Assert.False(viewModel.CanOpenNearestReminderQuickAction);
+        Assert.False(viewModel.CanOpenNearestMaintenanceQuickAction);
+        Assert.False(viewModel.CanOpenNearestRecordQuickAction);
+        Assert.False(viewModel.CanOpenBackgroundNotificationQuickAction);
+        Assert.False(model.CanOpenBackgroundStatus);
+    }
+
+    [Fact]
     public void Tray_actions_disable_navigation_and_data_actions_while_editing()
     {
         var viewModel = CreateViewModel(BuildQuickActionDataSet());
@@ -498,7 +516,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(model.CanOpenDataFolder);
     }
 
-    private static MainWindowViewModel CreateViewModel(VehimapDataSet dataSet)
+    private static MainWindowViewModel CreateViewModel(VehimapDataSet dataSet, ITimelineService? timelineService = null)
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
         var dataStore = new VehicleListQuickActionStubLegacyDataStore(dataSet);
@@ -511,7 +529,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             new VehicleListQuickActionStubFileLauncher(),
             new VehicleListQuickActionStubFilePickerService(),
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
-            new LegacyTimelineService(),
+            timelineService ?? new LegacyTimelineService(),
             new LegacyCalendarExportService(),
             new VehicleListQuickActionStubTextFileSaveService(),
             new VehicleListQuickActionStubBackupService(),

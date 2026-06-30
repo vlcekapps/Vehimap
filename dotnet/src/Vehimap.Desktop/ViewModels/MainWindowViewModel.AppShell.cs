@@ -401,9 +401,7 @@ public sealed partial class MainWindowViewModel
     {
         return _dataSet.Vehicles
             .SelectMany(vehicle => _timelineService.BuildVehicleTimeline(_dataSet, vehicle.Id, DateOnly.FromDateTime(DateTime.Today)))
-            .Where(item =>
-                !string.IsNullOrWhiteSpace(item.Status)
-                && !string.Equals(item.Status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase))
+            .Where(item => IsTimelineStatusAttention(item.Status))
             .OrderBy(item => item.IsFuture ? 1 : 0)
             .ThenBy(item => item.IsFuture ? item.Date.DayNumber : -item.Date.DayNumber)
             .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)

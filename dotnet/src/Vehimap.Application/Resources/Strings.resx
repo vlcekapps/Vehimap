@@ -468,6 +468,38 @@ Vehicle: {2}
   <data name="MainMenu.QuickActions.ReviewRemindersName" xml:space="preserve"><value>Check custom reminders</value></data>
   <data name="MainMenu.QuickActions.ReviewTechnical" xml:space="preserve"><value>Check technical inspections</value></data>
   <data name="MainMenu.QuickActions.ReviewTechnicalName" xml:space="preserve"><value>Check technical inspections</value></data>
+  <data name="QuickActions.Action.OpenBackgroundNotification" xml:space="preserve"><value>open current notification</value></data>
+  <data name="QuickActions.Action.OpenNearestGreenCard" xml:space="preserve"><value>open nearest green card</value></data>
+  <data name="QuickActions.Action.OpenNearestMaintenance" xml:space="preserve"><value>open nearest service task</value></data>
+  <data name="QuickActions.Action.OpenNearestRecord" xml:space="preserve"><value>open nearest document</value></data>
+  <data name="QuickActions.Action.OpenNearestReminder" xml:space="preserve"><value>open nearest reminder</value></data>
+  <data name="QuickActions.Action.OpenNearestTechnical" xml:space="preserve"><value>open nearest technical inspection</value></data>
+  <data name="QuickActions.Action.ReviewGreenCards" xml:space="preserve"><value>check green cards</value></data>
+  <data name="QuickActions.Action.ReviewMaintenance" xml:space="preserve"><value>check maintenance plan</value></data>
+  <data name="QuickActions.Action.ReviewRecords" xml:space="preserve"><value>check documents</value></data>
+  <data name="QuickActions.Action.ReviewReminders" xml:space="preserve"><value>check reminders</value></data>
+  <data name="QuickActions.Action.ReviewTechnical" xml:space="preserve"><value>check technical inspections</value></data>
+  <data name="QuickActions.Status.MissingGreenCardsOpened" xml:space="preserve"><value>Vehicles without a green card to complete: {0}. The upcoming due date overview is open.</value></data>
+  <data name="QuickActions.Status.NearestGreenCard" xml:space="preserve"><value>Nearest green card: {0} - {1}.</value></data>
+  <data name="QuickActions.Status.NearestMaintenance" xml:space="preserve"><value>Nearest service: {0} - {1} ({2}).</value></data>
+  <data name="QuickActions.Status.NearestRecord" xml:space="preserve"><value>Nearest document: {0} - {1} ({2}).</value></data>
+  <data name="QuickActions.Status.NearestReminder" xml:space="preserve"><value>Nearest reminder: {0} - {1} ({2}).</value></data>
+  <data name="QuickActions.Status.NearestTechnical" xml:space="preserve"><value>Nearest technical inspection: {0} - {1}.</value></data>
+  <data name="QuickActions.Status.NoBackgroundNotification" xml:space="preserve"><value>There is currently no current notification to open.</value></data>
+  <data name="QuickActions.Status.NoGreenCardsConfigured" xml:space="preserve"><value>No vehicle has a green card filled in. You can add it in the vehicle detail.</value></data>
+  <data name="QuickActions.Status.NoGreenCardsDue" xml:space="preserve"><value>No filled green card currently needs attention.</value></data>
+  <data name="QuickActions.Status.NoGreenCardsDueWithMissing" xml:space="preserve"><value>No filled green card currently needs attention. Some vehicles still do not have a green card filled in.</value></data>
+  <data name="QuickActions.Status.NoMaintenance" xml:space="preserve"><value>No maintenance task currently has an upcoming or overdue due date.</value></data>
+  <data name="QuickActions.Status.NoRecord" xml:space="preserve"><value>No document currently has an upcoming or overdue validity date.</value></data>
+  <data name="QuickActions.Status.NoReminder" xml:space="preserve"><value>No custom reminder currently has an upcoming or overdue due date.</value></data>
+  <data name="QuickActions.Status.NoTechnical" xml:space="preserve"><value>No vehicles currently have an upcoming or overdue technical inspection alert.</value></data>
+  <data name="QuickActions.Status.OpenedBackgroundAudit" xml:space="preserve"><value>Opened audit item: {0} - {1}.</value></data>
+  <data name="QuickActions.Status.OpenedBackgroundTimeline" xml:space="preserve"><value>Opened current notification: {0} - {1} ({2}).</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened" xml:space="preserve"><value>Green cards to review: {0}. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewMaintenanceOpened" xml:space="preserve"><value>Maintenance tasks to review: {0}. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewRecordOpened" xml:space="preserve"><value>Documents to review: {0}. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewReminderOpened" xml:space="preserve"><value>Reminders to review: {0}. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewTechnicalOpened" xml:space="preserve"><value>Technical inspections to review: {0}. The matching overview is open.</value></data>
   <data name="MainMenu.Vehicle" xml:space="preserve"><value>_Vehicle</value></data>
   <data name="MainMenu.Vehicle.Costs" xml:space="preserve"><value>Costs and summaries</value></data>
   <data name="MainMenu.Vehicle.CostsName" xml:space="preserve"><value>Open costs and summaries for selected vehicle</value></data>
@@ -816,6 +848,19 @@ Vehicle: {2}
   <data name="Shell.SettingsCanceled" xml:space="preserve"><value>Settings were closed without saving.</value></data>
   <data name="Shell.SettingsFailed" xml:space="preserve"><value>Settings could not be completed: {0}</value></data>
   <data name="Shell.SettingsSaved" xml:space="preserve"><value>Settings were saved and overviews were recalculated.</value></data>
+  <data name="WorkspaceStatus.AuditRefreshed" xml:space="preserve"><value>Data audit was refreshed.</value></data>
+  <data name="WorkspaceStatus.CostRefreshed" xml:space="preserve"><value>Cost overview was refreshed.</value></data>
+  <data name="WorkspaceStatus.DashboardRefreshed" xml:space="preserve"><value>Dashboard was refreshed.</value></data>
+  <data name="WorkspaceStatus.FuelAnalysisTargetMissing" xml:space="preserve"><value>The related fuel entry could not be found in the current list.</value></data>
+  <data name="WorkspaceStatus.FuelAnalysisTargetSelected" xml:space="preserve"><value>The related fuel entry was selected from the analysis summary.</value></data>
+  <data name="WorkspaceStatus.GlobalSearchRefreshed" xml:space="preserve"><value>Global search was refreshed.</value></data>
+  <data name="WorkspaceStatus.OverdueOverviewRefreshed" xml:space="preserve"><value>Overdue due dates overview was refreshed.</value></data>
+  <data name="WorkspaceStatus.SmartAdvisorOpenedCosts" xml:space="preserve"><value>Smart advisor opened the recommended vehicle cost overview.</value></data>
+  <data name="WorkspaceStatus.SmartAdvisorOpenedEntity" xml:space="preserve"><value>Smart advisor opened the related record.</value></data>
+  <data name="WorkspaceStatus.SmartAdvisorOpenedVehicle" xml:space="preserve"><value>Smart advisor showed the recommended vehicle.</value></data>
+  <data name="WorkspaceStatus.SmartAdvisorRefreshed" xml:space="preserve"><value>Smart advisor was refreshed.</value></data>
+  <data name="WorkspaceStatus.TimelineRefreshed" xml:space="preserve"><value>Timeline was refreshed.</value></data>
+  <data name="WorkspaceStatus.UpcomingOverviewRefreshed" xml:space="preserve"><value>Upcoming due dates overview was refreshed.</value></data>
   <data name="Shell.AuditCount" xml:space="preserve"><value>Audit</value></data>
   <data name="Shell.DataModeLabel" xml:space="preserve"><value>Data mode</value></data>
   <data name="Shell.DataPathLabel" xml:space="preserve"><value>Data folder</value></data>
