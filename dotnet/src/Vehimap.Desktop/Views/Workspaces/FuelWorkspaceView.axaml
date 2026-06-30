@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.FuelWorkspaceView"
@@ -18,36 +19,36 @@
                AutomationProperties.AutomationId="FuelSummaryText" />
     <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold"
-                 Text="Tankování vybraného vozidla" />
+                 Text="{i18n:Loc FuelWorkspace.Title}" />
       <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Search}" />
         <TextBox x:Name="FuelSearchBox"
                  Grid.Column="1"
                  Text="{Binding FuelSearchText}"
-                 PlaceholderText="Datum, palivo, detail, místo, litry, cena, tachometr nebo poznámka..."
-                 AutomationProperties.Name="Hledání v tankování vozidla"
-                 AutomationProperties.HelpText="Datum, palivo, detail, místo, litry, cena, tachometr nebo poznámka"
+                 PlaceholderText="{i18n:Loc FuelWorkspace.SearchPlaceholder}"
+                 AutomationProperties.Name="{i18n:Loc FuelWorkspace.SearchName}"
+                 AutomationProperties.HelpText="{i18n:Loc FuelWorkspace.SearchHelp}"
                  AutomationProperties.AutomationId="FuelSearchBox" />
         <Button Grid.Column="2"
                 Margin="12,0,0,0"
                 Command="{Binding ClearFuelSearchCommand}"
-                Content="Vymazat"
-                AutomationProperties.Name="Vymazat hledání v tankování vozidla"
+                Content="{i18n:Loc Common.Clear}"
+                AutomationProperties.Name="{i18n:Loc FuelWorkspace.ClearSearchName}"
                 AutomationProperties.AutomationId="ClearFuelSearchButton" />
       </Grid>
       <Grid Grid.Row="2" Margin="0,8,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Řadit" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Sort}" />
         <ComboBox Grid.Column="1"
                   ItemsSource="{Binding FuelSortOptions}"
                   SelectedItem="{Binding SelectedFuelSortOption}"
-                  AutomationProperties.Name="Řazení tankování vozidla"
+                  AutomationProperties.Name="{i18n:Loc FuelWorkspace.SortName}"
                   AutomationProperties.AutomationId="FuelSortComboBox" />
         <CheckBox Grid.Column="2"
                   Margin="12,0,0,0"
                   VerticalAlignment="Center"
-                  Content="Sestupně"
+                  Content="{i18n:Loc Common.SortDescending}"
                   IsChecked="{Binding FuelSortDescending}"
-                  AutomationProperties.Name="Řadit tankování sestupně"
+                  AutomationProperties.Name="{i18n:Loc FuelWorkspace.SortDescendingName}"
                   AutomationProperties.AutomationId="FuelSortDescendingCheckBox" />
       </Grid>
       <TextBlock Grid.Row="3"
@@ -62,7 +63,7 @@
                Margin="0,12,12,0"
                ItemsSource="{Binding VisibleFuelItems}"
                SelectedItem="{Binding SelectedFuel}"
-               AutomationProperties.Name="Tankování vybraného vozidla"
+               AutomationProperties.Name="{i18n:Loc FuelWorkspace.ListName}"
                AutomationProperties.AutomationId="FuelListBox">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="itemvm:VehicleFuelItemViewModel">
@@ -71,7 +72,7 @@
                     Background="#10203040"
                     CornerRadius="6"
                     AutomationProperties.Name="{Binding AccessibleLabel}"
-                    AutomationProperties.ItemType="Tankování"
+                    AutomationProperties.ItemType="{i18n:Loc FuelWorkspace.ItemType}"
                     AutomationProperties.ItemStatus="{Binding TankState}">
               <Grid ColumnDefinitions="120,1.5*,110,110,110,1.2*,*">
                 <TextBlock Grid.Column="0" Text="{Binding Date}" />
@@ -98,7 +99,7 @@
             CornerRadius="8">
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
-                    AutomationProperties.Name="Detail a analýza tankování"
+                    AutomationProperties.Name="{i18n:Loc FuelWorkspace.DetailName}"
                     AutomationProperties.AutomationId="FuelDetailScrollViewer">
         <StackPanel Spacing="16">
           <TextBlock FontSize="18"
@@ -108,17 +109,17 @@
                      ItemWidth="122"
                      ItemHeight="34">
             <Button Command="{Binding CreateFuelCommand}"
-                    Content="Nové"
-                    AutomationProperties.Name="Vytvořit nové tankování"
+                    Content="{i18n:Loc FuelWorkspace.Create}"
+                    AutomationProperties.Name="{i18n:Loc FuelWorkspace.CreateName}"
                     AutomationProperties.AutomationId="CreateFuelButton" />
             <Button Command="{Binding EditSelectedFuelCommand}"
-                    Content="Upravit"
-                    AutomationProperties.Name="Upravit vybrané tankování"
+                    Content="{i18n:Loc Common.Edit}"
+                    AutomationProperties.Name="{i18n:Loc FuelWorkspace.EditName}"
                     AutomationProperties.AutomationId="EditFuelButton" />
             <Button Command="{Binding DeleteSelectedFuelCommand}"
-                    Content="Odstranit"
-                    AutomationProperties.Name="Odstranit vybrané tankování"
-                    AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybraný záznam tankování."
+                    Content="{i18n:Loc Common.Delete}"
+                    AutomationProperties.Name="{i18n:Loc FuelWorkspace.DeleteName}"
+                    AutomationProperties.HelpText="{i18n:Loc FuelWorkspace.DeleteHelp}"
                     AutomationProperties.AutomationId="DeleteFuelButton" />
           </WrapPanel>
           <TextBlock Opacity="0.82"
@@ -134,8 +135,8 @@
           <Border Height="1" Background="#20304050" />
           <TextBlock FontSize="18"
                      FontWeight="SemiBold"
-                     Text="Analýza tankování"
-                     AutomationProperties.Name="Analýza tankování"
+                     Text="{i18n:Loc FuelWorkspace.AnalysisHeading}"
+                     AutomationProperties.Name="{i18n:Loc FuelWorkspace.AnalysisHeading}"
                      AutomationProperties.AutomationId="FuelAnalysisHeadingText"
                      AutomationProperties.HeadingLevel="2" />
           <TextBlock Text="{Binding FuelAnalysisSummaryText}"
@@ -143,15 +144,15 @@
                      AutomationProperties.Name="{Binding FuelAnalysisSummaryText}"
                      AutomationProperties.AutomationId="FuelAnalysisSummaryText" />
           <TextBlock FontWeight="SemiBold"
-                     Text="Vývoj spotřeby"
-                     AutomationProperties.Name="Vývoj spotřeby"
+                     Text="{i18n:Loc FuelWorkspace.ConsumptionHeading}"
+                     AutomationProperties.Name="{i18n:Loc FuelWorkspace.ConsumptionHeading}"
                      AutomationProperties.AutomationId="FuelConsumptionSegmentsHeadingText"
                      AutomationProperties.HeadingLevel="2" />
           <ListBox MinHeight="110"
                    MaxHeight="180"
                    ItemsSource="{Binding FuelConsumptionSegments}"
                    SelectedItem="{Binding SelectedFuelConsumptionSegment}"
-                   AutomationProperties.Name="Vývoj spotřeby tankování"
+                   AutomationProperties.Name="{i18n:Loc FuelWorkspace.ConsumptionListName}"
                    AutomationProperties.AutomationId="FuelConsumptionSegmentsListBox">
             <ListBox.KeyBindings>
               <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedFuelConsumptionSegmentCommand}" />
@@ -163,7 +164,7 @@
                         Background="#10203040"
                         CornerRadius="6"
                         AutomationProperties.Name="{Binding AccessibleLabel}"
-                        AutomationProperties.ItemType="Úsek spotřeby">
+                        AutomationProperties.ItemType="{i18n:Loc FuelWorkspace.ConsumptionItemType}">
                   <StackPanel>
                     <TextBlock Text="{Binding Period}" />
                     <TextBlock Opacity="0.78" Text="{Binding Consumption}" />
@@ -174,19 +175,19 @@
             </ListBox.ItemTemplate>
           </ListBox>
           <Button Command="{Binding OpenSelectedFuelConsumptionSegmentCommand}"
-                  Content="Otevřít tankování úseku"
-                  AutomationProperties.Name="Otevřít tankování vybraného úseku spotřeby"
+                  Content="{i18n:Loc FuelWorkspace.OpenConsumptionSegment}"
+                  AutomationProperties.Name="{i18n:Loc FuelWorkspace.OpenConsumptionSegmentName}"
                   AutomationProperties.AutomationId="OpenFuelConsumptionSegmentButton" />
           <TextBlock FontWeight="SemiBold"
-                     Text="Místa a paliva"
-                     AutomationProperties.Name="Místa a paliva"
+                     Text="{i18n:Loc FuelWorkspace.GroupsHeading}"
+                     AutomationProperties.Name="{i18n:Loc FuelWorkspace.GroupsHeading}"
                      AutomationProperties.AutomationId="FuelGroupSummariesHeadingText"
                      AutomationProperties.HeadingLevel="2" />
           <ListBox MinHeight="110"
                    MaxHeight="180"
                    ItemsSource="{Binding FuelGroupSummaries}"
                    SelectedItem="{Binding SelectedFuelGroupSummary}"
-                   AutomationProperties.Name="Místa tankování a paliva"
+                   AutomationProperties.Name="{i18n:Loc FuelWorkspace.GroupsListName}"
                    AutomationProperties.AutomationId="FuelGroupSummariesListBox">
             <ListBox.KeyBindings>
               <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedFuelGroupSummaryCommand}" />
@@ -198,7 +199,7 @@
                         Background="#10203040"
                         CornerRadius="6"
                         AutomationProperties.Name="{Binding AccessibleLabel}"
-                        AutomationProperties.ItemType="Souhrn místa a paliva">
+                        AutomationProperties.ItemType="{i18n:Loc FuelWorkspace.GroupItemType}">
                   <StackPanel>
                     <TextBlock Text="{Binding Station}" />
                     <TextBlock Opacity="0.78" Text="{Binding Fuel}" />
@@ -209,19 +210,19 @@
             </ListBox.ItemTemplate>
           </ListBox>
           <Button Command="{Binding OpenSelectedFuelGroupSummaryCommand}"
-                  Content="Otevřít poslední tankování skupiny"
-                  AutomationProperties.Name="Otevřít poslední tankování vybrané skupiny místa a paliva"
+                  Content="{i18n:Loc FuelWorkspace.OpenGroupSummary}"
+                  AutomationProperties.Name="{i18n:Loc FuelWorkspace.OpenGroupSummaryName}"
                   AutomationProperties.AutomationId="OpenFuelGroupSummaryButton" />
           <TextBlock FontWeight="SemiBold"
-                     Text="Upozornění"
-                     AutomationProperties.Name="Upozornění analýzy tankování"
+                     Text="{i18n:Loc FuelWorkspace.WarningsHeading}"
+                     AutomationProperties.Name="{i18n:Loc FuelWorkspace.WarningsName}"
                      AutomationProperties.AutomationId="FuelAnalysisWarningsHeadingText"
                      AutomationProperties.HeadingLevel="2" />
           <ListBox MinHeight="110"
                    MaxHeight="180"
                    ItemsSource="{Binding FuelAnalysisWarnings}"
                    SelectedItem="{Binding SelectedFuelAnalysisWarning}"
-                   AutomationProperties.Name="Upozornění analýzy tankování"
+                   AutomationProperties.Name="{i18n:Loc FuelWorkspace.WarningsName}"
                    AutomationProperties.AutomationId="FuelAnalysisWarningsListBox">
             <ListBox.KeyBindings>
               <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedFuelAnalysisWarningCommand}" />
@@ -233,7 +234,7 @@
                         Background="#10203040"
                         CornerRadius="6"
                         AutomationProperties.Name="{Binding AccessibleLabel}"
-                        AutomationProperties.ItemType="Upozornění analýzy tankování"
+                        AutomationProperties.ItemType="{i18n:Loc FuelWorkspace.WarningItemType}"
                         AutomationProperties.ItemStatus="{Binding Severity}">
                   <StackPanel>
                     <TextBlock Text="{Binding Title}" />
@@ -245,8 +246,8 @@
             </ListBox.ItemTemplate>
           </ListBox>
           <Button Command="{Binding OpenSelectedFuelAnalysisWarningCommand}"
-                  Content="Otevřít související tankování"
-                  AutomationProperties.Name="Otevřít tankování související s vybraným upozorněním"
+                  Content="{i18n:Loc FuelWorkspace.OpenWarning}"
+                  AutomationProperties.Name="{i18n:Loc FuelWorkspace.OpenWarningName}"
                   AutomationProperties.AutomationId="OpenFuelAnalysisWarningButton" />
         </StackPanel>
       </ScrollViewer>

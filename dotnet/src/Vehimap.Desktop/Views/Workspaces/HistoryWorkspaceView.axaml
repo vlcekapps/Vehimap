@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.HistoryWorkspaceView"
@@ -18,36 +19,36 @@
                AutomationProperties.AutomationId="HistorySummaryText" />
     <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="0,16,0,0">
       <TextBlock FontWeight="SemiBold"
-                 Text="Historické záznamy vybraného vozidla" />
+                 Text="{i18n:Loc HistoryWorkspace.Title}" />
       <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Search}" />
         <TextBox x:Name="HistorySearchBox"
                  Grid.Column="1"
                  Text="{Binding HistorySearchText}"
-                 PlaceholderText="Datum, typ, tachometr, cena nebo poznámka..."
-                 AutomationProperties.Name="Hledání v historii vozidla"
-                 AutomationProperties.HelpText="Datum, typ, tachometr, cena nebo poznámka"
+                 PlaceholderText="{i18n:Loc HistoryWorkspace.SearchPlaceholder}"
+                 AutomationProperties.Name="{i18n:Loc HistoryWorkspace.SearchName}"
+                 AutomationProperties.HelpText="{i18n:Loc HistoryWorkspace.SearchHelp}"
                  AutomationProperties.AutomationId="HistorySearchBox" />
         <Button Grid.Column="2"
                 Margin="12,0,0,0"
                 Command="{Binding ClearHistorySearchCommand}"
-                Content="Vymazat"
-                AutomationProperties.Name="Vymazat hledání v historii vozidla"
+                Content="{i18n:Loc Common.Clear}"
+                AutomationProperties.Name="{i18n:Loc HistoryWorkspace.ClearSearchName}"
                 AutomationProperties.AutomationId="ClearHistorySearchButton" />
       </Grid>
       <Grid Grid.Row="2" Margin="0,8,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Řadit" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Sort}" />
         <ComboBox Grid.Column="1"
                   ItemsSource="{Binding HistorySortOptions}"
                   SelectedItem="{Binding SelectedHistorySortOption}"
-                  AutomationProperties.Name="Řazení historie vozidla"
+                  AutomationProperties.Name="{i18n:Loc HistoryWorkspace.SortName}"
                   AutomationProperties.AutomationId="HistorySortComboBox" />
         <CheckBox Grid.Column="2"
                   Margin="12,0,0,0"
                   VerticalAlignment="Center"
-                  Content="Sestupně"
+                  Content="{i18n:Loc Common.SortDescending}"
                   IsChecked="{Binding HistorySortDescending}"
-                  AutomationProperties.Name="Řadit historii sestupně"
+                  AutomationProperties.Name="{i18n:Loc HistoryWorkspace.SortDescendingName}"
                   AutomationProperties.AutomationId="HistorySortDescendingCheckBox" />
       </Grid>
       <TextBlock Grid.Row="3"
@@ -62,7 +63,7 @@
                Margin="0,12,12,0"
                ItemsSource="{Binding VisibleHistoryItems}"
                SelectedItem="{Binding SelectedHistory}"
-               AutomationProperties.Name="Historie vybraného vozidla"
+               AutomationProperties.Name="{i18n:Loc HistoryWorkspace.ListName}"
                AutomationProperties.AutomationId="HistoryListBox">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="itemvm:VehicleHistoryItemViewModel">
@@ -71,7 +72,7 @@
                     Background="#10203040"
                     CornerRadius="6"
                     AutomationProperties.Name="{Binding AccessibleLabel}"
-                    AutomationProperties.ItemType="Historický záznam">
+                    AutomationProperties.ItemType="{i18n:Loc HistoryWorkspace.ItemType}">
               <Grid ColumnDefinitions="120,160,130,120,*">
                 <TextBlock Grid.Column="0" Text="{Binding Date}" />
                 <TextBlock Grid.Column="1" Text="{Binding EventType}" />
@@ -92,7 +93,7 @@
             CornerRadius="8">
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
-                    AutomationProperties.Name="Detail historie vozidla"
+                    AutomationProperties.Name="{i18n:Loc HistoryWorkspace.DetailName}"
                     AutomationProperties.AutomationId="HistoryDetailScrollViewer">
         <Grid RowDefinitions="Auto,Auto,Auto,*">
           <TextBlock FontSize="18"
@@ -104,17 +105,17 @@
                      ItemWidth="128"
                      ItemHeight="34">
             <Button Command="{Binding CreateHistoryCommand}"
-                    Content="Nový záznam"
-                    AutomationProperties.Name="Vytvořit nový historický záznam"
+                    Content="{i18n:Loc HistoryWorkspace.Create}"
+                    AutomationProperties.Name="{i18n:Loc HistoryWorkspace.CreateName}"
                     AutomationProperties.AutomationId="CreateHistoryButton" />
             <Button Command="{Binding EditSelectedHistoryCommand}"
-                    Content="Upravit"
-                    AutomationProperties.Name="Upravit vybraný historický záznam"
+                    Content="{i18n:Loc Common.Edit}"
+                    AutomationProperties.Name="{i18n:Loc HistoryWorkspace.EditName}"
                     AutomationProperties.AutomationId="EditHistoryButton" />
             <Button Command="{Binding DeleteSelectedHistoryCommand}"
-                    Content="Odstranit"
-                    AutomationProperties.Name="Odstranit vybraný historický záznam"
-                    AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybraný historický záznam vozidla."
+                    Content="{i18n:Loc Common.Delete}"
+                    AutomationProperties.Name="{i18n:Loc HistoryWorkspace.DeleteName}"
+                    AutomationProperties.HelpText="{i18n:Loc HistoryWorkspace.DeleteHelp}"
                     AutomationProperties.AutomationId="DeleteHistoryButton" />
           </WrapPanel>
           <TextBlock Grid.Row="2"

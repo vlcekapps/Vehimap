@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.MaintenanceWorkspaceView"
@@ -15,36 +16,36 @@
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding MaintenanceSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding MaintenanceSummary}" AutomationProperties.AutomationId="MaintenanceSummaryText" />
     <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="0,16,0,0">
-      <TextBlock FontWeight="SemiBold" Text="Servisní plány vybraného vozidla" />
+      <TextBlock FontWeight="SemiBold" Text="{i18n:Loc MaintenanceWorkspace.Title}" />
       <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Search}" />
         <TextBox x:Name="MaintenanceSearchBox"
                  Grid.Column="1"
                  Text="{Binding MaintenanceSearchText}"
-                 PlaceholderText="Úkon, interval, poslední servis, stav nebo poznámka..."
-                 AutomationProperties.Name="Hledání v plánu údržby"
-                 AutomationProperties.HelpText="Úkon, interval, poslední servis, stav nebo poznámka"
+                 PlaceholderText="{i18n:Loc MaintenanceWorkspace.SearchPlaceholder}"
+                 AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.SearchName}"
+                 AutomationProperties.HelpText="{i18n:Loc MaintenanceWorkspace.SearchHelp}"
                  AutomationProperties.AutomationId="MaintenanceSearchBox" />
         <Button Grid.Column="2"
                 Margin="12,0,0,0"
                 Command="{Binding ClearMaintenanceSearchCommand}"
-                Content="Vymazat"
-                AutomationProperties.Name="Vymazat hledání v plánu údržby"
+                Content="{i18n:Loc Common.Clear}"
+                AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.ClearSearchName}"
                 AutomationProperties.AutomationId="ClearMaintenanceSearchButton" />
       </Grid>
       <Grid Grid.Row="2" Margin="0,8,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Řadit" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Sort}" />
         <ComboBox Grid.Column="1"
                   ItemsSource="{Binding MaintenanceSortOptions}"
                   SelectedItem="{Binding SelectedMaintenanceSortOption}"
-                  AutomationProperties.Name="Řazení plánu údržby"
+                  AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.SortName}"
                   AutomationProperties.AutomationId="MaintenanceSortComboBox" />
         <CheckBox Grid.Column="2"
                   Margin="12,0,0,0"
                   VerticalAlignment="Center"
-                  Content="Sestupně"
+                  Content="{i18n:Loc Common.SortDescending}"
                   IsChecked="{Binding MaintenanceSortDescending}"
-                  AutomationProperties.Name="Řadit plán údržby sestupně"
+                  AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.SortDescendingName}"
                   AutomationProperties.AutomationId="MaintenanceSortDescendingCheckBox" />
       </Grid>
       <TextBlock Grid.Row="3" Margin="0,8,12,0" Opacity="0.72" Text="{Binding MaintenanceSearchSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding MaintenanceSearchSummary}" AutomationProperties.AutomationId="MaintenanceSearchSummaryText" />
@@ -53,11 +54,11 @@
                Margin="0,12,12,0"
                ItemsSource="{Binding VisibleMaintenanceItems}"
                SelectedItem="{Binding SelectedMaintenance}"
-               AutomationProperties.Name="Plán údržby vybraného vozidla"
+               AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.ListName}"
                AutomationProperties.AutomationId="MaintenanceListBox">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="itemvm:VehicleMaintenanceItemViewModel">
-            <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Servisní plán" AutomationProperties.ItemStatus="{Binding Status}">
+            <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="{i18n:Loc MaintenanceWorkspace.ItemType}" AutomationProperties.ItemStatus="{Binding Status}">
               <Grid ColumnDefinitions="2*,170,170,180,*">
                 <TextBlock Grid.Column="0" FontWeight="SemiBold" Text="{Binding Title}" TextWrapping="Wrap" />
                 <TextBlock Grid.Column="1" Text="{Binding Interval}" TextWrapping="Wrap" />
@@ -73,7 +74,7 @@
     <Border Grid.Row="1" Grid.Column="1" Margin="12,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
-                    AutomationProperties.Name="Detail plánu údržby"
+                    AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.DetailName}"
                     AutomationProperties.AutomationId="MaintenanceDetailScrollViewer">
         <Grid RowDefinitions="Auto,Auto,Auto,*">
           <TextBlock FontSize="18"
@@ -83,11 +84,11 @@
                      AutomationProperties.AutomationId="MaintenancePanelHeadingText"
                      AutomationProperties.HeadingLevel="2" />
           <WrapPanel x:Name="MaintenanceActionPanel" Grid.Row="1" Margin="0,14,0,0" ItemWidth="132" ItemHeight="34">
-            <Button Command="{Binding CreateMaintenanceCommand}" Content="Nový plán" AutomationProperties.Name="Vytvořit nový servisní plán" AutomationProperties.AutomationId="CreateMaintenanceButton" />
-            <Button Command="{Binding OpenMaintenanceTemplatesCommand}" Content="Doporučené" IsEnabled="{Binding CanOpenMaintenanceRecommendations}" AutomationProperties.Name="Otevřít doporučené servisní šablony" AutomationProperties.AutomationId="OpenMaintenanceTemplatesButton" />
-            <Button Command="{Binding EditSelectedMaintenanceCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybraný servisní plán" AutomationProperties.AutomationId="EditMaintenanceButton" />
-            <Button Command="{Binding DeleteSelectedMaintenanceCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybraný servisní plán" AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybraný servisní plán." AutomationProperties.AutomationId="DeleteMaintenanceButton" />
-            <Button Command="{Binding CompleteSelectedMaintenanceCommand}" Content="Splněno" AutomationProperties.Name="Označit vybraný servisní úkon jako splněný" AutomationProperties.AutomationId="CompleteMaintenanceButton" />
+            <Button Command="{Binding CreateMaintenanceCommand}" Content="{i18n:Loc MaintenanceWorkspace.Create}" AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.CreateName}" AutomationProperties.AutomationId="CreateMaintenanceButton" />
+            <Button Command="{Binding OpenMaintenanceTemplatesCommand}" Content="{i18n:Loc MaintenanceWorkspace.Recommended}" IsEnabled="{Binding CanOpenMaintenanceRecommendations}" AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.RecommendedName}" AutomationProperties.AutomationId="OpenMaintenanceTemplatesButton" />
+            <Button Command="{Binding EditSelectedMaintenanceCommand}" Content="{i18n:Loc Common.Edit}" AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.EditName}" AutomationProperties.AutomationId="EditMaintenanceButton" />
+            <Button Command="{Binding DeleteSelectedMaintenanceCommand}" Content="{i18n:Loc Common.Delete}" AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.DeleteName}" AutomationProperties.HelpText="{i18n:Loc MaintenanceWorkspace.DeleteHelp}" AutomationProperties.AutomationId="DeleteMaintenanceButton" />
+            <Button Command="{Binding CompleteSelectedMaintenanceCommand}" Content="{i18n:Loc MaintenanceWorkspace.Complete}" AutomationProperties.Name="{i18n:Loc MaintenanceWorkspace.CompleteName}" AutomationProperties.AutomationId="CompleteMaintenanceButton" />
           </WrapPanel>
           <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding MaintenanceEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding MaintenanceEditorStatus}" AutomationProperties.AutomationId="MaintenanceStatusText" AutomationProperties.LiveSetting="Polite" />
           <TextBlock Grid.Row="3" Margin="0,16,0,0" Text="{Binding SelectedMaintenanceDetail}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedMaintenanceDetail}" AutomationProperties.AutomationId="SelectedMaintenanceDetailText" />

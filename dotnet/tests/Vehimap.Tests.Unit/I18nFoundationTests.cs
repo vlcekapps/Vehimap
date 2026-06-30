@@ -215,6 +215,36 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Pilot_workspace_surfaces_use_resource_localization_for_static_text()
+    {
+        var root = FindRepositoryRoot();
+        var historyWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "HistoryWorkspaceView.axaml"));
+        var fuelWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "FuelWorkspaceView.axaml"));
+        var maintenanceWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "MaintenanceWorkspaceView.axaml"));
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc HistoryWorkspace.Title}\"", historyWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc HistoryWorkspace.SearchPlaceholder}\"", historyWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc HistoryWorkspace.ItemType}\"", historyWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), historyWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", fuelWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc FuelWorkspace.Title}\"", fuelWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc FuelWorkspace.SearchPlaceholder}\"", fuelWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc FuelWorkspace.ItemType}\"", fuelWorkspace);
+        Assert.Contains("FuelWorkspace.AnalysisHeading", fuelWorkspace);
+        Assert.Contains("FuelWorkspace.OpenWarningName", fuelWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), fuelWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", maintenanceWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc MaintenanceWorkspace.Title}\"", maintenanceWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc MaintenanceWorkspace.SearchPlaceholder}\"", maintenanceWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc MaintenanceWorkspace.ItemType}\"", maintenanceWorkspace);
+        Assert.Contains("MaintenanceWorkspace.CompleteName", maintenanceWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceWorkspace);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();
