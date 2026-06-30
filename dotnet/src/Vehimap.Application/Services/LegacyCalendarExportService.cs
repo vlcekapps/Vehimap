@@ -12,15 +12,17 @@ public sealed class LegacyCalendarExportService : ICalendarExportService
     private const int IcsContinuationLineTextByteLimit = 74;
 
     private readonly ITimelineService _timelineService;
+    private readonly IAppLocalizer _localizer;
 
     public LegacyCalendarExportService()
-        : this(new LegacyTimelineService())
+        : this(new LegacyTimelineService(), null)
     {
     }
 
-    public LegacyCalendarExportService(ITimelineService timelineService)
+    public LegacyCalendarExportService(ITimelineService timelineService, IAppLocalizer? localizer = null)
     {
         _timelineService = timelineService;
+        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
     }
 
     public CalendarExportResult BuildUpcomingCalendar(VehimapDataSet dataSet, DateOnly today, DateTimeOffset generatedAtUtc)
@@ -42,7 +44,7 @@ public sealed class LegacyCalendarExportService : ICalendarExportService
                     entry.VehicleId,
                     entry.VehicleName,
                     entry.Date,
-                    $"Vehimap - {entry.KindLabel} - {entry.VehicleName}",
+                    LF("CalendarExport.Summary", entry.KindLabel, entry.VehicleName),
                     BuildDescription(entry),
                     BuildUid(entry)));
             }
@@ -75,34 +77,34 @@ public sealed class LegacyCalendarExportService : ICalendarExportService
     private static bool IsCalendarExportKind(string kind) =>
         kind is "technical" or "green" or "custom" or "record" or "maintenance";
 
-    private static string BuildDescription(VehicleTimelineItem entry)
+    private string BuildDescription(VehicleTimelineItem entry)
     {
         var lines = new List<string>
         {
-            $"Vozidlo: {entry.VehicleName}",
-            $"Druh: {entry.KindLabel}",
-            $"Položka: {entry.Title}",
-            $"Termín: {entry.DateText}"
+            LF("CalendarExport.Description.Vehicle", entry.VehicleName),
+            LF("CalendarExport.Description.Kind", entry.KindLabel),
+            LF("CalendarExport.Description.Item", entry.Title),
+            LF("CalendarExport.Description.DueDate", entry.DateText)
         };
 
         if (!string.IsNullOrWhiteSpace(entry.VehiclePlate))
         {
-            lines.Add($"SPZ: {entry.VehiclePlate}");
+            lines.Add(LF("CalendarExport.Description.Plate", entry.VehiclePlate));
         }
 
         if (!string.IsNullOrWhiteSpace(entry.Detail))
         {
-            lines.Add($"Detail: {entry.Detail}");
+            lines.Add(LF("CalendarExport.Description.Detail", entry.Detail));
         }
 
         if (!string.IsNullOrWhiteSpace(entry.Status))
         {
-            lines.Add($"Stav: {entry.Status}");
+            lines.Add(LF("CalendarExport.Description.Status", entry.Status));
         }
 
         if (!string.IsNullOrWhiteSpace(entry.Note))
         {
-            lines.Add($"Poznámka: {entry.Note}");
+            lines.Add(LF("CalendarExport.Description.Note", entry.Note));
         }
 
         return string.Join('\n', lines);
@@ -202,4 +204,6 @@ public sealed class LegacyCalendarExportService : ICalendarExportService
 
         return builder.ToString();
     }
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 }

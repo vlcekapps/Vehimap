@@ -48,6 +48,7 @@
   <data name="Common.Edit" xml:space="preserve"><value>Upravit</value></data>
   <data name="Common.EmptyValue" xml:space="preserve"><value>nevyplněno</value></data>
   <data name="Common.NoDate" xml:space="preserve"><value>bez data</value></data>
+  <data name="Common.NoNote" xml:space="preserve"><value>bez poznámky</value></data>
   <data name="Common.UnknownVehicle" xml:space="preserve"><value>Neznámé vozidlo</value></data>
   <data name="Common.Save" xml:space="preserve"><value>Uložit</value></data>
   <data name="Common.Search" xml:space="preserve"><value>Hledat</value></data>
@@ -1016,18 +1017,34 @@ Vozidlo: {2}
   <data name="SmartAdvisorWorkspace.VehicleFilterName" xml:space="preserve"><value>Filtr vozidla chytrého poradce</value></data>
   <data name="TimelineWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v časové ose</value></data>
   <data name="TimelineWorkspace.DetailHeading" xml:space="preserve"><value>Detail časové osy</value></data>
+  <data name="TimelineWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte položku časové osy a zobrazí se detail.</value></data>
+  <data name="TimelineWorkspace.Detail.Selected" xml:space="preserve"><value>Datum: {0}
+Druh: {1}
+Položka: {2}
+Detail: {3}
+Stav: {4}
+Poznámka: {5}</value></data>
+  <data name="TimelineWorkspace.ExportStatus.Initial" xml:space="preserve"><value>Kalendářový export zatím nebyl spuštěn.</value></data>
+  <data name="TimelineWorkspace.Filter.All" xml:space="preserve"><value>Vše</value></data>
+  <data name="TimelineWorkspace.Filter.Future" xml:space="preserve"><value>Budoucí</value></data>
+  <data name="TimelineWorkspace.Filter.Past" xml:space="preserve"><value>Minulé</value></data>
   <data name="TimelineWorkspace.FilterName" xml:space="preserve"><value>Filtr časové osy</value></data>
   <data name="TimelineWorkspace.ItemType" xml:space="preserve"><value>Položka časové osy</value></data>
   <data name="TimelineWorkspace.KeyboardHelp" xml:space="preserve"><value>Enter nebo tlačítko otevře navazující kartu evidence.</value></data>
   <data name="TimelineWorkspace.ListName" xml:space="preserve"><value>Časová osa vybraného vozidla</value></data>
   <data name="TimelineWorkspace.OpenItem" xml:space="preserve"><value>Otevřít položku</value></data>
   <data name="TimelineWorkspace.OpenItemName" xml:space="preserve"><value>Otevřít vybranou položku časové osy</value></data>
+  <data name="TimelineWorkspace.PreferenceSaveFailed" xml:space="preserve"><value>Nepodařilo se uložit filtr časové osy</value></data>
   <data name="TimelineWorkspace.Refresh" xml:space="preserve"><value>Obnovit</value></data>
   <data name="TimelineWorkspace.RefreshName" xml:space="preserve"><value>Obnovit časovou osu vybraného vozidla</value></data>
   <data name="TimelineWorkspace.SearchHelp" xml:space="preserve"><value>Položka, stav nebo poznámka</value></data>
   <data name="TimelineWorkspace.SearchName" xml:space="preserve"><value>Hledání v časové ose</value></data>
   <data name="TimelineWorkspace.SearchPlaceholder" xml:space="preserve"><value>Položka, stav nebo poznámka</value></data>
   <data name="TimelineWorkspace.ShowFilter" xml:space="preserve"><value>Zobrazit</value></data>
+  <data name="TimelineWorkspace.Summary.All" xml:space="preserve"><value>Celkem položek: {0}. Budoucí: {1}. Minulé: {2}.</value></data>
+  <data name="TimelineWorkspace.Summary.Empty" xml:space="preserve"><value>Pro toto vozidlo zatím nejsou žádné časové položky s datem.</value></data>
+  <data name="TimelineWorkspace.Summary.Filtered" xml:space="preserve"><value>Celkem položek: {0}. Budoucí: {1}. Minulé: {2}. Po filtru zobrazeno: {3}.</value></data>
+  <data name="TimelineWorkspace.Summary.Initial" xml:space="preserve"><value>Časová osa vybraného vozidla se zobrazí po výběru vozidla.</value></data>
   <data name="UpcomingOverviewWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v přehledu blížících se termínů</value></data>
   <data name="UpcomingOverviewWorkspace.DetailHeading" xml:space="preserve"><value>Detail termínu</value></data>
   <data name="UpcomingOverviewWorkspace.FilterLabel" xml:space="preserve"><value>Filtrovat</value></data>
@@ -1262,10 +1279,16 @@ Stav: {5}</value></data>
   <data name="AppShell.FileDialog.VehiclePackageExportTitle" xml:space="preserve"><value>Export balíčku vozidla</value></data>
   <data name="AppShell.FileDialog.VehiclePackageImportTitle" xml:space="preserve"><value>Import balíčku vozidla</value></data>
   <data name="AppShell.FileDialog.VehiclePackageFileType" xml:space="preserve"><value>Balíček vozidla Vehimap</value></data>
+  <data name="AppShell.FileDialog.CalendarExportTitle" xml:space="preserve"><value>Export termínů do kalendáře</value></data>
   <data name="AppShell.FileDialog.PrintableReportTitle" xml:space="preserve"><value>Uložit tiskový přehled vozidel</value></data>
   <data name="AppShell.FileDialog.HtmlFileType" xml:space="preserve"><value>HTML soubor</value></data>
   <data name="AppShell.FileName.VehiclePackagePrefix" xml:space="preserve"><value>vehimap-vozidlo</value></data>
   <data name="AppShell.FileName.VehicleFallback" xml:space="preserve"><value>vozidlo</value></data>
+  <data name="AppShell.CalendarExport.Cancelled" xml:space="preserve"><value>Export kalendáře byl zrušen.</value></data>
+  <data name="AppShell.CalendarExport.Empty" xml:space="preserve"><value>Kalendář zatím neobsahuje žádné budoucí položky s konkrétním datem.</value></data>
+  <data name="AppShell.CalendarExport.Failed" xml:space="preserve"><value>Export kalendáře se nepodařil: {0}</value></data>
+  <data name="AppShell.CalendarExport.Saved" xml:space="preserve"><value>Kalendář uložen do {0}. Položek: {1}.</value></data>
+  <data name="AppShell.CalendarExport.SavedWithSkippedMaintenance" xml:space="preserve"><value>Kalendář uložen do {0}. Položek: {1}. Přeskočené servisní úkoly bez data: {2}.</value></data>
   <data name="AppShell.ExportBackup.NotLoaded" xml:space="preserve"><value>Export se nepodařilo připravit, protože nejsou načtená data.</value></data>
   <data name="AppShell.ExportBackup.Success" xml:space="preserve"><value>Záloha byla uložena do {0}.</value></data>
   <data name="AppShell.ExportBackup.IncludedManagedAttachments" xml:space="preserve"><value>Spravovaných příloh v záloze: {0}.</value></data>
@@ -1439,6 +1462,15 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Value.NoOdometer" xml:space="preserve"><value>bez tachometru</value></data>
   <data name="ServiceBook.Value.Money" xml:space="preserve"><value>{0} Kč</value></data>
   <data name="ServiceBook.Value.NoPrice" xml:space="preserve"><value>bez ceny</value></data>
+  <data name="CalendarExport.Description.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
+  <data name="CalendarExport.Description.DueDate" xml:space="preserve"><value>Termín: {0}</value></data>
+  <data name="CalendarExport.Description.Item" xml:space="preserve"><value>Položka: {0}</value></data>
+  <data name="CalendarExport.Description.Kind" xml:space="preserve"><value>Druh: {0}</value></data>
+  <data name="CalendarExport.Description.Note" xml:space="preserve"><value>Poznámka: {0}</value></data>
+  <data name="CalendarExport.Description.Plate" xml:space="preserve"><value>SPZ: {0}</value></data>
+  <data name="CalendarExport.Description.Status" xml:space="preserve"><value>Stav: {0}</value></data>
+  <data name="CalendarExport.Description.Vehicle" xml:space="preserve"><value>Vozidlo: {0}</value></data>
+  <data name="CalendarExport.Summary" xml:space="preserve"><value>Vehimap - {0} - {1}</value></data>
   <data name="ServiceBook.Export.HtmlLanguage" xml:space="preserve"><value>cs</value></data>
   <data name="ServiceBook.Export.Title" xml:space="preserve"><value>Vehimap - Servisní knížka</value></data>
   <data name="ServiceBook.Export.Heading" xml:space="preserve"><value>Servisní knížka</value></data>

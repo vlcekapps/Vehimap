@@ -269,7 +269,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new AvaloniaFilePickerService(),
             new LegacyGlobalSearchService(new ManagedAttachmentPathService(), new LegacyTimelineService(DesktopLocalization.Localizer), DesktopLocalization.Localizer),
             new LegacyTimelineService(DesktopLocalization.Localizer),
-            new LegacyCalendarExportService(new LegacyTimelineService(DesktopLocalization.Localizer)),
+            new LegacyCalendarExportService(new LegacyTimelineService(DesktopLocalization.Localizer), DesktopLocalization.Localizer),
             new AvaloniaTextFileSaveService(),
             new SqliteBackupService(),
             new AvaloniaFileDialogService(),
@@ -436,7 +436,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             FuelWorkspace.ClearFuelAnalysis();
             ReminderWorkspace.ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
             MaintenanceWorkspace.MaintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
-            TimelineWorkspace.TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
+            TimelineWorkspace.TimelineSummary = LO("TimelineWorkspace.Summary.Initial");
             RecordWorkspace.RecordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
             SelectedVehicleHistory.Clear();
             SelectedVehicleFuel.Clear();
@@ -635,28 +635,28 @@ public sealed partial class MainWindowViewModel : ObservableObject
             var export = _calendarExportService.BuildUpcomingCalendar(_dataSet, today, DateTimeOffset.UtcNow);
             if (export.Items.Count == 0)
             {
-                SetCalendarExportStatus("Kalendář zatím neobsahuje žádné budoucí položky s konkrétním datem.");
+                SetCalendarExportStatus(LO("AppShell.CalendarExport.Empty"));
                 return;
             }
 
             var suggestedFileName = $"vehimap-kalendar-{today:yyyy-MM-dd}.ics";
             var savedPath = await _fileSaveService
-                .SaveTextAsync("Export termínů do kalendáře", suggestedFileName, export.IcsContent)
+                .SaveTextAsync(LO("AppShell.FileDialog.CalendarExportTitle"), suggestedFileName, export.IcsContent)
                 .ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(savedPath))
             {
-                SetCalendarExportStatus("Export kalendáře byl zrušen.");
+                SetCalendarExportStatus(LO("AppShell.CalendarExport.Cancelled"));
                 return;
             }
 
             SetCalendarExportStatus(export.SkippedMaintenanceCount > 0
-                ? $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}. Přeskočené servisní úkoly bez data: {export.SkippedMaintenanceCount}."
-                : $"Kalendář uložen do {savedPath}. Položek: {export.Items.Count}.");
+                ? LFO("AppShell.CalendarExport.SavedWithSkippedMaintenance", savedPath, export.Items.Count, export.SkippedMaintenanceCount)
+                : LFO("AppShell.CalendarExport.Saved", savedPath, export.Items.Count));
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetCalendarExportStatus($"Export kalendáře se nepodařil: {ex.Message}");
+            SetCalendarExportStatus(LFO("AppShell.CalendarExport.Failed", ex.Message));
         }
     }
 
@@ -1429,7 +1429,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         TimelineWorkspace.SelectedTimelineItem = SelectedVehicleTimeline.FirstOrDefault();
         if (TimelineWorkspace.SelectedTimelineItem is null)
         {
-            TimelineWorkspace.SelectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
+            TimelineWorkspace.SelectedTimelineDetail = LO("TimelineWorkspace.Detail.Empty");
             NotifyTimelineWorkspaceSelectionChanged();
         }
     }
@@ -1451,7 +1451,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         if (SelectedVehicle is null)
         {
-            TimelineWorkspace.TimelineSummary = "Časová osa vybraného vozidla se zobrazí po výběru vozidla.";
+            TimelineWorkspace.TimelineSummary = LO("TimelineWorkspace.Summary.Initial");
             TimelineWorkspace.SelectedTimelineItem = null;
             return;
         }
@@ -1476,7 +1476,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             : FindTimelineItem(SelectedVehicleTimeline, previousSelection);
         if (TimelineWorkspace.SelectedTimelineItem is null)
         {
-            TimelineWorkspace.SelectedTimelineDetail = "Vyberte položku časové osy a zobrazí se detail.";
+            TimelineWorkspace.SelectedTimelineDetail = LO("TimelineWorkspace.Detail.Empty");
             NotifyTimelineWorkspaceSelectionChanged();
         }
     }

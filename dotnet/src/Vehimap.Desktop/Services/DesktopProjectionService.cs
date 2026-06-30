@@ -428,10 +428,10 @@ internal sealed class DesktopProjectionService
         var futureCount = allItems.Count(item => item.IsFuture);
         var pastCount = allItems.Count - futureCount;
         var summary = allItems.Count == 0
-            ? "Pro toto vozidlo zatím nejsou žádné časové položky s datem."
+            ? L("TimelineWorkspace.Summary.Empty")
             : filteredItems.Count == allItems.Count
-                ? $"Celkem položek: {allItems.Count}. Budoucí: {futureCount}. Minulé: {pastCount}."
-                : $"Celkem položek: {allItems.Count}. Budoucí: {futureCount}. Minulé: {pastCount}. Po filtru zobrazeno: {filteredItems.Count}.";
+                ? LF("TimelineWorkspace.Summary.All", allItems.Count, futureCount, pastCount)
+                : LF("TimelineWorkspace.Summary.Filtered", allItems.Count, futureCount, pastCount, filteredItems.Count);
 
         return new DesktopListProjection<VehicleTimelineItemViewModel>(filteredItems, summary);
     }
@@ -1075,14 +1075,36 @@ internal sealed class DesktopProjectionService
     private static string FormatReminderRepeatMode(string? repeatMode) =>
         string.IsNullOrWhiteSpace(repeatMode) ? "bez opakování" : repeatMode;
 
-    private static bool MatchesTimelineFilter(VehicleTimelineItem item, string selectedFilter)
+    private bool MatchesTimelineFilter(VehicleTimelineItem item, string selectedFilter)
     {
-        return selectedFilter switch
+        return NormalizeTimelineFilterKey(selectedFilter) switch
         {
-            "Budoucí" => item.IsFuture,
-            "Minulé" => !item.IsFuture,
+            "future" => item.IsFuture,
+            "past" => !item.IsFuture,
             _ => true
         };
+    }
+
+    private string NormalizeTimelineFilterKey(string? value)
+    {
+        var normalized = (value ?? string.Empty).Trim();
+        if (string.Equals(normalized, "future", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(normalized, L("TimelineWorkspace.Filter.Future"), StringComparison.CurrentCultureIgnoreCase)
+            || string.Equals(normalized, "Budoucí", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(normalized, "Future", StringComparison.OrdinalIgnoreCase))
+        {
+            return "future";
+        }
+
+        if (string.Equals(normalized, "past", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(normalized, L("TimelineWorkspace.Filter.Past"), StringComparison.CurrentCultureIgnoreCase)
+            || string.Equals(normalized, "Minulé", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(normalized, "Past", StringComparison.OrdinalIgnoreCase))
+        {
+            return "past";
+        }
+
+        return "all";
     }
 
     private static bool MatchesTimelineSearch(VehicleTimelineItem item, string? searchText)

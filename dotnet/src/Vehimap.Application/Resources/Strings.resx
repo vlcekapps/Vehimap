@@ -48,6 +48,7 @@
   <data name="Common.Edit" xml:space="preserve"><value>Edit</value></data>
   <data name="Common.EmptyValue" xml:space="preserve"><value>not filled</value></data>
   <data name="Common.NoDate" xml:space="preserve"><value>no date</value></data>
+  <data name="Common.NoNote" xml:space="preserve"><value>no note</value></data>
   <data name="Common.UnknownVehicle" xml:space="preserve"><value>Unknown vehicle</value></data>
   <data name="Common.Save" xml:space="preserve"><value>Save</value></data>
   <data name="Common.Search" xml:space="preserve"><value>Search</value></data>
@@ -1016,18 +1017,34 @@ Vehicle: {2}
   <data name="SmartAdvisorWorkspace.VehicleFilterName" xml:space="preserve"><value>Smart advisor vehicle filter</value></data>
   <data name="TimelineWorkspace.ClearSearchName" xml:space="preserve"><value>Clear timeline search</value></data>
   <data name="TimelineWorkspace.DetailHeading" xml:space="preserve"><value>Timeline detail</value></data>
+  <data name="TimelineWorkspace.Detail.Empty" xml:space="preserve"><value>Select a timeline item to show details.</value></data>
+  <data name="TimelineWorkspace.Detail.Selected" xml:space="preserve"><value>Date: {0}
+Kind: {1}
+Item: {2}
+Detail: {3}
+Status: {4}
+Note: {5}</value></data>
+  <data name="TimelineWorkspace.ExportStatus.Initial" xml:space="preserve"><value>Calendar export has not been started yet.</value></data>
+  <data name="TimelineWorkspace.Filter.All" xml:space="preserve"><value>All</value></data>
+  <data name="TimelineWorkspace.Filter.Future" xml:space="preserve"><value>Future</value></data>
+  <data name="TimelineWorkspace.Filter.Past" xml:space="preserve"><value>Past</value></data>
   <data name="TimelineWorkspace.FilterName" xml:space="preserve"><value>Timeline filter</value></data>
   <data name="TimelineWorkspace.ItemType" xml:space="preserve"><value>Timeline item</value></data>
   <data name="TimelineWorkspace.KeyboardHelp" xml:space="preserve"><value>Enter or the button opens the related record tab.</value></data>
   <data name="TimelineWorkspace.ListName" xml:space="preserve"><value>Selected vehicle timeline</value></data>
   <data name="TimelineWorkspace.OpenItem" xml:space="preserve"><value>Open item</value></data>
   <data name="TimelineWorkspace.OpenItemName" xml:space="preserve"><value>Open selected timeline item</value></data>
+  <data name="TimelineWorkspace.PreferenceSaveFailed" xml:space="preserve"><value>Timeline filter could not be saved</value></data>
   <data name="TimelineWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
   <data name="TimelineWorkspace.RefreshName" xml:space="preserve"><value>Refresh selected vehicle timeline</value></data>
   <data name="TimelineWorkspace.SearchHelp" xml:space="preserve"><value>Item, status or note</value></data>
   <data name="TimelineWorkspace.SearchName" xml:space="preserve"><value>Search in timeline</value></data>
   <data name="TimelineWorkspace.SearchPlaceholder" xml:space="preserve"><value>Item, status or note</value></data>
   <data name="TimelineWorkspace.ShowFilter" xml:space="preserve"><value>Show</value></data>
+  <data name="TimelineWorkspace.Summary.All" xml:space="preserve"><value>Total items: {0}. Future: {1}. Past: {2}.</value></data>
+  <data name="TimelineWorkspace.Summary.Empty" xml:space="preserve"><value>This vehicle does not have any dated timeline items yet.</value></data>
+  <data name="TimelineWorkspace.Summary.Filtered" xml:space="preserve"><value>Total items: {0}. Future: {1}. Past: {2}. Visible after filters: {3}.</value></data>
+  <data name="TimelineWorkspace.Summary.Initial" xml:space="preserve"><value>The selected vehicle timeline will appear after a vehicle is selected.</value></data>
   <data name="UpcomingOverviewWorkspace.ClearSearchName" xml:space="preserve"><value>Clear upcoming due date search</value></data>
   <data name="UpcomingOverviewWorkspace.DetailHeading" xml:space="preserve"><value>Due date detail</value></data>
   <data name="UpcomingOverviewWorkspace.FilterLabel" xml:space="preserve"><value>Filter</value></data>
@@ -1262,10 +1279,16 @@ Status: {5}</value></data>
   <data name="AppShell.FileDialog.VehiclePackageExportTitle" xml:space="preserve"><value>Export vehicle package</value></data>
   <data name="AppShell.FileDialog.VehiclePackageImportTitle" xml:space="preserve"><value>Import vehicle package</value></data>
   <data name="AppShell.FileDialog.VehiclePackageFileType" xml:space="preserve"><value>Vehimap vehicle package</value></data>
+  <data name="AppShell.FileDialog.CalendarExportTitle" xml:space="preserve"><value>Export due dates to calendar</value></data>
   <data name="AppShell.FileDialog.PrintableReportTitle" xml:space="preserve"><value>Save printable vehicle report</value></data>
   <data name="AppShell.FileDialog.HtmlFileType" xml:space="preserve"><value>HTML file</value></data>
   <data name="AppShell.FileName.VehiclePackagePrefix" xml:space="preserve"><value>vehimap-vehicle</value></data>
   <data name="AppShell.FileName.VehicleFallback" xml:space="preserve"><value>vehicle</value></data>
+  <data name="AppShell.CalendarExport.Cancelled" xml:space="preserve"><value>Calendar export was cancelled.</value></data>
+  <data name="AppShell.CalendarExport.Empty" xml:space="preserve"><value>The calendar does not contain any future items with a concrete date yet.</value></data>
+  <data name="AppShell.CalendarExport.Failed" xml:space="preserve"><value>Calendar export failed: {0}</value></data>
+  <data name="AppShell.CalendarExport.Saved" xml:space="preserve"><value>Calendar saved to {0}. Items: {1}.</value></data>
+  <data name="AppShell.CalendarExport.SavedWithSkippedMaintenance" xml:space="preserve"><value>Calendar saved to {0}. Items: {1}. Skipped maintenance tasks without a date: {2}.</value></data>
   <data name="AppShell.ExportBackup.NotLoaded" xml:space="preserve"><value>Backup export could not be prepared because no data is loaded.</value></data>
   <data name="AppShell.ExportBackup.Success" xml:space="preserve"><value>Backup was saved to {0}.</value></data>
   <data name="AppShell.ExportBackup.IncludedManagedAttachments" xml:space="preserve"><value>Managed attachments in the backup: {0}.</value></data>
@@ -1439,6 +1462,15 @@ Status: {5}</value></data>
   <data name="ServiceBook.Value.NoOdometer" xml:space="preserve"><value>no odometer</value></data>
   <data name="ServiceBook.Value.Money" xml:space="preserve"><value>CZK {0}</value></data>
   <data name="ServiceBook.Value.NoPrice" xml:space="preserve"><value>no price</value></data>
+  <data name="CalendarExport.Description.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
+  <data name="CalendarExport.Description.DueDate" xml:space="preserve"><value>Due date: {0}</value></data>
+  <data name="CalendarExport.Description.Item" xml:space="preserve"><value>Item: {0}</value></data>
+  <data name="CalendarExport.Description.Kind" xml:space="preserve"><value>Kind: {0}</value></data>
+  <data name="CalendarExport.Description.Note" xml:space="preserve"><value>Note: {0}</value></data>
+  <data name="CalendarExport.Description.Plate" xml:space="preserve"><value>License plate: {0}</value></data>
+  <data name="CalendarExport.Description.Status" xml:space="preserve"><value>Status: {0}</value></data>
+  <data name="CalendarExport.Description.Vehicle" xml:space="preserve"><value>Vehicle: {0}</value></data>
+  <data name="CalendarExport.Summary" xml:space="preserve"><value>Vehimap - {0} - {1}</value></data>
   <data name="ServiceBook.Export.HtmlLanguage" xml:space="preserve"><value>en</value></data>
   <data name="ServiceBook.Export.Title" xml:space="preserve"><value>Vehimap - Service book</value></data>
   <data name="ServiceBook.Export.Heading" xml:space="preserve"><value>Service book</value></data>

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
@@ -77,5 +78,29 @@ public sealed class LegacyCalendarExportServiceTests
             line => Assert.True(Encoding.UTF8.GetByteCount(line) <= 75, $"ICS line is too long: {line}"));
         Assert.Contains("Pozn\u00e1mka: velmi dlouh\u00e1 pozn\u00e1mka", unfolded);
         Assert.Contains("kapaliny\\; sv\u011btla\\, pneumatiky\\na dal\u0161\u00ed", unfolded);
+    }
+
+    [Fact]
+    public void BuildUpcomingCalendar_uses_supplied_localizer_for_user_visible_calendar_text()
+    {
+        var today = new DateOnly(2026, 4, 1);
+        var generatedAt = new DateTimeOffset(2026, 4, 1, 12, 30, 0, TimeSpan.Zero);
+        var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+        var service = new LegacyCalendarExportService(new LegacyTimelineService(localizer), localizer);
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Octavia", "Passenger cars", "", "Skoda Octavia", "1AB2345", "2020", "110", "", "05/2026", "", "")
+            ]
+        };
+
+        var result = service.BuildUpcomingCalendar(dataSet, today, generatedAt);
+
+        Assert.Contains("SUMMARY:Vehimap - Technical inspection - Octavia", result.IcsContent);
+        Assert.Contains("Vehicle: Octavia", result.IcsContent);
+        Assert.Contains("Kind: Technical inspection", result.IcsContent);
+        Assert.DoesNotContain("Vozidlo:", result.IcsContent);
+        Assert.DoesNotContain("Technická kontrola", result.IcsContent);
     }
 }

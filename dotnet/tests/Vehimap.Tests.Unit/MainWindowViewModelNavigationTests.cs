@@ -786,7 +786,7 @@ public sealed class MainWindowViewModelNavigationTests
 
         viewModel.TimelineWorkspace.SelectedTimelineFilter = "Minulé";
 
-        Assert.Equal("Minulé", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
+        Assert.Equal("past", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
         Assert.NotEmpty(viewModel.TimelineWorkspace.SelectedVehicleTimeline);
         Assert.All(viewModel.TimelineWorkspace.SelectedVehicleTimeline, item => Assert.False(item.IsFuture));
     }
@@ -808,7 +808,7 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.TimelineWorkspace.SelectedTimelineFilter = "Neznámý filtr";
 
         Assert.Equal("Vše", viewModel.TimelineWorkspace.SelectedTimelineFilter);
-        Assert.Equal("Vše", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
+        Assert.Equal("all", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
     }
 
     [Fact]

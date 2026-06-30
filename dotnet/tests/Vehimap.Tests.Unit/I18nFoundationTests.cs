@@ -607,12 +607,33 @@ public sealed class I18nFoundationTests
         var root = FindRepositoryRoot();
         var service = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacyTimelineService.cs"));
         var mainWindowViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
+        var timelineWorkspaceViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "TimelineWorkspaceViewModel.cs"));
+        var projectionService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopProjectionService.cs"));
 
         Assert.Contains("Timeline.Kind.TechnicalInspection", service);
         Assert.Contains("Timeline.Status.Overdue", service);
         Assert.Contains("Timeline.Value.Cost", service);
         Assert.Contains("Timeline.Value.ServiceTask", service);
         Assert.Contains("new LegacyTimelineService(DesktopLocalization.Localizer)", mainWindowViewModel);
+        Assert.Contains("TimelineWorkspace.Detail.Selected", timelineWorkspaceViewModel);
+        Assert.Contains("TimelineWorkspace.Summary.Filtered", projectionService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), timelineWorkspaceViewModel);
+    }
+
+    [Fact]
+    public void Domain_calendar_export_uses_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var service = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacyCalendarExportService.cs"));
+        var mainWindowViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
+        var preferencesViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.TimelinePreferences.cs"));
+
+        Assert.Contains("CalendarExport.Summary", service);
+        Assert.Contains("CalendarExport.Description.Vehicle", service);
+        Assert.Contains("AppShell.CalendarExport.SavedWithSkippedMaintenance", mainWindowViewModel);
+        Assert.Contains("AppShell.FileDialog.CalendarExportTitle", mainWindowViewModel);
+        Assert.Contains("TimelineFilterFutureKey", preferencesViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
     }
 
