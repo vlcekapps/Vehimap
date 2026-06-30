@@ -40,6 +40,8 @@
   <data name="About.Version" xml:space="preserve"><value>Version</value></data>
   <data name="Common.Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="Common.Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Common.ClipboardUnavailable" xml:space="preserve"><value>The clipboard is not available.</value></data>
+  <data name="Common.Close" xml:space="preserve"><value>Close</value></data>
   <data name="Common.Delete" xml:space="preserve"><value>Delete</value></data>
   <data name="Common.Edit" xml:space="preserve"><value>Edit</value></data>
   <data name="Common.EmptyValue" xml:space="preserve"><value>not filled</value></data>
@@ -47,6 +49,24 @@
   <data name="Common.Search" xml:space="preserve"><value>Search</value></data>
   <data name="Common.Sort" xml:space="preserve"><value>Sort</value></data>
   <data name="Common.SortDescending" xml:space="preserve"><value>Descending</value></data>
+  <data name="Confirmation.HelpText" xml:space="preserve"><value>Confirmation dialog. Focus is on the confirmation button; Escape cancels the action.</value></data>
+  <data name="Confirmation.MessageName" xml:space="preserve"><value>Confirmation text</value></data>
+  <data name="DataStoreHealth.CloseName" xml:space="preserve"><value>Close data set 2.0 check</value></data>
+  <data name="DataStoreHealth.CopyDiagnostics" xml:space="preserve"><value>Copy diagnostics</value></data>
+  <data name="DataStoreHealth.CopyDiagnosticsName" xml:space="preserve"><value>Copy data set 2.0 diagnostics to the clipboard</value></data>
+  <data name="DataStoreHealth.CopyFailedStatus" xml:space="preserve"><value>Data set diagnostics could not be copied: {0}</value></data>
+  <data name="DataStoreHealth.CopySuccessStatus" xml:space="preserve"><value>Data set diagnostics were copied to the clipboard.</value></data>
+  <data name="DataStoreHealth.DetailsName" xml:space="preserve"><value>Data set 2.0 check details</value></data>
+  <data name="DataStoreHealth.HeadingError" xml:space="preserve"><value>Data set 2.0 has a problem</value></data>
+  <data name="DataStoreHealth.HeadingHealthy" xml:space="preserve"><value>Data set 2.0 is healthy</value></data>
+  <data name="DataStoreHealth.HeadingWarning" xml:space="preserve"><value>Data set 2.0 needs attention</value></data>
+  <data name="DataStoreHealth.HelpText" xml:space="preserve"><value>SQLite data set check result. Focus is on copying diagnostics; Ctrl+Shift+C copies diagnostics and Escape closes the dialog.</value></data>
+  <data name="DataStoreHealth.InitialStatus" xml:space="preserve"><value>The data set check result is displayed. Ctrl+Shift+C copies diagnostics.</value></data>
+  <data name="DataStoreHealth.OpenDataFolder" xml:space="preserve"><value>Data folder</value></data>
+  <data name="DataStoreHealth.OpenDataFolderName" xml:space="preserve"><value>Open data folder</value></data>
+  <data name="DataStoreHealth.OpenPreMigrationBackup" xml:space="preserve"><value>Pre-migration backup</value></data>
+  <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Open pre-migration backup</value></data>
+  <data name="DataStoreHealth.Title" xml:space="preserve"><value>Data set 2.0 check</value></data>
   <data name="FuelWorkspace.AnalysisHeading" xml:space="preserve"><value>Fuel analysis</value></data>
   <data name="FuelWorkspace.ClearSearchName" xml:space="preserve"><value>Clear fuel search</value></data>
   <data name="FuelWorkspace.ConsumptionHeading" xml:space="preserve"><value>Consumption trend</value></data>

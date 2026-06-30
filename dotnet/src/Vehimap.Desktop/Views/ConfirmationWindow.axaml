@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.ConfirmationWindow"
         x:DataType="vm:ConfirmationDialogViewModel"
@@ -13,7 +14,7 @@
         Title="{Binding Title}"
         AutomationProperties.Name="{Binding Title}"
         AutomationProperties.AutomationId="ConfirmationWindow"
-        AutomationProperties.HelpText="Potvrzovací dialog. Fokus je na potvrzovacím tlačítku; Escape akci zruší.">
+        AutomationProperties.HelpText="{i18n:Loc Confirmation.HelpText}">
   <Grid Margin="20" RowDefinitions="Auto,*,Auto">
     <TextBlock FontSize="22"
                FontWeight="SemiBold"
@@ -25,7 +26,7 @@
                   Margin="0,16,0,0"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
-                  AutomationProperties.Name="Text potvrzení"
+                  AutomationProperties.Name="{i18n:Loc Confirmation.MessageName}"
                   AutomationProperties.AutomationId="ConfirmationMessageScrollViewer">
       <TextBlock Text="{Binding Message}"
                  TextWrapping="Wrap" />

@@ -276,6 +276,30 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Pilot_safety_dialogs_use_resource_localization_for_static_text()
+    {
+        var root = FindRepositoryRoot();
+        var confirmationWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "ConfirmationWindow.axaml"));
+        var dataStoreHealthWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "DataStoreHealthWindow.axaml"));
+        var dataStoreHealthViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "DataStoreHealthDialogViewModel.cs"));
+        var dataStoreHealthCodeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "DataStoreHealthWindow.axaml.cs"));
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", confirmationWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc Confirmation.HelpText}\"", confirmationWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc Confirmation.MessageName}\"", confirmationWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), confirmationWindow);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", dataStoreHealthWindow);
+        Assert.Contains("Title=\"{i18n:Loc DataStoreHealth.Title}\"", dataStoreHealthWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc DataStoreHealth.HelpText}\"", dataStoreHealthWindow);
+        Assert.Contains("Content=\"{i18n:Loc DataStoreHealth.CopyDiagnostics}\"", dataStoreHealthWindow);
+        Assert.Contains("Content=\"{i18n:Loc Common.Close}\"", dataStoreHealthWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), dataStoreHealthWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), dataStoreHealthViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), dataStoreHealthCodeBehind);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

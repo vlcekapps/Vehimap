@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.DataStoreHealthWindow"
         x:DataType="vm:DataStoreHealthDialogViewModel"
@@ -10,10 +11,10 @@
         CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="Kontrola datové sady 2.0"
-        AutomationProperties.Name="Kontrola datové sady 2.0"
+        Title="{i18n:Loc DataStoreHealth.Title}"
+        AutomationProperties.Name="{i18n:Loc DataStoreHealth.Title}"
         AutomationProperties.AutomationId="DataStoreHealthWindow"
-        AutomationProperties.HelpText="Výsledek kontroly SQLite datové sady. Fokus je na kopírování diagnostiky; Ctrl+Shift+C zkopíruje diagnostiku a Escape dialog zavře.">
+        AutomationProperties.HelpText="{i18n:Loc DataStoreHealth.HelpText}">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto,Auto">
     <TextBlock FontSize="22"
                FontWeight="SemiBold"
@@ -34,7 +35,7 @@
             CornerRadius="8">
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
-                    AutomationProperties.Name="Detaily kontroly datové sady 2.0"
+                    AutomationProperties.Name="{i18n:Loc DataStoreHealth.DetailsName}"
                     AutomationProperties.AutomationId="DataStoreHealthDetailsScrollViewer">
         <TextBlock Text="{Binding Details}"
                    TextWrapping="Wrap"
@@ -62,28 +63,28 @@
       <Button x:Name="CopyHealthDetailsButton"
               MinWidth="170"
               Click="OnCopyDetailsClick"
-              Content="Kopírovat diagnostiku"
-              AutomationProperties.Name="Kopírovat diagnostiku datové sady 2.0 do schránky"
+              Content="{i18n:Loc DataStoreHealth.CopyDiagnostics}"
+              AutomationProperties.Name="{i18n:Loc DataStoreHealth.CopyDiagnosticsName}"
               AutomationProperties.AutomationId="CopyDataStoreHealthDetailsButton" />
       <Button x:Name="OpenHealthDataFolderButton"
               MinWidth="150"
               IsEnabled="{Binding CanOpenDataFolder}"
               Click="OnOpenDataFolderClick"
-              Content="Datová složka"
-              AutomationProperties.Name="Otevřít datovou složku"
+              Content="{i18n:Loc DataStoreHealth.OpenDataFolder}"
+              AutomationProperties.Name="{i18n:Loc DataStoreHealth.OpenDataFolderName}"
               AutomationProperties.AutomationId="OpenHealthDataFolderButton" />
       <Button x:Name="OpenHealthPreMigrationBackupButton"
               MinWidth="210"
               IsEnabled="{Binding CanOpenPreMigrationBackupFolder}"
               Click="OnOpenPreMigrationBackupFolderClick"
-              Content="Předmigrační záloha"
-              AutomationProperties.Name="Otevřít předmigrační zálohu"
+              Content="{i18n:Loc DataStoreHealth.OpenPreMigrationBackup}"
+              AutomationProperties.Name="{i18n:Loc DataStoreHealth.OpenPreMigrationBackupName}"
               AutomationProperties.AutomationId="OpenHealthPreMigrationBackupButton" />
       <Button x:Name="CloseHealthButton"
               MinWidth="110"
               Click="OnCloseClick"
-              Content="Zavřít"
-              AutomationProperties.Name="Zavřít kontrolu datové sady 2.0"
+              Content="{i18n:Loc Common.Close}"
+              AutomationProperties.Name="{i18n:Loc DataStoreHealth.CloseName}"
               AutomationProperties.AutomationId="CloseDataStoreHealthButton" />
     </StackPanel>
   </Grid>

@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -10,9 +11,9 @@ public sealed partial class DataStoreHealthDialogViewModel : ObservableObject
         Report = report;
         Heading = report.Status switch
         {
-            DataStoreHealthStatus.Healthy => "Datová sada 2.0 je v pořádku",
-            DataStoreHealthStatus.Warning => "Datová sada 2.0 vyžaduje pozornost",
-            _ => "Datová sada 2.0 má problém"
+            DataStoreHealthStatus.Healthy => L("DataStoreHealth.HeadingHealthy"),
+            DataStoreHealthStatus.Warning => L("DataStoreHealth.HeadingWarning"),
+            _ => L("DataStoreHealth.HeadingError")
         };
         Summary = report.Summary;
         Details = string.Join(Environment.NewLine, report.Details);
@@ -37,5 +38,7 @@ public sealed partial class DataStoreHealthDialogViewModel : ObservableObject
     public bool CanOpenPreMigrationBackupFolder { get; }
 
     [ObservableProperty]
-    private string statusMessage = "Výsledek kontroly datové sady je zobrazený. Ctrl+Shift+C zkopíruje diagnostiku.";
+    private string statusMessage = L("DataStoreHealth.InitialStatus");
+
+    private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
 }

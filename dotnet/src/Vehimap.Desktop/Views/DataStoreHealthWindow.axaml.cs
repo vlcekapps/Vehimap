@@ -4,6 +4,7 @@ using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.Views;
@@ -59,18 +60,18 @@ public partial class DataStoreHealthWindow : Window
 
         if (Clipboard is null)
         {
-            model.StatusMessage = "Schránka není dostupná.";
+            model.StatusMessage = DesktopLocalization.Localizer.GetString("Common.ClipboardUnavailable");
             return;
         }
 
         try
         {
             await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
-            model.StatusMessage = "Diagnostika datové sady byla zkopírována do schránky.";
+            model.StatusMessage = DesktopLocalization.Localizer.GetString("DataStoreHealth.CopySuccessStatus");
         }
         catch (Exception ex)
         {
-            model.StatusMessage = $"Diagnostiku datové sady se nepodařilo zkopírovat: {ex.Message}";
+            model.StatusMessage = DesktopLocalization.Localizer.Format("DataStoreHealth.CopyFailedStatus", ex.Message);
         }
     }
 }

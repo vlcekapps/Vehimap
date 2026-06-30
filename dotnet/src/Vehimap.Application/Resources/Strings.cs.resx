@@ -40,6 +40,8 @@
   <data name="About.Version" xml:space="preserve"><value>Verze</value></data>
   <data name="Common.Cancel" xml:space="preserve"><value>Zrušit</value></data>
   <data name="Common.Clear" xml:space="preserve"><value>Vymazat</value></data>
+  <data name="Common.ClipboardUnavailable" xml:space="preserve"><value>Schránka není dostupná.</value></data>
+  <data name="Common.Close" xml:space="preserve"><value>Zavřít</value></data>
   <data name="Common.Delete" xml:space="preserve"><value>Odstranit</value></data>
   <data name="Common.Edit" xml:space="preserve"><value>Upravit</value></data>
   <data name="Common.EmptyValue" xml:space="preserve"><value>nevyplněno</value></data>
@@ -47,6 +49,24 @@
   <data name="Common.Search" xml:space="preserve"><value>Hledat</value></data>
   <data name="Common.Sort" xml:space="preserve"><value>Řadit</value></data>
   <data name="Common.SortDescending" xml:space="preserve"><value>Sestupně</value></data>
+  <data name="Confirmation.HelpText" xml:space="preserve"><value>Potvrzovací dialog. Fokus je na potvrzovacím tlačítku; Escape akci zruší.</value></data>
+  <data name="Confirmation.MessageName" xml:space="preserve"><value>Text potvrzení</value></data>
+  <data name="DataStoreHealth.CloseName" xml:space="preserve"><value>Zavřít kontrolu datové sady 2.0</value></data>
+  <data name="DataStoreHealth.CopyDiagnostics" xml:space="preserve"><value>Kopírovat diagnostiku</value></data>
+  <data name="DataStoreHealth.CopyDiagnosticsName" xml:space="preserve"><value>Kopírovat diagnostiku datové sady 2.0 do schránky</value></data>
+  <data name="DataStoreHealth.CopyFailedStatus" xml:space="preserve"><value>Diagnostiku datové sady se nepodařilo zkopírovat: {0}</value></data>
+  <data name="DataStoreHealth.CopySuccessStatus" xml:space="preserve"><value>Diagnostika datové sady byla zkopírována do schránky.</value></data>
+  <data name="DataStoreHealth.DetailsName" xml:space="preserve"><value>Detaily kontroly datové sady 2.0</value></data>
+  <data name="DataStoreHealth.HeadingError" xml:space="preserve"><value>Datová sada 2.0 má problém</value></data>
+  <data name="DataStoreHealth.HeadingHealthy" xml:space="preserve"><value>Datová sada 2.0 je v pořádku</value></data>
+  <data name="DataStoreHealth.HeadingWarning" xml:space="preserve"><value>Datová sada 2.0 vyžaduje pozornost</value></data>
+  <data name="DataStoreHealth.HelpText" xml:space="preserve"><value>Výsledek kontroly SQLite datové sady. Fokus je na kopírování diagnostiky; Ctrl+Shift+C zkopíruje diagnostiku a Escape dialog zavře.</value></data>
+  <data name="DataStoreHealth.InitialStatus" xml:space="preserve"><value>Výsledek kontroly datové sady je zobrazený. Ctrl+Shift+C zkopíruje diagnostiku.</value></data>
+  <data name="DataStoreHealth.OpenDataFolder" xml:space="preserve"><value>Datová složka</value></data>
+  <data name="DataStoreHealth.OpenDataFolderName" xml:space="preserve"><value>Otevřít datovou složku</value></data>
+  <data name="DataStoreHealth.OpenPreMigrationBackup" xml:space="preserve"><value>Předmigrační záloha</value></data>
+  <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Otevřít předmigrační zálohu</value></data>
+  <data name="DataStoreHealth.Title" xml:space="preserve"><value>Kontrola datové sady 2.0</value></data>
   <data name="FuelWorkspace.AnalysisHeading" xml:space="preserve"><value>Analýza tankování</value></data>
   <data name="FuelWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v tankování vozidla</value></data>
   <data name="FuelWorkspace.ConsumptionHeading" xml:space="preserve"><value>Vývoj spotřeby</value></data>

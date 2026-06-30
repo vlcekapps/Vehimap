@@ -524,7 +524,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenHealthDataFolderButton\"", dataStoreHealthXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenHealthPreMigrationBackupButton\"", dataStoreHealthXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseDataStoreHealthButton\"", dataStoreHealthXaml);
-        Assert.Contains("Ctrl+Shift+C zkopíruje diagnostiku a Escape dialog zavře.", dataStoreHealthXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc DataStoreHealth.HelpText}\"", dataStoreHealthXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc DataStoreHealth.CopyDiagnosticsName}\"", dataStoreHealthXaml);
         Assert.Contains("Key.Escape", dataStoreHealthCodeBehind);
         Assert.Contains("Key.C", dataStoreHealthCodeBehind);
         Assert.Contains("KeyModifiers.Control | KeyModifiers.Shift", dataStoreHealthCodeBehind);
@@ -636,7 +637,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationMessageScrollViewer\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationConfirmButton\"", confirmationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ConfirmationCancelButton\"", confirmationXaml);
-        Assert.Contains("Escape akci zruší.", confirmationXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc Confirmation.HelpText}\"", confirmationXaml);
         Assert.Contains("Key.Escape", confirmationCodeBehind);
         Assert.Contains("CanResize=\"True\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TrayActionsBackgroundStatusText\"", trayActionsXaml);
