@@ -157,6 +157,24 @@ Vehicle: {2}
   <data name="FuelWorkspace.SortDescendingName" xml:space="preserve"><value>Sort fuel entries descending</value></data>
   <data name="FuelWorkspace.SortName" xml:space="preserve"><value>Fuel entry sort order</value></data>
   <data name="FuelWorkspace.Title" xml:space="preserve"><value>Fuel entries for the selected vehicle</value></data>
+  <data name="FuelWorkspace.Summary.Initial" xml:space="preserve"><value>Fuel entries for the selected vehicle appear after choosing a vehicle.</value></data>
+  <data name="FuelWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to fuel search.</value></data>
+  <data name="FuelWorkspace.AnalysisSummary.Initial" xml:space="preserve"><value>Fuel analysis appears after choosing a vehicle.</value></data>
+  <data name="FuelWorkspace.Detail.Empty" xml:space="preserve"><value>Select a fuel entry to show its detail.</value></data>
+  <data name="FuelWorkspace.PanelHeading" xml:space="preserve"><value>Fuel detail</value></data>
+  <data name="FuelWorkspace.Detail.Date" xml:space="preserve"><value>Date: {0}</value></data>
+  <data name="FuelWorkspace.Detail.Fuel" xml:space="preserve"><value>Fuel: {0}</value></data>
+  <data name="FuelWorkspace.Detail.FuelDetail" xml:space="preserve"><value>Fuel detail: {0}</value></data>
+  <data name="FuelWorkspace.Detail.Station" xml:space="preserve"><value>Fuel station: {0}</value></data>
+  <data name="FuelWorkspace.Detail.Volume" xml:space="preserve"><value>Volume: {0}</value></data>
+  <data name="FuelWorkspace.Detail.TotalCost" xml:space="preserve"><value>Total cost: {0}</value></data>
+  <data name="FuelWorkspace.Detail.Odometer" xml:space="preserve"><value>Odometer: {0}</value></data>
+  <data name="FuelWorkspace.Detail.TankState" xml:space="preserve"><value>Tank state: {0}</value></data>
+  <data name="FuelWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
+  <data name="FuelWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} fuel entries. Ctrl+F moves focus to search.</value></data>
+  <data name="FuelWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any fuel entries.</value></data>
+  <data name="FuelWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} fuel entries.</value></data>
+  <data name="FuelItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, fuel detail {2}, station {3}, {4}, cost {5}, odometer {6}, {7}, note {8}</value></data>
   <data name="FuelWorkspace.WarningItemType" xml:space="preserve"><value>Fuel analysis warning</value></data>
   <data name="FuelWorkspace.WarningsHeading" xml:space="preserve"><value>Warnings</value></data>
   <data name="FuelWorkspace.WarningsName" xml:space="preserve"><value>Fuel analysis warnings</value></data>
@@ -225,6 +243,19 @@ Vehicle: {2}
   <data name="HistoryWorkspace.SortDescendingName" xml:space="preserve"><value>Sort history descending</value></data>
   <data name="HistoryWorkspace.SortName" xml:space="preserve"><value>Vehicle history sort order</value></data>
   <data name="HistoryWorkspace.Title" xml:space="preserve"><value>History entries for the selected vehicle</value></data>
+  <data name="HistoryWorkspace.Summary.Initial" xml:space="preserve"><value>History for the selected vehicle appears after choosing a vehicle.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to history search.</value></data>
+  <data name="HistoryWorkspace.Detail.Empty" xml:space="preserve"><value>Select a history entry to show its detail.</value></data>
+  <data name="HistoryWorkspace.PanelHeading" xml:space="preserve"><value>History detail</value></data>
+  <data name="HistoryWorkspace.Detail.Date" xml:space="preserve"><value>Date: {0}</value></data>
+  <data name="HistoryWorkspace.Detail.EventType" xml:space="preserve"><value>Event type: {0}</value></data>
+  <data name="HistoryWorkspace.Detail.Odometer" xml:space="preserve"><value>Odometer: {0}</value></data>
+  <data name="HistoryWorkspace.Detail.Cost" xml:space="preserve"><value>Cost: {0}</value></data>
+  <data name="HistoryWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
+  <data name="HistoryWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} history entries. Ctrl+F moves focus to search.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any history entries.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} history entries.</value></data>
+  <data name="HistoryItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, odometer {2}, cost {3}, note {4}</value></data>
   <data name="MaintenanceEditor.CancelName" xml:space="preserve"><value>Cancel maintenance plan editing</value></data>
   <data name="MaintenanceEditor.CustomTemplate" xml:space="preserve"><value>Custom item</value></data>
   <data name="MaintenanceEditor.EditTitle" xml:space="preserve"><value>Edit maintenance plan</value></data>
@@ -252,6 +283,8 @@ Vehicle: {2}
   <data name="MaintenanceEditor.SaveName" xml:space="preserve"><value>Save maintenance plan</value></data>
   <data name="MaintenanceEditor.TemplateLabel" xml:space="preserve"><value>Task template</value></data>
   <data name="MaintenanceEditor.TemplateName" xml:space="preserve"><value>Maintenance task template</value></data>
+  <data name="MaintenanceEditor.TemplateApplied" xml:space="preserve"><value>Template {0}{1} filled in the task name, intervals and note.</value></data>
+  <data name="MaintenanceEditor.TemplateCategorySuffix" xml:space="preserve"><value> from group {0}</value></data>
   <data name="MaintenanceEditor.TitleExample" xml:space="preserve"><value>For example Engine oil</value></data>
   <data name="MaintenanceEditor.TitleLabel" xml:space="preserve"><value>Task name</value></data>
   <data name="MaintenanceEditor.TitleName" xml:space="preserve"><value>Maintenance task name</value></data>
@@ -296,7 +329,21 @@ Vehicle: {2}
   <data name="MaintenanceWorkspace.SortName" xml:space="preserve"><value>Maintenance plan sort order</value></data>
   <data name="MaintenanceWorkspace.Status.NoMissingTemplates" xml:space="preserve"><value>Recommended templates no longer have any missing service plans.</value></data>
   <data name="MaintenanceWorkspace.Status.SelectMaintenancePlan" xml:space="preserve"><value>Select a service plan first.</value></data>
+  <data name="MaintenanceWorkspace.Status.SelectVehicleFirst" xml:space="preserve"><value>Select a vehicle first.</value></data>
   <data name="MaintenanceWorkspace.Title" xml:space="preserve"><value>Maintenance plans for the selected vehicle</value></data>
+  <data name="MaintenanceWorkspace.Summary.Initial" xml:space="preserve"><value>Maintenance plan for the selected vehicle appears after choosing a vehicle.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to maintenance search.</value></data>
+  <data name="MaintenanceWorkspace.Detail.Empty" xml:space="preserve"><value>Select a maintenance task to show its detail.</value></data>
+  <data name="MaintenanceWorkspace.PanelHeading" xml:space="preserve"><value>Maintenance detail</value></data>
+  <data name="MaintenanceWorkspace.Detail.Task" xml:space="preserve"><value>Task: {0}</value></data>
+  <data name="MaintenanceWorkspace.Detail.Interval" xml:space="preserve"><value>Interval: {0}</value></data>
+  <data name="MaintenanceWorkspace.Detail.LastService" xml:space="preserve"><value>Last service: {0}</value></data>
+  <data name="MaintenanceWorkspace.Detail.Status" xml:space="preserve"><value>Status: {0}</value></data>
+  <data name="MaintenanceWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} maintenance plans. Ctrl+F moves focus to search.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any maintenance entries.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} maintenance plans.</value></data>
+  <data name="MaintenanceItem.AccessibleLabel" xml:space="preserve"><value>{0}, interval {1}, last service {2}, status {3}, note {4}</value></data>
   <data name="RecordEditor.AttachmentModeLabel" xml:space="preserve"><value>Attachment mode</value></data>
   <data name="RecordEditor.AttachmentModeName" xml:space="preserve"><value>Document attachment mode</value></data>
   <data name="RecordEditor.BrowseFile" xml:space="preserve"><value>Choose file</value></data>
@@ -379,6 +426,24 @@ Vehicle: {2}
   <data name="RecordWorkspace.SortDescendingName" xml:space="preserve"><value>Sort documents descending</value></data>
   <data name="RecordWorkspace.SortName" xml:space="preserve"><value>Vehicle document sort order</value></data>
   <data name="RecordWorkspace.Title" xml:space="preserve"><value>Documents and attachments for the selected vehicle</value></data>
+  <data name="RecordWorkspace.Summary.Initial" xml:space="preserve"><value>Documents and attachments for the selected vehicle appear after choosing a vehicle.</value></data>
+  <data name="RecordWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to document search.</value></data>
+  <data name="RecordWorkspace.Detail.Empty" xml:space="preserve"><value>Select a document to show attachment detail.</value></data>
+  <data name="RecordWorkspace.PanelHeading" xml:space="preserve"><value>Document detail</value></data>
+  <data name="RecordWorkspace.Detail.Type" xml:space="preserve"><value>Type: {0}</value></data>
+  <data name="RecordWorkspace.Detail.Validity" xml:space="preserve"><value>Validity: {0}</value></data>
+  <data name="RecordWorkspace.Detail.Price" xml:space="preserve"><value>Price: {0}</value></data>
+  <data name="RecordWorkspace.Detail.AttachmentMode" xml:space="preserve"><value>Attachment mode: {0}</value></data>
+  <data name="RecordWorkspace.Detail.AttachmentState" xml:space="preserve"><value>Attachment state: {0}</value></data>
+  <data name="RecordWorkspace.Detail.StoredPath" xml:space="preserve"><value>Stored path: {0}</value></data>
+  <data name="RecordWorkspace.Detail.ResolvedPath" xml:space="preserve"><value>Resolved path: {0}</value></data>
+  <data name="RecordWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
+  <data name="RecordWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} documents. Ctrl+F moves focus to search.</value></data>
+  <data name="RecordWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any documents.</value></data>
+  <data name="RecordWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} documents.</value></data>
+  <data name="RecordItem.ProviderPart" xml:space="preserve"><value>, provider {0}</value></data>
+  <data name="RecordItem.NotePart" xml:space="preserve"><value>, note {0}</value></data>
+  <data name="RecordItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}{2}, validity {3}, mode {4}, attachment state {5}{6}</value></data>
   <data name="RecordAttachmentAction.CopyPathFailed" xml:space="preserve"><value>Document path could not be copied: {0}</value></data>
   <data name="RecordAttachmentAction.FileOpened" xml:space="preserve"><value>Document attachment has been opened: {0}.</value></data>
   <data name="RecordAttachmentAction.FileOpenFailed" xml:space="preserve"><value>Document attachment could not be opened: {0}</value></data>
@@ -438,6 +503,19 @@ Vehicle: {2}
   <data name="ReminderWorkspace.SortDescendingName" xml:space="preserve"><value>Sort reminders descending</value></data>
   <data name="ReminderWorkspace.SortName" xml:space="preserve"><value>Vehicle reminder sort order</value></data>
   <data name="ReminderWorkspace.Title" xml:space="preserve"><value>Reminders for the selected vehicle</value></data>
+  <data name="ReminderWorkspace.Summary.Initial" xml:space="preserve"><value>Reminders for the selected vehicle appear after choosing a vehicle.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to reminder search.</value></data>
+  <data name="ReminderWorkspace.Detail.Empty" xml:space="preserve"><value>Select a reminder to show its detail.</value></data>
+  <data name="ReminderWorkspace.PanelHeading" xml:space="preserve"><value>Reminder detail</value></data>
+  <data name="ReminderWorkspace.Detail.Title" xml:space="preserve"><value>Title: {0}</value></data>
+  <data name="ReminderWorkspace.Detail.DueDate" xml:space="preserve"><value>Due date: {0}</value></data>
+  <data name="ReminderWorkspace.Detail.Status" xml:space="preserve"><value>Status: {0}</value></data>
+  <data name="ReminderWorkspace.Detail.Repeat" xml:space="preserve"><value>Repeat: {0}</value></data>
+  <data name="ReminderWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
+  <data name="ReminderWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} reminders. Ctrl+F moves focus to search.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any reminders.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} reminders.</value></data>
+  <data name="ReminderItem.AccessibleLabel" xml:space="preserve"><value>{0}, due date {1}, status {2}, repeat {3}, note {4}</value></data>
   <data name="MainMenu.App" xml:space="preserve"><value>_Application</value></data>
   <data name="MainMenu.App.About" xml:space="preserve"><value>About</value></data>
   <data name="MainMenu.App.ActionsOnTray" xml:space="preserve"><value>Tray actions</value></data>

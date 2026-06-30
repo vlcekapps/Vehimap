@@ -1,3 +1,5 @@
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record VehicleRecordItemViewModel(
@@ -20,12 +22,20 @@ public sealed record VehicleRecordItemViewModel(
         {
             var providerPart = string.IsNullOrWhiteSpace(Provider)
                 ? string.Empty
-                : $", poskytovatel {Provider}";
+                : DesktopLocalization.Localizer.Format("RecordItem.ProviderPart", Provider);
             var notePart = string.IsNullOrWhiteSpace(Note)
                 ? string.Empty
-                : $", poznámka {Note}";
+                : DesktopLocalization.Localizer.Format("RecordItem.NotePart", Note);
 
-            return $"{Title}, {RecordType}{providerPart}, platnost {Validity}, režim {AttachmentMode}, stav přílohy {AttachmentState}{notePart}";
+            return DesktopLocalization.Localizer.Format(
+                "RecordItem.AccessibleLabel",
+                Title,
+                RecordType,
+                providerPart,
+                Validity,
+                AttachmentMode,
+                AttachmentState,
+                notePart);
         }
     }
 

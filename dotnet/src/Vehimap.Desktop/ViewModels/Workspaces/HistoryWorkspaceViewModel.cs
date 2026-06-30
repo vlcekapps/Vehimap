@@ -17,13 +17,13 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     public ObservableCollection<VehicleHistoryItemViewModel> VisibleHistoryItems { get; } = [];
 
     [ObservableProperty]
-    private string historySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
+    private string historySummary = L("HistoryWorkspace.Summary.Initial");
 
     [ObservableProperty]
     private string historySearchText = string.Empty;
 
     [ObservableProperty]
-    private string historySearchSummary = "Ctrl+F přesune fokus do hledání historie.";
+    private string historySearchSummary = L("HistoryWorkspace.SearchSummary.Initial");
 
     [ObservableProperty]
     private string selectedHistorySortOption = WorkspaceSortHelpers.DateSortLabel;
@@ -39,10 +39,10 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     private VehicleHistoryItemViewModel? selectedHistory;
 
     [ObservableProperty]
-    private string selectedHistoryDetail = "Vyberte historický záznam a zobrazí se detail položky.";
+    private string selectedHistoryDetail = L("HistoryWorkspace.Detail.Empty");
 
     [ObservableProperty]
-    private string historyPanelHeading = "Detail historie";
+    private string historyPanelHeading = L("HistoryWorkspace.PanelHeading");
 
     [ObservableProperty]
     private string historyEditorHeading = L("HistoryEditor.NewTitle");
@@ -115,7 +115,7 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
         SelectedHistory ??= VisibleHistoryItems.FirstOrDefault();
         if (SelectedHistory is null)
         {
-            SelectedHistoryDetail = "Vyberte historický záznam a zobrazí se detail položky.";
+            SelectedHistoryDetail = L("HistoryWorkspace.Detail.Empty");
             Root.NotifyHistoryWorkspaceSelectionChanged();
         }
 
@@ -125,8 +125,14 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     partial void OnSelectedHistoryChanged(VehicleHistoryItemViewModel? value)
     {
         SelectedHistoryDetail = value is null
-            ? "Vyberte historický záznam a zobrazí se detail položky."
-            : $"Datum: {value.Date}\nTyp události: {value.EventType}\nTachometr: {value.Odometer}\nCena: {value.Cost}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+            ? L("HistoryWorkspace.Detail.Empty")
+            : string.Join(
+                Environment.NewLine,
+                LF("HistoryWorkspace.Detail.Date", value.Date),
+                LF("HistoryWorkspace.Detail.EventType", value.EventType),
+                LF("HistoryWorkspace.Detail.Odometer", value.Odometer),
+                LF("HistoryWorkspace.Detail.Cost", value.Cost),
+                LF("HistoryWorkspace.Detail.Note", Root.FormatWorkspaceValue(value.Note, L("Common.NoNote"))));
 
         Root.NotifyHistoryWorkspaceSelectionChanged();
     }
@@ -182,13 +188,13 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(HistorySearchText))
         {
-            HistorySearchSummary = $"Zobrazeno {VisibleHistoryItems.Count} historických záznamů. Ctrl+F přesune fokus do hledání.";
+            HistorySearchSummary = LF("HistoryWorkspace.SearchSummary.All", VisibleHistoryItems.Count);
             return;
         }
 
         HistorySearchSummary = VisibleHistoryItems.Count == 0
-            ? $"Hledání „{HistorySearchText.Trim()}“ nenašlo v historii žádný záznam."
-            : $"Hledání „{HistorySearchText.Trim()}“ našlo {VisibleHistoryItems.Count} historických záznamů.";
+            ? LF("HistoryWorkspace.SearchSummary.Empty", HistorySearchText.Trim())
+            : LF("HistoryWorkspace.SearchSummary.Filtered", HistorySearchText.Trim(), VisibleHistoryItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

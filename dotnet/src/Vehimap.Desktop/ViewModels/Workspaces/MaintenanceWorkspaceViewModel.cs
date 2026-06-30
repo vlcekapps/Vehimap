@@ -34,7 +34,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public event EventHandler? MaintenanceCompletionRequested;
 
     [ObservableProperty]
-    private string maintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
+    private string maintenanceSummary = L("MaintenanceWorkspace.Summary.Initial");
 
     [ObservableProperty]
     private VehicleMaintenanceItemViewModel? selectedMaintenance;
@@ -43,7 +43,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     private string maintenanceSearchText = string.Empty;
 
     [ObservableProperty]
-    private string maintenanceSearchSummary = "Ctrl+F přesune fokus do hledání údržby.";
+    private string maintenanceSearchSummary = L("MaintenanceWorkspace.SearchSummary.Initial");
 
     [ObservableProperty]
     private string selectedMaintenanceSortOption = WorkspaceSortHelpers.TitleSortLabel;
@@ -56,10 +56,10 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public bool CanClearMaintenanceSearch => !string.IsNullOrWhiteSpace(MaintenanceSearchText);
 
     [ObservableProperty]
-    private string selectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
+    private string selectedMaintenanceDetail = L("MaintenanceWorkspace.Detail.Empty");
 
     [ObservableProperty]
-    private string maintenancePanelHeading = "Detail údržby";
+    private string maintenancePanelHeading = L("MaintenanceWorkspace.PanelHeading");
 
     [ObservableProperty]
     private string maintenanceEditorHeading = L("MaintenanceEditor.NewTitle");
@@ -137,7 +137,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public Task<string> ApplyMaintenanceTemplatesAsync(IReadOnlyList<VehicleStarterBundleTemplate> items)
     {
         return Root.SelectedVehicle is null
-            ? Task.FromResult("Nejprve vyberte vozidlo.")
+            ? Task.FromResult(L("MaintenanceWorkspace.Status.SelectVehicleFirst"))
             : Root.ApplyMaintenanceTemplatesAsync(Root.SelectedVehicle.Id, items);
     }
 
@@ -212,7 +212,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         SelectedMaintenance ??= VisibleMaintenanceItems.FirstOrDefault();
         if (SelectedMaintenance is null)
         {
-            SelectedMaintenanceDetail = "Vyberte servisní úkon a zobrazí se detail položky.";
+            SelectedMaintenanceDetail = L("MaintenanceWorkspace.Detail.Empty");
             Root.NotifyMaintenanceWorkspaceSelectionChanged();
         }
 
@@ -222,8 +222,14 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     partial void OnSelectedMaintenanceChanged(VehicleMaintenanceItemViewModel? value)
     {
         SelectedMaintenanceDetail = value is null
-            ? "Vyberte servisní úkon a zobrazí se detail položky."
-            : $"Úkon: {value.Title}\nInterval: {value.Interval}\nPoslední servis: {value.LastService}\nStav: {value.Status}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+            ? L("MaintenanceWorkspace.Detail.Empty")
+            : string.Join(
+                Environment.NewLine,
+                LF("MaintenanceWorkspace.Detail.Task", value.Title),
+                LF("MaintenanceWorkspace.Detail.Interval", value.Interval),
+                LF("MaintenanceWorkspace.Detail.LastService", value.LastService),
+                LF("MaintenanceWorkspace.Detail.Status", value.Status),
+                LF("MaintenanceWorkspace.Detail.Note", Root.FormatWorkspaceValue(value.Note, L("Common.NoNote"))));
 
         Root.NotifyMaintenanceWorkspaceSelectionChanged();
     }
@@ -264,8 +270,8 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         MaintenanceEditorNote = template.Note;
         var categoryText = string.IsNullOrWhiteSpace(template.Category)
             ? string.Empty
-            : $" ze skupiny {template.Category}";
-        MaintenanceEditorStatus = $"Šablona {template.Title}{categoryText} předvyplnila název, intervaly a poznámku.";
+            : LF("MaintenanceEditor.TemplateCategorySuffix", template.Category);
+        MaintenanceEditorStatus = LF("MaintenanceEditor.TemplateApplied", template.Title, categoryText);
         RequestFocus(DesktopFocusTarget.MaintenanceEditorTitle);
     }
 
@@ -308,13 +314,13 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     {
         if (string.IsNullOrWhiteSpace(MaintenanceSearchText))
         {
-            MaintenanceSearchSummary = $"Zobrazeno {VisibleMaintenanceItems.Count} servisních plánů. Ctrl+F přesune fokus do hledání.";
+            MaintenanceSearchSummary = LF("MaintenanceWorkspace.SearchSummary.All", VisibleMaintenanceItems.Count);
             return;
         }
 
         MaintenanceSearchSummary = VisibleMaintenanceItems.Count == 0
-            ? $"Hledání „{MaintenanceSearchText.Trim()}“ nenašlo v údržbě žádný záznam."
-            : $"Hledání „{MaintenanceSearchText.Trim()}“ našlo {VisibleMaintenanceItems.Count} servisních plánů.";
+            ? LF("MaintenanceWorkspace.SearchSummary.Empty", MaintenanceSearchText.Trim())
+            : LF("MaintenanceWorkspace.SearchSummary.Filtered", MaintenanceSearchText.Trim(), VisibleMaintenanceItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

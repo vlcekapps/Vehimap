@@ -1,3 +1,5 @@
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record VehicleMaintenanceItemViewModel(
@@ -9,7 +11,7 @@ public sealed record VehicleMaintenanceItemViewModel(
     string Note)
 {
     public string AccessibleLabel =>
-        $"{Title}, interval {Interval}, poslední servis {LastService}, stav {Status}, poznámka {Note}";
+        DesktopLocalization.Localizer.Format("MaintenanceItem.AccessibleLabel", Title, Interval, LastService, Status, Note);
 
     public override string ToString() => AccessibleLabel;
 }

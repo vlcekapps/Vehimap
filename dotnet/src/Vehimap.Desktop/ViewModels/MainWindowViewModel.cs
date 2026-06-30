@@ -431,13 +431,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
         if (value is null)
         {
             ApplyVehicleDetailProjection(_projectionService.BuildVehicleDetail(_dataSet, null));
-            HistoryWorkspace.HistorySummary = "Historie vybraného vozidla se zobrazí po výběru vozidla.";
-            FuelWorkspace.FuelSummary = "Tankování vybraného vozidla se zobrazí po výběru vozidla.";
+            HistoryWorkspace.HistorySummary = LO("HistoryWorkspace.Summary.Initial");
+            FuelWorkspace.FuelSummary = LO("FuelWorkspace.Summary.Initial");
             FuelWorkspace.ClearFuelAnalysis();
-            ReminderWorkspace.ReminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
-            MaintenanceWorkspace.MaintenanceSummary = "Plán údržby vybraného vozidla se zobrazí po výběru vozidla.";
+            ReminderWorkspace.ReminderSummary = LO("ReminderWorkspace.Summary.Initial");
+            MaintenanceWorkspace.MaintenanceSummary = LO("MaintenanceWorkspace.Summary.Initial");
             TimelineWorkspace.TimelineSummary = LO("TimelineWorkspace.Summary.Initial");
-            RecordWorkspace.RecordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
+            RecordWorkspace.RecordSummary = LO("RecordWorkspace.Summary.Initial");
             SelectedVehicleHistory.Clear();
             SelectedVehicleFuel.Clear();
             SelectedVehicleReminders.Clear();

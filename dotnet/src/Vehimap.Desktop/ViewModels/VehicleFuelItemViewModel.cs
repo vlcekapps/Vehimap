@@ -1,3 +1,5 @@
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record VehicleFuelItemViewModel(
@@ -13,7 +15,17 @@ public sealed record VehicleFuelItemViewModel(
     string Note)
 {
     public string AccessibleLabel =>
-        $"{Date}, {FuelType}, detail paliva {FuelDetail}, místo tankování {Station}, {Liters}, cena {TotalCost}, tachometr {Odometer}, {TankState}, poznámka {Note}";
+        DesktopLocalization.Localizer.Format(
+            "FuelItem.AccessibleLabel",
+            Date,
+            FuelType,
+            FuelDetail,
+            Station,
+            Liters,
+            TotalCost,
+            Odometer,
+            TankState,
+            Note);
 
     public override string ToString() => AccessibleLabel;
 }

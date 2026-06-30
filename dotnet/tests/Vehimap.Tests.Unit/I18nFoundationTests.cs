@@ -44,6 +44,10 @@ public sealed class I18nFoundationTests
         Assert.Equal("Vyplňte doklad a podle potřeby vyberte přílohu.", czech.GetString("RecordEditor.Status.CreatePrompt"));
         Assert.Equal("Document attachment has been opened: invoice.pdf.", english.Format("RecordAttachmentAction.FileOpened", "invoice.pdf"));
         Assert.Equal("Příloha dokladu byla otevřena: faktura.pdf.", czech.Format("RecordAttachmentAction.FileOpened", "faktura.pdf"));
+        Assert.Equal("Search “oil” found 2 history entries.", english.Format("HistoryWorkspace.SearchSummary.Filtered", "oil", 2));
+        Assert.Equal("Hledání „olej“ našlo 2 historických záznamů.", czech.Format("HistoryWorkspace.SearchSummary.Filtered", "olej", 2));
+        Assert.Equal("2026-06, Service, odometer 12345, cost 2500, note no note", english.Format("HistoryItem.AccessibleLabel", "2026-06", "Service", "12345", "2500", "no note"));
+        Assert.Equal("2026-06, Servis, tachometr 12345, cena 2500, poznámka bez poznámky", czech.Format("HistoryItem.AccessibleLabel", "2026-06", "Servis", "12345", "2500", "bez poznámky"));
         Assert.Equal("Missing.Key.For.Test", english.GetString("Missing.Key.For.Test"));
     }
 
@@ -429,6 +433,64 @@ public sealed class I18nFoundationTests
         Assert.Contains("\"VehicleDetail.Status.NewVehicleBundleNoItems\"", vehicleDetailWorkspaceCodeBehind);
         Assert.Contains("\"VehicleDetail.Status.BundleNoMissingItems\"", vehicleDetailWorkspaceCodeBehind);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), vehicleDetailWorkspaceCodeBehind);
+    }
+
+    [Fact]
+    public void Evidence_workspace_runtime_texts_use_resource_localization()
+    {
+        var root = FindRepositoryRoot();
+        var historyWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "HistoryWorkspaceViewModel.cs"));
+        var fuelWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "FuelWorkspaceViewModel.cs"));
+        var reminderWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "ReminderWorkspaceViewModel.cs"));
+        var maintenanceWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "MaintenanceWorkspaceViewModel.cs"));
+        var recordWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "RecordWorkspaceViewModel.cs"));
+        var mainWindowViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
+        var historyItem = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleHistoryItemViewModel.cs"));
+        var fuelItem = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleFuelItemViewModel.cs"));
+        var reminderItem = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleReminderItemViewModel.cs"));
+        var maintenanceItem = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleMaintenanceItemViewModel.cs"));
+        var recordItem = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleRecordItemViewModel.cs"));
+
+        Assert.Contains("HistoryWorkspace.Summary.Initial", historyWorkspace);
+        Assert.Contains("HistoryWorkspace.SearchSummary.Filtered", historyWorkspace);
+        Assert.Contains("HistoryWorkspace.Detail.Note", historyWorkspace);
+        Assert.DoesNotContain("Vyberte historický záznam", historyWorkspace);
+
+        Assert.Contains("FuelWorkspace.Summary.Initial", fuelWorkspace);
+        Assert.Contains("FuelWorkspace.AnalysisSummary.Initial", fuelWorkspace);
+        Assert.Contains("FuelWorkspace.SearchSummary.Filtered", fuelWorkspace);
+        Assert.DoesNotContain("Vyberte tankování", fuelWorkspace);
+
+        Assert.Contains("ReminderWorkspace.Summary.Initial", reminderWorkspace);
+        Assert.Contains("ReminderWorkspace.SearchSummary.Filtered", reminderWorkspace);
+        Assert.DoesNotContain("Vyberte připomínku", reminderWorkspace);
+
+        Assert.Contains("MaintenanceWorkspace.Summary.Initial", maintenanceWorkspace);
+        Assert.Contains("MaintenanceEditor.TemplateApplied", maintenanceWorkspace);
+        Assert.Contains("MaintenanceWorkspace.Status.SelectVehicleFirst", maintenanceWorkspace);
+        Assert.DoesNotContain("Vyberte servisní úkon", maintenanceWorkspace);
+
+        Assert.Contains("RecordWorkspace.Summary.Initial", recordWorkspace);
+        Assert.Contains("RecordWorkspace.SearchSummary.Filtered", recordWorkspace);
+        Assert.Contains("RecordEditor.AttachmentAvailability.SelectOrEnterPath", recordWorkspace);
+        Assert.DoesNotContain("Vyberte doklad", recordWorkspace);
+
+        Assert.Contains("HistoryWorkspace.Summary.Initial", mainWindowViewModel);
+        Assert.Contains("FuelWorkspace.Summary.Initial", mainWindowViewModel);
+        Assert.Contains("ReminderWorkspace.Summary.Initial", mainWindowViewModel);
+        Assert.Contains("MaintenanceWorkspace.Summary.Initial", mainWindowViewModel);
+        Assert.Contains("RecordWorkspace.Summary.Initial", mainWindowViewModel);
+
+        Assert.Contains("HistoryItem.AccessibleLabel", historyItem);
+        Assert.Contains("FuelItem.AccessibleLabel", fuelItem);
+        Assert.Contains("ReminderItem.AccessibleLabel", reminderItem);
+        Assert.Contains("MaintenanceItem.AccessibleLabel", maintenanceItem);
+        Assert.Contains("RecordItem.AccessibleLabel", recordItem);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), historyItem);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), fuelItem);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), reminderItem);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceItem);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), recordItem);
     }
 
     [Fact]

@@ -18,13 +18,13 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     public ObservableCollection<VehicleReminderItemViewModel> VisibleReminderItems { get; } = [];
 
     [ObservableProperty]
-    private string reminderSummary = "Připomínky vybraného vozidla se zobrazí po výběru vozidla.";
+    private string reminderSummary = L("ReminderWorkspace.Summary.Initial");
 
     [ObservableProperty]
     private string reminderSearchText = string.Empty;
 
     [ObservableProperty]
-    private string reminderSearchSummary = "Ctrl+F přesune fokus do hledání připomínek.";
+    private string reminderSearchSummary = L("ReminderWorkspace.SearchSummary.Initial");
 
     [ObservableProperty]
     private string selectedReminderSortOption = WorkspaceSortHelpers.DueDateSortLabel;
@@ -41,10 +41,10 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     private VehicleReminderItemViewModel? selectedReminder;
 
     [ObservableProperty]
-    private string selectedReminderDetail = "Vyberte připomínku a zobrazí se detail položky.";
+    private string selectedReminderDetail = L("ReminderWorkspace.Detail.Empty");
 
     [ObservableProperty]
-    private string reminderPanelHeading = "Detail připomínky";
+    private string reminderPanelHeading = L("ReminderWorkspace.PanelHeading");
 
     [ObservableProperty]
     private string reminderEditorHeading = L("ReminderEditor.NewTitle");
@@ -112,7 +112,7 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
         SelectedReminder ??= VisibleReminderItems.FirstOrDefault();
         if (SelectedReminder is null)
         {
-            SelectedReminderDetail = "Vyberte připomínku a zobrazí se detail položky.";
+            SelectedReminderDetail = L("ReminderWorkspace.Detail.Empty");
             Root.NotifyReminderWorkspaceSelectionChanged();
         }
 
@@ -122,8 +122,14 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     partial void OnSelectedReminderChanged(VehicleReminderItemViewModel? value)
     {
         SelectedReminderDetail = value is null
-            ? "Vyberte připomínku a zobrazí se detail položky."
-            : $"Název: {value.Title}\nTermín: {value.DueDate}\nStav: {value.Status}\nOpakování: {value.RepeatMode}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+            ? L("ReminderWorkspace.Detail.Empty")
+            : string.Join(
+                Environment.NewLine,
+                LF("ReminderWorkspace.Detail.Title", value.Title),
+                LF("ReminderWorkspace.Detail.DueDate", value.DueDate),
+                LF("ReminderWorkspace.Detail.Status", value.Status),
+                LF("ReminderWorkspace.Detail.Repeat", value.RepeatMode),
+                LF("ReminderWorkspace.Detail.Note", Root.FormatWorkspaceValue(value.Note, L("Common.NoNote"))));
 
         Root.NotifyReminderWorkspaceSelectionChanged();
     }
@@ -178,13 +184,13 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(ReminderSearchText))
         {
-            ReminderSearchSummary = $"Zobrazeno {VisibleReminderItems.Count} připomínek. Ctrl+F přesune fokus do hledání.";
+            ReminderSearchSummary = LF("ReminderWorkspace.SearchSummary.All", VisibleReminderItems.Count);
             return;
         }
 
         ReminderSearchSummary = VisibleReminderItems.Count == 0
-            ? $"Hledání „{ReminderSearchText.Trim()}“ nenašlo v připomínkách žádný záznam."
-            : $"Hledání „{ReminderSearchText.Trim()}“ našlo {VisibleReminderItems.Count} připomínek.";
+            ? LF("ReminderWorkspace.SearchSummary.Empty", ReminderSearchText.Trim())
+            : LF("ReminderWorkspace.SearchSummary.Filtered", ReminderSearchText.Trim(), VisibleReminderItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

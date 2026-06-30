@@ -1,3 +1,5 @@
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record VehicleHistoryItemViewModel(
@@ -9,7 +11,7 @@ public sealed record VehicleHistoryItemViewModel(
     string Note)
 {
     public string AccessibleLabel =>
-        $"{Date}, {EventType}, tachometr {Odometer}, cena {Cost}, poznámka {Note}";
+        DesktopLocalization.Localizer.Format("HistoryItem.AccessibleLabel", Date, EventType, Odometer, Cost, Note);
 
     public override string ToString() => AccessibleLabel;
 }

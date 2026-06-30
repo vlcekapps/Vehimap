@@ -19,7 +19,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public ObservableCollection<VehicleRecordItemViewModel> VisibleRecordItems { get; } = [];
 
     [ObservableProperty]
-    private string recordSummary = "Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.";
+    private string recordSummary = L("RecordWorkspace.Summary.Initial");
 
     [ObservableProperty]
     private VehicleRecordItemViewModel? selectedRecord;
@@ -28,7 +28,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     private string recordSearchText = string.Empty;
 
     [ObservableProperty]
-    private string recordSearchSummary = "Ctrl+F přesune fokus do hledání dokladů.";
+    private string recordSearchSummary = L("RecordWorkspace.SearchSummary.Initial");
 
     [ObservableProperty]
     private string selectedRecordSortOption = WorkspaceSortHelpers.ValiditySortLabel;
@@ -42,10 +42,10 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public bool CanClearRecordSearch => !string.IsNullOrWhiteSpace(RecordSearchText);
 
     [ObservableProperty]
-    private string selectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
+    private string selectedRecordDetail = L("RecordWorkspace.Detail.Empty");
 
     [ObservableProperty]
-    private string recordPanelHeading = "Detail dokladu";
+    private string recordPanelHeading = L("RecordWorkspace.PanelHeading");
 
     [ObservableProperty]
     private string recordEditorHeading = L("RecordEditor.NewTitle");
@@ -87,7 +87,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     private string recordEditorResolvedPath = string.Empty;
 
     [ObservableProperty]
-    private string recordEditorAvailability = "Vyberte soubor nebo zadejte cestu přílohy.";
+    private string recordEditorAvailability = L("RecordEditor.AttachmentAvailability.SelectOrEnterPath");
 
     [ObservableProperty]
     private string recordEditorNote = string.Empty;
@@ -149,7 +149,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
         SelectedRecord ??= VisibleRecordItems.FirstOrDefault();
         if (SelectedRecord is null)
         {
-            SelectedRecordDetail = "Vyberte doklad a zobrazí se detail přílohy.";
+            SelectedRecordDetail = L("RecordWorkspace.Detail.Empty");
             Root.NotifyRecordWorkspaceSelectionChanged();
         }
 
@@ -159,8 +159,17 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     partial void OnSelectedRecordChanged(VehicleRecordItemViewModel? value)
     {
         SelectedRecordDetail = value is null
-            ? "Vyberte doklad a zobrazí se detail přílohy."
-            : $"Typ: {value.RecordType}\nPlatnost: {value.Validity}\nCena: {value.Price}\nRežim přílohy: {value.AttachmentMode}\nStav přílohy: {value.AttachmentState}\nUložená cesta: {Root.FormatWorkspaceValue(value.StoredPath, "nevyplněno")}\nVyřešená cesta: {Root.FormatWorkspaceValue(value.ResolvedPath, "nevyplněno")}\nPoznámka: {Root.FormatWorkspaceValue(value.Note, "bez poznámky")}";
+            ? L("RecordWorkspace.Detail.Empty")
+            : string.Join(
+                Environment.NewLine,
+                LF("RecordWorkspace.Detail.Type", value.RecordType),
+                LF("RecordWorkspace.Detail.Validity", value.Validity),
+                LF("RecordWorkspace.Detail.Price", value.Price),
+                LF("RecordWorkspace.Detail.AttachmentMode", value.AttachmentMode),
+                LF("RecordWorkspace.Detail.AttachmentState", value.AttachmentState),
+                LF("RecordWorkspace.Detail.StoredPath", Root.FormatWorkspaceValue(value.StoredPath, L("Common.EmptyValue"))),
+                LF("RecordWorkspace.Detail.ResolvedPath", Root.FormatWorkspaceValue(value.ResolvedPath, L("Common.EmptyValue"))),
+                LF("RecordWorkspace.Detail.Note", Root.FormatWorkspaceValue(value.Note, L("Common.NoNote"))));
 
         Root.NotifyRecordWorkspaceSelectionChanged();
     }
@@ -243,13 +252,13 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(RecordSearchText))
         {
-            RecordSearchSummary = $"Zobrazeno {VisibleRecordItems.Count} dokladů. Ctrl+F přesune fokus do hledání.";
+            RecordSearchSummary = LF("RecordWorkspace.SearchSummary.All", VisibleRecordItems.Count);
             return;
         }
 
         RecordSearchSummary = VisibleRecordItems.Count == 0
-            ? $"Hledání „{RecordSearchText.Trim()}“ nenašlo v dokladech žádný záznam."
-            : $"Hledání „{RecordSearchText.Trim()}“ našlo {VisibleRecordItems.Count} dokladů.";
+            ? LF("RecordWorkspace.SearchSummary.Empty", RecordSearchText.Trim())
+            : LF("RecordWorkspace.SearchSummary.Filtered", RecordSearchText.Trim(), VisibleRecordItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

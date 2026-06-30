@@ -1,3 +1,5 @@
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record VehicleReminderItemViewModel(
@@ -9,7 +11,7 @@ public sealed record VehicleReminderItemViewModel(
     string Note)
 {
     public string AccessibleLabel =>
-        $"{Title}, termín {DueDate}, stav {Status}, opakování {RepeatMode}, poznámka {Note}";
+        DesktopLocalization.Localizer.Format("ReminderItem.AccessibleLabel", Title, DueDate, Status, RepeatMode, Note);
 
     public override string ToString() => AccessibleLabel;
 }
