@@ -34,6 +34,10 @@ public sealed class I18nFoundationTests
         Assert.Equal("Servisní knížka", czech.GetString("ServiceBook.Window.Title"));
         Assert.Equal("Vehimap - Service book", english.GetString("ServiceBook.Export.Title"));
         Assert.Equal("Vehimap - Servisní knížka", czech.GetString("ServiceBook.Export.Title"));
+        Assert.Equal("Year to date", english.GetString("CostPeriod.YearToDate"));
+        Assert.Equal("Od začátku roku", czech.GetString("CostPeriod.YearToDate"));
+        Assert.Equal("OK", english.GetString("CostAnalysis.Status.Ok"));
+        Assert.Equal("V pořádku", czech.GetString("CostAnalysis.Status.Ok"));
         Assert.Equal("Missing.Key.For.Test", english.GetString("Missing.Key.For.Test"));
     }
 

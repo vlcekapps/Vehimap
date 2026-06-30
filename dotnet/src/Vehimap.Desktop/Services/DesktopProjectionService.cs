@@ -130,7 +130,7 @@ internal sealed class DesktopProjectionService
 
     public IReadOnlyList<CostVehicleItemViewModel> BuildDashboardCostVehicles(CostAnalysisSummary costSummary) =>
         costSummary.Vehicles
-            .Where(item => item.TotalCost > 0m || item.Status != "Neaktivní")
+            .Where(item => item.TotalCost > 0m || !IsInactiveCostStatus(item.Status))
             .Select(row => new CostVehicleItemViewModel(
                 row.VehicleId,
                 row.VehicleName,
@@ -139,8 +139,8 @@ internal sealed class DesktopProjectionService
                 FormatMoney(row.HistoryCost),
                 FormatMoney(row.RecordCost),
                 FormatMoney(row.TotalCost),
-                row.DistanceKm.HasValue ? $"{row.DistanceKm.Value} km" : "nedostupné",
-                row.CostPerKm.HasValue ? $"{row.CostPerKm.Value:0.00} Kč/km" : "nedostupné",
+                FormatDistanceKm(row.DistanceKm),
+                FormatCostPerKm(row.CostPerKm),
                 row.Status))
             .ToList();
 
@@ -504,24 +504,23 @@ internal sealed class DesktopProjectionService
 
     public string BuildCostSummary(CostAnalysisSummary summary)
     {
-        var costPerKmText = summary.CostPerKm.HasValue ? $"{summary.CostPerKm.Value:0.00} Kč/km" : "nedostupné";
-        var distanceText = summary.DistanceKm.HasValue ? $"{summary.DistanceKm.Value} km" : "nedostupné";
-        return $"{summary.PeriodLabel}\nCelkem: {FormatMoney(summary.TotalCost)} | Ujeto: {distanceText} | Cena / km: {costPerKmText}\nBez číselného nákladu: {summary.ActiveWithoutCostCount} z {summary.ActiveVehicleCount} aktivních vozidel.";
+        return LF(
+            "Cost.Summary",
+            summary.PeriodLabel,
+            FormatMoney(summary.TotalCost),
+            FormatDistanceKm(summary.DistanceKm),
+            FormatCostPerKm(summary.CostPerKm),
+            summary.ActiveWithoutCostCount,
+            summary.ActiveVehicleCount);
     }
 
     public string BuildCostComparison(CostAnalysisSummary summary)
     {
-        var totalDelta = summary.TotalCostDifference >= 0m
-            ? $"+{summary.TotalCostDifference:0.00} Kč"
-            : $"{summary.TotalCostDifference:0.00} Kč";
-
-        var costDelta = summary.CostPerKmDifference.HasValue
-            ? (summary.CostPerKmDifference.Value >= 0m
-                ? $"+{summary.CostPerKmDifference.Value:0.00} Kč/km"
-                : $"{summary.CostPerKmDifference.Value:0.00} Kč/km")
-            : "nedostupné";
-
-        return $"Proti stejně dlouhému období loni: náklady {totalDelta}, cena / km {costDelta}. U {summary.CostPerKmUnavailableCount} vozidel s náklady zatím chybí spolehlivý výpočet ceny za kilometr.";
+        return LF(
+            "Cost.Comparison",
+            FormatSignedMoney(summary.TotalCostDifference),
+            FormatSignedCostPerKm(summary.CostPerKmDifference),
+            summary.CostPerKmUnavailableCount);
     }
 
     public string? GetRecordFolderPath(VehicleRecordItemViewModel? record)
@@ -685,7 +684,7 @@ internal sealed class DesktopProjectionService
         return $"Navazující evidence: historie {historyCount}, tankování {fuelCount}, doklady {recordCount}, připomínky {reminderCount}, servisní plány {maintenanceCount} z toho aktivních {activeMaintenanceCount}.";
     }
 
-    private static IReadOnlyList<VehicleDetailEvidenceSummaryItemViewModel> BuildVehicleEvidenceSummaryItems(
+    private IReadOnlyList<VehicleDetailEvidenceSummaryItemViewModel> BuildVehicleEvidenceSummaryItems(
         VehimapDataSet dataSet,
         string vehicleId,
         VehimapDataRoot? dataRoot,
@@ -733,7 +732,7 @@ internal sealed class DesktopProjectionService
         return summary;
     }
 
-    private static string BuildVehicleFuelDetailSummary(VehimapDataSet dataSet, string vehicleId)
+    private string BuildVehicleFuelDetailSummary(VehimapDataSet dataSet, string vehicleId)
     {
         var entries = dataSet.FuelEntries
             .Where(item => item.VehicleId == vehicleId)
@@ -1176,7 +1175,7 @@ internal sealed class DesktopProjectionService
         return parts.Count == 0 ? "V pořádku" : string.Join(" | ", parts);
     }
 
-    private static string FormatCostValue(string? value)
+    private string FormatCostValue(string? value)
     {
         if (VehimapValueParser.TryParseMoney(value, out var parsed))
         {
@@ -1211,7 +1210,44 @@ internal sealed class DesktopProjectionService
     private static string FormatCurrentOdometer(int? value) =>
         value.HasValue ? $"{value.Value} km" : "neznámý";
 
-    private static string FormatMoney(decimal value) => $"{value.ToString("0.00", CzechCulture)} Kč";
+    private string FormatMoney(decimal value) =>
+        LF("Cost.Value.Money", value.ToString("0.00", _formatCulture));
+
+    private string FormatDistanceKm(int? value) =>
+        value.HasValue
+            ? LF("Cost.Value.DistanceKm", value.Value)
+            : L("Cost.Value.Unavailable");
+
+    private string FormatCostPerKm(decimal? value) =>
+        value.HasValue
+            ? LF("Cost.Value.CostPerKm", value.Value.ToString("0.00", _formatCulture))
+            : L("Cost.Value.Unavailable");
+
+    private string FormatSignedMoney(decimal value)
+    {
+        var formatted = value.ToString("0.00", _formatCulture);
+        return value >= 0m
+            ? LF("Cost.Value.SignedMoney.Positive", formatted)
+            : LF("Cost.Value.SignedMoney.Negative", Math.Abs(value).ToString("0.00", _formatCulture));
+    }
+
+    private string FormatSignedCostPerKm(decimal? value)
+    {
+        if (!value.HasValue)
+        {
+            return L("Cost.Value.Unavailable");
+        }
+
+        var formatted = Math.Abs(value.Value).ToString("0.00", _formatCulture);
+        return value.Value >= 0m
+            ? LF("Cost.Value.SignedCostPerKm.Positive", formatted)
+            : LF("Cost.Value.SignedCostPerKm.Negative", formatted);
+    }
+
+    private bool IsInactiveCostStatus(string? status) =>
+        string.Equals(status, L("CostAnalysis.Status.Inactive"), StringComparison.CurrentCultureIgnoreCase)
+        || string.Equals(status, "Neaktivní", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(status, "Inactive", StringComparison.OrdinalIgnoreCase);
 
     private string FormatSmartAdvisorPriority(SmartAdvisorPriority priority) =>
         priority switch

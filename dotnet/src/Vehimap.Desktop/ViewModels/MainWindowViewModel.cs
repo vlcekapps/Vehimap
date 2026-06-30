@@ -335,7 +335,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             dataStore,
             attachmentService,
             new LegacyAuditService(attachmentService, DesktopLocalization.Localizer),
-            new LegacyCostAnalysisService(),
+            new LegacyCostAnalysisService(DesktopLocalization.Localizer),
             sessionBackupService,
             sessionAutostartService,
             sessionSupportedSettingsService,

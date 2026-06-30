@@ -13,7 +13,7 @@ public sealed partial class MainWindowViewModel
     {
         if (_currentCostSummary is null)
         {
-            SetCostExportStatus("Souhrn nákladů zatím není připraven k exportu.");
+            SetCostExportStatus(LO("CostExport.FleetNotReady"));
             return;
         }
 
@@ -22,21 +22,21 @@ public sealed partial class MainWindowViewModel
             var content = _costExportService.BuildFleetSummaryTsv(_currentCostSummary);
             var fileName = _costExportService.BuildFleetSummaryFileName(_currentCostSummary);
             var savedPath = await _fileSaveService.SaveTextAsync(
-                    "Export souhrnu nákladů",
+                    LO("CostExport.FleetSummaryTitle"),
                     fileName,
                     content,
-                    "TSV soubor",
+                    LO("CostExport.TsvFileType"),
                     "tsv",
                     ["*.tsv"])
                 .ConfigureAwait(false);
 
             SetCostExportStatus(string.IsNullOrWhiteSpace(savedPath)
-                ? "Export souhrnu nákladů byl zrušen."
-                : $"Souhrn nákladů byl uložen do {savedPath}.");
+                ? LO("CostExport.FleetCancelled")
+                : LFO("CostExport.FleetSaved", savedPath));
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetCostExportStatus($"Export souhrnu nákladů se nepodařil: {ex.Message}");
+            SetCostExportStatus(LFO("CostExport.FleetFailed", ex.Message));
         }
     }
 
@@ -46,7 +46,7 @@ public sealed partial class MainWindowViewModel
         var selectedCostVehicle = CostWorkspace.SelectedDashboardCostVehicle;
         if (_currentCostSummary is null || selectedCostVehicle is null)
         {
-            SetCostExportStatus("Nejprve vyberte vozidlo v nákladovém přehledu.");
+            SetCostExportStatus(LO("CostExport.SelectVehicleFirst"));
             return;
         }
 
@@ -63,21 +63,21 @@ public sealed partial class MainWindowViewModel
                 _currentCostSummary.PeriodStart,
                 _currentCostSummary.PeriodEnd);
             var savedPath = await _fileSaveService.SaveTextAsync(
-                    "Export detailu nákladů",
+                    LO("CostExport.VehicleDetailTitle"),
                     fileName,
                     content,
-                    "TSV soubor",
+                    LO("CostExport.TsvFileType"),
                     "tsv",
                     ["*.tsv"])
                 .ConfigureAwait(false);
 
             SetCostExportStatus(string.IsNullOrWhiteSpace(savedPath)
-                ? "Export detailu nákladů byl zrušen."
-                : $"Detail nákladů byl uložen do {savedPath}.");
+                ? LO("CostExport.DetailCancelled")
+                : LFO("CostExport.DetailSaved", savedPath));
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetCostExportStatus($"Export detailu nákladů se nepodařil: {ex.Message}");
+            SetCostExportStatus(LFO("CostExport.DetailFailed", ex.Message));
         }
     }
 
@@ -87,7 +87,7 @@ public sealed partial class MainWindowViewModel
         var selectedCostVehicle = CostWorkspace.SelectedDashboardCostVehicle;
         if (_currentCostSummary is null || selectedCostVehicle is null)
         {
-            SetCostExportStatus("Nejprve vyberte vozidlo v nákladovém přehledu.");
+            SetCostExportStatus(LO("CostExport.SelectVehicleFirst"));
             return;
         }
 
@@ -104,33 +104,33 @@ public sealed partial class MainWindowViewModel
                 _currentCostSummary.PeriodStart,
                 _currentCostSummary.PeriodEnd);
             var savedPath = await _fileSaveService.SaveTextAsync(
-                    "Export HTML sestavy nákladů",
+                    LO("CostExport.VehicleReportTitle"),
                     fileName,
                     content,
-                    "HTML soubor",
+                    LO("CostExport.HtmlFileType"),
                     "html",
                     ["*.html", "*.htm"])
                 .ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(savedPath))
             {
-                SetCostExportStatus("Export HTML sestavy nákladů byl zrušen.");
+                SetCostExportStatus(LO("CostExport.ReportCancelled"));
                 return;
             }
 
             try
             {
                 await _fileLauncher.OpenAsync(savedPath).ConfigureAwait(false);
-                SetCostExportStatus($"HTML sestava nákladů byla uložena do {savedPath}.");
+                SetCostExportStatus(LFO("CostExport.ReportSavedOpened", savedPath));
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
-                SetCostExportStatus($"HTML sestava nákladů byla uložena do {savedPath}, ale nepodařilo se ji otevřít: {ex.Message}");
+                SetCostExportStatus(LFO("CostExport.ReportSavedOpenFailed", savedPath, ex.Message));
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetCostExportStatus($"Export HTML sestavy nákladů se nepodařil: {ex.Message}");
+            SetCostExportStatus(LFO("CostExport.ReportFailed", ex.Message));
         }
     }
 

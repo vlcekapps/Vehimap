@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -99,5 +100,29 @@ public sealed class LegacyCostAnalysisServiceTests
         Assert.Equal(100m, summary.PreviousTotalCost);
         Assert.Equal(200m, summary.TotalCostDifference);
         Assert.Single(summary.Vehicles);
+    }
+
+    [Fact]
+    public void BuildPeriodSummary_uses_supplied_localizer_for_period_and_statuses()
+    {
+        var service = new LegacyCostAnalysisService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Octavia", "Passenger cars", "", "Skoda Octavia", "1AB2345", "2020", "110", "", "05/2027", "", "")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "10.02.2026", "Service", "10000", "100", ""),
+                new VehicleHistoryEntry("hist_2", "veh_1", "20.02.2026", "Service", "10100", "200", "")
+            ]
+        };
+
+        var summary = service.BuildPeriodSummary(dataSet, new DateOnly(2026, 2, 1), new DateOnly(2026, 2, 28));
+
+        Assert.Equal("From 01.02.2026 to 28.02.2026", summary.PeriodLabel);
+        Assert.Single(summary.Vehicles);
+        Assert.Equal("OK", summary.Vehicles[0].Status);
     }
 }

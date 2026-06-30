@@ -922,6 +922,75 @@ Vehicle: {2}
   <data name="CostWorkspace.SearchHelp" xml:space="preserve"><value>Vehicle, category, amount, cost per distance or calculation status</value></data>
   <data name="CostWorkspace.SearchName" xml:space="preserve"><value>Cost overview search</value></data>
   <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, category, amount, cost per distance or calculation status...</value></data>
+  <data name="CostWorkspace.PeriodStatus.Initial" xml:space="preserve"><value>The cost period loads together with the data.</value></data>
+  <data name="CostWorkspace.ExportStatus.Initial" xml:space="preserve"><value>Cost exports use the currently displayed period.</value></data>
+  <data name="CostWorkspace.Detail.Empty" xml:space="preserve"><value>Select a vehicle in the list to show the cost breakdown.</value></data>
+  <data name="CostWorkspace.Detail.Selected" xml:space="preserve"><value>Vehicle: {0}
+Category: {1}
+Fuel: {2}
+History: {3}
+Documents: {4}
+Total: {5}
+Distance: {6}
+Cost / km: {7}
+Calculation status: {8}</value></data>
+  <data name="CostWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to cost overview search.</value></data>
+  <data name="CostWorkspace.SearchSummary.Visible" xml:space="preserve"><value>Showing {0} vehicles in the cost overview. Ctrl+F moves focus to search, Ctrl+R refreshes the overview.</value></data>
+  <data name="CostWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any vehicle in costs.</value></data>
+  <data name="CostWorkspace.SearchSummary.WithResults" xml:space="preserve"><value>Search “{0}” found {1} vehicles in costs.</value></data>
+  <data name="CostPeriod.YearToDate" xml:space="preserve"><value>Year to date</value></data>
+  <data name="CostPeriod.Last30Days" xml:space="preserve"><value>Last 30 days</value></data>
+  <data name="CostPeriod.Last90Days" xml:space="preserve"><value>Last 90 days</value></data>
+  <data name="CostPeriod.CurrentYear" xml:space="preserve"><value>Current year</value></data>
+  <data name="CostPeriod.PreviousYear" xml:space="preserve"><value>Previous year</value></data>
+  <data name="CostPeriod.Custom" xml:space="preserve"><value>Custom period</value></data>
+  <data name="CostPeriod.Status.CustomPrompt" xml:space="preserve"><value>Enter the start and end of the custom period and use Recalculate.</value></data>
+  <data name="CostPeriod.Status.PresetChanged" xml:space="preserve"><value>Cost period was changed.</value></data>
+  <data name="CostPeriod.Status.CustomPending" xml:space="preserve"><value>The custom period will be used after Recalculate.</value></data>
+  <data name="CostPeriod.Status.InvalidStartDate" xml:space="preserve"><value>Cost period start is not a valid date. For example, enter 2026-01-01 or 01.01.2026.</value></data>
+  <data name="CostPeriod.Status.InvalidEndDate" xml:space="preserve"><value>Cost period end is not a valid date. For example, enter 2026-12-31 or 31.12.2026.</value></data>
+  <data name="CostPeriod.Status.Applied" xml:space="preserve"><value>Cost period was applied.</value></data>
+  <data name="CostPeriod.Status.AppliedSwapped" xml:space="preserve"><value>Cost period was applied; start and end were swapped into the correct order.</value></data>
+  <data name="CostPeriod.Status.CurrentPeriod" xml:space="preserve"><value>Current period: {0}, from {1} to {2}. Comparison uses the same period last year.</value></data>
+  <data name="CostPeriod.PreferenceSaveFailed" xml:space="preserve"><value>Cost period could not be saved</value></data>
+  <data name="CostAnalysis.PeriodLabel" xml:space="preserve"><value>From {0} to {1}</value></data>
+  <data name="CostAnalysis.Status.NoCost" xml:space="preserve"><value>No costs</value></data>
+  <data name="CostAnalysis.Status.OdometerRegression" xml:space="preserve"><value>Inconsistent odometer</value></data>
+  <data name="CostAnalysis.Status.MissingDistanceWithCost" xml:space="preserve"><value>Missing distance in period</value></data>
+  <data name="CostAnalysis.Status.NoDistance" xml:space="preserve"><value>No distance in period</value></data>
+  <data name="CostAnalysis.Status.Ok" xml:space="preserve"><value>OK</value></data>
+  <data name="CostAnalysis.Status.ZeroDistanceWithCost" xml:space="preserve"><value>Zero distance</value></data>
+  <data name="CostAnalysis.Status.NoMovement" xml:space="preserve"><value>No movement</value></data>
+  <data name="CostAnalysis.Status.Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Cost.Value.Unavailable" xml:space="preserve"><value>unavailable</value></data>
+  <data name="Cost.Value.DistanceKm" xml:space="preserve"><value>{0} km</value></data>
+  <data name="Cost.Value.Money" xml:space="preserve"><value>CZK {0}</value></data>
+  <data name="Cost.Value.CostPerKm" xml:space="preserve"><value>CZK {0}/km</value></data>
+  <data name="Cost.Value.SignedMoney.Positive" xml:space="preserve"><value>+CZK {0}</value></data>
+  <data name="Cost.Value.SignedMoney.Negative" xml:space="preserve"><value>-CZK {0}</value></data>
+  <data name="Cost.Value.SignedCostPerKm.Positive" xml:space="preserve"><value>+CZK {0}/km</value></data>
+  <data name="Cost.Value.SignedCostPerKm.Negative" xml:space="preserve"><value>-CZK {0}/km</value></data>
+  <data name="Cost.Summary" xml:space="preserve"><value>{0}
+Total: {1} | Distance: {2} | Cost / km: {3}
+Without numeric cost: {4} of {5} active vehicles.</value></data>
+  <data name="Cost.Comparison" xml:space="preserve"><value>Compared with the same-length period last year: costs {0}, cost / km {1}. For {2} vehicles with costs, a reliable cost-per-kilometer calculation is still missing.</value></data>
+  <data name="CostExport.FleetNotReady" xml:space="preserve"><value>Cost summary is not ready for export yet.</value></data>
+  <data name="CostExport.FleetSummaryTitle" xml:space="preserve"><value>Export cost summary</value></data>
+  <data name="CostExport.VehicleDetailTitle" xml:space="preserve"><value>Export cost detail</value></data>
+  <data name="CostExport.VehicleReportTitle" xml:space="preserve"><value>Export cost HTML report</value></data>
+  <data name="CostExport.TsvFileType" xml:space="preserve"><value>TSV file</value></data>
+  <data name="CostExport.HtmlFileType" xml:space="preserve"><value>HTML file</value></data>
+  <data name="CostExport.FleetCancelled" xml:space="preserve"><value>Cost summary export was cancelled.</value></data>
+  <data name="CostExport.FleetSaved" xml:space="preserve"><value>Cost summary was saved to {0}.</value></data>
+  <data name="CostExport.FleetFailed" xml:space="preserve"><value>Cost summary export failed: {0}</value></data>
+  <data name="CostExport.SelectVehicleFirst" xml:space="preserve"><value>Select a vehicle in the cost overview first.</value></data>
+  <data name="CostExport.DetailCancelled" xml:space="preserve"><value>Cost detail export was cancelled.</value></data>
+  <data name="CostExport.DetailSaved" xml:space="preserve"><value>Cost detail was saved to {0}.</value></data>
+  <data name="CostExport.DetailFailed" xml:space="preserve"><value>Cost detail export failed: {0}</value></data>
+  <data name="CostExport.ReportCancelled" xml:space="preserve"><value>Cost HTML report export was cancelled.</value></data>
+  <data name="CostExport.ReportSavedOpened" xml:space="preserve"><value>Cost HTML report was saved to {0}.</value></data>
+  <data name="CostExport.ReportSavedOpenFailed" xml:space="preserve"><value>Cost HTML report was saved to {0}, but could not be opened: {1}</value></data>
+  <data name="CostExport.ReportFailed" xml:space="preserve"><value>Cost HTML report export failed: {0}</value></data>
   <data name="DashboardWorkspace.AuditHeading" xml:space="preserve"><value>Most important audit</value></data>
   <data name="DashboardWorkspace.AuditListName" xml:space="preserve"><value>Dashboard audit item overview</value></data>
   <data name="DashboardWorkspace.AuditOpen" xml:space="preserve"><value>Open vehicle</value></data>

@@ -12,6 +12,13 @@ public sealed partial class MainWindowViewModel
     internal const string CostPeriodPreviousYearLabel = "Minulý rok";
     internal const string CostPeriodCustomLabel = "Vlastní období";
 
+    internal const string CostPeriodYearToDateKey = "year_to_date";
+    internal const string CostPeriodLast30DaysKey = "last_30_days";
+    internal const string CostPeriodLast90DaysKey = "last_90_days";
+    internal const string CostPeriodCurrentYearKey = "current_year";
+    internal const string CostPeriodPreviousYearKey = "previous_year";
+    internal const string CostPeriodCustomKey = "custom";
+
     private const string CostPeriodSettingsSection = "costs";
     private const string CostPeriodPresetSettingKey = "period_preset";
     private const string CostPeriodStartSettingKey = "period_start";
@@ -25,10 +32,12 @@ public sealed partial class MainWindowViewModel
     private void ApplyCostPeriodPreferences()
     {
         var today = DateOnly.FromDateTime(DateTime.Today);
-        var preset = NormalizeCostPeriodPreset(_dataSet.Settings.GetValue(CostPeriodSettingsSection, CostPeriodPresetSettingKey, CostPeriodYearToDateLabel));
+        var presetKey = NormalizeCostPeriodPresetKey(
+            _dataSet.Settings.GetValue(CostPeriodSettingsSection, CostPeriodPresetSettingKey, CostPeriodYearToDateKey));
+        var preset = CostPeriodLabelFromKey(presetKey);
         var (start, end) = BuildCostPeriodForPreset(preset, today);
 
-        if (string.Equals(preset, CostPeriodCustomLabel, StringComparison.Ordinal))
+        if (string.Equals(presetKey, CostPeriodCustomKey, StringComparison.Ordinal))
         {
             if (TryParseCostDate(_dataSet.Settings.GetValue(CostPeriodSettingsSection, CostPeriodStartSettingKey, string.Empty), out var customStart))
             {
@@ -72,14 +81,14 @@ public sealed partial class MainWindowViewModel
             }
         }
 
-        if (string.Equals(preset, CostPeriodCustomLabel, StringComparison.Ordinal))
+        if (string.Equals(NormalizeCostPeriodPresetKey(preset), CostPeriodCustomKey, StringComparison.Ordinal))
         {
-            CostWorkspace.CostPeriodStatus = "Zadejte začátek a konec vlastního období a použijte tlačítko Přepočítat.";
+            CostWorkspace.CostPeriodStatus = LO("CostPeriod.Status.CustomPrompt");
             return;
         }
 
         var (start, end) = BuildCostPeriodForPreset(preset, DateOnly.FromDateTime(DateTime.Today));
-        ApplyCostPeriodSelection(preset, start, end, persist: true, requestFocus: false, "Období nákladů bylo přepnuto.");
+        ApplyCostPeriodSelection(preset, start, end, persist: true, requestFocus: false, LO("CostPeriod.Status.PresetChanged"));
     }
 
     internal void HandleCostPeriodCustomDateChanged()
@@ -89,12 +98,12 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (!string.Equals(CostWorkspace.SelectedCostPeriodPreset, CostPeriodCustomLabel, StringComparison.Ordinal))
+        if (!string.Equals(NormalizeCostPeriodPresetKey(CostWorkspace.SelectedCostPeriodPreset), CostPeriodCustomKey, StringComparison.Ordinal))
         {
             _suppressCostPeriodRefresh = true;
             try
             {
-                CostWorkspace.SelectedCostPeriodPreset = CostPeriodCustomLabel;
+                CostWorkspace.SelectedCostPeriodPreset = CostPeriodLabelFromKey(CostPeriodCustomKey);
             }
             finally
             {
@@ -102,7 +111,7 @@ public sealed partial class MainWindowViewModel
             }
         }
 
-        CostWorkspace.CostPeriodStatus = "Vlastní období bude použito po tlačítku Přepočítat.";
+        CostWorkspace.CostPeriodStatus = LO("CostPeriod.Status.CustomPending");
     }
 
     internal void ApplyCostPeriodFromWorkspace()
@@ -114,7 +123,7 @@ public sealed partial class MainWindowViewModel
 
         if (!TryParseCostDate(CostWorkspace.CostPeriodStartText, out var start))
         {
-            CostWorkspace.CostPeriodStatus = "Začátek období není platné datum. Zadejte například 01.01.2026.";
+            CostWorkspace.CostPeriodStatus = LO("CostPeriod.Status.InvalidStartDate");
             ShellStatus = CostWorkspace.CostPeriodStatus;
             RequestFocus(DesktopFocusTarget.CostPeriodStart);
             return;
@@ -122,17 +131,17 @@ public sealed partial class MainWindowViewModel
 
         if (!TryParseCostDate(CostWorkspace.CostPeriodEndText, out var end))
         {
-            CostWorkspace.CostPeriodStatus = "Konec období není platné datum. Zadejte například 31.12.2026.";
+            CostWorkspace.CostPeriodStatus = LO("CostPeriod.Status.InvalidEndDate");
             ShellStatus = CostWorkspace.CostPeriodStatus;
             RequestFocus(DesktopFocusTarget.CostPeriodStart);
             return;
         }
 
-        var status = "Období nákladů bylo použito.";
+        var status = LO("CostPeriod.Status.Applied");
         if (end < start)
         {
             (start, end) = (end, start);
-            status = "Období nákladů bylo použito; začátek a konec byly prohozeny do správného pořadí.";
+            status = LO("CostPeriod.Status.AppliedSwapped");
         }
 
         ApplyCostPeriodSelection(
@@ -149,7 +158,7 @@ public sealed partial class MainWindowViewModel
         if (_costPeriodStart == default || _costPeriodEnd == default)
         {
             var today = DateOnly.FromDateTime(DateTime.Today);
-            (_costPeriodStart, _costPeriodEnd) = BuildCostPeriodForPreset(CostPeriodYearToDateLabel, today);
+            (_costPeriodStart, _costPeriodEnd) = BuildCostPeriodForPreset(CostPeriodYearToDateKey, today);
         }
 
         return _session.BuildCostSummary(_costPeriodStart, _costPeriodEnd);
@@ -223,7 +232,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var normalizedPreset = NormalizeCostPeriodPreset(preset);
+        var normalizedPreset = NormalizeCostPeriodPresetKey(preset);
         var startValue = start.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         var endValue = end.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         PersistPreferenceSettingsAsync(
@@ -233,25 +242,22 @@ public sealed partial class MainWindowViewModel
                 settings.SetValue(CostPeriodSettingsSection, CostPeriodStartSettingKey, startValue);
                 settings.SetValue(CostPeriodSettingsSection, CostPeriodEndSettingKey, endValue);
             },
-            "Nepodařilo se uložit období nákladů");
+            LO("CostPeriod.PreferenceSaveFailed"));
     }
 
     private string NormalizeCostPeriodPreset(string? value)
     {
-        var normalized = string.IsNullOrWhiteSpace(value) ? CostPeriodYearToDateLabel : value.Trim();
-        return CostWorkspace.CostPeriodPresets.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
-            ? normalized
-            : CostPeriodYearToDateLabel;
+        return CostPeriodLabelFromKey(NormalizeCostPeriodPresetKey(value));
     }
 
     private static (DateOnly Start, DateOnly End) BuildCostPeriodForPreset(string preset, DateOnly today)
     {
-        return preset switch
+        return NormalizeCostPeriodPresetKey(preset) switch
         {
-            CostPeriodLast30DaysLabel => (today.AddDays(-29), today),
-            CostPeriodLast90DaysLabel => (today.AddDays(-89), today),
-            CostPeriodCurrentYearLabel => (new DateOnly(today.Year, 1, 1), new DateOnly(today.Year, 12, 31)),
-            CostPeriodPreviousYearLabel => (new DateOnly(today.Year - 1, 1, 1), new DateOnly(today.Year - 1, 12, 31)),
+            CostPeriodLast30DaysKey => (today.AddDays(-29), today),
+            CostPeriodLast90DaysKey => (today.AddDays(-89), today),
+            CostPeriodCurrentYearKey => (new DateOnly(today.Year, 1, 1), new DateOnly(today.Year, 12, 31)),
+            CostPeriodPreviousYearKey => (new DateOnly(today.Year - 1, 1, 1), new DateOnly(today.Year - 1, 12, 31)),
             _ => (new DateOnly(today.Year, 1, 1), today)
         };
     }
@@ -274,5 +280,66 @@ public sealed partial class MainWindowViewModel
         date.ToString("dd.MM.yyyy", CzechCulture);
 
     private static string BuildCostPeriodStatus(string preset, DateOnly start, DateOnly end) =>
-        $"Aktuální období: {preset}, od {FormatCostDate(start)} do {FormatCostDate(end)}. Srovnání používá stejné období loni.";
+        LFO(
+            "CostPeriod.Status.CurrentPeriod",
+            CostPeriodLabelFromKey(NormalizeCostPeriodPresetKey(preset)),
+            FormatCostDate(start),
+            FormatCostDate(end));
+
+    private static string NormalizeCostPeriodPresetKey(string? value)
+    {
+        var normalized = (value ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return CostPeriodYearToDateKey;
+        }
+
+        if (MatchesCostPeriodPreset(normalized, CostPeriodYearToDateKey, "CostPeriod.YearToDate", CostPeriodYearToDateLabel, "Year to date"))
+        {
+            return CostPeriodYearToDateKey;
+        }
+
+        if (MatchesCostPeriodPreset(normalized, CostPeriodLast30DaysKey, "CostPeriod.Last30Days", CostPeriodLast30DaysLabel, "Last 30 days"))
+        {
+            return CostPeriodLast30DaysKey;
+        }
+
+        if (MatchesCostPeriodPreset(normalized, CostPeriodLast90DaysKey, "CostPeriod.Last90Days", CostPeriodLast90DaysLabel, "Last 90 days"))
+        {
+            return CostPeriodLast90DaysKey;
+        }
+
+        if (MatchesCostPeriodPreset(normalized, CostPeriodCurrentYearKey, "CostPeriod.CurrentYear", CostPeriodCurrentYearLabel, "Current year"))
+        {
+            return CostPeriodCurrentYearKey;
+        }
+
+        if (MatchesCostPeriodPreset(normalized, CostPeriodPreviousYearKey, "CostPeriod.PreviousYear", CostPeriodPreviousYearLabel, "Previous year"))
+        {
+            return CostPeriodPreviousYearKey;
+        }
+
+        if (MatchesCostPeriodPreset(normalized, CostPeriodCustomKey, "CostPeriod.Custom", CostPeriodCustomLabel, "Custom period"))
+        {
+            return CostPeriodCustomKey;
+        }
+
+        return CostPeriodYearToDateKey;
+    }
+
+    private static bool MatchesCostPeriodPreset(string normalized, string key, string resourceKey, params string[] aliases) =>
+        string.Equals(normalized, key, StringComparison.OrdinalIgnoreCase)
+        || string.Equals(normalized, LO(resourceKey), StringComparison.CurrentCultureIgnoreCase)
+        || aliases.Any(alias => string.Equals(normalized, alias, StringComparison.OrdinalIgnoreCase));
+
+    private static string CostPeriodLabelFromKey(string key) =>
+        key switch
+        {
+            CostPeriodLast30DaysKey => LO("CostPeriod.Last30Days"),
+            CostPeriodLast90DaysKey => LO("CostPeriod.Last90Days"),
+            CostPeriodCurrentYearKey => LO("CostPeriod.CurrentYear"),
+            CostPeriodPreviousYearKey => LO("CostPeriod.PreviousYear"),
+            CostPeriodCustomKey => LO("CostPeriod.Custom"),
+            _ => LO("CostPeriod.YearToDate")
+        };
 }

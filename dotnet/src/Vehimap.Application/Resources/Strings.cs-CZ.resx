@@ -922,6 +922,75 @@ Vozidlo: {2}
   <data name="CostWorkspace.SearchHelp" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za km nebo stav výpočtu</value></data>
   <data name="CostWorkspace.SearchName" xml:space="preserve"><value>Hledání v nákladovém přehledu</value></data>
   <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za km nebo stav výpočtu...</value></data>
+  <data name="CostWorkspace.PeriodStatus.Initial" xml:space="preserve"><value>Období nákladů se načte společně s daty.</value></data>
+  <data name="CostWorkspace.ExportStatus.Initial" xml:space="preserve"><value>Exporty nákladů použijí právě zobrazené období.</value></data>
+  <data name="CostWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte vozidlo v seznamu a zobrazí se rozpad nákladů.</value></data>
+  <data name="CostWorkspace.Detail.Selected" xml:space="preserve"><value>Vozidlo: {0}
+Kategorie: {1}
+Palivo: {2}
+Historie: {3}
+Doklady: {4}
+Celkem: {5}
+Ujeto: {6}
+Cena / km: {7}
+Stav výpočtu: {8}</value></data>
+  <data name="CostWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F přesune fokus do hledání nákladového přehledu.</value></data>
+  <data name="CostWorkspace.SearchSummary.Visible" xml:space="preserve"><value>Zobrazeno {0} vozidel v nákladovém přehledu. Ctrl+F přesune fokus do hledání, Ctrl+R přehled obnoví.</value></data>
+  <data name="CostWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Hledání „{0}“ nenašlo v nákladech žádné vozidlo.</value></data>
+  <data name="CostWorkspace.SearchSummary.WithResults" xml:space="preserve"><value>Hledání „{0}“ našlo {1} vozidel v nákladech.</value></data>
+  <data name="CostPeriod.YearToDate" xml:space="preserve"><value>Od začátku roku</value></data>
+  <data name="CostPeriod.Last30Days" xml:space="preserve"><value>Posledních 30 dní</value></data>
+  <data name="CostPeriod.Last90Days" xml:space="preserve"><value>Posledních 90 dní</value></data>
+  <data name="CostPeriod.CurrentYear" xml:space="preserve"><value>Aktuální rok</value></data>
+  <data name="CostPeriod.PreviousYear" xml:space="preserve"><value>Minulý rok</value></data>
+  <data name="CostPeriod.Custom" xml:space="preserve"><value>Vlastní období</value></data>
+  <data name="CostPeriod.Status.CustomPrompt" xml:space="preserve"><value>Zadejte začátek a konec vlastního období a použijte tlačítko Přepočítat.</value></data>
+  <data name="CostPeriod.Status.PresetChanged" xml:space="preserve"><value>Období nákladů bylo přepnuto.</value></data>
+  <data name="CostPeriod.Status.CustomPending" xml:space="preserve"><value>Vlastní období bude použito po tlačítku Přepočítat.</value></data>
+  <data name="CostPeriod.Status.InvalidStartDate" xml:space="preserve"><value>Začátek období není platné datum. Zadejte například 01.01.2026.</value></data>
+  <data name="CostPeriod.Status.InvalidEndDate" xml:space="preserve"><value>Konec období není platné datum. Zadejte například 31.12.2026.</value></data>
+  <data name="CostPeriod.Status.Applied" xml:space="preserve"><value>Období nákladů bylo použito.</value></data>
+  <data name="CostPeriod.Status.AppliedSwapped" xml:space="preserve"><value>Období nákladů bylo použito; začátek a konec byly prohozeny do správného pořadí.</value></data>
+  <data name="CostPeriod.Status.CurrentPeriod" xml:space="preserve"><value>Aktuální období: {0}, od {1} do {2}. Srovnání používá stejné období loni.</value></data>
+  <data name="CostPeriod.PreferenceSaveFailed" xml:space="preserve"><value>Nepodařilo se uložit období nákladů</value></data>
+  <data name="CostAnalysis.PeriodLabel" xml:space="preserve"><value>Od {0} do {1}</value></data>
+  <data name="CostAnalysis.Status.NoCost" xml:space="preserve"><value>Bez nákladů</value></data>
+  <data name="CostAnalysis.Status.OdometerRegression" xml:space="preserve"><value>Nekonzistentní tachometr</value></data>
+  <data name="CostAnalysis.Status.MissingDistanceWithCost" xml:space="preserve"><value>Chybí km v období</value></data>
+  <data name="CostAnalysis.Status.NoDistance" xml:space="preserve"><value>Bez km v období</value></data>
+  <data name="CostAnalysis.Status.Ok" xml:space="preserve"><value>V pořádku</value></data>
+  <data name="CostAnalysis.Status.ZeroDistanceWithCost" xml:space="preserve"><value>Nulový nájezd</value></data>
+  <data name="CostAnalysis.Status.NoMovement" xml:space="preserve"><value>Bez pohybu</value></data>
+  <data name="CostAnalysis.Status.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
+  <data name="Cost.Value.Unavailable" xml:space="preserve"><value>nedostupné</value></data>
+  <data name="Cost.Value.DistanceKm" xml:space="preserve"><value>{0} km</value></data>
+  <data name="Cost.Value.Money" xml:space="preserve"><value>{0} Kč</value></data>
+  <data name="Cost.Value.CostPerKm" xml:space="preserve"><value>{0} Kč/km</value></data>
+  <data name="Cost.Value.SignedMoney.Positive" xml:space="preserve"><value>+{0} Kč</value></data>
+  <data name="Cost.Value.SignedMoney.Negative" xml:space="preserve"><value>-{0} Kč</value></data>
+  <data name="Cost.Value.SignedCostPerKm.Positive" xml:space="preserve"><value>+{0} Kč/km</value></data>
+  <data name="Cost.Value.SignedCostPerKm.Negative" xml:space="preserve"><value>-{0} Kč/km</value></data>
+  <data name="Cost.Summary" xml:space="preserve"><value>{0}
+Celkem: {1} | Ujeto: {2} | Cena / km: {3}
+Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
+  <data name="Cost.Comparison" xml:space="preserve"><value>Proti stejně dlouhému období loni: náklady {0}, cena / km {1}. U {2} vozidel s náklady zatím chybí spolehlivý výpočet ceny za kilometr.</value></data>
+  <data name="CostExport.FleetNotReady" xml:space="preserve"><value>Souhrn nákladů zatím není připraven k exportu.</value></data>
+  <data name="CostExport.FleetSummaryTitle" xml:space="preserve"><value>Export souhrnu nákladů</value></data>
+  <data name="CostExport.VehicleDetailTitle" xml:space="preserve"><value>Export detailu nákladů</value></data>
+  <data name="CostExport.VehicleReportTitle" xml:space="preserve"><value>Export HTML sestavy nákladů</value></data>
+  <data name="CostExport.TsvFileType" xml:space="preserve"><value>TSV soubor</value></data>
+  <data name="CostExport.HtmlFileType" xml:space="preserve"><value>HTML soubor</value></data>
+  <data name="CostExport.FleetCancelled" xml:space="preserve"><value>Export souhrnu nákladů byl zrušen.</value></data>
+  <data name="CostExport.FleetSaved" xml:space="preserve"><value>Souhrn nákladů byl uložen do {0}.</value></data>
+  <data name="CostExport.FleetFailed" xml:space="preserve"><value>Export souhrnu nákladů se nepodařil: {0}</value></data>
+  <data name="CostExport.SelectVehicleFirst" xml:space="preserve"><value>Nejprve vyberte vozidlo v nákladovém přehledu.</value></data>
+  <data name="CostExport.DetailCancelled" xml:space="preserve"><value>Export detailu nákladů byl zrušen.</value></data>
+  <data name="CostExport.DetailSaved" xml:space="preserve"><value>Detail nákladů byl uložen do {0}.</value></data>
+  <data name="CostExport.DetailFailed" xml:space="preserve"><value>Export detailu nákladů se nepodařil: {0}</value></data>
+  <data name="CostExport.ReportCancelled" xml:space="preserve"><value>Export HTML sestavy nákladů byl zrušen.</value></data>
+  <data name="CostExport.ReportSavedOpened" xml:space="preserve"><value>HTML sestava nákladů byla uložena do {0}.</value></data>
+  <data name="CostExport.ReportSavedOpenFailed" xml:space="preserve"><value>HTML sestava nákladů byla uložena do {0}, ale nepodařilo se ji otevřít: {1}</value></data>
+  <data name="CostExport.ReportFailed" xml:space="preserve"><value>Export HTML sestavy nákladů se nepodařil: {0}</value></data>
   <data name="DashboardWorkspace.AuditHeading" xml:space="preserve"><value>Nejdůležitější audit</value></data>
   <data name="DashboardWorkspace.AuditListName" xml:space="preserve"><value>Přehled auditních položek na dashboardu</value></data>
   <data name="DashboardWorkspace.AuditOpen" xml:space="preserve"><value>Otevřít vozidlo</value></data>

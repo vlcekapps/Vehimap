@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Domain.Models;
 
@@ -5,6 +6,13 @@ namespace Vehimap.Application.Services;
 
 public sealed class LegacyCostAnalysisService : ICostAnalysisService
 {
+    private readonly IAppLocalizer _localizer;
+
+    public LegacyCostAnalysisService(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+    }
+
     public CostAnalysisSummary BuildYearToDateSummary(VehimapDataSet dataSet, DateOnly today)
     {
         var currentStart = new DateOnly(today.Year, 1, 1);
@@ -26,7 +34,7 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
         var previous = BuildPeriodTotals(dataSet, previousStart, previousEnd);
 
         return new CostAnalysisSummary(
-            $"Od {periodStart:dd.MM.yyyy} do {periodEnd:dd.MM.yyyy}",
+            BuildPeriodLabel(periodStart, periodEnd),
             periodStart,
             periodEnd,
             current.TotalCost,
@@ -42,7 +50,7 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
             current.Vehicles);
     }
 
-    private static CostAnalysisSummary BuildPeriodTotals(VehimapDataSet dataSet, DateOnly periodStart, DateOnly periodEnd)
+    private CostAnalysisSummary BuildPeriodTotals(VehimapDataSet dataSet, DateOnly periodStart, DateOnly periodEnd)
     {
         var metaByVehicleId = dataSet.VehicleMetaEntries
             .GroupBy(item => item.VehicleId, StringComparer.Ordinal)
@@ -135,7 +143,7 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
         var unavailableCostPerKm = rows.Count(item => item.TotalCost > 0m && !item.CostPerKm.HasValue);
 
         return new CostAnalysisSummary(
-            $"Od {periodStart:dd.MM.yyyy} do {periodEnd:dd.MM.yyyy}",
+            BuildPeriodLabel(periodStart, periodEnd),
             periodStart,
             periodEnd,
             totalCost,
@@ -151,7 +159,7 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
             rows);
     }
 
-    private static VehicleCostBreakdown BuildVehicleBreakdown(VehicleCostAccumulator row)
+    private VehicleCostBreakdown BuildVehicleBreakdown(VehicleCostAccumulator row)
     {
         var total = row.TotalCost;
         var orderedSamples = row.OdometerSamples
@@ -175,15 +183,17 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
 
         if (total <= 0m && !row.IsInactive)
         {
-            status = "Bez nákladů";
+            status = L("CostAnalysis.Status.NoCost");
         }
         else if (hasRegression)
         {
-            status = "Nekonzistentní tachometr";
+            status = L("CostAnalysis.Status.OdometerRegression");
         }
         else if (orderedSamples.Count < 2)
         {
-            status = total > 0m ? "Chybí km v období" : "Bez km v období";
+            status = total > 0m
+                ? L("CostAnalysis.Status.MissingDistanceWithCost")
+                : L("CostAnalysis.Status.NoDistance");
         }
         else
         {
@@ -193,17 +203,19 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
             if (distanceKm > 0)
             {
                 costPerKm = total / distanceKm.Value;
-                status = "V pořádku";
+                status = L("CostAnalysis.Status.Ok");
             }
             else
             {
-                status = total > 0m ? "Nulový nájezd" : "Bez pohybu";
+                status = total > 0m
+                    ? L("CostAnalysis.Status.ZeroDistanceWithCost")
+                    : L("CostAnalysis.Status.NoMovement");
             }
         }
 
         if (row.IsInactive && total <= 0m)
         {
-            status = "Neaktivní";
+            status = L("CostAnalysis.Status.Inactive");
         }
 
         return new VehicleCostBreakdown(
@@ -218,6 +230,16 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
             costPerKm,
             status);
     }
+
+    private string BuildPeriodLabel(DateOnly start, DateOnly end) =>
+        LF("CostAnalysis.PeriodLabel", FormatPeriodDate(start), FormatPeriodDate(end));
+
+    private static string FormatPeriodDate(DateOnly date) =>
+        date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 
     private static bool IsVehicleInactive(Vehicle vehicle, IReadOnlyDictionary<string, VehicleMeta> metaByVehicleId)
     {

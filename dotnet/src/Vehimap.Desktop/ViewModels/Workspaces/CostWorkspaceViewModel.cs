@@ -29,16 +29,16 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     private string costPeriodEndText = string.Empty;
 
     [ObservableProperty]
-    private string costPeriodStatus = "Období nákladů se načte společně s daty.";
+    private string costPeriodStatus = L("CostWorkspace.PeriodStatus.Initial");
 
     [ObservableProperty]
-    private string costExportStatus = "Exporty nákladů použijí právě zobrazené období.";
+    private string costExportStatus = L("CostWorkspace.ExportStatus.Initial");
 
     [ObservableProperty]
     private CostVehicleItemViewModel? selectedDashboardCostVehicle;
 
     [ObservableProperty]
-    private string selectedCostVehicleDetail = "Vyberte vozidlo v seznamu a zobrazí se rozpad nákladů.";
+    private string selectedCostVehicleDetail = L("CostWorkspace.Detail.Empty");
 
     public string WindowTitle => Root.CostWindowTitle;
 
@@ -48,12 +48,12 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
 
     public IReadOnlyList<string> CostPeriodPresets { get; } =
     [
-        MainWindowViewModel.CostPeriodYearToDateLabel,
-        MainWindowViewModel.CostPeriodLast30DaysLabel,
-        MainWindowViewModel.CostPeriodLast90DaysLabel,
-        MainWindowViewModel.CostPeriodCurrentYearLabel,
-        MainWindowViewModel.CostPeriodPreviousYearLabel,
-        MainWindowViewModel.CostPeriodCustomLabel
+        L("CostPeriod.YearToDate"),
+        L("CostPeriod.Last30Days"),
+        L("CostPeriod.Last90Days"),
+        L("CostPeriod.CurrentYear"),
+        L("CostPeriod.PreviousYear"),
+        L("CostPeriod.Custom")
     ];
 
     public bool CanUseSelectedCostVehicle => SelectedDashboardCostVehicle is not null;
@@ -63,7 +63,7 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     private string costSearchText = string.Empty;
 
     [ObservableProperty]
-    private string costSearchSummary = "Ctrl+F přesune fokus do hledání nákladového přehledu.";
+    private string costSearchSummary = L("CostWorkspace.SearchSummary.Initial");
 
     public ICommand OpenSelectedDashboardCostVehicleCommand => Root.OpenSelectedDashboardCostVehicleCommand;
     public ICommand OpenSelectedCostVehicleCommand => Root.OpenSelectedDashboardCostVehicleCommand;
@@ -128,7 +128,7 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
         SelectedDashboardCostVehicle ??= VisibleCostVehicles.FirstOrDefault();
         if (SelectedDashboardCostVehicle is null)
         {
-            SelectedCostVehicleDetail = "Vyberte vozidlo v seznamu a zobrazí se rozpad nákladů.";
+            SelectedCostVehicleDetail = L("CostWorkspace.Detail.Empty");
             Root.NotifyCostWorkspaceSelectionChanged();
         }
 
@@ -138,8 +138,18 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     partial void OnSelectedDashboardCostVehicleChanged(CostVehicleItemViewModel? value)
     {
         SelectedCostVehicleDetail = value is null
-            ? "Vyberte vozidlo v seznamu a zobrazí se rozpad nákladů."
-            : $"Vozidlo: {value.VehicleName}\nKategorie: {value.Category}\nPalivo: {value.FuelCost}\nHistorie: {value.HistoryCost}\nDoklady: {value.RecordCost}\nCelkem: {value.TotalCost}\nUjeto: {value.Distance}\nCena / km: {value.CostPerKm}\nStav výpočtu: {value.Status}";
+            ? L("CostWorkspace.Detail.Empty")
+            : LF(
+                "CostWorkspace.Detail.Selected",
+                value.VehicleName,
+                value.Category,
+                value.FuelCost,
+                value.HistoryCost,
+                value.RecordCost,
+                value.TotalCost,
+                value.Distance,
+                value.CostPerKm,
+                value.Status);
         OnPropertyChanged(nameof(CanUseSelectedCostVehicle));
         FocusSelectedCostDetailCommand.NotifyCanExecuteChanged();
         EditSelectedCostVehicleCommand.NotifyCanExecuteChanged();
@@ -192,13 +202,13 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(CostSearchText))
         {
-            CostSearchSummary = $"Zobrazeno {VisibleCostVehicles.Count} vozidel v nákladovém přehledu. Ctrl+F přesune fokus do hledání, Ctrl+R přehled obnoví.";
+            CostSearchSummary = LF("CostWorkspace.SearchSummary.Visible", VisibleCostVehicles.Count);
             return;
         }
 
         CostSearchSummary = VisibleCostVehicles.Count == 0
-            ? $"Hledání „{CostSearchText.Trim()}“ nenašlo v nákladech žádné vozidlo."
-            : $"Hledání „{CostSearchText.Trim()}“ našlo {VisibleCostVehicles.Count} vozidel v nákladech.";
+            ? LF("CostWorkspace.SearchSummary.Empty", CostSearchText.Trim())
+            : LF("CostWorkspace.SearchSummary.WithResults", CostSearchText.Trim(), VisibleCostVehicles.Count);
     }
 
     private static bool Contains(string value, string query) =>

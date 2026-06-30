@@ -515,7 +515,7 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("01.02.2026", viewModel.CostWorkspace.CostPeriodStartText);
         Assert.Equal("28.02.2026", viewModel.CostWorkspace.CostPeriodEndText);
         Assert.Contains("Od 01.02.2026 do 28.02.2026", viewModel.CostWorkspace.CostSummary, StringComparison.CurrentCulture);
-        Assert.Equal("Vlastní období", dataSetRef!.Settings.GetValue("costs", "period_preset"));
+        Assert.Equal("custom", dataSetRef!.Settings.GetValue("costs", "period_preset"));
         Assert.Equal("2026-02-01", dataSetRef.Settings.GetValue("costs", "period_start"));
         Assert.Equal("2026-02-28", dataSetRef.Settings.GetValue("costs", "period_end"));
         Assert.Contains("Období nákladů bylo použito", viewModel.CostWorkspace.CostPeriodStatus, StringComparison.CurrentCulture);
