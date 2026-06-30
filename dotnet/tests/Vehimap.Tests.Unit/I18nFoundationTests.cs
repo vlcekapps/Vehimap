@@ -54,6 +54,12 @@ public sealed class I18nFoundationTests
         Assert.Equal("Vehimap Nightly: zpětná vazba k nightly 2.0.0", czech.Format("FeedbackIssue.Title", "Vehimap Nightly", "nightly", "2.0.0"));
         Assert.Equal("Discard changes", english.GetString("PendingEdits.Confirmation.Confirm"));
         Assert.Equal("Zahodit změny", czech.GetString("PendingEdits.Confirmation.Confirm"));
+        Assert.Equal("Installer language preferences were added to the 2.0 data set.", english.GetString("InstallerLocaleSeed.Applied"));
+        Assert.Equal("Instalační jazykové předvolby byly doplněny do datové sady 2.0.", czech.GetString("InstallerLocaleSeed.Applied"));
+        Assert.Equal("Restore data from backup", english.GetString("AppShell.ImportBackup.ConfirmTitle"));
+        Assert.Equal("Obnovit data ze zálohy", czech.GetString("AppShell.ImportBackup.ConfirmTitle"));
+        Assert.Equal("close the fuel editor", english.GetString("WorkspaceWindow.CloseAction.Fuel"));
+        Assert.Equal("zavřít editor tankování", czech.GetString("WorkspaceWindow.CloseAction.Fuel"));
         Assert.Equal("Search “oil” found 2 history entries.", english.Format("HistoryWorkspace.SearchSummary.Filtered", "oil", 2));
         Assert.Equal("Hledání „olej“ našlo 2 historických záznamů.", czech.Format("HistoryWorkspace.SearchSummary.Filtered", "olej", 2));
         Assert.Equal("2026-06, Service, odometer 12345, cost 2500, note no note", english.Format("HistoryItem.AccessibleLabel", "2026-06", "Service", "12345", "2500", "no note"));
@@ -139,7 +145,9 @@ public sealed class I18nFoundationTests
             settings.SetValue("app", "language", "cs-CZ");
             settings.SetValue("app", "decimal_separator", "comma");
 
-            var service = new InstallerLocaleSeedService();
+            var service = new InstallerLocaleSeedService(
+                new AppLocaleDefaultsService(),
+                new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")));
             var result = await service.ApplyIfPresentAsync(dataRoot, settings);
             service.CompleteSeed(result);
 
@@ -151,6 +159,7 @@ public sealed class I18nFoundationTests
             Assert.Equal("comma", settings.GetValue("app", "decimal_separator"));
             Assert.Equal("km", settings.GetValue("app", "distance_unit"));
             Assert.Equal("l", settings.GetValue("app", "volume_unit"));
+            Assert.Equal("Instalační jazykové předvolby byly doplněny do datové sady 2.0.", result.Message);
             Assert.False(File.Exists(seedPath));
         }
         finally
@@ -172,9 +181,13 @@ public sealed class I18nFoundationTests
             await File.WriteAllTextAsync(InstallerLocaleSeedService.GetSeedPath(dataRoot), """{"language":"en-US"}""");
             var settings = new VehimapSettings();
 
-            var result = await new InstallerLocaleSeedService().ApplyIfPresentAsync(dataRoot, settings);
+            var result = await new InstallerLocaleSeedService(
+                    new AppLocaleDefaultsService(),
+                    new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")))
+                .ApplyIfPresentAsync(dataRoot, settings);
 
             Assert.True(result.SettingsChanged);
+            Assert.Equal("Installer language preferences were added to the 2.0 data set.", result.Message);
             Assert.Equal("en-US", settings.GetValue("app", "language"));
             Assert.Equal("comma", settings.GetValue("app", "thousands_separator"));
             Assert.Equal("dot", settings.GetValue("app", "decimal_separator"));
@@ -867,6 +880,40 @@ public sealed class I18nFoundationTests
         Assert.DoesNotMatch(CzechDiacriticsRegex(), appXaml);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), feedbackIssueBuilder);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), pendingEdits);
+    }
+
+    [Fact]
+    public void Pilot_app_edge_text_uses_resource_localization()
+    {
+        var root = FindRepositoryRoot();
+        var installerSeedService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "InstallerLocaleSeedService.cs"));
+        var trayService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "AvaloniaTrayService.cs"));
+        var dialogService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "AvaloniaAppShellDialogService.cs"));
+        var historyWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "HistoryWindow.axaml.cs"));
+        var fuelWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "FuelWindow.axaml.cs"));
+        var remindersWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "RemindersWindow.axaml.cs"));
+        var maintenanceWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "MaintenanceWindow.axaml.cs"));
+        var recordsWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "RecordsWindow.axaml.cs"));
+
+        Assert.Contains("InstallerLocaleSeed.InvalidRead", installerSeedService);
+        Assert.Contains("InstallerLocaleSeed.Applied", installerSeedService);
+        Assert.Contains("TrayActions.ShowMainWindowLabel", trayService);
+        Assert.Contains("TrayActions.ShowDashboardLabel", trayService);
+        Assert.Contains("TrayActions.ExitName", trayService);
+        Assert.Contains("AppShell.ImportBackup.ConfirmTitle", dialogService);
+        Assert.Contains("AppShell.ImportBackup.ConfirmMessage", dialogService);
+        Assert.Contains("WorkspaceWindow.CloseAction.History", historyWindow);
+        Assert.Contains("WorkspaceWindow.CloseAction.Fuel", fuelWindow);
+        Assert.Contains("WorkspaceWindow.CloseAction.Reminder", remindersWindow);
+        Assert.Contains("WorkspaceWindow.CloseAction.Maintenance", maintenanceWindow);
+        Assert.Contains("WorkspaceWindow.CloseAction.Record", recordsWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), installerSeedService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), trayService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), historyWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), fuelWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), remindersWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), recordsWindow);
     }
 
     [Fact]

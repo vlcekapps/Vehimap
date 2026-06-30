@@ -20,13 +20,14 @@ internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
 
     public async Task<bool> ConfirmBackupImportAsync(Window owner, string backupPath)
     {
+        var localizer = DesktopLocalization.Localizer;
         var confirmation = new ConfirmationWindow
         {
             DataContext = new ConfirmationDialogViewModel(
-                "Obnovit data ze zálohy",
-                $"Opravdu chcete nahradit aktuální načtená data obsahem zálohy?\n\n{backupPath}\n\nTento krok přepíše aktuální pracovní data v desktopové větvi.",
-                "Obnovit data",
-                "Zrušit")
+                localizer.GetString("AppShell.ImportBackup.ConfirmTitle"),
+                localizer.Format("AppShell.ImportBackup.ConfirmMessage", Environment.NewLine, backupPath),
+                localizer.GetString("AppShell.ImportBackup.ConfirmAction"),
+                localizer.GetString("Common.Cancel"))
         };
 
         return await confirmation.ShowDialog<bool>(owner);

@@ -4,6 +4,7 @@ using Avalonia.Platform;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.Services;
 
@@ -88,17 +89,18 @@ internal sealed class AvaloniaTrayService : ITrayService
 
     private static NativeMenu BuildTrayMenu(TrayServiceConfiguration configuration)
     {
+        var localizer = DesktopLocalization.Localizer;
         var menu = new NativeMenu();
-        menu.Add(new NativeMenuItem("Zobrazit Vehimap")
+        menu.Add(new NativeMenuItem(localizer.GetString("TrayActions.ShowMainWindowLabel"))
         {
             Command = new AsyncRelayCommand(configuration.ShowMainWindowAsync)
         });
-        menu.Add(new NativeMenuItem("Otevřít dashboard")
+        menu.Add(new NativeMenuItem(localizer.GetString("TrayActions.ShowDashboardLabel"))
         {
             Command = new AsyncRelayCommand(configuration.ShowDashboardAsync)
         });
         menu.Add(new NativeMenuItemSeparator());
-        menu.Add(new NativeMenuItem("Ukončit Vehimap")
+        menu.Add(new NativeMenuItem(localizer.GetString("TrayActions.ExitName"))
         {
             Command = new AsyncRelayCommand(configuration.ExitApplicationAsync)
         });

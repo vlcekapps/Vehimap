@@ -73,6 +73,10 @@
   <data name="DataStoreHealth.OpenPreMigrationBackup" xml:space="preserve"><value>Pre-migration backup</value></data>
   <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Open pre-migration backup</value></data>
   <data name="DataStoreHealth.Title" xml:space="preserve"><value>Data set 2.0 check</value></data>
+  <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Installer language preferences were added to the 2.0 data set.</value></data>
+  <data name="InstallerLocaleSeed.InvalidLanguage" xml:space="preserve"><value>Installer language preferences do not contain a supported concrete language.</value></data>
+  <data name="InstallerLocaleSeed.InvalidRead" xml:space="preserve"><value>Installer language preferences could not be read: {0}</value></data>
+  <data name="InstallerLocaleSeed.SkippedExisting" xml:space="preserve"><value>Installer language preferences were skipped because settings already exist.</value></data>
   <data name="FeedbackIssue.AccessibilityHeading" xml:space="preserve"><value>Accessibility</value></data>
   <data name="FeedbackIssue.ActualHeading" xml:space="preserve"><value>Actual behavior / why it is inconvenient</value></data>
   <data name="FeedbackIssue.AppLabel" xml:space="preserve"><value>Application</value></data>
@@ -1570,6 +1574,9 @@ Status: {5}</value></data>
   <data name="AppShell.ExportBackup.IncludedManagedAttachments" xml:space="preserve"><value>Managed attachments in the backup: {0}.</value></data>
   <data name="AppShell.ExportBackup.MissingManagedAttachments" xml:space="preserve"><value>Skipped missing managed attachments: {0}.</value></data>
   <data name="AppShell.ExportBackup.Failed" xml:space="preserve"><value>Backup export failed: {0}</value></data>
+  <data name="AppShell.ImportBackup.ConfirmTitle" xml:space="preserve"><value>Restore data from backup</value></data>
+  <data name="AppShell.ImportBackup.ConfirmMessage" xml:space="preserve"><value>Do you really want to replace the currently loaded data with the backup content?{0}{0}{1}{0}{0}This step overwrites the current working data in the desktop branch.</value></data>
+  <data name="AppShell.ImportBackup.ConfirmAction" xml:space="preserve"><value>Restore data</value></data>
   <data name="AppShell.ImportBackup.NotLoaded" xml:space="preserve"><value>Backup restore could not be prepared because no data is loaded.</value></data>
   <data name="AppShell.ImportBackup.Success" xml:space="preserve"><value>Data was restored from backup {0}.</value></data>
   <data name="AppShell.ImportBackup.PreRestoreBackup" xml:space="preserve"><value>Original data was moved to {0} before restore.</value></data>
@@ -1663,6 +1670,11 @@ Status: {5}</value></data>
   <data name="PendingEdits.Label.VehicleDetail" xml:space="preserve"><value>vehicle detail</value></data>
   <data name="PendingEdits.VehicleListLockStatus" xml:space="preserve"><value>Editing is in progress in {0}. Save or cancel the editor, then another vehicle can be selected.</value></data>
   <data name="PendingEdits.WorkspaceNavigationLockStatus" xml:space="preserve"><value>Editing is in progress in {0}. Save or cancel the editor, then you can switch to another tab or open another window.</value></data>
+  <data name="WorkspaceWindow.CloseAction.Fuel" xml:space="preserve"><value>close the fuel editor</value></data>
+  <data name="WorkspaceWindow.CloseAction.History" xml:space="preserve"><value>close the history editor</value></data>
+  <data name="WorkspaceWindow.CloseAction.Maintenance" xml:space="preserve"><value>close the maintenance editor</value></data>
+  <data name="WorkspaceWindow.CloseAction.Record" xml:space="preserve"><value>close the document editor</value></data>
+  <data name="WorkspaceWindow.CloseAction.Reminder" xml:space="preserve"><value>close the reminder editor</value></data>
   <data name="ServiceBook.Window.Title" xml:space="preserve"><value>Service book</value></data>
   <data name="ServiceBook.Window.TitleWithVehicle" xml:space="preserve"><value>Service book - {0}</value></data>
   <data name="ServiceBook.Window.HelpText" xml:space="preserve"><value>Service book for the selected vehicle. Ctrl+O opens the selected item, Ctrl+S exports HTML and Escape closes the window.</value></data>

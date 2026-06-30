@@ -73,6 +73,10 @@
   <data name="DataStoreHealth.OpenPreMigrationBackup" xml:space="preserve"><value>Předmigrační záloha</value></data>
   <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Otevřít předmigrační zálohu</value></data>
   <data name="DataStoreHealth.Title" xml:space="preserve"><value>Kontrola datové sady 2.0</value></data>
+  <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Instalační jazykové předvolby byly doplněny do datové sady 2.0.</value></data>
+  <data name="InstallerLocaleSeed.InvalidLanguage" xml:space="preserve"><value>Instalační jazykové předvolby neobsahují podporovaný konkrétní jazyk.</value></data>
+  <data name="InstallerLocaleSeed.InvalidRead" xml:space="preserve"><value>Instalační jazykové předvolby se nepodařilo načíst: {0}</value></data>
+  <data name="InstallerLocaleSeed.SkippedExisting" xml:space="preserve"><value>Instalační jazykové předvolby byly přeskočeny, protože nastavení už existuje.</value></data>
   <data name="FeedbackIssue.AccessibilityHeading" xml:space="preserve"><value>Přístupnost</value></data>
   <data name="FeedbackIssue.ActualHeading" xml:space="preserve"><value>Skutečné chování / proč je to nepohodlné</value></data>
   <data name="FeedbackIssue.AppLabel" xml:space="preserve"><value>Aplikace</value></data>
@@ -1570,6 +1574,9 @@ Stav: {5}</value></data>
   <data name="AppShell.ExportBackup.IncludedManagedAttachments" xml:space="preserve"><value>Spravovaných příloh v záloze: {0}.</value></data>
   <data name="AppShell.ExportBackup.MissingManagedAttachments" xml:space="preserve"><value>Přeskočených chybějících spravovaných příloh: {0}.</value></data>
   <data name="AppShell.ExportBackup.Failed" xml:space="preserve"><value>Export zálohy se nepodařil: {0}</value></data>
+  <data name="AppShell.ImportBackup.ConfirmTitle" xml:space="preserve"><value>Obnovit data ze zálohy</value></data>
+  <data name="AppShell.ImportBackup.ConfirmMessage" xml:space="preserve"><value>Opravdu chcete nahradit aktuální načtená data obsahem zálohy?{0}{0}{1}{0}{0}Tento krok přepíše aktuální pracovní data v desktopové větvi.</value></data>
+  <data name="AppShell.ImportBackup.ConfirmAction" xml:space="preserve"><value>Obnovit data</value></data>
   <data name="AppShell.ImportBackup.NotLoaded" xml:space="preserve"><value>Obnovu se nepodařilo připravit, protože nejsou načtená data.</value></data>
   <data name="AppShell.ImportBackup.Success" xml:space="preserve"><value>Data byla obnovena ze zálohy {0}.</value></data>
   <data name="AppShell.ImportBackup.PreRestoreBackup" xml:space="preserve"><value>Původní data byla před obnovou odložena do {0}.</value></data>
@@ -1663,6 +1670,11 @@ Stav: {5}</value></data>
   <data name="PendingEdits.Label.VehicleDetail" xml:space="preserve"><value>detail vozidla</value></data>
   <data name="PendingEdits.VehicleListLockStatus" xml:space="preserve"><value>Probíhá úprava v části {0}. Uložte nebo zrušte editor, potom půjde vybrat jiné vozidlo.</value></data>
   <data name="PendingEdits.WorkspaceNavigationLockStatus" xml:space="preserve"><value>Probíhá úprava v části {0}. Uložte nebo zrušte editor, potom půjde přejít na jinou kartu nebo otevřít jiné okno.</value></data>
+  <data name="WorkspaceWindow.CloseAction.Fuel" xml:space="preserve"><value>zavřít editor tankování</value></data>
+  <data name="WorkspaceWindow.CloseAction.History" xml:space="preserve"><value>zavřít editor historie</value></data>
+  <data name="WorkspaceWindow.CloseAction.Maintenance" xml:space="preserve"><value>zavřít editor údržby</value></data>
+  <data name="WorkspaceWindow.CloseAction.Record" xml:space="preserve"><value>zavřít editor dokladů</value></data>
+  <data name="WorkspaceWindow.CloseAction.Reminder" xml:space="preserve"><value>zavřít editor připomínek</value></data>
   <data name="ServiceBook.Window.Title" xml:space="preserve"><value>Servisní knížka</value></data>
   <data name="ServiceBook.Window.TitleWithVehicle" xml:space="preserve"><value>Servisní knížka - {0}</value></data>
   <data name="ServiceBook.Window.HelpText" xml:space="preserve"><value>Servisní knížka vybraného vozidla. Ctrl+O otevře vybranou položku, Ctrl+S exportuje HTML a Escape okno zavře.</value></data>

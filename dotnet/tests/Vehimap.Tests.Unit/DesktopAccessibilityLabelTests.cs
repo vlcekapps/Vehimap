@@ -784,9 +784,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("mainWindow.OpenTrayActionsRequested = _runtimeController.RequestOpenTrayActionsAsync;", appStartup);
         Assert.Contains("Command = new AsyncRelayCommand(configuration.OpenTrayActionsAsync)", trayService);
         Assert.DoesNotContain("new NativeMenuItem(\"Akce Vehimapu", trayService);
-        Assert.Contains("new NativeMenuItem(\"Zobrazit Vehimap\")", trayService);
-        Assert.Contains("new NativeMenuItem(\"Otevřít dashboard\")", trayService);
-        Assert.Contains("new NativeMenuItem(\"Ukončit Vehimap\")", trayService);
+        Assert.Contains("new NativeMenuItem(localizer.GetString(\"TrayActions.ShowMainWindowLabel\"))", trayService);
+        Assert.Contains("new NativeMenuItem(localizer.GetString(\"TrayActions.ShowDashboardLabel\"))", trayService);
+        Assert.Contains("new NativeMenuItem(localizer.GetString(\"TrayActions.ExitName\"))", trayService);
+        Assert.DoesNotMatch("[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]", trayService);
         Assert.Contains("TrayActionsDialogAction.OpenBackgroundStatus", runtimeController);
         Assert.Contains("_shell.OpenBackgroundNotificationAsync()", runtimeController);
         Assert.Contains("TrayActionsDialogAction.OpenNearestTechnical", runtimeController);

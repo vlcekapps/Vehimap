@@ -10,15 +10,22 @@ public sealed class InstallerLocaleSeedService
     public const string SeedFileName = "installer-preferences.json";
 
     private readonly AppLocaleDefaultsService _defaultsService;
+    private readonly IAppLocalizer _localizer;
 
     public InstallerLocaleSeedService()
-        : this(new AppLocaleDefaultsService())
+        : this(new AppLocaleDefaultsService(), new ResourceAppLocalizer())
     {
     }
 
     public InstallerLocaleSeedService(AppLocaleDefaultsService defaultsService)
+        : this(defaultsService, new ResourceAppLocalizer())
+    {
+    }
+
+    public InstallerLocaleSeedService(AppLocaleDefaultsService defaultsService, IAppLocalizer? localizer)
     {
         _defaultsService = defaultsService;
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public async Task<InstallerLocaleSeedApplyResult> ApplyIfPresentAsync(
@@ -44,13 +51,13 @@ public sealed class InstallerLocaleSeedService
         }
         catch (Exception ex) when (ex is JsonException or IOException or UnauthorizedAccessException)
         {
-            return MoveInvalidSeed(seedPath, $"Instalační jazykové předvolby se nepodařilo načíst: {ex.Message}");
+            return MoveInvalidSeed(seedPath, _localizer.Format("InstallerLocaleSeed.InvalidRead", ex.Message));
         }
 
         var language = AppCultureService.NormalizeLanguage(seed?.Language);
         if (string.Equals(language, AppCultureService.SystemLanguage, StringComparison.Ordinal))
         {
-            return MoveInvalidSeed(seedPath, "Instalační jazykové předvolby neobsahují podporovaný konkrétní jazyk.");
+            return MoveInvalidSeed(seedPath, _localizer.GetString("InstallerLocaleSeed.InvalidLanguage"));
         }
 
         var hasLanguage = HasSetting(settings, "app", "language");
@@ -71,8 +78,8 @@ public sealed class InstallerLocaleSeedService
             true,
             seedPath,
             changed
-                ? "Instalační jazykové předvolby byly doplněny do datové sady 2.0."
-                : "Instalační jazykové předvolby byly přeskočeny, protože nastavení už existuje.");
+                ? _localizer.GetString("InstallerLocaleSeed.Applied")
+                : _localizer.GetString("InstallerLocaleSeed.SkippedExisting"));
     }
 
     public void CompleteSeed(InstallerLocaleSeedApplyResult result)
