@@ -8,11 +8,9 @@ public sealed record FuelConsumptionSegmentItemViewModel(
     string Liters,
     string Consumption,
     string PricePerLiter,
-    string CostPerKm)
+    string CostPerKm,
+    string AccessibleLabel)
 {
-    public string AccessibleLabel =>
-        $"Úsek spotřeby {Period}, vzdálenost {Distance}, natankováno {Liters}, spotřeba {Consumption}, cena za litr {PricePerLiter}, cena za kilometr {CostPerKm}";
-
     public override string ToString() => AccessibleLabel;
 }
 
@@ -25,11 +23,9 @@ public sealed record FuelGroupSummaryItemViewModel(
     string Liters,
     string TotalCost,
     string AveragePricePerLiter,
-    string LatestDate)
+    string LatestDate,
+    string AccessibleLabel)
 {
-    public string AccessibleLabel =>
-        $"{Station}, {Fuel}, {EntryCount}, litry {Liters}, náklady {TotalCost}, průměrná cena za litr {AveragePricePerLiter}, poslední tankování {LatestDate}";
-
     public override string ToString() => AccessibleLabel;
 }
 
@@ -38,12 +34,8 @@ public sealed record FuelAnalysisWarningItemViewModel(
     string FuelEntryId,
     string Severity,
     string Title,
-    string Description)
+    string Description,
+    string AccessibleLabel)
 {
-    public string AccessibleLabel =>
-        string.IsNullOrWhiteSpace(FuelEntryId)
-            ? $"{Severity}: {Title}. {Description}"
-            : $"{Severity}: {Title}. {Description}. Enter nebo tlačítko otevře související tankování.";
-
     public override string ToString() => AccessibleLabel;
 }

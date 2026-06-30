@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Domain.Models;
@@ -10,6 +11,18 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
     private const decimal ConsumptionOutlierLowMultiplier = 0.6m;
     private const decimal PriceOutlierHighMultiplier = 1.3m;
     private const decimal PriceOutlierLowMultiplier = 0.7m;
+
+    private readonly IAppLocalizer _localizer;
+
+    public LegacyFuelAnalysisService()
+        : this(new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)))
+    {
+    }
+
+    public LegacyFuelAnalysisService(IAppLocalizer localizer)
+    {
+        _localizer = localizer;
+    }
 
     public FuelAnalysisSummary BuildVehicleFuelAnalysis(VehimapDataSet dataSet, string vehicleId)
     {
@@ -65,7 +78,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                 .ToList());
     }
 
-    private static ParsedFuelEntry ParseEntry(FuelEntry entry, ICollection<FuelAnalysisWarning> warnings)
+    private ParsedFuelEntry ParseEntry(FuelEntry entry, ICollection<FuelAnalysisWarning> warnings)
     {
         DateOnly? date = null;
         if (VehimapValueParser.TryParseEventDate(entry.EntryDate, out var parsedDate))
@@ -84,8 +97,8 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                 $"fuel-analysis-odometer-{entry.Id}",
                 entry.Id,
                 FuelAnalysisWarningSeverity.Warning,
-                "Tachometr nejde použít",
-                $"Tankování z {FormatEntryDate(entry)} má nečíselný nebo záporný stav tachometru."));
+                L("FuelAnalysis.Warning.OdometerInvalid.Title"),
+                LF("FuelAnalysis.Warning.OdometerInvalid.Description", FormatEntryDate(entry))));
         }
 
         decimal? liters = null;
@@ -99,8 +112,8 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                 $"fuel-analysis-liters-{entry.Id}",
                 entry.Id,
                 FuelAnalysisWarningSeverity.Warning,
-                "Množství paliva nejde použít",
-                $"Tankování z {FormatEntryDate(entry)} má nečíselné nebo nulové množství paliva."));
+                L("FuelAnalysis.Warning.LitersInvalid.Title"),
+                LF("FuelAnalysis.Warning.LitersInvalid.Description", FormatEntryDate(entry))));
         }
 
         decimal? totalCost = null;
@@ -114,14 +127,14 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                 $"fuel-analysis-cost-{entry.Id}",
                 entry.Id,
                 FuelAnalysisWarningSeverity.Warning,
-                "Cena tankování nejde použít",
-                $"Tankování z {FormatEntryDate(entry)} má nečíselnou nebo zápornou cenu."));
+                L("FuelAnalysis.Warning.CostInvalid.Title"),
+                LF("FuelAnalysis.Warning.CostInvalid.Description", FormatEntryDate(entry))));
         }
 
         return new ParsedFuelEntry(entry, date, odometer, liters, totalCost);
     }
 
-    private static void AddOdometerRegressionWarnings(
+    private void AddOdometerRegressionWarnings(
         IReadOnlyList<ParsedFuelEntry> parsedEntries,
         ICollection<FuelAnalysisWarning> warnings)
     {
@@ -138,15 +151,15 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     $"fuel-analysis-odometer-regression-{current.Entry.Id}",
                     current.Entry.Id,
                     FuelAnalysisWarningSeverity.Warning,
-                    "Tachometr v čase klesá",
-                    $"Tankování z {FormatEntryDate(current.Entry)} má tachometr {current.Odometer.Value} km, což je méně než dřívější hodnota {previous.Odometer.Value} km."));
+                    L("FuelAnalysis.Warning.OdometerRegression.Title"),
+                    LF("FuelAnalysis.Warning.OdometerRegression.Description", FormatEntryDate(current.Entry), current.Odometer.Value, previous.Odometer.Value)));
             }
 
             previous = current;
         }
     }
 
-    private static IReadOnlyList<FuelConsumptionSegment> BuildConsumptionSegments(
+    private IReadOnlyList<FuelConsumptionSegment> BuildConsumptionSegments(
         IReadOnlyList<ParsedFuelEntry> parsedEntries,
         ICollection<FuelAnalysisWarning> warnings)
     {
@@ -232,8 +245,8 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     $"fuel-analysis-segment-distance-{sample.Entry.Id}",
                     sample.Entry.Id,
                     FuelAnalysisWarningSeverity.Warning,
-                    "Úsek spotřeby nejde spočítat",
-                    $"Tankování z {FormatEntryDate(sample.Entry)} má stejný nebo nižší tachometr než předchozí plná nádrž."));
+                    L("FuelAnalysis.Warning.SegmentUnavailable.Title"),
+                    LF("FuelAnalysis.Warning.SegmentUnavailable.Description", FormatEntryDate(sample.Entry))));
             }
 
             lastFullTank = sample;
@@ -246,7 +259,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
         return segments;
     }
 
-    private static void AddAvailabilityWarning(
+    private void AddAvailabilityWarning(
         int entryCount,
         IReadOnlyList<ParsedFuelEntry> parsedEntries,
         IReadOnlyList<FuelConsumptionSegment> segments,
@@ -259,18 +272,18 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
 
         var fullTankWithOdometerCount = parsedEntries.Count(item => item.Entry.FullTank && item.Date.HasValue && item.Odometer.HasValue);
         var description = fullTankWithOdometerCount < 2
-            ? "Spotřebu zatím nejde spočítat, jsou potřeba alespoň dvě plné nádrže s datem a tachometrem."
-            : "Spotřebu zatím nejde spočítat, některému úseku chybí použitelné litry nebo má nekonzistentní tachometr.";
+            ? L("FuelAnalysis.Warning.ConsumptionUnavailable.Description.FullTanks")
+            : L("FuelAnalysis.Warning.ConsumptionUnavailable.Description.InvalidSegments");
 
         warnings.Add(new FuelAnalysisWarning(
             "fuel-analysis-consumption-unavailable",
             null,
             FuelAnalysisWarningSeverity.Info,
-            "Spotřeba zatím není dostupná",
+            L("FuelAnalysis.Warning.ConsumptionUnavailable.Title"),
             description));
     }
 
-    private static void AddConsumptionOutlierWarnings(
+    private void AddConsumptionOutlierWarnings(
         IReadOnlyList<FuelConsumptionSegment> segments,
         ICollection<FuelAnalysisWarning> warnings)
     {
@@ -288,8 +301,8 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     $"fuel-analysis-consumption-high-{segment.EndFuelEntryId}",
                     segment.EndFuelEntryId,
                     FuelAnalysisWarningSeverity.Info,
-                    "Nezvykle vysoká spotřeba",
-                    $"Úsek končící {segment.EndDate:dd.MM.yyyy} je výrazně nad průměrem vozidla."));
+                    L("FuelAnalysis.Warning.ConsumptionHigh.Title"),
+                    LF("FuelAnalysis.Warning.ConsumptionHigh.Description", segment.EndDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture))));
             }
             else if (segment.ConsumptionLitersPer100Km < average * ConsumptionOutlierLowMultiplier)
             {
@@ -297,13 +310,13 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     $"fuel-analysis-consumption-low-{segment.EndFuelEntryId}",
                     segment.EndFuelEntryId,
                     FuelAnalysisWarningSeverity.Info,
-                    "Nezvykle nízká spotřeba",
-                    $"Úsek končící {segment.EndDate:dd.MM.yyyy} je výrazně pod průměrem vozidla."));
+                    L("FuelAnalysis.Warning.ConsumptionLow.Title"),
+                    LF("FuelAnalysis.Warning.ConsumptionLow.Description", segment.EndDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture))));
             }
         }
     }
 
-    private static void AddPriceOutlierWarnings(
+    private void AddPriceOutlierWarnings(
         IReadOnlyList<ParsedFuelEntry> parsedEntries,
         ICollection<FuelAnalysisWarning> warnings)
     {
@@ -331,8 +344,8 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     $"fuel-analysis-price-high-{sample.Entry.Id}",
                     sample.Entry.Id,
                     FuelAnalysisWarningSeverity.Info,
-                    "Nezvykle vysoká cena za litr",
-                    $"Tankování z {FormatEntryDate(sample.Entry)} má cenu za litr výrazně nad průměrem vozidla."));
+                    L("FuelAnalysis.Warning.PriceHigh.Title"),
+                    LF("FuelAnalysis.Warning.PriceHigh.Description", FormatEntryDate(sample.Entry))));
             }
             else if (sample.PricePerLiter.Value < average * PriceOutlierLowMultiplier)
             {
@@ -340,20 +353,20 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     $"fuel-analysis-price-low-{sample.Entry.Id}",
                     sample.Entry.Id,
                     FuelAnalysisWarningSeverity.Info,
-                    "Nezvykle nízká cena za litr",
-                    $"Tankování z {FormatEntryDate(sample.Entry)} má cenu za litr výrazně pod průměrem vozidla."));
+                    L("FuelAnalysis.Warning.PriceLow.Title"),
+                    LF("FuelAnalysis.Warning.PriceLow.Description", FormatEntryDate(sample.Entry))));
             }
         }
     }
 
-    private static IReadOnlyList<FuelGroupSummary> BuildGroupSummaries(IReadOnlyList<ParsedFuelEntry> parsedEntries)
+    private IReadOnlyList<FuelGroupSummary> BuildGroupSummaries(IReadOnlyList<ParsedFuelEntry> parsedEntries)
     {
         return parsedEntries
             .GroupBy(item => new
             {
-                Station = NormalizeGroupValue(item.Entry.Station, "Bez místa"),
-                FuelType = NormalizeGroupValue(item.Entry.FuelType, "Bez typu"),
-                FuelDetail = NormalizeGroupValue(item.Entry.FuelDetail, "Bez detailu")
+                Station = NormalizeGroupValue(item.Entry.Station, L("FuelAnalysis.Group.UnknownStation")),
+                FuelType = NormalizeGroupValue(item.Entry.FuelType, L("FuelAnalysis.Group.UnknownFuelType")),
+                FuelDetail = NormalizeGroupValue(item.Entry.FuelDetail, L("FuelAnalysis.Group.UnknownFuelDetail"))
             })
             .Select(group =>
             {
@@ -386,21 +399,21 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
             .ToList();
     }
 
-    private static string BuildStatus(int entryCount, int segmentCount)
+    private string BuildStatus(int entryCount, int segmentCount)
     {
         if (entryCount == 0)
         {
-            return "Zatím není zapsané žádné tankování.";
+            return L("FuelAnalysis.Status.NoEntries");
         }
 
         if (segmentCount == 0)
         {
-            return "Spotřebu zatím nejde spočítat, jsou potřeba alespoň dvě plné nádrže s tachometrem.";
+            return L("FuelAnalysis.Status.Unavailable");
         }
 
         return segmentCount == 1
-            ? "Spotřeba je spočítaná z 1 použitelného úseku mezi plnými nádržemi."
-            : $"Spotřeba je spočítaná z {segmentCount} použitelných úseků mezi plnými nádržemi.";
+            ? L("FuelAnalysis.Status.OneSegment")
+            : LF("FuelAnalysis.Status.ManySegments", segmentCount);
     }
 
     private static string NormalizeGroupValue(string? value, string fallback)
@@ -409,8 +422,12 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
         return string.IsNullOrWhiteSpace(normalized) ? fallback : normalized;
     }
 
-    private static string FormatEntryDate(FuelEntry entry) =>
-        string.IsNullOrWhiteSpace(entry.EntryDate) ? "bez data" : entry.EntryDate;
+    private string FormatEntryDate(FuelEntry entry) =>
+        string.IsNullOrWhiteSpace(entry.EntryDate) ? L("Common.NoDate") : entry.EntryDate;
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 
     private sealed record ParsedFuelEntry(
         FuelEntry Entry,

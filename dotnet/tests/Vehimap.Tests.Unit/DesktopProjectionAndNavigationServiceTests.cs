@@ -206,4 +206,66 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("Info", warning.Severity);
         Assert.Contains("související tankování", warning.AccessibleLabel, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void Projection_service_localizes_fuel_analysis_summary_and_accessible_labels()
+    {
+        var projectionService = new DesktopProjectionService(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")),
+            CultureInfo.GetCultureInfo("en-US"));
+        var analysis = new FuelAnalysisSummary(
+            "veh_1",
+            2,
+            82m,
+            4100m,
+            50m,
+            8.2m,
+            new FuelConsumptionSegment(
+                "segment_1",
+                "fuel_1",
+                "fuel_2",
+                new DateOnly(2026, 1, 1),
+                new DateOnly(2026, 1, 15),
+                10000,
+                10500,
+                500,
+                41m,
+                2050m,
+                8.2m,
+                50m,
+                4.1m),
+            null,
+            "Consumption is calculated from 1 usable segment between full tanks.",
+            [
+                new FuelConsumptionSegment(
+                    "segment_1",
+                    "fuel_1",
+                    "fuel_2",
+                    new DateOnly(2026, 1, 1),
+                    new DateOnly(2026, 1, 15),
+                    10000,
+                    10500,
+                    500,
+                    41m,
+                    2050m,
+                    8.2m,
+                    50m,
+                    4.1m)
+            ],
+            [
+                new FuelGroupSummary("group_1", "fuel_2", "Shell", "Natural 95", "FuelSave", 2, 82m, 4100m, 50m, new DateOnly(2026, 1, 15))
+            ],
+            [
+                new FuelAnalysisWarning("warn_1", "fuel_2", FuelAnalysisWarningSeverity.Warning, "Check", "Warning for test.")
+            ]);
+
+        var projection = projectionService.BuildFuelAnalysis(analysis);
+
+        Assert.Contains("Refuel entries: 2", projection.Summary, StringComparison.Ordinal);
+        Assert.Contains("Average consumption: 8.20 l/100 km", projection.Summary, StringComparison.Ordinal);
+        Assert.Contains("Consumption segment", projection.ConsumptionSegments.Single().AccessibleLabel, StringComparison.Ordinal);
+        Assert.Contains("liters 82 l", projection.GroupSummaries.Single().AccessibleLabel, StringComparison.Ordinal);
+        Assert.Equal("Warning", projection.Warnings.Single().Severity);
+        Assert.Contains("related refuel entry", projection.Warnings.Single().AccessibleLabel, StringComparison.Ordinal);
+    }
 }

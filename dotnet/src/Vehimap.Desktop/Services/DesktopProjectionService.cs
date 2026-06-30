@@ -12,6 +12,26 @@ namespace Vehimap.Desktop.Services;
 internal sealed class DesktopProjectionService
 {
     private static readonly CultureInfo CzechCulture = CultureInfo.GetCultureInfo("cs-CZ");
+    private readonly IAppLocalizer _localizer;
+    private readonly CultureInfo _formatCulture;
+
+    public DesktopProjectionService()
+        : this(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)),
+            CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage))
+    {
+    }
+
+    public DesktopProjectionService(IAppLocalizer localizer)
+        : this(localizer, CultureInfo.CurrentCulture)
+    {
+    }
+
+    public DesktopProjectionService(IAppLocalizer localizer, CultureInfo formatCulture)
+    {
+        _localizer = localizer;
+        _formatCulture = formatCulture;
+    }
 
     public DesktopListProjection<VehicleListItemViewModel> BuildVehicleList(
         VehimapDataSet dataSet,
@@ -242,59 +262,86 @@ internal sealed class DesktopProjectionService
     {
         var summaryLines = new List<string>
         {
-            $"Počet tankování: {analysis.EntryCount}. Celkem palivo: {FormatLiters(analysis.TotalLiters)}. Celkové náklady: {FormatMoney(analysis.TotalCost)}. Průměrná cena za litr: {FormatOptionalPricePerLiter(analysis.AveragePricePerLiter)}.",
-            $"Průměrná spotřeba: {FormatOptionalConsumption(analysis.AverageConsumptionLitersPer100Km)}. {analysis.Status}"
+            LF("FuelAnalysis.Summary.Main", analysis.EntryCount, FormatFuelAnalysisLiters(analysis.TotalLiters), FormatFuelAnalysisMoney(analysis.TotalCost), FormatOptionalPricePerLiter(analysis.AveragePricePerLiter)),
+            LF("FuelAnalysis.Summary.AverageConsumption", FormatOptionalConsumption(analysis.AverageConsumptionLitersPer100Km), analysis.Status)
         };
 
         if (analysis.BestConsumptionSegment is not null)
         {
-            summaryLines.Add($"Nejlepší úsek: {FormatConsumptionSegmentPeriod(analysis.BestConsumptionSegment)} se spotřebou {FormatConsumption(analysis.BestConsumptionSegment.ConsumptionLitersPer100Km)}.");
+            summaryLines.Add(LF("FuelAnalysis.Summary.BestSegment", FormatConsumptionSegmentPeriod(analysis.BestConsumptionSegment), FormatFuelAnalysisConsumption(analysis.BestConsumptionSegment.ConsumptionLitersPer100Km)));
         }
 
         if (analysis.WorstConsumptionSegment is not null
             && !string.Equals(analysis.WorstConsumptionSegment.Id, analysis.BestConsumptionSegment?.Id, StringComparison.Ordinal))
         {
-            summaryLines.Add($"Nejvyšší spotřeba: {FormatConsumptionSegmentPeriod(analysis.WorstConsumptionSegment)} se spotřebou {FormatConsumption(analysis.WorstConsumptionSegment.ConsumptionLitersPer100Km)}.");
+            summaryLines.Add(LF("FuelAnalysis.Summary.WorstSegment", FormatConsumptionSegmentPeriod(analysis.WorstConsumptionSegment), FormatFuelAnalysisConsumption(analysis.WorstConsumptionSegment.ConsumptionLitersPer100Km)));
         }
 
         return new DesktopFuelAnalysisProjection(
             string.Join(Environment.NewLine, summaryLines),
             analysis.ConsumptionSegments
                 .OrderByDescending(item => item.EndDate)
-                .Select(item => new FuelConsumptionSegmentItemViewModel(
-                    item.Id,
-                    item.EndFuelEntryId,
-                    FormatConsumptionSegmentPeriod(item),
-                    $"{item.DistanceKm} km",
-                    FormatLiters(item.Liters),
-                    FormatConsumption(item.ConsumptionLitersPer100Km),
-                    FormatOptionalPricePerLiter(item.PricePerLiter),
-                    item.CostPerKm.HasValue ? $"{item.CostPerKm.Value.ToString("0.00", CzechCulture)} Kč/km" : "nedostupné"))
+                .Select(item =>
+                {
+                    var period = FormatConsumptionSegmentPeriod(item);
+                    var distance = $"{item.DistanceKm} km";
+                    var liters = FormatFuelAnalysisLiters(item.Liters);
+                    var consumption = FormatFuelAnalysisConsumption(item.ConsumptionLitersPer100Km);
+                    var pricePerLiter = FormatOptionalPricePerLiter(item.PricePerLiter);
+                    var costPerKm = item.CostPerKm.HasValue
+                        ? $"{item.CostPerKm.Value.ToString("0.00", _formatCulture)} Kč/km"
+                        : L("FuelAnalysis.Value.CostPerKmUnavailable");
+                    return new FuelConsumptionSegmentItemViewModel(
+                        item.Id,
+                        item.EndFuelEntryId,
+                        period,
+                        distance,
+                        liters,
+                        consumption,
+                        pricePerLiter,
+                        costPerKm,
+                        LF("FuelAnalysis.Accessible.Segment", period, distance, liters, consumption, pricePerLiter, costPerKm));
+                })
                 .ToList(),
             analysis.GroupSummaries
-                .Select(item => new FuelGroupSummaryItemViewModel(
-                    item.Id,
-                    item.LatestFuelEntryId,
-                    item.Station,
-                    BuildFuelGroupLabel(item.FuelType, item.FuelDetail),
-                    $"{item.EntryCount} záznamů",
-                    FormatLiters(item.Liters),
-                    FormatMoney(item.TotalCost),
-                    FormatOptionalPricePerLiter(item.AveragePricePerLiter),
-                    item.LatestDate.HasValue ? item.LatestDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "bez data"))
+                .Select(item =>
+                {
+                    var fuel = BuildFuelGroupLabel(item.FuelType, item.FuelDetail);
+                    var entryCount = LF("FuelAnalysis.Group.EntryCount", item.EntryCount);
+                    var liters = FormatFuelAnalysisLiters(item.Liters);
+                    var totalCost = FormatFuelAnalysisMoney(item.TotalCost);
+                    var averagePrice = FormatOptionalPricePerLiter(item.AveragePricePerLiter);
+                    var latestDate = item.LatestDate.HasValue
+                        ? item.LatestDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
+                        : L("FuelAnalysis.LatestDate.None");
+                    return new FuelGroupSummaryItemViewModel(
+                        item.Id,
+                        item.LatestFuelEntryId,
+                        item.Station,
+                        fuel,
+                        entryCount,
+                        liters,
+                        totalCost,
+                        averagePrice,
+                        latestDate,
+                        LF("FuelAnalysis.Accessible.GroupSummary", item.Station, fuel, entryCount, liters, totalCost, averagePrice, latestDate));
+                })
                 .ToList(),
             analysis.Warnings
-                .Select(item => new FuelAnalysisWarningItemViewModel(
-                    item.Id,
-                    item.FuelEntryId ?? string.Empty,
-                    item.Severity switch
-                    {
-                        FuelAnalysisWarningSeverity.Error => "Chyba",
-                        FuelAnalysisWarningSeverity.Warning => "Upozornění",
-                        _ => "Info"
-                    },
-                    item.Title,
-                    item.Description))
+                .Select(item =>
+                {
+                    var fuelEntryId = item.FuelEntryId ?? string.Empty;
+                    var severity = FormatFuelAnalysisWarningSeverity(item.Severity);
+                    return new FuelAnalysisWarningItemViewModel(
+                        item.Id,
+                        fuelEntryId,
+                        severity,
+                        item.Title,
+                        item.Description,
+                        string.IsNullOrWhiteSpace(fuelEntryId)
+                            ? LF("FuelAnalysis.Accessible.Warning", severity, item.Title, item.Description)
+                            : LF("FuelAnalysis.Accessible.WarningWithAction", severity, item.Title, item.Description));
+                })
                 .ToList());
     }
 
@@ -1169,24 +1216,42 @@ internal sealed class DesktopProjectionService
 
     private static string FormatConsumption(decimal value) => $"{value.ToString("0.00", CzechCulture)} l/100 km";
 
-    private static string FormatOptionalConsumption(decimal? value) =>
-        value.HasValue ? FormatConsumption(value.Value) : "nedostupná";
+    private string FormatOptionalConsumption(decimal? value) =>
+        value.HasValue ? FormatFuelAnalysisConsumption(value.Value) : L("FuelAnalysis.Value.ConsumptionUnavailable");
 
-    private static string FormatOptionalPricePerLiter(decimal? value) =>
-        value.HasValue ? $"{value.Value.ToString("0.00", CzechCulture)} Kč/l" : "nedostupná";
+    private string FormatOptionalPricePerLiter(decimal? value) =>
+        value.HasValue ? $"{value.Value.ToString("0.00", _formatCulture)} Kč/l" : L("FuelAnalysis.Value.PricePerLiterUnavailable");
+
+    private string FormatFuelAnalysisMoney(decimal value) => $"{value.ToString("0.00", _formatCulture)} Kč";
+
+    private string FormatFuelAnalysisLiters(decimal value) => $"{value.ToString("0.##", _formatCulture)} l";
+
+    private string FormatFuelAnalysisConsumption(decimal value) => $"{value.ToString("0.00", _formatCulture)} l/100 km";
 
     private static string FormatConsumptionSegmentPeriod(FuelConsumptionSegment segment) =>
         $"{segment.StartDate:dd.MM.yyyy} až {segment.EndDate:dd.MM.yyyy}";
 
-    private static string BuildFuelGroupLabel(string fuelType, string fuelDetail)
+    private string BuildFuelGroupLabel(string fuelType, string fuelDetail)
     {
-        if (string.IsNullOrWhiteSpace(fuelDetail) || string.Equals(fuelDetail, "Bez detailu", StringComparison.CurrentCultureIgnoreCase))
+        if (string.IsNullOrWhiteSpace(fuelDetail) || string.Equals(fuelDetail, L("FuelAnalysis.Group.UnknownFuelDetail"), StringComparison.CurrentCultureIgnoreCase))
         {
             return fuelType;
         }
 
         return $"{fuelType} | {fuelDetail}";
     }
+
+    private string FormatFuelAnalysisWarningSeverity(FuelAnalysisWarningSeverity severity) =>
+        severity switch
+        {
+            FuelAnalysisWarningSeverity.Error => L("FuelAnalysis.Severity.Error"),
+            FuelAnalysisWarningSeverity.Warning => L("FuelAnalysis.Severity.Warning"),
+            _ => L("FuelAnalysis.Severity.Info")
+        };
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;

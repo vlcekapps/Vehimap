@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Models;
@@ -83,6 +84,30 @@ public sealed class LegacyFuelAnalysisServiceTests
         Assert.Contains(summary.Warnings, item =>
             item.Severity == FuelAnalysisWarningSeverity.Info
             && item.Title == "Spotřeba zatím není dostupná");
+    }
+
+    [Fact]
+    public void BuildVehicleFuelAnalysis_uses_localized_domain_messages()
+    {
+        var service = new LegacyFuelAnalysisService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        var dataSet = new VehimapDataSet
+        {
+            FuelEntries =
+            [
+                new FuelEntry("fuel_1", "veh_1", "01.01.2026", "bad", "many", "expensive", false, "Diesel", "")
+            ]
+        };
+
+        var summary = service.BuildVehicleFuelAnalysis(dataSet, "veh_1");
+
+        Assert.Contains("Consumption cannot be calculated", summary.Status, StringComparison.Ordinal);
+        Assert.Contains(summary.Warnings, item =>
+            item.FuelEntryId == "fuel_1"
+            && item.Title == "Odometer cannot be used"
+            && item.Description.Contains("non-numeric", StringComparison.Ordinal));
+        Assert.Contains(summary.Warnings, item =>
+            item.Severity == FuelAnalysisWarningSeverity.Info
+            && item.Title == "Consumption is not available yet");
     }
 
     [Fact]

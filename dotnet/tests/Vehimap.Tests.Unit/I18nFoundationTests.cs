@@ -524,6 +524,21 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Domain_fuel_analysis_uses_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var service = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacyFuelAnalysisService.cs"));
+        var itemViewModels = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "FuelAnalysisItemViewModels.cs"));
+
+        Assert.Contains("FuelAnalysis.Warning.OdometerInvalid.Title", service);
+        Assert.Contains("FuelAnalysis.Status.ManySegments", service);
+        Assert.Contains("FuelAnalysis.Group.UnknownStation", service);
+        Assert.Contains("string AccessibleLabel", itemViewModels);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), itemViewModels);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

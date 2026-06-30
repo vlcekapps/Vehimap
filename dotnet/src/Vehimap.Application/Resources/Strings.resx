@@ -47,6 +47,7 @@
   <data name="Common.Delete" xml:space="preserve"><value>Delete</value></data>
   <data name="Common.Edit" xml:space="preserve"><value>Edit</value></data>
   <data name="Common.EmptyValue" xml:space="preserve"><value>not filled</value></data>
+  <data name="Common.NoDate" xml:space="preserve"><value>no date</value></data>
   <data name="Common.Save" xml:space="preserve"><value>Save</value></data>
   <data name="Common.Search" xml:space="preserve"><value>Search</value></data>
   <data name="Common.Sort" xml:space="preserve"><value>Sort</value></data>
@@ -590,6 +591,50 @@
   <data name="Notification.HelpText" xml:space="preserve"><value>Short Vehimap notification. It closes automatically; when active, press Escape to close it.</value></data>
   <data name="Notification.Title" xml:space="preserve"><value>Vehimap notification</value></data>
   <data name="Notification.WindowName" xml:space="preserve"><value>Vehimap notification</value></data>
+  <data name="FuelAnalysis.Accessible.GroupSummary" xml:space="preserve"><value>{0}, {1}, {2}, liters {3}, costs {4}, average price per liter {5}, latest refuel {6}</value></data>
+  <data name="FuelAnalysis.Accessible.Segment" xml:space="preserve"><value>Consumption segment {0}, distance {1}, refueled {2}, consumption {3}, price per liter {4}, cost per kilometer {5}</value></data>
+  <data name="FuelAnalysis.Accessible.Warning" xml:space="preserve"><value>{0}: {1}. {2}</value></data>
+  <data name="FuelAnalysis.Accessible.WarningWithAction" xml:space="preserve"><value>{0}: {1}. {2}. Enter or the button opens the related refuel entry.</value></data>
+  <data name="FuelAnalysis.Group.EntryCount" xml:space="preserve"><value>{0} entries</value></data>
+  <data name="FuelAnalysis.Group.UnknownFuelDetail" xml:space="preserve"><value>No detail</value></data>
+  <data name="FuelAnalysis.Group.UnknownFuelType" xml:space="preserve"><value>No type</value></data>
+  <data name="FuelAnalysis.Group.UnknownStation" xml:space="preserve"><value>No place</value></data>
+  <data name="FuelAnalysis.LatestDate.None" xml:space="preserve"><value>no date</value></data>
+  <data name="FuelAnalysis.Severity.Error" xml:space="preserve"><value>Error</value></data>
+  <data name="FuelAnalysis.Severity.Info" xml:space="preserve"><value>Info</value></data>
+  <data name="FuelAnalysis.Severity.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="FuelAnalysis.Status.ManySegments" xml:space="preserve"><value>Consumption is calculated from {0} usable segments between full tanks.</value></data>
+  <data name="FuelAnalysis.Status.NoEntries" xml:space="preserve"><value>No refuel entries have been recorded yet.</value></data>
+  <data name="FuelAnalysis.Status.OneSegment" xml:space="preserve"><value>Consumption is calculated from 1 usable segment between full tanks.</value></data>
+  <data name="FuelAnalysis.Status.Unavailable" xml:space="preserve"><value>Consumption cannot be calculated yet. At least two full tanks with odometer values are required.</value></data>
+  <data name="FuelAnalysis.Summary.AverageConsumption" xml:space="preserve"><value>Average consumption: {0}. {1}</value></data>
+  <data name="FuelAnalysis.Summary.BestSegment" xml:space="preserve"><value>Best segment: {0} with consumption {1}.</value></data>
+  <data name="FuelAnalysis.Summary.Main" xml:space="preserve"><value>Refuel entries: {0}. Total fuel: {1}. Total cost: {2}. Average price per liter: {3}.</value></data>
+  <data name="FuelAnalysis.Summary.WorstSegment" xml:space="preserve"><value>Highest consumption: {0} with consumption {1}.</value></data>
+  <data name="FuelAnalysis.Value.CostPerKmUnavailable" xml:space="preserve"><value>unavailable</value></data>
+  <data name="FuelAnalysis.Value.PricePerLiterUnavailable" xml:space="preserve"><value>unavailable</value></data>
+  <data name="FuelAnalysis.Value.ConsumptionUnavailable" xml:space="preserve"><value>unavailable</value></data>
+  <data name="FuelAnalysis.Warning.ConsumptionHigh.Description" xml:space="preserve"><value>The segment ending {0} is significantly above this vehicle's average.</value></data>
+  <data name="FuelAnalysis.Warning.ConsumptionHigh.Title" xml:space="preserve"><value>Unusually high consumption</value></data>
+  <data name="FuelAnalysis.Warning.ConsumptionLow.Description" xml:space="preserve"><value>The segment ending {0} is significantly below this vehicle's average.</value></data>
+  <data name="FuelAnalysis.Warning.ConsumptionLow.Title" xml:space="preserve"><value>Unusually low consumption</value></data>
+  <data name="FuelAnalysis.Warning.ConsumptionUnavailable.Description.FullTanks" xml:space="preserve"><value>Consumption cannot be calculated yet. At least two full tanks with date and odometer are required.</value></data>
+  <data name="FuelAnalysis.Warning.ConsumptionUnavailable.Description.InvalidSegments" xml:space="preserve"><value>Consumption cannot be calculated yet. Some segment is missing usable liters or has inconsistent odometer data.</value></data>
+  <data name="FuelAnalysis.Warning.ConsumptionUnavailable.Title" xml:space="preserve"><value>Consumption is not available yet</value></data>
+  <data name="FuelAnalysis.Warning.CostInvalid.Description" xml:space="preserve"><value>Refuel entry from {0} has a non-numeric or negative total cost.</value></data>
+  <data name="FuelAnalysis.Warning.CostInvalid.Title" xml:space="preserve"><value>Refuel cost cannot be used</value></data>
+  <data name="FuelAnalysis.Warning.LitersInvalid.Description" xml:space="preserve"><value>Refuel entry from {0} has a non-numeric or zero fuel amount.</value></data>
+  <data name="FuelAnalysis.Warning.LitersInvalid.Title" xml:space="preserve"><value>Fuel amount cannot be used</value></data>
+  <data name="FuelAnalysis.Warning.OdometerInvalid.Description" xml:space="preserve"><value>Refuel entry from {0} has a non-numeric or negative odometer value.</value></data>
+  <data name="FuelAnalysis.Warning.OdometerInvalid.Title" xml:space="preserve"><value>Odometer cannot be used</value></data>
+  <data name="FuelAnalysis.Warning.OdometerRegression.Description" xml:space="preserve"><value>Refuel entry from {0} has odometer {1} km, which is lower than the earlier value {2} km.</value></data>
+  <data name="FuelAnalysis.Warning.OdometerRegression.Title" xml:space="preserve"><value>Odometer decreases over time</value></data>
+  <data name="FuelAnalysis.Warning.PriceHigh.Description" xml:space="preserve"><value>Refuel entry from {0} has a price per liter significantly above this vehicle's average.</value></data>
+  <data name="FuelAnalysis.Warning.PriceHigh.Title" xml:space="preserve"><value>Unusually high price per liter</value></data>
+  <data name="FuelAnalysis.Warning.PriceLow.Description" xml:space="preserve"><value>Refuel entry from {0} has a price per liter significantly below this vehicle's average.</value></data>
+  <data name="FuelAnalysis.Warning.PriceLow.Title" xml:space="preserve"><value>Unusually low price per liter</value></data>
+  <data name="FuelAnalysis.Warning.SegmentUnavailable.Description" xml:space="preserve"><value>Refuel entry from {0} has the same or lower odometer value than the previous full tank.</value></data>
+  <data name="FuelAnalysis.Warning.SegmentUnavailable.Title" xml:space="preserve"><value>Consumption segment cannot be calculated</value></data>
   <data name="UpdateCheck.AssetAction" xml:space="preserve"><value>Download asset</value></data>
   <data name="UpdateCheck.AssetActionName" xml:space="preserve"><value>Download update asset</value></data>
   <data name="UpdateCheck.CloseName" xml:space="preserve"><value>Close update check</value></data>
