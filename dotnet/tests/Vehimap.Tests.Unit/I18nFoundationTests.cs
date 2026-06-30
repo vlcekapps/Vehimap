@@ -353,6 +353,28 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Pilot_maintenance_completion_dialog_uses_resource_localization_for_static_text()
+    {
+        var root = FindRepositoryRoot();
+        var maintenanceCompletionWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "MaintenanceCompletionWindow.axaml"));
+        var maintenanceCompletionViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MaintenanceCompletionDialogViewModel.cs"));
+        var aboutCodeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "AboutWindow.axaml.cs"));
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", maintenanceCompletionWindow);
+        Assert.Contains("Title=\"{i18n:Loc MaintenanceCompletion.Title}\"", maintenanceCompletionWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc MaintenanceCompletion.HelpText}\"", maintenanceCompletionWindow);
+        Assert.Contains("Text=\"{i18n:Loc MaintenanceCompletion.CompletedDate}\"", maintenanceCompletionWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MaintenanceCompletion.HistoryNoteName}\"", maintenanceCompletionWindow);
+        Assert.Contains("Content=\"{i18n:Loc Common.Save}\"", maintenanceCompletionWindow);
+        Assert.Contains("_localizer.Format(\"MaintenanceCompletion.CompletedOdometerLabel\"", maintenanceCompletionViewModel);
+        Assert.Contains("_localizer.GetString(\"MaintenanceCompletion.Validation.CompletedDate\")", maintenanceCompletionViewModel);
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"About.Status.DiagnosticsCopied\")", aboutCodeBehind);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceCompletionWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceCompletionViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), aboutCodeBehind);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

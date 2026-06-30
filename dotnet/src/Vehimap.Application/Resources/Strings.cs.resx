@@ -30,6 +30,8 @@
   <data name="About.Diagnostics.Title" xml:space="preserve"><value>Název: {0}</value></data>
   <data name="About.HelpText" xml:space="preserve"><value>Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+K otevře poděkování autorovi, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.</value></data>
   <data name="About.Status.Basic" xml:space="preserve"><value>Základní informace o aplikaci jsou zobrazené. Diagnostická data lze zobrazit nebo zkopírovat pro podporu.</value></data>
+  <data name="About.Status.DiagnosticsCopied" xml:space="preserve"><value>Diagnostická data byla zkopírována do schránky.</value></data>
+  <data name="About.Status.DiagnosticsCopyFailed" xml:space="preserve"><value>Diagnostická data se nepodařilo zkopírovat: {0}</value></data>
   <data name="About.Status.DiagnosticsHidden" xml:space="preserve"><value>Diagnostická data jsou skrytá. Běžný pohled obsahuje jen základní informace.</value></data>
   <data name="About.Status.DiagnosticsVisible" xml:space="preserve"><value>Diagnostická data jsou zobrazená. Lze je zkopírovat pro podporu.</value></data>
   <data name="About.Toggle.HideDiagnostics" xml:space="preserve"><value>Skrýt diagnostická data</value></data>
@@ -193,6 +195,27 @@
   <data name="MaintenanceEditor.TitleExample" xml:space="preserve"><value>Například Motorový olej</value></data>
   <data name="MaintenanceEditor.TitleLabel" xml:space="preserve"><value>Název úkonu</value></data>
   <data name="MaintenanceEditor.TitleName" xml:space="preserve"><value>Název servisního úkonu</value></data>
+  <data name="MaintenanceCompletion.AddHistory" xml:space="preserve"><value>Současně zapsat i do historie událostí</value></data>
+  <data name="MaintenanceCompletion.AddHistoryName" xml:space="preserve"><value>Současně zapsat servisní úkon do historie událostí</value></data>
+  <data name="MaintenanceCompletion.CancelName" xml:space="preserve"><value>Zrušit dokončení servisního úkonu</value></data>
+  <data name="MaintenanceCompletion.CompletedDate" xml:space="preserve"><value>Datum provedení</value></data>
+  <data name="MaintenanceCompletion.CompletedDateName" xml:space="preserve"><value>Datum provedení servisního úkonu</value></data>
+  <data name="MaintenanceCompletion.CompletedOdometerHelp" xml:space="preserve"><value>Zadejte stav tachometru v {0}. Vehimap hodnotu uloží interně v kilometrech.</value></data>
+  <data name="MaintenanceCompletion.CompletedOdometerLabel" xml:space="preserve"><value>Tachometr při provedení ({0})</value></data>
+  <data name="MaintenanceCompletion.CompletedOdometerName" xml:space="preserve"><value>Tachometr při provedení servisního úkonu v {0}</value></data>
+  <data name="MaintenanceCompletion.Description" xml:space="preserve"><value>Potvrďte datum a tachometr, od kterých se má plán počítat znovu. Volitelně lze záznam rovnou uložit i do historie událostí.</value></data>
+  <data name="MaintenanceCompletion.FieldsName" xml:space="preserve"><value>Pole dokončení servisního úkonu</value></data>
+  <data name="MaintenanceCompletion.HelpText" xml:space="preserve"><value>Dialog pro potvrzení dokončeného servisního úkonu. Ctrl+S uloží, Escape zavře bez změn.</value></data>
+  <data name="MaintenanceCompletion.HistoryCost" xml:space="preserve"><value>Cena do historie</value></data>
+  <data name="MaintenanceCompletion.HistoryCostName" xml:space="preserve"><value>Cena servisního úkonu do historie</value></data>
+  <data name="MaintenanceCompletion.HistoryNote" xml:space="preserve"><value>Poznámka do historie</value></data>
+  <data name="MaintenanceCompletion.HistoryNoteName" xml:space="preserve"><value>Poznámka servisního úkonu do historie</value></data>
+  <data name="MaintenanceCompletion.SaveName" xml:space="preserve"><value>Uložit dokončení servisního úkonu</value></data>
+  <data name="MaintenanceCompletion.Title" xml:space="preserve"><value>Označit servisní úkon jako splněný</value></data>
+  <data name="MaintenanceCompletion.Validation.CompletedDate" xml:space="preserve"><value>Datum provedení musí být ve formátu DD.MM.RRRR.</value></data>
+  <data name="MaintenanceCompletion.Validation.CompletedOdometerNumber" xml:space="preserve"><value>Tachometr při provedení zadejte jako číslo v {0}.</value></data>
+  <data name="MaintenanceCompletion.Validation.CompletedOdometerRequired" xml:space="preserve"><value>Pro kilometrický interval vyplňte i stav tachometru při provedení úkonu.</value></data>
+  <data name="MaintenanceCompletion.Validation.HistoryCost" xml:space="preserve"><value>Cenu do historie zadejte jako číslo, například 2500.</value></data>
   <data name="MaintenanceWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v plánu údržby</value></data>
   <data name="MaintenanceWorkspace.Complete" xml:space="preserve"><value>Splněno</value></data>
   <data name="MaintenanceWorkspace.CompleteName" xml:space="preserve"><value>Označit vybraný servisní úkon jako splněný</value></data>

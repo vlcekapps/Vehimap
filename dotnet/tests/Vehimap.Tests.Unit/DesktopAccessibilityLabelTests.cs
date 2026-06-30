@@ -578,7 +578,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionHistoryNoteBox\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"SaveMaintenanceCompletionButton\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CancelMaintenanceCompletionButton\"", maintenanceCompletionXaml);
-        Assert.Contains("Ctrl+S uloží, Escape zavře bez změn.", maintenanceCompletionXaml);
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", maintenanceCompletionXaml);
+        Assert.Contains("Title=\"{i18n:Loc MaintenanceCompletion.Title}\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc MaintenanceCompletion.HelpText}\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MaintenanceCompletion.CompletedDateName}\"", maintenanceCompletionXaml);
+        Assert.Contains("Content=\"{i18n:Loc Common.Save}\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MaintenanceCompletion.CancelName}\"", maintenanceCompletionXaml);
+        Assert.DoesNotMatch("[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]", maintenanceCompletionXaml);
         Assert.Contains("Key.Escape", maintenanceCompletionCodeBehind);
         Assert.Contains("Key.S", maintenanceCompletionCodeBehind);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseVehicleDetailWindowButton\"", vehicleDetailXaml);

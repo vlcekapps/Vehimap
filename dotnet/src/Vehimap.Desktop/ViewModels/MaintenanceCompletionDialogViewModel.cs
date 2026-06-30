@@ -1,5 +1,6 @@
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 
@@ -12,6 +13,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
 
     private readonly AppCulturePreferences _culturePreferences;
     private readonly AppUnitPreferences _unitPreferences;
+    private readonly IAppLocalizer _localizer;
 
     public MaintenanceCompletionDialogViewModel(
         string vehicleName,
@@ -21,7 +23,8 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         string completedDate,
         string completedOdometer,
         AppCulturePreferences? culturePreferences = null,
-        AppUnitPreferences? unitPreferences = null)
+        AppUnitPreferences? unitPreferences = null,
+        IAppLocalizer? localizer = null)
     {
         VehicleName = vehicleName;
         PlanTitle = planTitle;
@@ -31,6 +34,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         CompletedOdometer = completedOdometer;
         _culturePreferences = culturePreferences ?? new AppCulturePreferences();
         _unitPreferences = UnitFormatService.Normalize(unitPreferences ?? new AppUnitPreferences());
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public string VehicleName { get; }
@@ -46,11 +50,11 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
             ? "mi"
             : "km";
 
-    public string CompletedOdometerLabel => $"Tachometr při provedení ({DistanceUnitLabel})";
+    public string CompletedOdometerLabel => _localizer.Format("MaintenanceCompletion.CompletedOdometerLabel", DistanceUnitLabel);
 
-    public string CompletedOdometerName => $"Tachometr při provedení servisního úkonu v {DistanceUnitLabel}";
+    public string CompletedOdometerName => _localizer.Format("MaintenanceCompletion.CompletedOdometerName", DistanceUnitLabel);
 
-    public string CompletedOdometerHelp => $"Zadejte stav tachometru v {DistanceUnitLabel}. Vehimap hodnotu uloží interně v kilometrech.";
+    public string CompletedOdometerHelp => _localizer.Format("MaintenanceCompletion.CompletedOdometerHelp", DistanceUnitLabel);
 
     [ObservableProperty]
     private string completedDate = string.Empty;
@@ -80,7 +84,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
 
         if (!VehimapValueParser.TryParseEventDate(CompletedDate, out var parsedDate))
         {
-            SetError("Datum provedení musí být ve formátu DD.MM.RRRR.", "MaintenanceCompletionDateBox");
+            SetError(_localizer.GetString("MaintenanceCompletion.Validation.CompletedDate"), "MaintenanceCompletionDateBox");
             return false;
         }
 
@@ -91,7 +95,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
             if (!NumberFormatService.TryParseDecimal(completedOdometerText, _culturePreferences, out var parsedOdometer)
                 || parsedOdometer < 0m)
             {
-                SetError($"Tachometr při provedení zadejte jako číslo v {DistanceUnitLabel}.", "MaintenanceCompletionOdometerBox");
+                SetError(_localizer.Format("MaintenanceCompletion.Validation.CompletedOdometerNumber", DistanceUnitLabel), "MaintenanceCompletionOdometerBox");
                 return false;
             }
 
@@ -100,7 +104,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         }
         else if (RequiresOdometer)
         {
-            SetError("Pro kilometrický interval vyplňte i stav tachometru při provedení úkonu.", "MaintenanceCompletionOdometerBox");
+            SetError(_localizer.GetString("MaintenanceCompletion.Validation.CompletedOdometerRequired"), "MaintenanceCompletionOdometerBox");
             return false;
         }
 
@@ -110,7 +114,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         {
             if (!VehimapValueParser.TryParseMoney(historyCostText, out var parsedCost))
             {
-                SetError("Cenu do historie zadejte jako číslo, například 2500.", "MaintenanceCompletionHistoryCostBox");
+                SetError(_localizer.GetString("MaintenanceCompletion.Validation.HistoryCost"), "MaintenanceCompletionHistoryCostBox");
                 return false;
             }
 

@@ -30,6 +30,8 @@
   <data name="About.Diagnostics.Title" xml:space="preserve"><value>Name: {0}</value></data>
   <data name="About.HelpText" xml:space="preserve"><value>Information about Vehimap. Ctrl+O opens release notes, Ctrl+K opens the author support page, Ctrl+Shift+C copies diagnostic data and Escape closes the dialog.</value></data>
   <data name="About.Status.Basic" xml:space="preserve"><value>Basic application information is displayed. Diagnostic data can be shown or copied for support.</value></data>
+  <data name="About.Status.DiagnosticsCopied" xml:space="preserve"><value>Diagnostic data were copied to the clipboard.</value></data>
+  <data name="About.Status.DiagnosticsCopyFailed" xml:space="preserve"><value>Diagnostic data could not be copied: {0}</value></data>
   <data name="About.Status.DiagnosticsHidden" xml:space="preserve"><value>Diagnostic data is hidden. The standard view contains only basic information.</value></data>
   <data name="About.Status.DiagnosticsVisible" xml:space="preserve"><value>Diagnostic data is displayed. It can be copied for support.</value></data>
   <data name="About.Toggle.HideDiagnostics" xml:space="preserve"><value>Hide diagnostic data</value></data>
@@ -193,6 +195,27 @@
   <data name="MaintenanceEditor.TitleExample" xml:space="preserve"><value>For example Engine oil</value></data>
   <data name="MaintenanceEditor.TitleLabel" xml:space="preserve"><value>Task name</value></data>
   <data name="MaintenanceEditor.TitleName" xml:space="preserve"><value>Maintenance task name</value></data>
+  <data name="MaintenanceCompletion.AddHistory" xml:space="preserve"><value>Also write to event history</value></data>
+  <data name="MaintenanceCompletion.AddHistoryName" xml:space="preserve"><value>Also write the maintenance item to event history</value></data>
+  <data name="MaintenanceCompletion.CancelName" xml:space="preserve"><value>Cancel maintenance completion</value></data>
+  <data name="MaintenanceCompletion.CompletedDate" xml:space="preserve"><value>Completion date</value></data>
+  <data name="MaintenanceCompletion.CompletedDateName" xml:space="preserve"><value>Maintenance item completion date</value></data>
+  <data name="MaintenanceCompletion.CompletedOdometerHelp" xml:space="preserve"><value>Enter the odometer in {0}. Vehimap stores the value internally in kilometers.</value></data>
+  <data name="MaintenanceCompletion.CompletedOdometerLabel" xml:space="preserve"><value>Completion odometer ({0})</value></data>
+  <data name="MaintenanceCompletion.CompletedOdometerName" xml:space="preserve"><value>Maintenance item completion odometer in {0}</value></data>
+  <data name="MaintenanceCompletion.Description" xml:space="preserve"><value>Confirm the date and odometer from which the plan should be counted again. Optionally, the same item can be saved to event history.</value></data>
+  <data name="MaintenanceCompletion.FieldsName" xml:space="preserve"><value>Maintenance completion fields</value></data>
+  <data name="MaintenanceCompletion.HelpText" xml:space="preserve"><value>Dialog for confirming a completed maintenance item. Ctrl+S saves, Escape closes without changes.</value></data>
+  <data name="MaintenanceCompletion.HistoryCost" xml:space="preserve"><value>History cost</value></data>
+  <data name="MaintenanceCompletion.HistoryCostName" xml:space="preserve"><value>Maintenance item cost for history</value></data>
+  <data name="MaintenanceCompletion.HistoryNote" xml:space="preserve"><value>History note</value></data>
+  <data name="MaintenanceCompletion.HistoryNoteName" xml:space="preserve"><value>Maintenance item note for history</value></data>
+  <data name="MaintenanceCompletion.SaveName" xml:space="preserve"><value>Save maintenance completion</value></data>
+  <data name="MaintenanceCompletion.Title" xml:space="preserve"><value>Mark maintenance item as completed</value></data>
+  <data name="MaintenanceCompletion.Validation.CompletedDate" xml:space="preserve"><value>Completion date must be in DD.MM.YYYY format.</value></data>
+  <data name="MaintenanceCompletion.Validation.CompletedOdometerNumber" xml:space="preserve"><value>Completion odometer must be a number in {0}.</value></data>
+  <data name="MaintenanceCompletion.Validation.CompletedOdometerRequired" xml:space="preserve"><value>For a distance interval, also fill in the odometer when the item was completed.</value></data>
+  <data name="MaintenanceCompletion.Validation.HistoryCost" xml:space="preserve"><value>History cost must be a number, for example 2500.</value></data>
   <data name="MaintenanceWorkspace.ClearSearchName" xml:space="preserve"><value>Clear maintenance plan search</value></data>
   <data name="MaintenanceWorkspace.Complete" xml:space="preserve"><value>Done</value></data>
   <data name="MaintenanceWorkspace.CompleteName" xml:space="preserve"><value>Mark selected maintenance task as done</value></data>
