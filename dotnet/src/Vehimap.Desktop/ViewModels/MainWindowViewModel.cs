@@ -267,7 +267,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new ManagedAttachmentPathService(),
             new ProcessFileLauncher(),
             new AvaloniaFilePickerService(),
-            new LegacyGlobalSearchService(new ManagedAttachmentPathService(), new LegacyTimelineService(DesktopLocalization.Localizer)),
+            new LegacyGlobalSearchService(new ManagedAttachmentPathService(), new LegacyTimelineService(DesktopLocalization.Localizer), DesktopLocalization.Localizer),
             new LegacyTimelineService(DesktopLocalization.Localizer),
             new LegacyCalendarExportService(new LegacyTimelineService(DesktopLocalization.Localizer)),
             new AvaloniaTextFileSaveService(),
@@ -1488,7 +1488,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         if (_dataRoot is null || string.IsNullOrWhiteSpace(GlobalSearchWorkspace.GlobalSearchText))
         {
-            GlobalSearchWorkspace.GlobalSearchSummary = "Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.";
+            GlobalSearchWorkspace.GlobalSearchSummary = DesktopLocalization.Localizer.GetString("GlobalSearch.Summary.EmptyQuery");
             GlobalSearchWorkspace.SelectedSearchResult = null;
             return;
         }
@@ -1502,7 +1502,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 result.VehicleName,
                 result.SectionLabel,
                 result.Title,
-                result.Summary))
+                result.Summary,
+                DesktopLocalization.Localizer.GetString("GlobalSearch.Accessible.VehicleLabel")))
             .ToList();
 
         foreach (var result in WorkspaceSortHelpers.SortGlobalSearch(
@@ -1514,8 +1515,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         GlobalSearchWorkspace.GlobalSearchSummary = results.Count == 0
-            ? $"Pro dotaz „{GlobalSearchWorkspace.GlobalSearchText.Trim()}“ nebyly nalezeny žádné výsledky."
-            : $"Dotaz „{GlobalSearchWorkspace.GlobalSearchText.Trim()}“: {results.Count} výsledků. Enter otevře vybranou položku.";
+            ? DesktopLocalization.Localizer.Format("GlobalSearch.Summary.NoResults", GlobalSearchWorkspace.GlobalSearchText.Trim())
+            : DesktopLocalization.Localizer.Format("GlobalSearch.Summary.WithResults", GlobalSearchWorkspace.GlobalSearchText.Trim(), results.Count);
 
         var previousKey = previousSelection is null
             ? string.Empty
@@ -1523,7 +1524,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         GlobalSearchWorkspace.SelectedSearchResult = FindById(GlobalSearchResults, item => $"{item.EntityKind}|{item.EntityId}|{item.VehicleId}", previousKey);
         if (GlobalSearchWorkspace.SelectedSearchResult is null)
         {
-            GlobalSearchWorkspace.SelectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
+            GlobalSearchWorkspace.SelectedSearchResultDetail = DesktopLocalization.Localizer.GetString("GlobalSearch.Detail.EmptySelection");
             NotifyGlobalSearchWorkspaceSelectionChanged();
         }
     }

@@ -85,6 +85,49 @@
   <data name="GlobalSearchWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, license plate, document, reminder, maintenance...</value></data>
   <data name="GlobalSearchWorkspace.SortDescendingName" xml:space="preserve"><value>Sort global search descending</value></data>
   <data name="GlobalSearchWorkspace.SortName" xml:space="preserve"><value>Global search sort order</value></data>
+  <data name="GlobalSearch.Accessible.VehicleLabel" xml:space="preserve"><value>vehicle</value></data>
+  <data name="GlobalSearch.Attachment.External" xml:space="preserve"><value>External path</value></data>
+  <data name="GlobalSearch.Attachment.Managed" xml:space="preserve"><value>Managed copy</value></data>
+  <data name="GlobalSearch.Attention.GreenCard" xml:space="preserve"><value>Green card</value></data>
+  <data name="GlobalSearch.Attention.StatusPart" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="GlobalSearch.Attention.TechnicalInspection" xml:space="preserve"><value>Technical inspection</value></data>
+  <data name="GlobalSearch.Entity.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="GlobalSearch.Entity.History" xml:space="preserve"><value>History</value></data>
+  <data name="GlobalSearch.Entity.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="GlobalSearch.Entity.Record" xml:space="preserve"><value>Document</value></data>
+  <data name="GlobalSearch.Entity.Records" xml:space="preserve"><value>Documents</value></data>
+  <data name="GlobalSearch.Entity.Reminder" xml:space="preserve"><value>Reminder</value></data>
+  <data name="GlobalSearch.Entity.Reminders" xml:space="preserve"><value>Reminders</value></data>
+  <data name="GlobalSearch.Entity.Vehicle" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="GlobalSearch.Detail.EmptySelection" xml:space="preserve"><value>Select a result to open the matching vehicle or record directly.</value></data>
+  <data name="GlobalSearch.Detail.Selected" xml:space="preserve"><value>{0}: {1}
+Vehicle: {2}
+{3}</value></data>
+  <data name="GlobalSearch.Summary.EmptyQuery" xml:space="preserve"><value>Enter search text to show matching vehicles and records across the application.</value></data>
+  <data name="GlobalSearch.Summary.NoResults" xml:space="preserve"><value>No results were found for “{0}”.</value></data>
+  <data name="GlobalSearch.Summary.WithResults" xml:space="preserve"><value>Query “{0}”: {1} results. Enter opens the selected item.</value></data>
+  <data name="GlobalSearch.Title.FuelWithLabel" xml:space="preserve"><value>Fuel - {0}</value></data>
+  <data name="GlobalSearch.Title.OdometerState" xml:space="preserve"><value>Odometer state</value></data>
+  <data name="GlobalSearch.Validity.From" xml:space="preserve"><value>from {0}</value></data>
+  <data name="GlobalSearch.Validity.Range" xml:space="preserve"><value>{0} to {1}</value></data>
+  <data name="GlobalSearch.Validity.To" xml:space="preserve"><value>to {0}</value></data>
+  <data name="GlobalSearch.Value.Active" xml:space="preserve"><value>Active</value></data>
+  <data name="GlobalSearch.Value.FullTank" xml:space="preserve"><value>Full tank</value></data>
+  <data name="GlobalSearch.Value.Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="GlobalSearch.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
+  <data name="GlobalSearch.Value.Money" xml:space="preserve"><value>CZK {0}</value></data>
+  <data name="GlobalSearch.Value.Months" xml:space="preserve"><value>{0} months</value></data>
+  <data name="GlobalSearch.Value.No" xml:space="preserve"><value>no</value></data>
+  <data name="GlobalSearch.Value.NoCategory" xml:space="preserve"><value>No category</value></data>
+  <data name="GlobalSearch.Value.NoDueDate" xml:space="preserve"><value>no due date</value></data>
+  <data name="GlobalSearch.Value.NoFuelType" xml:space="preserve"><value>no fuel type</value></data>
+  <data name="GlobalSearch.Value.NoMakeModel" xml:space="preserve"><value>No make/model</value></data>
+  <data name="GlobalSearch.Value.NoPlate" xml:space="preserve"><value>No license plate</value></data>
+  <data name="GlobalSearch.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
+  <data name="GlobalSearch.Value.Plate" xml:space="preserve"><value>License plate {0}</value></data>
+  <data name="GlobalSearch.Value.ServiceTask" xml:space="preserve"><value>Service task</value></data>
+  <data name="GlobalSearch.Value.UntitledVehicle" xml:space="preserve"><value>Untitled vehicle</value></data>
+  <data name="GlobalSearch.Value.Yes" xml:space="preserve"><value>yes</value></data>
   <data name="FuelWorkspace.AnalysisHeading" xml:space="preserve"><value>Fuel analysis</value></data>
   <data name="FuelWorkspace.ClearSearchName" xml:space="preserve"><value>Clear fuel search</value></data>
   <data name="FuelWorkspace.ConsumptionHeading" xml:space="preserve"><value>Consumption trend</value></data>

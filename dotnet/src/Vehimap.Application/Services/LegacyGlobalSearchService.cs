@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Domain.Enums;
@@ -8,19 +9,29 @@ namespace Vehimap.Application.Services;
 public sealed class LegacyGlobalSearchService : IGlobalSearchService
 {
     private const int NoSearchMatchRank = 1_000_000;
+    private const string EntityVehicle = "Vozidlo";
+    private const string EntityHistory = "Historie";
+    private const string EntityFuel = "Tankov\u00E1n\u00ED";
+    private const string EntityRecord = "Doklad";
+    private const string EntityReminder = "P\u0159ipom\u00EDnka";
+    private const string EntityMaintenance = "\u00DAdr\u017Eba";
+    private const string NeutralTimelineStatusCs = "Bez upozorn\u011Bn\u00ED";
+    private const string NeutralTimelineStatusEn = "No alert";
 
     private readonly IFileAttachmentService _attachmentService;
     private readonly ITimelineService _timelineService;
+    private readonly IAppLocalizer _localizer;
 
     public LegacyGlobalSearchService(IFileAttachmentService attachmentService)
-        : this(attachmentService, new LegacyTimelineService())
+        : this(attachmentService, new LegacyTimelineService(), null)
     {
     }
 
-    public LegacyGlobalSearchService(IFileAttachmentService attachmentService, ITimelineService timelineService)
+    public LegacyGlobalSearchService(IFileAttachmentService attachmentService, ITimelineService timelineService, IAppLocalizer? localizer = null)
     {
         _attachmentService = attachmentService;
         _timelineService = timelineService;
+        _localizer = localizer ?? CreateDefaultLocalizer();
     }
 
     public IReadOnlyList<GlobalSearchResult> Search(VehimapDataRoot dataRoot, VehimapDataSet dataSet, string query)
@@ -47,10 +58,10 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var meta = metaByVehicleId.GetValueOrDefault(vehicle.Id);
             var timeline = timelineByVehicleId.GetValueOrDefault(vehicle.Id) ?? [];
             var statusText = BuildVehicleAttentionStatusText(timeline);
-            var title = ValueOrFallback(vehicle.Name, "Bez názvu vozidla");
+            var title = ValueOrFallback(vehicle.Name, L("GlobalSearch.Value.UntitledVehicle"));
             var summary = JoinParts(
-                ValueOrFallback(vehicle.MakeModel, "Bez značky / modelu"),
-                ValueOrFallback(vehicle.Category, "Bez kategorie"),
+                ValueOrFallback(vehicle.MakeModel, L("GlobalSearch.Value.NoMakeModel")),
+                ValueOrFallback(vehicle.Category, L("GlobalSearch.Value.NoCategory")),
                 FormatPlate(vehicle.Plate),
                 ValueOrFallback(vehicle.VehicleNote, string.Empty),
                 ValueOrFallback(meta?.State, string.Empty),
@@ -68,9 +79,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 results.Add(new GlobalSearchResult(
                     vehicle.Id,
                     title,
-                    "Vozidlo",
+                    EntityVehicle,
                     vehicle.Id,
-                    "Vozidlo",
+                    L("GlobalSearch.Entity.Vehicle"),
                     title,
                     summary,
                     rank));
@@ -80,17 +91,19 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         foreach (var entry in dataSet.HistoryEntries)
         {
             var vehicle = vehiclesById.GetValueOrDefault(entry.VehicleId);
-            var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+            var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
             var meta = vehicle is null ? null : metaByVehicleId.GetValueOrDefault(vehicle.Id);
             var timeline = GetVehicleTimeline(timelineByVehicleId, entry.VehicleId);
-            var title = ValueOrFallback(entry.EventType, "Historie");
+            var title = ValueOrFallback(entry.EventType, L("GlobalSearch.Entity.History"));
             var summary = JoinParts(
-                ValueOrFallback(entry.EventDate, "bez data"),
+                ValueOrFallback(entry.EventDate, L("Common.NoDate")),
                 FormatOdometer(entry.Odometer),
                 FormatMoneyValue(entry.Cost),
                 ValueOrFallback(entry.Note, string.Empty));
             var searchTexts = BuildSearchTexts(
                 BuildVehicleSearchTexts(vehicle, meta, timeline),
+                EntityHistory,
+                L("GlobalSearch.Entity.History"),
                 entry.EventDate,
                 entry.EventType,
                 entry.Odometer,
@@ -103,9 +116,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 results.Add(new GlobalSearchResult(
                     entry.VehicleId,
                     vehicleName,
-                    "Historie",
+                    EntityHistory,
                     entry.Id,
-                    "Historie",
+                    L("GlobalSearch.Entity.History"),
                     title,
                     summary,
                     rank));
@@ -115,28 +128,30 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         foreach (var entry in dataSet.FuelEntries)
         {
             var vehicle = vehiclesById.GetValueOrDefault(entry.VehicleId);
-            var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+            var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
             var meta = vehicle is null ? null : metaByVehicleId.GetValueOrDefault(vehicle.Id);
             var timeline = GetVehicleTimeline(timelineByVehicleId, entry.VehicleId);
             var title = BuildFuelTitle(entry);
             var summary = JoinParts(
-                ValueOrFallback(entry.EntryDate, "bez data"),
-                ValueOrFallback(entry.FuelType, "bez typu"),
+                ValueOrFallback(entry.EntryDate, L("Common.NoDate")),
+                ValueOrFallback(entry.FuelType, L("GlobalSearch.Value.NoFuelType")),
                 FormatFuelLiters(entry.Liters),
                 FormatOdometer(entry.Odometer),
                 FormatMoneyValue(entry.TotalCost),
-                entry.FullTank ? "Plná nádrž" : string.Empty,
+                entry.FullTank ? L("GlobalSearch.Value.FullTank") : string.Empty,
                 ValueOrFallback(entry.FuelDetail, string.Empty),
                 ValueOrFallback(entry.Station, string.Empty),
                 ValueOrFallback(entry.Note, string.Empty));
             var searchTexts = BuildSearchTexts(
                 BuildVehicleSearchTexts(vehicle, meta, timeline),
+                EntityFuel,
+                L("GlobalSearch.Entity.Fuel"),
                 entry.EntryDate,
                 entry.Odometer,
                 entry.Liters,
                 entry.TotalCost,
-                entry.FullTank ? "ano" : "ne",
-                entry.FullTank ? "Plná nádrž" : string.Empty,
+                entry.FullTank ? L("GlobalSearch.Value.Yes") : L("GlobalSearch.Value.No"),
+                entry.FullTank ? L("GlobalSearch.Value.FullTank") : string.Empty,
                 entry.FuelType,
                 entry.FuelDetail,
                 entry.Station,
@@ -148,9 +163,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 results.Add(new GlobalSearchResult(
                     entry.VehicleId,
                     vehicleName,
-                    "Tankování",
+                    EntityFuel,
                     entry.Id,
-                    "Tankování",
+                    L("GlobalSearch.Entity.Fuel"),
                     title,
                     summary,
                     rank));
@@ -160,14 +175,14 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         foreach (var record in dataSet.Records)
         {
             var vehicle = vehiclesById.GetValueOrDefault(record.VehicleId);
-            var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+            var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
             var meta = vehicle is null ? null : metaByVehicleId.GetValueOrDefault(vehicle.Id);
             var timeline = GetVehicleTimeline(timelineByVehicleId, record.VehicleId);
             var timelineStatus = FindTimelineStatus(timeline, "record", record.Id);
-            var title = ValueOrFallback(record.Title, "Doklad");
+            var title = ValueOrFallback(record.Title, L("GlobalSearch.Entity.Record"));
             var resolvedPath = ResolveRecordPath(dataRoot, record);
             var summary = JoinParts(
-                ValueOrFallback(record.RecordType, "Doklad"),
+                ValueOrFallback(record.RecordType, L("GlobalSearch.Entity.Record")),
                 ValueOrFallback(record.Provider, string.Empty),
                 BuildValidity(record.ValidFrom, record.ValidTo),
                 BuildAttachmentLabel(record, resolvedPath),
@@ -175,6 +190,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 ValueOrFallback(record.Note, string.Empty));
             var searchTexts = BuildSearchTexts(
                 BuildVehicleSearchTexts(vehicle, meta, timeline),
+                EntityRecord,
+                L("GlobalSearch.Entity.Record"),
+                L("GlobalSearch.Entity.Records"),
                 record.RecordType,
                 record.Title,
                 record.Provider,
@@ -194,9 +212,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 results.Add(new GlobalSearchResult(
                     record.VehicleId,
                     vehicleName,
-                    "Doklad",
+                    EntityRecord,
                     record.Id,
-                    "Doklady",
+                    L("GlobalSearch.Entity.Records"),
                     title,
                     summary,
                     rank));
@@ -206,18 +224,21 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         foreach (var reminder in dataSet.Reminders)
         {
             var vehicle = vehiclesById.GetValueOrDefault(reminder.VehicleId);
-            var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+            var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
             var meta = vehicle is null ? null : metaByVehicleId.GetValueOrDefault(vehicle.Id);
             var timeline = GetVehicleTimeline(timelineByVehicleId, reminder.VehicleId);
             var timelineStatus = FindTimelineStatus(timeline, "custom", reminder.Id);
-            var title = ValueOrFallback(reminder.Title, "Připomínka");
+            var title = ValueOrFallback(reminder.Title, L("GlobalSearch.Entity.Reminder"));
             var summary = JoinParts(
-                ValueOrFallback(reminder.DueDate, "bez termínu"),
+                ValueOrFallback(reminder.DueDate, L("GlobalSearch.Value.NoDueDate")),
                 ValueOrFallback(reminder.RepeatMode, string.Empty),
                 timelineStatus,
                 ValueOrFallback(reminder.Note, string.Empty));
             var searchTexts = BuildSearchTexts(
                 BuildVehicleSearchTexts(vehicle, meta, timeline),
+                EntityReminder,
+                L("GlobalSearch.Entity.Reminder"),
+                L("GlobalSearch.Entity.Reminders"),
                 reminder.Title,
                 reminder.DueDate,
                 reminder.ReminderDays,
@@ -231,9 +252,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 results.Add(new GlobalSearchResult(
                     reminder.VehicleId,
                     vehicleName,
-                    "Připomínka",
+                    EntityReminder,
                     reminder.Id,
-                    "Připomínky",
+                    L("GlobalSearch.Entity.Reminders"),
                     title,
                     summary,
                     rank));
@@ -243,22 +264,24 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         foreach (var plan in dataSet.MaintenancePlans)
         {
             var vehicle = vehiclesById.GetValueOrDefault(plan.VehicleId);
-            var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+            var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
             var meta = vehicle is null ? null : metaByVehicleId.GetValueOrDefault(vehicle.Id);
             var timeline = GetVehicleTimeline(timelineByVehicleId, plan.VehicleId);
             var timelineItem = FindTimelineItem(timeline, "maintenance", plan.Id);
             var timelineStatus = FormatSearchableTimelineStatus(timelineItem?.Status);
-            var title = ValueOrFallback(plan.Title, "Servisní úkon");
+            var title = ValueOrFallback(plan.Title, L("GlobalSearch.Value.ServiceTask"));
             var summary = JoinParts(
                 BuildMaintenanceInterval(plan),
                 ValueOrFallback(plan.LastServiceDate, string.Empty),
                 FormatOdometer(plan.LastServiceOdometer),
                 timelineItem?.Detail,
                 timelineStatus,
-                plan.IsActive ? "Aktivní" : "Neaktivní",
+                plan.IsActive ? L("GlobalSearch.Value.Active") : L("GlobalSearch.Value.Inactive"),
                 ValueOrFallback(plan.Note, string.Empty));
             var searchTexts = BuildSearchTexts(
                 BuildVehicleSearchTexts(vehicle, meta, timeline),
+                EntityMaintenance,
+                L("GlobalSearch.Entity.Maintenance"),
                 plan.Title,
                 plan.IntervalKm,
                 plan.IntervalMonths,
@@ -266,7 +289,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 plan.LastServiceOdometer,
                 timelineItem?.Detail,
                 timelineStatus,
-                plan.IsActive ? "Aktivní" : "Neaktivní",
+                plan.IsActive ? L("GlobalSearch.Value.Active") : L("GlobalSearch.Value.Inactive"),
                 plan.Note);
 
             var rank = ComputeRank(searchTexts, needle);
@@ -275,9 +298,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 results.Add(new GlobalSearchResult(
                     plan.VehicleId,
                     vehicleName,
-                    "Údržba",
+                    EntityMaintenance,
                     plan.Id,
-                    "Údržba",
+                    L("GlobalSearch.Entity.Maintenance"),
                     title,
                     summary,
                     rank));
@@ -311,7 +334,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         string vehicleId) =>
         timelineByVehicleId.GetValueOrDefault(vehicleId) ?? [];
 
-    private static IReadOnlyList<string?> BuildVehicleSearchTexts(
+    private IReadOnlyList<string?> BuildVehicleSearchTexts(
         Vehicle? vehicle,
         VehicleMeta? meta,
         IReadOnlyList<VehicleTimelineItem> timelineItems,
@@ -342,6 +365,8 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             vehicle.NextTk,
             vehicle.GreenCardFrom,
             vehicle.GreenCardTo,
+            EntityVehicle,
+            L("GlobalSearch.Entity.Vehicle"),
             includeTimelineStatus ? statusText : string.Empty,
             .. (includeTimelineStatus
                 ? timelineItems
@@ -362,17 +387,17 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private static string FormatSearchableTimelineStatus(string? status) =>
         IsAttentionStatus(status) ? status ?? string.Empty : string.Empty;
 
-    private static string BuildVehicleAttentionStatusText(IReadOnlyList<VehicleTimelineItem> timelineItems)
+    private string BuildVehicleAttentionStatusText(IReadOnlyList<VehicleTimelineItem> timelineItems)
     {
         var parts = new List<string>();
-        AddTimelineStatusPart(parts, timelineItems, "technical", "TK");
-        AddTimelineStatusPart(parts, timelineItems, "green", "ZK");
-        AddTimelineStatusPart(parts, timelineItems, "custom", "Připomínka");
-        AddTimelineStatusPart(parts, timelineItems, "maintenance", "Údržba");
+        AddTimelineStatusPart(parts, timelineItems, "technical", L("GlobalSearch.Attention.TechnicalInspection"));
+        AddTimelineStatusPart(parts, timelineItems, "green", L("GlobalSearch.Attention.GreenCard"));
+        AddTimelineStatusPart(parts, timelineItems, "custom", L("GlobalSearch.Entity.Reminder"));
+        AddTimelineStatusPart(parts, timelineItems, "maintenance", L("GlobalSearch.Entity.Maintenance"));
         return string.Join(" | ", parts);
     }
 
-    private static void AddTimelineStatusPart(List<string> parts, IReadOnlyList<VehicleTimelineItem> timelineItems, string kind, string label)
+    private void AddTimelineStatusPart(List<string> parts, IReadOnlyList<VehicleTimelineItem> timelineItems, string kind, string label)
     {
         var status = timelineItems
             .Where(item => string.Equals(item.Kind, kind, StringComparison.Ordinal))
@@ -381,7 +406,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
 
         if (!string.IsNullOrWhiteSpace(status))
         {
-            parts.Add($"{label}: {status}");
+            parts.Add(LF("GlobalSearch.Attention.StatusPart", label, status));
         }
     }
 
@@ -390,8 +415,8 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
 
     private static bool IsAttentionStatus(string? status) =>
         !string.IsNullOrWhiteSpace(status)
-        && !string.Equals(status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase)
-        && !string.Equals(status, "No alert", StringComparison.CurrentCultureIgnoreCase);
+        && !string.Equals(status, NeutralTimelineStatusCs, StringComparison.CurrentCultureIgnoreCase)
+        && !string.Equals(status, NeutralTimelineStatusEn, StringComparison.CurrentCultureIgnoreCase);
 
     private static IReadOnlyList<string?> BuildSearchTexts(IReadOnlyList<string?> vehicleSearchTexts, params string?[] entrySearchTexts)
     {
@@ -445,12 +470,12 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private static int GetEntityKindPriority(string entityKind) =>
         entityKind switch
         {
-            "Vozidlo" => 1,
-            "Připomínka" => 2,
-            "Doklad" => 3,
-            "Historie" => 4,
-            "Tankování" => 5,
-            "Údržba" => 6,
+            EntityVehicle => 1,
+            EntityReminder => 2,
+            EntityRecord => 3,
+            EntityHistory => 4,
+            EntityFuel => 5,
+            EntityMaintenance => 6,
             _ => 99
         };
 
@@ -460,39 +485,39 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private static string JoinParts(params string?[] parts) =>
         string.Join(" | ", parts.Where(part => !string.IsNullOrWhiteSpace(part)).Select(part => part!.Trim()));
 
-    private static string FormatPlate(string? plate) =>
-        string.IsNullOrWhiteSpace(plate) ? "SPZ Bez SPZ" : $"SPZ {plate.Trim()}";
+    private string FormatPlate(string? plate) =>
+        LF("GlobalSearch.Value.Plate", string.IsNullOrWhiteSpace(plate) ? L("GlobalSearch.Value.NoPlate") : plate.Trim());
 
-    private static string FormatOdometer(string? value) =>
-        VehimapValueParser.TryParseOdometer(value, out var parsed) ? $"{parsed} km" : ValueOrFallback(value, string.Empty);
+    private string FormatOdometer(string? value) =>
+        VehimapValueParser.TryParseOdometer(value, out var parsed) ? LF("GlobalSearch.Value.OdometerKm", parsed) : ValueOrFallback(value, string.Empty);
 
-    private static string FormatMoneyValue(string? value) =>
-        VehimapValueParser.TryParseMoney(value, out var parsed) ? $"{parsed:0.00} Kč" : ValueOrFallback(value, string.Empty);
+    private string FormatMoneyValue(string? value) =>
+        VehimapValueParser.TryParseMoney(value, out var parsed) ? LF("GlobalSearch.Value.Money", parsed.ToString("0.00", CultureInfo.InvariantCulture)) : ValueOrFallback(value, string.Empty);
 
-    private static string FormatFuelLiters(string? value)
+    private string FormatFuelLiters(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
             return string.Empty;
         }
 
-        return value.Contains('l', StringComparison.OrdinalIgnoreCase) ? value : $"{value} l";
+        return value.Contains('l', StringComparison.OrdinalIgnoreCase) ? value : LF("GlobalSearch.Value.Liters", value.Trim());
     }
 
-    private static string BuildFuelTitle(FuelEntry entry)
+    private string BuildFuelTitle(FuelEntry entry)
     {
         if (!string.IsNullOrWhiteSpace(entry.Liters) || !string.IsNullOrWhiteSpace(entry.TotalCost))
         {
             var fuelLabel = JoinParts(entry.FuelType, entry.FuelDetail);
             return string.IsNullOrWhiteSpace(fuelLabel)
-                ? "Tankování"
-                : $"Tankování - {fuelLabel}";
+                ? L("GlobalSearch.Entity.Fuel")
+                : LF("GlobalSearch.Title.FuelWithLabel", fuelLabel);
         }
 
-        return "Stav tachometru";
+        return L("GlobalSearch.Title.OdometerState");
     }
 
-    private static string BuildValidity(string? validFrom, string? validTo)
+    private string BuildValidity(string? validFrom, string? validTo)
     {
         if (string.IsNullOrWhiteSpace(validFrom) && string.IsNullOrWhiteSpace(validTo))
         {
@@ -501,40 +526,47 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
 
         if (string.IsNullOrWhiteSpace(validFrom))
         {
-            return $"do {validTo}";
+            return LF("GlobalSearch.Validity.To", validTo);
         }
 
         if (string.IsNullOrWhiteSpace(validTo))
         {
-            return $"od {validFrom}";
+            return LF("GlobalSearch.Validity.From", validFrom);
         }
 
-        return $"{validFrom} až {validTo}";
+        return LF("GlobalSearch.Validity.Range", validFrom, validTo);
     }
 
-    private static string BuildAttachmentLabel(VehicleRecord record, string resolvedPath)
+    private string BuildAttachmentLabel(VehicleRecord record, string resolvedPath)
     {
         var mode = BuildAttachmentModeLabel(record);
         var fileName = !string.IsNullOrWhiteSpace(resolvedPath) ? Path.GetFileName(resolvedPath) : Path.GetFileName(record.FilePath);
         return JoinParts(mode, fileName);
     }
 
-    private static string BuildAttachmentModeLabel(VehicleRecord record) =>
-        record.AttachmentMode == VehicleRecordAttachmentMode.Managed ? "Spravovaná kopie" : "Externí cesta";
+    private string BuildAttachmentModeLabel(VehicleRecord record) =>
+        record.AttachmentMode == VehicleRecordAttachmentMode.Managed ? L("GlobalSearch.Attachment.Managed") : L("GlobalSearch.Attachment.External");
 
-    private static string BuildMaintenanceInterval(MaintenancePlan plan)
+    private string BuildMaintenanceInterval(MaintenancePlan plan)
     {
         var parts = new List<string>();
         if (!string.IsNullOrWhiteSpace(plan.IntervalKm))
         {
-            parts.Add($"{plan.IntervalKm} km");
+            parts.Add(LF("GlobalSearch.Value.OdometerKm", plan.IntervalKm.Trim()));
         }
 
         if (!string.IsNullOrWhiteSpace(plan.IntervalMonths))
         {
-            parts.Add($"{plan.IntervalMonths} měsíců");
+            parts.Add(LF("GlobalSearch.Value.Months", plan.IntervalMonths.Trim()));
         }
 
         return string.Join(" / ", parts);
     }
+
+    private static IAppLocalizer CreateDefaultLocalizer() =>
+        new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 }

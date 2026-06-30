@@ -71,7 +71,7 @@ public sealed class LegacyGlobalSearchServiceTests
     public void Search_should_ignore_localized_neutral_timeline_status()
     {
         var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
-        var service = new LegacyGlobalSearchService(new StubAttachmentService(), new LegacyTimelineService(localizer));
+        var service = new LegacyGlobalSearchService(new StubAttachmentService(), new LegacyTimelineService(localizer), localizer);
         var today = DateOnly.FromDateTime(DateTime.Today);
         var dataSet = new VehimapDataSet
         {
@@ -88,6 +88,28 @@ public sealed class LegacyGlobalSearchServiceTests
         var results = service.Search(DataRoot, dataSet, "No alert");
 
         Assert.Empty(results);
+    }
+
+    [Fact]
+    public void Search_should_localize_visible_result_texts_without_changing_navigation_entity_kinds()
+    {
+        var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+        var service = new LegacyGlobalSearchService(new StubAttachmentService(), new LegacyTimelineService(localizer), localizer);
+        var dataSet = CreateDataSet();
+
+        var fuelResults = service.Search(DataRoot, dataSet, "FuelSave");
+        var fuelResult = Assert.Single(fuelResults.Where(item => item.EntityId == "fuel_1"));
+        Assert.Equal("Tankování", fuelResult.EntityKind);
+        Assert.Equal("Fuel", fuelResult.SectionLabel);
+        Assert.StartsWith("Fuel -", fuelResult.Title, StringComparison.Ordinal);
+        Assert.Contains("Full tank", fuelResult.Summary, StringComparison.Ordinal);
+        Assert.Contains("CZK 1200.00", fuelResult.Summary, StringComparison.Ordinal);
+
+        var recordResults = service.Search(DataRoot, dataSet, "asistence.pdf");
+        var recordResult = Assert.Single(recordResults.Where(item => item.EntityId == "rec_2"));
+        Assert.Equal("Doklad", recordResult.EntityKind);
+        Assert.Equal("Documents", recordResult.SectionLabel);
+        Assert.Contains("Managed copy", recordResult.Summary, StringComparison.Ordinal);
     }
 
     [Fact]

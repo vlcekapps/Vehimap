@@ -585,6 +585,25 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Domain_global_search_uses_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var service = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacyGlobalSearchService.cs"));
+        var mainWindowViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
+        var workspaceViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "GlobalSearchWorkspaceViewModel.cs"));
+        var itemViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "GlobalSearchResultItemViewModel.cs"));
+
+        Assert.Contains("GlobalSearch.Entity.Vehicle", service);
+        Assert.Contains("GlobalSearch.Value.Money", service);
+        Assert.Contains("GlobalSearch.Attachment.Managed", service);
+        Assert.Contains("GlobalSearch.Summary.WithResults", mainWindowViewModel);
+        Assert.Contains("GlobalSearch.Detail.Selected", workspaceViewModel);
+        Assert.Contains("VehicleLabel", itemViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), workspaceViewModel);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

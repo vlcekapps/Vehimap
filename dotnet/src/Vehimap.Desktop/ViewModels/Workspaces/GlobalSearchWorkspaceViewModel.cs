@@ -13,7 +13,7 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
     }
 
     [ObservableProperty]
-    private string globalSearchSummary = "Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.";
+    private string globalSearchSummary = L("GlobalSearch.Summary.EmptyQuery");
 
     [ObservableProperty]
     private string globalSearchText = string.Empty;
@@ -22,7 +22,7 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
     private GlobalSearchResultItemViewModel? selectedSearchResult;
 
     [ObservableProperty]
-    private string selectedSearchResultDetail = "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.";
+    private string selectedSearchResultDetail = L("GlobalSearch.Detail.EmptySelection");
 
     [ObservableProperty]
     private string selectedGlobalSearchSortOption = WorkspaceSortHelpers.TypeSortLabel;
@@ -68,8 +68,8 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
     partial void OnSelectedSearchResultChanged(GlobalSearchResultItemViewModel? value)
     {
         SelectedSearchResultDetail = value is null
-            ? "Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci."
-            : $"{value.SectionLabel}: {value.Title}\nVozidlo: {value.VehicleName}\n{value.Summary}";
+            ? L("GlobalSearch.Detail.EmptySelection")
+            : LF("GlobalSearch.Detail.Selected", value.SectionLabel, value.Title, value.VehicleName, value.Summary);
 
         Root.NotifyGlobalSearchWorkspaceSelectionChanged();
     }

@@ -7,10 +7,11 @@ public sealed record GlobalSearchResultItemViewModel(
     string VehicleName,
     string SectionLabel,
     string Title,
-    string Summary)
+    string Summary,
+    string VehicleLabel = "vozidlo")
 {
     public string AccessibleLabel =>
-        $"{SectionLabel}, {Title}, vozidlo {VehicleName}, {Summary}".Trim().TrimEnd(',');
+        $"{SectionLabel}, {Title}, {VehicleLabel} {VehicleName}, {Summary}".Trim().TrimEnd(',');
 
     public override string ToString() => AccessibleLabel;
 }

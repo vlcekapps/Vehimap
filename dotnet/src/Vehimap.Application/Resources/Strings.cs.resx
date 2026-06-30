@@ -85,6 +85,49 @@
   <data name="GlobalSearchWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, SPZ, doklad, připomínka, údržba...</value></data>
   <data name="GlobalSearchWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit globální hledání sestupně</value></data>
   <data name="GlobalSearchWorkspace.SortName" xml:space="preserve"><value>Řazení globálního hledání</value></data>
+  <data name="GlobalSearch.Accessible.VehicleLabel" xml:space="preserve"><value>vozidlo</value></data>
+  <data name="GlobalSearch.Attachment.External" xml:space="preserve"><value>Externí cesta</value></data>
+  <data name="GlobalSearch.Attachment.Managed" xml:space="preserve"><value>Spravovaná kopie</value></data>
+  <data name="GlobalSearch.Attention.GreenCard" xml:space="preserve"><value>ZK</value></data>
+  <data name="GlobalSearch.Attention.StatusPart" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="GlobalSearch.Attention.TechnicalInspection" xml:space="preserve"><value>TK</value></data>
+  <data name="GlobalSearch.Entity.Fuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="GlobalSearch.Entity.History" xml:space="preserve"><value>Historie</value></data>
+  <data name="GlobalSearch.Entity.Maintenance" xml:space="preserve"><value>Údržba</value></data>
+  <data name="GlobalSearch.Entity.Record" xml:space="preserve"><value>Doklad</value></data>
+  <data name="GlobalSearch.Entity.Records" xml:space="preserve"><value>Doklady</value></data>
+  <data name="GlobalSearch.Entity.Reminder" xml:space="preserve"><value>Připomínka</value></data>
+  <data name="GlobalSearch.Entity.Reminders" xml:space="preserve"><value>Připomínky</value></data>
+  <data name="GlobalSearch.Entity.Vehicle" xml:space="preserve"><value>Vozidlo</value></data>
+  <data name="GlobalSearch.Detail.EmptySelection" xml:space="preserve"><value>Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.</value></data>
+  <data name="GlobalSearch.Detail.Selected" xml:space="preserve"><value>{0}: {1}
+Vozidlo: {2}
+{3}</value></data>
+  <data name="GlobalSearch.Summary.EmptyQuery" xml:space="preserve"><value>Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.</value></data>
+  <data name="GlobalSearch.Summary.NoResults" xml:space="preserve"><value>Pro dotaz „{0}“ nebyly nalezeny žádné výsledky.</value></data>
+  <data name="GlobalSearch.Summary.WithResults" xml:space="preserve"><value>Dotaz „{0}“: {1} výsledků. Enter otevře vybranou položku.</value></data>
+  <data name="GlobalSearch.Title.FuelWithLabel" xml:space="preserve"><value>Tankování - {0}</value></data>
+  <data name="GlobalSearch.Title.OdometerState" xml:space="preserve"><value>Stav tachometru</value></data>
+  <data name="GlobalSearch.Validity.From" xml:space="preserve"><value>od {0}</value></data>
+  <data name="GlobalSearch.Validity.Range" xml:space="preserve"><value>{0} až {1}</value></data>
+  <data name="GlobalSearch.Validity.To" xml:space="preserve"><value>do {0}</value></data>
+  <data name="GlobalSearch.Value.Active" xml:space="preserve"><value>Aktivní</value></data>
+  <data name="GlobalSearch.Value.FullTank" xml:space="preserve"><value>Plná nádrž</value></data>
+  <data name="GlobalSearch.Value.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
+  <data name="GlobalSearch.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
+  <data name="GlobalSearch.Value.Money" xml:space="preserve"><value>{0} Kč</value></data>
+  <data name="GlobalSearch.Value.Months" xml:space="preserve"><value>{0} měsíců</value></data>
+  <data name="GlobalSearch.Value.No" xml:space="preserve"><value>ne</value></data>
+  <data name="GlobalSearch.Value.NoCategory" xml:space="preserve"><value>Bez kategorie</value></data>
+  <data name="GlobalSearch.Value.NoDueDate" xml:space="preserve"><value>bez termínu</value></data>
+  <data name="GlobalSearch.Value.NoFuelType" xml:space="preserve"><value>bez typu</value></data>
+  <data name="GlobalSearch.Value.NoMakeModel" xml:space="preserve"><value>Bez značky / modelu</value></data>
+  <data name="GlobalSearch.Value.NoPlate" xml:space="preserve"><value>Bez SPZ</value></data>
+  <data name="GlobalSearch.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
+  <data name="GlobalSearch.Value.Plate" xml:space="preserve"><value>SPZ {0}</value></data>
+  <data name="GlobalSearch.Value.ServiceTask" xml:space="preserve"><value>Servisní úkon</value></data>
+  <data name="GlobalSearch.Value.UntitledVehicle" xml:space="preserve"><value>Bez názvu vozidla</value></data>
+  <data name="GlobalSearch.Value.Yes" xml:space="preserve"><value>ano</value></data>
   <data name="FuelWorkspace.AnalysisHeading" xml:space="preserve"><value>Analýza tankování</value></data>
   <data name="FuelWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v tankování vozidla</value></data>
   <data name="FuelWorkspace.ConsumptionHeading" xml:space="preserve"><value>Vývoj spotřeby</value></data>
