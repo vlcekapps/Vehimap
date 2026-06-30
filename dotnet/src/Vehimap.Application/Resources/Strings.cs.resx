@@ -652,6 +652,28 @@
   <data name="Shell.RecordsCount" xml:space="preserve"><value>Doklady</value></data>
   <data name="Shell.RemindersCount" xml:space="preserve"><value>Připomínky</value></data>
   <data name="Shell.VehicleCount" xml:space="preserve"><value>Vozidla</value></data>
+  <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Kategorie</value></data>
+  <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie chytrého poradce</value></data>
+  <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Vymazat filtry chytrého poradce</value></data>
+  <data name="SmartAdvisorWorkspace.DetailHeading" xml:space="preserve"><value>Detail doporučení</value></data>
+  <data name="SmartAdvisorWorkspace.DetailScrollName" xml:space="preserve"><value>Detail vybraného doporučení chytrého poradce</value></data>
+  <data name="SmartAdvisorWorkspace.ItemType" xml:space="preserve"><value>Doporučení chytrého poradce</value></data>
+  <data name="SmartAdvisorWorkspace.KeyboardHelp" xml:space="preserve"><value>Ctrl+F hledá, Ctrl+R obnoví poradce a Enter nebo Ctrl+O otevře vybrané doporučení.</value></data>
+  <data name="SmartAdvisorWorkspace.KeyboardHelpName" xml:space="preserve"><value>Nápověda chytrého poradce. Ctrl+F hledá, Ctrl+R obnoví poradce a Enter nebo Ctrl+O otevře vybrané doporučení.</value></data>
+  <data name="SmartAdvisorWorkspace.ListName" xml:space="preserve"><value>Seznam doporučení chytrého poradce</value></data>
+  <data name="SmartAdvisorWorkspace.OpenItem" xml:space="preserve"><value>Otevřít položku</value></data>
+  <data name="SmartAdvisorWorkspace.OpenItemName" xml:space="preserve"><value>Otevřít vybrané doporučení</value></data>
+  <data name="SmartAdvisorWorkspace.OpenVehicle" xml:space="preserve"><value>Zobrazit vozidlo</value></data>
+  <data name="SmartAdvisorWorkspace.OpenVehicleName" xml:space="preserve"><value>Zobrazit vozidlo vybraného doporučení</value></data>
+  <data name="SmartAdvisorWorkspace.PriorityFilter" xml:space="preserve"><value>Priorita</value></data>
+  <data name="SmartAdvisorWorkspace.PriorityFilterName" xml:space="preserve"><value>Filtr priority chytrého poradce</value></data>
+  <data name="SmartAdvisorWorkspace.Refresh" xml:space="preserve"><value>Obnovit</value></data>
+  <data name="SmartAdvisorWorkspace.RefreshName" xml:space="preserve"><value>Obnovit chytrého poradce</value></data>
+  <data name="SmartAdvisorWorkspace.SearchHelp" xml:space="preserve"><value>Vozidlo, priorita, kategorie nebo text doporučení</value></data>
+  <data name="SmartAdvisorWorkspace.SearchName" xml:space="preserve"><value>Hledání v chytrém poradci</value></data>
+  <data name="SmartAdvisorWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, priorita, kategorie nebo text doporučení...</value></data>
+  <data name="SmartAdvisorWorkspace.VehicleFilter" xml:space="preserve"><value>Vozidlo</value></data>
+  <data name="SmartAdvisorWorkspace.VehicleFilterName" xml:space="preserve"><value>Filtr vozidla chytrého poradce</value></data>
   <data name="TimelineWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v časové ose</value></data>
   <data name="TimelineWorkspace.DetailHeading" xml:space="preserve"><value>Detail časové osy</value></data>
   <data name="TimelineWorkspace.FilterName" xml:space="preserve"><value>Filtr časové osy</value></data>

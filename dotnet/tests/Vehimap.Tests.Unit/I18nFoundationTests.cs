@@ -242,6 +242,7 @@ public sealed class I18nFoundationTests
         var timelineWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "TimelineWorkspaceView.axaml"));
         var upcomingOverviewWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "UpcomingOverviewWorkspaceView.axaml"));
         var overdueOverviewWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "OverdueOverviewWorkspaceView.axaml"));
+        var smartAdvisorWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "SmartAdvisorWorkspaceView.axaml"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyWorkspace);
         Assert.Contains("Text=\"{i18n:Loc HistoryWorkspace.Title}\"", historyWorkspace);
@@ -317,6 +318,14 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc OverdueOverviewWorkspace.ItemType}\"", overdueOverviewWorkspace);
         Assert.Contains("Text=\"{i18n:Loc OverdueOverviewWorkspace.DetailHeading}\"", overdueOverviewWorkspace);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), overdueOverviewWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", smartAdvisorWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc SmartAdvisorWorkspace.SearchPlaceholder}\"", smartAdvisorWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc SmartAdvisorWorkspace.OpenItemName}\"", smartAdvisorWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc SmartAdvisorWorkspace.PriorityFilterName}\"", smartAdvisorWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc SmartAdvisorWorkspace.ItemType}\"", smartAdvisorWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc SmartAdvisorWorkspace.DetailHeading}\"", smartAdvisorWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), smartAdvisorWorkspace);
     }
 
     [Fact]

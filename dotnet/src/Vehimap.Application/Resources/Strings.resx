@@ -652,6 +652,28 @@
   <data name="Shell.RecordsCount" xml:space="preserve"><value>Documents</value></data>
   <data name="Shell.RemindersCount" xml:space="preserve"><value>Reminders</value></data>
   <data name="Shell.VehicleCount" xml:space="preserve"><value>Vehicles</value></data>
+  <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Category</value></data>
+  <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Smart advisor category filter</value></data>
+  <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Clear smart advisor filters</value></data>
+  <data name="SmartAdvisorWorkspace.DetailHeading" xml:space="preserve"><value>Recommendation detail</value></data>
+  <data name="SmartAdvisorWorkspace.DetailScrollName" xml:space="preserve"><value>Selected smart advisor recommendation detail</value></data>
+  <data name="SmartAdvisorWorkspace.ItemType" xml:space="preserve"><value>Smart advisor recommendation</value></data>
+  <data name="SmartAdvisorWorkspace.KeyboardHelp" xml:space="preserve"><value>Ctrl+F searches, Ctrl+R refreshes the advisor, and Enter or Ctrl+O opens the selected recommendation.</value></data>
+  <data name="SmartAdvisorWorkspace.KeyboardHelpName" xml:space="preserve"><value>Smart advisor help. Ctrl+F searches, Ctrl+R refreshes the advisor, and Enter or Ctrl+O opens the selected recommendation.</value></data>
+  <data name="SmartAdvisorWorkspace.ListName" xml:space="preserve"><value>Smart advisor recommendations</value></data>
+  <data name="SmartAdvisorWorkspace.OpenItem" xml:space="preserve"><value>Open item</value></data>
+  <data name="SmartAdvisorWorkspace.OpenItemName" xml:space="preserve"><value>Open selected recommendation</value></data>
+  <data name="SmartAdvisorWorkspace.OpenVehicle" xml:space="preserve"><value>Show vehicle</value></data>
+  <data name="SmartAdvisorWorkspace.OpenVehicleName" xml:space="preserve"><value>Show the vehicle for the selected recommendation</value></data>
+  <data name="SmartAdvisorWorkspace.PriorityFilter" xml:space="preserve"><value>Priority</value></data>
+  <data name="SmartAdvisorWorkspace.PriorityFilterName" xml:space="preserve"><value>Smart advisor priority filter</value></data>
+  <data name="SmartAdvisorWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="SmartAdvisorWorkspace.RefreshName" xml:space="preserve"><value>Refresh smart advisor</value></data>
+  <data name="SmartAdvisorWorkspace.SearchHelp" xml:space="preserve"><value>Vehicle, priority, category or recommendation text</value></data>
+  <data name="SmartAdvisorWorkspace.SearchName" xml:space="preserve"><value>Smart advisor search</value></data>
+  <data name="SmartAdvisorWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, priority, category or recommendation text...</value></data>
+  <data name="SmartAdvisorWorkspace.VehicleFilter" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="SmartAdvisorWorkspace.VehicleFilterName" xml:space="preserve"><value>Smart advisor vehicle filter</value></data>
   <data name="TimelineWorkspace.ClearSearchName" xml:space="preserve"><value>Clear timeline search</value></data>
   <data name="TimelineWorkspace.DetailHeading" xml:space="preserve"><value>Timeline detail</value></data>
   <data name="TimelineWorkspace.FilterName" xml:space="preserve"><value>Timeline filter</value></data>
