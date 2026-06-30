@@ -278,7 +278,7 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => VehicleDetailWorkspace.VehicleEditorStatus = status,
                 failureFocus: DesktopFocusTarget.VehicleEditorName,
-                failurePrefix: "Vozidlo se nepodařilo uložit"))
+                failurePrefix: LO("VehicleDetail.Status.SaveFailedPrefix")))
         {
             return;
         }
@@ -288,8 +288,8 @@ public sealed partial class MainWindowViewModel
         _pendingVehicleStarterBundleOfferVehicleId = wasNew ? vehicleId : null;
 
         VehicleDetailWorkspace.VehicleEditorStatus = wasNew
-            ? "Nové vozidlo bylo uloženo."
-            : "Vozidlo bylo upraveno.";
+            ? LO("VehicleDetail.Status.NewVehicleSaved")
+            : LO("VehicleDetail.Status.VehicleUpdated");
     }
 
     [RelayCommand(CanExecute = nameof(CanCancelVehicleEdit))]

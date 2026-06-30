@@ -459,8 +459,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
             CostWorkspace.SelectedDashboardCostVehicle = null;
             DashboardWorkspace.SelectedDashboardTimelineItem = null;
             SelectedRecord = null;
-            DashboardWorkspace.DashboardTimelineSummary = "Nejbližší termíny napříč vozidly se zobrazí po načtení dat.";
-            DashboardWorkspace.SelectedDashboardTimelineDetail = "Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.";
+            DashboardWorkspace.DashboardTimelineSummary = LO("Overview.Summary.DashboardInitial");
+            DashboardWorkspace.SelectedDashboardTimelineDetail = LO("DashboardTimeline.Detail.Empty");
             SelectedVehicleTabIndex = DetailTabIndex;
             RequestFocus(DesktopFocusTarget.VehicleList);
             return;
@@ -507,7 +507,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void Reload()
     {
-        if (BlockDataActionIfEditing("znovu načíst data"))
+        if (BlockDataActionIfEditing(LO("PendingEdits.Action.ReloadData")))
         {
             return;
         }
@@ -624,7 +624,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private async Task ExportCalendarAsync()
     {
-        if (BlockDataActionIfEditing("exportovat termíny do kalendáře"))
+        if (BlockDataActionIfEditing(LO("PendingEdits.Action.ExportCalendar")))
         {
             return;
         }
@@ -674,7 +674,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít vybranou položku časové osy").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenSelectedTimelineItem")).ConfigureAwait(true))
         {
             return;
         }
@@ -944,7 +944,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return false;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít položku z auditu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenAuditItem")).ConfigureAwait(true))
         {
             return false;
         }
@@ -960,7 +960,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return false;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zobrazit vozidlo z auditu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenAuditVehicle")).ConfigureAwait(true))
         {
             return false;
         }
@@ -978,7 +978,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         if (IsVehicleAuditTarget(item))
         {
-            if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("upravit vozidlo z auditu").ConfigureAwait(true))
+            if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.EditAuditVehicle")).ConfigureAwait(true))
             {
                 return false;
             }
@@ -1010,7 +1010,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return false;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("upravit vozidlo z nákladů").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.EditCostVehicle")).ConfigureAwait(true))
         {
             return false;
         }
@@ -1034,7 +1034,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zobrazit vozidlo z dashboardu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenDashboardVehicle")).ConfigureAwait(true))
         {
             return;
         }
@@ -1051,7 +1051,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("upravit vozidlo z dashboardu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.EditDashboardVehicle")).ConfigureAwait(true))
         {
             return;
         }
@@ -1068,7 +1068,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanOpenDashboardCostOverview))]
     private async Task OpenDashboardCostOverviewAsync()
     {
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít souhrn nákladů z dashboardu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenDashboardCostOverview")).ConfigureAwait(true))
         {
             return;
         }
@@ -1086,7 +1086,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít historii vozidla z dashboardu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenDashboardVehicleHistory")).ConfigureAwait(true))
         {
             return;
         }
@@ -1103,7 +1103,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít náklady vozidla z dashboardu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenDashboardVehicleCosts")).ConfigureAwait(true))
         {
             return;
         }
@@ -1128,7 +1128,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít vozidlo z nákladů").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenCostVehicle")).ConfigureAwait(true))
         {
             return;
         }
@@ -1144,7 +1144,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return false;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("označit servis z dashboardu jako splněný").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.CompleteDashboardMaintenance")).ConfigureAwait(true))
         {
             return false;
         }
@@ -1163,7 +1163,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít náklady vybraného vozidla").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenSelectedVehicleCosts")).ConfigureAwait(true))
         {
             return;
         }
@@ -1182,7 +1182,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít položku z dashboardu").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenDashboardTimelineItem")).ConfigureAwait(true))
         {
             return;
         }
@@ -1198,7 +1198,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít výsledek hledání").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenSearchResult")).ConfigureAwait(true))
         {
             return;
         }

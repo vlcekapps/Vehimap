@@ -1457,7 +1457,11 @@ Stav: {5}</value></data>
   <data name="VehicleDetail.StarterBundle" xml:space="preserve"><value>Balíček</value></data>
   <data name="VehicleDetail.StarterBundleName" xml:space="preserve"><value>Otevřít balíček pro vybrané vozidlo</value></data>
   <data name="VehicleDetail.Status.BundleNoMissingItems" xml:space="preserve"><value>Balíček pro vozidlo už nemá žádné chybějící položky.</value></data>
+  <data name="VehicleDetail.Status.NewVehicleSaved" xml:space="preserve"><value>Nové vozidlo bylo uloženo.</value></data>
+  <data name="VehicleDetail.Status.NewVehicleBundleOpenFailed" xml:space="preserve"><value>Nové vozidlo bylo uloženo, ale navazující balíček se nepodařilo otevřít: {0}</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>Nové vozidlo bylo uloženo. Balíček pro vozidlo už neměl žádné nové položky.</value></data>
+  <data name="VehicleDetail.Status.SaveFailedPrefix" xml:space="preserve"><value>Vozidlo se nepodařilo uložit</value></data>
+  <data name="VehicleDetail.Status.VehicleUpdated" xml:space="preserve"><value>Vozidlo bylo upraveno.</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Category" xml:space="preserve"><value>{0}, {1}: {2}</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Full" xml:space="preserve"><value>{0}, {1}, {2}: {3}</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Simple" xml:space="preserve"><value>{0}: {1}</value></data>
@@ -1686,6 +1690,46 @@ Stav: {5}</value></data>
   <data name="AppShell.Controller.UpdateInstallerLaunched" xml:space="preserve"><value>Instalátor aktualizace byl spuštěn. Vehimap se nyní ukončí, aby instalace mohla pokračovat.</value></data>
   <data name="AppShell.Controller.UpdateCheckFailed" xml:space="preserve"><value>Kontrolu aktualizací se nepodařilo dokončit: {0}</value></data>
   <data name="PendingEdits.Action.Continue" xml:space="preserve"><value>pokračovat</value></data>
+  <data name="PendingEdits.Action.CompleteDashboardMaintenance" xml:space="preserve"><value>označit servis z dashboardu jako splněný</value></data>
+  <data name="PendingEdits.Action.EditAuditVehicle" xml:space="preserve"><value>upravit vozidlo z auditu</value></data>
+  <data name="PendingEdits.Action.EditCostVehicle" xml:space="preserve"><value>upravit vozidlo z nákladů</value></data>
+  <data name="PendingEdits.Action.EditDashboardVehicle" xml:space="preserve"><value>upravit vozidlo z dashboardu</value></data>
+  <data name="PendingEdits.Action.ExitApplication" xml:space="preserve"><value>ukončit aplikaci</value></data>
+  <data name="PendingEdits.Action.ExportCalendar" xml:space="preserve"><value>exportovat termíny do kalendáře</value></data>
+  <data name="PendingEdits.Action.OpenAuditItem" xml:space="preserve"><value>otevřít položku z auditu</value></data>
+  <data name="PendingEdits.Action.OpenAuditVehicle" xml:space="preserve"><value>zobrazit vozidlo z auditu</value></data>
+  <data name="PendingEdits.Action.OpenAuditWindow" xml:space="preserve"><value>otevřít audit dat</value></data>
+  <data name="PendingEdits.Action.OpenCostVehicle" xml:space="preserve"><value>otevřít vozidlo z nákladů</value></data>
+  <data name="PendingEdits.Action.OpenCostWindow" xml:space="preserve"><value>otevřít náklady napříč vozidly</value></data>
+  <data name="PendingEdits.Action.OpenDashboardCostOverview" xml:space="preserve"><value>otevřít souhrn nákladů z dashboardu</value></data>
+  <data name="PendingEdits.Action.OpenDashboardTimelineItem" xml:space="preserve"><value>otevřít položku z dashboardu</value></data>
+  <data name="PendingEdits.Action.OpenDashboardVehicle" xml:space="preserve"><value>zobrazit vozidlo z dashboardu</value></data>
+  <data name="PendingEdits.Action.OpenDashboardVehicleCosts" xml:space="preserve"><value>otevřít náklady vozidla z dashboardu</value></data>
+  <data name="PendingEdits.Action.OpenDashboardVehicleHistory" xml:space="preserve"><value>otevřít historii vozidla z dashboardu</value></data>
+  <data name="PendingEdits.Action.OpenDashboardWindow" xml:space="preserve"><value>otevřít dashboard</value></data>
+  <data name="PendingEdits.Action.OpenFuelWindow" xml:space="preserve"><value>otevřít tankování vybraného vozidla</value></data>
+  <data name="PendingEdits.Action.OpenGlobalSearchWindow" xml:space="preserve"><value>otevřít globální hledání</value></data>
+  <data name="PendingEdits.Action.OpenHistoryWindow" xml:space="preserve"><value>otevřít historii vybraného vozidla</value></data>
+  <data name="PendingEdits.Action.OpenMaintenanceWindow" xml:space="preserve"><value>otevřít plán údržby vybraného vozidla</value></data>
+  <data name="PendingEdits.Action.OpenOverdueOverviewItem" xml:space="preserve"><value>otevřít propadlý termín</value></data>
+  <data name="PendingEdits.Action.OpenOverdueOverviewVehicle" xml:space="preserve"><value>otevřít vozidlo z propadlých termínů</value></data>
+  <data name="PendingEdits.Action.OpenOverdueOverviewWindow" xml:space="preserve"><value>otevřít propadlé termíny</value></data>
+  <data name="PendingEdits.Action.OpenRecordsWindow" xml:space="preserve"><value>otevřít doklady vybraného vozidla</value></data>
+  <data name="PendingEdits.Action.OpenRemindersWindow" xml:space="preserve"><value>otevřít připomínky vybraného vozidla</value></data>
+  <data name="PendingEdits.Action.OpenSearchResult" xml:space="preserve"><value>otevřít výsledek hledání</value></data>
+  <data name="PendingEdits.Action.OpenSelectedTimelineItem" xml:space="preserve"><value>otevřít vybranou položku časové osy</value></data>
+  <data name="PendingEdits.Action.OpenSelectedVehicleCosts" xml:space="preserve"><value>otevřít náklady vybraného vozidla</value></data>
+  <data name="PendingEdits.Action.OpenServiceBook" xml:space="preserve"><value>otevřít servisní knížku vybraného vozidla</value></data>
+  <data name="PendingEdits.Action.OpenSmartAdvisorItem" xml:space="preserve"><value>otevřít doporučení chytrého poradce</value></data>
+  <data name="PendingEdits.Action.OpenSmartAdvisorVehicle" xml:space="preserve"><value>zobrazit vozidlo z chytrého poradce</value></data>
+  <data name="PendingEdits.Action.OpenSmartAdvisorWindow" xml:space="preserve"><value>otevřít chytrého poradce</value></data>
+  <data name="PendingEdits.Action.OpenTimelineWindow" xml:space="preserve"><value>otevřít časovou osu vybraného vozidla</value></data>
+  <data name="PendingEdits.Action.OpenUpcomingOverviewItem" xml:space="preserve"><value>otevřít blížící se termín</value></data>
+  <data name="PendingEdits.Action.OpenUpcomingOverviewVehicle" xml:space="preserve"><value>otevřít vozidlo z přehledu termínů</value></data>
+  <data name="PendingEdits.Action.OpenUpcomingOverviewWindow" xml:space="preserve"><value>otevřít blížící se termíny</value></data>
+  <data name="PendingEdits.Action.OpenVehicleDetailWindow" xml:space="preserve"><value>otevřít detail vybraného vozidla</value></data>
+  <data name="PendingEdits.Action.ReloadData" xml:space="preserve"><value>znovu načíst data</value></data>
+  <data name="PendingEdits.Action.SwitchVehicle" xml:space="preserve"><value>přejít na jiné vozidlo</value></data>
   <data name="PendingEdits.BlockDataAction" xml:space="preserve"><value>Probíhá úprava v části {0}. Uložte nebo zrušte editor, potom půjde {1}.</value></data>
   <data name="PendingEdits.Confirmation.ActionFallback" xml:space="preserve"><value>pokračovat</value></data>
   <data name="PendingEdits.Confirmation.Cancel" xml:space="preserve"><value>Pokračovat v úpravách</value></data>

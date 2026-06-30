@@ -57,7 +57,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít blížící se termín").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenUpcomingOverviewItem")).ConfigureAwait(true))
         {
             return;
         }
@@ -73,7 +73,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít vozidlo z přehledu termínů").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenUpcomingOverviewVehicle")).ConfigureAwait(true))
         {
             return;
         }
@@ -92,7 +92,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít propadlý termín").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenOverdueOverviewItem")).ConfigureAwait(true))
         {
             return;
         }
@@ -108,7 +108,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít vozidlo z propadlých termínů").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenOverdueOverviewVehicle")).ConfigureAwait(true))
         {
             return;
         }

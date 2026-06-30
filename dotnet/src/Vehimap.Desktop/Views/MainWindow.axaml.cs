@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.Windows.Input;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
 
@@ -57,6 +58,10 @@ public partial class MainWindow : Window
     ];
 
     private const int MaxInitialFocusAttempts = 8;
+
+    private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
+
+    private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
 
     private MainWindowViewModel? _viewModel;
     private bool _initialFocusCompleted;
@@ -474,7 +479,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!await _viewModel.ConfirmDiscardPendingEditsAsync("přejít na jiné vozidlo").ConfigureAwait(true))
+        if (!await _viewModel.ConfirmDiscardPendingEditsAsync(L("PendingEdits.Action.SwitchVehicle")).ConfigureAwait(true))
         {
             SyncVehicleSelectionFromViewModel();
             RequestFocus(_viewModel.GetPendingEditFocusTarget());
@@ -1344,7 +1349,7 @@ public partial class MainWindow : Window
             var preview = workspace.BuildVehicleStarterBundlePreview();
             if (preview.TotalMissingCount == 0)
             {
-                workspace.SetVehicleStarterBundleStatus("Nové vozidlo bylo uloženo. Balíček pro vozidlo už neměl žádné nové položky.");
+                workspace.SetVehicleStarterBundleStatus(L("VehicleDetail.Status.NewVehicleBundleNoItems"));
                 return;
             }
 
@@ -1365,7 +1370,7 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             _viewModel.VehicleDetailWorkspace.SetVehicleStarterBundleStatus(
-                $"Nové vozidlo bylo uloženo, ale navazující balíček se nepodařilo otevřít: {ex.Message}");
+                LF("VehicleDetail.Status.NewVehicleBundleOpenFailed", ex.Message));
         }
     }
 
@@ -1421,7 +1426,7 @@ public partial class MainWindow : Window
                 return;
             }
 
-            if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync("otevřít detail vybraného vozidla").ConfigureAwait(true))
+            if (!allowActiveEditor && !await ConfirmDiscardPendingEditsForWindowAsync(L("PendingEdits.Action.OpenVehicleDetailWindow")).ConfigureAwait(true))
             {
                 return;
             }
@@ -1431,7 +1436,7 @@ public partial class MainWindow : Window
             DetailTabIndex,
             _viewModel.VehicleDetailWorkspace,
             DesktopFocusTarget.VehicleList,
-            "otevřít detail vybraného vozidla",
+            L("PendingEdits.Action.OpenVehicleDetailWindow"),
             allowActiveEditor: true).ConfigureAwait(true);
     }
 
@@ -1446,7 +1451,7 @@ public partial class MainWindow : Window
             HistoryTabIndex,
             _viewModel.HistoryWorkspace,
             DesktopFocusTarget.HistoryList,
-            "otevřít historii vybraného vozidla",
+            L("PendingEdits.Action.OpenHistoryWindow"),
             allowActiveEditor).ConfigureAwait(true);
     }
 
@@ -1461,7 +1466,7 @@ public partial class MainWindow : Window
             FuelTabIndex,
             _viewModel.FuelWorkspace,
             DesktopFocusTarget.FuelList,
-            "otevřít tankování vybraného vozidla",
+            L("PendingEdits.Action.OpenFuelWindow"),
             allowActiveEditor).ConfigureAwait(true);
     }
 
@@ -1476,7 +1481,7 @@ public partial class MainWindow : Window
             ReminderTabIndex,
             _viewModel.ReminderWorkspace,
             DesktopFocusTarget.ReminderList,
-            "otevřít připomínky vybraného vozidla",
+            L("PendingEdits.Action.OpenRemindersWindow"),
             allowActiveEditor).ConfigureAwait(true);
     }
 
@@ -1491,7 +1496,7 @@ public partial class MainWindow : Window
             MaintenanceTabIndex,
             _viewModel.MaintenanceWorkspace,
             DesktopFocusTarget.MaintenanceList,
-            "otevřít plán údržby vybraného vozidla",
+            L("PendingEdits.Action.OpenMaintenanceWindow"),
             allowActiveEditor).ConfigureAwait(true);
     }
 
@@ -1506,7 +1511,7 @@ public partial class MainWindow : Window
             TimelineTabIndex,
             _viewModel.TimelineWorkspace,
             DesktopFocusTarget.TimelineSearch,
-            "otevřít časovou osu vybraného vozidla").ConfigureAwait(true);
+            L("PendingEdits.Action.OpenTimelineWindow")).ConfigureAwait(true);
     }
 
     private async Task OpenServiceBookWindowAsync()
@@ -1516,7 +1521,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        if (!await ConfirmDiscardPendingEditsForWindowAsync("otevřít servisní knížku vybraného vozidla").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsForWindowAsync(L("PendingEdits.Action.OpenServiceBook")).ConfigureAwait(true))
         {
             return;
         }
@@ -1548,7 +1553,7 @@ public partial class MainWindow : Window
             AuditTabIndex,
             _viewModel.AuditWorkspace,
             DesktopFocusTarget.AuditList,
-            "otevřít audit dat").ConfigureAwait(true);
+            L("PendingEdits.Action.OpenAuditWindow")).ConfigureAwait(true);
     }
 
     private async Task OpenCostWindowAsync()
@@ -1562,7 +1567,7 @@ public partial class MainWindow : Window
             CostTabIndex,
             _viewModel.CostWorkspace,
             DesktopFocusTarget.CostList,
-            "otevřít náklady napříč vozidly").ConfigureAwait(true);
+            L("PendingEdits.Action.OpenCostWindow")).ConfigureAwait(true);
     }
 
     private async Task OpenDashboardWindowAsync()
@@ -1576,7 +1581,7 @@ public partial class MainWindow : Window
             DashboardTabIndex,
             _viewModel.DashboardWorkspace,
             DesktopFocusTarget.DashboardAuditList,
-            "otevřít dashboard").ConfigureAwait(true);
+            L("PendingEdits.Action.OpenDashboardWindow")).ConfigureAwait(true);
     }
 
     private async Task OpenGlobalSearchWindowAsync()
@@ -1590,7 +1595,7 @@ public partial class MainWindow : Window
             SearchTabIndex,
             _viewModel.GlobalSearchWorkspace,
             DesktopFocusTarget.GlobalSearchBox,
-            "otevřít globální hledání").ConfigureAwait(true);
+            L("PendingEdits.Action.OpenGlobalSearchWindow")).ConfigureAwait(true);
     }
 
     private async Task OpenUpcomingOverviewWindowAsync()
@@ -1604,7 +1609,7 @@ public partial class MainWindow : Window
             UpcomingOverviewTabIndex,
             _viewModel.UpcomingOverviewWorkspace,
             DesktopFocusTarget.UpcomingOverviewSearch,
-            "otevřít blížící se termíny").ConfigureAwait(true);
+            L("PendingEdits.Action.OpenUpcomingOverviewWindow")).ConfigureAwait(true);
     }
 
     private async Task OpenOverdueOverviewWindowAsync()
@@ -1618,7 +1623,7 @@ public partial class MainWindow : Window
             OverdueOverviewTabIndex,
             _viewModel.OverdueOverviewWorkspace,
             DesktopFocusTarget.OverdueOverviewSearch,
-            "otevřít propadlé termíny").ConfigureAwait(true);
+            L("PendingEdits.Action.OpenOverdueOverviewWindow")).ConfigureAwait(true);
     }
 
     private async Task OpenSmartAdvisorWindowAsync()
@@ -1632,7 +1637,7 @@ public partial class MainWindow : Window
             SmartAdvisorTabIndex,
             _viewModel.SmartAdvisorWorkspace,
             DesktopFocusTarget.SmartAdvisorList,
-            "otevřít chytrého poradce").ConfigureAwait(true);
+            L("PendingEdits.Action.OpenSmartAdvisorWindow")).ConfigureAwait(true);
     }
 
     private async Task OpenRecordsWindowAsync(bool allowActiveEditor = false)
@@ -1646,7 +1651,7 @@ public partial class MainWindow : Window
             RecordTabIndex,
             _viewModel.RecordWorkspace,
             DesktopFocusTarget.RecordList,
-            "otevřít doklady vybraného vozidla",
+            L("PendingEdits.Action.OpenRecordsWindow"),
             allowActiveEditor).ConfigureAwait(true);
     }
 
@@ -1661,7 +1666,7 @@ public partial class MainWindow : Window
         var preview = workspace.BuildVehicleStarterBundlePreview();
         if (preview.TotalMissingCount == 0)
         {
-            workspace.SetVehicleStarterBundleStatus("Balíček pro vozidlo už nemá žádné chybějící položky.");
+            workspace.SetVehicleStarterBundleStatus(L("VehicleDetail.Status.BundleNoMissingItems"));
             RequestFocus(DesktopFocusTarget.VehicleList);
             return;
         }

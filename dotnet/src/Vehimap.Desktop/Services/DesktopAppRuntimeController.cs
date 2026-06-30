@@ -427,7 +427,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         try
         {
             var confirmed = await _dialogService
-                .ConfirmDiscardPendingChangesAsync(_mainWindow, _shell.GetPendingEditLabel(), "ukončit aplikaci")
+                .ConfirmDiscardPendingChangesAsync(_mainWindow, _shell.GetPendingEditLabel(), DesktopLocalization.Localizer.GetString("PendingEdits.Action.ExitApplication"))
                 .ConfigureAwait(true);
             if (!confirmed)
             {
@@ -458,7 +458,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             }
 
             var confirmed = await _dialogService
-                .ConfirmDiscardPendingChangesAsync(_mainWindow, _shell.GetPendingEditLabel(), "ukončit aplikaci")
+                .ConfirmDiscardPendingChangesAsync(_mainWindow, _shell.GetPendingEditLabel(), DesktopLocalization.Localizer.GetString("PendingEdits.Action.ExitApplication"))
                 .ConfigureAwait(true);
             if (!confirmed)
             {

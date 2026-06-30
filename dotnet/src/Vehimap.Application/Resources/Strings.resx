@@ -1457,7 +1457,11 @@ Status: {5}</value></data>
   <data name="VehicleDetail.StarterBundle" xml:space="preserve"><value>Bundle</value></data>
   <data name="VehicleDetail.StarterBundleName" xml:space="preserve"><value>Open bundle for the selected vehicle</value></data>
   <data name="VehicleDetail.Status.BundleNoMissingItems" xml:space="preserve"><value>The vehicle bundle has no missing items.</value></data>
+  <data name="VehicleDetail.Status.NewVehicleSaved" xml:space="preserve"><value>New vehicle was saved.</value></data>
+  <data name="VehicleDetail.Status.NewVehicleBundleOpenFailed" xml:space="preserve"><value>The new vehicle was saved, but the follow-up vehicle bundle could not be opened: {0}</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>New vehicle was saved. The vehicle bundle had no new items.</value></data>
+  <data name="VehicleDetail.Status.SaveFailedPrefix" xml:space="preserve"><value>Vehicle could not be saved</value></data>
+  <data name="VehicleDetail.Status.VehicleUpdated" xml:space="preserve"><value>Vehicle was updated.</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Category" xml:space="preserve"><value>{0}, {1}: {2}</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Full" xml:space="preserve"><value>{0}, {1}, {2}: {3}</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Simple" xml:space="preserve"><value>{0}: {1}</value></data>
@@ -1686,6 +1690,46 @@ Status: {5}</value></data>
   <data name="AppShell.Controller.UpdateInstallerLaunched" xml:space="preserve"><value>The update installer has been started. Vehimap will now exit so installation can continue.</value></data>
   <data name="AppShell.Controller.UpdateCheckFailed" xml:space="preserve"><value>Update check could not be completed: {0}</value></data>
   <data name="PendingEdits.Action.Continue" xml:space="preserve"><value>continue</value></data>
+  <data name="PendingEdits.Action.CompleteDashboardMaintenance" xml:space="preserve"><value>mark dashboard service as completed</value></data>
+  <data name="PendingEdits.Action.EditAuditVehicle" xml:space="preserve"><value>edit vehicle from audit</value></data>
+  <data name="PendingEdits.Action.EditCostVehicle" xml:space="preserve"><value>edit vehicle from costs</value></data>
+  <data name="PendingEdits.Action.EditDashboardVehicle" xml:space="preserve"><value>edit vehicle from dashboard</value></data>
+  <data name="PendingEdits.Action.ExitApplication" xml:space="preserve"><value>exit the application</value></data>
+  <data name="PendingEdits.Action.ExportCalendar" xml:space="preserve"><value>export due dates to calendar</value></data>
+  <data name="PendingEdits.Action.OpenAuditItem" xml:space="preserve"><value>open audit item</value></data>
+  <data name="PendingEdits.Action.OpenAuditVehicle" xml:space="preserve"><value>show vehicle from audit</value></data>
+  <data name="PendingEdits.Action.OpenAuditWindow" xml:space="preserve"><value>open data audit</value></data>
+  <data name="PendingEdits.Action.OpenCostVehicle" xml:space="preserve"><value>open vehicle from costs</value></data>
+  <data name="PendingEdits.Action.OpenCostWindow" xml:space="preserve"><value>open fleet costs</value></data>
+  <data name="PendingEdits.Action.OpenDashboardCostOverview" xml:space="preserve"><value>open cost summary from dashboard</value></data>
+  <data name="PendingEdits.Action.OpenDashboardTimelineItem" xml:space="preserve"><value>open dashboard item</value></data>
+  <data name="PendingEdits.Action.OpenDashboardVehicle" xml:space="preserve"><value>show vehicle from dashboard</value></data>
+  <data name="PendingEdits.Action.OpenDashboardVehicleCosts" xml:space="preserve"><value>open vehicle costs from dashboard</value></data>
+  <data name="PendingEdits.Action.OpenDashboardVehicleHistory" xml:space="preserve"><value>open vehicle history from dashboard</value></data>
+  <data name="PendingEdits.Action.OpenDashboardWindow" xml:space="preserve"><value>open dashboard</value></data>
+  <data name="PendingEdits.Action.OpenFuelWindow" xml:space="preserve"><value>open selected vehicle fuel records</value></data>
+  <data name="PendingEdits.Action.OpenGlobalSearchWindow" xml:space="preserve"><value>open global search</value></data>
+  <data name="PendingEdits.Action.OpenHistoryWindow" xml:space="preserve"><value>open selected vehicle history</value></data>
+  <data name="PendingEdits.Action.OpenMaintenanceWindow" xml:space="preserve"><value>open selected vehicle maintenance plan</value></data>
+  <data name="PendingEdits.Action.OpenOverdueOverviewItem" xml:space="preserve"><value>open overdue due date</value></data>
+  <data name="PendingEdits.Action.OpenOverdueOverviewVehicle" xml:space="preserve"><value>open vehicle from overdue due dates</value></data>
+  <data name="PendingEdits.Action.OpenOverdueOverviewWindow" xml:space="preserve"><value>open overdue due dates</value></data>
+  <data name="PendingEdits.Action.OpenRecordsWindow" xml:space="preserve"><value>open selected vehicle documents</value></data>
+  <data name="PendingEdits.Action.OpenRemindersWindow" xml:space="preserve"><value>open selected vehicle reminders</value></data>
+  <data name="PendingEdits.Action.OpenSearchResult" xml:space="preserve"><value>open search result</value></data>
+  <data name="PendingEdits.Action.OpenSelectedTimelineItem" xml:space="preserve"><value>open selected timeline item</value></data>
+  <data name="PendingEdits.Action.OpenSelectedVehicleCosts" xml:space="preserve"><value>open selected vehicle costs</value></data>
+  <data name="PendingEdits.Action.OpenServiceBook" xml:space="preserve"><value>open selected vehicle service book</value></data>
+  <data name="PendingEdits.Action.OpenSmartAdvisorItem" xml:space="preserve"><value>open Smart Advisor recommendation</value></data>
+  <data name="PendingEdits.Action.OpenSmartAdvisorVehicle" xml:space="preserve"><value>show vehicle from Smart Advisor</value></data>
+  <data name="PendingEdits.Action.OpenSmartAdvisorWindow" xml:space="preserve"><value>open Smart Advisor</value></data>
+  <data name="PendingEdits.Action.OpenTimelineWindow" xml:space="preserve"><value>open selected vehicle timeline</value></data>
+  <data name="PendingEdits.Action.OpenUpcomingOverviewItem" xml:space="preserve"><value>open upcoming due date</value></data>
+  <data name="PendingEdits.Action.OpenUpcomingOverviewVehicle" xml:space="preserve"><value>open vehicle from upcoming due dates</value></data>
+  <data name="PendingEdits.Action.OpenUpcomingOverviewWindow" xml:space="preserve"><value>open upcoming due dates</value></data>
+  <data name="PendingEdits.Action.OpenVehicleDetailWindow" xml:space="preserve"><value>open selected vehicle detail</value></data>
+  <data name="PendingEdits.Action.ReloadData" xml:space="preserve"><value>reload data</value></data>
+  <data name="PendingEdits.Action.SwitchVehicle" xml:space="preserve"><value>switch to another vehicle</value></data>
   <data name="PendingEdits.BlockDataAction" xml:space="preserve"><value>Editing is in progress in {0}. Save or cancel the editor, then you can {1}.</value></data>
   <data name="PendingEdits.Confirmation.ActionFallback" xml:space="preserve"><value>continue</value></data>
   <data name="PendingEdits.Confirmation.Cancel" xml:space="preserve"><value>Keep editing</value></data>

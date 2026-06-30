@@ -498,7 +498,7 @@ public sealed partial class MainWindowViewModel
             return false;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("otevřít doporučení chytrého poradce").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenSmartAdvisorItem")).ConfigureAwait(true))
         {
             return false;
         }
@@ -527,7 +527,7 @@ public sealed partial class MainWindowViewModel
             return false;
         }
 
-        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync("zobrazit vozidlo z chytrého poradce").ConfigureAwait(true))
+        if (!await ConfirmDiscardPendingEditsBeforeNavigationAsync(LO("PendingEdits.Action.OpenSmartAdvisorVehicle")).ConfigureAwait(true))
         {
             return false;
         }

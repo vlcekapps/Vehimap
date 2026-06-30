@@ -54,6 +54,12 @@ public sealed class I18nFoundationTests
         Assert.Equal("Vehimap Nightly: zpětná vazba k nightly 2.0.0", czech.Format("FeedbackIssue.Title", "Vehimap Nightly", "nightly", "2.0.0"));
         Assert.Equal("Discard changes", english.GetString("PendingEdits.Confirmation.Confirm"));
         Assert.Equal("Zahodit změny", czech.GetString("PendingEdits.Confirmation.Confirm"));
+        Assert.Equal("open data audit", english.GetString("PendingEdits.Action.OpenAuditWindow"));
+        Assert.Equal("otevřít audit dat", czech.GetString("PendingEdits.Action.OpenAuditWindow"));
+        Assert.Equal("exit the application", english.GetString("PendingEdits.Action.ExitApplication"));
+        Assert.Equal("ukončit aplikaci", czech.GetString("PendingEdits.Action.ExitApplication"));
+        Assert.Equal("New vehicle was saved.", english.GetString("VehicleDetail.Status.NewVehicleSaved"));
+        Assert.Equal("Nové vozidlo bylo uloženo.", czech.GetString("VehicleDetail.Status.NewVehicleSaved"));
         Assert.Equal("Installer language preferences were added to the 2.0 data set.", english.GetString("InstallerLocaleSeed.Applied"));
         Assert.Equal("Instalační jazykové předvolby byly doplněny do datové sady 2.0.", czech.GetString("InstallerLocaleSeed.Applied"));
         Assert.Equal("Restore data from backup", english.GetString("AppShell.ImportBackup.ConfirmTitle"));
@@ -65,6 +71,45 @@ public sealed class I18nFoundationTests
         Assert.Equal("2026-06, Service, odometer 12345, cost 2500, note no note", english.Format("HistoryItem.AccessibleLabel", "2026-06", "Service", "12345", "2500", "no note"));
         Assert.Equal("2026-06, Servis, tachometr 12345, cena 2500, poznámka bez poznámky", czech.Format("HistoryItem.AccessibleLabel", "2026-06", "Servis", "12345", "2500", "bez poznámky"));
         Assert.Equal("Missing.Key.For.Test", english.GetString("Missing.Key.For.Test"));
+    }
+
+    [Fact]
+    public void Pilot_pending_edit_action_descriptions_use_resource_localization()
+    {
+        var root = FindRepositoryRoot();
+        var runtimeController = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopAppRuntimeController.cs"));
+        var mainWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "MainWindow.axaml.cs"));
+        var shellViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
+        var overviewViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.Overviews.cs"));
+        var workspaceStateViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.WorkspaceState.cs"));
+        var vehicleEditingViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.VehicleEditing.cs"));
+
+        Assert.Contains("PendingEdits.Action.ExitApplication", runtimeController);
+        Assert.Contains("PendingEdits.Action.SwitchVehicle", mainWindow);
+        Assert.Contains("PendingEdits.Action.OpenDashboardWindow", mainWindow);
+        Assert.Contains("PendingEdits.Action.OpenSelectedTimelineItem", shellViewModel);
+        Assert.Contains("PendingEdits.Action.OpenAuditItem", shellViewModel);
+        Assert.Contains("PendingEdits.Action.OpenUpcomingOverviewItem", overviewViewModel);
+        Assert.Contains("PendingEdits.Action.OpenSmartAdvisorItem", workspaceStateViewModel);
+        Assert.Contains("VehicleDetail.Status.NewVehicleSaved", vehicleEditingViewModel);
+        Assert.Contains("VehicleDetail.Status.NewVehicleBundleOpenFailed", mainWindow);
+
+        var combined = string.Join(
+            Environment.NewLine,
+            runtimeController,
+            mainWindow,
+            shellViewModel,
+            overviewViewModel,
+            workspaceStateViewModel,
+            vehicleEditingViewModel);
+
+        Assert.DoesNotContain("\"ukončit aplikaci\"", combined);
+        Assert.DoesNotContain("\"přejít na jiné vozidlo\"", combined);
+        Assert.DoesNotContain("\"otevřít audit dat\"", combined);
+        Assert.DoesNotContain("\"otevřít chytrého poradce\"", combined);
+        Assert.DoesNotContain("\"otevřít doporučení chytrého poradce\"", combined);
+        Assert.DoesNotContain("\"Nové vozidlo bylo uloženo.", combined);
+        Assert.DoesNotContain("\"Vozidlo bylo upraveno.", combined);
     }
 
     [Theory]
