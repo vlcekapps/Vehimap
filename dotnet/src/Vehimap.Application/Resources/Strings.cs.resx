@@ -473,6 +473,79 @@
   <data name="WorkspaceWindow.UpcomingName" xml:space="preserve"><value>Blížící se termíny</value></data>
   <data name="WorkspaceWindow.VehicleDetailHelpText" xml:space="preserve"><value>Samostatné okno pro detail vybraného vozidla a související evidence. Escape okno zavře.</value></data>
   <data name="WorkspaceWindow.VehicleDetailName" xml:space="preserve"><value>Detail vozidla</value></data>
+  <data name="TrayActions.BackgroundStatus.ActiveWithDetail" xml:space="preserve"><value>Pozadí je aktivní. {0}</value></data>
+  <data name="TrayActions.BackgroundStatus.NoNotification" xml:space="preserve"><value>Pozadí je aktivní. Aktuálně není nic k oznámení.</value></data>
+  <data name="TrayActions.BackgroundStatusUnavailable" xml:space="preserve"><value>Stav pozadí zatím není dostupný.</value></data>
+  <data name="TrayActions.CancelLabel" xml:space="preserve"><value>Zavřít</value></data>
+  <data name="TrayActions.CheckForUpdatesLabel" xml:space="preserve"><value>Zkontrolovat aktualizace</value></data>
+  <data name="TrayActions.CheckForUpdatesName" xml:space="preserve"><value>Zkontrolovat aktualizace aplikace</value></data>
+  <data name="TrayActions.CloseName" xml:space="preserve"><value>Zavřít akce lišty bez provedení změny</value></data>
+  <data name="TrayActions.CreateAutomaticBackupNowLabel" xml:space="preserve"><value>Zálohovat ihned</value></data>
+  <data name="TrayActions.CreateAutomaticBackupNowName" xml:space="preserve"><value>Vytvořit automatickou zálohu ihned</value></data>
+  <data name="TrayActions.Description" xml:space="preserve"><value>Vyberte akci pro běžící Vehimap. Toto okno nahrazuje nativní menu lišty pro přístupnější ovládání přes klávesnici a čtečku obrazovky.</value></data>
+  <data name="TrayActions.ExitLabel" xml:space="preserve"><value>Ukončit aplikaci</value></data>
+  <data name="TrayActions.ExitName" xml:space="preserve"><value>Ukončit Vehimap</value></data>
+  <data name="TrayActions.ExportBackupLabel" xml:space="preserve"><value>Export dat do zálohy</value></data>
+  <data name="TrayActions.ExportBackupName" xml:space="preserve"><value>Exportovat data aplikace do zálohy</value></data>
+  <data name="TrayActions.ExportCalendarLabel" xml:space="preserve"><value>Export termínů do kalendáře</value></data>
+  <data name="TrayActions.ExportCalendarName" xml:space="preserve"><value>Exportovat budoucí termíny do kalendáře</value></data>
+  <data name="TrayActions.FeedbackIssueLabel" xml:space="preserve"><value>Nahlásit zpětnou vazbu</value></data>
+  <data name="TrayActions.FeedbackIssueName" xml:space="preserve"><value>Otevřít formulář pro nahlášení zpětné vazby k Vehimapu</value></data>
+  <data name="TrayActions.HelpText" xml:space="preserve"><value>Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; další tlačítka otevřou přehledy, nejbližší termíny, filtrované kontroly nebo souborové akce. Escape okno zavře bez akce.</value></data>
+  <data name="TrayActions.ImportBackupHelpText" xml:space="preserve"><value>Vybere záložní soubor a po potvrzení nahradí aktuální datovou sadu. Před obnovou se vytvoří ochranná kopie současných dat.</value></data>
+  <data name="TrayActions.ImportBackupLabel" xml:space="preserve"><value>Obnovit data ze zálohy</value></data>
+  <data name="TrayActions.ImportBackupName" xml:space="preserve"><value>Obnovit data aplikace ze zálohy</value></data>
+  <data name="TrayActions.OpenAboutLabel" xml:space="preserve"><value>O programu</value></data>
+  <data name="TrayActions.OpenAboutName" xml:space="preserve"><value>Otevřít dialog O programu</value></data>
+  <data name="TrayActions.OpenAutomaticBackupFolderLabel" xml:space="preserve"><value>Otevřít složku automatických záloh</value></data>
+  <data name="TrayActions.OpenAutomaticBackupFolderName" xml:space="preserve"><value>Otevřít složku automatických záloh</value></data>
+  <data name="TrayActions.OpenBackgroundStatusLabel" xml:space="preserve"><value>Otevřít aktuální upozornění</value></data>
+  <data name="TrayActions.OpenBackgroundStatusName" xml:space="preserve"><value>Otevřít aktuální upozornění z pozadí</value></data>
+  <data name="TrayActions.OpenDataFolderLabel" xml:space="preserve"><value>Otevřít datovou složku</value></data>
+  <data name="TrayActions.OpenDataFolderName" xml:space="preserve"><value>Otevřít datovou složku Vehimapu</value></data>
+  <data name="TrayActions.OpenNearestGreenCardLabel" xml:space="preserve"><value>Nejbližší ZK</value></data>
+  <data name="TrayActions.OpenNearestGreenCardName" xml:space="preserve"><value>Otevřít nejbližší zelenou kartu</value></data>
+  <data name="TrayActions.OpenNearestMaintenanceLabel" xml:space="preserve"><value>Nejbližší servis</value></data>
+  <data name="TrayActions.OpenNearestMaintenanceName" xml:space="preserve"><value>Otevřít nejbližší servisní úkon</value></data>
+  <data name="TrayActions.OpenNearestRecordLabel" xml:space="preserve"><value>Nejbližší doklad</value></data>
+  <data name="TrayActions.OpenNearestRecordName" xml:space="preserve"><value>Otevřít nejbližší doklad</value></data>
+  <data name="TrayActions.OpenNearestReminderLabel" xml:space="preserve"><value>Nejbližší připomínka</value></data>
+  <data name="TrayActions.OpenNearestReminderName" xml:space="preserve"><value>Otevřít nejbližší vlastní připomínku</value></data>
+  <data name="TrayActions.OpenNearestTechnicalLabel" xml:space="preserve"><value>Nejbližší TK</value></data>
+  <data name="TrayActions.OpenNearestTechnicalName" xml:space="preserve"><value>Otevřít nejbližší technickou kontrolu</value></data>
+  <data name="TrayActions.OpenPrintableReportLabel" xml:space="preserve"><value>Tiskový přehled</value></data>
+  <data name="TrayActions.OpenPrintableReportName" xml:space="preserve"><value>Otevřít tiskový přehled vozidel</value></data>
+  <data name="TrayActions.OpenSettingsLabel" xml:space="preserve"><value>Nastavení</value></data>
+  <data name="TrayActions.OpenSettingsName" xml:space="preserve"><value>Otevřít nastavení aplikace</value></data>
+  <data name="TrayActions.ReloadDataLabel" xml:space="preserve"><value>Načíst data znovu</value></data>
+  <data name="TrayActions.ReloadDataName" xml:space="preserve"><value>Znovu načíst data</value></data>
+  <data name="TrayActions.ReviewGreenCardsLabel" xml:space="preserve"><value>Zkontrolovat ZK</value></data>
+  <data name="TrayActions.ReviewGreenCardsName" xml:space="preserve"><value>Zkontrolovat zelené karty</value></data>
+  <data name="TrayActions.ReviewMaintenanceLabel" xml:space="preserve"><value>Zkontrolovat údržbu</value></data>
+  <data name="TrayActions.ReviewMaintenanceName" xml:space="preserve"><value>Zkontrolovat plán údržby</value></data>
+  <data name="TrayActions.ReviewRecordsLabel" xml:space="preserve"><value>Zkontrolovat doklady</value></data>
+  <data name="TrayActions.ReviewRecordsName" xml:space="preserve"><value>Zkontrolovat doklady</value></data>
+  <data name="TrayActions.ReviewRemindersLabel" xml:space="preserve"><value>Zkontrolovat připomínky</value></data>
+  <data name="TrayActions.ReviewRemindersName" xml:space="preserve"><value>Zkontrolovat vlastní připomínky</value></data>
+  <data name="TrayActions.ReviewTechnicalLabel" xml:space="preserve"><value>Zkontrolovat TK</value></data>
+  <data name="TrayActions.ReviewTechnicalName" xml:space="preserve"><value>Zkontrolovat technické kontroly</value></data>
+  <data name="TrayActions.ScrollViewerName" xml:space="preserve"><value>Seznam akcí lišty</value></data>
+  <data name="TrayActions.Section.ApplicationAndOverviews" xml:space="preserve"><value>Aplikace a přehledy</value></data>
+  <data name="TrayActions.Section.FileAndSettings" xml:space="preserve"><value>Soubor a nastavení</value></data>
+  <data name="TrayActions.Section.FilteredChecks" xml:space="preserve"><value>Filtrované kontroly</value></data>
+  <data name="TrayActions.Section.NearestItems" xml:space="preserve"><value>Nejbližší položky</value></data>
+  <data name="TrayActions.ShowDashboardLabel" xml:space="preserve"><value>Otevřít Dashboard</value></data>
+  <data name="TrayActions.ShowDashboardName" xml:space="preserve"><value>Otevřít dashboard Vehimapu</value></data>
+  <data name="TrayActions.ShowMainWindowLabel" xml:space="preserve"><value>Zobrazit Vehimap</value></data>
+  <data name="TrayActions.ShowMainWindowName" xml:space="preserve"><value>Zobrazit hlavní okno Vehimapu</value></data>
+  <data name="TrayActions.ShowOverdueOverviewLabel" xml:space="preserve"><value>Propadlé termíny</value></data>
+  <data name="TrayActions.ShowOverdueOverviewName" xml:space="preserve"><value>Otevřít přehled propadlých termínů</value></data>
+  <data name="TrayActions.ShowUpcomingOverviewLabel" xml:space="preserve"><value>Blížící se termíny</value></data>
+  <data name="TrayActions.ShowUpcomingOverviewName" xml:space="preserve"><value>Otevřít přehled blížících se termínů</value></data>
+  <data name="TrayActions.ThankAuthorLabel" xml:space="preserve"><value>Poděkovat autorovi</value></data>
+  <data name="TrayActions.ThankAuthorName" xml:space="preserve"><value>Otevřít stránku pro poděkování autorovi</value></data>
+  <data name="TrayActions.Title" xml:space="preserve"><value>Akce Vehimapu na liště</value></data>
+  <data name="TrayActions.WindowName" xml:space="preserve"><value>Akce Vehimapu na liště</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Zálohovat ihned</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Zavřít dialog nastavení</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Uložit nastavení</value></data>

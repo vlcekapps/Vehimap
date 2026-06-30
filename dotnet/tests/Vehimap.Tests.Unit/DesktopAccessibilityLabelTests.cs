@@ -1,6 +1,8 @@
+using System.Globalization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Views;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Xunit;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -193,7 +195,7 @@ public sealed class DesktopAccessibilityLabelTests
     [Fact]
     public void Tray_actions_dialog_defaults_should_expose_overview_actions()
     {
-        var model = TrayActionsDialogViewModel.CreateDefault();
+        var model = TrayActionsDialogViewModel.CreateDefault(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")));
 
         Assert.Equal("Stav pozadí zatím není dostupný.", model.BackgroundStatus);
         Assert.Equal("Otevřít aktuální upozornění", model.OpenBackgroundStatusLabel);
@@ -640,10 +642,16 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc Confirmation.HelpText}\"", confirmationXaml);
         Assert.Contains("Key.Escape", confirmationCodeBehind);
         Assert.Contains("CanResize=\"True\"", trayActionsXaml);
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.WindowName}\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc TrayActions.HelpText}\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TrayActionsBackgroundStatusText\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenBackgroundStatusTrayActionButton\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.OpenBackgroundStatusName}\"", trayActionsXaml);
         Assert.Contains("IsEnabled=\"{Binding CanOpenBackgroundStatus}\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"TrayActionsScrollViewer\"", trayActionsXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.ScrollViewerName}\"", trayActionsXaml);
+        Assert.Contains("Text=\"{i18n:Loc TrayActions.Section.ApplicationAndOverviews}\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowMainWindowTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowDashboardTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShowUpcomingOverviewTrayActionButton\"", trayActionsXaml);
@@ -686,7 +694,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CheckForUpdatesTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExitTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseTrayActionsButton\"", trayActionsXaml);
-        Assert.Contains("Escape okno zavře bez akce.", trayActionsXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.CloseName}\"", trayActionsXaml);
+        Assert.DoesNotMatch("[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]", trayActionsXaml);
         Assert.Contains("OnShowUpcomingOverviewClick", trayActionsCodeBehind);
         Assert.Contains("OnOpenBackgroundStatusClick", trayActionsCodeBehind);
         Assert.Contains("OnShowOverdueOverviewClick", trayActionsCodeBehind);

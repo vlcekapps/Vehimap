@@ -473,6 +473,79 @@
   <data name="WorkspaceWindow.UpcomingName" xml:space="preserve"><value>Upcoming due dates</value></data>
   <data name="WorkspaceWindow.VehicleDetailHelpText" xml:space="preserve"><value>Separate window for selected vehicle detail and related records. Escape closes the window.</value></data>
   <data name="WorkspaceWindow.VehicleDetailName" xml:space="preserve"><value>Vehicle detail</value></data>
+  <data name="TrayActions.BackgroundStatus.ActiveWithDetail" xml:space="preserve"><value>Background mode is active. {0}</value></data>
+  <data name="TrayActions.BackgroundStatus.NoNotification" xml:space="preserve"><value>Background mode is active. Nothing needs attention right now.</value></data>
+  <data name="TrayActions.BackgroundStatusUnavailable" xml:space="preserve"><value>Background status is not available yet.</value></data>
+  <data name="TrayActions.CancelLabel" xml:space="preserve"><value>Close</value></data>
+  <data name="TrayActions.CheckForUpdatesLabel" xml:space="preserve"><value>Check for updates</value></data>
+  <data name="TrayActions.CheckForUpdatesName" xml:space="preserve"><value>Check for application updates</value></data>
+  <data name="TrayActions.CloseName" xml:space="preserve"><value>Close tray actions without making a change</value></data>
+  <data name="TrayActions.CreateAutomaticBackupNowLabel" xml:space="preserve"><value>Back up now</value></data>
+  <data name="TrayActions.CreateAutomaticBackupNowName" xml:space="preserve"><value>Create an automatic backup now</value></data>
+  <data name="TrayActions.Description" xml:space="preserve"><value>Choose an action for the running Vehimap. This window replaces the native tray menu with a more accessible keyboard and screen-reader friendly control surface.</value></data>
+  <data name="TrayActions.ExitLabel" xml:space="preserve"><value>Exit application</value></data>
+  <data name="TrayActions.ExitName" xml:space="preserve"><value>Exit Vehimap</value></data>
+  <data name="TrayActions.ExportBackupLabel" xml:space="preserve"><value>Export data backup</value></data>
+  <data name="TrayActions.ExportBackupName" xml:space="preserve"><value>Export application data to a backup</value></data>
+  <data name="TrayActions.ExportCalendarLabel" xml:space="preserve"><value>Export due dates to calendar</value></data>
+  <data name="TrayActions.ExportCalendarName" xml:space="preserve"><value>Export future due dates to a calendar</value></data>
+  <data name="TrayActions.FeedbackIssueLabel" xml:space="preserve"><value>Report feedback</value></data>
+  <data name="TrayActions.FeedbackIssueName" xml:space="preserve"><value>Open the feedback form for Vehimap</value></data>
+  <data name="TrayActions.HelpText" xml:space="preserve"><value>Choose an action for the running Vehimap. The first button shows the main application window; the other buttons open overviews, nearest due dates, filtered checks or file actions. Escape closes the window without an action.</value></data>
+  <data name="TrayActions.ImportBackupHelpText" xml:space="preserve"><value>Selects a backup file and, after confirmation, replaces the current data set. A protective copy of current data is created before restore.</value></data>
+  <data name="TrayActions.ImportBackupLabel" xml:space="preserve"><value>Restore data from backup</value></data>
+  <data name="TrayActions.ImportBackupName" xml:space="preserve"><value>Restore application data from a backup</value></data>
+  <data name="TrayActions.OpenAboutLabel" xml:space="preserve"><value>About</value></data>
+  <data name="TrayActions.OpenAboutName" xml:space="preserve"><value>Open the About dialog</value></data>
+  <data name="TrayActions.OpenAutomaticBackupFolderLabel" xml:space="preserve"><value>Open automatic backup folder</value></data>
+  <data name="TrayActions.OpenAutomaticBackupFolderName" xml:space="preserve"><value>Open the automatic backup folder</value></data>
+  <data name="TrayActions.OpenBackgroundStatusLabel" xml:space="preserve"><value>Open current alert</value></data>
+  <data name="TrayActions.OpenBackgroundStatusName" xml:space="preserve"><value>Open the current background alert</value></data>
+  <data name="TrayActions.OpenDataFolderLabel" xml:space="preserve"><value>Open data folder</value></data>
+  <data name="TrayActions.OpenDataFolderName" xml:space="preserve"><value>Open the Vehimap data folder</value></data>
+  <data name="TrayActions.OpenNearestGreenCardLabel" xml:space="preserve"><value>Nearest green card</value></data>
+  <data name="TrayActions.OpenNearestGreenCardName" xml:space="preserve"><value>Open the nearest green card due date</value></data>
+  <data name="TrayActions.OpenNearestMaintenanceLabel" xml:space="preserve"><value>Nearest service</value></data>
+  <data name="TrayActions.OpenNearestMaintenanceName" xml:space="preserve"><value>Open the nearest maintenance item</value></data>
+  <data name="TrayActions.OpenNearestRecordLabel" xml:space="preserve"><value>Nearest document</value></data>
+  <data name="TrayActions.OpenNearestRecordName" xml:space="preserve"><value>Open the nearest document</value></data>
+  <data name="TrayActions.OpenNearestReminderLabel" xml:space="preserve"><value>Nearest reminder</value></data>
+  <data name="TrayActions.OpenNearestReminderName" xml:space="preserve"><value>Open the nearest custom reminder</value></data>
+  <data name="TrayActions.OpenNearestTechnicalLabel" xml:space="preserve"><value>Nearest inspection</value></data>
+  <data name="TrayActions.OpenNearestTechnicalName" xml:space="preserve"><value>Open the nearest technical inspection</value></data>
+  <data name="TrayActions.OpenPrintableReportLabel" xml:space="preserve"><value>Printable report</value></data>
+  <data name="TrayActions.OpenPrintableReportName" xml:space="preserve"><value>Open the printable vehicle report</value></data>
+  <data name="TrayActions.OpenSettingsLabel" xml:space="preserve"><value>Settings</value></data>
+  <data name="TrayActions.OpenSettingsName" xml:space="preserve"><value>Open application settings</value></data>
+  <data name="TrayActions.ReloadDataLabel" xml:space="preserve"><value>Reload data</value></data>
+  <data name="TrayActions.ReloadDataName" xml:space="preserve"><value>Reload data</value></data>
+  <data name="TrayActions.ReviewGreenCardsLabel" xml:space="preserve"><value>Review green cards</value></data>
+  <data name="TrayActions.ReviewGreenCardsName" xml:space="preserve"><value>Review green cards</value></data>
+  <data name="TrayActions.ReviewMaintenanceLabel" xml:space="preserve"><value>Review maintenance</value></data>
+  <data name="TrayActions.ReviewMaintenanceName" xml:space="preserve"><value>Review the maintenance plan</value></data>
+  <data name="TrayActions.ReviewRecordsLabel" xml:space="preserve"><value>Review documents</value></data>
+  <data name="TrayActions.ReviewRecordsName" xml:space="preserve"><value>Review documents</value></data>
+  <data name="TrayActions.ReviewRemindersLabel" xml:space="preserve"><value>Review reminders</value></data>
+  <data name="TrayActions.ReviewRemindersName" xml:space="preserve"><value>Review custom reminders</value></data>
+  <data name="TrayActions.ReviewTechnicalLabel" xml:space="preserve"><value>Review inspections</value></data>
+  <data name="TrayActions.ReviewTechnicalName" xml:space="preserve"><value>Review technical inspections</value></data>
+  <data name="TrayActions.ScrollViewerName" xml:space="preserve"><value>Tray action list</value></data>
+  <data name="TrayActions.Section.ApplicationAndOverviews" xml:space="preserve"><value>Application and overviews</value></data>
+  <data name="TrayActions.Section.FileAndSettings" xml:space="preserve"><value>File and settings</value></data>
+  <data name="TrayActions.Section.FilteredChecks" xml:space="preserve"><value>Filtered checks</value></data>
+  <data name="TrayActions.Section.NearestItems" xml:space="preserve"><value>Nearest items</value></data>
+  <data name="TrayActions.ShowDashboardLabel" xml:space="preserve"><value>Open Dashboard</value></data>
+  <data name="TrayActions.ShowDashboardName" xml:space="preserve"><value>Open Vehimap Dashboard</value></data>
+  <data name="TrayActions.ShowMainWindowLabel" xml:space="preserve"><value>Show Vehimap</value></data>
+  <data name="TrayActions.ShowMainWindowName" xml:space="preserve"><value>Show the main Vehimap window</value></data>
+  <data name="TrayActions.ShowOverdueOverviewLabel" xml:space="preserve"><value>Overdue due dates</value></data>
+  <data name="TrayActions.ShowOverdueOverviewName" xml:space="preserve"><value>Open the overdue due dates overview</value></data>
+  <data name="TrayActions.ShowUpcomingOverviewLabel" xml:space="preserve"><value>Upcoming due dates</value></data>
+  <data name="TrayActions.ShowUpcomingOverviewName" xml:space="preserve"><value>Open the upcoming due dates overview</value></data>
+  <data name="TrayActions.ThankAuthorLabel" xml:space="preserve"><value>Thank the author</value></data>
+  <data name="TrayActions.ThankAuthorName" xml:space="preserve"><value>Open the page for thanking the author</value></data>
+  <data name="TrayActions.Title" xml:space="preserve"><value>Vehimap tray actions</value></data>
+  <data name="TrayActions.WindowName" xml:space="preserve"><value>Vehimap tray actions</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Back up now</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Close the settings dialog</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Save settings</value></data>

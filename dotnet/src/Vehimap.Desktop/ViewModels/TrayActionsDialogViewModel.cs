@@ -1,3 +1,6 @@
+using Vehimap.Application.Abstractions;
+using Vehimap.Application.Services;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record TrayActionsDialogViewModel(
@@ -65,38 +68,42 @@ public sealed record TrayActionsDialogViewModel(
     public bool CanCheckForUpdates { get; init; } = true;
     public bool CanExit { get; init; } = true;
 
-    public static TrayActionsDialogViewModel CreateDefault() => new(
-        "Akce Vehimapu na liště",
-        "Vyberte akci pro běžící Vehimap. Toto okno nahrazuje nativní menu lišty pro přístupnější ovládání přes klávesnici a čtečku obrazovky.",
-        "Stav pozadí zatím není dostupný.",
-        "Otevřít aktuální upozornění",
-        "Zobrazit Vehimap",
-        "Otevřít Dashboard",
-        "Blížící se termíny",
-        "Propadlé termíny",
-        "Nejbližší TK",
-        "Nejbližší ZK",
-        "Nejbližší připomínka",
-        "Nejbližší servis",
-        "Nejbližší doklad",
-        "Zkontrolovat TK",
-        "Zkontrolovat ZK",
-        "Zkontrolovat připomínky",
-        "Zkontrolovat údržbu",
-        "Zkontrolovat doklady",
-        "Tiskový přehled",
-        "Export dat do zálohy",
-        "Obnovit data ze zálohy",
-        "Zálohovat ihned",
-        "Otevřít složku automatických záloh",
-        "Nastavení",
-        "Export termínů do kalendáře",
-        "Načíst data znovu",
-        "Otevřít datovou složku",
-        "O programu",
-        "Poděkovat autorovi",
-        "Nahlásit zpětnou vazbu",
-        "Zkontrolovat aktualizace",
-        "Ukončit aplikaci",
-        "Zavřít");
+    public static TrayActionsDialogViewModel CreateDefault(IAppLocalizer? localizer = null)
+    {
+        var effectiveLocalizer = localizer ?? new ResourceAppLocalizer();
+        return new(
+            effectiveLocalizer.GetString("TrayActions.Title"),
+            effectiveLocalizer.GetString("TrayActions.Description"),
+            effectiveLocalizer.GetString("TrayActions.BackgroundStatusUnavailable"),
+            effectiveLocalizer.GetString("TrayActions.OpenBackgroundStatusLabel"),
+            effectiveLocalizer.GetString("TrayActions.ShowMainWindowLabel"),
+            effectiveLocalizer.GetString("TrayActions.ShowDashboardLabel"),
+            effectiveLocalizer.GetString("TrayActions.ShowUpcomingOverviewLabel"),
+            effectiveLocalizer.GetString("TrayActions.ShowOverdueOverviewLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenNearestTechnicalLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenNearestGreenCardLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenNearestReminderLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenNearestMaintenanceLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenNearestRecordLabel"),
+            effectiveLocalizer.GetString("TrayActions.ReviewTechnicalLabel"),
+            effectiveLocalizer.GetString("TrayActions.ReviewGreenCardsLabel"),
+            effectiveLocalizer.GetString("TrayActions.ReviewRemindersLabel"),
+            effectiveLocalizer.GetString("TrayActions.ReviewMaintenanceLabel"),
+            effectiveLocalizer.GetString("TrayActions.ReviewRecordsLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenPrintableReportLabel"),
+            effectiveLocalizer.GetString("TrayActions.ExportBackupLabel"),
+            effectiveLocalizer.GetString("TrayActions.ImportBackupLabel"),
+            effectiveLocalizer.GetString("TrayActions.CreateAutomaticBackupNowLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenAutomaticBackupFolderLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenSettingsLabel"),
+            effectiveLocalizer.GetString("TrayActions.ExportCalendarLabel"),
+            effectiveLocalizer.GetString("TrayActions.ReloadDataLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenDataFolderLabel"),
+            effectiveLocalizer.GetString("TrayActions.OpenAboutLabel"),
+            effectiveLocalizer.GetString("TrayActions.ThankAuthorLabel"),
+            effectiveLocalizer.GetString("TrayActions.FeedbackIssueLabel"),
+            effectiveLocalizer.GetString("TrayActions.CheckForUpdatesLabel"),
+            effectiveLocalizer.GetString("TrayActions.ExitLabel"),
+            effectiveLocalizer.GetString("TrayActions.CancelLabel"));
+    }
 }

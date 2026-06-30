@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -379,7 +380,7 @@ public sealed partial class MainWindowViewModel
         var canUseDataActions = CanUseDataActions;
         var background = BuildBackgroundSnapshot();
 
-        return TrayActionsDialogViewModel.CreateDefault() with
+        return TrayActionsDialogViewModel.CreateDefault(DesktopLocalization.Localizer) with
         {
             BackgroundStatus = BuildTrayBackgroundStatus(background),
             CanOpenBackgroundStatus = CanOpenBackgroundNotification(background),
@@ -417,8 +418,8 @@ public sealed partial class MainWindowViewModel
 
         var toolTip = NormalizeTrayBackgroundText(snapshot.ToolTipText);
         return string.IsNullOrWhiteSpace(toolTip)
-            ? "Pozadí je aktivní. Aktuálně není nic k oznámení."
-            : $"Pozadí je aktivní. {toolTip}";
+            ? DesktopLocalization.Localizer.GetString("TrayActions.BackgroundStatus.NoNotification")
+            : DesktopLocalization.Localizer.Format("TrayActions.BackgroundStatus.ActiveWithDetail", toolTip);
     }
 
     private bool CanOpenBackgroundNotification(DesktopBackgroundSnapshot snapshot) =>

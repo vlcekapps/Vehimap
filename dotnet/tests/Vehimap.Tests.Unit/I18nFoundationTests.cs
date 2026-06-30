@@ -333,6 +333,26 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Pilot_tray_actions_dialog_uses_resource_localization_for_static_text()
+    {
+        var root = FindRepositoryRoot();
+        var trayActionsWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "TrayActionsWindow.axaml"));
+        var trayActionsViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "TrayActionsDialogViewModel.cs"));
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", trayActionsWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.WindowName}\"", trayActionsWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc TrayActions.HelpText}\"", trayActionsWindow);
+        Assert.Contains("Text=\"{i18n:Loc TrayActions.Section.ApplicationAndOverviews}\"", trayActionsWindow);
+        Assert.Contains("Text=\"{i18n:Loc TrayActions.Section.FileAndSettings}\"", trayActionsWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.ExportBackupName}\"", trayActionsWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc TrayActions.ImportBackupHelpText}\"", trayActionsWindow);
+        Assert.Contains("effectiveLocalizer.GetString(\"TrayActions.Title\")", trayActionsViewModel);
+        Assert.Contains("effectiveLocalizer.GetString(\"TrayActions.CheckForUpdatesLabel\")", trayActionsViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), trayActionsWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), trayActionsViewModel);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();
