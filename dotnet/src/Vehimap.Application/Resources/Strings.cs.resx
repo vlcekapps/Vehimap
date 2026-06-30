@@ -248,6 +248,8 @@
   <data name="MaintenanceWorkspace.SearchPlaceholder" xml:space="preserve"><value>Úkon, interval, poslední servis, stav nebo poznámka...</value></data>
   <data name="MaintenanceWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit plán údržby sestupně</value></data>
   <data name="MaintenanceWorkspace.SortName" xml:space="preserve"><value>Řazení plánu údržby</value></data>
+  <data name="MaintenanceWorkspace.Status.NoMissingTemplates" xml:space="preserve"><value>Doporučené šablony už nemají žádné chybějící servisní plány.</value></data>
+  <data name="MaintenanceWorkspace.Status.SelectMaintenancePlan" xml:space="preserve"><value>Nejprve vyberte servisní plán.</value></data>
   <data name="MaintenanceWorkspace.Title" xml:space="preserve"><value>Servisní plány vybraného vozidla</value></data>
   <data name="RecordEditor.AttachmentModeLabel" xml:space="preserve"><value>Režim přílohy</value></data>
   <data name="RecordEditor.AttachmentModeName" xml:space="preserve"><value>Režim přílohy dokladu</value></data>
@@ -728,6 +730,7 @@
   <data name="DashboardWorkspace.ShowOnLaunch" xml:space="preserve"><value>Zobrazovat dashboard při startu</value></data>
   <data name="DashboardWorkspace.ShowOnLaunchHelp" xml:space="preserve"><value>Zapíše stejnou volbu do nastavení aplikace jako dialog Nastavení.</value></data>
   <data name="DashboardWorkspace.ShowOnLaunchName" xml:space="preserve"><value>Zobrazovat dashboard při startu aplikace</value></data>
+  <data name="DashboardWorkspace.Status.SelectMaintenancePlan" xml:space="preserve"><value>Nejprve vyberte servisní plán.</value></data>
   <data name="DashboardWorkspace.TimelineHeading" xml:space="preserve"><value>Nejbližší termíny</value></data>
   <data name="DashboardWorkspace.TimelineListName" xml:space="preserve"><value>Nejbližší termíny napříč vozidly</value></data>
   <data name="DashboardWorkspace.TimelineOpen" xml:space="preserve"><value>Otevřít položku</value></data>
@@ -858,6 +861,8 @@
   <data name="VehicleDetail.RelatedActionsPanelName" xml:space="preserve"><value>Související evidence vybraného vozidla</value></data>
   <data name="VehicleDetail.StarterBundle" xml:space="preserve"><value>Balíček</value></data>
   <data name="VehicleDetail.StarterBundleName" xml:space="preserve"><value>Otevřít balíček pro vybrané vozidlo</value></data>
+  <data name="VehicleDetail.Status.BundleNoMissingItems" xml:space="preserve"><value>Balíček pro vozidlo už nemá žádné chybějící položky.</value></data>
+  <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>Nové vozidlo bylo uloženo. Balíček pro vozidlo už neměl žádné nové položky.</value></data>
   <data name="WorkspaceTabs.Audit" xml:space="preserve"><value>Audit</value></data>
   <data name="WorkspaceTabs.AuditName" xml:space="preserve"><value>Karta Audit</value></data>
   <data name="WorkspaceTabs.ContentHelp" xml:space="preserve"><value>Obsah se mění podle zvolené karty nahoře.</value></data>

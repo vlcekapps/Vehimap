@@ -248,6 +248,8 @@
   <data name="MaintenanceWorkspace.SearchPlaceholder" xml:space="preserve"><value>Task, interval, last service, status or note...</value></data>
   <data name="MaintenanceWorkspace.SortDescendingName" xml:space="preserve"><value>Sort maintenance plan descending</value></data>
   <data name="MaintenanceWorkspace.SortName" xml:space="preserve"><value>Maintenance plan sort order</value></data>
+  <data name="MaintenanceWorkspace.Status.NoMissingTemplates" xml:space="preserve"><value>Recommended templates no longer have any missing service plans.</value></data>
+  <data name="MaintenanceWorkspace.Status.SelectMaintenancePlan" xml:space="preserve"><value>Select a service plan first.</value></data>
   <data name="MaintenanceWorkspace.Title" xml:space="preserve"><value>Maintenance plans for the selected vehicle</value></data>
   <data name="RecordEditor.AttachmentModeLabel" xml:space="preserve"><value>Attachment mode</value></data>
   <data name="RecordEditor.AttachmentModeName" xml:space="preserve"><value>Document attachment mode</value></data>
@@ -728,6 +730,7 @@
   <data name="DashboardWorkspace.ShowOnLaunch" xml:space="preserve"><value>Show dashboard on launch</value></data>
   <data name="DashboardWorkspace.ShowOnLaunchHelp" xml:space="preserve"><value>Writes the same application setting as the Settings dialog.</value></data>
   <data name="DashboardWorkspace.ShowOnLaunchName" xml:space="preserve"><value>Show dashboard when the application starts</value></data>
+  <data name="DashboardWorkspace.Status.SelectMaintenancePlan" xml:space="preserve"><value>Select a service plan first.</value></data>
   <data name="DashboardWorkspace.TimelineHeading" xml:space="preserve"><value>Nearest due dates</value></data>
   <data name="DashboardWorkspace.TimelineListName" xml:space="preserve"><value>Nearest due dates across vehicles</value></data>
   <data name="DashboardWorkspace.TimelineOpen" xml:space="preserve"><value>Open item</value></data>
@@ -858,6 +861,8 @@
   <data name="VehicleDetail.RelatedActionsPanelName" xml:space="preserve"><value>Related records for the selected vehicle</value></data>
   <data name="VehicleDetail.StarterBundle" xml:space="preserve"><value>Bundle</value></data>
   <data name="VehicleDetail.StarterBundleName" xml:space="preserve"><value>Open bundle for the selected vehicle</value></data>
+  <data name="VehicleDetail.Status.BundleNoMissingItems" xml:space="preserve"><value>The vehicle bundle has no missing items.</value></data>
+  <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>New vehicle was saved. The vehicle bundle had no new items.</value></data>
   <data name="WorkspaceTabs.Audit" xml:space="preserve"><value>Audit</value></data>
   <data name="WorkspaceTabs.AuditName" xml:space="preserve"><value>Audit tab</value></data>
   <data name="WorkspaceTabs.ContentHelp" xml:space="preserve"><value>Content changes based on the selected tab above.</value></data>

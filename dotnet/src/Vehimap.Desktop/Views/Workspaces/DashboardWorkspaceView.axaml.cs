@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -59,7 +60,8 @@ public partial class DashboardWorkspaceView : WorkspaceViewBase<DashboardWorkspa
         var dialogViewModel = ViewModel.BuildDashboardMaintenanceCompletionDialogViewModel();
         if (dialogViewModel is null)
         {
-            ViewModel.SetDashboardMaintenanceStatus("Nejprve vyberte servisní plán.");
+            ViewModel.SetDashboardMaintenanceStatus(
+                DesktopLocalization.Localizer.GetString("DashboardWorkspace.Status.SelectMaintenancePlan"));
             return;
         }
 

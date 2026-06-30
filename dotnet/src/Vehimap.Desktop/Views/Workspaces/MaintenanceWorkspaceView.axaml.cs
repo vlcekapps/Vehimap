@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Desktop.Views;
@@ -77,7 +78,8 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
         var preview = ViewModel.BuildMaintenanceTemplatePreview();
         if (preview.TotalMissingCount == 0)
         {
-            ViewModel.SetMaintenanceTemplateStatus("Doporučené šablony už nemají žádné chybějící servisní plány.");
+            ViewModel.SetMaintenanceTemplateStatus(
+                DesktopLocalization.Localizer.GetString("MaintenanceWorkspace.Status.NoMissingTemplates"));
             return;
         }
 
@@ -116,7 +118,8 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
         var dialogViewModel = ViewModel.BuildMaintenanceCompletionDialogViewModel();
         if (dialogViewModel is null)
         {
-            ViewModel.SetMaintenanceStatus("Nejprve vyberte servisní plán.");
+            ViewModel.SetMaintenanceStatus(
+                DesktopLocalization.Localizer.GetString("MaintenanceWorkspace.Status.SelectMaintenancePlan"));
             return;
         }
 

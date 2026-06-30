@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Desktop.Views;
@@ -51,9 +52,10 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         var preview = ViewModel.BuildVehicleStarterBundlePreview();
         if (preview.TotalMissingCount == 0)
         {
-            ViewModel.SetVehicleStarterBundleStatus(postCreateOffer
-                ? "Nové vozidlo bylo uloženo. Balíček pro vozidlo už neměl žádné nové položky."
-                : "Balíček pro vozidlo už nemá žádné chybějící položky.");
+            ViewModel.SetVehicleStarterBundleStatus(
+                DesktopLocalization.Localizer.GetString(postCreateOffer
+                    ? "VehicleDetail.Status.NewVehicleBundleNoItems"
+                    : "VehicleDetail.Status.BundleNoMissingItems"));
             FocusPrimaryActionAfterLayout();
             return;
         }

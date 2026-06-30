@@ -246,6 +246,9 @@ public sealed class I18nFoundationTests
         var auditWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "AuditWorkspaceView.axaml"));
         var costWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "CostWorkspaceView.axaml"));
         var dashboardWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "DashboardWorkspaceView.axaml"));
+        var dashboardWorkspaceCodeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "DashboardWorkspaceView.axaml.cs"));
+        var maintenanceWorkspaceCodeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "MaintenanceWorkspaceView.axaml.cs"));
+        var vehicleDetailWorkspaceCodeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "VehicleDetailWorkspaceView.axaml.cs"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyWorkspace);
         Assert.Contains("Text=\"{i18n:Loc HistoryWorkspace.Title}\"", historyWorkspace);
@@ -356,6 +359,15 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc CostWorkspace.ItemType}\"", dashboardWorkspace);
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc TimelineWorkspace.ItemType}\"", dashboardWorkspace);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), dashboardWorkspace);
+
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"DashboardWorkspace.Status.SelectMaintenancePlan\")", dashboardWorkspaceCodeBehind);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), dashboardWorkspaceCodeBehind);
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"MaintenanceWorkspace.Status.NoMissingTemplates\")", maintenanceWorkspaceCodeBehind);
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"MaintenanceWorkspace.Status.SelectMaintenancePlan\")", maintenanceWorkspaceCodeBehind);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceWorkspaceCodeBehind);
+        Assert.Contains("\"VehicleDetail.Status.NewVehicleBundleNoItems\"", vehicleDetailWorkspaceCodeBehind);
+        Assert.Contains("\"VehicleDetail.Status.BundleNoMissingItems\"", vehicleDetailWorkspaceCodeBehind);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), vehicleDetailWorkspaceCodeBehind);
     }
 
     [Fact]
