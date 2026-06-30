@@ -113,7 +113,12 @@ public sealed class AppShellServicesTests : IDisposable
             true,
             "nightly");
 
-        var url = FeedbackIssueUrlBuilder.Build(appInfo, "Systémová datová složka", 3, 2);
+        var url = FeedbackIssueUrlBuilder.Build(
+            appInfo,
+            "Systémová datová složka",
+            3,
+            2,
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")));
         var uri = new Uri(url);
         var title = ReadQueryValue(uri, "title");
         var body = ReadQueryValue(uri, "body");
@@ -128,6 +133,43 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Contains("- Položky auditu: 2", body, StringComparison.Ordinal);
         Assert.Contains("veřejný issue nepředvyplňuje datovou složku", body, StringComparison.Ordinal);
         Assert.DoesNotContain(@"C:\Users\tester", body, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Feedback_issue_url_uses_english_resources_when_requested()
+    {
+        var appInfo = new AppBuildInfo(
+            "Vehimap Nightly",
+            "2.0.0-nightly.25.1",
+            "2.0.0.0",
+            "published desktop app",
+            @"/opt/vehimap/Vehimap.Desktop",
+            "Windows 11 x64",
+            ".NET 10",
+            "https://example.com/latest.ini",
+            "https://example.com/release",
+            @"/opt/vehimap/Vehimap.Updater",
+            true,
+            "nightly");
+
+        var url = FeedbackIssueUrlBuilder.Build(
+            appInfo,
+            "System data folder",
+            4,
+            1,
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        var uri = new Uri(url);
+        var title = ReadQueryValue(uri, "title");
+        var body = ReadQueryValue(uri, "body");
+
+        Assert.Contains("Vehimap Nightly: feedback for nightly 2.0.0-nightly.25.1", title, StringComparison.Ordinal);
+        Assert.Contains("## What do you want to report or suggest", body, StringComparison.Ordinal);
+        Assert.Contains("- Channel: nightly", body, StringComparison.Ordinal);
+        Assert.Contains("- Data mode: System data folder", body, StringComparison.Ordinal);
+        Assert.Contains("- Vehicle count: 4", body, StringComparison.Ordinal);
+        Assert.Contains("- Audit items: 1", body, StringComparison.Ordinal);
+        Assert.Contains("public issue does not prefill the data folder", body, StringComparison.Ordinal);
+        Assert.DoesNotContain("/opt/vehimap", body, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -545,7 +545,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             Settings = BuildSettings(),
             Vehicles =
             [
-                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "05/2026", "01/2026", "06/2026"),
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "05/2026", "01/2026", "06/2027"),
                 new Vehicle("veh_2", "Božena", "Osobní vozidla", "Srazové", "Škoda 100", "", "1973", "30", "", "09/2099", "01/2099", "10/2099")
             ],
             Reminders =

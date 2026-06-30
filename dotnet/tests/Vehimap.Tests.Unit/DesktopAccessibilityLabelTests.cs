@@ -1566,7 +1566,8 @@ public sealed class DesktopAccessibilityLabelTests
 
         Assert.Contains("<Style Selector=\"ComboBox\">", appXaml);
         Assert.Contains("Property=\"AutomationProperties.HelpText\"", appXaml);
-        Assert.Contains("Šipkami nahoru nebo dolů otevřete seznam", appXaml);
+        Assert.Contains("Value=\"{i18n:Loc App.ComboBox.HelpText}\"", appXaml);
+        Assert.DoesNotContain("Šipkami nahoru nebo dolů otevřete seznam", appXaml);
     }
 
     [Fact]

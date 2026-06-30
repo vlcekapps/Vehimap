@@ -1,3 +1,5 @@
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
@@ -23,12 +25,12 @@ public sealed partial class MainWindowViewModel
 
     public string VehicleListLockStatus =>
         HasPendingEdits
-            ? $"Probíhá úprava v části {GetPendingEditLabel()}. Uložte nebo zrušte editor, potom půjde vybrat jiné vozidlo."
+            ? LFP("PendingEdits.VehicleListLockStatus", GetPendingEditLabel())
             : string.Empty;
 
     public string WorkspaceNavigationLockStatus =>
         HasPendingEdits
-            ? $"Probíhá úprava v části {GetPendingEditLabel()}. Uložte nebo zrušte editor, potom půjde přejít na jinou kartu nebo otevřít jiné okno."
+            ? LFP("PendingEdits.WorkspaceNavigationLockStatus", GetPendingEditLabel())
             : string.Empty;
 
     internal Func<string, Task<bool>>? ConfirmPendingEditsHandler
@@ -48,39 +50,39 @@ public sealed partial class MainWindowViewModel
         var labels = new List<string>();
         if (VehicleDetailWorkspace.IsEditingVehicle)
         {
-            labels.Add("detail vozidla");
+            labels.Add(LP("PendingEdits.Label.VehicleDetail"));
         }
 
         if (IsEditingHistory)
         {
-            labels.Add("historie");
+            labels.Add(LP("PendingEdits.Label.History"));
         }
 
         if (IsEditingFuel)
         {
-            labels.Add("tankování");
+            labels.Add(LP("PendingEdits.Label.Fuel"));
         }
 
         if (IsEditingReminder)
         {
-            labels.Add("připomínky");
+            labels.Add(LP("PendingEdits.Label.Reminder"));
         }
 
         if (IsEditingMaintenance)
         {
-            labels.Add("údržba");
+            labels.Add(LP("PendingEdits.Label.Maintenance"));
         }
 
         if (IsEditingRecord)
         {
-            labels.Add("doklady");
+            labels.Add(LP("PendingEdits.Label.Record"));
         }
 
         return labels.Count switch
         {
             0 => string.Empty,
             1 => labels[0],
-            _ => "více otevřených editorů"
+            _ => LP("PendingEdits.Label.MultipleEditors")
         };
     }
 
@@ -235,10 +237,16 @@ public sealed partial class MainWindowViewModel
         }
 
         var action = string.IsNullOrWhiteSpace(actionDescription)
-            ? "pokračovat"
+            ? LP("PendingEdits.Action.Continue")
             : actionDescription.Trim();
-        ShellStatus = $"Probíhá úprava v části {GetPendingEditLabel()}. Uložte nebo zrušte editor, potom půjde {action}.";
+        ShellStatus = LFP("PendingEdits.BlockDataAction", GetPendingEditLabel(), action);
         RequestFocus(GetPendingEditFocusTarget());
         return true;
     }
+
+    private static string LP(string key) =>
+        DesktopLocalization.Localizer.GetString(key);
+
+    private static string LFP(string key, params object?[] args) =>
+        DesktopLocalization.Localizer.Format(key, args);
 }

@@ -48,6 +48,12 @@ public sealed class I18nFoundationTests
         Assert.Equal("Balíček pro vozidlo", czech.GetString("VehicleStarterBundle.Title"));
         Assert.Equal("Selected: 3 items | Service 1 | Documents 1 | Reminders 1", english.Format("VehicleStarterBundle.Summary.SectionCounts", 3, 1, 1, 1));
         Assert.Equal("Vybráno: 3 položek | Servis 1 | Doklady 1 | Připomínky 1", czech.Format("VehicleStarterBundle.Summary.SectionCounts", 3, 1, 1, 1));
+        Assert.Equal("Press Up or Down Arrow to open the list and choose a value.", english.GetString("App.ComboBox.HelpText"));
+        Assert.Equal("Šipkami nahoru nebo dolů otevřete seznam a vyberte hodnotu.", czech.GetString("App.ComboBox.HelpText"));
+        Assert.Equal("Vehimap Nightly: feedback for nightly 2.0.0", english.Format("FeedbackIssue.Title", "Vehimap Nightly", "nightly", "2.0.0"));
+        Assert.Equal("Vehimap Nightly: zpětná vazba k nightly 2.0.0", czech.Format("FeedbackIssue.Title", "Vehimap Nightly", "nightly", "2.0.0"));
+        Assert.Equal("Discard changes", english.GetString("PendingEdits.Confirmation.Confirm"));
+        Assert.Equal("Zahodit změny", czech.GetString("PendingEdits.Confirmation.Confirm"));
         Assert.Equal("Search “oil” found 2 history entries.", english.Format("HistoryWorkspace.SearchSummary.Filtered", "oil", 2));
         Assert.Equal("Hledání „olej“ našlo 2 historických záznamů.", czech.Format("HistoryWorkspace.SearchSummary.Filtered", "olej", 2));
         Assert.Equal("2026-06, Service, odometer 12345, cost 2500, note no note", english.Format("HistoryItem.AccessibleLabel", "2026-06", "Service", "12345", "2500", "no note"));
@@ -839,6 +845,28 @@ public sealed class I18nFoundationTests
         Assert.Contains("AppShell.Controller.UpdateCheckFailed", appShellController);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), appShellViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), appShellController);
+    }
+
+    [Fact]
+    public void Pilot_feedback_combo_and_pending_edit_text_use_resource_localization()
+    {
+        var root = FindRepositoryRoot();
+        var appXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "App.axaml"));
+        var feedbackIssueBuilder = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "FeedbackIssueUrlBuilder.cs"));
+        var pendingEdits = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.PendingEdits.cs"));
+        var dialogService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "AvaloniaAppShellDialogService.cs"));
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", appXaml);
+        Assert.Contains("Value=\"{i18n:Loc App.ComboBox.HelpText}\"", appXaml);
+        Assert.Contains("FeedbackIssue.Title", feedbackIssueBuilder);
+        Assert.Contains("FeedbackIssue.ReportHeading", feedbackIssueBuilder);
+        Assert.Contains("PendingEdits.VehicleListLockStatus", pendingEdits);
+        Assert.Contains("PendingEdits.BlockDataAction", pendingEdits);
+        Assert.Contains("PendingEdits.Confirmation.Title", dialogService);
+        Assert.Contains("PendingEdits.Confirmation.MessageDiscard", dialogService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), appXaml);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), feedbackIssueBuilder);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), pendingEdits);
     }
 
     [Fact]

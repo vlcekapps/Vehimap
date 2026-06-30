@@ -464,7 +464,7 @@ public sealed partial class MainWindowViewModel
     internal string BuildFeedbackIssueUrl()
     {
         var appInfo = _session.GetAppInfo();
-        return FeedbackIssueUrlBuilder.Build(appInfo, DataMode, VehicleCount, AuditCount);
+        return FeedbackIssueUrlBuilder.Build(appInfo, DataMode, VehicleCount, AuditCount, DesktopLocalization.Localizer);
     }
 
     internal async Task<string> OpenExternalAsync(string path, CancellationToken cancellationToken = default)

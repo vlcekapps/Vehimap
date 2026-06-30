@@ -34,20 +34,26 @@ internal sealed class AvaloniaAppShellDialogService : IAppShellDialogService
 
     public async Task<bool> ConfirmDiscardPendingChangesAsync(Window owner, string pendingEditLabel, string actionDescription)
     {
+        var localizer = DesktopLocalization.Localizer;
         var subject = string.IsNullOrWhiteSpace(pendingEditLabel)
-            ? "rozpracované změny"
+            ? localizer.GetString("PendingEdits.Confirmation.SubjectFallback")
             : pendingEditLabel.Trim();
         var actionText = string.IsNullOrWhiteSpace(actionDescription)
-            ? "pokračovat"
+            ? localizer.GetString("PendingEdits.Confirmation.ActionFallback")
             : actionDescription.Trim();
+        var message = string.Join(
+            Environment.NewLine + Environment.NewLine,
+            localizer.Format("PendingEdits.Confirmation.MessageLead", subject),
+            localizer.Format("PendingEdits.Confirmation.MessageDiscard", actionText),
+            localizer.GetString("PendingEdits.Confirmation.MessageQuestion"));
 
         var confirmation = new ConfirmationWindow
         {
             DataContext = new ConfirmationDialogViewModel(
-                "Neuložené změny",
-                $"Máte rozpracované změny v části „{subject}“.\n\nPokud budete pokračovat a zvolíte akci „{actionText}“, všechny neuložené změny se zahodí.\n\nOpravdu chcete pokračovat?",
-                "Zahodit změny",
-                "Pokračovat v úpravách")
+                localizer.GetString("PendingEdits.Confirmation.Title"),
+                message,
+                localizer.GetString("PendingEdits.Confirmation.Confirm"),
+                localizer.GetString("PendingEdits.Confirmation.Cancel"))
         };
 
         return await confirmation.ShowDialog<bool>(owner);

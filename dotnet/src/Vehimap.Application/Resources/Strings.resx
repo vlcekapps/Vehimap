@@ -40,6 +40,7 @@
   <data name="About.ThankAuthorHelpText" xml:space="preserve"><value>Open the page where you can thank the author by supporting the work.</value></data>
   <data name="About.Title" xml:space="preserve"><value>About</value></data>
   <data name="About.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="App.ComboBox.HelpText" xml:space="preserve"><value>Press Up or Down Arrow to open the list and choose a value.</value></data>
   <data name="Common.Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="Common.Clear" xml:space="preserve"><value>Clear</value></data>
   <data name="Common.ClipboardUnavailable" xml:space="preserve"><value>The clipboard is not available.</value></data>
@@ -72,6 +73,27 @@
   <data name="DataStoreHealth.OpenPreMigrationBackup" xml:space="preserve"><value>Pre-migration backup</value></data>
   <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Open pre-migration backup</value></data>
   <data name="DataStoreHealth.Title" xml:space="preserve"><value>Data set 2.0 check</value></data>
+  <data name="FeedbackIssue.AccessibilityHeading" xml:space="preserve"><value>Accessibility</value></data>
+  <data name="FeedbackIssue.ActualHeading" xml:space="preserve"><value>Actual behavior / why it is inconvenient</value></data>
+  <data name="FeedbackIssue.AppLabel" xml:space="preserve"><value>Application</value></data>
+  <data name="FeedbackIssue.AuditCountLabel" xml:space="preserve"><value>Audit items</value></data>
+  <data name="FeedbackIssue.ChannelLabel" xml:space="preserve"><value>Channel</value></data>
+  <data name="FeedbackIssue.DataModeLabel" xml:space="preserve"><value>Data mode</value></data>
+  <data name="FeedbackIssue.ExpectedHeading" xml:space="preserve"><value>Expected behavior</value></data>
+  <data name="FeedbackIssue.FrameworkLabel" xml:space="preserve"><value>Runtime</value></data>
+  <data name="FeedbackIssue.KeyboardLabel" xml:space="preserve"><value>Keyboard</value></data>
+  <data name="FeedbackIssue.LargeTextLabel" xml:space="preserve"><value>Larger text or DPI</value></data>
+  <data name="FeedbackIssue.Note" xml:space="preserve"><value>Note: the public issue does not prefill the data folder or vehicle names. If they are needed, add them manually only in the scope you want to publish.</value></data>
+  <data name="FeedbackIssue.PlatformLabel" xml:space="preserve"><value>Platform</value></data>
+  <data name="FeedbackIssue.ReportHeading" xml:space="preserve"><value>What do you want to report or suggest</value></data>
+  <data name="FeedbackIssue.RuntimeModeLabel" xml:space="preserve"><value>Run mode</value></data>
+  <data name="FeedbackIssue.ScreenReaderLabel" xml:space="preserve"><value>Screen reader</value></data>
+  <data name="FeedbackIssue.StepsHeading" xml:space="preserve"><value>Steps to reproduce or use</value></data>
+  <data name="FeedbackIssue.SystemHeading" xml:space="preserve"><value>Environment</value></data>
+  <data name="FeedbackIssue.Title" xml:space="preserve"><value>{0}: feedback for {1} {2}</value></data>
+  <data name="FeedbackIssue.UnknownValue" xml:space="preserve"><value>unknown</value></data>
+  <data name="FeedbackIssue.VehicleCountLabel" xml:space="preserve"><value>Vehicle count</value></data>
+  <data name="FeedbackIssue.VersionLabel" xml:space="preserve"><value>Version</value></data>
   <data name="GlobalSearchWorkspace.ClearSearchName" xml:space="preserve"><value>Clear global search</value></data>
   <data name="GlobalSearchWorkspace.DetailHeading" xml:space="preserve"><value>Result detail</value></data>
   <data name="GlobalSearchWorkspace.ItemType" xml:space="preserve"><value>Search result</value></data>
@@ -1622,6 +1644,25 @@ Status: {5}</value></data>
   <data name="AppShell.Controller.InstallUpdateAction" xml:space="preserve"><value>download and install update</value></data>
   <data name="AppShell.Controller.UpdateInstallerLaunched" xml:space="preserve"><value>The update installer has been started. Vehimap will now exit so installation can continue.</value></data>
   <data name="AppShell.Controller.UpdateCheckFailed" xml:space="preserve"><value>Update check could not be completed: {0}</value></data>
+  <data name="PendingEdits.Action.Continue" xml:space="preserve"><value>continue</value></data>
+  <data name="PendingEdits.BlockDataAction" xml:space="preserve"><value>Editing is in progress in {0}. Save or cancel the editor, then you can {1}.</value></data>
+  <data name="PendingEdits.Confirmation.ActionFallback" xml:space="preserve"><value>continue</value></data>
+  <data name="PendingEdits.Confirmation.Cancel" xml:space="preserve"><value>Keep editing</value></data>
+  <data name="PendingEdits.Confirmation.Confirm" xml:space="preserve"><value>Discard changes</value></data>
+  <data name="PendingEdits.Confirmation.MessageDiscard" xml:space="preserve"><value>If you continue and choose “{0}”, all unsaved changes will be discarded.</value></data>
+  <data name="PendingEdits.Confirmation.MessageLead" xml:space="preserve"><value>You have unsaved changes in “{0}”.</value></data>
+  <data name="PendingEdits.Confirmation.MessageQuestion" xml:space="preserve"><value>Do you really want to continue?</value></data>
+  <data name="PendingEdits.Confirmation.SubjectFallback" xml:space="preserve"><value>unsaved changes</value></data>
+  <data name="PendingEdits.Confirmation.Title" xml:space="preserve"><value>Unsaved changes</value></data>
+  <data name="PendingEdits.Label.Fuel" xml:space="preserve"><value>fuel</value></data>
+  <data name="PendingEdits.Label.History" xml:space="preserve"><value>history</value></data>
+  <data name="PendingEdits.Label.Maintenance" xml:space="preserve"><value>maintenance</value></data>
+  <data name="PendingEdits.Label.MultipleEditors" xml:space="preserve"><value>multiple open editors</value></data>
+  <data name="PendingEdits.Label.Record" xml:space="preserve"><value>documents</value></data>
+  <data name="PendingEdits.Label.Reminder" xml:space="preserve"><value>reminders</value></data>
+  <data name="PendingEdits.Label.VehicleDetail" xml:space="preserve"><value>vehicle detail</value></data>
+  <data name="PendingEdits.VehicleListLockStatus" xml:space="preserve"><value>Editing is in progress in {0}. Save or cancel the editor, then another vehicle can be selected.</value></data>
+  <data name="PendingEdits.WorkspaceNavigationLockStatus" xml:space="preserve"><value>Editing is in progress in {0}. Save or cancel the editor, then you can switch to another tab or open another window.</value></data>
   <data name="ServiceBook.Window.Title" xml:space="preserve"><value>Service book</value></data>
   <data name="ServiceBook.Window.TitleWithVehicle" xml:space="preserve"><value>Service book - {0}</value></data>
   <data name="ServiceBook.Window.HelpText" xml:space="preserve"><value>Service book for the selected vehicle. Ctrl+O opens the selected item, Ctrl+S exports HTML and Escape closes the window.</value></data>

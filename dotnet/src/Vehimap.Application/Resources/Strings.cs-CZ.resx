@@ -40,6 +40,7 @@
   <data name="About.ThankAuthorHelpText" xml:space="preserve"><value>Otevře stránku, kde můžete autorovi poděkovat podporou tvorby.</value></data>
   <data name="About.Title" xml:space="preserve"><value>O programu</value></data>
   <data name="About.Version" xml:space="preserve"><value>Verze</value></data>
+  <data name="App.ComboBox.HelpText" xml:space="preserve"><value>Šipkami nahoru nebo dolů otevřete seznam a vyberte hodnotu.</value></data>
   <data name="Common.Cancel" xml:space="preserve"><value>Zrušit</value></data>
   <data name="Common.Clear" xml:space="preserve"><value>Vymazat</value></data>
   <data name="Common.ClipboardUnavailable" xml:space="preserve"><value>Schránka není dostupná.</value></data>
@@ -72,6 +73,27 @@
   <data name="DataStoreHealth.OpenPreMigrationBackup" xml:space="preserve"><value>Předmigrační záloha</value></data>
   <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Otevřít předmigrační zálohu</value></data>
   <data name="DataStoreHealth.Title" xml:space="preserve"><value>Kontrola datové sady 2.0</value></data>
+  <data name="FeedbackIssue.AccessibilityHeading" xml:space="preserve"><value>Přístupnost</value></data>
+  <data name="FeedbackIssue.ActualHeading" xml:space="preserve"><value>Skutečné chování / proč je to nepohodlné</value></data>
+  <data name="FeedbackIssue.AppLabel" xml:space="preserve"><value>Aplikace</value></data>
+  <data name="FeedbackIssue.AuditCountLabel" xml:space="preserve"><value>Položky auditu</value></data>
+  <data name="FeedbackIssue.ChannelLabel" xml:space="preserve"><value>Kanál</value></data>
+  <data name="FeedbackIssue.DataModeLabel" xml:space="preserve"><value>Režim dat</value></data>
+  <data name="FeedbackIssue.ExpectedHeading" xml:space="preserve"><value>Očekávané chování</value></data>
+  <data name="FeedbackIssue.FrameworkLabel" xml:space="preserve"><value>Runtime</value></data>
+  <data name="FeedbackIssue.KeyboardLabel" xml:space="preserve"><value>Klávesnice</value></data>
+  <data name="FeedbackIssue.LargeTextLabel" xml:space="preserve"><value>Větší písmo nebo DPI</value></data>
+  <data name="FeedbackIssue.Note" xml:space="preserve"><value>Poznámka: veřejný issue nepředvyplňuje datovou složku ani názvy vozidel. Pokud jsou potřeba, doplňte je prosím ručně jen v rozsahu, který chcete zveřejnit.</value></data>
+  <data name="FeedbackIssue.PlatformLabel" xml:space="preserve"><value>Platforma</value></data>
+  <data name="FeedbackIssue.ReportHeading" xml:space="preserve"><value>Co chcete nahlásit nebo navrhnout</value></data>
+  <data name="FeedbackIssue.RuntimeModeLabel" xml:space="preserve"><value>Režim spuštění</value></data>
+  <data name="FeedbackIssue.ScreenReaderLabel" xml:space="preserve"><value>Čtečka obrazovky</value></data>
+  <data name="FeedbackIssue.StepsHeading" xml:space="preserve"><value>Kroky k reprodukci nebo použití</value></data>
+  <data name="FeedbackIssue.SystemHeading" xml:space="preserve"><value>Prostředí</value></data>
+  <data name="FeedbackIssue.Title" xml:space="preserve"><value>{0}: zpětná vazba k {1} {2}</value></data>
+  <data name="FeedbackIssue.UnknownValue" xml:space="preserve"><value>nezjištěno</value></data>
+  <data name="FeedbackIssue.VehicleCountLabel" xml:space="preserve"><value>Počet vozidel</value></data>
+  <data name="FeedbackIssue.VersionLabel" xml:space="preserve"><value>Verze</value></data>
   <data name="GlobalSearchWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat globální hledání</value></data>
   <data name="GlobalSearchWorkspace.DetailHeading" xml:space="preserve"><value>Detail výsledku</value></data>
   <data name="GlobalSearchWorkspace.ItemType" xml:space="preserve"><value>Výsledek hledání</value></data>
@@ -1622,6 +1644,25 @@ Stav: {5}</value></data>
   <data name="AppShell.Controller.InstallUpdateAction" xml:space="preserve"><value>stáhnout a nainstalovat aktualizaci</value></data>
   <data name="AppShell.Controller.UpdateInstallerLaunched" xml:space="preserve"><value>Instalátor aktualizace byl spuštěn. Vehimap se nyní ukončí, aby instalace mohla pokračovat.</value></data>
   <data name="AppShell.Controller.UpdateCheckFailed" xml:space="preserve"><value>Kontrolu aktualizací se nepodařilo dokončit: {0}</value></data>
+  <data name="PendingEdits.Action.Continue" xml:space="preserve"><value>pokračovat</value></data>
+  <data name="PendingEdits.BlockDataAction" xml:space="preserve"><value>Probíhá úprava v části {0}. Uložte nebo zrušte editor, potom půjde {1}.</value></data>
+  <data name="PendingEdits.Confirmation.ActionFallback" xml:space="preserve"><value>pokračovat</value></data>
+  <data name="PendingEdits.Confirmation.Cancel" xml:space="preserve"><value>Pokračovat v úpravách</value></data>
+  <data name="PendingEdits.Confirmation.Confirm" xml:space="preserve"><value>Zahodit změny</value></data>
+  <data name="PendingEdits.Confirmation.MessageDiscard" xml:space="preserve"><value>Pokud budete pokračovat a zvolíte akci „{0}“, všechny neuložené změny se zahodí.</value></data>
+  <data name="PendingEdits.Confirmation.MessageLead" xml:space="preserve"><value>Máte rozpracované změny v části „{0}“.</value></data>
+  <data name="PendingEdits.Confirmation.MessageQuestion" xml:space="preserve"><value>Opravdu chcete pokračovat?</value></data>
+  <data name="PendingEdits.Confirmation.SubjectFallback" xml:space="preserve"><value>rozpracované změny</value></data>
+  <data name="PendingEdits.Confirmation.Title" xml:space="preserve"><value>Neuložené změny</value></data>
+  <data name="PendingEdits.Label.Fuel" xml:space="preserve"><value>tankování</value></data>
+  <data name="PendingEdits.Label.History" xml:space="preserve"><value>historie</value></data>
+  <data name="PendingEdits.Label.Maintenance" xml:space="preserve"><value>údržba</value></data>
+  <data name="PendingEdits.Label.MultipleEditors" xml:space="preserve"><value>více otevřených editorů</value></data>
+  <data name="PendingEdits.Label.Record" xml:space="preserve"><value>doklady</value></data>
+  <data name="PendingEdits.Label.Reminder" xml:space="preserve"><value>připomínky</value></data>
+  <data name="PendingEdits.Label.VehicleDetail" xml:space="preserve"><value>detail vozidla</value></data>
+  <data name="PendingEdits.VehicleListLockStatus" xml:space="preserve"><value>Probíhá úprava v části {0}. Uložte nebo zrušte editor, potom půjde vybrat jiné vozidlo.</value></data>
+  <data name="PendingEdits.WorkspaceNavigationLockStatus" xml:space="preserve"><value>Probíhá úprava v části {0}. Uložte nebo zrušte editor, potom půjde přejít na jinou kartu nebo otevřít jiné okno.</value></data>
   <data name="ServiceBook.Window.Title" xml:space="preserve"><value>Servisní knížka</value></data>
   <data name="ServiceBook.Window.TitleWithVehicle" xml:space="preserve"><value>Servisní knížka - {0}</value></data>
   <data name="ServiceBook.Window.HelpText" xml:space="preserve"><value>Servisní knížka vybraného vozidla. Ctrl+O otevře vybranou položku, Ctrl+S exportuje HTML a Escape okno zavře.</value></data>

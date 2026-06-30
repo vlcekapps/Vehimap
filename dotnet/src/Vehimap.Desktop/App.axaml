@@ -1,11 +1,12 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:themes="clr-namespace:Avalonia.Themes.Fluent;assembly=Avalonia.Themes.Fluent"
              x:Class="Vehimap.Desktop.App">
   <Application.Styles>
     <themes:FluentTheme />
     <Style Selector="ComboBox">
-      <Setter Property="AutomationProperties.HelpText" Value="Šipkami nahoru nebo dolů otevřete seznam a vyberte hodnotu." />
+      <Setter Property="AutomationProperties.HelpText" Value="{i18n:Loc App.ComboBox.HelpText}" />
     </Style>
     <Style Selector="RadioButton.tab-header">
       <Setter Property="Margin" Value="0,0,8,8" />
