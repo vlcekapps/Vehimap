@@ -701,6 +701,43 @@
   <data name="CostWorkspace.SearchHelp" xml:space="preserve"><value>Vehicle, category, amount, cost per distance or calculation status</value></data>
   <data name="CostWorkspace.SearchName" xml:space="preserve"><value>Cost overview search</value></data>
   <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, category, amount, cost per distance or calculation status...</value></data>
+  <data name="DashboardWorkspace.AuditHeading" xml:space="preserve"><value>Most important audit</value></data>
+  <data name="DashboardWorkspace.AuditListName" xml:space="preserve"><value>Dashboard audit item overview</value></data>
+  <data name="DashboardWorkspace.AuditOpen" xml:space="preserve"><value>Open vehicle</value></data>
+  <data name="DashboardWorkspace.AuditOpenName" xml:space="preserve"><value>Open vehicle or record from the selected audit item</value></data>
+  <data name="DashboardWorkspace.CompleteMaintenance" xml:space="preserve"><value>Complete service</value></data>
+  <data name="DashboardWorkspace.CompleteMaintenanceName" xml:space="preserve"><value>Mark selected dashboard service due date as completed</value></data>
+  <data name="DashboardWorkspace.CostHeading" xml:space="preserve"><value>Vehicle costs</value></data>
+  <data name="DashboardWorkspace.CostListName" xml:space="preserve"><value>Dashboard cost item overview</value></data>
+  <data name="DashboardWorkspace.CostOpen" xml:space="preserve"><value>Select vehicle</value></data>
+  <data name="DashboardWorkspace.CostOpenName" xml:space="preserve"><value>Select vehicle from the cost overview</value></data>
+  <data name="DashboardWorkspace.CostOverview" xml:space="preserve"><value>Cost summary</value></data>
+  <data name="DashboardWorkspace.CostOverviewName" xml:space="preserve"><value>Open cost summary from dashboard</value></data>
+  <data name="DashboardWorkspace.EditVehicle" xml:space="preserve"><value>Edit vehicle</value></data>
+  <data name="DashboardWorkspace.EditVehicleName" xml:space="preserve"><value>Edit the vehicle selected on the dashboard</value></data>
+  <data name="DashboardWorkspace.KeyboardHelp" xml:space="preserve"><value>Ctrl+R refreshes the dashboard, Ctrl+F opens global search, Ctrl+T opens upcoming due dates, Ctrl+Shift+T opens overdue due dates, Ctrl+P opens the selected due date, Ctrl+H opens vehicle history, Ctrl+L completes the selected service, Ctrl+O shows the vehicle, and Ctrl+U or F2 edits the vehicle.</value></data>
+  <data name="DashboardWorkspace.KeyboardHelpName" xml:space="preserve"><value>Dashboard keyboard help. Ctrl+R refreshes the dashboard, Ctrl+F opens global search, Ctrl+T opens upcoming due dates, Ctrl+Shift+T opens overdue due dates, Ctrl+P opens the selected due date, Ctrl+H opens vehicle history, Ctrl+L completes the selected service, Ctrl+O shows the vehicle, and Ctrl+U or F2 edits the vehicle.</value></data>
+  <data name="DashboardWorkspace.OpenVehicle" xml:space="preserve"><value>Show vehicle</value></data>
+  <data name="DashboardWorkspace.OpenVehicleName" xml:space="preserve"><value>Show vehicle selected on the dashboard</value></data>
+  <data name="DashboardWorkspace.Overdue" xml:space="preserve"><value>Overdue</value></data>
+  <data name="DashboardWorkspace.OverdueName" xml:space="preserve"><value>Open overdue due dates from dashboard</value></data>
+  <data name="DashboardWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="DashboardWorkspace.RefreshName" xml:space="preserve"><value>Refresh dashboard</value></data>
+  <data name="DashboardWorkspace.ScrollName" xml:space="preserve"><value>Dashboard content</value></data>
+  <data name="DashboardWorkspace.SearchName" xml:space="preserve"><value>Open global search from dashboard</value></data>
+  <data name="DashboardWorkspace.ShowOnLaunch" xml:space="preserve"><value>Show dashboard on launch</value></data>
+  <data name="DashboardWorkspace.ShowOnLaunchHelp" xml:space="preserve"><value>Writes the same application setting as the Settings dialog.</value></data>
+  <data name="DashboardWorkspace.ShowOnLaunchName" xml:space="preserve"><value>Show dashboard when the application starts</value></data>
+  <data name="DashboardWorkspace.TimelineHeading" xml:space="preserve"><value>Nearest due dates</value></data>
+  <data name="DashboardWorkspace.TimelineListName" xml:space="preserve"><value>Nearest due dates across vehicles</value></data>
+  <data name="DashboardWorkspace.TimelineOpen" xml:space="preserve"><value>Open item</value></data>
+  <data name="DashboardWorkspace.TimelineOpenName" xml:space="preserve"><value>Open selected due date from dashboard</value></data>
+  <data name="DashboardWorkspace.Upcoming" xml:space="preserve"><value>Upcoming</value></data>
+  <data name="DashboardWorkspace.UpcomingName" xml:space="preserve"><value>Open upcoming due dates from dashboard</value></data>
+  <data name="DashboardWorkspace.VehicleCosts" xml:space="preserve"><value>Vehicle costs</value></data>
+  <data name="DashboardWorkspace.VehicleCostsName" xml:space="preserve"><value>Open costs for the vehicle selected on the dashboard</value></data>
+  <data name="DashboardWorkspace.VehicleHistory" xml:space="preserve"><value>Vehicle history</value></data>
+  <data name="DashboardWorkspace.VehicleHistoryName" xml:space="preserve"><value>Open history for the vehicle selected on the dashboard</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Category</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Smart advisor category filter</value></data>
   <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Clear smart advisor filters</value></data>

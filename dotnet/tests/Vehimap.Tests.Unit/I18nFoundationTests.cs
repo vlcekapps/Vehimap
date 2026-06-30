@@ -245,6 +245,7 @@ public sealed class I18nFoundationTests
         var smartAdvisorWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "SmartAdvisorWorkspaceView.axaml"));
         var auditWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "AuditWorkspaceView.axaml"));
         var costWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "CostWorkspaceView.axaml"));
+        var dashboardWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "DashboardWorkspaceView.axaml"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyWorkspace);
         Assert.Contains("Text=\"{i18n:Loc HistoryWorkspace.Title}\"", historyWorkspace);
@@ -345,6 +346,16 @@ public sealed class I18nFoundationTests
         Assert.Contains("PlaceholderText=\"{i18n:Loc CostWorkspace.SearchPlaceholder}\"", costWorkspace);
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc CostWorkspace.ItemType}\"", costWorkspace);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), costWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", dashboardWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc DashboardWorkspace.ScrollName}\"", dashboardWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc DashboardWorkspace.KeyboardHelp}\"", dashboardWorkspace);
+        Assert.Contains("Content=\"{i18n:Loc DashboardWorkspace.ShowOnLaunch}\"", dashboardWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc DashboardWorkspace.AuditListName}\"", dashboardWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc AuditWorkspace.ItemType}\"", dashboardWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc CostWorkspace.ItemType}\"", dashboardWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc TimelineWorkspace.ItemType}\"", dashboardWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), dashboardWorkspace);
     }
 
     [Fact]

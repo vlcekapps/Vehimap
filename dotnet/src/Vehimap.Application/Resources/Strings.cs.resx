@@ -701,6 +701,43 @@
   <data name="CostWorkspace.SearchHelp" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za km nebo stav výpočtu</value></data>
   <data name="CostWorkspace.SearchName" xml:space="preserve"><value>Hledání v nákladovém přehledu</value></data>
   <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za km nebo stav výpočtu...</value></data>
+  <data name="DashboardWorkspace.AuditHeading" xml:space="preserve"><value>Nejdůležitější audit</value></data>
+  <data name="DashboardWorkspace.AuditListName" xml:space="preserve"><value>Přehled auditních položek na dashboardu</value></data>
+  <data name="DashboardWorkspace.AuditOpen" xml:space="preserve"><value>Otevřít vozidlo</value></data>
+  <data name="DashboardWorkspace.AuditOpenName" xml:space="preserve"><value>Otevřít vozidlo nebo evidenci z vybrané auditní položky</value></data>
+  <data name="DashboardWorkspace.CompleteMaintenance" xml:space="preserve"><value>Dokončit servis</value></data>
+  <data name="DashboardWorkspace.CompleteMaintenanceName" xml:space="preserve"><value>Označit vybraný servisní termín z dashboardu jako splněný</value></data>
+  <data name="DashboardWorkspace.CostHeading" xml:space="preserve"><value>Náklady vozidel</value></data>
+  <data name="DashboardWorkspace.CostListName" xml:space="preserve"><value>Přehled nákladových položek na dashboardu</value></data>
+  <data name="DashboardWorkspace.CostOpen" xml:space="preserve"><value>Vybrat vozidlo</value></data>
+  <data name="DashboardWorkspace.CostOpenName" xml:space="preserve"><value>Vybrat vozidlo z nákladového přehledu</value></data>
+  <data name="DashboardWorkspace.CostOverview" xml:space="preserve"><value>Souhrn nákladů</value></data>
+  <data name="DashboardWorkspace.CostOverviewName" xml:space="preserve"><value>Otevřít souhrn nákladů z dashboardu</value></data>
+  <data name="DashboardWorkspace.EditVehicle" xml:space="preserve"><value>Upravit vozidlo</value></data>
+  <data name="DashboardWorkspace.EditVehicleName" xml:space="preserve"><value>Upravit vozidlo vybrané na dashboardu</value></data>
+  <data name="DashboardWorkspace.KeyboardHelp" xml:space="preserve"><value>Ctrl+R obnoví dashboard, Ctrl+F otevře globální hledání, Ctrl+T blížící se termíny, Ctrl+Shift+T propadlé termíny, Ctrl+P otevře vybraný termín, Ctrl+H historii vozidla, Ctrl+L dokončí vybraný servis, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 vozidlo upraví.</value></data>
+  <data name="DashboardWorkspace.KeyboardHelpName" xml:space="preserve"><value>Klávesová nápověda dashboardu. Ctrl+R obnoví dashboard, Ctrl+F otevře globální hledání, Ctrl+T blížící se termíny, Ctrl+Shift+T propadlé termíny, Ctrl+P otevře vybraný termín, Ctrl+H historii vozidla, Ctrl+L dokončí vybraný servis, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 vozidlo upraví.</value></data>
+  <data name="DashboardWorkspace.OpenVehicle" xml:space="preserve"><value>Zobrazit vozidlo</value></data>
+  <data name="DashboardWorkspace.OpenVehicleName" xml:space="preserve"><value>Zobrazit vozidlo vybrané na dashboardu</value></data>
+  <data name="DashboardWorkspace.Overdue" xml:space="preserve"><value>Propadlé</value></data>
+  <data name="DashboardWorkspace.OverdueName" xml:space="preserve"><value>Otevřít propadlé termíny z dashboardu</value></data>
+  <data name="DashboardWorkspace.Refresh" xml:space="preserve"><value>Obnovit</value></data>
+  <data name="DashboardWorkspace.RefreshName" xml:space="preserve"><value>Obnovit dashboard</value></data>
+  <data name="DashboardWorkspace.ScrollName" xml:space="preserve"><value>Obsah dashboardu</value></data>
+  <data name="DashboardWorkspace.SearchName" xml:space="preserve"><value>Otevřít globální hledání z dashboardu</value></data>
+  <data name="DashboardWorkspace.ShowOnLaunch" xml:space="preserve"><value>Zobrazovat dashboard při startu</value></data>
+  <data name="DashboardWorkspace.ShowOnLaunchHelp" xml:space="preserve"><value>Zapíše stejnou volbu do nastavení aplikace jako dialog Nastavení.</value></data>
+  <data name="DashboardWorkspace.ShowOnLaunchName" xml:space="preserve"><value>Zobrazovat dashboard při startu aplikace</value></data>
+  <data name="DashboardWorkspace.TimelineHeading" xml:space="preserve"><value>Nejbližší termíny</value></data>
+  <data name="DashboardWorkspace.TimelineListName" xml:space="preserve"><value>Nejbližší termíny napříč vozidly</value></data>
+  <data name="DashboardWorkspace.TimelineOpen" xml:space="preserve"><value>Otevřít položku</value></data>
+  <data name="DashboardWorkspace.TimelineOpenName" xml:space="preserve"><value>Otevřít vybraný termín z dashboardu</value></data>
+  <data name="DashboardWorkspace.Upcoming" xml:space="preserve"><value>Blížící se</value></data>
+  <data name="DashboardWorkspace.UpcomingName" xml:space="preserve"><value>Otevřít blížící se termíny z dashboardu</value></data>
+  <data name="DashboardWorkspace.VehicleCosts" xml:space="preserve"><value>Náklady vozidla</value></data>
+  <data name="DashboardWorkspace.VehicleCostsName" xml:space="preserve"><value>Otevřít náklady vozidla vybraného na dashboardu</value></data>
+  <data name="DashboardWorkspace.VehicleHistory" xml:space="preserve"><value>Historie vozidla</value></data>
+  <data name="DashboardWorkspace.VehicleHistoryName" xml:space="preserve"><value>Otevřít historii vozidla vybraného na dashboardu</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Kategorie</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie chytrého poradce</value></data>
   <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Vymazat filtry chytrého poradce</value></data>

@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.DashboardWorkspaceView"
@@ -18,7 +19,7 @@
   </UserControl.KeyBindings>
   <ScrollViewer VerticalScrollBarVisibility="Auto"
                 HorizontalScrollBarVisibility="Disabled"
-                AutomationProperties.Name="Obsah dashboardu"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.ScrollName}"
                 AutomationProperties.AutomationId="DashboardWorkspaceScrollViewer">
   <Grid RowDefinitions="Auto,*" ColumnDefinitions="1.1*,1.1*,1.2*">
     <StackPanel Grid.ColumnSpan="3" Spacing="8">
@@ -27,76 +28,78 @@
       <TextBlock Opacity="0.75" Text="{Binding CostComparison}" TextWrapping="Wrap" AutomationProperties.Name="{Binding CostComparison}" AutomationProperties.AutomationId="DashboardCostComparisonText" />
       <TextBlock Opacity="0.75" Text="{Binding DashboardTimelineSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding DashboardTimelineSummary}" AutomationProperties.AutomationId="DashboardTimelineSummaryText" />
       <TextBlock Opacity="0.75"
-                 Text="Ctrl+R obnoví dashboard, Ctrl+F otevře globální hledání, Ctrl+T blížící se termíny, Ctrl+Shift+T propadlé termíny, Ctrl+P otevře vybraný termín, Ctrl+H historii vozidla, Ctrl+L dokončí vybraný servis, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 vozidlo upraví."
-                 TextWrapping="Wrap" />
+                 Text="{i18n:Loc DashboardWorkspace.KeyboardHelp}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.Name="{i18n:Loc DashboardWorkspace.KeyboardHelpName}"
+                 AutomationProperties.AutomationId="DashboardKeyboardHelpText" />
       <WrapPanel Margin="0,4,0,0" Orientation="Horizontal">
         <Button x:Name="DashboardRefreshButton"
                 Margin="0,0,10,8"
                 Command="{Binding RefreshDashboardCommand}"
-                Content="Obnovit"
-                AutomationProperties.Name="Obnovit dashboard"
+                Content="{i18n:Loc DashboardWorkspace.Refresh}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.RefreshName}"
                 AutomationProperties.AutomationId="DashboardRefreshButton" />
         <CheckBox x:Name="DashboardShowOnLaunchCheckBox"
                   Margin="0,0,10,8"
                   VerticalAlignment="Center"
                   IsChecked="{Binding ShowDashboardOnLaunch}"
-                  Content="Zobrazovat dashboard při startu"
-                  AutomationProperties.Name="Zobrazovat dashboard při startu aplikace"
+                  Content="{i18n:Loc DashboardWorkspace.ShowOnLaunch}"
+                  AutomationProperties.Name="{i18n:Loc DashboardWorkspace.ShowOnLaunchName}"
                   AutomationProperties.AutomationId="DashboardShowOnLaunchCheckBox"
-                  AutomationProperties.HelpText="Zapíše stejnou volbu do nastavení aplikace jako dialog Nastavení." />
+                  AutomationProperties.HelpText="{i18n:Loc DashboardWorkspace.ShowOnLaunchHelp}" />
         <Button x:Name="DashboardSearchButton"
                 Margin="0,0,10,8"
                 Command="{Binding FocusGlobalSearchCommand}"
-                Content="Hledat"
-                AutomationProperties.Name="Otevřít globální hledání z dashboardu"
+                Content="{i18n:Loc Common.Search}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.SearchName}"
                 AutomationProperties.AutomationId="DashboardSearchButton" />
         <Button x:Name="DashboardCostOverviewButton"
                 Margin="0,0,10,8"
                 Command="{Binding OpenDashboardCostOverviewCommand}"
-                Content="Souhrn nákladů"
-                AutomationProperties.Name="Otevřít souhrn nákladů z dashboardu"
+                Content="{i18n:Loc DashboardWorkspace.CostOverview}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.CostOverviewName}"
                 AutomationProperties.AutomationId="DashboardCostOverviewButton" />
         <Button x:Name="DashboardUpcomingButton"
                 Margin="0,0,10,8"
                 Command="{Binding FocusUpcomingOverviewCommand}"
-                Content="Blížící se"
-                AutomationProperties.Name="Otevřít blížící se termíny z dashboardu"
+                Content="{i18n:Loc DashboardWorkspace.Upcoming}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.UpcomingName}"
                 AutomationProperties.AutomationId="DashboardUpcomingButton" />
         <Button x:Name="DashboardOverdueButton"
                 Margin="0,0,10,8"
                 Command="{Binding FocusOverdueOverviewCommand}"
-                Content="Propadlé"
-                AutomationProperties.Name="Otevřít propadlé termíny z dashboardu"
+                Content="{i18n:Loc DashboardWorkspace.Overdue}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.OverdueName}"
                 AutomationProperties.AutomationId="DashboardOverdueButton" />
         <Button x:Name="DashboardOpenVehicleButton"
                 Margin="0,0,10,8"
                 Command="{Binding OpenSelectedDashboardVehicleCommand}"
-                Content="Zobrazit vozidlo"
-                AutomationProperties.Name="Zobrazit vozidlo vybrané na dashboardu"
+                Content="{i18n:Loc DashboardWorkspace.OpenVehicle}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.OpenVehicleName}"
                 AutomationProperties.AutomationId="DashboardOpenVehicleButton" />
         <Button x:Name="DashboardVehicleHistoryButton"
                 Margin="0,0,10,8"
                 Command="{Binding OpenSelectedDashboardVehicleHistoryCommand}"
-                Content="Historie vozidla"
-                AutomationProperties.Name="Otevřít historii vozidla vybraného na dashboardu"
+                Content="{i18n:Loc DashboardWorkspace.VehicleHistory}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.VehicleHistoryName}"
                 AutomationProperties.AutomationId="DashboardVehicleHistoryButton" />
         <Button x:Name="DashboardVehicleCostsButton"
                 Margin="0,0,10,8"
                 Command="{Binding OpenSelectedDashboardVehicleCostsCommand}"
-                Content="Náklady vozidla"
-                AutomationProperties.Name="Otevřít náklady vozidla vybraného na dashboardu"
+                Content="{i18n:Loc DashboardWorkspace.VehicleCosts}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.VehicleCostsName}"
                 AutomationProperties.AutomationId="DashboardVehicleCostsButton" />
         <Button x:Name="DashboardCompleteMaintenanceButton"
                 Margin="0,0,10,8"
                 Command="{Binding CompleteSelectedDashboardMaintenanceCommand}"
-                Content="Dokončit servis"
-                AutomationProperties.Name="Označit vybraný servisní termín z dashboardu jako splněný"
+                Content="{i18n:Loc DashboardWorkspace.CompleteMaintenance}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.CompleteMaintenanceName}"
                 AutomationProperties.AutomationId="DashboardCompleteMaintenanceButton" />
         <Button x:Name="DashboardEditVehicleButton"
                 Margin="0,0,10,8"
                 Command="{Binding EditSelectedDashboardVehicleCommand}"
-                Content="Upravit vozidlo"
-                AutomationProperties.Name="Upravit vozidlo vybrané na dashboardu"
+                Content="{i18n:Loc DashboardWorkspace.EditVehicle}"
+                AutomationProperties.Name="{i18n:Loc DashboardWorkspace.EditVehicleName}"
                 AutomationProperties.AutomationId="DashboardEditVehicleButton" />
       </WrapPanel>
     </StackPanel>
@@ -104,24 +107,24 @@
       <Grid RowDefinitions="Auto,Auto,*">
         <TextBlock FontSize="18"
                    FontWeight="SemiBold"
-                   Text="Nejdůležitější audit"
-                   AutomationProperties.Name="Nejdůležitější audit"
+                   Text="{i18n:Loc DashboardWorkspace.AuditHeading}"
+                   AutomationProperties.Name="{i18n:Loc DashboardWorkspace.AuditHeading}"
                    AutomationProperties.AutomationId="DashboardAuditHeadingText"
                    AutomationProperties.HeadingLevel="2" />
-        <Button Grid.Row="1" x:Name="DashboardAuditOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardAuditItemCommand}" Content="Otevřít vozidlo" AutomationProperties.Name="Otevřít vozidlo nebo evidenci z vybrané auditní položky" AutomationProperties.AutomationId="DashboardAuditOpenButton" />
+        <Button Grid.Row="1" x:Name="DashboardAuditOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardAuditItemCommand}" Content="{i18n:Loc DashboardWorkspace.AuditOpen}" AutomationProperties.Name="{i18n:Loc DashboardWorkspace.AuditOpenName}" AutomationProperties.AutomationId="DashboardAuditOpenButton" />
         <ListBox x:Name="DashboardAuditListBox"
                  Grid.Row="2"
                  Margin="0,12,0,0"
                  ItemsSource="{Binding AuditItems}"
                  SelectedItem="{Binding SelectedDashboardAuditItem}"
-                 AutomationProperties.Name="Přehled auditních položek na dashboardu"
+                 AutomationProperties.Name="{i18n:Loc DashboardWorkspace.AuditListName}"
                  AutomationProperties.AutomationId="DashboardAuditListBox">
           <ListBox.KeyBindings>
             <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardAuditItemCommand}" />
           </ListBox.KeyBindings>
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="itemvm:AuditItemViewModel">
-              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Auditní položka" AutomationProperties.ItemStatus="{Binding Severity}">
+              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="{i18n:Loc AuditWorkspace.ItemType}" AutomationProperties.ItemStatus="{Binding Severity}">
                 <StackPanel Spacing="4">
                   <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
                   <TextBlock Text="{Binding VehicleName}" />
@@ -138,24 +141,24 @@
       <Grid RowDefinitions="Auto,Auto,*">
         <TextBlock FontSize="18"
                    FontWeight="SemiBold"
-                   Text="Náklady vozidel"
-                   AutomationProperties.Name="Náklady vozidel"
+                   Text="{i18n:Loc DashboardWorkspace.CostHeading}"
+                   AutomationProperties.Name="{i18n:Loc DashboardWorkspace.CostHeading}"
                    AutomationProperties.AutomationId="DashboardCostHeadingText"
                    AutomationProperties.HeadingLevel="2" />
-        <Button Grid.Row="1" x:Name="DashboardCostOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" Content="Vybrat vozidlo" AutomationProperties.Name="Vybrat vozidlo z nákladového přehledu" AutomationProperties.AutomationId="DashboardCostOpenButton" />
+        <Button Grid.Row="1" x:Name="DashboardCostOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" Content="{i18n:Loc DashboardWorkspace.CostOpen}" AutomationProperties.Name="{i18n:Loc DashboardWorkspace.CostOpenName}" AutomationProperties.AutomationId="DashboardCostOpenButton" />
         <ListBox x:Name="DashboardCostListBox"
                  Grid.Row="2"
                  Margin="0,12,0,0"
                  ItemsSource="{Binding CostVehicles}"
                  SelectedItem="{Binding SelectedDashboardCostVehicle}"
-                 AutomationProperties.Name="Přehled nákladových položek na dashboardu"
+                 AutomationProperties.Name="{i18n:Loc DashboardWorkspace.CostListName}"
                  AutomationProperties.AutomationId="DashboardCostListBox">
           <ListBox.KeyBindings>
             <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardCostVehicleCommand}" />
           </ListBox.KeyBindings>
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="itemvm:CostVehicleItemViewModel">
-              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Nákladový souhrn vozidla" AutomationProperties.ItemStatus="{Binding Status}">
+              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="{i18n:Loc CostWorkspace.ItemType}" AutomationProperties.ItemStatus="{Binding Status}">
                 <StackPanel Spacing="4">
                   <TextBlock FontWeight="SemiBold" Text="{Binding VehicleName}" />
                   <TextBlock Opacity="0.8" Text="{Binding Category}" />
@@ -173,25 +176,25 @@
       <Grid RowDefinitions="Auto,Auto,Auto,*">
         <TextBlock FontSize="18"
                    FontWeight="SemiBold"
-                   Text="Nejbližší termíny"
-                   AutomationProperties.Name="Nejbližší termíny"
+                   Text="{i18n:Loc DashboardWorkspace.TimelineHeading}"
+                   AutomationProperties.Name="{i18n:Loc DashboardWorkspace.TimelineHeading}"
                    AutomationProperties.AutomationId="DashboardTimelineHeadingText"
                    AutomationProperties.HeadingLevel="2" />
-        <Button Grid.Row="1" x:Name="DashboardTimelineOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" Content="Otevřít položku" AutomationProperties.Name="Otevřít vybraný termín z dashboardu" AutomationProperties.AutomationId="DashboardTimelineOpenButton" />
+        <Button Grid.Row="1" x:Name="DashboardTimelineOpenButton" Margin="0,12,0,0" Width="150" HorizontalAlignment="Left" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" Content="{i18n:Loc DashboardWorkspace.TimelineOpen}" AutomationProperties.Name="{i18n:Loc DashboardWorkspace.TimelineOpenName}" AutomationProperties.AutomationId="DashboardTimelineOpenButton" />
         <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.75" Text="{Binding SelectedDashboardTimelineDetail}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedDashboardTimelineDetail}" AutomationProperties.AutomationId="SelectedDashboardTimelineDetailText" />
         <ListBox x:Name="DashboardTimelineListBox"
                  Grid.Row="3"
                  Margin="0,12,0,0"
                  ItemsSource="{Binding DashboardUpcomingTimeline}"
                  SelectedItem="{Binding SelectedDashboardTimelineItem}"
-                 AutomationProperties.Name="Nejbližší termíny napříč vozidly"
+                 AutomationProperties.Name="{i18n:Loc DashboardWorkspace.TimelineListName}"
                  AutomationProperties.AutomationId="DashboardTimelineListBox">
           <ListBox.KeyBindings>
             <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedDashboardTimelineItemCommand}" />
           </ListBox.KeyBindings>
           <ListBox.ItemTemplate>
             <DataTemplate x:DataType="itemvm:VehicleTimelineItemViewModel">
-              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Položka časové osy" AutomationProperties.ItemStatus="{Binding Status}">
+              <Border Padding="12" Margin="0,0,0,8" Background="#143A4A5A" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="{i18n:Loc TimelineWorkspace.ItemType}" AutomationProperties.ItemStatus="{Binding Status}">
                 <StackPanel Spacing="4">
                   <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
                   <TextBlock Text="{Binding VehicleName}" />
