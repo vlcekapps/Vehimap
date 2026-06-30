@@ -330,6 +330,32 @@ Vehicle: {2}
   <data name="RecordEditor.ValidFromName" xml:space="preserve"><value>Document valid from</value></data>
   <data name="RecordEditor.ValidToLabel" xml:space="preserve"><value>Valid to</value></data>
   <data name="RecordEditor.ValidToName" xml:space="preserve"><value>Document valid to</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ExistingManagedMissing" xml:space="preserve"><value>The existing managed attachment is missing. Choose a replacement file.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ExistingManagedReady" xml:space="preserve"><value>The existing managed attachment will be used.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ExternalMissing" xml:space="preserve"><value>The external file could not be found yet.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ExternalReady" xml:space="preserve"><value>The external file is available.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ManagedImportPrompt" xml:space="preserve"><value>Choose a file that will be copied to managed attachments when saved.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.NoAttachment" xml:space="preserve"><value>The document will be saved without an attached file.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.SelectOrEnterPath" xml:space="preserve"><value>Choose a file or enter an attachment path.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.SourceMissing" xml:space="preserve"><value>The selected source file could not be found yet.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.SourceReady" xml:space="preserve"><value>The selected file will be copied to managed attachments when saved.</value></data>
+  <data name="RecordEditor.FileDialog.ExternalTitle" xml:space="preserve"><value>Choose external file</value></data>
+  <data name="RecordEditor.FileDialog.ManagedTitle" xml:space="preserve"><value>Choose file for managed copy</value></data>
+  <data name="RecordEditor.Persistence.DeleteFailed" xml:space="preserve"><value>Document could not be deleted</value></data>
+  <data name="RecordEditor.Persistence.SaveFailed" xml:space="preserve"><value>Document could not be saved</value></data>
+  <data name="RecordEditor.Status.Created" xml:space="preserve"><value>New document has been saved.</value></data>
+  <data name="RecordEditor.Status.CreatePrompt" xml:space="preserve"><value>Fill in the document and choose an attachment if needed.</value></data>
+  <data name="RecordEditor.Status.Deleted" xml:space="preserve"><value>Document has been deleted.</value></data>
+  <data name="RecordEditor.Status.EditPrompt" xml:space="preserve"><value>Edit the document and save the changes.</value></data>
+  <data name="RecordEditor.Status.MoveExternalToManagedPrompt" xml:space="preserve"><value>When saved, the current external attachment will be copied to managed attachments.</value></data>
+  <data name="RecordEditor.Status.Updated" xml:space="preserve"><value>Document has been updated.</value></data>
+  <data name="RecordEditor.Validation.ManagedSourceMissing" xml:space="preserve"><value>The selected file for the managed copy could not be found.</value></data>
+  <data name="RecordEditor.Validation.PriceInvalid" xml:space="preserve"><value>Enter the document price as a number, for example 2000.</value></data>
+  <data name="RecordEditor.Validation.TitleRequired" xml:space="preserve"><value>Document title is required.</value></data>
+  <data name="RecordEditor.Validation.TypeRequired" xml:space="preserve"><value>Select the record type.</value></data>
+  <data name="RecordEditor.Validation.ValidFromInvalid" xml:space="preserve"><value>Valid from must be in MM/YYYY format.</value></data>
+  <data name="RecordEditor.Validation.ValidRangeInvalid" xml:space="preserve"><value>Valid from must not be later than Valid to.</value></data>
+  <data name="RecordEditor.Validation.ValidToInvalid" xml:space="preserve"><value>Valid to must be in MM/YYYY format.</value></data>
   <data name="RecordWorkspace.ClearSearchName" xml:space="preserve"><value>Clear document search</value></data>
   <data name="RecordWorkspace.CopyPath" xml:space="preserve"><value>Copy path</value></data>
   <data name="RecordWorkspace.CopyPathName" xml:space="preserve"><value>Copy resolved attachment path for the document</value></data>
@@ -353,6 +379,16 @@ Vehicle: {2}
   <data name="RecordWorkspace.SortDescendingName" xml:space="preserve"><value>Sort documents descending</value></data>
   <data name="RecordWorkspace.SortName" xml:space="preserve"><value>Vehicle document sort order</value></data>
   <data name="RecordWorkspace.Title" xml:space="preserve"><value>Documents and attachments for the selected vehicle</value></data>
+  <data name="RecordAttachmentAction.CopyPathFailed" xml:space="preserve"><value>Document path could not be copied: {0}</value></data>
+  <data name="RecordAttachmentAction.FileOpened" xml:space="preserve"><value>Document attachment has been opened: {0}.</value></data>
+  <data name="RecordAttachmentAction.FileOpenFailed" xml:space="preserve"><value>Document attachment could not be opened: {0}</value></data>
+  <data name="RecordAttachmentAction.FileUnavailable" xml:space="preserve"><value>Document attachment is not available: {0}.</value></data>
+  <data name="RecordAttachmentAction.FolderOpened" xml:space="preserve"><value>Document attachment folder has been opened: {0}.</value></data>
+  <data name="RecordAttachmentAction.FolderOpenFailed" xml:space="preserve"><value>Document attachment folder could not be opened: {0}</value></data>
+  <data name="RecordAttachmentAction.NoCopyPath" xml:space="preserve"><value>The document has no available path to copy.</value></data>
+  <data name="RecordAttachmentAction.NoFolder" xml:space="preserve"><value>The document has no available attachment folder.</value></data>
+  <data name="RecordAttachmentAction.NoPath" xml:space="preserve"><value>The document has no available attachment path.</value></data>
+  <data name="RecordAttachmentAction.PathCopied" xml:space="preserve"><value>The resolved document path has been copied to the clipboard.</value></data>
   <data name="ReminderEditor.CancelName" xml:space="preserve"><value>Cancel reminder editing</value></data>
   <data name="ReminderEditor.DaysExample" xml:space="preserve"><value>For example 30</value></data>
   <data name="ReminderEditor.DaysLabel" xml:space="preserve"><value>Reminder days</value></data>
@@ -372,6 +408,19 @@ Vehicle: {2}
   <data name="ReminderEditor.TitleExample" xml:space="preserve"><value>For example book service</value></data>
   <data name="ReminderEditor.TitleLabel" xml:space="preserve"><value>Reminder title</value></data>
   <data name="ReminderEditor.TitleName" xml:space="preserve"><value>Reminder title</value></data>
+  <data name="ReminderEditor.Persistence.AdvanceFailed" xml:space="preserve"><value>Reminder next due date could not be saved</value></data>
+  <data name="ReminderEditor.Persistence.DeleteFailed" xml:space="preserve"><value>Reminder could not be deleted</value></data>
+  <data name="ReminderEditor.Persistence.SaveFailed" xml:space="preserve"><value>Reminder could not be saved</value></data>
+  <data name="ReminderEditor.Status.Advanced" xml:space="preserve"><value>Reminder has been moved to {0}.</value></data>
+  <data name="ReminderEditor.Status.AdvanceUnavailable" xml:space="preserve"><value>The selected reminder has no repeat mode or readable due date.</value></data>
+  <data name="ReminderEditor.Status.Created" xml:space="preserve"><value>New reminder has been saved.</value></data>
+  <data name="ReminderEditor.Status.CreatePrompt" xml:space="preserve"><value>Fill in the reminder and save it.</value></data>
+  <data name="ReminderEditor.Status.Deleted" xml:space="preserve"><value>Reminder has been deleted.</value></data>
+  <data name="ReminderEditor.Status.EditPrompt" xml:space="preserve"><value>Edit the reminder and save the changes.</value></data>
+  <data name="ReminderEditor.Status.Updated" xml:space="preserve"><value>Reminder has been updated.</value></data>
+  <data name="ReminderEditor.Validation.DueDateRequired" xml:space="preserve"><value>Due date is required and must be in DD.MM.YYYY format.</value></data>
+  <data name="ReminderEditor.Validation.ReminderDaysInvalid" xml:space="preserve"><value>Reminder days must be a whole number from 0 to 999.</value></data>
+  <data name="ReminderEditor.Validation.TitleRequired" xml:space="preserve"><value>Reminder title is required.</value></data>
   <data name="ReminderWorkspace.Advance" xml:space="preserve"><value>Next due date</value></data>
   <data name="ReminderWorkspace.AdvanceName" xml:space="preserve"><value>Advance selected repeating reminder to the next due date</value></data>
   <data name="ReminderWorkspace.ClearSearchName" xml:space="preserve"><value>Clear reminder search</value></data>

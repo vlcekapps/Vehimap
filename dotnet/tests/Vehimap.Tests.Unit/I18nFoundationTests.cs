@@ -38,6 +38,12 @@ public sealed class I18nFoundationTests
         Assert.Equal("Od začátku roku", czech.GetString("CostPeriod.YearToDate"));
         Assert.Equal("OK", english.GetString("CostAnalysis.Status.Ok"));
         Assert.Equal("V pořádku", czech.GetString("CostAnalysis.Status.Ok"));
+        Assert.Equal("Fill in the reminder and save it.", english.GetString("ReminderEditor.Status.CreatePrompt"));
+        Assert.Equal("Vyplňte připomínku a uložte ji.", czech.GetString("ReminderEditor.Status.CreatePrompt"));
+        Assert.Equal("Fill in the document and choose an attachment if needed.", english.GetString("RecordEditor.Status.CreatePrompt"));
+        Assert.Equal("Vyplňte doklad a podle potřeby vyberte přílohu.", czech.GetString("RecordEditor.Status.CreatePrompt"));
+        Assert.Equal("Document attachment has been opened: invoice.pdf.", english.Format("RecordAttachmentAction.FileOpened", "invoice.pdf"));
+        Assert.Equal("Příloha dokladu byla otevřena: faktura.pdf.", czech.Format("RecordAttachmentAction.FileOpened", "faktura.pdf"));
         Assert.Equal("Missing.Key.For.Test", english.GetString("Missing.Key.For.Test"));
     }
 
@@ -262,6 +268,25 @@ public sealed class I18nFoundationTests
         Assert.Contains("RecordEditor.AttachmentModeName", recordEditor);
         Assert.Contains("RecordEditor.BrowseFileName", recordEditor);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), recordEditor);
+    }
+
+    [Fact]
+    public void Pilot_editor_runtime_statuses_use_resource_localization()
+    {
+        var root = FindRepositoryRoot();
+        var editingViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.Editing.cs"));
+        var shellViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
+
+        Assert.Contains("ReminderEditor.Status.CreatePrompt", editingViewModel);
+        Assert.Contains("ReminderEditor.Validation.TitleRequired", editingViewModel);
+        Assert.Contains("RecordEditor.Status.CreatePrompt", editingViewModel);
+        Assert.Contains("RecordEditor.AttachmentAvailability.ManagedImportPrompt", editingViewModel);
+        Assert.Contains("RecordEditor.FileDialog.ManagedTitle", editingViewModel);
+        Assert.Contains("RecordAttachmentAction.NoPath", shellViewModel);
+        Assert.Contains("RecordAttachmentAction.FileOpened", shellViewModel);
+        Assert.DoesNotContain("Vyplňte připomínku a uložte ji.", editingViewModel);
+        Assert.DoesNotContain("Vyplňte doklad a podle potřeby vyberte přílohu.", editingViewModel);
+        Assert.DoesNotContain("Doklad nemá dostupnou cestu k příloze.", shellViewModel);
     }
 
     [Fact]

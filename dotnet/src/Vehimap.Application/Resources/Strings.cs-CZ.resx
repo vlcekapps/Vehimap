@@ -330,6 +330,32 @@ Vozidlo: {2}
   <data name="RecordEditor.ValidFromName" xml:space="preserve"><value>Platnost dokladu od</value></data>
   <data name="RecordEditor.ValidToLabel" xml:space="preserve"><value>Platí do</value></data>
   <data name="RecordEditor.ValidToName" xml:space="preserve"><value>Platnost dokladu do</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ExistingManagedMissing" xml:space="preserve"><value>Stávající spravovaná příloha chybí. Vyberte náhradní soubor.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ExistingManagedReady" xml:space="preserve"><value>Použije se stávající spravovaná příloha.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ExternalMissing" xml:space="preserve"><value>Externí soubor se zatím nepodařilo najít.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ExternalReady" xml:space="preserve"><value>Externí soubor je dostupný.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.ManagedImportPrompt" xml:space="preserve"><value>Vyberte soubor, který se po uložení zkopíruje do spravovaných příloh.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.NoAttachment" xml:space="preserve"><value>Doklad bude uložen bez připojeného souboru.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.SelectOrEnterPath" xml:space="preserve"><value>Vyberte soubor nebo zadejte cestu přílohy.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.SourceMissing" xml:space="preserve"><value>Vybraný zdrojový soubor se zatím nepodařilo najít.</value></data>
+  <data name="RecordEditor.AttachmentAvailability.SourceReady" xml:space="preserve"><value>Po uložení se vybraný soubor zkopíruje do spravovaných příloh.</value></data>
+  <data name="RecordEditor.FileDialog.ExternalTitle" xml:space="preserve"><value>Vyberte externí soubor</value></data>
+  <data name="RecordEditor.FileDialog.ManagedTitle" xml:space="preserve"><value>Vyberte soubor pro spravovanou kopii</value></data>
+  <data name="RecordEditor.Persistence.DeleteFailed" xml:space="preserve"><value>Doklad se nepodařilo odstranit</value></data>
+  <data name="RecordEditor.Persistence.SaveFailed" xml:space="preserve"><value>Doklad se nepodařilo uložit</value></data>
+  <data name="RecordEditor.Status.Created" xml:space="preserve"><value>Nový doklad byl uložen.</value></data>
+  <data name="RecordEditor.Status.CreatePrompt" xml:space="preserve"><value>Vyplňte doklad a podle potřeby vyberte přílohu.</value></data>
+  <data name="RecordEditor.Status.Deleted" xml:space="preserve"><value>Doklad byl odstraněn.</value></data>
+  <data name="RecordEditor.Status.EditPrompt" xml:space="preserve"><value>Upravte doklad a uložte změny.</value></data>
+  <data name="RecordEditor.Status.MoveExternalToManagedPrompt" xml:space="preserve"><value>Po uložení se současná externí příloha zkopíruje do spravovaných příloh.</value></data>
+  <data name="RecordEditor.Status.Updated" xml:space="preserve"><value>Doklad byl upraven.</value></data>
+  <data name="RecordEditor.Validation.ManagedSourceMissing" xml:space="preserve"><value>Vybraný soubor pro spravovanou kopii se nepodařilo najít.</value></data>
+  <data name="RecordEditor.Validation.PriceInvalid" xml:space="preserve"><value>Cenu dokladu zadejte jako číslo, například 2000.</value></data>
+  <data name="RecordEditor.Validation.TitleRequired" xml:space="preserve"><value>Doklad musí mít název.</value></data>
+  <data name="RecordEditor.Validation.TypeRequired" xml:space="preserve"><value>Vyberte prosím druh záznamu.</value></data>
+  <data name="RecordEditor.Validation.ValidFromInvalid" xml:space="preserve"><value>Pole Platné od musí být ve formátu MM/RRRR.</value></data>
+  <data name="RecordEditor.Validation.ValidRangeInvalid" xml:space="preserve"><value>Pole Platné od nesmí být později než pole Platné do.</value></data>
+  <data name="RecordEditor.Validation.ValidToInvalid" xml:space="preserve"><value>Pole Platné do musí být ve formátu MM/RRRR.</value></data>
   <data name="RecordWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v dokladech vozidla</value></data>
   <data name="RecordWorkspace.CopyPath" xml:space="preserve"><value>Kopírovat cestu</value></data>
   <data name="RecordWorkspace.CopyPathName" xml:space="preserve"><value>Kopírovat vyřešenou cestu přílohy dokladu</value></data>
@@ -353,6 +379,16 @@ Vozidlo: {2}
   <data name="RecordWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit doklady sestupně</value></data>
   <data name="RecordWorkspace.SortName" xml:space="preserve"><value>Řazení dokladů vozidla</value></data>
   <data name="RecordWorkspace.Title" xml:space="preserve"><value>Seznam dokladů a příloh vybraného vozidla</value></data>
+  <data name="RecordAttachmentAction.CopyPathFailed" xml:space="preserve"><value>Cestu dokladu se nepodařilo zkopírovat: {0}</value></data>
+  <data name="RecordAttachmentAction.FileOpened" xml:space="preserve"><value>Příloha dokladu byla otevřena: {0}.</value></data>
+  <data name="RecordAttachmentAction.FileOpenFailed" xml:space="preserve"><value>Přílohu dokladu se nepodařilo otevřít: {0}</value></data>
+  <data name="RecordAttachmentAction.FileUnavailable" xml:space="preserve"><value>Příloha dokladu není dostupná: {0}.</value></data>
+  <data name="RecordAttachmentAction.FolderOpened" xml:space="preserve"><value>Složka přílohy dokladu byla otevřena: {0}.</value></data>
+  <data name="RecordAttachmentAction.FolderOpenFailed" xml:space="preserve"><value>Složku přílohy dokladu se nepodařilo otevřít: {0}</value></data>
+  <data name="RecordAttachmentAction.NoCopyPath" xml:space="preserve"><value>Doklad nemá dostupnou cestu ke zkopírování.</value></data>
+  <data name="RecordAttachmentAction.NoFolder" xml:space="preserve"><value>Doklad nemá dostupnou složku přílohy.</value></data>
+  <data name="RecordAttachmentAction.NoPath" xml:space="preserve"><value>Doklad nemá dostupnou cestu k příloze.</value></data>
+  <data name="RecordAttachmentAction.PathCopied" xml:space="preserve"><value>Vyřešená cesta dokladu byla zkopírována do schránky.</value></data>
   <data name="ReminderEditor.CancelName" xml:space="preserve"><value>Zrušit úpravu připomínky</value></data>
   <data name="ReminderEditor.DaysExample" xml:space="preserve"><value>Například 30</value></data>
   <data name="ReminderEditor.DaysLabel" xml:space="preserve"><value>Předstih dnů</value></data>
@@ -372,6 +408,19 @@ Vozidlo: {2}
   <data name="ReminderEditor.TitleExample" xml:space="preserve"><value>Například objednat servis</value></data>
   <data name="ReminderEditor.TitleLabel" xml:space="preserve"><value>Název připomínky</value></data>
   <data name="ReminderEditor.TitleName" xml:space="preserve"><value>Název připomínky</value></data>
+  <data name="ReminderEditor.Persistence.AdvanceFailed" xml:space="preserve"><value>Posun připomínky se nepodařilo uložit</value></data>
+  <data name="ReminderEditor.Persistence.DeleteFailed" xml:space="preserve"><value>Připomínku se nepodařilo odstranit</value></data>
+  <data name="ReminderEditor.Persistence.SaveFailed" xml:space="preserve"><value>Připomínku se nepodařilo uložit</value></data>
+  <data name="ReminderEditor.Status.Advanced" xml:space="preserve"><value>Připomínka byla posunuta na {0}.</value></data>
+  <data name="ReminderEditor.Status.AdvanceUnavailable" xml:space="preserve"><value>Vybraná připomínka nemá opakování nebo čitelný termín.</value></data>
+  <data name="ReminderEditor.Status.Created" xml:space="preserve"><value>Nová připomínka byla uložena.</value></data>
+  <data name="ReminderEditor.Status.CreatePrompt" xml:space="preserve"><value>Vyplňte připomínku a uložte ji.</value></data>
+  <data name="ReminderEditor.Status.Deleted" xml:space="preserve"><value>Připomínka byla odstraněna.</value></data>
+  <data name="ReminderEditor.Status.EditPrompt" xml:space="preserve"><value>Upravte připomínku a uložte změny.</value></data>
+  <data name="ReminderEditor.Status.Updated" xml:space="preserve"><value>Připomínka byla upravena.</value></data>
+  <data name="ReminderEditor.Validation.DueDateRequired" xml:space="preserve"><value>Pole Termín je povinné a musí být ve formátu DD.MM.RRRR.</value></data>
+  <data name="ReminderEditor.Validation.ReminderDaysInvalid" xml:space="preserve"><value>Pole Upozornit dnů předem musí být celé číslo od 0 do 999.</value></data>
+  <data name="ReminderEditor.Validation.TitleRequired" xml:space="preserve"><value>Připomínka musí mít název.</value></data>
   <data name="ReminderWorkspace.Advance" xml:space="preserve"><value>Další termín</value></data>
   <data name="ReminderWorkspace.AdvanceName" xml:space="preserve"><value>Posunout vybranou opakovanou připomínku na další termín</value></data>
   <data name="ReminderWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v připomínkách vozidla</value></data>

@@ -47,7 +47,7 @@ public sealed partial class MainWindowViewModel
         ReminderEditorDays = "30";
         ReminderEditorRepeatMode = "Neopakovat";
         ReminderEditorNote = string.Empty;
-        ReminderEditorStatus = "Vyplňte připomínku a uložte ji.";
+        ReminderEditorStatus = LO("ReminderEditor.Status.CreatePrompt");
         IsEditingReminder = true;
         SelectedVehicleTabIndex = ReminderTabIndex;
         RequestWorkspaceEditorDialog(WorkspaceEditorKind.Reminder, DesktopFocusTarget.ReminderList);
@@ -68,7 +68,7 @@ public sealed partial class MainWindowViewModel
         ReminderEditorDays = reminder.ReminderDays;
         ReminderEditorRepeatMode = LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(reminder.RepeatMode);
         ReminderEditorNote = reminder.Note;
-        ReminderEditorStatus = "Upravte připomínku a uložte změny.";
+        ReminderEditorStatus = LO("ReminderEditor.Status.EditPrompt");
         IsEditingReminder = true;
         SelectedVehicleTabIndex = ReminderTabIndex;
         RequestWorkspaceEditorDialog(WorkspaceEditorKind.Reminder, DesktopFocusTarget.ReminderList);
@@ -85,7 +85,7 @@ public sealed partial class MainWindowViewModel
         var title = (ReminderEditorTitle ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(title))
         {
-            ReminderEditorStatus = "Připomínka musí mít název.";
+            ReminderEditorStatus = LO("ReminderEditor.Validation.TitleRequired");
             RequestFocus(DesktopFocusTarget.ReminderEditorTitle);
             return;
         }
@@ -94,7 +94,7 @@ public sealed partial class MainWindowViewModel
         var dueDate = LegacyVehicleValueNormalization.NormalizeEventDate(dueDateText);
         if (dueDate.Length == 0)
         {
-            ReminderEditorStatus = "Pole Termín je povinné a musí být ve formátu DD.MM.RRRR.";
+            ReminderEditorStatus = LO("ReminderEditor.Validation.DueDateRequired");
             RequestFocus(DesktopFocusTarget.ReminderEditorDueDate);
             return;
         }
@@ -103,7 +103,7 @@ public sealed partial class MainWindowViewModel
         var reminderDays = LegacyVehicleValueNormalization.NormalizeReminderDays(reminderDaysText);
         if (reminderDays.Length == 0)
         {
-            ReminderEditorStatus = "Pole Upozornit dnů předem musí být celé číslo od 0 do 999.";
+            ReminderEditorStatus = LO("ReminderEditor.Validation.ReminderDaysInvalid");
             RequestFocus(DesktopFocusTarget.ReminderEditorDays);
             return;
         }
@@ -129,15 +129,15 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => ReminderEditorStatus = status,
                 failureFocus: DesktopFocusTarget.ReminderEditorTitle,
-                failurePrefix: "Připomínku se nepodařilo uložit"))
+                failurePrefix: LO("ReminderEditor.Persistence.SaveFailed")))
         {
             return;
         }
 
         CancelReminderEditCore(clearStatus: false);
         ReminderEditorStatus = wasNew
-            ? "Nová připomínka byla uložena."
-            : "Připomínka byla upravena.";
+            ? LO("ReminderEditor.Status.Created")
+            : LO("ReminderEditor.Status.Updated");
         SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, reminderId);
         RequestFocus(DesktopFocusTarget.ReminderList);
     }
@@ -164,11 +164,11 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => ReminderEditorStatus = status,
                 failureFocus: DesktopFocusTarget.ReminderList,
-                failurePrefix: "Připomínku se nepodařilo odstranit"))
+                failurePrefix: LO("ReminderEditor.Persistence.DeleteFailed")))
         {
             return;
         }
-        ReminderEditorStatus = "Připomínka byla odstraněna.";
+        ReminderEditorStatus = LO("ReminderEditor.Status.Deleted");
         RequestFocus(DesktopFocusTarget.ReminderList);
     }
 
@@ -183,7 +183,7 @@ public sealed partial class MainWindowViewModel
         var reminder = GetSelectedReminderModel();
         if (!TryBuildNextReminderDueDate(reminder, out var nextDueDate))
         {
-            ReminderEditorStatus = "Vybraná připomínka nemá opakování nebo čitelný termín.";
+            ReminderEditorStatus = LO("ReminderEditor.Status.AdvanceUnavailable");
             RequestFocus(DesktopFocusTarget.ReminderList);
             return;
         }
@@ -200,12 +200,12 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => ReminderEditorStatus = status,
                 failureFocus: DesktopFocusTarget.ReminderList,
-                failurePrefix: "Posun připomínky se nepodařilo uložit"))
+                failurePrefix: LO("ReminderEditor.Persistence.AdvanceFailed")))
         {
             return;
         }
 
-        ReminderEditorStatus = $"Připomínka byla posunuta na {nextDueDateText}.";
+        ReminderEditorStatus = LFO("ReminderEditor.Status.Advanced", nextDueDateText);
         SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, updatedReminder.Id);
         RequestFocus(DesktopFocusTarget.ReminderList);
     }
@@ -229,9 +229,9 @@ public sealed partial class MainWindowViewModel
         RecordEditorPathInput = string.Empty;
         RecordEditorStoredPath = string.Empty;
         RecordEditorResolvedPath = string.Empty;
-        RecordEditorAvailability = "Vyberte soubor, který se po uložení zkopíruje do spravovaných příloh.";
+        RecordEditorAvailability = LO("RecordEditor.AttachmentAvailability.ManagedImportPrompt");
         RecordEditorNote = string.Empty;
-        RecordEditorStatus = "Vyplňte doklad a podle potřeby vyberte přílohu.";
+        RecordEditorStatus = LO("RecordEditor.Status.CreatePrompt");
         IsEditingRecord = true;
         SelectedVehicleTabIndex = RecordTabIndex;
         RequestWorkspaceEditorDialog(WorkspaceEditorKind.Record, DesktopFocusTarget.RecordList);
@@ -265,7 +265,7 @@ public sealed partial class MainWindowViewModel
     private async Task BrowseRecordAttachmentAsync()
     {
         var filePath = await _filePickerService.PickFileAsync(
-            IsRecordEditorManaged ? "Vyberte soubor pro spravovanou kopii" : "Vyberte externí soubor");
+            IsRecordEditorManaged ? LO("RecordEditor.FileDialog.ManagedTitle") : LO("RecordEditor.FileDialog.ExternalTitle"));
 
         if (string.IsNullOrWhiteSpace(filePath))
         {
@@ -289,14 +289,14 @@ public sealed partial class MainWindowViewModel
         var recordType = LegacyVehicleValueNormalization.NormalizeRecordType(recordTypeText);
         if (string.IsNullOrWhiteSpace(recordTypeText))
         {
-            RecordEditorStatus = "Vyberte prosím druh záznamu.";
+            RecordEditorStatus = LO("RecordEditor.Validation.TypeRequired");
             RequestFocus(DesktopFocusTarget.RecordEditorType);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(title))
         {
-            RecordEditorStatus = "Doklad musí mít název.";
+            RecordEditorStatus = LO("RecordEditor.Validation.TitleRequired");
             RequestFocus(DesktopFocusTarget.RecordEditorTitle);
             return;
         }
@@ -310,14 +310,14 @@ public sealed partial class MainWindowViewModel
 
         if (validFromText.Length > 0 && validFrom.Length == 0)
         {
-            RecordEditorStatus = "Pole Platné od musí být ve formátu MM/RRRR.";
+            RecordEditorStatus = LO("RecordEditor.Validation.ValidFromInvalid");
             RequestFocus(DesktopFocusTarget.RecordEditorValidFrom);
             return;
         }
 
         if (validToText.Length > 0 && validTo.Length == 0)
         {
-            RecordEditorStatus = "Pole Platné do musí být ve formátu MM/RRRR.";
+            RecordEditorStatus = LO("RecordEditor.Validation.ValidToInvalid");
             RequestFocus(DesktopFocusTarget.RecordEditorValidTo);
             return;
         }
@@ -326,7 +326,7 @@ public sealed partial class MainWindowViewModel
             && LegacyVehicleValueNormalization.TryGetMonthYearOrder(validTo, out var validToOrder)
             && validFromOrder > validToOrder)
         {
-            RecordEditorStatus = "Pole Platné od nesmí být později než pole Platné do.";
+            RecordEditorStatus = LO("RecordEditor.Validation.ValidRangeInvalid");
             RequestFocus(DesktopFocusTarget.RecordEditorValidFrom);
             return;
         }
@@ -335,7 +335,7 @@ public sealed partial class MainWindowViewModel
         {
             if (!VehimapValueParser.TryParseMoney(priceText, out var parsedPrice) || parsedPrice < 0)
             {
-                RecordEditorStatus = "Cenu dokladu zadejte jako číslo, například 2000.";
+                RecordEditorStatus = LO("RecordEditor.Validation.PriceInvalid");
                 RequestFocus(DesktopFocusTarget.RecordEditorPrice);
                 return;
             }
@@ -388,7 +388,7 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => RecordEditorStatus = status,
                 failureFocus: DesktopFocusTarget.RecordEditorTitle,
-                failurePrefix: "Doklad se nepodařilo uložit"))
+                failurePrefix: LO("RecordEditor.Persistence.SaveFailed")))
         {
             DeleteManagedAttachmentIfUnused(createdManagedPath);
             return;
@@ -397,8 +397,8 @@ public sealed partial class MainWindowViewModel
         DeleteManagedAttachmentIfUnused(previousManagedPath);
         CancelRecordEditCore(clearStatus: false);
         RecordEditorStatus = existingRecord is null
-            ? "Nový doklad byl uložen."
-            : "Doklad byl upraven.";
+            ? LO("RecordEditor.Status.Created")
+            : LO("RecordEditor.Status.Updated");
         SelectedRecord = FindById(SelectedVehicleRecords, item => item.Id, recordId);
         RequestFocus(DesktopFocusTarget.RecordList);
     }
@@ -428,12 +428,12 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => RecordEditorStatus = status,
                 failureFocus: DesktopFocusTarget.RecordList,
-                failurePrefix: "Doklad se nepodařilo odstranit"))
+                failurePrefix: LO("RecordEditor.Persistence.DeleteFailed")))
         {
             return;
         }
 
-        RecordEditorStatus = "Doklad byl odstraněn.";
+        RecordEditorStatus = LO("RecordEditor.Status.Deleted");
         DeleteManagedAttachmentIfUnused(deletedManagedPath);
         RequestFocus(DesktopFocusTarget.RecordList);
     }
@@ -453,8 +453,8 @@ public sealed partial class MainWindowViewModel
             : (record.AttachmentMode == VehicleRecordAttachmentMode.External ? record.FilePath : string.Empty);
         RecordEditorNote = record.Note;
         RecordEditorStatus = preferManagedImport
-            ? "Po uložení se současná externí příloha zkopíruje do spravovaných příloh."
-            : "Upravte doklad a uložte změny.";
+            ? LO("RecordEditor.Status.MoveExternalToManagedPrompt")
+            : LO("RecordEditor.Status.EditPrompt");
         IsEditingRecord = true;
         RefreshRecordEditorAttachmentPreview();
         SelectedVehicleTabIndex = RecordTabIndex;
@@ -700,7 +700,7 @@ public sealed partial class MainWindowViewModel
         var sourcePath = ResolvePotentialPath(inputPath);
         if (!File.Exists(sourcePath))
         {
-            throw new InvalidOperationException("Vybraný soubor pro spravovanou kopii se nepodařilo najít.");
+            throw new InvalidOperationException(LO("RecordEditor.Validation.ManagedSourceMissing"));
         }
 
         var existingManagedPath = existingRecord?.AttachmentMode == VehicleRecordAttachmentMode.Managed
@@ -759,7 +759,7 @@ public sealed partial class MainWindowViewModel
         RecordEditorPathInput = string.Empty;
         RecordEditorStoredPath = string.Empty;
         RecordEditorResolvedPath = string.Empty;
-        RecordEditorAvailability = "Vyberte soubor nebo zadejte cestu přílohy.";
+        RecordEditorAvailability = LO("RecordEditor.AttachmentAvailability.SelectOrEnterPath");
         RecordEditorNote = string.Empty;
         if (clearStatus)
         {
@@ -817,18 +817,18 @@ public sealed partial class MainWindowViewModel
             {
                 var sourcePath = ResolvePotentialPath(RecordEditorPathInput);
                 RecordEditorAvailability = File.Exists(sourcePath)
-                    ? "Po uložení se vybraný soubor zkopíruje do spravovaných příloh."
-                    : "Vybraný zdrojový soubor se zatím nepodařilo najít.";
+                    ? LO("RecordEditor.AttachmentAvailability.SourceReady")
+                    : LO("RecordEditor.AttachmentAvailability.SourceMissing");
             }
             else if (!string.IsNullOrWhiteSpace(RecordEditorStoredPath))
             {
                 RecordEditorAvailability = File.Exists(RecordEditorResolvedPath)
-                    ? "Použije se stávající spravovaná příloha."
-                    : "Stávající spravovaná příloha chybí. Vyberte náhradní soubor.";
+                    ? LO("RecordEditor.AttachmentAvailability.ExistingManagedReady")
+                    : LO("RecordEditor.AttachmentAvailability.ExistingManagedMissing");
             }
             else
             {
-                RecordEditorAvailability = "Vyberte soubor, který se po uložení zkopíruje do spravovaných příloh.";
+                RecordEditorAvailability = LO("RecordEditor.AttachmentAvailability.ManagedImportPrompt");
             }
 
             return;
@@ -838,13 +838,13 @@ public sealed partial class MainWindowViewModel
         RecordEditorResolvedPath = string.IsNullOrWhiteSpace(RecordEditorStoredPath) ? string.Empty : ResolvePotentialPath(RecordEditorStoredPath);
         if (string.IsNullOrWhiteSpace(RecordEditorStoredPath))
         {
-            RecordEditorAvailability = "Doklad bude uložen bez připojeného souboru.";
+            RecordEditorAvailability = LO("RecordEditor.AttachmentAvailability.NoAttachment");
         }
         else
         {
             RecordEditorAvailability = File.Exists(RecordEditorResolvedPath)
-                ? "Externí soubor je dostupný."
-                : "Externí soubor se zatím nepodařilo najít.";
+                ? LO("RecordEditor.AttachmentAvailability.ExternalReady")
+                : LO("RecordEditor.AttachmentAvailability.ExternalMissing");
         }
     }
 
