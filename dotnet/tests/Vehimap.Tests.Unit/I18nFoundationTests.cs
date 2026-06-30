@@ -243,6 +243,7 @@ public sealed class I18nFoundationTests
         var upcomingOverviewWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "UpcomingOverviewWorkspaceView.axaml"));
         var overdueOverviewWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "OverdueOverviewWorkspaceView.axaml"));
         var smartAdvisorWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "SmartAdvisorWorkspaceView.axaml"));
+        var auditWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "AuditWorkspaceView.axaml"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyWorkspace);
         Assert.Contains("Text=\"{i18n:Loc HistoryWorkspace.Title}\"", historyWorkspace);
@@ -326,6 +327,14 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc SmartAdvisorWorkspace.ItemType}\"", smartAdvisorWorkspace);
         Assert.Contains("Text=\"{i18n:Loc SmartAdvisorWorkspace.DetailHeading}\"", smartAdvisorWorkspace);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), smartAdvisorWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", auditWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc AuditWorkspace.SearchPlaceholder}\"", auditWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc AuditWorkspace.OpenItemName}\"", auditWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc AuditWorkspace.SortName}\"", auditWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc AuditWorkspace.ItemType}\"", auditWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc AuditWorkspace.KeyboardHelp}\"", auditWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), auditWorkspace);
     }
 
     [Fact]

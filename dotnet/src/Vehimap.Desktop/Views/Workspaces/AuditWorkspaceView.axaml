@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.AuditWorkspaceView"
@@ -17,84 +18,86 @@
     <Grid Grid.Row="1" Margin="0,12,0,0" ColumnDefinitions="100,*,120,120,150,150,120">
       <TextBlock Grid.Column="0"
                  VerticalAlignment="Center"
-                 Text="Hledat" />
+                 Text="{i18n:Loc Common.Search}" />
       <TextBox x:Name="AuditSearchBox"
                Grid.Column="1"
                Margin="12,0,0,0"
                Text="{Binding AuditSearchText}"
-               PlaceholderText="Vozidlo, SPZ, evidence nebo popis problému..."
-               AutomationProperties.Name="Hledání v auditu dat"
-               AutomationProperties.HelpText="Vozidlo, SPZ, evidence nebo popis problému"
+               PlaceholderText="{i18n:Loc AuditWorkspace.SearchPlaceholder}"
+               AutomationProperties.Name="{i18n:Loc AuditWorkspace.SearchName}"
+               AutomationProperties.HelpText="{i18n:Loc AuditWorkspace.SearchHelp}"
                AutomationProperties.AutomationId="AuditSearchBox" />
       <Button Grid.Column="2"
               Margin="12,0,0,0"
               Command="{Binding ClearAuditSearchCommand}"
-              Content="Vymazat"
-              AutomationProperties.Name="Vymazat hledání v auditu dat"
+              Content="{i18n:Loc Common.Clear}"
+              AutomationProperties.Name="{i18n:Loc AuditWorkspace.ClearSearchName}"
               AutomationProperties.AutomationId="ClearAuditSearchButton" />
       <Button Grid.Column="3"
               Margin="12,0,0,0"
               Command="{Binding RefreshAuditCommand}"
-              Content="Obnovit"
-              AutomationProperties.Name="Obnovit audit dat"
+              Content="{i18n:Loc AuditWorkspace.Refresh}"
+              AutomationProperties.Name="{i18n:Loc AuditWorkspace.RefreshName}"
               AutomationProperties.AutomationId="AuditRefreshButton" />
       <Button Grid.Column="4"
               Margin="12,0,0,0"
               Command="{Binding OpenSelectedAuditItemCommand}"
-              Content="Otevřít položku"
-              AutomationProperties.Name="Otevřít vybranou auditní položku"
+              Content="{i18n:Loc AuditWorkspace.OpenItem}"
+              AutomationProperties.Name="{i18n:Loc AuditWorkspace.OpenItemName}"
               AutomationProperties.AutomationId="AuditOpenItemButton" />
       <Button Grid.Column="5"
               Margin="12,0,0,0"
               Command="{Binding OpenSelectedAuditVehicleCommand}"
-              Content="Zobrazit vozidlo"
-              AutomationProperties.Name="Zobrazit vozidlo vybrané auditní položky"
+              Content="{i18n:Loc AuditWorkspace.OpenVehicle}"
+              AutomationProperties.Name="{i18n:Loc AuditWorkspace.OpenVehicleName}"
               AutomationProperties.AutomationId="AuditOpenVehicleButton" />
       <Button Grid.Column="6"
               Margin="12,0,0,0"
               Command="{Binding EditSelectedAuditItemCommand}"
-              Content="Upravit"
-              AutomationProperties.Name="Upravit vybranou auditní položku"
+              Content="{i18n:Loc Common.Edit}"
+              AutomationProperties.Name="{i18n:Loc AuditWorkspace.EditItemName}"
               AutomationProperties.AutomationId="AuditEditItemButton" />
     </Grid>
     <TextBlock Grid.Row="2"
                Margin="0,8,0,0"
                VerticalAlignment="Center"
-               Text="Řadit" />
+               Text="{i18n:Loc Common.Sort}" />
     <Grid Grid.Row="2"
           Margin="112,8,0,0"
           ColumnDefinitions="220,150,*">
       <ComboBox Grid.Column="0"
                 ItemsSource="{Binding AuditSortOptions}"
                 SelectedItem="{Binding SelectedAuditSortOption}"
-                AutomationProperties.Name="Řazení auditu dat"
+                AutomationProperties.Name="{i18n:Loc AuditWorkspace.SortName}"
                 AutomationProperties.AutomationId="AuditSortComboBox" />
       <CheckBox Grid.Column="1"
                 Margin="12,0,0,0"
                 VerticalAlignment="Center"
-                Content="Sestupně"
+                Content="{i18n:Loc Common.SortDescending}"
                 IsChecked="{Binding AuditSortDescending}"
-                AutomationProperties.Name="Řadit audit dat sestupně"
+                AutomationProperties.Name="{i18n:Loc AuditWorkspace.SortDescendingName}"
                 AutomationProperties.AutomationId="AuditSortDescendingCheckBox" />
     </Grid>
     <TextBlock Grid.Row="3"
                Margin="0,8,0,0"
                Opacity="0.75"
-               Text="Ctrl+F hledá, Ctrl+R obnoví audit, Ctrl+P otevře řešenou položku, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 otevře nejbližší editor."
-               TextWrapping="Wrap" />
+               Text="{i18n:Loc AuditWorkspace.KeyboardHelp}"
+               TextWrapping="Wrap"
+               AutomationProperties.Name="{i18n:Loc AuditWorkspace.KeyboardHelpName}"
+               AutomationProperties.AutomationId="AuditKeyboardHelpText" />
     <ListBox x:Name="AuditListBox"
              Grid.Row="4"
              Margin="0,12,0,0"
              ItemsSource="{Binding VisibleAuditItems}"
              SelectedItem="{Binding SelectedDashboardAuditItem}"
-             AutomationProperties.Name="Seznam auditních položek"
+             AutomationProperties.Name="{i18n:Loc AuditWorkspace.ListName}"
              AutomationProperties.AutomationId="AuditListBox">
       <ListBox.KeyBindings>
         <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedAuditItemCommand}" />
       </ListBox.KeyBindings>
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="itemvm:AuditItemViewModel">
-          <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Auditní položka" AutomationProperties.ItemStatus="{Binding Severity}">
+          <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="{i18n:Loc AuditWorkspace.ItemType}" AutomationProperties.ItemStatus="{Binding Severity}">
             <StackPanel Spacing="4">
               <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
               <TextBlock Text="{Binding VehicleName}" />

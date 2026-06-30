@@ -652,6 +652,23 @@
   <data name="Shell.RecordsCount" xml:space="preserve"><value>Doklady</value></data>
   <data name="Shell.RemindersCount" xml:space="preserve"><value>Připomínky</value></data>
   <data name="Shell.VehicleCount" xml:space="preserve"><value>Vozidla</value></data>
+  <data name="AuditWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v auditu dat</value></data>
+  <data name="AuditWorkspace.EditItemName" xml:space="preserve"><value>Upravit vybranou auditní položku</value></data>
+  <data name="AuditWorkspace.ItemType" xml:space="preserve"><value>Auditní položka</value></data>
+  <data name="AuditWorkspace.KeyboardHelp" xml:space="preserve"><value>Ctrl+F hledá, Ctrl+R obnoví audit, Ctrl+P otevře řešenou položku, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 otevře nejbližší editor.</value></data>
+  <data name="AuditWorkspace.KeyboardHelpName" xml:space="preserve"><value>Nápověda auditu dat. Ctrl+F hledá, Ctrl+R obnoví audit, Ctrl+P otevře řešenou položku, Ctrl+O zobrazí vozidlo a Ctrl+U nebo F2 otevře nejbližší editor.</value></data>
+  <data name="AuditWorkspace.ListName" xml:space="preserve"><value>Seznam auditních položek</value></data>
+  <data name="AuditWorkspace.OpenItem" xml:space="preserve"><value>Otevřít položku</value></data>
+  <data name="AuditWorkspace.OpenItemName" xml:space="preserve"><value>Otevřít vybranou auditní položku</value></data>
+  <data name="AuditWorkspace.OpenVehicle" xml:space="preserve"><value>Zobrazit vozidlo</value></data>
+  <data name="AuditWorkspace.OpenVehicleName" xml:space="preserve"><value>Zobrazit vozidlo vybrané auditní položky</value></data>
+  <data name="AuditWorkspace.Refresh" xml:space="preserve"><value>Obnovit</value></data>
+  <data name="AuditWorkspace.RefreshName" xml:space="preserve"><value>Obnovit audit dat</value></data>
+  <data name="AuditWorkspace.SearchHelp" xml:space="preserve"><value>Vozidlo, SPZ, evidence nebo popis problému</value></data>
+  <data name="AuditWorkspace.SearchName" xml:space="preserve"><value>Hledání v auditu dat</value></data>
+  <data name="AuditWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, SPZ, evidence nebo popis problému...</value></data>
+  <data name="AuditWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit audit dat sestupně</value></data>
+  <data name="AuditWorkspace.SortName" xml:space="preserve"><value>Řazení auditu dat</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Kategorie</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie chytrého poradce</value></data>
   <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Vymazat filtry chytrého poradce</value></data>

@@ -652,6 +652,23 @@
   <data name="Shell.RecordsCount" xml:space="preserve"><value>Documents</value></data>
   <data name="Shell.RemindersCount" xml:space="preserve"><value>Reminders</value></data>
   <data name="Shell.VehicleCount" xml:space="preserve"><value>Vehicles</value></data>
+  <data name="AuditWorkspace.ClearSearchName" xml:space="preserve"><value>Clear data audit search</value></data>
+  <data name="AuditWorkspace.EditItemName" xml:space="preserve"><value>Edit selected audit item</value></data>
+  <data name="AuditWorkspace.ItemType" xml:space="preserve"><value>Audit item</value></data>
+  <data name="AuditWorkspace.KeyboardHelp" xml:space="preserve"><value>Ctrl+F searches, Ctrl+R refreshes the audit, Ctrl+P opens the problem item, Ctrl+O shows the vehicle, and Ctrl+U or F2 opens the nearest editor.</value></data>
+  <data name="AuditWorkspace.KeyboardHelpName" xml:space="preserve"><value>Data audit help. Ctrl+F searches, Ctrl+R refreshes the audit, Ctrl+P opens the problem item, Ctrl+O shows the vehicle, and Ctrl+U or F2 opens the nearest editor.</value></data>
+  <data name="AuditWorkspace.ListName" xml:space="preserve"><value>Audit item list</value></data>
+  <data name="AuditWorkspace.OpenItem" xml:space="preserve"><value>Open item</value></data>
+  <data name="AuditWorkspace.OpenItemName" xml:space="preserve"><value>Open selected audit item</value></data>
+  <data name="AuditWorkspace.OpenVehicle" xml:space="preserve"><value>Show vehicle</value></data>
+  <data name="AuditWorkspace.OpenVehicleName" xml:space="preserve"><value>Show the vehicle for the selected audit item</value></data>
+  <data name="AuditWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="AuditWorkspace.RefreshName" xml:space="preserve"><value>Refresh data audit</value></data>
+  <data name="AuditWorkspace.SearchHelp" xml:space="preserve"><value>Vehicle, license plate, record type or problem description</value></data>
+  <data name="AuditWorkspace.SearchName" xml:space="preserve"><value>Data audit search</value></data>
+  <data name="AuditWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, license plate, record type or problem description...</value></data>
+  <data name="AuditWorkspace.SortDescendingName" xml:space="preserve"><value>Sort data audit descending</value></data>
+  <data name="AuditWorkspace.SortName" xml:space="preserve"><value>Data audit sort order</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Category</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Smart advisor category filter</value></data>
   <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Clear smart advisor filters</value></data>
