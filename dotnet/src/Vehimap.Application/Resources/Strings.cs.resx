@@ -585,6 +585,11 @@
   <data name="TrayActions.ThankAuthorName" xml:space="preserve"><value>Otevřít stránku pro poděkování autorovi</value></data>
   <data name="TrayActions.Title" xml:space="preserve"><value>Akce Vehimapu na liště</value></data>
   <data name="TrayActions.WindowName" xml:space="preserve"><value>Akce Vehimapu na liště</value></data>
+  <data name="Notification.AutoBackupTitle" xml:space="preserve"><value>Vehimap - automatická záloha</value></data>
+  <data name="Notification.HeadingName" xml:space="preserve"><value>Upozornění Vehimapu</value></data>
+  <data name="Notification.HelpText" xml:space="preserve"><value>Krátké upozornění Vehimapu. Zavře se samo; při aktivaci ho lze zavřít klávesou Escape.</value></data>
+  <data name="Notification.Title" xml:space="preserve"><value>Vehimap upozornění</value></data>
+  <data name="Notification.WindowName" xml:space="preserve"><value>Upozornění Vehimapu</value></data>
   <data name="UpdateCheck.AssetAction" xml:space="preserve"><value>Stáhnout asset</value></data>
   <data name="UpdateCheck.AssetActionName" xml:space="preserve"><value>Stáhnout aktualizační asset</value></data>
   <data name="UpdateCheck.CloseName" xml:space="preserve"><value>Zavřít kontrolu aktualizací</value></data>

@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -22,7 +23,9 @@ public partial class NotificationWindow : Window
         : this()
     {
         Title = notificationTitle;
-        this.FindControl<TextBlock>("NotificationTitleTextBlock")!.Text = notificationTitle;
+        var titleBlock = this.FindControl<TextBlock>("NotificationTitleTextBlock")!;
+        titleBlock.Text = notificationTitle;
+        AutomationProperties.SetName(titleBlock, notificationTitle);
         this.FindControl<TextBlock>("NotificationMessageTextBlock")!.Text = notificationMessage;
         Opened += OnNotificationOpened;
     }

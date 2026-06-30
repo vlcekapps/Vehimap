@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         x:Class="Vehimap.Desktop.Views.NotificationWindow"
         Width="380"
         Height="140"
@@ -9,17 +10,17 @@
         WindowStartupLocation="Manual"
         ShowActivated="False"
         Topmost="True"
-        Title="Vehimap upozornění"
-        AutomationProperties.Name="Upozornění Vehimapu"
+        Title="{i18n:Loc Notification.Title}"
+        AutomationProperties.Name="{i18n:Loc Notification.WindowName}"
         AutomationProperties.AutomationId="NotificationWindow"
-        AutomationProperties.HelpText="Krátké upozornění Vehimapu. Zavře se samo; při aktivaci ho lze zavřít klávesou Escape.">
+        AutomationProperties.HelpText="{i18n:Loc Notification.HelpText}">
   <Border Margin="12" Padding="16" Background="#1C2B38" CornerRadius="10">
     <StackPanel Spacing="10">
       <TextBlock x:Name="NotificationTitleTextBlock"
                  FontSize="18"
                  FontWeight="SemiBold"
                  TextWrapping="Wrap"
-                 AutomationProperties.Name="Upozornění Vehimapu"
+                 AutomationProperties.Name="{i18n:Loc Notification.HeadingName}"
                  AutomationProperties.AutomationId="NotificationHeadingText"
                  AutomationProperties.HeadingLevel="1" />
       <TextBlock x:Name="NotificationMessageTextBlock" TextWrapping="Wrap" />

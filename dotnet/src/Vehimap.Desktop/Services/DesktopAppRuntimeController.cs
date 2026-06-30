@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Views;
 
@@ -204,7 +205,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             var backupResult = await _shell.RunAutomaticBackupCheckAsync().ConfigureAwait(false);
             if (DesktopBackgroundRuntimePolicy.CanShowAutomaticBackupNotification(notifyWhenHidden, backupResult.Created, backupResult.IsError))
             {
-                await _notificationService.ShowAsync("Vehimap - automatická záloha", backupResult.Message).ConfigureAwait(false);
+                await _notificationService.ShowAsync(DesktopLocalization.Localizer.GetString("Notification.AutoBackupTitle"), backupResult.Message).ConfigureAwait(false);
             }
         }
 

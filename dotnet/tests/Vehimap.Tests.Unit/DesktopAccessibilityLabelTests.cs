@@ -563,9 +563,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"CopyUpdateDetailsButton\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc UpdateCheck.CopyDetailsName}\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc UpdateCheck.CloseName}\"", updateXaml);
-        Assert.Contains("AutomationProperties.Name=\"Upozornění Vehimapu\"", notificationXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc Notification.WindowName}\"", notificationXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"NotificationWindow\"", notificationXaml);
-        Assert.Contains("Zavře se samo; při aktivaci ho lze zavřít klávesou Escape.", notificationXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc Notification.HelpText}\"", notificationXaml);
         Assert.Contains("Key.Escape", notificationCodeBehind);
         Assert.Contains("CanResize=\"True\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionWindow\"", maintenanceCompletionXaml);

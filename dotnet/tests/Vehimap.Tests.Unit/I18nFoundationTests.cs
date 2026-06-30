@@ -506,6 +506,24 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Pilot_notification_window_uses_resource_localization_for_static_text()
+    {
+        var root = FindRepositoryRoot();
+        var notificationWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "NotificationWindow.axaml"));
+        var notificationCodeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "NotificationWindow.axaml.cs"));
+        var runtimeController = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopAppRuntimeController.cs"));
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", notificationWindow);
+        Assert.Contains("Title=\"{i18n:Loc Notification.Title}\"", notificationWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc Notification.WindowName}\"", notificationWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc Notification.HelpText}\"", notificationWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc Notification.HeadingName}\"", notificationWindow);
+        Assert.Contains("AutomationProperties.SetName(titleBlock, notificationTitle)", notificationCodeBehind);
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"Notification.AutoBackupTitle\")", runtimeController);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), notificationWindow);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

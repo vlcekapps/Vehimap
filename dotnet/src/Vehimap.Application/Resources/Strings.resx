@@ -585,6 +585,11 @@
   <data name="TrayActions.ThankAuthorName" xml:space="preserve"><value>Open the page for thanking the author</value></data>
   <data name="TrayActions.Title" xml:space="preserve"><value>Vehimap tray actions</value></data>
   <data name="TrayActions.WindowName" xml:space="preserve"><value>Vehimap tray actions</value></data>
+  <data name="Notification.AutoBackupTitle" xml:space="preserve"><value>Vehimap - automatic backup</value></data>
+  <data name="Notification.HeadingName" xml:space="preserve"><value>Vehimap notification</value></data>
+  <data name="Notification.HelpText" xml:space="preserve"><value>Short Vehimap notification. It closes automatically; when active, press Escape to close it.</value></data>
+  <data name="Notification.Title" xml:space="preserve"><value>Vehimap notification</value></data>
+  <data name="Notification.WindowName" xml:space="preserve"><value>Vehimap notification</value></data>
   <data name="UpdateCheck.AssetAction" xml:space="preserve"><value>Download asset</value></data>
   <data name="UpdateCheck.AssetActionName" xml:space="preserve"><value>Download update asset</value></data>
   <data name="UpdateCheck.CloseName" xml:space="preserve"><value>Close update check</value></data>
