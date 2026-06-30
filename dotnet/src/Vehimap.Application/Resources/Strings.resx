@@ -650,6 +650,36 @@
   <data name="VehicleList.SearchPlaceholder" xml:space="preserve"><value>Name, make, license plate, note or tag</value></data>
   <data name="VehicleList.StatusFilter" xml:space="preserve"><value>List filter</value></data>
   <data name="VehicleList.StatusFilterName" xml:space="preserve"><value>Vehicle status filter</value></data>
+  <data name="VehicleDetail.CreateVehicle" xml:space="preserve"><value>New vehicle</value></data>
+  <data name="VehicleDetail.CreateVehicleName" xml:space="preserve"><value>Create a new vehicle</value></data>
+  <data name="VehicleDetail.DeleteVehicleHelp" xml:space="preserve"><value>Opens a confirmation and deletes the selected vehicle including its related records if confirmed.</value></data>
+  <data name="VehicleDetail.DeleteVehicleName" xml:space="preserve"><value>Delete selected vehicle</value></data>
+  <data name="VehicleDetail.EditVehicleName" xml:space="preserve"><value>Edit selected vehicle</value></data>
+  <data name="VehicleDetail.EvidenceSummaryItemType" xml:space="preserve"><value>Vehicle record summary</value></data>
+  <data name="VehicleDetail.EvidenceSummaryListName" xml:space="preserve"><value>Related record status for the selected vehicle</value></data>
+  <data name="VehicleDetail.OpenCosts" xml:space="preserve"><value>Costs</value></data>
+  <data name="VehicleDetail.OpenCostsName" xml:space="preserve"><value>Open costs for the selected vehicle</value></data>
+  <data name="VehicleDetail.OpenFuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="VehicleDetail.OpenFuelName" xml:space="preserve"><value>Open fuel entries for the selected vehicle</value></data>
+  <data name="VehicleDetail.OpenHistory" xml:space="preserve"><value>History</value></data>
+  <data name="VehicleDetail.OpenHistoryName" xml:space="preserve"><value>Open history for the selected vehicle</value></data>
+  <data name="VehicleDetail.OpenMaintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="VehicleDetail.OpenMaintenanceName" xml:space="preserve"><value>Open maintenance plan for the selected vehicle</value></data>
+  <data name="VehicleDetail.OpenRecords" xml:space="preserve"><value>Documents</value></data>
+  <data name="VehicleDetail.OpenRecordsName" xml:space="preserve"><value>Open documents and attachments for the selected vehicle</value></data>
+  <data name="VehicleDetail.OpenReminders" xml:space="preserve"><value>Reminders</value></data>
+  <data name="VehicleDetail.OpenRemindersName" xml:space="preserve"><value>Open reminders for the selected vehicle</value></data>
+  <data name="VehicleDetail.OpenServiceBook" xml:space="preserve"><value>Service book</value></data>
+  <data name="VehicleDetail.OpenServiceBookName" xml:space="preserve"><value>Open service book for the selected vehicle</value></data>
+  <data name="VehicleDetail.OpenTimeline" xml:space="preserve"><value>Timeline</value></data>
+  <data name="VehicleDetail.OpenTimelineName" xml:space="preserve"><value>Open timeline for the selected vehicle</value></data>
+  <data name="VehicleDetail.RecentHistoryItemType" xml:space="preserve"><value>History entry</value></data>
+  <data name="VehicleDetail.RecentHistoryListName" xml:space="preserve"><value>Recent historical events for the selected vehicle</value></data>
+  <data name="VehicleDetail.RelatedActionsHeading" xml:space="preserve"><value>Related records</value></data>
+  <data name="VehicleDetail.RelatedActionsHelp" xml:space="preserve"><value>Go directly to the selected vehicle records, timeline or costs.</value></data>
+  <data name="VehicleDetail.RelatedActionsPanelName" xml:space="preserve"><value>Related records for the selected vehicle</value></data>
+  <data name="VehicleDetail.StarterBundle" xml:space="preserve"><value>Bundle</value></data>
+  <data name="VehicleDetail.StarterBundleName" xml:space="preserve"><value>Open bundle for the selected vehicle</value></data>
   <data name="WorkspaceTabs.Audit" xml:space="preserve"><value>Audit</value></data>
   <data name="WorkspaceTabs.AuditName" xml:space="preserve"><value>Audit tab</value></data>
   <data name="WorkspaceTabs.ContentHelp" xml:space="preserve"><value>Content changes based on the selected tab above.</value></data>

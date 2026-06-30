@@ -650,6 +650,36 @@
   <data name="VehicleList.SearchPlaceholder" xml:space="preserve"><value>Název, značka, SPZ, poznámka nebo štítek</value></data>
   <data name="VehicleList.StatusFilter" xml:space="preserve"><value>Filtr seznamu</value></data>
   <data name="VehicleList.StatusFilterName" xml:space="preserve"><value>Filtr stavu vozidel</value></data>
+  <data name="VehicleDetail.CreateVehicle" xml:space="preserve"><value>Nové vozidlo</value></data>
+  <data name="VehicleDetail.CreateVehicleName" xml:space="preserve"><value>Vytvořit nové vozidlo</value></data>
+  <data name="VehicleDetail.DeleteVehicleHelp" xml:space="preserve"><value>Otevře potvrzení a při potvrzení odstraní vybrané vozidlo včetně jeho souvisejících evidencí.</value></data>
+  <data name="VehicleDetail.DeleteVehicleName" xml:space="preserve"><value>Odstranit vybrané vozidlo</value></data>
+  <data name="VehicleDetail.EditVehicleName" xml:space="preserve"><value>Upravit vybrané vozidlo</value></data>
+  <data name="VehicleDetail.EvidenceSummaryItemType" xml:space="preserve"><value>Souhrn evidence vozidla</value></data>
+  <data name="VehicleDetail.EvidenceSummaryListName" xml:space="preserve"><value>Stav navazujících evidencí vybraného vozidla</value></data>
+  <data name="VehicleDetail.OpenCosts" xml:space="preserve"><value>Náklady</value></data>
+  <data name="VehicleDetail.OpenCostsName" xml:space="preserve"><value>Otevřít náklady vybraného vozidla</value></data>
+  <data name="VehicleDetail.OpenFuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="VehicleDetail.OpenFuelName" xml:space="preserve"><value>Otevřít tankování vybraného vozidla</value></data>
+  <data name="VehicleDetail.OpenHistory" xml:space="preserve"><value>Historie</value></data>
+  <data name="VehicleDetail.OpenHistoryName" xml:space="preserve"><value>Otevřít historii vybraného vozidla</value></data>
+  <data name="VehicleDetail.OpenMaintenance" xml:space="preserve"><value>Údržba</value></data>
+  <data name="VehicleDetail.OpenMaintenanceName" xml:space="preserve"><value>Otevřít plán údržby vybraného vozidla</value></data>
+  <data name="VehicleDetail.OpenRecords" xml:space="preserve"><value>Doklady</value></data>
+  <data name="VehicleDetail.OpenRecordsName" xml:space="preserve"><value>Otevřít doklady a přílohy vybraného vozidla</value></data>
+  <data name="VehicleDetail.OpenReminders" xml:space="preserve"><value>Připomínky</value></data>
+  <data name="VehicleDetail.OpenRemindersName" xml:space="preserve"><value>Otevřít připomínky vybraného vozidla</value></data>
+  <data name="VehicleDetail.OpenServiceBook" xml:space="preserve"><value>Servisní knížka</value></data>
+  <data name="VehicleDetail.OpenServiceBookName" xml:space="preserve"><value>Otevřít servisní knížku vybraného vozidla</value></data>
+  <data name="VehicleDetail.OpenTimeline" xml:space="preserve"><value>Časová osa</value></data>
+  <data name="VehicleDetail.OpenTimelineName" xml:space="preserve"><value>Otevřít časovou osu vybraného vozidla</value></data>
+  <data name="VehicleDetail.RecentHistoryItemType" xml:space="preserve"><value>Historický záznam</value></data>
+  <data name="VehicleDetail.RecentHistoryListName" xml:space="preserve"><value>Poslední historické události vybraného vozidla</value></data>
+  <data name="VehicleDetail.RelatedActionsHeading" xml:space="preserve"><value>Související evidence</value></data>
+  <data name="VehicleDetail.RelatedActionsHelp" xml:space="preserve"><value>Přejděte přímo do evidence, časové osy nebo nákladů vybraného vozidla.</value></data>
+  <data name="VehicleDetail.RelatedActionsPanelName" xml:space="preserve"><value>Související evidence vybraného vozidla</value></data>
+  <data name="VehicleDetail.StarterBundle" xml:space="preserve"><value>Balíček</value></data>
+  <data name="VehicleDetail.StarterBundleName" xml:space="preserve"><value>Otevřít balíček pro vybrané vozidlo</value></data>
   <data name="WorkspaceTabs.Audit" xml:space="preserve"><value>Audit</value></data>
   <data name="WorkspaceTabs.AuditName" xml:space="preserve"><value>Karta Audit</value></data>
   <data name="WorkspaceTabs.ContentHelp" xml:space="preserve"><value>Obsah se mění podle zvolené karty nahoře.</value></data>

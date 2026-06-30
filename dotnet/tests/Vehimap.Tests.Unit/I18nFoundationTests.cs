@@ -237,6 +237,7 @@ public sealed class I18nFoundationTests
         var reminderWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "ReminderWorkspaceView.axaml"));
         var maintenanceWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "MaintenanceWorkspaceView.axaml"));
         var recordWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "RecordWorkspaceView.axaml"));
+        var vehicleDetailWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "VehicleDetailWorkspaceView.axaml"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyWorkspace);
         Assert.Contains("Text=\"{i18n:Loc HistoryWorkspace.Title}\"", historyWorkspace);
@@ -273,6 +274,15 @@ public sealed class I18nFoundationTests
         Assert.Contains("RecordWorkspace.MoveToManagedName", recordWorkspace);
         Assert.Contains("RecordWorkspace.CopyPathName", recordWorkspace);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), recordWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", vehicleDetailWorkspace);
+        Assert.Contains("Content=\"{i18n:Loc VehicleDetail.CreateVehicle}\"", vehicleDetailWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.RelatedActionsPanelName}\"", vehicleDetailWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc VehicleDetail.RelatedActionsHeading}\"", vehicleDetailWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenServiceBookName}\"", vehicleDetailWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc VehicleDetail.EvidenceSummaryItemType}\"", vehicleDetailWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc VehicleDetail.RecentHistoryItemType}\"", vehicleDetailWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), vehicleDetailWorkspace);
     }
 
     [Fact]

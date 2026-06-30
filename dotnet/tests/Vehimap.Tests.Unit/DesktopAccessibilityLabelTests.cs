@@ -450,21 +450,21 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailRelatedActionsPanel\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailRelatedActionsHelpText\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailHistoryButton\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít historii vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenHistoryName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailFuelButton\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít tankování vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenFuelName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailRemindersButton\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít připomínky vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenRemindersName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailMaintenanceButton\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít plán údržby vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenMaintenanceName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailRecordsButton\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít doklady a přílohy vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenRecordsName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailTimelineButton\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít časovou osu vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenTimelineName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailServiceBookButton\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít servisní knížku vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenServiceBookName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailCostsButton\"", xaml);
-        Assert.Contains("AutomationProperties.Name=\"Otevřít náklady vybraného vozidla\"", xaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenCostsName}\"", xaml);
         Assert.Equal(8, Regex.Matches(xaml, "IsEnabled=\"\\{Binding CanOpenVehicleRelatedWorkspace\\}\"").Count);
     }
 
@@ -1095,14 +1095,20 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AllowEditing=\"False\"", ReadViewFile("MainWindow.axaml"));
         Assert.Contains("x:Name=\"CancelVehicleButton\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"DeleteVehicleButton\"", vehicleDetailXaml);
+        Assert.Contains("Content=\"{i18n:Loc VehicleDetail.CreateVehicle}\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.CreateVehicleName}\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.DeleteVehicleName}\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc VehicleDetail.DeleteVehicleHelp}\"", vehicleDetailXaml);
         Assert.Contains("ItemsSource=\"{Binding VehicleCategoryOptions}\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailRecentHistoryListBox\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailEvidenceSummaryItems\"", vehicleDetailXaml);
         Assert.Contains("ItemsSource=\"{Binding EvidenceSummaryItems}\"", vehicleDetailXaml);
         Assert.Contains("x:DataType=\"itemvm:VehicleDetailEvidenceSummaryItemViewModel\"", vehicleDetailXaml);
         Assert.Contains("AutomationProperties.Name=\"{Binding AccessibleLabel}\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc VehicleDetail.EvidenceSummaryItemType}\"", vehicleDetailXaml);
         Assert.Contains("ItemsSource=\"{Binding RecentHistoryItems}\"", vehicleDetailXaml);
         Assert.Contains("x:DataType=\"itemvm:VehicleHistoryItemViewModel\"", vehicleDetailXaml);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc VehicleDetail.RecentHistoryItemType}\"", vehicleDetailXaml);
     }
 
     [Fact]
