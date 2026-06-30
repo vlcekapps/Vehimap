@@ -37,6 +37,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - prekladatele mohou pro upravy `.resx` pouzit Local ResX Editor: https://apps.microsoft.com/detail/9pkht426fq1k
 - jazyk se v prvni fazi plne projevi po restartu aplikace
 - kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
+- vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 
 ## Aktualni stav

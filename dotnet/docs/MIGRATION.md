@@ -20,6 +20,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Pilotni oblasti jsou `Nastaveni`, `O programu`, `Editor vozidla`, hlavni shell, hlavni menu, levy panel seznamu vozidel a nazvy pracovnich karet.
 - Nastaveni uz nese jazyk, oddelovac tisicu, oddelovac desetin, jednotku vzdalenosti a jednotku objemu paliva.
 - Podporovane jednotky jsou kilometry/mile a litry/US galony/imperialni galony.
+- Vzdalenostni nastaveni v UI, napr. upozorneni na udrzbu podle vzdalenosti, se zobrazuji a parsují ve zvolene jednotce, ale runtime storage dal uklada normalizovane kilometry.
 - Interni data zustavaji invariantni a SQLite storage se kvuli lokalizaci nemeni; zobrazeni, vstup a exporty budou postupne pouzivat formatovaci sluzby.
 - Prekladatelska pravidla jsou v `dotnet/docs/I18N.md`; commit messages zustavaji vyhradne anglicky.
 

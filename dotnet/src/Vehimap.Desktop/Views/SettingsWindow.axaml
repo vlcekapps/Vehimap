@@ -121,12 +121,13 @@
                    AutomationProperties.Name="{i18n:Loc Settings.MaintenanceReminderDaysName}"
                    AutomationProperties.AutomationId="MaintenanceReminderDaysBox" />
 
-          <TextBlock Grid.Row="3" Margin="0,12,0,0" Text="{i18n:Loc Settings.MaintenanceReminderKm}" VerticalAlignment="Center" />
+          <TextBlock Grid.Row="3" Margin="0,12,0,0" Text="{Binding MaintenanceReminderDistanceLabel}" VerticalAlignment="Center" />
           <TextBox Grid.Row="3"
                    Grid.Column="1"
                    Margin="0,12,0,0"
                    Text="{Binding MaintenanceReminderKm}"
-                   AutomationProperties.Name="{i18n:Loc Settings.MaintenanceReminderKmName}"
+                   AutomationProperties.Name="{Binding MaintenanceReminderDistanceName}"
+                   AutomationProperties.HelpText="{Binding MaintenanceReminderDistanceHelp}"
                    AutomationProperties.AutomationId="MaintenanceReminderKmBox" />
 
           <CheckBox Grid.Row="4"

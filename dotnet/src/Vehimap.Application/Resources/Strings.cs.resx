@@ -189,6 +189,9 @@
   <data name="Settings.LocaleFormattingHeading" xml:space="preserve"><value>Jazyk, čísla a jednotky</value></data>
   <data name="Settings.MaintenanceReminderDays" xml:space="preserve"><value>Upozornění na údržbu (dny)</value></data>
   <data name="Settings.MaintenanceReminderDaysName" xml:space="preserve"><value>Upozornění na údržbu ve dnech</value></data>
+  <data name="Settings.MaintenanceReminderDistance" xml:space="preserve"><value>Upozornění na údržbu podle vzdálenosti ({0})</value></data>
+  <data name="Settings.MaintenanceReminderDistanceHelp" xml:space="preserve"><value>Zadejte vzdálenostní práh v {0}. Vehimap hodnotu kvůli kompatibilitě interně uloží v kilometrech.</value></data>
+  <data name="Settings.MaintenanceReminderDistanceName" xml:space="preserve"><value>Upozornění na údržbu podle vzdálenosti v {0}</value></data>
   <data name="Settings.MaintenanceReminderKm" xml:space="preserve"><value>Upozornění na údržbu (km)</value></data>
   <data name="Settings.MaintenanceReminderKmName" xml:space="preserve"><value>Upozornění na údržbu v kilometrech</value></data>
   <data name="Settings.NumberFormattingHeading" xml:space="preserve"><value>Jazyk a formát čísel</value></data>
@@ -216,6 +219,7 @@
   <data name="Settings.ThousandsSeparator" xml:space="preserve"><value>Oddělovač tisíců</value></data>
   <data name="Settings.Title" xml:space="preserve"><value>Nastavení Vehimapu</value></data>
   <data name="Settings.Validation.IntegerRange" xml:space="preserve"><value>{0} musí být celé číslo v rozsahu {1} až {2}.</value></data>
+  <data name="Settings.Validation.NumberRange" xml:space="preserve"><value>{0} musí být číslo v rozsahu {1} až {2}.</value></data>
   <data name="Settings.VolumeUnit" xml:space="preserve"><value>Jednotka objemu paliva</value></data>
   <data name="Shell.SettingsCanceled" xml:space="preserve"><value>Nastavení bylo zavřeno bez uložení.</value></data>
   <data name="Shell.SettingsFailed" xml:space="preserve"><value>Nastavení se nepodařilo dokončit: {0}</value></data>

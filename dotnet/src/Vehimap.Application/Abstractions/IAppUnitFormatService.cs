@@ -6,6 +6,8 @@ public interface IAppUnitFormatService
 {
     AppUnitPreferences Normalize(AppUnitPreferences preferences);
 
+    decimal ConvertDistanceFromKilometers(decimal kilometers, AppUnitPreferences unitPreferences);
+
     string FormatDistanceFromKilometers(decimal kilometers, AppCulturePreferences culturePreferences, AppUnitPreferences unitPreferences, int decimalPlaces = 1);
 
     decimal ConvertDistanceToKilometers(decimal value, AppUnitPreferences unitPreferences);

@@ -35,12 +35,18 @@ public sealed class AppUnitFormatService : IAppUnitFormatService
             NormalizeDistanceUnit(preferences.DistanceUnit),
             NormalizeVolumeUnit(preferences.VolumeUnit));
 
+    public decimal ConvertDistanceFromKilometers(decimal kilometers, AppUnitPreferences unitPreferences)
+    {
+        var normalized = Normalize(unitPreferences);
+        return string.Equals(normalized.DistanceUnit, Miles, StringComparison.Ordinal)
+            ? kilometers / KilometersPerMile
+            : kilometers;
+    }
+
     public string FormatDistanceFromKilometers(decimal kilometers, AppCulturePreferences culturePreferences, AppUnitPreferences unitPreferences, int decimalPlaces = 1)
     {
         var normalized = Normalize(unitPreferences);
-        var value = string.Equals(normalized.DistanceUnit, Miles, StringComparison.Ordinal)
-            ? kilometers / KilometersPerMile
-            : kilometers;
+        var value = ConvertDistanceFromKilometers(kilometers, normalized);
         var unitLabel = string.Equals(normalized.DistanceUnit, Miles, StringComparison.Ordinal) ? "mi" : "km";
         return _numberFormatService.FormatDecimal(value, culturePreferences, decimalPlaces) + " " + unitLabel;
     }
