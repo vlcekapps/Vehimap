@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.UpdateCheckWindow"
         x:DataType="vm:UpdateDialogViewModel"
@@ -10,10 +11,10 @@
         CanResize="True"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="Kontrola aktualizací"
-        AutomationProperties.Name="Kontrola aktualizací"
+        Title="{i18n:Loc UpdateCheck.Title}"
+        AutomationProperties.Name="{i18n:Loc UpdateCheck.Title}"
         AutomationProperties.AutomationId="UpdateCheckWindow"
-        AutomationProperties.HelpText="Výsledek kontroly aktualizací. Fokus je na hlavní dostupné akci; Ctrl+Shift+C zkopíruje detaily a Escape dialog zavře.">
+        AutomationProperties.HelpText="{i18n:Loc UpdateCheck.HelpText}">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto,Auto">
     <TextBlock FontSize="22"
                FontWeight="SemiBold"
@@ -34,7 +35,7 @@
             CornerRadius="8">
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
-                    AutomationProperties.Name="Detaily kontroly aktualizací"
+                    AutomationProperties.Name="{i18n:Loc UpdateCheck.DetailsName}"
                     AutomationProperties.AutomationId="UpdateDetailsScrollViewer">
         <TextBlock Text="{Binding Details}"
                    TextWrapping="Wrap"
@@ -70,20 +71,20 @@
               MinWidth="170"
               IsVisible="{Binding ShowSecondaryAssetAction}"
               Click="OnAssetActionClick"
-              Content="Stáhnout asset"
-              AutomationProperties.Name="Stáhnout aktualizační asset"
+              Content="{i18n:Loc UpdateCheck.AssetAction}"
+              AutomationProperties.Name="{i18n:Loc UpdateCheck.AssetActionName}"
               AutomationProperties.AutomationId="AssetActionButton" />
       <Button x:Name="CopyDetailsButton"
               MinWidth="150"
               Click="OnCopyDetailsClick"
-              Content="Kopírovat detaily"
-              AutomationProperties.Name="Kopírovat detaily kontroly aktualizací do schránky"
+              Content="{i18n:Loc UpdateCheck.CopyDetails}"
+              AutomationProperties.Name="{i18n:Loc UpdateCheck.CopyDetailsName}"
               AutomationProperties.AutomationId="CopyUpdateDetailsButton" />
       <Button x:Name="CloseButton"
               MinWidth="110"
               Click="OnCloseClick"
-              Content="Zavřít"
-              AutomationProperties.Name="Zavřít kontrolu aktualizací"
+              Content="{i18n:Loc Common.Close}"
+              AutomationProperties.Name="{i18n:Loc UpdateCheck.CloseName}"
               AutomationProperties.AutomationId="UpdateCloseButton" />
     </StackPanel>
   </Grid>

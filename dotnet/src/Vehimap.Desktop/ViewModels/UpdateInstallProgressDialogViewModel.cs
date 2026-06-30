@@ -1,15 +1,27 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class UpdateInstallProgressDialogViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private string heading = "Stahování aktualizace";
+    private readonly IAppLocalizer _localizer;
+
+    public UpdateInstallProgressDialogViewModel(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer();
+        Heading = _localizer.GetString("UpdateInstall.Title");
+        StatusMessage = _localizer.GetString("UpdateInstall.InitialStatus");
+        CancelButtonLabel = _localizer.GetString("UpdateInstall.Cancel");
+    }
 
     [ObservableProperty]
-    private string statusMessage = "Připravuji stahování aktualizace.";
+    private string heading = string.Empty;
+
+    [ObservableProperty]
+    private string statusMessage = string.Empty;
 
     [ObservableProperty]
     private double progressValue;
@@ -24,15 +36,15 @@ public sealed partial class UpdateInstallProgressDialogViewModel : ObservableObj
     private bool canCancel = true;
 
     [ObservableProperty]
-    private string cancelButtonLabel = "Zrušit";
+    private string cancelButtonLabel = string.Empty;
 
     public string HelpText =>
-        "Aktualizace se stahuje a ověřuje. Tlačítkem Zrušit můžete stahování přerušit.";
+        _localizer.GetString("UpdateInstall.HelpText");
 
     public void ApplyProgress(UpdateInstallProgress progress)
     {
         StatusMessage = string.IsNullOrWhiteSpace(progress.Message)
-            ? "Stahuji aktualizaci."
+            ? _localizer.GetString("UpdateInstall.Downloading")
             : progress.Message;
         IsIndeterminate = progress.IsIndeterminate || progress.TotalBytes is null or <= 0;
 
@@ -42,11 +54,15 @@ public sealed partial class UpdateInstallProgressDialogViewModel : ObservableObj
             ProgressValue = progress.TotalBytes.Value == 0
                 ? 0
                 : boundedReceived * 100d / progress.TotalBytes.Value;
-            ProgressText = $"{ProgressValue:0} % ({FormatBytes(boundedReceived)} z {FormatBytes(progress.TotalBytes.Value)})";
+            ProgressText = _localizer.Format(
+                "UpdateInstall.ProgressWithBytes",
+                ProgressValue.ToString("0"),
+                FormatBytes(boundedReceived),
+                FormatBytes(progress.TotalBytes.Value));
         }
         else if (progress.BytesReceived > 0)
         {
-            ProgressText = $"Staženo {FormatBytes(progress.BytesReceived)}.";
+            ProgressText = _localizer.Format("UpdateInstall.DownloadedBytes", FormatBytes(progress.BytesReceived));
         }
     }
 
@@ -57,15 +73,15 @@ public sealed partial class UpdateInstallProgressDialogViewModel : ObservableObj
         ProgressValue = 100;
         ProgressText = "100 %";
         CanCancel = false;
-        CancelButtonLabel = "Zavřít";
+        CancelButtonLabel = _localizer.GetString("Common.Close");
     }
 
     public void MarkCancelled()
     {
-        StatusMessage = "Stahování aktualizace bylo zrušeno.";
+        StatusMessage = _localizer.GetString("UpdateInstall.CancelledResult");
         IsIndeterminate = false;
         CanCancel = false;
-        CancelButtonLabel = "Zavřít";
+        CancelButtonLabel = _localizer.GetString("Common.Close");
     }
 
     private static string FormatBytes(long sizeBytes)

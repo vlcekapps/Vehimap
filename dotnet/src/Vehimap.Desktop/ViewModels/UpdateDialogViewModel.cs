@@ -1,28 +1,34 @@
 using Vehimap.Application;
+using Vehimap.Application.Abstractions;
+using Vehimap.Application.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class UpdateDialogViewModel : ObservableObject
 {
-    public UpdateDialogViewModel(UpdateCheckResult result)
+    private readonly IAppLocalizer _localizer;
+
+    public UpdateDialogViewModel(UpdateCheckResult result, IAppLocalizer? localizer = null)
     {
+        _localizer = localizer ?? new ResourceAppLocalizer();
         Result = result;
         Heading = result.FailureReason is not null
-            ? "Kontrola aktualizací se nepodařila"
+            ? _localizer.GetString("UpdateCheck.Heading.Failed")
             : result.IsUpdateAvailable
-                ? "Je dostupná novější verze"
-                : "Kontrola aktualizací";
+                ? _localizer.GetString("UpdateCheck.Heading.UpdateAvailable")
+                : _localizer.GetString("UpdateCheck.Heading.Default");
         Summary = result.FailureReason ?? result.Message;
         Details = BuildDetails(result);
         ClipboardText = BuildClipboardText(Heading, Summary, Details);
+        StatusMessage = _localizer.GetString("UpdateCheck.Status.ReadyToCopy");
         PrimaryActionLabel = result.IsUpdateAvailable
             ? result.CanInstallAutomatically
-                ? "Stáhnout a nainstalovat"
+                ? _localizer.GetString("UpdateCheck.Primary.Install")
                 : !string.IsNullOrWhiteSpace(result.NotesUrl)
-                    ? "Otevřít release stránku"
-                    : "Stáhnout asset"
-            : "Zavřít";
+                    ? _localizer.GetString("UpdateCheck.Primary.OpenRelease")
+                    : _localizer.GetString("UpdateCheck.Primary.DownloadAsset")
+            : _localizer.GetString("Common.Close");
     }
 
     public UpdateCheckResult Result { get; }
@@ -38,62 +44,62 @@ public sealed partial class UpdateDialogViewModel : ObservableObject
     public string PrimaryActionLabel { get; }
 
     [ObservableProperty]
-    private string statusMessage = "Detaily kontroly jsou připravené ke zkopírování.";
+    private string statusMessage = string.Empty;
 
     public bool ShowPrimaryAction => Result.IsUpdateAvailable && (Result.CanInstallAutomatically || !string.IsNullOrWhiteSpace(Result.NotesUrl) || !string.IsNullOrWhiteSpace(Result.AssetUrl));
 
     public bool ShowSecondaryAssetAction => Result.IsUpdateAvailable && !Result.CanInstallAutomatically && !string.IsNullOrWhiteSpace(Result.AssetUrl) && !string.IsNullOrWhiteSpace(Result.NotesUrl);
 
-    private static string BuildDetails(UpdateCheckResult result)
+    private string BuildDetails(UpdateCheckResult result)
     {
         var lines = new List<string>
         {
-            $"Aktuální verze: {result.CurrentVersion}",
-            $"Nejnovější verze: {result.LatestVersion}"
+            _localizer.Format("UpdateCheck.Details.CurrentVersion", result.CurrentVersion),
+            _localizer.Format("UpdateCheck.Details.LatestVersion", result.LatestVersion)
         };
 
         if (!string.IsNullOrWhiteSpace(result.PublishedAt))
         {
-            lines.Add($"Vydáno: {result.PublishedAt}");
+            lines.Add(_localizer.Format("UpdateCheck.Details.PublishedAt", result.PublishedAt));
         }
 
         if (result.AssetSize is > 0)
         {
-            lines.Add($"Velikost assetu: {FormatBytes(result.AssetSize.Value)}");
+            lines.Add(_localizer.Format("UpdateCheck.Details.AssetSize", FormatBytes(result.AssetSize.Value)));
         }
 
         if (result.IsUpdateAvailable)
         {
             lines.Add(result.CanInstallAutomatically
-                ? "Automatická instalace: dostupná."
-                : $"Automatická instalace: nedostupná. {BuildManualInstallReason(result)}");
+                ? _localizer.GetString("UpdateCheck.Details.AutomaticInstallAvailable")
+                : _localizer.Format("UpdateCheck.Details.AutomaticInstallUnavailable", BuildManualInstallReason(result)));
         }
 
         if (!string.IsNullOrWhiteSpace(result.NotesUrl))
         {
-            lines.Add($"Release poznámky: {result.NotesUrl}");
+            lines.Add(_localizer.Format("UpdateCheck.Details.ReleaseNotes", result.NotesUrl));
         }
 
         if (result.IsUpdateAvailable && !string.IsNullOrWhiteSpace(result.AssetUrl))
         {
-            lines.Add($"Asset ke stažení: {result.AssetUrl}");
+            lines.Add(_localizer.Format("UpdateCheck.Details.AssetUrl", result.AssetUrl));
         }
 
         if (result.IsUpdateAvailable && !string.IsNullOrWhiteSpace(result.Sha256))
         {
-            lines.Add($"SHA-256: {result.Sha256}");
+            lines.Add(_localizer.Format("UpdateCheck.Details.Sha256", result.Sha256));
         }
 
         return string.Join(Environment.NewLine, lines);
     }
 
-    private static string BuildClipboardText(string heading, string summary, string details)
+    private string BuildClipboardText(string heading, string summary, string details)
     {
         return string.Join(
             Environment.NewLine,
             new[]
             {
-                "Vehimap - kontrola aktualizací",
+                _localizer.GetString("UpdateCheck.ClipboardTitle"),
                 heading,
                 summary,
                 string.Empty,
@@ -101,14 +107,14 @@ public sealed partial class UpdateDialogViewModel : ObservableObject
             });
     }
 
-    private static string BuildManualInstallReason(UpdateCheckResult result)
+    private string BuildManualInstallReason(UpdateCheckResult result)
     {
         if (!string.IsNullOrWhiteSpace(result.AutomaticInstallUnavailableReason))
         {
             return result.AutomaticInstallUnavailableReason;
         }
 
-        return "Použijte release stránku nebo stáhněte asset ručně.";
+        return _localizer.GetString("UpdateCheck.ManualInstallFallback");
     }
 
     private static string FormatBytes(long sizeBytes)

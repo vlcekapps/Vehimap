@@ -470,6 +470,42 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Pilot_update_dialogs_use_resource_localization_for_static_text()
+    {
+        var root = FindRepositoryRoot();
+        var updateCheckWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "UpdateCheckWindow.axaml"));
+        var updateCheckCodeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "UpdateCheckWindow.axaml.cs"));
+        var updateDialogViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "UpdateDialogViewModel.cs"));
+        var updateInstallWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "UpdateInstallProgressWindow.axaml"));
+        var updateInstallCodeBehind = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "UpdateInstallProgressWindow.axaml.cs"));
+        var updateInstallViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "UpdateInstallProgressDialogViewModel.cs"));
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", updateCheckWindow);
+        Assert.Contains("Title=\"{i18n:Loc UpdateCheck.Title}\"", updateCheckWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc UpdateCheck.HelpText}\"", updateCheckWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc UpdateCheck.DetailsName}\"", updateCheckWindow);
+        Assert.Contains("Content=\"{i18n:Loc UpdateCheck.CopyDetails}\"", updateCheckWindow);
+        Assert.Contains("Content=\"{i18n:Loc Common.Close}\"", updateCheckWindow);
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"UpdateCheck.Status.DetailsCopied\")", updateCheckCodeBehind);
+        Assert.Contains("_localizer.GetString(\"UpdateCheck.Heading.Default\")", updateDialogViewModel);
+        Assert.Contains("_localizer.Format(\"UpdateCheck.Details.AssetUrl\"", updateDialogViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), updateCheckWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), updateCheckCodeBehind);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), updateDialogViewModel);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", updateInstallWindow);
+        Assert.Contains("Title=\"{i18n:Loc UpdateInstall.Title}\"", updateInstallWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc UpdateInstall.Title}\"", updateInstallWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc UpdateInstall.ProgressHelpText}\"", updateInstallWindow);
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"UpdateInstall.CancelledResult\")", updateInstallCodeBehind);
+        Assert.Contains("_localizer.GetString(\"UpdateInstall.InitialStatus\")", updateInstallViewModel);
+        Assert.Contains("UpdateInstall.ProgressWithBytes", updateInstallViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), updateInstallWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), updateInstallCodeBehind);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), updateInstallViewModel);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

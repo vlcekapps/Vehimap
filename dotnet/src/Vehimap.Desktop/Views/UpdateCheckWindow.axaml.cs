@@ -4,6 +4,7 @@ using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.Views;
@@ -75,18 +76,18 @@ public partial class UpdateCheckWindow : Window
 
         if (Clipboard is null)
         {
-            model.StatusMessage = "Schránka není dostupná.";
+            model.StatusMessage = DesktopLocalization.Localizer.GetString("Common.ClipboardUnavailable");
             return;
         }
 
         try
         {
             await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
-            model.StatusMessage = "Detaily kontroly aktualizací byly zkopírovány do schránky.";
+            model.StatusMessage = DesktopLocalization.Localizer.GetString("UpdateCheck.Status.DetailsCopied");
         }
         catch (Exception ex)
         {
-            model.StatusMessage = $"Detaily kontroly aktualizací se nepodařilo zkopírovat: {ex.Message}";
+            model.StatusMessage = DesktopLocalization.Localizer.Format("UpdateCheck.Status.CopyFailed", ex.Message);
         }
     }
 }

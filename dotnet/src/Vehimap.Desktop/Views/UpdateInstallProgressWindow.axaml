@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.UpdateInstallProgressWindow"
         x:DataType="vm:UpdateInstallProgressDialogViewModel"
@@ -10,8 +11,8 @@
         CanResize="False"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="Stahování aktualizace"
-        AutomationProperties.Name="Stahování aktualizace"
+        Title="{i18n:Loc UpdateInstall.Title}"
+        AutomationProperties.Name="{i18n:Loc UpdateInstall.Title}"
         AutomationProperties.AutomationId="UpdateInstallProgressWindow"
         AutomationProperties.HelpText="{Binding HelpText}">
   <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*,Auto">
@@ -36,7 +37,7 @@
                  IsIndeterminate="{Binding IsIndeterminate}"
                  AutomationProperties.Name="{Binding ProgressText}"
                  AutomationProperties.AutomationId="UpdateInstallProgressBar"
-                 AutomationProperties.HelpText="Průběh stahování a ověřování aktualizace v procentech." />
+                 AutomationProperties.HelpText="{i18n:Loc UpdateInstall.ProgressHelpText}" />
     <TextBlock Grid.Row="3"
                Margin="0,8,0,0"
                Text="{Binding ProgressText}"

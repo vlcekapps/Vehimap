@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.Views;
@@ -25,7 +26,7 @@ public partial class UpdateInstallProgressWindow : Window
     public Func<IProgress<UpdateInstallProgress>, CancellationToken, Task<UpdateInstallResult>>? PrepareInstallAsync { get; set; }
 
     public UpdateInstallResult Result { get; private set; } =
-        new(false, "Stahování aktualizace nebylo spuštěno.", null);
+        new(false, DesktopLocalization.Localizer.GetString("UpdateInstall.NotStartedResult"), null);
 
     private void OnOpened(object? sender, EventArgs e)
     {
@@ -59,7 +60,10 @@ public partial class UpdateInstallProgressWindow : Window
         }
         catch (OperationCanceledException)
         {
-            Result = new UpdateInstallResult(false, "Stahování aktualizace bylo zrušeno.", null);
+            Result = new UpdateInstallResult(
+                false,
+                DesktopLocalization.Localizer.GetString("UpdateInstall.CancelledResult"),
+                null);
             _operationFinished = true;
             model.MarkCancelled();
             await Task.Delay(250).ConfigureAwait(true);
@@ -67,7 +71,10 @@ public partial class UpdateInstallProgressWindow : Window
         }
         catch (Exception ex)
         {
-            Result = new UpdateInstallResult(false, $"Aktualizaci se nepodařilo připravit: {ex.Message}", null);
+            Result = new UpdateInstallResult(
+                false,
+                DesktopLocalization.Localizer.Format("UpdateInstall.PrepareFailed", ex.Message),
+                null);
             _operationFinished = true;
             model.MarkCompleted(Result.Message);
         }
@@ -80,7 +87,7 @@ public partial class UpdateInstallProgressWindow : Window
             _cancellation.Cancel();
             if (DataContext is UpdateInstallProgressDialogViewModel model)
             {
-                model.StatusMessage = "Ruším stahování aktualizace.";
+                model.StatusMessage = DesktopLocalization.Localizer.GetString("UpdateInstall.Cancelling");
                 model.CanCancel = false;
             }
 

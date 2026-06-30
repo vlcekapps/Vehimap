@@ -585,6 +585,46 @@
   <data name="TrayActions.ThankAuthorName" xml:space="preserve"><value>Otevřít stránku pro poděkování autorovi</value></data>
   <data name="TrayActions.Title" xml:space="preserve"><value>Akce Vehimapu na liště</value></data>
   <data name="TrayActions.WindowName" xml:space="preserve"><value>Akce Vehimapu na liště</value></data>
+  <data name="UpdateCheck.AssetAction" xml:space="preserve"><value>Stáhnout asset</value></data>
+  <data name="UpdateCheck.AssetActionName" xml:space="preserve"><value>Stáhnout aktualizační asset</value></data>
+  <data name="UpdateCheck.CloseName" xml:space="preserve"><value>Zavřít kontrolu aktualizací</value></data>
+  <data name="UpdateCheck.ClipboardTitle" xml:space="preserve"><value>Vehimap - kontrola aktualizací</value></data>
+  <data name="UpdateCheck.CopyDetails" xml:space="preserve"><value>Kopírovat detaily</value></data>
+  <data name="UpdateCheck.CopyDetailsName" xml:space="preserve"><value>Kopírovat detaily kontroly aktualizací do schránky</value></data>
+  <data name="UpdateCheck.Details.AssetSize" xml:space="preserve"><value>Velikost assetu: {0}</value></data>
+  <data name="UpdateCheck.Details.AssetUrl" xml:space="preserve"><value>Asset ke stažení: {0}</value></data>
+  <data name="UpdateCheck.Details.AutomaticInstallAvailable" xml:space="preserve"><value>Automatická instalace: dostupná.</value></data>
+  <data name="UpdateCheck.Details.AutomaticInstallUnavailable" xml:space="preserve"><value>Automatická instalace: nedostupná. {0}</value></data>
+  <data name="UpdateCheck.Details.CurrentVersion" xml:space="preserve"><value>Aktuální verze: {0}</value></data>
+  <data name="UpdateCheck.Details.LatestVersion" xml:space="preserve"><value>Nejnovější verze: {0}</value></data>
+  <data name="UpdateCheck.Details.PublishedAt" xml:space="preserve"><value>Vydáno: {0}</value></data>
+  <data name="UpdateCheck.Details.ReleaseNotes" xml:space="preserve"><value>Release poznámky: {0}</value></data>
+  <data name="UpdateCheck.Details.Sha256" xml:space="preserve"><value>SHA-256: {0}</value></data>
+  <data name="UpdateCheck.DetailsName" xml:space="preserve"><value>Detaily kontroly aktualizací</value></data>
+  <data name="UpdateCheck.Heading.Default" xml:space="preserve"><value>Kontrola aktualizací</value></data>
+  <data name="UpdateCheck.Heading.Failed" xml:space="preserve"><value>Kontrola aktualizací se nepodařila</value></data>
+  <data name="UpdateCheck.Heading.UpdateAvailable" xml:space="preserve"><value>Je dostupná novější verze</value></data>
+  <data name="UpdateCheck.HelpText" xml:space="preserve"><value>Výsledek kontroly aktualizací. Fokus je na hlavní dostupné akci; Ctrl+Shift+C zkopíruje detaily a Escape dialog zavře.</value></data>
+  <data name="UpdateCheck.ManualInstallFallback" xml:space="preserve"><value>Použijte release stránku nebo stáhněte asset ručně.</value></data>
+  <data name="UpdateCheck.Primary.DownloadAsset" xml:space="preserve"><value>Stáhnout asset</value></data>
+  <data name="UpdateCheck.Primary.Install" xml:space="preserve"><value>Stáhnout a nainstalovat</value></data>
+  <data name="UpdateCheck.Primary.OpenRelease" xml:space="preserve"><value>Otevřít release stránku</value></data>
+  <data name="UpdateCheck.Status.CopyFailed" xml:space="preserve"><value>Detaily kontroly aktualizací se nepodařilo zkopírovat: {0}</value></data>
+  <data name="UpdateCheck.Status.DetailsCopied" xml:space="preserve"><value>Detaily kontroly aktualizací byly zkopírovány do schránky.</value></data>
+  <data name="UpdateCheck.Status.ReadyToCopy" xml:space="preserve"><value>Detaily kontroly jsou připravené ke zkopírování.</value></data>
+  <data name="UpdateCheck.Title" xml:space="preserve"><value>Kontrola aktualizací</value></data>
+  <data name="UpdateInstall.Cancel" xml:space="preserve"><value>Zrušit</value></data>
+  <data name="UpdateInstall.CancelledResult" xml:space="preserve"><value>Stahování aktualizace bylo zrušeno.</value></data>
+  <data name="UpdateInstall.Cancelling" xml:space="preserve"><value>Ruším stahování aktualizace.</value></data>
+  <data name="UpdateInstall.DownloadedBytes" xml:space="preserve"><value>Staženo {0}.</value></data>
+  <data name="UpdateInstall.Downloading" xml:space="preserve"><value>Stahuji aktualizaci.</value></data>
+  <data name="UpdateInstall.HelpText" xml:space="preserve"><value>Aktualizace se stahuje a ověřuje. Tlačítkem Zrušit můžete stahování přerušit.</value></data>
+  <data name="UpdateInstall.InitialStatus" xml:space="preserve"><value>Připravuji stahování aktualizace.</value></data>
+  <data name="UpdateInstall.NotStartedResult" xml:space="preserve"><value>Stahování aktualizace nebylo spuštěno.</value></data>
+  <data name="UpdateInstall.PrepareFailed" xml:space="preserve"><value>Aktualizaci se nepodařilo připravit: {0}</value></data>
+  <data name="UpdateInstall.ProgressHelpText" xml:space="preserve"><value>Průběh stahování a ověřování aktualizace v procentech.</value></data>
+  <data name="UpdateInstall.ProgressWithBytes" xml:space="preserve"><value>{0} % ({1} z {2})</value></data>
+  <data name="UpdateInstall.Title" xml:space="preserve"><value>Stahování aktualizace</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Zálohovat ihned</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Zavřít dialog nastavení</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Uložit nastavení</value></data>

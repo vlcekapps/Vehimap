@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
@@ -470,19 +471,21 @@ public sealed class AppShellServicesTests : IDisposable
     public void Update_dialog_details_show_automatic_install_status()
     {
         var sha256 = new string('a', 64);
-        var model = new UpdateDialogViewModel(new UpdateCheckResult(
-            "1.0.2",
-            "1.0.3",
-            true,
-            "2026-04-02",
-            "https://example.com/release",
-            "https://example.com/vehimap.zip",
-            sha256,
-            2048,
-            false,
-            "Je dostupna novejsi verze.",
-            null,
-            "Vedle aplikace chybi Vehimap.Updater."));
+        var model = new UpdateDialogViewModel(
+            new UpdateCheckResult(
+                "1.0.2",
+                "1.0.3",
+                true,
+                "2026-04-02",
+                "https://example.com/release",
+                "https://example.com/vehimap.zip",
+                sha256,
+                2048,
+                false,
+                "Je dostupna novejsi verze.",
+                null,
+                "Vedle aplikace chybi Vehimap.Updater."),
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")));
 
         Assert.Contains("Automatická instalace: nedostupná", model.Details, StringComparison.Ordinal);
         Assert.Contains("Vehimap.Updater", model.Details, StringComparison.Ordinal);

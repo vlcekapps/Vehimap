@@ -585,6 +585,46 @@
   <data name="TrayActions.ThankAuthorName" xml:space="preserve"><value>Open the page for thanking the author</value></data>
   <data name="TrayActions.Title" xml:space="preserve"><value>Vehimap tray actions</value></data>
   <data name="TrayActions.WindowName" xml:space="preserve"><value>Vehimap tray actions</value></data>
+  <data name="UpdateCheck.AssetAction" xml:space="preserve"><value>Download asset</value></data>
+  <data name="UpdateCheck.AssetActionName" xml:space="preserve"><value>Download update asset</value></data>
+  <data name="UpdateCheck.CloseName" xml:space="preserve"><value>Close update check</value></data>
+  <data name="UpdateCheck.ClipboardTitle" xml:space="preserve"><value>Vehimap - update check</value></data>
+  <data name="UpdateCheck.CopyDetails" xml:space="preserve"><value>Copy details</value></data>
+  <data name="UpdateCheck.CopyDetailsName" xml:space="preserve"><value>Copy update check details to the clipboard</value></data>
+  <data name="UpdateCheck.Details.AssetSize" xml:space="preserve"><value>Asset size: {0}</value></data>
+  <data name="UpdateCheck.Details.AssetUrl" xml:space="preserve"><value>Download asset: {0}</value></data>
+  <data name="UpdateCheck.Details.AutomaticInstallAvailable" xml:space="preserve"><value>Automatic installation: available.</value></data>
+  <data name="UpdateCheck.Details.AutomaticInstallUnavailable" xml:space="preserve"><value>Automatic installation: unavailable. {0}</value></data>
+  <data name="UpdateCheck.Details.CurrentVersion" xml:space="preserve"><value>Current version: {0}</value></data>
+  <data name="UpdateCheck.Details.LatestVersion" xml:space="preserve"><value>Latest version: {0}</value></data>
+  <data name="UpdateCheck.Details.PublishedAt" xml:space="preserve"><value>Published: {0}</value></data>
+  <data name="UpdateCheck.Details.ReleaseNotes" xml:space="preserve"><value>Release notes: {0}</value></data>
+  <data name="UpdateCheck.Details.Sha256" xml:space="preserve"><value>SHA-256: {0}</value></data>
+  <data name="UpdateCheck.DetailsName" xml:space="preserve"><value>Update check details</value></data>
+  <data name="UpdateCheck.Heading.Default" xml:space="preserve"><value>Update check</value></data>
+  <data name="UpdateCheck.Heading.Failed" xml:space="preserve"><value>Update check failed</value></data>
+  <data name="UpdateCheck.Heading.UpdateAvailable" xml:space="preserve"><value>A newer version is available</value></data>
+  <data name="UpdateCheck.HelpText" xml:space="preserve"><value>Update check result. Focus is on the primary available action; Ctrl+Shift+C copies details and Escape closes the dialog.</value></data>
+  <data name="UpdateCheck.ManualInstallFallback" xml:space="preserve"><value>Use the release page or download the asset manually.</value></data>
+  <data name="UpdateCheck.Primary.DownloadAsset" xml:space="preserve"><value>Download asset</value></data>
+  <data name="UpdateCheck.Primary.Install" xml:space="preserve"><value>Download and install</value></data>
+  <data name="UpdateCheck.Primary.OpenRelease" xml:space="preserve"><value>Open release page</value></data>
+  <data name="UpdateCheck.Status.CopyFailed" xml:space="preserve"><value>Update check details could not be copied: {0}</value></data>
+  <data name="UpdateCheck.Status.DetailsCopied" xml:space="preserve"><value>Update check details were copied to the clipboard.</value></data>
+  <data name="UpdateCheck.Status.ReadyToCopy" xml:space="preserve"><value>Check details are ready to copy.</value></data>
+  <data name="UpdateCheck.Title" xml:space="preserve"><value>Update check</value></data>
+  <data name="UpdateInstall.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="UpdateInstall.CancelledResult" xml:space="preserve"><value>Update download was cancelled.</value></data>
+  <data name="UpdateInstall.Cancelling" xml:space="preserve"><value>Cancelling update download.</value></data>
+  <data name="UpdateInstall.DownloadedBytes" xml:space="preserve"><value>Downloaded {0}.</value></data>
+  <data name="UpdateInstall.Downloading" xml:space="preserve"><value>Downloading update.</value></data>
+  <data name="UpdateInstall.HelpText" xml:space="preserve"><value>The update is being downloaded and verified. Use Cancel to stop the download.</value></data>
+  <data name="UpdateInstall.InitialStatus" xml:space="preserve"><value>Preparing update download.</value></data>
+  <data name="UpdateInstall.NotStartedResult" xml:space="preserve"><value>Update download was not started.</value></data>
+  <data name="UpdateInstall.PrepareFailed" xml:space="preserve"><value>Update could not be prepared: {0}</value></data>
+  <data name="UpdateInstall.ProgressHelpText" xml:space="preserve"><value>Download and verification progress in percent.</value></data>
+  <data name="UpdateInstall.ProgressWithBytes" xml:space="preserve"><value>{0} % ({1} of {2})</value></data>
+  <data name="UpdateInstall.Title" xml:space="preserve"><value>Downloading update</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Back up now</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Close the settings dialog</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Save settings</value></data>
