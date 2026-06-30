@@ -1256,4 +1256,93 @@ Stav: {5}</value></data>
   <data name="VehicleEditor.Year" xml:space="preserve"><value>Rok</value></data>
   <data name="VehicleEditor.YearName" xml:space="preserve"><value>Rok vozidla</value></data>
   <data name="VehicleEditor.CancelName" xml:space="preserve"><value>Zrušit úpravu vozidla</value></data>
+  <data name="AppShell.FileDialog.BackupExportTitle" xml:space="preserve"><value>Export dat Vehimapu</value></data>
+  <data name="AppShell.FileDialog.BackupImportTitle" xml:space="preserve"><value>Import zálohy Vehimapu</value></data>
+  <data name="AppShell.FileDialog.BackupFileType" xml:space="preserve"><value>Záloha Vehimap</value></data>
+  <data name="AppShell.FileDialog.VehiclePackageExportTitle" xml:space="preserve"><value>Export balíčku vozidla</value></data>
+  <data name="AppShell.FileDialog.VehiclePackageImportTitle" xml:space="preserve"><value>Import balíčku vozidla</value></data>
+  <data name="AppShell.FileDialog.VehiclePackageFileType" xml:space="preserve"><value>Balíček vozidla Vehimap</value></data>
+  <data name="AppShell.FileDialog.PrintableReportTitle" xml:space="preserve"><value>Uložit tiskový přehled vozidel</value></data>
+  <data name="AppShell.FileDialog.HtmlFileType" xml:space="preserve"><value>HTML soubor</value></data>
+  <data name="AppShell.FileName.VehiclePackagePrefix" xml:space="preserve"><value>vehimap-vozidlo</value></data>
+  <data name="AppShell.FileName.VehicleFallback" xml:space="preserve"><value>vozidlo</value></data>
+  <data name="AppShell.ExportBackup.NotLoaded" xml:space="preserve"><value>Export se nepodařilo připravit, protože nejsou načtená data.</value></data>
+  <data name="AppShell.ExportBackup.Success" xml:space="preserve"><value>Záloha byla uložena do {0}.</value></data>
+  <data name="AppShell.ExportBackup.IncludedManagedAttachments" xml:space="preserve"><value>Spravovaných příloh v záloze: {0}.</value></data>
+  <data name="AppShell.ExportBackup.MissingManagedAttachments" xml:space="preserve"><value>Přeskočených chybějících spravovaných příloh: {0}.</value></data>
+  <data name="AppShell.ExportBackup.Failed" xml:space="preserve"><value>Export zálohy se nepodařil: {0}</value></data>
+  <data name="AppShell.ImportBackup.NotLoaded" xml:space="preserve"><value>Obnovu se nepodařilo připravit, protože nejsou načtená data.</value></data>
+  <data name="AppShell.ImportBackup.Success" xml:space="preserve"><value>Data byla obnovena ze zálohy {0}.</value></data>
+  <data name="AppShell.ImportBackup.PreRestoreBackup" xml:space="preserve"><value>Původní data byla před obnovou odložena do {0}.</value></data>
+  <data name="AppShell.ImportBackup.RestoredManagedAttachments" xml:space="preserve"><value>Obnoveno spravovaných příloh: {0}.</value></data>
+  <data name="AppShell.ImportBackup.Failed" xml:space="preserve"><value>Obnova ze zálohy se nepodařila: {0}</value></data>
+  <data name="AppShell.DataStoreHealth.Action" xml:space="preserve"><value>zkontrolovat datovou sadu 2.0</value></data>
+  <data name="AppShell.DataStoreHealth.DeferredByPendingEdits" xml:space="preserve"><value>Kontrola datové sady byla odložena kvůli rozpracovaným úpravám.</value></data>
+  <data name="AppShell.DataStoreHealth.HealthyManual" xml:space="preserve"><value>Kontrola datové sady 2.0 proběhla v pořádku.</value></data>
+  <data name="AppShell.DataStoreHealth.Healthy" xml:space="preserve"><value>Datová sada 2.0 je v pořádku.</value></data>
+  <data name="AppShell.DataStoreHealth.Summary" xml:space="preserve"><value>Kontrola datové sady 2.0: {0}</value></data>
+  <data name="AppShell.VehiclePackage.ExportNoVehicle" xml:space="preserve"><value>Balíček vozidla nelze exportovat, protože není vybrané žádné vozidlo.</value></data>
+  <data name="AppShell.VehiclePackage.ExportNotLoaded" xml:space="preserve"><value>Balíček vozidla nelze exportovat, protože nejsou načtená data.</value></data>
+  <data name="AppShell.VehiclePackage.ExportAction" xml:space="preserve"><value>exportovat balíček vozidla</value></data>
+  <data name="AppShell.VehiclePackage.ExportSuccess" xml:space="preserve"><value>Balíček vozidla {0} byl uložen do {1}.</value></data>
+  <data name="AppShell.VehiclePackage.IncludedAttachments" xml:space="preserve"><value>Přiložených spravovaných příloh: {0}.</value></data>
+  <data name="AppShell.VehiclePackage.MissingAttachments" xml:space="preserve"><value>Přeskočených chybějících příloh: {0}.</value></data>
+  <data name="AppShell.VehiclePackage.ExportFailed" xml:space="preserve"><value>Export balíčku vozidla se nepodařil: {0}</value></data>
+  <data name="AppShell.VehiclePackage.ImportNotLoaded" xml:space="preserve"><value>Balíček vozidla nelze importovat, protože nejsou načtená data.</value></data>
+  <data name="AppShell.VehiclePackage.ImportAction" xml:space="preserve"><value>importovat balíček vozidla</value></data>
+  <data name="AppShell.VehiclePackage.ImportSuccess" xml:space="preserve"><value>Balíček vozidla {0} byl importován.</value></data>
+  <data name="AppShell.VehiclePackage.RestoredAttachments" xml:space="preserve"><value>Obnoveno spravovaných příloh: {0}.</value></data>
+  <data name="AppShell.VehiclePackage.ImportFailed" xml:space="preserve"><value>Import balíčku vozidla se nepodařil: {0}</value></data>
+  <data name="AppShell.Dashboard.ShowOnLaunchEnabled" xml:space="preserve"><value>Dashboard se bude zobrazovat při startu aplikace.</value></data>
+  <data name="AppShell.Dashboard.ShowOnLaunchDisabled" xml:space="preserve"><value>Dashboard se při startu aplikace nebude otevírat automaticky.</value></data>
+  <data name="AppShell.Dashboard.ShowOnLaunchFailed" xml:space="preserve"><value>Volbu dashboardu při startu se nepodařilo uložit: {0}</value></data>
+  <data name="AppShell.AutomaticBackup.NotLoaded" xml:space="preserve"><value>Automatickou zálohu nelze vytvořit bez načtených dat.</value></data>
+  <data name="AppShell.AutomaticBackup.CreateAction" xml:space="preserve"><value>vytvořit zálohu</value></data>
+  <data name="AppShell.PrintableReport.NotLoaded" xml:space="preserve"><value>Tiskový přehled nelze otevřít bez načtených dat.</value></data>
+  <data name="AppShell.PrintableReport.SaveCancelled" xml:space="preserve"><value>Uložení tiskového přehledu bylo zrušeno.</value></data>
+  <data name="AppShell.PrintableReport.SavedAndOpened" xml:space="preserve"><value>Tiskový přehled byl uložen do {0} a otevřen.</value></data>
+  <data name="AppShell.PrintableReport.Failed" xml:space="preserve"><value>Tiskový přehled se nepodařilo uložit nebo otevřít: {0}</value></data>
+  <data name="AppShell.Background.TooltipSummary" xml:space="preserve"><value>Vozidla: {0} | K řešení: {1} | Termíny: {2}</value></data>
+  <data name="AppShell.Background.NearestAttention" xml:space="preserve"><value>Nejbližší k řešení: {0} - {1} ({2}, {3})</value></data>
+  <data name="AppShell.Background.NearestUpcoming" xml:space="preserve"><value>Nejbližší: {0} - {1} ({2})</value></data>
+  <data name="AppShell.Background.NotificationTimelineTitle" xml:space="preserve"><value>Vehimap: {0} termínů k řešení</value></data>
+  <data name="AppShell.Background.NotificationTimelineMessage" xml:space="preserve"><value>{0}: {1} ({2}). {3}</value></data>
+  <data name="AppShell.Background.NotificationAuditTitle" xml:space="preserve"><value>Vehimap: {0} položek k řešení</value></data>
+  <data name="AppShell.Background.NotificationAuditMessage" xml:space="preserve"><value>{0}: {1}. {2}</value></data>
+  <data name="AppShell.About.DataModePortable" xml:space="preserve"><value>Portable data vedle aplikace</value></data>
+  <data name="AppShell.About.DataModeSystem" xml:space="preserve"><value>Systémová datová složka</value></data>
+  <data name="AppShell.About.DataPathNotLoaded" xml:space="preserve"><value>Datová složka zatím nebyla načtena</value></data>
+  <data name="AppShell.External.Empty" xml:space="preserve"><value>Externí odkaz nelze otevřít, protože není vyplněná cesta ani URL.</value></data>
+  <data name="AppShell.External.Opened" xml:space="preserve"><value>Externí odkaz byl otevřen: {0}.</value></data>
+  <data name="AppShell.External.Failed" xml:space="preserve"><value>Externí odkaz se nepodařilo otevřít: {0}</value></data>
+  <data name="AppShell.DataFolder.NotLoaded" xml:space="preserve"><value>Datovou složku zatím nelze otevřít, protože data nebyla načtena.</value></data>
+  <data name="AppShell.DataFolder.Action" xml:space="preserve"><value>otevřít datovou složku</value></data>
+  <data name="AppShell.DataFolder.Opened" xml:space="preserve"><value>Datová složka byla otevřena: {0}.</value></data>
+  <data name="AppShell.DataFolder.Failed" xml:space="preserve"><value>Datovou složku se nepodařilo otevřít: {0}</value></data>
+  <data name="AppShell.AutomaticBackupFolder.NotLoaded" xml:space="preserve"><value>Složku automatických záloh zatím nelze otevřít, protože data nebyla načtena.</value></data>
+  <data name="AppShell.AutomaticBackupFolder.Action" xml:space="preserve"><value>otevřít složku automatických záloh</value></data>
+  <data name="AppShell.AutomaticBackupFolder.Opened" xml:space="preserve"><value>Složka automatických záloh byla otevřena: {0}.</value></data>
+  <data name="AppShell.AutomaticBackupFolder.Failed" xml:space="preserve"><value>Složku automatických záloh se nepodařilo otevřít: {0}</value></data>
+  <data name="AppShell.PreMigrationBackupFolder.NotAvailable" xml:space="preserve"><value>Složku předmigrační zálohy zatím nelze otevřít, protože žádná migrace v této datové sadě nebyla zaznamenána.</value></data>
+  <data name="AppShell.PreMigrationBackupFolder.Action" xml:space="preserve"><value>otevřít složku předmigrační zálohy</value></data>
+  <data name="AppShell.PreMigrationBackupFolder.Opened" xml:space="preserve"><value>Složka předmigrační zálohy byla otevřena: {0}.</value></data>
+  <data name="AppShell.PreMigrationBackupFolder.Failed" xml:space="preserve"><value>Složku předmigrační zálohy se nepodařilo otevřít: {0}</value></data>
+  <data name="AppShell.Update.CheckFailed" xml:space="preserve"><value>Kontrola aktualizací se nepodařila: {0}</value></data>
+  <data name="AppShell.Update.PrepareInstallFailed" xml:space="preserve"><value>Příprava instalace aktualizace se nepodařila: {0}</value></data>
+  <data name="AppShell.Controller.ExportBackupCancelled" xml:space="preserve"><value>Export zálohy byl zrušen.</value></data>
+  <data name="AppShell.Controller.ExportBackupStartFailed" xml:space="preserve"><value>Export zálohy se nepodařilo spustit: {0}</value></data>
+  <data name="AppShell.Controller.ExportVehiclePackageCancelled" xml:space="preserve"><value>Export balíčku vozidla byl zrušen.</value></data>
+  <data name="AppShell.Controller.ExportVehiclePackageStartFailed" xml:space="preserve"><value>Export balíčku vozidla se nepodařilo spustit: {0}</value></data>
+  <data name="AppShell.Controller.ImportVehiclePackageAction" xml:space="preserve"><value>importovat balíček vozidla</value></data>
+  <data name="AppShell.Controller.ImportVehiclePackageCancelled" xml:space="preserve"><value>Import balíčku vozidla byl zrušen.</value></data>
+  <data name="AppShell.Controller.ImportVehiclePackageStartFailed" xml:space="preserve"><value>Import balíčku vozidla se nepodařilo spustit: {0}</value></data>
+  <data name="AppShell.Controller.ImportBackupAction" xml:space="preserve"><value>obnovit data ze zálohy</value></data>
+  <data name="AppShell.Controller.ImportBackupCancelled" xml:space="preserve"><value>Obnova ze zálohy byla zrušena.</value></data>
+  <data name="AppShell.Controller.ImportBackupNotConfirmed" xml:space="preserve"><value>Obnova ze zálohy nebyla potvrzena.</value></data>
+  <data name="AppShell.Controller.ImportBackupStartFailed" xml:space="preserve"><value>Obnovu ze zálohy se nepodařilo spustit: {0}</value></data>
+  <data name="AppShell.Controller.DataStoreHealthFailed" xml:space="preserve"><value>Kontrolu datové sady se nepodařilo dokončit: {0}</value></data>
+  <data name="AppShell.Controller.AboutFailed" xml:space="preserve"><value>Dialog O programu se nepodařilo dokončit: {0}</value></data>
+  <data name="AppShell.Controller.InstallUpdateAction" xml:space="preserve"><value>stáhnout a nainstalovat aktualizaci</value></data>
+  <data name="AppShell.Controller.UpdateInstallerLaunched" xml:space="preserve"><value>Instalátor aktualizace byl spuštěn. Vehimap se nyní ukončí, aby instalace mohla pokračovat.</value></data>
+  <data name="AppShell.Controller.UpdateCheckFailed" xml:space="preserve"><value>Kontrolu aktualizací se nepodařilo dokončit: {0}</value></data>
 </root>

@@ -11,14 +11,23 @@ public sealed partial class MainWindowViewModel
     {
         var suggestedFileName = $"vehimap-{DateTime.Today:yyyy-MM-dd}.vehimapbak";
         return await _fileDialogService
-            .PickSaveFileAsync("Export dat Vehimapu", suggestedFileName, "Záloha Vehimap", "vehimapbak", cancellationToken)
+            .PickSaveFileAsync(
+                LO("AppShell.FileDialog.BackupExportTitle"),
+                suggestedFileName,
+                LO("AppShell.FileDialog.BackupFileType"),
+                "vehimapbak",
+                cancellationToken)
             .ConfigureAwait(false);
     }
 
     internal async Task<string?> PickBackupImportPathAsync(CancellationToken cancellationToken = default)
     {
         return await _fileDialogService
-            .PickOpenFileAsync("Import zálohy Vehimapu", "Záloha Vehimap", "vehimapbak", cancellationToken)
+            .PickOpenFileAsync(
+                LO("AppShell.FileDialog.BackupImportTitle"),
+                LO("AppShell.FileDialog.BackupFileType"),
+                "vehimapbak",
+                cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -29,16 +38,25 @@ public sealed partial class MainWindowViewModel
             return null;
         }
 
-        var suggestedFileName = $"vehimap-vozidlo-{BuildSafeFileName(SelectedVehicle.Name)}.vehimapvehicle";
+        var suggestedFileName = $"{LO("AppShell.FileName.VehiclePackagePrefix")}-{BuildSafeFileName(SelectedVehicle.Name)}.vehimapvehicle";
         return await _fileDialogService
-            .PickSaveFileAsync("Export balíčku vozidla", suggestedFileName, "Balíček vozidla Vehimap", "vehimapvehicle", cancellationToken)
+            .PickSaveFileAsync(
+                LO("AppShell.FileDialog.VehiclePackageExportTitle"),
+                suggestedFileName,
+                LO("AppShell.FileDialog.VehiclePackageFileType"),
+                "vehimapvehicle",
+                cancellationToken)
             .ConfigureAwait(false);
     }
 
     internal async Task<string?> PickVehiclePackageImportPathAsync(CancellationToken cancellationToken = default)
     {
         return await _fileDialogService
-            .PickOpenFileAsync("Import balíčku vozidla", "Balíček vozidla Vehimap", "vehimapvehicle", cancellationToken)
+            .PickOpenFileAsync(
+                LO("AppShell.FileDialog.VehiclePackageImportTitle"),
+                LO("AppShell.FileDialog.VehiclePackageFileType"),
+                "vehimapvehicle",
+                cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -46,26 +64,26 @@ public sealed partial class MainWindowViewModel
     {
         if (!_session.IsLoaded)
         {
-            return "Export se nepodařilo připravit, protože nejsou načtená data.";
+            return LO("AppShell.ExportBackup.NotLoaded");
         }
 
         try
         {
             var result = await _session.ExportBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
-            ShellStatus = $"Záloha byla uložena do {backupPath}.";
+            ShellStatus = LFO("AppShell.ExportBackup.Success", backupPath);
             if (result.IncludedManagedAttachmentCount > 0)
             {
-                ShellStatus += $" Spravovaných příloh v záloze: {result.IncludedManagedAttachmentCount}.";
+                ShellStatus += " " + LFO("AppShell.ExportBackup.IncludedManagedAttachments", result.IncludedManagedAttachmentCount);
             }
 
             if (result.MissingManagedAttachmentCount > 0)
             {
-                ShellStatus += $" Přeskočených chybějících spravovaných příloh: {result.MissingManagedAttachmentCount}.";
+                ShellStatus += " " + LFO("AppShell.ExportBackup.MissingManagedAttachments", result.MissingManagedAttachmentCount);
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = $"Export zálohy se nepodařil: {ex.Message}";
+            ShellStatus = LFO("AppShell.ExportBackup.Failed", ex.Message);
         }
 
         return ShellStatus;
@@ -75,29 +93,29 @@ public sealed partial class MainWindowViewModel
     {
         if (!_session.IsLoaded)
         {
-            return "Obnovu se nepodařilo připravit, protože nejsou načtená data.";
+            return LO("AppShell.ImportBackup.NotLoaded");
         }
 
         try
         {
             var restoreResult = await _session.RestoreBackupAsync(backupPath, cancellationToken).ConfigureAwait(false);
             RefreshShellFromSessionState(applyLaunchTabPreference: false);
-            ShellStatus = $"Data byla obnovena ze zálohy {backupPath}.";
+            ShellStatus = LFO("AppShell.ImportBackup.Success", backupPath);
             if (!string.IsNullOrWhiteSpace(restoreResult.PreRestoreBackupPath))
             {
-                ShellStatus += $" Původní data byla před obnovou odložena do {restoreResult.PreRestoreBackupPath}.";
+                ShellStatus += " " + LFO("AppShell.ImportBackup.PreRestoreBackup", restoreResult.PreRestoreBackupPath);
             }
 
             if (restoreResult.RestoredAttachmentCount > 0)
             {
-                ShellStatus += $" Obnoveno spravovaných příloh: {restoreResult.RestoredAttachmentCount}.";
+                ShellStatus += " " + LFO("AppShell.ImportBackup.RestoredManagedAttachments", restoreResult.RestoredAttachmentCount);
             }
 
             RequestBackgroundRefresh();
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = $"Obnova ze zálohy se nepodařila: {ex.Message}";
+            ShellStatus = LFO("AppShell.ImportBackup.Failed", ex.Message);
         }
 
         return ShellStatus;
@@ -105,11 +123,11 @@ public sealed partial class MainWindowViewModel
 
     internal async Task<DataStoreHealthReport> CheckDataStoreHealthAsync(CancellationToken cancellationToken = default)
     {
-        if (BlockDataActionIfEditing("zkontrolovat datovou sadu 2.0"))
+        if (BlockDataActionIfEditing(LO("AppShell.DataStoreHealth.Action")))
         {
             return new DataStoreHealthReport(
                 DataStoreHealthStatus.Warning,
-                "Kontrola datové sady byla odložena kvůli rozpracovaným úpravám.",
+                LO("AppShell.DataStoreHealth.DeferredByPendingEdits"),
                 [ShellStatus],
                 _dataRoot is null ? string.Empty : Path.Combine(_dataRoot.DataPath, "vehimap.db"),
                 _dataRoot?.DataPath ?? string.Empty,
@@ -125,17 +143,17 @@ public sealed partial class MainWindowViewModel
     {
         if (SelectedVehicle is null)
         {
-            ShellStatus = "Balíček vozidla nelze exportovat, protože není vybrané žádné vozidlo.";
+            ShellStatus = LO("AppShell.VehiclePackage.ExportNoVehicle");
             return ShellStatus;
         }
 
         if (_dataRoot is null)
         {
-            ShellStatus = "Balíček vozidla nelze exportovat, protože nejsou načtená data.";
+            ShellStatus = LO("AppShell.VehiclePackage.ExportNotLoaded");
             return ShellStatus;
         }
 
-        if (BlockDataActionIfEditing("exportovat balíček vozidla"))
+        if (BlockDataActionIfEditing(LO("AppShell.VehiclePackage.ExportAction")))
         {
             return ShellStatus;
         }
@@ -145,20 +163,20 @@ public sealed partial class MainWindowViewModel
             var result = await _vehiclePackageService
                 .ExportVehicleAsync(packagePath, _dataRoot, _dataSet, SelectedVehicle.Id, cancellationToken)
                 .ConfigureAwait(false);
-            ShellStatus = $"Balíček vozidla {result.VehicleName} byl uložen do {result.PackagePath}.";
+            ShellStatus = LFO("AppShell.VehiclePackage.ExportSuccess", result.VehicleName, result.PackagePath);
             if (result.IncludedAttachmentCount > 0)
             {
-                ShellStatus += $" Přiložených spravovaných příloh: {result.IncludedAttachmentCount}.";
+                ShellStatus += " " + LFO("AppShell.VehiclePackage.IncludedAttachments", result.IncludedAttachmentCount);
             }
 
             if (result.MissingAttachmentCount > 0)
             {
-                ShellStatus += $" Přeskočených chybějících příloh: {result.MissingAttachmentCount}.";
+                ShellStatus += " " + LFO("AppShell.VehiclePackage.MissingAttachments", result.MissingAttachmentCount);
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = $"Export balíčku vozidla se nepodařil: {ex.Message}";
+            ShellStatus = LFO("AppShell.VehiclePackage.ExportFailed", ex.Message);
         }
 
         return ShellStatus;
@@ -168,11 +186,11 @@ public sealed partial class MainWindowViewModel
     {
         if (_dataRoot is null)
         {
-            ShellStatus = "Balíček vozidla nelze importovat, protože nejsou načtená data.";
+            ShellStatus = LO("AppShell.VehiclePackage.ImportNotLoaded");
             return ShellStatus;
         }
 
-        if (BlockDataActionIfEditing("importovat balíček vozidla"))
+        if (BlockDataActionIfEditing(LO("AppShell.VehiclePackage.ImportAction")))
         {
             return ShellStatus;
         }
@@ -185,17 +203,17 @@ public sealed partial class MainWindowViewModel
             _session.RestoreDataSet(result.DataSet);
             await _session.PersistAsync(cancellationToken).ConfigureAwait(false);
             RefreshShellFromSessionState(result.ImportedVehicleId, DetailTabIndex, applyLaunchTabPreference: false);
-            ShellStatus = $"Balíček vozidla {result.ImportedVehicleName} byl importován.";
+            ShellStatus = LFO("AppShell.VehiclePackage.ImportSuccess", result.ImportedVehicleName);
             if (result.RestoredAttachmentCount > 0)
             {
-                ShellStatus += $" Obnoveno spravovaných příloh: {result.RestoredAttachmentCount}.";
+                ShellStatus += " " + LFO("AppShell.VehiclePackage.RestoredAttachments", result.RestoredAttachmentCount);
             }
 
             RequestBackgroundRefresh();
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = $"Import balíčku vozidla se nepodařil: {ex.Message}";
+            ShellStatus = LFO("AppShell.VehiclePackage.ImportFailed", ex.Message);
         }
 
         return ShellStatus;
@@ -246,14 +264,14 @@ public sealed partial class MainWindowViewModel
         {
             await SaveSupportedSettingsAsync(current with { ShowDashboardOnLaunch = showDashboardOnLaunch }).ConfigureAwait(false);
             ShellStatus = showDashboardOnLaunch
-                ? "Dashboard se bude zobrazovat při startu aplikace."
-                : "Dashboard se při startu aplikace nebude otevírat automaticky.";
+                ? LO("AppShell.Dashboard.ShowOnLaunchEnabled")
+                : LO("AppShell.Dashboard.ShowOnLaunchDisabled");
             DashboardWorkspace.SyncShowDashboardOnLaunch(showDashboardOnLaunch);
         }
         catch (Exception ex)
         {
             DashboardWorkspace.SyncShowDashboardOnLaunch(current.ShowDashboardOnLaunch);
-            ShellStatus = $"Volbu dashboardu při startu se nepodařilo uložit: {ex.Message}";
+            ShellStatus = LFO("AppShell.Dashboard.ShowOnLaunchFailed", ex.Message);
         }
     }
 
@@ -261,10 +279,10 @@ public sealed partial class MainWindowViewModel
     {
         if (!_session.IsLoaded)
         {
-            return "Automatickou zálohu nelze vytvořit bez načtených dat.";
+            return LO("AppShell.AutomaticBackup.NotLoaded");
         }
 
-        if (BlockDataActionIfEditing("vytvořit zálohu"))
+        if (BlockDataActionIfEditing(LO("AppShell.AutomaticBackup.CreateAction")))
         {
             return ShellStatus;
         }
@@ -279,7 +297,7 @@ public sealed partial class MainWindowViewModel
     {
         if (!_session.IsLoaded)
         {
-            return new AutomaticBackupResult(false, true, string.Empty, "Automatickou zálohu nelze vytvořit bez načtených dat.");
+            return new AutomaticBackupResult(false, true, string.Empty, LO("AppShell.AutomaticBackup.NotLoaded"));
         }
 
         var result = await _session.RunAutomaticBackupCheckAsync(false, cancellationToken).ConfigureAwait(false);
@@ -305,7 +323,7 @@ public sealed partial class MainWindowViewModel
     {
         if (!_session.IsLoaded)
         {
-            ShellStatus = "Tiskový přehled nelze otevřít bez načtených dat.";
+            ShellStatus = LO("AppShell.PrintableReport.NotLoaded");
             return ShellStatus;
         }
 
@@ -321,10 +339,10 @@ public sealed partial class MainWindowViewModel
             var fileName = _printableVehicleReportService.BuildFileName(now);
             var reportPath = await _fileSaveService
                 .SaveTextAsync(
-                    "Uložit tiskový přehled vozidel",
+                    LO("AppShell.FileDialog.PrintableReportTitle"),
                     fileName,
                     html,
-                    "HTML soubor",
+                    LO("AppShell.FileDialog.HtmlFileType"),
                     "html",
                     ["*.html", "*.htm"],
                     cancellationToken)
@@ -332,16 +350,16 @@ public sealed partial class MainWindowViewModel
 
             if (string.IsNullOrWhiteSpace(reportPath))
             {
-                ShellStatus = "Uložení tiskového přehledu bylo zrušeno.";
+                ShellStatus = LO("AppShell.PrintableReport.SaveCancelled");
                 return ShellStatus;
             }
 
             await _fileLauncher.OpenAsync(reportPath, cancellationToken).ConfigureAwait(false);
-            ShellStatus = $"Tiskový přehled byl uložen do {reportPath} a otevřen.";
+            ShellStatus = LFO("AppShell.PrintableReport.SavedAndOpened", reportPath);
         }
         catch (Exception ex)
         {
-            ShellStatus = $"Tiskový přehled se nepodařilo uložit nebo otevřít: {ex.Message}";
+            ShellStatus = LFO("AppShell.PrintableReport.Failed", ex.Message);
         }
 
         return ShellStatus;
@@ -355,17 +373,17 @@ public sealed partial class MainWindowViewModel
         var toolTipLines = new List<string>
         {
             $"{appName} Desktop",
-            $"Vozidla: {VehicleCount} | K řešení: {AuditCount} | Termíny: {DashboardUpcomingTimeline.Count}"
+            LFO("AppShell.Background.TooltipSummary", VehicleCount, AuditCount, DashboardUpcomingTimeline.Count)
         };
 
         var firstAttention = attentionTimelineItems.FirstOrDefault();
         if (firstAttention is not null)
         {
-            toolTipLines.Add($"Nejbližší k řešení: {firstAttention.VehicleName} - {firstAttention.Title} ({firstAttention.Date}, {firstAttention.Status})");
+            toolTipLines.Add(LFO("AppShell.Background.NearestAttention", firstAttention.VehicleName, firstAttention.Title, firstAttention.Date, firstAttention.Status));
         }
         else if (DashboardUpcomingTimeline.FirstOrDefault() is { } firstUpcoming)
         {
-            toolTipLines.Add($"Nejbližší: {firstUpcoming.VehicleName} - {firstUpcoming.Title} ({firstUpcoming.Date})");
+            toolTipLines.Add(LFO("AppShell.Background.NearestUpcoming", firstUpcoming.VehicleName, firstUpcoming.Title, firstUpcoming.Date));
         }
 
         if (firstAttention is not null)
@@ -373,8 +391,8 @@ public sealed partial class MainWindowViewModel
             return new DesktopBackgroundSnapshot(
                 string.Join(Environment.NewLine, toolTipLines),
                 $"timeline|{attentionTimelineItems.Count}|{firstAttention.VehicleId}|{firstAttention.Kind}|{firstAttention.EntryId}|{firstAttention.Date}",
-                $"Vehimap: {attentionTimelineItems.Count} termínů k řešení",
-                $"{firstAttention.VehicleName}: {firstAttention.Title} ({firstAttention.Date}). {firstAttention.Status}",
+                LFO("AppShell.Background.NotificationTimelineTitle", attentionTimelineItems.Count),
+                LFO("AppShell.Background.NotificationTimelineMessage", firstAttention.VehicleName, firstAttention.Title, firstAttention.Date, firstAttention.Status),
                 true);
         }
 
@@ -384,8 +402,8 @@ public sealed partial class MainWindowViewModel
             return new DesktopBackgroundSnapshot(
                 string.Join(Environment.NewLine, toolTipLines),
                 $"audit|{AuditItems.Count}|{firstAudit.VehicleId}|{firstAudit.EntityKind}|{firstAudit.EntityId}",
-                $"Vehimap: {AuditItems.Count} položek k řešení",
-                $"{firstAudit.VehicleName}: {firstAudit.Title}. {firstAudit.Message}",
+                LFO("AppShell.Background.NotificationAuditTitle", AuditItems.Count),
+                LFO("AppShell.Background.NotificationAuditMessage", firstAudit.VehicleName, firstAudit.Title, firstAudit.Message),
                 true);
         }
 
@@ -425,8 +443,8 @@ public sealed partial class MainWindowViewModel
     internal AboutDialogViewModel BuildAboutDialogModel()
     {
         var appInfo = _session.GetAppInfo();
-        var dataMode = _dataRoot?.IsPortable == true ? "Portable data vedle aplikace" : "Systémová datová složka";
-        var dataPath = _dataRoot?.DataPath ?? "Datová složka zatím nebyla načtena";
+        var dataMode = _dataRoot?.IsPortable == true ? LO("AppShell.About.DataModePortable") : LO("AppShell.About.DataModeSystem");
+        var dataPath = _dataRoot?.DataPath ?? LO("AppShell.About.DataPathNotLoaded");
 
         return new AboutDialogViewModel(
             appInfo.ApplicationName,
@@ -453,18 +471,18 @@ public sealed partial class MainWindowViewModel
     {
         if (string.IsNullOrWhiteSpace(path))
         {
-            ShellStatus = "Externí odkaz nelze otevřít, protože není vyplněná cesta ani URL.";
+            ShellStatus = LO("AppShell.External.Empty");
             return ShellStatus;
         }
 
         try
         {
             await _fileLauncher.OpenAsync(path, cancellationToken).ConfigureAwait(false);
-            ShellStatus = $"Externí odkaz byl otevřen: {path}.";
+            ShellStatus = LFO("AppShell.External.Opened", path);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = $"Externí odkaz se nepodařilo otevřít: {ex.Message}";
+            ShellStatus = LFO("AppShell.External.Failed", ex.Message);
         }
 
         return ShellStatus;
@@ -475,24 +493,24 @@ public sealed partial class MainWindowViewModel
         var dataPath = _dataRoot?.DataPath;
         if (string.IsNullOrWhiteSpace(dataPath))
         {
-            ShellStatus = "Datovou složku zatím nelze otevřít, protože data nebyla načtena.";
+            ShellStatus = LO("AppShell.DataFolder.NotLoaded");
             return ShellStatus;
         }
 
         try
         {
-            if (BlockDataActionIfEditing("otevřít datovou složku"))
+            if (BlockDataActionIfEditing(LO("AppShell.DataFolder.Action")))
             {
                 return ShellStatus;
             }
 
             Directory.CreateDirectory(dataPath);
             await _fileLauncher.OpenFolderAsync(dataPath, cancellationToken).ConfigureAwait(false);
-            ShellStatus = $"Datová složka byla otevřena: {dataPath}.";
+            ShellStatus = LFO("AppShell.DataFolder.Opened", dataPath);
         }
         catch (Exception ex)
         {
-            ShellStatus = $"Datovou složku se nepodařilo otevřít: {ex.Message}";
+            ShellStatus = LFO("AppShell.DataFolder.Failed", ex.Message);
         }
 
         return ShellStatus;
@@ -503,11 +521,11 @@ public sealed partial class MainWindowViewModel
         var backupDirectory = _session.GetAutomaticBackupDirectoryPath();
         if (string.IsNullOrWhiteSpace(backupDirectory))
         {
-            ShellStatus = "Složku automatických záloh zatím nelze otevřít, protože data nebyla načtena.";
+            ShellStatus = LO("AppShell.AutomaticBackupFolder.NotLoaded");
             return ShellStatus;
         }
 
-        if (BlockDataActionIfEditing("otevřít složku automatických záloh"))
+        if (BlockDataActionIfEditing(LO("AppShell.AutomaticBackupFolder.Action")))
         {
             return ShellStatus;
         }
@@ -516,11 +534,11 @@ public sealed partial class MainWindowViewModel
         {
             Directory.CreateDirectory(backupDirectory);
             await _fileLauncher.OpenFolderAsync(backupDirectory, cancellationToken).ConfigureAwait(false);
-            ShellStatus = $"Složka automatických záloh byla otevřena: {backupDirectory}.";
+            ShellStatus = LFO("AppShell.AutomaticBackupFolder.Opened", backupDirectory);
         }
         catch (Exception ex)
         {
-            ShellStatus = $"Složku automatických záloh se nepodařilo otevřít: {ex.Message}";
+            ShellStatus = LFO("AppShell.AutomaticBackupFolder.Failed", ex.Message);
         }
 
         return ShellStatus;
@@ -531,11 +549,11 @@ public sealed partial class MainWindowViewModel
         var backupDirectory = _session.GetPreMigrationBackupPath();
         if (string.IsNullOrWhiteSpace(backupDirectory) || !Directory.Exists(backupDirectory))
         {
-            ShellStatus = "Složku předmigrační zálohy zatím nelze otevřít, protože žádná migrace v této datové sadě nebyla zaznamenána.";
+            ShellStatus = LO("AppShell.PreMigrationBackupFolder.NotAvailable");
             return ShellStatus;
         }
 
-        if (BlockDataActionIfEditing("otevřít složku předmigrační zálohy"))
+        if (BlockDataActionIfEditing(LO("AppShell.PreMigrationBackupFolder.Action")))
         {
             return ShellStatus;
         }
@@ -543,11 +561,11 @@ public sealed partial class MainWindowViewModel
         try
         {
             await _fileLauncher.OpenFolderAsync(backupDirectory, cancellationToken).ConfigureAwait(false);
-            ShellStatus = $"Složka předmigrační zálohy byla otevřena: {backupDirectory}.";
+            ShellStatus = LFO("AppShell.PreMigrationBackupFolder.Opened", backupDirectory);
         }
         catch (Exception ex)
         {
-            ShellStatus = $"Složku předmigrační zálohy se nepodařilo otevřít: {ex.Message}";
+            ShellStatus = LFO("AppShell.PreMigrationBackupFolder.Failed", ex.Message);
         }
 
         return ShellStatus;
@@ -557,9 +575,9 @@ public sealed partial class MainWindowViewModel
     {
         return report.Status switch
         {
-            DataStoreHealthStatus.Healthy when manual => "Kontrola datové sady 2.0 proběhla v pořádku.",
-            DataStoreHealthStatus.Healthy => "Datová sada 2.0 je v pořádku.",
-            _ => $"Kontrola datové sady 2.0: {report.Summary}"
+            DataStoreHealthStatus.Healthy when manual => LO("AppShell.DataStoreHealth.HealthyManual"),
+            DataStoreHealthStatus.Healthy => LO("AppShell.DataStoreHealth.Healthy"),
+            _ => LFO("AppShell.DataStoreHealth.Summary", report.Summary)
         };
     }
 
@@ -574,7 +592,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = $"Kontrola aktualizací se nepodařila: {ex.Message}";
+            ShellStatus = LFO("AppShell.Update.CheckFailed", ex.Message);
             return new UpdateCheckResult(
                 appInfo.AppVersion,
                 appInfo.AppVersion,
@@ -603,7 +621,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = $"Příprava instalace aktualizace se nepodařila: {ex.Message}";
+            ShellStatus = LFO("AppShell.Update.PrepareInstallFailed", ex.Message);
             return new UpdateInstallResult(false, ShellStatus, null);
         }
     }
@@ -612,7 +630,7 @@ public sealed partial class MainWindowViewModel
     {
         var safeName = string.Join("_", value.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries)).Trim();
         return string.IsNullOrWhiteSpace(safeName)
-            ? "vozidlo"
+            ? LO("AppShell.FileName.VehicleFallback")
             : safeName;
     }
 }

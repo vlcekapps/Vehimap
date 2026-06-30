@@ -648,6 +648,29 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Domain_app_shell_workflows_use_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var appShellViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.AppShell.cs"));
+        var appShellController = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopAppShellController.cs"));
+
+        Assert.Contains("AppShell.ExportBackup.Success", appShellViewModel);
+        Assert.Contains("AppShell.ImportBackup.Success", appShellViewModel);
+        Assert.Contains("AppShell.VehiclePackage.ExportSuccess", appShellViewModel);
+        Assert.Contains("AppShell.PrintableReport.SavedAndOpened", appShellViewModel);
+        Assert.Contains("AppShell.Background.NotificationTimelineTitle", appShellViewModel);
+        Assert.Contains("AppShell.External.Failed", appShellViewModel);
+        Assert.Contains("AppShell.DataStoreHealth.HealthyManual", appShellViewModel);
+        Assert.Contains("AppShell.Update.PrepareInstallFailed", appShellViewModel);
+        Assert.Contains("AppShell.Controller.ExportBackupCancelled", appShellController);
+        Assert.Contains("AppShell.Controller.ImportBackupAction", appShellController);
+        Assert.Contains("AppShell.Controller.UpdateInstallerLaunched", appShellController);
+        Assert.Contains("AppShell.Controller.UpdateCheckFailed", appShellController);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), appShellViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), appShellController);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

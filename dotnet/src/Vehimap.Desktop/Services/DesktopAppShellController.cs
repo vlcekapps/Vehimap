@@ -52,7 +52,7 @@ internal sealed class DesktopAppShellController
             var backupPath = await shell.PickBackupExportPathAsync(cancellationToken).ConfigureAwait(true);
             if (string.IsNullOrWhiteSpace(backupPath))
             {
-                shell.ShellStatus = "Export zálohy byl zrušen.";
+                shell.ShellStatus = L("AppShell.Controller.ExportBackupCancelled");
                 return;
             }
 
@@ -60,7 +60,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = $"Export zálohy se nepodařilo spustit: {ex.Message}";
+            shell.ShellStatus = LF("AppShell.Controller.ExportBackupStartFailed", ex.Message);
         }
     }
 
@@ -74,7 +74,7 @@ internal sealed class DesktopAppShellController
             var packagePath = await shell.PickVehiclePackageExportPathAsync(cancellationToken).ConfigureAwait(true);
             if (string.IsNullOrWhiteSpace(packagePath))
             {
-                shell.ShellStatus = "Export balíčku vozidla byl zrušen.";
+                shell.ShellStatus = L("AppShell.Controller.ExportVehiclePackageCancelled");
                 return;
             }
 
@@ -82,7 +82,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = $"Export balíčku vozidla se nepodařilo spustit: {ex.Message}";
+            shell.ShellStatus = LF("AppShell.Controller.ExportVehiclePackageStartFailed", ex.Message);
         }
     }
 
@@ -90,7 +90,7 @@ internal sealed class DesktopAppShellController
     {
         try
         {
-            if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "importovat balíček vozidla").ConfigureAwait(true))
+            if (!await ConfirmDiscardPendingChangesAsync(owner, shell, L("AppShell.Controller.ImportVehiclePackageAction")).ConfigureAwait(true))
             {
                 shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
                 return;
@@ -99,7 +99,7 @@ internal sealed class DesktopAppShellController
             var packagePath = await shell.PickVehiclePackageImportPathAsync(cancellationToken).ConfigureAwait(true);
             if (string.IsNullOrWhiteSpace(packagePath))
             {
-                shell.ShellStatus = "Import balíčku vozidla byl zrušen.";
+                shell.ShellStatus = L("AppShell.Controller.ImportVehiclePackageCancelled");
                 return;
             }
 
@@ -107,7 +107,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = $"Import balíčku vozidla se nepodařilo spustit: {ex.Message}";
+            shell.ShellStatus = LF("AppShell.Controller.ImportVehiclePackageStartFailed", ex.Message);
         }
     }
 
@@ -115,7 +115,7 @@ internal sealed class DesktopAppShellController
     {
         try
         {
-            if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "obnovit data ze zálohy").ConfigureAwait(true))
+            if (!await ConfirmDiscardPendingChangesAsync(owner, shell, L("AppShell.Controller.ImportBackupAction")).ConfigureAwait(true))
             {
                 shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
                 return;
@@ -124,14 +124,14 @@ internal sealed class DesktopAppShellController
             var backupPath = await shell.PickBackupImportPathAsync(cancellationToken).ConfigureAwait(true);
             if (string.IsNullOrWhiteSpace(backupPath))
             {
-                shell.ShellStatus = "Obnova ze zálohy byla zrušena.";
+                shell.ShellStatus = L("AppShell.Controller.ImportBackupCancelled");
                 return;
             }
 
             var confirmed = await _dialogService.ConfirmBackupImportAsync(owner, backupPath).ConfigureAwait(true);
             if (!confirmed)
             {
-                shell.ShellStatus = "Obnova ze zálohy nebyla potvrzena.";
+                shell.ShellStatus = L("AppShell.Controller.ImportBackupNotConfirmed");
                 return;
             }
 
@@ -139,7 +139,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = $"Obnovu ze zálohy se nepodařilo spustit: {ex.Message}";
+            shell.ShellStatus = LF("AppShell.Controller.ImportBackupStartFailed", ex.Message);
         }
     }
 
@@ -163,7 +163,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = $"Kontrolu datové sady se nepodařilo dokončit: {ex.Message}";
+            shell.ShellStatus = LF("AppShell.Controller.DataStoreHealthFailed", ex.Message);
         }
     }
 
@@ -187,7 +187,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = $"Dialog O programu se nepodařilo dokončit: {ex.Message}";
+            shell.ShellStatus = LF("AppShell.Controller.AboutFailed", ex.Message);
         }
     }
 
@@ -211,7 +211,7 @@ internal sealed class DesktopAppShellController
                 case UpdateDialogAction.PrimaryAction:
                     if (result.IsUpdateAvailable && result.CanInstallAutomatically)
                     {
-                        if (!await ConfirmDiscardPendingChangesAsync(owner, shell, "stáhnout a nainstalovat aktualizaci").ConfigureAwait(true))
+                        if (!await ConfirmDiscardPendingChangesAsync(owner, shell, L("AppShell.Controller.InstallUpdateAction")).ConfigureAwait(true))
                         {
                             shell.RequestWorkspaceFocus(shell.GetPendingEditFocusTarget());
                             return false;
@@ -225,7 +225,7 @@ internal sealed class DesktopAppShellController
                         if (installResult.IsReady && installResult.InstallPlan is not null)
                         {
                             _updateInstallLauncher.Launch(installResult.InstallPlan);
-                            shell.ShellStatus = "Instalátor aktualizace byl spuštěn. Vehimap se nyní ukončí, aby instalace mohla pokračovat.";
+                            shell.ShellStatus = L("AppShell.Controller.UpdateInstallerLaunched");
                             return true;
                         }
 
@@ -273,7 +273,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = $"Kontrolu aktualizací se nepodařilo dokončit: {ex.Message}";
+            shell.ShellStatus = LF("AppShell.Controller.UpdateCheckFailed", ex.Message);
             return false;
         }
     }
@@ -289,4 +289,8 @@ internal sealed class DesktopAppShellController
             .ConfirmDiscardPendingChangesAsync(owner, shell.GetPendingEditLabel(), actionDescription)
             .ConfigureAwait(true);
     }
+
+    private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
+
+    private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
 }
