@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -7,13 +8,36 @@ namespace Vehimap.Application.Services;
 
 public sealed class LegacySmartAdvisorService : ISmartAdvisorService
 {
+    private const string EntityVehicle = "Vozidlo";
+    private const string EntityHistory = "Historie";
+    private const string EntityFuel = "Tankov\u00E1n\u00ED";
+    private const string EntityRecord = "Doklad";
+    private const string EntityMaintenance = "\u00DAdr\u017Eba";
+    private const string EntityReminder = "P\u0159ipom\u00EDnka";
+    private const string EntityCosts = "N\u00E1klady";
+    private const string CategoryAttachmentCs = "P\u0159\u00EDloha";
+    private const string CategoryMaintenanceCs = "\u00DAdr\u017Eba";
+    private const string CategoryCostsCs = "N\u00E1klady";
+    private const string CategoryTechnicalInspectionCs = "Technick\u00E1 kontrola";
+    private const string CategoryGreenCardCs = "Zelen\u00E1 karta";
+    private const string TimelineStatusOverdue = "Po term\u00EDnu";
+    private const string TimelineStatusToday = "Dnes";
+    private const string TimelineStatusWithin = "Do ";
+    private const string TimelineStatusOverLimit = "Po limitu";
+    private const string TimelineStatusMissing = "Chyb\u00ED";
+
     private readonly ITimelineService _timelineService;
     private readonly IFuelAnalysisService _fuelAnalysisService;
+    private readonly IAppLocalizer _localizer;
 
-    public LegacySmartAdvisorService(ITimelineService timelineService, IFuelAnalysisService fuelAnalysisService)
+    public LegacySmartAdvisorService(
+        ITimelineService timelineService,
+        IFuelAnalysisService fuelAnalysisService,
+        IAppLocalizer? localizer = null)
     {
         _timelineService = timelineService;
         _fuelAnalysisService = fuelAnalysisService;
+        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
     }
 
     public SmartAdvisorSummary BuildSmartAdvisor(
@@ -53,7 +77,7 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
             orderedItems);
     }
 
-    private static void AddAuditItems(ICollection<SmartAdvisorItem> items, IReadOnlyList<AuditItem> auditItems)
+    private void AddAuditItems(ICollection<SmartAdvisorItem> items, IReadOnlyList<AuditItem> auditItems)
     {
         foreach (var audit in auditItems)
         {
@@ -70,12 +94,12 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
                 priority,
                 category,
                 audit.VehicleId,
-                ValueOrFallback(audit.VehicleName, "Neznámé vozidlo"),
+                ValueOrFallback(audit.VehicleName, L("Common.UnknownVehicle")),
                 audit.EntityKind,
                 audit.EntityId,
                 audit.Title,
                 audit.Message,
-                $"Audit dat: {audit.Category}. {audit.Message}",
+                LF("SmartAdvisor.Detail.Audit", audit.Category, audit.Message),
                 BuildActionLabel(audit.EntityKind),
                 null));
         }
@@ -106,8 +130,8 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
                     ValueOrFallback(timeline.VehicleName, vehicle.Name),
                     BuildTimelineEntityKind(timeline.Kind),
                     timeline.EntryId,
-                    $"{timeline.KindLabel}: {timeline.Title}",
-                    $"{timeline.Status}. {timeline.DateText}.",
+                    LF("SmartAdvisor.Title.Timeline", timeline.KindLabel, timeline.Title),
+                    LF("SmartAdvisor.Summary.Timeline", timeline.Status, timeline.DateText),
                     ValueOrFallback(timeline.Detail, timeline.Title),
                     BuildTimelineActionLabel(timeline.Kind),
                     timeline.Date));
@@ -136,18 +160,20 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
                     SmartAdvisorCategory.Fuel,
                     vehicle.Id,
                     ValueOrFallback(vehiclesById.GetValueOrDefault(vehicle.Id)?.Name, vehicle.Name),
-                    "Tankování",
+                    EntityFuel,
                     warning.FuelEntryId ?? string.Empty,
                     warning.Title,
                     warning.Description,
-                    "Tankovací analýza upozorňuje na položku, kterou se vyplatí zkontrolovat.",
-                    string.IsNullOrWhiteSpace(warning.FuelEntryId) ? "Otevřít tankování" : "Otevřít související tankování",
+                    L("SmartAdvisor.Detail.FuelAnalysis"),
+                    string.IsNullOrWhiteSpace(warning.FuelEntryId)
+                        ? L("SmartAdvisor.Action.OpenFuel")
+                        : L("SmartAdvisor.Action.OpenRelatedFuel"),
                     null));
             }
         }
     }
 
-    private static void AddCostItems(ICollection<SmartAdvisorItem> items, CostAnalysisSummary? costSummary)
+    private void AddCostItems(ICollection<SmartAdvisorItem> items, CostAnalysisSummary? costSummary)
     {
         if (costSummary is null)
         {
@@ -161,41 +187,41 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
                 SmartAdvisorPriority.Recommendation,
                 SmartAdvisorCategory.Costs,
                 vehicle.VehicleId,
-                ValueOrFallback(vehicle.VehicleName, "Neznámé vozidlo"),
-                "Náklady",
+                ValueOrFallback(vehicle.VehicleName, L("Common.UnknownVehicle")),
+                EntityCosts,
                 vehicle.VehicleId,
-                "Cena na kilometr není dostupná",
-                "Vozidlo má náklady, ale chybí použitelný rozdíl tachometru pro výpočet ceny na kilometr.",
-                "Doplňte použitelné tachometry v historii nebo tankování, aby šlo spočítat cenu na kilometr.",
-                "Otevřít náklady vozidla",
+                L("SmartAdvisor.Title.CostPerKmUnavailable"),
+                L("SmartAdvisor.Summary.CostPerKmUnavailable"),
+                L("SmartAdvisor.Detail.CostPerKmUnavailable"),
+                L("SmartAdvisor.Action.OpenVehicleCosts"),
                 null));
         }
     }
 
     private static SmartAdvisorCategory MapAuditCategory(AuditItem item)
     {
-        if (IsAny(item.Category, "Příloha", "Attachment"))
+        if (IsAny(item.Category, CategoryAttachmentCs, "Attachment"))
         {
             return SmartAdvisorCategory.Attachments;
         }
 
-        if (IsAny(item.Category, "Údržba", "Maintenance"))
+        if (IsAny(item.Category, CategoryMaintenanceCs, "Maintenance"))
         {
             return SmartAdvisorCategory.Maintenance;
         }
 
-        if (IsAny(item.Category, "Náklady", "Costs"))
+        if (IsAny(item.Category, CategoryCostsCs, "Costs"))
         {
             return SmartAdvisorCategory.Costs;
         }
 
-        if (string.Equals(item.EntityKind, "Tankování", StringComparison.CurrentCultureIgnoreCase))
+        if (string.Equals(item.EntityKind, EntityFuel, StringComparison.CurrentCultureIgnoreCase))
         {
             return SmartAdvisorCategory.Fuel;
         }
 
-        if (IsAny(item.Category, "Technická kontrola", "Technical inspection")
-            || IsAny(item.Category, "Zelená karta", "Green card"))
+        if (IsAny(item.Category, CategoryTechnicalInspectionCs, "Technical inspection")
+            || IsAny(item.Category, CategoryGreenCardCs, "Green card"))
         {
             return SmartAdvisorCategory.Deadlines;
         }
@@ -208,15 +234,15 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
 
     private static SmartAdvisorPriority BuildTimelinePriority(string status)
     {
-        if (status.Contains("Po termínu", StringComparison.CurrentCultureIgnoreCase))
+        if (status.Contains(TimelineStatusOverdue, StringComparison.CurrentCultureIgnoreCase))
         {
             return SmartAdvisorPriority.Critical;
         }
 
-        if (status.Contains("Dnes", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Do ", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Po limitu", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Chybí", StringComparison.CurrentCultureIgnoreCase))
+        if (status.Contains(TimelineStatusToday, StringComparison.CurrentCultureIgnoreCase)
+            || status.Contains(TimelineStatusWithin, StringComparison.CurrentCultureIgnoreCase)
+            || status.Contains(TimelineStatusOverLimit, StringComparison.CurrentCultureIgnoreCase)
+            || status.Contains(TimelineStatusMissing, StringComparison.CurrentCultureIgnoreCase))
         {
             return SmartAdvisorPriority.Warning;
         }
@@ -227,57 +253,57 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
     private static string BuildTimelineEntityKind(string kind) =>
         kind switch
         {
-            "custom" => "Připomínka",
-            "maintenance" => "Údržba",
-            "record" => "Doklad",
-            _ => "Vozidlo"
+            "custom" => EntityReminder,
+            "maintenance" => EntityMaintenance,
+            "record" => EntityRecord,
+            _ => EntityVehicle
         };
 
-    private static string BuildTimelineActionLabel(string kind) =>
+    private string BuildTimelineActionLabel(string kind) =>
         kind switch
         {
-            "custom" => "Otevřít připomínku",
-            "maintenance" => "Otevřít údržbu",
-            "record" => "Otevřít doklad",
-            _ => "Otevřít vozidlo"
+            "custom" => L("SmartAdvisor.Action.OpenReminder"),
+            "maintenance" => L("SmartAdvisor.Action.OpenMaintenance"),
+            "record" => L("SmartAdvisor.Action.OpenRecord"),
+            _ => L("SmartAdvisor.Action.OpenVehicle")
         };
 
-    private static string BuildActionLabel(string entityKind) =>
+    private string BuildActionLabel(string entityKind) =>
         entityKind switch
         {
-            "Historie" => "Otevřít historii",
-            "Tankování" => "Otevřít tankování",
-            "Doklad" => "Otevřít doklad",
-            "Údržba" => "Otevřít údržbu",
-            "Připomínka" => "Otevřít připomínku",
-            "Náklady" => "Otevřít náklady",
-            _ => "Otevřít vozidlo"
+            EntityHistory => L("SmartAdvisor.Action.OpenHistory"),
+            EntityFuel => L("SmartAdvisor.Action.OpenFuel"),
+            EntityRecord => L("SmartAdvisor.Action.OpenRecord"),
+            EntityMaintenance => L("SmartAdvisor.Action.OpenMaintenance"),
+            EntityReminder => L("SmartAdvisor.Action.OpenReminder"),
+            EntityCosts => L("SmartAdvisor.Action.OpenCosts"),
+            _ => L("SmartAdvisor.Action.OpenVehicle")
         };
 
-    private static string BuildStatus(int totalCount, int criticalCount, int warningCount, int recommendationCount)
+    private string BuildStatus(int totalCount, int criticalCount, int warningCount, int recommendationCount)
     {
         if (totalCount == 0)
         {
-            return "Chytrý poradce nenašel nic naléhavého. Data vypadají z pohledu známých pravidel v pořádku.";
+            return L("SmartAdvisor.Status.Empty");
         }
 
         var parts = new List<string>();
         if (criticalCount > 0)
         {
-            parts.Add($"{criticalCount} naléhavých");
+            parts.Add(LF("SmartAdvisor.Status.Part.Critical", criticalCount));
         }
 
         if (warningCount > 0)
         {
-            parts.Add($"{warningCount} upozornění");
+            parts.Add(LF("SmartAdvisor.Status.Part.Warning", warningCount));
         }
 
         if (recommendationCount > 0)
         {
-            parts.Add($"{recommendationCount} doporučení");
+            parts.Add(LF("SmartAdvisor.Status.Part.Recommendation", recommendationCount));
         }
 
-        return $"Chytrý poradce našel {totalCount} položek: {string.Join(", ", parts)}.";
+        return LF("SmartAdvisor.Status.WithItems", totalCount, string.Join(", ", parts));
     }
 
     private static string ValueOrFallback(string? value, string fallback) =>
@@ -295,4 +321,8 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
 
         return false;
     }
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 }

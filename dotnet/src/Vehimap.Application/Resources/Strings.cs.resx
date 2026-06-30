@@ -872,6 +872,39 @@
   <data name="DashboardWorkspace.VehicleHistory" xml:space="preserve"><value>Historie vozidla</value></data>
   <data name="DashboardWorkspace.VehicleHistoryName" xml:space="preserve"><value>Otevřít historii vozidla vybraného na dashboardu</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Kategorie</value></data>
+  <data name="SmartAdvisor.Action.OpenCosts" xml:space="preserve"><value>Otevřít náklady</value></data>
+  <data name="SmartAdvisor.Action.OpenFuel" xml:space="preserve"><value>Otevřít tankování</value></data>
+  <data name="SmartAdvisor.Action.OpenHistory" xml:space="preserve"><value>Otevřít historii</value></data>
+  <data name="SmartAdvisor.Action.OpenMaintenance" xml:space="preserve"><value>Otevřít údržbu</value></data>
+  <data name="SmartAdvisor.Action.OpenRecord" xml:space="preserve"><value>Otevřít doklad</value></data>
+  <data name="SmartAdvisor.Action.OpenRelatedFuel" xml:space="preserve"><value>Otevřít související tankování</value></data>
+  <data name="SmartAdvisor.Action.OpenReminder" xml:space="preserve"><value>Otevřít připomínku</value></data>
+  <data name="SmartAdvisor.Action.OpenVehicle" xml:space="preserve"><value>Otevřít vozidlo</value></data>
+  <data name="SmartAdvisor.Action.OpenVehicleCosts" xml:space="preserve"><value>Otevřít náklady vozidla</value></data>
+  <data name="SmartAdvisor.Category.Attachments" xml:space="preserve"><value>Přílohy</value></data>
+  <data name="SmartAdvisor.Category.Costs" xml:space="preserve"><value>Náklady</value></data>
+  <data name="SmartAdvisor.Category.Data" xml:space="preserve"><value>Data</value></data>
+  <data name="SmartAdvisor.Category.Deadlines" xml:space="preserve"><value>Termíny</value></data>
+  <data name="SmartAdvisor.Category.Fuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="SmartAdvisor.Category.Maintenance" xml:space="preserve"><value>Údržba</value></data>
+  <data name="SmartAdvisor.Category.Other" xml:space="preserve"><value>Ostatní</value></data>
+  <data name="SmartAdvisor.Detail.Audit" xml:space="preserve"><value>Audit dat: {0}. {1}</value></data>
+  <data name="SmartAdvisor.Detail.CostPerKmUnavailable" xml:space="preserve"><value>Doplňte použitelné tachometry v historii nebo tankování, aby šlo spočítat cenu na kilometr.</value></data>
+  <data name="SmartAdvisor.Detail.FuelAnalysis" xml:space="preserve"><value>Tankovací analýza upozorňuje na položku, kterou se vyplatí zkontrolovat.</value></data>
+  <data name="SmartAdvisor.Priority.Critical" xml:space="preserve"><value>Naléhavé</value></data>
+  <data name="SmartAdvisor.Priority.Info" xml:space="preserve"><value>Informace</value></data>
+  <data name="SmartAdvisor.Priority.Recommendation" xml:space="preserve"><value>Doporučení</value></data>
+  <data name="SmartAdvisor.Priority.Warning" xml:space="preserve"><value>Upozornění</value></data>
+  <data name="SmartAdvisor.Status.Empty" xml:space="preserve"><value>Chytrý poradce nenašel nic naléhavého. Data vypadají z pohledu známých pravidel v pořádku.</value></data>
+  <data name="SmartAdvisor.Status.Part.Critical" xml:space="preserve"><value>{0} naléhavých</value></data>
+  <data name="SmartAdvisor.Status.Part.Recommendation" xml:space="preserve"><value>{0} doporučení</value></data>
+  <data name="SmartAdvisor.Status.Part.Warning" xml:space="preserve"><value>{0} upozornění</value></data>
+  <data name="SmartAdvisor.Status.WithItems" xml:space="preserve"><value>Chytrý poradce našel {0} položek: {1}.</value></data>
+  <data name="SmartAdvisor.Summary.CostPerKmUnavailable" xml:space="preserve"><value>Vozidlo má náklady, ale chybí použitelný rozdíl tachometru pro výpočet ceny na kilometr.</value></data>
+  <data name="SmartAdvisor.Summary.Timeline" xml:space="preserve"><value>{0}. {1}.</value></data>
+  <data name="SmartAdvisor.Title.CostPerKmUnavailable" xml:space="preserve"><value>Cena na kilometr není dostupná</value></data>
+  <data name="SmartAdvisor.Title.Timeline" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="SmartAdvisor.Value.NoDueDate" xml:space="preserve"><value>bez termínu</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie chytrého poradce</value></data>
   <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Vymazat filtry chytrého poradce</value></data>
   <data name="SmartAdvisorWorkspace.DetailHeading" xml:space="preserve"><value>Detail doporučení</value></data>

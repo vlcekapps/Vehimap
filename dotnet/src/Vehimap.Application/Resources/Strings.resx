@@ -872,6 +872,39 @@
   <data name="DashboardWorkspace.VehicleHistory" xml:space="preserve"><value>Vehicle history</value></data>
   <data name="DashboardWorkspace.VehicleHistoryName" xml:space="preserve"><value>Open history for the vehicle selected on the dashboard</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Category</value></data>
+  <data name="SmartAdvisor.Action.OpenCosts" xml:space="preserve"><value>Open costs</value></data>
+  <data name="SmartAdvisor.Action.OpenFuel" xml:space="preserve"><value>Open fuel entries</value></data>
+  <data name="SmartAdvisor.Action.OpenHistory" xml:space="preserve"><value>Open history</value></data>
+  <data name="SmartAdvisor.Action.OpenMaintenance" xml:space="preserve"><value>Open maintenance</value></data>
+  <data name="SmartAdvisor.Action.OpenRecord" xml:space="preserve"><value>Open document</value></data>
+  <data name="SmartAdvisor.Action.OpenRelatedFuel" xml:space="preserve"><value>Open related fuel entry</value></data>
+  <data name="SmartAdvisor.Action.OpenReminder" xml:space="preserve"><value>Open reminder</value></data>
+  <data name="SmartAdvisor.Action.OpenVehicle" xml:space="preserve"><value>Open vehicle</value></data>
+  <data name="SmartAdvisor.Action.OpenVehicleCosts" xml:space="preserve"><value>Open vehicle costs</value></data>
+  <data name="SmartAdvisor.Category.Attachments" xml:space="preserve"><value>Attachments</value></data>
+  <data name="SmartAdvisor.Category.Costs" xml:space="preserve"><value>Costs</value></data>
+  <data name="SmartAdvisor.Category.Data" xml:space="preserve"><value>Data</value></data>
+  <data name="SmartAdvisor.Category.Deadlines" xml:space="preserve"><value>Due dates</value></data>
+  <data name="SmartAdvisor.Category.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="SmartAdvisor.Category.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="SmartAdvisor.Category.Other" xml:space="preserve"><value>Other</value></data>
+  <data name="SmartAdvisor.Detail.Audit" xml:space="preserve"><value>Data audit: {0}. {1}</value></data>
+  <data name="SmartAdvisor.Detail.CostPerKmUnavailable" xml:space="preserve"><value>Add usable odometer values in history or fuel records so cost per kilometer can be calculated.</value></data>
+  <data name="SmartAdvisor.Detail.FuelAnalysis" xml:space="preserve"><value>Fuel analysis points to an entry worth checking.</value></data>
+  <data name="SmartAdvisor.Priority.Critical" xml:space="preserve"><value>Critical</value></data>
+  <data name="SmartAdvisor.Priority.Info" xml:space="preserve"><value>Info</value></data>
+  <data name="SmartAdvisor.Priority.Recommendation" xml:space="preserve"><value>Recommendation</value></data>
+  <data name="SmartAdvisor.Priority.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="SmartAdvisor.Status.Empty" xml:space="preserve"><value>Smart advisor did not find anything urgent. The data looks OK according to the known rules.</value></data>
+  <data name="SmartAdvisor.Status.Part.Critical" xml:space="preserve"><value>{0} critical</value></data>
+  <data name="SmartAdvisor.Status.Part.Recommendation" xml:space="preserve"><value>{0} recommendations</value></data>
+  <data name="SmartAdvisor.Status.Part.Warning" xml:space="preserve"><value>{0} warnings</value></data>
+  <data name="SmartAdvisor.Status.WithItems" xml:space="preserve"><value>Smart advisor found {0} items: {1}.</value></data>
+  <data name="SmartAdvisor.Summary.CostPerKmUnavailable" xml:space="preserve"><value>The vehicle has costs, but no usable odometer difference for calculating cost per kilometer.</value></data>
+  <data name="SmartAdvisor.Summary.Timeline" xml:space="preserve"><value>{0}. {1}.</value></data>
+  <data name="SmartAdvisor.Title.CostPerKmUnavailable" xml:space="preserve"><value>Cost per kilometer is not available</value></data>
+  <data name="SmartAdvisor.Title.Timeline" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="SmartAdvisor.Value.NoDueDate" xml:space="preserve"><value>no due date</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Smart advisor category filter</value></data>
   <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Clear smart advisor filters</value></data>
   <data name="SmartAdvisorWorkspace.DetailHeading" xml:space="preserve"><value>Recommendation detail</value></data>

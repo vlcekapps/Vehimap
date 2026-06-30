@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
@@ -167,6 +168,65 @@ public sealed class LegacySmartAdvisorServiceTests
         Assert.Equal(SmartAdvisorCategory.Costs, item.Category);
         Assert.Equal(SmartAdvisorPriority.Recommendation, item.Priority);
         Assert.Equal("Náklady", item.EntityKind);
+    }
+
+    [Fact]
+    public void BuildSmartAdvisor_uses_localized_domain_messages()
+    {
+        var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+        var service = new LegacySmartAdvisorService(
+            new LegacyTimelineService(),
+            new LegacyFuelAnalysisService(localizer),
+            localizer);
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            {
+                CreateVehicle("veh_1", "Milena")
+            }
+        };
+        var costs = new CostAnalysisSummary(
+            "Test",
+            new DateOnly(2026, 1, 1),
+            new DateOnly(2026, 12, 31),
+            1200m,
+            null,
+            null,
+            0m,
+            null,
+            1200m,
+            null,
+            1,
+            0,
+            1,
+            [
+                new VehicleCostBreakdown("veh_1", "Milena", "Cars", 1200m, 0m, 0m, 1200m, null, null, "Active")
+            ]);
+        var auditItems = new[]
+        {
+            new AuditItem(
+                AuditSeverity.Warning,
+                "Attachment",
+                "veh_1",
+                "Milena",
+                "Doklad",
+                "rec_1",
+                "Missing managed attachment",
+                "The document attachment file is not available.")
+        };
+
+        var summary = service.BuildSmartAdvisor(dataSet, auditItems, costs, new DateOnly(2026, 6, 15));
+
+        Assert.Contains("Smart advisor found 2 items", summary.Status, StringComparison.Ordinal);
+        Assert.Contains(summary.Items, item =>
+            item.Category == SmartAdvisorCategory.Attachments
+            && item.Detail == "Data audit: Attachment. The document attachment file is not available."
+            && item.ActionLabel == "Open document");
+        Assert.Contains(summary.Items, item =>
+            item.Category == SmartAdvisorCategory.Costs
+            && item.Title == "Cost per kilometer is not available"
+            && item.ActionLabel == "Open vehicle costs"
+            && item.Detail.Contains("Add usable odometer values", StringComparison.Ordinal));
     }
 
     private static LegacySmartAdvisorService CreateService() =>

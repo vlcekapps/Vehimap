@@ -554,6 +554,22 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Domain_smart_advisor_uses_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var service = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacySmartAdvisorService.cs"));
+        var projectionService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopProjectionService.cs"));
+
+        Assert.Contains("SmartAdvisor.Status.Empty", service);
+        Assert.Contains("SmartAdvisor.Detail.FuelAnalysis", service);
+        Assert.Contains("SmartAdvisor.Title.CostPerKmUnavailable", service);
+        Assert.Contains("SmartAdvisor.Action.OpenVehicleCosts", service);
+        Assert.Contains("SmartAdvisor.Priority.Critical", projectionService);
+        Assert.Contains("SmartAdvisor.Category.Attachments", projectionService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

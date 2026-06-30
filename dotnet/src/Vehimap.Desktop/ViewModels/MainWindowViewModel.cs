@@ -349,7 +349,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _timelineService = timelineService;
         _fuelAnalysisService = fuelAnalysisService ?? new LegacyFuelAnalysisService(DesktopLocalization.Localizer);
         _serviceBookService = serviceBookService ?? new LegacyServiceBookService();
-        _smartAdvisorService = smartAdvisorService ?? new LegacySmartAdvisorService(_timelineService, _fuelAnalysisService);
+        _smartAdvisorService = smartAdvisorService ?? new LegacySmartAdvisorService(_timelineService, _fuelAnalysisService, DesktopLocalization.Localizer);
         _vehiclePackageService = vehiclePackageService ?? new VehiclePackageService();
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;

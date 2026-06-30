@@ -309,4 +309,55 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             "Data audit has not found any issues that need action.",
             projectionService.BuildAuditSummary(Array.Empty<AuditItem>()));
     }
+
+    [Fact]
+    public void Projection_service_localizes_smart_advisor_priority_category_and_due_date()
+    {
+        var projectionService = new DesktopProjectionService(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")),
+            CultureInfo.GetCultureInfo("en-US"));
+        var summary = new SmartAdvisorSummary(
+            2,
+            1,
+            1,
+            0,
+            "Smart advisor found 2 items: 1 critical, 1 warnings.",
+            [
+                new SmartAdvisorItem(
+                    "advisor_1",
+                    SmartAdvisorPriority.Critical,
+                    SmartAdvisorCategory.Attachments,
+                    "veh_1",
+                    "Milena",
+                    "Doklad",
+                    "rec_1",
+                    "Missing managed attachment",
+                    "The document attachment file is not available.",
+                    "Data audit: Attachment. The document attachment file is not available.",
+                    "Open document",
+                    new DateOnly(2026, 7, 2)),
+                new SmartAdvisorItem(
+                    "advisor_2",
+                    SmartAdvisorPriority.Recommendation,
+                    SmartAdvisorCategory.Costs,
+                    "veh_1",
+                    "Milena",
+                    "Náklady",
+                    "veh_1",
+                    "Cost per kilometer is not available",
+                    "The vehicle has costs.",
+                    "Add odometers.",
+                    "Open vehicle costs",
+                    null)
+            ]);
+
+        var projection = projectionService.BuildSmartAdvisor(summary);
+
+        Assert.Equal("Critical", projection.Items[0].Priority);
+        Assert.Equal("Attachments", projection.Items[0].Category);
+        Assert.Equal("7/2/2026", projection.Items[0].DueDate);
+        Assert.Equal("Recommendation", projection.Items[1].Priority);
+        Assert.Equal("Costs", projection.Items[1].Category);
+        Assert.Equal("no due date", projection.Items[1].DueDate);
+    }
 }
