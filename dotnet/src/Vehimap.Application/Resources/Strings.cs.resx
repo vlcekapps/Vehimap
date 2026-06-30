@@ -431,6 +431,48 @@
   <data name="OpenWorkspaceWindow.SmartAdvisor" xml:space="preserve"><value>Otevřít chytrého poradce v samostatném okně</value></data>
   <data name="OpenWorkspaceWindow.Timeline" xml:space="preserve"><value>Otevřít časovou osu v samostatném okně</value></data>
   <data name="OpenWorkspaceWindow.Upcoming" xml:space="preserve"><value>Otevřít blížící se termíny v samostatném okně</value></data>
+  <data name="WorkspaceWindow.AuditHelpText" xml:space="preserve"><value>Samostatné okno pro audit dat a problémových stavů. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.AuditName" xml:space="preserve"><value>Audit dat</value></data>
+  <data name="WorkspaceWindow.CloseAuditName" xml:space="preserve"><value>Zavřít okno auditu</value></data>
+  <data name="WorkspaceWindow.CloseCostName" xml:space="preserve"><value>Zavřít okno nákladů</value></data>
+  <data name="WorkspaceWindow.CloseDashboardName" xml:space="preserve"><value>Zavřít okno dashboardu</value></data>
+  <data name="WorkspaceWindow.CloseFuelName" xml:space="preserve"><value>Zavřít okno tankování</value></data>
+  <data name="WorkspaceWindow.CloseGlobalSearchName" xml:space="preserve"><value>Zavřít okno globálního hledání</value></data>
+  <data name="WorkspaceWindow.CloseHistoryName" xml:space="preserve"><value>Zavřít okno historie</value></data>
+  <data name="WorkspaceWindow.CloseMaintenanceName" xml:space="preserve"><value>Zavřít okno plánu údržby</value></data>
+  <data name="WorkspaceWindow.CloseOverdueName" xml:space="preserve"><value>Zavřít okno propadlých termínů</value></data>
+  <data name="WorkspaceWindow.CloseRecordsName" xml:space="preserve"><value>Zavřít okno dokladů</value></data>
+  <data name="WorkspaceWindow.CloseRemindersName" xml:space="preserve"><value>Zavřít okno připomínek</value></data>
+  <data name="WorkspaceWindow.CloseSmartAdvisorName" xml:space="preserve"><value>Zavřít okno chytrého poradce</value></data>
+  <data name="WorkspaceWindow.CloseTimelineName" xml:space="preserve"><value>Zavřít okno časové osy</value></data>
+  <data name="WorkspaceWindow.CloseUpcomingName" xml:space="preserve"><value>Zavřít okno blížících se termínů</value></data>
+  <data name="WorkspaceWindow.CloseVehicleDetailName" xml:space="preserve"><value>Zavřít okno detailu vozidla</value></data>
+  <data name="WorkspaceWindow.CostHelpText" xml:space="preserve"><value>Samostatné okno pro přehled nákladů napříč vozidly. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.CostName" xml:space="preserve"><value>Náklady napříč vozidly</value></data>
+  <data name="WorkspaceWindow.DashboardHelpText" xml:space="preserve"><value>Samostatné okno pro dashboard napříč vozidly. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.DashboardName" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="WorkspaceWindow.FuelHelpText" xml:space="preserve"><value>Samostatné okno pro práci s tankováním vybraného vozidla. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.FuelName" xml:space="preserve"><value>Tankování vozidla</value></data>
+  <data name="WorkspaceWindow.GlobalSearchHelpText" xml:space="preserve"><value>Samostatné okno pro hledání napříč vozidly a evidencemi. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.GlobalSearchName" xml:space="preserve"><value>Globální hledání</value></data>
+  <data name="WorkspaceWindow.HistoryHelpText" xml:space="preserve"><value>Samostatné okno pro práci s historií vybraného vozidla. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.HistoryName" xml:space="preserve"><value>Historie vozidla</value></data>
+  <data name="WorkspaceWindow.MaintenanceHelpText" xml:space="preserve"><value>Samostatné okno pro práci s plánem údržby vybraného vozidla. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.MaintenanceName" xml:space="preserve"><value>Plán údržby vozidla</value></data>
+  <data name="WorkspaceWindow.OverdueHelpText" xml:space="preserve"><value>Samostatné okno pro propadlé termíny napříč vozidly. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.OverdueName" xml:space="preserve"><value>Propadlé termíny</value></data>
+  <data name="WorkspaceWindow.RecordsHelpText" xml:space="preserve"><value>Samostatné okno pro práci s doklady a přílohami vybraného vozidla. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.RecordsName" xml:space="preserve"><value>Doklady vozidla</value></data>
+  <data name="WorkspaceWindow.RemindersHelpText" xml:space="preserve"><value>Samostatné okno pro práci s připomínkami vybraného vozidla. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.RemindersName" xml:space="preserve"><value>Připomínky vozidla</value></data>
+  <data name="WorkspaceWindow.SmartAdvisorHelpText" xml:space="preserve"><value>Samostatné okno chytrého poradce. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.SmartAdvisorName" xml:space="preserve"><value>Chytrý poradce</value></data>
+  <data name="WorkspaceWindow.TimelineHelpText" xml:space="preserve"><value>Samostatné okno pro časovou osu vybraného vozidla. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.TimelineName" xml:space="preserve"><value>Časová osa vozidla</value></data>
+  <data name="WorkspaceWindow.UpcomingHelpText" xml:space="preserve"><value>Samostatné okno pro blížící se termíny napříč vozidly. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.UpcomingName" xml:space="preserve"><value>Blížící se termíny</value></data>
+  <data name="WorkspaceWindow.VehicleDetailHelpText" xml:space="preserve"><value>Samostatné okno pro detail vybraného vozidla a související evidence. Escape okno zavře.</value></data>
+  <data name="WorkspaceWindow.VehicleDetailName" xml:space="preserve"><value>Detail vozidla</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Zálohovat ihned</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Zavřít dialog nastavení</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Uložit nastavení</value></data>

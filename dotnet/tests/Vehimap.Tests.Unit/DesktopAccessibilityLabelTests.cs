@@ -2170,7 +2170,8 @@ public sealed class DesktopAccessibilityLabelTests
             var codeBehind = ReadViewCodeBehind(fileName);
             var xaml = ReadViewFile(fileName.Replace(".axaml.cs", ".axaml", StringComparison.Ordinal));
             Assert.Contains($"RegisterWorkspaceLifecycle(this, \"{hostName}\"", codeBehind);
-            Assert.Contains("Escape okno zavře.", xaml);
+            Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc WorkspaceWindow.", xaml);
+            Assert.Contains("Content=\"{i18n:Loc Common.Close}\"", xaml);
             Assert.DoesNotContain("Opened += OnOpened", codeBehind);
             Assert.DoesNotContain("Closing += OnClosing", codeBehind);
         }

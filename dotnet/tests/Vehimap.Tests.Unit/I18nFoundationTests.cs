@@ -300,6 +300,39 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Pilot_workspace_window_chrome_uses_resource_localization_for_static_text()
+    {
+        var root = FindRepositoryRoot();
+        var workspaceWindows = new[]
+        {
+            "AuditWindow.axaml",
+            "CostWindow.axaml",
+            "DashboardWindow.axaml",
+            "FuelWindow.axaml",
+            "GlobalSearchWindow.axaml",
+            "HistoryWindow.axaml",
+            "MaintenanceWindow.axaml",
+            "OverdueOverviewWindow.axaml",
+            "RecordsWindow.axaml",
+            "RemindersWindow.axaml",
+            "SmartAdvisorWindow.axaml",
+            "TimelineWindow.axaml",
+            "UpcomingOverviewWindow.axaml",
+            "VehicleDetailWindow.axaml"
+        };
+
+        foreach (var fileName in workspaceWindows)
+        {
+            var xaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", fileName));
+            Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", xaml);
+            Assert.Contains("AutomationProperties.Name=\"{i18n:Loc WorkspaceWindow.", xaml);
+            Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc WorkspaceWindow.", xaml);
+            Assert.Contains("Content=\"{i18n:Loc Common.Close}\"", xaml);
+            Assert.DoesNotMatch(CzechDiacriticsRegex(), xaml);
+        }
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

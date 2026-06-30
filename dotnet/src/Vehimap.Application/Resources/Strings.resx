@@ -431,6 +431,48 @@
   <data name="OpenWorkspaceWindow.SmartAdvisor" xml:space="preserve"><value>Open smart advisor in a separate window</value></data>
   <data name="OpenWorkspaceWindow.Timeline" xml:space="preserve"><value>Open timeline in a separate window</value></data>
   <data name="OpenWorkspaceWindow.Upcoming" xml:space="preserve"><value>Open upcoming due dates in a separate window</value></data>
+  <data name="WorkspaceWindow.AuditHelpText" xml:space="preserve"><value>Separate window for data audit and problem states. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.AuditName" xml:space="preserve"><value>Data audit</value></data>
+  <data name="WorkspaceWindow.CloseAuditName" xml:space="preserve"><value>Close audit window</value></data>
+  <data name="WorkspaceWindow.CloseCostName" xml:space="preserve"><value>Close costs window</value></data>
+  <data name="WorkspaceWindow.CloseDashboardName" xml:space="preserve"><value>Close dashboard window</value></data>
+  <data name="WorkspaceWindow.CloseFuelName" xml:space="preserve"><value>Close fuel window</value></data>
+  <data name="WorkspaceWindow.CloseGlobalSearchName" xml:space="preserve"><value>Close global search window</value></data>
+  <data name="WorkspaceWindow.CloseHistoryName" xml:space="preserve"><value>Close history window</value></data>
+  <data name="WorkspaceWindow.CloseMaintenanceName" xml:space="preserve"><value>Close maintenance plan window</value></data>
+  <data name="WorkspaceWindow.CloseOverdueName" xml:space="preserve"><value>Close overdue due dates window</value></data>
+  <data name="WorkspaceWindow.CloseRecordsName" xml:space="preserve"><value>Close documents window</value></data>
+  <data name="WorkspaceWindow.CloseRemindersName" xml:space="preserve"><value>Close reminders window</value></data>
+  <data name="WorkspaceWindow.CloseSmartAdvisorName" xml:space="preserve"><value>Close smart advisor window</value></data>
+  <data name="WorkspaceWindow.CloseTimelineName" xml:space="preserve"><value>Close timeline window</value></data>
+  <data name="WorkspaceWindow.CloseUpcomingName" xml:space="preserve"><value>Close upcoming due dates window</value></data>
+  <data name="WorkspaceWindow.CloseVehicleDetailName" xml:space="preserve"><value>Close vehicle detail window</value></data>
+  <data name="WorkspaceWindow.CostHelpText" xml:space="preserve"><value>Separate window for costs across vehicles. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.CostName" xml:space="preserve"><value>Costs across vehicles</value></data>
+  <data name="WorkspaceWindow.DashboardHelpText" xml:space="preserve"><value>Separate dashboard window across vehicles. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.DashboardName" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="WorkspaceWindow.FuelHelpText" xml:space="preserve"><value>Separate window for working with fuel entries for the selected vehicle. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.FuelName" xml:space="preserve"><value>Vehicle fuel entries</value></data>
+  <data name="WorkspaceWindow.GlobalSearchHelpText" xml:space="preserve"><value>Separate window for searching across vehicles and records. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.GlobalSearchName" xml:space="preserve"><value>Global search</value></data>
+  <data name="WorkspaceWindow.HistoryHelpText" xml:space="preserve"><value>Separate window for working with history of the selected vehicle. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.HistoryName" xml:space="preserve"><value>Vehicle history</value></data>
+  <data name="WorkspaceWindow.MaintenanceHelpText" xml:space="preserve"><value>Separate window for working with maintenance plan of the selected vehicle. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.MaintenanceName" xml:space="preserve"><value>Vehicle maintenance plan</value></data>
+  <data name="WorkspaceWindow.OverdueHelpText" xml:space="preserve"><value>Separate window for overdue due dates across vehicles. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.OverdueName" xml:space="preserve"><value>Overdue due dates</value></data>
+  <data name="WorkspaceWindow.RecordsHelpText" xml:space="preserve"><value>Separate window for working with documents and attachments of the selected vehicle. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.RecordsName" xml:space="preserve"><value>Vehicle documents</value></data>
+  <data name="WorkspaceWindow.RemindersHelpText" xml:space="preserve"><value>Separate window for working with reminders of the selected vehicle. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.RemindersName" xml:space="preserve"><value>Vehicle reminders</value></data>
+  <data name="WorkspaceWindow.SmartAdvisorHelpText" xml:space="preserve"><value>Separate smart advisor window. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.SmartAdvisorName" xml:space="preserve"><value>Smart advisor</value></data>
+  <data name="WorkspaceWindow.TimelineHelpText" xml:space="preserve"><value>Separate window for the selected vehicle timeline. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.TimelineName" xml:space="preserve"><value>Vehicle timeline</value></data>
+  <data name="WorkspaceWindow.UpcomingHelpText" xml:space="preserve"><value>Separate window for upcoming due dates across vehicles. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.UpcomingName" xml:space="preserve"><value>Upcoming due dates</value></data>
+  <data name="WorkspaceWindow.VehicleDetailHelpText" xml:space="preserve"><value>Separate window for selected vehicle detail and related records. Escape closes the window.</value></data>
+  <data name="WorkspaceWindow.VehicleDetailName" xml:space="preserve"><value>Vehicle detail</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Back up now</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Close the settings dialog</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Save settings</value></data>

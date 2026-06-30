@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
         xmlns:workspaces="using:Vehimap.Desktop.Views.Workspaces"
         x:Class="Vehimap.Desktop.Views.RemindersWindow"
@@ -10,9 +11,9 @@
         MinHeight="660"
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
-        AutomationProperties.Name="Připomínky vozidla"
+        AutomationProperties.Name="{i18n:Loc WorkspaceWindow.RemindersName}"
         AutomationProperties.AutomationId="RemindersWindow"
-        AutomationProperties.HelpText="Samostatné okno pro práci s připomínkami vybraného vozidla. Escape okno zavře.">
+        AutomationProperties.HelpText="{i18n:Loc WorkspaceWindow.RemindersHelpText}">
   <Grid Margin="20" RowDefinitions="Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">
@@ -33,8 +34,8 @@
               HorizontalAlignment="Right"
               VerticalAlignment="Top"
               Click="OnCloseClick"
-              Content="Zavřít"
-              AutomationProperties.Name="Zavřít okno připomínek"
+              Content="{i18n:Loc Common.Close}"
+              AutomationProperties.Name="{i18n:Loc WorkspaceWindow.CloseRemindersName}"
               AutomationProperties.AutomationId="CloseRemindersWindowButton" />
     </Grid>
 
