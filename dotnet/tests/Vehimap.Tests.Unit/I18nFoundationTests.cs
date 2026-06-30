@@ -238,6 +238,8 @@ public sealed class I18nFoundationTests
         var maintenanceWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "MaintenanceWorkspaceView.axaml"));
         var recordWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "RecordWorkspaceView.axaml"));
         var vehicleDetailWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "VehicleDetailWorkspaceView.axaml"));
+        var globalSearchWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "GlobalSearchWorkspaceView.axaml"));
+        var timelineWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "TimelineWorkspaceView.axaml"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyWorkspace);
         Assert.Contains("Text=\"{i18n:Loc HistoryWorkspace.Title}\"", historyWorkspace);
@@ -283,6 +285,21 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc VehicleDetail.EvidenceSummaryItemType}\"", vehicleDetailWorkspace);
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc VehicleDetail.RecentHistoryItemType}\"", vehicleDetailWorkspace);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), vehicleDetailWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", globalSearchWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc GlobalSearchWorkspace.SearchPlaceholder}\"", globalSearchWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc GlobalSearchWorkspace.OpenItemName}\"", globalSearchWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc GlobalSearchWorkspace.ItemType}\"", globalSearchWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc GlobalSearchWorkspace.DetailHeading}\"", globalSearchWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), globalSearchWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", timelineWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc TimelineWorkspace.ShowFilter}\"", timelineWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc TimelineWorkspace.SearchPlaceholder}\"", timelineWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TimelineWorkspace.OpenItemName}\"", timelineWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc TimelineWorkspace.ItemType}\"", timelineWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc TimelineWorkspace.DetailHeading}\"", timelineWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), timelineWorkspace);
     }
 
     [Fact]

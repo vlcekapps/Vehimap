@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.TimelineWorkspaceView"
@@ -20,37 +21,37 @@
           Grid.ColumnSpan="2"
           Margin="0,12,0,0"
           ColumnDefinitions="100,170,100,*,120,130">
-      <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Zobrazit" />
+      <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{i18n:Loc TimelineWorkspace.ShowFilter}" />
       <ComboBox x:Name="TimelineFilterComboBox"
                 Grid.Column="1"
                 ItemsSource="{Binding TimelineFilters}"
                 SelectedItem="{Binding SelectedTimelineFilter}"
-                AutomationProperties.Name="Filtr časové osy"
+                AutomationProperties.Name="{i18n:Loc TimelineWorkspace.FilterName}"
                 AutomationProperties.AutomationId="TimelineFilterComboBox" />
-      <TextBlock Grid.Column="2" Margin="16,0,0,0" VerticalAlignment="Center" Text="Hledat" />
+      <TextBlock Grid.Column="2" Margin="16,0,0,0" VerticalAlignment="Center" Text="{i18n:Loc Common.Search}" />
       <TextBox x:Name="TimelineSearchBox"
                Grid.Column="3"
                Margin="12,0,0,0"
                Text="{Binding TimelineSearchText}"
-               PlaceholderText="Položka, stav nebo poznámka"
-               AutomationProperties.Name="Hledání v časové ose"
-               AutomationProperties.HelpText="Položka, stav nebo poznámka"
+               PlaceholderText="{i18n:Loc TimelineWorkspace.SearchPlaceholder}"
+               AutomationProperties.Name="{i18n:Loc TimelineWorkspace.SearchName}"
+               AutomationProperties.HelpText="{i18n:Loc TimelineWorkspace.SearchHelp}"
                AutomationProperties.AutomationId="TimelineSearchBox" />
       <Button Grid.Column="4"
               x:Name="ClearTimelineSearchButton"
               Margin="12,0,0,0"
               Width="108"
               Command="{Binding ClearTimelineSearchCommand}"
-              Content="Vymazat"
-              AutomationProperties.Name="Vymazat hledání v časové ose"
+              Content="{i18n:Loc Common.Clear}"
+              AutomationProperties.Name="{i18n:Loc TimelineWorkspace.ClearSearchName}"
               AutomationProperties.AutomationId="ClearTimelineSearchButton" />
       <Button Grid.Column="5"
               x:Name="TimelineRefreshButton"
               Margin="12,0,0,0"
               Width="118"
               Command="{Binding RefreshTimelineCommand}"
-              Content="Obnovit"
-              AutomationProperties.Name="Obnovit časovou osu vybraného vozidla"
+              Content="{i18n:Loc TimelineWorkspace.Refresh}"
+              AutomationProperties.Name="{i18n:Loc TimelineWorkspace.RefreshName}"
               AutomationProperties.AutomationId="TimelineRefreshButton" />
     </Grid>
 
@@ -59,7 +60,7 @@
              Margin="0,12,12,0"
              ItemsSource="{Binding SelectedVehicleTimeline}"
              SelectedItem="{Binding SelectedTimelineItem}"
-             AutomationProperties.Name="Časová osa vybraného vozidla"
+             AutomationProperties.Name="{i18n:Loc TimelineWorkspace.ListName}"
              AutomationProperties.AutomationId="TimelineListBox">
       <ListBox.KeyBindings>
         <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedTimelineItemCommand}" />
@@ -71,7 +72,7 @@
                   Background="#10203040"
                   CornerRadius="6"
                   AutomationProperties.Name="{Binding AccessibleLabel}"
-                  AutomationProperties.ItemType="Položka časové osy"
+                  AutomationProperties.ItemType="{i18n:Loc TimelineWorkspace.ItemType}"
                   AutomationProperties.ItemStatus="{Binding Status}">
             <Grid ColumnDefinitions="110,150,*">
               <TextBlock Grid.Column="0" Text="{Binding Date}" />
@@ -96,8 +97,8 @@
       <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
         <TextBlock FontSize="18"
                    FontWeight="SemiBold"
-                   Text="Detail časové osy"
-                   AutomationProperties.Name="Detail časové osy"
+                   Text="{i18n:Loc TimelineWorkspace.DetailHeading}"
+                   AutomationProperties.Name="{i18n:Loc TimelineWorkspace.DetailHeading}"
                    AutomationProperties.AutomationId="TimelineDetailHeadingText"
                    AutomationProperties.HeadingLevel="2" />
         <Button Grid.Row="1"
@@ -106,8 +107,8 @@
                 Width="150"
                 HorizontalAlignment="Left"
                 Command="{Binding OpenSelectedTimelineItemCommand}"
-                Content="Otevřít položku"
-                AutomationProperties.Name="Otevřít vybranou položku časové osy"
+                Content="{i18n:Loc TimelineWorkspace.OpenItem}"
+                AutomationProperties.Name="{i18n:Loc TimelineWorkspace.OpenItemName}"
                 AutomationProperties.AutomationId="TimelineOpenButton" />
         <TextBlock Grid.Row="2"
                    Margin="0,12,0,0"
@@ -120,7 +121,7 @@
         <TextBlock Grid.Row="3"
                    Margin="0,12,0,0"
                    Opacity="0.75"
-                   Text="Enter nebo tlačítko otevře navazující kartu evidence."
+                   Text="{i18n:Loc TimelineWorkspace.KeyboardHelp}"
                    TextWrapping="Wrap" />
         <TextBlock Grid.Row="4"
                    Margin="0,16,0,0"

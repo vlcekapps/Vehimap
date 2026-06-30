@@ -69,6 +69,20 @@
   <data name="DataStoreHealth.OpenPreMigrationBackup" xml:space="preserve"><value>Pre-migration backup</value></data>
   <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Open pre-migration backup</value></data>
   <data name="DataStoreHealth.Title" xml:space="preserve"><value>Data set 2.0 check</value></data>
+  <data name="GlobalSearchWorkspace.ClearSearchName" xml:space="preserve"><value>Clear global search</value></data>
+  <data name="GlobalSearchWorkspace.DetailHeading" xml:space="preserve"><value>Result detail</value></data>
+  <data name="GlobalSearchWorkspace.ItemType" xml:space="preserve"><value>Search result</value></data>
+  <data name="GlobalSearchWorkspace.KeyboardHelp" xml:space="preserve"><value>Enter or the button opens the matching vehicle or record directly.</value></data>
+  <data name="GlobalSearchWorkspace.ListName" xml:space="preserve"><value>Global search results</value></data>
+  <data name="GlobalSearchWorkspace.OpenItem" xml:space="preserve"><value>Open item</value></data>
+  <data name="GlobalSearchWorkspace.OpenItemName" xml:space="preserve"><value>Open selected search result</value></data>
+  <data name="GlobalSearchWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="GlobalSearchWorkspace.RefreshName" xml:space="preserve"><value>Refresh global search</value></data>
+  <data name="GlobalSearchWorkspace.SearchHelp" xml:space="preserve"><value>Vehicle, license plate, document, reminder or maintenance</value></data>
+  <data name="GlobalSearchWorkspace.SearchName" xml:space="preserve"><value>Global Vehimap search</value></data>
+  <data name="GlobalSearchWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, license plate, document, reminder, maintenance...</value></data>
+  <data name="GlobalSearchWorkspace.SortDescendingName" xml:space="preserve"><value>Sort global search descending</value></data>
+  <data name="GlobalSearchWorkspace.SortName" xml:space="preserve"><value>Global search sort order</value></data>
   <data name="FuelWorkspace.AnalysisHeading" xml:space="preserve"><value>Fuel analysis</value></data>
   <data name="FuelWorkspace.ClearSearchName" xml:space="preserve"><value>Clear fuel search</value></data>
   <data name="FuelWorkspace.ConsumptionHeading" xml:space="preserve"><value>Consumption trend</value></data>
@@ -638,6 +652,20 @@
   <data name="Shell.RecordsCount" xml:space="preserve"><value>Documents</value></data>
   <data name="Shell.RemindersCount" xml:space="preserve"><value>Reminders</value></data>
   <data name="Shell.VehicleCount" xml:space="preserve"><value>Vehicles</value></data>
+  <data name="TimelineWorkspace.ClearSearchName" xml:space="preserve"><value>Clear timeline search</value></data>
+  <data name="TimelineWorkspace.DetailHeading" xml:space="preserve"><value>Timeline detail</value></data>
+  <data name="TimelineWorkspace.FilterName" xml:space="preserve"><value>Timeline filter</value></data>
+  <data name="TimelineWorkspace.ItemType" xml:space="preserve"><value>Timeline item</value></data>
+  <data name="TimelineWorkspace.KeyboardHelp" xml:space="preserve"><value>Enter or the button opens the related record tab.</value></data>
+  <data name="TimelineWorkspace.ListName" xml:space="preserve"><value>Selected vehicle timeline</value></data>
+  <data name="TimelineWorkspace.OpenItem" xml:space="preserve"><value>Open item</value></data>
+  <data name="TimelineWorkspace.OpenItemName" xml:space="preserve"><value>Open selected timeline item</value></data>
+  <data name="TimelineWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="TimelineWorkspace.RefreshName" xml:space="preserve"><value>Refresh selected vehicle timeline</value></data>
+  <data name="TimelineWorkspace.SearchHelp" xml:space="preserve"><value>Item, status or note</value></data>
+  <data name="TimelineWorkspace.SearchName" xml:space="preserve"><value>Search in timeline</value></data>
+  <data name="TimelineWorkspace.SearchPlaceholder" xml:space="preserve"><value>Item, status or note</value></data>
+  <data name="TimelineWorkspace.ShowFilter" xml:space="preserve"><value>Show</value></data>
   <data name="VehicleList.Category" xml:space="preserve"><value>Category</value></data>
   <data name="VehicleList.CategoryFilterName" xml:space="preserve"><value>Vehicle category filter</value></data>
   <data name="VehicleList.ClearFilters" xml:space="preserve"><value>Clear filters</value></data>

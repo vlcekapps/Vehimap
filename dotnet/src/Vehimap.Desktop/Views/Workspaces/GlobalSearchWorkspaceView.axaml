@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.GlobalSearchWorkspaceView"
@@ -23,59 +24,59 @@
           ColumnDefinitions="100,*,120,120,150">
       <TextBlock Grid.Column="0"
                  VerticalAlignment="Center"
-                 Text="Hledat" />
+                 Text="{i18n:Loc Common.Search}" />
       <TextBox x:Name="GlobalSearchTextBox"
                Grid.Column="1"
                Margin="12,0,0,0"
                Text="{Binding GlobalSearchText}"
-               PlaceholderText="Vozidlo, SPZ, doklad, připomínka, údržba..."
-               AutomationProperties.Name="Globální hledání ve Vehimapu"
-               AutomationProperties.HelpText="Vozidlo, SPZ, doklad, připomínka, údržba"
+               PlaceholderText="{i18n:Loc GlobalSearchWorkspace.SearchPlaceholder}"
+               AutomationProperties.Name="{i18n:Loc GlobalSearchWorkspace.SearchName}"
+               AutomationProperties.HelpText="{i18n:Loc GlobalSearchWorkspace.SearchHelp}"
                AutomationProperties.AutomationId="GlobalSearchTextBox" />
       <Button Grid.Column="2"
               x:Name="ClearGlobalSearchButton"
               Margin="12,0,0,0"
               Width="108"
               Command="{Binding ClearGlobalSearchCommand}"
-              Content="Vymazat"
-              AutomationProperties.Name="Vymazat globální hledání"
+              Content="{i18n:Loc Common.Clear}"
+              AutomationProperties.Name="{i18n:Loc GlobalSearchWorkspace.ClearSearchName}"
               AutomationProperties.AutomationId="ClearGlobalSearchButton" />
       <Button Grid.Column="3"
               x:Name="GlobalSearchRefreshButton"
               Margin="12,0,0,0"
               Width="118"
               Command="{Binding RefreshGlobalSearchCommand}"
-              Content="Obnovit"
-              AutomationProperties.Name="Obnovit globální hledání"
+              Content="{i18n:Loc GlobalSearchWorkspace.Refresh}"
+              AutomationProperties.Name="{i18n:Loc GlobalSearchWorkspace.RefreshName}"
               AutomationProperties.AutomationId="GlobalSearchRefreshButton" />
       <Button Grid.Column="4"
               x:Name="SearchOpenButton"
               Margin="12,0,0,0"
               Width="150"
               Command="{Binding OpenSelectedSearchResultCommand}"
-              Content="Otevřít položku"
-              AutomationProperties.Name="Otevřít vybraný výsledek hledání"
+              Content="{i18n:Loc GlobalSearchWorkspace.OpenItem}"
+              AutomationProperties.Name="{i18n:Loc GlobalSearchWorkspace.OpenItemName}"
               AutomationProperties.AutomationId="SearchOpenButton" />
       <TextBlock Grid.Row="1"
                  Grid.Column="0"
                  Margin="0,8,0,0"
                  VerticalAlignment="Center"
-                 Text="Řadit" />
+                 Text="{i18n:Loc Common.Sort}" />
       <ComboBox Grid.Row="1"
                 Grid.Column="1"
                 Margin="12,8,0,0"
                 ItemsSource="{Binding GlobalSearchSortOptions}"
                 SelectedItem="{Binding SelectedGlobalSearchSortOption}"
-                AutomationProperties.Name="Řazení globálního hledání"
+                AutomationProperties.Name="{i18n:Loc GlobalSearchWorkspace.SortName}"
                 AutomationProperties.AutomationId="GlobalSearchSortComboBox" />
       <CheckBox Grid.Row="1"
                 Grid.Column="2"
                 Grid.ColumnSpan="2"
                 Margin="12,8,0,0"
                 VerticalAlignment="Center"
-                Content="Sestupně"
+                Content="{i18n:Loc Common.SortDescending}"
                 IsChecked="{Binding GlobalSearchSortDescending}"
-                AutomationProperties.Name="Řadit globální hledání sestupně"
+                AutomationProperties.Name="{i18n:Loc GlobalSearchWorkspace.SortDescendingName}"
                 AutomationProperties.AutomationId="GlobalSearchSortDescendingCheckBox" />
     </Grid>
 
@@ -84,7 +85,7 @@
              Margin="0,12,12,0"
              ItemsSource="{Binding GlobalSearchResults}"
              SelectedItem="{Binding SelectedSearchResult}"
-             AutomationProperties.Name="Výsledky globálního hledání"
+             AutomationProperties.Name="{i18n:Loc GlobalSearchWorkspace.ListName}"
              AutomationProperties.AutomationId="SearchResultsListBox">
       <ListBox.KeyBindings>
         <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedSearchResultCommand}" />
@@ -96,7 +97,7 @@
                   Background="#10203040"
                   CornerRadius="6"
                   AutomationProperties.Name="{Binding AccessibleLabel}"
-                  AutomationProperties.ItemType="Výsledek hledání">
+                  AutomationProperties.ItemType="{i18n:Loc GlobalSearchWorkspace.ItemType}">
             <StackPanel Spacing="4">
               <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
               <TextBlock Opacity="0.82" Text="{Binding SectionLabel}" />
@@ -117,14 +118,14 @@
       <Grid RowDefinitions="Auto,Auto,*">
         <TextBlock FontSize="18"
                    FontWeight="SemiBold"
-                   Text="Detail výsledku"
-                   AutomationProperties.Name="Detail výsledku"
+                   Text="{i18n:Loc GlobalSearchWorkspace.DetailHeading}"
+                   AutomationProperties.Name="{i18n:Loc GlobalSearchWorkspace.DetailHeading}"
                    AutomationProperties.AutomationId="GlobalSearchDetailHeadingText"
                    AutomationProperties.HeadingLevel="2" />
         <TextBlock Grid.Row="1"
                    Margin="0,12,0,0"
                    Opacity="0.75"
-                   Text="Enter nebo tlačítko otevře rovnou správné vozidlo nebo evidenci."
+                   Text="{i18n:Loc GlobalSearchWorkspace.KeyboardHelp}"
                    TextWrapping="Wrap" />
         <TextBlock Grid.Row="2"
                    Margin="0,16,0,0"
