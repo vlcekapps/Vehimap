@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -69,5 +70,74 @@ public sealed class LegacyTimelineServiceTests
         Assert.True(timeline.TakeWhile(item => item.IsFuture).SequenceEqual(timeline.Where(item => item.IsFuture).OrderBy(item => item.Date)));
         Assert.Equal("05.04.2026", timeline.First(item => item.Kind == "custom").DateText);
         Assert.Equal("Do 14 dnů", timeline.First(item => item.Kind == "maintenance").Status);
+    }
+
+    [Fact]
+    public void BuildVehicleTimeline_uses_localized_domain_messages()
+    {
+        var today = new DateOnly(2026, 4, 1);
+        var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+        var service = new LegacyTimelineService(localizer);
+        var dataSet = new VehimapDataSet
+        {
+            Settings =
+            {
+                Sections =
+                {
+                    ["notifications"] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        ["technical_reminder_days"] = "31",
+                        ["maintenance_reminder_days"] = "31",
+                        ["maintenance_reminder_km"] = "1000"
+                    }
+                }
+            },
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Octavia", "Cars", "", "Skoda Octavia", "1AB2345", "2020", "110", "", "03/2026", "", "")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "10.03.2026", "", "12000", "100", "")
+            ],
+            FuelEntries =
+            [
+                new FuelEntry("fuel_1", "veh_1", "28.03.2026", "12450", "40", "300", true, "Diesel", "")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_1", "veh_1", "", "", "", "", "04/2026", "", VehicleRecordAttachmentMode.External, "", "")
+            ],
+            MaintenancePlans =
+            [
+                new MaintenancePlan("plan_1", "veh_1", "", "13000", "12", "15.04.2025", "10000", true, "")
+            ]
+        };
+
+        var timeline = service.BuildVehicleTimeline(dataSet, "veh_1", today);
+
+        var technical = timeline.First(item => item.Kind == "technical");
+        Assert.Equal("Technical inspection", technical.KindLabel);
+        Assert.Equal("Next technical inspection", technical.Title);
+        Assert.Equal("Overdue", technical.Status);
+
+        var maintenance = timeline.First(item => item.Kind == "maintenance");
+        Assert.Equal("Maintenance plan", maintenance.KindLabel);
+        Assert.Equal("Service task", maintenance.Title);
+        Assert.Equal("15.04.2026 | 23000 km", maintenance.Detail);
+        Assert.Equal("In 14 days", maintenance.Status);
+
+        var record = timeline.First(item => item.Kind == "record");
+        Assert.Equal("Document", record.KindLabel);
+        Assert.Equal("Document: Untitled", record.Title);
+
+        var history = timeline.First(item => item.Kind == "history");
+        Assert.Equal("History", history.KindLabel);
+        Assert.Equal("History", history.Title);
+
+        var fuel = timeline.First(item => item.Kind == "fuel");
+        Assert.Equal("Fuel", fuel.KindLabel);
+        Assert.Equal("Fuel", fuel.Title);
+        Assert.Equal("CZK 300.00", fuel.Status);
     }
 }

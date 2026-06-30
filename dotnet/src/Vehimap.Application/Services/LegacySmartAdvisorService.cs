@@ -25,6 +25,11 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
     private const string TimelineStatusWithin = "Do ";
     private const string TimelineStatusOverLimit = "Po limitu";
     private const string TimelineStatusMissing = "Chyb\u00ED";
+    private const string TimelineStatusOverdueEn = "Overdue";
+    private const string TimelineStatusTodayEn = "Due today";
+    private const string TimelineStatusWithinEn = "In ";
+    private const string TimelineStatusOverLimitEn = "Over distance limit";
+    private const string TimelineStatusMissingEn = "missing";
 
     private readonly ITimelineService _timelineService;
     private readonly IFuelAnalysisService _fuelAnalysisService;
@@ -234,15 +239,21 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
 
     private static SmartAdvisorPriority BuildTimelinePriority(string status)
     {
-        if (status.Contains(TimelineStatusOverdue, StringComparison.CurrentCultureIgnoreCase))
+        if (ContainsAny(status, TimelineStatusOverdue, TimelineStatusOverdueEn))
         {
             return SmartAdvisorPriority.Critical;
         }
 
-        if (status.Contains(TimelineStatusToday, StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains(TimelineStatusWithin, StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains(TimelineStatusOverLimit, StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains(TimelineStatusMissing, StringComparison.CurrentCultureIgnoreCase))
+        if (ContainsAny(
+            status,
+            TimelineStatusToday,
+            TimelineStatusWithin,
+            TimelineStatusOverLimit,
+            TimelineStatusMissing,
+            TimelineStatusTodayEn,
+            TimelineStatusWithinEn,
+            TimelineStatusOverLimitEn,
+            TimelineStatusMissingEn))
         {
             return SmartAdvisorPriority.Warning;
         }
@@ -314,6 +325,19 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
         foreach (var expectedValue in expectedValues)
         {
             if (string.Equals(value, expectedValue, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool ContainsAny(string value, params string[] expectedValues)
+    {
+        foreach (var expectedValue in expectedValues)
+        {
+            if (value.Contains(expectedValue, StringComparison.CurrentCultureIgnoreCase))
             {
                 return true;
             }

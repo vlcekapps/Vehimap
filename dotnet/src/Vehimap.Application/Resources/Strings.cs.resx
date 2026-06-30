@@ -982,6 +982,33 @@
   <data name="OverdueOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, SPZ, termín nebo položka...</value></data>
   <data name="OverdueOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit přehled propadlých termínů sestupně</value></data>
   <data name="OverdueOverviewWorkspace.SortName" xml:space="preserve"><value>Řazení přehledu propadlých termínů</value></data>
+  <data name="Timeline.Detail.DateAndOdometer" xml:space="preserve"><value>{0} | {1}</value></data>
+  <data name="Timeline.Kind.Fuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="Timeline.Kind.GreenCard" xml:space="preserve"><value>Zelená karta</value></data>
+  <data name="Timeline.Kind.History" xml:space="preserve"><value>Historie</value></data>
+  <data name="Timeline.Kind.Maintenance" xml:space="preserve"><value>Plán údržby</value></data>
+  <data name="Timeline.Kind.Record" xml:space="preserve"><value>Doklad</value></data>
+  <data name="Timeline.Kind.Reminder" xml:space="preserve"><value>Připomínka</value></data>
+  <data name="Timeline.Kind.TechnicalInspection" xml:space="preserve"><value>Technická kontrola</value></data>
+  <data name="Timeline.Status.DaysLeft" xml:space="preserve"><value>Do {0} dnů</value></data>
+  <data name="Timeline.Status.MissingCurrentOdometer" xml:space="preserve"><value>Chybí aktuální tachometr</value></data>
+  <data name="Timeline.Status.MissingOdometerForCalculation" xml:space="preserve"><value>Chybí tachometr pro výpočet</value></data>
+  <data name="Timeline.Status.NoAlert" xml:space="preserve"><value>Bez upozornění</value></data>
+  <data name="Timeline.Status.OverDistanceLimitKm" xml:space="preserve"><value>Po limitu o {0} km</value></data>
+  <data name="Timeline.Status.Overdue" xml:space="preserve"><value>Po termínu</value></data>
+  <data name="Timeline.Status.Today" xml:space="preserve"><value>Dnes</value></data>
+  <data name="Timeline.Status.WithinDistanceKm" xml:space="preserve"><value>Do {0} km</value></data>
+  <data name="Timeline.Title.Fuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="Timeline.Title.GreenCardEnd" xml:space="preserve"><value>Konec zelené karty</value></data>
+  <data name="Timeline.Title.NextTechnicalInspection" xml:space="preserve"><value>Příští TK</value></data>
+  <data name="Timeline.Title.Record" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Timeline.Value.Cost" xml:space="preserve"><value>{0} Kč</value></data>
+  <data name="Timeline.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
+  <data name="Timeline.Value.NoCost" xml:space="preserve"><value>-</value></data>
+  <data name="Timeline.Value.NoRepeat" xml:space="preserve"><value>Neopakovat</value></data>
+  <data name="Timeline.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
+  <data name="Timeline.Value.ServiceTask" xml:space="preserve"><value>Servisní úkon</value></data>
+  <data name="Timeline.Value.Untitled" xml:space="preserve"><value>Bez názvu</value></data>
   <data name="VehicleList.Category" xml:space="preserve"><value>Kategorie</value></data>
   <data name="VehicleList.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie vozidel</value></data>
   <data name="VehicleList.ClearFilters" xml:space="preserve"><value>Vymazat filtry</value></data>

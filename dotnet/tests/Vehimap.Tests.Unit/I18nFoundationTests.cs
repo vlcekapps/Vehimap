@@ -570,6 +570,21 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Domain_timeline_uses_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var service = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacyTimelineService.cs"));
+        var mainWindowViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
+
+        Assert.Contains("Timeline.Kind.TechnicalInspection", service);
+        Assert.Contains("Timeline.Status.Overdue", service);
+        Assert.Contains("Timeline.Value.Cost", service);
+        Assert.Contains("Timeline.Value.ServiceTask", service);
+        Assert.Contains("new LegacyTimelineService(DesktopLocalization.Localizer)", mainWindowViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

@@ -247,13 +247,14 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var meta = vehicle is null ? null : metaByVehicleId.GetValueOrDefault(vehicle.Id);
             var timeline = GetVehicleTimeline(timelineByVehicleId, plan.VehicleId);
             var timelineItem = FindTimelineItem(timeline, "maintenance", plan.Id);
+            var timelineStatus = FormatSearchableTimelineStatus(timelineItem?.Status);
             var title = ValueOrFallback(plan.Title, "Servisní úkon");
             var summary = JoinParts(
                 BuildMaintenanceInterval(plan),
                 ValueOrFallback(plan.LastServiceDate, string.Empty),
                 FormatOdometer(plan.LastServiceOdometer),
                 timelineItem?.Detail,
-                timelineItem?.Status,
+                timelineStatus,
                 plan.IsActive ? "Aktivní" : "Neaktivní",
                 ValueOrFallback(plan.Note, string.Empty));
             var searchTexts = BuildSearchTexts(
@@ -264,7 +265,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 plan.LastServiceDate,
                 plan.LastServiceOdometer,
                 timelineItem?.Detail,
-                timelineItem?.Status,
+                timelineStatus,
                 plan.IsActive ? "Aktivní" : "Neaktivní",
                 plan.Note);
 
@@ -345,7 +346,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             .. (includeTimelineStatus
                 ? timelineItems
                     .Where(IsVehicleStatusTimelineItem)
-                    .SelectMany(item => new string?[] { item.KindLabel, item.Title, item.Detail, item.Status })
+                    .SelectMany(item => new string?[] { item.KindLabel, item.Title, item.Detail, FormatSearchableTimelineStatus(item.Status) })
                 : [])
         ];
     }
@@ -356,7 +357,10 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             && string.Equals(item.EntryId, entryId, StringComparison.Ordinal));
 
     private static string FindTimelineStatus(IReadOnlyList<VehicleTimelineItem> timelineItems, string kind, string entryId) =>
-        FindTimelineItem(timelineItems, kind, entryId)?.Status ?? string.Empty;
+        FormatSearchableTimelineStatus(FindTimelineItem(timelineItems, kind, entryId)?.Status);
+
+    private static string FormatSearchableTimelineStatus(string? status) =>
+        IsAttentionStatus(status) ? status ?? string.Empty : string.Empty;
 
     private static string BuildVehicleAttentionStatusText(IReadOnlyList<VehicleTimelineItem> timelineItems)
     {
@@ -386,7 +390,8 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
 
     private static bool IsAttentionStatus(string? status) =>
         !string.IsNullOrWhiteSpace(status)
-        && !string.Equals(status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase);
+        && !string.Equals(status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase)
+        && !string.Equals(status, "No alert", StringComparison.CurrentCultureIgnoreCase);
 
     private static IReadOnlyList<string?> BuildSearchTexts(IReadOnlyList<string?> vehicleSearchTexts, params string?[] entrySearchTexts)
     {

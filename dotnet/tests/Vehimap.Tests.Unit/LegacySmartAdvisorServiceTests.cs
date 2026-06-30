@@ -175,7 +175,7 @@ public sealed class LegacySmartAdvisorServiceTests
     {
         var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
         var service = new LegacySmartAdvisorService(
-            new LegacyTimelineService(),
+            new LegacyTimelineService(localizer),
             new LegacyFuelAnalysisService(localizer),
             localizer);
         var dataSet = new VehimapDataSet
@@ -227,6 +227,37 @@ public sealed class LegacySmartAdvisorServiceTests
             && item.Title == "Cost per kilometer is not available"
             && item.ActionLabel == "Open vehicle costs"
             && item.Detail.Contains("Add usable odometer values", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void BuildSmartAdvisor_understands_localized_timeline_statuses()
+    {
+        var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+        var service = new LegacySmartAdvisorService(
+            new LegacyTimelineService(localizer),
+            new LegacyFuelAnalysisService(localizer),
+            localizer);
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            {
+                CreateVehicle("veh_1", "Milena", nextTk: "05/2026"),
+                CreateVehicle("veh_2", "Karosa", nextTk: "06/2026")
+            }
+        };
+
+        var summary = service.BuildSmartAdvisor(dataSet, [], null, new DateOnly(2026, 6, 15));
+
+        Assert.Contains(summary.Items, item =>
+            item.VehicleId == "veh_1"
+            && item.Priority == SmartAdvisorPriority.Critical
+            && item.Title == "Technical inspection: Next technical inspection"
+            && item.Summary.Contains("Overdue", StringComparison.Ordinal)
+            && item.ActionLabel == "Open vehicle");
+        Assert.Contains(summary.Items, item =>
+            item.VehicleId == "veh_2"
+            && item.Priority == SmartAdvisorPriority.Warning
+            && item.Summary.Contains("In ", StringComparison.Ordinal));
     }
 
     private static LegacySmartAdvisorService CreateService() =>

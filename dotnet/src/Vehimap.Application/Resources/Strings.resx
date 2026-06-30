@@ -982,6 +982,33 @@
   <data name="OverdueOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, license plate, due date or item...</value></data>
   <data name="OverdueOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Sort overdue due dates descending</value></data>
   <data name="OverdueOverviewWorkspace.SortName" xml:space="preserve"><value>Overdue due date sort order</value></data>
+  <data name="Timeline.Detail.DateAndOdometer" xml:space="preserve"><value>{0} | {1}</value></data>
+  <data name="Timeline.Kind.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="Timeline.Kind.GreenCard" xml:space="preserve"><value>Green card</value></data>
+  <data name="Timeline.Kind.History" xml:space="preserve"><value>History</value></data>
+  <data name="Timeline.Kind.Maintenance" xml:space="preserve"><value>Maintenance plan</value></data>
+  <data name="Timeline.Kind.Record" xml:space="preserve"><value>Document</value></data>
+  <data name="Timeline.Kind.Reminder" xml:space="preserve"><value>Reminder</value></data>
+  <data name="Timeline.Kind.TechnicalInspection" xml:space="preserve"><value>Technical inspection</value></data>
+  <data name="Timeline.Status.DaysLeft" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="Timeline.Status.MissingCurrentOdometer" xml:space="preserve"><value>Current odometer is missing</value></data>
+  <data name="Timeline.Status.MissingOdometerForCalculation" xml:space="preserve"><value>Odometer is missing for calculation</value></data>
+  <data name="Timeline.Status.NoAlert" xml:space="preserve"><value>No alert</value></data>
+  <data name="Timeline.Status.OverDistanceLimitKm" xml:space="preserve"><value>Over distance limit by {0} km</value></data>
+  <data name="Timeline.Status.Overdue" xml:space="preserve"><value>Overdue</value></data>
+  <data name="Timeline.Status.Today" xml:space="preserve"><value>Due today</value></data>
+  <data name="Timeline.Status.WithinDistanceKm" xml:space="preserve"><value>Within {0} km</value></data>
+  <data name="Timeline.Title.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="Timeline.Title.GreenCardEnd" xml:space="preserve"><value>Green card end</value></data>
+  <data name="Timeline.Title.NextTechnicalInspection" xml:space="preserve"><value>Next technical inspection</value></data>
+  <data name="Timeline.Title.Record" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Timeline.Value.Cost" xml:space="preserve"><value>CZK {0}</value></data>
+  <data name="Timeline.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
+  <data name="Timeline.Value.NoCost" xml:space="preserve"><value>-</value></data>
+  <data name="Timeline.Value.NoRepeat" xml:space="preserve"><value>Do not repeat</value></data>
+  <data name="Timeline.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
+  <data name="Timeline.Value.ServiceTask" xml:space="preserve"><value>Service task</value></data>
+  <data name="Timeline.Value.Untitled" xml:space="preserve"><value>Untitled</value></data>
   <data name="VehicleList.Category" xml:space="preserve"><value>Category</value></data>
   <data name="VehicleList.CategoryFilterName" xml:space="preserve"><value>Vehicle category filter</value></data>
   <data name="VehicleList.ClearFilters" xml:space="preserve"><value>Clear filters</value></data>

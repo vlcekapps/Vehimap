@@ -7,6 +7,18 @@ namespace Vehimap.Application.Services;
 
 public sealed class LegacyTimelineService : ITimelineService
 {
+    private readonly IAppLocalizer _localizer;
+
+    public LegacyTimelineService()
+        : this(CreateDefaultLocalizer())
+    {
+    }
+
+    public LegacyTimelineService(IAppLocalizer localizer)
+    {
+        _localizer = localizer;
+    }
+
     public IReadOnlyList<VehicleTimelineItem> BuildVehicleTimeline(VehimapDataSet dataSet, string vehicleId, DateOnly today)
     {
         var vehicle = dataSet.Vehicles.FirstOrDefault(item => item.Id == vehicleId);
@@ -27,14 +39,14 @@ public sealed class LegacyTimelineService : ITimelineService
 
             items.Add(new VehicleTimelineItem(
                 "history",
-                "Historie",
+                L("Timeline.Kind.History"),
                 vehicle.Id,
                 vehicle.Name,
                 vehicle.Plate,
                 vehicle.MakeModel,
                 date,
                 FormatEventDate(date),
-                ValueOrFallback(entry.EventType, "Historie"),
+                ValueOrFallback(entry.EventType, L("Timeline.Kind.History")),
                 JoinParts(FormatOdometerText(entry.Odometer), entry.Note),
                 FormatCostStatus(entry.Cost),
                 entry.Id,
@@ -51,14 +63,14 @@ public sealed class LegacyTimelineService : ITimelineService
 
             items.Add(new VehicleTimelineItem(
                 "fuel",
-                "Tankování",
+                L("Timeline.Kind.Fuel"),
                 vehicle.Id,
                 vehicle.Name,
                 vehicle.Plate,
                 vehicle.MakeModel,
                 date,
                 FormatEventDate(date),
-                "Tankování",
+                L("Timeline.Title.Fuel"),
                 JoinParts(FormatOdometerText(entry.Odometer), FormatFuelLiters(entry.Liters), entry.FuelType, entry.FuelDetail, entry.Station, entry.Note),
                 FormatCostStatus(entry.TotalCost),
                 entry.Id,
@@ -70,16 +82,16 @@ public sealed class LegacyTimelineService : ITimelineService
         {
             items.Add(new VehicleTimelineItem(
                 "technical",
-                "Technická kontrola",
+                L("Timeline.Kind.TechnicalInspection"),
                 vehicle.Id,
                 vehicle.Name,
                 vehicle.Plate,
                 vehicle.MakeModel,
                 technicalDate,
                 vehicle.NextTk,
-                "Příští TK",
+                L("Timeline.Title.NextTechnicalInspection"),
                 BuildVehicleDetail(vehicle),
-                BuildExpirationStatus(technicalDate, today, GetReminderDays(dataSet.Settings, "technical_reminder_days", 31)),
+                BuildExpirationStatusText(technicalDate, today, GetReminderDays(dataSet.Settings, "technical_reminder_days", 31)),
                 string.Empty,
                 string.Empty,
                 technicalDate >= today));
@@ -89,16 +101,16 @@ public sealed class LegacyTimelineService : ITimelineService
         {
             items.Add(new VehicleTimelineItem(
                 "green",
-                "Zelená karta",
+                L("Timeline.Kind.GreenCard"),
                 vehicle.Id,
                 vehicle.Name,
                 vehicle.Plate,
                 vehicle.MakeModel,
                 greenDate,
                 vehicle.GreenCardTo,
-                "Konec zelené karty",
+                L("Timeline.Title.GreenCardEnd"),
                 BuildVehicleDetail(vehicle),
-                BuildExpirationStatus(greenDate, today, GetReminderDays(dataSet.Settings, "green_card_reminder_days", 31)),
+                BuildExpirationStatusText(greenDate, today, GetReminderDays(dataSet.Settings, "green_card_reminder_days", 31)),
                 string.Empty,
                 string.Empty,
                 greenDate >= today));
@@ -113,16 +125,16 @@ public sealed class LegacyTimelineService : ITimelineService
 
             items.Add(new VehicleTimelineItem(
                 "custom",
-                "Připomínka",
+                L("Timeline.Kind.Reminder"),
                 vehicle.Id,
                 vehicle.Name,
                 vehicle.Plate,
                 vehicle.MakeModel,
                 dueDate,
                 FormatEventDate(dueDate),
-                ValueOrFallback(reminder.Title, "Připomínka"),
+                ValueOrFallback(reminder.Title, L("Timeline.Kind.Reminder")),
                 JoinParts(FormatReminderRepeatMode(reminder.RepeatMode), reminder.Note),
-                BuildExpirationStatus(dueDate, today, GetReminderDaysFromReminder(reminder)),
+                BuildExpirationStatusText(dueDate, today, GetReminderDaysFromReminder(reminder)),
                 reminder.Id,
                 reminder.Note,
                 dueDate >= today));
@@ -137,16 +149,16 @@ public sealed class LegacyTimelineService : ITimelineService
 
             items.Add(new VehicleTimelineItem(
                 "record",
-                "Doklad",
+                L("Timeline.Kind.Record"),
                 vehicle.Id,
                 vehicle.Name,
                 vehicle.Plate,
                 vehicle.MakeModel,
                 dueDate,
                 record.ValidTo,
-                $"{ValueOrFallback(record.RecordType, "Doklad")}: {ValueOrFallback(record.Title, "Bez názvu")}",
+                LF("Timeline.Title.Record", ValueOrFallback(record.RecordType, L("Timeline.Kind.Record")), ValueOrFallback(record.Title, L("Timeline.Value.Untitled"))),
                 JoinParts(record.Provider, record.Note),
-                BuildExpirationStatus(dueDate, today, 30),
+                BuildExpirationStatusText(dueDate, today, 30),
                 record.Id,
                 record.Note,
                 dueDate >= today));
@@ -154,21 +166,21 @@ public sealed class LegacyTimelineService : ITimelineService
 
         foreach (var plan in dataSet.MaintenancePlans.Where(item => item.VehicleId == vehicleId && item.IsActive))
         {
-            if (!TryBuildMaintenanceSchedule(plan, currentOdometerLookup.GetValueOrDefault(vehicleId), today, GetMaintenanceReminderDays(dataSet.Settings), GetMaintenanceReminderKm(dataSet.Settings), out var dueDate, out var nextServiceText, out var statusText))
+            if (!TryBuildMaintenanceScheduleLocalized(plan, currentOdometerLookup.GetValueOrDefault(vehicleId), today, GetMaintenanceReminderDays(dataSet.Settings), GetMaintenanceReminderKm(dataSet.Settings), out var dueDate, out var nextServiceText, out var statusText))
             {
                 continue;
             }
 
             items.Add(new VehicleTimelineItem(
                 "maintenance",
-                "Plán údržby",
+                L("Timeline.Kind.Maintenance"),
                 vehicle.Id,
                 vehicle.Name,
                 vehicle.Plate,
                 vehicle.MakeModel,
                 dueDate,
                 FormatEventDate(dueDate),
-                ValueOrFallback(plan.Title, "Servisní úkon"),
+                ValueOrFallback(plan.Title, L("Timeline.Value.ServiceTask")),
                 nextServiceText,
                 statusText,
                 plan.Id,
@@ -192,6 +204,47 @@ public sealed class LegacyTimelineService : ITimelineService
         int reminderKm,
         out DateOnly dueDate,
         out string nextServiceText,
+        out string statusText) =>
+        TryBuildMaintenanceScheduleCore(
+            plan,
+            currentOdometer,
+            today,
+            reminderDays,
+            reminderKm,
+            CreateDefaultLocalizer(),
+            out dueDate,
+            out nextServiceText,
+            out statusText);
+
+    private bool TryBuildMaintenanceScheduleLocalized(
+        MaintenancePlan plan,
+        int? currentOdometer,
+        DateOnly today,
+        int reminderDays,
+        int reminderKm,
+        out DateOnly dueDate,
+        out string nextServiceText,
+        out string statusText) =>
+        TryBuildMaintenanceScheduleCore(
+            plan,
+            currentOdometer,
+            today,
+            reminderDays,
+            reminderKm,
+            _localizer,
+            out dueDate,
+            out nextServiceText,
+            out statusText);
+
+    private static bool TryBuildMaintenanceScheduleCore(
+        MaintenancePlan plan,
+        int? currentOdometer,
+        DateOnly today,
+        int reminderDays,
+        int reminderKm,
+        IAppLocalizer localizer,
+        out DateOnly dueDate,
+        out string nextServiceText,
         out string statusText)
     {
         dueDate = default;
@@ -212,37 +265,39 @@ public sealed class LegacyTimelineService : ITimelineService
             if (VehimapValueParser.TryParseOdometer(plan.LastServiceOdometer, out var lastServiceOdometer))
             {
                 var nextOdometer = lastServiceOdometer + intervalKm;
-                nextOdometerText = $"{nextOdometer} km";
+                nextOdometerText = LF(localizer, "Timeline.Value.OdometerKm", nextOdometer);
                 if (currentOdometer.HasValue)
                 {
                     var remainingKm = nextOdometer - currentOdometer.Value;
                     if (remainingKm < 0)
                     {
-                        odometerStatus = $"Po limitu o {Math.Abs(remainingKm)} km";
+                        odometerStatus = LF(localizer, "Timeline.Status.OverDistanceLimitKm", Math.Abs(remainingKm));
                     }
                     else if (remainingKm <= reminderKm)
                     {
-                        odometerStatus = $"Do {remainingKm} km";
+                        odometerStatus = LF(localizer, "Timeline.Status.WithinDistanceKm", remainingKm);
                     }
                 }
                 else
                 {
-                    odometerStatus = "Chybí aktuální tachometr";
+                    odometerStatus = L(localizer, "Timeline.Status.MissingCurrentOdometer");
                 }
             }
             else
             {
-                odometerStatus = "Chybí tachometr pro výpočet";
+                odometerStatus = L(localizer, "Timeline.Status.MissingOdometerForCalculation");
             }
         }
 
-        nextServiceText = nextOdometerText is null ? FormatEventDate(dueDate) : $"{FormatEventDate(dueDate)} | {nextOdometerText}";
+        nextServiceText = nextOdometerText is null
+            ? FormatEventDate(dueDate)
+            : LF(localizer, "Timeline.Detail.DateAndOdometer", FormatEventDate(dueDate), nextOdometerText);
 
-        var dateStatus = BuildExpirationStatus(dueDate, today, reminderDays);
+        var dateStatus = BuildExpirationStatusCore(dueDate, today, reminderDays, localizer);
         statusText = JoinParts(dateStatus, odometerStatus);
         if (string.IsNullOrWhiteSpace(statusText))
         {
-            statusText = "Bez upozornění";
+            statusText = L(localizer, "Timeline.Status.NoAlert");
         }
 
         return true;
@@ -277,18 +332,26 @@ public sealed class LegacyTimelineService : ITimelineService
         return true;
     }
 
-    internal static string BuildExpirationStatus(DateOnly dueDate, DateOnly today, int reminderDays)
+    internal static string BuildExpirationStatus(DateOnly dueDate, DateOnly today, int reminderDays) =>
+        BuildExpirationStatusCore(dueDate, today, reminderDays, CreateDefaultLocalizer());
+
+    private string BuildExpirationStatusText(DateOnly dueDate, DateOnly today, int reminderDays) =>
+        BuildExpirationStatusCore(dueDate, today, reminderDays, _localizer);
+
+    private static string BuildExpirationStatusCore(DateOnly dueDate, DateOnly today, int reminderDays, IAppLocalizer localizer)
     {
         if (dueDate < today)
         {
-            return "Po termínu";
+            return L(localizer, "Timeline.Status.Overdue");
         }
 
         var cutoff = today.AddDays(reminderDays);
         if (dueDate <= cutoff)
         {
             var daysLeft = dueDate.DayNumber - today.DayNumber;
-            return daysLeft < 1 ? "Dnes" : $"Do {daysLeft} dnů";
+            return daysLeft < 1
+                ? L(localizer, "Timeline.Status.Today")
+                : LF(localizer, "Timeline.Status.DaysLeft", daysLeft);
         }
 
         return string.Empty;
@@ -350,39 +413,39 @@ public sealed class LegacyTimelineService : ITimelineService
 
     private static string FormatEventDate(DateOnly date) => date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 
-    private static string FormatCostStatus(string? value)
+    private string FormatCostStatus(string? value)
     {
         if (VehimapValueParser.TryParseMoney(value, out var money))
         {
-            return $"{money:0.00} Kč";
+            return LF("Timeline.Value.Cost", money.ToString("0.00", CultureInfo.InvariantCulture));
         }
 
-        return string.IsNullOrWhiteSpace(value) ? "-" : value;
+        return string.IsNullOrWhiteSpace(value) ? L("Timeline.Value.NoCost") : value;
     }
 
-    private static string FormatFuelLiters(string? liters)
+    private string FormatFuelLiters(string? liters)
     {
         if (string.IsNullOrWhiteSpace(liters))
         {
             return string.Empty;
         }
 
-        return liters.Contains('l', StringComparison.OrdinalIgnoreCase) ? liters : $"{liters} l";
+        return liters.Contains('l', StringComparison.OrdinalIgnoreCase) ? liters : LF("Timeline.Value.Liters", liters.Trim());
     }
 
-    private static string FormatOdometerText(string? odometer)
+    private string FormatOdometerText(string? odometer)
     {
         if (!VehimapValueParser.TryParseOdometer(odometer, out var parsed))
         {
             return string.Empty;
         }
 
-        return $"{parsed} km";
+        return LF("Timeline.Value.OdometerKm", parsed);
     }
 
-    private static string FormatReminderRepeatMode(string? repeatMode)
+    private string FormatReminderRepeatMode(string? repeatMode)
     {
-        return string.IsNullOrWhiteSpace(repeatMode) ? "Neopakovat" : repeatMode;
+        return string.IsNullOrWhiteSpace(repeatMode) ? L("Timeline.Value.NoRepeat") : repeatMode;
     }
 
     private static string JoinParts(params string?[] parts)
@@ -392,4 +455,15 @@ public sealed class LegacyTimelineService : ITimelineService
 
     private static string ValueOrFallback(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;
+
+    private static IAppLocalizer CreateDefaultLocalizer() =>
+        new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+
+    private static string L(IAppLocalizer localizer, string key) => localizer.GetString(key);
+
+    private static string LF(IAppLocalizer localizer, string key, params object?[] args) => localizer.Format(key, args);
 }

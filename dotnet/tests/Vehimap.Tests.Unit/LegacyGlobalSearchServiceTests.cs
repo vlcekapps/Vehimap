@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
@@ -64,6 +65,29 @@ public sealed class LegacyGlobalSearchServiceTests
         Assert.Contains(results, item => item.EntityKind == "Připomínka" && item.EntityId == "rem_1");
         Assert.DoesNotContain(results, item => item.EntityKind == "Historie" && item.EntityId == "hist_1");
         Assert.DoesNotContain(results, item => item.EntityKind == "Tankování" && item.EntityId == "fuel_1");
+    }
+
+    [Fact]
+    public void Search_should_ignore_localized_neutral_timeline_status()
+    {
+        var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+        var service = new LegacyGlobalSearchService(new StubAttachmentService(), new LegacyTimelineService(localizer));
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Cars", "", "Skoda 120", "", "1980", "37", "", "", "", "")
+            ],
+            MaintenancePlans =
+            [
+                new MaintenancePlan("mnt_1", "veh_1", "Oil service", "", "12", today.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture), "", true, "")
+            ]
+        };
+
+        var results = service.Search(DataRoot, dataSet, "No alert");
+
+        Assert.Empty(results);
     }
 
     [Fact]
