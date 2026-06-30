@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -14,6 +15,10 @@ public abstract class WorkspaceViewModelBase : ObservableObject, IDisposable
     protected MainWindowViewModel Root { get; }
 
     internal bool HasPendingEdits => Root.HasPendingEdits;
+
+    protected static string L(string key) => DesktopLocalization.Localizer.GetString(key);
+
+    protected static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
 
     public event Action<DesktopFocusTarget>? FocusRequested
     {

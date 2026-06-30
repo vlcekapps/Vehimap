@@ -45,7 +45,7 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     private string historyPanelHeading = "Detail historie";
 
     [ObservableProperty]
-    private string historyEditorHeading = "Nový historický záznam";
+    private string historyEditorHeading = L("HistoryEditor.NewTitle");
 
     [ObservableProperty]
     private bool isEditingHistory;
@@ -62,11 +62,11 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string historyEditorOdometer = string.Empty;
 
-    public string HistoryEditorOdometerLabel => $"Tachometr ({Root.CurrentDistanceUnitLabel})";
+    public string HistoryEditorOdometerLabel => LF("HistoryEditor.OdometerLabel", Root.CurrentDistanceUnitLabel);
 
-    public string HistoryEditorOdometerName => $"Tachometr historického záznamu v {Root.CurrentDistanceUnitLabel}";
+    public string HistoryEditorOdometerName => LF("HistoryEditor.OdometerName", Root.CurrentDistanceUnitLabel);
 
-    public string HistoryEditorOdometerHelp => $"Zadejte stav tachometru v {Root.CurrentDistanceUnitLabel}. Vehimap hodnotu uloží interně v kilometrech.";
+    public string HistoryEditorOdometerHelp => LF("HistoryEditor.OdometerHelp", Root.CurrentDistanceUnitLabel);
 
     [ObservableProperty]
     private string historyEditorCost = string.Empty;
@@ -153,8 +153,8 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
         if (value)
         {
             HistoryEditorHeading = Root.GetEditingHistoryId() is null
-                ? "Nový historický záznam"
-                : "Upravit historický záznam";
+                ? L("HistoryEditor.NewTitle")
+                : L("HistoryEditor.EditTitle");
             NotifyUnitMetadataChanged();
         }
 

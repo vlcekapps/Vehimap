@@ -9,12 +9,17 @@ namespace Vehimap.Desktop.ViewModels.Workspaces;
 
 public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBase
 {
-    private const string CustomMaintenanceTemplateLabel = "Vlastní položka";
+    private static string CustomMaintenanceTemplateLabel => L("MaintenanceEditor.CustomTemplate");
     private bool _suppressMaintenanceTemplateApply;
 
     public MaintenanceWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
     {
+        MaintenanceTemplateOptions =
+        [
+            CustomMaintenanceTemplateLabel,
+            .. VehicleStarterBundleService.GetMaintenanceTemplateCatalog().Select(VehicleStarterBundleService.BuildMaintenanceTemplateDisplayName)
+        ];
     }
 
     public string WindowTitle => Root.MaintenanceWindowTitle;
@@ -22,11 +27,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     public ObservableCollection<VehicleMaintenanceItemViewModel> VisibleMaintenanceItems { get; } = [];
     public bool CanOpenMaintenanceRecommendations => Root.CanOpenMaintenanceRecommendations;
     public bool CanCompleteSelectedMaintenance => Root.CanCompleteSelectedMaintenance;
-    public IReadOnlyList<string> MaintenanceTemplateOptions { get; } =
-    [
-        CustomMaintenanceTemplateLabel,
-        .. VehicleStarterBundleService.GetMaintenanceTemplateCatalog().Select(VehicleStarterBundleService.BuildMaintenanceTemplateDisplayName)
-    ];
+    public IReadOnlyList<string> MaintenanceTemplateOptions { get; }
 
     public event EventHandler? MaintenanceTemplatesRequested;
 
@@ -61,7 +62,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     private string maintenancePanelHeading = "Detail údržby";
 
     [ObservableProperty]
-    private string maintenanceEditorHeading = "Nový servisní plán";
+    private string maintenanceEditorHeading = L("MaintenanceEditor.NewTitle");
 
     [ObservableProperty]
     private bool isEditingMaintenance;
@@ -78,11 +79,11 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     [ObservableProperty]
     private string maintenanceEditorIntervalKm = string.Empty;
 
-    public string MaintenanceEditorIntervalDistanceLabel => $"Interval vzdálenosti ({Root.CurrentDistanceUnitLabel})";
+    public string MaintenanceEditorIntervalDistanceLabel => LF("MaintenanceEditor.IntervalDistanceLabel", Root.CurrentDistanceUnitLabel);
 
-    public string MaintenanceEditorIntervalDistanceName => $"Interval údržby v {Root.CurrentDistanceUnitLabel}";
+    public string MaintenanceEditorIntervalDistanceName => LF("MaintenanceEditor.IntervalDistanceName", Root.CurrentDistanceUnitLabel);
 
-    public string MaintenanceEditorIntervalDistanceHelp => $"Zadejte vzdálenostní interval v {Root.CurrentDistanceUnitLabel}. Vehimap hodnotu uloží interně v kilometrech.";
+    public string MaintenanceEditorIntervalDistanceHelp => LF("MaintenanceEditor.IntervalDistanceHelp", Root.CurrentDistanceUnitLabel);
 
     [ObservableProperty]
     private string maintenanceEditorIntervalMonths = string.Empty;
@@ -93,11 +94,11 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     [ObservableProperty]
     private string maintenanceEditorLastServiceOdometer = string.Empty;
 
-    public string MaintenanceEditorLastServiceOdometerLabel => $"Poslední servis - tachometr ({Root.CurrentDistanceUnitLabel})";
+    public string MaintenanceEditorLastServiceOdometerLabel => LF("MaintenanceEditor.LastServiceOdometerLabel", Root.CurrentDistanceUnitLabel);
 
-    public string MaintenanceEditorLastServiceOdometerName => $"Tachometr při posledním servisu v {Root.CurrentDistanceUnitLabel}";
+    public string MaintenanceEditorLastServiceOdometerName => LF("MaintenanceEditor.LastServiceOdometerName", Root.CurrentDistanceUnitLabel);
 
-    public string MaintenanceEditorLastServiceOdometerHelp => $"Zadejte stav tachometru v {Root.CurrentDistanceUnitLabel}. Vehimap hodnotu uloží interně v kilometrech.";
+    public string MaintenanceEditorLastServiceOdometerHelp => LF("MaintenanceEditor.LastServiceOdometerHelp", Root.CurrentDistanceUnitLabel);
 
     [ObservableProperty]
     private bool maintenanceEditorIsActive = true;
@@ -273,8 +274,8 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         if (value)
         {
             MaintenanceEditorHeading = Root.GetEditingMaintenanceId() is null
-                ? "Nový servisní plán"
-                : "Upravit servisní plán";
+                ? L("MaintenanceEditor.NewTitle")
+                : L("MaintenanceEditor.EditTitle");
             NotifyUnitMetadataChanged();
         }
 

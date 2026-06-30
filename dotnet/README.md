@@ -11,7 +11,7 @@ Aktualni zamer:
 - cist legacy `TSV`, `INI`, starsi `.vehimapbak` a `data/attachments` pres `Vehimap.Storage.Legacy` jen pro migraci z 1.0.2 a import starsich zaloh; po uspesne migraci zive TSV/INI soubory z `data/` odlozit mimo runtime koren
 - release priorita je nejdrive stabilni Windows desktop pres Inno Setup instalator, potom Android, nasledne macOS a nakonec Linux
 - rada 2.0 zustava po zavedeni SQLite v delsi nightly stabilizaci; beta/stable se neplanuji, dokud storage gate a testerska vlna nebudou bez blockeru
-- lokalizacni zaklad se zavadi pred dalsimi velkymi funkcemi a pred Android UI; pilot uz pokryva nastaveni, O programu, editor vozidla, hlavni shell, hlavni menu, levy panel seznamu vozidel a nazvy pracovnich karet pres `.resx` zdroje
+- lokalizacni zaklad se zavadi pred dalsimi velkymi funkcemi a pred Android UI; pilot uz pokryva nastaveni, O programu, editor vozidla, hlavni shell, hlavni menu, levy panel seznamu vozidel, nazvy pracovnich karet a staticke povrchy editoru historie/tankovani/udrzby pres `.resx` zdroje
 - preference jazyka, oddelovacu cisel a jednotek vzdalenosti/objemu se ukladaji do nastaveni datove sady; internim ulozistem zustavaji invariantni hodnoty, UI a exporty je budou formatovat podle preferenci
 
 ## Struktura
@@ -36,6 +36,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - commit messages zustavaji vzdy anglicky
 - prekladatele mohou pro upravy `.resx` pouzit Local ResX Editor: https://apps.microsoft.com/detail/9pkht426fq1k
 - jazyk se v prvni fazi plne projevi po restartu aplikace
+- staticke texty v editorech historie, tankovani a planu udrzby jsou pilotne lokalizovane vcetne pristupnych nazvu; workflow statusy techto evidenci prijdou v dalsim passu
 - kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
 - vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry
 - tachometry v historii/tankovani, servisni intervaly, dokonceni udrzby a objem tankovani se v editorech zobrazuji a zadavaji ve zvolenych jednotkach, zatimco SQLite zustava v kanonickych km/l

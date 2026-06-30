@@ -943,9 +943,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("<ComboBox x:Name=\"FuelEditorFuelTypeBox\"", fuelEditorXaml);
         Assert.Contains("ItemsSource=\"{Binding FuelTypeOptions}\"", fuelEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorFuelDetailBox\"", fuelEditorXaml);
-        Assert.Contains("AutomationProperties.Name=\"Detail paliva\"", fuelEditorXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc FuelEditor.FuelDetailName}\"", fuelEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"FuelEditorStationBox\"", fuelEditorXaml);
-        Assert.Contains("AutomationProperties.Name=\"Místo tankování\"", fuelEditorXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc FuelEditor.StationName}\"", fuelEditorXaml);
         Assert.Contains("Grid.Column=\"1\" Spacing=\"6\"", fuelEditorXaml);
         Assert.Contains("x:Name=\"FuelEditorOdometerBox\"", fuelEditorXaml);
         Assert.Contains("x:Name=\"FuelEditorLitersBox\"", fuelEditorXaml);
@@ -1116,11 +1116,11 @@ public sealed class DesktopAccessibilityLabelTests
             Assert.Contains("AutomationProperties.LiveSetting=\"Polite\"", xaml);
             Assert.True(
                 xaml.Contains("Ctrl+S uloží", StringComparison.Ordinal)
-                    || xaml.Contains("AutomationProperties.HelpText=\"{i18n:Loc VehicleEditor.HelpText}\"", StringComparison.Ordinal),
+                    || xaml.Contains("AutomationProperties.HelpText=\"{i18n:Loc ", StringComparison.Ordinal),
                 $"{xamlFile} must expose Ctrl+S editor help text directly or through a localized resource.");
             Assert.True(
                 xaml.Contains("Escape nebo Zrušit zavře bez uložení", StringComparison.Ordinal)
-                    || xaml.Contains("AutomationProperties.HelpText=\"{i18n:Loc VehicleEditor.HelpText}\"", StringComparison.Ordinal),
+                    || xaml.Contains("AutomationProperties.HelpText=\"{i18n:Loc ", StringComparison.Ordinal),
                 $"{xamlFile} must expose Escape/Cancel editor help text directly or through a localized resource.");
             Assert.Contains($"AutomationProperties.AutomationId=\"{cancelButtonId}\"", xaml);
             Assert.Contains($"AutomationProperties.AutomationId=\"{saveButtonId}\"", xaml);
@@ -2087,13 +2087,13 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateHistoryCommand}\"", historyXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedHistoryCommand}\"", historyXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedHistoryCommand}\"", historyXaml);
-        Assert.Contains("Ctrl+S uloží", historyEditorXaml);
+        Assert.Contains("HistoryEditor.HelpText", historyEditorXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateFuelCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedFuelCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedFuelCommand}\"", fuelXaml);
-        Assert.Contains("Ctrl+S uloží", fuelEditorXaml);
+        Assert.Contains("FuelEditor.HelpText", fuelEditorXaml);
         Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedFuelConsumptionSegmentCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedFuelGroupSummaryCommand}\"", fuelXaml);
         Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedFuelAnalysisWarningCommand}\"", fuelXaml);
@@ -2111,7 +2111,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Gesture=\"Ctrl+U\" Command=\"{Binding EditSelectedMaintenanceCommand}\"", maintenanceXaml);
         Assert.Contains("Gesture=\"F2\" Command=\"{Binding EditSelectedMaintenanceCommand}\"", maintenanceXaml);
         Assert.Contains("Gesture=\"Ctrl+L\" Command=\"{Binding CompleteSelectedMaintenanceCommand}\"", maintenanceXaml);
-        Assert.Contains("Ctrl+S uloží", maintenanceEditorXaml);
+        Assert.Contains("MaintenanceEditor.HelpText", maintenanceEditorXaml);
 
         Assert.Contains("Gesture=\"Ctrl+F\" Command=\"{Binding FocusSearchCommand}\"", recordXaml);
         Assert.Contains("Gesture=\"Ctrl+N\" Command=\"{Binding CreateRecordCommand}\"", recordXaml);

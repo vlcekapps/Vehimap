@@ -64,7 +64,7 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     private string fuelPanelHeading = "Detail tankování";
 
     [ObservableProperty]
-    private string fuelEditorHeading = "Nové tankování";
+    private string fuelEditorHeading = L("FuelEditor.NewTitle");
 
     [ObservableProperty]
     private bool isEditingFuel;
@@ -87,11 +87,11 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string fuelEditorLiters = string.Empty;
 
-    public string FuelEditorVolumeLabel => $"Množství ({Root.CurrentVolumeUnitLabel})";
+    public string FuelEditorVolumeLabel => LF("FuelEditor.VolumeLabel", Root.CurrentVolumeUnitLabel);
 
-    public string FuelEditorVolumeName => $"Množství tankovaného paliva v {Root.CurrentVolumeUnitLabel}";
+    public string FuelEditorVolumeName => LF("FuelEditor.VolumeName", Root.CurrentVolumeUnitLabel);
 
-    public string FuelEditorVolumeHelp => $"Zadejte objem paliva v {Root.CurrentVolumeUnitLabel}. Vehimap hodnotu uloží interně v litrech.";
+    public string FuelEditorVolumeHelp => LF("FuelEditor.VolumeHelp", Root.CurrentVolumeUnitLabel);
 
     [ObservableProperty]
     private string fuelEditorTotalCost = string.Empty;
@@ -99,11 +99,11 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string fuelEditorOdometer = string.Empty;
 
-    public string FuelEditorOdometerLabel => $"Tachometr ({Root.CurrentDistanceUnitLabel})";
+    public string FuelEditorOdometerLabel => LF("FuelEditor.OdometerLabel", Root.CurrentDistanceUnitLabel);
 
-    public string FuelEditorOdometerName => $"Tachometr při tankování v {Root.CurrentDistanceUnitLabel}";
+    public string FuelEditorOdometerName => LF("FuelEditor.OdometerName", Root.CurrentDistanceUnitLabel);
 
-    public string FuelEditorOdometerHelp => $"Zadejte stav tachometru v {Root.CurrentDistanceUnitLabel}. Vehimap hodnotu uloží interně v kilometrech.";
+    public string FuelEditorOdometerHelp => LF("FuelEditor.OdometerHelp", Root.CurrentDistanceUnitLabel);
 
     [ObservableProperty]
     private bool fuelEditorFullTank = true;
@@ -268,7 +268,9 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (value)
         {
-            FuelEditorHeading = Root.GetEditingFuelId() is null ? "Nové tankování" : "Upravit tankování";
+            FuelEditorHeading = Root.GetEditingFuelId() is null
+                ? L("FuelEditor.NewTitle")
+                : L("FuelEditor.EditTitle");
             NotifyUnitMetadataChanged();
         }
 

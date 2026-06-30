@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
         x:Class="Vehimap.Desktop.Views.HistoryEditorWindow"
         x:DataType="vm:HistoryWorkspaceViewModel"
@@ -12,7 +13,7 @@
         Title="{Binding HistoryEditorHeading}"
         AutomationProperties.Name="{Binding HistoryEditorHeading}"
         AutomationProperties.AutomationId="HistoryEditorWindow"
-        AutomationProperties.HelpText="Samostatný editor historického záznamu. Ctrl+S uloží, Escape nebo Zrušit zavře bez uložení.">
+        AutomationProperties.HelpText="{i18n:Loc HistoryEditor.HelpText}">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
     <TextBlock FontSize="20"
                FontWeight="SemiBold"
@@ -32,29 +33,29 @@
                   Margin="0,16,0,0"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
-                  AutomationProperties.Name="Pole editoru historického záznamu"
+                  AutomationProperties.Name="{i18n:Loc HistoryEditor.FieldsName}"
                   AutomationProperties.AutomationId="HistoryEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-        <TextBlock FontWeight="SemiBold" Text="Datum" />
+        <TextBlock FontWeight="SemiBold" Text="{i18n:Loc HistoryEditor.DateLabel}" />
         <TextBox x:Name="HistoryEditorDateBox"
                  Grid.Row="1"
                  Margin="0,6,0,0"
                  Text="{Binding HistoryEditorDate}"
-                 PlaceholderText="Například 15.06.2026"
-                 AutomationProperties.Name="Datum historického záznamu"
-                 AutomationProperties.HelpText="Například 15.06.2026"
+                 PlaceholderText="{i18n:Loc HistoryEditor.DateExample}"
+                 AutomationProperties.Name="{i18n:Loc HistoryEditor.DateName}"
+                 AutomationProperties.HelpText="{i18n:Loc HistoryEditor.DateExample}"
                  AutomationProperties.AutomationId="HistoryEditorDateBox"
                  AutomationProperties.IsRequiredForForm="True" />
         <Grid Grid.Row="2"
               Margin="0,14,0,0"
               ColumnDefinitions="*,160">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Typ události" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc HistoryEditor.TypeLabel}" />
             <TextBox x:Name="HistoryEditorTypeBox"
                      Text="{Binding HistoryEditorType}"
-                     PlaceholderText="Například Servis"
-                     AutomationProperties.Name="Typ historické události"
-                     AutomationProperties.HelpText="Například Servis"
+                     PlaceholderText="{i18n:Loc HistoryEditor.TypeExample}"
+                     AutomationProperties.Name="{i18n:Loc HistoryEditor.TypeName}"
+                     AutomationProperties.HelpText="{i18n:Loc HistoryEditor.TypeExample}"
                      AutomationProperties.AutomationId="HistoryEditorTypeBox"
                      AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>
@@ -62,22 +63,22 @@
             <TextBlock FontWeight="SemiBold" Text="{Binding HistoryEditorOdometerLabel}" />
             <TextBox x:Name="HistoryEditorOdometerBox"
                      Text="{Binding HistoryEditorOdometer}"
-                     PlaceholderText="Například 123456"
+                     PlaceholderText="{i18n:Loc HistoryEditor.OdometerExample}"
                      AutomationProperties.Name="{Binding HistoryEditorOdometerName}"
                      AutomationProperties.HelpText="{Binding HistoryEditorOdometerHelp}"
                      AutomationProperties.AutomationId="HistoryEditorOdometerBox" />
           </StackPanel>
         </Grid>
-        <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="Cena" />
+        <TextBlock Grid.Row="3" Margin="0,14,0,0" FontWeight="SemiBold" Text="{i18n:Loc HistoryEditor.CostLabel}" />
         <TextBox x:Name="HistoryEditorCostBox"
                  Grid.Row="4"
                  Margin="0,6,0,0"
                  Text="{Binding HistoryEditorCost}"
-                 PlaceholderText="Například 2500"
-                 AutomationProperties.Name="Cena historického záznamu"
-                 AutomationProperties.HelpText="Například 2500"
+                 PlaceholderText="{i18n:Loc HistoryEditor.CostExample}"
+                 AutomationProperties.Name="{i18n:Loc HistoryEditor.CostName}"
+                 AutomationProperties.HelpText="{i18n:Loc HistoryEditor.CostExample}"
                  AutomationProperties.AutomationId="HistoryEditorCostBox" />
-        <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="Poznámka" />
+        <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="{i18n:Loc HistoryEditor.NoteLabel}" />
         <TextBox Grid.Row="6"
                  Margin="0,6,0,0"
                  Height="120"
@@ -85,7 +86,7 @@
                  TextWrapping="Wrap"
                  VerticalContentAlignment="Top"
                  Text="{Binding HistoryEditorNote}"
-                 AutomationProperties.Name="Poznámka k historickému záznamu"
+                 AutomationProperties.Name="{i18n:Loc HistoryEditor.NoteName}"
                  AutomationProperties.AutomationId="HistoryEditorNoteBox" />
       </Grid>
     </ScrollViewer>
@@ -96,15 +97,15 @@
                 Spacing="10">
       <Button x:Name="CancelHistoryButton"
               MinWidth="110"
-              Content="Zrušit"
+              Content="{i18n:Loc Common.Cancel}"
               Click="OnCancelClick"
-              AutomationProperties.Name="Zrušit úpravu historického záznamu"
+              AutomationProperties.Name="{i18n:Loc HistoryEditor.CancelName}"
               AutomationProperties.AutomationId="CancelHistoryButton" />
       <Button MinWidth="110"
-              Content="Uložit"
+              Content="{i18n:Loc Common.Save}"
               IsEnabled="{Binding IsEditingHistory}"
               Click="OnSaveClick"
-              AutomationProperties.Name="Uložit historický záznam"
+              AutomationProperties.Name="{i18n:Loc HistoryEditor.SaveName}"
               AutomationProperties.AutomationId="SaveHistoryButton" />
     </StackPanel>
   </Grid>

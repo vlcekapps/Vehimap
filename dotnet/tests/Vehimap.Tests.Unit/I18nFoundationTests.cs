@@ -188,6 +188,33 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Pilot_editor_dialogs_use_resource_localization_for_static_text()
+    {
+        var root = FindRepositoryRoot();
+        var historyEditor = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "HistoryEditorWindow.axaml"));
+        var fuelEditor = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "FuelEditorWindow.axaml"));
+        var maintenanceEditor = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "MaintenanceEditorWindow.axaml"));
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyEditor);
+        Assert.Contains("HistoryEditor.HelpText", historyEditor);
+        Assert.Contains("HistoryEditor.DateLabel", historyEditor);
+        Assert.Contains("HistoryEditor.CancelName", historyEditor);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), historyEditor);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", fuelEditor);
+        Assert.Contains("FuelEditor.HelpText", fuelEditor);
+        Assert.Contains("FuelEditor.FuelDetailName", fuelEditor);
+        Assert.Contains("FuelEditor.FullTank", fuelEditor);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), fuelEditor);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", maintenanceEditor);
+        Assert.Contains("MaintenanceEditor.HelpText", maintenanceEditor);
+        Assert.Contains("MaintenanceEditor.TemplateName", maintenanceEditor);
+        Assert.Contains("MaintenanceEditor.IsActive", maintenanceEditor);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceEditor);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

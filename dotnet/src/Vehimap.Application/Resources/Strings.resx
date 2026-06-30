@@ -40,6 +40,86 @@
   <data name="About.Version" xml:space="preserve"><value>Version</value></data>
   <data name="Common.Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="Common.Save" xml:space="preserve"><value>Save</value></data>
+  <data name="FuelEditor.CancelName" xml:space="preserve"><value>Cancel fuel entry editing</value></data>
+  <data name="FuelEditor.DateExample" xml:space="preserve"><value>For example 15.06.2026</value></data>
+  <data name="FuelEditor.DateLabel" xml:space="preserve"><value>Date</value></data>
+  <data name="FuelEditor.DateName" xml:space="preserve"><value>Fuel entry date</value></data>
+  <data name="FuelEditor.EditTitle" xml:space="preserve"><value>Edit fuel entry</value></data>
+  <data name="FuelEditor.FieldsName" xml:space="preserve"><value>Fuel editor fields</value></data>
+  <data name="FuelEditor.FuelDetailExample" xml:space="preserve"><value>For example Natural 95, V-Power or FuelSave</value></data>
+  <data name="FuelEditor.FuelDetailLabel" xml:space="preserve"><value>Fuel detail</value></data>
+  <data name="FuelEditor.FuelDetailName" xml:space="preserve"><value>Fuel detail</value></data>
+  <data name="FuelEditor.FuelTypeLabel" xml:space="preserve"><value>Fuel type</value></data>
+  <data name="FuelEditor.FuelTypeName" xml:space="preserve"><value>Fuel type</value></data>
+  <data name="FuelEditor.FullTank" xml:space="preserve"><value>Full tank</value></data>
+  <data name="FuelEditor.FullTankName" xml:space="preserve"><value>Fuel entry is a full tank</value></data>
+  <data name="FuelEditor.HelpText" xml:space="preserve"><value>Separate fuel entry editor. Ctrl+S saves, Escape or Cancel closes without saving.</value></data>
+  <data name="FuelEditor.NewTitle" xml:space="preserve"><value>New fuel entry</value></data>
+  <data name="FuelEditor.NoteLabel" xml:space="preserve"><value>Note</value></data>
+  <data name="FuelEditor.NoteName" xml:space="preserve"><value>Fuel entry note</value></data>
+  <data name="FuelEditor.OdometerHelp" xml:space="preserve"><value>Enter odometer in {0}. Vehimap stores the value internally in kilometers.</value></data>
+  <data name="FuelEditor.OdometerLabel" xml:space="preserve"><value>Odometer ({0})</value></data>
+  <data name="FuelEditor.OdometerName" xml:space="preserve"><value>Fuel entry odometer in {0}</value></data>
+  <data name="FuelEditor.SaveName" xml:space="preserve"><value>Save fuel entry</value></data>
+  <data name="FuelEditor.StationExample" xml:space="preserve"><value>For example Shell Brno Vídeňská</value></data>
+  <data name="FuelEditor.StationLabel" xml:space="preserve"><value>Fuel station</value></data>
+  <data name="FuelEditor.StationName" xml:space="preserve"><value>Fuel station</value></data>
+  <data name="FuelEditor.TotalCostLabel" xml:space="preserve"><value>Total cost</value></data>
+  <data name="FuelEditor.TotalCostName" xml:space="preserve"><value>Total fuel cost</value></data>
+  <data name="FuelEditor.VolumeHelp" xml:space="preserve"><value>Enter fuel volume in {0}. Vehimap stores the value internally in liters.</value></data>
+  <data name="FuelEditor.VolumeLabel" xml:space="preserve"><value>Volume ({0})</value></data>
+  <data name="FuelEditor.VolumeName" xml:space="preserve"><value>Fuel volume in {0}</value></data>
+  <data name="HistoryEditor.CancelName" xml:space="preserve"><value>Cancel history entry editing</value></data>
+  <data name="HistoryEditor.CostExample" xml:space="preserve"><value>For example 2500</value></data>
+  <data name="HistoryEditor.CostLabel" xml:space="preserve"><value>Cost</value></data>
+  <data name="HistoryEditor.CostName" xml:space="preserve"><value>History entry cost</value></data>
+  <data name="HistoryEditor.DateExample" xml:space="preserve"><value>For example 15.06.2026</value></data>
+  <data name="HistoryEditor.DateLabel" xml:space="preserve"><value>Date</value></data>
+  <data name="HistoryEditor.DateName" xml:space="preserve"><value>History entry date</value></data>
+  <data name="HistoryEditor.EditTitle" xml:space="preserve"><value>Edit history entry</value></data>
+  <data name="HistoryEditor.FieldsName" xml:space="preserve"><value>History editor fields</value></data>
+  <data name="HistoryEditor.HelpText" xml:space="preserve"><value>Separate history entry editor. Ctrl+S saves, Escape or Cancel closes without saving.</value></data>
+  <data name="HistoryEditor.NewTitle" xml:space="preserve"><value>New history entry</value></data>
+  <data name="HistoryEditor.NoteLabel" xml:space="preserve"><value>Note</value></data>
+  <data name="HistoryEditor.NoteName" xml:space="preserve"><value>History entry note</value></data>
+  <data name="HistoryEditor.OdometerHelp" xml:space="preserve"><value>Enter odometer in {0}. Vehimap stores the value internally in kilometers.</value></data>
+  <data name="HistoryEditor.OdometerExample" xml:space="preserve"><value>For example 123456</value></data>
+  <data name="HistoryEditor.OdometerLabel" xml:space="preserve"><value>Odometer ({0})</value></data>
+  <data name="HistoryEditor.OdometerName" xml:space="preserve"><value>History entry odometer in {0}</value></data>
+  <data name="HistoryEditor.SaveName" xml:space="preserve"><value>Save history entry</value></data>
+  <data name="HistoryEditor.TypeExample" xml:space="preserve"><value>For example Service</value></data>
+  <data name="HistoryEditor.TypeLabel" xml:space="preserve"><value>Event type</value></data>
+  <data name="HistoryEditor.TypeName" xml:space="preserve"><value>History event type</value></data>
+  <data name="MaintenanceEditor.CancelName" xml:space="preserve"><value>Cancel maintenance plan editing</value></data>
+  <data name="MaintenanceEditor.CustomTemplate" xml:space="preserve"><value>Custom item</value></data>
+  <data name="MaintenanceEditor.EditTitle" xml:space="preserve"><value>Edit maintenance plan</value></data>
+  <data name="MaintenanceEditor.FieldsName" xml:space="preserve"><value>Maintenance plan editor fields</value></data>
+  <data name="MaintenanceEditor.HelpText" xml:space="preserve"><value>Separate maintenance plan editor. Ctrl+S saves, Escape or Cancel closes without saving.</value></data>
+  <data name="MaintenanceEditor.IntervalDistanceHelp" xml:space="preserve"><value>Enter distance interval in {0}. Vehimap stores the value internally in kilometers.</value></data>
+  <data name="MaintenanceEditor.IntervalDistanceExample" xml:space="preserve"><value>For example 15000</value></data>
+  <data name="MaintenanceEditor.IntervalDistanceLabel" xml:space="preserve"><value>Distance interval ({0})</value></data>
+  <data name="MaintenanceEditor.IntervalDistanceName" xml:space="preserve"><value>Maintenance interval in {0}</value></data>
+  <data name="MaintenanceEditor.IntervalMonthsExample" xml:space="preserve"><value>For example 12</value></data>
+  <data name="MaintenanceEditor.IntervalMonthsLabel" xml:space="preserve"><value>Months interval</value></data>
+  <data name="MaintenanceEditor.IntervalMonthsName" xml:space="preserve"><value>Maintenance interval in months</value></data>
+  <data name="MaintenanceEditor.IsActive" xml:space="preserve"><value>Active maintenance plan</value></data>
+  <data name="MaintenanceEditor.IsActiveName" xml:space="preserve"><value>Maintenance plan is active</value></data>
+  <data name="MaintenanceEditor.LastServiceDateExample" xml:space="preserve"><value>For example 15.06.2026</value></data>
+  <data name="MaintenanceEditor.LastServiceDateLabel" xml:space="preserve"><value>Last service date</value></data>
+  <data name="MaintenanceEditor.LastServiceDateName" xml:space="preserve"><value>Last service date</value></data>
+  <data name="MaintenanceEditor.LastServiceOdometerHelp" xml:space="preserve"><value>Enter odometer in {0}. Vehimap stores the value internally in kilometers.</value></data>
+  <data name="MaintenanceEditor.LastServiceOdometerExample" xml:space="preserve"><value>For example 123456</value></data>
+  <data name="MaintenanceEditor.LastServiceOdometerLabel" xml:space="preserve"><value>Last service odometer ({0})</value></data>
+  <data name="MaintenanceEditor.LastServiceOdometerName" xml:space="preserve"><value>Last service odometer in {0}</value></data>
+  <data name="MaintenanceEditor.NewTitle" xml:space="preserve"><value>New maintenance plan</value></data>
+  <data name="MaintenanceEditor.NoteLabel" xml:space="preserve"><value>Note</value></data>
+  <data name="MaintenanceEditor.NoteName" xml:space="preserve"><value>Maintenance plan note</value></data>
+  <data name="MaintenanceEditor.SaveName" xml:space="preserve"><value>Save maintenance plan</value></data>
+  <data name="MaintenanceEditor.TemplateLabel" xml:space="preserve"><value>Task template</value></data>
+  <data name="MaintenanceEditor.TemplateName" xml:space="preserve"><value>Maintenance task template</value></data>
+  <data name="MaintenanceEditor.TitleExample" xml:space="preserve"><value>For example Engine oil</value></data>
+  <data name="MaintenanceEditor.TitleLabel" xml:space="preserve"><value>Task name</value></data>
+  <data name="MaintenanceEditor.TitleName" xml:space="preserve"><value>Maintenance task name</value></data>
   <data name="MainMenu.App" xml:space="preserve"><value>_Application</value></data>
   <data name="MainMenu.App.About" xml:space="preserve"><value>About</value></data>
   <data name="MainMenu.App.ActionsOnTray" xml:space="preserve"><value>Tray actions</value></data>
