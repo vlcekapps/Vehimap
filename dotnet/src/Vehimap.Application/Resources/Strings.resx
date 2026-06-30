@@ -666,6 +666,48 @@
   <data name="TimelineWorkspace.SearchName" xml:space="preserve"><value>Search in timeline</value></data>
   <data name="TimelineWorkspace.SearchPlaceholder" xml:space="preserve"><value>Item, status or note</value></data>
   <data name="TimelineWorkspace.ShowFilter" xml:space="preserve"><value>Show</value></data>
+  <data name="UpcomingOverviewWorkspace.ClearSearchName" xml:space="preserve"><value>Clear upcoming due date search</value></data>
+  <data name="UpcomingOverviewWorkspace.DetailHeading" xml:space="preserve"><value>Due date detail</value></data>
+  <data name="UpcomingOverviewWorkspace.FilterLabel" xml:space="preserve"><value>Filter</value></data>
+  <data name="UpcomingOverviewWorkspace.FilterName" xml:space="preserve"><value>Upcoming due date filter</value></data>
+  <data name="UpcomingOverviewWorkspace.Help" xml:space="preserve"><value>The due date overview shows upcoming technical inspections, green cards, reminders, documents and maintenance tasks with dates.</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeDataIssues" xml:space="preserve"><value>Show data issues too</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeDataIssuesName" xml:space="preserve"><value>Also show audit data issues in the due date overview</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeMissingGreenCards" xml:space="preserve"><value>Show vehicles without green card too</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeMissingGreenCardsName" xml:space="preserve"><value>Also show vehicles without a filled green card in the due date overview</value></data>
+  <data name="UpcomingOverviewWorkspace.ItemType" xml:space="preserve"><value>Timeline item</value></data>
+  <data name="UpcomingOverviewWorkspace.ListName" xml:space="preserve"><value>Upcoming due dates across vehicles</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenEvidenceName" xml:space="preserve"><value>Open the record for the selected upcoming due date</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenItem" xml:space="preserve"><value>Open item</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenItemName" xml:space="preserve"><value>Open selected upcoming due date</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenVehicle" xml:space="preserve"><value>Show vehicle</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenVehicleName" xml:space="preserve"><value>Show the vehicle for the selected upcoming due date</value></data>
+  <data name="UpcomingOverviewWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="UpcomingOverviewWorkspace.RefreshName" xml:space="preserve"><value>Refresh upcoming due dates</value></data>
+  <data name="UpcomingOverviewWorkspace.SearchHelp" xml:space="preserve"><value>Vehicle, license plate, due date or item</value></data>
+  <data name="UpcomingOverviewWorkspace.SearchName" xml:space="preserve"><value>Search upcoming due dates</value></data>
+  <data name="UpcomingOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, license plate, due date or item...</value></data>
+  <data name="UpcomingOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Sort upcoming due dates descending</value></data>
+  <data name="UpcomingOverviewWorkspace.SortName" xml:space="preserve"><value>Upcoming due date sort order</value></data>
+  <data name="OverdueOverviewWorkspace.ClearSearchName" xml:space="preserve"><value>Clear overdue due date search</value></data>
+  <data name="OverdueOverviewWorkspace.DetailHeading" xml:space="preserve"><value>Overdue due date detail</value></data>
+  <data name="OverdueOverviewWorkspace.FilterLabel" xml:space="preserve"><value>Filter</value></data>
+  <data name="OverdueOverviewWorkspace.FilterName" xml:space="preserve"><value>Overdue due date filter</value></data>
+  <data name="OverdueOverviewWorkspace.Help" xml:space="preserve"><value>Overdue due dates help you quickly review records that are already past their deadline and need attention.</value></data>
+  <data name="OverdueOverviewWorkspace.ItemType" xml:space="preserve"><value>Timeline item</value></data>
+  <data name="OverdueOverviewWorkspace.ListName" xml:space="preserve"><value>Overdue due dates across vehicles</value></data>
+  <data name="OverdueOverviewWorkspace.OpenEvidenceName" xml:space="preserve"><value>Open the record for the selected overdue due date</value></data>
+  <data name="OverdueOverviewWorkspace.OpenItem" xml:space="preserve"><value>Open item</value></data>
+  <data name="OverdueOverviewWorkspace.OpenItemName" xml:space="preserve"><value>Open selected overdue due date</value></data>
+  <data name="OverdueOverviewWorkspace.OpenVehicle" xml:space="preserve"><value>Show vehicle</value></data>
+  <data name="OverdueOverviewWorkspace.OpenVehicleName" xml:space="preserve"><value>Show the vehicle for the selected overdue due date</value></data>
+  <data name="OverdueOverviewWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="OverdueOverviewWorkspace.RefreshName" xml:space="preserve"><value>Refresh overdue due dates</value></data>
+  <data name="OverdueOverviewWorkspace.SearchHelp" xml:space="preserve"><value>Vehicle, license plate, due date or item</value></data>
+  <data name="OverdueOverviewWorkspace.SearchName" xml:space="preserve"><value>Search overdue due dates</value></data>
+  <data name="OverdueOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, license plate, due date or item...</value></data>
+  <data name="OverdueOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Sort overdue due dates descending</value></data>
+  <data name="OverdueOverviewWorkspace.SortName" xml:space="preserve"><value>Overdue due date sort order</value></data>
   <data name="VehicleList.Category" xml:space="preserve"><value>Category</value></data>
   <data name="VehicleList.CategoryFilterName" xml:space="preserve"><value>Vehicle category filter</value></data>
   <data name="VehicleList.ClearFilters" xml:space="preserve"><value>Clear filters</value></data>

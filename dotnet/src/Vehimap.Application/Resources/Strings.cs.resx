@@ -666,6 +666,48 @@
   <data name="TimelineWorkspace.SearchName" xml:space="preserve"><value>Hledání v časové ose</value></data>
   <data name="TimelineWorkspace.SearchPlaceholder" xml:space="preserve"><value>Položka, stav nebo poznámka</value></data>
   <data name="TimelineWorkspace.ShowFilter" xml:space="preserve"><value>Zobrazit</value></data>
+  <data name="UpcomingOverviewWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v přehledu blížících se termínů</value></data>
+  <data name="UpcomingOverviewWorkspace.DetailHeading" xml:space="preserve"><value>Detail termínu</value></data>
+  <data name="UpcomingOverviewWorkspace.FilterLabel" xml:space="preserve"><value>Filtrovat</value></data>
+  <data name="UpcomingOverviewWorkspace.FilterName" xml:space="preserve"><value>Filtr přehledu blížících se termínů</value></data>
+  <data name="UpcomingOverviewWorkspace.Help" xml:space="preserve"><value>Přehled termínů ukazuje všechny blížící se technické kontroly, zelené karty, připomínky, doklady a servisní úkoly s datem.</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeDataIssues" xml:space="preserve"><value>Zobrazit i datové nedostatky</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeDataIssuesName" xml:space="preserve"><value>Zobrazit v přehledu také datové nedostatky z auditu</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeMissingGreenCards" xml:space="preserve"><value>Zobrazit i vozidla bez zelené karty</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeMissingGreenCardsName" xml:space="preserve"><value>Zobrazit v přehledu také vozidla bez vyplněné zelené karty</value></data>
+  <data name="UpcomingOverviewWorkspace.ItemType" xml:space="preserve"><value>Položka časové osy</value></data>
+  <data name="UpcomingOverviewWorkspace.ListName" xml:space="preserve"><value>Přehled blížících se termínů napříč vozidly</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenEvidenceName" xml:space="preserve"><value>Otevřít evidenci vybraného blížícího se termínu</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenItem" xml:space="preserve"><value>Otevřít položku</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenItemName" xml:space="preserve"><value>Otevřít vybraný blížící se termín</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenVehicle" xml:space="preserve"><value>Zobrazit vozidlo</value></data>
+  <data name="UpcomingOverviewWorkspace.OpenVehicleName" xml:space="preserve"><value>Zobrazit vozidlo k vybranému blížícímu se termínu</value></data>
+  <data name="UpcomingOverviewWorkspace.Refresh" xml:space="preserve"><value>Obnovit</value></data>
+  <data name="UpcomingOverviewWorkspace.RefreshName" xml:space="preserve"><value>Obnovit přehled blížících se termínů</value></data>
+  <data name="UpcomingOverviewWorkspace.SearchHelp" xml:space="preserve"><value>Vozidlo, SPZ, termín nebo položka</value></data>
+  <data name="UpcomingOverviewWorkspace.SearchName" xml:space="preserve"><value>Hledání v přehledu blížících se termínů</value></data>
+  <data name="UpcomingOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, SPZ, termín nebo položka...</value></data>
+  <data name="UpcomingOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit přehled blížících se termínů sestupně</value></data>
+  <data name="UpcomingOverviewWorkspace.SortName" xml:space="preserve"><value>Řazení přehledu blížících se termínů</value></data>
+  <data name="OverdueOverviewWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v přehledu propadlých termínů</value></data>
+  <data name="OverdueOverviewWorkspace.DetailHeading" xml:space="preserve"><value>Detail propadlého termínu</value></data>
+  <data name="OverdueOverviewWorkspace.FilterLabel" xml:space="preserve"><value>Filtrovat</value></data>
+  <data name="OverdueOverviewWorkspace.FilterName" xml:space="preserve"><value>Filtr přehledu propadlých termínů</value></data>
+  <data name="OverdueOverviewWorkspace.Help" xml:space="preserve"><value>Propadlé termíny vám pomohou rychle projít všechny záznamy, které už jsou po termínu a vyžadují zásah.</value></data>
+  <data name="OverdueOverviewWorkspace.ItemType" xml:space="preserve"><value>Položka časové osy</value></data>
+  <data name="OverdueOverviewWorkspace.ListName" xml:space="preserve"><value>Přehled propadlých termínů napříč vozidly</value></data>
+  <data name="OverdueOverviewWorkspace.OpenEvidenceName" xml:space="preserve"><value>Otevřít evidenci vybraného propadlého termínu</value></data>
+  <data name="OverdueOverviewWorkspace.OpenItem" xml:space="preserve"><value>Otevřít položku</value></data>
+  <data name="OverdueOverviewWorkspace.OpenItemName" xml:space="preserve"><value>Otevřít vybraný propadlý termín</value></data>
+  <data name="OverdueOverviewWorkspace.OpenVehicle" xml:space="preserve"><value>Zobrazit vozidlo</value></data>
+  <data name="OverdueOverviewWorkspace.OpenVehicleName" xml:space="preserve"><value>Zobrazit vozidlo k vybranému propadlému termínu</value></data>
+  <data name="OverdueOverviewWorkspace.Refresh" xml:space="preserve"><value>Obnovit</value></data>
+  <data name="OverdueOverviewWorkspace.RefreshName" xml:space="preserve"><value>Obnovit přehled propadlých termínů</value></data>
+  <data name="OverdueOverviewWorkspace.SearchHelp" xml:space="preserve"><value>Vozidlo, SPZ, termín nebo položka</value></data>
+  <data name="OverdueOverviewWorkspace.SearchName" xml:space="preserve"><value>Hledání v přehledu propadlých termínů</value></data>
+  <data name="OverdueOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, SPZ, termín nebo položka...</value></data>
+  <data name="OverdueOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit přehled propadlých termínů sestupně</value></data>
+  <data name="OverdueOverviewWorkspace.SortName" xml:space="preserve"><value>Řazení přehledu propadlých termínů</value></data>
   <data name="VehicleList.Category" xml:space="preserve"><value>Kategorie</value></data>
   <data name="VehicleList.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie vozidel</value></data>
   <data name="VehicleList.ClearFilters" xml:space="preserve"><value>Vymazat filtry</value></data>
