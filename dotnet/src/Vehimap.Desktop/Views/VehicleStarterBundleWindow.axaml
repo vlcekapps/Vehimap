@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels"
         x:Class="Vehimap.Desktop.Views.VehicleStarterBundleWindow"
         x:DataType="vm:VehicleStarterBundleDialogViewModel"
@@ -42,7 +43,7 @@
                    SelectedItem="{Binding SelectedItem}"
                    AutomationProperties.Name="{Binding ItemsListName}"
                    AutomationProperties.AutomationId="BundleItemsListBox"
-                   AutomationProperties.HelpText="Šipkami vyberte položku. Mezerník přepne, zda se položka přidá. Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže.">
+                   AutomationProperties.HelpText="{i18n:Loc VehicleStarterBundle.ItemsHelpText}">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:VehicleStarterBundleItemEditorViewModel">
                 <Border Padding="10"
@@ -50,7 +51,7 @@
                         Background="#10203040"
                         CornerRadius="6"
                         AutomationProperties.Name="{Binding AccessibleLabel}"
-                        AutomationProperties.ItemType="Položka balíčku pro vozidlo">
+                        AutomationProperties.ItemType="{i18n:Loc VehicleStarterBundle.ItemType}">
                   <Grid ColumnDefinitions="Auto,*">
                     <CheckBox IsChecked="{Binding IsSelected}"
                               VerticalAlignment="Top"
@@ -68,12 +69,12 @@
 
           <StackPanel Grid.Row="2" Margin="0,12,0,0" Orientation="Horizontal" Spacing="10">
             <Button Command="{Binding SelectAllCommand}"
-                    Content="Vybrat vše"
-                    AutomationProperties.Name="Vybrat všechny položky balíčku"
+                    Content="{i18n:Loc VehicleStarterBundle.SelectAll}"
+                    AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.SelectAllName}"
                     AutomationProperties.AutomationId="BundleSelectAllButton" />
             <Button Command="{Binding ClearSelectionCommand}"
-                    Content="Zrušit výběr"
-                    AutomationProperties.Name="Zrušit výběr položek balíčku"
+                    Content="{i18n:Loc VehicleStarterBundle.ClearSelection}"
+                    AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.ClearSelectionName}"
                     AutomationProperties.AutomationId="BundleClearSelectionButton" />
           </StackPanel>
         </Grid>
@@ -82,13 +83,13 @@
       <Border Grid.Column="1" Margin="16,0,0,0" Padding="14" BorderBrush="#304050" BorderThickness="1" CornerRadius="8">
         <ScrollViewer VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
-                      AutomationProperties.Name="Detail položky balíčku"
+                      AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.DetailScrollName}"
                       AutomationProperties.AutomationId="BundleDetailScrollViewer">
           <StackPanel Spacing="12">
             <TextBlock FontSize="18"
                        FontWeight="SemiBold"
-                       Text="Detail vybrané položky"
-                       AutomationProperties.Name="Detail vybrané položky balíčku pro vozidlo"
+                       Text="{i18n:Loc VehicleStarterBundle.DetailHeading}"
+                       AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.DetailHeadingName}"
                        AutomationProperties.AutomationId="BundleDetailHeadingText"
                        AutomationProperties.HeadingLevel="2" />
             <TextBlock Opacity="0.78"
@@ -97,97 +98,97 @@
                        AutomationProperties.AutomationId="BundleDetailHintText" />
 
             <StackPanel IsVisible="{Binding SelectedItem.IsMaintenance}">
-              <TextBlock FontWeight="SemiBold" Text="Název servisního úkonu" />
+              <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.MaintenanceTitleLabel}" />
               <TextBox Text="{Binding SelectedItem.Title}"
-                       AutomationProperties.Name="Název servisního úkonu balíčku"
+                       AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.MaintenanceTitleName}"
                        AutomationProperties.AutomationId="BundleMaintenanceTitleBox" />
               <Grid Margin="0,12,0,0" ColumnDefinitions="*,*">
                 <StackPanel Margin="0,0,10,0" Spacing="6">
-                  <TextBlock FontWeight="SemiBold" Text="Interval km" />
+                  <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.MaintenanceIntervalKmLabel}" />
                   <TextBox Text="{Binding SelectedItem.IntervalKm}"
-                           AutomationProperties.Name="Interval údržby v kilometrech"
+                           AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.MaintenanceIntervalKmName}"
                            AutomationProperties.AutomationId="BundleMaintenanceIntervalKmBox" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="6">
-                  <TextBlock FontWeight="SemiBold" Text="Interval měsíců" />
+                  <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.MaintenanceIntervalMonthsLabel}" />
                   <TextBox Text="{Binding SelectedItem.IntervalMonths}"
-                           AutomationProperties.Name="Interval údržby v měsících"
+                           AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.MaintenanceIntervalMonthsName}"
                            AutomationProperties.AutomationId="BundleMaintenanceIntervalMonthsBox" />
                 </StackPanel>
               </Grid>
             </StackPanel>
 
             <StackPanel IsVisible="{Binding SelectedItem.IsRecord}">
-              <TextBlock FontWeight="SemiBold" Text="Typ dokladu" />
+              <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.RecordTypeLabel}" />
               <ComboBox ItemsSource="{Binding RecordTypeOptions}"
                         SelectedItem="{Binding SelectedItem.RecordType}"
-                        AutomationProperties.Name="Typ dokladu balíčku"
+                        AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.RecordTypeName}"
                         AutomationProperties.AutomationId="BundleRecordTypeBox" />
-              <TextBlock FontWeight="SemiBold" Text="Název dokladu" />
+              <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.RecordTitleLabel}" />
               <TextBox Text="{Binding SelectedItem.Title}"
-                       AutomationProperties.Name="Název dokladu balíčku"
+                       AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.RecordTitleName}"
                        AutomationProperties.AutomationId="BundleRecordTitleBox" />
-              <TextBlock FontWeight="SemiBold" Text="Poskytovatel" />
+              <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.RecordProviderLabel}" />
               <TextBox Text="{Binding SelectedItem.Provider}"
-                       AutomationProperties.Name="Poskytovatel dokladu balíčku"
+                       AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.RecordProviderName}"
                        AutomationProperties.AutomationId="BundleRecordProviderBox" />
               <Grid Margin="0,12,0,0" ColumnDefinitions="*,*,*">
                 <StackPanel Margin="0,0,10,0" Spacing="6">
-                  <TextBlock FontWeight="SemiBold" Text="Platnost od" />
+                  <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.RecordValidFromLabel}" />
                   <TextBox Text="{Binding SelectedItem.ValidFrom}"
-                           AutomationProperties.Name="Platnost dokladu od"
+                           AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.RecordValidFromName}"
                            AutomationProperties.AutomationId="BundleRecordValidFromBox" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="0,0,10,0" Spacing="6">
-                  <TextBlock FontWeight="SemiBold" Text="Platnost do" />
+                  <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.RecordValidToLabel}" />
                   <TextBox Text="{Binding SelectedItem.ValidTo}"
-                           AutomationProperties.Name="Platnost dokladu do"
+                           AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.RecordValidToName}"
                            AutomationProperties.AutomationId="BundleRecordValidToBox" />
                 </StackPanel>
                 <StackPanel Grid.Column="2" Spacing="6">
-                  <TextBlock FontWeight="SemiBold" Text="Cena" />
+                  <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.RecordPriceLabel}" />
                   <TextBox Text="{Binding SelectedItem.Price}"
-                           AutomationProperties.Name="Cena dokladu balíčku"
+                           AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.RecordPriceName}"
                            AutomationProperties.AutomationId="BundleRecordPriceBox" />
                 </StackPanel>
               </Grid>
             </StackPanel>
 
             <StackPanel IsVisible="{Binding SelectedItem.IsReminder}">
-              <TextBlock FontWeight="SemiBold" Text="Název připomínky" />
+              <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.ReminderTitleLabel}" />
               <TextBox Text="{Binding SelectedItem.Title}"
-                       AutomationProperties.Name="Název připomínky balíčku"
+                       AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.ReminderTitleName}"
                        AutomationProperties.AutomationId="BundleReminderTitleBox" />
               <Grid Margin="0,12,0,0" ColumnDefinitions="*,*,*">
                 <StackPanel Margin="0,0,10,0" Spacing="6">
-                  <TextBlock FontWeight="SemiBold" Text="Termín" />
+                  <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.ReminderDueDateLabel}" />
                   <TextBox Text="{Binding SelectedItem.DueDate}"
-                           AutomationProperties.Name="Termín připomínky balíčku"
+                           AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.ReminderDueDateName}"
                            AutomationProperties.AutomationId="BundleReminderDueDateBox" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="0,0,10,0" Spacing="6">
-                  <TextBlock FontWeight="SemiBold" Text="Upozornit dní předem" />
+                  <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.ReminderDaysLabel}" />
                   <TextBox Text="{Binding SelectedItem.ReminderDays}"
-                           AutomationProperties.Name="Počet dní před termínem"
+                           AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.ReminderDaysName}"
                            AutomationProperties.AutomationId="BundleReminderDaysBox" />
                 </StackPanel>
                 <StackPanel Grid.Column="2" Spacing="6">
-                  <TextBlock FontWeight="SemiBold" Text="Opakování" />
+                  <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.ReminderRepeatLabel}" />
                   <ComboBox ItemsSource="{Binding ReminderRepeatModeOptions}"
                             SelectedItem="{Binding SelectedItem.RepeatMode}"
-                            AutomationProperties.Name="Opakování připomínky balíčku"
+                            AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.ReminderRepeatName}"
                             AutomationProperties.AutomationId="BundleReminderRepeatModeBox" />
                 </StackPanel>
               </Grid>
             </StackPanel>
 
-            <TextBlock FontWeight="SemiBold" Text="Poznámka" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.NoteLabel}" />
             <TextBox Height="120"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
                      VerticalContentAlignment="Top"
                      Text="{Binding SelectedItem.Note}"
-                     AutomationProperties.Name="Poznámka položky balíčku"
+                     AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.NoteName}"
                      AutomationProperties.AutomationId="BundleItemNoteBox" />
           </StackPanel>
         </ScrollViewer>
@@ -197,14 +198,14 @@
     <StackPanel Grid.Row="3" Margin="0,18,0,0" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
       <Button x:Name="ApplyBundleButton"
               Click="OnApplyClick"
-              Content="Přidat vybrané"
+              Content="{i18n:Loc VehicleStarterBundle.Apply}"
               IsEnabled="{Binding CanApply}"
-              AutomationProperties.Name="Přidat vybrané položky balíčku"
+              AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.ApplyName}"
               AutomationProperties.AutomationId="ApplyBundleButton" />
       <Button x:Name="CancelBundleButton"
               Click="OnCancelClick"
-              Content="Zavřít"
-              AutomationProperties.Name="Zavřít balíček bez přidání"
+              Content="{i18n:Loc Common.Close}"
+              AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.CloseName}"
               AutomationProperties.AutomationId="CancelBundleButton" />
     </StackPanel>
   </Grid>

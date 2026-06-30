@@ -1398,6 +1398,64 @@ Stav: {5}</value></data>
   <data name="VehicleDetail.StarterBundleName" xml:space="preserve"><value>Otevřít balíček pro vybrané vozidlo</value></data>
   <data name="VehicleDetail.Status.BundleNoMissingItems" xml:space="preserve"><value>Balíček pro vozidlo už nemá žádné chybějící položky.</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>Nové vozidlo bylo uloženo. Balíček pro vozidlo už neměl žádné nové položky.</value></data>
+  <data name="VehicleStarterBundle.AccessibleLabel.Category" xml:space="preserve"><value>{0}, {1}: {2}</value></data>
+  <data name="VehicleStarterBundle.AccessibleLabel.Full" xml:space="preserve"><value>{0}, {1}, {2}: {3}</value></data>
+  <data name="VehicleStarterBundle.AccessibleLabel.Simple" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="VehicleStarterBundle.Apply" xml:space="preserve"><value>Přidat vybrané</value></data>
+  <data name="VehicleStarterBundle.ApplyName" xml:space="preserve"><value>Přidat vybrané položky balíčku</value></data>
+  <data name="VehicleStarterBundle.ClearSelection" xml:space="preserve"><value>Zrušit výběr</value></data>
+  <data name="VehicleStarterBundle.ClearSelectionName" xml:space="preserve"><value>Zrušit výběr položek balíčku</value></data>
+  <data name="VehicleStarterBundle.CloseName" xml:space="preserve"><value>Zavřít balíček bez přidání</value></data>
+  <data name="VehicleStarterBundle.DetailHeading" xml:space="preserve"><value>Detail vybrané položky</value></data>
+  <data name="VehicleStarterBundle.DetailHeadingName" xml:space="preserve"><value>Detail vybrané položky balíčku pro vozidlo</value></data>
+  <data name="VehicleStarterBundle.DetailHint" xml:space="preserve"><value>Vyberte položku vlevo a můžete upravit její obsah před přidáním.</value></data>
+  <data name="VehicleStarterBundle.DetailScrollName" xml:space="preserve"><value>Detail položky balíčku</value></data>
+  <data name="VehicleStarterBundle.EmptySelection" xml:space="preserve"><value>Není vybraná žádná položka.</value></data>
+  <data name="VehicleStarterBundle.HelpText" xml:space="preserve"><value>Dialog pro výběr servisních plánů, dokladů a připomínek pro vozidlo. Ctrl+S přidá vybrané položky, Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže a Escape zavře dialog.</value></data>
+  <data name="VehicleStarterBundle.ItemType" xml:space="preserve"><value>Položka balíčku pro vozidlo</value></data>
+  <data name="VehicleStarterBundle.ItemsHeading" xml:space="preserve"><value>Doporučené položky</value></data>
+  <data name="VehicleStarterBundle.ItemsHelpText" xml:space="preserve"><value>Šipkami vyberte položku. Mezerník přepne, zda se položka přidá. Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže.</value></data>
+  <data name="VehicleStarterBundle.ItemsListName" xml:space="preserve"><value>Seznam položek balíčku</value></data>
+  <data name="VehicleStarterBundle.MaintenanceDetailHint" xml:space="preserve"><value>Vyberte šablonu vlevo a můžete upravit její intervaly nebo poznámku před přidáním.</value></data>
+  <data name="VehicleStarterBundle.MaintenanceEmptySelection" xml:space="preserve"><value>Není vybraná žádná servisní šablona.</value></data>
+  <data name="VehicleStarterBundle.MaintenanceHelpText" xml:space="preserve"><value>Dialog pro výběr doporučených servisních plánů podle kategorie a servisního profilu vozidla. Ctrl+S přidá vybrané šablony, Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže a Escape zavře dialog.</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalKmLabel" xml:space="preserve"><value>Interval km</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalKmName" xml:space="preserve"><value>Interval údržby v kilometrech</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalMonthsLabel" xml:space="preserve"><value>Interval měsíců</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalMonthsName" xml:space="preserve"><value>Interval údržby v měsících</value></data>
+  <data name="VehicleStarterBundle.MaintenanceItemsHeading" xml:space="preserve"><value>Servisní šablony</value></data>
+  <data name="VehicleStarterBundle.MaintenanceItemsListName" xml:space="preserve"><value>Seznam doporučených servisních šablon</value></data>
+  <data name="VehicleStarterBundle.MaintenanceTitle" xml:space="preserve"><value>Doporučené servisní šablony</value></data>
+  <data name="VehicleStarterBundle.MaintenanceTitleLabel" xml:space="preserve"><value>Název servisního úkonu</value></data>
+  <data name="VehicleStarterBundle.MaintenanceTitleName" xml:space="preserve"><value>Název servisního úkonu balíčku</value></data>
+  <data name="VehicleStarterBundle.NoteLabel" xml:space="preserve"><value>Poznámka</value></data>
+  <data name="VehicleStarterBundle.NoteName" xml:space="preserve"><value>Poznámka položky balíčku</value></data>
+  <data name="VehicleStarterBundle.Profile.Empty" xml:space="preserve"><value>Bez doplňujícího profilu</value></data>
+  <data name="VehicleStarterBundle.RecordPriceLabel" xml:space="preserve"><value>Cena</value></data>
+  <data name="VehicleStarterBundle.RecordPriceName" xml:space="preserve"><value>Cena dokladu balíčku</value></data>
+  <data name="VehicleStarterBundle.RecordProviderLabel" xml:space="preserve"><value>Poskytovatel</value></data>
+  <data name="VehicleStarterBundle.RecordProviderName" xml:space="preserve"><value>Poskytovatel dokladu balíčku</value></data>
+  <data name="VehicleStarterBundle.RecordTitleLabel" xml:space="preserve"><value>Název dokladu</value></data>
+  <data name="VehicleStarterBundle.RecordTitleName" xml:space="preserve"><value>Název dokladu balíčku</value></data>
+  <data name="VehicleStarterBundle.RecordTypeLabel" xml:space="preserve"><value>Typ dokladu</value></data>
+  <data name="VehicleStarterBundle.RecordTypeName" xml:space="preserve"><value>Typ dokladu balíčku</value></data>
+  <data name="VehicleStarterBundle.RecordValidFromLabel" xml:space="preserve"><value>Platnost od</value></data>
+  <data name="VehicleStarterBundle.RecordValidFromName" xml:space="preserve"><value>Platnost dokladu od</value></data>
+  <data name="VehicleStarterBundle.RecordValidToLabel" xml:space="preserve"><value>Platnost do</value></data>
+  <data name="VehicleStarterBundle.RecordValidToName" xml:space="preserve"><value>Platnost dokladu do</value></data>
+  <data name="VehicleStarterBundle.ReminderDaysLabel" xml:space="preserve"><value>Upozornit dní předem</value></data>
+  <data name="VehicleStarterBundle.ReminderDaysName" xml:space="preserve"><value>Počet dní před termínem</value></data>
+  <data name="VehicleStarterBundle.ReminderDueDateLabel" xml:space="preserve"><value>Termín</value></data>
+  <data name="VehicleStarterBundle.ReminderDueDateName" xml:space="preserve"><value>Termín připomínky balíčku</value></data>
+  <data name="VehicleStarterBundle.ReminderRepeatLabel" xml:space="preserve"><value>Opakování</value></data>
+  <data name="VehicleStarterBundle.ReminderRepeatName" xml:space="preserve"><value>Opakování připomínky balíčku</value></data>
+  <data name="VehicleStarterBundle.ReminderTitleLabel" xml:space="preserve"><value>Název připomínky</value></data>
+  <data name="VehicleStarterBundle.ReminderTitleName" xml:space="preserve"><value>Název připomínky balíčku</value></data>
+  <data name="VehicleStarterBundle.SelectAll" xml:space="preserve"><value>Vybrat vše</value></data>
+  <data name="VehicleStarterBundle.SelectAllName" xml:space="preserve"><value>Vybrat všechny položky balíčku</value></data>
+  <data name="VehicleStarterBundle.Summary.MaintenanceOnly" xml:space="preserve"><value>Vybráno: {0} servisních šablon.</value></data>
+  <data name="VehicleStarterBundle.Summary.SectionCounts" xml:space="preserve"><value>Vybráno: {0} položek | Servis {1} | Doklady {2} | Připomínky {3}</value></data>
+  <data name="VehicleStarterBundle.Title" xml:space="preserve"><value>Balíček pro vozidlo</value></data>
   <data name="WorkspaceTabs.Audit" xml:space="preserve"><value>Audit</value></data>
   <data name="WorkspaceTabs.AuditName" xml:space="preserve"><value>Karta Audit</value></data>
   <data name="WorkspaceTabs.ContentHelp" xml:space="preserve"><value>Obsah se mění podle zvolené karty nahoře.</value></data>

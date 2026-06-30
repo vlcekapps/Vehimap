@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels;
@@ -52,12 +53,12 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
             var subcategory = Subcategory.Trim();
             if (!string.IsNullOrWhiteSpace(category) && !string.IsNullOrWhiteSpace(subcategory))
             {
-                return $"{SectionLabel}, {category}, {subcategory}: {Title}";
+                return LF("VehicleStarterBundle.AccessibleLabel.Full", SectionLabel, category, subcategory, Title);
             }
 
             return string.IsNullOrWhiteSpace(category)
-                ? $"{SectionLabel}: {Title}"
-                : $"{SectionLabel}, {category}: {Title}";
+                ? LF("VehicleStarterBundle.AccessibleLabel.Simple", SectionLabel, Title)
+                : LF("VehicleStarterBundle.AccessibleLabel.Category", SectionLabel, category, Title);
         }
     }
 
@@ -131,4 +132,6 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
             Category.Trim(),
             Subcategory.Trim());
     }
+
+    private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
 }

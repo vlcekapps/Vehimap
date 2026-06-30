@@ -1398,6 +1398,64 @@ Status: {5}</value></data>
   <data name="VehicleDetail.StarterBundleName" xml:space="preserve"><value>Open bundle for the selected vehicle</value></data>
   <data name="VehicleDetail.Status.BundleNoMissingItems" xml:space="preserve"><value>The vehicle bundle has no missing items.</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>New vehicle was saved. The vehicle bundle had no new items.</value></data>
+  <data name="VehicleStarterBundle.AccessibleLabel.Category" xml:space="preserve"><value>{0}, {1}: {2}</value></data>
+  <data name="VehicleStarterBundle.AccessibleLabel.Full" xml:space="preserve"><value>{0}, {1}, {2}: {3}</value></data>
+  <data name="VehicleStarterBundle.AccessibleLabel.Simple" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="VehicleStarterBundle.Apply" xml:space="preserve"><value>Add selected</value></data>
+  <data name="VehicleStarterBundle.ApplyName" xml:space="preserve"><value>Add selected bundle items</value></data>
+  <data name="VehicleStarterBundle.ClearSelection" xml:space="preserve"><value>Clear selection</value></data>
+  <data name="VehicleStarterBundle.ClearSelectionName" xml:space="preserve"><value>Clear selected bundle items</value></data>
+  <data name="VehicleStarterBundle.CloseName" xml:space="preserve"><value>Close bundle without adding items</value></data>
+  <data name="VehicleStarterBundle.DetailHeading" xml:space="preserve"><value>Selected item detail</value></data>
+  <data name="VehicleStarterBundle.DetailHeadingName" xml:space="preserve"><value>Selected vehicle bundle item detail</value></data>
+  <data name="VehicleStarterBundle.DetailHint" xml:space="preserve"><value>Select an item on the left and you can edit its contents before adding it.</value></data>
+  <data name="VehicleStarterBundle.DetailScrollName" xml:space="preserve"><value>Bundle item detail</value></data>
+  <data name="VehicleStarterBundle.EmptySelection" xml:space="preserve"><value>No item is selected.</value></data>
+  <data name="VehicleStarterBundle.HelpText" xml:space="preserve"><value>Dialog for choosing service plans, documents and reminders for the vehicle. Ctrl+S adds selected items, Ctrl+A selects all, Ctrl+Shift+A clears the selection and Escape closes the dialog.</value></data>
+  <data name="VehicleStarterBundle.ItemType" xml:space="preserve"><value>Vehicle bundle item</value></data>
+  <data name="VehicleStarterBundle.ItemsHeading" xml:space="preserve"><value>Recommended items</value></data>
+  <data name="VehicleStarterBundle.ItemsHelpText" xml:space="preserve"><value>Use arrow keys to choose an item. Space toggles whether the item will be added. Ctrl+A selects all, Ctrl+Shift+A clears the selection.</value></data>
+  <data name="VehicleStarterBundle.ItemsListName" xml:space="preserve"><value>Vehicle bundle item list</value></data>
+  <data name="VehicleStarterBundle.MaintenanceDetailHint" xml:space="preserve"><value>Select a template on the left and you can edit its intervals or note before adding it.</value></data>
+  <data name="VehicleStarterBundle.MaintenanceEmptySelection" xml:space="preserve"><value>No service template is selected.</value></data>
+  <data name="VehicleStarterBundle.MaintenanceHelpText" xml:space="preserve"><value>Dialog for choosing recommended service plans by vehicle category and service profile. Ctrl+S adds selected templates, Ctrl+A selects all, Ctrl+Shift+A clears the selection and Escape closes the dialog.</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalKmLabel" xml:space="preserve"><value>Distance interval (km)</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalKmName" xml:space="preserve"><value>Maintenance distance interval in kilometers</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalMonthsLabel" xml:space="preserve"><value>Months interval</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalMonthsName" xml:space="preserve"><value>Maintenance interval in months</value></data>
+  <data name="VehicleStarterBundle.MaintenanceItemsHeading" xml:space="preserve"><value>Service templates</value></data>
+  <data name="VehicleStarterBundle.MaintenanceItemsListName" xml:space="preserve"><value>Recommended service template list</value></data>
+  <data name="VehicleStarterBundle.MaintenanceTitle" xml:space="preserve"><value>Recommended service templates</value></data>
+  <data name="VehicleStarterBundle.MaintenanceTitleLabel" xml:space="preserve"><value>Service task name</value></data>
+  <data name="VehicleStarterBundle.MaintenanceTitleName" xml:space="preserve"><value>Bundle service task name</value></data>
+  <data name="VehicleStarterBundle.NoteLabel" xml:space="preserve"><value>Note</value></data>
+  <data name="VehicleStarterBundle.NoteName" xml:space="preserve"><value>Bundle item note</value></data>
+  <data name="VehicleStarterBundle.Profile.Empty" xml:space="preserve"><value>No additional profile</value></data>
+  <data name="VehicleStarterBundle.RecordPriceLabel" xml:space="preserve"><value>Price</value></data>
+  <data name="VehicleStarterBundle.RecordPriceName" xml:space="preserve"><value>Bundle document price</value></data>
+  <data name="VehicleStarterBundle.RecordProviderLabel" xml:space="preserve"><value>Provider</value></data>
+  <data name="VehicleStarterBundle.RecordProviderName" xml:space="preserve"><value>Bundle document provider</value></data>
+  <data name="VehicleStarterBundle.RecordTitleLabel" xml:space="preserve"><value>Document title</value></data>
+  <data name="VehicleStarterBundle.RecordTitleName" xml:space="preserve"><value>Bundle document title</value></data>
+  <data name="VehicleStarterBundle.RecordTypeLabel" xml:space="preserve"><value>Document type</value></data>
+  <data name="VehicleStarterBundle.RecordTypeName" xml:space="preserve"><value>Bundle document type</value></data>
+  <data name="VehicleStarterBundle.RecordValidFromLabel" xml:space="preserve"><value>Valid from</value></data>
+  <data name="VehicleStarterBundle.RecordValidFromName" xml:space="preserve"><value>Bundle document valid from</value></data>
+  <data name="VehicleStarterBundle.RecordValidToLabel" xml:space="preserve"><value>Valid to</value></data>
+  <data name="VehicleStarterBundle.RecordValidToName" xml:space="preserve"><value>Bundle document valid to</value></data>
+  <data name="VehicleStarterBundle.ReminderDaysLabel" xml:space="preserve"><value>Reminder days before due date</value></data>
+  <data name="VehicleStarterBundle.ReminderDaysName" xml:space="preserve"><value>Number of days before due date</value></data>
+  <data name="VehicleStarterBundle.ReminderDueDateLabel" xml:space="preserve"><value>Due date</value></data>
+  <data name="VehicleStarterBundle.ReminderDueDateName" xml:space="preserve"><value>Bundle reminder due date</value></data>
+  <data name="VehicleStarterBundle.ReminderRepeatLabel" xml:space="preserve"><value>Repeat</value></data>
+  <data name="VehicleStarterBundle.ReminderRepeatName" xml:space="preserve"><value>Bundle reminder repeat mode</value></data>
+  <data name="VehicleStarterBundle.ReminderTitleLabel" xml:space="preserve"><value>Reminder title</value></data>
+  <data name="VehicleStarterBundle.ReminderTitleName" xml:space="preserve"><value>Bundle reminder title</value></data>
+  <data name="VehicleStarterBundle.SelectAll" xml:space="preserve"><value>Select all</value></data>
+  <data name="VehicleStarterBundle.SelectAllName" xml:space="preserve"><value>Select all bundle items</value></data>
+  <data name="VehicleStarterBundle.Summary.MaintenanceOnly" xml:space="preserve"><value>Selected: {0} service templates.</value></data>
+  <data name="VehicleStarterBundle.Summary.SectionCounts" xml:space="preserve"><value>Selected: {0} items | Service {1} | Documents {2} | Reminders {3}</value></data>
+  <data name="VehicleStarterBundle.Title" xml:space="preserve"><value>Vehicle bundle</value></data>
   <data name="WorkspaceTabs.Audit" xml:space="preserve"><value>Audit</value></data>
   <data name="WorkspaceTabs.AuditName" xml:space="preserve"><value>Audit tab</value></data>
   <data name="WorkspaceTabs.ContentHelp" xml:space="preserve"><value>Content changes based on the selected tab above.</value></data>

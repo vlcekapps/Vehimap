@@ -5,6 +5,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels;
@@ -17,12 +18,12 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
     public VehicleStarterBundleDialogViewModel(VehicleStarterBundlePreview preview)
         : this(
             preview,
-            "Balíček pro vozidlo",
-            "Dialog pro výběr servisních plánů, dokladů a připomínek pro vozidlo. Ctrl+S přidá vybrané položky, Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže a Escape zavře dialog.",
-            "Doporučené položky",
-            "Seznam položek balíčku",
-            "Vyberte položku vlevo a můžete upravit její obsah před přidáním.",
-            "Není vybraná žádná položka.",
+            L("VehicleStarterBundle.Title"),
+            L("VehicleStarterBundle.HelpText"),
+            L("VehicleStarterBundle.ItemsHeading"),
+            L("VehicleStarterBundle.ItemsListName"),
+            L("VehicleStarterBundle.DetailHint"),
+            L("VehicleStarterBundle.EmptySelection"),
             showSectionCounts: true)
     {
     }
@@ -46,7 +47,7 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         _showSectionCounts = showSectionCounts;
         VehicleId = preview.VehicleId;
         VehicleName = preview.VehicleName;
-        ProfileLabel = string.IsNullOrWhiteSpace(preview.ProfileLabel) ? "Bez doplňujícího profilu" : preview.ProfileLabel;
+        ProfileLabel = string.IsNullOrWhiteSpace(preview.ProfileLabel) ? L("VehicleStarterBundle.Profile.Empty") : preview.ProfileLabel;
         Items = new ObservableCollection<VehicleStarterBundleItemEditorViewModel>(preview.Items.Select(item => new VehicleStarterBundleItemEditorViewModel(item)));
         Items.CollectionChanged += OnItemsCollectionChanged;
 
@@ -62,12 +63,12 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
     public static VehicleStarterBundleDialogViewModel CreateMaintenanceTemplates(VehicleStarterBundlePreview preview) =>
         new(
             preview,
-            "Doporučené servisní šablony",
-            "Dialog pro výběr doporučených servisních plánů podle kategorie a servisního profilu vozidla. Ctrl+S přidá vybrané šablony, Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže a Escape zavře dialog.",
-            "Servisní šablony",
-            "Seznam doporučených servisních šablon",
-            "Vyberte šablonu vlevo a můžete upravit její intervaly nebo poznámku před přidáním.",
-            "Není vybraná žádná servisní šablona.",
+            L("VehicleStarterBundle.MaintenanceTitle"),
+            L("VehicleStarterBundle.MaintenanceHelpText"),
+            L("VehicleStarterBundle.MaintenanceItemsHeading"),
+            L("VehicleStarterBundle.MaintenanceItemsListName"),
+            L("VehicleStarterBundle.MaintenanceDetailHint"),
+            L("VehicleStarterBundle.MaintenanceEmptySelection"),
             showSectionCounts: false);
 
     public string DialogTitle { get; }
@@ -170,8 +171,12 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         SummaryText = selectedItems.Count == 0
             ? _emptySelectionText
             : _showSectionCounts
-                ? $"Vybráno: {selectedItems.Count} položek | Servis {maintenanceCount} | Doklady {recordCount} | Připomínky {reminderCount}"
-                : $"Vybráno: {maintenanceCount} servisních šablon.";
+                ? LF("VehicleStarterBundle.Summary.SectionCounts", selectedItems.Count, maintenanceCount, recordCount, reminderCount)
+                : LF("VehicleStarterBundle.Summary.MaintenanceOnly", maintenanceCount);
         OnPropertyChanged(nameof(CanApply));
     }
+
+    private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
+
+    private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
 }

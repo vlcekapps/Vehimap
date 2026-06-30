@@ -44,6 +44,10 @@ public sealed class I18nFoundationTests
         Assert.Equal("Vyplňte doklad a podle potřeby vyberte přílohu.", czech.GetString("RecordEditor.Status.CreatePrompt"));
         Assert.Equal("Document attachment has been opened: invoice.pdf.", english.Format("RecordAttachmentAction.FileOpened", "invoice.pdf"));
         Assert.Equal("Příloha dokladu byla otevřena: faktura.pdf.", czech.Format("RecordAttachmentAction.FileOpened", "faktura.pdf"));
+        Assert.Equal("Vehicle bundle", english.GetString("VehicleStarterBundle.Title"));
+        Assert.Equal("Balíček pro vozidlo", czech.GetString("VehicleStarterBundle.Title"));
+        Assert.Equal("Selected: 3 items | Service 1 | Documents 1 | Reminders 1", english.Format("VehicleStarterBundle.Summary.SectionCounts", 3, 1, 1, 1));
+        Assert.Equal("Vybráno: 3 položek | Servis 1 | Doklady 1 | Připomínky 1", czech.Format("VehicleStarterBundle.Summary.SectionCounts", 3, 1, 1, 1));
         Assert.Equal("Search “oil” found 2 history entries.", english.Format("HistoryWorkspace.SearchSummary.Filtered", "oil", 2));
         Assert.Equal("Hledání „olej“ našlo 2 historických záznamů.", czech.Format("HistoryWorkspace.SearchSummary.Filtered", "olej", 2));
         Assert.Equal("2026-06, Service, odometer 12345, cost 2500, note no note", english.Format("HistoryItem.AccessibleLabel", "2026-06", "Service", "12345", "2500", "no note"));
@@ -231,6 +235,29 @@ public sealed class I18nFoundationTests
         Assert.DoesNotMatch(CzechDiacriticsRegex(), exportService);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), shellServiceBook);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), windowViewModel);
+    }
+
+    [Fact]
+    public void Vehicle_starter_bundle_dialog_uses_resource_localization_for_static_and_runtime_text()
+    {
+        var root = FindRepositoryRoot();
+        var bundleWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "VehicleStarterBundleWindow.axaml"));
+        var dialogViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleStarterBundleDialogViewModel.cs"));
+        var itemViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleStarterBundleItemEditorViewModel.cs"));
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", bundleWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc VehicleStarterBundle.ItemsHelpText}\"", bundleWindow);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc VehicleStarterBundle.ItemType}\"", bundleWindow);
+        Assert.Contains("Content=\"{i18n:Loc VehicleStarterBundle.Apply}\"", bundleWindow);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleStarterBundle.CloseName}\"", bundleWindow);
+        Assert.Contains("VehicleStarterBundle.Summary.SectionCounts", dialogViewModel);
+        Assert.Contains("VehicleStarterBundle.MaintenanceTitle", dialogViewModel);
+        Assert.Contains("VehicleStarterBundle.Profile.Empty", dialogViewModel);
+        Assert.Contains("VehicleStarterBundle.AccessibleLabel.Full", itemViewModel);
+        Assert.Contains("VehicleStarterBundle.AccessibleLabel.Category", itemViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), bundleWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), dialogViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), itemViewModel);
     }
 
     [Fact]
