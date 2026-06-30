@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.ReminderWorkspaceView"
@@ -14,27 +15,27 @@
   <Grid ColumnDefinitions="1.15*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding ReminderSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ReminderSummary}" AutomationProperties.AutomationId="ReminderSummaryText" />
     <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="0,16,0,0">
-      <TextBlock FontWeight="SemiBold" Text="Seznam připomínek vybraného vozidla" />
+      <TextBlock FontWeight="SemiBold" Text="{i18n:Loc ReminderWorkspace.Title}" />
       <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Search}" />
         <TextBox x:Name="ReminderSearchBox"
                  Grid.Column="1"
                  Text="{Binding ReminderSearchText}"
-                 PlaceholderText="Název, termín, stav, opakování nebo poznámka..."
-                 AutomationProperties.Name="Hledání v připomínkách vozidla"
-                 AutomationProperties.HelpText="Název, termín, stav, opakování nebo poznámka"
+                 PlaceholderText="{i18n:Loc ReminderWorkspace.SearchPlaceholder}"
+                 AutomationProperties.Name="{i18n:Loc ReminderWorkspace.SearchName}"
+                 AutomationProperties.HelpText="{i18n:Loc ReminderWorkspace.SearchHelp}"
                  AutomationProperties.AutomationId="ReminderSearchBox" />
         <Button Grid.Column="2"
                 Margin="12,0,0,0"
                 Command="{Binding ClearReminderSearchCommand}"
-                Content="Vymazat"
-                AutomationProperties.Name="Vymazat hledání v připomínkách vozidla"
+                Content="{i18n:Loc Common.Clear}"
+                AutomationProperties.Name="{i18n:Loc ReminderWorkspace.ClearSearchName}"
                 AutomationProperties.AutomationId="ClearReminderSearchButton" />
       </Grid>
       <Grid Grid.Row="2" Margin="0,8,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Řadit" />
-        <ComboBox Grid.Column="1" ItemsSource="{Binding ReminderSortOptions}" SelectedItem="{Binding SelectedReminderSortOption}" AutomationProperties.Name="Řazení připomínek vozidla" AutomationProperties.AutomationId="ReminderSortComboBox" />
-        <CheckBox Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center" Content="Sestupně" IsChecked="{Binding ReminderSortDescending}" AutomationProperties.Name="Řadit připomínky sestupně" AutomationProperties.AutomationId="ReminderSortDescendingCheckBox" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Sort}" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding ReminderSortOptions}" SelectedItem="{Binding SelectedReminderSortOption}" AutomationProperties.Name="{i18n:Loc ReminderWorkspace.SortName}" AutomationProperties.AutomationId="ReminderSortComboBox" />
+        <CheckBox Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center" Content="{i18n:Loc Common.SortDescending}" IsChecked="{Binding ReminderSortDescending}" AutomationProperties.Name="{i18n:Loc ReminderWorkspace.SortDescendingName}" AutomationProperties.AutomationId="ReminderSortDescendingCheckBox" />
       </Grid>
       <TextBlock Grid.Row="3" Margin="0,8,12,0" Opacity="0.72" Text="{Binding ReminderSearchSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ReminderSearchSummary}" AutomationProperties.AutomationId="ReminderSearchSummaryText" />
       <ListBox x:Name="ReminderListBox"
@@ -42,11 +43,11 @@
                Margin="0,12,12,0"
                ItemsSource="{Binding VisibleReminderItems}"
                SelectedItem="{Binding SelectedReminder}"
-               AutomationProperties.Name="Připomínky vybraného vozidla"
+               AutomationProperties.Name="{i18n:Loc ReminderWorkspace.ListName}"
                AutomationProperties.AutomationId="ReminderListBox">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="itemvm:VehicleReminderItemViewModel">
-            <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Připomínka" AutomationProperties.ItemStatus="{Binding Status}">
+            <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="{i18n:Loc ReminderWorkspace.ItemType}" AutomationProperties.ItemStatus="{Binding Status}">
               <Grid ColumnDefinitions="2*,130,130,130,*">
                 <TextBlock Grid.Column="0" Text="{Binding Title}" TextWrapping="Wrap" />
                 <TextBlock Grid.Column="1" Text="{Binding DueDate}" />
@@ -62,7 +63,7 @@
     <Border Grid.Row="1" Grid.Column="1" Margin="12,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
-                    AutomationProperties.Name="Detail připomínky vozidla"
+                    AutomationProperties.Name="{i18n:Loc ReminderWorkspace.DetailName}"
                     AutomationProperties.AutomationId="ReminderDetailScrollViewer">
         <Grid RowDefinitions="Auto,Auto,Auto,*">
           <TextBlock FontSize="18"
@@ -72,10 +73,10 @@
                      AutomationProperties.AutomationId="ReminderPanelHeadingText"
                      AutomationProperties.HeadingLevel="2" />
           <WrapPanel x:Name="ReminderActionPanel" Grid.Row="1" Margin="0,14,0,0" ItemWidth="122" ItemHeight="34">
-            <Button Command="{Binding CreateReminderCommand}" Content="Nová" AutomationProperties.Name="Vytvořit novou připomínku" AutomationProperties.AutomationId="CreateReminderButton" />
-            <Button Command="{Binding EditSelectedReminderCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybranou připomínku" AutomationProperties.AutomationId="EditReminderButton" />
-            <Button Command="{Binding DeleteSelectedReminderCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybranou připomínku" AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybranou připomínku." AutomationProperties.AutomationId="DeleteReminderButton" />
-            <Button Command="{Binding AdvanceSelectedReminderCommand}" Content="Další termín" AutomationProperties.Name="Posunout vybranou opakovanou připomínku na další termín" AutomationProperties.AutomationId="AdvanceReminderButton" />
+            <Button Command="{Binding CreateReminderCommand}" Content="{i18n:Loc ReminderWorkspace.Create}" AutomationProperties.Name="{i18n:Loc ReminderWorkspace.CreateName}" AutomationProperties.AutomationId="CreateReminderButton" />
+            <Button Command="{Binding EditSelectedReminderCommand}" Content="{i18n:Loc Common.Edit}" AutomationProperties.Name="{i18n:Loc ReminderWorkspace.EditName}" AutomationProperties.AutomationId="EditReminderButton" />
+            <Button Command="{Binding DeleteSelectedReminderCommand}" Content="{i18n:Loc Common.Delete}" AutomationProperties.Name="{i18n:Loc ReminderWorkspace.DeleteName}" AutomationProperties.HelpText="{i18n:Loc ReminderWorkspace.DeleteHelp}" AutomationProperties.AutomationId="DeleteReminderButton" />
+            <Button Command="{Binding AdvanceSelectedReminderCommand}" Content="{i18n:Loc ReminderWorkspace.Advance}" AutomationProperties.Name="{i18n:Loc ReminderWorkspace.AdvanceName}" AutomationProperties.AutomationId="AdvanceReminderButton" />
           </WrapPanel>
           <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding ReminderEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding ReminderEditorStatus}" AutomationProperties.AutomationId="ReminderStatusText" AutomationProperties.LiveSetting="Polite" />
           <TextBlock Grid.Row="3" Margin="0,16,0,0" Text="{Binding SelectedReminderDetail}" TextWrapping="Wrap" AutomationProperties.Name="{Binding SelectedReminderDetail}" AutomationProperties.AutomationId="SelectedReminderDetailText" />

@@ -42,6 +42,7 @@
   <data name="Common.Clear" xml:space="preserve"><value>Vymazat</value></data>
   <data name="Common.Delete" xml:space="preserve"><value>Odstranit</value></data>
   <data name="Common.Edit" xml:space="preserve"><value>Upravit</value></data>
+  <data name="Common.EmptyValue" xml:space="preserve"><value>nevyplněno</value></data>
   <data name="Common.Save" xml:space="preserve"><value>Uložit</value></data>
   <data name="Common.Search" xml:space="preserve"><value>Hledat</value></data>
   <data name="Common.Sort" xml:space="preserve"><value>Řadit</value></data>
@@ -191,6 +192,98 @@
   <data name="MaintenanceWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit plán údržby sestupně</value></data>
   <data name="MaintenanceWorkspace.SortName" xml:space="preserve"><value>Řazení plánu údržby</value></data>
   <data name="MaintenanceWorkspace.Title" xml:space="preserve"><value>Servisní plány vybraného vozidla</value></data>
+  <data name="RecordEditor.AttachmentModeLabel" xml:space="preserve"><value>Režim přílohy</value></data>
+  <data name="RecordEditor.AttachmentModeName" xml:space="preserve"><value>Režim přílohy dokladu</value></data>
+  <data name="RecordEditor.BrowseFile" xml:space="preserve"><value>Vybrat soubor</value></data>
+  <data name="RecordEditor.BrowseFileName" xml:space="preserve"><value>Vybrat soubor pro doklad</value></data>
+  <data name="RecordEditor.CancelName" xml:space="preserve"><value>Zrušit úpravu dokladu</value></data>
+  <data name="RecordEditor.EditTitle" xml:space="preserve"><value>Upravit doklad</value></data>
+  <data name="RecordEditor.ExternalPathHelp" xml:space="preserve"><value>Zadejte nebo vyberte externí cestu, která se nebude kopírovat.</value></data>
+  <data name="RecordEditor.ExternalPathLabel" xml:space="preserve"><value>Externí cesta k souboru</value></data>
+  <data name="RecordEditor.FieldsName" xml:space="preserve"><value>Pole editoru dokladu</value></data>
+  <data name="RecordEditor.HelpText" xml:space="preserve"><value>Samostatný editor dokladu a přílohy. Ctrl+S uloží, Escape nebo Zrušit zavře bez uložení.</value></data>
+  <data name="RecordEditor.ManagedSourceHelp" xml:space="preserve"><value>Vybraný soubor se po uložení zkopíruje do spravovaných příloh.</value></data>
+  <data name="RecordEditor.ManagedSourceLabel" xml:space="preserve"><value>Zdroj souboru pro import</value></data>
+  <data name="RecordEditor.NewTitle" xml:space="preserve"><value>Nový doklad</value></data>
+  <data name="RecordEditor.NoteLabel" xml:space="preserve"><value>Poznámka</value></data>
+  <data name="RecordEditor.NoteName" xml:space="preserve"><value>Poznámka k dokladu</value></data>
+  <data name="RecordEditor.PriceLabel" xml:space="preserve"><value>Cena</value></data>
+  <data name="RecordEditor.PriceName" xml:space="preserve"><value>Cena dokladu</value></data>
+  <data name="RecordEditor.ProviderLabel" xml:space="preserve"><value>Poskytovatel</value></data>
+  <data name="RecordEditor.ProviderName" xml:space="preserve"><value>Poskytovatel dokladu</value></data>
+  <data name="RecordEditor.ResolvedPathAccessibleLabel" xml:space="preserve"><value>Vyřešená cesta přílohy</value></data>
+  <data name="RecordEditor.ResolvedPathLabel" xml:space="preserve"><value>Vyřešená cesta</value></data>
+  <data name="RecordEditor.SaveName" xml:space="preserve"><value>Uložit doklad</value></data>
+  <data name="RecordEditor.StoredPathAccessibleLabel" xml:space="preserve"><value>Uložená cesta přílohy</value></data>
+  <data name="RecordEditor.StoredPathLabel" xml:space="preserve"><value>Uložená cesta</value></data>
+  <data name="RecordEditor.TitleExample" xml:space="preserve"><value>Například Allianz 2026</value></data>
+  <data name="RecordEditor.TitleLabel" xml:space="preserve"><value>Název</value></data>
+  <data name="RecordEditor.TitleName" xml:space="preserve"><value>Název dokladu</value></data>
+  <data name="RecordEditor.TypeLabel" xml:space="preserve"><value>Typ dokladu</value></data>
+  <data name="RecordEditor.TypeName" xml:space="preserve"><value>Typ dokladu</value></data>
+  <data name="RecordEditor.ValidFromLabel" xml:space="preserve"><value>Platí od</value></data>
+  <data name="RecordEditor.ValidFromName" xml:space="preserve"><value>Platnost dokladu od</value></data>
+  <data name="RecordEditor.ValidToLabel" xml:space="preserve"><value>Platí do</value></data>
+  <data name="RecordEditor.ValidToName" xml:space="preserve"><value>Platnost dokladu do</value></data>
+  <data name="RecordWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v dokladech vozidla</value></data>
+  <data name="RecordWorkspace.CopyPath" xml:space="preserve"><value>Kopírovat cestu</value></data>
+  <data name="RecordWorkspace.CopyPathName" xml:space="preserve"><value>Kopírovat vyřešenou cestu přílohy dokladu</value></data>
+  <data name="RecordWorkspace.Create" xml:space="preserve"><value>Nový doklad</value></data>
+  <data name="RecordWorkspace.CreateName" xml:space="preserve"><value>Vytvořit nový doklad</value></data>
+  <data name="RecordWorkspace.DeleteHelp" xml:space="preserve"><value>Otevře potvrzení a při potvrzení odstraní vybraný doklad z evidence; související spravovaná příloha zůstane řešená podle bezpečnostních pravidel aplikace.</value></data>
+  <data name="RecordWorkspace.DeleteName" xml:space="preserve"><value>Odstranit vybraný doklad</value></data>
+  <data name="RecordWorkspace.DetailName" xml:space="preserve"><value>Detail dokladu vozidla</value></data>
+  <data name="RecordWorkspace.EditName" xml:space="preserve"><value>Upravit vybraný doklad</value></data>
+  <data name="RecordWorkspace.ItemType" xml:space="preserve"><value>Doklad</value></data>
+  <data name="RecordWorkspace.ListName" xml:space="preserve"><value>Doklady vybraného vozidla</value></data>
+  <data name="RecordWorkspace.MoveToManaged" xml:space="preserve"><value>Přesunout do příloh</value></data>
+  <data name="RecordWorkspace.MoveToManagedName" xml:space="preserve"><value>Převést vybraný doklad na spravovanou kopii</value></data>
+  <data name="RecordWorkspace.OpenFile" xml:space="preserve"><value>Otevřít soubor</value></data>
+  <data name="RecordWorkspace.OpenFileName" xml:space="preserve"><value>Otevřít soubor přílohy vybraného dokladu</value></data>
+  <data name="RecordWorkspace.OpenFolder" xml:space="preserve"><value>Otevřít složku</value></data>
+  <data name="RecordWorkspace.OpenFolderName" xml:space="preserve"><value>Otevřít složku přílohy vybraného dokladu</value></data>
+  <data name="RecordWorkspace.SearchHelp" xml:space="preserve"><value>Typ, název, poskytovatel, platnost, příloha nebo poznámka</value></data>
+  <data name="RecordWorkspace.SearchName" xml:space="preserve"><value>Hledání v dokladech vozidla</value></data>
+  <data name="RecordWorkspace.SearchPlaceholder" xml:space="preserve"><value>Typ, název, poskytovatel, platnost, příloha nebo poznámka...</value></data>
+  <data name="RecordWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit doklady sestupně</value></data>
+  <data name="RecordWorkspace.SortName" xml:space="preserve"><value>Řazení dokladů vozidla</value></data>
+  <data name="RecordWorkspace.Title" xml:space="preserve"><value>Seznam dokladů a příloh vybraného vozidla</value></data>
+  <data name="ReminderEditor.CancelName" xml:space="preserve"><value>Zrušit úpravu připomínky</value></data>
+  <data name="ReminderEditor.DaysExample" xml:space="preserve"><value>Například 30</value></data>
+  <data name="ReminderEditor.DaysLabel" xml:space="preserve"><value>Předstih dnů</value></data>
+  <data name="ReminderEditor.DaysName" xml:space="preserve"><value>Předstih připomínky ve dnech</value></data>
+  <data name="ReminderEditor.DueDateExample" xml:space="preserve"><value>Například 15.06.2026</value></data>
+  <data name="ReminderEditor.DueDateLabel" xml:space="preserve"><value>Termín</value></data>
+  <data name="ReminderEditor.DueDateName" xml:space="preserve"><value>Termín připomínky</value></data>
+  <data name="ReminderEditor.EditTitle" xml:space="preserve"><value>Upravit připomínku</value></data>
+  <data name="ReminderEditor.FieldsName" xml:space="preserve"><value>Pole editoru připomínky</value></data>
+  <data name="ReminderEditor.HelpText" xml:space="preserve"><value>Samostatný editor připomínky. Ctrl+S uloží, Escape nebo Zrušit zavře bez uložení.</value></data>
+  <data name="ReminderEditor.NewTitle" xml:space="preserve"><value>Nová připomínka</value></data>
+  <data name="ReminderEditor.NoteLabel" xml:space="preserve"><value>Poznámka</value></data>
+  <data name="ReminderEditor.NoteName" xml:space="preserve"><value>Poznámka k připomínce</value></data>
+  <data name="ReminderEditor.RepeatLabel" xml:space="preserve"><value>Opakování</value></data>
+  <data name="ReminderEditor.RepeatName" xml:space="preserve"><value>Opakování připomínky</value></data>
+  <data name="ReminderEditor.SaveName" xml:space="preserve"><value>Uložit připomínku</value></data>
+  <data name="ReminderEditor.TitleExample" xml:space="preserve"><value>Například objednat servis</value></data>
+  <data name="ReminderEditor.TitleLabel" xml:space="preserve"><value>Název připomínky</value></data>
+  <data name="ReminderEditor.TitleName" xml:space="preserve"><value>Název připomínky</value></data>
+  <data name="ReminderWorkspace.Advance" xml:space="preserve"><value>Další termín</value></data>
+  <data name="ReminderWorkspace.AdvanceName" xml:space="preserve"><value>Posunout vybranou opakovanou připomínku na další termín</value></data>
+  <data name="ReminderWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v připomínkách vozidla</value></data>
+  <data name="ReminderWorkspace.Create" xml:space="preserve"><value>Nová</value></data>
+  <data name="ReminderWorkspace.CreateName" xml:space="preserve"><value>Vytvořit novou připomínku</value></data>
+  <data name="ReminderWorkspace.DeleteHelp" xml:space="preserve"><value>Otevře potvrzení a při potvrzení odstraní vybranou připomínku.</value></data>
+  <data name="ReminderWorkspace.DeleteName" xml:space="preserve"><value>Odstranit vybranou připomínku</value></data>
+  <data name="ReminderWorkspace.DetailName" xml:space="preserve"><value>Detail připomínky vozidla</value></data>
+  <data name="ReminderWorkspace.EditName" xml:space="preserve"><value>Upravit vybranou připomínku</value></data>
+  <data name="ReminderWorkspace.ItemType" xml:space="preserve"><value>Připomínka</value></data>
+  <data name="ReminderWorkspace.ListName" xml:space="preserve"><value>Připomínky vybraného vozidla</value></data>
+  <data name="ReminderWorkspace.SearchHelp" xml:space="preserve"><value>Název, termín, stav, opakování nebo poznámka</value></data>
+  <data name="ReminderWorkspace.SearchName" xml:space="preserve"><value>Hledání v připomínkách vozidla</value></data>
+  <data name="ReminderWorkspace.SearchPlaceholder" xml:space="preserve"><value>Název, termín, stav, opakování nebo poznámka...</value></data>
+  <data name="ReminderWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit připomínky sestupně</value></data>
+  <data name="ReminderWorkspace.SortName" xml:space="preserve"><value>Řazení připomínek vozidla</value></data>
+  <data name="ReminderWorkspace.Title" xml:space="preserve"><value>Seznam připomínek vybraného vozidla</value></data>
   <data name="MainMenu.App" xml:space="preserve"><value>_Aplikace</value></data>
   <data name="MainMenu.App.About" xml:space="preserve"><value>O programu</value></data>
   <data name="MainMenu.App.ActionsOnTray" xml:space="preserve"><value>Akce na liště</value></data>

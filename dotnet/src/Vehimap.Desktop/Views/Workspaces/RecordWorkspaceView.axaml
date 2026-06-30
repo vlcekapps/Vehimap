@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.RecordWorkspaceView"
@@ -16,27 +17,27 @@
   <Grid ColumnDefinitions="1.1*,*" RowDefinitions="Auto,*">
     <TextBlock Grid.ColumnSpan="2" Text="{Binding RecordSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordSummary}" AutomationProperties.AutomationId="RecordSummaryText" />
     <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="0,16,0,0">
-      <TextBlock FontWeight="SemiBold" Text="Seznam dokladů a příloh vybraného vozidla" />
+      <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordWorkspace.Title}" />
       <Grid Grid.Row="1" Margin="0,10,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Hledat" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Search}" />
         <TextBox x:Name="RecordSearchBox"
                  Grid.Column="1"
                  Text="{Binding RecordSearchText}"
-                 PlaceholderText="Typ, název, poskytovatel, platnost, příloha nebo poznámka..."
-                 AutomationProperties.Name="Hledání v dokladech vozidla"
-                 AutomationProperties.HelpText="Typ, název, poskytovatel, platnost, příloha nebo poznámka"
+                 PlaceholderText="{i18n:Loc RecordWorkspace.SearchPlaceholder}"
+                 AutomationProperties.Name="{i18n:Loc RecordWorkspace.SearchName}"
+                 AutomationProperties.HelpText="{i18n:Loc RecordWorkspace.SearchHelp}"
                  AutomationProperties.AutomationId="RecordSearchBox" />
         <Button Grid.Column="2"
                 Margin="12,0,0,0"
                 Command="{Binding ClearRecordSearchCommand}"
-                Content="Vymazat"
-                AutomationProperties.Name="Vymazat hledání v dokladech vozidla"
+                Content="{i18n:Loc Common.Clear}"
+                AutomationProperties.Name="{i18n:Loc RecordWorkspace.ClearSearchName}"
                 AutomationProperties.AutomationId="ClearRecordSearchButton" />
       </Grid>
       <Grid Grid.Row="2" Margin="0,8,12,0" ColumnDefinitions="80,*,120">
-        <TextBlock VerticalAlignment="Center" Text="Řadit" />
-        <ComboBox Grid.Column="1" ItemsSource="{Binding RecordSortOptions}" SelectedItem="{Binding SelectedRecordSortOption}" AutomationProperties.Name="Řazení dokladů vozidla" AutomationProperties.AutomationId="RecordSortComboBox" />
-        <CheckBox Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center" Content="Sestupně" IsChecked="{Binding RecordSortDescending}" AutomationProperties.Name="Řadit doklady sestupně" AutomationProperties.AutomationId="RecordSortDescendingCheckBox" />
+        <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Sort}" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding RecordSortOptions}" SelectedItem="{Binding SelectedRecordSortOption}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.SortName}" AutomationProperties.AutomationId="RecordSortComboBox" />
+        <CheckBox Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center" Content="{i18n:Loc Common.SortDescending}" IsChecked="{Binding RecordSortDescending}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.SortDescendingName}" AutomationProperties.AutomationId="RecordSortDescendingCheckBox" />
       </Grid>
       <TextBlock Grid.Row="3" Margin="0,8,12,0" Opacity="0.72" Text="{Binding RecordSearchSummary}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordSearchSummary}" AutomationProperties.AutomationId="RecordSearchSummaryText" />
       <ListBox x:Name="RecordListBox"
@@ -44,14 +45,14 @@
                Margin="0,12,12,0"
                ItemsSource="{Binding VisibleRecordItems}"
                SelectedItem="{Binding SelectedRecord}"
-               AutomationProperties.Name="Doklady vybraného vozidla"
+               AutomationProperties.Name="{i18n:Loc RecordWorkspace.ListName}"
                AutomationProperties.AutomationId="RecordListBox">
         <ListBox.KeyBindings>
           <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedRecordFileCommand}" />
         </ListBox.KeyBindings>
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="itemvm:VehicleRecordItemViewModel">
-            <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="Doklad" AutomationProperties.ItemStatus="{Binding AttachmentState}">
+            <Border Padding="12" Margin="0,0,0,8" Background="#10203040" CornerRadius="6" AutomationProperties.Name="{Binding AccessibleLabel}" AutomationProperties.ItemType="{i18n:Loc RecordWorkspace.ItemType}" AutomationProperties.ItemStatus="{Binding AttachmentState}">
               <StackPanel Spacing="4">
                 <TextBlock FontWeight="SemiBold" Text="{Binding Title}" />
                 <TextBlock Opacity="0.82" Text="{Binding RecordType}" />
@@ -68,7 +69,7 @@
     <Border Grid.Row="1" Grid.Column="1" Margin="12,16,0,0" Padding="16" Background="#10203040" CornerRadius="8">
       <ScrollViewer VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
-                    AutomationProperties.Name="Detail dokladu vozidla"
+                    AutomationProperties.Name="{i18n:Loc RecordWorkspace.DetailName}"
                     AutomationProperties.AutomationId="RecordDetailScrollViewer">
         <Grid RowDefinitions="Auto,Auto,Auto,*">
           <TextBlock FontSize="18"
@@ -79,15 +80,15 @@
                      AutomationProperties.HeadingLevel="2" />
           <StackPanel Grid.Row="1" Margin="0,14,0,0" Spacing="8">
             <WrapPanel x:Name="RecordEditActionPanel" ItemWidth="138" ItemHeight="34">
-              <Button Command="{Binding CreateRecordCommand}" Content="Nový doklad" AutomationProperties.Name="Vytvořit nový doklad" AutomationProperties.AutomationId="CreateRecordButton" />
-              <Button Command="{Binding EditSelectedRecordCommand}" Content="Upravit" AutomationProperties.Name="Upravit vybraný doklad" AutomationProperties.AutomationId="EditRecordButton" />
-              <Button Command="{Binding DeleteSelectedRecordCommand}" Content="Odstranit" AutomationProperties.Name="Odstranit vybraný doklad" AutomationProperties.HelpText="Otevře potvrzení a při potvrzení odstraní vybraný doklad z evidence; související spravovaná příloha zůstane řešená podle bezpečnostních pravidel aplikace." AutomationProperties.AutomationId="DeleteRecordButton" />
-              <Button Command="{Binding MoveSelectedRecordToManagedCommand}" Content="Přesunout do příloh" AutomationProperties.Name="Převést vybraný doklad na spravovanou kopii" AutomationProperties.AutomationId="MoveRecordToManagedButton" />
+              <Button Command="{Binding CreateRecordCommand}" Content="{i18n:Loc RecordWorkspace.Create}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.CreateName}" AutomationProperties.AutomationId="CreateRecordButton" />
+              <Button Command="{Binding EditSelectedRecordCommand}" Content="{i18n:Loc Common.Edit}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.EditName}" AutomationProperties.AutomationId="EditRecordButton" />
+              <Button Command="{Binding DeleteSelectedRecordCommand}" Content="{i18n:Loc Common.Delete}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.DeleteName}" AutomationProperties.HelpText="{i18n:Loc RecordWorkspace.DeleteHelp}" AutomationProperties.AutomationId="DeleteRecordButton" />
+              <Button Command="{Binding MoveSelectedRecordToManagedCommand}" Content="{i18n:Loc RecordWorkspace.MoveToManaged}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.MoveToManagedName}" AutomationProperties.AutomationId="MoveRecordToManagedButton" />
             </WrapPanel>
             <WrapPanel x:Name="RecordFileActionPanel" ItemWidth="138" ItemHeight="34">
-              <Button Command="{Binding OpenSelectedRecordFileCommand}" Content="Otevřít soubor" AutomationProperties.Name="Otevřít soubor přílohy vybraného dokladu" AutomationProperties.AutomationId="OpenRecordFileButton" />
-              <Button Command="{Binding OpenSelectedRecordFolderCommand}" Content="Otevřít složku" AutomationProperties.Name="Otevřít složku přílohy vybraného dokladu" AutomationProperties.AutomationId="OpenRecordFolderButton" />
-              <Button Command="{Binding CopySelectedRecordPathCommand}" Content="Kopírovat cestu" AutomationProperties.Name="Kopírovat vyřešenou cestu přílohy dokladu" AutomationProperties.AutomationId="CopyRecordPathButton" />
+              <Button Command="{Binding OpenSelectedRecordFileCommand}" Content="{i18n:Loc RecordWorkspace.OpenFile}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.OpenFileName}" AutomationProperties.AutomationId="OpenRecordFileButton" />
+              <Button Command="{Binding OpenSelectedRecordFolderCommand}" Content="{i18n:Loc RecordWorkspace.OpenFolder}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.OpenFolderName}" AutomationProperties.AutomationId="OpenRecordFolderButton" />
+              <Button Command="{Binding CopySelectedRecordPathCommand}" Content="{i18n:Loc RecordWorkspace.CopyPath}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.CopyPathName}" AutomationProperties.AutomationId="CopyRecordPathButton" />
             </WrapPanel>
           </StackPanel>
           <TextBlock Grid.Row="2" Margin="0,12,0,0" Opacity="0.82" Text="{Binding RecordEditorStatus}" TextWrapping="Wrap" AutomationProperties.Name="{Binding RecordEditorStatus}" AutomationProperties.AutomationId="RecordStatusText" AutomationProperties.LiveSetting="Polite" />

@@ -193,7 +193,9 @@ public sealed class I18nFoundationTests
         var root = FindRepositoryRoot();
         var historyEditor = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "HistoryEditorWindow.axaml"));
         var fuelEditor = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "FuelEditorWindow.axaml"));
+        var reminderEditor = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "ReminderEditorWindow.axaml"));
         var maintenanceEditor = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "MaintenanceEditorWindow.axaml"));
+        var recordEditor = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "RecordEditorWindow.axaml"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyEditor);
         Assert.Contains("HistoryEditor.HelpText", historyEditor);
@@ -212,6 +214,18 @@ public sealed class I18nFoundationTests
         Assert.Contains("MaintenanceEditor.TemplateName", maintenanceEditor);
         Assert.Contains("MaintenanceEditor.IsActive", maintenanceEditor);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceEditor);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", reminderEditor);
+        Assert.Contains("ReminderEditor.HelpText", reminderEditor);
+        Assert.Contains("ReminderEditor.TitleName", reminderEditor);
+        Assert.Contains("ReminderEditor.RepeatName", reminderEditor);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), reminderEditor);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", recordEditor);
+        Assert.Contains("RecordEditor.HelpText", recordEditor);
+        Assert.Contains("RecordEditor.AttachmentModeName", recordEditor);
+        Assert.Contains("RecordEditor.BrowseFileName", recordEditor);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), recordEditor);
     }
 
     [Fact]
@@ -220,7 +234,9 @@ public sealed class I18nFoundationTests
         var root = FindRepositoryRoot();
         var historyWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "HistoryWorkspaceView.axaml"));
         var fuelWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "FuelWorkspaceView.axaml"));
+        var reminderWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "ReminderWorkspaceView.axaml"));
         var maintenanceWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "MaintenanceWorkspaceView.axaml"));
+        var recordWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "RecordWorkspaceView.axaml"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyWorkspace);
         Assert.Contains("Text=\"{i18n:Loc HistoryWorkspace.Title}\"", historyWorkspace);
@@ -242,6 +258,21 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc MaintenanceWorkspace.ItemType}\"", maintenanceWorkspace);
         Assert.Contains("MaintenanceWorkspace.CompleteName", maintenanceWorkspace);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", reminderWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc ReminderWorkspace.Title}\"", reminderWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc ReminderWorkspace.SearchPlaceholder}\"", reminderWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc ReminderWorkspace.ItemType}\"", reminderWorkspace);
+        Assert.Contains("ReminderWorkspace.AdvanceName", reminderWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), reminderWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", recordWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc RecordWorkspace.Title}\"", recordWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc RecordWorkspace.SearchPlaceholder}\"", recordWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc RecordWorkspace.ItemType}\"", recordWorkspace);
+        Assert.Contains("RecordWorkspace.MoveToManagedName", recordWorkspace);
+        Assert.Contains("RecordWorkspace.CopyPathName", recordWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), recordWorkspace);
     }
 
     [Fact]

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -47,7 +48,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     private string recordPanelHeading = "Detail dokladu";
 
     [ObservableProperty]
-    private string recordEditorHeading = "Nový doklad";
+    private string recordEditorHeading = L("RecordEditor.NewTitle");
 
     [ObservableProperty]
     private bool isEditingRecord;
@@ -94,12 +95,15 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public IReadOnlyList<string> RecordAttachmentModes { get; } = ["Spravovaná kopie", "Externí cesta"];
     public bool IsRecordDetailVisible => !IsEditingRecord;
     public bool IsRecordEditorManaged => string.Equals(SelectedRecordEditorAttachmentMode, "Spravovaná kopie", StringComparison.CurrentCulture);
-    public string RecordEditorPathInputLabel => IsRecordEditorManaged ? "Zdroj souboru pro import" : "Externí cesta k souboru";
+    public string RecordEditorPathInputLabel => IsRecordEditorManaged
+        ? L("RecordEditor.ManagedSourceLabel")
+        : L("RecordEditor.ExternalPathLabel");
+
     public string RecordEditorPathInputHelp => IsRecordEditorManaged
-        ? "Vybraný soubor se po uložení zkopíruje do spravovaných příloh."
-        : "Zadejte nebo vyberte externí cestu, která se nebude kopírovat.";
-    public string RecordEditorStoredPathAccessibleName => BuildPathAccessibleName("Uložená cesta přílohy", RecordEditorStoredPath);
-    public string RecordEditorResolvedPathAccessibleName => BuildPathAccessibleName("Vyřešená cesta přílohy", RecordEditorResolvedPath);
+        ? L("RecordEditor.ManagedSourceHelp")
+        : L("RecordEditor.ExternalPathHelp");
+    public string RecordEditorStoredPathAccessibleName => BuildPathAccessibleName(L("RecordEditor.StoredPathAccessibleLabel"), RecordEditorStoredPath);
+    public string RecordEditorResolvedPathAccessibleName => BuildPathAccessibleName(L("RecordEditor.ResolvedPathAccessibleLabel"), RecordEditorResolvedPath);
 
     public ICommand CreateRecordCommand => Root.CreateRecordCommand;
     public ICommand EditSelectedRecordCommand => Root.EditSelectedRecordCommand;
@@ -182,7 +186,9 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (value)
         {
-            RecordEditorHeading = Root.GetEditingRecordId() is null ? "Nový doklad" : "Upravit doklad";
+            RecordEditorHeading = Root.GetEditingRecordId() is null
+                ? L("RecordEditor.NewTitle")
+                : L("RecordEditor.EditTitle");
         }
 
         OnPropertyChanged(nameof(IsRecordDetailVisible));
@@ -251,6 +257,6 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
 
     private static string BuildPathAccessibleName(string label, string value) =>
         string.IsNullOrWhiteSpace(value)
-            ? $"{label}: nevyplněno"
+            ? string.Format(CultureInfo.CurrentCulture, "{0}: {1}", label, L("Common.EmptyValue"))
             : $"{label}: {value}";
 }

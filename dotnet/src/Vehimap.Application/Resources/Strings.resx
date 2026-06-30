@@ -42,6 +42,7 @@
   <data name="Common.Clear" xml:space="preserve"><value>Clear</value></data>
   <data name="Common.Delete" xml:space="preserve"><value>Delete</value></data>
   <data name="Common.Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Common.EmptyValue" xml:space="preserve"><value>not filled</value></data>
   <data name="Common.Save" xml:space="preserve"><value>Save</value></data>
   <data name="Common.Search" xml:space="preserve"><value>Search</value></data>
   <data name="Common.Sort" xml:space="preserve"><value>Sort</value></data>
@@ -191,6 +192,98 @@
   <data name="MaintenanceWorkspace.SortDescendingName" xml:space="preserve"><value>Sort maintenance plan descending</value></data>
   <data name="MaintenanceWorkspace.SortName" xml:space="preserve"><value>Maintenance plan sort order</value></data>
   <data name="MaintenanceWorkspace.Title" xml:space="preserve"><value>Maintenance plans for the selected vehicle</value></data>
+  <data name="RecordEditor.AttachmentModeLabel" xml:space="preserve"><value>Attachment mode</value></data>
+  <data name="RecordEditor.AttachmentModeName" xml:space="preserve"><value>Document attachment mode</value></data>
+  <data name="RecordEditor.BrowseFile" xml:space="preserve"><value>Choose file</value></data>
+  <data name="RecordEditor.BrowseFileName" xml:space="preserve"><value>Choose file for the document</value></data>
+  <data name="RecordEditor.CancelName" xml:space="preserve"><value>Cancel document editing</value></data>
+  <data name="RecordEditor.EditTitle" xml:space="preserve"><value>Edit document</value></data>
+  <data name="RecordEditor.ExternalPathHelp" xml:space="preserve"><value>Enter or choose an external path that will not be copied.</value></data>
+  <data name="RecordEditor.ExternalPathLabel" xml:space="preserve"><value>External file path</value></data>
+  <data name="RecordEditor.FieldsName" xml:space="preserve"><value>Document editor fields</value></data>
+  <data name="RecordEditor.HelpText" xml:space="preserve"><value>Standalone document and attachment editor. Ctrl+S saves, Escape or Cancel closes without saving.</value></data>
+  <data name="RecordEditor.ManagedSourceHelp" xml:space="preserve"><value>The selected file will be copied to managed attachments when saved.</value></data>
+  <data name="RecordEditor.ManagedSourceLabel" xml:space="preserve"><value>Source file to import</value></data>
+  <data name="RecordEditor.NewTitle" xml:space="preserve"><value>New document</value></data>
+  <data name="RecordEditor.NoteLabel" xml:space="preserve"><value>Note</value></data>
+  <data name="RecordEditor.NoteName" xml:space="preserve"><value>Document note</value></data>
+  <data name="RecordEditor.PriceLabel" xml:space="preserve"><value>Price</value></data>
+  <data name="RecordEditor.PriceName" xml:space="preserve"><value>Document price</value></data>
+  <data name="RecordEditor.ProviderLabel" xml:space="preserve"><value>Provider</value></data>
+  <data name="RecordEditor.ProviderName" xml:space="preserve"><value>Document provider</value></data>
+  <data name="RecordEditor.ResolvedPathAccessibleLabel" xml:space="preserve"><value>Resolved attachment path</value></data>
+  <data name="RecordEditor.ResolvedPathLabel" xml:space="preserve"><value>Resolved path</value></data>
+  <data name="RecordEditor.SaveName" xml:space="preserve"><value>Save document</value></data>
+  <data name="RecordEditor.StoredPathAccessibleLabel" xml:space="preserve"><value>Stored attachment path</value></data>
+  <data name="RecordEditor.StoredPathLabel" xml:space="preserve"><value>Stored path</value></data>
+  <data name="RecordEditor.TitleExample" xml:space="preserve"><value>For example Allianz 2026</value></data>
+  <data name="RecordEditor.TitleLabel" xml:space="preserve"><value>Title</value></data>
+  <data name="RecordEditor.TitleName" xml:space="preserve"><value>Document title</value></data>
+  <data name="RecordEditor.TypeLabel" xml:space="preserve"><value>Document type</value></data>
+  <data name="RecordEditor.TypeName" xml:space="preserve"><value>Document type</value></data>
+  <data name="RecordEditor.ValidFromLabel" xml:space="preserve"><value>Valid from</value></data>
+  <data name="RecordEditor.ValidFromName" xml:space="preserve"><value>Document valid from</value></data>
+  <data name="RecordEditor.ValidToLabel" xml:space="preserve"><value>Valid to</value></data>
+  <data name="RecordEditor.ValidToName" xml:space="preserve"><value>Document valid to</value></data>
+  <data name="RecordWorkspace.ClearSearchName" xml:space="preserve"><value>Clear document search</value></data>
+  <data name="RecordWorkspace.CopyPath" xml:space="preserve"><value>Copy path</value></data>
+  <data name="RecordWorkspace.CopyPathName" xml:space="preserve"><value>Copy resolved attachment path for the document</value></data>
+  <data name="RecordWorkspace.Create" xml:space="preserve"><value>New document</value></data>
+  <data name="RecordWorkspace.CreateName" xml:space="preserve"><value>Create a new document</value></data>
+  <data name="RecordWorkspace.DeleteHelp" xml:space="preserve"><value>Opens a confirmation and deletes the selected document from records; the related managed attachment remains handled by application safety rules.</value></data>
+  <data name="RecordWorkspace.DeleteName" xml:space="preserve"><value>Delete selected document</value></data>
+  <data name="RecordWorkspace.DetailName" xml:space="preserve"><value>Vehicle document detail</value></data>
+  <data name="RecordWorkspace.EditName" xml:space="preserve"><value>Edit selected document</value></data>
+  <data name="RecordWorkspace.ItemType" xml:space="preserve"><value>Document</value></data>
+  <data name="RecordWorkspace.ListName" xml:space="preserve"><value>Documents for the selected vehicle</value></data>
+  <data name="RecordWorkspace.MoveToManaged" xml:space="preserve"><value>Move to attachments</value></data>
+  <data name="RecordWorkspace.MoveToManagedName" xml:space="preserve"><value>Convert selected document to a managed copy</value></data>
+  <data name="RecordWorkspace.OpenFile" xml:space="preserve"><value>Open file</value></data>
+  <data name="RecordWorkspace.OpenFileName" xml:space="preserve"><value>Open selected document attachment file</value></data>
+  <data name="RecordWorkspace.OpenFolder" xml:space="preserve"><value>Open folder</value></data>
+  <data name="RecordWorkspace.OpenFolderName" xml:space="preserve"><value>Open selected document attachment folder</value></data>
+  <data name="RecordWorkspace.SearchHelp" xml:space="preserve"><value>Type, title, provider, validity, attachment or note</value></data>
+  <data name="RecordWorkspace.SearchName" xml:space="preserve"><value>Search in vehicle documents</value></data>
+  <data name="RecordWorkspace.SearchPlaceholder" xml:space="preserve"><value>Type, title, provider, validity, attachment or note...</value></data>
+  <data name="RecordWorkspace.SortDescendingName" xml:space="preserve"><value>Sort documents descending</value></data>
+  <data name="RecordWorkspace.SortName" xml:space="preserve"><value>Vehicle document sort order</value></data>
+  <data name="RecordWorkspace.Title" xml:space="preserve"><value>Documents and attachments for the selected vehicle</value></data>
+  <data name="ReminderEditor.CancelName" xml:space="preserve"><value>Cancel reminder editing</value></data>
+  <data name="ReminderEditor.DaysExample" xml:space="preserve"><value>For example 30</value></data>
+  <data name="ReminderEditor.DaysLabel" xml:space="preserve"><value>Reminder days</value></data>
+  <data name="ReminderEditor.DaysName" xml:space="preserve"><value>Reminder advance in days</value></data>
+  <data name="ReminderEditor.DueDateExample" xml:space="preserve"><value>For example 15.06.2026</value></data>
+  <data name="ReminderEditor.DueDateLabel" xml:space="preserve"><value>Due date</value></data>
+  <data name="ReminderEditor.DueDateName" xml:space="preserve"><value>Reminder due date</value></data>
+  <data name="ReminderEditor.EditTitle" xml:space="preserve"><value>Edit reminder</value></data>
+  <data name="ReminderEditor.FieldsName" xml:space="preserve"><value>Reminder editor fields</value></data>
+  <data name="ReminderEditor.HelpText" xml:space="preserve"><value>Standalone reminder editor. Ctrl+S saves, Escape or Cancel closes without saving.</value></data>
+  <data name="ReminderEditor.NewTitle" xml:space="preserve"><value>New reminder</value></data>
+  <data name="ReminderEditor.NoteLabel" xml:space="preserve"><value>Note</value></data>
+  <data name="ReminderEditor.NoteName" xml:space="preserve"><value>Reminder note</value></data>
+  <data name="ReminderEditor.RepeatLabel" xml:space="preserve"><value>Repeat</value></data>
+  <data name="ReminderEditor.RepeatName" xml:space="preserve"><value>Reminder repeat mode</value></data>
+  <data name="ReminderEditor.SaveName" xml:space="preserve"><value>Save reminder</value></data>
+  <data name="ReminderEditor.TitleExample" xml:space="preserve"><value>For example book service</value></data>
+  <data name="ReminderEditor.TitleLabel" xml:space="preserve"><value>Reminder title</value></data>
+  <data name="ReminderEditor.TitleName" xml:space="preserve"><value>Reminder title</value></data>
+  <data name="ReminderWorkspace.Advance" xml:space="preserve"><value>Next due date</value></data>
+  <data name="ReminderWorkspace.AdvanceName" xml:space="preserve"><value>Advance selected repeating reminder to the next due date</value></data>
+  <data name="ReminderWorkspace.ClearSearchName" xml:space="preserve"><value>Clear reminder search</value></data>
+  <data name="ReminderWorkspace.Create" xml:space="preserve"><value>New</value></data>
+  <data name="ReminderWorkspace.CreateName" xml:space="preserve"><value>Create a new reminder</value></data>
+  <data name="ReminderWorkspace.DeleteHelp" xml:space="preserve"><value>Opens a confirmation and deletes the selected reminder if confirmed.</value></data>
+  <data name="ReminderWorkspace.DeleteName" xml:space="preserve"><value>Delete selected reminder</value></data>
+  <data name="ReminderWorkspace.DetailName" xml:space="preserve"><value>Vehicle reminder detail</value></data>
+  <data name="ReminderWorkspace.EditName" xml:space="preserve"><value>Edit selected reminder</value></data>
+  <data name="ReminderWorkspace.ItemType" xml:space="preserve"><value>Reminder</value></data>
+  <data name="ReminderWorkspace.ListName" xml:space="preserve"><value>Reminders for the selected vehicle</value></data>
+  <data name="ReminderWorkspace.SearchHelp" xml:space="preserve"><value>Title, due date, status, repeat mode or note</value></data>
+  <data name="ReminderWorkspace.SearchName" xml:space="preserve"><value>Search in vehicle reminders</value></data>
+  <data name="ReminderWorkspace.SearchPlaceholder" xml:space="preserve"><value>Title, due date, status, repeat mode or note...</value></data>
+  <data name="ReminderWorkspace.SortDescendingName" xml:space="preserve"><value>Sort reminders descending</value></data>
+  <data name="ReminderWorkspace.SortName" xml:space="preserve"><value>Vehicle reminder sort order</value></data>
+  <data name="ReminderWorkspace.Title" xml:space="preserve"><value>Reminders for the selected vehicle</value></data>
   <data name="MainMenu.App" xml:space="preserve"><value>_Application</value></data>
   <data name="MainMenu.App.About" xml:space="preserve"><value>About</value></data>
   <data name="MainMenu.App.ActionsOnTray" xml:space="preserve"><value>Tray actions</value></data>

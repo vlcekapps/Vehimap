@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization"
         xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
         x:Class="Vehimap.Desktop.Views.RecordEditorWindow"
         x:DataType="vm:RecordWorkspaceViewModel"
@@ -12,7 +13,7 @@
         Title="{Binding RecordEditorHeading}"
         AutomationProperties.Name="{Binding RecordEditorHeading}"
         AutomationProperties.AutomationId="RecordEditorWindow"
-        AutomationProperties.HelpText="Samostatný editor dokladu a přílohy. Ctrl+S uloží, Escape nebo Zrušit zavře bez uložení.">
+        AutomationProperties.HelpText="{i18n:Loc RecordEditor.HelpText}">
   <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
     <TextBlock FontSize="20"
                FontWeight="SemiBold"
@@ -32,65 +33,65 @@
                   Margin="0,16,0,0"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
-                  AutomationProperties.Name="Pole editoru dokladu"
+                  AutomationProperties.Name="{i18n:Loc RecordEditor.FieldsName}"
                   AutomationProperties.AutomationId="RecordEditorScrollViewer">
       <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
         <Grid ColumnDefinitions="1.1*,1.4*">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Typ dokladu" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.TypeLabel}" />
             <ComboBox x:Name="RecordEditorTypeBox"
                       ItemsSource="{Binding RecordTypeOptions}"
                       SelectedItem="{Binding RecordEditorRecordType}"
-                      AutomationProperties.Name="Typ dokladu"
+                      AutomationProperties.Name="{i18n:Loc RecordEditor.TypeName}"
                       AutomationProperties.AutomationId="RecordEditorTypeBox"
                       AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Název" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.TitleLabel}" />
             <TextBox x:Name="RecordEditorTitleBox"
                      Text="{Binding RecordEditorTitle}"
-                     PlaceholderText="Například Allianz 2026"
-                     AutomationProperties.Name="Název dokladu"
-                     AutomationProperties.HelpText="Například Allianz 2026"
+                     PlaceholderText="{i18n:Loc RecordEditor.TitleExample}"
+                     AutomationProperties.Name="{i18n:Loc RecordEditor.TitleName}"
+                     AutomationProperties.HelpText="{i18n:Loc RecordEditor.TitleExample}"
                      AutomationProperties.AutomationId="RecordEditorTitleBox"
                      AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="1.2*,*,*">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Poskytovatel" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.ProviderLabel}" />
             <TextBox Text="{Binding RecordEditorProvider}"
-                     AutomationProperties.Name="Poskytovatel dokladu"
+                     AutomationProperties.Name="{i18n:Loc RecordEditor.ProviderName}"
                      AutomationProperties.AutomationId="RecordEditorProviderBox" />
           </StackPanel>
           <StackPanel Grid.Column="1" Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Platí od" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.ValidFromLabel}" />
             <TextBox x:Name="RecordEditorValidFromBox"
                      Text="{Binding RecordEditorValidFrom}"
-                     AutomationProperties.Name="Platnost dokladu od"
+                     AutomationProperties.Name="{i18n:Loc RecordEditor.ValidFromName}"
                      AutomationProperties.AutomationId="RecordEditorValidFromBox" />
           </StackPanel>
           <StackPanel Grid.Column="2" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Platí do" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.ValidToLabel}" />
             <TextBox x:Name="RecordEditorValidToBox"
                      Text="{Binding RecordEditorValidTo}"
-                     AutomationProperties.Name="Platnost dokladu do"
+                     AutomationProperties.Name="{i18n:Loc RecordEditor.ValidToName}"
                      AutomationProperties.AutomationId="RecordEditorValidToBox" />
           </StackPanel>
         </Grid>
         <Grid Grid.Row="2" Margin="0,14,0,0" ColumnDefinitions="180,*">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Cena" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.PriceLabel}" />
             <TextBox x:Name="RecordEditorPriceBox"
                      Text="{Binding RecordEditorPrice}"
-                     AutomationProperties.Name="Cena dokladu"
+                     AutomationProperties.Name="{i18n:Loc RecordEditor.PriceName}"
                      AutomationProperties.AutomationId="RecordEditorPriceBox" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="Režim přílohy" />
+            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.AttachmentModeLabel}" />
             <ComboBox ItemsSource="{Binding RecordAttachmentModes}"
                       SelectedItem="{Binding SelectedRecordEditorAttachmentMode}"
-                      AutomationProperties.Name="Režim přílohy dokladu"
+                      AutomationProperties.Name="{i18n:Loc RecordEditor.AttachmentModeName}"
                       AutomationProperties.AutomationId="RecordAttachmentModeComboBox" />
           </StackPanel>
         </Grid>
@@ -106,8 +107,8 @@
           <Button Grid.Column="1"
                   Margin="12,0,0,0"
                   Command="{Binding BrowseRecordAttachmentCommand}"
-                  Content="Vybrat soubor"
-                  AutomationProperties.Name="Vybrat soubor pro doklad"
+                  Content="{i18n:Loc RecordEditor.BrowseFile}"
+                  AutomationProperties.Name="{i18n:Loc RecordEditor.BrowseFileName}"
                   AutomationProperties.AutomationId="BrowseRecordAttachmentButton" />
         </Grid>
         <TextBlock Grid.Row="5"
@@ -118,13 +119,13 @@
                    AutomationProperties.Name="{Binding RecordEditorPathInputHelp}"
                    AutomationProperties.AutomationId="RecordEditorPathInputHelpText"
                    AutomationProperties.LiveSetting="Polite" />
-        <TextBlock Grid.Row="6" Margin="0,14,0,0" FontWeight="SemiBold" Text="Uložená cesta" />
+        <TextBlock Grid.Row="6" Margin="0,14,0,0" FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.StoredPathLabel}" />
         <SelectableTextBlock Grid.Row="7"
                              Margin="0,6,0,0"
                              Text="{Binding RecordEditorStoredPath}"
                              AutomationProperties.Name="{Binding RecordEditorStoredPathAccessibleName}"
                              AutomationProperties.AutomationId="RecordEditorStoredPathText" />
-        <TextBlock Grid.Row="8" Margin="0,14,0,0" FontWeight="SemiBold" Text="Vyřešená cesta" />
+        <TextBlock Grid.Row="8" Margin="0,14,0,0" FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.ResolvedPathLabel}" />
         <SelectableTextBlock Grid.Row="9"
                              Margin="0,6,0,0"
                              Text="{Binding RecordEditorResolvedPath}"
@@ -138,13 +139,13 @@
                    AutomationProperties.AutomationId="RecordEditorAvailabilityText"
                    AutomationProperties.LiveSetting="Polite" />
         <StackPanel Grid.Row="11" Margin="0,14,0,0" Spacing="6">
-          <TextBlock FontWeight="SemiBold" Text="Poznámka" />
+          <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.NoteLabel}" />
           <TextBox Height="100"
                    AcceptsReturn="True"
                    TextWrapping="Wrap"
                    VerticalContentAlignment="Top"
                    Text="{Binding RecordEditorNote}"
-                   AutomationProperties.Name="Poznámka k dokladu"
+                   AutomationProperties.Name="{i18n:Loc RecordEditor.NoteName}"
                    AutomationProperties.AutomationId="RecordEditorNoteBox" />
         </StackPanel>
       </Grid>
@@ -156,15 +157,15 @@
                 Spacing="10">
       <Button x:Name="CancelRecordButton"
               MinWidth="110"
-              Content="Zrušit"
+              Content="{i18n:Loc Common.Cancel}"
               Click="OnCancelClick"
-              AutomationProperties.Name="Zrušit úpravu dokladu"
+              AutomationProperties.Name="{i18n:Loc RecordEditor.CancelName}"
               AutomationProperties.AutomationId="CancelRecordButton" />
       <Button MinWidth="110"
-              Content="Uložit"
+              Content="{i18n:Loc Common.Save}"
               IsEnabled="{Binding IsEditingRecord}"
               Click="OnSaveClick"
-              AutomationProperties.Name="Uložit doklad"
+              AutomationProperties.Name="{i18n:Loc RecordEditor.SaveName}"
               AutomationProperties.AutomationId="SaveRecordButton" />
     </StackPanel>
   </Grid>
