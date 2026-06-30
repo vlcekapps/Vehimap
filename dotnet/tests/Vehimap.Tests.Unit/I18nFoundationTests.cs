@@ -244,6 +244,7 @@ public sealed class I18nFoundationTests
         var overdueOverviewWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "OverdueOverviewWorkspaceView.axaml"));
         var smartAdvisorWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "SmartAdvisorWorkspaceView.axaml"));
         var auditWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "AuditWorkspaceView.axaml"));
+        var costWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "Workspaces", "CostWorkspaceView.axaml"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", historyWorkspace);
         Assert.Contains("Text=\"{i18n:Loc HistoryWorkspace.Title}\"", historyWorkspace);
@@ -335,6 +336,15 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc AuditWorkspace.ItemType}\"", auditWorkspace);
         Assert.Contains("Text=\"{i18n:Loc AuditWorkspace.KeyboardHelp}\"", auditWorkspace);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), auditWorkspace);
+
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", costWorkspace);
+        Assert.Contains("Text=\"{i18n:Loc CostWorkspace.PeriodHeading}\"", costWorkspace);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc CostWorkspace.PeriodStartHelp}\"", costWorkspace);
+        Assert.Contains("Content=\"{i18n:Loc CostWorkspace.ExportFleetSummary}\"", costWorkspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc CostWorkspace.OpenVehicleName}\"", costWorkspace);
+        Assert.Contains("PlaceholderText=\"{i18n:Loc CostWorkspace.SearchPlaceholder}\"", costWorkspace);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc CostWorkspace.ItemType}\"", costWorkspace);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), costWorkspace);
     }
 
     [Fact]

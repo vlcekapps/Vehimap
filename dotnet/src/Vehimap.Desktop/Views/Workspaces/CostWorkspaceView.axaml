@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i18n="using:Vehimap.Desktop.Localization"
              xmlns:vm="using:Vehimap.Desktop.ViewModels.Workspaces"
              xmlns:itemvm="using:Vehimap.Desktop.ViewModels"
              x:Class="Vehimap.Desktop.Views.Workspaces.CostWorkspaceView"
@@ -15,42 +16,42 @@
 
   <ScrollViewer VerticalScrollBarVisibility="Auto"
                 HorizontalScrollBarVisibility="Disabled"
-                AutomationProperties.Name="Obsah nákladového přehledu"
+                AutomationProperties.Name="{i18n:Loc CostWorkspace.ScrollName}"
                 AutomationProperties.AutomationId="CostWorkspaceScrollViewer">
   <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
     <StackPanel Spacing="8">
       <TextBlock FontWeight="SemiBold"
-                 Text="Období nákladů" />
+                 Text="{i18n:Loc CostWorkspace.PeriodHeading}" />
       <Grid ColumnDefinitions="170,150,42,150,Auto" RowDefinitions="Auto,Auto">
         <ComboBox x:Name="CostPeriodPresetComboBox"
                   ItemsSource="{Binding CostPeriodPresets}"
                   SelectedItem="{Binding SelectedCostPeriodPreset}"
-                  AutomationProperties.Name="Předvolba období nákladů"
+                  AutomationProperties.Name="{i18n:Loc CostWorkspace.PeriodPresetName}"
                   AutomationProperties.AutomationId="CostPeriodPresetComboBox" />
         <TextBox x:Name="CostPeriodStartBox"
                  Grid.Column="1"
                  Margin="12,0,0,0"
                  Text="{Binding CostPeriodStartText}"
-                 PlaceholderText="Od"
-                 AutomationProperties.Name="Začátek období nákladů"
-                 AutomationProperties.HelpText="Datum začátku období, například 01.01.2026"
+                 PlaceholderText="{i18n:Loc CostWorkspace.PeriodStartPlaceholder}"
+                 AutomationProperties.Name="{i18n:Loc CostWorkspace.PeriodStartName}"
+                 AutomationProperties.HelpText="{i18n:Loc CostWorkspace.PeriodStartHelp}"
                  AutomationProperties.AutomationId="CostPeriodStartBox" />
         <TextBlock Grid.Column="2"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
-                   Text="až" />
+                   Text="{i18n:Loc CostWorkspace.PeriodSeparator}" />
         <TextBox x:Name="CostPeriodEndBox"
                  Grid.Column="3"
                  Text="{Binding CostPeriodEndText}"
-                 PlaceholderText="Do"
-                 AutomationProperties.Name="Konec období nákladů"
-                 AutomationProperties.HelpText="Datum konce období, například 31.12.2026"
+                 PlaceholderText="{i18n:Loc CostWorkspace.PeriodEndPlaceholder}"
+                 AutomationProperties.Name="{i18n:Loc CostWorkspace.PeriodEndName}"
+                 AutomationProperties.HelpText="{i18n:Loc CostWorkspace.PeriodEndHelp}"
                  AutomationProperties.AutomationId="CostPeriodEndBox" />
         <Button Grid.Column="4"
                 Margin="12,0,0,0"
                 Command="{Binding ApplyCostPeriodCommand}"
-                Content="Přepočítat"
-                AutomationProperties.Name="Přepočítat náklady pro zadané období"
+                Content="{i18n:Loc CostWorkspace.ApplyPeriod}"
+                AutomationProperties.Name="{i18n:Loc CostWorkspace.ApplyPeriodName}"
                 AutomationProperties.AutomationId="ApplyCostPeriodButton" />
         <TextBlock Grid.Row="1"
                    Grid.ColumnSpan="5"
@@ -82,16 +83,16 @@
                 Orientation="Horizontal"
                 Spacing="10">
       <Button Command="{Binding ExportFleetCostSummaryCommand}"
-              Content="Export souhrnu TSV"
-              AutomationProperties.Name="Exportovat souhrn nákladů do TSV"
+              Content="{i18n:Loc CostWorkspace.ExportFleetSummary}"
+              AutomationProperties.Name="{i18n:Loc CostWorkspace.ExportFleetSummaryName}"
               AutomationProperties.AutomationId="ExportFleetCostSummaryButton" />
       <Button Command="{Binding ExportSelectedVehicleCostDetailCommand}"
-              Content="Export detailu TSV"
-              AutomationProperties.Name="Exportovat detail nákladů vybraného vozidla do TSV"
+              Content="{i18n:Loc CostWorkspace.ExportSelectedDetail}"
+              AutomationProperties.Name="{i18n:Loc CostWorkspace.ExportSelectedDetailName}"
               AutomationProperties.AutomationId="ExportSelectedVehicleCostDetailButton" />
       <Button Command="{Binding ExportSelectedVehicleCostReportCommand}"
-              Content="Export HTML sestavy"
-              AutomationProperties.Name="Exportovat HTML sestavu nákladů vybraného vozidla"
+              Content="{i18n:Loc CostWorkspace.ExportSelectedReport}"
+              AutomationProperties.Name="{i18n:Loc CostWorkspace.ExportSelectedReportName}"
               AutomationProperties.AutomationId="ExportSelectedVehicleCostReportButton" />
     </StackPanel>
     <StackPanel Grid.Row="4"
@@ -99,20 +100,20 @@
                 Orientation="Horizontal"
                 Spacing="10">
       <Button Command="{Binding RefreshCostCommand}"
-              Content="Obnovit"
-              AutomationProperties.Name="Obnovit nákladový přehled"
+              Content="{i18n:Loc CostWorkspace.Refresh}"
+              AutomationProperties.Name="{i18n:Loc CostWorkspace.RefreshName}"
               AutomationProperties.AutomationId="CostRefreshButton" />
       <Button Command="{Binding FocusSelectedCostDetailCommand}"
-              Content="Zobrazit rozpad"
-              AutomationProperties.Name="Zobrazit rozpad nákladů vybraného vozidla"
+              Content="{i18n:Loc CostWorkspace.FocusDetail}"
+              AutomationProperties.Name="{i18n:Loc CostWorkspace.FocusDetailName}"
               AutomationProperties.AutomationId="FocusCostDetailButton" />
       <Button Command="{Binding OpenSelectedCostVehicleCommand}"
-              Content="Zobrazit vozidlo"
-              AutomationProperties.Name="Zobrazit detail vozidla z nákladového přehledu"
+              Content="{i18n:Loc CostWorkspace.OpenVehicle}"
+              AutomationProperties.Name="{i18n:Loc CostWorkspace.OpenVehicleName}"
               AutomationProperties.AutomationId="OpenCostVehicleButton" />
       <Button Command="{Binding EditSelectedCostVehicleCommand}"
-              Content="Upravit vozidlo"
-              AutomationProperties.Name="Upravit vozidlo z nákladového přehledu"
+              Content="{i18n:Loc CostWorkspace.EditVehicle}"
+              AutomationProperties.Name="{i18n:Loc CostWorkspace.EditVehicleName}"
               AutomationProperties.AutomationId="EditCostVehicleButton" />
     </StackPanel>
     <TextBlock Grid.Row="5"
@@ -135,19 +136,19 @@
                  TextWrapping="Wrap" />
     </Border>
     <Grid Grid.Row="7" Margin="0,12,0,0" ColumnDefinitions="80,*,120">
-      <TextBlock VerticalAlignment="Center" Text="Hledat" />
+      <TextBlock VerticalAlignment="Center" Text="{i18n:Loc Common.Search}" />
       <TextBox x:Name="CostSearchBox"
                Grid.Column="1"
                Text="{Binding CostSearchText}"
-               PlaceholderText="Vozidlo, kategorie, částka, cena za km nebo stav výpočtu..."
-               AutomationProperties.Name="Hledání v nákladovém přehledu"
-               AutomationProperties.HelpText="Vozidlo, kategorie, částka, cena za km nebo stav výpočtu"
+               PlaceholderText="{i18n:Loc CostWorkspace.SearchPlaceholder}"
+               AutomationProperties.Name="{i18n:Loc CostWorkspace.SearchName}"
+               AutomationProperties.HelpText="{i18n:Loc CostWorkspace.SearchHelp}"
                AutomationProperties.AutomationId="CostSearchBox" />
       <Button Grid.Column="2"
               Margin="12,0,0,0"
               Command="{Binding ClearCostSearchCommand}"
-              Content="Vymazat"
-              AutomationProperties.Name="Vymazat hledání v nákladovém přehledu"
+              Content="{i18n:Loc Common.Clear}"
+              AutomationProperties.Name="{i18n:Loc CostWorkspace.ClearSearchName}"
               AutomationProperties.AutomationId="ClearCostSearchButton" />
     </Grid>
     <TextBlock Grid.Row="8"
@@ -162,7 +163,7 @@
              Margin="0,12,0,0"
              ItemsSource="{Binding VisibleCostVehicles}"
              SelectedItem="{Binding SelectedDashboardCostVehicle}"
-             AutomationProperties.Name="Seznam nákladových souhrnů vozidel"
+             AutomationProperties.Name="{i18n:Loc CostWorkspace.ListName}"
              AutomationProperties.AutomationId="CostListBox">
       <ListBox.KeyBindings>
         <KeyBinding Gesture="Enter" Command="{Binding OpenSelectedCostVehicleCommand}" />
@@ -174,7 +175,7 @@
                   Background="#10203040"
                   CornerRadius="6"
                   AutomationProperties.Name="{Binding AccessibleLabel}"
-                  AutomationProperties.ItemType="Nákladový souhrn vozidla"
+                  AutomationProperties.ItemType="{i18n:Loc CostWorkspace.ItemType}"
                   AutomationProperties.ItemStatus="{Binding Status}">
             <Grid ColumnDefinitions="2*,1.2*,1.2*,1.2*,1.5*">
               <StackPanel>

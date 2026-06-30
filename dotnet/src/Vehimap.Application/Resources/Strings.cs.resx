@@ -669,6 +669,38 @@
   <data name="AuditWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, SPZ, evidence nebo popis problému...</value></data>
   <data name="AuditWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit audit dat sestupně</value></data>
   <data name="AuditWorkspace.SortName" xml:space="preserve"><value>Řazení auditu dat</value></data>
+  <data name="CostWorkspace.ApplyPeriod" xml:space="preserve"><value>Přepočítat</value></data>
+  <data name="CostWorkspace.ApplyPeriodName" xml:space="preserve"><value>Přepočítat náklady pro zadané období</value></data>
+  <data name="CostWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v nákladovém přehledu</value></data>
+  <data name="CostWorkspace.EditVehicle" xml:space="preserve"><value>Upravit vozidlo</value></data>
+  <data name="CostWorkspace.EditVehicleName" xml:space="preserve"><value>Upravit vozidlo z nákladového přehledu</value></data>
+  <data name="CostWorkspace.ExportFleetSummary" xml:space="preserve"><value>Export souhrnu TSV</value></data>
+  <data name="CostWorkspace.ExportFleetSummaryName" xml:space="preserve"><value>Exportovat souhrn nákladů do TSV</value></data>
+  <data name="CostWorkspace.ExportSelectedDetail" xml:space="preserve"><value>Export detailu TSV</value></data>
+  <data name="CostWorkspace.ExportSelectedDetailName" xml:space="preserve"><value>Exportovat detail nákladů vybraného vozidla do TSV</value></data>
+  <data name="CostWorkspace.ExportSelectedReport" xml:space="preserve"><value>Export HTML sestavy</value></data>
+  <data name="CostWorkspace.ExportSelectedReportName" xml:space="preserve"><value>Exportovat HTML sestavu nákladů vybraného vozidla</value></data>
+  <data name="CostWorkspace.FocusDetail" xml:space="preserve"><value>Zobrazit rozpad</value></data>
+  <data name="CostWorkspace.FocusDetailName" xml:space="preserve"><value>Zobrazit rozpad nákladů vybraného vozidla</value></data>
+  <data name="CostWorkspace.ItemType" xml:space="preserve"><value>Nákladový souhrn vozidla</value></data>
+  <data name="CostWorkspace.ListName" xml:space="preserve"><value>Seznam nákladových souhrnů vozidel</value></data>
+  <data name="CostWorkspace.OpenVehicle" xml:space="preserve"><value>Zobrazit vozidlo</value></data>
+  <data name="CostWorkspace.OpenVehicleName" xml:space="preserve"><value>Zobrazit detail vozidla z nákladového přehledu</value></data>
+  <data name="CostWorkspace.PeriodEndHelp" xml:space="preserve"><value>Datum konce období, například 31.12.2026</value></data>
+  <data name="CostWorkspace.PeriodEndName" xml:space="preserve"><value>Konec období nákladů</value></data>
+  <data name="CostWorkspace.PeriodEndPlaceholder" xml:space="preserve"><value>Do</value></data>
+  <data name="CostWorkspace.PeriodHeading" xml:space="preserve"><value>Období nákladů</value></data>
+  <data name="CostWorkspace.PeriodPresetName" xml:space="preserve"><value>Předvolba období nákladů</value></data>
+  <data name="CostWorkspace.PeriodSeparator" xml:space="preserve"><value>až</value></data>
+  <data name="CostWorkspace.PeriodStartHelp" xml:space="preserve"><value>Datum začátku období, například 01.01.2026</value></data>
+  <data name="CostWorkspace.PeriodStartName" xml:space="preserve"><value>Začátek období nákladů</value></data>
+  <data name="CostWorkspace.PeriodStartPlaceholder" xml:space="preserve"><value>Od</value></data>
+  <data name="CostWorkspace.Refresh" xml:space="preserve"><value>Obnovit</value></data>
+  <data name="CostWorkspace.RefreshName" xml:space="preserve"><value>Obnovit nákladový přehled</value></data>
+  <data name="CostWorkspace.ScrollName" xml:space="preserve"><value>Obsah nákladového přehledu</value></data>
+  <data name="CostWorkspace.SearchHelp" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za km nebo stav výpočtu</value></data>
+  <data name="CostWorkspace.SearchName" xml:space="preserve"><value>Hledání v nákladovém přehledu</value></data>
+  <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za km nebo stav výpočtu...</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Kategorie</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie chytrého poradce</value></data>
   <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Vymazat filtry chytrého poradce</value></data>

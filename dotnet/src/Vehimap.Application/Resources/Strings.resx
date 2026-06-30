@@ -669,6 +669,38 @@
   <data name="AuditWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, license plate, record type or problem description...</value></data>
   <data name="AuditWorkspace.SortDescendingName" xml:space="preserve"><value>Sort data audit descending</value></data>
   <data name="AuditWorkspace.SortName" xml:space="preserve"><value>Data audit sort order</value></data>
+  <data name="CostWorkspace.ApplyPeriod" xml:space="preserve"><value>Recalculate</value></data>
+  <data name="CostWorkspace.ApplyPeriodName" xml:space="preserve"><value>Recalculate costs for the selected period</value></data>
+  <data name="CostWorkspace.ClearSearchName" xml:space="preserve"><value>Clear cost overview search</value></data>
+  <data name="CostWorkspace.EditVehicle" xml:space="preserve"><value>Edit vehicle</value></data>
+  <data name="CostWorkspace.EditVehicleName" xml:space="preserve"><value>Edit vehicle from cost overview</value></data>
+  <data name="CostWorkspace.ExportFleetSummary" xml:space="preserve"><value>Export summary TSV</value></data>
+  <data name="CostWorkspace.ExportFleetSummaryName" xml:space="preserve"><value>Export fleet cost summary to TSV</value></data>
+  <data name="CostWorkspace.ExportSelectedDetail" xml:space="preserve"><value>Export detail TSV</value></data>
+  <data name="CostWorkspace.ExportSelectedDetailName" xml:space="preserve"><value>Export selected vehicle cost detail to TSV</value></data>
+  <data name="CostWorkspace.ExportSelectedReport" xml:space="preserve"><value>Export HTML report</value></data>
+  <data name="CostWorkspace.ExportSelectedReportName" xml:space="preserve"><value>Export selected vehicle cost HTML report</value></data>
+  <data name="CostWorkspace.FocusDetail" xml:space="preserve"><value>Show breakdown</value></data>
+  <data name="CostWorkspace.FocusDetailName" xml:space="preserve"><value>Show cost breakdown for the selected vehicle</value></data>
+  <data name="CostWorkspace.ItemType" xml:space="preserve"><value>Vehicle cost summary</value></data>
+  <data name="CostWorkspace.ListName" xml:space="preserve"><value>Vehicle cost summary list</value></data>
+  <data name="CostWorkspace.OpenVehicle" xml:space="preserve"><value>Show vehicle</value></data>
+  <data name="CostWorkspace.OpenVehicleName" xml:space="preserve"><value>Show vehicle detail from cost overview</value></data>
+  <data name="CostWorkspace.PeriodEndHelp" xml:space="preserve"><value>End date of the cost period, for example 2026-12-31 or 31.12.2026</value></data>
+  <data name="CostWorkspace.PeriodEndName" xml:space="preserve"><value>Cost period end</value></data>
+  <data name="CostWorkspace.PeriodEndPlaceholder" xml:space="preserve"><value>To</value></data>
+  <data name="CostWorkspace.PeriodHeading" xml:space="preserve"><value>Cost period</value></data>
+  <data name="CostWorkspace.PeriodPresetName" xml:space="preserve"><value>Cost period preset</value></data>
+  <data name="CostWorkspace.PeriodSeparator" xml:space="preserve"><value>to</value></data>
+  <data name="CostWorkspace.PeriodStartHelp" xml:space="preserve"><value>Start date of the cost period, for example 2026-01-01 or 01.01.2026</value></data>
+  <data name="CostWorkspace.PeriodStartName" xml:space="preserve"><value>Cost period start</value></data>
+  <data name="CostWorkspace.PeriodStartPlaceholder" xml:space="preserve"><value>From</value></data>
+  <data name="CostWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="CostWorkspace.RefreshName" xml:space="preserve"><value>Refresh cost overview</value></data>
+  <data name="CostWorkspace.ScrollName" xml:space="preserve"><value>Cost overview content</value></data>
+  <data name="CostWorkspace.SearchHelp" xml:space="preserve"><value>Vehicle, category, amount, cost per distance or calculation status</value></data>
+  <data name="CostWorkspace.SearchName" xml:space="preserve"><value>Cost overview search</value></data>
+  <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, category, amount, cost per distance or calculation status...</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilter" xml:space="preserve"><value>Category</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Smart advisor category filter</value></data>
   <data name="SmartAdvisorWorkspace.ClearFiltersName" xml:space="preserve"><value>Clear smart advisor filters</value></data>
