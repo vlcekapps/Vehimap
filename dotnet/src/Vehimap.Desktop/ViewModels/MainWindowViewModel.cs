@@ -292,7 +292,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         return new LegacyVehimapBootstrapper(
             new LegacyDataRootLocator(AssemblyAppBuildInfoProvider.ResolveCurrentApplicationDataFolderName()),
             sqliteDataStore,
-            new SqliteDataMigrationService(legacyDataStore, sqliteDataStore));
+            new SqliteDataMigrationService(legacyDataStore, sqliteDataStore, DesktopLocalization.Localizer));
     }
 
     internal MainWindowViewModel(
@@ -341,7 +341,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             sessionSupportedSettingsService,
             sessionAppBuildInfoProvider,
             sessionUpdateService,
-            dataStoreHealthService ?? new SqliteDataStoreHealthService());
+            dataStoreHealthService ?? new SqliteDataStoreHealthService(DesktopLocalization.Localizer));
         _fileLauncher = fileLauncher;
         _filePickerService = filePickerService;
         _clipboardService = clipboardService ?? new AvaloniaClipboardService();

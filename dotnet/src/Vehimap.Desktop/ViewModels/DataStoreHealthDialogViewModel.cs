@@ -17,7 +17,7 @@ public sealed partial class DataStoreHealthDialogViewModel : ObservableObject
         };
         Summary = report.Summary;
         Details = string.Join(Environment.NewLine, report.Details);
-        ClipboardText = report.DiagnosticText;
+        ClipboardText = BuildDiagnosticText(report);
         CanOpenDataFolder = Directory.Exists(report.DataPath);
         CanOpenPreMigrationBackupFolder = !string.IsNullOrWhiteSpace(report.PreMigrationBackupPath)
             && Directory.Exists(report.PreMigrationBackupPath);
@@ -41,4 +41,20 @@ public sealed partial class DataStoreHealthDialogViewModel : ObservableObject
     private string statusMessage = L("DataStoreHealth.InitialStatus");
 
     private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
+
+    private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
+
+    private static string BuildDiagnosticText(DataStoreHealthReport report) =>
+        string.Join(
+            Environment.NewLine,
+            new[]
+            {
+                L("DataStoreHealth.Diagnostics.Title"),
+                LF("DataStoreHealth.Diagnostics.Status", report.Status),
+                LF("DataStoreHealth.Diagnostics.Summary", report.Summary),
+                LF("DataStoreHealth.Diagnostics.DatabasePath", report.DatabasePath),
+                LF("DataStoreHealth.Diagnostics.DataPath", report.DataPath),
+                LF("DataStoreHealth.Diagnostics.PreMigrationBackupPath", report.PreMigrationBackupPath ?? string.Empty),
+                L("DataStoreHealth.Diagnostics.Details")
+            }.Concat(report.Details.Select(item => LF("DataStoreHealth.Diagnostics.DetailItem", item))));
 }

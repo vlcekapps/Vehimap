@@ -1,5 +1,6 @@
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Storage.Sqlite;
 
@@ -21,11 +22,13 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
 
     private readonly ILegacyDataStore _legacyDataStore;
     private readonly IVehimapDataStore _targetDataStore;
+    private readonly IAppLocalizer _localizer;
 
-    public SqliteDataMigrationService(ILegacyDataStore legacyDataStore, IVehimapDataStore targetDataStore)
+    public SqliteDataMigrationService(ILegacyDataStore legacyDataStore, IVehimapDataStore targetDataStore, IAppLocalizer? localizer = null)
     {
         _legacyDataStore = legacyDataStore;
         _targetDataStore = targetDataStore;
+        _localizer = localizer ?? new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
     }
 
     public async Task<DataMigrationResult> MigrateIfNeededAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
@@ -50,16 +53,16 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
                 return new DataMigrationResult(
                     false,
                     cleanupBackupPath,
-                    $"Datová sada 2.0 je připravena. Zbylé původní TSV/INI soubory byly přesunuty mimo živou datovou složku do {cleanupBackupPath}.");
+                    LF("DataMigration.LegacyCleanupCompleted", cleanupBackupPath));
             }
 
-            return DataMigrationResult.NotNeeded;
+            return NotNeeded();
         }
 
         var legacyFiles = GetLiveLegacyFiles(dataRoot);
         if (legacyFiles.Count == 0)
         {
-            return DataMigrationResult.NotNeeded;
+            return NotNeeded();
         }
 
         var backupPath = BackupLegacyData(dataRoot, cancellationToken);
@@ -74,7 +77,7 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
         return new DataMigrationResult(
             true,
             backupPath,
-            $"Data byla automaticky migrována do datové sady 2.0. Původní TSV/INI soubory byly po ověření SQLite přesunuty mimo živou datovou složku do {backupPath}.");
+            LF("DataMigration.LegacyMigrationCompleted", backupPath));
     }
 
     private static IReadOnlyList<string> GetLiveLegacyFiles(VehimapDataRoot dataRoot) =>
@@ -169,4 +172,11 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
             File.Copy(file, targetPath, overwrite: true);
         }
     }
+
+    private DataMigrationResult NotNeeded() =>
+        new(false, null, L("DataMigration.NotNeeded"));
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 }

@@ -63,6 +63,14 @@
   <data name="DataStoreHealth.CopyFailedStatus" xml:space="preserve"><value>Data set diagnostics could not be copied: {0}</value></data>
   <data name="DataStoreHealth.CopySuccessStatus" xml:space="preserve"><value>Data set diagnostics were copied to the clipboard.</value></data>
   <data name="DataStoreHealth.DetailsName" xml:space="preserve"><value>Data set 2.0 check details</value></data>
+  <data name="DataStoreHealth.Diagnostics.DatabasePath" xml:space="preserve"><value>Database: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.DataPath" xml:space="preserve"><value>Data folder: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.DetailItem" xml:space="preserve"><value>- {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.Details" xml:space="preserve"><value>Details:</value></data>
+  <data name="DataStoreHealth.Diagnostics.PreMigrationBackupPath" xml:space="preserve"><value>Pre-migration backup: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.Status" xml:space="preserve"><value>Status: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.Summary" xml:space="preserve"><value>Summary: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.Title" xml:space="preserve"><value>Vehimap - data set 2.0 check</value></data>
   <data name="DataStoreHealth.HeadingError" xml:space="preserve"><value>Data set 2.0 has a problem</value></data>
   <data name="DataStoreHealth.HeadingHealthy" xml:space="preserve"><value>Data set 2.0 is healthy</value></data>
   <data name="DataStoreHealth.HeadingWarning" xml:space="preserve"><value>Data set 2.0 needs attention</value></data>
@@ -72,7 +80,33 @@
   <data name="DataStoreHealth.OpenDataFolderName" xml:space="preserve"><value>Open data folder</value></data>
   <data name="DataStoreHealth.OpenPreMigrationBackup" xml:space="preserve"><value>Pre-migration backup</value></data>
   <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Open pre-migration backup</value></data>
+  <data name="DataStoreHealth.Report.AttachmentsFolderExists" xml:space="preserve"><value>Managed attachments folder exists: {0}</value></data>
+  <data name="DataStoreHealth.Report.AttachmentsFolderMissingNoManaged" xml:space="preserve"><value>Managed attachments folder does not exist yet; it will be created with the first managed attachment.</value></data>
+  <data name="DataStoreHealth.Report.AttachmentsFolderMissingWithManaged" xml:space="preserve"><value>Managed attachments folder is missing, but the database references {0} managed attachments: {1}</value></data>
+  <data name="DataStoreHealth.Report.DatabaseCheckFailed" xml:space="preserve"><value>The database could not be opened or checked: {0}</value></data>
+  <data name="DataStoreHealth.Report.DatabaseMissingDetail" xml:space="preserve"><value>Database file was not found: {0}</value></data>
+  <data name="DataStoreHealth.Report.DatabaseMissingSummary" xml:space="preserve"><value>The data set 2.0 database was not found.</value></data>
+  <data name="DataStoreHealth.Report.DataPathMissingDetail" xml:space="preserve"><value>Data folder was not found: {0}</value></data>
+  <data name="DataStoreHealth.Report.DataPathMissingSummary" xml:space="preserve"><value>Data folder does not exist.</value></data>
+  <data name="DataStoreHealth.Report.DataPathNotWritable" xml:space="preserve"><value>Data folder is not writable: {0}</value></data>
+  <data name="DataStoreHealth.Report.DataPathWritable" xml:space="preserve"><value>Data folder is writable.</value></data>
+  <data name="DataStoreHealth.Report.ExpectedTablesMissing" xml:space="preserve"><value>SQLite database is missing expected tables: {0}.</value></data>
+  <data name="DataStoreHealth.Report.ExpectedTablesPresent" xml:space="preserve"><value>SQLite contains all expected data set 2.0 tables.</value></data>
+  <data name="DataStoreHealth.Report.LiveLegacyFilesPresent" xml:space="preserve"><value>Legacy TSV/INI files remain in the live data folder: {0}.</value></data>
+  <data name="DataStoreHealth.Report.NoDetail" xml:space="preserve"><value>no detail</value></data>
+  <data name="DataStoreHealth.Report.NoDetailsReturned" xml:space="preserve"><value>The check did not return any additional details.</value></data>
+  <data name="DataStoreHealth.Report.NoLiveLegacyFiles" xml:space="preserve"><value>No legacy TSV/INI files are present in the live data folder.</value></data>
+  <data name="DataStoreHealth.Report.QuickCheckOk" xml:space="preserve"><value>SQLite quick_check is OK.</value></data>
+  <data name="DataStoreHealth.Report.QuickCheckProblem" xml:space="preserve"><value>SQLite quick_check reported a problem: {0}.</value></data>
+  <data name="DataStoreHealth.Report.SchemaMarkerMissing" xml:space="preserve"><value>SQLite database is missing schema marker 2.0-initial.</value></data>
+  <data name="DataStoreHealth.Report.SchemaMarkerPresent" xml:space="preserve"><value>Schema marker 2.0-initial is present.</value></data>
+  <data name="DataStoreHealth.Report.SummaryError" xml:space="preserve"><value>Data set 2.0 has a problem. Data were not automatically repaired or deleted.</value></data>
+  <data name="DataStoreHealth.Report.SummaryHealthy" xml:space="preserve"><value>Data set 2.0 is healthy.</value></data>
+  <data name="DataStoreHealth.Report.SummaryWarning" xml:space="preserve"><value>Data set 2.0 is usable, but needs attention.</value></data>
   <data name="DataStoreHealth.Title" xml:space="preserve"><value>Data set 2.0 check</value></data>
+  <data name="DataMigration.LegacyCleanupCompleted" xml:space="preserve"><value>The 2.0 data set is ready. Remaining legacy TSV/INI files were moved out of the live data folder to {0}.</value></data>
+  <data name="DataMigration.LegacyMigrationCompleted" xml:space="preserve"><value>Data were automatically migrated to the 2.0 data set. After SQLite verification, the original TSV/INI files were moved out of the live data folder to {0}.</value></data>
+  <data name="DataMigration.NotNeeded" xml:space="preserve"><value>The 2.0 data set is ready.</value></data>
   <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Installer language preferences were added to the 2.0 data set.</value></data>
   <data name="InstallerLocaleSeed.InvalidLanguage" xml:space="preserve"><value>Installer language preferences do not contain a supported concrete language.</value></data>
   <data name="InstallerLocaleSeed.InvalidRead" xml:space="preserve"><value>Installer language preferences could not be read: {0}</value></data>

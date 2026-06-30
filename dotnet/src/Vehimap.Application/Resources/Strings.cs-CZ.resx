@@ -63,6 +63,14 @@
   <data name="DataStoreHealth.CopyFailedStatus" xml:space="preserve"><value>Diagnostiku datové sady se nepodařilo zkopírovat: {0}</value></data>
   <data name="DataStoreHealth.CopySuccessStatus" xml:space="preserve"><value>Diagnostika datové sady byla zkopírována do schránky.</value></data>
   <data name="DataStoreHealth.DetailsName" xml:space="preserve"><value>Detaily kontroly datové sady 2.0</value></data>
+  <data name="DataStoreHealth.Diagnostics.DatabasePath" xml:space="preserve"><value>Databáze: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.DataPath" xml:space="preserve"><value>Datová složka: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.DetailItem" xml:space="preserve"><value>- {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.Details" xml:space="preserve"><value>Detaily:</value></data>
+  <data name="DataStoreHealth.Diagnostics.PreMigrationBackupPath" xml:space="preserve"><value>Předmigrační záloha: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.Status" xml:space="preserve"><value>Stav: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.Summary" xml:space="preserve"><value>Souhrn: {0}</value></data>
+  <data name="DataStoreHealth.Diagnostics.Title" xml:space="preserve"><value>Vehimap - kontrola datové sady 2.0</value></data>
   <data name="DataStoreHealth.HeadingError" xml:space="preserve"><value>Datová sada 2.0 má problém</value></data>
   <data name="DataStoreHealth.HeadingHealthy" xml:space="preserve"><value>Datová sada 2.0 je v pořádku</value></data>
   <data name="DataStoreHealth.HeadingWarning" xml:space="preserve"><value>Datová sada 2.0 vyžaduje pozornost</value></data>
@@ -72,7 +80,33 @@
   <data name="DataStoreHealth.OpenDataFolderName" xml:space="preserve"><value>Otevřít datovou složku</value></data>
   <data name="DataStoreHealth.OpenPreMigrationBackup" xml:space="preserve"><value>Předmigrační záloha</value></data>
   <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Otevřít předmigrační zálohu</value></data>
+  <data name="DataStoreHealth.Report.AttachmentsFolderExists" xml:space="preserve"><value>Složka spravovaných příloh existuje: {0}</value></data>
+  <data name="DataStoreHealth.Report.AttachmentsFolderMissingNoManaged" xml:space="preserve"><value>Složka spravovaných příloh zatím neexistuje; vytvoří se při první spravované příloze.</value></data>
+  <data name="DataStoreHealth.Report.AttachmentsFolderMissingWithManaged" xml:space="preserve"><value>Složka spravovaných příloh chybí, ale databáze odkazuje na {0} spravovaných příloh: {1}</value></data>
+  <data name="DataStoreHealth.Report.DatabaseCheckFailed" xml:space="preserve"><value>Databázi se nepodařilo otevřít nebo zkontrolovat: {0}</value></data>
+  <data name="DataStoreHealth.Report.DatabaseMissingDetail" xml:space="preserve"><value>Soubor databáze nebyl nalezen: {0}</value></data>
+  <data name="DataStoreHealth.Report.DatabaseMissingSummary" xml:space="preserve"><value>Databáze datové sady 2.0 nebyla nalezena.</value></data>
+  <data name="DataStoreHealth.Report.DataPathMissingDetail" xml:space="preserve"><value>Datová složka nebyla nalezena: {0}</value></data>
+  <data name="DataStoreHealth.Report.DataPathMissingSummary" xml:space="preserve"><value>Datová složka neexistuje.</value></data>
+  <data name="DataStoreHealth.Report.DataPathNotWritable" xml:space="preserve"><value>Datová složka není zapisovatelná: {0}</value></data>
+  <data name="DataStoreHealth.Report.DataPathWritable" xml:space="preserve"><value>Datová složka je zapisovatelná.</value></data>
+  <data name="DataStoreHealth.Report.ExpectedTablesMissing" xml:space="preserve"><value>SQLite databázi chybí očekávané tabulky: {0}.</value></data>
+  <data name="DataStoreHealth.Report.ExpectedTablesPresent" xml:space="preserve"><value>SQLite obsahuje všechny očekávané tabulky datové sady 2.0.</value></data>
+  <data name="DataStoreHealth.Report.LiveLegacyFilesPresent" xml:space="preserve"><value>V živé datové složce zůstaly legacy TSV/INI soubory: {0}.</value></data>
+  <data name="DataStoreHealth.Report.NoDetail" xml:space="preserve"><value>bez detailu</value></data>
+  <data name="DataStoreHealth.Report.NoDetailsReturned" xml:space="preserve"><value>Kontrola nevrátila žádné další detaily.</value></data>
+  <data name="DataStoreHealth.Report.NoLiveLegacyFiles" xml:space="preserve"><value>V živé datové složce nejsou legacy TSV/INI soubory.</value></data>
+  <data name="DataStoreHealth.Report.QuickCheckOk" xml:space="preserve"><value>SQLite quick_check je v pořádku.</value></data>
+  <data name="DataStoreHealth.Report.QuickCheckProblem" xml:space="preserve"><value>SQLite quick_check vrátil problém: {0}.</value></data>
+  <data name="DataStoreHealth.Report.SchemaMarkerMissing" xml:space="preserve"><value>SQLite databázi chybí schema marker 2.0-initial.</value></data>
+  <data name="DataStoreHealth.Report.SchemaMarkerPresent" xml:space="preserve"><value>Schema marker 2.0-initial je přítomný.</value></data>
+  <data name="DataStoreHealth.Report.SummaryError" xml:space="preserve"><value>Datová sada 2.0 má problém. Data nebyla automaticky opravena ani smazána.</value></data>
+  <data name="DataStoreHealth.Report.SummaryHealthy" xml:space="preserve"><value>Datová sada 2.0 je v pořádku.</value></data>
+  <data name="DataStoreHealth.Report.SummaryWarning" xml:space="preserve"><value>Datová sada 2.0 je použitelná, ale vyžaduje pozornost.</value></data>
   <data name="DataStoreHealth.Title" xml:space="preserve"><value>Kontrola datové sady 2.0</value></data>
+  <data name="DataMigration.LegacyCleanupCompleted" xml:space="preserve"><value>Datová sada 2.0 je připravena. Zbylé původní TSV/INI soubory byly přesunuty mimo živou datovou složku do {0}.</value></data>
+  <data name="DataMigration.LegacyMigrationCompleted" xml:space="preserve"><value>Data byla automaticky migrována do datové sady 2.0. Původní TSV/INI soubory byly po ověření SQLite přesunuty mimo živou datovou složku do {0}.</value></data>
+  <data name="DataMigration.NotNeeded" xml:space="preserve"><value>Datová sada 2.0 je připravena.</value></data>
   <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Instalační jazykové předvolby byly doplněny do datové sady 2.0.</value></data>
   <data name="InstallerLocaleSeed.InvalidLanguage" xml:space="preserve"><value>Instalační jazykové předvolby neobsahují podporovaný konkrétní jazyk.</value></data>
   <data name="InstallerLocaleSeed.InvalidRead" xml:space="preserve"><value>Instalační jazykové předvolby se nepodařilo načíst: {0}</value></data>

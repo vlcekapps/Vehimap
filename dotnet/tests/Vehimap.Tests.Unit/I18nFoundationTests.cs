@@ -917,6 +917,33 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Pilot_sqlite_health_and_migration_messages_use_resource_localization()
+    {
+        var root = FindRepositoryRoot();
+        var migrationService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Storage.Sqlite", "SqliteDataMigrationService.cs"));
+        var healthService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Storage.Sqlite", "SqliteDataStoreHealthService.cs"));
+        var migrationResult = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Models", "DataMigrationResult.cs"));
+        var healthReport = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Models", "DataStoreHealthReport.cs"));
+        var healthDialogViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "DataStoreHealthDialogViewModel.cs"));
+
+        Assert.Contains("DataMigration.LegacyMigrationCompleted", migrationService);
+        Assert.Contains("DataMigration.LegacyCleanupCompleted", migrationService);
+        Assert.Contains("DataMigration.NotNeeded", migrationService);
+        Assert.Contains("DataStoreHealth.Report.SummaryHealthy", healthService);
+        Assert.Contains("DataStoreHealth.Report.DatabaseCheckFailed", healthService);
+        Assert.Contains("DataStoreHealth.Report.QuickCheckOk", healthService);
+        Assert.Contains("DataStoreHealth.Diagnostics.Title", healthDialogViewModel);
+        Assert.Contains("DataStoreHealth.Diagnostics.DetailItem", healthDialogViewModel);
+        Assert.DoesNotContain("DiagnosticText", healthReport);
+        Assert.DoesNotContain("NotNeeded", migrationResult);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), migrationService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), healthService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), migrationResult);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), healthReport);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), healthDialogViewModel);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();

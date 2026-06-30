@@ -1,6 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Storage.Sqlite;
 
@@ -31,6 +32,13 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         "settings.ini"
     ];
 
+    private readonly IAppLocalizer _localizer;
+
+    public SqliteDataStoreHealthService(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+    }
+
     public async Task<DataStoreHealthReport> CheckAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
     {
         var details = new List<string>();
@@ -43,8 +51,8 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         {
             return BuildReport(
                 DataStoreHealthStatus.Error,
-                "Datová složka neexistuje.",
-                [$"Datová složka nebyla nalezena: {dataPath}"],
+                L("DataStoreHealth.Report.DataPathMissingSummary"),
+                [LF("DataStoreHealth.Report.DataPathMissingDetail", dataPath)],
                 databasePath,
                 dataPath);
         }
@@ -53,8 +61,8 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         {
             return BuildReport(
                 DataStoreHealthStatus.Error,
-                "Databáze datové sady 2.0 nebyla nalezena.",
-                [$"Soubor databáze nebyl nalezen: {databasePath}"],
+                L("DataStoreHealth.Report.DatabaseMissingSummary"),
+                [LF("DataStoreHealth.Report.DatabaseMissingDetail", databasePath)],
                 databasePath,
                 dataPath);
         }
@@ -87,14 +95,14 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             status = DataStoreHealthStatus.Error;
-            details.Add($"Databázi se nepodařilo otevřít nebo zkontrolovat: {ex.Message}");
+            details.Add(LF("DataStoreHealth.Report.DatabaseCheckFailed", ex.Message));
         }
 
         var summary = status switch
         {
-            DataStoreHealthStatus.Healthy => "Datová sada 2.0 je v pořádku.",
-            DataStoreHealthStatus.Warning => "Datová sada 2.0 je použitelná, ale vyžaduje pozornost.",
-            _ => "Datová sada 2.0 má problém. Data nebyla automaticky opravena ani smazána."
+            DataStoreHealthStatus.Healthy => L("DataStoreHealth.Report.SummaryHealthy"),
+            DataStoreHealthStatus.Warning => L("DataStoreHealth.Report.SummaryWarning"),
+            _ => L("DataStoreHealth.Report.SummaryError")
         };
 
         return BuildReport(status, summary, details, databasePath, dataPath, preMigrationBackupPath);
@@ -112,19 +120,19 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         return builder.ToString();
     }
 
-    private static void CheckDataPathWritable(string dataPath, List<string> details, ref DataStoreHealthStatus status)
+    private void CheckDataPathWritable(string dataPath, List<string> details, ref DataStoreHealthStatus status)
     {
         var probePath = Path.Combine(dataPath, $".vehimap-health-{Guid.NewGuid():N}.tmp");
         try
         {
             File.WriteAllText(probePath, "Vehimap health check");
             File.Delete(probePath);
-            details.Add("Datová složka je zapisovatelná.");
+            details.Add(L("DataStoreHealth.Report.DataPathWritable"));
         }
         catch (Exception ex)
         {
             status = DataStoreHealthStatus.Error;
-            details.Add($"Datová složka není zapisovatelná: {ex.Message}");
+            details.Add(LF("DataStoreHealth.Report.DataPathNotWritable", ex.Message));
             try
             {
                 if (File.Exists(probePath))
@@ -138,7 +146,7 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         }
     }
 
-    private static void CheckLegacyFiles(VehimapDataRoot dataRoot, List<string> details, ref DataStoreHealthStatus status)
+    private void CheckLegacyFiles(VehimapDataRoot dataRoot, List<string> details, ref DataStoreHealthStatus status)
     {
         var remaining = LegacyFileNames
             .Where(fileName => File.Exists(Path.Combine(dataRoot.DataPath, fileName)))
@@ -146,15 +154,15 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
 
         if (remaining.Length == 0)
         {
-            details.Add("V živé datové složce nejsou legacy TSV/INI soubory.");
+            details.Add(L("DataStoreHealth.Report.NoLiveLegacyFiles"));
             return;
         }
 
         status = MaxStatus(status, DataStoreHealthStatus.Warning);
-        details.Add($"V živé datové složce zůstaly legacy TSV/INI soubory: {string.Join(", ", remaining)}.");
+        details.Add(LF("DataStoreHealth.Report.LiveLegacyFilesPresent", string.Join(", ", remaining)));
     }
 
-    private static async Task<DataStoreHealthStatus> CheckQuickCheckAsync(
+    private async Task<DataStoreHealthStatus> CheckQuickCheckAsync(
         SqliteConnection connection,
         List<string> details,
         CancellationToken cancellationToken)
@@ -164,11 +172,11 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         var result = Convert.ToString(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
         if (string.Equals(result, "ok", StringComparison.OrdinalIgnoreCase))
         {
-            details.Add("SQLite quick_check je v pořádku.");
+            details.Add(L("DataStoreHealth.Report.QuickCheckOk"));
             return DataStoreHealthStatus.Healthy;
         }
 
-        details.Add($"SQLite quick_check vrátil problém: {result ?? "bez detailu"}.");
+        details.Add(LF("DataStoreHealth.Report.QuickCheckProblem", result ?? L("DataStoreHealth.Report.NoDetail")));
         return DataStoreHealthStatus.Error;
     }
 
@@ -186,7 +194,7 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         return tables;
     }
 
-    private static void CheckExpectedTables(HashSet<string> tables, List<string> details, ref DataStoreHealthStatus status)
+    private void CheckExpectedTables(HashSet<string> tables, List<string> details, ref DataStoreHealthStatus status)
     {
         var missing = ExpectedTables
             .Where(table => !tables.Contains(table))
@@ -194,15 +202,15 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
 
         if (missing.Length == 0)
         {
-            details.Add("SQLite obsahuje všechny očekávané tabulky datové sady 2.0.");
+            details.Add(L("DataStoreHealth.Report.ExpectedTablesPresent"));
             return;
         }
 
         status = DataStoreHealthStatus.Error;
-        details.Add($"SQLite databázi chybí očekávané tabulky: {string.Join(", ", missing)}.");
+        details.Add(LF("DataStoreHealth.Report.ExpectedTablesMissing", string.Join(", ", missing)));
     }
 
-    private static async Task<DataStoreHealthStatus> CheckSchemaMigrationMarkerAsync(
+    private async Task<DataStoreHealthStatus> CheckSchemaMigrationMarkerAsync(
         SqliteConnection connection,
         List<string> details,
         CancellationToken cancellationToken)
@@ -212,15 +220,15 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         var count = Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
         if (count > 0)
         {
-            details.Add("Schema marker 2.0-initial je přítomný.");
+            details.Add(L("DataStoreHealth.Report.SchemaMarkerPresent"));
             return DataStoreHealthStatus.Healthy;
         }
 
-        details.Add("SQLite databázi chybí schema marker 2.0-initial.");
+        details.Add(L("DataStoreHealth.Report.SchemaMarkerMissing"));
         return DataStoreHealthStatus.Error;
     }
 
-    private static async Task<DataStoreHealthStatus> CheckAttachmentsAsync(
+    private async Task<DataStoreHealthStatus> CheckAttachmentsAsync(
         VehimapDataRoot dataRoot,
         SqliteConnection connection,
         List<string> details,
@@ -232,17 +240,17 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         var managedCount = Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
         if (Directory.Exists(attachmentsPath))
         {
-            details.Add($"Složka spravovaných příloh existuje: {attachmentsPath}");
+            details.Add(LF("DataStoreHealth.Report.AttachmentsFolderExists", attachmentsPath));
             return DataStoreHealthStatus.Healthy;
         }
 
         if (managedCount > 0)
         {
-            details.Add($"Složka spravovaných příloh chybí, ale databáze odkazuje na {managedCount} spravovaných příloh: {attachmentsPath}");
+            details.Add(LF("DataStoreHealth.Report.AttachmentsFolderMissingWithManaged", managedCount, attachmentsPath));
             return DataStoreHealthStatus.Warning;
         }
 
-        details.Add("Složka spravovaných příloh zatím neexistuje; vytvoří se při první spravované příloze.");
+        details.Add(L("DataStoreHealth.Report.AttachmentsFolderMissingNoManaged"));
         return DataStoreHealthStatus.Healthy;
     }
 
@@ -254,7 +262,7 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 
-    private static DataStoreHealthReport BuildReport(
+    private DataStoreHealthReport BuildReport(
         DataStoreHealthStatus status,
         string summary,
         IReadOnlyList<string> details,
@@ -264,11 +272,15 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         new(
             status,
             summary,
-            details.Count == 0 ? ["Kontrola nevrátila žádné další detaily."] : details,
+            details.Count == 0 ? [L("DataStoreHealth.Report.NoDetailsReturned")] : details,
             databasePath,
             dataPath,
             string.IsNullOrWhiteSpace(preMigrationBackupPath) ? null : preMigrationBackupPath);
 
     private static DataStoreHealthStatus MaxStatus(DataStoreHealthStatus current, DataStoreHealthStatus candidate) =>
         (int)candidate > (int)current ? candidate : current;
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 }
