@@ -54,6 +54,35 @@ public sealed class LegacySmartAdvisorServiceTests
     }
 
     [Fact]
+    public void BuildSmartAdvisor_maps_localized_audit_categories()
+    {
+        var service = CreateService();
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            {
+                CreateVehicle("veh_1", "Milena")
+            }
+        };
+        var auditItems = new[]
+        {
+            new AuditItem(
+                AuditSeverity.Warning,
+                "Attachment",
+                "veh_1",
+                "Milena",
+                "Doklad",
+                "rec_1",
+                "Missing managed attachment",
+                "The document attachment file is not available.")
+        };
+
+        var summary = service.BuildSmartAdvisor(dataSet, auditItems, null, new DateOnly(2026, 6, 15));
+
+        Assert.Equal(SmartAdvisorCategory.Attachments, Assert.Single(summary.Items).Category);
+    }
+
+    [Fact]
     public void BuildSmartAdvisor_reports_overdue_and_upcoming_timeline_items()
     {
         var service = CreateService();

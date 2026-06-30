@@ -268,4 +268,45 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("Warning", projection.Warnings.Single().Severity);
         Assert.Contains("related refuel entry", projection.Warnings.Single().AccessibleLabel, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void Projection_service_localizes_audit_severity_summary_and_accessible_labels()
+    {
+        var projectionService = new DesktopProjectionService(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")),
+            CultureInfo.GetCultureInfo("en-US"));
+        var audit = new[]
+        {
+            new AuditItem(
+                AuditSeverity.Error,
+                "Vehicle",
+                "veh_1",
+                "Milena",
+                "Vozidlo",
+                "veh_1",
+                "Missing license plate",
+                "The active vehicle has no license plate filled in."),
+            new AuditItem(
+                AuditSeverity.Warning,
+                "Costs",
+                "veh_1",
+                "Milena",
+                "Doklad",
+                "rec_1",
+                "Missing usable date",
+                "The document has a price but no usable date for cost analysis.")
+        };
+
+        var items = projectionService.BuildAuditItems(audit);
+
+        Assert.Equal("Error", items[0].Severity);
+        Assert.Equal("Warning", items[1].Severity);
+        Assert.Contains("Error, Milena, Missing license plate", items[0].AccessibleLabel, StringComparison.Ordinal);
+        Assert.Equal(
+            "There are 2 items to resolve: 1 errors and 1 warnings.",
+            projectionService.BuildAuditSummary(audit));
+        Assert.Equal(
+            "Data audit has not found any issues that need action.",
+            projectionService.BuildAuditSummary(Array.Empty<AuditItem>()));
+    }
 }

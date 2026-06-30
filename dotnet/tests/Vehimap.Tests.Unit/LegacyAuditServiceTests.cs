@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Services;
@@ -79,6 +80,48 @@ public sealed class LegacyAuditServiceTests
 
         Assert.Contains(audit, item => item.Title == "Klesající tachometr" && item.VehicleId == "veh_1" && item.Severity == AuditSeverity.Error);
         Assert.Contains(audit, item => item.Title == "Chybí použitelný tachometr" && item.VehicleId == "veh_2");
+    }
+
+    [Fact]
+    public void BuildAudit_uses_localized_domain_messages()
+    {
+        var service = new LegacyAuditService(
+            new TestAttachmentService(),
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Cars", "", "Skoda 120", "", "1980", "37", "", "", "", "")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_1", "veh_1", "Document", "Insurance", "", "05/2026", "04/2026", "abc", VehicleRecordAttachmentMode.External, "", "")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "10.01.2026", "Service", "12000", "", ""),
+                new VehicleHistoryEntry("hist_2", "veh_1", "20.01.2026", "Service", "11800", "", "")
+            ]
+        };
+
+        var audit = service.BuildAudit(new VehimapDataRoot("C:\\vehimap", "C:\\vehimap\\data", true), dataSet);
+
+        Assert.Contains(audit, item =>
+            item.Category == "Vehicle"
+            && item.Title == "Missing license plate"
+            && item.Message.Contains("license plate", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(audit, item =>
+            item.Category == "Document"
+            && item.Title == "Invalid validity range");
+        Assert.Contains(audit, item =>
+            item.Category == "Costs"
+            && item.Title == "Invalid amount"
+            && item.Message.Contains("document", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(audit, item =>
+            item.Category == "History"
+            && item.Title == "Decreasing odometer"
+            && item.Message.Contains("11800", StringComparison.Ordinal));
     }
 
     private sealed class TestAttachmentService : IFileAttachmentService

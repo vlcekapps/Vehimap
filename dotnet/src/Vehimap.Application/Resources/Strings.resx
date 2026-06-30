@@ -48,6 +48,7 @@
   <data name="Common.Edit" xml:space="preserve"><value>Edit</value></data>
   <data name="Common.EmptyValue" xml:space="preserve"><value>not filled</value></data>
   <data name="Common.NoDate" xml:space="preserve"><value>no date</value></data>
+  <data name="Common.UnknownVehicle" xml:space="preserve"><value>Unknown vehicle</value></data>
   <data name="Common.Save" xml:space="preserve"><value>Save</value></data>
   <data name="Common.Search" xml:space="preserve"><value>Search</value></data>
   <data name="Common.Sort" xml:space="preserve"><value>Sort</value></data>
@@ -591,6 +592,45 @@
   <data name="Notification.HelpText" xml:space="preserve"><value>Short Vehimap notification. It closes automatically; when active, press Escape to close it.</value></data>
   <data name="Notification.Title" xml:space="preserve"><value>Vehimap notification</value></data>
   <data name="Notification.WindowName" xml:space="preserve"><value>Vehimap notification</value></data>
+  <data name="Audit.Category.Attachment" xml:space="preserve"><value>Attachment</value></data>
+  <data name="Audit.Category.Costs" xml:space="preserve"><value>Costs</value></data>
+  <data name="Audit.Category.Document" xml:space="preserve"><value>Document</value></data>
+  <data name="Audit.Category.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="Audit.Category.GreenCard" xml:space="preserve"><value>Green card</value></data>
+  <data name="Audit.Category.History" xml:space="preserve"><value>History</value></data>
+  <data name="Audit.Category.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="Audit.Category.TechnicalInspection" xml:space="preserve"><value>Technical inspection</value></data>
+  <data name="Audit.Category.Vehicle" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="Audit.Message.FuelInvalidAmount" xml:space="preserve"><value>The refuel entry contains an amount that could not be converted to a number.</value></data>
+  <data name="Audit.Message.FuelMissingUsableDate" xml:space="preserve"><value>The refuel entry has a price but no usable date.</value></data>
+  <data name="Audit.Message.HistoryInvalidAmount" xml:space="preserve"><value>The historical event contains an amount that could not be converted to a number.</value></data>
+  <data name="Audit.Message.HistoryMissingUsableDate" xml:space="preserve"><value>The historical event has a price but no usable date.</value></data>
+  <data name="Audit.Message.InvalidGreenCardRange" xml:space="preserve"><value>The green card range is invalid because Valid from is later than Valid to.</value></data>
+  <data name="Audit.Message.InvalidValidityRange" xml:space="preserve"><value>The valid-from date is later than the valid-to date.</value></data>
+  <data name="Audit.Message.MaintenanceMissingUsableOdometer" xml:space="preserve"><value>The maintenance plan uses a distance interval, but no usable current odometer is available for the vehicle.</value></data>
+  <data name="Audit.Message.MissingAttachment" xml:space="preserve"><value>The document attachment file is not available at the expected location.</value></data>
+  <data name="Audit.Message.MissingNextTechnicalInspection" xml:space="preserve"><value>The active vehicle has no next technical inspection date filled in.</value></data>
+  <data name="Audit.Message.MissingPlate" xml:space="preserve"><value>The active vehicle has no license plate filled in.</value></data>
+  <data name="Audit.Message.OdometerRegression" xml:space="preserve"><value>Odometer value {0} is lower than the earlier recorded value {1}.</value></data>
+  <data name="Audit.Message.RecordInvalidAmount" xml:space="preserve"><value>The document contains a price that could not be converted to a number.</value></data>
+  <data name="Audit.Message.RecordMissingUsableDate" xml:space="preserve"><value>The document has a price but no usable date for cost analysis.</value></data>
+  <data name="Audit.Message.RecordWithoutPath" xml:space="preserve"><value>The document has no attachment path filled in.</value></data>
+  <data name="Audit.Severity.Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Audit.Severity.Info" xml:space="preserve"><value>Info</value></data>
+  <data name="Audit.Severity.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Audit.Summary.Empty" xml:space="preserve"><value>Data audit has not found any issues that need action.</value></data>
+  <data name="Audit.Summary.WithItems" xml:space="preserve"><value>There are {0} items to resolve: {1} errors and {2} warnings.</value></data>
+  <data name="Audit.Title.InvalidAmount" xml:space="preserve"><value>Invalid amount</value></data>
+  <data name="Audit.Title.InvalidGreenCardRange" xml:space="preserve"><value>Invalid green card range</value></data>
+  <data name="Audit.Title.InvalidValidityRange" xml:space="preserve"><value>Invalid validity range</value></data>
+  <data name="Audit.Title.MissingExternalAttachment" xml:space="preserve"><value>Missing external attachment</value></data>
+  <data name="Audit.Title.MissingManagedAttachment" xml:space="preserve"><value>Missing managed attachment</value></data>
+  <data name="Audit.Title.MissingNextTechnicalInspection" xml:space="preserve"><value>Missing next technical inspection</value></data>
+  <data name="Audit.Title.MissingPlate" xml:space="preserve"><value>Missing license plate</value></data>
+  <data name="Audit.Title.MissingUsableDate" xml:space="preserve"><value>Missing usable date</value></data>
+  <data name="Audit.Title.MissingUsableOdometer" xml:space="preserve"><value>Missing usable odometer</value></data>
+  <data name="Audit.Title.OdometerRegression" xml:space="preserve"><value>Decreasing odometer</value></data>
+  <data name="Audit.Title.RecordWithoutPath" xml:space="preserve"><value>Document without a path</value></data>
   <data name="FuelAnalysis.Accessible.GroupSummary" xml:space="preserve"><value>{0}, {1}, {2}, liters {3}, costs {4}, average price per liter {5}, latest refuel {6}</value></data>
   <data name="FuelAnalysis.Accessible.Segment" xml:space="preserve"><value>Consumption segment {0}, distance {1}, refueled {2}, consumption {3}, price per liter {4}, cost per kilometer {5}</value></data>
   <data name="FuelAnalysis.Accessible.Warning" xml:space="preserve"><value>{0}: {1}. {2}</value></data>

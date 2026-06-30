@@ -174,17 +174,17 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
 
     private static SmartAdvisorCategory MapAuditCategory(AuditItem item)
     {
-        if (string.Equals(item.Category, "Příloha", StringComparison.CurrentCultureIgnoreCase))
+        if (IsAny(item.Category, "Příloha", "Attachment"))
         {
             return SmartAdvisorCategory.Attachments;
         }
 
-        if (string.Equals(item.Category, "Údržba", StringComparison.CurrentCultureIgnoreCase))
+        if (IsAny(item.Category, "Údržba", "Maintenance"))
         {
             return SmartAdvisorCategory.Maintenance;
         }
 
-        if (string.Equals(item.Category, "Náklady", StringComparison.CurrentCultureIgnoreCase))
+        if (IsAny(item.Category, "Náklady", "Costs"))
         {
             return SmartAdvisorCategory.Costs;
         }
@@ -194,8 +194,8 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
             return SmartAdvisorCategory.Fuel;
         }
 
-        if (string.Equals(item.Category, "Technická kontrola", StringComparison.CurrentCultureIgnoreCase)
-            || string.Equals(item.Category, "Zelená karta", StringComparison.CurrentCultureIgnoreCase))
+        if (IsAny(item.Category, "Technická kontrola", "Technical inspection")
+            || IsAny(item.Category, "Zelená karta", "Green card"))
         {
             return SmartAdvisorCategory.Deadlines;
         }
@@ -282,4 +282,17 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
 
     private static string ValueOrFallback(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
+
+    private static bool IsAny(string value, params string[] expectedValues)
+    {
+        foreach (var expectedValue in expectedValues)
+        {
+            if (string.Equals(value, expectedValue, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

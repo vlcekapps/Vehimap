@@ -93,9 +93,9 @@ internal sealed class DesktopProjectionService
                 item.EntityId,
                 item.Severity switch
                 {
-                    AuditSeverity.Error => "Chyba",
-                    AuditSeverity.Warning => "Upozornění",
-                    _ => "Info"
+                    AuditSeverity.Error => L("Audit.Severity.Error"),
+                    AuditSeverity.Warning => L("Audit.Severity.Warning"),
+                    _ => L("Audit.Severity.Info")
                 },
                 item.Category,
                 item.VehicleName,
@@ -494,12 +494,12 @@ internal sealed class DesktopProjectionService
     {
         if (audit.Count == 0)
         {
-            return "Audit zatím nenašel žádné problémy, které by potřebovaly zásah.";
+            return L("Audit.Summary.Empty");
         }
 
         var errorCount = audit.Count(item => item.Severity == AuditSeverity.Error);
         var warningCount = audit.Count(item => item.Severity == AuditSeverity.Warning);
-        return $"K řešení je {audit.Count} položek: {errorCount} chyb a {warningCount} upozornění.";
+        return LF("Audit.Summary.WithItems", audit.Count, errorCount, warningCount);
     }
 
     public string BuildCostSummary(CostAnalysisSummary summary)

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -6,11 +7,19 @@ namespace Vehimap.Application.Services;
 
 public sealed class LegacyAuditService : IAuditService
 {
-    private readonly IFileAttachmentService _attachmentService;
+    private const string EntityVehicle = "Vozidlo";
+    private const string EntityHistory = "Historie";
+    private const string EntityFuel = "Tankov\u00E1n\u00ED";
+    private const string EntityRecord = "Doklad";
+    private const string EntityMaintenance = "\u00DAdr\u017Eba";
 
-    public LegacyAuditService(IFileAttachmentService attachmentService)
+    private readonly IFileAttachmentService _attachmentService;
+    private readonly IAppLocalizer _localizer;
+
+    public LegacyAuditService(IFileAttachmentService attachmentService, IAppLocalizer? localizer = null)
     {
         _attachmentService = attachmentService;
+        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
     }
 
     public IReadOnlyList<AuditItem> BuildAudit(VehimapDataRoot dataRoot, VehimapDataSet dataSet)
@@ -32,62 +41,64 @@ public sealed class LegacyAuditService : IAuditService
             {
                 items.Add(CreateVehicleAudit(
                     AuditSeverity.Warning,
-                    "Vozidlo",
+                    L("Audit.Category.Vehicle"),
                     vehicle,
-                    "Chybí SPZ",
-                    "Aktivní vozidlo nemá vyplněnou registrační značku."));
+                    L("Audit.Title.MissingPlate"),
+                    L("Audit.Message.MissingPlate")));
             }
 
             if (string.IsNullOrWhiteSpace(vehicle.NextTk))
             {
                 items.Add(CreateVehicleAudit(
                     AuditSeverity.Warning,
-                    "Technická kontrola",
+                    L("Audit.Category.TechnicalInspection"),
                     vehicle,
-                    "Chybí příští TK",
-                    "Aktivní vozidlo nemá vyplněný termín příští technické kontroly."));
+                    L("Audit.Title.MissingNextTechnicalInspection"),
+                    L("Audit.Message.MissingNextTechnicalInspection")));
             }
 
             if (HasInvalidGreenCardRange(vehicle))
             {
                 items.Add(CreateVehicleAudit(
                     AuditSeverity.Error,
-                    "Zelená karta",
+                    L("Audit.Category.GreenCard"),
                     vehicle,
-                    "Neplatný rozsah zelené karty",
-                    "Rozsah zelené karty je neplatný, protože pole Platné od je později než pole Platné do."));
+                    L("Audit.Title.InvalidGreenCardRange"),
+                    L("Audit.Message.InvalidGreenCardRange")));
             }
         }
 
         foreach (var record in dataSet.Records)
         {
             var vehicle = vehiclesById.GetValueOrDefault(record.VehicleId);
-            var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+            var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
             var resolvedPath = ResolveRecordPath(dataRoot, record);
 
             if (record.AttachmentMode == VehicleRecordAttachmentMode.External && string.IsNullOrWhiteSpace(record.FilePath))
             {
                 items.Add(new AuditItem(
                     AuditSeverity.Warning,
-                    "Příloha",
+                    L("Audit.Category.Attachment"),
                     record.VehicleId,
                     vehicleName,
-                    "Doklad",
+                    EntityRecord,
                     record.Id,
-                    "Doklad bez cesty",
-                    "Doklad nemá vyplněnou cestu k příloze."));
+                    L("Audit.Title.RecordWithoutPath"),
+                    L("Audit.Message.RecordWithoutPath")));
             }
             else if (!string.IsNullOrWhiteSpace(record.FilePath) && !File.Exists(resolvedPath))
             {
                 items.Add(new AuditItem(
                     AuditSeverity.Warning,
-                    "Příloha",
+                    L("Audit.Category.Attachment"),
                     record.VehicleId,
                     vehicleName,
-                    "Doklad",
+                    EntityRecord,
                     record.Id,
-                    record.AttachmentMode == VehicleRecordAttachmentMode.Managed ? "Chybí spravovaná příloha" : "Chybí externí příloha",
-                    "U dokladu není dostupný soubor přílohy v očekávaném umístění."));
+                    record.AttachmentMode == VehicleRecordAttachmentMode.Managed
+                        ? L("Audit.Title.MissingManagedAttachment")
+                        : L("Audit.Title.MissingExternalAttachment"),
+                    L("Audit.Message.MissingAttachment")));
             }
 
             if (VehimapValueParser.TryParseMonthYear(record.ValidFrom, out var validFrom)
@@ -96,13 +107,13 @@ public sealed class LegacyAuditService : IAuditService
             {
                 items.Add(new AuditItem(
                     AuditSeverity.Error,
-                    "Doklad",
+                    L("Audit.Category.Document"),
                     record.VehicleId,
                     vehicleName,
-                    "Doklad",
+                    EntityRecord,
                     record.Id,
-                    "Neplatný rozsah platnosti",
-                    "Datum platnosti od je později než datum platnosti do."));
+                    L("Audit.Title.InvalidValidityRange"),
+                    L("Audit.Message.InvalidValidityRange")));
             }
 
             if (!string.IsNullOrWhiteSpace(record.Price))
@@ -111,25 +122,25 @@ public sealed class LegacyAuditService : IAuditService
                 {
                     items.Add(new AuditItem(
                         AuditSeverity.Warning,
-                        "Náklady",
+                        L("Audit.Category.Costs"),
                         record.VehicleId,
                         vehicleName,
-                        "Doklad",
+                        EntityRecord,
                         record.Id,
-                        "Neplatná částka",
-                        "Doklad obsahuje cenu, kterou se nepodařilo převést na číslo."));
+                        L("Audit.Title.InvalidAmount"),
+                        L("Audit.Message.RecordInvalidAmount")));
                 }
                 else if (!VehimapValueParser.TryResolveRecordDate(record, out _))
                 {
                     items.Add(new AuditItem(
                         AuditSeverity.Warning,
-                        "Náklady",
+                        L("Audit.Category.Costs"),
                         record.VehicleId,
                         vehicleName,
-                        "Doklad",
+                        EntityRecord,
                         record.Id,
-                        "Chybí použitelné datum",
-                        "Doklad má cenu, ale nemá použitelné datum pro zařazení do nákladů."));
+                        L("Audit.Title.MissingUsableDate"),
+                        L("Audit.Message.RecordMissingUsableDate")));
                 }
             }
         }
@@ -146,12 +157,12 @@ public sealed class LegacyAuditService : IAuditService
             .ToList();
     }
 
-    private static void AddHistoryAuditItems(List<AuditItem> items, IReadOnlyDictionary<string, Vehicle> vehiclesById, IEnumerable<VehicleHistoryEntry> historyEntries)
+    private void AddHistoryAuditItems(List<AuditItem> items, IReadOnlyDictionary<string, Vehicle> vehiclesById, IEnumerable<VehicleHistoryEntry> historyEntries)
     {
         foreach (var entry in historyEntries)
         {
             var vehicle = vehiclesById.GetValueOrDefault(entry.VehicleId);
-            var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+            var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
 
             if (!string.IsNullOrWhiteSpace(entry.Cost))
             {
@@ -159,25 +170,25 @@ public sealed class LegacyAuditService : IAuditService
                 {
                     items.Add(new AuditItem(
                         AuditSeverity.Warning,
-                        "Náklady",
+                        L("Audit.Category.Costs"),
                         entry.VehicleId,
                         vehicleName,
-                        "Historie",
+                        EntityHistory,
                         entry.Id,
-                        "Neplatná částka",
-                        "Historická událost obsahuje částku, kterou se nepodařilo převést na číslo."));
+                        L("Audit.Title.InvalidAmount"),
+                        L("Audit.Message.HistoryInvalidAmount")));
                 }
                 else if (!VehimapValueParser.TryParseEventDate(entry.EventDate, out _))
                 {
                     items.Add(new AuditItem(
                         AuditSeverity.Warning,
-                        "Náklady",
+                        L("Audit.Category.Costs"),
                         entry.VehicleId,
                         vehicleName,
-                        "Historie",
+                        EntityHistory,
                         entry.Id,
-                        "Chybí použitelné datum",
-                        "Historická událost má cenu, ale nemá použitelné datum."));
+                        L("Audit.Title.MissingUsableDate"),
+                        L("Audit.Message.HistoryMissingUsableDate")));
                 }
             }
         }
@@ -185,16 +196,16 @@ public sealed class LegacyAuditService : IAuditService
         AddOdometerRegressionAuditItems(
             items,
             vehiclesById,
-            historyEntries.Select(entry => new OdometerSample(entry.VehicleId, entry.Id, "Historie", entry.EventDate, entry.Odometer)),
-            "Historie");
+            historyEntries.Select(entry => new OdometerSample(entry.VehicleId, entry.Id, EntityHistory, entry.EventDate, entry.Odometer)),
+            L("Audit.Category.History"));
     }
 
-    private static void AddFuelAuditItems(List<AuditItem> items, IReadOnlyDictionary<string, Vehicle> vehiclesById, IEnumerable<FuelEntry> fuelEntries)
+    private void AddFuelAuditItems(List<AuditItem> items, IReadOnlyDictionary<string, Vehicle> vehiclesById, IEnumerable<FuelEntry> fuelEntries)
     {
         foreach (var entry in fuelEntries)
         {
             var vehicle = vehiclesById.GetValueOrDefault(entry.VehicleId);
-            var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+            var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
 
             if (!string.IsNullOrWhiteSpace(entry.TotalCost))
             {
@@ -202,25 +213,25 @@ public sealed class LegacyAuditService : IAuditService
                 {
                     items.Add(new AuditItem(
                         AuditSeverity.Warning,
-                        "Náklady",
+                        L("Audit.Category.Costs"),
                         entry.VehicleId,
                         vehicleName,
-                        "Tankování",
+                        EntityFuel,
                         entry.Id,
-                        "Neplatná částka",
-                        "Tankování obsahuje částku, kterou se nepodařilo převést na číslo."));
+                        L("Audit.Title.InvalidAmount"),
+                        L("Audit.Message.FuelInvalidAmount")));
                 }
                 else if (!VehimapValueParser.TryParseEventDate(entry.EntryDate, out _))
                 {
                     items.Add(new AuditItem(
                         AuditSeverity.Warning,
-                        "Náklady",
+                        L("Audit.Category.Costs"),
                         entry.VehicleId,
                         vehicleName,
-                        "Tankování",
+                        EntityFuel,
                         entry.Id,
-                        "Chybí použitelné datum",
-                        "Tankování má cenu, ale nemá použitelné datum."));
+                        L("Audit.Title.MissingUsableDate"),
+                        L("Audit.Message.FuelMissingUsableDate")));
                 }
             }
         }
@@ -228,11 +239,11 @@ public sealed class LegacyAuditService : IAuditService
         AddOdometerRegressionAuditItems(
             items,
             vehiclesById,
-            fuelEntries.Select(entry => new OdometerSample(entry.VehicleId, entry.Id, "Tankování", entry.EntryDate, entry.Odometer)),
-            "Tankování");
+            fuelEntries.Select(entry => new OdometerSample(entry.VehicleId, entry.Id, EntityFuel, entry.EntryDate, entry.Odometer)),
+            L("Audit.Category.Fuel"));
     }
 
-    private static void AddMaintenanceAuditItems(
+    private void AddMaintenanceAuditItems(
         List<AuditItem> items,
         IReadOnlyDictionary<string, Vehicle> vehiclesById,
         IEnumerable<MaintenancePlan> maintenancePlans,
@@ -254,16 +265,16 @@ public sealed class LegacyAuditService : IAuditService
             }
 
             var vehicle = vehiclesById.GetValueOrDefault(plan.VehicleId);
-            var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+            var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
             items.Add(new AuditItem(
                 AuditSeverity.Warning,
-                "Údržba",
+                L("Audit.Category.Maintenance"),
                 plan.VehicleId,
                 vehicleName,
-                "Údržba",
+                EntityMaintenance,
                 plan.Id,
-                "Chybí použitelný tachometr",
-                "Plán údržby používá kilometrový interval, ale u vozidla není k dispozici použitelný aktuální tachometr."));
+                L("Audit.Title.MissingUsableOdometer"),
+                L("Audit.Message.MaintenanceMissingUsableOdometer")));
         }
     }
 
@@ -271,8 +282,8 @@ public sealed class LegacyAuditService : IAuditService
     {
         var latestByVehicle = new Dictionary<string, (DateOnly Date, int Odometer)>(StringComparer.Ordinal);
 
-        foreach (var sample in historyEntries.Select(entry => new OdometerSample(entry.VehicleId, entry.Id, "Historie", entry.EventDate, entry.Odometer))
-                     .Concat(fuelEntries.Select(entry => new OdometerSample(entry.VehicleId, entry.Id, "Tankování", entry.EntryDate, entry.Odometer))))
+        foreach (var sample in historyEntries.Select(entry => new OdometerSample(entry.VehicleId, entry.Id, EntityHistory, entry.EventDate, entry.Odometer))
+                     .Concat(fuelEntries.Select(entry => new OdometerSample(entry.VehicleId, entry.Id, EntityFuel, entry.EntryDate, entry.Odometer))))
         {
             if (!VehimapValueParser.TryParseEventDate(sample.DateText, out var sampleDate)
                 || !VehimapValueParser.TryParseOdometer(sample.OdometerText, out var odometer))
@@ -291,7 +302,7 @@ public sealed class LegacyAuditService : IAuditService
         return latestByVehicle.ToDictionary(item => item.Key, item => item.Value.Odometer, StringComparer.Ordinal);
     }
 
-    private static void AddOdometerRegressionAuditItems(
+    private void AddOdometerRegressionAuditItems(
         List<AuditItem> items,
         IReadOnlyDictionary<string, Vehicle> vehiclesById,
         IEnumerable<OdometerSample> samples,
@@ -330,7 +341,7 @@ public sealed class LegacyAuditService : IAuditService
                 }
 
                 var vehicle = vehiclesById.GetValueOrDefault(group.Key);
-                var vehicleName = vehicle?.Name ?? "Neznámé vozidlo";
+                var vehicleName = vehicle?.Name ?? L("Common.UnknownVehicle");
                 items.Add(new AuditItem(
                     AuditSeverity.Error,
                     category,
@@ -338,15 +349,15 @@ public sealed class LegacyAuditService : IAuditService
                     vehicleName,
                     current.EntityKind,
                     current.EntityId,
-                    "Klesající tachometr",
-                    $"Hodnota tachometru {current.Odometer} je nižší než dříve zaznamenaná hodnota {previous.Odometer}."));
+                    L("Audit.Title.OdometerRegression"),
+                    LF("Audit.Message.OdometerRegression", current.Odometer, previous.Odometer)));
             }
         }
     }
 
     private static AuditItem CreateVehicleAudit(AuditSeverity severity, string category, Vehicle vehicle, string title, string message)
     {
-        return new AuditItem(severity, category, vehicle.Id, vehicle.Name, "Vozidlo", vehicle.Id, title, message);
+        return new AuditItem(severity, category, vehicle.Id, vehicle.Name, EntityVehicle, vehicle.Id, title, message);
     }
 
     private static bool HasInvalidGreenCardRange(Vehicle vehicle)
@@ -382,6 +393,10 @@ public sealed class LegacyAuditService : IAuditService
             ? record.FilePath
             : Path.GetFullPath(Path.Combine(dataRoot.AppBasePath, record.FilePath));
     }
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 
     private sealed record OdometerSample(
         string VehicleId,

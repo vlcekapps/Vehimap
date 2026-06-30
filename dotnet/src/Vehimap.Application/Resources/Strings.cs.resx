@@ -48,6 +48,7 @@
   <data name="Common.Edit" xml:space="preserve"><value>Upravit</value></data>
   <data name="Common.EmptyValue" xml:space="preserve"><value>nevyplněno</value></data>
   <data name="Common.NoDate" xml:space="preserve"><value>bez data</value></data>
+  <data name="Common.UnknownVehicle" xml:space="preserve"><value>Neznámé vozidlo</value></data>
   <data name="Common.Save" xml:space="preserve"><value>Uložit</value></data>
   <data name="Common.Search" xml:space="preserve"><value>Hledat</value></data>
   <data name="Common.Sort" xml:space="preserve"><value>Řadit</value></data>
@@ -591,6 +592,45 @@
   <data name="Notification.HelpText" xml:space="preserve"><value>Krátké upozornění Vehimapu. Zavře se samo; při aktivaci ho lze zavřít klávesou Escape.</value></data>
   <data name="Notification.Title" xml:space="preserve"><value>Vehimap upozornění</value></data>
   <data name="Notification.WindowName" xml:space="preserve"><value>Upozornění Vehimapu</value></data>
+  <data name="Audit.Category.Attachment" xml:space="preserve"><value>Příloha</value></data>
+  <data name="Audit.Category.Costs" xml:space="preserve"><value>Náklady</value></data>
+  <data name="Audit.Category.Document" xml:space="preserve"><value>Doklad</value></data>
+  <data name="Audit.Category.Fuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="Audit.Category.GreenCard" xml:space="preserve"><value>Zelená karta</value></data>
+  <data name="Audit.Category.History" xml:space="preserve"><value>Historie</value></data>
+  <data name="Audit.Category.Maintenance" xml:space="preserve"><value>Údržba</value></data>
+  <data name="Audit.Category.TechnicalInspection" xml:space="preserve"><value>Technická kontrola</value></data>
+  <data name="Audit.Category.Vehicle" xml:space="preserve"><value>Vozidlo</value></data>
+  <data name="Audit.Message.FuelInvalidAmount" xml:space="preserve"><value>Tankování obsahuje částku, kterou se nepodařilo převést na číslo.</value></data>
+  <data name="Audit.Message.FuelMissingUsableDate" xml:space="preserve"><value>Tankování má cenu, ale nemá použitelné datum.</value></data>
+  <data name="Audit.Message.HistoryInvalidAmount" xml:space="preserve"><value>Historická událost obsahuje částku, kterou se nepodařilo převést na číslo.</value></data>
+  <data name="Audit.Message.HistoryMissingUsableDate" xml:space="preserve"><value>Historická událost má cenu, ale nemá použitelné datum.</value></data>
+  <data name="Audit.Message.InvalidGreenCardRange" xml:space="preserve"><value>Rozsah zelené karty je neplatný, protože pole Platné od je později než pole Platné do.</value></data>
+  <data name="Audit.Message.InvalidValidityRange" xml:space="preserve"><value>Datum platnosti od je později než datum platnosti do.</value></data>
+  <data name="Audit.Message.MaintenanceMissingUsableOdometer" xml:space="preserve"><value>Plán údržby používá kilometrový interval, ale u vozidla není k dispozici použitelný aktuální tachometr.</value></data>
+  <data name="Audit.Message.MissingAttachment" xml:space="preserve"><value>U dokladu není dostupný soubor přílohy v očekávaném umístění.</value></data>
+  <data name="Audit.Message.MissingNextTechnicalInspection" xml:space="preserve"><value>Aktivní vozidlo nemá vyplněný termín příští technické kontroly.</value></data>
+  <data name="Audit.Message.MissingPlate" xml:space="preserve"><value>Aktivní vozidlo nemá vyplněnou registrační značku.</value></data>
+  <data name="Audit.Message.OdometerRegression" xml:space="preserve"><value>Hodnota tachometru {0} je nižší než dříve zaznamenaná hodnota {1}.</value></data>
+  <data name="Audit.Message.RecordInvalidAmount" xml:space="preserve"><value>Doklad obsahuje cenu, kterou se nepodařilo převést na číslo.</value></data>
+  <data name="Audit.Message.RecordMissingUsableDate" xml:space="preserve"><value>Doklad má cenu, ale nemá použitelné datum pro zařazení do nákladů.</value></data>
+  <data name="Audit.Message.RecordWithoutPath" xml:space="preserve"><value>Doklad nemá vyplněnou cestu k příloze.</value></data>
+  <data name="Audit.Severity.Error" xml:space="preserve"><value>Chyba</value></data>
+  <data name="Audit.Severity.Info" xml:space="preserve"><value>Info</value></data>
+  <data name="Audit.Severity.Warning" xml:space="preserve"><value>Upozornění</value></data>
+  <data name="Audit.Summary.Empty" xml:space="preserve"><value>Audit zatím nenašel žádné problémy, které by potřebovaly zásah.</value></data>
+  <data name="Audit.Summary.WithItems" xml:space="preserve"><value>K řešení je {0} položek: {1} chyb a {2} upozornění.</value></data>
+  <data name="Audit.Title.InvalidAmount" xml:space="preserve"><value>Neplatná částka</value></data>
+  <data name="Audit.Title.InvalidGreenCardRange" xml:space="preserve"><value>Neplatný rozsah zelené karty</value></data>
+  <data name="Audit.Title.InvalidValidityRange" xml:space="preserve"><value>Neplatný rozsah platnosti</value></data>
+  <data name="Audit.Title.MissingExternalAttachment" xml:space="preserve"><value>Chybí externí příloha</value></data>
+  <data name="Audit.Title.MissingManagedAttachment" xml:space="preserve"><value>Chybí spravovaná příloha</value></data>
+  <data name="Audit.Title.MissingNextTechnicalInspection" xml:space="preserve"><value>Chybí příští TK</value></data>
+  <data name="Audit.Title.MissingPlate" xml:space="preserve"><value>Chybí SPZ</value></data>
+  <data name="Audit.Title.MissingUsableDate" xml:space="preserve"><value>Chybí použitelné datum</value></data>
+  <data name="Audit.Title.MissingUsableOdometer" xml:space="preserve"><value>Chybí použitelný tachometr</value></data>
+  <data name="Audit.Title.OdometerRegression" xml:space="preserve"><value>Klesající tachometr</value></data>
+  <data name="Audit.Title.RecordWithoutPath" xml:space="preserve"><value>Doklad bez cesty</value></data>
   <data name="FuelAnalysis.Accessible.GroupSummary" xml:space="preserve"><value>{0}, {1}, {2}, litry {3}, náklady {4}, průměrná cena za litr {5}, poslední tankování {6}</value></data>
   <data name="FuelAnalysis.Accessible.Segment" xml:space="preserve"><value>Úsek spotřeby {0}, vzdálenost {1}, natankováno {2}, spotřeba {3}, cena za litr {4}, cena za kilometr {5}</value></data>
   <data name="FuelAnalysis.Accessible.Warning" xml:space="preserve"><value>{0}: {1}. {2}</value></data>

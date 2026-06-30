@@ -539,6 +539,21 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Domain_audit_uses_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var service = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacyAuditService.cs"));
+        var projectionService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopProjectionService.cs"));
+
+        Assert.Contains("Audit.Title.MissingPlate", service);
+        Assert.Contains("Audit.Message.OdometerRegression", service);
+        Assert.Contains("Audit.Category.Attachment", service);
+        Assert.Contains("Audit.Severity.Warning", projectionService);
+        Assert.Contains("Audit.Summary.WithItems", projectionService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
+    }
+
+    [Fact]
     public void Pilot_shell_surfaces_do_not_keep_czech_hardcoded_ui_text()
     {
         var root = FindRepositoryRoot();
