@@ -2,4 +2,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Vehimap.Domain\Vehimap.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Strings.cs-CZ.resx">
+      <DependentUpon>Strings.resx</DependentUpon>
+      <WithCulture>true</WithCulture>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

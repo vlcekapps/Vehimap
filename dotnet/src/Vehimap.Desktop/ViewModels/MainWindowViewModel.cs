@@ -348,7 +348,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _globalSearchService = globalSearchService;
         _timelineService = timelineService;
         _fuelAnalysisService = fuelAnalysisService ?? new LegacyFuelAnalysisService(DesktopLocalization.Localizer);
-        _serviceBookService = serviceBookService ?? new LegacyServiceBookService();
+        _serviceBookService = serviceBookService ?? new LegacyServiceBookService(DesktopLocalization.Localizer);
         _smartAdvisorService = smartAdvisorService ?? new LegacySmartAdvisorService(_timelineService, _fuelAnalysisService, DesktopLocalization.Localizer);
         _vehiclePackageService = vehiclePackageService ?? new VehiclePackageService();
         _calendarExportService = calendarExportService;
@@ -357,7 +357,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _projectionService = projectionService ?? new DesktopProjectionService(DesktopLocalization.Localizer, DesktopLocalization.CurrentCulture);
         _navigationCoordinator = navigationCoordinator ?? new DesktopNavigationCoordinator();
         _printableVehicleReportService = printableVehicleReportService ?? new DesktopPrintableVehicleReportService();
-        _serviceBookExportService = serviceBookExportService ?? new DesktopServiceBookExportService();
+        _serviceBookExportService = serviceBookExportService ?? new DesktopServiceBookExportService(DesktopLocalization.Localizer);
         AppShellController = new DesktopAppShellController(
             appShellDialogService ?? new AvaloniaAppShellDialogService(),
             updateInstallLauncher ?? new ProcessUpdateInstallLauncher());

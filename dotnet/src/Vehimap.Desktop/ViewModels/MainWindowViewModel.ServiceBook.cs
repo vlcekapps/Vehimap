@@ -1,4 +1,5 @@
 using Vehimap.Application.Models;
+using Vehimap.Desktop.Localization;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 
@@ -8,14 +9,14 @@ public sealed partial class MainWindowViewModel
 {
     internal string ServiceBookWindowTitle =>
         SelectedVehicle is null
-            ? "Servisní knížka"
-            : $"Servisní knížka - {SelectedVehicle.Name}";
+            ? LO("ServiceBook.Window.Title")
+            : LFO("ServiceBook.Window.TitleWithVehicle", SelectedVehicle.Name);
 
     internal ServiceBookWindowViewModel? BuildSelectedVehicleServiceBookModel()
     {
         if (SelectedVehicle is null)
         {
-            ShellStatus = "Servisní knížku nelze otevřít bez vybraného vozidla.";
+            ShellStatus = LO("ServiceBook.Status.NoVehicle");
             return null;
         }
 
@@ -26,31 +27,31 @@ public sealed partial class MainWindowViewModel
         var historyItems = summary.HistoryEntries
             .Select(item => new ServiceBookItemViewModel(
                 summary.VehicleId,
-                "Historie",
+                "History",
                 item.Id,
-                "Historie a servis",
+                LO("ServiceBook.Section.HistoryAndService"),
                 item.DateText,
                 item.EventType,
-                $"Tachometr {item.Odometer}. Poznámka {item.Note}.",
-                $"Cena {item.Cost}"))
+                LFO("ServiceBook.Detail.History", item.Odometer, item.Note),
+                LFO("ServiceBook.Detail.HistoryCost", item.Cost)))
             .ToList();
         var maintenanceItems = summary.MaintenancePlans
             .Select(item => new ServiceBookItemViewModel(
                 summary.VehicleId,
-                "Údržba",
+                "Maintenance",
                 item.Id,
-                "Servisní plán",
+                LO("ServiceBook.Section.MaintenancePlan"),
                 item.Title,
                 item.Interval,
-                $"Poslední servis {item.LastService}. Poznámka {item.Note}.",
+                LFO("ServiceBook.Detail.Maintenance", item.LastService, item.Note),
                 item.Status))
             .ToList();
         var recordItems = summary.Records
             .Select(item => new ServiceBookItemViewModel(
                 summary.VehicleId,
-                "Doklad",
+                "Record",
                 item.Id,
-                "Servisní doklad",
+                LO("ServiceBook.Section.ServiceRecord"),
                 item.Title,
                 item.RecordType,
                 BuildServiceBookRecordDetail(item),
@@ -63,14 +64,15 @@ public sealed partial class MainWindowViewModel
             maintenanceItems,
             recordItems,
             OpenServiceBookItem,
-            model => ExportServiceBookHtmlAsync(model));
+            model => ExportServiceBookHtmlAsync(model),
+            DesktopLocalization.Localizer);
     }
 
     internal bool OpenServiceBookItem(ServiceBookItemViewModel? item)
     {
         if (item is null)
         {
-            ShellStatus = "Nejprve vyberte položku servisní knížky.";
+            ShellStatus = LO("ServiceBook.Status.SelectItemFirst");
             return false;
         }
 
@@ -82,7 +84,7 @@ public sealed partial class MainWindowViewModel
         }
 
         SelectVehicleAndOpenEntity(item.VehicleId, item.EntityKind, item.EntityId);
-        ShellStatus = $"Otevřena položka servisní knížky: {item.Primary}.";
+        ShellStatus = LFO("ServiceBook.Status.ItemOpened", item.Primary);
         return true;
     }
 
@@ -101,10 +103,10 @@ public sealed partial class MainWindowViewModel
                 now);
             var fileName = _serviceBookExportService.BuildFileName(model.Summary, now);
             var savedPath = await _fileSaveService.SaveTextAsync(
-                    "Export servisní knížky",
+                    LO("ServiceBook.FileDialog.ExportTitle"),
                     fileName,
                     content,
-                    "HTML soubor",
+                    LO("ServiceBook.FileDialog.HtmlFileType"),
                     "html",
                     ["*.html", "*.htm"],
                     cancellationToken)
@@ -112,23 +114,23 @@ public sealed partial class MainWindowViewModel
 
             if (string.IsNullOrWhiteSpace(savedPath))
             {
-                ShellStatus = "Export servisní knížky byl zrušen.";
+                ShellStatus = LO("ServiceBook.Status.ExportCancelled");
                 return ShellStatus;
             }
 
             try
             {
                 await _fileLauncher.OpenAsync(savedPath, cancellationToken).ConfigureAwait(false);
-                ShellStatus = $"Servisní knížka byla uložena do {savedPath} a otevřena.";
+                ShellStatus = LFO("ServiceBook.Status.ExportSavedOpened", savedPath);
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
-                ShellStatus = $"Servisní knížka byla uložena do {savedPath}, ale nepodařilo se ji otevřít: {ex.Message}";
+                ShellStatus = LFO("ServiceBook.Status.ExportSavedOpenFailed", savedPath, ex.Message);
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = $"Export servisní knížky se nepodařil: {ex.Message}";
+            ShellStatus = LFO("ServiceBook.Status.ExportFailed", ex.Message);
         }
 
         return ShellStatus;
@@ -138,15 +140,16 @@ public sealed partial class MainWindowViewModel
     {
         var parts = new List<string>
         {
-            $"Poskytovatel {item.Provider}",
-            $"Platnost {item.Validity}",
-            $"Cena {item.Price}",
-            $"Poznámka {item.Note}"
+            LFO("ServiceBook.Detail.Provider", item.Provider),
+            LFO("ServiceBook.Detail.Validity", item.Validity),
+            LFO("ServiceBook.Detail.Price", item.Price),
+            LFO("ServiceBook.Detail.Note", item.Note)
         };
 
-        if (!string.IsNullOrWhiteSpace(item.StoredPath) && !string.Equals(item.StoredPath, "bez uložené cesty", StringComparison.CurrentCultureIgnoreCase))
+        if (!string.IsNullOrWhiteSpace(item.StoredPath)
+            && !string.Equals(item.StoredPath, LO("ServiceBook.Value.NoStoredPath"), StringComparison.CurrentCultureIgnoreCase))
         {
-            parts.Add($"Uložená cesta {item.StoredPath}");
+            parts.Add(LFO("ServiceBook.Detail.StoredPath", item.StoredPath));
         }
 
         return string.Join(". ", parts) + ".";
@@ -158,25 +161,25 @@ public sealed partial class MainWindowViewModel
             string.Equals(item.Id, serviceBookRecord.Id, StringComparison.Ordinal));
         if (record is null)
         {
-            return "Doklad už není v datech dostupný.";
+            return LO("ServiceBook.Attachment.RecordMissing");
         }
 
         if (string.IsNullOrWhiteSpace(record.FilePath))
         {
-            return "Příloha není vyplněná.";
+            return LO("ServiceBook.Attachment.Empty");
         }
 
         var resolvedPath = ResolveServiceBookRecordPath(record);
         if (string.IsNullOrWhiteSpace(resolvedPath))
         {
             return record.AttachmentMode == VehicleRecordAttachmentMode.Managed
-                ? "Spravovanou přílohu se nepodařilo vyřešit."
-                : "Externí cestu se nepodařilo vyřešit.";
+                ? LO("ServiceBook.Attachment.ManagedResolveFailed")
+                : LO("ServiceBook.Attachment.ExternalResolveFailed");
         }
 
         return File.Exists(resolvedPath)
-            ? $"Příloha je dostupná: {resolvedPath}"
-            : $"Příloha není dostupná: {resolvedPath}";
+            ? LFO("ServiceBook.Attachment.Available", resolvedPath)
+            : LFO("ServiceBook.Attachment.Missing", resolvedPath);
     }
 
     private string ResolveServiceBookRecordPath(VehicleRecord record)

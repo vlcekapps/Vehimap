@@ -1345,4 +1345,112 @@ Status: {5}</value></data>
   <data name="AppShell.Controller.InstallUpdateAction" xml:space="preserve"><value>download and install update</value></data>
   <data name="AppShell.Controller.UpdateInstallerLaunched" xml:space="preserve"><value>The update installer has been started. Vehimap will now exit so installation can continue.</value></data>
   <data name="AppShell.Controller.UpdateCheckFailed" xml:space="preserve"><value>Update check could not be completed: {0}</value></data>
+  <data name="ServiceBook.Window.Title" xml:space="preserve"><value>Service book</value></data>
+  <data name="ServiceBook.Window.TitleWithVehicle" xml:space="preserve"><value>Service book - {0}</value></data>
+  <data name="ServiceBook.Window.HelpText" xml:space="preserve"><value>Service book for the selected vehicle. Ctrl+O opens the selected item, Ctrl+S exports HTML and Escape closes the window.</value></data>
+  <data name="ServiceBook.Window.CloseName" xml:space="preserve"><value>Close service book</value></data>
+  <data name="ServiceBook.Window.ContentName" xml:space="preserve"><value>Service book content</value></data>
+  <data name="ServiceBook.Window.FooterHelp" xml:space="preserve"><value>Enter or Ctrl+O opens the selected item. Ctrl+S saves HTML for printing.</value></data>
+  <data name="ServiceBook.Window.OpenItem" xml:space="preserve"><value>Open item</value></data>
+  <data name="ServiceBook.Window.OpenItemName" xml:space="preserve"><value>Open selected service book item</value></data>
+  <data name="ServiceBook.Window.ExportHtml" xml:space="preserve"><value>Export HTML</value></data>
+  <data name="ServiceBook.Window.ExportHtmlName" xml:space="preserve"><value>Export service book to HTML</value></data>
+  <data name="ServiceBook.Window.HistoryHeading" xml:space="preserve"><value>History and service entries</value></data>
+  <data name="ServiceBook.Window.HistoryEmpty" xml:space="preserve"><value>The vehicle history does not contain any entries yet.</value></data>
+  <data name="ServiceBook.Window.HistoryListName" xml:space="preserve"><value>History and service entries in the service book</value></data>
+  <data name="ServiceBook.Window.MaintenanceHeading" xml:space="preserve"><value>Maintenance plans</value></data>
+  <data name="ServiceBook.Window.MaintenanceEmpty" xml:space="preserve"><value>The maintenance plan does not contain any service plan yet.</value></data>
+  <data name="ServiceBook.Window.MaintenanceListName" xml:space="preserve"><value>Maintenance plans in the service book</value></data>
+  <data name="ServiceBook.Window.RecordsHeading" xml:space="preserve"><value>Service documents</value></data>
+  <data name="ServiceBook.Window.RecordsEmpty" xml:space="preserve"><value>No stored documents have been recognized as service documents yet.</value></data>
+  <data name="ServiceBook.Window.RecordListName" xml:space="preserve"><value>Service documents in the service book</value></data>
+  <data name="ServiceBook.Window.ItemType" xml:space="preserve"><value>Service book item</value></data>
+  <data name="ServiceBook.Window.VehicleSummary" xml:space="preserve"><value>{0} | {1} | License plate {2} | Odometer {3}</value></data>
+  <data name="ServiceBook.Window.CostSummary" xml:space="preserve"><value>Sum of numeric amounts in history: {0}.</value></data>
+  <data name="ServiceBook.Window.SelectedItemEmpty" xml:space="preserve"><value>Select a service book item to open the related record.</value></data>
+  <data name="ServiceBook.Window.OpenRelatedFailed" xml:space="preserve"><value>The related item could not be opened.</value></data>
+  <data name="ServiceBook.Window.OpenRelatedSuccess" xml:space="preserve"><value>The related item was opened in the main window.</value></data>
+  <data name="ServiceBook.Status.NoVehicle" xml:space="preserve"><value>Service book cannot be opened without a selected vehicle.</value></data>
+  <data name="ServiceBook.Status.SelectItemFirst" xml:space="preserve"><value>Select a service book item first.</value></data>
+  <data name="ServiceBook.Status.ItemOpened" xml:space="preserve"><value>Opened service book item: {0}.</value></data>
+  <data name="ServiceBook.Status.ExportCancelled" xml:space="preserve"><value>Service book export was cancelled.</value></data>
+  <data name="ServiceBook.Status.ExportSavedOpened" xml:space="preserve"><value>Service book was saved to {0} and opened.</value></data>
+  <data name="ServiceBook.Status.ExportSavedOpenFailed" xml:space="preserve"><value>Service book was saved to {0}, but could not be opened: {1}</value></data>
+  <data name="ServiceBook.Status.ExportFailed" xml:space="preserve"><value>Service book export failed: {0}</value></data>
+  <data name="ServiceBook.FileDialog.ExportTitle" xml:space="preserve"><value>Export service book</value></data>
+  <data name="ServiceBook.FileDialog.HtmlFileType" xml:space="preserve"><value>HTML file</value></data>
+  <data name="ServiceBook.FileName.Suffix" xml:space="preserve"><value>service-book</value></data>
+  <data name="ServiceBook.FileName.VehicleFallback" xml:space="preserve"><value>vehicle</value></data>
+  <data name="ServiceBook.Section.History" xml:space="preserve"><value>History</value></data>
+  <data name="ServiceBook.Section.HistoryAndService" xml:space="preserve"><value>History and service</value></data>
+  <data name="ServiceBook.Section.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="ServiceBook.Section.MaintenancePlan" xml:space="preserve"><value>Maintenance plan</value></data>
+  <data name="ServiceBook.Section.Record" xml:space="preserve"><value>Document</value></data>
+  <data name="ServiceBook.Section.ServiceRecord" xml:space="preserve"><value>Service document</value></data>
+  <data name="ServiceBook.Detail.History" xml:space="preserve"><value>Odometer {0}. Note {1}.</value></data>
+  <data name="ServiceBook.Detail.HistoryCost" xml:space="preserve"><value>Cost {0}</value></data>
+  <data name="ServiceBook.Detail.Maintenance" xml:space="preserve"><value>Last service {0}. Note {1}.</value></data>
+  <data name="ServiceBook.Detail.Provider" xml:space="preserve"><value>Provider {0}</value></data>
+  <data name="ServiceBook.Detail.Validity" xml:space="preserve"><value>Validity {0}</value></data>
+  <data name="ServiceBook.Detail.Price" xml:space="preserve"><value>Price {0}</value></data>
+  <data name="ServiceBook.Detail.Note" xml:space="preserve"><value>Note {0}</value></data>
+  <data name="ServiceBook.Detail.StoredPath" xml:space="preserve"><value>Stored path {0}</value></data>
+  <data name="ServiceBook.Attachment.RecordMissing" xml:space="preserve"><value>The document is no longer available in the data set.</value></data>
+  <data name="ServiceBook.Attachment.Empty" xml:space="preserve"><value>Attachment is not filled in.</value></data>
+  <data name="ServiceBook.Attachment.ManagedResolveFailed" xml:space="preserve"><value>Managed attachment could not be resolved.</value></data>
+  <data name="ServiceBook.Attachment.ExternalResolveFailed" xml:space="preserve"><value>External path could not be resolved.</value></data>
+  <data name="ServiceBook.Attachment.Available" xml:space="preserve"><value>Attachment is available: {0}</value></data>
+  <data name="ServiceBook.Attachment.Missing" xml:space="preserve"><value>Attachment is not available: {0}</value></data>
+  <data name="ServiceBook.Summary.Empty" xml:space="preserve"><value>The service book does not contain any items yet. Add history, maintenance or service documents in the normal vehicle records.</value></data>
+  <data name="ServiceBook.Summary.Counts" xml:space="preserve"><value>History entries: {0}. Maintenance plans: {1}. Service documents: {2}.</value></data>
+  <data name="ServiceBook.Value.UnknownVehicle" xml:space="preserve"><value>Unknown vehicle</value></data>
+  <data name="ServiceBook.Value.NoCategory" xml:space="preserve"><value>no category</value></data>
+  <data name="ServiceBook.Value.NoMakeModel" xml:space="preserve"><value>no make / model</value></data>
+  <data name="ServiceBook.Value.NoPlate" xml:space="preserve"><value>no license plate</value></data>
+  <data name="ServiceBook.Value.Unknown" xml:space="preserve"><value>unknown</value></data>
+  <data name="ServiceBook.Value.NoDate" xml:space="preserve"><value>no date</value></data>
+  <data name="ServiceBook.Value.NoNote" xml:space="preserve"><value>no note</value></data>
+  <data name="ServiceBook.Value.Untitled" xml:space="preserve"><value>Untitled</value></data>
+  <data name="ServiceBook.Value.Record" xml:space="preserve"><value>Document</value></data>
+  <data name="ServiceBook.Value.NoProvider" xml:space="preserve"><value>no provider</value></data>
+  <data name="ServiceBook.Value.ManagedAttachment" xml:space="preserve"><value>Managed copy</value></data>
+  <data name="ServiceBook.Value.ExternalAttachment" xml:space="preserve"><value>External path</value></data>
+  <data name="ServiceBook.Value.NoStoredPath" xml:space="preserve"><value>no stored path</value></data>
+  <data name="ServiceBook.Value.NoValidity" xml:space="preserve"><value>no validity</value></data>
+  <data name="ServiceBook.Value.ValidTo" xml:space="preserve"><value>to {0}</value></data>
+  <data name="ServiceBook.Value.ValidFrom" xml:space="preserve"><value>from {0}</value></data>
+  <data name="ServiceBook.Value.ValidRange" xml:space="preserve"><value>{0} to {1}</value></data>
+  <data name="ServiceBook.Value.NoInterval" xml:space="preserve"><value>no interval</value></data>
+  <data name="ServiceBook.Value.MonthSingular" xml:space="preserve"><value>1 month</value></data>
+  <data name="ServiceBook.Value.MonthPlural" xml:space="preserve"><value>{0} months</value></data>
+  <data name="ServiceBook.Value.LastService" xml:space="preserve"><value>{0} | {1}</value></data>
+  <data name="ServiceBook.Value.Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="ServiceBook.Value.OverdueDays" xml:space="preserve"><value>Overdue by {0} days</value></data>
+  <data name="ServiceBook.Value.ServiceToday" xml:space="preserve"><value>Service today</value></data>
+  <data name="ServiceBook.Value.InOneDay" xml:space="preserve"><value>In 1 day</value></data>
+  <data name="ServiceBook.Value.InDays" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="ServiceBook.Value.MissingLastServiceDate" xml:space="preserve"><value>Last service date is missing</value></data>
+  <data name="ServiceBook.Value.OverDistanceLimitKm" xml:space="preserve"><value>Over distance limit by {0} km</value></data>
+  <data name="ServiceBook.Value.ServiceNow" xml:space="preserve"><value>Service now</value></data>
+  <data name="ServiceBook.Value.InKm" xml:space="preserve"><value>In {0} km</value></data>
+  <data name="ServiceBook.Value.MissingOdometerForCalculation" xml:space="preserve"><value>Odometer is missing for calculation</value></data>
+  <data name="ServiceBook.Value.NoActiveInterval" xml:space="preserve"><value>No active interval</value></data>
+  <data name="ServiceBook.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
+  <data name="ServiceBook.Value.NoOdometer" xml:space="preserve"><value>no odometer</value></data>
+  <data name="ServiceBook.Value.Money" xml:space="preserve"><value>CZK {0}</value></data>
+  <data name="ServiceBook.Value.NoPrice" xml:space="preserve"><value>no price</value></data>
+  <data name="ServiceBook.Export.HtmlLanguage" xml:space="preserve"><value>en</value></data>
+  <data name="ServiceBook.Export.Title" xml:space="preserve"><value>Vehimap - Service book</value></data>
+  <data name="ServiceBook.Export.Heading" xml:space="preserve"><value>Service book</value></data>
+  <data name="ServiceBook.Export.VehicleMeta" xml:space="preserve"><value>Vehicle: {0} | {1} | {2} | License plate {3}</value></data>
+  <data name="ServiceBook.Export.OdometerMeta" xml:space="preserve"><value>Odometer: {0} | Generated: {1}</value></data>
+  <data name="ServiceBook.Export.Summary" xml:space="preserve"><value>{0} Sum of numeric amounts in history: {1}.</value></data>
+  <data name="ServiceBook.Export.HistorySection" xml:space="preserve"><value>History and service entries</value></data>
+  <data name="ServiceBook.Export.MaintenanceSection" xml:space="preserve"><value>Maintenance plans</value></data>
+  <data name="ServiceBook.Export.RecordsSection" xml:space="preserve"><value>Service documents</value></data>
+  <data name="ServiceBook.Export.EmptySection" xml:space="preserve"><value>This section does not contain any items yet.</value></data>
+  <data name="ServiceBook.Export.Column.Primary" xml:space="preserve"><value>Main value</value></data>
+  <data name="ServiceBook.Export.Column.Secondary" xml:space="preserve"><value>Additional value</value></data>
+  <data name="ServiceBook.Export.Column.Detail" xml:space="preserve"><value>Detail</value></data>
+  <data name="ServiceBook.Export.Column.Status" xml:space="preserve"><value>Status</value></data>
 </root>

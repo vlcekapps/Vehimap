@@ -1,3 +1,4 @@
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Domain.Enums;
@@ -19,6 +20,13 @@ public sealed class LegacyServiceBookService : IServiceBookService
         "doklad o servisu"
     ];
 
+    private readonly IAppLocalizer _localizer;
+
+    public LegacyServiceBookService(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+    }
+
     public ServiceBookSummary BuildVehicleServiceBook(VehimapDataSet dataSet, string vehicleId, DateOnly today)
     {
         ArgumentNullException.ThrowIfNull(dataSet);
@@ -32,18 +40,18 @@ public sealed class LegacyServiceBookService : IServiceBookService
             .Where(item => item.ParsedCost.HasValue)
             .Sum(item => item.ParsedCost!.Value);
 
-        var vehicleName = FormatValue(vehicle?.Name, "Neznámé vozidlo");
+        var vehicleName = FormatValue(vehicle?.Name, L("ServiceBook.Value.UnknownVehicle"));
         var status = history.Count == 0 && maintenance.Count == 0 && records.Count == 0
-            ? "Servisní knížka zatím nemá žádné položky. Historii, údržbu nebo servisní doklady doplníte v běžných evidencích vozidla."
-            : $"Záznamy historie: {history.Count}. Servisní plány: {maintenance.Count}. Servisní doklady: {records.Count}.";
+            ? L("ServiceBook.Summary.Empty")
+            : LF("ServiceBook.Summary.Counts", history.Count, maintenance.Count, records.Count);
 
         return new ServiceBookSummary(
             vehicleId,
             vehicleName,
-            FormatValue(vehicle?.Category, "bez kategorie"),
-            FormatValue(vehicle?.MakeModel, "bez značky / modelu"),
-            FormatValue(vehicle?.Plate, "bez SPZ"),
-            currentOdometer.HasValue ? $"{currentOdometer.Value} km" : "neznámý",
+            FormatValue(vehicle?.Category, L("ServiceBook.Value.NoCategory")),
+            FormatValue(vehicle?.MakeModel, L("ServiceBook.Value.NoMakeModel")),
+            FormatValue(vehicle?.Plate, L("ServiceBook.Value.NoPlate")),
+            currentOdometer.HasValue ? LF("ServiceBook.Value.OdometerKm", currentOdometer.Value) : L("ServiceBook.Value.Unknown"),
             totalHistoryCost,
             status,
             history,
@@ -51,7 +59,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
             records);
     }
 
-    private static IReadOnlyList<ServiceBookHistoryEntry> BuildHistoryEntries(VehimapDataSet dataSet, string vehicleId)
+    private IReadOnlyList<ServiceBookHistoryEntry> BuildHistoryEntries(VehimapDataSet dataSet, string vehicleId)
     {
         return dataSet.HistoryEntries
             .Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal))
@@ -71,17 +79,17 @@ public sealed class LegacyServiceBookService : IServiceBookService
             .ThenBy(item => item.Entry.EventType, StringComparer.CurrentCultureIgnoreCase)
             .Select(item => new ServiceBookHistoryEntry(
                 item.Entry.Id,
-                FormatValue(item.Entry.EventDate, "bez data"),
+                FormatValue(item.Entry.EventDate, L("ServiceBook.Value.NoDate")),
                 item.Date,
-                FormatValue(item.Entry.EventType, "Historie"),
+                FormatValue(item.Entry.EventType, L("ServiceBook.Section.History")),
                 FormatOdometer(item.Entry.Odometer),
                 FormatMoneyText(item.Entry.Cost),
                 item.Cost,
-                FormatValue(item.Entry.Note, "bez poznámky")))
+                FormatValue(item.Entry.Note, L("ServiceBook.Value.NoNote"))))
             .ToList();
     }
 
-    private static IReadOnlyList<ServiceBookMaintenanceEntry> BuildMaintenanceEntries(
+    private IReadOnlyList<ServiceBookMaintenanceEntry> BuildMaintenanceEntries(
         VehimapDataSet dataSet,
         string vehicleId,
         DateOnly today,
@@ -93,16 +101,16 @@ public sealed class LegacyServiceBookService : IServiceBookService
             .ThenBy(item => item.Title, StringComparer.CurrentCultureIgnoreCase)
             .Select(item => new ServiceBookMaintenanceEntry(
                 item.Id,
-                FormatValue(item.Title, "Bez názvu"),
+                FormatValue(item.Title, L("ServiceBook.Value.Untitled")),
                 BuildMaintenanceInterval(item),
                 BuildMaintenanceLastService(item),
                 BuildMaintenanceStatus(item, today, currentOdometer),
                 item.IsActive,
-                FormatValue(item.Note, "bez poznámky")))
+                FormatValue(item.Note, L("ServiceBook.Value.NoNote"))))
             .ToList();
     }
 
-    private static IReadOnlyList<ServiceBookRecordEntry> BuildRecordEntries(VehimapDataSet dataSet, string vehicleId)
+    private IReadOnlyList<ServiceBookRecordEntry> BuildRecordEntries(VehimapDataSet dataSet, string vehicleId)
     {
         return dataSet.Records
             .Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal))
@@ -118,14 +126,16 @@ public sealed class LegacyServiceBookService : IServiceBookService
             .ThenBy(item => item.Entry.Title, StringComparer.CurrentCultureIgnoreCase)
             .Select(item => new ServiceBookRecordEntry(
                 item.Entry.Id,
-                FormatValue(item.Entry.RecordType, "Doklad"),
-                FormatValue(item.Entry.Title, "Bez názvu"),
-                FormatValue(item.Entry.Provider, "bez poskytovatele"),
+                FormatValue(item.Entry.RecordType, L("ServiceBook.Value.Record")),
+                FormatValue(item.Entry.Title, L("ServiceBook.Value.Untitled")),
+                FormatValue(item.Entry.Provider, L("ServiceBook.Value.NoProvider")),
                 BuildRecordValidity(item.Entry),
                 FormatMoneyText(item.Entry.Price),
-                item.Entry.AttachmentMode == VehicleRecordAttachmentMode.Managed ? "Spravovaná kopie" : "Externí cesta",
-                FormatValue(item.Entry.FilePath, "bez uložené cesty"),
-                FormatValue(item.Entry.Note, "bez poznámky")))
+                item.Entry.AttachmentMode == VehicleRecordAttachmentMode.Managed
+                    ? L("ServiceBook.Value.ManagedAttachment")
+                    : L("ServiceBook.Value.ExternalAttachment"),
+                FormatValue(item.Entry.FilePath, L("ServiceBook.Value.NoStoredPath")),
+                FormatValue(item.Entry.Note, L("ServiceBook.Value.NoNote"))))
             .ToList();
     }
 
@@ -153,53 +163,55 @@ public sealed class LegacyServiceBookService : IServiceBookService
             haystack.Contains(keyword, StringComparison.CurrentCultureIgnoreCase));
     }
 
-    private static string BuildRecordValidity(VehicleRecord record)
+    private string BuildRecordValidity(VehicleRecord record)
     {
         if (string.IsNullOrWhiteSpace(record.ValidFrom) && string.IsNullOrWhiteSpace(record.ValidTo))
         {
-            return "bez platnosti";
+            return L("ServiceBook.Value.NoValidity");
         }
 
         if (string.IsNullOrWhiteSpace(record.ValidFrom))
         {
-            return $"do {record.ValidTo}";
+            return LF("ServiceBook.Value.ValidTo", record.ValidTo);
         }
 
         if (string.IsNullOrWhiteSpace(record.ValidTo))
         {
-            return $"od {record.ValidFrom}";
+            return LF("ServiceBook.Value.ValidFrom", record.ValidFrom);
         }
 
-        return $"{record.ValidFrom} až {record.ValidTo}";
+        return LF("ServiceBook.Value.ValidRange", record.ValidFrom, record.ValidTo);
     }
 
-    private static string BuildMaintenanceInterval(MaintenancePlan plan)
+    private string BuildMaintenanceInterval(MaintenancePlan plan)
     {
         var parts = new List<string>();
         if (TryParsePositiveInteger(plan.IntervalKm, out var intervalKm))
         {
-            parts.Add($"{intervalKm} km");
+            parts.Add(LF("ServiceBook.Value.OdometerKm", intervalKm));
         }
 
         if (TryParsePositiveInteger(plan.IntervalMonths, out var intervalMonths))
         {
-            parts.Add(intervalMonths == 1 ? "1 měsíc" : $"{intervalMonths} měsíců");
+            parts.Add(intervalMonths == 1
+                ? L("ServiceBook.Value.MonthSingular")
+                : LF("ServiceBook.Value.MonthPlural", intervalMonths));
         }
 
-        return parts.Count == 0 ? "bez intervalu" : string.Join(" / ", parts);
+        return parts.Count == 0 ? L("ServiceBook.Value.NoInterval") : string.Join(" / ", parts);
     }
 
-    private static string BuildMaintenanceLastService(MaintenancePlan plan)
+    private string BuildMaintenanceLastService(MaintenancePlan plan)
     {
-        var date = FormatValue(plan.LastServiceDate, "bez data");
-        return $"{date} | {FormatOdometer(plan.LastServiceOdometer)}";
+        var date = FormatValue(plan.LastServiceDate, L("ServiceBook.Value.NoDate"));
+        return LF("ServiceBook.Value.LastService", date, FormatOdometer(plan.LastServiceOdometer));
     }
 
-    private static string BuildMaintenanceStatus(MaintenancePlan plan, DateOnly today, int? currentOdometer)
+    private string BuildMaintenanceStatus(MaintenancePlan plan, DateOnly today, int? currentOdometer)
     {
         if (!plan.IsActive)
         {
-            return "Neaktivní";
+            return L("ServiceBook.Value.Inactive");
         }
 
         var parts = new List<string>();
@@ -211,15 +223,15 @@ public sealed class LegacyServiceBookService : IServiceBookService
                 var delta = nextDate.DayNumber - today.DayNumber;
                 parts.Add(delta switch
                 {
-                    < 0 => $"Po termínu o {Math.Abs(delta)} dnů",
-                    0 => "Servis dnes",
-                    1 => "Za 1 den",
-                    _ => $"Za {delta} dnů"
+                    < 0 => LF("ServiceBook.Value.OverdueDays", Math.Abs(delta)),
+                    0 => L("ServiceBook.Value.ServiceToday"),
+                    1 => L("ServiceBook.Value.InOneDay"),
+                    _ => LF("ServiceBook.Value.InDays", delta)
                 });
             }
             else
             {
-                parts.Add("Chybí datum posledního servisu");
+                parts.Add(L("ServiceBook.Value.MissingLastServiceDate"));
             }
         }
 
@@ -230,18 +242,18 @@ public sealed class LegacyServiceBookService : IServiceBookService
                 var remainingKm = (lastServiceOdometer + intervalKm) - currentOdometer.Value;
                 parts.Add(remainingKm switch
                 {
-                    < 0 => $"Po limitu o {Math.Abs(remainingKm)} km",
-                    0 => "Servis nyní",
-                    _ => $"Za {remainingKm} km"
+                    < 0 => LF("ServiceBook.Value.OverDistanceLimitKm", Math.Abs(remainingKm)),
+                    0 => L("ServiceBook.Value.ServiceNow"),
+                    _ => LF("ServiceBook.Value.InKm", remainingKm)
                 });
             }
             else
             {
-                parts.Add("Chybí tachometr pro výpočet");
+                parts.Add(L("ServiceBook.Value.MissingOdometerForCalculation"));
             }
         }
 
-        return parts.Count == 0 ? "Bez aktivního intervalu" : string.Join(" | ", parts);
+        return parts.Count == 0 ? L("ServiceBook.Value.NoActiveInterval") : string.Join(" | ", parts);
     }
 
     private static bool TryParsePositiveInteger(string? text, out int value)
@@ -250,26 +262,30 @@ public sealed class LegacyServiceBookService : IServiceBookService
         return int.TryParse((text ?? string.Empty).Trim(), out value) && value > 0;
     }
 
-    private static string FormatOdometer(string? value)
+    private string FormatOdometer(string? value)
     {
         if (VehimapValueParser.TryParseOdometer(value, out var parsed))
         {
-            return $"{parsed} km";
+            return LF("ServiceBook.Value.OdometerKm", parsed);
         }
 
-        return FormatValue(value, "bez tachometru");
+        return FormatValue(value, L("ServiceBook.Value.NoOdometer"));
     }
 
-    private static string FormatMoneyText(string? value)
+    private string FormatMoneyText(string? value)
     {
         if (VehimapValueParser.TryParseMoney(value, out var parsed))
         {
-            return $"{parsed:0.00} Kč";
+            return LF("ServiceBook.Value.Money", parsed.ToString("0.00", CultureInfo.InvariantCulture));
         }
 
-        return FormatValue(value, "bez ceny");
+        return FormatValue(value, L("ServiceBook.Value.NoPrice"));
     }
 
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 }

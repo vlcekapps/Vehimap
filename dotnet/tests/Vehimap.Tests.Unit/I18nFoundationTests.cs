@@ -16,7 +16,7 @@ public sealed class I18nFoundationTests
     {
         var root = FindRepositoryRoot();
         var englishKeys = ReadResourceKeys(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx"));
-        var czechKeys = ReadResourceKeys(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs.resx"));
+        var czechKeys = ReadResourceKeys(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx"));
 
         Assert.Empty(englishKeys.Except(czechKeys).OrderBy(key => key, StringComparer.Ordinal));
         Assert.Empty(czechKeys.Except(englishKeys).OrderBy(key => key, StringComparer.Ordinal));
@@ -30,6 +30,10 @@ public sealed class I18nFoundationTests
 
         Assert.Equal("Vehimap settings", english.GetString("Settings.Title"));
         Assert.Equal("Nastavení Vehimapu", czech.GetString("Settings.Title"));
+        Assert.Equal("Service book", english.GetString("ServiceBook.Window.Title"));
+        Assert.Equal("Servisní knížka", czech.GetString("ServiceBook.Window.Title"));
+        Assert.Equal("Vehimap - Service book", english.GetString("ServiceBook.Export.Title"));
+        Assert.Equal("Vehimap - Servisní knížka", czech.GetString("ServiceBook.Export.Title"));
         Assert.Equal("Missing.Key.For.Test", english.GetString("Missing.Key.For.Test"));
     }
 
@@ -170,6 +174,7 @@ public sealed class I18nFoundationTests
         var settingsWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "SettingsWindow.axaml"));
         var aboutWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "AboutWindow.axaml"));
         var vehicleEditorWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "VehicleEditorWindow.axaml"));
+        var serviceBookWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "ServiceBookWindow.axaml"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", mainWindow);
         Assert.Contains("Header=\"{i18n:Loc MainMenu.App}\"", mainWindow);
@@ -185,6 +190,33 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc About.Title}\"", aboutWindow);
         Assert.Contains("VehicleEditor.HelpText", vehicleEditorWindow);
         Assert.Contains("VehicleEditor.CancelName", vehicleEditorWindow);
+        Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", serviceBookWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc ServiceBook.Window.HelpText}\"", serviceBookWindow);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc ServiceBook.Window.ItemType}\"", serviceBookWindow);
+        Assert.Contains("Content=\"{i18n:Loc ServiceBook.Window.ExportHtml}\"", serviceBookWindow);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), serviceBookWindow);
+    }
+
+    [Fact]
+    public void Service_book_uses_resource_localization_for_generated_texts()
+    {
+        var root = FindRepositoryRoot();
+        var service = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacyServiceBookService.cs"));
+        var exportService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopServiceBookExportService.cs"));
+        var shellServiceBook = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.ServiceBook.cs"));
+        var windowViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "ServiceBookWindowViewModel.cs"));
+
+        Assert.Contains("IAppLocalizer", service);
+        Assert.Contains("ServiceBook.Summary.Empty", service);
+        Assert.Contains("ServiceBook.Value.Money", service);
+        Assert.Contains("ServiceBook.Attachment.Available", shellServiceBook);
+        Assert.Contains("ServiceBook.FileDialog.ExportTitle", shellServiceBook);
+        Assert.Contains("ServiceBook.Export.Title", exportService);
+        Assert.Contains("ServiceBook.Export.Column.Primary", exportService);
+        Assert.Contains("ServiceBook.Window.SelectedItemEmpty", windowViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), exportService);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), shellServiceBook);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), windowViewModel);
     }
 
     [Fact]

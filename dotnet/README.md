@@ -32,12 +32,12 @@ Aktualni zamer:
 Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 
 - anglictina je fallback v `Strings.resx`
-- cestina je v `Strings.cs.resx`
+- cestina je v `Strings.cs-CZ.resx`
 - nove UI texty v lokalizovanych pilotnich castech patri do obou resource souboru
 - commit messages zustavaji vzdy anglicky
 - prekladatele mohou pro upravy `.resx` pouzit Local ResX Editor: https://apps.microsoft.com/detail/9pkht426fq1k
 - jazyk se v prvni fazi plne projevi po restartu aplikace
-- staticke texty v editorech a workspace kartach historie, tankovani, planu udrzby, pripominek a dokladu jsou pilotne lokalizovane vcetne pristupnych nazvu; lokalizovane jsou i workspace `Detail vozidla`, `Globalni hledani`, `Casova osa`, `Blizici se terminy`, `Propadle terminy`, `Chytry poradce`, `Audit dat`, `Naklady`, `Dashboard`, kratke akcni workspace statusy dashboardu/udrzby/detailu vozidla, dialog dokonceni udrzby, potvrzovaci dialog, dialog kontroly datove sady 2.0, dialog kontroly/stahovani aktualizaci, kratke desktopove notifikacni okno, titulky/help/zavirani samostatnych workspace oken, pristupne okno `Akce na liste`, kopirovaci statusy v dialogu `O programu`, domain i18n pass analyzy tankovani, auditu dat, Chytreho poradce, casove osy, globalniho hledani, terminovych prehledu/dashboard timeline, rychlych akci a app-shell workflow statusu; zbyvajici dynamicke workflow statusy a domenove zpravy techto evidenci prijdou v dalsich passech
+- staticke texty v editorech a workspace kartach historie, tankovani, planu udrzby, pripominek a dokladu jsou pilotne lokalizovane vcetne pristupnych nazvu; lokalizovane jsou i workspace `Detail vozidla`, `Globalni hledani`, `Casova osa`, `Blizici se terminy`, `Propadle terminy`, `Chytry poradce`, `Audit dat`, `Naklady`, `Dashboard`, servisni knizka vcetne generovaneho HTML exportu, kratke akcni workspace statusy dashboardu/udrzby/detailu vozidla, dialog dokonceni udrzby, potvrzovaci dialog, dialog kontroly datove sady 2.0, dialog kontroly/stahovani aktualizaci, kratke desktopove notifikacni okno, titulky/help/zavirani samostatnych workspace oken, pristupne okno `Akce na liste`, kopirovaci statusy v dialogu `O programu`, domain i18n pass analyzy tankovani, auditu dat, Chytreho poradce, casove osy, globalniho hledani, terminovych prehledu/dashboard timeline, rychlych akci a app-shell workflow statusu; zbyvajici dynamicke workflow statusy a domenove zpravy techto evidenci prijdou v dalsich passech
 - kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
 - vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry
 - tachometry v historii/tankovani, servisni intervaly, dokonceni udrzby a objem tankovani se v editorech zobrazuji a zadavaji ve zvolenych jednotkach, zatimco SQLite zustava v kanonickych km/l

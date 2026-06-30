@@ -1,15 +1,24 @@
 using System.Globalization;
 using System.Net;
 using System.Text;
+using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.Services;
 
 internal sealed class DesktopServiceBookExportService
 {
+    private readonly IAppLocalizer _localizer;
+
+    public DesktopServiceBookExportService(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+    }
+
     public string BuildFileName(ServiceBookSummary summary, DateTime generatedAt) =>
-        $"{SafeFileName(summary.VehicleName)}-servisni-knizka-{generatedAt:yyyy-MM-dd}.html";
+        $"{SafeFileName(summary.VehicleName)}-{L("ServiceBook.FileName.Suffix")}-{generatedAt:yyyy-MM-dd}.html";
 
     public string BuildHtml(
         ServiceBookSummary summary,
@@ -20,10 +29,10 @@ internal sealed class DesktopServiceBookExportService
     {
         var builder = new StringBuilder();
         builder.AppendLine("<!DOCTYPE html>");
-        builder.AppendLine("<html lang=\"cs\">");
+        builder.AppendLine($"<html lang=\"{L("ServiceBook.Export.HtmlLanguage")}\">");
         builder.AppendLine("<head>");
         builder.AppendLine("  <meta charset=\"utf-8\">");
-        builder.AppendLine("  <title>Vehimap - Servisní knížka</title>");
+        builder.AppendLine($"  <title>{L("ServiceBook.Export.Title")}</title>");
         builder.AppendLine("  <style>");
         builder.AppendLine("    body{font-family:Segoe UI,Arial,sans-serif;margin:24px;color:#1d2329;background:#f7f7f4;}");
         builder.AppendLine("    h1{margin:0 0 8px 0;font-size:28px;}h2{margin:22px 0 10px 0;font-size:20px;}");
@@ -33,31 +42,32 @@ internal sealed class DesktopServiceBookExportService
         builder.AppendLine("  </style>");
         builder.AppendLine("</head>");
         builder.AppendLine("<body>");
-        builder.AppendLine("  <h1>Servisní knížka</h1>");
-        builder.AppendLine($"  <p class=\"meta\">Vozidlo: {Html(summary.VehicleName)} | {Html(summary.VehicleMakeModel)} | {Html(summary.VehicleCategory)} | SPZ {Html(summary.VehiclePlate)}</p>");
-        builder.AppendLine($"  <p class=\"meta\">Tachometr: {Html(summary.CurrentOdometer)} | Vytvořeno: {Html(generatedAt.ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture))}</p>");
-        builder.AppendLine($"  <p class=\"summary\">{Html(summary.Status)} Součet číselných částek v historii: {Html($"{summary.TotalHistoryCost:0.00} Kč")}.</p>");
-        AppendSection(builder, "Záznamy historie a servisu", historyItems);
-        AppendSection(builder, "Servisní plány", maintenanceItems);
-        AppendSection(builder, "Servisní doklady", recordItems);
+        builder.AppendLine($"  <h1>{L("ServiceBook.Export.Heading")}</h1>");
+        builder.AppendLine($"  <p class=\"meta\">{Html(LF("ServiceBook.Export.VehicleMeta", summary.VehicleName, summary.VehicleMakeModel, summary.VehicleCategory, summary.VehiclePlate))}</p>");
+        builder.AppendLine($"  <p class=\"meta\">{Html(LF("ServiceBook.Export.OdometerMeta", summary.CurrentOdometer, generatedAt.ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)))}</p>");
+        builder.AppendLine($"  <p class=\"summary\">{Html(LF("ServiceBook.Export.Summary", summary.Status, FormatMoney(summary.TotalHistoryCost)))}</p>");
+        AppendSection(builder, L("ServiceBook.Export.HistorySection"), historyItems);
+        AppendSection(builder, L("ServiceBook.Export.MaintenanceSection"), maintenanceItems);
+        AppendSection(builder, L("ServiceBook.Export.RecordsSection"), recordItems);
         builder.AppendLine("</body>");
         builder.AppendLine("</html>");
         return builder.ToString();
     }
 
-    private static void AppendSection(StringBuilder builder, string title, IReadOnlyList<ServiceBookItemViewModel> items)
+    private void AppendSection(StringBuilder builder, string title, IReadOnlyList<ServiceBookItemViewModel> items)
     {
         builder.AppendLine("  <div class=\"card\">");
-        builder.AppendLine($"    <h2>{Html(title)}</h2>");
+        builder.AppendLine($"    <h2>{title}</h2>");
         if (items.Count == 0)
         {
-            builder.AppendLine("    <p class=\"empty\">V této části zatím nejsou žádné položky.</p>");
+            builder.AppendLine($"    <p class=\"empty\">{L("ServiceBook.Export.EmptySection")}</p>");
             builder.AppendLine("  </div>");
             return;
         }
 
         builder.AppendLine("    <table>");
-        builder.AppendLine("      <thead><tr><th>Hlavní údaj</th><th>Doplňující údaj</th><th>Detail</th><th>Stav</th></tr></thead>");
+        builder.AppendLine(
+            $"      <thead><tr><th>{L("ServiceBook.Export.Column.Primary")}</th><th>{L("ServiceBook.Export.Column.Secondary")}</th><th>{L("ServiceBook.Export.Column.Detail")}</th><th>{L("ServiceBook.Export.Column.Status")}</th></tr></thead>");
         builder.AppendLine("      <tbody>");
         foreach (var item in items)
         {
@@ -74,17 +84,24 @@ internal sealed class DesktopServiceBookExportService
         builder.AppendLine("  </div>");
     }
 
-    private static string SafeFileName(string value)
+    private string SafeFileName(string value)
     {
-        var safe = string.IsNullOrWhiteSpace(value) ? "vozidlo" : value.Trim();
+        var safe = string.IsNullOrWhiteSpace(value) ? L("ServiceBook.FileName.VehicleFallback") : value.Trim();
         foreach (var invalidChar in Path.GetInvalidFileNameChars())
         {
             safe = safe.Replace(invalidChar, '_');
         }
 
         safe = string.Join("_", safe.Split(' ', StringSplitOptions.RemoveEmptyEntries));
-        return string.IsNullOrWhiteSpace(safe) ? "vozidlo" : safe.Trim('_', '.');
+        return string.IsNullOrWhiteSpace(safe) ? L("ServiceBook.FileName.VehicleFallback") : safe.Trim('_', '.');
     }
 
     private static string Html(string? value) => WebUtility.HtmlEncode(value ?? string.Empty);
+
+    private string FormatMoney(decimal value) =>
+        LF("ServiceBook.Value.Money", value.ToString("0.00", CultureInfo.InvariantCulture));
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 }

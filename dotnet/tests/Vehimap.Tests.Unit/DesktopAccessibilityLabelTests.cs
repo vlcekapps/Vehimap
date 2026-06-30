@@ -609,7 +609,11 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"OpenServiceBookItemButton\"", serviceBookXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ExportServiceBookHtmlButton\"", serviceBookXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CloseServiceBookWindowButton\"", serviceBookXaml);
-        Assert.Contains("Ctrl+O otevře vybranou položku, Ctrl+S exportuje HTML a Escape okno zavře.", serviceBookXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc ServiceBook.Window.HelpText}\"", serviceBookXaml);
+        Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc ServiceBook.Window.ItemType}\"", serviceBookXaml);
+        Assert.Contains("Content=\"{i18n:Loc ServiceBook.Window.ExportHtml}\"", serviceBookXaml);
+        Assert.Contains("Content=\"{i18n:Loc Common.Close}\"", serviceBookXaml);
+        Assert.DoesNotMatch("[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]", serviceBookXaml);
         Assert.Contains("Gesture=\"Ctrl+O\" Command=\"{Binding OpenSelectedServiceBookItemCommand}\"", serviceBookXaml);
         Assert.Contains("Gesture=\"Ctrl+S\" Command=\"{Binding ExportHtmlCommand}\"", serviceBookXaml);
         Assert.Contains("Gesture=\"Enter\" Command=\"{Binding OpenSelectedServiceBookItemCommand}\"", serviceBookXaml);
@@ -2521,7 +2525,7 @@ public sealed class DesktopAccessibilityLabelTests
     private static IReadOnlyDictionary<string, string> ReadCzechResourceValues()
     {
         var repositoryRoot = FindRepositoryRoot();
-        var path = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs.resx");
+        var path = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx");
         var document = XDocument.Load(path);
         return document.Root!
             .Elements("data")

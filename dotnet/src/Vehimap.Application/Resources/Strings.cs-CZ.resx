@@ -1345,4 +1345,112 @@ Stav: {5}</value></data>
   <data name="AppShell.Controller.InstallUpdateAction" xml:space="preserve"><value>stáhnout a nainstalovat aktualizaci</value></data>
   <data name="AppShell.Controller.UpdateInstallerLaunched" xml:space="preserve"><value>Instalátor aktualizace byl spuštěn. Vehimap se nyní ukončí, aby instalace mohla pokračovat.</value></data>
   <data name="AppShell.Controller.UpdateCheckFailed" xml:space="preserve"><value>Kontrolu aktualizací se nepodařilo dokončit: {0}</value></data>
+  <data name="ServiceBook.Window.Title" xml:space="preserve"><value>Servisní knížka</value></data>
+  <data name="ServiceBook.Window.TitleWithVehicle" xml:space="preserve"><value>Servisní knížka - {0}</value></data>
+  <data name="ServiceBook.Window.HelpText" xml:space="preserve"><value>Servisní knížka vybraného vozidla. Ctrl+O otevře vybranou položku, Ctrl+S exportuje HTML a Escape okno zavře.</value></data>
+  <data name="ServiceBook.Window.CloseName" xml:space="preserve"><value>Zavřít servisní knížku</value></data>
+  <data name="ServiceBook.Window.ContentName" xml:space="preserve"><value>Obsah servisní knížky</value></data>
+  <data name="ServiceBook.Window.FooterHelp" xml:space="preserve"><value>Enter nebo Ctrl+O otevře vybranou položku. Ctrl+S uloží HTML pro tisk.</value></data>
+  <data name="ServiceBook.Window.OpenItem" xml:space="preserve"><value>Otevřít položku</value></data>
+  <data name="ServiceBook.Window.OpenItemName" xml:space="preserve"><value>Otevřít vybranou položku servisní knížky</value></data>
+  <data name="ServiceBook.Window.ExportHtml" xml:space="preserve"><value>Exportovat HTML</value></data>
+  <data name="ServiceBook.Window.ExportHtmlName" xml:space="preserve"><value>Exportovat servisní knížku do HTML</value></data>
+  <data name="ServiceBook.Window.HistoryHeading" xml:space="preserve"><value>Záznamy historie a servisu</value></data>
+  <data name="ServiceBook.Window.HistoryEmpty" xml:space="preserve"><value>V historii vozidla zatím není žádný záznam.</value></data>
+  <data name="ServiceBook.Window.HistoryListName" xml:space="preserve"><value>Záznamy historie a servisu v servisní knížce</value></data>
+  <data name="ServiceBook.Window.MaintenanceHeading" xml:space="preserve"><value>Servisní plány</value></data>
+  <data name="ServiceBook.Window.MaintenanceEmpty" xml:space="preserve"><value>V plánu údržby zatím není žádný servisní plán.</value></data>
+  <data name="ServiceBook.Window.MaintenanceListName" xml:space="preserve"><value>Servisní plány v servisní knížce</value></data>
+  <data name="ServiceBook.Window.RecordsHeading" xml:space="preserve"><value>Servisní doklady</value></data>
+  <data name="ServiceBook.Window.RecordsEmpty" xml:space="preserve"><value>Zatím nejsou uložené žádné doklady rozpoznané jako servisní.</value></data>
+  <data name="ServiceBook.Window.RecordListName" xml:space="preserve"><value>Servisní doklady v servisní knížce</value></data>
+  <data name="ServiceBook.Window.ItemType" xml:space="preserve"><value>Položka servisní knížky</value></data>
+  <data name="ServiceBook.Window.VehicleSummary" xml:space="preserve"><value>{0} | {1} | SPZ {2} | Tachometr {3}</value></data>
+  <data name="ServiceBook.Window.CostSummary" xml:space="preserve"><value>Součet číselných částek v historii: {0}.</value></data>
+  <data name="ServiceBook.Window.SelectedItemEmpty" xml:space="preserve"><value>Vyberte položku servisní knížky a můžete otevřít související evidenci.</value></data>
+  <data name="ServiceBook.Window.OpenRelatedFailed" xml:space="preserve"><value>Související položku se nepodařilo otevřít.</value></data>
+  <data name="ServiceBook.Window.OpenRelatedSuccess" xml:space="preserve"><value>Související položka byla otevřena v hlavním okně.</value></data>
+  <data name="ServiceBook.Status.NoVehicle" xml:space="preserve"><value>Servisní knížku nelze otevřít bez vybraného vozidla.</value></data>
+  <data name="ServiceBook.Status.SelectItemFirst" xml:space="preserve"><value>Nejprve vyberte položku servisní knížky.</value></data>
+  <data name="ServiceBook.Status.ItemOpened" xml:space="preserve"><value>Otevřena položka servisní knížky: {0}.</value></data>
+  <data name="ServiceBook.Status.ExportCancelled" xml:space="preserve"><value>Export servisní knížky byl zrušen.</value></data>
+  <data name="ServiceBook.Status.ExportSavedOpened" xml:space="preserve"><value>Servisní knížka byla uložena do {0} a otevřena.</value></data>
+  <data name="ServiceBook.Status.ExportSavedOpenFailed" xml:space="preserve"><value>Servisní knížka byla uložena do {0}, ale nepodařilo se ji otevřít: {1}</value></data>
+  <data name="ServiceBook.Status.ExportFailed" xml:space="preserve"><value>Export servisní knížky se nepodařil: {0}</value></data>
+  <data name="ServiceBook.FileDialog.ExportTitle" xml:space="preserve"><value>Export servisní knížky</value></data>
+  <data name="ServiceBook.FileDialog.HtmlFileType" xml:space="preserve"><value>HTML soubor</value></data>
+  <data name="ServiceBook.FileName.Suffix" xml:space="preserve"><value>servisni-knizka</value></data>
+  <data name="ServiceBook.FileName.VehicleFallback" xml:space="preserve"><value>vozidlo</value></data>
+  <data name="ServiceBook.Section.History" xml:space="preserve"><value>Historie</value></data>
+  <data name="ServiceBook.Section.HistoryAndService" xml:space="preserve"><value>Historie a servis</value></data>
+  <data name="ServiceBook.Section.Maintenance" xml:space="preserve"><value>Údržba</value></data>
+  <data name="ServiceBook.Section.MaintenancePlan" xml:space="preserve"><value>Servisní plán</value></data>
+  <data name="ServiceBook.Section.Record" xml:space="preserve"><value>Doklad</value></data>
+  <data name="ServiceBook.Section.ServiceRecord" xml:space="preserve"><value>Servisní doklad</value></data>
+  <data name="ServiceBook.Detail.History" xml:space="preserve"><value>Tachometr {0}. Poznámka {1}.</value></data>
+  <data name="ServiceBook.Detail.HistoryCost" xml:space="preserve"><value>Cena {0}</value></data>
+  <data name="ServiceBook.Detail.Maintenance" xml:space="preserve"><value>Poslední servis {0}. Poznámka {1}.</value></data>
+  <data name="ServiceBook.Detail.Provider" xml:space="preserve"><value>Poskytovatel {0}</value></data>
+  <data name="ServiceBook.Detail.Validity" xml:space="preserve"><value>Platnost {0}</value></data>
+  <data name="ServiceBook.Detail.Price" xml:space="preserve"><value>Cena {0}</value></data>
+  <data name="ServiceBook.Detail.Note" xml:space="preserve"><value>Poznámka {0}</value></data>
+  <data name="ServiceBook.Detail.StoredPath" xml:space="preserve"><value>Uložená cesta {0}</value></data>
+  <data name="ServiceBook.Attachment.RecordMissing" xml:space="preserve"><value>Doklad už není v datech dostupný.</value></data>
+  <data name="ServiceBook.Attachment.Empty" xml:space="preserve"><value>Příloha není vyplněná.</value></data>
+  <data name="ServiceBook.Attachment.ManagedResolveFailed" xml:space="preserve"><value>Spravovanou přílohu se nepodařilo vyřešit.</value></data>
+  <data name="ServiceBook.Attachment.ExternalResolveFailed" xml:space="preserve"><value>Externí cestu se nepodařilo vyřešit.</value></data>
+  <data name="ServiceBook.Attachment.Available" xml:space="preserve"><value>Příloha je dostupná: {0}</value></data>
+  <data name="ServiceBook.Attachment.Missing" xml:space="preserve"><value>Příloha není dostupná: {0}</value></data>
+  <data name="ServiceBook.Summary.Empty" xml:space="preserve"><value>Servisní knížka zatím nemá žádné položky. Historii, údržbu nebo servisní doklady doplníte v běžných evidencích vozidla.</value></data>
+  <data name="ServiceBook.Summary.Counts" xml:space="preserve"><value>Záznamy historie: {0}. Servisní plány: {1}. Servisní doklady: {2}.</value></data>
+  <data name="ServiceBook.Value.UnknownVehicle" xml:space="preserve"><value>Neznámé vozidlo</value></data>
+  <data name="ServiceBook.Value.NoCategory" xml:space="preserve"><value>bez kategorie</value></data>
+  <data name="ServiceBook.Value.NoMakeModel" xml:space="preserve"><value>bez značky / modelu</value></data>
+  <data name="ServiceBook.Value.NoPlate" xml:space="preserve"><value>bez SPZ</value></data>
+  <data name="ServiceBook.Value.Unknown" xml:space="preserve"><value>neznámý</value></data>
+  <data name="ServiceBook.Value.NoDate" xml:space="preserve"><value>bez data</value></data>
+  <data name="ServiceBook.Value.NoNote" xml:space="preserve"><value>bez poznámky</value></data>
+  <data name="ServiceBook.Value.Untitled" xml:space="preserve"><value>Bez názvu</value></data>
+  <data name="ServiceBook.Value.Record" xml:space="preserve"><value>Doklad</value></data>
+  <data name="ServiceBook.Value.NoProvider" xml:space="preserve"><value>bez poskytovatele</value></data>
+  <data name="ServiceBook.Value.ManagedAttachment" xml:space="preserve"><value>Spravovaná kopie</value></data>
+  <data name="ServiceBook.Value.ExternalAttachment" xml:space="preserve"><value>Externí cesta</value></data>
+  <data name="ServiceBook.Value.NoStoredPath" xml:space="preserve"><value>bez uložené cesty</value></data>
+  <data name="ServiceBook.Value.NoValidity" xml:space="preserve"><value>bez platnosti</value></data>
+  <data name="ServiceBook.Value.ValidTo" xml:space="preserve"><value>do {0}</value></data>
+  <data name="ServiceBook.Value.ValidFrom" xml:space="preserve"><value>od {0}</value></data>
+  <data name="ServiceBook.Value.ValidRange" xml:space="preserve"><value>{0} až {1}</value></data>
+  <data name="ServiceBook.Value.NoInterval" xml:space="preserve"><value>bez intervalu</value></data>
+  <data name="ServiceBook.Value.MonthSingular" xml:space="preserve"><value>1 měsíc</value></data>
+  <data name="ServiceBook.Value.MonthPlural" xml:space="preserve"><value>{0} měsíců</value></data>
+  <data name="ServiceBook.Value.LastService" xml:space="preserve"><value>{0} | {1}</value></data>
+  <data name="ServiceBook.Value.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
+  <data name="ServiceBook.Value.OverdueDays" xml:space="preserve"><value>Po termínu o {0} dnů</value></data>
+  <data name="ServiceBook.Value.ServiceToday" xml:space="preserve"><value>Servis dnes</value></data>
+  <data name="ServiceBook.Value.InOneDay" xml:space="preserve"><value>Za 1 den</value></data>
+  <data name="ServiceBook.Value.InDays" xml:space="preserve"><value>Za {0} dnů</value></data>
+  <data name="ServiceBook.Value.MissingLastServiceDate" xml:space="preserve"><value>Chybí datum posledního servisu</value></data>
+  <data name="ServiceBook.Value.OverDistanceLimitKm" xml:space="preserve"><value>Po limitu o {0} km</value></data>
+  <data name="ServiceBook.Value.ServiceNow" xml:space="preserve"><value>Servis nyní</value></data>
+  <data name="ServiceBook.Value.InKm" xml:space="preserve"><value>Za {0} km</value></data>
+  <data name="ServiceBook.Value.MissingOdometerForCalculation" xml:space="preserve"><value>Chybí tachometr pro výpočet</value></data>
+  <data name="ServiceBook.Value.NoActiveInterval" xml:space="preserve"><value>Bez aktivního intervalu</value></data>
+  <data name="ServiceBook.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
+  <data name="ServiceBook.Value.NoOdometer" xml:space="preserve"><value>bez tachometru</value></data>
+  <data name="ServiceBook.Value.Money" xml:space="preserve"><value>{0} Kč</value></data>
+  <data name="ServiceBook.Value.NoPrice" xml:space="preserve"><value>bez ceny</value></data>
+  <data name="ServiceBook.Export.HtmlLanguage" xml:space="preserve"><value>cs</value></data>
+  <data name="ServiceBook.Export.Title" xml:space="preserve"><value>Vehimap - Servisní knížka</value></data>
+  <data name="ServiceBook.Export.Heading" xml:space="preserve"><value>Servisní knížka</value></data>
+  <data name="ServiceBook.Export.VehicleMeta" xml:space="preserve"><value>Vozidlo: {0} | {1} | {2} | SPZ {3}</value></data>
+  <data name="ServiceBook.Export.OdometerMeta" xml:space="preserve"><value>Tachometr: {0} | Vytvořeno: {1}</value></data>
+  <data name="ServiceBook.Export.Summary" xml:space="preserve"><value>{0} Součet číselných částek v historii: {1}.</value></data>
+  <data name="ServiceBook.Export.HistorySection" xml:space="preserve"><value>Záznamy historie a servisu</value></data>
+  <data name="ServiceBook.Export.MaintenanceSection" xml:space="preserve"><value>Servisní plány</value></data>
+  <data name="ServiceBook.Export.RecordsSection" xml:space="preserve"><value>Servisní doklady</value></data>
+  <data name="ServiceBook.Export.EmptySection" xml:space="preserve"><value>V této části zatím nejsou žádné položky.</value></data>
+  <data name="ServiceBook.Export.Column.Primary" xml:space="preserve"><value>Hlavní údaj</value></data>
+  <data name="ServiceBook.Export.Column.Secondary" xml:space="preserve"><value>Doplňující údaj</value></data>
+  <data name="ServiceBook.Export.Column.Detail" xml:space="preserve"><value>Detail</value></data>
+  <data name="ServiceBook.Export.Column.Status" xml:space="preserve"><value>Stav</value></data>
 </root>

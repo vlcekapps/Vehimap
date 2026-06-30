@@ -8,6 +8,12 @@ internal sealed class DesktopNavigationCoordinator
     {
         return entityKind switch
         {
+            "Vehicle" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Detail, DesktopFocusTarget.VehicleList, DesktopNavigationSelectionKind.Vehicle, entityId),
+            "History" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.History, DesktopFocusTarget.HistoryList, DesktopNavigationSelectionKind.History, entityId),
+            "Fuel" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Fuel, DesktopFocusTarget.FuelList, DesktopNavigationSelectionKind.Fuel, entityId),
+            "Record" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Record, DesktopFocusTarget.RecordList, DesktopNavigationSelectionKind.Record, entityId),
+            "Maintenance" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Maintenance, DesktopFocusTarget.MaintenanceList, DesktopNavigationSelectionKind.Maintenance, entityId),
+            "Reminder" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Reminder, DesktopFocusTarget.ReminderList, DesktopNavigationSelectionKind.Reminder, entityId),
             "Historie" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.History, DesktopFocusTarget.HistoryList, DesktopNavigationSelectionKind.History, entityId),
             "Tankování" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Fuel, DesktopFocusTarget.FuelList, DesktopNavigationSelectionKind.Fuel, entityId),
             "Doklad" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Record, DesktopFocusTarget.RecordList, DesktopNavigationSelectionKind.Record, entityId),

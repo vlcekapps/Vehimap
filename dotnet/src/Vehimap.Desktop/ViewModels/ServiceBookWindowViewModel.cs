@@ -1,7 +1,10 @@
 using System.Collections.ObjectModel;
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -9,6 +12,7 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
 {
     private readonly Func<ServiceBookItemViewModel?, bool> _openItem;
     private readonly Func<ServiceBookWindowViewModel, Task<string>> _exportHtml;
+    private readonly IAppLocalizer _localizer;
     private bool _syncingSelection;
     private ServiceBookItemViewModel? _selectedHistoryItem;
     private ServiceBookItemViewModel? _selectedMaintenanceItem;
@@ -20,14 +24,16 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
         IReadOnlyList<ServiceBookItemViewModel> maintenanceItems,
         IReadOnlyList<ServiceBookItemViewModel> recordItems,
         Func<ServiceBookItemViewModel?, bool> openItem,
-        Func<ServiceBookWindowViewModel, Task<string>> exportHtml)
+        Func<ServiceBookWindowViewModel, Task<string>> exportHtml,
+        IAppLocalizer? localizer = null)
     {
         Summary = summary;
         _openItem = openItem;
         _exportHtml = exportHtml;
-        WindowTitle = $"Servisní knížka - {summary.VehicleName}";
-        VehicleSummary = $"{summary.VehicleMakeModel} | {summary.VehicleCategory} | SPZ {summary.VehiclePlate} | Tachometr {summary.CurrentOdometer}";
-        CostSummary = $"Součet číselných částek v historii: {summary.TotalHistoryCost:0.00} Kč.";
+        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        WindowTitle = LF("ServiceBook.Window.TitleWithVehicle", summary.VehicleName);
+        VehicleSummary = LF("ServiceBook.Window.VehicleSummary", summary.VehicleMakeModel, summary.VehicleCategory, summary.VehiclePlate, summary.CurrentOdometer);
+        CostSummary = LF("ServiceBook.Window.CostSummary", FormatMoney(summary.TotalHistoryCost));
         StatusText = summary.Status;
 
         foreach (var item in historyItems)
@@ -123,7 +129,7 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
 
     public string SelectedItemDetail =>
         SelectedServiceBookItem is null
-            ? "Vyberte položku servisní knížky a můžete otevřít související evidenci."
+            ? L("ServiceBook.Window.SelectedItemEmpty")
             : SelectedServiceBookItem.AccessibleLabel;
 
     public bool CanOpenSelectedServiceBookItem => SelectedServiceBookItem is not null;
@@ -135,12 +141,12 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
     {
         if (!_openItem(SelectedServiceBookItem))
         {
-            StatusText = "Související položku se nepodařilo otevřít.";
+            StatusText = L("ServiceBook.Window.OpenRelatedFailed");
             return;
         }
 
         DidOpenSelectedItem = true;
-        StatusText = "Související položka byla otevřena v hlavním okně.";
+        StatusText = L("ServiceBook.Window.OpenRelatedSuccess");
         CloseRequested?.Invoke();
     }
 
@@ -192,4 +198,11 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
         Maintenance,
         Record
     }
+
+    private string FormatMoney(decimal value) =>
+        LF("ServiceBook.Value.Money", value.ToString("0.00", CultureInfo.InvariantCulture));
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 }
