@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.Services;

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 param(
     [string]$RuntimeIdentifier = "win-x64",
     [ValidateSet("stable", "beta", "nightly")]

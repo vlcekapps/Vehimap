@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using Microsoft.Win32;
 using System.Runtime.Versioning;
 using Vehimap.Application.Abstractions;

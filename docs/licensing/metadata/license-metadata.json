@@ -1,0 +1,62 @@
+{
+  "project": "Vehimap",
+  "repository": "https://github.com/vlcekapps/Vehimap",
+  "declared_project_license": "GPL-3.0-or-later",
+  "generated_on": "2026-07-01",
+  "scope": "Runtime notices are based on direct, transitive and native NuGet dependencies observed via dotnet list package --include-transitive and checked against the Windows x64 publish payload; this is not a legal audit.",
+  "copyright_holder": "Pavel Vlček",
+  "runtime_dependency_metadata": "docs/licensing/metadata/runtime-nuget-dependencies-win-x64.csv",
+  "development_dependency_notices": "docs/licensing/development-dependencies.md",
+  "dotnet_list_snapshot": "docs/licensing/dotnet-list-package-include-transitive.txt",
+  "direct_dependencies": [
+    {
+      "package": "Avalonia",
+      "version": "12.0.4",
+      "project_file": "dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj",
+      "license": "MIT",
+      "notice": "Copyright 2013-2026 © The AvaloniaUI Project."
+    },
+    {
+      "package": "Avalonia.Desktop",
+      "version": "12.0.4",
+      "project_file": "dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj",
+      "license": "MIT",
+      "notice": "Copyright 2013-2026 © The AvaloniaUI Project."
+    },
+    {
+      "package": "Avalonia.Themes.Fluent",
+      "version": "12.0.4",
+      "project_file": "dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj",
+      "license": "MIT",
+      "notice": "Copyright 2013-2026 © The AvaloniaUI Project."
+    },
+    {
+      "package": "CommunityToolkit.Mvvm",
+      "version": "8.4.2",
+      "project_file": "dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj",
+      "license": "MIT",
+      "notice": "© .NET Foundation and Contributors. All rights reserved."
+    },
+    {
+      "package": "Microsoft.Data.Sqlite",
+      "version": "10.0.0",
+      "project_file": "dotnet/src/Vehimap.Storage.Sqlite/Vehimap.Storage.Sqlite.csproj",
+      "license": "MIT",
+      "notice": "© Microsoft Corporation. All rights reserved."
+    },
+    {
+      "package": "SQLitePCLRaw.bundle_e_sqlite3",
+      "version": "3.0.3",
+      "project_file": "dotnet/src/Vehimap.Storage.Sqlite/Vehimap.Storage.Sqlite.csproj",
+      "license": "Apache-2.0",
+      "notice": "Verify restored package metadata and transitive native SQLite package notices before release."
+    },
+    {
+      "package": "Microsoft.Win32.SystemEvents",
+      "version": "10.0.0",
+      "project_file": "dotnet/src/Vehimap.Platform/Vehimap.Platform.csproj",
+      "license": "MIT",
+      "notice": "© Microsoft Corporation. All rights reserved."
+    }
+  ]
+}

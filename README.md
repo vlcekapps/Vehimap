@@ -8,6 +8,13 @@ C# Avalonia aplikace je aktuální a jediná aktivní větev Vehimapu. Původní
 
 Od řady 2.0 je primární datové úložiště SQLite databáze `data/vehimap.db`. Data z řady 1.0.2 (`TSV`, `INI`, starší `.vehimapbak` a `data/attachments`) se při prvním startu automaticky zmigrují se zálohou do `data/migration-backups/<čas>`; legacy parsery v `.NET` vrstvě zůstávají pro bezpečný import starších dat.
 
+## Licence
+
+Vehimap je free software pod licencí `GPL-3.0-or-later`.
+Copyright (C) 2026 Pavel Vlček.
+
+Binární releasy obsahují `LICENSE`, `COPYING`, `COPYRIGHT-NOTICE.txt`, `THIRD-PARTY-NOTICES.md` a texty licencí třetích stran ve složce `LICENSES/`.
+
 ## Co umí
 
 - rozdělení vozidel do kategorií `Osobní vozidla`, `Motocykly`, `Nákladní vozidla`, `Autobusy`, `Ostatní`

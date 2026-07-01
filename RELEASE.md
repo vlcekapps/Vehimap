@@ -2,6 +2,12 @@
 
 Tento soubor je jen pro release a vyvoj. Uzivatelske informace zustavaji v `README.md`.
 
+## Licence releasu
+
+Vehimap je licencovan pod `GPL-3.0-or-later`, copyright (C) 2026 Pavel Vlček.
+
+Kazdy binarni release musi obsahovat `LICENSE`, `COPYING`, `COPYRIGHT-NOTICE.txt`, `THIRD-PARTY-NOTICES.md` a slozku `LICENSES/`. Pred publikaci spustte `dotnet\build\Test-DotnetLicenseCompliance.ps1` a po publishi stejnou kontrolu s parametrem `-PublishDirectory`.
+
 ## Co release skript dela
 
 Skript `build/release.ps1`:

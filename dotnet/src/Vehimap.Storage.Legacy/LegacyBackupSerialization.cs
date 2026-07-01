@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 namespace Vehimap.Storage.Legacy;
 
 internal static class LegacyBackupSerialization

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 param(
     [Parameter(Mandatory = $true)]
     [string]$PublishDirectory,
@@ -308,10 +309,35 @@ function Write-ChecksumFile {
     }
 }
 
+function Test-LicensePayload {
+    param([string]$PayloadDirectory)
+
+    $requiredFiles = @(
+        "LICENSE",
+        "COPYING",
+        "COPYRIGHT-NOTICE.txt",
+        "THIRD-PARTY-NOTICES.md",
+        "LICENSES\GPL-3.0.txt",
+        "LICENSES\MIT.txt",
+        "LICENSES\Apache-2.0.txt",
+        "LICENSES\ANGLE-BSD-3-Clause.txt",
+        "LICENSES\SQLite-Public-Domain.txt"
+    )
+
+    foreach ($relativePath in $requiredFiles) {
+        $path = Join-Path $PayloadDirectory $relativePath
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+            throw "Release payload neobsahuje povinny licencni soubor '$relativePath'."
+        }
+    }
+}
+
 $resolvedPublishDirectory = (Resolve-Path -LiteralPath $PublishDirectory).Path
 if (-not (Test-Path -LiteralPath $resolvedPublishDirectory -PathType Container)) {
     throw "Publikační složka '$PublishDirectory' neexistuje."
 }
+
+Test-LicensePayload -PayloadDirectory $resolvedPublishDirectory
 
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 $resolvedOutputDirectory = (Resolve-Path -LiteralPath $OutputDirectory).Path

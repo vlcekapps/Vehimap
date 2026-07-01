@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;

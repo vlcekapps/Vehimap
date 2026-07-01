@@ -2,6 +2,13 @@
 
 Tato slozka obsahuje novou C# codebase pro multiplatformni desktopovy Vehimap.
 
+## Licence
+
+Vehimap je free software pod licenci `GPL-3.0-or-later`.
+Copyright (C) 2026 Pavel Vlček.
+
+Desktop publish a release balicky musi obsahovat `LICENSE`, `COPYING`, `COPYRIGHT-NOTICE.txt`, `THIRD-PARTY-NOTICES.md` a slozku `LICENSES/`. Technicky to hlida `dotnet/build/Test-DotnetLicenseCompliance.ps1` a release packaging gate.
+
 Aktualni zamer:
 
 - brat `.NET + Avalonia` jako primarni desktopovou vetev Vehimapu

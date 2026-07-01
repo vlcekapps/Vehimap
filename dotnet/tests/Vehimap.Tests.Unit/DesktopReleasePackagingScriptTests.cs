@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Security.Cryptography;
@@ -38,6 +39,7 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.Desktop.exe"), "desktop binary");
         await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.Desktop.pdb"), "debug symbols");
         await File.WriteAllTextAsync(Path.Combine(publishDirectory, "locales", "cs.txt"), "cestina");
+        CopyLicensePayloadToPublishDirectory(publishDirectory);
 
         const string version = "9.8.7-preview.1";
         var packageScript = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Package-DesktopRelease.ps1");
@@ -116,6 +118,7 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         var outputDirectory = Path.Combine(_tempRoot, "nightly-release");
         Directory.CreateDirectory(publishDirectory);
         await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.Desktop.exe"), "desktop nightly binary");
+        CopyLicensePayloadToPublishDirectory(publishDirectory);
 
         const string version = "9.8.7-nightly.123.1";
         var packageScript = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Package-DesktopRelease.ps1");
@@ -178,6 +181,7 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
 
         Assert.Contains("SetupIconFile={{SOURCE_DIR}}\\Vehimap.ico", template, StringComparison.Ordinal);
         Assert.Contains("UninstallDisplayIcon={app}\\Vehimap.ico", template, StringComparison.Ordinal);
+        Assert.Contains("LicenseFile={{SOURCE_DIR}}\\LICENSE", template, StringComparison.Ordinal);
         Assert.Contains("IconFilename: \"{app}\\Vehimap.ico\"", template, StringComparison.Ordinal);
         Assert.Contains("CloseApplications=yes", template, StringComparison.Ordinal);
         Assert.Contains("RestartApplications=no", template, StringComparison.Ordinal);
@@ -408,6 +412,35 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         }
 
         throw new DirectoryNotFoundException("Nepodarilo se najit koren repozitare Vehimap.");
+    }
+
+    private static void CopyLicensePayloadToPublishDirectory(string publishDirectory)
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        foreach (var relativePath in new[]
+        {
+            "LICENSE",
+            "COPYING",
+            "COPYRIGHT-NOTICE.txt",
+            "THIRD-PARTY-NOTICES.md"
+        })
+        {
+            File.Copy(
+                Path.Combine(repositoryRoot, relativePath),
+                Path.Combine(publishDirectory, relativePath),
+                overwrite: true);
+        }
+
+        var licenseSourceDirectory = Path.Combine(repositoryRoot, "LICENSES");
+        var licenseTargetDirectory = Path.Combine(publishDirectory, "LICENSES");
+        Directory.CreateDirectory(licenseTargetDirectory);
+        foreach (var sourcePath in Directory.EnumerateFiles(licenseSourceDirectory))
+        {
+            File.Copy(
+                sourcePath,
+                Path.Combine(licenseTargetDirectory, Path.GetFileName(sourcePath)),
+                overwrite: true);
+        }
     }
 
     private sealed record ScriptResult(int ExitCode, string StandardOutput, string StandardError)

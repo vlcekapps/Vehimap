@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using System.Globalization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Views;
@@ -2316,14 +2317,12 @@ public sealed class DesktopAccessibilityLabelTests
     private static string ReadWindowRootElement(string fileName)
     {
         var xaml = ReadViewFile(fileName);
-        var rootEnd = xaml.IndexOf(">\r\n", StringComparison.Ordinal);
-        if (rootEnd < 0)
-        {
-            rootEnd = xaml.IndexOf(">\n", StringComparison.Ordinal);
-        }
+        var rootStart = xaml.IndexOf("<Window", StringComparison.Ordinal);
+        Assert.True(rootStart >= 0, $"Soubor {fileName} nemá čitelný kořenový Window element.");
+        var rootEnd = xaml.IndexOf('>', rootStart);
 
         Assert.True(rootEnd > 0, $"Soubor {fileName} nemá čitelný kořenový Window element.");
-        return xaml[..rootEnd];
+        return xaml[rootStart..rootEnd];
     }
 
     private static string ReadWorkspaceOrView(string fileName, bool workspace)

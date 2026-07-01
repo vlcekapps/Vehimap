@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 

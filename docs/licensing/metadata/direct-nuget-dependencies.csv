@@ -1,0 +1,8 @@
+package,version,project_file,license,notice
+Avalonia,12.0.4,dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj,MIT,Copyright 2013-2026 © The AvaloniaUI Project.
+Avalonia.Desktop,12.0.4,dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj,MIT,Copyright 2013-2026 © The AvaloniaUI Project.
+Avalonia.Themes.Fluent,12.0.4,dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj,MIT,Copyright 2013-2026 © The AvaloniaUI Project.
+CommunityToolkit.Mvvm,8.4.2,dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj,MIT,© .NET Foundation and Contributors. All rights reserved.
+Microsoft.Data.Sqlite,10.0.0,dotnet/src/Vehimap.Storage.Sqlite/Vehimap.Storage.Sqlite.csproj,MIT,© Microsoft Corporation. All rights reserved.
+SQLitePCLRaw.bundle_e_sqlite3,3.0.3,dotnet/src/Vehimap.Storage.Sqlite/Vehimap.Storage.Sqlite.csproj,Apache-2.0,Verify restored package metadata and transitive native SQLite package notices before release.
+Microsoft.Win32.SystemEvents,10.0.0,dotnet/src/Vehimap.Platform/Vehimap.Platform.csproj,MIT,© Microsoft Corporation. All rights reserved.
