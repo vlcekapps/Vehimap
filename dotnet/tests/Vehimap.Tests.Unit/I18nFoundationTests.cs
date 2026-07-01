@@ -1120,6 +1120,41 @@ public sealed class I18nFoundationTests
         Assert.DoesNotMatch(CzechDiacriticsRegex(), aboutDialogViewModel);
     }
 
+    [Fact]
+    public void Unit_sensitive_resource_surfaces_do_not_keep_fixed_metric_labels()
+    {
+        var root = FindRepositoryRoot();
+        var englishPath = Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx");
+        var czechPath = Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx");
+        var englishResources = File.ReadAllText(englishPath);
+        var czechResources = File.ReadAllText(czechPath);
+        var englishKeys = ReadResourceKeys(englishPath);
+        var czechKeys = ReadResourceKeys(czechPath);
+
+        Assert.DoesNotContain("Settings.MaintenanceReminderKm", englishKeys);
+        Assert.DoesNotContain("Settings.MaintenanceReminderKmName", englishKeys);
+        Assert.DoesNotContain("Settings.MaintenanceReminderKm", czechKeys);
+        Assert.DoesNotContain("Settings.MaintenanceReminderKmName", czechKeys);
+
+        Assert.DoesNotContain("ServiceBook.Value.OverDistanceLimitKm", englishKeys);
+        Assert.DoesNotContain("ServiceBook.Value.InKm", englishKeys);
+        Assert.DoesNotContain("ServiceBook.Value.OdometerKm", englishKeys);
+        Assert.DoesNotContain("ServiceBook.Value.OverDistanceLimitKm", czechKeys);
+        Assert.DoesNotContain("ServiceBook.Value.InKm", czechKeys);
+        Assert.DoesNotContain("ServiceBook.Value.OdometerKm", czechKeys);
+
+        Assert.DoesNotContain("Maintenance reminder (km)", englishResources);
+        Assert.DoesNotContain("Distance interval (km)", englishResources);
+        Assert.DoesNotContain("Maintenance distance interval in kilometers", englishResources);
+        Assert.DoesNotContain("Upozornění na údržbu (km)", czechResources);
+        Assert.DoesNotContain("Interval km", czechResources);
+        Assert.DoesNotContain("Interval údržby v kilometrech", czechResources);
+        Assert.DoesNotContain("cena za km", czechResources);
+        Assert.DoesNotContain("Chybí km v období", czechResources);
+        Assert.DoesNotContain("Bez km v období", czechResources);
+        Assert.DoesNotContain("bez údajů o litrech", czechResources);
+    }
+
     private static SortedSet<string> ReadResourceKeys(string path)
     {
         var document = XDocument.Load(path);

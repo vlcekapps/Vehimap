@@ -1035,8 +1035,6 @@ Vehicle: {2}
   <data name="Settings.MaintenanceReminderDistance" xml:space="preserve"><value>Maintenance reminder distance ({0})</value></data>
   <data name="Settings.MaintenanceReminderDistanceHelp" xml:space="preserve"><value>Enter the distance threshold in {0}. Vehimap stores the value internally in kilometers for compatibility.</value></data>
   <data name="Settings.MaintenanceReminderDistanceName" xml:space="preserve"><value>Maintenance reminder distance in {0}</value></data>
-  <data name="Settings.MaintenanceReminderKm" xml:space="preserve"><value>Maintenance reminder (km)</value></data>
-  <data name="Settings.MaintenanceReminderKmName" xml:space="preserve"><value>Maintenance reminder in kilometers</value></data>
   <data name="Settings.NumberFormattingHeading" xml:space="preserve"><value>Language and number formatting</value></data>
   <data name="Settings.Option.Culture" xml:space="preserve"><value>Use language default</value></data>
   <data name="Settings.Option.CurrencyCzk" xml:space="preserve"><value>Czech crown (CZK)</value></data>
@@ -1559,8 +1557,8 @@ Status: {5}</value></data>
   <data name="VehicleStarterBundle.MaintenanceDetailHint" xml:space="preserve"><value>Select a template on the left and you can edit its intervals or note before adding it.</value></data>
   <data name="VehicleStarterBundle.MaintenanceEmptySelection" xml:space="preserve"><value>No service template is selected.</value></data>
   <data name="VehicleStarterBundle.MaintenanceHelpText" xml:space="preserve"><value>Dialog for choosing recommended service plans by vehicle category and service profile. Ctrl+S adds selected templates, Ctrl+A selects all, Ctrl+Shift+A clears the selection and Escape closes the dialog.</value></data>
-  <data name="VehicleStarterBundle.MaintenanceIntervalKmLabel" xml:space="preserve"><value>Distance interval (km)</value></data>
-  <data name="VehicleStarterBundle.MaintenanceIntervalKmName" xml:space="preserve"><value>Maintenance distance interval in kilometers</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalKmLabel" xml:space="preserve"><value>Distance interval</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalKmName" xml:space="preserve"><value>Maintenance distance interval</value></data>
   <data name="VehicleStarterBundle.MaintenanceIntervalMonthsLabel" xml:space="preserve"><value>Months interval</value></data>
   <data name="VehicleStarterBundle.MaintenanceIntervalMonthsName" xml:space="preserve"><value>Maintenance interval in months</value></data>
   <data name="VehicleStarterBundle.MaintenanceItemsHeading" xml:space="preserve"><value>Service templates</value></data>
@@ -1953,13 +1951,10 @@ Status: {5}</value></data>
   <data name="ServiceBook.Value.InDays" xml:space="preserve"><value>In {0} days</value></data>
   <data name="ServiceBook.Value.MissingLastServiceDate" xml:space="preserve"><value>Last service date is missing</value></data>
   <data name="ServiceBook.Value.OverDistanceLimit" xml:space="preserve"><value>Over distance limit by {0}</value></data>
-  <data name="ServiceBook.Value.OverDistanceLimitKm" xml:space="preserve"><value>Over distance limit by {0} km</value></data>
   <data name="ServiceBook.Value.ServiceNow" xml:space="preserve"><value>Service now</value></data>
   <data name="ServiceBook.Value.InDistance" xml:space="preserve"><value>In {0}</value></data>
-  <data name="ServiceBook.Value.InKm" xml:space="preserve"><value>In {0} km</value></data>
   <data name="ServiceBook.Value.MissingOdometerForCalculation" xml:space="preserve"><value>Odometer is missing for calculation</value></data>
   <data name="ServiceBook.Value.NoActiveInterval" xml:space="preserve"><value>No active interval</value></data>
-  <data name="ServiceBook.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
   <data name="ServiceBook.Value.NoOdometer" xml:space="preserve"><value>no odometer</value></data>
   <data name="ServiceBook.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="ServiceBook.Value.NoPrice" xml:space="preserve"><value>no price</value></data>

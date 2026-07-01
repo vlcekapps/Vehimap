@@ -57,6 +57,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - SQLite 2.0 migracni hlasky, cleanup zbylych legacy TSV/INI souboru, health check detaily a text kopirovany z dialogu `Kontrola datove sady 2.0` uz take pouzivaji EN/CS `.resx`
 - kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
 - vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry
+- jednotkove citlive popisky, vyhledavaci napovedy a stavove texty nesmi bez konkretni hodnoty tvrdit pevne `km` nebo `litry`; nastaveni, balicek pro vozidlo, nakladove hledani/stavy a obecne prazdne texty tankovani uz pouzivaji dynamickou jednotku nebo neutralni formulaci
 - tachometry v historii/tankovani/casove ose/servisni knizce, servisni intervaly, dokonceni udrzby, stavove texty planu udrzby a objem tankovani se v UI zobrazuji a zadavaji ve zvolenych jednotkach, zatimco SQLite zustava v kanonickych km/l
 - objem tankovani v litrech podporuje presnost na setiny podle realnych stojanu; ulozene hodnoty typu `3`, `3,1` a `3,12` se znovu otevrou bez zbytecnych nul a vypocty spotreby/ceny pouzivaji decimal hodnoty
 - zmena oddelovacu cisel jen znovu vykresli viditelne hodnoty; nejednoznacne kombinace, kde je oddelovac tisicu stejny jako desetinni oddelovac, nastaveni odmitne

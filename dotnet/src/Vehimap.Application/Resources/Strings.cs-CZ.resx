@@ -1035,8 +1035,6 @@ Vozidlo: {2}
   <data name="Settings.MaintenanceReminderDistance" xml:space="preserve"><value>Upozornění na údržbu podle vzdálenosti ({0})</value></data>
   <data name="Settings.MaintenanceReminderDistanceHelp" xml:space="preserve"><value>Zadejte vzdálenostní práh v {0}. Vehimap hodnotu kvůli kompatibilitě interně uloží v kilometrech.</value></data>
   <data name="Settings.MaintenanceReminderDistanceName" xml:space="preserve"><value>Upozornění na údržbu podle vzdálenosti v {0}</value></data>
-  <data name="Settings.MaintenanceReminderKm" xml:space="preserve"><value>Upozornění na údržbu (km)</value></data>
-  <data name="Settings.MaintenanceReminderKmName" xml:space="preserve"><value>Upozornění na údržbu v kilometrech</value></data>
   <data name="Settings.NumberFormattingHeading" xml:space="preserve"><value>Jazyk a formát čísel</value></data>
   <data name="Settings.Option.Culture" xml:space="preserve"><value>Podle jazyka</value></data>
   <data name="Settings.Option.CurrencyCzk" xml:space="preserve"><value>Česká koruna (CZK)</value></data>
@@ -1143,9 +1141,9 @@ Vozidlo: {2}
   <data name="CostWorkspace.Refresh" xml:space="preserve"><value>Obnovit</value></data>
   <data name="CostWorkspace.RefreshName" xml:space="preserve"><value>Obnovit nákladový přehled</value></data>
   <data name="CostWorkspace.ScrollName" xml:space="preserve"><value>Obsah nákladového přehledu</value></data>
-  <data name="CostWorkspace.SearchHelp" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za km nebo stav výpočtu</value></data>
+  <data name="CostWorkspace.SearchHelp" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za vzdálenost nebo stav výpočtu</value></data>
   <data name="CostWorkspace.SearchName" xml:space="preserve"><value>Hledání v nákladovém přehledu</value></data>
-  <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za km nebo stav výpočtu...</value></data>
+  <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za vzdálenost nebo stav výpočtu...</value></data>
   <data name="CostWorkspace.PeriodStatus.Initial" xml:space="preserve"><value>Období nákladů se načte společně s daty.</value></data>
   <data name="CostWorkspace.ExportStatus.Initial" xml:space="preserve"><value>Exporty nákladů použijí právě zobrazené období.</value></data>
   <data name="CostWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte vozidlo v seznamu a zobrazí se rozpad nákladů.</value></data>
@@ -1180,8 +1178,8 @@ Stav výpočtu: {8}</value></data>
   <data name="CostAnalysis.PeriodLabel" xml:space="preserve"><value>Od {0} do {1}</value></data>
   <data name="CostAnalysis.Status.NoCost" xml:space="preserve"><value>Bez nákladů</value></data>
   <data name="CostAnalysis.Status.OdometerRegression" xml:space="preserve"><value>Nekonzistentní tachometr</value></data>
-  <data name="CostAnalysis.Status.MissingDistanceWithCost" xml:space="preserve"><value>Chybí km v období</value></data>
-  <data name="CostAnalysis.Status.NoDistance" xml:space="preserve"><value>Bez km v období</value></data>
+  <data name="CostAnalysis.Status.MissingDistanceWithCost" xml:space="preserve"><value>Chybí vzdálenost v období</value></data>
+  <data name="CostAnalysis.Status.NoDistance" xml:space="preserve"><value>Bez vzdálenosti v období</value></data>
   <data name="CostAnalysis.Status.Ok" xml:space="preserve"><value>V pořádku</value></data>
   <data name="CostAnalysis.Status.ZeroDistanceWithCost" xml:space="preserve"><value>Nulový nájezd</value></data>
   <data name="CostAnalysis.Status.NoMovement" xml:space="preserve"><value>Bez pohybu</value></data>
@@ -1559,8 +1557,8 @@ Stav: {5}</value></data>
   <data name="VehicleStarterBundle.MaintenanceDetailHint" xml:space="preserve"><value>Vyberte šablonu vlevo a můžete upravit její intervaly nebo poznámku před přidáním.</value></data>
   <data name="VehicleStarterBundle.MaintenanceEmptySelection" xml:space="preserve"><value>Není vybraná žádná servisní šablona.</value></data>
   <data name="VehicleStarterBundle.MaintenanceHelpText" xml:space="preserve"><value>Dialog pro výběr doporučených servisních plánů podle kategorie a servisního profilu vozidla. Ctrl+S přidá vybrané šablony, Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže a Escape zavře dialog.</value></data>
-  <data name="VehicleStarterBundle.MaintenanceIntervalKmLabel" xml:space="preserve"><value>Interval km</value></data>
-  <data name="VehicleStarterBundle.MaintenanceIntervalKmName" xml:space="preserve"><value>Interval údržby v kilometrech</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalKmLabel" xml:space="preserve"><value>Vzdálenostní interval</value></data>
+  <data name="VehicleStarterBundle.MaintenanceIntervalKmName" xml:space="preserve"><value>Vzdálenostní interval údržby</value></data>
   <data name="VehicleStarterBundle.MaintenanceIntervalMonthsLabel" xml:space="preserve"><value>Interval měsíců</value></data>
   <data name="VehicleStarterBundle.MaintenanceIntervalMonthsName" xml:space="preserve"><value>Interval údržby v měsících</value></data>
   <data name="VehicleStarterBundle.MaintenanceItemsHeading" xml:space="preserve"><value>Servisní šablony</value></data>
@@ -1953,13 +1951,10 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Value.InDays" xml:space="preserve"><value>Za {0} dnů</value></data>
   <data name="ServiceBook.Value.MissingLastServiceDate" xml:space="preserve"><value>Chybí datum posledního servisu</value></data>
   <data name="ServiceBook.Value.OverDistanceLimit" xml:space="preserve"><value>Po limitu o {0}</value></data>
-  <data name="ServiceBook.Value.OverDistanceLimitKm" xml:space="preserve"><value>Po limitu o {0} km</value></data>
   <data name="ServiceBook.Value.ServiceNow" xml:space="preserve"><value>Servis nyní</value></data>
   <data name="ServiceBook.Value.InDistance" xml:space="preserve"><value>Za {0}</value></data>
-  <data name="ServiceBook.Value.InKm" xml:space="preserve"><value>Za {0} km</value></data>
   <data name="ServiceBook.Value.MissingOdometerForCalculation" xml:space="preserve"><value>Chybí tachometr pro výpočet</value></data>
   <data name="ServiceBook.Value.NoActiveInterval" xml:space="preserve"><value>Bez aktivního intervalu</value></data>
-  <data name="ServiceBook.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
   <data name="ServiceBook.Value.NoOdometer" xml:space="preserve"><value>bez tachometru</value></data>
   <data name="ServiceBook.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="ServiceBook.Value.NoPrice" xml:space="preserve"><value>bez ceny</value></data>
@@ -2143,7 +2138,7 @@ Stav: {5}</value></data>
   <data name="Projection.Value.NoStation" xml:space="preserve"><value>bez místa</value></data>
   <data name="Projection.Value.NoProvider" xml:space="preserve"><value>Bez poskytovatele</value></data>
   <data name="Projection.Value.Document" xml:space="preserve"><value>Doklad</value></data>
-  <data name="Projection.Value.NoFuelVolumeData" xml:space="preserve"><value>bez údajů o litrech</value></data>
+  <data name="Projection.Value.NoFuelVolumeData" xml:space="preserve"><value>bez údajů o množství paliva</value></data>
   <data name="Projection.Value.UnknownOdometer" xml:space="preserve"><value>neznámý</value></data>
   <data name="History.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné záznamy v historii.</value></data>
   <data name="History.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} historických záznamů.</value></data>
