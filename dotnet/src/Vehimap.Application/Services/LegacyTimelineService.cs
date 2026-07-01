@@ -89,7 +89,7 @@ public sealed class LegacyTimelineService : ITimelineService
                 date,
                 FormatEventDate(date),
                 L("Timeline.Title.Fuel"),
-                JoinParts(FormatOdometerText(entry.Odometer), FormatFuelLiters(entry.Liters), entry.FuelType, entry.FuelDetail, entry.Station, entry.Note),
+                JoinParts(FormatOdometerText(entry.Odometer), FormatFuelLiters(entry.Liters), FormatFuelType(entry.FuelType), entry.FuelDetail, entry.Station, entry.Note),
                 FormatCostStatus(entry.TotalCost),
                 entry.Id,
                 entry.Note,
@@ -174,7 +174,7 @@ public sealed class LegacyTimelineService : ITimelineService
                 vehicle.MakeModel,
                 dueDate,
                 record.ValidTo,
-                LF("Timeline.Title.Record", ValueOrFallback(record.RecordType, L("Timeline.Kind.Record")), ValueOrFallback(record.Title, L("Timeline.Value.Untitled"))),
+                LF("Timeline.Title.Record", ValueOrFallback(FormatRecordType(record.RecordType), L("Timeline.Kind.Record")), ValueOrFallback(record.Title, L("Timeline.Value.Untitled"))),
                 JoinParts(record.Provider, record.Note),
                 BuildExpirationStatusText(dueDate, today, 30),
                 record.Id,
@@ -483,8 +483,14 @@ public sealed class LegacyTimelineService : ITimelineService
 
     private string FormatReminderRepeatMode(string? repeatMode)
     {
-        return string.IsNullOrWhiteSpace(repeatMode) ? L("Timeline.Value.NoRepeat") : repeatMode;
+        return string.IsNullOrWhiteSpace(repeatMode) ? L("Timeline.Value.NoRepeat") : LegacyKnownValueDisplayService.FormatReminderRepeatMode(repeatMode, _localizer);
     }
+
+    private string FormatFuelType(string? fuelType) =>
+        LegacyKnownValueDisplayService.FormatFuelType(fuelType, _localizer);
+
+    private string FormatRecordType(string? recordType) =>
+        LegacyKnownValueDisplayService.FormatRecordType(recordType, _localizer);
 
     private static string JoinParts(params string?[] parts)
     {

@@ -88,15 +88,15 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var title = ValueOrFallback(vehicle.Name, L("GlobalSearch.Value.UntitledVehicle"));
             var summary = JoinParts(
                 ValueOrFallback(vehicle.MakeModel, L("GlobalSearch.Value.NoMakeModel")),
-                ValueOrFallback(vehicle.Category, L("GlobalSearch.Value.NoCategory")),
+                ValueOrFallback(FormatCategory(vehicle.Category), L("GlobalSearch.Value.NoCategory")),
                 FormatPlate(vehicle.Plate),
                 ValueOrFallback(vehicle.VehicleNote, string.Empty),
-                ValueOrFallback(meta?.State, string.Empty),
+                ValueOrFallback(FormatVehicleState(meta?.State), string.Empty),
                 ValueOrFallback(meta?.Tags, string.Empty),
-                ValueOrFallback(meta?.Powertrain, string.Empty),
-                ValueOrFallback(meta?.ClimateProfile, string.Empty),
-                ValueOrFallback(meta?.TimingDrive, string.Empty),
-                ValueOrFallback(meta?.Transmission, string.Empty),
+                ValueOrFallback(FormatPowertrain(meta?.Powertrain), string.Empty),
+                ValueOrFallback(FormatClimateProfile(meta?.ClimateProfile), string.Empty),
+                ValueOrFallback(FormatTimingDrive(meta?.TimingDrive), string.Empty),
+                ValueOrFallback(FormatTransmission(meta?.Transmission), string.Empty),
                 statusText);
             var searchTexts = BuildVehicleSearchTexts(vehicle, meta, timeline, includeTimelineStatus: true);
 
@@ -161,7 +161,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var title = BuildFuelTitle(entry);
             var summary = JoinParts(
                 ValueOrFallback(entry.EntryDate, L("Common.NoDate")),
-                ValueOrFallback(entry.FuelType, L("GlobalSearch.Value.NoFuelType")),
+                ValueOrFallback(FormatFuelType(entry.FuelType), L("GlobalSearch.Value.NoFuelType")),
                 FormatFuelLiters(entry.Liters),
                 FormatOdometer(entry.Odometer),
                 FormatMoneyValue(entry.TotalCost),
@@ -180,6 +180,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 entry.FullTank ? L("GlobalSearch.Value.Yes") : L("GlobalSearch.Value.No"),
                 entry.FullTank ? L("GlobalSearch.Value.FullTank") : string.Empty,
                 entry.FuelType,
+                FormatFuelType(entry.FuelType),
                 entry.FuelDetail,
                 entry.Station,
                 entry.Note);
@@ -209,7 +210,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var title = ValueOrFallback(record.Title, L("GlobalSearch.Entity.Record"));
             var resolvedPath = ResolveRecordPath(dataRoot, record);
             var summary = JoinParts(
-                ValueOrFallback(record.RecordType, L("GlobalSearch.Entity.Record")),
+                ValueOrFallback(FormatRecordType(record.RecordType), L("GlobalSearch.Entity.Record")),
                 ValueOrFallback(record.Provider, string.Empty),
                 BuildValidity(record.ValidFrom, record.ValidTo),
                 BuildAttachmentLabel(record, resolvedPath),
@@ -221,6 +222,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 L("GlobalSearch.Entity.Record"),
                 L("GlobalSearch.Entity.Records"),
                 record.RecordType,
+                FormatRecordType(record.RecordType),
                 record.Title,
                 record.Provider,
                 record.ValidFrom,
@@ -258,7 +260,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var title = ValueOrFallback(reminder.Title, L("GlobalSearch.Entity.Reminder"));
             var summary = JoinParts(
                 ValueOrFallback(reminder.DueDate, L("GlobalSearch.Value.NoDueDate")),
-                ValueOrFallback(reminder.RepeatMode, string.Empty),
+                ValueOrFallback(FormatReminderRepeatMode(reminder.RepeatMode), string.Empty),
                 timelineStatus,
                 ValueOrFallback(reminder.Note, string.Empty));
             var searchTexts = BuildSearchTexts(
@@ -270,6 +272,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 reminder.DueDate,
                 reminder.ReminderDays,
                 reminder.RepeatMode,
+                FormatReminderRepeatMode(reminder.RepeatMode),
                 timelineStatus,
                 reminder.Note);
 
@@ -382,12 +385,18 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             vehicle.Year,
             vehicle.Power,
             vehicle.Category,
+            FormatCategory(vehicle.Category),
             meta?.State,
+            FormatVehicleState(meta?.State),
             meta?.Tags,
             meta?.Powertrain,
+            FormatPowertrain(meta?.Powertrain),
             meta?.ClimateProfile,
+            FormatClimateProfile(meta?.ClimateProfile),
             meta?.TimingDrive,
+            FormatTimingDrive(meta?.TimingDrive),
             meta?.Transmission,
+            FormatTransmission(meta?.Transmission),
             vehicle.LastTk,
             vehicle.NextTk,
             vehicle.GreenCardFrom,
@@ -547,7 +556,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     {
         if (!string.IsNullOrWhiteSpace(entry.Liters) || !string.IsNullOrWhiteSpace(entry.TotalCost))
         {
-            var fuelLabel = JoinParts(entry.FuelType, entry.FuelDetail);
+            var fuelLabel = JoinParts(FormatFuelType(entry.FuelType), entry.FuelDetail);
             return string.IsNullOrWhiteSpace(fuelLabel)
                 ? L("GlobalSearch.Entity.Fuel")
                 : LF("GlobalSearch.Title.FuelWithLabel", fuelLabel);
@@ -601,6 +610,33 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
 
         return string.Join(" / ", parts);
     }
+
+    private string FormatCategory(string? value) =>
+        LegacyKnownValueDisplayService.FormatCategory(value, _localizer);
+
+    private string FormatRecordType(string? value) =>
+        LegacyKnownValueDisplayService.FormatRecordType(value, _localizer);
+
+    private string FormatVehicleState(string? value) =>
+        LegacyKnownValueDisplayService.FormatVehicleState(value, _localizer);
+
+    private string FormatPowertrain(string? value) =>
+        LegacyKnownValueDisplayService.FormatPowertrain(value, _localizer);
+
+    private string FormatClimateProfile(string? value) =>
+        LegacyKnownValueDisplayService.FormatClimateProfile(value, _localizer);
+
+    private string FormatTimingDrive(string? value) =>
+        LegacyKnownValueDisplayService.FormatTimingDrive(value, _localizer);
+
+    private string FormatTransmission(string? value) =>
+        LegacyKnownValueDisplayService.FormatTransmission(value, _localizer);
+
+    private string FormatFuelType(string? value) =>
+        LegacyKnownValueDisplayService.FormatFuelType(value, _localizer);
+
+    private string FormatReminderRepeatMode(string? value) =>
+        LegacyKnownValueDisplayService.FormatReminderRepeatMode(value, _localizer);
 
     private static IAppLocalizer CreateDefaultLocalizer() =>
         new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));

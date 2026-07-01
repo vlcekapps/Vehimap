@@ -89,7 +89,28 @@ public sealed class I18nFoundationTests
         Assert.Equal("Hledání „olej“ našlo 2 historických záznamů.", czech.Format("HistoryWorkspace.SearchSummary.Filtered", "olej", 2));
         Assert.Equal("2026-06, Service, odometer 12345, cost 2500, note no note", english.Format("HistoryItem.AccessibleLabel", "2026-06", "Service", "12345", "2500", "no note"));
         Assert.Equal("2026-06, Servis, tachometr 12345, cena 2500, poznámka bez poznámky", czech.Format("HistoryItem.AccessibleLabel", "2026-06", "Servis", "12345", "2500", "bez poznámky"));
+        Assert.Equal("Passenger vehicles", english.GetString("KnownValue.Category.PassengerVehicles"));
+        Assert.Equal("Osobní vozidla", czech.GetString("KnownValue.Category.PassengerVehicles"));
+        Assert.Equal("Liability insurance", english.GetString("KnownValue.RecordType.LiabilityInsurance"));
+        Assert.Equal("Povinné ručení", czech.GetString("KnownValue.RecordType.LiabilityInsurance"));
+        Assert.Equal("Every 2 years", english.GetString("KnownValue.ReminderRepeat.EveryTwoYears"));
+        Assert.Equal("Každé 2 roky", czech.GetString("KnownValue.ReminderRepeat.EveryTwoYears"));
         Assert.Equal("Missing.Key.For.Test", english.GetString("Missing.Key.For.Test"));
+    }
+
+    [Fact]
+    public void Legacy_known_value_display_service_localizes_known_values_and_preserves_custom_values()
+    {
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+        var czech = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ"));
+
+        Assert.Equal("Passenger vehicles", LegacyKnownValueDisplayService.FormatCategory("Osobní vozidla", english));
+        Assert.Equal("Osobní vozidla", LegacyKnownValueDisplayService.FormatCategory("Osobní vozidla", czech));
+        Assert.Equal("Gasoline", LegacyKnownValueDisplayService.FormatFuelType("Benzin", english));
+        Assert.Equal("Gasoline", LegacyKnownValueDisplayService.FormatPowertrain("Benzín", english));
+        Assert.Equal("Every year", LegacyKnownValueDisplayService.FormatReminderRepeatMode("Každý rok", english));
+        Assert.Equal("Custom category", LegacyKnownValueDisplayService.FormatCategory("Custom category", english));
+        Assert.Equal(string.Empty, LegacyKnownValueDisplayService.FormatRecordType("", english));
     }
 
     [Fact]
@@ -238,6 +259,10 @@ public sealed class I18nFoundationTests
 
         Assert.Equal("62.1 mi", service.FormatDistanceFromKilometers(100m, culturePreferences, new AppUnitPreferences("mi", "us_gal"), 1));
         Assert.Equal("2.64 US gal", service.FormatVolumeFromLiters(10m, culturePreferences, new AppUnitPreferences("mi", "us_gal"), 2));
+        Assert.Equal("mi", service.GetDistanceUnitLabel(new AppUnitPreferences("mi", "us_gal")));
+        Assert.Equal("km", service.GetDistanceUnitLabel(new AppUnitPreferences("km", "imp_gal")));
+        Assert.Equal("US gal", service.GetVolumeUnitLabel(new AppUnitPreferences("mi", "us_gal")));
+        Assert.Equal("imp gal", service.GetVolumeUnitLabel(new AppUnitPreferences("mi", "imp_gal")));
         Assert.InRange(service.ConvertDistanceFromKilometers(100m, new AppUnitPreferences("mi", "l")), 62.137m, 62.138m);
         Assert.InRange(service.ConvertDistanceToKilometers(62.137119m, new AppUnitPreferences("mi", "l")), 99.999m, 100.001m);
         Assert.InRange(service.ConvertVolumeToLiters(2.64172m, new AppUnitPreferences("km", "us_gal")), 9.999m, 10.001m);

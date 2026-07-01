@@ -71,7 +71,7 @@ internal sealed class DesktopCostExportService
         {
             lines.Add(Tsv([
                 row.VehicleName,
-                row.Category,
+                FormatCategory(row.Category),
                 Money(row.FuelCost),
                 Money(row.HistoryCost),
                 Money(row.RecordCost),
@@ -213,12 +213,12 @@ internal sealed class DesktopCostExportService
             }
 
             var extra = JoinNonEmpty([
-                TextPart(L("CostExport.Extra.Fuel"), entry.FuelType),
+                TextPart(L("CostExport.Extra.Fuel"), FormatFuelType(entry.FuelType)),
                 TextPart(L("CostExport.Extra.Volume"), FormatFuelVolume(entry.Liters)),
                 TextPart(L("CostExport.Extra.Odometer"), FormatOdometer(entry.Odometer)),
                 entry.FullTank ? L("CostExport.Extra.FullTank") : string.Empty
             ]);
-            entries.Add(new CostExportEntry(date, entry.EntryDate, L("CostExport.EntryGroup.Fuel"), string.IsNullOrWhiteSpace(entry.FuelType) ? L("CostExport.Entry.FuelFallback") : entry.FuelType, amount, extra, entry.Note));
+            entries.Add(new CostExportEntry(date, entry.EntryDate, L("CostExport.EntryGroup.Fuel"), string.IsNullOrWhiteSpace(entry.FuelType) ? L("CostExport.Entry.FuelFallback") : FormatFuelType(entry.FuelType), amount, extra, entry.Note));
         }
 
         foreach (var entry in dataSet.HistoryEntries)
@@ -253,7 +253,7 @@ internal sealed class DesktopCostExportService
 
             var dateText = string.IsNullOrWhiteSpace(entry.ValidTo) ? entry.ValidFrom : entry.ValidTo;
             var extra = JoinNonEmpty([
-                TextPart(L("CostExport.Extra.RecordType"), entry.RecordType),
+                TextPart(L("CostExport.Extra.RecordType"), FormatRecordType(entry.RecordType)),
                 TextPart(L("CostExport.Extra.Provider"), entry.Provider),
                 TextPart(L("CostExport.Extra.Attachment"), entry.AttachmentMode == VehicleRecordAttachmentMode.Managed ? Path.GetFileName(entry.FilePath) : entry.FilePath)
             ]);
@@ -294,6 +294,15 @@ internal sealed class DesktopCostExportService
 
     private string FormatDistance(decimal kilometers, int decimalPlaces) =>
         _unitFormatService.FormatDistanceFromKilometers(kilometers, _culturePreferences, _unitPreferences, decimalPlaces);
+
+    private string FormatCategory(string? value) =>
+        LegacyKnownValueDisplayService.FormatCategory(value, _localizer);
+
+    private string FormatFuelType(string? value) =>
+        LegacyKnownValueDisplayService.FormatFuelType(value, _localizer);
+
+    private string FormatRecordType(string? value) =>
+        LegacyKnownValueDisplayService.FormatRecordType(value, _localizer);
 
     private string FormatCostPerDistance(decimal costPerKm)
     {

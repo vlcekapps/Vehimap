@@ -119,11 +119,11 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         {
             Vehicles =
             [
-                new Vehicle("veh_1", "Milena", "Cars", "Family car", "Skoda 120L", "", "1988", "43", "", "08/2026", "05/2025", "")
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Family car", "Skoda 120L", "", "1988", "43", "", "08/2026", "05/2025", "")
             ],
             VehicleMetaEntries =
             [
-                new VehicleMeta("veh_1", "", "", "", "", "", "")
+                new VehicleMeta("veh_1", "Veterán", "", "Benzín", "Má klimatizaci", "Řemen", "Manuální")
             ],
             HistoryEntries =
             [
@@ -131,15 +131,15 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             ],
             FuelEntries =
             [
-                new FuelEntry("fuel_1", "veh_1", "02.04.2026", "10050", "3.12", "350", true, "Gasoline", "", "Natural 95", "Shell")
+                new FuelEntry("fuel_1", "veh_1", "02.04.2026", "10050", "3.12", "350", true, "Benzin", "", "Natural 95", "Shell")
             ],
             Records =
             [
-                new VehicleRecord("rec_1", "veh_1", "", "", "", "", "05/2026", "2000", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/insurance.pdf", "")
+                new VehicleRecord("rec_1", "veh_1", "Povinné ručení", "", "", "", "05/2026", "2000", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/insurance.pdf", "")
             ],
             Reminders =
             [
-                new VehicleReminder("rem_1", "veh_1", "Call service", "10.04.2026", "", "", "")
+                new VehicleReminder("rem_1", "veh_1", "Call service", "10.04.2026", "", "Každý rok", "")
             ],
             MaintenancePlans =
             [
@@ -156,6 +156,9 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             new DateOnly(2026, 4, 3));
 
         var vehicle = Assert.Single(vehicleList.Items);
+        Assert.Equal("Passenger vehicles", vehicle.Category);
+        Assert.Equal("Veteran", vehicle.State);
+        Assert.Equal("Gasoline", vehicle.Powertrain);
         Assert.Equal("No license plate", vehicle.Plate);
         Assert.Contains("Green card missing", vehicle.StatusSummary, StringComparison.Ordinal);
         Assert.DoesNotContain("ZK chybí", vehicle.StatusSummary, StringComparison.Ordinal);
@@ -169,7 +172,12 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             relativePath => Path.Combine(dataRoot.DataPath, relativePath.Replace('/', Path.DirectorySeparatorChar)),
             new DateOnly(2026, 4, 3));
 
-        Assert.Contains("State: Normal operation", detail.Overview, StringComparison.Ordinal);
+        Assert.Contains("Skoda 120L | Passenger vehicles | No license plate", detail.Overview, StringComparison.Ordinal);
+        Assert.Contains("State: Veteran", detail.Overview, StringComparison.Ordinal);
+        Assert.Contains("Powertrain: Gasoline", detail.Profile, StringComparison.Ordinal);
+        Assert.Contains("Climate: Has air conditioning", detail.Profile, StringComparison.Ordinal);
+        Assert.Contains("Timing drive: Belt", detail.Profile, StringComparison.Ordinal);
+        Assert.Contains("Transmission: Manual", detail.Profile, StringComparison.Ordinal);
         Assert.Contains("Related records: history 1, fuel 1, documents 1, reminders 1, maintenance plans 1, active 1.", detail.EvidenceSummary, StringComparison.Ordinal);
         Assert.Contains("History", detail.EvidenceSummaries.Select(item => item.Title));
         Assert.Contains("Fuel", detail.EvidenceSummaries.Select(item => item.Title));
@@ -178,8 +186,11 @@ public sealed class DesktopProjectionAndNavigationServiceTests
 
         Assert.Equal("The selected vehicle has 1 history entries.", projectionService.BuildHistory(dataSet, "veh_1").Summary);
         Assert.Equal("The selected vehicle has 1 fuel entries.", projectionService.BuildFuel(dataSet, "veh_1").Summary);
-        Assert.Equal("Full tank", projectionService.BuildFuel(dataSet, "veh_1").Items.Single().TankState);
+        var fuel = Assert.Single(projectionService.BuildFuel(dataSet, "veh_1").Items);
+        Assert.Equal("Gasoline", fuel.FuelType);
+        Assert.Equal("Full tank", fuel.TankState);
         Assert.Equal("The selected vehicle has 1 reminders.", projectionService.BuildReminders(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Summary);
+        Assert.Equal("Every year", projectionService.BuildReminders(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Items.Single().RepeatMode);
         Assert.Equal("The selected vehicle has 1 maintenance plans.", projectionService.BuildMaintenance(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Summary);
 
         var records = projectionService.BuildRecords(
@@ -189,7 +200,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             relativePath => Path.Combine(dataRoot.DataPath, relativePath.Replace('/', Path.DirectorySeparatorChar)));
 
         var record = Assert.Single(records.Items);
-        Assert.Equal("Document", record.RecordType);
+        Assert.Equal("Liability insurance", record.RecordType);
         Assert.Equal("Untitled", record.Title);
         Assert.Equal("Managed copy", record.AttachmentMode);
         Assert.Equal("File available", record.AttachmentState);

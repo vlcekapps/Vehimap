@@ -2457,4 +2457,45 @@ Suggested action: {6}</value></data>
   <data name="VehicleDelete.Dialog.Confirm" xml:space="preserve"><value>Delete vehicle</value></data>
   <data name="Dialog.Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="WorkspaceEditor.Error.UnknownKind" xml:space="preserve"><value>Unknown editor type.</value></data>
+  <data name="KnownValue.Category.PassengerVehicles" xml:space="preserve"><value>Passenger vehicles</value></data>
+  <data name="KnownValue.Category.Motorcycles" xml:space="preserve"><value>Motorcycles</value></data>
+  <data name="KnownValue.Category.Trucks" xml:space="preserve"><value>Trucks</value></data>
+  <data name="KnownValue.Category.Buses" xml:space="preserve"><value>Buses</value></data>
+  <data name="KnownValue.Category.Other" xml:space="preserve"><value>Other</value></data>
+  <data name="KnownValue.RecordType.LiabilityInsurance" xml:space="preserve"><value>Liability insurance</value></data>
+  <data name="KnownValue.RecordType.ComprehensiveInsurance" xml:space="preserve"><value>Comprehensive insurance</value></data>
+  <data name="KnownValue.RecordType.Assistance" xml:space="preserve"><value>Assistance</value></data>
+  <data name="KnownValue.RecordType.Document" xml:space="preserve"><value>Document</value></data>
+  <data name="KnownValue.RecordType.ServiceDocument" xml:space="preserve"><value>Service document</value></data>
+  <data name="KnownValue.RecordType.Other" xml:space="preserve"><value>Other</value></data>
+  <data name="KnownValue.VehicleState.NormalOperation" xml:space="preserve"><value>Normal operation</value></data>
+  <data name="KnownValue.VehicleState.Veteran" xml:space="preserve"><value>Veteran</value></data>
+  <data name="KnownValue.VehicleState.OutOfService" xml:space="preserve"><value>Out of service</value></data>
+  <data name="KnownValue.VehicleState.InRenovation" xml:space="preserve"><value>In renovation</value></data>
+  <data name="KnownValue.VehicleState.ForSale" xml:space="preserve"><value>For sale</value></data>
+  <data name="KnownValue.VehicleState.Archive" xml:space="preserve"><value>Archive</value></data>
+  <data name="KnownValue.Powertrain.Gasoline" xml:space="preserve"><value>Gasoline</value></data>
+  <data name="KnownValue.Powertrain.Diesel" xml:space="preserve"><value>Diesel</value></data>
+  <data name="KnownValue.Powertrain.Hybrid" xml:space="preserve"><value>Hybrid</value></data>
+  <data name="KnownValue.Powertrain.PluginHybrid" xml:space="preserve"><value>Plug-in hybrid</value></data>
+  <data name="KnownValue.Powertrain.Electric" xml:space="preserve"><value>Electric</value></data>
+  <data name="KnownValue.Powertrain.LpgCng" xml:space="preserve"><value>LPG / CNG</value></data>
+  <data name="KnownValue.Powertrain.Other" xml:space="preserve"><value>Other</value></data>
+  <data name="KnownValue.Climate.HasAirConditioning" xml:space="preserve"><value>Has air conditioning</value></data>
+  <data name="KnownValue.Climate.NoAirConditioning" xml:space="preserve"><value>No air conditioning</value></data>
+  <data name="KnownValue.TimingDrive.Belt" xml:space="preserve"><value>Belt</value></data>
+  <data name="KnownValue.TimingDrive.Chain" xml:space="preserve"><value>Chain</value></data>
+  <data name="KnownValue.Common.NotRelevant" xml:space="preserve"><value>Not relevant</value></data>
+  <data name="KnownValue.Transmission.Manual" xml:space="preserve"><value>Manual</value></data>
+  <data name="KnownValue.Transmission.Automatic" xml:space="preserve"><value>Automatic</value></data>
+  <data name="KnownValue.FuelType.Gasoline" xml:space="preserve"><value>Gasoline</value></data>
+  <data name="KnownValue.FuelType.Diesel" xml:space="preserve"><value>Diesel</value></data>
+  <data name="KnownValue.FuelType.Lpg" xml:space="preserve"><value>LPG</value></data>
+  <data name="KnownValue.FuelType.Cng" xml:space="preserve"><value>CNG</value></data>
+  <data name="KnownValue.FuelType.Electricity" xml:space="preserve"><value>Electricity</value></data>
+  <data name="KnownValue.FuelType.Other" xml:space="preserve"><value>Other</value></data>
+  <data name="KnownValue.ReminderRepeat.None" xml:space="preserve"><value>Do not repeat</value></data>
+  <data name="KnownValue.ReminderRepeat.Yearly" xml:space="preserve"><value>Every year</value></data>
+  <data name="KnownValue.ReminderRepeat.EveryTwoYears" xml:space="preserve"><value>Every 2 years</value></data>
+  <data name="KnownValue.ReminderRepeat.EveryFiveYears" xml:space="preserve"><value>Every 5 years</value></data>
 </root>

@@ -79,14 +79,14 @@ internal sealed class DesktopProjectionService
                 return new VehicleListItemViewModel(
                     vehicle.Id,
                     vehicle.Name,
-                    vehicle.Category,
+                    FormatCategory(vehicle.Category),
                     FormatValue(vehicle.Plate, L("Projection.Value.NoPlate")),
                     FormatValue(vehicle.MakeModel, L("Projection.Value.NoMakeModel")),
                     vehicle.VehicleNote,
                     vehicle.NextTk,
                     vehicle.GreenCardTo,
-                    meta?.State ?? string.Empty,
-                    meta?.Powertrain ?? string.Empty,
+                    FormatKnownOrEmpty(meta?.State, FormatVehicleState),
+                    FormatKnownOrEmpty(meta?.Powertrain, FormatPowertrain),
                     BuildVehicleStatusSummary(vehicle, meta, auditItems, timelineItems));
             })
             .ToList();
@@ -161,7 +161,7 @@ internal sealed class DesktopProjectionService
             .Select(row => new CostVehicleItemViewModel(
                 row.VehicleId,
                 row.VehicleName,
-                row.Category,
+                FormatCategory(row.Category),
                 FormatMoney(row.FuelCost),
                 FormatMoney(row.HistoryCost),
                 FormatMoney(row.RecordCost),
@@ -172,7 +172,7 @@ internal sealed class DesktopProjectionService
                 LF(
                     "CostItem.AccessibleLabel",
                     row.VehicleName,
-                    row.Category,
+                    FormatCategory(row.Category),
                     FormatMoney(row.TotalCost),
                     FormatMoney(row.FuelCost),
                     FormatMoney(row.HistoryCost),
@@ -204,13 +204,13 @@ internal sealed class DesktopProjectionService
         }
 
         var effectiveToday = today ?? DateOnly.FromDateTime(DateTime.Today);
-        var state = string.IsNullOrWhiteSpace(vehicle.State) ? L("Projection.Value.NormalOperation") : vehicle.State;
+        var state = string.IsNullOrWhiteSpace(vehicle.State) ? L("Projection.Value.NormalOperation") : FormatVehicleState(vehicle.State);
         var tags = string.IsNullOrWhiteSpace(meta?.Tags) ? L("Common.EmptyValue") : meta.Tags;
         var note = string.IsNullOrWhiteSpace(vehicle.VehicleNote) ? L("Common.NoNote") : vehicle.VehicleNote;
-        var powertrain = string.IsNullOrWhiteSpace(meta?.Powertrain) ? L("Common.EmptyValue") : meta.Powertrain;
-        var climate = string.IsNullOrWhiteSpace(meta?.ClimateProfile) ? L("Common.EmptyValue") : meta.ClimateProfile;
-        var timingDrive = string.IsNullOrWhiteSpace(meta?.TimingDrive) ? L("Common.EmptyValue") : meta.TimingDrive;
-        var transmission = string.IsNullOrWhiteSpace(meta?.Transmission) ? L("Common.EmptyValue") : meta.Transmission;
+        var powertrain = string.IsNullOrWhiteSpace(meta?.Powertrain) ? L("Common.EmptyValue") : FormatPowertrain(meta.Powertrain);
+        var climate = string.IsNullOrWhiteSpace(meta?.ClimateProfile) ? L("Common.EmptyValue") : FormatClimateProfile(meta.ClimateProfile);
+        var timingDrive = string.IsNullOrWhiteSpace(meta?.TimingDrive) ? L("Common.EmptyValue") : FormatTimingDrive(meta.TimingDrive);
+        var transmission = string.IsNullOrWhiteSpace(meta?.Transmission) ? L("Common.EmptyValue") : FormatTransmission(meta.Transmission);
         var currentOdometer = BuildCurrentOdometerLookup(dataSet).GetValueOrDefault(vehicle.Id);
         var recentHistory = BuildRecentVehicleHistory(dataSet, vehicle.Id);
         var evidenceSummaries = BuildVehicleEvidenceSummaryItems(
@@ -226,7 +226,7 @@ internal sealed class DesktopProjectionService
             LF(
                 "VehicleDetail.Projection.Overview",
                 vehicle.MakeModel,
-                vehicle.Category,
+                FormatCategory(vehicle.Category),
                 vehicle.Plate,
                 state,
                 tags,
@@ -291,7 +291,7 @@ internal sealed class DesktopProjectionService
             .Select(item => new VehicleFuelItemViewModel(
                 item.Item.Id,
                 FormatValue(item.Item.EntryDate, L("Common.NoDate")),
-                FormatValue(item.Item.FuelType, L("Projection.Value.NoType")),
+                FormatKnownValue(item.Item.FuelType, L("Projection.Value.NoType"), FormatFuelType),
                 FormatFuelVolume(item.Item.Liters),
                 FormatCostValue(item.Item.TotalCost),
                 FormatOdometerValue(item.Item.Odometer),
@@ -603,7 +603,7 @@ internal sealed class DesktopProjectionService
 
         return new VehicleRecordItemViewModel(
             record.Id,
-            FormatValue(record.RecordType, L("Projection.Value.Document")),
+            FormatKnownValue(record.RecordType, L("Projection.Value.Document"), FormatRecordType),
             FormatValue(record.Title, L("Projection.Value.NoTitle")),
             FormatValue(record.Provider, L("Projection.Value.NoProvider")),
             BuildRecordValidity(record),
@@ -1159,7 +1159,7 @@ internal sealed class DesktopProjectionService
     }
 
     private string FormatReminderRepeatMode(string? repeatMode) =>
-        string.IsNullOrWhiteSpace(repeatMode) ? L("Reminder.Repeat.None") : repeatMode;
+        string.IsNullOrWhiteSpace(repeatMode) ? L("Reminder.Repeat.None") : FormatReminderRepeat(repeatMode);
 
     private bool MatchesTimelineFilter(VehicleTimelineItem item, string selectedFilter)
     {
@@ -1435,12 +1435,13 @@ internal sealed class DesktopProjectionService
 
     private string BuildFuelGroupLabel(string fuelType, string fuelDetail)
     {
+        var formattedFuelType = FormatKnownValue(fuelType, L("FuelAnalysis.Group.UnknownFuelType"), FormatFuelType);
         if (string.IsNullOrWhiteSpace(fuelDetail) || string.Equals(fuelDetail, L("FuelAnalysis.Group.UnknownFuelDetail"), StringComparison.CurrentCultureIgnoreCase))
         {
-            return fuelType;
+            return formattedFuelType;
         }
 
-        return $"{fuelType} | {fuelDetail}";
+        return $"{formattedFuelType} | {fuelDetail}";
     }
 
     private string FormatFuelAnalysisWarningSeverity(FuelAnalysisWarningSeverity severity) =>
@@ -1469,7 +1470,7 @@ internal sealed class DesktopProjectionService
         if (!string.IsNullOrWhiteSpace(filters.SelectedCategory)
             && !MainWindowViewModel.IsAllVehicleCategoryFilter(filters.SelectedCategory))
         {
-            filterParts.Add(LF("VehicleList.Filter.Category", filters.SelectedCategory));
+            filterParts.Add(LF("VehicleList.Filter.Category", FormatCategory(filters.SelectedCategory)));
         }
 
         if (!string.IsNullOrWhiteSpace(filters.StatusFilter)
@@ -1500,7 +1501,7 @@ internal sealed class DesktopProjectionService
             || string.Equals(vehicle.Category, selectedCategory, StringComparison.CurrentCultureIgnoreCase);
     }
 
-    private static bool MatchesVehicleSearch(Vehicle vehicle, VehicleMeta? meta, string statusSummary, string? searchText)
+    private bool MatchesVehicleSearch(Vehicle vehicle, VehicleMeta? meta, string statusSummary, string? searchText)
     {
         var needle = (searchText ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(needle))
@@ -1515,16 +1516,22 @@ internal sealed class DesktopProjectionService
             vehicle.MakeModel,
             vehicle.Plate,
             vehicle.Category,
+            FormatCategory(vehicle.Category),
             vehicle.LastTk,
             vehicle.NextTk,
             vehicle.GreenCardFrom,
             vehicle.GreenCardTo,
             meta?.State,
+            FormatKnownOrEmpty(meta?.State, FormatVehicleState),
             meta?.Tags,
             meta?.Powertrain,
+            FormatKnownOrEmpty(meta?.Powertrain, FormatPowertrain),
             meta?.ClimateProfile,
+            FormatKnownOrEmpty(meta?.ClimateProfile, FormatClimateProfile),
             meta?.TimingDrive,
+            FormatKnownOrEmpty(meta?.TimingDrive, FormatTimingDrive),
             meta?.Transmission,
+            FormatKnownOrEmpty(meta?.Transmission, FormatTransmission),
             statusSummary
         };
 
@@ -1604,6 +1611,39 @@ internal sealed class DesktopProjectionService
 
     private static string NormalizeVehicleState(string? state) =>
         string.IsNullOrWhiteSpace(state) ? "Běžný provoz" : state.Trim();
+
+    private string FormatCategory(string? value) =>
+        LegacyKnownValueDisplayService.FormatCategory(value, _localizer);
+
+    private string FormatRecordType(string? value) =>
+        LegacyKnownValueDisplayService.FormatRecordType(value, _localizer);
+
+    private string FormatVehicleState(string? value) =>
+        LegacyKnownValueDisplayService.FormatVehicleState(value, _localizer);
+
+    private string FormatPowertrain(string? value) =>
+        LegacyKnownValueDisplayService.FormatPowertrain(value, _localizer);
+
+    private string FormatClimateProfile(string? value) =>
+        LegacyKnownValueDisplayService.FormatClimateProfile(value, _localizer);
+
+    private string FormatTimingDrive(string? value) =>
+        LegacyKnownValueDisplayService.FormatTimingDrive(value, _localizer);
+
+    private string FormatTransmission(string? value) =>
+        LegacyKnownValueDisplayService.FormatTransmission(value, _localizer);
+
+    private string FormatFuelType(string? value) =>
+        LegacyKnownValueDisplayService.FormatFuelType(value, _localizer);
+
+    private string FormatReminderRepeat(string? value) =>
+        LegacyKnownValueDisplayService.FormatReminderRepeatMode(value, _localizer);
+
+    private static string FormatKnownOrEmpty(string? value, Func<string?, string> formatter) =>
+        string.IsNullOrWhiteSpace(value) ? string.Empty : formatter(value);
+
+    private static string FormatKnownValue(string? value, string fallback, Func<string?, string> formatter) =>
+        string.IsNullOrWhiteSpace(value) ? fallback : formatter(value);
 }
 
 internal sealed record DesktopVehicleDetailProjection(

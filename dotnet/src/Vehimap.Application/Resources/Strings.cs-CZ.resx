@@ -2457,4 +2457,45 @@ Navržená akce: {6}</value></data>
   <data name="VehicleDelete.Dialog.Confirm" xml:space="preserve"><value>Odstranit vozidlo</value></data>
   <data name="Dialog.Cancel" xml:space="preserve"><value>Zrušit</value></data>
   <data name="WorkspaceEditor.Error.UnknownKind" xml:space="preserve"><value>Neznámý typ editoru.</value></data>
+  <data name="KnownValue.Category.PassengerVehicles" xml:space="preserve"><value>Osobní vozidla</value></data>
+  <data name="KnownValue.Category.Motorcycles" xml:space="preserve"><value>Motocykly</value></data>
+  <data name="KnownValue.Category.Trucks" xml:space="preserve"><value>Nákladní vozidla</value></data>
+  <data name="KnownValue.Category.Buses" xml:space="preserve"><value>Autobusy</value></data>
+  <data name="KnownValue.Category.Other" xml:space="preserve"><value>Ostatní</value></data>
+  <data name="KnownValue.RecordType.LiabilityInsurance" xml:space="preserve"><value>Povinné ručení</value></data>
+  <data name="KnownValue.RecordType.ComprehensiveInsurance" xml:space="preserve"><value>Havarijní pojištění</value></data>
+  <data name="KnownValue.RecordType.Assistance" xml:space="preserve"><value>Asistence</value></data>
+  <data name="KnownValue.RecordType.Document" xml:space="preserve"><value>Doklad</value></data>
+  <data name="KnownValue.RecordType.ServiceDocument" xml:space="preserve"><value>Servisní dokument</value></data>
+  <data name="KnownValue.RecordType.Other" xml:space="preserve"><value>Jiné</value></data>
+  <data name="KnownValue.VehicleState.NormalOperation" xml:space="preserve"><value>Běžný provoz</value></data>
+  <data name="KnownValue.VehicleState.Veteran" xml:space="preserve"><value>Veterán</value></data>
+  <data name="KnownValue.VehicleState.OutOfService" xml:space="preserve"><value>Odstaveno</value></data>
+  <data name="KnownValue.VehicleState.InRenovation" xml:space="preserve"><value>V renovaci</value></data>
+  <data name="KnownValue.VehicleState.ForSale" xml:space="preserve"><value>Na prodej</value></data>
+  <data name="KnownValue.VehicleState.Archive" xml:space="preserve"><value>Archiv</value></data>
+  <data name="KnownValue.Powertrain.Gasoline" xml:space="preserve"><value>Benzín</value></data>
+  <data name="KnownValue.Powertrain.Diesel" xml:space="preserve"><value>Nafta</value></data>
+  <data name="KnownValue.Powertrain.Hybrid" xml:space="preserve"><value>Hybrid</value></data>
+  <data name="KnownValue.Powertrain.PluginHybrid" xml:space="preserve"><value>Plug-in hybrid</value></data>
+  <data name="KnownValue.Powertrain.Electric" xml:space="preserve"><value>Elektro</value></data>
+  <data name="KnownValue.Powertrain.LpgCng" xml:space="preserve"><value>LPG / CNG</value></data>
+  <data name="KnownValue.Powertrain.Other" xml:space="preserve"><value>Jiné</value></data>
+  <data name="KnownValue.Climate.HasAirConditioning" xml:space="preserve"><value>Má klimatizaci</value></data>
+  <data name="KnownValue.Climate.NoAirConditioning" xml:space="preserve"><value>Bez klimatizace</value></data>
+  <data name="KnownValue.TimingDrive.Belt" xml:space="preserve"><value>Řemen</value></data>
+  <data name="KnownValue.TimingDrive.Chain" xml:space="preserve"><value>Řetěz</value></data>
+  <data name="KnownValue.Common.NotRelevant" xml:space="preserve"><value>Není relevantní</value></data>
+  <data name="KnownValue.Transmission.Manual" xml:space="preserve"><value>Manuální</value></data>
+  <data name="KnownValue.Transmission.Automatic" xml:space="preserve"><value>Automatická</value></data>
+  <data name="KnownValue.FuelType.Gasoline" xml:space="preserve"><value>Benzín</value></data>
+  <data name="KnownValue.FuelType.Diesel" xml:space="preserve"><value>Nafta</value></data>
+  <data name="KnownValue.FuelType.Lpg" xml:space="preserve"><value>LPG</value></data>
+  <data name="KnownValue.FuelType.Cng" xml:space="preserve"><value>CNG</value></data>
+  <data name="KnownValue.FuelType.Electricity" xml:space="preserve"><value>Elektřina</value></data>
+  <data name="KnownValue.FuelType.Other" xml:space="preserve"><value>Jiné</value></data>
+  <data name="KnownValue.ReminderRepeat.None" xml:space="preserve"><value>Neopakovat</value></data>
+  <data name="KnownValue.ReminderRepeat.Yearly" xml:space="preserve"><value>Každý rok</value></data>
+  <data name="KnownValue.ReminderRepeat.EveryTwoYears" xml:space="preserve"><value>Každé 2 roky</value></data>
+  <data name="KnownValue.ReminderRepeat.EveryFiveYears" xml:space="preserve"><value>Každých 5 let</value></data>
 </root>

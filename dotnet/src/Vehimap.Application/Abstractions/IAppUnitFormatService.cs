@@ -11,9 +11,13 @@ public interface IAppUnitFormatService
 
     string FormatDistanceFromKilometers(decimal kilometers, AppCulturePreferences culturePreferences, AppUnitPreferences unitPreferences, int decimalPlaces = 1);
 
+    string GetDistanceUnitLabel(AppUnitPreferences unitPreferences);
+
     decimal ConvertDistanceToKilometers(decimal value, AppUnitPreferences unitPreferences);
 
     string FormatVolumeFromLiters(decimal liters, AppCulturePreferences culturePreferences, AppUnitPreferences unitPreferences, int decimalPlaces = 2);
+
+    string GetVolumeUnitLabel(AppUnitPreferences unitPreferences);
 
     decimal ConvertVolumeFromLiters(decimal liters, AppUnitPreferences unitPreferences);
 

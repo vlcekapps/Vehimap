@@ -363,9 +363,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             SelectedVolumeUnitOption?.Value ?? AppUnitFormatService.Liters);
 
     private string CurrentDistanceUnitLabel =>
-        string.Equals(AppUnitFormatService.NormalizeDistanceUnit(SelectedDistanceUnitOption?.Value), AppUnitFormatService.Miles, StringComparison.Ordinal)
-            ? "mi"
-            : "km";
+        _unitFormatService.GetDistanceUnitLabel(BuildUnitPreferences());
 
     private void NotifyMaintenanceReminderDistanceMetadataChanged()
     {

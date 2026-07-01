@@ -19,17 +19,10 @@ public sealed partial class MainWindowViewModel
     private string? _editingMaintenanceId;
 
     internal string CurrentDistanceUnitLabel =>
-        string.Equals(CurrentUnitPreferences.DistanceUnit, AppUnitFormatService.Miles, StringComparison.Ordinal)
-            ? "mi"
-            : "km";
+        EditorUnitFormatService.GetDistanceUnitLabel(CurrentUnitPreferences);
 
     internal string CurrentVolumeUnitLabel =>
-        CurrentUnitPreferences.VolumeUnit switch
-        {
-            AppUnitFormatService.UsGallons => "US gal",
-            AppUnitFormatService.ImperialGallons => "imp gal",
-            _ => "l"
-        };
+        EditorUnitFormatService.GetVolumeUnitLabel(CurrentUnitPreferences);
 
     private DesktopSupportedSettingsSnapshot CurrentSupportedSettings => _session.ReadSupportedSettings();
 

@@ -48,9 +48,11 @@ public sealed class AppUnitFormatService : IAppUnitFormatService
     {
         var normalized = Normalize(unitPreferences);
         var value = ConvertDistanceFromKilometers(kilometers, normalized);
-        var unitLabel = string.Equals(normalized.DistanceUnit, Miles, StringComparison.Ordinal) ? "mi" : "km";
-        return _numberFormatService.FormatDecimal(value, culturePreferences, decimalPlaces) + " " + unitLabel;
+        return _numberFormatService.FormatDecimal(value, culturePreferences, decimalPlaces) + " " + GetDistanceUnitLabel(normalized);
     }
+
+    public string GetDistanceUnitLabel(AppUnitPreferences unitPreferences) =>
+        string.Equals(Normalize(unitPreferences).DistanceUnit, Miles, StringComparison.Ordinal) ? "mi" : "km";
 
     public decimal ConvertDistanceToKilometers(decimal value, AppUnitPreferences unitPreferences)
     {
@@ -64,14 +66,16 @@ public sealed class AppUnitFormatService : IAppUnitFormatService
     {
         var normalized = Normalize(unitPreferences);
         var value = ConvertVolumeFromLiters(liters, normalized);
-        var unitLabel = normalized.VolumeUnit switch
+        return _numberFormatService.FormatDecimal(value, culturePreferences, decimalPlaces) + " " + GetVolumeUnitLabel(normalized);
+    }
+
+    public string GetVolumeUnitLabel(AppUnitPreferences unitPreferences) =>
+        Normalize(unitPreferences).VolumeUnit switch
         {
             UsGallons => "US gal",
             ImperialGallons => "imp gal",
             _ => "l"
         };
-        return _numberFormatService.FormatDecimal(value, culturePreferences, decimalPlaces) + " " + unitLabel;
-    }
 
     public decimal ConvertVolumeFromLiters(decimal liters, AppUnitPreferences unitPreferences)
     {
