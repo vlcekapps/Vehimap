@@ -879,7 +879,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         var savedPlan = Assert.Single(dataStore.CurrentDataSet.MaintenancePlans);
         Assert.Equal("322", savedPlan.LastServiceOdometer);
-        Assert.Contains("322 km", message);
+        Assert.Contains("200 mi", message);
+        Assert.DoesNotContain("322 km", message);
     }
 
     [Fact]

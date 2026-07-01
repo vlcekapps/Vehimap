@@ -261,6 +261,52 @@ public sealed class DesktopProjectionAndNavigationServiceTests
     }
 
     [Fact]
+    public void Projection_service_formats_maintenance_distance_status_with_selected_unit()
+    {
+        var projectionService = new DesktopProjectionService(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")),
+            CultureInfo.GetCultureInfo("en-US"));
+        projectionService.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            15,
+            30,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Cars", "Family car", "Skoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "01.04.2026", "Service", "10000", "", "")
+            ],
+            MaintenancePlans =
+            [
+                new MaintenancePlan("mnt_1", "veh_1", "Oil service", "1609", "", "", "10000", true, "")
+            ]
+        };
+
+        var projection = projectionService.BuildMaintenance(dataSet, "veh_1", new DateOnly(2026, 4, 2));
+
+        var item = Assert.Single(projection.Items);
+        Assert.Contains("1,000 mi", item.Status, StringComparison.Ordinal);
+        Assert.DoesNotContain(" km", item.Status, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Projection_service_localizes_fuel_analysis_summary_and_accessible_labels()
     {
         var projectionService = new DesktopProjectionService(

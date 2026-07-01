@@ -921,7 +921,7 @@ internal sealed class DesktopProjectionService
         return summary;
     }
 
-    private static string BuildVehicleMaintenanceDetailSummary(
+    private string BuildVehicleMaintenanceDetailSummary(
         VehimapDataSet dataSet,
         string vehicleId,
         DateOnly today,
@@ -1041,7 +1041,7 @@ internal sealed class DesktopProjectionService
         return $"{date} | {FormatOdometerValue(plan.LastServiceOdometer)}";
     }
 
-    private static string BuildMaintenanceStatus(MaintenancePlan plan, DateOnly today, int? currentOdometer)
+    private string BuildMaintenanceStatus(MaintenancePlan plan, DateOnly today, int? currentOdometer)
     {
         if (!plan.IsActive)
         {
@@ -1082,7 +1082,7 @@ internal sealed class DesktopProjectionService
                 var remainingKm = (lastServiceOdometer + intervalKm) - currentOdometer.Value;
                 if (remainingKm < 0)
                 {
-                    parts.Add($"Po limitu o {Math.Abs(remainingKm)} km");
+                    parts.Add($"Po limitu o {FormatDistance(Math.Abs(remainingKm), decimalPlaces: 0)}");
                 }
                 else if (remainingKm == 0)
                 {
@@ -1090,7 +1090,7 @@ internal sealed class DesktopProjectionService
                 }
                 else
                 {
-                    parts.Add($"Za {remainingKm} km");
+                    parts.Add($"Za {FormatDistance(remainingKm, decimalPlaces: 0)}");
                 }
             }
             else

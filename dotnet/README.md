@@ -51,7 +51,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - SQLite 2.0 migracni hlasky, cleanup zbylych legacy TSV/INI souboru, health check detaily a text kopirovany z dialogu `Kontrola datove sady 2.0` uz take pouzivaji EN/CS `.resx`
 - kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
 - vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry
-- tachometry v historii/tankovani, servisni intervaly, dokonceni udrzby a objem tankovani se v editorech zobrazuji a zadavaji ve zvolenych jednotkach, zatimco SQLite zustava v kanonickych km/l
+- tachometry v historii/tankovani, servisni intervaly, dokonceni udrzby, stavove texty planu udrzby a objem tankovani se v UI zobrazuji a zadavaji ve zvolenych jednotkach, zatimco SQLite zustava v kanonickych km/l
 - objem tankovani v litrech podporuje presnost na setiny podle realnych stojanu; ulozene hodnoty typu `3`, `3,1` a `3,12` se znovu otevrou bez zbytecnych nul a vypocty spotreby/ceny pouzivaji decimal hodnoty
 - zmena oddelovacu cisel jen znovu vykresli viditelne hodnoty; nejednoznacne kombinace, kde je oddelovac tisicu stejny jako desetinni oddelovac, nastaveni odmitne
 - mena ma prvni podporovanou volbu v nastaveni (`CZK`, `USD`, `EUR`, `GBP`) a spolecnou formatovaci sluzbu; dashboardove/nakladove souhrny, analyza tankovani, servisni knizka, casova osa, globalni hledani a nakladove TSV/HTML exporty uz ji pouzivaji, zatimco zbyvajici exportni/reportovaci texty zustavaji navazujici i18n pass bez automaticke kurzove konverze historickych hodnot

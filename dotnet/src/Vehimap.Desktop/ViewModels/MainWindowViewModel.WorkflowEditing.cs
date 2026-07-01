@@ -808,7 +808,7 @@ public sealed partial class MainWindowViewModel
 
         var odometerMessage = string.IsNullOrWhiteSpace(updatedPlan.LastServiceOdometer)
             ? "Tachometr zůstal prázdný."
-            : $"Tachometr: {updatedPlan.LastServiceOdometer} km.";
+            : $"Tachometr: {FormatCanonicalOdometerForEditor(updatedPlan.LastServiceOdometer)} {CurrentDistanceUnitLabel}.";
         var historyMessage = completion.AddHistory
             ? " Událost byla zapsána i do historie."
             : string.Empty;
