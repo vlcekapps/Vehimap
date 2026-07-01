@@ -2302,6 +2302,31 @@ Převodovka: {3}</value></data>
   <data name="VehicleList.Filter.Search" xml:space="preserve"><value>hledání „{0}“</value></data>
   <data name="VehicleList.Summary.All" xml:space="preserve"><value>Seznam vozidel: {0} vozidel.</value></data>
   <data name="VehicleList.Summary.Filtered" xml:space="preserve"><value>Seznam vozidel: zobrazeno {0} z {1}. {2}</value></data>
+  <data name="WorkspaceSort.Date" xml:space="preserve"><value>Datum</value></data>
+  <data name="WorkspaceSort.Type" xml:space="preserve"><value>Typ</value></data>
+  <data name="WorkspaceSort.Odometer" xml:space="preserve"><value>Tachometr</value></data>
+  <data name="WorkspaceSort.Cost" xml:space="preserve"><value>Cena</value></data>
+  <data name="WorkspaceSort.Note" xml:space="preserve"><value>Poznámka</value></data>
+  <data name="WorkspaceSort.FuelType" xml:space="preserve"><value>Palivo</value></data>
+  <data name="WorkspaceSort.FuelDetail" xml:space="preserve"><value>Detail paliva</value></data>
+  <data name="WorkspaceSort.FuelStation" xml:space="preserve"><value>Místo tankování</value></data>
+  <data name="WorkspaceSort.FuelVolume" xml:space="preserve"><value>Množství paliva</value></data>
+  <data name="WorkspaceSort.TotalCost" xml:space="preserve"><value>Cena celkem</value></data>
+  <data name="WorkspaceSort.TankState" xml:space="preserve"><value>Stav nádrže</value></data>
+  <data name="WorkspaceSort.Title" xml:space="preserve"><value>Název</value></data>
+  <data name="WorkspaceSort.Vehicle" xml:space="preserve"><value>Vozidlo</value></data>
+  <data name="WorkspaceSort.DueDate" xml:space="preserve"><value>Termín</value></data>
+  <data name="WorkspaceSort.Status" xml:space="preserve"><value>Stav</value></data>
+  <data name="WorkspaceSort.RepeatMode" xml:space="preserve"><value>Opakování</value></data>
+  <data name="WorkspaceSort.Interval" xml:space="preserve"><value>Interval</value></data>
+  <data name="WorkspaceSort.LastService" xml:space="preserve"><value>Poslední servis</value></data>
+  <data name="WorkspaceSort.Validity" xml:space="preserve"><value>Platnost</value></data>
+  <data name="WorkspaceSort.Provider" xml:space="preserve"><value>Poskytovatel</value></data>
+  <data name="WorkspaceSort.AttachmentMode" xml:space="preserve"><value>Režim přílohy</value></data>
+  <data name="WorkspaceSort.AttachmentState" xml:space="preserve"><value>Stav přílohy</value></data>
+  <data name="WorkspaceSort.Severity" xml:space="preserve"><value>Závažnost</value></data>
+  <data name="WorkspaceSort.Category" xml:space="preserve"><value>Evidence</value></data>
+  <data name="WorkspaceSort.Summary" xml:space="preserve"><value>Souhrn</value></data>
   <data name="VehicleList.Status.Technical" xml:space="preserve"><value>TK: {0}</value></data>
   <data name="VehicleList.Status.GreenCard" xml:space="preserve"><value>ZK: {0}</value></data>
   <data name="VehicleList.Status.Reminder" xml:space="preserve"><value>Připomínka: {0}</value></data>

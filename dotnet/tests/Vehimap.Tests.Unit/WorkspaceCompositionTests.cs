@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.ViewModels.Workspaces;
@@ -208,6 +210,26 @@ public sealed class WorkspaceCompositionTests
         Assert.True(RecordWorkspaceViewModel.IsManagedAttachmentModeLabel("Managed copy"));
         Assert.True(RecordWorkspaceViewModel.IsExternalAttachmentModeLabel("Externí cesta"));
         Assert.True(RecordWorkspaceViewModel.IsExternalAttachmentModeLabel("External path"));
+    }
+
+    [Fact]
+    public void Workspace_sort_options_are_localized_and_accept_legacy_aliases()
+    {
+        try
+        {
+            DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+
+            Assert.Contains("Date", WorkspaceSortHelpers.HistorySortOptions);
+            Assert.Contains("Fuel volume", WorkspaceSortHelpers.FuelSortOptions);
+            Assert.Equal("Date", WorkspaceSortHelpers.NormalizeSortOption("Datum", WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortLabel));
+            Assert.Equal("Fuel volume", WorkspaceSortHelpers.NormalizeSortOption("Litry", WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortLabel));
+            Assert.Equal("Attachment mode", WorkspaceSortHelpers.NormalizeSortOption("Režim přílohy", WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortLabel));
+            Assert.Equal("Record area", WorkspaceSortHelpers.NormalizeSortOption("Evidence", WorkspaceSortHelpers.AuditSortOptions, WorkspaceSortHelpers.SeveritySortLabel));
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
     }
 
     [Fact]

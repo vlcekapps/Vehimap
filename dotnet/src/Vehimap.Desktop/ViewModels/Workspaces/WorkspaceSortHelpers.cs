@@ -1,37 +1,93 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
 internal static class WorkspaceSortHelpers
 {
-    public const string DateSortLabel = "Datum";
-    public const string TypeSortLabel = "Typ";
-    public const string OdometerSortLabel = "Tachometr";
-    public const string CostSortLabel = "Cena";
-    public const string NoteSortLabel = "Poznámka";
-    public const string FuelTypeSortLabel = "Palivo";
-    public const string FuelDetailSortLabel = "Detail paliva";
-    public const string FuelStationSortLabel = "Místo tankování";
-    public const string LitersSortLabel = "Litry";
-    public const string TotalCostSortLabel = "Cena celkem";
-    public const string TankStateSortLabel = "Stav nádrže";
-    public const string TitleSortLabel = "Název";
-    public const string VehicleSortLabel = "Vozidlo";
-    public const string DueDateSortLabel = "Termín";
-    public const string StatusSortLabel = "Stav";
-    public const string RepeatModeSortLabel = "Opakování";
-    public const string IntervalSortLabel = "Interval";
-    public const string LastServiceSortLabel = "Poslední servis";
-    public const string ValiditySortLabel = "Platnost";
-    public const string ProviderSortLabel = "Poskytovatel";
-    public const string AttachmentModeSortLabel = "Režim přílohy";
-    public const string AttachmentStateSortLabel = "Stav přílohy";
-    public const string SeveritySortLabel = "Závažnost";
-    public const string CategorySortLabel = "Evidence";
-    public const string SummarySortLabel = "Souhrn";
+    private const string DateSortKey = "date";
+    private const string TypeSortKey = "type";
+    private const string OdometerSortKey = "odometer";
+    private const string CostSortKey = "cost";
+    private const string NoteSortKey = "note";
+    private const string FuelTypeSortKey = "fuel_type";
+    private const string FuelDetailSortKey = "fuel_detail";
+    private const string FuelStationSortKey = "fuel_station";
+    private const string LitersSortKey = "fuel_volume";
+    private const string TotalCostSortKey = "total_cost";
+    private const string TankStateSortKey = "tank_state";
+    private const string TitleSortKey = "title";
+    private const string VehicleSortKey = "vehicle";
+    private const string DueDateSortKey = "due_date";
+    private const string StatusSortKey = "status";
+    private const string RepeatModeSortKey = "repeat_mode";
+    private const string IntervalSortKey = "interval";
+    private const string LastServiceSortKey = "last_service";
+    private const string ValiditySortKey = "validity";
+    private const string ProviderSortKey = "provider";
+    private const string AttachmentModeSortKey = "attachment_mode";
+    private const string AttachmentStateSortKey = "attachment_state";
+    private const string SeveritySortKey = "severity";
+    private const string CategorySortKey = "category";
+    private const string SummarySortKey = "summary";
 
-    public static IReadOnlyList<string> HistorySortOptions { get; } =
+    private static readonly SortOptionDefinition[] SortDefinitions =
+    [
+        new(DateSortKey, "WorkspaceSort.Date", "Datum", "Date"),
+        new(TypeSortKey, "WorkspaceSort.Type", "Typ", "Type"),
+        new(OdometerSortKey, "WorkspaceSort.Odometer", "Tachometr", "Odometer"),
+        new(CostSortKey, "WorkspaceSort.Cost", "Cena", "Cost"),
+        new(NoteSortKey, "WorkspaceSort.Note", "Poznámka", "Note"),
+        new(FuelTypeSortKey, "WorkspaceSort.FuelType", "Palivo", "Fuel"),
+        new(FuelDetailSortKey, "WorkspaceSort.FuelDetail", "Detail paliva", "Fuel detail"),
+        new(FuelStationSortKey, "WorkspaceSort.FuelStation", "Místo tankování", "Fuel station"),
+        new(LitersSortKey, "WorkspaceSort.FuelVolume", "Litry", "Fuel volume"),
+        new(TotalCostSortKey, "WorkspaceSort.TotalCost", "Cena celkem", "Total cost"),
+        new(TankStateSortKey, "WorkspaceSort.TankState", "Stav nádrže", "Tank state"),
+        new(TitleSortKey, "WorkspaceSort.Title", "Název", "Title"),
+        new(VehicleSortKey, "WorkspaceSort.Vehicle", "Vozidlo", "Vehicle"),
+        new(DueDateSortKey, "WorkspaceSort.DueDate", "Termín", "Due date"),
+        new(StatusSortKey, "WorkspaceSort.Status", "Stav", "Status"),
+        new(RepeatModeSortKey, "WorkspaceSort.RepeatMode", "Opakování", "Repeat"),
+        new(IntervalSortKey, "WorkspaceSort.Interval", "Interval", "Interval"),
+        new(LastServiceSortKey, "WorkspaceSort.LastService", "Poslední servis", "Last service"),
+        new(ValiditySortKey, "WorkspaceSort.Validity", "Platnost", "Validity"),
+        new(ProviderSortKey, "WorkspaceSort.Provider", "Poskytovatel", "Provider"),
+        new(AttachmentModeSortKey, "WorkspaceSort.AttachmentMode", "Režim přílohy", "Attachment mode"),
+        new(AttachmentStateSortKey, "WorkspaceSort.AttachmentState", "Stav přílohy", "Attachment status"),
+        new(SeveritySortKey, "WorkspaceSort.Severity", "Závažnost", "Severity"),
+        new(CategorySortKey, "WorkspaceSort.Category", "Evidence", "Record area"),
+        new(SummarySortKey, "WorkspaceSort.Summary", "Souhrn", "Summary")
+    ];
+
+    public static string DateSortLabel => GetSortLabel(DateSortKey);
+    public static string TypeSortLabel => GetSortLabel(TypeSortKey);
+    public static string OdometerSortLabel => GetSortLabel(OdometerSortKey);
+    public static string CostSortLabel => GetSortLabel(CostSortKey);
+    public static string NoteSortLabel => GetSortLabel(NoteSortKey);
+    public static string FuelTypeSortLabel => GetSortLabel(FuelTypeSortKey);
+    public static string FuelDetailSortLabel => GetSortLabel(FuelDetailSortKey);
+    public static string FuelStationSortLabel => GetSortLabel(FuelStationSortKey);
+    public static string LitersSortLabel => GetSortLabel(LitersSortKey);
+    public static string TotalCostSortLabel => GetSortLabel(TotalCostSortKey);
+    public static string TankStateSortLabel => GetSortLabel(TankStateSortKey);
+    public static string TitleSortLabel => GetSortLabel(TitleSortKey);
+    public static string VehicleSortLabel => GetSortLabel(VehicleSortKey);
+    public static string DueDateSortLabel => GetSortLabel(DueDateSortKey);
+    public static string StatusSortLabel => GetSortLabel(StatusSortKey);
+    public static string RepeatModeSortLabel => GetSortLabel(RepeatModeSortKey);
+    public static string IntervalSortLabel => GetSortLabel(IntervalSortKey);
+    public static string LastServiceSortLabel => GetSortLabel(LastServiceSortKey);
+    public static string ValiditySortLabel => GetSortLabel(ValiditySortKey);
+    public static string ProviderSortLabel => GetSortLabel(ProviderSortKey);
+    public static string AttachmentModeSortLabel => GetSortLabel(AttachmentModeSortKey);
+    public static string AttachmentStateSortLabel => GetSortLabel(AttachmentStateSortKey);
+    public static string SeveritySortLabel => GetSortLabel(SeveritySortKey);
+    public static string CategorySortLabel => GetSortLabel(CategorySortKey);
+    public static string SummarySortLabel => GetSortLabel(SummarySortKey);
+
+    public static IReadOnlyList<string> HistorySortOptions =>
     [
         DateSortLabel,
         TypeSortLabel,
@@ -40,7 +96,7 @@ internal static class WorkspaceSortHelpers
         NoteSortLabel
     ];
 
-    public static IReadOnlyList<string> FuelSortOptions { get; } =
+    public static IReadOnlyList<string> FuelSortOptions =>
     [
         DateSortLabel,
         FuelTypeSortLabel,
@@ -52,7 +108,7 @@ internal static class WorkspaceSortHelpers
         TankStateSortLabel
     ];
 
-    public static IReadOnlyList<string> ReminderSortOptions { get; } =
+    public static IReadOnlyList<string> ReminderSortOptions =>
     [
         DueDateSortLabel,
         TitleSortLabel,
@@ -61,7 +117,7 @@ internal static class WorkspaceSortHelpers
         NoteSortLabel
     ];
 
-    public static IReadOnlyList<string> MaintenanceSortOptions { get; } =
+    public static IReadOnlyList<string> MaintenanceSortOptions =>
     [
         TitleSortLabel,
         IntervalSortLabel,
@@ -70,7 +126,7 @@ internal static class WorkspaceSortHelpers
         NoteSortLabel
     ];
 
-    public static IReadOnlyList<string> RecordSortOptions { get; } =
+    public static IReadOnlyList<string> RecordSortOptions =>
     [
         ValiditySortLabel,
         TitleSortLabel,
@@ -81,7 +137,7 @@ internal static class WorkspaceSortHelpers
         AttachmentStateSortLabel
     ];
 
-    public static IReadOnlyList<string> TimelineOverviewSortOptions { get; } =
+    public static IReadOnlyList<string> TimelineOverviewSortOptions =>
     [
         DateSortLabel,
         TypeSortLabel,
@@ -90,7 +146,7 @@ internal static class WorkspaceSortHelpers
         StatusSortLabel
     ];
 
-    public static IReadOnlyList<string> AuditSortOptions { get; } =
+    public static IReadOnlyList<string> AuditSortOptions =>
     [
         SeveritySortLabel,
         VehicleSortLabel,
@@ -99,7 +155,7 @@ internal static class WorkspaceSortHelpers
         TypeSortLabel
     ];
 
-    public static IReadOnlyList<string> GlobalSearchSortOptions { get; } =
+    public static IReadOnlyList<string> GlobalSearchSortOptions =>
     [
         TypeSortLabel,
         VehicleSortLabel,
@@ -109,23 +165,70 @@ internal static class WorkspaceSortHelpers
 
     public static string NormalizeSortOption(string? value, IReadOnlyList<string> supportedOptions, string defaultOption)
     {
-        var normalized = string.IsNullOrWhiteSpace(value) ? defaultOption : value.Trim();
-        return supportedOptions.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
-            ? normalized
-            : defaultOption;
+        var defaultKey = TryGetSortKey(defaultOption) ?? DateSortKey;
+        var selectedKey = TryGetSortKey(value);
+        var supportedKeys = supportedOptions
+            .Select(TryGetSortKey)
+            .Where(key => key is not null)
+            .ToHashSet(StringComparer.Ordinal);
+
+        return selectedKey is not null && supportedKeys.Contains(selectedKey)
+            ? GetSortLabel(selectedKey)
+            : GetSortLabel(defaultKey);
     }
+
+    private static string NormalizeSortKey(string? value, IReadOnlyList<string> supportedOptions, string defaultOption)
+    {
+        var defaultKey = TryGetSortKey(defaultOption) ?? DateSortKey;
+        var selectedKey = TryGetSortKey(value);
+        var supportedKeys = supportedOptions
+            .Select(TryGetSortKey)
+            .Where(key => key is not null)
+            .ToHashSet(StringComparer.Ordinal);
+
+        return selectedKey is not null && supportedKeys.Contains(selectedKey) ? selectedKey : defaultKey;
+    }
+
+    private static string GetSortLabel(string key) =>
+        DesktopLocalization.Localizer.GetString(GetSortDefinition(key).ResourceKey);
+
+    private static string? TryGetSortKey(string? value)
+    {
+        var normalized = (value ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return null;
+        }
+
+        foreach (var definition in SortDefinitions)
+        {
+            if (string.Equals(normalized, definition.Key, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(normalized, definition.LegacyLabel, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(normalized, definition.EnglishLabel, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(normalized, DesktopLocalization.Localizer.GetString(definition.ResourceKey), StringComparison.OrdinalIgnoreCase))
+            {
+                return definition.Key;
+            }
+        }
+
+        return null;
+    }
+
+    private static SortOptionDefinition GetSortDefinition(string key) =>
+        SortDefinitions.FirstOrDefault(item => string.Equals(item.Key, key, StringComparison.Ordinal))
+        ?? SortDefinitions.First(item => string.Equals(item.Key, DateSortKey, StringComparison.Ordinal));
 
     public static IEnumerable<VehicleHistoryItemViewModel> SortHistory(
         IEnumerable<VehicleHistoryItemViewModel> items,
         string selectedOption,
         bool descending)
     {
-        return NormalizeSortOption(selectedOption, HistorySortOptions, DateSortLabel) switch
+        return NormalizeSortKey(selectedOption, HistorySortOptions, DateSortLabel) switch
         {
-            TypeSortLabel => OrderByText(items, descending, item => item.EventType, item => item.Date),
-            OdometerSortLabel => OrderByNumber(items, descending, item => TryParseOdometer(item.Odometer), item => item.Date),
-            CostSortLabel => OrderByMoney(items, descending, item => TryParseMoney(item.Cost), item => item.Date),
-            NoteSortLabel => OrderByText(items, descending, item => item.Note, item => item.Date),
+            TypeSortKey => OrderByText(items, descending, item => item.EventType, item => item.Date),
+            OdometerSortKey => OrderByNumber(items, descending, item => TryParseOdometer(item.Odometer), item => item.Date),
+            CostSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.Cost), item => item.Date),
+            NoteSortKey => OrderByText(items, descending, item => item.Note, item => item.Date),
             _ => OrderByDate(items, descending, item => TryParseDate(item.Date), item => item.EventType)
         };
     }
@@ -135,15 +238,15 @@ internal static class WorkspaceSortHelpers
         string selectedOption,
         bool descending)
     {
-        return NormalizeSortOption(selectedOption, FuelSortOptions, DateSortLabel) switch
+        return NormalizeSortKey(selectedOption, FuelSortOptions, DateSortLabel) switch
         {
-            FuelTypeSortLabel => OrderByText(items, descending, item => item.FuelType, item => item.Date),
-            FuelDetailSortLabel => OrderByText(items, descending, item => item.FuelDetail, item => item.Date),
-            FuelStationSortLabel => OrderByText(items, descending, item => item.Station, item => item.Date),
-            LitersSortLabel => OrderByMoney(items, descending, item => TryParseMoney(item.Liters), item => item.Date),
-            TotalCostSortLabel => OrderByMoney(items, descending, item => TryParseMoney(item.TotalCost), item => item.Date),
-            OdometerSortLabel => OrderByNumber(items, descending, item => TryParseOdometer(item.Odometer), item => item.Date),
-            TankStateSortLabel => OrderByText(items, descending, item => item.TankState, item => item.Date),
+            FuelTypeSortKey => OrderByText(items, descending, item => item.FuelType, item => item.Date),
+            FuelDetailSortKey => OrderByText(items, descending, item => item.FuelDetail, item => item.Date),
+            FuelStationSortKey => OrderByText(items, descending, item => item.Station, item => item.Date),
+            LitersSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.Liters), item => item.Date),
+            TotalCostSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.TotalCost), item => item.Date),
+            OdometerSortKey => OrderByNumber(items, descending, item => TryParseOdometer(item.Odometer), item => item.Date),
+            TankStateSortKey => OrderByText(items, descending, item => item.TankState, item => item.Date),
             _ => OrderByDate(items, descending, item => TryParseDate(item.Date), item => item.FuelType)
         };
     }
@@ -153,12 +256,12 @@ internal static class WorkspaceSortHelpers
         string selectedOption,
         bool descending)
     {
-        return NormalizeSortOption(selectedOption, ReminderSortOptions, DueDateSortLabel) switch
+        return NormalizeSortKey(selectedOption, ReminderSortOptions, DueDateSortLabel) switch
         {
-            TitleSortLabel => OrderByText(items, descending, item => item.Title, item => item.DueDate),
-            StatusSortLabel => OrderByText(items, descending, item => item.Status, item => item.DueDate),
-            RepeatModeSortLabel => OrderByText(items, descending, item => item.RepeatMode, item => item.DueDate),
-            NoteSortLabel => OrderByText(items, descending, item => item.Note, item => item.DueDate),
+            TitleSortKey => OrderByText(items, descending, item => item.Title, item => item.DueDate),
+            StatusSortKey => OrderByText(items, descending, item => item.Status, item => item.DueDate),
+            RepeatModeSortKey => OrderByText(items, descending, item => item.RepeatMode, item => item.DueDate),
+            NoteSortKey => OrderByText(items, descending, item => item.Note, item => item.DueDate),
             _ => OrderByDate(items, descending, item => TryParseDate(item.DueDate), item => item.Title)
         };
     }
@@ -168,12 +271,12 @@ internal static class WorkspaceSortHelpers
         string selectedOption,
         bool descending)
     {
-        return NormalizeSortOption(selectedOption, MaintenanceSortOptions, TitleSortLabel) switch
+        return NormalizeSortKey(selectedOption, MaintenanceSortOptions, TitleSortLabel) switch
         {
-            IntervalSortLabel => OrderByNumber(items, descending, item => TryParseFirstNumber(item.Interval), item => item.Title),
-            LastServiceSortLabel => OrderByDate(items, descending, item => TryParseMaintenanceLastService(item.LastService), item => item.Title),
-            StatusSortLabel => OrderByText(items, descending, item => item.Status, item => item.Title),
-            NoteSortLabel => OrderByText(items, descending, item => item.Note, item => item.Title),
+            IntervalSortKey => OrderByNumber(items, descending, item => TryParseFirstNumber(item.Interval), item => item.Title),
+            LastServiceSortKey => OrderByDate(items, descending, item => TryParseMaintenanceLastService(item.LastService), item => item.Title),
+            StatusSortKey => OrderByText(items, descending, item => item.Status, item => item.Title),
+            NoteSortKey => OrderByText(items, descending, item => item.Note, item => item.Title),
             _ => OrderByText(items, descending, item => item.Title, item => item.Status)
         };
     }
@@ -183,14 +286,14 @@ internal static class WorkspaceSortHelpers
         string selectedOption,
         bool descending)
     {
-        return NormalizeSortOption(selectedOption, RecordSortOptions, ValiditySortLabel) switch
+        return NormalizeSortKey(selectedOption, RecordSortOptions, ValiditySortLabel) switch
         {
-            TitleSortLabel => OrderByText(items, descending, item => item.Title, item => item.Validity),
-            TypeSortLabel => OrderByText(items, descending, item => item.RecordType, item => item.Validity),
-            ProviderSortLabel => OrderByText(items, descending, item => item.Provider, item => item.Validity),
-            CostSortLabel => OrderByMoney(items, descending, item => TryParseMoney(item.Price), item => item.Validity),
-            AttachmentModeSortLabel => OrderByText(items, descending, item => item.AttachmentMode, item => item.Validity),
-            AttachmentStateSortLabel => OrderByText(items, descending, item => item.AttachmentState, item => item.Validity),
+            TitleSortKey => OrderByText(items, descending, item => item.Title, item => item.Validity),
+            TypeSortKey => OrderByText(items, descending, item => item.RecordType, item => item.Validity),
+            ProviderSortKey => OrderByText(items, descending, item => item.Provider, item => item.Validity),
+            CostSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.Price), item => item.Validity),
+            AttachmentModeSortKey => OrderByText(items, descending, item => item.AttachmentMode, item => item.Validity),
+            AttachmentStateSortKey => OrderByText(items, descending, item => item.AttachmentState, item => item.Validity),
             _ => OrderByDate(items, descending, item => TryParseRecordValidity(item.Validity), item => item.Title)
         };
     }
@@ -200,12 +303,12 @@ internal static class WorkspaceSortHelpers
         string selectedOption,
         bool descending)
     {
-        return NormalizeSortOption(selectedOption, TimelineOverviewSortOptions, DateSortLabel) switch
+        return NormalizeSortKey(selectedOption, TimelineOverviewSortOptions, DateSortLabel) switch
         {
-            TypeSortLabel => OrderByText(items, descending, item => item.KindLabel, item => item.Date),
-            VehicleSortLabel => OrderByText(items, descending, item => item.VehicleName, item => item.Date),
-            TitleSortLabel => OrderByText(items, descending, item => item.Title, item => item.Date),
-            StatusSortLabel => OrderByText(items, descending, item => item.Status, item => item.Date),
+            TypeSortKey => OrderByText(items, descending, item => item.KindLabel, item => item.Date),
+            VehicleSortKey => OrderByText(items, descending, item => item.VehicleName, item => item.Date),
+            TitleSortKey => OrderByText(items, descending, item => item.Title, item => item.Date),
+            StatusSortKey => OrderByText(items, descending, item => item.Status, item => item.Date),
             _ => OrderByDate(items, descending, item => TryParseDate(item.Date), item => item.VehicleName)
         };
     }
@@ -215,12 +318,12 @@ internal static class WorkspaceSortHelpers
         string selectedOption,
         bool descending)
     {
-        return NormalizeSortOption(selectedOption, AuditSortOptions, SeveritySortLabel) switch
+        return NormalizeSortKey(selectedOption, AuditSortOptions, SeveritySortLabel) switch
         {
-            VehicleSortLabel => OrderByText(items, descending, item => item.VehicleName, item => item.Title),
-            TitleSortLabel => OrderByText(items, descending, item => item.Title, item => item.VehicleName),
-            CategorySortLabel => OrderByText(items, descending, item => item.Category, item => item.VehicleName),
-            TypeSortLabel => OrderByText(items, descending, item => item.EntityKind, item => item.VehicleName),
+            VehicleSortKey => OrderByText(items, descending, item => item.VehicleName, item => item.Title),
+            TitleSortKey => OrderByText(items, descending, item => item.Title, item => item.VehicleName),
+            CategorySortKey => OrderByText(items, descending, item => item.Category, item => item.VehicleName),
+            TypeSortKey => OrderByText(items, descending, item => item.EntityKind, item => item.VehicleName),
             _ => OrderBySeverity(items, descending, item => item.Severity, item => item.VehicleName)
         };
     }
@@ -230,11 +333,11 @@ internal static class WorkspaceSortHelpers
         string selectedOption,
         bool descending)
     {
-        return NormalizeSortOption(selectedOption, GlobalSearchSortOptions, TypeSortLabel) switch
+        return NormalizeSortKey(selectedOption, GlobalSearchSortOptions, TypeSortLabel) switch
         {
-            VehicleSortLabel => OrderByText(items, descending, item => item.VehicleName, item => item.Title),
-            TitleSortLabel => OrderByText(items, descending, item => item.Title, item => item.VehicleName),
-            SummarySortLabel => OrderByText(items, descending, item => item.Summary, item => item.VehicleName),
+            VehicleSortKey => OrderByText(items, descending, item => item.VehicleName, item => item.Title),
+            TitleSortKey => OrderByText(items, descending, item => item.Title, item => item.VehicleName),
+            SummarySortKey => OrderByText(items, descending, item => item.Summary, item => item.VehicleName),
             _ => OrderByText(items, descending, item => item.SectionLabel, item => item.VehicleName)
         };
     }
@@ -376,4 +479,6 @@ internal static class WorkspaceSortHelpers
 
     private static decimal? TryParseMoney(string? value) =>
         VehimapValueParser.TryParseMoney(value, out var parsed) ? parsed : null;
+
+    private sealed record SortOptionDefinition(string Key, string ResourceKey, string LegacyLabel, string EnglishLabel);
 }

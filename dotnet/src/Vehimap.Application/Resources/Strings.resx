@@ -2302,6 +2302,31 @@ Transmission: {3}</value></data>
   <data name="VehicleList.Filter.Search" xml:space="preserve"><value>search "{0}"</value></data>
   <data name="VehicleList.Summary.All" xml:space="preserve"><value>Vehicle list: {0} vehicles.</value></data>
   <data name="VehicleList.Summary.Filtered" xml:space="preserve"><value>Vehicle list: showing {0} of {1}. {2}</value></data>
+  <data name="WorkspaceSort.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="WorkspaceSort.Type" xml:space="preserve"><value>Type</value></data>
+  <data name="WorkspaceSort.Odometer" xml:space="preserve"><value>Odometer</value></data>
+  <data name="WorkspaceSort.Cost" xml:space="preserve"><value>Cost</value></data>
+  <data name="WorkspaceSort.Note" xml:space="preserve"><value>Note</value></data>
+  <data name="WorkspaceSort.FuelType" xml:space="preserve"><value>Fuel</value></data>
+  <data name="WorkspaceSort.FuelDetail" xml:space="preserve"><value>Fuel detail</value></data>
+  <data name="WorkspaceSort.FuelStation" xml:space="preserve"><value>Fuel station</value></data>
+  <data name="WorkspaceSort.FuelVolume" xml:space="preserve"><value>Fuel volume</value></data>
+  <data name="WorkspaceSort.TotalCost" xml:space="preserve"><value>Total cost</value></data>
+  <data name="WorkspaceSort.TankState" xml:space="preserve"><value>Tank state</value></data>
+  <data name="WorkspaceSort.Title" xml:space="preserve"><value>Title</value></data>
+  <data name="WorkspaceSort.Vehicle" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="WorkspaceSort.DueDate" xml:space="preserve"><value>Due date</value></data>
+  <data name="WorkspaceSort.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="WorkspaceSort.RepeatMode" xml:space="preserve"><value>Repeat</value></data>
+  <data name="WorkspaceSort.Interval" xml:space="preserve"><value>Interval</value></data>
+  <data name="WorkspaceSort.LastService" xml:space="preserve"><value>Last service</value></data>
+  <data name="WorkspaceSort.Validity" xml:space="preserve"><value>Validity</value></data>
+  <data name="WorkspaceSort.Provider" xml:space="preserve"><value>Provider</value></data>
+  <data name="WorkspaceSort.AttachmentMode" xml:space="preserve"><value>Attachment mode</value></data>
+  <data name="WorkspaceSort.AttachmentState" xml:space="preserve"><value>Attachment status</value></data>
+  <data name="WorkspaceSort.Severity" xml:space="preserve"><value>Severity</value></data>
+  <data name="WorkspaceSort.Category" xml:space="preserve"><value>Record area</value></data>
+  <data name="WorkspaceSort.Summary" xml:space="preserve"><value>Summary</value></data>
   <data name="VehicleList.Status.Technical" xml:space="preserve"><value>Technical inspection: {0}</value></data>
   <data name="VehicleList.Status.GreenCard" xml:space="preserve"><value>Green card: {0}</value></data>
   <data name="VehicleList.Status.Reminder" xml:space="preserve"><value>Reminder: {0}</value></data>
