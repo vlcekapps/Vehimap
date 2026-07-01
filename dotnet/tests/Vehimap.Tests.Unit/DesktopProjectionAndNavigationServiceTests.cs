@@ -174,6 +174,12 @@ public sealed class DesktopProjectionAndNavigationServiceTests
 
         Assert.Contains("Skoda 120L | Passenger vehicles | No license plate", detail.Overview, StringComparison.Ordinal);
         Assert.Contains("State: Veteran", detail.Overview, StringComparison.Ordinal);
+        Assert.Contains("Next technical inspection: 08/2026", detail.Dates, StringComparison.Ordinal);
+        Assert.Contains("Green card until: not filled", detail.Dates, StringComparison.Ordinal);
+        Assert.Contains("Status summary:", detail.Dates, StringComparison.Ordinal);
+        Assert.Contains("Green card missing", detail.Dates, StringComparison.Ordinal);
+        Assert.DoesNotContain("Příští TK", detail.Dates, StringComparison.Ordinal);
+        Assert.DoesNotContain("Zelená karta", detail.Dates, StringComparison.Ordinal);
         Assert.Contains("Powertrain: Gasoline", detail.Profile, StringComparison.Ordinal);
         Assert.Contains("Climate: Has air conditioning", detail.Profile, StringComparison.Ordinal);
         Assert.Contains("Timing drive: Belt", detail.Profile, StringComparison.Ordinal);

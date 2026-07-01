@@ -6,15 +6,23 @@ namespace Vehimap.Desktop.ViewModels;
 public sealed partial class MainWindowViewModel
 {
     private readonly SemaphoreSlim _preferencePersistGate = new(1, 1);
+    private bool _suppressPreferencePersistence;
 
     private void PersistPreferenceSettingsAsync(Action<VehimapSettings> updateSettings, string failurePrefix)
     {
-        if (!_session.IsLoaded)
+        if (!_session.IsLoaded || _suppressPreferencePersistence)
         {
             return;
         }
 
         _ = PersistPreferenceSettingsCoreAsync(updateSettings, failurePrefix);
+    }
+
+    private IDisposable SuppressPreferencePersistence()
+    {
+        var previous = _suppressPreferencePersistence;
+        _suppressPreferencePersistence = true;
+        return new PreferencePersistenceSuppressionScope(this, previous);
     }
 
     private async Task PersistPreferenceSettingsCoreAsync(Action<VehimapSettings> updateSettings, string failurePrefix)
@@ -43,6 +51,24 @@ public sealed partial class MainWindowViewModel
         finally
         {
             _preferencePersistGate.Release();
+        }
+    }
+
+    private sealed class PreferencePersistenceSuppressionScope(
+        MainWindowViewModel owner,
+        bool previousValue) : IDisposable
+    {
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            owner._suppressPreferencePersistence = previousValue;
+            _disposed = true;
         }
     }
 }

@@ -28,6 +28,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Lokální release readiness pro C# větev nově vybírá přesný metadata soubor právě sestaveného balíčku podle kanálu, verze a RID, takže starší nightly setupy ve výstupní složce nemohou zmást installer smoke ani update manifest kontrolu.
 - Import starších textových `.vehimapbak`, nové SQLite zálohy a balíčky vozidel nově odmítají nebezpečné cesty spravovaných příloh mimo `data/attachments`; sdílený path guard hlídá relativní cestu, zakazuje `..`, drive/UNC/absolutní cesty a ověřuje výsledné umístění přes full-path containment check.
 - Kontrola a příprava aktualizací už v běžném UI nezobrazuje syrové texty parserových nebo systémových výjimek; selhání zůstává lokalizované a technicky kategorizované bez úniku konkrétní low-level zprávy.
+- Shell při každém přepočtu projekcí znovu aplikuje jazyk z aktuální datové sady před sestavením detailu vozidla, seznamu a dashboardových souhrnů; anglický detail vozidla má regresní test proti návratu českých labelů typu `Příští TK`.
+- Start lokální/nightly aplikace už během programového refresh shellu neukládá preference řazení vyvolané synchronizací bindingů, takže UI vlákno nečeká na SQLite commit a okno po startu nezůstane ve stavu „neodpovídá“.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.

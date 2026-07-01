@@ -1282,7 +1282,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
+        using var preferencePersistenceScope = SuppressPreferencePersistence();
         var supportedSettings = _session.ReadSupportedSettings();
+        ApplyDesktopLocalization(supportedSettings);
         var appInfo = _session.GetAppInfo();
         _projectionService.ApplySupportedSettings(supportedSettings);
         _costExportService.ApplySupportedSettings(supportedSettings);
