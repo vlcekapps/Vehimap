@@ -127,6 +127,7 @@
   <data name="LegacyBackup.Error.IncompleteOrCorrupt" xml:space="preserve"><value>The backup file is incomplete or corrupted.</value></data>
   <data name="LegacyBackup.Error.MissingHeaderItem" xml:space="preserve"><value>The backup file does not contain item {0}.</value></data>
   <data name="LegacySection.Error.EmptyAttachmentPath" xml:space="preserve"><value>The {0} row {1} contains an empty relative path.</value></data>
+  <data name="LegacySection.Error.InvalidAttachmentPath" xml:space="preserve"><value>The {0} row {1} contains an unsafe managed attachment path.</value></data>
   <data name="LegacySection.Error.InvalidAttachmentContent" xml:space="preserve"><value>The {0} row {1} contains invalid file content.</value></data>
   <data name="LegacySection.Error.InvalidFieldCount" xml:space="preserve"><value>The {0} row {1} must contain {2}.</value></data>
   <data name="LegacySection.Error.NestedHeader" xml:space="preserve"><value>The file contains an invalid nested header or comment.</value></data>
@@ -1063,6 +1064,7 @@ Vehicle: {2}
   <data name="UpdateService.Check.Current" xml:space="preserve"><value>You are using the current Vehimap version ({0}).</value></data>
   <data name="UpdateService.Check.DotnetManifestUnavailable" xml:space="preserve"><value>The desktop update channel for the .NET branch has not been published yet.</value></data>
   <data name="UpdateService.Check.Failed" xml:space="preserve"><value>Update check could not be completed.</value></data>
+  <data name="UpdateService.Check.FailureReason" xml:space="preserve"><value>Update check failed safely. Technical category: {0}.</value></data>
   <data name="UpdateService.Check.LocalNewer" xml:space="preserve"><value>You are using a newer local version ({0}) than the manifest version ({1}).</value></data>
   <data name="UpdateService.Check.ServerHttp" xml:space="preserve"><value>The server returned HTTP {0}.</value></data>
   <data name="UpdateService.Check.UpdateAvailable" xml:space="preserve"><value>A newer Vehimap version ({0}) is available.{1}</value></data>
@@ -1827,6 +1829,7 @@ Status: {5}</value></data>
   <data name="VehiclePackage.Error.UnsupportedFormat" xml:space="preserve"><value>The vehicle package uses an unsupported format.</value></data>
   <data name="VehiclePackage.Error.MissingVehicleData" xml:space="preserve"><value>The vehicle package does not contain vehicle data.</value></data>
   <data name="VehiclePackage.Error.ExactlyOneVehicleRequired" xml:space="preserve"><value>The package must contain exactly one vehicle.</value></data>
+  <data name="VehiclePackage.Error.InvalidAttachmentPath" xml:space="preserve"><value>The vehicle package contains an unsafe managed attachment path.</value></data>
   <data name="VehiclePackage.AttachmentFallbackFileName" xml:space="preserve"><value>attachment.bin</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchEnabled" xml:space="preserve"><value>Dashboard will be shown when the app starts.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchDisabled" xml:space="preserve"><value>Dashboard will not open automatically when the app starts.</value></data>

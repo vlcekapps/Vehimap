@@ -56,7 +56,7 @@ public static partial class SemVersionService
         var match = SemVersionRegex().Match(value.Trim());
         if (!match.Success)
         {
-            throw new InvalidOperationException($"Neplatná semver verze: {value}");
+            throw new InvalidOperationException($"Invalid semantic version: {value}");
         }
 
         var prerelease = match.Groups["prerelease"].Success

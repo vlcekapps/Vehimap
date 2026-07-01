@@ -3,6 +3,7 @@ using System.IO.Compression;
 using System.Text;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Storage.Legacy;
@@ -238,7 +239,7 @@ public sealed class SqliteBackupService : IBackupService
             }
 
             var relativeInAttachments = StripAttachmentsPrefix(relativePath);
-            var targetPath = Path.Combine(targetAttachmentsRoot, relativeInAttachments.Replace('/', Path.DirectorySeparatorChar));
+            var targetPath = ManagedAttachmentPathGuard.ResolveRelativePathInsideRoot(targetAttachmentsRoot, relativeInAttachments);
             var targetParent = Path.GetDirectoryName(targetPath);
             if (!string.IsNullOrWhiteSpace(targetParent))
             {

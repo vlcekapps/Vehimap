@@ -235,6 +235,15 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Equal(expected, Math.Sign(SemVersionService.Compare(left, right)));
     }
 
+    [Fact]
+    public void Semver_invalid_error_is_invariant_english()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() => SemVersionService.Compare("not-a-version", "1.0.0"));
+
+        Assert.Contains("Invalid semantic version", exception.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("Neplat", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
     [Theory]
     [InlineData("stable", "Vehimap", "Vehimap", "latest-dotnet-win-x64.ini")]
     [InlineData("beta", "Vehimap Beta", "Vehimap Beta", "latest-dotnet-beta-win-x64.ini")]
@@ -458,6 +467,40 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.False(result.IsUpdateAvailable);
         Assert.Null(result.FailureReason);
         Assert.Contains("has not been published", result.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Broken_remote_manifest_does_not_surface_raw_exception_message()
+    {
+        var manifestFileName = $"latest-dotnet-broken-remote-{Guid.NewGuid():N}.ini";
+        const string manifest = """
+            [release]
+            version=not-a-version
+            """;
+        var buildInfo = new StubBuildInfoProvider(
+            new AppBuildInfo(
+                "Vehimap",
+                "1.0.2",
+                "1.0.2.0",
+                "samostatna desktopova aplikace",
+                Path.Combine(_tempRoot, "Vehimap.Desktop.exe"),
+                "Windows",
+                ".NET 10",
+                $"https://example.com/{manifestFileName}",
+                "https://github.com/vlcekapps/Vehimap/releases",
+                Path.Combine(_tempRoot, "Vehimap.Updater.exe"),
+                true));
+
+        using var httpClient = new HttpClient(new StubHttpMessageHandler(Encoding.UTF8.GetBytes(manifest)));
+        var service = new LegacyUpdateService(buildInfo, httpClient, () => EnglishLocalizer());
+
+        var result = await service.CheckForUpdatesAsync("1.0.2");
+
+        Assert.False(result.IsUpdateAvailable);
+        Assert.Equal("Update check could not be completed.", result.Message);
+        Assert.NotNull(result.FailureReason);
+        Assert.Contains("InvalidOperationException", result.FailureReason, StringComparison.Ordinal);
+        Assert.DoesNotContain("not-a-version", result.FailureReason, StringComparison.Ordinal);
     }
 
     [Fact]

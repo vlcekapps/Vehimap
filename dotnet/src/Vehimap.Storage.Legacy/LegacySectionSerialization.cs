@@ -74,24 +74,7 @@ internal static class LegacySectionSerialization
 
     public static string NormalizeAttachmentRelativePath(string? path)
     {
-        var normalized = (path ?? string.Empty).Trim().Replace('\\', '/');
-
-        while (normalized.StartsWith("./", StringComparison.Ordinal))
-        {
-            normalized = normalized[2..];
-        }
-
-        if (normalized.StartsWith("data/", StringComparison.OrdinalIgnoreCase))
-        {
-            normalized = normalized[5..];
-        }
-
-        while (normalized.StartsWith("/", StringComparison.Ordinal))
-        {
-            normalized = normalized[1..];
-        }
-
-        return normalized;
+        return ManagedAttachmentPathGuard.NormalizeAttachmentRelativePath(path);
     }
 
     public static string GetAttachmentsRootPath(string dataPath) =>
@@ -99,10 +82,7 @@ internal static class LegacySectionSerialization
 
     public static string ResolveManagedAttachmentPath(string dataPath, string relativePath)
     {
-        var normalized = NormalizeAttachmentRelativePath(relativePath);
-        return string.IsNullOrWhiteSpace(normalized)
-            ? string.Empty
-            : Path.Combine(dataPath, normalized.Replace('/', Path.DirectorySeparatorChar));
+        return ManagedAttachmentPathGuard.ResolveManagedAttachmentPath(dataPath, relativePath);
     }
 
     public static VehimapSettings ParseSettings(string content)
@@ -512,7 +492,21 @@ internal static class LegacySectionSerialization
                 throw InvalidFieldCount(resolvedLocalizer, "LegacyData.Section.Attachments", index + 2, resolvedLocalizer.GetString("LegacySection.FieldCount.Two"));
             }
 
-            var relativePath = NormalizeAttachmentRelativePath(UnescapeField(fields[0]));
+            string relativePath;
+            try
+            {
+                relativePath = NormalizeAttachmentRelativePath(UnescapeField(fields[0]));
+            }
+            catch (InvalidDataException ex)
+            {
+                throw new FormatException(
+                    resolvedLocalizer.Format(
+                        "LegacySection.Error.InvalidAttachmentPath",
+                        resolvedLocalizer.GetString("LegacyData.Section.Attachments"),
+                        index + 2),
+                    ex);
+            }
+
             if (string.IsNullOrWhiteSpace(relativePath))
             {
                 throw new FormatException(resolvedLocalizer.Format(

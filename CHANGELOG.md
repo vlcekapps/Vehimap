@@ -26,6 +26,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Startovní background refresh C# shellu znovu kontroluje upozornění hned po načtení dat i při viditelném hlavním okně; pokud installer seed změnil jazyk/nastavení, resetuje se historie desktopových notifikací, aby první lokalizované oznámení nemuselo čekat až na ruční uložení nastavení.
 - Windows Inno Setup instalátor C# větve má zjednodušený update režim: převezme jazyk předchozí instalace, neschovává licenční souhlas, ale přeskočí volbu instalační složky, zástupce, stránku připravenosti a po aktualizaci dál nabídne spuštění aplikace.
 - Lokální release readiness pro C# větev nově vybírá přesný metadata soubor právě sestaveného balíčku podle kanálu, verze a RID, takže starší nightly setupy ve výstupní složce nemohou zmást installer smoke ani update manifest kontrolu.
+- Import starších textových `.vehimapbak`, nové SQLite zálohy a balíčky vozidel nově odmítají nebezpečné cesty spravovaných příloh mimo `data/attachments`; sdílený path guard hlídá relativní cestu, zakazuje `..`, drive/UNC/absolutní cesty a ověřuje výsledné umístění přes full-path containment check.
+- Kontrola a příprava aktualizací už v běžném UI nezobrazuje syrové texty parserových nebo systémových výjimek; selhání zůstává lokalizované a technicky kategorizované bez úniku konkrétní low-level zprávy.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.

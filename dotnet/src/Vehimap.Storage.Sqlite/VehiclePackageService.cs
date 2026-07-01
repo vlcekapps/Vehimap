@@ -281,8 +281,17 @@ public sealed class VehiclePackageService : IVehiclePackageService
         foreach (var record in records.Where(record => record.AttachmentMode == VehicleRecordAttachmentMode.Managed).ToList())
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var expectedSourceRelativePath = SqliteStoragePaths.NormalizeAttachmentRelativePath(record.FilePath);
-            var packageSourcePath = Path.Combine(packageDirectory, expectedSourceRelativePath.Replace('/', Path.DirectorySeparatorChar));
+            string expectedSourceRelativePath;
+            try
+            {
+                expectedSourceRelativePath = SqliteStoragePaths.NormalizeAttachmentRelativePath(record.FilePath);
+            }
+            catch (InvalidDataException ex)
+            {
+                throw new FormatException(L("VehiclePackage.Error.InvalidAttachmentPath"), ex);
+            }
+
+            var packageSourcePath = ManagedAttachmentPathGuard.ResolveManagedAttachmentPath(packageDirectory, expectedSourceRelativePath);
             if (!File.Exists(packageSourcePath))
             {
                 continue;
@@ -362,9 +371,9 @@ public sealed class VehiclePackageService : IVehiclePackageService
                 continue;
             }
 
-            var targetPath = Path.Combine(
+            var targetPath = ManagedAttachmentPathGuard.ResolveRelativePathInsideRoot(
                 targetAttachmentsRoot,
-                StripAttachmentsPrefix(relativePath).Replace('/', Path.DirectorySeparatorChar));
+                StripAttachmentsPrefix(relativePath));
             var targetParent = Path.GetDirectoryName(targetPath);
             if (!string.IsNullOrWhiteSpace(targetParent))
             {

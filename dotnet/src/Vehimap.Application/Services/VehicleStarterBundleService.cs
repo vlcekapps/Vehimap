@@ -310,7 +310,7 @@ public sealed class VehicleStarterBundleService
 
     private static IReadOnlyList<VehicleStarterBundleTemplate> GetReminderTemplates(Vehicle vehicle, DateOnly today)
     {
-        var dueDate = today.AddDays(30).ToString("dd.MM.yyyy");
+        var dueDate = today.AddDays(30).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         var category = NormalizeCategory(vehicle.Category);
         var title = category switch
         {

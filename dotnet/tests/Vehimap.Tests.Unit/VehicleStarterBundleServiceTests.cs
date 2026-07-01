@@ -104,6 +104,25 @@ public sealed class VehicleStarterBundleServiceTests
     }
 
     [Fact]
+    public void Build_preview_stores_generated_reminder_date_as_invariant_iso_text()
+    {
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", string.Empty, "08/2026", "05/2025", "06/2026")
+            ]
+        };
+
+        var preview = _service.BuildPreview(dataSet, "veh_1", new DateOnly(2026, 4, 2));
+        var reminder = Assert.Single(preview.Items.Where(item => item.Section == Vehimap.Application.Models.VehicleStarterBundleSection.Reminder));
+
+        Assert.Equal("2026-05-02", reminder.DueDate);
+        Assert.True(VehimapValueParser.TryParseEventDate(reminder.DueDate, out var parsedDate));
+        Assert.Equal(new DateOnly(2026, 5, 2), parsedDate);
+    }
+
+    [Fact]
     public void Build_preview_skips_existing_bundle_items()
     {
         var dataSet = new VehimapDataSet

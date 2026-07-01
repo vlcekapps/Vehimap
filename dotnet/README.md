@@ -88,6 +88,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - importovat starsi textove `.vehimapbak` zalohy pres legacy parser a obnovit je uz do SQLite runtime storage
 - exportovat nove `.vehimapbak` zalohy jako SQLite backup s `vehimap.db` a referenced spravovanymi prilohami
 - exportovat a importovat jedno vozidlo jako `*.vehimapvehicle` balicek vcetne historie, tankovani, dokladu, pripominek, udrzby a relevantnich spravovanych priloh
+- pri importu starsich `.vehimapbak`, novych SQLite zaloh i `*.vehimapvehicle` balicku prijimat jen bezpecne relativni cesty spravovanych priloh pod `attachments/...`; `..`, absolutni, drive a UNC cesty se odmitaji a kazde rozliseni cesty se overuje proti cilovemu rootu
 - pri poskozenem legacy `TSV` nebo `INI` souboru ukazat konkretni nazev souboru, plnou cestu a parser detail v chybovem stavu shellu
 - pri nedostupnem nebo poskozenem `.vehimapbak` souboru ukazat cestu k zaloze a parser/I/O detail ve stavovem textu misto neobslouzene vyjimky v shellu; u starsich textovych zaloh se ramcova importni hlaska i parserove chyby lokalizuji podle aktivniho jazyka
 - pri zruseni nebo selhani app-level akci z menu/tray, jako jsou nastaveni, export/import zalohy, O programu a kontrola aktualizaci, zapsat citelnou stavovou hlasku misto neobslouzene vyjimky

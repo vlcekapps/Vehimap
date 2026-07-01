@@ -12,6 +12,8 @@ namespace Vehimap.Platform;
 
 public sealed class LegacyUpdateService : IUpdateService
 {
+    private static readonly HttpClient SharedHttpClient = new();
+
     private readonly IAppBuildInfoProvider _appBuildInfoProvider;
     private readonly HttpClient _httpClient;
     private readonly Func<IAppLocalizer> _localizerProvider;
@@ -22,7 +24,7 @@ public sealed class LegacyUpdateService : IUpdateService
         Func<IAppLocalizer>? localizerProvider = null)
     {
         _appBuildInfoProvider = appBuildInfoProvider;
-        _httpClient = httpClient ?? new HttpClient();
+        _httpClient = httpClient ?? SharedHttpClient;
         _localizerProvider = localizerProvider ?? (() => new ResourceAppLocalizer(CultureInfo.CurrentUICulture));
     }
 
@@ -128,7 +130,7 @@ public sealed class LegacyUpdateService : IUpdateService
                 null,
                 false,
                 L("UpdateService.Check.Failed"),
-                ex.Message);
+                LF("UpdateService.Check.FailureReason", ex.GetType().Name));
         }
     }
 
@@ -213,7 +215,7 @@ public sealed class LegacyUpdateService : IUpdateService
         catch (Exception ex)
         {
             TryDeleteDirectory(tempRoot);
-            return new UpdateInstallResult(false, LF("UpdateService.Install.PrepareFailed", ex.Message), null);
+            return new UpdateInstallResult(false, LF("UpdateService.Install.PrepareFailed", ex.GetType().Name), null);
         }
     }
 

@@ -74,7 +74,7 @@ public partial class UpdateInstallProgressWindow : Window
         {
             Result = new UpdateInstallResult(
                 false,
-                DesktopLocalization.Localizer.Format("UpdateInstall.PrepareFailed", ex.Message),
+                DesktopLocalization.Localizer.Format("UpdateInstall.PrepareFailed", ex.GetType().Name),
                 null);
             _operationFinished = true;
             model.MarkCompleted(Result.Message);

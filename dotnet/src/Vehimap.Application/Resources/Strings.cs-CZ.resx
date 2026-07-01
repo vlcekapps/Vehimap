@@ -127,6 +127,7 @@
   <data name="LegacyBackup.Error.IncompleteOrCorrupt" xml:space="preserve"><value>Soubor zálohy je neúplný nebo poškozený.</value></data>
   <data name="LegacyBackup.Error.MissingHeaderItem" xml:space="preserve"><value>Soubor zálohy neobsahuje položku {0}.</value></data>
   <data name="LegacySection.Error.EmptyAttachmentPath" xml:space="preserve"><value>Řádek {0} {1} obsahuje prázdnou relativní cestu.</value></data>
+  <data name="LegacySection.Error.InvalidAttachmentPath" xml:space="preserve"><value>Řádek {0} {1} obsahuje nebezpečnou cestu spravované přílohy.</value></data>
   <data name="LegacySection.Error.InvalidAttachmentContent" xml:space="preserve"><value>Řádek {0} {1} obsahuje neplatný obsah souboru.</value></data>
   <data name="LegacySection.Error.InvalidFieldCount" xml:space="preserve"><value>Řádek {0} {1} musí obsahovat {2}.</value></data>
   <data name="LegacySection.Error.NestedHeader" xml:space="preserve"><value>Soubor obsahuje neplatnou vnořenou hlavičku nebo komentář.</value></data>
@@ -1063,6 +1064,7 @@ Vozidlo: {2}
   <data name="UpdateService.Check.Current" xml:space="preserve"><value>Používáte aktuální verzi Vehimap ({0}).</value></data>
   <data name="UpdateService.Check.DotnetManifestUnavailable" xml:space="preserve"><value>Desktopový update kanál pro .NET větev zatím není publikovaný.</value></data>
   <data name="UpdateService.Check.Failed" xml:space="preserve"><value>Kontrolu aktualizací se nepodařilo dokončit.</value></data>
+  <data name="UpdateService.Check.FailureReason" xml:space="preserve"><value>Kontrola aktualizací bezpečně selhala. Technická kategorie: {0}.</value></data>
   <data name="UpdateService.Check.LocalNewer" xml:space="preserve"><value>Používáte novější lokální verzi ({0}) než je v manifestu ({1}).</value></data>
   <data name="UpdateService.Check.ServerHttp" xml:space="preserve"><value>Server vrátil HTTP {0}.</value></data>
   <data name="UpdateService.Check.UpdateAvailable" xml:space="preserve"><value>Je dostupná novější verze Vehimap ({0}).{1}</value></data>
@@ -1827,6 +1829,7 @@ Stav: {5}</value></data>
   <data name="VehiclePackage.Error.UnsupportedFormat" xml:space="preserve"><value>Balíček vozidla má nepodporovaný formát.</value></data>
   <data name="VehiclePackage.Error.MissingVehicleData" xml:space="preserve"><value>Balíček vozidla neobsahuje data vozidla.</value></data>
   <data name="VehiclePackage.Error.ExactlyOneVehicleRequired" xml:space="preserve"><value>Balíček musí obsahovat právě jedno vozidlo.</value></data>
+  <data name="VehiclePackage.Error.InvalidAttachmentPath" xml:space="preserve"><value>Balíček vozidla obsahuje nebezpečnou cestu spravované přílohy.</value></data>
   <data name="VehiclePackage.AttachmentFallbackFileName" xml:space="preserve"><value>priloha.bin</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchEnabled" xml:space="preserve"><value>Dashboard se bude zobrazovat při startu aplikace.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchDisabled" xml:space="preserve"><value>Dashboard se při startu aplikace nebude otevírat automaticky.</value></data>

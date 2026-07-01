@@ -8,6 +8,18 @@ namespace Vehimap.Storage.Sqlite;
 
 public sealed class SqliteVehimapDataStore : IVehimapDataStore
 {
+    private static readonly string[] ResetTableStatements =
+    [
+        "DELETE FROM settings;",
+        "DELETE FROM vehicles;",
+        "DELETE FROM vehicle_meta;",
+        "DELETE FROM history_entries;",
+        "DELETE FROM fuel_entries;",
+        "DELETE FROM records;",
+        "DELETE FROM reminders;",
+        "DELETE FROM maintenance_plans;"
+    ];
+
     public async Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
     {
         Directory.CreateDirectory(dataRoot.DataPath);
@@ -38,19 +50,9 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
         await using var transaction = (SqliteTransaction)await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            foreach (var table in new[]
-                     {
-                         "settings",
-                         "vehicles",
-                         "vehicle_meta",
-                         "history_entries",
-                         "fuel_entries",
-                         "records",
-                         "reminders",
-                         "maintenance_plans"
-                     })
+            foreach (var statement in ResetTableStatements)
             {
-                await ExecuteAsync(connection, transaction, $"DELETE FROM {table};", cancellationToken).ConfigureAwait(false);
+                await ExecuteAsync(connection, transaction, statement, cancellationToken).ConfigureAwait(false);
             }
 
             foreach (var (section, values) in dataSet.Settings.Sections)

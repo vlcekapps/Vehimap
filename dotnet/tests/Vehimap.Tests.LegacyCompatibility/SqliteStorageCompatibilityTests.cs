@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Globalization;
+using System.Text.Json;
 using Microsoft.Data.Sqlite;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -547,6 +548,55 @@ public sealed class SqliteStorageCompatibilityTests
     }
 
     [Fact]
+    public async Task Vehicle_package_import_rejects_unsafe_managed_attachment_path_without_restoring()
+    {
+        var tempRoot = CreateTempRoot("vehimap-vehicle-package-unsafe-path");
+        var targetRoot = CreateDataRoot(Path.Combine(tempRoot, "target"));
+        var service = new VehiclePackageService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)));
+        var packagePath = Path.Combine(tempRoot, "unsafe.vehimapvehicle");
+
+        try
+        {
+            var manifest = SerializePackageJson(new
+            {
+                format = "vehimap.vehicle-package",
+                version = 1,
+                vehicleId = "veh_pkg",
+                vehicleName = "Unsafe",
+                createdUtc = DateTime.UtcNow
+            });
+            var packageData = SerializePackageJson(new
+            {
+                vehicles = new[]
+                {
+                    new Vehicle("veh_pkg", "Unsafe", "Passenger vehicles", "", "Test", "", "", "", "", "", "", "")
+                },
+                vehicleMetaEntries = Array.Empty<VehicleMeta>(),
+                historyEntries = Array.Empty<VehicleHistoryEntry>(),
+                fuelEntries = Array.Empty<FuelEntry>(),
+                records = new[]
+                {
+                    new VehicleRecord("rec_pkg", "veh_pkg", "Document", "Unsafe attachment", "", "", "", "", VehicleRecordAttachmentMode.Managed, "../outside.txt", "")
+                },
+                reminders = Array.Empty<VehicleReminder>(),
+                maintenancePlans = Array.Empty<MaintenancePlan>()
+            });
+
+            await CreateZipAsync(packagePath, ("manifest.json", manifest), ("vehicle.json", packageData));
+
+            var exception = await Assert.ThrowsAsync<FormatException>(() =>
+                service.ImportVehicleAsync(packagePath, targetRoot, new VehimapDataSet()));
+
+            Assert.Contains("unsafe managed attachment path", exception.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.False(Directory.Exists(Path.Combine(targetRoot.DataPath, "attachments")));
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
     public async Task Vehicle_package_service_uses_supplied_localizer_for_storage_errors()
     {
         var tempRoot = CreateTempRoot("vehimap-vehicle-package-localized-errors");
@@ -655,6 +705,9 @@ public sealed class SqliteStorageCompatibilityTests
             await writer.WriteAsync(content);
         }
     }
+
+    private static string SerializePackageJson<T>(T value) =>
+        JsonSerializer.Serialize(value, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
     private static VehimapDataRoot CreateDataRoot(string rootPath) =>
         new(rootPath, Path.Combine(rootPath, "data"), true);

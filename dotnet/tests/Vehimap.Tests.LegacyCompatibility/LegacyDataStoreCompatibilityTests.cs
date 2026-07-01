@@ -335,6 +335,63 @@ public sealed class LegacyDataStoreCompatibilityTests
     }
 
     [Fact]
+    public async Task Import_backup_rejects_unsafe_managed_attachment_path()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-unsafe-attachment-path-" + Guid.NewGuid());
+        var backupPath = Path.Combine(tempRoot, "unsafe-attachment.vehimapbak");
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+        var backupService = new LegacyBackupService(english);
+        var attachments = "# Vehimap attachments v1\n../outside.txt\tAQID\n";
+        var outsidePath = Path.Combine(tempRoot, "outside.txt");
+
+        try
+        {
+            Directory.CreateDirectory(tempRoot);
+            await File.WriteAllTextAsync(backupPath, BuildBackupContent(attachments));
+
+            var exception = await Assert.ThrowsAsync<LegacyBackupException>(() => backupService.ImportAsync(backupPath));
+
+            Assert.Equal(Path.GetFullPath(backupPath), exception.BackupPath);
+            Assert.Contains("unsafe managed attachment path", exception.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.False(File.Exists(outsidePath));
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task Restore_backup_rejects_unsafe_managed_attachment_path_without_writing_outside_data()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-unsafe-restore-attachment-" + Guid.NewGuid());
+        var dataRoot = new Vehimap.Application.Abstractions.VehimapDataRoot(tempRoot, Path.Combine(tempRoot, "data"), true);
+        var backupService = new LegacyBackupService();
+        var outsidePath = Path.GetFullPath(Path.Combine(dataRoot.DataPath, "..", "outside.txt"));
+
+        try
+        {
+            var bundle = new VehimapBackupBundle(
+                new VehimapDataSet(),
+                [new ManagedAttachment("../outside.txt", [1, 2, 3])]);
+
+            await Assert.ThrowsAsync<InvalidDataException>(() => backupService.RestoreAsync(dataRoot, bundle));
+
+            Assert.False(File.Exists(outsidePath));
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
     public async Task Restore_creates_import_backup_with_current_files_and_attachments()
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-import-backup-" + Guid.NewGuid());
