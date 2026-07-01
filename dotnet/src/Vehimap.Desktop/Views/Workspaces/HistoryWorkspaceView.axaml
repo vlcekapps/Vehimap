@@ -64,8 +64,6 @@
                Margin="0,12,12,0"
                ItemsSource="{Binding VisibleHistoryItems}"
                SelectedItem="{Binding SelectedHistory}"
-               Focusable="True"
-               IsTabStop="True"
                AutomationProperties.Name="{i18n:Loc HistoryWorkspace.ListName}"
                AutomationProperties.AutomationId="HistoryListBox">
         <ListBox.ItemTemplate>

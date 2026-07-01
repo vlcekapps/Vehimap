@@ -162,12 +162,9 @@
                    TextWrapping="Wrap"
                    AutomationProperties.Name="{Binding SelectedVehicleRecentHistorySummary}"
                    AutomationProperties.AutomationId="SelectedVehicleRecentHistorySummaryText" />
-        <ListBox x:Name="VehicleDetailRecentHistoryListBox"
-                 ItemsSource="{Binding RecentHistoryItems}"
+        <ListBox ItemsSource="{Binding RecentHistoryItems}"
                  MinHeight="96"
                  MaxHeight="180"
-                 Focusable="True"
-                 IsTabStop="True"
                  AutomationProperties.Name="{i18n:Loc VehicleDetail.RecentHistoryListName}"
                  AutomationProperties.AutomationId="VehicleDetailRecentHistoryListBox">
           <ListBox.ItemTemplate>

@@ -43,14 +43,6 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleStatusFilterBox"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("HideInactiveVehiclesCheckBox"));
             Assert.NotNull(session.WaitForElementByAccessibilityId("DashboardTabButton"));
-
-            session.SendKeysByAccessibilityId("VehicleListBox", Keys.Enter);
-            Assert.Equal("OpenVehicleDetailWindowButton", session.WaitForFocusedAutomationId(12, "OpenVehicleDetailWindowButton"));
-
-            session.ClickByAccessibilityId("HistoryTabButton");
-            Assert.NotNull(session.WaitForElementByAccessibilityId("HistoryListBox"));
-            session.ClickByAccessibilityId("HistoryListBox");
-            Assert.Equal("HistoryListBox", session.WaitForFocusedAutomationId(12, "HistoryListBox"));
         }
     }
 

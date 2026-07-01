@@ -4,7 +4,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
-using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -12,7 +11,6 @@ using Vehimap.Application.Models;
 using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
-using Vehimap.Desktop.Views.Workspaces;
 
 namespace Vehimap.Desktop.Views;
 
@@ -204,7 +202,7 @@ public partial class MainWindow : Window
         var control = ResolveFocusTarget(target);
         if (control is null)
         {
-            return TryFocusWorkspaceTarget(target);
+            return false;
         }
 
         if (control is ListBox listBox)
@@ -215,57 +213,10 @@ public partial class MainWindow : Window
         return control.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
     }
 
-    private bool TryFocusWorkspaceTarget(DesktopFocusTarget target)
-    {
-        return ResolveWorkspaceViewForFocusTarget(target)?.TryFocus(target) == true;
-    }
-
-    private IWorkspaceView? ResolveWorkspaceViewForFocusTarget(DesktopFocusTarget target) =>
-        target switch
-        {
-            DesktopFocusTarget.VehicleDetailPrimaryAction
-                or DesktopFocusTarget.VehicleDetailRecentHistoryList => FindWorkspaceView<VehicleDetailWorkspaceView>(),
-            DesktopFocusTarget.HistorySearch
-                or DesktopFocusTarget.HistoryList => FindWorkspaceView<HistoryWorkspaceView>(),
-            DesktopFocusTarget.FuelSearch
-                or DesktopFocusTarget.FuelList => FindWorkspaceView<FuelWorkspaceView>(),
-            DesktopFocusTarget.ReminderSearch
-                or DesktopFocusTarget.ReminderList => FindWorkspaceView<ReminderWorkspaceView>(),
-            DesktopFocusTarget.MaintenanceSearch
-                or DesktopFocusTarget.MaintenanceList => FindWorkspaceView<MaintenanceWorkspaceView>(),
-            DesktopFocusTarget.TimelineSearch
-                or DesktopFocusTarget.TimelineList => FindWorkspaceView<TimelineWorkspaceView>(),
-            DesktopFocusTarget.RecordSearch
-                or DesktopFocusTarget.RecordList => FindWorkspaceView<RecordWorkspaceView>(),
-            DesktopFocusTarget.AuditSearch
-                or DesktopFocusTarget.AuditList => FindWorkspaceView<AuditWorkspaceView>(),
-            DesktopFocusTarget.CostPeriodStart
-                or DesktopFocusTarget.CostSearch
-                or DesktopFocusTarget.CostList
-                or DesktopFocusTarget.CostDetail => FindWorkspaceView<CostWorkspaceView>(),
-            DesktopFocusTarget.DashboardAuditList
-                or DesktopFocusTarget.DashboardCostList
-                or DesktopFocusTarget.DashboardTimelineList => FindWorkspaceView<DashboardWorkspaceView>(),
-            DesktopFocusTarget.GlobalSearchBox
-                or DesktopFocusTarget.GlobalSearchList => FindWorkspaceView<GlobalSearchWorkspaceView>(),
-            DesktopFocusTarget.UpcomingOverviewSearch
-                or DesktopFocusTarget.UpcomingOverviewList => FindWorkspaceView<UpcomingOverviewWorkspaceView>(),
-            DesktopFocusTarget.OverdueOverviewSearch
-                or DesktopFocusTarget.OverdueOverviewList => FindWorkspaceView<OverdueOverviewWorkspaceView>(),
-            DesktopFocusTarget.SmartAdvisorSearch
-                or DesktopFocusTarget.SmartAdvisorList => FindWorkspaceView<SmartAdvisorWorkspaceView>(),
-            _ => null
-        };
-
-    private TWorkspace? FindWorkspaceView<TWorkspace>()
-        where TWorkspace : Control, IWorkspaceView =>
-        this.GetVisualDescendants().OfType<TWorkspace>().FirstOrDefault();
-
     private void RegisterTabBoundaryNavigation()
     {
         RegisterForwardTabToVehicleList("HideInactiveVehiclesCheckBox");
         RegisterForwardTabToHeaders("VehicleListBox");
-        RegisterVehicleListActivation("VehicleListBox");
         RegisterTabHeaderNavigation();
     }
 
@@ -285,14 +236,6 @@ public partial class MainWindow : Window
         if (this.FindControl<Control>(controlName) is { } control)
         {
             control.AddHandler(InputElement.KeyDownEvent, OnForwardTabToHeadersKeyDown, RoutingStrategies.Tunnel);
-        }
-    }
-
-    private void RegisterVehicleListActivation(string controlName)
-    {
-        if (this.FindControl<Control>(controlName) is { } control)
-        {
-            control.AddHandler(InputElement.KeyDownEvent, OnVehicleListActivationKeyDown, RoutingStrategies.Tunnel);
         }
     }
 
@@ -322,24 +265,6 @@ public partial class MainWindow : Window
         }
 
         e.Handled = FocusSelectedTabHeader();
-    }
-
-    private void OnVehicleListActivationKeyDown(object? sender, KeyEventArgs e)
-    {
-        if (e.Key != Key.Enter || e.KeyModifiers != KeyModifiers.None || _viewModel?.SelectedVehicle is null)
-        {
-            return;
-        }
-
-        if (_viewModel.SelectedVehicleTabIndex != DetailTabIndex && _viewModel.BlockWorkspaceNavigationIfEditing())
-        {
-            e.Handled = true;
-            return;
-        }
-
-        _viewModel.SelectedVehicleTabIndex = DetailTabIndex;
-        RequestFocus(DesktopFocusTarget.VehicleDetailOpenInWindow);
-        e.Handled = true;
     }
 
     private async void OnWindowKeyDown(object? sender, KeyEventArgs e)
@@ -1172,7 +1097,6 @@ public partial class MainWindow : Window
         {
             DesktopFocusTarget.VehicleList => this.FindControl<ListBox>("VehicleListBox"),
             DesktopFocusTarget.VehicleSearch => this.FindControl<TextBox>("VehicleSearchBox"),
-            DesktopFocusTarget.VehicleDetailOpenInWindow => this.FindControl<Button>("OpenVehicleDetailWindowButton"),
             _ => null
         };
     }

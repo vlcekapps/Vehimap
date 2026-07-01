@@ -21,8 +21,13 @@ internal static class WorkspaceFocusHelpers
         if (listBox.SelectedItem is not null)
         {
             listBox.ScrollIntoView(listBox.SelectedItem);
+            if (listBox.ContainerFromItem(listBox.SelectedItem) is Control itemContainer)
+            {
+                return itemContainer.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
+            }
         }
 
         return listBox.Focus(NavigationMethod.Unspecified, KeyModifiers.None);
     }
 }
+
