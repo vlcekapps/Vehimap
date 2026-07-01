@@ -12,10 +12,18 @@ namespace Vehimap.Desktop.Services;
 
 internal sealed class DesktopPrintableVehicleReportService
 {
+    private readonly IAppLocalizer _localizer;
+
+    public DesktopPrintableVehicleReportService(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+    }
+
     public string BuildFileName(DateTime generatedAt) =>
         string.Format(
             CultureInfo.InvariantCulture,
-            "vehimap-tiskovy-prehled-{0:yyyy-MM-dd}.html",
+            "{0}-{1:yyyy-MM-dd}.html",
+            L("PrintableReport.FileNamePrefix"),
             generatedAt);
 
     public string BuildHtml(
@@ -26,15 +34,16 @@ internal sealed class DesktopPrintableVehicleReportService
         DateTime generatedAt)
     {
         var sections = GetPrintableCategories(dataSet)
-            .Select(category => BuildCategorySection(category, dataSet, metaByVehicleId, timelineService, today))
+            .Select(category => BuildCategorySection(category, dataSet, metaByVehicleId, timelineService, today, _localizer))
             .ToList();
 
+        var reportCulture = ResolveReportCulture();
         var builder = new StringBuilder();
         builder.AppendLine("<!DOCTYPE html>");
-        builder.AppendLine("<html lang=\"cs\">");
+        builder.AppendLine($"<html lang=\"{Html(L("PrintableReport.HtmlLanguage"))}\">");
         builder.AppendLine("<head>");
         builder.AppendLine("  <meta charset=\"utf-8\">");
-        builder.AppendLine("  <title>Vehimap - Tiskový přehled vozidel</title>");
+        builder.AppendLine($"  <title>{Html(L("PrintableReport.Title"))}</title>");
         builder.AppendLine("  <style>");
         builder.AppendLine("    body{font-family:Segoe UI,Arial,sans-serif;margin:24px;color:#111;background:#fff;}");
         builder.AppendLine("    h1{margin:0 0 8px 0;font-size:28px;}");
@@ -48,8 +57,8 @@ internal sealed class DesktopPrintableVehicleReportService
         builder.AppendLine("  </style>");
         builder.AppendLine("</head>");
         builder.AppendLine("<body>");
-        builder.AppendLine("  <h1>Vehimap - Tiskový přehled vozidel</h1>");
-        builder.AppendLine($"  <p class=\"meta\">Vytvořeno: {Html(generatedAt.ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture))} | Celkem vozidel: {dataSet.Vehicles.Count}</p>");
+        builder.AppendLine($"  <h1>{Html(L("PrintableReport.Heading"))}</h1>");
+        builder.AppendLine($"  <p class=\"meta\">{Html(LF("PrintableReport.Meta", generatedAt.ToString("g", reportCulture), dataSet.Vehicles.Count))}</p>");
         foreach (var section in sections)
         {
             builder.Append(section);
@@ -79,7 +88,8 @@ internal sealed class DesktopPrintableVehicleReportService
         VehimapDataSet dataSet,
         IReadOnlyDictionary<string, VehicleMeta> metaByVehicleId,
         ITimelineService timelineService,
-        DateOnly today)
+        DateOnly today,
+        IAppLocalizer localizer)
     {
         var vehicles = dataSet.Vehicles
             .Where(vehicle => string.Equals(vehicle.Category, category, StringComparison.CurrentCultureIgnoreCase))
@@ -88,15 +98,28 @@ internal sealed class DesktopPrintableVehicleReportService
             .ToList();
 
         var builder = new StringBuilder();
-        builder.AppendLine($"  <h2>{Html(category)} ({vehicles.Count})</h2>");
+        builder.AppendLine($"  <h2>{Html(localizer.Format("PrintableReport.SectionHeading", category, vehicles.Count))}</h2>");
         if (vehicles.Count == 0)
         {
-            builder.AppendLine("  <p class=\"empty\">V této kategorii není žádné vozidlo.</p>");
+            builder.AppendLine($"  <p class=\"empty\">{Html(localizer.GetString("PrintableReport.EmptyCategory"))}</p>");
             return builder.ToString();
         }
 
         builder.AppendLine("  <table>");
-        builder.AppendLine("    <thead><tr><th>Název</th><th>Poznámka</th><th>Značka / model</th><th>SPZ</th><th>Rok výroby</th><th>Výkon</th><th>Stav vozidla</th><th>Štítky</th><th>Poslední TK</th><th>Příští TK</th><th>Zelená karta do</th><th>Stav</th></tr></thead>");
+        builder.AppendLine("    <thead><tr>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.Name"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.Note"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.MakeModel"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.Plate"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.Year"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.Power"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.VehicleState"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.Tags"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.LastTechnical"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.NextTechnical"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.GreenCardTo"))}</th>"
+            + $"<th>{Html(localizer.GetString("PrintableReport.Column.Status"))}</th>"
+            + "</tr></thead>");
         builder.AppendLine("    <tbody>");
         foreach (var vehicle in vehicles)
         {
@@ -114,7 +137,7 @@ internal sealed class DesktopPrintableVehicleReportService
             builder.AppendLine($"        <td>{Html(vehicle.LastTk)}</td>");
             builder.AppendLine($"        <td>{Html(vehicle.NextTk)}</td>");
             builder.AppendLine($"        <td>{Html(vehicle.GreenCardTo)}</td>");
-            builder.AppendLine($"        <td>{Html(BuildPrintableStatusText(timeline))}</td>");
+            builder.AppendLine($"        <td>{Html(BuildPrintableStatusText(timeline, localizer))}</td>");
             builder.AppendLine("      </tr>");
         }
 
@@ -123,13 +146,13 @@ internal sealed class DesktopPrintableVehicleReportService
         return builder.ToString();
     }
 
-    private static string BuildPrintableStatusText(IReadOnlyList<VehicleTimelineItem> timelineItems)
+    private static string BuildPrintableStatusText(IReadOnlyList<VehicleTimelineItem> timelineItems, IAppLocalizer localizer)
     {
         var parts = new List<string>();
-        AddTimelineStatusPart(parts, timelineItems, "technical", "TK");
-        AddTimelineStatusPart(parts, timelineItems, "green", "ZK");
-        AddTimelineStatusPart(parts, timelineItems, "custom", "Připomínka");
-        AddTimelineStatusPart(parts, timelineItems, "maintenance", "Údržba");
+        AddTimelineStatusPart(parts, timelineItems, "technical", localizer.GetString("PrintableReport.Status.Technical"));
+        AddTimelineStatusPart(parts, timelineItems, "green", localizer.GetString("PrintableReport.Status.GreenCard"));
+        AddTimelineStatusPart(parts, timelineItems, "custom", localizer.GetString("PrintableReport.Status.Reminder"));
+        AddTimelineStatusPart(parts, timelineItems, "maintenance", localizer.GetString("PrintableReport.Status.Maintenance"));
         return string.Join(" | ", parts);
     }
 
@@ -138,7 +161,7 @@ internal sealed class DesktopPrintableVehicleReportService
         var relevantStatus = timelineItems
             .Where(item => string.Equals(item.Kind, kind, StringComparison.Ordinal))
             .Select(item => item.Status)
-            .Where(status => !string.IsNullOrWhiteSpace(status) && !string.Equals(status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase))
+            .Where(status => !string.IsNullOrWhiteSpace(status) && !IsNoAlertStatus(status))
             .OrderBy(GetStatusPriority)
             .ThenBy(status => status, StringComparer.CurrentCultureIgnoreCase)
             .FirstOrDefault();
@@ -152,20 +175,26 @@ internal sealed class DesktopPrintableVehicleReportService
     private static int GetStatusPriority(string status)
     {
         if (status.Contains("Po termínu", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Po limitu", StringComparison.CurrentCultureIgnoreCase))
+            || status.Contains("Po limitu", StringComparison.CurrentCultureIgnoreCase)
+            || status.Contains("Overdue", StringComparison.CurrentCultureIgnoreCase)
+            || status.Contains("Over distance limit", StringComparison.CurrentCultureIgnoreCase))
         {
             return 0;
         }
 
         if (string.Equals(status, "Dnes", StringComparison.CurrentCultureIgnoreCase)
+            || string.Equals(status, "Today", StringComparison.CurrentCultureIgnoreCase)
             || status.Contains("Servis dnes", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Servis nyní", StringComparison.CurrentCultureIgnoreCase))
+            || status.Contains("Servis nyní", StringComparison.CurrentCultureIgnoreCase)
+            || status.Contains("Service today", StringComparison.CurrentCultureIgnoreCase)
+            || status.Contains("Service now", StringComparison.CurrentCultureIgnoreCase))
         {
             return 1;
         }
 
         if (status.StartsWith("Do ", StringComparison.CurrentCultureIgnoreCase)
-            || status.StartsWith("Za ", StringComparison.CurrentCultureIgnoreCase))
+            || status.StartsWith("Za ", StringComparison.CurrentCultureIgnoreCase)
+            || status.StartsWith("In ", StringComparison.CurrentCultureIgnoreCase))
         {
             return 2;
         }
@@ -183,6 +212,27 @@ internal sealed class DesktopPrintableVehicleReportService
         var dueDate = new DateOnly(monthDate.Year, monthDate.Month, DateTime.DaysInMonth(monthDate.Year, monthDate.Month));
         return dueDate.DayNumber;
     }
+
+    private static bool IsNoAlertStatus(string status) =>
+        string.Equals(status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase)
+        || string.Equals(status, "No alert", StringComparison.CurrentCultureIgnoreCase);
+
+    private CultureInfo ResolveReportCulture()
+    {
+        var cultureName = L("PrintableReport.CultureName");
+        try
+        {
+            return CultureInfo.GetCultureInfo(cultureName);
+        }
+        catch (CultureNotFoundException)
+        {
+            return CultureInfo.CurrentCulture;
+        }
+    }
+
+    private string L(string key) => _localizer.GetString(key);
+
+    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 
     private static string Html(string? value) => WebUtility.HtmlEncode(value ?? string.Empty);
 }

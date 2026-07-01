@@ -942,7 +942,9 @@ public sealed class I18nFoundationTests
     {
         var root = FindRepositoryRoot();
         var appShellViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.AppShell.cs"));
+        var mainWindowViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
         var appShellController = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopAppShellController.cs"));
+        var printableReportService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopPrintableVehicleReportService.cs"));
 
         Assert.Contains("AppShell.ExportBackup.Success", appShellViewModel);
         Assert.Contains("AppShell.ImportBackup.Success", appShellViewModel);
@@ -956,6 +958,13 @@ public sealed class I18nFoundationTests
         Assert.Contains("AppShell.Controller.ImportBackupAction", appShellController);
         Assert.Contains("AppShell.Controller.UpdateInstallerLaunched", appShellController);
         Assert.Contains("AppShell.Controller.UpdateCheckFailed", appShellController);
+        Assert.Contains("new DesktopPrintableVehicleReportService(DesktopLocalization.Localizer)", mainWindowViewModel);
+        Assert.Contains("PrintableReport.Title", printableReportService);
+        Assert.Contains("PrintableReport.Column.GreenCardTo", printableReportService);
+        Assert.Contains("PrintableReport.Status.Maintenance", printableReportService);
+        Assert.DoesNotContain("Tiskový přehled", printableReportService);
+        Assert.DoesNotContain("V této kategorii", printableReportService);
+        Assert.DoesNotContain("Zelená karta do", printableReportService);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), appShellViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), appShellController);
     }

@@ -1725,6 +1725,30 @@ Status: {5}</value></data>
   <data name="AppShell.PrintableReport.SaveCancelled" xml:space="preserve"><value>Saving printable report was cancelled.</value></data>
   <data name="AppShell.PrintableReport.SavedAndOpened" xml:space="preserve"><value>Printable report was saved to {0} and opened.</value></data>
   <data name="AppShell.PrintableReport.Failed" xml:space="preserve"><value>Printable report could not be saved or opened: {0}</value></data>
+  <data name="PrintableReport.FileNamePrefix" xml:space="preserve"><value>vehimap-printable-overview</value></data>
+  <data name="PrintableReport.CultureName" xml:space="preserve"><value>en-US</value></data>
+  <data name="PrintableReport.HtmlLanguage" xml:space="preserve"><value>en</value></data>
+  <data name="PrintableReport.Title" xml:space="preserve"><value>Vehimap - Printable vehicle overview</value></data>
+  <data name="PrintableReport.Heading" xml:space="preserve"><value>Vehimap - Printable vehicle overview</value></data>
+  <data name="PrintableReport.Meta" xml:space="preserve"><value>Generated: {0} | Vehicles total: {1}</value></data>
+  <data name="PrintableReport.SectionHeading" xml:space="preserve"><value>{0} ({1})</value></data>
+  <data name="PrintableReport.EmptyCategory" xml:space="preserve"><value>There is no vehicle in this category.</value></data>
+  <data name="PrintableReport.Column.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="PrintableReport.Column.Note" xml:space="preserve"><value>Note</value></data>
+  <data name="PrintableReport.Column.MakeModel" xml:space="preserve"><value>Make / model</value></data>
+  <data name="PrintableReport.Column.Plate" xml:space="preserve"><value>License plate</value></data>
+  <data name="PrintableReport.Column.Year" xml:space="preserve"><value>Year</value></data>
+  <data name="PrintableReport.Column.Power" xml:space="preserve"><value>Power</value></data>
+  <data name="PrintableReport.Column.VehicleState" xml:space="preserve"><value>Vehicle state</value></data>
+  <data name="PrintableReport.Column.Tags" xml:space="preserve"><value>Tags</value></data>
+  <data name="PrintableReport.Column.LastTechnical" xml:space="preserve"><value>Last inspection</value></data>
+  <data name="PrintableReport.Column.NextTechnical" xml:space="preserve"><value>Next inspection</value></data>
+  <data name="PrintableReport.Column.GreenCardTo" xml:space="preserve"><value>Green card valid to</value></data>
+  <data name="PrintableReport.Column.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="PrintableReport.Status.Technical" xml:space="preserve"><value>Inspection</value></data>
+  <data name="PrintableReport.Status.GreenCard" xml:space="preserve"><value>Green card</value></data>
+  <data name="PrintableReport.Status.Reminder" xml:space="preserve"><value>Reminder</value></data>
+  <data name="PrintableReport.Status.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
   <data name="AppShell.Background.TooltipSummary" xml:space="preserve"><value>Vehicles: {0} | To review: {1} | Due dates: {2}</value></data>
   <data name="AppShell.Background.NearestAttention" xml:space="preserve"><value>Nearest item to review: {0} - {1} ({2}, {3})</value></data>
   <data name="AppShell.Background.NearestUpcoming" xml:space="preserve"><value>Nearest item: {0} - {1} ({2})</value></data>

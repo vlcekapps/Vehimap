@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Net;
 using Avalonia.Controls;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
@@ -211,7 +212,7 @@ public sealed class DesktopAppShellControllerTests
         Assert.Contains("*.html", textFileSaveService.LastPatterns);
         Assert.Contains("vehimap-tiskovy-prehled-", textFileSaveService.LastSuggestedFileName);
         Assert.EndsWith(".html", textFileSaveService.LastSuggestedFileName, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("Vehimap - Tiskový přehled vozidel", textFileSaveService.LastContent);
+        Assert.Contains("Vehimap - Tiskový přehled vozidel", WebUtility.HtmlDecode(textFileSaveService.LastContent));
         Assert.Contains(reportPath, viewModel.ShellStatus);
     }
 

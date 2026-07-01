@@ -1725,6 +1725,30 @@ Stav: {5}</value></data>
   <data name="AppShell.PrintableReport.SaveCancelled" xml:space="preserve"><value>Uložení tiskového přehledu bylo zrušeno.</value></data>
   <data name="AppShell.PrintableReport.SavedAndOpened" xml:space="preserve"><value>Tiskový přehled byl uložen do {0} a otevřen.</value></data>
   <data name="AppShell.PrintableReport.Failed" xml:space="preserve"><value>Tiskový přehled se nepodařilo uložit nebo otevřít: {0}</value></data>
+  <data name="PrintableReport.FileNamePrefix" xml:space="preserve"><value>vehimap-tiskovy-prehled</value></data>
+  <data name="PrintableReport.CultureName" xml:space="preserve"><value>cs-CZ</value></data>
+  <data name="PrintableReport.HtmlLanguage" xml:space="preserve"><value>cs</value></data>
+  <data name="PrintableReport.Title" xml:space="preserve"><value>Vehimap - Tiskový přehled vozidel</value></data>
+  <data name="PrintableReport.Heading" xml:space="preserve"><value>Vehimap - Tiskový přehled vozidel</value></data>
+  <data name="PrintableReport.Meta" xml:space="preserve"><value>Vytvořeno: {0} | Celkem vozidel: {1}</value></data>
+  <data name="PrintableReport.SectionHeading" xml:space="preserve"><value>{0} ({1})</value></data>
+  <data name="PrintableReport.EmptyCategory" xml:space="preserve"><value>V této kategorii není žádné vozidlo.</value></data>
+  <data name="PrintableReport.Column.Name" xml:space="preserve"><value>Název</value></data>
+  <data name="PrintableReport.Column.Note" xml:space="preserve"><value>Poznámka</value></data>
+  <data name="PrintableReport.Column.MakeModel" xml:space="preserve"><value>Značka / model</value></data>
+  <data name="PrintableReport.Column.Plate" xml:space="preserve"><value>SPZ</value></data>
+  <data name="PrintableReport.Column.Year" xml:space="preserve"><value>Rok výroby</value></data>
+  <data name="PrintableReport.Column.Power" xml:space="preserve"><value>Výkon</value></data>
+  <data name="PrintableReport.Column.VehicleState" xml:space="preserve"><value>Stav vozidla</value></data>
+  <data name="PrintableReport.Column.Tags" xml:space="preserve"><value>Štítky</value></data>
+  <data name="PrintableReport.Column.LastTechnical" xml:space="preserve"><value>Poslední TK</value></data>
+  <data name="PrintableReport.Column.NextTechnical" xml:space="preserve"><value>Příští TK</value></data>
+  <data name="PrintableReport.Column.GreenCardTo" xml:space="preserve"><value>Zelená karta do</value></data>
+  <data name="PrintableReport.Column.Status" xml:space="preserve"><value>Stav</value></data>
+  <data name="PrintableReport.Status.Technical" xml:space="preserve"><value>TK</value></data>
+  <data name="PrintableReport.Status.GreenCard" xml:space="preserve"><value>ZK</value></data>
+  <data name="PrintableReport.Status.Reminder" xml:space="preserve"><value>Připomínka</value></data>
+  <data name="PrintableReport.Status.Maintenance" xml:space="preserve"><value>Údržba</value></data>
   <data name="AppShell.Background.TooltipSummary" xml:space="preserve"><value>Vozidla: {0} | K řešení: {1} | Termíny: {2}</value></data>
   <data name="AppShell.Background.NearestAttention" xml:space="preserve"><value>Nejbližší k řešení: {0} - {1} ({2}, {3})</value></data>
   <data name="AppShell.Background.NearestUpcoming" xml:space="preserve"><value>Nejbližší: {0} - {1} ({2})</value></data>

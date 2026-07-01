@@ -280,7 +280,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             null,
             new DesktopProjectionService(),
             new DesktopNavigationCoordinator(),
-            new DesktopPrintableVehicleReportService(),
+            new DesktopPrintableVehicleReportService(DesktopLocalization.Localizer),
             new AvaloniaAppShellDialogService(),
             new ProcessUpdateInstallLauncher())
     {
@@ -359,7 +359,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
         _projectionService = projectionService ?? new DesktopProjectionService(DesktopLocalization.Localizer, DesktopLocalization.CurrentCulture);
         _navigationCoordinator = navigationCoordinator ?? new DesktopNavigationCoordinator();
-        _printableVehicleReportService = printableVehicleReportService ?? new DesktopPrintableVehicleReportService();
+        _printableVehicleReportService = printableVehicleReportService ?? new DesktopPrintableVehicleReportService(DesktopLocalization.Localizer);
         _serviceBookExportService = serviceBookExportService ?? new DesktopServiceBookExportService(DesktopLocalization.Localizer);
         AppShellController = new DesktopAppShellController(
             appShellDialogService ?? new AvaloniaAppShellDialogService(),
