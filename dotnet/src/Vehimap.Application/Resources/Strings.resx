@@ -1496,6 +1496,7 @@ Status: {5}</value></data>
   <data name="Overview.MissingGreen.Status" xml:space="preserve"><value>Missing</value></data>
   <data name="Overview.MissingGreen.Title" xml:space="preserve"><value>Missing green card</value></data>
   <data name="Overview.Persistence.Error" xml:space="preserve"><value>Failed to save due date overview preferences</value></data>
+  <data name="Persistence.GenericSaveFailed" xml:space="preserve"><value>Changes could not be saved</value></data>
   <data name="Overview.Summary.DashboardEmpty" xml:space="preserve"><value>The available data does not contain any future due dates with a concrete date yet.</value></data>
   <data name="Overview.Summary.DashboardInitial" xml:space="preserve"><value>Nearest due dates across vehicles will appear after the data is loaded.</value></data>
   <data name="Overview.Summary.DashboardWithItems" xml:space="preserve"><value>The nearest {0} future due dates across all vehicles are ready to open.</value></data>
@@ -2227,6 +2228,7 @@ Status: {5}</value></data>
   <data name="VehicleDetail.Projection.EmptyOverview" xml:space="preserve"><value>Select a vehicle on the left to show its basic summary.</value></data>
   <data name="VehicleDetail.Projection.EmptyEvidence" xml:space="preserve"><value>Related records appear after selecting a vehicle.</value></data>
   <data name="VehicleDetail.Projection.EmptyRecentHistory" xml:space="preserve"><value>Recent events appear after selecting a vehicle.</value></data>
+  <data name="VehicleDetail.PanelHeading" xml:space="preserve"><value>Vehicle detail</value></data>
   <data name="VehicleDetail.Projection.Overview" xml:space="preserve"><value>{0} | {1} | {2}
 State: {3}
 Tags: {4}
@@ -2290,6 +2292,11 @@ Transmission: {3}</value></data>
   <data name="Maintenance.Status.MissingOdometer" xml:space="preserve"><value>Missing odometer for calculation</value></data>
   <data name="Maintenance.Status.NoActiveInterval" xml:space="preserve"><value>No active interval</value></data>
   <data name="VehicleList.Summary.Empty" xml:space="preserve"><value>Vehicle list: there are no vehicles in the data yet.</value></data>
+  <data name="VehicleList.FilterOption.AllCategories" xml:space="preserve"><value>All categories</value></data>
+  <data name="VehicleList.FilterOption.AllVehicles" xml:space="preserve"><value>All vehicles</value></data>
+  <data name="VehicleList.FilterOption.Attention" xml:space="preserve"><value>Only vehicles needing review</value></data>
+  <data name="VehicleList.FilterOption.Overdue" xml:space="preserve"><value>Only overdue vehicles</value></data>
+  <data name="VehicleList.FilterOption.MissingGreenCard" xml:space="preserve"><value>Only missing green card</value></data>
   <data name="VehicleList.Filter.Category" xml:space="preserve"><value>category {0}</value></data>
   <data name="VehicleList.Filter.HideInactive" xml:space="preserve"><value>excluding archived and parked</value></data>
   <data name="VehicleList.Filter.Search" xml:space="preserve"><value>search "{0}"</value></data>

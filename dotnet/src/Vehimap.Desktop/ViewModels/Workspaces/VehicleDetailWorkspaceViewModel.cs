@@ -12,14 +12,14 @@ namespace Vehimap.Desktop.ViewModels.Workspaces;
 public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 {
     private bool isEditingVehicle;
-    private string vehiclePanelHeading = "Detail vozidla";
+    private string vehiclePanelHeading = L("VehicleDetail.PanelHeading");
     private string vehicleEditorHeading = L("VehicleEditor.Title.Default");
-    private string selectedVehicleHeading = "Nevybrané vozidlo";
-    private string selectedVehicleOverview = "Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.";
+    private string selectedVehicleHeading = L("VehicleDetail.Projection.EmptyHeading");
+    private string selectedVehicleOverview = L("VehicleDetail.Projection.EmptyOverview");
     private string selectedVehicleDates = string.Empty;
     private string selectedVehicleProfile = string.Empty;
-    private string selectedVehicleEvidenceSummary = "Navazující evidence se zobrazí po výběru vozidla.";
-    private string selectedVehicleRecentHistorySummary = "Poslední události se zobrazí po výběru vozidla.";
+    private string selectedVehicleEvidenceSummary = L("VehicleDetail.Projection.EmptyEvidence");
+    private string selectedVehicleRecentHistorySummary = L("VehicleDetail.Projection.EmptyRecentHistory");
     private string vehicleEditorStatus = string.Empty;
     private string vehicleEditorName = string.Empty;
     private string vehicleEditorCategory = string.Empty;
@@ -293,7 +293,7 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 
     internal void SetVehicleEditingState(bool isEditing, bool isNewVehicle)
     {
-        VehiclePanelHeading = "Detail vozidla";
+        VehiclePanelHeading = L("VehicleDetail.PanelHeading");
         VehicleEditorHeading = isEditing
             ? (isNewVehicle ? L("VehicleEditor.Title.New") : L("VehicleEditor.Title.Edit"))
             : L("VehicleEditor.Title.Default");

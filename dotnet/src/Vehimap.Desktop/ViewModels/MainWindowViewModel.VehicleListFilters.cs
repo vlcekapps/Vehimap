@@ -8,11 +8,22 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    internal const string AllVehicleCategoriesLabel = "Všechny kategorie";
-    internal const string AllVehicleStatusFilterLabel = "Všechna vozidla";
-    internal const string AttentionVehicleStatusFilterLabel = "Jen s blížícím se termínem";
-    internal const string OverdueVehicleStatusFilterLabel = "Jen po termínu";
-    internal const string MissingGreenVehicleStatusFilterLabel = "Jen bez zelené karty";
+    private const string LegacyAllVehicleCategoriesLabel = "Všechny kategorie";
+    private const string LegacyAllVehicleStatusFilterLabel = "Všechna vozidla";
+    private const string LegacyAttentionVehicleStatusFilterLabel = "Jen s blížícím se termínem";
+    private const string LegacyOverdueVehicleStatusFilterLabel = "Jen po termínu";
+    private const string LegacyMissingGreenVehicleStatusFilterLabel = "Jen bez zelené karty";
+    private const string EnglishAllVehicleCategoriesLabel = "All categories";
+    private const string EnglishAllVehicleStatusFilterLabel = "All vehicles";
+    private const string EnglishAttentionVehicleStatusFilterLabel = "Only vehicles needing review";
+    private const string EnglishOverdueVehicleStatusFilterLabel = "Only overdue vehicles";
+    private const string EnglishMissingGreenVehicleStatusFilterLabel = "Only missing green card";
+
+    internal static string AllVehicleCategoriesLabel => LO("VehicleList.FilterOption.AllCategories");
+    internal static string AllVehicleStatusFilterLabel => LO("VehicleList.FilterOption.AllVehicles");
+    internal static string AttentionVehicleStatusFilterLabel => LO("VehicleList.FilterOption.Attention");
+    internal static string OverdueVehicleStatusFilterLabel => LO("VehicleList.FilterOption.Overdue");
+    internal static string MissingGreenVehicleStatusFilterLabel => LO("VehicleList.FilterOption.MissingGreenCard");
 
     private const string VehicleListCategoryFilterSettingKey = "vehicle_category_filter";
     private const string VehicleListStatusFilterSettingKey = "vehicle_status_filter";
@@ -35,13 +46,13 @@ public sealed partial class MainWindowViewModel
     [ObservableProperty]
     private bool hideInactiveVehicles;
 
-    public IReadOnlyList<string> VehicleCategoryFilters { get; } =
+    public IReadOnlyList<string> VehicleCategoryFilters =>
     [
         AllVehicleCategoriesLabel,
         .. LegacyKnownValues.Categories
     ];
 
-    public IReadOnlyList<string> VehicleStatusFilters { get; } =
+    public IReadOnlyList<string> VehicleStatusFilters =>
     [
         AllVehicleStatusFilterLabel,
         AttentionVehicleStatusFilterLabel,
@@ -52,8 +63,8 @@ public sealed partial class MainWindowViewModel
     public bool CanClearVehicleFilters =>
         CanUseVehicleList
         && (!string.IsNullOrWhiteSpace(VehicleSearchText)
-            || !string.Equals(SelectedVehicleCategoryFilter, AllVehicleCategoriesLabel, StringComparison.Ordinal)
-            || !string.Equals(SelectedVehicleStatusFilter, AllVehicleStatusFilterLabel, StringComparison.Ordinal)
+            || !IsAllVehicleCategoryFilter(SelectedVehicleCategoryFilter)
+            || !IsAllVehicleStatusFilter(SelectedVehicleStatusFilter)
             || HideInactiveVehicles);
 
     partial void OnVehicleSearchTextChanged(string value)
@@ -168,6 +179,11 @@ public sealed partial class MainWindowViewModel
     private string NormalizeVehicleCategoryFilter(string? value)
     {
         var normalized = string.IsNullOrWhiteSpace(value) ? AllVehicleCategoriesLabel : value.Trim();
+        if (IsAllVehicleCategoryFilter(normalized))
+        {
+            return AllVehicleCategoriesLabel;
+        }
+
         return VehicleCategoryFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
             ? normalized
             : AllVehicleCategoriesLabel;
@@ -176,9 +192,50 @@ public sealed partial class MainWindowViewModel
     private string NormalizeVehicleStatusFilter(string? value)
     {
         var normalized = string.IsNullOrWhiteSpace(value) ? AllVehicleStatusFilterLabel : value.Trim();
+        if (IsAllVehicleStatusFilter(normalized))
+        {
+            return AllVehicleStatusFilterLabel;
+        }
+
+        if (IsAttentionVehicleStatusFilter(normalized))
+        {
+            return AttentionVehicleStatusFilterLabel;
+        }
+
+        if (IsOverdueVehicleStatusFilter(normalized))
+        {
+            return OverdueVehicleStatusFilterLabel;
+        }
+
+        if (IsMissingGreenCardVehicleStatusFilter(normalized))
+        {
+            return MissingGreenVehicleStatusFilterLabel;
+        }
+
         return VehicleStatusFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
             ? normalized
             : AllVehicleStatusFilterLabel;
+    }
+
+    internal static bool IsAllVehicleCategoryFilter(string? value) =>
+        MatchesVehicleFilterLabel(value, AllVehicleCategoriesLabel, LegacyAllVehicleCategoriesLabel, EnglishAllVehicleCategoriesLabel);
+
+    internal static bool IsAllVehicleStatusFilter(string? value) =>
+        MatchesVehicleFilterLabel(value, AllVehicleStatusFilterLabel, LegacyAllVehicleStatusFilterLabel, EnglishAllVehicleStatusFilterLabel);
+
+    internal static bool IsAttentionVehicleStatusFilter(string? value) =>
+        MatchesVehicleFilterLabel(value, AttentionVehicleStatusFilterLabel, LegacyAttentionVehicleStatusFilterLabel, EnglishAttentionVehicleStatusFilterLabel);
+
+    internal static bool IsOverdueVehicleStatusFilter(string? value) =>
+        MatchesVehicleFilterLabel(value, OverdueVehicleStatusFilterLabel, LegacyOverdueVehicleStatusFilterLabel, EnglishOverdueVehicleStatusFilterLabel);
+
+    internal static bool IsMissingGreenCardVehicleStatusFilter(string? value) =>
+        MatchesVehicleFilterLabel(value, MissingGreenVehicleStatusFilterLabel, LegacyMissingGreenVehicleStatusFilterLabel, EnglishMissingGreenVehicleStatusFilterLabel);
+
+    private static bool MatchesVehicleFilterLabel(string? value, params string[] candidates)
+    {
+        var normalized = (value ?? string.Empty).Trim();
+        return candidates.Any(candidate => string.Equals(normalized, candidate, StringComparison.OrdinalIgnoreCase));
     }
 
     private void RefreshVehicleList(string? preferredVehicleId = null)

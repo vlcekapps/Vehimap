@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Globalization;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Storage.Legacy;
@@ -226,7 +227,7 @@ public sealed partial class MainWindowViewModel
         RecordEditorValidFrom = string.Empty;
         RecordEditorValidTo = string.Empty;
         RecordEditorPrice = string.Empty;
-        SelectedRecordEditorAttachmentMode = "Spravovaná kopie";
+        SelectedRecordEditorAttachmentMode = RecordWorkspaceViewModel.ManagedAttachmentModeLabel;
         RecordEditorPathInput = string.Empty;
         RecordEditorStoredPath = string.Empty;
         RecordEditorResolvedPath = string.Empty;
@@ -448,7 +449,9 @@ public sealed partial class MainWindowViewModel
         RecordEditorValidFrom = record.ValidFrom;
         RecordEditorValidTo = record.ValidTo;
         RecordEditorPrice = record.Price;
-        SelectedRecordEditorAttachmentMode = preferManagedImport ? "Spravovaná kopie" : (record.AttachmentMode == VehicleRecordAttachmentMode.Managed ? "Spravovaná kopie" : "Externí cesta");
+        SelectedRecordEditorAttachmentMode = preferManagedImport
+            ? RecordWorkspaceViewModel.ManagedAttachmentModeLabel
+            : RecordWorkspaceViewModel.GetAttachmentModeLabel(record.AttachmentMode);
         RecordEditorPathInput = preferManagedImport
             ? ResolveExistingRecordPath(record)
             : (record.AttachmentMode == VehicleRecordAttachmentMode.External ? record.FilePath : string.Empty);
@@ -562,7 +565,7 @@ public sealed partial class MainWindowViewModel
         Action<string>? setFailureStatus = null,
         DesktopFocusTarget? failureFocus = null,
         bool requireVehicleSelection = true,
-        string failurePrefix = "Změny se nepodařilo uložit")
+        string? failurePrefix = null)
     {
         if (_dataRoot is null)
         {
@@ -580,7 +583,7 @@ public sealed partial class MainWindowViewModel
                 _session.RestoreDataSet(rollbackDataSet);
             }
 
-            var message = $"{failurePrefix}: {ex.Message}";
+            var message = $"{failurePrefix ?? LO("Persistence.GenericSaveFailed")}: {ex.Message}";
             setFailureStatus?.Invoke(message);
             ShellStatus = message;
             if (failureFocus is { } focusTarget)
@@ -756,7 +759,7 @@ public sealed partial class MainWindowViewModel
         RecordEditorValidFrom = string.Empty;
         RecordEditorValidTo = string.Empty;
         RecordEditorPrice = string.Empty;
-        SelectedRecordEditorAttachmentMode = "Spravovaná kopie";
+        SelectedRecordEditorAttachmentMode = RecordWorkspaceViewModel.ManagedAttachmentModeLabel;
         RecordEditorPathInput = string.Empty;
         RecordEditorStoredPath = string.Empty;
         RecordEditorResolvedPath = string.Empty;

@@ -203,7 +203,11 @@ public sealed class WorkspaceCompositionTests
         Assert.DoesNotContain("Datové nedostatky", viewModel.OverdueOverviewWorkspace.OverviewFilters);
         Assert.Contains("Servis / Souhrn - Pravidelný servis", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
         Assert.Contains("Motor / Olej a filtry - Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
-        Assert.Contains("Spravovaná kopie", viewModel.RecordWorkspace.RecordAttachmentModes);
+        Assert.Contains(RecordWorkspaceViewModel.ManagedAttachmentModeLabel, viewModel.RecordWorkspace.RecordAttachmentModes);
+        Assert.True(RecordWorkspaceViewModel.IsManagedAttachmentModeLabel("Spravovaná kopie"));
+        Assert.True(RecordWorkspaceViewModel.IsManagedAttachmentModeLabel("Managed copy"));
+        Assert.True(RecordWorkspaceViewModel.IsExternalAttachmentModeLabel("Externí cesta"));
+        Assert.True(RecordWorkspaceViewModel.IsExternalAttachmentModeLabel("External path"));
     }
 
     [Fact]

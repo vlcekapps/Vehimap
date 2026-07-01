@@ -1467,13 +1467,13 @@ internal sealed class DesktopProjectionService
 
         var filterParts = new List<string>();
         if (!string.IsNullOrWhiteSpace(filters.SelectedCategory)
-            && !string.Equals(filters.SelectedCategory, MainWindowViewModel.AllVehicleCategoriesLabel, StringComparison.Ordinal))
+            && !MainWindowViewModel.IsAllVehicleCategoryFilter(filters.SelectedCategory))
         {
             filterParts.Add(LF("VehicleList.Filter.Category", filters.SelectedCategory));
         }
 
         if (!string.IsNullOrWhiteSpace(filters.StatusFilter)
-            && !string.Equals(filters.StatusFilter, MainWindowViewModel.AllVehicleStatusFilterLabel, StringComparison.Ordinal))
+            && !MainWindowViewModel.IsAllVehicleStatusFilter(filters.StatusFilter))
         {
             filterParts.Add(filters.StatusFilter);
         }
@@ -1496,7 +1496,7 @@ internal sealed class DesktopProjectionService
     private static bool MatchesVehicleCategory(Vehicle vehicle, string? selectedCategory)
     {
         return string.IsNullOrWhiteSpace(selectedCategory)
-            || string.Equals(selectedCategory, MainWindowViewModel.AllVehicleCategoriesLabel, StringComparison.Ordinal)
+            || MainWindowViewModel.IsAllVehicleCategoryFilter(selectedCategory)
             || string.Equals(vehicle.Category, selectedCategory, StringComparison.CurrentCultureIgnoreCase);
     }
 
@@ -1535,13 +1535,22 @@ internal sealed class DesktopProjectionService
 
     private bool MatchesVehicleStatusFilter(Vehicle vehicle, IReadOnlyList<VehicleTimelineItem> timelineItems, string? statusFilter)
     {
-        return statusFilter switch
+        if (MainWindowViewModel.IsAttentionVehicleStatusFilter(statusFilter))
         {
-            MainWindowViewModel.AttentionVehicleStatusFilterLabel => HasVehicleAttention(timelineItems),
-            MainWindowViewModel.OverdueVehicleStatusFilterLabel => HasVehicleOverdueTerm(timelineItems),
-            MainWindowViewModel.MissingGreenVehicleStatusFilterLabel => string.IsNullOrWhiteSpace(vehicle.GreenCardTo),
-            _ => true
-        };
+            return HasVehicleAttention(timelineItems);
+        }
+
+        if (MainWindowViewModel.IsOverdueVehicleStatusFilter(statusFilter))
+        {
+            return HasVehicleOverdueTerm(timelineItems);
+        }
+
+        if (MainWindowViewModel.IsMissingGreenCardVehicleStatusFilter(statusFilter))
+        {
+            return string.IsNullOrWhiteSpace(vehicle.GreenCardTo);
+        }
+
+        return true;
     }
 
     private bool HasVehicleAttention(IReadOnlyList<VehicleTimelineItem> timelineItems)

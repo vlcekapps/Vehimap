@@ -3,6 +3,7 @@ using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Enums;
@@ -185,6 +186,30 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Equal(MainWindowViewModel.AllVehicleStatusFilterLabel, viewModel.SelectedVehicleStatusFilter);
         Assert.Equal(dataSet.Vehicles.Count, viewModel.Vehicles.Count);
         Assert.False(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
+    }
+
+    [Fact]
+    public void Vehicle_filter_preferences_normalize_legacy_labels_after_language_change()
+    {
+        try
+        {
+            DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+            var dataSet = BuildQuickActionDataSet();
+            dataSet.Settings.SetValue("app", "language", "en-US");
+            dataSet.Settings.SetValue("app", "vehicle_category_filter", "Všechny kategorie");
+            dataSet.Settings.SetValue("app", "vehicle_status_filter", "Jen po termínu");
+
+            var viewModel = CreateViewModel(dataSet);
+
+            Assert.Equal("All categories", viewModel.SelectedVehicleCategoryFilter);
+            Assert.Equal("Only overdue vehicles", viewModel.SelectedVehicleStatusFilter);
+            Assert.True(MainWindowViewModel.IsOverdueVehicleStatusFilter("Jen po termínu"));
+            Assert.True(MainWindowViewModel.IsOverdueVehicleStatusFilter("Only overdue vehicles"));
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
     }
 
     [Fact]

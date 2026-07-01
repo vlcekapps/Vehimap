@@ -65,6 +65,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - globalni hledani formatuje viditelne tachometry, servisni intervaly a mnozstvi paliva podle zvolenych jednotek; servisni knizka stejne formatuje tachometry a servisni vzdalenosti, zatimco vyhledavaci index dal bere v uvahu i invariantni ulozene hodnoty
 - dashboardove naklady, srovnani obdobi, casova osa a analyza tankovani uz zvolene jednotky pouzivaji i pro odvozene hodnoty: cena za vzdalenost se zobrazi za km nebo mili, palivo v litrech/galonech, pri kombinaci mile + galony se spotreba zobrazi jako `mpg` a upozorneni analyzy tankovani na klesajici tachometr pouziva aktivni jednotku vzdalenosti
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
+- viditelne ulozene volby, ktere jeste nejsou prevedene na stabilni interni klice, musi mit i18n aliasy; hlavni filtry seznamu vozidel a rezim dokladovych priloh uz rozpoznavaji stare ceske i nove anglicke labely
 
 ## Aktualni stav
 

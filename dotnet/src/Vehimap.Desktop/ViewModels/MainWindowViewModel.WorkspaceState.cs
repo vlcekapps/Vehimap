@@ -428,7 +428,7 @@ public sealed partial class MainWindowViewModel
     private bool CanMoveSelectedRecordToManaged =>
         SelectedRecord is not null
         && !HasPendingEdits
-        && !string.Equals(SelectedRecord.AttachmentMode, "Spravovaná kopie", StringComparison.CurrentCulture)
+        && !Workspaces.RecordWorkspaceViewModel.IsManagedAttachmentModeLabel(SelectedRecord.AttachmentMode)
         && !string.IsNullOrWhiteSpace(SelectedRecord.ResolvedPath);
     private bool IsRecordEditorManaged => RecordWorkspace.IsRecordEditorManaged;
     private string RecordEditorPathInputLabel => RecordWorkspace.RecordEditorPathInputLabel;

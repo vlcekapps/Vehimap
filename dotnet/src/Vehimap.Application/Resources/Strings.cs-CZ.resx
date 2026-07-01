@@ -1496,6 +1496,7 @@ Stav: {5}</value></data>
   <data name="Overview.MissingGreen.Status" xml:space="preserve"><value>Chybí</value></data>
   <data name="Overview.MissingGreen.Title" xml:space="preserve"><value>Chybí zelená karta</value></data>
   <data name="Overview.Persistence.Error" xml:space="preserve"><value>Nepodařilo se uložit volby přehledu termínů</value></data>
+  <data name="Persistence.GenericSaveFailed" xml:space="preserve"><value>Změny se nepodařilo uložit</value></data>
   <data name="Overview.Summary.DashboardEmpty" xml:space="preserve"><value>V dostupných datech zatím nejsou žádné budoucí termíny s konkrétním datem.</value></data>
   <data name="Overview.Summary.DashboardInitial" xml:space="preserve"><value>Nejbližší termíny napříč vozidly se zobrazí po načtení dat.</value></data>
   <data name="Overview.Summary.DashboardWithItems" xml:space="preserve"><value>Napříč všemi vozidly je nejbližších {0} budoucích termínů připravených k otevření.</value></data>
@@ -2227,6 +2228,7 @@ Stav: {5}</value></data>
   <data name="VehicleDetail.Projection.EmptyOverview" xml:space="preserve"><value>Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.</value></data>
   <data name="VehicleDetail.Projection.EmptyEvidence" xml:space="preserve"><value>Navazující evidence se zobrazí po výběru vozidla.</value></data>
   <data name="VehicleDetail.Projection.EmptyRecentHistory" xml:space="preserve"><value>Poslední události se zobrazí po výběru vozidla.</value></data>
+  <data name="VehicleDetail.PanelHeading" xml:space="preserve"><value>Detail vozidla</value></data>
   <data name="VehicleDetail.Projection.Overview" xml:space="preserve"><value>{0} | {1} | {2}
 Stav: {3}
 Štítky: {4}
@@ -2290,6 +2292,11 @@ Převodovka: {3}</value></data>
   <data name="Maintenance.Status.MissingOdometer" xml:space="preserve"><value>Chybí tachometr pro výpočet</value></data>
   <data name="Maintenance.Status.NoActiveInterval" xml:space="preserve"><value>Bez aktivního intervalu</value></data>
   <data name="VehicleList.Summary.Empty" xml:space="preserve"><value>Seznam vozidel: v datech zatím nejsou žádná vozidla.</value></data>
+  <data name="VehicleList.FilterOption.AllCategories" xml:space="preserve"><value>Všechny kategorie</value></data>
+  <data name="VehicleList.FilterOption.AllVehicles" xml:space="preserve"><value>Všechna vozidla</value></data>
+  <data name="VehicleList.FilterOption.Attention" xml:space="preserve"><value>Jen s blížícím se termínem</value></data>
+  <data name="VehicleList.FilterOption.Overdue" xml:space="preserve"><value>Jen po termínu</value></data>
+  <data name="VehicleList.FilterOption.MissingGreenCard" xml:space="preserve"><value>Jen bez zelené karty</value></data>
   <data name="VehicleList.Filter.Category" xml:space="preserve"><value>kategorie {0}</value></data>
   <data name="VehicleList.Filter.HideInactive" xml:space="preserve"><value>bez archivovaných a odstavených</value></data>
   <data name="VehicleList.Filter.Search" xml:space="preserve"><value>hledání „{0}“</value></data>

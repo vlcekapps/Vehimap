@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Domain.Enums;
 using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
@@ -18,6 +19,8 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public string WindowTitle => Root.RecordWindowTitle;
     public ObservableCollection<VehicleRecordItemViewModel> SelectedVehicleRecords { get; } = [];
     public ObservableCollection<VehicleRecordItemViewModel> VisibleRecordItems { get; } = [];
+    public static string ManagedAttachmentModeLabel => L("Record.Projection.AttachmentMode.Managed");
+    public static string ExternalAttachmentModeLabel => L("Record.Projection.AttachmentMode.External");
 
     [ObservableProperty]
     private string recordSummary = L("RecordWorkspace.Summary.Initial");
@@ -76,7 +79,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     private string recordEditorPrice = string.Empty;
 
     [ObservableProperty]
-    private string selectedRecordEditorAttachmentMode = "Spravovaná kopie";
+    private string selectedRecordEditorAttachmentMode = ManagedAttachmentModeLabel;
 
     [ObservableProperty]
     private string recordEditorPathInput = string.Empty;
@@ -93,9 +96,9 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string recordEditorNote = string.Empty;
 
-    public IReadOnlyList<string> RecordAttachmentModes { get; } = ["Spravovaná kopie", "Externí cesta"];
+    public IReadOnlyList<string> RecordAttachmentModes => [ManagedAttachmentModeLabel, ExternalAttachmentModeLabel];
     public bool IsRecordDetailVisible => !IsEditingRecord;
-    public bool IsRecordEditorManaged => string.Equals(SelectedRecordEditorAttachmentMode, "Spravovaná kopie", StringComparison.CurrentCulture);
+    public bool IsRecordEditorManaged => IsManagedAttachmentModeLabel(SelectedRecordEditorAttachmentMode);
     public string RecordEditorPathInputLabel => IsRecordEditorManaged
         ? L("RecordEditor.ManagedSourceLabel")
         : L("RecordEditor.ExternalPathLabel");
@@ -116,6 +119,21 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     public ICommand OpenSelectedRecordFileCommand => Root.OpenSelectedRecordFileCommand;
     public ICommand OpenSelectedRecordFolderCommand => Root.OpenSelectedRecordFolderCommand;
     public ICommand CopySelectedRecordPathCommand => Root.CopySelectedRecordPathCommand;
+
+    internal static string GetAttachmentModeLabel(VehicleRecordAttachmentMode mode) =>
+        mode == VehicleRecordAttachmentMode.Managed ? ManagedAttachmentModeLabel : ExternalAttachmentModeLabel;
+
+    internal static bool IsManagedAttachmentModeLabel(string? value) =>
+        MatchesAttachmentModeLabel(value, ManagedAttachmentModeLabel, "Spravovaná kopie", "Managed copy", "managed");
+
+    internal static bool IsExternalAttachmentModeLabel(string? value) =>
+        MatchesAttachmentModeLabel(value, ExternalAttachmentModeLabel, "Externí cesta", "External path", "external");
+
+    private static bool MatchesAttachmentModeLabel(string? value, params string[] candidates)
+    {
+        var normalized = (value ?? string.Empty).Trim();
+        return candidates.Any(candidate => string.Equals(normalized, candidate, StringComparison.OrdinalIgnoreCase));
+    }
 
     [RelayCommand]
     private void FocusSearch()
