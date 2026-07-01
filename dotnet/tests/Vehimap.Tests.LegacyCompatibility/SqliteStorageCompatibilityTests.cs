@@ -2,6 +2,7 @@
 using Microsoft.Data.Sqlite;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Storage.Legacy;
@@ -517,6 +518,61 @@ public sealed class SqliteStorageCompatibilityTests
         }
     }
 
+    [Fact]
+    public async Task Vehicle_package_service_uses_supplied_localizer_for_storage_errors()
+    {
+        var tempRoot = CreateTempRoot("vehimap-vehicle-package-localized-errors");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var service = new VehiclePackageService(new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)));
+        var invalidPackagePath = Path.Combine(tempRoot, "invalid.vehimapvehicle");
+
+        try
+        {
+            var exportError = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                service.ExportVehicleAsync(invalidPackagePath, dataRoot, new VehimapDataSet(), "missing_vehicle"));
+
+            await CreateZipAsync(invalidPackagePath, ("manifest.json", "null"));
+
+            var importError = await Assert.ThrowsAsync<FormatException>(() =>
+                service.ImportVehicleAsync(invalidPackagePath, dataRoot, new VehimapDataSet()));
+
+            Assert.Contains("selected vehicle", exportError.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("valid manifest", importError.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("Balíček", importError.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
+    public async Task Legacy_data_store_uses_supplied_localizer_for_load_error_wrapper()
+    {
+        var tempRoot = CreateTempRoot("vehimap-legacy-localized-load-error");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var store = new LegacyVehimapDataStore(new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)));
+
+        try
+        {
+            Directory.CreateDirectory(dataRoot.DataPath);
+            await File.WriteAllTextAsync(
+                Path.Combine(dataRoot.DataPath, "vehicles.tsv"),
+                "# Vehimap data v4\nbad\trow");
+
+            var error = await Assert.ThrowsAsync<LegacyDataLoadException>(() => store.LoadAsync(dataRoot));
+
+            Assert.Contains("vehicles file", error.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("could not be loaded", error.Message, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("Check file:", error.Message, StringComparison.Ordinal);
+            Assert.DoesNotContain("Soubor vozidel", error.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
     private static VehimapDataSet BuildSampleDataSet(string vehicleName = "Božena")
     {
         var settings = new VehimapSettings();
@@ -555,6 +611,19 @@ public sealed class SqliteStorageCompatibilityTests
                 new MaintenancePlan("maint_1", "veh_1", "Pravidelný servis", "10000", "12", "01.05.2026", "12345", true, "Olej a filtry")
             ]
         };
+    }
+
+    private static async Task CreateZipAsync(string path, params (string Name, string Content)[] entries)
+    {
+        await using var stream = File.Create(path);
+        using var archive = new System.IO.Compression.ZipArchive(stream, System.IO.Compression.ZipArchiveMode.Create, leaveOpen: false);
+        foreach (var (name, content) in entries)
+        {
+            var entry = archive.CreateEntry(name);
+            await using var entryStream = entry.Open();
+            await using var writer = new StreamWriter(entryStream);
+            await writer.WriteAsync(content);
+        }
     }
 
     private static VehimapDataRoot CreateDataRoot(string rootPath) =>

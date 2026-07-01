@@ -12,6 +12,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Runtime zapis po migraci je hlidany SQLite-only gate: bezne ulozeni nastaveni, vozidla, tankovani nebo dokladu smi menit `vehimap.db`, ale nesmi znovu vytvorit zive legacy TSV/INI soubory v `data/`.
 - Zdravi datove sady 2.0 lze overit rucne z menu `Soubor -> Zkontrolovat datovou sadu 2.0`; health check overuje otevreni `vehimap.db`, `PRAGMA quick_check`, ocekavane tabulky, schema marker, zapisovatelnost datove slozky, aktivni `attachments` a zbytky legacy TSV/INI bez automatickeho mazani nebo oprav databaze.
 - Migracni a health diagnostika datove sady 2.0 pouziva EN/CS `.resx` zdroje, vcetne hlasek automaticke migrace, cleanupu zbylych legacy TSV/INI souboru, `quick_check`, schema markeru, priloh a textu kopirovaneho z health dialogu.
+- Chybove obaly pri nacitani legacy TSV/INI a storage-level chyby exportu/importu `*.vehimapvehicle` pouzivaji EN/CS `.resx`; nizkourovnovy parser detail zustava pripojeny kvuli diagnostice konkretniho radku nebo souboru.
 - `Vehimap.Storage.Legacy` zustava read-only kompatibilitni vrstva pro migraci a import starsich zaloh, ne dlouhodoby runtime format 2.x.
 
 ## Lokalizace pred Androidem

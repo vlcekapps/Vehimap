@@ -289,7 +289,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private static LegacyVehimapBootstrapper CreateDefaultBootstrapper()
     {
         var sqliteDataStore = new SqliteVehimapDataStore();
-        var legacyDataStore = new LegacyVehimapDataStore();
+        var legacyDataStore = new LegacyVehimapDataStore(DesktopLocalization.LiveLocalizer);
         return new LegacyVehimapBootstrapper(
             new LegacyDataRootLocator(AssemblyAppBuildInfoProvider.ResolveCurrentApplicationDataFolderName()),
             sqliteDataStore,
@@ -354,7 +354,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _fuelAnalysisService = fuelAnalysisService ?? new LegacyFuelAnalysisService(DesktopLocalization.LiveLocalizer);
         _serviceBookService = serviceBookService ?? new LegacyServiceBookService(DesktopLocalization.LiveLocalizer);
         _smartAdvisorService = smartAdvisorService ?? new LegacySmartAdvisorService(_timelineService, _fuelAnalysisService, DesktopLocalization.LiveLocalizer);
-        _vehiclePackageService = vehiclePackageService ?? new VehiclePackageService();
+        _vehiclePackageService = vehiclePackageService ?? new VehiclePackageService(DesktopLocalization.LiveLocalizer);
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();

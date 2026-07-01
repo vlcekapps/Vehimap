@@ -110,6 +110,17 @@
   <data name="DataMigration.LegacyCleanupCompleted" xml:space="preserve"><value>Datová sada 2.0 je připravena. Zbylé původní TSV/INI soubory byly přesunuty mimo živou datovou složku do {0}.</value></data>
   <data name="DataMigration.LegacyMigrationCompleted" xml:space="preserve"><value>Data byla automaticky migrována do datové sady 2.0. Původní TSV/INI soubory byly po ověření SQLite přesunuty mimo živou datovou složku do {0}.</value></data>
   <data name="DataMigration.NotNeeded" xml:space="preserve"><value>Datová sada 2.0 je připravena.</value></data>
+  <data name="LegacyData.Section.Settings" xml:space="preserve"><value>nastavení</value></data>
+  <data name="LegacyData.Section.Vehicles" xml:space="preserve"><value>vozidel</value></data>
+  <data name="LegacyData.Section.History" xml:space="preserve"><value>historie</value></data>
+  <data name="LegacyData.Section.Fuel" xml:space="preserve"><value>tankování</value></data>
+  <data name="LegacyData.Section.Records" xml:space="preserve"><value>dokladů</value></data>
+  <data name="LegacyData.Section.VehicleMeta" xml:space="preserve"><value>metadat vozidel</value></data>
+  <data name="LegacyData.Section.Reminders" xml:space="preserve"><value>připomínek</value></data>
+  <data name="LegacyData.Section.Maintenance" xml:space="preserve"><value>plánů údržby</value></data>
+  <data name="LegacyData.LoadFailed" xml:space="preserve"><value>Soubor {0} ({1}) se nepodařilo načíst.</value></data>
+  <data name="LegacyData.CheckFile" xml:space="preserve"><value>Zkontrolujte soubor: {0}</value></data>
+  <data name="LegacyData.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
   <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Instalační jazykové předvolby byly doplněny do datové sady 2.0.</value></data>
   <data name="InstallerLocaleSeed.InvalidLanguage" xml:space="preserve"><value>Instalační jazykové předvolby neobsahují podporovaný konkrétní jazyk.</value></data>
   <data name="InstallerLocaleSeed.InvalidRead" xml:space="preserve"><value>Instalační jazykové předvolby se nepodařilo načíst: {0}</value></data>
@@ -1785,6 +1796,12 @@ Stav: {5}</value></data>
   <data name="AppShell.VehiclePackage.ImportSuccess" xml:space="preserve"><value>Balíček vozidla {0} byl importován.</value></data>
   <data name="AppShell.VehiclePackage.RestoredAttachments" xml:space="preserve"><value>Obnoveno spravovaných příloh: {0}.</value></data>
   <data name="AppShell.VehiclePackage.ImportFailed" xml:space="preserve"><value>Import balíčku vozidla se nepodařil: {0}</value></data>
+  <data name="VehiclePackage.Error.SelectedVehicleMissing" xml:space="preserve"><value>Vybrané vozidlo už v datové sadě neexistuje.</value></data>
+  <data name="VehiclePackage.Error.InvalidManifest" xml:space="preserve"><value>Balíček vozidla neobsahuje platný manifest.</value></data>
+  <data name="VehiclePackage.Error.UnsupportedFormat" xml:space="preserve"><value>Balíček vozidla má nepodporovaný formát.</value></data>
+  <data name="VehiclePackage.Error.MissingVehicleData" xml:space="preserve"><value>Balíček vozidla neobsahuje data vozidla.</value></data>
+  <data name="VehiclePackage.Error.ExactlyOneVehicleRequired" xml:space="preserve"><value>Balíček musí obsahovat právě jedno vozidlo.</value></data>
+  <data name="VehiclePackage.AttachmentFallbackFileName" xml:space="preserve"><value>priloha.bin</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchEnabled" xml:space="preserve"><value>Dashboard se bude zobrazovat při startu aplikace.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchDisabled" xml:space="preserve"><value>Dashboard se při startu aplikace nebude otevírat automaticky.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchFailed" xml:space="preserve"><value>Volbu dashboardu při startu se nepodařilo uložit: {0}</value></data>

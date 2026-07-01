@@ -110,6 +110,17 @@
   <data name="DataMigration.LegacyCleanupCompleted" xml:space="preserve"><value>The 2.0 data set is ready. Remaining legacy TSV/INI files were moved out of the live data folder to {0}.</value></data>
   <data name="DataMigration.LegacyMigrationCompleted" xml:space="preserve"><value>Data were automatically migrated to the 2.0 data set. After SQLite verification, the original TSV/INI files were moved out of the live data folder to {0}.</value></data>
   <data name="DataMigration.NotNeeded" xml:space="preserve"><value>The 2.0 data set is ready.</value></data>
+  <data name="LegacyData.Section.Settings" xml:space="preserve"><value>settings</value></data>
+  <data name="LegacyData.Section.Vehicles" xml:space="preserve"><value>vehicles</value></data>
+  <data name="LegacyData.Section.History" xml:space="preserve"><value>history</value></data>
+  <data name="LegacyData.Section.Fuel" xml:space="preserve"><value>fuel records</value></data>
+  <data name="LegacyData.Section.Records" xml:space="preserve"><value>documents</value></data>
+  <data name="LegacyData.Section.VehicleMeta" xml:space="preserve"><value>vehicle metadata</value></data>
+  <data name="LegacyData.Section.Reminders" xml:space="preserve"><value>reminders</value></data>
+  <data name="LegacyData.Section.Maintenance" xml:space="preserve"><value>maintenance plans</value></data>
+  <data name="LegacyData.LoadFailed" xml:space="preserve"><value>The {0} file ({1}) could not be loaded.</value></data>
+  <data name="LegacyData.CheckFile" xml:space="preserve"><value>Check file: {0}</value></data>
+  <data name="LegacyData.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
   <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Installer language preferences were added to the 2.0 data set.</value></data>
   <data name="InstallerLocaleSeed.InvalidLanguage" xml:space="preserve"><value>Installer language preferences do not contain a supported concrete language.</value></data>
   <data name="InstallerLocaleSeed.InvalidRead" xml:space="preserve"><value>Installer language preferences could not be read: {0}</value></data>
@@ -1785,6 +1796,12 @@ Status: {5}</value></data>
   <data name="AppShell.VehiclePackage.ImportSuccess" xml:space="preserve"><value>Vehicle package {0} was imported.</value></data>
   <data name="AppShell.VehiclePackage.RestoredAttachments" xml:space="preserve"><value>Restored managed attachments: {0}.</value></data>
   <data name="AppShell.VehiclePackage.ImportFailed" xml:space="preserve"><value>Vehicle package import failed: {0}</value></data>
+  <data name="VehiclePackage.Error.SelectedVehicleMissing" xml:space="preserve"><value>The selected vehicle no longer exists in the data set.</value></data>
+  <data name="VehiclePackage.Error.InvalidManifest" xml:space="preserve"><value>The vehicle package does not contain a valid manifest.</value></data>
+  <data name="VehiclePackage.Error.UnsupportedFormat" xml:space="preserve"><value>The vehicle package uses an unsupported format.</value></data>
+  <data name="VehiclePackage.Error.MissingVehicleData" xml:space="preserve"><value>The vehicle package does not contain vehicle data.</value></data>
+  <data name="VehiclePackage.Error.ExactlyOneVehicleRequired" xml:space="preserve"><value>The package must contain exactly one vehicle.</value></data>
+  <data name="VehiclePackage.AttachmentFallbackFileName" xml:space="preserve"><value>attachment.bin</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchEnabled" xml:space="preserve"><value>Dashboard will be shown when the app starts.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchDisabled" xml:space="preserve"><value>Dashboard will not open automatically when the app starts.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchFailed" xml:space="preserve"><value>Failed to save dashboard startup preference: {0}</value></data>

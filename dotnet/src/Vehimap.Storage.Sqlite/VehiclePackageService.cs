@@ -3,6 +3,7 @@ using System.IO.Compression;
 using System.Text.Json;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 
@@ -20,6 +21,13 @@ public sealed class VehiclePackageService : IVehiclePackageService
         WriteIndented = true
     };
 
+    private readonly IAppLocalizer _localizer;
+
+    public VehiclePackageService(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer();
+    }
+
     public async Task<VehiclePackageExportResult> ExportVehicleAsync(
         string packagePath,
         VehimapDataRoot dataRoot,
@@ -28,7 +36,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
         CancellationToken cancellationToken = default)
     {
         var vehicle = dataSet.Vehicles.FirstOrDefault(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal))
-            ?? throw new InvalidOperationException("Vybrané vozidlo už v datové sadě neexistuje.");
+            ?? throw new InvalidOperationException(L("VehiclePackage.Error.SelectedVehicleMissing"));
 
         var packageData = CreatePackageData(dataSet, vehicleId);
         var tempDirectory = CreateTemporaryDirectory("vehimap-vehicle-package");
@@ -82,17 +90,17 @@ public sealed class VehiclePackageService : IVehiclePackageService
         {
             ZipFile.ExtractToDirectory(packagePath, tempDirectory);
             var manifest = await ReadJsonAsync<VehiclePackageManifest>(Path.Combine(tempDirectory, ManifestFileName), cancellationToken).ConfigureAwait(false)
-                ?? throw new FormatException("Balíček vozidla neobsahuje platný manifest.");
+                ?? throw new FormatException(L("VehiclePackage.Error.InvalidManifest"));
             if (!string.Equals(manifest.Format, PackageFormat, StringComparison.Ordinal) || manifest.Version != PackageVersion)
             {
-                throw new FormatException("Balíček vozidla má nepodporovaný formát.");
+                throw new FormatException(L("VehiclePackage.Error.UnsupportedFormat"));
             }
 
             var packageData = await ReadJsonAsync<VehiclePackageData>(Path.Combine(tempDirectory, DataFileName), cancellationToken).ConfigureAwait(false)
-                ?? throw new FormatException("Balíček vozidla neobsahuje data vozidla.");
+                ?? throw new FormatException(L("VehiclePackage.Error.MissingVehicleData"));
             if (packageData.Vehicles.Count != 1)
             {
-                throw new FormatException("Balíček musí obsahovat právě jedno vozidlo.");
+                throw new FormatException(L("VehiclePackage.Error.ExactlyOneVehicleRequired"));
             }
 
             var sourceVehicle = packageData.Vehicles[0];
@@ -248,19 +256,19 @@ public sealed class VehiclePackageService : IVehiclePackageService
         }
     }
 
-    private static string BuildImportedAttachmentRelativePath(string vehicleId, string sourceRelativePath)
+    private string BuildImportedAttachmentRelativePath(string vehicleId, string sourceRelativePath)
     {
         var normalized = SqliteStoragePaths.NormalizeAttachmentRelativePath(sourceRelativePath);
         var fileName = Path.GetFileName(normalized.Replace('/', Path.DirectorySeparatorChar));
         if (string.IsNullOrWhiteSpace(fileName))
         {
-            fileName = "priloha.bin";
+            fileName = L("VehiclePackage.AttachmentFallbackFileName");
         }
 
         return $"{SqliteStoragePaths.AttachmentsDirectoryName}/{vehicleId}/{fileName}";
     }
 
-    private static int RestorePackageAttachments(
+    private int RestorePackageAttachments(
         string packageDirectory,
         VehimapDataRoot dataRoot,
         List<VehicleRecord> records,
@@ -306,7 +314,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
         return restoredCount;
     }
 
-    private static string ResolveUniqueAttachmentRelativePath(VehimapDataRoot dataRoot, string vehicleId, string sourceRelativePath)
+    private string ResolveUniqueAttachmentRelativePath(VehimapDataRoot dataRoot, string vehicleId, string sourceRelativePath)
     {
         var baseRelativePath = BuildImportedAttachmentRelativePath(vehicleId, sourceRelativePath);
         if (!File.Exists(SqliteStoragePaths.ResolveManagedAttachmentPath(dataRoot, baseRelativePath)))
@@ -412,6 +420,8 @@ public sealed class VehiclePackageService : IVehiclePackageService
         {
         }
     }
+
+    private string L(string key) => _localizer.GetString(key);
 
     private sealed record VehiclePackageManifest(
         string Format,
