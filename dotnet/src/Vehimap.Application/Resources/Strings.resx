@@ -876,7 +876,7 @@ Vehicle: {2}
   <data name="Audit.Message.MissingAttachment" xml:space="preserve"><value>The document attachment file is not available at the expected location.</value></data>
   <data name="Audit.Message.MissingNextTechnicalInspection" xml:space="preserve"><value>The active vehicle has no next technical inspection date filled in.</value></data>
   <data name="Audit.Message.MissingPlate" xml:space="preserve"><value>The active vehicle has no license plate filled in.</value></data>
-  <data name="Audit.Message.OdometerRegression" xml:space="preserve"><value>Odometer value {0} is lower than the earlier recorded value {1}.</value></data>
+  <data name="Audit.Message.OdometerRegression" xml:space="preserve"><value>This odometer value {0} is lower than the earlier recorded value {1}.</value></data>
   <data name="Audit.Message.RecordInvalidAmount" xml:space="preserve"><value>The document contains a price that could not be converted to a number.</value></data>
   <data name="Audit.Message.RecordMissingUsableDate" xml:space="preserve"><value>The document has a price but no usable date for cost analysis.</value></data>
   <data name="Audit.Message.RecordWithoutPath" xml:space="preserve"><value>The document has no attachment path filled in.</value></data>
@@ -894,7 +894,7 @@ Vehicle: {2}
   <data name="Audit.Title.MissingPlate" xml:space="preserve"><value>Missing license plate</value></data>
   <data name="Audit.Title.MissingUsableDate" xml:space="preserve"><value>Missing usable date</value></data>
   <data name="Audit.Title.MissingUsableOdometer" xml:space="preserve"><value>Missing usable odometer</value></data>
-  <data name="Audit.Title.OdometerRegression" xml:space="preserve"><value>Decreasing odometer</value></data>
+  <data name="Audit.Title.OdometerRegression" xml:space="preserve"><value>Odometer is lower than an earlier record</value></data>
   <data name="Audit.Title.RecordWithoutPath" xml:space="preserve"><value>Document without a path</value></data>
   <data name="FuelAnalysis.Accessible.GroupSummary" xml:space="preserve"><value>{0}, {1}, {2}, fuel {3}, costs {4}, average price per fuel unit {5}, latest refuel {6}</value></data>
   <data name="FuelAnalysis.Accessible.Segment" xml:space="preserve"><value>Consumption segment {0}, distance {1}, refueled {2}, consumption {3}, price per fuel unit {4}, cost per distance {5}</value></data>
@@ -935,7 +935,7 @@ Vehicle: {2}
   <data name="FuelAnalysis.Warning.OdometerInvalid.Description" xml:space="preserve"><value>Refuel entry from {0} has a non-numeric or negative odometer value.</value></data>
   <data name="FuelAnalysis.Warning.OdometerInvalid.Title" xml:space="preserve"><value>Odometer cannot be used</value></data>
   <data name="FuelAnalysis.Warning.OdometerRegression.Description" xml:space="preserve"><value>Refuel entry from {0} has odometer {1}, which is lower than the earlier value {2}.</value></data>
-  <data name="FuelAnalysis.Warning.OdometerRegression.Title" xml:space="preserve"><value>Odometer decreases over time</value></data>
+  <data name="FuelAnalysis.Warning.OdometerRegression.Title" xml:space="preserve"><value>Odometer is lower than an earlier refuel entry</value></data>
   <data name="FuelAnalysis.Warning.PriceHigh.Description" xml:space="preserve"><value>Refuel entry from {0} has a price per fuel unit significantly above this vehicle's average.</value></data>
   <data name="FuelAnalysis.Warning.PriceHigh.Title" xml:space="preserve"><value>Unusually high price per fuel unit</value></data>
   <data name="FuelAnalysis.Warning.PriceLow.Description" xml:space="preserve"><value>Refuel entry from {0} has a price per fuel unit significantly below this vehicle's average.</value></data>

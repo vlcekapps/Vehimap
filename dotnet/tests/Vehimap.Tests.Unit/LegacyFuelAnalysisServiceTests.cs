@@ -192,7 +192,7 @@ public sealed class LegacyFuelAnalysisServiceTests
         Assert.Contains(summary.Warnings, item => item.FuelEntryId == "fuel_2" && item.Title == "Tachometr nejde použít");
         Assert.Contains(summary.Warnings, item => item.FuelEntryId == "fuel_2" && item.Title == "Množství paliva nejde použít");
         Assert.Contains(summary.Warnings, item => item.FuelEntryId == "fuel_2" && item.Title == "Cena tankování nejde použít");
-        Assert.Contains(summary.Warnings, item => item.FuelEntryId == "fuel_3" && item.Title == "Tachometr v čase klesá");
+        Assert.Contains(summary.Warnings, item => item.FuelEntryId == "fuel_3" && item.Title == "Tachometr je nižší než dřívější tankování");
     }
 
     [Fact]

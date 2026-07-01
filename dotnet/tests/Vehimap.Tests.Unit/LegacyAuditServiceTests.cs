@@ -79,7 +79,7 @@ public sealed class LegacyAuditServiceTests
 
         var audit = service.BuildAudit(new VehimapDataRoot("C:\\vehimap", "C:\\vehimap\\data", true), dataSet);
 
-        Assert.Contains(audit, item => item.Title == "Klesající tachometr" && item.VehicleId == "veh_1" && item.Severity == AuditSeverity.Error);
+        Assert.Contains(audit, item => item.Title == "Tachometr je nižší než dřívější záznam" && item.VehicleId == "veh_1" && item.Severity == AuditSeverity.Error);
         Assert.Contains(audit, item => item.Title == "Chybí použitelný tachometr" && item.VehicleId == "veh_2");
     }
 
@@ -121,7 +121,7 @@ public sealed class LegacyAuditServiceTests
             && item.Message.Contains("document", StringComparison.OrdinalIgnoreCase));
         Assert.Contains(audit, item =>
             item.Category == "History"
-            && item.Title == "Decreasing odometer"
+            && item.Title == "Odometer is lower than an earlier record"
             && item.Message.Contains("11800", StringComparison.Ordinal));
     }
 

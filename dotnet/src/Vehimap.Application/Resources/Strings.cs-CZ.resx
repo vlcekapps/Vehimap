@@ -876,7 +876,7 @@ Vozidlo: {2}
   <data name="Audit.Message.MissingAttachment" xml:space="preserve"><value>U dokladu není dostupný soubor přílohy v očekávaném umístění.</value></data>
   <data name="Audit.Message.MissingNextTechnicalInspection" xml:space="preserve"><value>Aktivní vozidlo nemá vyplněný termín příští technické kontroly.</value></data>
   <data name="Audit.Message.MissingPlate" xml:space="preserve"><value>Aktivní vozidlo nemá vyplněnou registrační značku.</value></data>
-  <data name="Audit.Message.OdometerRegression" xml:space="preserve"><value>Hodnota tachometru {0} je nižší než dříve zaznamenaná hodnota {1}.</value></data>
+  <data name="Audit.Message.OdometerRegression" xml:space="preserve"><value>Tato hodnota tachometru {0} je nižší než dříve zaznamenaná hodnota {1}.</value></data>
   <data name="Audit.Message.RecordInvalidAmount" xml:space="preserve"><value>Doklad obsahuje cenu, kterou se nepodařilo převést na číslo.</value></data>
   <data name="Audit.Message.RecordMissingUsableDate" xml:space="preserve"><value>Doklad má cenu, ale nemá použitelné datum pro zařazení do nákladů.</value></data>
   <data name="Audit.Message.RecordWithoutPath" xml:space="preserve"><value>Doklad nemá vyplněnou cestu k příloze.</value></data>
@@ -894,7 +894,7 @@ Vozidlo: {2}
   <data name="Audit.Title.MissingPlate" xml:space="preserve"><value>Chybí SPZ</value></data>
   <data name="Audit.Title.MissingUsableDate" xml:space="preserve"><value>Chybí použitelné datum</value></data>
   <data name="Audit.Title.MissingUsableOdometer" xml:space="preserve"><value>Chybí použitelný tachometr</value></data>
-  <data name="Audit.Title.OdometerRegression" xml:space="preserve"><value>Klesající tachometr</value></data>
+  <data name="Audit.Title.OdometerRegression" xml:space="preserve"><value>Tachometr je nižší než dřívější záznam</value></data>
   <data name="Audit.Title.RecordWithoutPath" xml:space="preserve"><value>Doklad bez cesty</value></data>
   <data name="FuelAnalysis.Accessible.GroupSummary" xml:space="preserve"><value>{0}, {1}, {2}, palivo {3}, náklady {4}, průměrná cena za jednotku paliva {5}, poslední tankování {6}</value></data>
   <data name="FuelAnalysis.Accessible.Segment" xml:space="preserve"><value>Úsek spotřeby {0}, vzdálenost {1}, natankováno {2}, spotřeba {3}, cena za jednotku paliva {4}, cena za vzdálenost {5}</value></data>
@@ -935,7 +935,7 @@ Vozidlo: {2}
   <data name="FuelAnalysis.Warning.OdometerInvalid.Description" xml:space="preserve"><value>Tankování z {0} má nečíselný nebo záporný stav tachometru.</value></data>
   <data name="FuelAnalysis.Warning.OdometerInvalid.Title" xml:space="preserve"><value>Tachometr nejde použít</value></data>
   <data name="FuelAnalysis.Warning.OdometerRegression.Description" xml:space="preserve"><value>Tankování z {0} má tachometr {1}, což je méně než dřívější hodnota {2}.</value></data>
-  <data name="FuelAnalysis.Warning.OdometerRegression.Title" xml:space="preserve"><value>Tachometr v čase klesá</value></data>
+  <data name="FuelAnalysis.Warning.OdometerRegression.Title" xml:space="preserve"><value>Tachometr je nižší než dřívější tankování</value></data>
   <data name="FuelAnalysis.Warning.PriceHigh.Description" xml:space="preserve"><value>Tankování z {0} má cenu za jednotku paliva výrazně nad průměrem vozidla.</value></data>
   <data name="FuelAnalysis.Warning.PriceHigh.Title" xml:space="preserve"><value>Nezvykle vysoká cena za jednotku paliva</value></data>
   <data name="FuelAnalysis.Warning.PriceLow.Description" xml:space="preserve"><value>Tankování z {0} má cenu za jednotku paliva výrazně pod průměrem vozidla.</value></data>
