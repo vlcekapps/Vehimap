@@ -135,6 +135,45 @@ public sealed class LegacyFuelAnalysisServiceTests
     }
 
     [Fact]
+    public void BuildVehicleFuelAnalysis_formats_regression_odometer_with_selected_distance_unit()
+    {
+        var service = new LegacyFuelAnalysisService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+        var dataSet = new VehimapDataSet
+        {
+            FuelEntries =
+            [
+                new FuelEntry("fuel_1", "veh_1", "01.01.2026", "1609", "30", "1200", true, "Diesel", ""),
+                new FuelEntry("fuel_2", "veh_1", "02.01.2026", "805", "20", "1000", true, "Diesel", "")
+            ]
+        };
+
+        var summary = service.BuildVehicleFuelAnalysis(dataSet, "veh_1");
+
+        var warning = Assert.Single(summary.Warnings.Where(item => item.Id == "fuel-analysis-odometer-regression-fuel_2"));
+        Assert.Contains("500 mi", warning.Description, StringComparison.Ordinal);
+        Assert.Contains("1,000 mi", warning.Description, StringComparison.Ordinal);
+        Assert.DoesNotContain("805 km", warning.Description, StringComparison.Ordinal);
+        Assert.DoesNotContain("1609 km", warning.Description, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void BuildVehicleFuelAnalysis_warns_about_invalid_values_and_odometer_regression()
     {
         var service = new LegacyFuelAnalysisService();

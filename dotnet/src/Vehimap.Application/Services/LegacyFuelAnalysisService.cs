@@ -14,15 +14,33 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
     private const decimal PriceOutlierLowMultiplier = 0.7m;
 
     private readonly IAppLocalizer _localizer;
+    private readonly IAppNumberFormatService _numberFormatService;
+    private readonly IAppUnitFormatService _unitFormatService;
+    private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private AppUnitPreferences _unitPreferences = new(AppUnitFormatService.Kilometers, AppUnitFormatService.Liters);
 
     public LegacyFuelAnalysisService()
         : this(new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)))
     {
     }
 
-    public LegacyFuelAnalysisService(IAppLocalizer localizer)
+    public LegacyFuelAnalysisService(
+        IAppLocalizer localizer,
+        IAppNumberFormatService? numberFormatService = null,
+        IAppUnitFormatService? unitFormatService = null)
     {
         _localizer = localizer;
+        _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+        _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
+    }
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
+        _unitPreferences = new AppUnitPreferences(settings.DistanceUnit, settings.VolumeUnit);
     }
 
     public FuelAnalysisSummary BuildVehicleFuelAnalysis(VehimapDataSet dataSet, string vehicleId)
@@ -153,7 +171,11 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     current.Entry.Id,
                     FuelAnalysisWarningSeverity.Warning,
                     L("FuelAnalysis.Warning.OdometerRegression.Title"),
-                    LF("FuelAnalysis.Warning.OdometerRegression.Description", FormatEntryDate(current.Entry), current.Odometer.Value, previous.Odometer.Value)));
+                    LF(
+                        "FuelAnalysis.Warning.OdometerRegression.Description",
+                        FormatEntryDate(current.Entry),
+                        FormatOdometer(current.Odometer.Value),
+                        FormatOdometer(previous.Odometer.Value))));
             }
 
             previous = current;
@@ -429,6 +451,9 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
     private string L(string key) => _localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+
+    private string FormatOdometer(int odometerKm) =>
+        _unitFormatService.FormatDistanceFromKilometers(odometerKm, _culturePreferences, _unitPreferences, decimalPlaces: 0);
 
     private sealed record ParsedFuelEntry(
         FuelEntry Entry,

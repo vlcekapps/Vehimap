@@ -934,7 +934,7 @@ Vehicle: {2}
   <data name="FuelAnalysis.Warning.LitersInvalid.Title" xml:space="preserve"><value>Fuel amount cannot be used</value></data>
   <data name="FuelAnalysis.Warning.OdometerInvalid.Description" xml:space="preserve"><value>Refuel entry from {0} has a non-numeric or negative odometer value.</value></data>
   <data name="FuelAnalysis.Warning.OdometerInvalid.Title" xml:space="preserve"><value>Odometer cannot be used</value></data>
-  <data name="FuelAnalysis.Warning.OdometerRegression.Description" xml:space="preserve"><value>Refuel entry from {0} has odometer {1} km, which is lower than the earlier value {2} km.</value></data>
+  <data name="FuelAnalysis.Warning.OdometerRegression.Description" xml:space="preserve"><value>Refuel entry from {0} has odometer {1}, which is lower than the earlier value {2}.</value></data>
   <data name="FuelAnalysis.Warning.OdometerRegression.Title" xml:space="preserve"><value>Odometer decreases over time</value></data>
   <data name="FuelAnalysis.Warning.PriceHigh.Description" xml:space="preserve"><value>Refuel entry from {0} has a price per fuel unit significantly above this vehicle's average.</value></data>
   <data name="FuelAnalysis.Warning.PriceHigh.Title" xml:space="preserve"><value>Unusually high price per fuel unit</value></data>

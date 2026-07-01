@@ -934,7 +934,7 @@ Vozidlo: {2}
   <data name="FuelAnalysis.Warning.LitersInvalid.Title" xml:space="preserve"><value>Množství paliva nejde použít</value></data>
   <data name="FuelAnalysis.Warning.OdometerInvalid.Description" xml:space="preserve"><value>Tankování z {0} má nečíselný nebo záporný stav tachometru.</value></data>
   <data name="FuelAnalysis.Warning.OdometerInvalid.Title" xml:space="preserve"><value>Tachometr nejde použít</value></data>
-  <data name="FuelAnalysis.Warning.OdometerRegression.Description" xml:space="preserve"><value>Tankování z {0} má tachometr {1} km, což je méně než dřívější hodnota {2} km.</value></data>
+  <data name="FuelAnalysis.Warning.OdometerRegression.Description" xml:space="preserve"><value>Tankování z {0} má tachometr {1}, což je méně než dřívější hodnota {2}.</value></data>
   <data name="FuelAnalysis.Warning.OdometerRegression.Title" xml:space="preserve"><value>Tachometr v čase klesá</value></data>
   <data name="FuelAnalysis.Warning.PriceHigh.Description" xml:space="preserve"><value>Tankování z {0} má cenu za jednotku paliva výrazně nad průměrem vozidla.</value></data>
   <data name="FuelAnalysis.Warning.PriceHigh.Title" xml:space="preserve"><value>Nezvykle vysoká cena za jednotku paliva</value></data>

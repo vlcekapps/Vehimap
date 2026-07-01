@@ -1297,6 +1297,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
             legacyGlobalSearchService.ApplySupportedSettings(supportedSettings);
         }
 
+        if (_fuelAnalysisService is LegacyFuelAnalysisService legacyFuelAnalysisService)
+        {
+            legacyFuelAnalysisService.ApplySupportedSettings(supportedSettings);
+        }
+
         if (_serviceBookService is LegacyServiceBookService legacyServiceBookService)
         {
             legacyServiceBookService.ApplySupportedSettings(supportedSettings);

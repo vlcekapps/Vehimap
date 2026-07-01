@@ -821,10 +821,16 @@ public sealed class I18nFoundationTests
         var root = FindRepositoryRoot();
         var service = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacyFuelAnalysisService.cs"));
         var itemViewModels = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "FuelAnalysisItemViewModels.cs"));
+        var englishResources = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx"));
+        var czechResources = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx"));
 
         Assert.Contains("FuelAnalysis.Warning.OdometerInvalid.Title", service);
         Assert.Contains("FuelAnalysis.Status.ManySegments", service);
         Assert.Contains("FuelAnalysis.Group.UnknownStation", service);
+        Assert.Contains("FormatDistanceFromKilometers", service);
+        Assert.DoesNotContain("{1} km", service);
+        Assert.DoesNotContain("has odometer {1} km", englishResources);
+        Assert.DoesNotContain("má tachometr {1} km", czechResources);
         Assert.Contains("string AccessibleLabel", itemViewModels);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), itemViewModels);
