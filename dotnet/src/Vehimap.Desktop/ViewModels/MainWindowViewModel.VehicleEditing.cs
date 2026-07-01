@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Storage.Legacy;
@@ -10,7 +11,7 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    private readonly VehicleStarterBundleService _vehicleStarterBundleService = new();
+    private readonly VehicleStarterBundleService _vehicleStarterBundleService = new(DesktopLocalization.Localizer);
     private string? _editingVehicleId;
     private string? _pendingVehicleStarterBundleOfferVehicleId;
     private DesktopFocusTarget? _nextVehicleEditorReturnFocusTarget;
@@ -343,12 +344,12 @@ public sealed partial class MainWindowViewModel
     {
         if (_dataRoot is null)
         {
-            return "Balíček pro vozidlo nelze použít bez načtených dat.";
+            return LO("VehicleStarterBundle.Status.NotLoaded");
         }
 
         if (items.Count == 0)
         {
-            return "Balíček pro vozidlo neobsahoval žádné vybrané položky.";
+            return LO("VehicleStarterBundle.Status.NoSelectedItems");
         }
 
         var maintenanceKeys = _dataSet.MaintenancePlans
@@ -380,8 +381,9 @@ public sealed partial class MainWindowViewModel
             {
                 case VehicleStarterBundleSection.Maintenance:
                 {
+                    var titleVariants = VehicleStarterBundleService.GetKnownTemplateTitleVariants(item.Title);
                     var key = NormalizeBundleKey(item.Title);
-                    if (string.IsNullOrWhiteSpace(key) || maintenanceKeys.Contains(key))
+                    if (string.IsNullOrWhiteSpace(key) || titleVariants.Any(title => maintenanceKeys.Contains(NormalizeBundleKey(title))))
                     {
                         break;
                     }
@@ -404,7 +406,8 @@ public sealed partial class MainWindowViewModel
                 {
                     var recordType = LegacyVehicleValueNormalization.NormalizeRecordType(item.RecordType);
                     var key = BuildBundleRecordKey(recordType, item.Title);
-                    if (string.IsNullOrWhiteSpace(key) || recordKeys.Contains(key))
+                    var titleVariants = VehicleStarterBundleService.GetKnownTemplateTitleVariants(item.Title);
+                    if (string.IsNullOrWhiteSpace(key) || titleVariants.Any(title => recordKeys.Contains(BuildBundleRecordKey(recordType, title))))
                     {
                         break;
                     }
@@ -429,7 +432,8 @@ public sealed partial class MainWindowViewModel
                 {
                     var repeatMode = LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(item.RepeatMode);
                     var key = BuildBundleReminderKey(item.Title, repeatMode);
-                    if (string.IsNullOrWhiteSpace(key) || reminderKeys.Contains(key))
+                    var titleVariants = VehicleStarterBundleService.GetKnownTemplateTitleVariants(item.Title);
+                    if (string.IsNullOrWhiteSpace(key) || titleVariants.Any(title => reminderKeys.Contains(BuildBundleReminderKey(title, repeatMode))))
                     {
                         break;
                     }
@@ -452,7 +456,7 @@ public sealed partial class MainWindowViewModel
         var addedCount = addedMaintenance + addedRecords + addedReminders;
         if (addedCount == 0)
         {
-            return "Balíček pro vozidlo už neměl žádné nové položky k doplnění.";
+            return LO("VehicleStarterBundle.Status.NoNewItems");
         }
 
         if (!await PersistDataAndRestoreSelectionAsync(
@@ -461,7 +465,7 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => VehicleDetailWorkspace.VehicleEditorStatus = status,
                 failureFocus: DesktopFocusTarget.VehicleDetailPrimaryAction,
-                failurePrefix: "Balíček pro vozidlo se nepodařilo uložit"))
+                failurePrefix: LO("VehicleStarterBundle.Status.SaveFailedPrefix")))
         {
             return VehicleDetailWorkspace.VehicleEditorStatus;
         }
@@ -470,27 +474,27 @@ public sealed partial class MainWindowViewModel
         var parts = new List<string>();
         if (addedMaintenance > 0)
         {
-            parts.Add($"{addedMaintenance}× servis");
+            parts.Add(LFO("VehicleStarterBundle.Status.AddedPart.Maintenance", addedMaintenance));
         }
 
         if (addedRecords > 0)
         {
-            parts.Add($"{addedRecords}× doklad");
+            parts.Add(LFO("VehicleStarterBundle.Status.AddedPart.Record", addedRecords));
         }
 
         if (addedReminders > 0)
         {
-            parts.Add($"{addedReminders}× připomínka");
+            parts.Add(LFO("VehicleStarterBundle.Status.AddedPart.Reminder", addedReminders));
         }
 
-        return $"Balíček pro vozidlo přidal {addedCount} položek: {string.Join(", ", parts)}.";
+        return LFO("VehicleStarterBundle.Status.Added", addedCount, string.Join(", ", parts));
     }
 
     internal async Task<string> ApplyMaintenanceTemplatesAsync(string vehicleId, IReadOnlyList<VehicleStarterBundleTemplate> items)
     {
         if (_dataRoot is null)
         {
-            return "Doporučené šablony nelze použít bez načtených dat.";
+            return LO("MaintenanceTemplates.Status.NotLoaded");
         }
 
         var maintenanceItems = items
@@ -499,7 +503,7 @@ public sealed partial class MainWindowViewModel
 
         if (maintenanceItems.Count == 0)
         {
-            return "Doporučené šablony neobsahovaly žádné vybrané servisní plány.";
+            return LO("MaintenanceTemplates.Status.NoSelectedItems");
         }
 
         var maintenanceKeys = _dataSet.MaintenancePlans
@@ -512,8 +516,9 @@ public sealed partial class MainWindowViewModel
         var addedMaintenance = 0;
         foreach (var item in maintenanceItems)
         {
+            var titleVariants = VehicleStarterBundleService.GetKnownTemplateTitleVariants(item.Title);
             var key = NormalizeBundleKey(item.Title);
-            if (string.IsNullOrWhiteSpace(key) || maintenanceKeys.Contains(key))
+            if (string.IsNullOrWhiteSpace(key) || titleVariants.Any(title => maintenanceKeys.Contains(NormalizeBundleKey(title))))
             {
                 continue;
             }
@@ -534,7 +539,7 @@ public sealed partial class MainWindowViewModel
 
         if (addedMaintenance == 0)
         {
-            return "Doporučené šablony už neměly žádné nové servisní plány k doplnění.";
+            return LO("MaintenanceTemplates.Status.NoNewItems");
         }
 
         if (!await PersistDataAndRestoreSelectionAsync(
@@ -543,13 +548,13 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => MaintenanceEditorStatus = status,
                 failureFocus: DesktopFocusTarget.MaintenanceList,
-                failurePrefix: "Doporučené šablony se nepodařilo uložit"))
+                failurePrefix: LO("MaintenanceTemplates.Status.SaveFailedPrefix")))
         {
             return MaintenanceEditorStatus;
         }
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
 
-        return $"Doporučené šablony přidaly {addedMaintenance} servisních plánů.";
+        return LFO("MaintenanceTemplates.Status.Added", addedMaintenance);
     }
 
     internal void SetVehicleStarterBundleStatus(string message)

@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Globalization;
+using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Domain.Models;
 
@@ -6,6 +8,9 @@ namespace Vehimap.Application.Services;
 
 public sealed class VehicleStarterBundleService
 {
+    private static readonly IAppLocalizer EnglishTemplateLocalizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+    private static readonly IAppLocalizer CzechTemplateLocalizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+
     private static readonly VehicleStarterBundleTemplate[] MaintenanceTemplates =
     [
         Maintenance("Servis", "Souhrn", "Pravidelný servis", "15000", "12", "Souhrnný servisní úkon: výměna motorového oleje a olejového filtru, kontrola nebo výměna vzduchového, kabinového a podle pohonu také palivového filtru."),
@@ -54,8 +59,75 @@ public sealed class VehicleStarterBundleService
         new(VehicleStarterBundleSection.Record, "Doklad", "Obecný doklad", string.Empty, string.Empty, "Doklad", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "Doplňte název dokladu, platnost a případnou přílohu.")
     ];
 
+    private static readonly IReadOnlyDictionary<string, string> MaintenanceTemplateKeys = new Dictionary<string, string>(StringComparer.Ordinal)
+    {
+        ["Pravidelný servis"] = "RegularService",
+        ["Motorový olej a filtr"] = "EngineOilFilter",
+        ["Palivový filtr"] = "FuelFilter",
+        ["Vzduchový filtr"] = "AirFilter",
+        ["Kabinový filtr"] = "CabinFilter",
+        ["Brzdová kapalina"] = "BrakeFluid",
+        ["Chladicí kapalina"] = "Coolant",
+        ["Rozvody"] = "TimingDrive",
+        ["Převodový olej"] = "TransmissionOil",
+        ["Klimatizace a dezinfekce"] = "AirConditioning",
+        ["Svíčky / žhaviče"] = "SparkGlowPlugs",
+        ["Snímače motoru"] = "EngineSensors",
+        ["Sání motoru"] = "Intake",
+        ["Turbo"] = "Turbo",
+        ["Brzdové kotouče / bubny"] = "BrakeDiscsDrums",
+        ["Brzdové destičky / obložení"] = "BrakePadsShoes",
+        ["Silentbloky"] = "Bushings",
+        ["Ramena náprav"] = "SuspensionArms",
+        ["Kosti stabilizátoru"] = "StabilizerLinks",
+        ["Čepy řízení a náprav"] = "SteeringJoints",
+        ["Tlumiče"] = "ShockAbsorbers",
+        ["Pružiny"] = "Springs",
+        ["Katalyzátor"] = "CatalyticConverter",
+        ["Lambda sonda"] = "LambdaSensor",
+        ["Koncovka výfuku"] = "ExhaustTip",
+        ["Tlumič výfuku"] = "ExhaustMuffler",
+        ["Výfukové trubky"] = "ExhaustPipes",
+        ["Žárovky a osvětlení"] = "BulbsLighting",
+        ["Baterie"] = "Battery",
+        ["Pojistky"] = "Fuses",
+        ["Parkovací senzory"] = "ParkingSensors",
+        ["Ostatní snímače a senzory"] = "OtherSensors"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> RecordTemplateKeys = new Dictionary<string, string>(StringComparer.Ordinal)
+    {
+        ["Povinné ručení"] = "LiabilityInsurance",
+        ["Havarijní pojištění"] = "ComprehensiveInsurance",
+        ["Asistence"] = "Assistance",
+        ["Obecný doklad"] = "GenericDocument"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> ReminderTemplateKeys = new Dictionary<string, string>(StringComparer.Ordinal)
+    {
+        ["Předsezónní kontrola motocyklu"] = "MotorcyclePreSeasonCheck",
+        ["Pravidelná provozní kontrola"] = "OperationalCheck",
+        ["Pravidelná kontrola stavu"] = "ConditionCheck",
+        ["Pravidelná kontrola stavu vozidla"] = "VehicleConditionCheck"
+    };
+
+    private readonly IAppLocalizer _localizer;
+
+    public VehicleStarterBundleService()
+        : this(new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)))
+    {
+    }
+
+    public VehicleStarterBundleService(IAppLocalizer localizer)
+    {
+        _localizer = localizer;
+    }
+
     public static IReadOnlyList<VehicleStarterBundleTemplate> GetMaintenanceTemplateCatalog() =>
         MaintenanceTemplates;
+
+    public static IReadOnlyList<VehicleStarterBundleTemplate> GetMaintenanceTemplateCatalog(IAppLocalizer localizer) =>
+        MaintenanceTemplates.Select(template => LocalizeTemplate(template, localizer)).ToList();
 
     public static string BuildMaintenanceTemplateDisplayName(VehicleStarterBundleTemplate template)
     {
@@ -74,6 +146,27 @@ public sealed class VehicleStarterBundleService
             string.Equals(item.Title, value, StringComparison.Ordinal)
             || string.Equals(BuildMaintenanceTemplateDisplayName(item), value, StringComparison.Ordinal));
 
+    public static VehicleStarterBundleTemplate? FindMaintenanceTemplateByDisplayName(string value, IAppLocalizer localizer) =>
+        GetMaintenanceTemplateCatalog(localizer).FirstOrDefault(item =>
+            string.Equals(item.Title, value, StringComparison.Ordinal)
+            || string.Equals(BuildMaintenanceTemplateDisplayName(item), value, StringComparison.Ordinal));
+
+    public static IReadOnlyList<string> GetKnownTemplateTitleVariants(string title)
+    {
+        var key = ResolveTemplateKeyByAnyLocalizedTitle(title);
+        if (key is null)
+        {
+            return [title];
+        }
+
+        return
+        [
+            title,
+            EnglishTemplateLocalizer.GetString(key),
+            CzechTemplateLocalizer.GetString(key)
+        ];
+    }
+
     public VehicleStarterBundlePreview BuildPreview(VehimapDataSet dataSet, string vehicleId, DateOnly today)
     {
         var vehicle = dataSet.Vehicles.FirstOrDefault(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal));
@@ -88,7 +181,11 @@ public sealed class VehicleStarterBundleService
         items.AddRange(GetMissingRecordTemplates(dataSet, vehicle));
         items.AddRange(GetMissingReminderTemplates(dataSet, vehicle, today));
 
-        return new VehicleStarterBundlePreview(vehicle.Id, vehicle.Name, BuildProfileLabel(vehicle, meta), items);
+        return new VehicleStarterBundlePreview(
+            vehicle.Id,
+            vehicle.Name,
+            BuildProfileLabel(vehicle, meta, _localizer),
+            items.Select(item => LocalizeTemplate(item, _localizer)).ToList());
     }
 
     private static IReadOnlyList<VehicleStarterBundleTemplate> GetMissingMaintenanceTemplates(VehimapDataSet dataSet, Vehicle vehicle, VehicleMeta? meta)
@@ -100,7 +197,7 @@ public sealed class VehicleStarterBundleService
             .ToHashSet(StringComparer.Ordinal);
 
         return GetRecommendedMaintenanceTemplates(vehicle, meta)
-            .Where(template => !existingTitles.Contains(NormalizeKey(template.Title)))
+            .Where(template => !GetKnownTemplateTitleVariants(template.Title).Any(title => existingTitles.Contains(NormalizeKey(title))))
             .ToList();
     }
 
@@ -114,7 +211,7 @@ public sealed class VehicleStarterBundleService
 
         var templates = IsRoadVehicleCategory(vehicle.Category) ? RoadRecordTemplates : GenericRecordTemplates;
         return templates
-            .Where(template => !existingKeys.Contains(BuildRecordKey(template.RecordType, template.Title)))
+            .Where(template => !GetKnownTemplateTitleVariants(template.Title).Any(title => existingKeys.Contains(BuildRecordKey(template.RecordType, title))))
             .ToList();
     }
 
@@ -127,7 +224,7 @@ public sealed class VehicleStarterBundleService
             .ToHashSet(StringComparer.Ordinal);
 
         return GetReminderTemplates(vehicle, today)
-            .Where(template => !existingKeys.Contains(BuildReminderKey(template.Title, template.RepeatMode)))
+            .Where(template => !GetKnownTemplateTitleVariants(template.Title).Any(title => existingKeys.Contains(BuildReminderKey(title, template.RepeatMode))))
             .ToList();
     }
 
@@ -279,38 +376,150 @@ public sealed class VehicleStarterBundleService
             category,
             subcategory);
 
-    private static string BuildProfileLabel(Vehicle vehicle, VehicleMeta? meta)
+    private static VehicleStarterBundleTemplate LocalizeTemplate(VehicleStarterBundleTemplate template, IAppLocalizer localizer)
     {
-        var parts = new List<string> { NormalizeCategory(vehicle.Category) };
+        var sectionLabel = template.Section switch
+        {
+            VehicleStarterBundleSection.Maintenance => localizer.GetString("VehicleStarterBundle.Catalog.Section.Maintenance"),
+            VehicleStarterBundleSection.Record => localizer.GetString("VehicleStarterBundle.Catalog.Section.Record"),
+            VehicleStarterBundleSection.Reminder => localizer.GetString("VehicleStarterBundle.Catalog.Section.Reminder"),
+            _ => template.SectionLabel
+        };
+
+        var titleKey = ResolveTemplateKeyByLegacyTitle(template.Title);
+        var title = titleKey is null ? template.Title : localizer.GetString(titleKey);
+        var noteKey = titleKey is null ? null : $"{titleKey}.Note";
+        var note = noteKey is null ? template.Note : localizer.GetString(noteKey);
+        var category = template.Section == VehicleStarterBundleSection.Maintenance
+            ? LocalizeMaintenanceCategory(template.Category, localizer)
+            : template.Category;
+        var subcategory = template.Section == VehicleStarterBundleSection.Maintenance
+            ? LocalizeMaintenanceSubcategory(template.Subcategory, localizer)
+            : template.Subcategory;
+
+        return template with
+        {
+            SectionLabel = sectionLabel,
+            Title = title,
+            Note = note,
+            Category = category,
+            Subcategory = subcategory
+        };
+    }
+
+    private static string? ResolveTemplateKeyByLegacyTitle(string title)
+    {
+        if (MaintenanceTemplateKeys.TryGetValue(title, out var maintenanceKey))
+        {
+            return $"VehicleStarterBundle.Catalog.Maintenance.{maintenanceKey}.Title";
+        }
+
+        if (RecordTemplateKeys.TryGetValue(title, out var recordKey))
+        {
+            return $"VehicleStarterBundle.Catalog.Record.{recordKey}.Title";
+        }
+
+        return ReminderTemplateKeys.TryGetValue(title, out var reminderKey)
+            ? $"VehicleStarterBundle.Catalog.Reminder.{reminderKey}.Title"
+            : null;
+    }
+
+    private static string? ResolveTemplateKeyByAnyLocalizedTitle(string title)
+    {
+        var normalizedTitle = NormalizeKey(title);
+        foreach (var legacyTitle in MaintenanceTemplateKeys.Keys.Concat(RecordTemplateKeys.Keys).Concat(ReminderTemplateKeys.Keys))
+        {
+            var key = ResolveTemplateKeyByLegacyTitle(legacyTitle);
+            if (key is null)
+            {
+                continue;
+            }
+
+            if (NormalizeKey(legacyTitle) == normalizedTitle
+                || NormalizeKey(EnglishTemplateLocalizer.GetString(key)) == normalizedTitle
+                || NormalizeKey(CzechTemplateLocalizer.GetString(key)) == normalizedTitle)
+            {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
+    private static string LocalizeMaintenanceCategory(string value, IAppLocalizer localizer) =>
+        value switch
+        {
+            "Servis" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Category.Service"),
+            "Motor" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Category.Engine"),
+            "Podvozek" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Category.Chassis"),
+            "Výfukové potrubí" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Category.Exhaust"),
+            "Elektronika" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Category.Electronics"),
+            _ => value
+        };
+
+    private static string LocalizeMaintenanceSubcategory(string value, IAppLocalizer localizer) =>
+        value switch
+        {
+            "Souhrn" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Summary"),
+            "Olej a filtry" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.OilFilters"),
+            "Brzdy" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Brakes"),
+            "Kapaliny" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Fluids"),
+            "Rozvody" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Timing"),
+            "Převody" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Transmission"),
+            "Komfort" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Comfort"),
+            "Zapalování a žhavení" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.IgnitionGlow"),
+            "Snímače" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Sensors"),
+            "Sání a přeplňování" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.IntakeBoost"),
+            "Uložení a ramena" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.MountsArms"),
+            "Stabilizátor" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Stabilizer"),
+            "Řízení a čepy" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.SteeringJoints"),
+            "Tlumení" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Damping"),
+            "Emise" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Emissions"),
+            "Koncové díly" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.EndParts"),
+            "Potrubí" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Pipes"),
+            "Osvětlení" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Lighting"),
+            "Napájení" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Power"),
+            "Jištění" => localizer.GetString("VehicleStarterBundle.Catalog.Maintenance.Subcategory.Protection"),
+            _ => value
+        };
+
+    private static string BuildProfileLabel(Vehicle vehicle, VehicleMeta? meta, IAppLocalizer localizer)
+    {
+        var parts = new List<string> { LocalizeVehicleCategory(NormalizeCategory(vehicle.Category), localizer) };
         var powertrain = ResolvePowertrain(vehicle, meta);
         if (!string.IsNullOrWhiteSpace(powertrain))
         {
             parts.Add(powertrain switch
             {
-                "Benzín" => "benzínový pohon",
-                "Nafta" => "naftový pohon",
-                "Hybrid" => "hybridní pohon",
-                "Plug-in hybrid" => "plug-in hybrid",
-                "Elektro" => "elektrický pohon",
-                "LPG / CNG" => "pohon LPG / CNG",
-                "Jiné" => "jiný pohon",
+                "Benzín" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Gasoline"),
+                "Nafta" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Diesel"),
+                "Hybrid" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Hybrid"),
+                "Plug-in hybrid" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.PlugInHybrid"),
+                "Elektro" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Electric"),
+                "LPG / CNG" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.LpgCng"),
+                "Jiné" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Other"),
                 _ => powertrain.ToLowerInvariant()
             });
         }
 
         if (!string.IsNullOrWhiteSpace(meta?.ClimateProfile))
         {
-            parts.Add(meta.ClimateProfile.ToLowerInvariant());
+            parts.Add(meta.ClimateProfile switch
+            {
+                "Má klimatizaci" => localizer.GetString("VehicleStarterBundle.Profile.Climate.Has"),
+                "Bez klimatizace" => localizer.GetString("VehicleStarterBundle.Profile.Climate.None"),
+                _ => meta.ClimateProfile.ToLowerInvariant()
+            });
         }
 
         if (!string.IsNullOrWhiteSpace(meta?.TimingDrive))
         {
             parts.Add(meta.TimingDrive switch
             {
-                "Řemen" => "rozvody řemenem",
-                "Řetěz" => "rozvody řetězem",
-                "Není relevantní" => "bez pravidelných rozvodů",
-                _ => $"rozvody: {meta.TimingDrive.ToLowerInvariant()}"
+                "Řemen" => localizer.GetString("VehicleStarterBundle.Profile.Timing.Belt"),
+                "Řetěz" => localizer.GetString("VehicleStarterBundle.Profile.Timing.Chain"),
+                "Není relevantní" => localizer.GetString("VehicleStarterBundle.Profile.Timing.NotRelevant"),
+                _ => localizer.Format("VehicleStarterBundle.Profile.Timing.Other", meta.TimingDrive.ToLowerInvariant())
             });
         }
 
@@ -318,15 +527,26 @@ public sealed class VehicleStarterBundleService
         {
             parts.Add(meta.Transmission switch
             {
-                "Manuální" => "manuální převodovka",
-                "Automatická" => "automatická převodovka",
-                "Není relevantní" => "bez klasické převodovky",
-                _ => $"převodovka: {meta.Transmission.ToLowerInvariant()}"
+                "Manuální" => localizer.GetString("VehicleStarterBundle.Profile.Transmission.Manual"),
+                "Automatická" => localizer.GetString("VehicleStarterBundle.Profile.Transmission.Automatic"),
+                "Není relevantní" => localizer.GetString("VehicleStarterBundle.Profile.Transmission.NotRelevant"),
+                _ => localizer.Format("VehicleStarterBundle.Profile.Transmission.Other", meta.Transmission.ToLowerInvariant())
             });
         }
 
         return string.Join(", ", parts.Where(static item => !string.IsNullOrWhiteSpace(item)));
     }
+
+    private static string LocalizeVehicleCategory(string value, IAppLocalizer localizer) =>
+        value switch
+        {
+            "Osobní vozidla" => localizer.GetString("VehicleStarterBundle.Profile.Category.PassengerVehicles"),
+            "Motocykly" => localizer.GetString("VehicleStarterBundle.Profile.Category.Motorcycles"),
+            "Nákladní vozidla" => localizer.GetString("VehicleStarterBundle.Profile.Category.Trucks"),
+            "Autobusy" => localizer.GetString("VehicleStarterBundle.Profile.Category.Buses"),
+            "Ostatní" => localizer.GetString("VehicleStarterBundle.Profile.Category.Other"),
+            _ => value
+        };
 
     private static string ResolvePowertrain(Vehicle vehicle, VehicleMeta? meta)
     {

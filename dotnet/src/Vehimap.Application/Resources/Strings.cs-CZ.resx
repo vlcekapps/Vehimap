@@ -1990,4 +1990,147 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Export.Column.Secondary" xml:space="preserve"><value>Doplňující údaj</value></data>
   <data name="ServiceBook.Export.Column.Detail" xml:space="preserve"><value>Detail</value></data>
   <data name="ServiceBook.Export.Column.Status" xml:space="preserve"><value>Stav</value></data>
+  <data name="VehicleStarterBundle.Catalog.Section.Maintenance" xml:space="preserve"><value>Servis</value></data>
+  <data name="VehicleStarterBundle.Catalog.Section.Record" xml:space="preserve"><value>Doklad</value></data>
+  <data name="VehicleStarterBundle.Catalog.Section.Reminder" xml:space="preserve"><value>Připomínka</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Service" xml:space="preserve"><value>Servis</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Engine" xml:space="preserve"><value>Motor</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Chassis" xml:space="preserve"><value>Podvozek</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Exhaust" xml:space="preserve"><value>Výfukové potrubí</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Electronics" xml:space="preserve"><value>Elektronika</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Summary" xml:space="preserve"><value>Souhrn</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.OilFilters" xml:space="preserve"><value>Olej a filtry</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Brakes" xml:space="preserve"><value>Brzdy</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Fluids" xml:space="preserve"><value>Kapaliny</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Timing" xml:space="preserve"><value>Rozvody</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Transmission" xml:space="preserve"><value>Převody</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Comfort" xml:space="preserve"><value>Komfort</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.IgnitionGlow" xml:space="preserve"><value>Zapalování a žhavení</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Sensors" xml:space="preserve"><value>Snímače</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.IntakeBoost" xml:space="preserve"><value>Sání a přeplňování</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.MountsArms" xml:space="preserve"><value>Uložení a ramena</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Stabilizer" xml:space="preserve"><value>Stabilizátor</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.SteeringJoints" xml:space="preserve"><value>Řízení a čepy</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Damping" xml:space="preserve"><value>Tlumení</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Emissions" xml:space="preserve"><value>Emise</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.EndParts" xml:space="preserve"><value>Koncové díly</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Pipes" xml:space="preserve"><value>Potrubí</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Lighting" xml:space="preserve"><value>Osvětlení</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Power" xml:space="preserve"><value>Napájení</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Protection" xml:space="preserve"><value>Jištění</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.RegularService.Title" xml:space="preserve"><value>Pravidelný servis</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.RegularService.Title.Note" xml:space="preserve"><value>Souhrnný servisní úkon: výměna motorového oleje a olejového filtru, kontrola nebo výměna vzduchového, kabinového a podle pohonu také palivového filtru.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.EngineOilFilter.Title" xml:space="preserve"><value>Motorový olej a filtr</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.EngineOilFilter.Title.Note" xml:space="preserve"><value>Pravidelná výměna oleje a olejového filtru.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.FuelFilter.Title" xml:space="preserve"><value>Palivový filtr</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.FuelFilter.Title.Note" xml:space="preserve"><value>Výměna palivového filtru podle provozu a doporučení výrobce.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.AirFilter.Title" xml:space="preserve"><value>Vzduchový filtr</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.AirFilter.Title.Note" xml:space="preserve"><value>Zkontrolovat nebo vyměnit vzduchový filtr.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.CabinFilter.Title" xml:space="preserve"><value>Kabinový filtr</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.CabinFilter.Title.Note" xml:space="preserve"><value>Pravidelná výměna pylového nebo kabinového filtru.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakeFluid.Title" xml:space="preserve"><value>Brzdová kapalina</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakeFluid.Title.Note" xml:space="preserve"><value>Pravidelná výměna brzdové kapaliny.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Coolant.Title" xml:space="preserve"><value>Chladicí kapalina</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Coolant.Title.Note" xml:space="preserve"><value>Kontrola a obnova chladicí kapaliny.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.TimingDrive.Title" xml:space="preserve"><value>Rozvody</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.TimingDrive.Title.Note" xml:space="preserve"><value>Rozvodový řemen nebo řetěz podle doporučení výrobce.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.TransmissionOil.Title" xml:space="preserve"><value>Převodový olej</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.TransmissionOil.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna převodového oleje.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.AirConditioning.Title" xml:space="preserve"><value>Klimatizace a dezinfekce</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.AirConditioning.Title.Note" xml:space="preserve"><value>Servis klimatizace a dezinfekce okruhu.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SparkGlowPlugs.Title" xml:space="preserve"><value>Svíčky / žhaviče</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SparkGlowPlugs.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna zapalovacích svíček u benzinu, případně žhavičů u naftového motoru.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.EngineSensors.Title" xml:space="preserve"><value>Snímače motoru</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.EngineSensors.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna motorových snímačů a senzorů podle diagnostiky a chování vozidla.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Intake.Title" xml:space="preserve"><value>Sání motoru</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Intake.Title.Note" xml:space="preserve"><value>Kontrola, čištění nebo servis sání motoru podle provozu a zanesení.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Turbo.Title" xml:space="preserve"><value>Turbo</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Turbo.Title.Note" xml:space="preserve"><value>Kontrola nebo servis turbodmychadla, hadic a regulace přeplňování.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakeDiscsDrums.Title" xml:space="preserve"><value>Brzdové kotouče / bubny</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakeDiscsDrums.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna brzdových kotoučů, bubnů a souvisejících dílů.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakePadsShoes.Title" xml:space="preserve"><value>Brzdové destičky / obložení</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakePadsShoes.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna brzdových destiček, čelistí nebo obložení podle opotřebení.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Bushings.Title" xml:space="preserve"><value>Silentbloky</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Bushings.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna silentbloků náprav, ramen nebo stabilizátoru.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SuspensionArms.Title" xml:space="preserve"><value>Ramena náprav</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SuspensionArms.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna ramen náprav a jejich uložení.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.StabilizerLinks.Title" xml:space="preserve"><value>Kosti stabilizátoru</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.StabilizerLinks.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna táhel stabilizátoru a souvisejícího uložení.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SteeringJoints.Title" xml:space="preserve"><value>Čepy řízení a náprav</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SteeringJoints.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna čepů řízení, kulových čepů a souvisejících dílů náprav.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ShockAbsorbers.Title" xml:space="preserve"><value>Tlumiče</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ShockAbsorbers.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna tlumičů podle stavu, úniku kapaliny a jízdního projevu.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Springs.Title" xml:space="preserve"><value>Pružiny</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Springs.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna pružin a jejich uložení.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.CatalyticConverter.Title" xml:space="preserve"><value>Katalyzátor</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.CatalyticConverter.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna katalyzátoru podle emisí, diagnostiky a stavu výfuku.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.LambdaSensor.Title" xml:space="preserve"><value>Lambda sonda</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.LambdaSensor.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna lambda sondy podle diagnostiky a spotřeby.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustTip.Title" xml:space="preserve"><value>Koncovka výfuku</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustTip.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna koncovky výfuku.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustMuffler.Title" xml:space="preserve"><value>Tlumič výfuku</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustMuffler.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna tlumiče výfuku.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustPipes.Title" xml:space="preserve"><value>Výfukové trubky</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustPipes.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna výfukových trubek, spojů a závěsů.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BulbsLighting.Title" xml:space="preserve"><value>Žárovky a osvětlení</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BulbsLighting.Title.Note" xml:space="preserve"><value>Pravidelná kontrola a výměna žárovek, světelných zdrojů a osvětlení vozidla.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Battery.Title" xml:space="preserve"><value>Baterie</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Battery.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna startovací baterie, svorek a dobíjení.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Fuses.Title" xml:space="preserve"><value>Pojistky</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Fuses.Title.Note" xml:space="preserve"><value>Kontrola pojistek, pojistkové skříně a souvisejících elektrických závad.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ParkingSensors.Title" xml:space="preserve"><value>Parkovací senzory</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ParkingSensors.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna parkovacích senzorů a jejich kabeláže.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.OtherSensors.Title" xml:space="preserve"><value>Ostatní snímače a senzory</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.OtherSensors.Title.Note" xml:space="preserve"><value>Kontrola nebo výměna ostatních snímačů a senzorů, které nesouvisí přímo s motorem.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.LiabilityInsurance.Title" xml:space="preserve"><value>Povinné ručení</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.LiabilityInsurance.Title.Note" xml:space="preserve"><value>Doplňte číslo smlouvy, platnost a případnou přílohu.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.ComprehensiveInsurance.Title" xml:space="preserve"><value>Havarijní pojištění</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.ComprehensiveInsurance.Title.Note" xml:space="preserve"><value>Doplňte rozsah pojištění, platnost a případnou přílohu.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.Assistance.Title" xml:space="preserve"><value>Asistence</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.Assistance.Title.Note" xml:space="preserve"><value>Doplňte poskytovatele asistence a důležité kontakty.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.GenericDocument.Title" xml:space="preserve"><value>Obecný doklad</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.GenericDocument.Title.Note" xml:space="preserve"><value>Doplňte název dokladu, platnost a případnou přílohu.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.MotorcyclePreSeasonCheck.Title" xml:space="preserve"><value>Předsezónní kontrola motocyklu</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.MotorcyclePreSeasonCheck.Title.Note" xml:space="preserve"><value>Zkontrolujte brzdy, řetěz, pneumatiky, kapaliny a baterii.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.OperationalCheck.Title" xml:space="preserve"><value>Pravidelná provozní kontrola</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.OperationalCheck.Title.Note" xml:space="preserve"><value>Zkontrolujte kapaliny, osvětlení, pneumatiky a povinnou výbavu.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.ConditionCheck.Title" xml:space="preserve"><value>Pravidelná kontrola stavu</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.ConditionCheck.Title.Note" xml:space="preserve"><value>Doplňte vlastní kontrolní kroky podle typu zařízení.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.VehicleConditionCheck.Title" xml:space="preserve"><value>Pravidelná kontrola stavu vozidla</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.VehicleConditionCheck.Title.Note" xml:space="preserve"><value>Zkontrolujte výbavu, kapaliny, osvětlení a stav pneumatik.</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.PassengerVehicles" xml:space="preserve"><value>Osobní vozidla</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.Motorcycles" xml:space="preserve"><value>Motocykly</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.Trucks" xml:space="preserve"><value>Nákladní vozidla</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.Buses" xml:space="preserve"><value>Autobusy</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.Other" xml:space="preserve"><value>Ostatní</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Gasoline" xml:space="preserve"><value>benzínový pohon</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Diesel" xml:space="preserve"><value>naftový pohon</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Hybrid" xml:space="preserve"><value>hybridní pohon</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.PlugInHybrid" xml:space="preserve"><value>plug-in hybrid</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Electric" xml:space="preserve"><value>elektrický pohon</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.LpgCng" xml:space="preserve"><value>pohon LPG / CNG</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Other" xml:space="preserve"><value>jiný pohon</value></data>
+  <data name="VehicleStarterBundle.Profile.Climate.Has" xml:space="preserve"><value>má klimatizaci</value></data>
+  <data name="VehicleStarterBundle.Profile.Climate.None" xml:space="preserve"><value>bez klimatizace</value></data>
+  <data name="VehicleStarterBundle.Profile.Timing.Belt" xml:space="preserve"><value>rozvody řemenem</value></data>
+  <data name="VehicleStarterBundle.Profile.Timing.Chain" xml:space="preserve"><value>rozvody řetězem</value></data>
+  <data name="VehicleStarterBundle.Profile.Timing.NotRelevant" xml:space="preserve"><value>bez pravidelných rozvodů</value></data>
+  <data name="VehicleStarterBundle.Profile.Timing.Other" xml:space="preserve"><value>rozvody: {0}</value></data>
+  <data name="VehicleStarterBundle.Profile.Transmission.Manual" xml:space="preserve"><value>manuální převodovka</value></data>
+  <data name="VehicleStarterBundle.Profile.Transmission.Automatic" xml:space="preserve"><value>automatická převodovka</value></data>
+  <data name="VehicleStarterBundle.Profile.Transmission.NotRelevant" xml:space="preserve"><value>bez klasické převodovky</value></data>
+  <data name="VehicleStarterBundle.Profile.Transmission.Other" xml:space="preserve"><value>převodovka: {0}</value></data>
+  <data name="VehicleStarterBundle.Status.NotLoaded" xml:space="preserve"><value>Balíček pro vozidlo nelze použít bez načtených dat.</value></data>
+  <data name="VehicleStarterBundle.Status.NoSelectedItems" xml:space="preserve"><value>Balíček pro vozidlo neobsahoval žádné vybrané položky.</value></data>
+  <data name="VehicleStarterBundle.Status.NoNewItems" xml:space="preserve"><value>Balíček pro vozidlo už neměl žádné nové položky k doplnění.</value></data>
+  <data name="VehicleStarterBundle.Status.SaveFailedPrefix" xml:space="preserve"><value>Balíček pro vozidlo se nepodařilo uložit</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Maintenance" xml:space="preserve"><value>{0}× servis</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Record" xml:space="preserve"><value>{0}× doklad</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Reminder" xml:space="preserve"><value>{0}× připomínka</value></data>
+  <data name="VehicleStarterBundle.Status.Added" xml:space="preserve"><value>Balíček pro vozidlo přidal {0} položek: {1}.</value></data>
+  <data name="MaintenanceTemplates.Status.NotLoaded" xml:space="preserve"><value>Doporučené šablony nelze použít bez načtených dat.</value></data>
+  <data name="MaintenanceTemplates.Status.NoSelectedItems" xml:space="preserve"><value>Doporučené šablony neobsahovaly žádné vybrané servisní plány.</value></data>
+  <data name="MaintenanceTemplates.Status.NoNewItems" xml:space="preserve"><value>Doporučené šablony už neměly žádné nové servisní plány k doplnění.</value></data>
+  <data name="MaintenanceTemplates.Status.SaveFailedPrefix" xml:space="preserve"><value>Doporučené šablony se nepodařilo uložit</value></data>
+  <data name="MaintenanceTemplates.Status.Added" xml:space="preserve"><value>Doporučené šablony přidaly {0} servisních plánů.</value></data>
 </root>

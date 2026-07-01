@@ -1990,4 +1990,147 @@ Status: {5}</value></data>
   <data name="ServiceBook.Export.Column.Secondary" xml:space="preserve"><value>Additional value</value></data>
   <data name="ServiceBook.Export.Column.Detail" xml:space="preserve"><value>Detail</value></data>
   <data name="ServiceBook.Export.Column.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="VehicleStarterBundle.Catalog.Section.Maintenance" xml:space="preserve"><value>Service</value></data>
+  <data name="VehicleStarterBundle.Catalog.Section.Record" xml:space="preserve"><value>Document</value></data>
+  <data name="VehicleStarterBundle.Catalog.Section.Reminder" xml:space="preserve"><value>Reminder</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Service" xml:space="preserve"><value>Service</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Engine" xml:space="preserve"><value>Engine</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Chassis" xml:space="preserve"><value>Chassis</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Exhaust" xml:space="preserve"><value>Exhaust system</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Category.Electronics" xml:space="preserve"><value>Electronics</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Summary" xml:space="preserve"><value>Summary</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.OilFilters" xml:space="preserve"><value>Oil and filters</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Brakes" xml:space="preserve"><value>Brakes</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Fluids" xml:space="preserve"><value>Fluids</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Timing" xml:space="preserve"><value>Timing drive</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Transmission" xml:space="preserve"><value>Transmission</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Comfort" xml:space="preserve"><value>Comfort</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.IgnitionGlow" xml:space="preserve"><value>Ignition and glow plugs</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Sensors" xml:space="preserve"><value>Sensors</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.IntakeBoost" xml:space="preserve"><value>Intake and boost</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.MountsArms" xml:space="preserve"><value>Mounts and arms</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Stabilizer" xml:space="preserve"><value>Stabilizer</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.SteeringJoints" xml:space="preserve"><value>Steering and joints</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Damping" xml:space="preserve"><value>Damping</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Emissions" xml:space="preserve"><value>Emissions</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.EndParts" xml:space="preserve"><value>End parts</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Pipes" xml:space="preserve"><value>Pipes</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Lighting" xml:space="preserve"><value>Lighting</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Power" xml:space="preserve"><value>Power supply</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Subcategory.Protection" xml:space="preserve"><value>Protection</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.RegularService.Title" xml:space="preserve"><value>Regular service</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.RegularService.Title.Note" xml:space="preserve"><value>Combined service task: engine oil and oil filter replacement, plus inspection or replacement of the air filter, cabin filter and, depending on the powertrain, the fuel filter.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.EngineOilFilter.Title" xml:space="preserve"><value>Engine oil and filter</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.EngineOilFilter.Title.Note" xml:space="preserve"><value>Regular engine oil and oil filter replacement.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.FuelFilter.Title" xml:space="preserve"><value>Fuel filter</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.FuelFilter.Title.Note" xml:space="preserve"><value>Replace the fuel filter according to usage and manufacturer recommendations.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.AirFilter.Title" xml:space="preserve"><value>Air filter</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.AirFilter.Title.Note" xml:space="preserve"><value>Inspect or replace the air filter.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.CabinFilter.Title" xml:space="preserve"><value>Cabin filter</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.CabinFilter.Title.Note" xml:space="preserve"><value>Regular pollen or cabin filter replacement.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakeFluid.Title" xml:space="preserve"><value>Brake fluid</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakeFluid.Title.Note" xml:space="preserve"><value>Regular brake fluid replacement.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Coolant.Title" xml:space="preserve"><value>Coolant</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Coolant.Title.Note" xml:space="preserve"><value>Inspect and renew coolant.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.TimingDrive.Title" xml:space="preserve"><value>Timing drive</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.TimingDrive.Title.Note" xml:space="preserve"><value>Timing belt or chain according to manufacturer recommendations.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.TransmissionOil.Title" xml:space="preserve"><value>Transmission oil</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.TransmissionOil.Title.Note" xml:space="preserve"><value>Inspect or replace transmission oil.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.AirConditioning.Title" xml:space="preserve"><value>Air conditioning service and disinfection</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.AirConditioning.Title.Note" xml:space="preserve"><value>Air conditioning service and circuit disinfection.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SparkGlowPlugs.Title" xml:space="preserve"><value>Spark plugs / glow plugs</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SparkGlowPlugs.Title.Note" xml:space="preserve"><value>Inspect or replace spark plugs on gasoline engines, or glow plugs on diesel engines.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.EngineSensors.Title" xml:space="preserve"><value>Engine sensors</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.EngineSensors.Title.Note" xml:space="preserve"><value>Inspect or replace engine sensors according to diagnostics and vehicle behavior.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Intake.Title" xml:space="preserve"><value>Engine intake</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Intake.Title.Note" xml:space="preserve"><value>Inspect, clean or service the engine intake according to usage and deposits.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Turbo.Title" xml:space="preserve"><value>Turbocharger</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Turbo.Title.Note" xml:space="preserve"><value>Inspect or service the turbocharger, hoses and boost control.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakeDiscsDrums.Title" xml:space="preserve"><value>Brake discs / drums</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakeDiscsDrums.Title.Note" xml:space="preserve"><value>Inspect or replace brake discs, drums and related parts.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakePadsShoes.Title" xml:space="preserve"><value>Brake pads / shoes</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BrakePadsShoes.Title.Note" xml:space="preserve"><value>Inspect or replace brake pads, shoes or linings according to wear.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Bushings.Title" xml:space="preserve"><value>Bushings</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Bushings.Title.Note" xml:space="preserve"><value>Inspect or replace axle, control arm or stabilizer bushings.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SuspensionArms.Title" xml:space="preserve"><value>Suspension arms</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SuspensionArms.Title.Note" xml:space="preserve"><value>Inspect or replace suspension arms and their mounts.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.StabilizerLinks.Title" xml:space="preserve"><value>Stabilizer links</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.StabilizerLinks.Title.Note" xml:space="preserve"><value>Inspect or replace stabilizer links and related mounts.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SteeringJoints.Title" xml:space="preserve"><value>Steering and suspension joints</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.SteeringJoints.Title.Note" xml:space="preserve"><value>Inspect or replace tie rods, ball joints and related suspension parts.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ShockAbsorbers.Title" xml:space="preserve"><value>Shock absorbers</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ShockAbsorbers.Title.Note" xml:space="preserve"><value>Inspect or replace shock absorbers according to condition, leakage and driving behavior.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Springs.Title" xml:space="preserve"><value>Springs</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Springs.Title.Note" xml:space="preserve"><value>Inspect or replace springs and their mounts.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.CatalyticConverter.Title" xml:space="preserve"><value>Catalytic converter</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.CatalyticConverter.Title.Note" xml:space="preserve"><value>Inspect or replace the catalytic converter according to emissions, diagnostics and exhaust condition.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.LambdaSensor.Title" xml:space="preserve"><value>Lambda sensor</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.LambdaSensor.Title.Note" xml:space="preserve"><value>Inspect or replace the lambda sensor according to diagnostics and consumption.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustTip.Title" xml:space="preserve"><value>Exhaust tip</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustTip.Title.Note" xml:space="preserve"><value>Inspect or replace the exhaust tip.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustMuffler.Title" xml:space="preserve"><value>Exhaust muffler</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustMuffler.Title.Note" xml:space="preserve"><value>Inspect or replace the exhaust muffler.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustPipes.Title" xml:space="preserve"><value>Exhaust pipes</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ExhaustPipes.Title.Note" xml:space="preserve"><value>Inspect or replace exhaust pipes, joints and hangers.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BulbsLighting.Title" xml:space="preserve"><value>Bulbs and lighting</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.BulbsLighting.Title.Note" xml:space="preserve"><value>Regular inspection and replacement of bulbs, light sources and vehicle lighting.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Battery.Title" xml:space="preserve"><value>Battery</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Battery.Title.Note" xml:space="preserve"><value>Inspect or replace the starter battery, terminals and charging.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Fuses.Title" xml:space="preserve"><value>Fuses</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.Fuses.Title.Note" xml:space="preserve"><value>Inspect fuses, fuse box and related electrical faults.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ParkingSensors.Title" xml:space="preserve"><value>Parking sensors</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.ParkingSensors.Title.Note" xml:space="preserve"><value>Inspect or replace parking sensors and their wiring.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.OtherSensors.Title" xml:space="preserve"><value>Other sensors</value></data>
+  <data name="VehicleStarterBundle.Catalog.Maintenance.OtherSensors.Title.Note" xml:space="preserve"><value>Inspect or replace other sensors that are not directly related to the engine.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.LiabilityInsurance.Title" xml:space="preserve"><value>Liability insurance</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.LiabilityInsurance.Title.Note" xml:space="preserve"><value>Add the contract number, validity and optional attachment.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.ComprehensiveInsurance.Title" xml:space="preserve"><value>Comprehensive insurance</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.ComprehensiveInsurance.Title.Note" xml:space="preserve"><value>Add the insurance scope, validity and optional attachment.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.Assistance.Title" xml:space="preserve"><value>Assistance</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.Assistance.Title.Note" xml:space="preserve"><value>Add the assistance provider and important contacts.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.GenericDocument.Title" xml:space="preserve"><value>General document</value></data>
+  <data name="VehicleStarterBundle.Catalog.Record.GenericDocument.Title.Note" xml:space="preserve"><value>Add the document name, validity and optional attachment.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.MotorcyclePreSeasonCheck.Title" xml:space="preserve"><value>Motorcycle pre-season check</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.MotorcyclePreSeasonCheck.Title.Note" xml:space="preserve"><value>Check brakes, chain, tires, fluids and battery.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.OperationalCheck.Title" xml:space="preserve"><value>Regular operational check</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.OperationalCheck.Title.Note" xml:space="preserve"><value>Check fluids, lighting, tires and required equipment.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.ConditionCheck.Title" xml:space="preserve"><value>Regular condition check</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.ConditionCheck.Title.Note" xml:space="preserve"><value>Add your own checklist steps according to the type of equipment.</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.VehicleConditionCheck.Title" xml:space="preserve"><value>Regular vehicle condition check</value></data>
+  <data name="VehicleStarterBundle.Catalog.Reminder.VehicleConditionCheck.Title.Note" xml:space="preserve"><value>Check equipment, fluids, lighting and tire condition.</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.PassengerVehicles" xml:space="preserve"><value>Passenger vehicles</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.Motorcycles" xml:space="preserve"><value>Motorcycles</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.Trucks" xml:space="preserve"><value>Trucks</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.Buses" xml:space="preserve"><value>Buses</value></data>
+  <data name="VehicleStarterBundle.Profile.Category.Other" xml:space="preserve"><value>Other</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Gasoline" xml:space="preserve"><value>gasoline powertrain</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Diesel" xml:space="preserve"><value>diesel powertrain</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Hybrid" xml:space="preserve"><value>hybrid powertrain</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.PlugInHybrid" xml:space="preserve"><value>plug-in hybrid</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Electric" xml:space="preserve"><value>electric powertrain</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.LpgCng" xml:space="preserve"><value>LPG / CNG powertrain</value></data>
+  <data name="VehicleStarterBundle.Profile.Powertrain.Other" xml:space="preserve"><value>other powertrain</value></data>
+  <data name="VehicleStarterBundle.Profile.Climate.Has" xml:space="preserve"><value>has air conditioning</value></data>
+  <data name="VehicleStarterBundle.Profile.Climate.None" xml:space="preserve"><value>without air conditioning</value></data>
+  <data name="VehicleStarterBundle.Profile.Timing.Belt" xml:space="preserve"><value>timing belt</value></data>
+  <data name="VehicleStarterBundle.Profile.Timing.Chain" xml:space="preserve"><value>timing chain</value></data>
+  <data name="VehicleStarterBundle.Profile.Timing.NotRelevant" xml:space="preserve"><value>no regular timing drive service</value></data>
+  <data name="VehicleStarterBundle.Profile.Timing.Other" xml:space="preserve"><value>timing drive: {0}</value></data>
+  <data name="VehicleStarterBundle.Profile.Transmission.Manual" xml:space="preserve"><value>manual transmission</value></data>
+  <data name="VehicleStarterBundle.Profile.Transmission.Automatic" xml:space="preserve"><value>automatic transmission</value></data>
+  <data name="VehicleStarterBundle.Profile.Transmission.NotRelevant" xml:space="preserve"><value>without conventional transmission</value></data>
+  <data name="VehicleStarterBundle.Profile.Transmission.Other" xml:space="preserve"><value>transmission: {0}</value></data>
+  <data name="VehicleStarterBundle.Status.NotLoaded" xml:space="preserve"><value>The vehicle bundle cannot be used before data is loaded.</value></data>
+  <data name="VehicleStarterBundle.Status.NoSelectedItems" xml:space="preserve"><value>The vehicle bundle did not contain any selected items.</value></data>
+  <data name="VehicleStarterBundle.Status.NoNewItems" xml:space="preserve"><value>The vehicle bundle did not have any new items to add.</value></data>
+  <data name="VehicleStarterBundle.Status.SaveFailedPrefix" xml:space="preserve"><value>The vehicle bundle could not be saved</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Maintenance" xml:space="preserve"><value>{0} service</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Record" xml:space="preserve"><value>{0} document</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Reminder" xml:space="preserve"><value>{0} reminder</value></data>
+  <data name="VehicleStarterBundle.Status.Added" xml:space="preserve"><value>Vehicle bundle added {0} items: {1}.</value></data>
+  <data name="MaintenanceTemplates.Status.NotLoaded" xml:space="preserve"><value>Recommended templates cannot be used before data is loaded.</value></data>
+  <data name="MaintenanceTemplates.Status.NoSelectedItems" xml:space="preserve"><value>Recommended templates did not contain any selected service plans.</value></data>
+  <data name="MaintenanceTemplates.Status.NoNewItems" xml:space="preserve"><value>Recommended templates did not have any new service plans to add.</value></data>
+  <data name="MaintenanceTemplates.Status.SaveFailedPrefix" xml:space="preserve"><value>Recommended templates could not be saved</value></data>
+  <data name="MaintenanceTemplates.Status.Added" xml:space="preserve"><value>Recommended templates added {0} service plans.</value></data>
 </root>

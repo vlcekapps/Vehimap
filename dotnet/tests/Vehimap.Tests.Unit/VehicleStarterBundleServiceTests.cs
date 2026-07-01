@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Globalization;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Models;
 using Xunit;
@@ -25,6 +26,23 @@ public sealed class VehicleStarterBundleServiceTests
         Assert.Contains("olejového filtru", template.Note, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("vzduchového", template.Note, StringComparison.CurrentCultureIgnoreCase);
         Assert.Contains("kabinového", template.Note, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    [Fact]
+    public void Maintenance_catalog_can_return_localized_template_text()
+    {
+        var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+        var template = Assert.Single(
+            VehicleStarterBundleService.GetMaintenanceTemplateCatalog(localizer),
+            item => item.Title == "Regular service");
+
+        Assert.Equal("15000", template.IntervalKm);
+        Assert.Equal("12", template.IntervalMonths);
+        Assert.Equal("Service", template.Category);
+        Assert.Equal("Summary", template.Subcategory);
+        Assert.Equal("Service / Summary - Regular service", VehicleStarterBundleService.BuildMaintenanceTemplateDisplayName(template));
+        Assert.Contains("engine oil", template.Note, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("cabin filter", template.Note, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -113,6 +131,44 @@ public sealed class VehicleStarterBundleServiceTests
         Assert.DoesNotContain(preview.Items, item => item.Title == "Motorový olej a filtr");
         Assert.DoesNotContain(preview.Items, item => item.SectionLabel == "Doklad" && item.Title == "Povinné ručení");
         Assert.DoesNotContain(preview.Items, item => item.SectionLabel == "Připomínka" && item.Title == "Pravidelná kontrola stavu vozidla");
+    }
+
+    [Fact]
+    public void Build_preview_localizes_templates_and_skips_existing_legacy_titles()
+    {
+        var service = new VehicleStarterBundleService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)));
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda Octavia TDI", "1AB2345", "2018", "110", string.Empty, "08/2026", "05/2025", "06/2026")
+            ],
+            VehicleMetaEntries =
+            [
+                new VehicleMeta("veh_1", "Běžný provoz", string.Empty, "Nafta", "Má klimatizaci", "Řemen", "Automatická")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_1", "veh_1", "Povinné ručení", "Povinné ručení", string.Empty, string.Empty, string.Empty, string.Empty, Domain.Enums.VehicleRecordAttachmentMode.Managed, string.Empty, string.Empty)
+            ],
+            Reminders =
+            [
+                new VehicleReminder("rem_1", "veh_1", "Pravidelná kontrola stavu vozidla", "02.05.2026", "14", "Každý rok", string.Empty)
+            ],
+            MaintenancePlans =
+            [
+                new MaintenancePlan("mnt_1", "veh_1", "Motorový olej a filtr", "15000", "12", string.Empty, string.Empty, true, string.Empty)
+            ]
+        };
+
+        var preview = service.BuildPreview(dataSet, "veh_1", new DateOnly(2026, 4, 2));
+
+        Assert.Contains("Passenger vehicles", preview.ProfileLabel);
+        Assert.Contains("diesel powertrain", preview.ProfileLabel);
+        Assert.Contains(preview.Items, item => item.Section == Vehimap.Application.Models.VehicleStarterBundleSection.Maintenance && item.Title == "Fuel filter");
+        Assert.DoesNotContain(preview.Items, item => item.Title == "Engine oil and filter");
+        Assert.DoesNotContain(preview.Items, item => item.Title == "Liability insurance");
+        Assert.DoesNotContain(preview.Items, item => item.Title == "Regular vehicle condition check");
     }
 
     private static void AssertMaintenanceTemplate(

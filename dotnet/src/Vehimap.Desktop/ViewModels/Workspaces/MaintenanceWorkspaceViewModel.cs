@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -19,7 +20,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         MaintenanceTemplateOptions =
         [
             CustomMaintenanceTemplateLabel,
-            .. VehicleStarterBundleService.GetMaintenanceTemplateCatalog().Select(VehicleStarterBundleService.BuildMaintenanceTemplateDisplayName)
+            .. VehicleStarterBundleService.GetMaintenanceTemplateCatalog(DesktopLocalization.Localizer).Select(VehicleStarterBundleService.BuildMaintenanceTemplateDisplayName)
         ];
     }
 
@@ -259,7 +260,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
             return;
         }
 
-        var template = VehicleStarterBundleService.FindMaintenanceTemplateByDisplayName(value);
+        var template = VehicleStarterBundleService.FindMaintenanceTemplateByDisplayName(value, DesktopLocalization.Localizer);
         if (template is null)
         {
             return;
