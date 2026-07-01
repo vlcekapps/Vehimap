@@ -85,9 +85,10 @@ public sealed partial class MainWindowViewModel
 
         var units = CurrentUnitPreferences;
         var volume = EditorUnitFormatService.ConvertVolumeFromLiters(liters, units);
-        var decimalPlaces = string.Equals(AppUnitFormatService.NormalizeVolumeUnit(units.VolumeUnit), AppUnitFormatService.Liters, StringComparison.Ordinal)
+        var maxDecimalPlaces = string.Equals(AppUnitFormatService.NormalizeVolumeUnit(units.VolumeUnit), AppUnitFormatService.Liters, StringComparison.Ordinal)
             ? 2
             : 3;
+        var decimalPlaces = CountMeaningfulDecimalPlaces(volume, maxDecimalPlaces);
         return EditorNumberFormatService.FormatDecimal(volume, CurrentCulturePreferences, decimalPlaces);
     }
 
@@ -139,6 +140,20 @@ public sealed partial class MainWindowViewModel
         var convertedLiters = EditorUnitFormatService.ConvertVolumeToLiters(volume, CurrentUnitPreferences);
         liters = convertedLiters.ToString("0.##", CultureInfo.InvariantCulture);
         return true;
+    }
+
+    private static int CountMeaningfulDecimalPlaces(decimal value, int maxDecimalPlaces)
+    {
+        var max = Math.Clamp(maxDecimalPlaces, 0, 9);
+        for (var decimalPlaces = 0; decimalPlaces < max; decimalPlaces++)
+        {
+            if (decimal.Round(value, decimalPlaces) == value)
+            {
+                return decimalPlaces;
+            }
+        }
+
+        return max;
     }
 
     private bool TryParseEditorDecimal(string value, out decimal number) =>

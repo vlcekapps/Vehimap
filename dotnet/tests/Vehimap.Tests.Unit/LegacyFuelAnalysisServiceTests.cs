@@ -39,6 +39,29 @@ public sealed class LegacyFuelAnalysisServiceTests
     }
 
     [Fact]
+    public void BuildVehicleFuelAnalysis_preserves_decimal_liters_in_consumption_and_price()
+    {
+        var service = new LegacyFuelAnalysisService();
+        var dataSet = new VehimapDataSet
+        {
+            FuelEntries =
+            [
+                new FuelEntry("fuel_1", "veh_1", "01.01.2026", "10000", "3.12", "156", true, "Natural 95", "", "", "Test"),
+                new FuelEntry("fuel_2", "veh_1", "10.01.2026", "10100", "3.1", "155", true, "Natural 95", "", "", "Test")
+            ]
+        };
+
+        var summary = service.BuildVehicleFuelAnalysis(dataSet, "veh_1");
+
+        var segment = Assert.Single(summary.ConsumptionSegments);
+        Assert.Equal(3.1m, segment.Liters);
+        Assert.Equal(3.1m, segment.ConsumptionLitersPer100Km);
+        Assert.Equal(50m, segment.PricePerLiter);
+        Assert.Equal(6.22m, summary.TotalLiters);
+        Assert.Equal(50m, summary.AveragePricePerLiter);
+    }
+
+    [Fact]
     public void BuildVehicleFuelAnalysis_groups_by_station_fuel_and_detail()
     {
         var service = new LegacyFuelAnalysisService();

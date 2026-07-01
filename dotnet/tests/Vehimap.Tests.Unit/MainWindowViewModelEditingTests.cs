@@ -572,6 +572,52 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("10.5", saved.Liters);
     }
 
+    [Theory]
+    [InlineData("3", "3")]
+    [InlineData("3,1", "3.1")]
+    [InlineData("3,12", "3.12")]
+    public async Task Fuel_editor_preserves_liter_precision_up_to_hundredths(string enteredLiters, string expectedCanonicalLiters)
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        ConfigureNumberFormatAndUnits(dataSet, language: "cs-CZ", thousandsSeparator: "none", decimalSeparator: "comma", distanceUnit: "km", volumeUnit: "l");
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.CreateFuelCommand.Execute(null);
+        viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
+        viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
+        viewModel.FuelWorkspace.FuelEditorLiters = enteredLiters;
+        viewModel.FuelWorkspace.FuelEditorOdometer = "123456";
+
+        await viewModel.SaveFuelCommand.ExecuteAsync(null);
+
+        var saved = Assert.Single(dataStore.CurrentDataSet.FuelEntries);
+        Assert.Equal(expectedCanonicalLiters, saved.Liters);
+    }
+
+    [Theory]
+    [InlineData("3", "3")]
+    [InlineData("3.1", "3,1")]
+    [InlineData("3.12", "3,12")]
+    public void Fuel_editor_displays_liters_without_unnecessary_trailing_zeroes(string storedLiters, string expectedEditorLiters)
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        ConfigureNumberFormatAndUnits(dataSet, language: "cs-CZ", thousandsSeparator: "none", decimalSeparator: "comma", distanceUnit: "km", volumeUnit: "l");
+        dataSet.FuelEntries.Add(new FuelEntry("fuel_1", "veh_1", "20.10.2026", "123456", storedLiters, "180", true, "Nafta", string.Empty));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.EditSelectedFuelCommand.Execute(null);
+
+        Assert.Equal(expectedEditorLiters, viewModel.FuelWorkspace.FuelEditorLiters);
+    }
+
     [Fact]
     public async Task Save_fuel_command_normalizes_unknown_fuel_type_to_legacy_default()
     {
