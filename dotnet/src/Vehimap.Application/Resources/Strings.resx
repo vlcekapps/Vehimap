@@ -178,7 +178,6 @@ Vehicle: {2}
   <data name="GlobalSearch.Value.Active" xml:space="preserve"><value>Active</value></data>
   <data name="GlobalSearch.Value.FullTank" xml:space="preserve"><value>Full tank</value></data>
   <data name="GlobalSearch.Value.Inactive" xml:space="preserve"><value>Inactive</value></data>
-  <data name="GlobalSearch.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
   <data name="GlobalSearch.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="GlobalSearch.Value.Months" xml:space="preserve"><value>{0} months</value></data>
   <data name="GlobalSearch.Value.No" xml:space="preserve"><value>no</value></data>
@@ -187,7 +186,6 @@ Vehicle: {2}
   <data name="GlobalSearch.Value.NoFuelType" xml:space="preserve"><value>no fuel type</value></data>
   <data name="GlobalSearch.Value.NoMakeModel" xml:space="preserve"><value>No make/model</value></data>
   <data name="GlobalSearch.Value.NoPlate" xml:space="preserve"><value>No license plate</value></data>
-  <data name="GlobalSearch.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
   <data name="GlobalSearch.Value.Plate" xml:space="preserve"><value>License plate {0}</value></data>
   <data name="GlobalSearch.Value.ServiceTask" xml:space="preserve"><value>Service task</value></data>
   <data name="GlobalSearch.Value.UntitledVehicle" xml:space="preserve"><value>Untitled vehicle</value></data>

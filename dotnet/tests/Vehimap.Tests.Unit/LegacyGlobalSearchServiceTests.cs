@@ -128,6 +128,13 @@ public sealed class LegacyGlobalSearchServiceTests
         Assert.DoesNotContain("12400 km", fuelResult.Summary, StringComparison.Ordinal);
         Assert.DoesNotContain("32 l", fuelResult.Summary, StringComparison.Ordinal);
 
+        var maintenanceResults = service.Search(DataRoot, dataSet, "Minerální");
+        var maintenanceResult = Assert.Single(maintenanceResults.Where(item => item.EntityId == "mnt_1"));
+        Assert.Equal("Údržba", maintenanceResult.EntityKind);
+        Assert.Equal("Maintenance", maintenanceResult.SectionLabel);
+        Assert.Contains("6,214 mi", maintenanceResult.Summary, StringComparison.Ordinal);
+        Assert.DoesNotContain("10000 km", maintenanceResult.Summary, StringComparison.Ordinal);
+
         var recordResults = service.Search(DataRoot, dataSet, "asistence.pdf");
         var recordResult = Assert.Single(recordResults.Where(item => item.EntityId == "rec_2"));
         Assert.Equal("Doklad", recordResult.EntityKind);

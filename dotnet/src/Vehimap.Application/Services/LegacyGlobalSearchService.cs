@@ -591,7 +591,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         var parts = new List<string>();
         if (!string.IsNullOrWhiteSpace(plan.IntervalKm))
         {
-            parts.Add(LF("GlobalSearch.Value.OdometerKm", plan.IntervalKm.Trim()));
+            parts.Add(FormatOdometer(plan.IntervalKm));
         }
 
         if (!string.IsNullOrWhiteSpace(plan.IntervalMonths))

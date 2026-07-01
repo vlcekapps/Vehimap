@@ -178,7 +178,6 @@ Vozidlo: {2}
   <data name="GlobalSearch.Value.Active" xml:space="preserve"><value>Aktivní</value></data>
   <data name="GlobalSearch.Value.FullTank" xml:space="preserve"><value>Plná nádrž</value></data>
   <data name="GlobalSearch.Value.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
-  <data name="GlobalSearch.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
   <data name="GlobalSearch.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="GlobalSearch.Value.Months" xml:space="preserve"><value>{0} měsíců</value></data>
   <data name="GlobalSearch.Value.No" xml:space="preserve"><value>ne</value></data>
@@ -187,7 +186,6 @@ Vozidlo: {2}
   <data name="GlobalSearch.Value.NoFuelType" xml:space="preserve"><value>bez typu</value></data>
   <data name="GlobalSearch.Value.NoMakeModel" xml:space="preserve"><value>Bez značky / modelu</value></data>
   <data name="GlobalSearch.Value.NoPlate" xml:space="preserve"><value>Bez SPZ</value></data>
-  <data name="GlobalSearch.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
   <data name="GlobalSearch.Value.Plate" xml:space="preserve"><value>SPZ {0}</value></data>
   <data name="GlobalSearch.Value.ServiceTask" xml:space="preserve"><value>Servisní úkon</value></data>
   <data name="GlobalSearch.Value.UntitledVehicle" xml:space="preserve"><value>Bez názvu vozidla</value></data>

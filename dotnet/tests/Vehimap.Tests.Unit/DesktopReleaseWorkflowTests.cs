@@ -219,6 +219,9 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("\"-p:VehimapVersion=$effectiveVersion\"", script, StringComparison.Ordinal);
         Assert.Contains("-Version $effectiveVersion", script, StringComparison.Ordinal);
         Assert.Contains("-Channel $channelName", script, StringComparison.Ordinal);
+        Assert.Contains("$expectedPackageBaseName = if ($RuntimeIdentifier -like \"win-*\")", script, StringComparison.Ordinal);
+        Assert.Contains("Join-Path $releaseDirectory \"$expectedPackageBaseName.json\"", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("Get-ChildItem -LiteralPath $releaseDirectory -Filter \"*.json\" | Sort-Object Name | Select-Object -First 1", script, StringComparison.Ordinal);
         Assert.Contains("Update manifest neobsahuje ocekavany kanal '$channelName'.", script, StringComparison.Ordinal);
         Assert.Contains("Update manifest neobsahuje platny SHA-256 hash assetu.", script, StringComparison.Ordinal);
         Assert.Contains("if ($channelName -eq \"stable\" -and $manifestContent -match \"preview\")", script, StringComparison.Ordinal);

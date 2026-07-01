@@ -915,6 +915,9 @@ public sealed class I18nFoundationTests
         Assert.Contains("GlobalSearch.Entity.Vehicle", service);
         Assert.Contains("GlobalSearch.Value.Money", service);
         Assert.Contains("GlobalSearch.Attachment.Managed", service);
+        Assert.Contains("FormatDistanceFromKilometers", service);
+        Assert.DoesNotContain("GlobalSearch.Value.OdometerKm", service);
+        Assert.DoesNotContain("GlobalSearch.Value.Liters", service);
         Assert.Contains("GlobalSearch.Summary.WithResults", mainWindowViewModel);
         Assert.Contains("GlobalSearch.Detail.Selected", workspaceViewModel);
         Assert.Contains("VehicleLabel", itemViewModel);

@@ -108,10 +108,17 @@ try {
         -OutputDirectory $releaseDirectory `
         -Channel $channelName
 
-    $metadata = Get-ChildItem -LiteralPath $releaseDirectory -Filter "*.json" | Sort-Object Name | Select-Object -First 1
-    if ($null -eq $metadata) {
-        throw "Release metadata nebyla vytvorena."
+    $expectedPackageBaseName = if ($RuntimeIdentifier -like "win-*") {
+        "vehimap-desktop-$channelName-$effectiveVersion-$RuntimeIdentifier-setup"
     }
+    else {
+        "vehimap-desktop-$channelName-$effectiveVersion-$RuntimeIdentifier"
+    }
+    $metadataPath = Join-Path $releaseDirectory "$expectedPackageBaseName.json"
+    if (-not (Test-Path -LiteralPath $metadataPath -PathType Leaf)) {
+        throw "Release metadata '$metadataPath' nebyla vytvorena."
+    }
+    $metadata = Get-Item -LiteralPath $metadataPath
 
     & (Join-Path $PSScriptRoot "Write-DotnetUpdateManifest.ps1") `
         -PackageMetadataPath $metadata.FullName `
