@@ -178,7 +178,7 @@ Vozidlo: {2}
   <data name="GlobalSearch.Value.FullTank" xml:space="preserve"><value>Plná nádrž</value></data>
   <data name="GlobalSearch.Value.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
   <data name="GlobalSearch.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
-  <data name="GlobalSearch.Value.Money" xml:space="preserve"><value>{0} Kč</value></data>
+  <data name="GlobalSearch.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="GlobalSearch.Value.Months" xml:space="preserve"><value>{0} měsíců</value></data>
   <data name="GlobalSearch.Value.No" xml:space="preserve"><value>ne</value></data>
   <data name="GlobalSearch.Value.NoCategory" xml:space="preserve"><value>Bez kategorie</value></data>
@@ -266,6 +266,7 @@ Vozidlo: {2}
   <data name="FuelEditor.StationName" xml:space="preserve"><value>Místo tankování</value></data>
   <data name="FuelEditor.TotalCostLabel" xml:space="preserve"><value>Cena celkem</value></data>
   <data name="FuelEditor.TotalCostName" xml:space="preserve"><value>Cena tankování celkem</value></data>
+  <data name="FuelEditor.Validation.TotalCostInvalid" xml:space="preserve"><value>Cenu celkem zadejte jako číslo, například 1890.</value></data>
   <data name="FuelEditor.VolumeHelp" xml:space="preserve"><value>Zadejte objem paliva v {0}. Vehimap hodnotu uloží interně v litrech.</value></data>
   <data name="FuelEditor.VolumeLabel" xml:space="preserve"><value>Množství ({0})</value></data>
   <data name="FuelEditor.VolumeName" xml:space="preserve"><value>Množství tankovaného paliva v {0}</value></data>
@@ -1441,7 +1442,7 @@ Stav: {5}</value></data>
   <data name="Timeline.Title.GreenCardEnd" xml:space="preserve"><value>Konec zelené karty</value></data>
   <data name="Timeline.Title.NextTechnicalInspection" xml:space="preserve"><value>Příští TK</value></data>
   <data name="Timeline.Title.Record" xml:space="preserve"><value>{0}: {1}</value></data>
-  <data name="Timeline.Value.Cost" xml:space="preserve"><value>{0} Kč</value></data>
+  <data name="Timeline.Value.Cost" xml:space="preserve"><value>{0}</value></data>
   <data name="Timeline.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
   <data name="Timeline.Value.NoCost" xml:space="preserve"><value>-</value></data>
   <data name="Timeline.Value.NoRepeat" xml:space="preserve"><value>Neopakovat</value></data>
@@ -1879,7 +1880,7 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Value.NoActiveInterval" xml:space="preserve"><value>Bez aktivního intervalu</value></data>
   <data name="ServiceBook.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
   <data name="ServiceBook.Value.NoOdometer" xml:space="preserve"><value>bez tachometru</value></data>
-  <data name="ServiceBook.Value.Money" xml:space="preserve"><value>{0} Kč</value></data>
+  <data name="ServiceBook.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="ServiceBook.Value.NoPrice" xml:space="preserve"><value>bez ceny</value></data>
   <data name="CalendarExport.Description.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
   <data name="CalendarExport.Description.DueDate" xml:space="preserve"><value>Termín: {0}</value></data>

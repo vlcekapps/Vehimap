@@ -8,15 +8,28 @@ namespace Vehimap.Application.Services;
 public sealed class LegacyTimelineService : ITimelineService
 {
     private readonly IAppLocalizer _localizer;
+    private readonly IAppNumberFormatService _numberFormatService;
+    private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private string _currency = AppCurrencyFormatService.CzechCrowns;
 
     public LegacyTimelineService()
         : this(CreateDefaultLocalizer())
     {
     }
 
-    public LegacyTimelineService(IAppLocalizer localizer)
+    public LegacyTimelineService(IAppLocalizer localizer, IAppNumberFormatService? numberFormatService = null)
     {
         _localizer = localizer;
+        _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+    }
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
+        _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
     }
 
     public IReadOnlyList<VehicleTimelineItem> BuildVehicleTimeline(VehimapDataSet dataSet, string vehicleId, DateOnly today)
@@ -417,7 +430,7 @@ public sealed class LegacyTimelineService : ITimelineService
     {
         if (VehimapValueParser.TryParseMoney(value, out var money))
         {
-            return LF("Timeline.Value.Cost", money.ToString("0.00", CultureInfo.InvariantCulture));
+            return LF("Timeline.Value.Cost", _numberFormatService.FormatMoney(money, _culturePreferences, _currency));
         }
 
         return string.IsNullOrWhiteSpace(value) ? L("Timeline.Value.NoCost") : value;

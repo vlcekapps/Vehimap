@@ -21,10 +21,23 @@ public sealed class LegacyServiceBookService : IServiceBookService
     ];
 
     private readonly IAppLocalizer _localizer;
+    private readonly IAppNumberFormatService _numberFormatService;
+    private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private string _currency = AppCurrencyFormatService.CzechCrowns;
 
-    public LegacyServiceBookService(IAppLocalizer? localizer = null)
+    public LegacyServiceBookService(IAppLocalizer? localizer = null, IAppNumberFormatService? numberFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+    }
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
+        _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
     }
 
     public ServiceBookSummary BuildVehicleServiceBook(VehimapDataSet dataSet, string vehicleId, DateOnly today)
@@ -276,7 +289,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
     {
         if (VehimapValueParser.TryParseMoney(value, out var parsed))
         {
-            return LF("ServiceBook.Value.Money", parsed.ToString("0.00", CultureInfo.InvariantCulture));
+            return LF("ServiceBook.Value.Money", _numberFormatService.FormatMoney(parsed, _culturePreferences, _currency));
         }
 
         return FormatValue(value, L("ServiceBook.Value.NoPrice"));

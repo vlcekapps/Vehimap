@@ -395,7 +395,7 @@ public sealed partial class MainWindowViewModel
         {
             if (!VehimapValueParser.TryParseMoney(totalCostText, out var parsedTotalCost) || parsedTotalCost < 0)
             {
-                FuelEditorStatus = "Cenu celkem zadejte jako číslo v Kč, například 1890.";
+                FuelEditorStatus = LO("FuelEditor.Validation.TotalCostInvalid");
                 RequestFocus(DesktopFocusTarget.FuelEditorTotalCost);
                 return;
             }

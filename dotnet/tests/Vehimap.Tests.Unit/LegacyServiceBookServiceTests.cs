@@ -1,3 +1,5 @@
+using System.Globalization;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -71,5 +73,48 @@ public sealed class LegacyServiceBookServiceTests
         Assert.Empty(summary.Records);
         Assert.Contains("zatím nemá žádné položky", summary.Status);
         Assert.Equal("neznámý", summary.CurrentOdometer);
+    }
+
+    [Fact]
+    public void Build_vehicle_service_book_formats_money_with_selected_currency()
+    {
+        var service = new LegacyServiceBookService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Cars", "", "Skoda 120L", "1AB2345", "", "", "", "", "", "")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "01.01.2026", "Service", "100000", "2500", "Oil")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_1", "veh_1", "Servisní dokument", "Faktura servis", "Garage", "02/2026", "02/2026", "4000", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/invoice.pdf", "Work")
+            ]
+        };
+
+        var summary = service.BuildVehicleServiceBook(dataSet, "veh_1", new DateOnly(2026, 3, 1));
+
+        Assert.Equal("$2,500.00", summary.HistoryEntries.Single().Cost);
+        Assert.Equal("$4,000.00", summary.Records.Single().Price);
     }
 }

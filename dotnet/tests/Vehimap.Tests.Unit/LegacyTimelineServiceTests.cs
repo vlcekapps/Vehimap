@@ -1,4 +1,5 @@
 using System.Globalization;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -78,6 +79,23 @@ public sealed class LegacyTimelineServiceTests
         var today = new DateOnly(2026, 4, 1);
         var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
         var service = new LegacyTimelineService(localizer);
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
         var dataSet = new VehimapDataSet
         {
             Settings =
@@ -138,6 +156,6 @@ public sealed class LegacyTimelineServiceTests
         var fuel = timeline.First(item => item.Kind == "fuel");
         Assert.Equal("Fuel", fuel.KindLabel);
         Assert.Equal("Fuel", fuel.Title);
-        Assert.Equal("CZK 300.00", fuel.Status);
+        Assert.Equal("$300.00", fuel.Status);
     }
 }

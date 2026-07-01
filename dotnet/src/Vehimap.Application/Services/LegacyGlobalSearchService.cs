@@ -21,17 +21,34 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private readonly IFileAttachmentService _attachmentService;
     private readonly ITimelineService _timelineService;
     private readonly IAppLocalizer _localizer;
+    private readonly IAppNumberFormatService _numberFormatService;
+    private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private string _currency = AppCurrencyFormatService.CzechCrowns;
 
     public LegacyGlobalSearchService(IFileAttachmentService attachmentService)
         : this(attachmentService, new LegacyTimelineService(), null)
     {
     }
 
-    public LegacyGlobalSearchService(IFileAttachmentService attachmentService, ITimelineService timelineService, IAppLocalizer? localizer = null)
+    public LegacyGlobalSearchService(IFileAttachmentService attachmentService, ITimelineService timelineService, IAppLocalizer? localizer = null, IAppNumberFormatService? numberFormatService = null)
     {
         _attachmentService = attachmentService;
         _timelineService = timelineService;
         _localizer = localizer ?? CreateDefaultLocalizer();
+        _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+    }
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
+        _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
+        if (_timelineService is LegacyTimelineService legacyTimelineService)
+        {
+            legacyTimelineService.ApplySupportedSettings(settings);
+        }
     }
 
     public IReadOnlyList<GlobalSearchResult> Search(VehimapDataRoot dataRoot, VehimapDataSet dataSet, string query)
@@ -492,7 +509,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         VehimapValueParser.TryParseOdometer(value, out var parsed) ? LF("GlobalSearch.Value.OdometerKm", parsed) : ValueOrFallback(value, string.Empty);
 
     private string FormatMoneyValue(string? value) =>
-        VehimapValueParser.TryParseMoney(value, out var parsed) ? LF("GlobalSearch.Value.Money", parsed.ToString("0.00", CultureInfo.InvariantCulture)) : ValueOrFallback(value, string.Empty);
+        VehimapValueParser.TryParseMoney(value, out var parsed)
+            ? LF("GlobalSearch.Value.Money", _numberFormatService.FormatMoney(parsed, _culturePreferences, _currency))
+            : ValueOrFallback(value, string.Empty);
 
     private string FormatFuelLiters(string? value)
     {

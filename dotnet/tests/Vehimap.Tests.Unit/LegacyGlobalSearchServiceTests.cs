@@ -1,5 +1,6 @@
 using System.Globalization;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -95,6 +96,23 @@ public sealed class LegacyGlobalSearchServiceTests
     {
         var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
         var service = new LegacyGlobalSearchService(new StubAttachmentService(), new LegacyTimelineService(localizer), localizer);
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
         var dataSet = CreateDataSet();
 
         var fuelResults = service.Search(DataRoot, dataSet, "FuelSave");
@@ -103,7 +121,7 @@ public sealed class LegacyGlobalSearchServiceTests
         Assert.Equal("Fuel", fuelResult.SectionLabel);
         Assert.StartsWith("Fuel -", fuelResult.Title, StringComparison.Ordinal);
         Assert.Contains("Full tank", fuelResult.Summary, StringComparison.Ordinal);
-        Assert.Contains("CZK 1200.00", fuelResult.Summary, StringComparison.Ordinal);
+        Assert.Contains("$1,200.00", fuelResult.Summary, StringComparison.Ordinal);
 
         var recordResults = service.Search(DataRoot, dataSet, "asistence.pdf");
         var recordResult = Assert.Single(recordResults.Where(item => item.EntityId == "rec_2"));

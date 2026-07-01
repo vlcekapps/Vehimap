@@ -178,7 +178,7 @@ Vehicle: {2}
   <data name="GlobalSearch.Value.FullTank" xml:space="preserve"><value>Full tank</value></data>
   <data name="GlobalSearch.Value.Inactive" xml:space="preserve"><value>Inactive</value></data>
   <data name="GlobalSearch.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
-  <data name="GlobalSearch.Value.Money" xml:space="preserve"><value>CZK {0}</value></data>
+  <data name="GlobalSearch.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="GlobalSearch.Value.Months" xml:space="preserve"><value>{0} months</value></data>
   <data name="GlobalSearch.Value.No" xml:space="preserve"><value>no</value></data>
   <data name="GlobalSearch.Value.NoCategory" xml:space="preserve"><value>No category</value></data>
@@ -266,6 +266,7 @@ Vehicle: {2}
   <data name="FuelEditor.StationName" xml:space="preserve"><value>Fuel station</value></data>
   <data name="FuelEditor.TotalCostLabel" xml:space="preserve"><value>Total cost</value></data>
   <data name="FuelEditor.TotalCostName" xml:space="preserve"><value>Total fuel cost</value></data>
+  <data name="FuelEditor.Validation.TotalCostInvalid" xml:space="preserve"><value>Enter the total cost as a number, for example 1890.</value></data>
   <data name="FuelEditor.VolumeHelp" xml:space="preserve"><value>Enter fuel volume in {0}. Vehimap stores the value internally in liters.</value></data>
   <data name="FuelEditor.VolumeLabel" xml:space="preserve"><value>Volume ({0})</value></data>
   <data name="FuelEditor.VolumeName" xml:space="preserve"><value>Fuel volume in {0}</value></data>
@@ -1441,7 +1442,7 @@ Status: {5}</value></data>
   <data name="Timeline.Title.GreenCardEnd" xml:space="preserve"><value>Green card end</value></data>
   <data name="Timeline.Title.NextTechnicalInspection" xml:space="preserve"><value>Next technical inspection</value></data>
   <data name="Timeline.Title.Record" xml:space="preserve"><value>{0}: {1}</value></data>
-  <data name="Timeline.Value.Cost" xml:space="preserve"><value>CZK {0}</value></data>
+  <data name="Timeline.Value.Cost" xml:space="preserve"><value>{0}</value></data>
   <data name="Timeline.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
   <data name="Timeline.Value.NoCost" xml:space="preserve"><value>-</value></data>
   <data name="Timeline.Value.NoRepeat" xml:space="preserve"><value>Do not repeat</value></data>
@@ -1879,7 +1880,7 @@ Status: {5}</value></data>
   <data name="ServiceBook.Value.NoActiveInterval" xml:space="preserve"><value>No active interval</value></data>
   <data name="ServiceBook.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
   <data name="ServiceBook.Value.NoOdometer" xml:space="preserve"><value>no odometer</value></data>
-  <data name="ServiceBook.Value.Money" xml:space="preserve"><value>CZK {0}</value></data>
+  <data name="ServiceBook.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="ServiceBook.Value.NoPrice" xml:space="preserve"><value>no price</value></data>
   <data name="CalendarExport.Description.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
   <data name="CalendarExport.Description.DueDate" xml:space="preserve"><value>Due date: {0}</value></data>

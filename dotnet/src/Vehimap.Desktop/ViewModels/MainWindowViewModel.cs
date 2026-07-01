@@ -1279,6 +1279,21 @@ public sealed partial class MainWindowViewModel : ObservableObject
         _projectionService.ApplySupportedSettings(supportedSettings);
         _costExportService.ApplySupportedSettings(supportedSettings);
         _serviceBookExportService.ApplySupportedSettings(supportedSettings);
+        if (_timelineService is LegacyTimelineService legacyTimelineService)
+        {
+            legacyTimelineService.ApplySupportedSettings(supportedSettings);
+        }
+
+        if (_globalSearchService is LegacyGlobalSearchService legacyGlobalSearchService)
+        {
+            legacyGlobalSearchService.ApplySupportedSettings(supportedSettings);
+        }
+
+        if (_serviceBookService is LegacyServiceBookService legacyServiceBookService)
+        {
+            legacyServiceBookService.ApplySupportedSettings(supportedSettings);
+        }
+
         ApplyCostPeriodPreferences();
         var costSummary = BuildSelectedCostSummary();
         _currentCostSummary = costSummary;
@@ -1738,40 +1753,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         BackgroundRefreshRequested?.Invoke();
     }
-
-    private static string FormatCostValue(string? value)
-    {
-        if (VehimapValueParser.TryParseMoney(value, out var parsed))
-        {
-            return FormatMoney(parsed);
-        }
-
-        return FormatValue(value, "bez ceny");
-    }
-
-    private static string FormatFuelLiters(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return "bez množství";
-        }
-
-        return value.Contains('l', StringComparison.OrdinalIgnoreCase)
-            ? value
-            : $"{value} l";
-    }
-
-    private static string FormatOdometerValue(string? value)
-    {
-        if (!VehimapValueParser.TryParseOdometer(value, out var parsed))
-        {
-            return FormatValue(value, "bez tachometru");
-        }
-
-        return $"{parsed} km";
-    }
-
-    private static string FormatMoney(decimal value) => $"{value:0.00} Kč";
 
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;
