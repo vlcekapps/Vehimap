@@ -2303,4 +2303,83 @@ Převodovka: {3}</value></data>
   <data name="VehicleList.Status.AttentionCount" xml:space="preserve"><value>{0} položek k řešení</value></data>
   <data name="VehicleList.Status.Ok" xml:space="preserve"><value>V pořádku</value></data>
   <data name="FuelAnalysis.Value.SegmentPeriod" xml:space="preserve"><value>{0} až {1}</value></data>
+  <data name="Shell.Subtitle.Stable" xml:space="preserve"><value>Multiplatformní desktop nad daty Vehimapu.</value></data>
+  <data name="Shell.Subtitle.Channel" xml:space="preserve"><value>Multiplatformní desktop nad odděleným kanálem {0}.</value></data>
+  <data name="Shell.Status.Ready" xml:space="preserve"><value>Desktopová aplikace je připravená.</value></data>
+  <data name="Shell.DataMode.Portable" xml:space="preserve"><value>Datová sada 2.0 (SQLite), portable data vedle aplikace</value></data>
+  <data name="Shell.DataMode.System" xml:space="preserve"><value>Datová sada 2.0 (SQLite), systémová datová složka</value></data>
+  <data name="Shell.LoadError.DatabasePath" xml:space="preserve"><value>Databáze datové sady 2.0: {0}</value></data>
+  <data name="Shell.LoadError.DataFolder" xml:space="preserve"><value>Datová složka: {0}</value></data>
+  <data name="Shell.LoadError.CorruptDatabaseAdvice" xml:space="preserve"><value>Vehimap poškozenou databázi automaticky nemaže ani neopravuje. Obnovte poslední .vehimapbak nebo otevřete předmigrační zálohu, pokud existuje.</value></data>
+  <data name="Window.History.Title.Empty" xml:space="preserve"><value>Historie vozidla</value></data>
+  <data name="Window.History.Title.Vehicle" xml:space="preserve"><value>Historie - {0}</value></data>
+  <data name="Window.Fuel.Title.Empty" xml:space="preserve"><value>Tankování vozidla</value></data>
+  <data name="Window.Fuel.Title.Vehicle" xml:space="preserve"><value>Tankování - {0}</value></data>
+  <data name="Window.Reminder.Title.Empty" xml:space="preserve"><value>Připomínky vozidla</value></data>
+  <data name="Window.Reminder.Title.Vehicle" xml:space="preserve"><value>Připomínky - {0}</value></data>
+  <data name="Window.Maintenance.Title.Empty" xml:space="preserve"><value>Plán údržby vozidla</value></data>
+  <data name="Window.Maintenance.Title.Vehicle" xml:space="preserve"><value>Údržba - {0}</value></data>
+  <data name="Window.Record.Title.Empty" xml:space="preserve"><value>Doklady a přílohy</value></data>
+  <data name="Window.Record.Title.Vehicle" xml:space="preserve"><value>Doklady a přílohy - {0}</value></data>
+  <data name="Window.VehicleDetail.Title.Empty" xml:space="preserve"><value>Detail vozidla</value></data>
+  <data name="Window.VehicleDetail.Title.Vehicle" xml:space="preserve"><value>Detail - {0}</value></data>
+  <data name="Window.Timeline.Title.Empty" xml:space="preserve"><value>Časová osa vozidla</value></data>
+  <data name="Window.Timeline.Title.Vehicle" xml:space="preserve"><value>Časová osa - {0}</value></data>
+  <data name="Window.Audit.Title" xml:space="preserve"><value>Audit dat</value></data>
+  <data name="Window.Cost.Title" xml:space="preserve"><value>Náklady napříč vozidly</value></data>
+  <data name="Window.Dashboard.Title" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Window.GlobalSearch.Title" xml:space="preserve"><value>Globální hledání</value></data>
+  <data name="Window.Upcoming.Title" xml:space="preserve"><value>Blížící se termíny</value></data>
+  <data name="Window.Overdue.Title" xml:space="preserve"><value>Propadlé termíny</value></data>
+  <data name="Window.SmartAdvisor.Title" xml:space="preserve"><value>Chytrý poradce</value></data>
+  <data name="VehicleList.Summary.NotLoaded" xml:space="preserve"><value>Seznam vozidel: zatím nebyla načtena žádná data.</value></data>
+  <data name="VehicleList.Status.FiltersCleared" xml:space="preserve"><value>Filtry seznamu vozidel byly vymazány.</value></data>
+  <data name="VehicleList.Persistence.FiltersFailed" xml:space="preserve"><value>Nepodařilo se uložit filtry seznamu vozidel</value></data>
+  <data name="Preferences.Persistence.EvidenceSortFailed" xml:space="preserve"><value>Nepodařilo se uložit řazení evidencí</value></data>
+  <data name="Preferences.Persistence.WorkspaceSortFailed" xml:space="preserve"><value>Nepodařilo se uložit řazení přehledů</value></data>
+  <data name="AutomaticBackup.Status.NoBackupYet" xml:space="preserve"><value>Automatické zálohy se ukládají do složky {0}. Poslední záloha v této složce zatím nebyla vytvořena.</value></data>
+  <data name="AutomaticBackup.Status.LastBackup" xml:space="preserve"><value>Automatické zálohy se ukládají do složky {0}. Poslední záloha v této složce: {1}.</value></data>
+  <data name="AutomaticBackup.Status.FileName" xml:space="preserve"><value> Soubor je uložen pod názvem {0}.</value></data>
+  <data name="AutomaticBackup.Status.NeverCreated" xml:space="preserve"><value>zatím nebyla vytvořena</value></data>
+  <data name="AutomaticBackup.Result.NoData" xml:space="preserve"><value>Automatickou zálohu nelze vytvořit bez načtených dat.</value></data>
+  <data name="AutomaticBackup.Result.Disabled" xml:space="preserve"><value>Automatické zálohy jsou vypnuté.</value></data>
+  <data name="AutomaticBackup.Result.NotDue" xml:space="preserve"><value>Automatická záloha ještě není splatná.</value></data>
+  <data name="AutomaticBackup.Result.Created" xml:space="preserve"><value>Automatická záloha byla vytvořena do {0}.</value></data>
+  <data name="AutomaticBackup.Result.IncludedAttachments" xml:space="preserve"><value> Spravovaných příloh v záloze: {0}.</value></data>
+  <data name="AutomaticBackup.Result.MissingAttachments" xml:space="preserve"><value> Přeskočených chybějících spravovaných příloh: {0}.</value></data>
+  <data name="AutomaticBackup.Result.Failed" xml:space="preserve"><value>Automatická záloha se nepodařila: {0}</value></data>
+  <data name="DataStoreHealth.NotLoaded.Summary" xml:space="preserve"><value>Datová sada není načtená.</value></data>
+  <data name="DataStoreHealth.NotLoaded.Detail" xml:space="preserve"><value>Kontrolu datové sady 2.0 nelze spustit bez načtené datové složky.</value></data>
+  <data name="DataStoreHealth.NoOp.Summary" xml:space="preserve"><value>Kontrola datové sady 2.0 nebyla v testovací session zapojená.</value></data>
+  <data name="DataStoreHealth.NoOp.Detail" xml:space="preserve"><value>Testovací session nepoužila konkrétní health službu.</value></data>
+  <data name="SmartAdvisor.Filter.AllPriorities" xml:space="preserve"><value>Všechny priority</value></data>
+  <data name="SmartAdvisor.Filter.AllCategories" xml:space="preserve"><value>Všechny kategorie</value></data>
+  <data name="SmartAdvisor.Filter.AllVehicles" xml:space="preserve"><value>Všechna vozidla</value></data>
+  <data name="SmartAdvisor.Summary.Initial" xml:space="preserve"><value>Chytrý poradce se zobrazí po načtení dat.</value></data>
+  <data name="SmartAdvisor.Detail.Empty" xml:space="preserve"><value>Vyberte doporučení a zobrazí se detail i navržená akce.</value></data>
+  <data name="SmartAdvisor.Detail.Selected" xml:space="preserve"><value>Priorita: {0}
+Kategorie: {1}
+Vozidlo: {2}
+Doporučení: {3}
+Souhrn: {4}
+Detail: {5}
+Navržená akce: {6}</value></data>
+  <data name="SmartAdvisor.Summary.FilteredEmpty" xml:space="preserve"><value>Aktuální filtry nenašly žádné doporučení.</value></data>
+  <data name="SmartAdvisor.Summary.FilteredCount" xml:space="preserve"><value>Aktuální filtry zobrazují {0} z {1} doporučení.</value></data>
+  <data name="Audit.Summary.SearchEmpty" xml:space="preserve"><value>Pro hledání „{0}“ nejsou v auditu žádné položky.</value></data>
+  <data name="Audit.Summary.SearchCount" xml:space="preserve"><value>Hledání „{0}“ našlo {1} z {2} auditních položek.</value></data>
+  <data name="Keyboard.TextBox.LabelFallback" xml:space="preserve"><value>Textové pole</value></data>
+  <data name="Keyboard.TextBox.Selection" xml:space="preserve"><value>{0}: vybráno {1} znaků, {2}.</value></data>
+  <data name="Keyboard.TextBox.Empty" xml:space="preserve"><value>{0}: prázdné pole.</value></data>
+  <data name="Keyboard.TextBox.Start" xml:space="preserve"><value>{0}: začátek textu, před znakem {1}, pozice 0 z {2}.</value></data>
+  <data name="Keyboard.TextBox.End" xml:space="preserve"><value>{0}: konec textu, za znakem {1}, pozice {2} z {2}.</value></data>
+  <data name="Keyboard.TextBox.Middle" xml:space="preserve"><value>{0}: za znakem {1}, před znakem {2}, pozice {3} z {4}.</value></data>
+  <data name="Keyboard.TextBox.LineBreak" xml:space="preserve"><value>konec řádku</value></data>
+  <data name="Keyboard.TextBox.EmptySelection" xml:space="preserve"><value>prázdný výběr</value></data>
+  <data name="Keyboard.TextBox.Tab" xml:space="preserve"><value>tabulátor</value></data>
+  <data name="Keyboard.TextBox.Space" xml:space="preserve"><value>mezera</value></data>
+  <data name="VehicleDelete.Dialog.Title" xml:space="preserve"><value>Odstranit vozidlo</value></data>
+  <data name="VehicleDelete.Dialog.Confirm" xml:space="preserve"><value>Odstranit vozidlo</value></data>
+  <data name="Dialog.Cancel" xml:space="preserve"><value>Zrušit</value></data>
+  <data name="WorkspaceEditor.Error.UnknownKind" xml:space="preserve"><value>Neznámý typ editoru.</value></data>
 </root>

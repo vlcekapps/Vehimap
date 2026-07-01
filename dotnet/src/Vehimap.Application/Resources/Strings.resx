@@ -2303,4 +2303,83 @@ Transmission: {3}</value></data>
   <data name="VehicleList.Status.AttentionCount" xml:space="preserve"><value>{0} items to review</value></data>
   <data name="VehicleList.Status.Ok" xml:space="preserve"><value>OK</value></data>
   <data name="FuelAnalysis.Value.SegmentPeriod" xml:space="preserve"><value>{0} to {1}</value></data>
+  <data name="Shell.Subtitle.Stable" xml:space="preserve"><value>Multiplatform desktop for Vehimap data.</value></data>
+  <data name="Shell.Subtitle.Channel" xml:space="preserve"><value>Multiplatform desktop for the separate {0} channel.</value></data>
+  <data name="Shell.Status.Ready" xml:space="preserve"><value>The desktop app is ready.</value></data>
+  <data name="Shell.DataMode.Portable" xml:space="preserve"><value>2.0 data set (SQLite), portable data next to the app</value></data>
+  <data name="Shell.DataMode.System" xml:space="preserve"><value>2.0 data set (SQLite), system data folder</value></data>
+  <data name="Shell.LoadError.DatabasePath" xml:space="preserve"><value>2.0 data set database: {0}</value></data>
+  <data name="Shell.LoadError.DataFolder" xml:space="preserve"><value>Data folder: {0}</value></data>
+  <data name="Shell.LoadError.CorruptDatabaseAdvice" xml:space="preserve"><value>Vehimap does not automatically delete or repair a damaged database. Restore the latest .vehimapbak or open the pre-migration backup if it exists.</value></data>
+  <data name="Window.History.Title.Empty" xml:space="preserve"><value>Vehicle history</value></data>
+  <data name="Window.History.Title.Vehicle" xml:space="preserve"><value>History - {0}</value></data>
+  <data name="Window.Fuel.Title.Empty" xml:space="preserve"><value>Vehicle fuel</value></data>
+  <data name="Window.Fuel.Title.Vehicle" xml:space="preserve"><value>Fuel - {0}</value></data>
+  <data name="Window.Reminder.Title.Empty" xml:space="preserve"><value>Vehicle reminders</value></data>
+  <data name="Window.Reminder.Title.Vehicle" xml:space="preserve"><value>Reminders - {0}</value></data>
+  <data name="Window.Maintenance.Title.Empty" xml:space="preserve"><value>Vehicle maintenance plan</value></data>
+  <data name="Window.Maintenance.Title.Vehicle" xml:space="preserve"><value>Maintenance - {0}</value></data>
+  <data name="Window.Record.Title.Empty" xml:space="preserve"><value>Documents and attachments</value></data>
+  <data name="Window.Record.Title.Vehicle" xml:space="preserve"><value>Documents and attachments - {0}</value></data>
+  <data name="Window.VehicleDetail.Title.Empty" xml:space="preserve"><value>Vehicle detail</value></data>
+  <data name="Window.VehicleDetail.Title.Vehicle" xml:space="preserve"><value>Detail - {0}</value></data>
+  <data name="Window.Timeline.Title.Empty" xml:space="preserve"><value>Vehicle timeline</value></data>
+  <data name="Window.Timeline.Title.Vehicle" xml:space="preserve"><value>Timeline - {0}</value></data>
+  <data name="Window.Audit.Title" xml:space="preserve"><value>Data audit</value></data>
+  <data name="Window.Cost.Title" xml:space="preserve"><value>Costs across vehicles</value></data>
+  <data name="Window.Dashboard.Title" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Window.GlobalSearch.Title" xml:space="preserve"><value>Global search</value></data>
+  <data name="Window.Upcoming.Title" xml:space="preserve"><value>Upcoming due dates</value></data>
+  <data name="Window.Overdue.Title" xml:space="preserve"><value>Overdue due dates</value></data>
+  <data name="Window.SmartAdvisor.Title" xml:space="preserve"><value>Smart Advisor</value></data>
+  <data name="VehicleList.Summary.NotLoaded" xml:space="preserve"><value>Vehicle list: no data has been loaded yet.</value></data>
+  <data name="VehicleList.Status.FiltersCleared" xml:space="preserve"><value>Vehicle list filters were cleared.</value></data>
+  <data name="VehicleList.Persistence.FiltersFailed" xml:space="preserve"><value>Could not save vehicle list filters</value></data>
+  <data name="Preferences.Persistence.EvidenceSortFailed" xml:space="preserve"><value>Could not save evidence sorting</value></data>
+  <data name="Preferences.Persistence.WorkspaceSortFailed" xml:space="preserve"><value>Could not save overview sorting</value></data>
+  <data name="AutomaticBackup.Status.NoBackupYet" xml:space="preserve"><value>Automatic backups are stored in {0}. No backup has been created in this folder yet.</value></data>
+  <data name="AutomaticBackup.Status.LastBackup" xml:space="preserve"><value>Automatic backups are stored in {0}. Last backup in this folder: {1}.</value></data>
+  <data name="AutomaticBackup.Status.FileName" xml:space="preserve"><value> The file is named {0}.</value></data>
+  <data name="AutomaticBackup.Status.NeverCreated" xml:space="preserve"><value>not created yet</value></data>
+  <data name="AutomaticBackup.Result.NoData" xml:space="preserve"><value>Automatic backup cannot be created without loaded data.</value></data>
+  <data name="AutomaticBackup.Result.Disabled" xml:space="preserve"><value>Automatic backups are disabled.</value></data>
+  <data name="AutomaticBackup.Result.NotDue" xml:space="preserve"><value>Automatic backup is not due yet.</value></data>
+  <data name="AutomaticBackup.Result.Created" xml:space="preserve"><value>Automatic backup was created at {0}.</value></data>
+  <data name="AutomaticBackup.Result.IncludedAttachments" xml:space="preserve"><value> Managed attachments in backup: {0}.</value></data>
+  <data name="AutomaticBackup.Result.MissingAttachments" xml:space="preserve"><value> Skipped missing managed attachments: {0}.</value></data>
+  <data name="AutomaticBackup.Result.Failed" xml:space="preserve"><value>Automatic backup failed: {0}</value></data>
+  <data name="DataStoreHealth.NotLoaded.Summary" xml:space="preserve"><value>Data set is not loaded.</value></data>
+  <data name="DataStoreHealth.NotLoaded.Detail" xml:space="preserve"><value>The 2.0 data set check cannot run without a loaded data folder.</value></data>
+  <data name="DataStoreHealth.NoOp.Summary" xml:space="preserve"><value>The 2.0 data set check is not connected in this test session.</value></data>
+  <data name="DataStoreHealth.NoOp.Detail" xml:space="preserve"><value>The test session did not use a concrete health service.</value></data>
+  <data name="SmartAdvisor.Filter.AllPriorities" xml:space="preserve"><value>All priorities</value></data>
+  <data name="SmartAdvisor.Filter.AllCategories" xml:space="preserve"><value>All categories</value></data>
+  <data name="SmartAdvisor.Filter.AllVehicles" xml:space="preserve"><value>All vehicles</value></data>
+  <data name="SmartAdvisor.Summary.Initial" xml:space="preserve"><value>Smart Advisor appears after data is loaded.</value></data>
+  <data name="SmartAdvisor.Detail.Empty" xml:space="preserve"><value>Select a recommendation to show the detail and suggested action.</value></data>
+  <data name="SmartAdvisor.Detail.Selected" xml:space="preserve"><value>Priority: {0}
+Category: {1}
+Vehicle: {2}
+Recommendation: {3}
+Summary: {4}
+Detail: {5}
+Suggested action: {6}</value></data>
+  <data name="SmartAdvisor.Summary.FilteredEmpty" xml:space="preserve"><value>The current filters did not find any recommendation.</value></data>
+  <data name="SmartAdvisor.Summary.FilteredCount" xml:space="preserve"><value>The current filters show {0} of {1} recommendations.</value></data>
+  <data name="Audit.Summary.SearchEmpty" xml:space="preserve"><value>No audit items match search "{0}".</value></data>
+  <data name="Audit.Summary.SearchCount" xml:space="preserve"><value>Search "{0}" found {1} of {2} audit items.</value></data>
+  <data name="Keyboard.TextBox.LabelFallback" xml:space="preserve"><value>Text field</value></data>
+  <data name="Keyboard.TextBox.Selection" xml:space="preserve"><value>{0}: selected {1} characters, {2}.</value></data>
+  <data name="Keyboard.TextBox.Empty" xml:space="preserve"><value>{0}: empty field.</value></data>
+  <data name="Keyboard.TextBox.Start" xml:space="preserve"><value>{0}: start of text, before character {1}, position 0 of {2}.</value></data>
+  <data name="Keyboard.TextBox.End" xml:space="preserve"><value>{0}: end of text, after character {1}, position {2} of {2}.</value></data>
+  <data name="Keyboard.TextBox.Middle" xml:space="preserve"><value>{0}: after character {1}, before character {2}, position {3} of {4}.</value></data>
+  <data name="Keyboard.TextBox.LineBreak" xml:space="preserve"><value>line break</value></data>
+  <data name="Keyboard.TextBox.EmptySelection" xml:space="preserve"><value>empty selection</value></data>
+  <data name="Keyboard.TextBox.Tab" xml:space="preserve"><value>tab</value></data>
+  <data name="Keyboard.TextBox.Space" xml:space="preserve"><value>space</value></data>
+  <data name="VehicleDelete.Dialog.Title" xml:space="preserve"><value>Delete vehicle</value></data>
+  <data name="VehicleDelete.Dialog.Confirm" xml:space="preserve"><value>Delete vehicle</value></data>
+  <data name="Dialog.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="WorkspaceEditor.Error.UnknownKind" xml:space="preserve"><value>Unknown editor type.</value></data>
 </root>

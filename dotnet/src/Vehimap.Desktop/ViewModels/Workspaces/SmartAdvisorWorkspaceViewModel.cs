@@ -7,9 +7,9 @@ namespace Vehimap.Desktop.ViewModels.Workspaces;
 
 public sealed partial class SmartAdvisorWorkspaceViewModel : WorkspaceViewModelBase
 {
-    public const string AllPrioritiesLabel = "Všechny priority";
-    public const string AllCategoriesLabel = "Všechny kategorie";
-    public const string AllVehiclesLabel = "Všechna vozidla";
+    public static string AllPrioritiesLabel => L("SmartAdvisor.Filter.AllPriorities");
+    public static string AllCategoriesLabel => L("SmartAdvisor.Filter.AllCategories");
+    public static string AllVehiclesLabel => L("SmartAdvisor.Filter.AllVehicles");
 
     public SmartAdvisorWorkspaceViewModel(MainWindowViewModel root)
         : base(root)
@@ -19,10 +19,10 @@ public sealed partial class SmartAdvisorWorkspaceViewModel : WorkspaceViewModelB
         VehicleFilters.Add(AllVehiclesLabel);
     }
 
-    private string unfilteredSmartAdvisorSummary = "Chytrý poradce se zobrazí po načtení dat.";
+    private string unfilteredSmartAdvisorSummary = L("SmartAdvisor.Summary.Initial");
 
     [ObservableProperty]
-    private string smartAdvisorSummary = "Chytrý poradce se zobrazí po načtení dat.";
+    private string smartAdvisorSummary = L("SmartAdvisor.Summary.Initial");
 
     [ObservableProperty]
     private string smartAdvisorSearchText = string.Empty;
@@ -40,7 +40,7 @@ public sealed partial class SmartAdvisorWorkspaceViewModel : WorkspaceViewModelB
     private SmartAdvisorItemViewModel? selectedSmartAdvisorItem;
 
     [ObservableProperty]
-    private string selectedSmartAdvisorDetail = "Vyberte doporučení a zobrazí se detail i navržená akce.";
+    private string selectedSmartAdvisorDetail = L("SmartAdvisor.Detail.Empty");
 
     public string WindowTitle => Root.SmartAdvisorWindowTitle;
 
@@ -145,8 +145,16 @@ public sealed partial class SmartAdvisorWorkspaceViewModel : WorkspaceViewModelB
     partial void OnSelectedSmartAdvisorItemChanged(SmartAdvisorItemViewModel? value)
     {
         SelectedSmartAdvisorDetail = value is null
-            ? "Vyberte doporučení a zobrazí se detail i navržená akce."
-            : $"Priorita: {value.Priority}\nKategorie: {value.Category}\nVozidlo: {value.VehicleName}\nDoporučení: {value.Title}\nSouhrn: {value.Summary}\nDetail: {value.Detail}\nNavržená akce: {value.ActionLabel}";
+            ? L("SmartAdvisor.Detail.Empty")
+            : LF(
+                "SmartAdvisor.Detail.Selected",
+                value.Priority,
+                value.Category,
+                value.VehicleName,
+                value.Title,
+                value.Summary,
+                value.Detail,
+                value.ActionLabel);
 
         OnPropertyChanged(nameof(CanOpenSelectedSmartAdvisorItem));
         OpenSelectedSmartAdvisorItemCommand.NotifyCanExecuteChanged();
@@ -246,8 +254,8 @@ public sealed partial class SmartAdvisorWorkspaceViewModel : WorkspaceViewModelB
         }
 
         SmartAdvisorSummary = VisibleSmartAdvisorItems.Count == 0
-            ? "Aktuální filtry nenašly žádné doporučení."
-            : $"Aktuální filtry zobrazují {VisibleSmartAdvisorItems.Count} z {SmartAdvisorItems.Count} doporučení.";
+            ? L("SmartAdvisor.Summary.FilteredEmpty")
+            : LF("SmartAdvisor.Summary.FilteredCount", VisibleSmartAdvisorItems.Count, SmartAdvisorItems.Count);
     }
 
     private void NotifyFilterStateChanged()

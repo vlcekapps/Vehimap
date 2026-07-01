@@ -66,7 +66,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private string title = "Vehimap";
 
     [ObservableProperty]
-    private string subtitle = "Multiplatformní desktop nad daty Vehimapu.";
+    private string subtitle = LO("Shell.Subtitle.Stable");
 
     [ObservableProperty]
     private string dataMode = string.Empty;
@@ -99,7 +99,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private int auditCount;
 
     [ObservableProperty]
-    private string shellStatus = "Desktopová větev je připravená.";
+    private string shellStatus = LO("Shell.Status.Ready");
 
     [ObservableProperty]
     private bool isMinimizeToTrayAvailable;
@@ -171,52 +171,52 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     internal string HistoryWindowTitle =>
         SelectedVehicle is null
-            ? "Historie vozidla"
-            : $"Historie - {SelectedVehicle.Name}";
+            ? LO("Window.History.Title.Empty")
+            : LFO("Window.History.Title.Vehicle", SelectedVehicle.Name);
 
     internal string FuelWindowTitle =>
         SelectedVehicle is null
-            ? "Tankování vozidla"
-            : $"Tankování - {SelectedVehicle.Name}";
+            ? LO("Window.Fuel.Title.Empty")
+            : LFO("Window.Fuel.Title.Vehicle", SelectedVehicle.Name);
 
     internal string ReminderWindowTitle =>
         SelectedVehicle is null
-            ? "Připomínky vozidla"
-            : $"Připomínky - {SelectedVehicle.Name}";
+            ? LO("Window.Reminder.Title.Empty")
+            : LFO("Window.Reminder.Title.Vehicle", SelectedVehicle.Name);
 
     internal string MaintenanceWindowTitle =>
         SelectedVehicle is null
-            ? "Plán údržby vozidla"
-            : $"Údržba - {SelectedVehicle.Name}";
+            ? LO("Window.Maintenance.Title.Empty")
+            : LFO("Window.Maintenance.Title.Vehicle", SelectedVehicle.Name);
 
     internal string RecordWindowTitle =>
         SelectedVehicle is null
-            ? "Doklady a přílohy"
-            : $"Doklady a přílohy - {SelectedVehicle.Name}";
+            ? LO("Window.Record.Title.Empty")
+            : LFO("Window.Record.Title.Vehicle", SelectedVehicle.Name);
 
     internal string VehicleDetailWindowTitle =>
         SelectedVehicle is null
-            ? "Detail vozidla"
-            : $"Detail - {SelectedVehicle.Name}";
+            ? LO("Window.VehicleDetail.Title.Empty")
+            : LFO("Window.VehicleDetail.Title.Vehicle", SelectedVehicle.Name);
 
     internal string TimelineWindowTitle =>
         SelectedVehicle is null
-            ? "Časová osa vozidla"
-            : $"Časová osa - {SelectedVehicle.Name}";
+            ? LO("Window.Timeline.Title.Empty")
+            : LFO("Window.Timeline.Title.Vehicle", SelectedVehicle.Name);
 
-    internal string AuditWindowTitle => "Audit dat";
+    internal string AuditWindowTitle => LO("Window.Audit.Title");
 
-    internal string CostWindowTitle => "Náklady napříč vozidly";
+    internal string CostWindowTitle => LO("Window.Cost.Title");
 
-    internal string DashboardWindowTitle => "Dashboard";
+    internal string DashboardWindowTitle => LO("Window.Dashboard.Title");
 
-    internal string GlobalSearchWindowTitle => "Globální hledání";
+    internal string GlobalSearchWindowTitle => LO("Window.GlobalSearch.Title");
 
-    internal string UpcomingOverviewWindowTitle => "Blížící se termíny";
+    internal string UpcomingOverviewWindowTitle => LO("Window.Upcoming.Title");
 
-    internal string OverdueOverviewWindowTitle => "Propadlé termíny";
+    internal string OverdueOverviewWindowTitle => LO("Window.Overdue.Title");
 
-    internal string SmartAdvisorWindowTitle => "Chytrý poradce";
+    internal string SmartAdvisorWindowTitle => LO("Window.SmartAdvisor.Title");
 
     public bool IsDetailTabSelected => SelectedVehicleTabIndex == DetailTabIndex;
 
@@ -1251,9 +1251,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 [
                     exception.Message,
                     string.Empty,
-                    $"Databáze datové sady 2.0: {databasePath}",
-                    $"Datová složka: {dataRoot.DataPath}",
-                    "Vehimap poškozenou databázi automaticky nemaže ani neopravuje. Obnovte poslední .vehimapbak nebo otevřete předmigrační zálohu, pokud existuje."
+                    LFO("Shell.LoadError.DatabasePath", databasePath),
+                    LFO("Shell.LoadError.DataFolder", dataRoot.DataPath),
+                    LO("Shell.LoadError.CorruptDatabaseAdvice")
                 ]);
         }
         catch
@@ -1270,7 +1270,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
 
         var message = BuildDataStoreHealthShellMessage(report, manual: false);
-        ShellStatus = string.IsNullOrWhiteSpace(ShellStatus) || string.Equals(ShellStatus, "Desktopová větev je připravená.", StringComparison.Ordinal)
+        ShellStatus = string.IsNullOrWhiteSpace(ShellStatus) || string.Equals(ShellStatus, LO("Shell.Status.Ready"), StringComparison.Ordinal)
             ? message
             : $"{ShellStatus} {message}";
     }
@@ -1314,11 +1314,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
         LoadError = string.Empty;
         Title = appInfo.ApplicationName;
         Subtitle = appInfo.ReleaseChannel == ReleaseChannelService.Stable
-            ? "Multiplatformni desktop nad daty Vehimapu."
-            : $"Multiplatformni desktop nad oddelenym kanalem {appInfo.ReleaseChannel}.";
+            ? LO("Shell.Subtitle.Stable")
+            : LFO("Shell.Subtitle.Channel", appInfo.ReleaseChannel);
         DataMode = _dataRoot.IsPortable
-            ? "Datová sada 2.0 (SQLite), portable data vedle aplikace"
-            : "Datová sada 2.0 (SQLite), systémová datová složka";
+            ? LO("Shell.DataMode.Portable")
+            : LO("Shell.DataMode.System");
         DataPath = _dataRoot.DataPath;
         OnPropertyChanged(nameof(CanUseDataActions));
         OnPropertyChanged(nameof(CanOpenDataFolder));

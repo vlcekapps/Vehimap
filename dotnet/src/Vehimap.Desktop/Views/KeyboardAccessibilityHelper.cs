@@ -8,6 +8,7 @@ using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using System.Runtime.CompilerServices;
+using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.Views;
 
@@ -175,7 +176,7 @@ internal static class KeyboardAccessibilityHelper
         int selectionStart,
         int selectionEnd)
     {
-        var label = string.IsNullOrWhiteSpace(fieldName) ? "Textové pole" : fieldName.Trim();
+        var label = string.IsNullOrWhiteSpace(fieldName) ? L("Keyboard.TextBox.LabelFallback") : fieldName.Trim();
         var value = text ?? string.Empty;
         var length = value.Length;
         var caret = Math.Clamp(caretIndex, 0, length);
@@ -185,25 +186,31 @@ internal static class KeyboardAccessibilityHelper
         if (start != end)
         {
             var selected = value[start..end];
-            return $"{label}: vybráno {end - start} znaků, {DescribeSnippet(selected)}.";
+            return LF("Keyboard.TextBox.Selection", label, end - start, DescribeSnippet(selected));
         }
 
         if (length == 0)
         {
-            return $"{label}: prázdné pole.";
+            return LF("Keyboard.TextBox.Empty", label);
         }
 
         if (caret == 0)
         {
-            return $"{label}: začátek textu, před znakem {DescribeCharacter(value[0])}, pozice 0 z {length}.";
+            return LF("Keyboard.TextBox.Start", label, DescribeCharacter(value[0]), length);
         }
 
         if (caret >= length)
         {
-            return $"{label}: konec textu, za znakem {DescribeCharacter(value[^1])}, pozice {length} z {length}.";
+            return LF("Keyboard.TextBox.End", label, DescribeCharacter(value[^1]), length);
         }
 
-        return $"{label}: za znakem {DescribeCharacter(value[caret - 1])}, před znakem {DescribeCharacter(value[caret])}, pozice {caret} z {length}.";
+        return LF(
+            "Keyboard.TextBox.Middle",
+            label,
+            DescribeCharacter(value[caret - 1]),
+            DescribeCharacter(value[caret]),
+            caret,
+            length);
     }
 
     private static TextBlock CreateTextEditingLiveRegion()
@@ -256,10 +263,10 @@ internal static class KeyboardAccessibilityHelper
     private static string DescribeSnippet(string value)
     {
         const int maxLength = 32;
-        var normalized = value.Replace("\r", string.Empty, StringComparison.Ordinal).Replace("\n", " konec řádku ", StringComparison.Ordinal).Trim();
+        var normalized = value.Replace("\r", string.Empty, StringComparison.Ordinal).Replace("\n", $" {L("Keyboard.TextBox.LineBreak")} ", StringComparison.Ordinal).Trim();
         if (string.IsNullOrWhiteSpace(normalized))
         {
-            return "prázdný výběr";
+            return L("Keyboard.TextBox.EmptySelection");
         }
 
         return normalized.Length <= maxLength
@@ -270,11 +277,15 @@ internal static class KeyboardAccessibilityHelper
     private static string DescribeCharacter(char character) =>
         character switch
         {
-            '\r' or '\n' => "konec řádku",
-            '\t' => "tabulátor",
-            ' ' => "mezera",
+            '\r' or '\n' => L("Keyboard.TextBox.LineBreak"),
+            '\t' => L("Keyboard.TextBox.Tab"),
+            ' ' => L("Keyboard.TextBox.Space"),
             _ => character.ToString()
         };
+
+    private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
+
+    private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
 
     private static TControl? FindSourceControl<TControl>(object? source)
         where TControl : Control

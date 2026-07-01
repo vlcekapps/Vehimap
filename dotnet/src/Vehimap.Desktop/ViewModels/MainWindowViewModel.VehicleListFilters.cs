@@ -21,7 +21,7 @@ public sealed partial class MainWindowViewModel
     private bool _suppressVehicleListFilterRefresh;
 
     [ObservableProperty]
-    private string vehicleListSummary = "Seznam vozidel: zatím nebyla načtena žádná data.";
+    private string vehicleListSummary = LO("VehicleList.Summary.NotLoaded");
 
     [ObservableProperty]
     private string vehicleSearchText = string.Empty;
@@ -95,7 +95,7 @@ public sealed partial class MainWindowViewModel
         RefreshVehicleList();
         NotifyVehicleListFilterStateChanged();
         PersistVehicleListFilterPreferencesAsync();
-        ShellStatus = "Filtry seznamu vozidel byly vymazány.";
+        ShellStatus = LO("VehicleList.Status.FiltersCleared");
         RequestFocus(DesktopFocusTarget.VehicleSearch);
     }
 
@@ -162,7 +162,7 @@ public sealed partial class MainWindowViewModel
                 settings.SetValue("app", VehicleListCategoryFilterSettingKey, categoryFilter);
                 settings.SetValue("app", VehicleListStatusFilterSettingKey, statusFilter);
             },
-            "Nepodařilo se uložit filtry seznamu vozidel");
+            LO("VehicleList.Persistence.FiltersFailed"));
     }
 
     private string NormalizeVehicleCategoryFilter(string? value)
@@ -186,7 +186,7 @@ public sealed partial class MainWindowViewModel
         if (!_session.IsLoaded)
         {
             Vehicles.Clear();
-            VehicleListSummary = "Seznam vozidel: zatím nebyla načtena žádná data.";
+            VehicleListSummary = LO("VehicleList.Summary.NotLoaded");
             return;
         }
 

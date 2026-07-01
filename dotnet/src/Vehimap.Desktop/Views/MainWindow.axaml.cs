@@ -1082,10 +1082,10 @@ public partial class MainWindow : Window
         var confirmation = new ConfirmationWindow
         {
             DataContext = new ConfirmationDialogViewModel(
-                "Odstranit vozidlo",
+                DesktopLocalization.Localizer.GetString("VehicleDelete.Dialog.Title"),
                 message,
-                "Odstranit vozidlo",
-                "Zrušit")
+                DesktopLocalization.Localizer.GetString("VehicleDelete.Dialog.Confirm"),
+                DesktopLocalization.Localizer.GetString("Dialog.Cancel"))
         };
 
         return await confirmation.ShowDialog<bool>(this);
@@ -1325,7 +1325,7 @@ public partial class MainWindow : Window
                 WorkspaceEditorKind.Reminder => new ReminderEditorWindow { DataContext = viewModel.ReminderWorkspace },
                 WorkspaceEditorKind.Maintenance => new MaintenanceEditorWindow { DataContext = viewModel.MaintenanceWorkspace },
                 WorkspaceEditorKind.Record => new RecordEditorWindow { DataContext = viewModel.RecordWorkspace },
-                _ => throw new InvalidOperationException("Neznámý typ editoru.")
+                _ => throw new InvalidOperationException(DesktopLocalization.Localizer.GetString("WorkspaceEditor.Error.UnknownKind"))
             };
 
             await dialog.ShowDialog<bool?>(this).ConfigureAwait(true);

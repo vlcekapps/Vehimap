@@ -4,6 +4,7 @@ using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 using Vehimap.Domain.Models;
 
 namespace Vehimap.Desktop.Services;
@@ -194,8 +195,8 @@ internal sealed class DesktopSessionController
         {
             return new DataStoreHealthReport(
                 DataStoreHealthStatus.Error,
-                "Datová sada není načtená.",
-                ["Kontrolu datové sady 2.0 nelze spustit bez načtené datové složky."],
+                LO("DataStoreHealth.NotLoaded.Summary"),
+                [LO("DataStoreHealth.NotLoaded.Detail")],
                 string.Empty,
                 string.Empty);
         }
@@ -290,13 +291,13 @@ internal sealed class DesktopSessionController
 
         if (string.IsNullOrWhiteSpace(lastStamp))
         {
-            return $"Automatické zálohy se ukládají do složky {backupDirectoryLabel}. Poslední záloha v této složce zatím nebyla vytvořena.";
+            return LFO("AutomaticBackup.Status.NoBackupYet", backupDirectoryLabel);
         }
 
-        var status = $"Automatické zálohy se ukládají do složky {backupDirectoryLabel}. Poslední záloha v této složce: {FormatAutomaticBackupStamp(lastStamp)}.";
+        var status = LFO("AutomaticBackup.Status.LastBackup", backupDirectoryLabel, FormatAutomaticBackupStamp(lastStamp));
         if (!string.IsNullOrWhiteSpace(lastPath) && File.Exists(lastPath))
         {
-            status += $" Soubor je uložen pod názvem {Path.GetFileName(lastPath)}.";
+            status += LFO("AutomaticBackup.Status.FileName", Path.GetFileName(lastPath));
         }
 
         return status;
@@ -320,18 +321,18 @@ internal sealed class DesktopSessionController
     {
         if (DataRoot is null)
         {
-            return new AutomaticBackupResult(false, true, string.Empty, "Automatickou zálohu nelze vytvořit bez načtených dat.");
+            return new AutomaticBackupResult(false, true, string.Empty, LO("AutomaticBackup.Result.NoData"));
         }
 
         if (!force && !CurrentSupportedSettings.AutomaticBackupsEnabled)
         {
-            return new AutomaticBackupResult(false, false, string.Empty, "Automatické zálohy jsou vypnuté.");
+            return new AutomaticBackupResult(false, false, string.Empty, LO("AutomaticBackup.Result.Disabled"));
         }
 
         if (!force && !IsAutomaticBackupDue(DateTime.Now))
         {
             TrimAutomaticBackupFiles();
-            return new AutomaticBackupResult(false, false, string.Empty, "Automatická záloha ještě není splatná.");
+            return new AutomaticBackupResult(false, false, string.Empty, LO("AutomaticBackup.Result.NotDue"));
         }
 
         return await CreateAutomaticBackupAsync(cancellationToken).ConfigureAwait(false);
@@ -341,7 +342,7 @@ internal sealed class DesktopSessionController
     {
         if (DataRoot is null)
         {
-            return new AutomaticBackupResult(false, true, string.Empty, "Automatickou zálohu nelze vytvořit bez načtených dat.");
+            return new AutomaticBackupResult(false, true, string.Empty, LO("AutomaticBackup.Result.NoData"));
         }
 
         try
@@ -359,22 +360,22 @@ internal sealed class DesktopSessionController
                     cancellationToken)
                 .ConfigureAwait(false);
             TrimAutomaticBackupFiles();
-            var message = $"Automatická záloha byla vytvořena do {backupPath}.";
+            var message = LFO("AutomaticBackup.Result.Created", backupPath);
             if (exportResult.IncludedManagedAttachmentCount > 0)
             {
-                message += $" Spravovaných příloh v záloze: {exportResult.IncludedManagedAttachmentCount}.";
+                message += LFO("AutomaticBackup.Result.IncludedAttachments", exportResult.IncludedManagedAttachmentCount);
             }
 
             if (exportResult.MissingManagedAttachmentCount > 0)
             {
-                message += $" Přeskočených chybějících spravovaných příloh: {exportResult.MissingManagedAttachmentCount}.";
+                message += LFO("AutomaticBackup.Result.MissingAttachments", exportResult.MissingManagedAttachmentCount);
             }
 
             return new AutomaticBackupResult(true, false, backupPath, message);
         }
         catch (Exception ex)
         {
-            return new AutomaticBackupResult(false, true, string.Empty, $"Automatická záloha se nepodařila: {ex.Message}");
+            return new AutomaticBackupResult(false, true, string.Empty, LFO("AutomaticBackup.Result.Failed", ex.Message));
         }
     }
 
@@ -415,7 +416,7 @@ internal sealed class DesktopSessionController
     {
         return DateTime.TryParseExact(stamp, "yyyyMMddHHmmss", null, DateTimeStyles.None, out var parsed)
             ? parsed.ToString("dd.MM.yyyy HH:mm")
-            : "zatím nebyla vytvořena";
+            : LO("AutomaticBackup.Status.NeverCreated");
     }
 
     private bool IsAutomaticBackupDue(DateTime now)
@@ -522,12 +523,16 @@ internal sealed class DesktopSessionController
         {
             return Task.FromResult(new DataStoreHealthReport(
                 DataStoreHealthStatus.Healthy,
-                "Kontrola datové sady 2.0 nebyla v testovací session zapojená.",
-                ["Testovací session nepoužila konkrétní health službu."],
+                LO("DataStoreHealth.NoOp.Summary"),
+                [LO("DataStoreHealth.NoOp.Detail")],
                 Path.Combine(dataRoot.DataPath, "vehimap.db"),
                 dataRoot.DataPath));
         }
     }
+
+    private static string LO(string key) => DesktopLocalization.Localizer.GetString(key);
+
+    private static string LFO(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
 }
 
 internal sealed record DesktopSessionLoadResult(

@@ -145,6 +145,6 @@ public sealed partial class MainWindowViewModel
                 settings.SetValue(EvidenceSortSettingsSection, RecordSortSettingKey, recordSort);
                 settings.SetValue(EvidenceSortSettingsSection, RecordSortDescendingSettingKey, recordDescending);
             },
-            "Nepodařilo se uložit řazení evidencí");
+            LO("Preferences.Persistence.EvidenceSortFailed"));
     }
 }

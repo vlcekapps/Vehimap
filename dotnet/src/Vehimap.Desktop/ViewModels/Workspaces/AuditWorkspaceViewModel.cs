@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -164,8 +165,8 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
         }
 
         AuditSummary = VisibleAuditItems.Count == 0
-            ? $"Pro hledání „{AuditSearchText.Trim()}“ nejsou v auditu žádné položky."
-            : $"Hledání „{AuditSearchText.Trim()}“ našlo {VisibleAuditItems.Count} z {AuditItems.Count} auditních položek.";
+            ? DesktopLocalization.Localizer.Format("Audit.Summary.SearchEmpty", AuditSearchText.Trim())
+            : DesktopLocalization.Localizer.Format("Audit.Summary.SearchCount", AuditSearchText.Trim(), VisibleAuditItems.Count, AuditItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

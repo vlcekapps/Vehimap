@@ -97,6 +97,6 @@ public sealed partial class MainWindowViewModel
                 settings.SetValue(WorkspaceSortSettingsSection, GlobalSearchSortSettingKey, globalSearchSort);
                 settings.SetValue(WorkspaceSortSettingsSection, GlobalSearchSortDescendingSettingKey, globalSearchDescending);
             },
-            "Nepodařilo se uložit řazení přehledů");
+            LO("Preferences.Persistence.WorkspaceSortFailed"));
     }
 }
