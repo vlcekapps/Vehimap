@@ -1276,6 +1276,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         var supportedSettings = _session.ReadSupportedSettings();
         var appInfo = _session.GetAppInfo();
+        _projectionService.ApplySupportedSettings(supportedSettings);
+        _costExportService.ApplySupportedSettings(supportedSettings);
+        _serviceBookExportService.ApplySupportedSettings(supportedSettings);
         ApplyCostPeriodPreferences();
         var costSummary = BuildSelectedCostSummary();
         _currentCostSummary = costSummary;

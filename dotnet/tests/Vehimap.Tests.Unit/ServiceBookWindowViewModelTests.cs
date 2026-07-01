@@ -76,6 +76,38 @@ public sealed class ServiceBookWindowViewModelTests
         Assert.Equal("Servisní knížka byla uložena.", model.StatusText);
     }
 
+    [Fact]
+    public void Cost_summary_should_use_selected_currency()
+    {
+        var model = new ServiceBookWindowViewModel(
+            CreateSummary(),
+            [],
+            [],
+            [],
+            _ => false,
+            _ => Task.FromResult("Exportováno."),
+            supportedSettings: new DesktopSupportedSettingsSnapshot(
+                30,
+                30,
+                31,
+                1000,
+                false,
+                false,
+                false,
+                false,
+                1,
+                30,
+                "en-US",
+                "comma",
+                "dot",
+                "mi",
+                "us_gal",
+                "USD"));
+
+        Assert.Contains("$2,500.00", model.CostSummary);
+        Assert.DoesNotContain("Kč", model.CostSummary);
+    }
+
     private static ServiceBookSummary CreateSummary() => new(
         "veh_1",
         "Milena",

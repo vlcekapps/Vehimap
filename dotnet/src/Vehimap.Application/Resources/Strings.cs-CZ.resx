@@ -1185,12 +1185,12 @@ Stav výpočtu: {8}</value></data>
   <data name="CostAnalysis.Status.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
   <data name="Cost.Value.Unavailable" xml:space="preserve"><value>nedostupné</value></data>
   <data name="Cost.Value.DistanceKm" xml:space="preserve"><value>{0} km</value></data>
-  <data name="Cost.Value.Money" xml:space="preserve"><value>{0} Kč</value></data>
-  <data name="Cost.Value.CostPerKm" xml:space="preserve"><value>{0} Kč/km</value></data>
-  <data name="Cost.Value.SignedMoney.Positive" xml:space="preserve"><value>+{0} Kč</value></data>
-  <data name="Cost.Value.SignedMoney.Negative" xml:space="preserve"><value>-{0} Kč</value></data>
-  <data name="Cost.Value.SignedCostPerKm.Positive" xml:space="preserve"><value>+{0} Kč/km</value></data>
-  <data name="Cost.Value.SignedCostPerKm.Negative" xml:space="preserve"><value>-{0} Kč/km</value></data>
+  <data name="Cost.Value.Money" xml:space="preserve"><value>{0}</value></data>
+  <data name="Cost.Value.CostPerKm" xml:space="preserve"><value>{0}/km</value></data>
+  <data name="Cost.Value.SignedMoney.Positive" xml:space="preserve"><value>+{0}</value></data>
+  <data name="Cost.Value.SignedMoney.Negative" xml:space="preserve"><value>-{0}</value></data>
+  <data name="Cost.Value.SignedCostPerKm.Positive" xml:space="preserve"><value>+{0}/km</value></data>
+  <data name="Cost.Value.SignedCostPerKm.Negative" xml:space="preserve"><value>-{0}/km</value></data>
   <data name="Cost.Summary" xml:space="preserve"><value>{0}
 Celkem: {1} | Ujeto: {2} | Cena / km: {3}
 Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>

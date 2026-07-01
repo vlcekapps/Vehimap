@@ -13,6 +13,9 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
     private readonly Func<ServiceBookItemViewModel?, bool> _openItem;
     private readonly Func<ServiceBookWindowViewModel, Task<string>> _exportHtml;
     private readonly IAppLocalizer _localizer;
+    private readonly IAppNumberFormatService _numberFormatService;
+    private readonly AppCulturePreferences _culturePreferences;
+    private readonly string _currency;
     private bool _syncingSelection;
     private ServiceBookItemViewModel? _selectedHistoryItem;
     private ServiceBookItemViewModel? _selectedMaintenanceItem;
@@ -25,12 +28,18 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
         IReadOnlyList<ServiceBookItemViewModel> recordItems,
         Func<ServiceBookItemViewModel?, bool> openItem,
         Func<ServiceBookWindowViewModel, Task<string>> exportHtml,
-        IAppLocalizer? localizer = null)
+        IAppLocalizer? localizer = null,
+        DesktopSupportedSettingsSnapshot? supportedSettings = null,
+        IAppNumberFormatService? numberFormatService = null)
     {
         Summary = summary;
         _openItem = openItem;
         _exportHtml = exportHtml;
         _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+        var settings = supportedSettings ?? new DesktopSupportedSettingsSnapshot(30, 30, 31, 1000, false, false, false, false, 1, 30);
+        _culturePreferences = new AppCulturePreferences(settings.Language, settings.ThousandsSeparator, settings.DecimalSeparator);
+        _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
         WindowTitle = LF("ServiceBook.Window.TitleWithVehicle", summary.VehicleName);
         VehicleSummary = LF("ServiceBook.Window.VehicleSummary", summary.VehicleMakeModel, summary.VehicleCategory, summary.VehiclePlate, summary.CurrentOdometer);
         CostSummary = LF("ServiceBook.Window.CostSummary", FormatMoney(summary.TotalHistoryCost));
@@ -200,7 +209,7 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
     }
 
     private string FormatMoney(decimal value) =>
-        LF("ServiceBook.Value.Money", value.ToString("0.00", CultureInfo.InvariantCulture));
+        _numberFormatService.FormatMoney(value, _culturePreferences, _currency);
 
     private string L(string key) => _localizer.GetString(key);
 

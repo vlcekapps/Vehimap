@@ -11,10 +11,23 @@ namespace Vehimap.Desktop.Services;
 internal sealed class DesktopServiceBookExportService
 {
     private readonly IAppLocalizer _localizer;
+    private readonly IAppNumberFormatService _numberFormatService;
+    private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private string _currency = AppCurrencyFormatService.CzechCrowns;
 
-    public DesktopServiceBookExportService(IAppLocalizer? localizer = null)
+    public DesktopServiceBookExportService(IAppLocalizer? localizer = null, IAppNumberFormatService? numberFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+    }
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
+        _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
     }
 
     public string BuildFileName(ServiceBookSummary summary, DateTime generatedAt) =>
@@ -99,7 +112,7 @@ internal sealed class DesktopServiceBookExportService
     private static string Html(string? value) => WebUtility.HtmlEncode(value ?? string.Empty);
 
     private string FormatMoney(decimal value) =>
-        LF("ServiceBook.Value.Money", value.ToString("0.00", CultureInfo.InvariantCulture));
+        _numberFormatService.FormatMoney(value, _culturePreferences, _currency);
 
     private string L(string key) => _localizer.GetString(key);
 

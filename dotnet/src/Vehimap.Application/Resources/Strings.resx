@@ -1185,12 +1185,12 @@ Calculation status: {8}</value></data>
   <data name="CostAnalysis.Status.Inactive" xml:space="preserve"><value>Inactive</value></data>
   <data name="Cost.Value.Unavailable" xml:space="preserve"><value>unavailable</value></data>
   <data name="Cost.Value.DistanceKm" xml:space="preserve"><value>{0} km</value></data>
-  <data name="Cost.Value.Money" xml:space="preserve"><value>CZK {0}</value></data>
-  <data name="Cost.Value.CostPerKm" xml:space="preserve"><value>CZK {0}/km</value></data>
-  <data name="Cost.Value.SignedMoney.Positive" xml:space="preserve"><value>+CZK {0}</value></data>
-  <data name="Cost.Value.SignedMoney.Negative" xml:space="preserve"><value>-CZK {0}</value></data>
-  <data name="Cost.Value.SignedCostPerKm.Positive" xml:space="preserve"><value>+CZK {0}/km</value></data>
-  <data name="Cost.Value.SignedCostPerKm.Negative" xml:space="preserve"><value>-CZK {0}/km</value></data>
+  <data name="Cost.Value.Money" xml:space="preserve"><value>{0}</value></data>
+  <data name="Cost.Value.CostPerKm" xml:space="preserve"><value>{0}/km</value></data>
+  <data name="Cost.Value.SignedMoney.Positive" xml:space="preserve"><value>+{0}</value></data>
+  <data name="Cost.Value.SignedMoney.Negative" xml:space="preserve"><value>-{0}</value></data>
+  <data name="Cost.Value.SignedCostPerKm.Positive" xml:space="preserve"><value>+{0}/km</value></data>
+  <data name="Cost.Value.SignedCostPerKm.Negative" xml:space="preserve"><value>-{0}/km</value></data>
   <data name="Cost.Summary" xml:space="preserve"><value>{0}
 Total: {1} | Distance: {2} | Cost / km: {3}
 Without numeric cost: {4} of {5} active vehicles.</value></data>

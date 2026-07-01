@@ -50,6 +50,34 @@ public sealed class DesktopServiceBookExportServiceTests
         Assert.DoesNotContain("Milena <test>", html);
     }
 
+    [Fact]
+    public void Build_html_should_format_summary_money_with_selected_currency()
+    {
+        var service = new DesktopServiceBookExportService();
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+
+        var html = service.BuildHtml(CreateSummary(), [], [], [], new DateTime(2026, 4, 3, 9, 15, 0));
+
+        Assert.Contains("$2,500.00", html);
+        Assert.DoesNotContain("Kč", html);
+    }
+
     private static ServiceBookSummary CreateSummary() => new(
         "veh_1",
         "Milena",

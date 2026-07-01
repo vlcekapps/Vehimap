@@ -1,4 +1,5 @@
 using Vehimap.Application;
+using Vehimap.Application.Models;
 using Vehimap.Desktop.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -48,6 +49,35 @@ public sealed class DesktopCostExportServiceTests
         Assert.Contains("Souhrn období", html);
         Assert.Contains("Detail položek období", html);
         Assert.Contains("Povinn", html);
+    }
+
+    [Fact]
+    public void Build_vehicle_report_html_formats_money_with_selected_currency()
+    {
+        var service = new DesktopCostExportService();
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+
+        var html = service.BuildVehicleReportHtml(BuildDataSet(), BuildSummary(), "veh_1", new DateTime(2026, 6, 19, 20, 0, 0));
+
+        Assert.Contains("$700.00", html);
+        Assert.Contains("$4.67/km", html);
+        Assert.DoesNotContain("Kč", html);
     }
 
     private static CostAnalysisSummary BuildSummary()

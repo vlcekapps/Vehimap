@@ -2,6 +2,8 @@ using System.Globalization;
 using System.Net;
 using System.Text;
 using Vehimap.Application;
+using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -10,6 +12,24 @@ namespace Vehimap.Desktop.Services;
 
 internal sealed class DesktopCostExportService
 {
+    private readonly IAppNumberFormatService _numberFormatService;
+    private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private string _currency = AppCurrencyFormatService.CzechCrowns;
+
+    public DesktopCostExportService(IAppNumberFormatService? numberFormatService = null)
+    {
+        _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+    }
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
+        _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
+    }
+
     public string BuildFleetSummaryTsv(CostAnalysisSummary summary)
     {
         var lines = new List<string>
@@ -93,7 +113,7 @@ internal sealed class DesktopCostExportService
         }
         else
         {
-            builder.AppendLine($"<p class=\"summary\">Celkem nákladů: {Html(Money(row.TotalCost))}. Ujeto: {Html(row.DistanceKm.HasValue ? $"{row.DistanceKm.Value} km" : "nedostupné")}. Cena / km: {Html(row.CostPerKm.HasValue ? $"{row.CostPerKm.Value:0.00} Kč/km" : "nedostupné")}. Stav: {Html(row.Status)}.</p>");
+            builder.AppendLine($"<p class=\"summary\">Celkem nákladů: {Html(Money(row.TotalCost))}. Ujeto: {Html(row.DistanceKm.HasValue ? $"{row.DistanceKm.Value} km" : "nedostupné")}. Cena / km: {Html(row.CostPerKm.HasValue ? $"{Money(row.CostPerKm.Value)}/km" : "nedostupné")}. Stav: {Html(row.Status)}.</p>");
             builder.AppendLine("<table><thead><tr><th>Skupina</th><th>Částka</th></tr></thead><tbody>");
             builder.AppendLine($"<tr><td>Tankování</td><td>{Html(Money(row.FuelCost))}</td></tr>");
             builder.AppendLine($"<tr><td>Historie a servis</td><td>{Html(Money(row.HistoryCost))}</td></tr>");
@@ -228,7 +248,8 @@ internal sealed class DesktopCostExportService
         dataSet.Vehicles.FirstOrDefault(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal))?.Name
         ?? "vozidlo";
 
-    private static string Money(decimal value) => $"{value:0.00} Kč";
+    private string Money(decimal value) =>
+        _numberFormatService.FormatMoney(value, _culturePreferences, _currency);
 
     private static string MoneyForTsv(decimal value) =>
         value.ToString("0.00", CultureInfo.InvariantCulture).Replace('.', ',');

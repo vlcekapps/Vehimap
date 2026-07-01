@@ -208,6 +208,56 @@ public sealed class DesktopProjectionAndNavigationServiceTests
     }
 
     [Fact]
+    public void Projection_service_formats_costs_with_selected_currency()
+    {
+        var projectionService = new DesktopProjectionService(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")),
+            CultureInfo.GetCultureInfo("en-US"));
+        projectionService.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+        var summary = new CostAnalysisSummary(
+            "From 1/1/2026 to 12/31/2026",
+            new DateOnly(2026, 1, 1),
+            new DateOnly(2026, 12, 31),
+            700m,
+            150,
+            4.6667m,
+            0m,
+            5.9167m,
+            700m,
+            -1.25m,
+            1,
+            0,
+            0,
+            [
+                new VehicleCostBreakdown("veh_1", "Milena", "Cars", 350m, 150m, 200m, 700m, 150, 4.6667m, "Calculated")
+            ]);
+
+        var item = Assert.Single(projectionService.BuildDashboardCostVehicles(summary));
+
+        Assert.Equal("$350.00", item.FuelCost);
+        Assert.Equal("$700.00", item.TotalCost);
+        Assert.Equal("$4.67/km", item.CostPerKm);
+        Assert.Contains("$700.00", projectionService.BuildCostSummary(summary), StringComparison.Ordinal);
+        Assert.Contains("-$1.25/km", projectionService.BuildCostComparison(summary), StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Projection_service_localizes_fuel_analysis_summary_and_accessible_labels()
     {
         var projectionService = new DesktopProjectionService(

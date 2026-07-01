@@ -1,4 +1,5 @@
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -24,6 +25,7 @@ public sealed partial class MainWindowViewModel
             _dataSet,
             SelectedVehicle.Id,
             DateOnly.FromDateTime(DateTime.Today));
+        var supportedSettings = _session.ReadSupportedSettings();
         var historyItems = summary.HistoryEntries
             .Select(item => new ServiceBookItemViewModel(
                 summary.VehicleId,
@@ -33,7 +35,7 @@ public sealed partial class MainWindowViewModel
                 item.DateText,
                 item.EventType,
                 LFO("ServiceBook.Detail.History", item.Odometer, item.Note),
-                LFO("ServiceBook.Detail.HistoryCost", item.Cost)))
+                LFO("ServiceBook.Detail.HistoryCost", FormatServiceBookMoney(item.ParsedCost, item.Cost, supportedSettings))))
             .ToList();
         var maintenanceItems = summary.MaintenancePlans
             .Select(item => new ServiceBookItemViewModel(
@@ -54,7 +56,7 @@ public sealed partial class MainWindowViewModel
                 LO("ServiceBook.Section.ServiceRecord"),
                 item.Title,
                 item.RecordType,
-                BuildServiceBookRecordDetail(item),
+                BuildServiceBookRecordDetail(item, supportedSettings),
                 BuildServiceBookRecordAttachmentStatus(item)))
             .ToList();
 
@@ -65,7 +67,8 @@ public sealed partial class MainWindowViewModel
             recordItems,
             OpenServiceBookItem,
             model => ExportServiceBookHtmlAsync(model),
-            DesktopLocalization.Localizer);
+            DesktopLocalization.Localizer,
+            supportedSettings);
     }
 
     internal bool OpenServiceBookItem(ServiceBookItemViewModel? item)
@@ -136,13 +139,13 @@ public sealed partial class MainWindowViewModel
         return ShellStatus;
     }
 
-    private string BuildServiceBookRecordDetail(ServiceBookRecordEntry item)
+    private string BuildServiceBookRecordDetail(ServiceBookRecordEntry item, DesktopSupportedSettingsSnapshot supportedSettings)
     {
         var parts = new List<string>
         {
             LFO("ServiceBook.Detail.Provider", item.Provider),
             LFO("ServiceBook.Detail.Validity", item.Validity),
-            LFO("ServiceBook.Detail.Price", item.Price),
+            LFO("ServiceBook.Detail.Price", FormatServiceBookRecordPrice(item, supportedSettings)),
             LFO("ServiceBook.Detail.Note", item.Note)
         };
 
@@ -153,6 +156,32 @@ public sealed partial class MainWindowViewModel
         }
 
         return string.Join(". ", parts) + ".";
+    }
+
+    private string FormatServiceBookRecordPrice(ServiceBookRecordEntry serviceBookRecord, DesktopSupportedSettingsSnapshot supportedSettings)
+    {
+        var record = _dataSet.Records.FirstOrDefault(item =>
+            string.Equals(item.Id, serviceBookRecord.Id, StringComparison.Ordinal));
+        if (record is not null && VehimapValueParser.TryParseMoney(record.Price, out var parsed))
+        {
+            return FormatServiceBookMoney(parsed, serviceBookRecord.Price, supportedSettings);
+        }
+
+        return serviceBookRecord.Price;
+    }
+
+    private static string FormatServiceBookMoney(decimal? parsedValue, string fallback, DesktopSupportedSettingsSnapshot supportedSettings)
+    {
+        if (!parsedValue.HasValue)
+        {
+            return fallback;
+        }
+
+        var culturePreferences = new AppCulturePreferences(
+            supportedSettings.Language,
+            supportedSettings.ThousandsSeparator,
+            supportedSettings.DecimalSeparator);
+        return new AppNumberFormatService().FormatMoney(parsedValue.Value, culturePreferences, supportedSettings.Currency);
     }
 
     private string BuildServiceBookRecordAttachmentStatus(ServiceBookRecordEntry serviceBookRecord)

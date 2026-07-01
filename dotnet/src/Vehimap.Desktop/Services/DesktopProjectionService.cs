@@ -14,6 +14,9 @@ internal sealed class DesktopProjectionService
     private static readonly CultureInfo CzechCulture = CultureInfo.GetCultureInfo("cs-CZ");
     private readonly IAppLocalizer _localizer;
     private readonly CultureInfo _formatCulture;
+    private readonly IAppNumberFormatService _numberFormatService;
+    private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private string _currency = AppCurrencyFormatService.CzechCrowns;
 
     public DesktopProjectionService()
         : this(
@@ -28,9 +31,24 @@ internal sealed class DesktopProjectionService
     }
 
     public DesktopProjectionService(IAppLocalizer localizer, CultureInfo formatCulture)
+        : this(localizer, formatCulture, new AppNumberFormatService())
+    {
+    }
+
+    public DesktopProjectionService(IAppLocalizer localizer, CultureInfo formatCulture, IAppNumberFormatService numberFormatService)
     {
         _localizer = localizer;
         _formatCulture = formatCulture;
+        _numberFormatService = numberFormatService;
+    }
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
+        _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
     }
 
     public DesktopListProjection<VehicleListItemViewModel> BuildVehicleList(
@@ -289,7 +307,7 @@ internal sealed class DesktopProjectionService
                     var consumption = FormatFuelAnalysisConsumption(item.ConsumptionLitersPer100Km);
                     var pricePerLiter = FormatOptionalPricePerLiter(item.PricePerLiter);
                     var costPerKm = item.CostPerKm.HasValue
-                        ? $"{item.CostPerKm.Value.ToString("0.00", _formatCulture)} Kč/km"
+                        ? $"{FormatMoney(item.CostPerKm.Value)}/km"
                         : L("FuelAnalysis.Value.CostPerKmUnavailable");
                     return new FuelConsumptionSegmentItemViewModel(
                         item.Id,
@@ -1211,7 +1229,7 @@ internal sealed class DesktopProjectionService
         value.HasValue ? $"{value.Value} km" : "neznámý";
 
     private string FormatMoney(decimal value) =>
-        LF("Cost.Value.Money", value.ToString("0.00", _formatCulture));
+        _numberFormatService.FormatMoney(value, _culturePreferences, _currency);
 
     private string FormatDistanceKm(int? value) =>
         value.HasValue
@@ -1220,15 +1238,14 @@ internal sealed class DesktopProjectionService
 
     private string FormatCostPerKm(decimal? value) =>
         value.HasValue
-            ? LF("Cost.Value.CostPerKm", value.Value.ToString("0.00", _formatCulture))
+            ? LF("Cost.Value.CostPerKm", FormatMoney(value.Value))
             : L("Cost.Value.Unavailable");
 
     private string FormatSignedMoney(decimal value)
     {
-        var formatted = value.ToString("0.00", _formatCulture);
         return value >= 0m
-            ? LF("Cost.Value.SignedMoney.Positive", formatted)
-            : LF("Cost.Value.SignedMoney.Negative", Math.Abs(value).ToString("0.00", _formatCulture));
+            ? LF("Cost.Value.SignedMoney.Positive", FormatMoney(value))
+            : LF("Cost.Value.SignedMoney.Negative", FormatMoney(Math.Abs(value)));
     }
 
     private string FormatSignedCostPerKm(decimal? value)
@@ -1238,10 +1255,9 @@ internal sealed class DesktopProjectionService
             return L("Cost.Value.Unavailable");
         }
 
-        var formatted = Math.Abs(value.Value).ToString("0.00", _formatCulture);
         return value.Value >= 0m
-            ? LF("Cost.Value.SignedCostPerKm.Positive", formatted)
-            : LF("Cost.Value.SignedCostPerKm.Negative", formatted);
+            ? LF("Cost.Value.SignedCostPerKm.Positive", FormatMoney(value.Value))
+            : LF("Cost.Value.SignedCostPerKm.Negative", FormatMoney(Math.Abs(value.Value)));
     }
 
     private bool IsInactiveCostStatus(string? status) =>
@@ -1278,9 +1294,9 @@ internal sealed class DesktopProjectionService
         value.HasValue ? FormatFuelAnalysisConsumption(value.Value) : L("FuelAnalysis.Value.ConsumptionUnavailable");
 
     private string FormatOptionalPricePerLiter(decimal? value) =>
-        value.HasValue ? $"{value.Value.ToString("0.00", _formatCulture)} Kč/l" : L("FuelAnalysis.Value.PricePerLiterUnavailable");
+        value.HasValue ? $"{FormatMoney(value.Value)}/l" : L("FuelAnalysis.Value.PricePerLiterUnavailable");
 
-    private string FormatFuelAnalysisMoney(decimal value) => $"{value.ToString("0.00", _formatCulture)} Kč";
+    private string FormatFuelAnalysisMoney(decimal value) => FormatMoney(value);
 
     private string FormatFuelAnalysisLiters(decimal value) => $"{value.ToString("0.##", _formatCulture)} l";
 
