@@ -26,6 +26,8 @@ public sealed class DesktopSystemResumeServiceTests
         Assert.Contains("ResumeBackgroundDelay = TimeSpan.FromMilliseconds(1500)", source);
         Assert.Contains("_systemResumeService.Resumed += OnSystemResumed", source);
         Assert.Contains("_systemResumeService.Resumed -= OnSystemResumed", source);
+        Assert.Contains("RefreshBackgroundStateAsync(notifyWhenHidden: true, runAutomaticBackup: true, notifyDue: true)", source);
+        Assert.Contains("RefreshBackgroundStateAsync(notifyWhenHidden: false, runAutomaticBackup: true, notifyDue: true)", source);
         Assert.Contains("RefreshBackgroundStateAsync(notifyWhenHidden: !_mainWindow.IsVisible, runAutomaticBackup: true)", source);
         Assert.Contains("_resumeRefreshScheduled", source);
     }

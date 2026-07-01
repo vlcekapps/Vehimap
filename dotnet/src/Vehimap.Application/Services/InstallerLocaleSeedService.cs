@@ -61,13 +61,9 @@ public sealed class InstallerLocaleSeedService
             return MoveInvalidSeed(seedPath, _localizer.GetString("InstallerLocaleSeed.InvalidLanguage"));
         }
 
-        var hasLanguage = HasSetting(settings, "app", "language");
-        var effectiveLanguage = hasLanguage
-            ? settings.GetValue("app", "language", language)
-            : language;
-        var defaults = _defaultsService.GetDefaultsForLanguage(effectiveLanguage);
+        var defaults = _defaultsService.GetDefaultsForLanguage(language);
         var changed = false;
-        changed |= SetIfMissing(settings, "app", "language", language);
+        changed |= SetValueIfDifferent(settings, "app", "language", language);
         changed |= SetIfMissing(settings, "app", "thousands_separator", defaults.ThousandsSeparator);
         changed |= SetIfMissing(settings, "app", "decimal_separator", defaults.DecimalSeparator);
         changed |= SetIfMissing(settings, "app", "distance_unit", defaults.DistanceUnit);
@@ -112,6 +108,18 @@ public sealed class InstallerLocaleSeedService
     private static bool SetIfMissing(VehimapSettings settings, string section, string key, string value)
     {
         if (HasSetting(settings, section, key))
+        {
+            return false;
+        }
+
+        settings.SetValue(section, key, value);
+        return true;
+    }
+
+    private static bool SetValueIfDifferent(VehimapSettings settings, string section, string key, string value)
+    {
+        var currentValue = settings.GetValue(section, key, string.Empty);
+        if (string.Equals(currentValue, value, StringComparison.Ordinal))
         {
             return false;
         }

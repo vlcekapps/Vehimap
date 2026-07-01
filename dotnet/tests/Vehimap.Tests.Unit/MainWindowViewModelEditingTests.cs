@@ -19,6 +19,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
     public MainWindowViewModelEditingTests()
     {
+        TestCultureInitializer.ResetToCzech();
         _tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-dotnet-edit-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(_tempRoot);
     }
@@ -451,7 +452,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.EditSelectedHistoryCommand.Execute(null);
 
         Assert.Equal("100", viewModel.HistoryWorkspace.HistoryEditorOdometer);
-        Assert.Equal("Tachometr (mi)", viewModel.HistoryWorkspace.HistoryEditorOdometerLabel);
+        Assert.Equal("Odometer (mi)", viewModel.HistoryWorkspace.HistoryEditorOdometerLabel);
 
         viewModel.HistoryWorkspace.HistoryEditorOdometer = "200";
 
@@ -534,8 +535,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.CreateFuelCommand.Execute(null);
 
-        Assert.Equal("Tachometr (mi)", viewModel.FuelWorkspace.FuelEditorOdometerLabel);
-        Assert.Equal("Množství (US gal)", viewModel.FuelWorkspace.FuelEditorVolumeLabel);
+        Assert.Equal("Odometer (mi)", viewModel.FuelWorkspace.FuelEditorOdometerLabel);
+        Assert.Equal("Volume (US gal)", viewModel.FuelWorkspace.FuelEditorVolumeLabel);
 
         viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
         viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
@@ -722,8 +723,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.CreateMaintenanceCommand.Execute(null);
 
-        Assert.Equal("Interval vzdálenosti (mi)", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalDistanceLabel);
-        Assert.Equal("Poslední servis - tachometr (mi)", viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceOdometerLabel);
+        Assert.Equal("Distance interval (mi)", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalDistanceLabel);
+        Assert.Equal("Last service odometer (mi)", viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceOdometerLabel);
 
         viewModel.MaintenanceWorkspace.MaintenanceEditorTitle = "Motorový olej";
         viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm = "100";
@@ -869,7 +870,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         Assert.NotNull(dialogViewModel);
         Assert.Equal("100", dialogViewModel!.CompletedOdometer);
-        Assert.Equal("Tachometr při provedení (mi)", dialogViewModel.CompletedOdometerLabel);
+        Assert.Equal("Completion odometer (mi)", dialogViewModel.CompletedOdometerLabel);
 
         dialogViewModel.CompletedOdometer = "200";
         Assert.True(dialogViewModel.TryBuildResult(out var result));
@@ -1296,6 +1297,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         {
             Directory.Delete(_tempRoot, true);
         }
+
+        TestCultureInitializer.ResetToCzech();
     }
 
     private MainWindowViewModel CreateViewModel(VehimapDataRoot dataRoot, MutableStubLegacyDataStore dataStore)

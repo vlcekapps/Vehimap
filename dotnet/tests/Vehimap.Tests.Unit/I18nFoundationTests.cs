@@ -248,17 +248,21 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
-    public async Task Installer_locale_seed_applies_only_missing_settings_and_is_removed_after_completion()
+    public async Task Installer_locale_seed_overrides_language_but_preserves_existing_formatting_units_and_currency()
     {
         var tempRoot = CreateTempDirectory();
         try
         {
             var dataRoot = new VehimapDataRoot(tempRoot, tempRoot, false);
             var seedPath = InstallerLocaleSeedService.GetSeedPath(dataRoot);
-            await File.WriteAllTextAsync(seedPath, """{"language":"en-US"}""");
+            await File.WriteAllTextAsync(seedPath, """{"language":"cs-CZ"}""");
             var settings = new VehimapSettings();
-            settings.SetValue("app", "language", "cs-CZ");
-            settings.SetValue("app", "decimal_separator", "comma");
+            settings.SetValue("app", "language", "en-US");
+            settings.SetValue("app", "thousands_separator", "comma");
+            settings.SetValue("app", "decimal_separator", "dot");
+            settings.SetValue("app", "distance_unit", "mi");
+            settings.SetValue("app", "volume_unit", "us_gal");
+            settings.SetValue("app", "currency", "USD");
 
             var service = new InstallerLocaleSeedService(
                 new AppLocaleDefaultsService(),
@@ -270,11 +274,11 @@ public sealed class I18nFoundationTests
             Assert.True(result.SeedValid);
             Assert.True(result.SettingsChanged);
             Assert.Equal("cs-CZ", settings.GetValue("app", "language"));
-            Assert.Equal("none", settings.GetValue("app", "thousands_separator"));
-            Assert.Equal("comma", settings.GetValue("app", "decimal_separator"));
-            Assert.Equal("km", settings.GetValue("app", "distance_unit"));
-            Assert.Equal("l", settings.GetValue("app", "volume_unit"));
-            Assert.Equal("CZK", settings.GetValue("app", "currency"));
+            Assert.Equal("comma", settings.GetValue("app", "thousands_separator"));
+            Assert.Equal("dot", settings.GetValue("app", "decimal_separator"));
+            Assert.Equal("mi", settings.GetValue("app", "distance_unit"));
+            Assert.Equal("us_gal", settings.GetValue("app", "volume_unit"));
+            Assert.Equal("USD", settings.GetValue("app", "currency"));
             Assert.Equal("Instalační jazykové předvolby byly doplněny do datové sady 2.0.", result.Message);
             Assert.False(File.Exists(seedPath));
         }
@@ -870,7 +874,7 @@ public sealed class I18nFoundationTests
         Assert.Contains("Timeline.Status.Overdue", service);
         Assert.Contains("Timeline.Value.Cost", service);
         Assert.Contains("Timeline.Value.ServiceTask", service);
-        Assert.Contains("new LegacyTimelineService(DesktopLocalization.Localizer)", mainWindowViewModel);
+        Assert.Contains("new LegacyTimelineService(DesktopLocalization.LiveLocalizer)", mainWindowViewModel);
         Assert.Contains("TimelineWorkspace.Detail.Selected", timelineWorkspaceViewModel);
         Assert.Contains("TimelineWorkspace.Summary.Filtered", projectionService);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
@@ -977,7 +981,7 @@ public sealed class I18nFoundationTests
         Assert.Contains("AppShell.Controller.ImportBackupAction", appShellController);
         Assert.Contains("AppShell.Controller.UpdateInstallerLaunched", appShellController);
         Assert.Contains("AppShell.Controller.UpdateCheckFailed", appShellController);
-        Assert.Contains("new DesktopPrintableVehicleReportService(DesktopLocalization.Localizer)", mainWindowViewModel);
+        Assert.Contains("new DesktopPrintableVehicleReportService(DesktopLocalization.LiveLocalizer)", mainWindowViewModel);
         Assert.Contains("PrintableReport.Title", printableReportService);
         Assert.Contains("PrintableReport.Column.GreenCardTo", printableReportService);
         Assert.Contains("PrintableReport.Status.Maintenance", printableReportService);

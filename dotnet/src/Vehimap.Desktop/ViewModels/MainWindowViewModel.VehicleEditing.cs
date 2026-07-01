@@ -11,7 +11,7 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    private readonly VehicleStarterBundleService _vehicleStarterBundleService = new(DesktopLocalization.Localizer);
+    private readonly VehicleStarterBundleService _vehicleStarterBundleService = new(DesktopLocalization.LiveLocalizer);
     private string? _editingVehicleId;
     private string? _pendingVehicleStarterBundleOfferVehicleId;
     private DesktopFocusTarget? _nextVehicleEditorReturnFocusTarget;

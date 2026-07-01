@@ -40,6 +40,7 @@ internal sealed class DesktopSessionController
     private readonly IFileAttachmentService _attachmentService;
     private readonly IDataStoreHealthService _dataStoreHealthService;
     private readonly InstallerLocaleSeedService _installerLocaleSeedService;
+    private readonly Action<DesktopSupportedSettingsSnapshot>? _supportedSettingsApplied;
     private readonly Dictionary<string, VehicleMeta> _metaByVehicleId = new(StringComparer.Ordinal);
 
     public DesktopSessionController(
@@ -54,7 +55,8 @@ internal sealed class DesktopSessionController
         IAppBuildInfoProvider appBuildInfoProvider,
         IUpdateService updateService,
         IDataStoreHealthService? dataStoreHealthService = null,
-        InstallerLocaleSeedService? installerLocaleSeedService = null)
+        InstallerLocaleSeedService? installerLocaleSeedService = null,
+        Action<DesktopSupportedSettingsSnapshot>? supportedSettingsApplied = null)
     {
         _bootstrapper = bootstrapper;
         _dataStore = dataStore;
@@ -68,6 +70,7 @@ internal sealed class DesktopSessionController
         _updateService = updateService;
         _dataStoreHealthService = dataStoreHealthService ?? new NoOpDataStoreHealthService();
         _installerLocaleSeedService = installerLocaleSeedService ?? new InstallerLocaleSeedService();
+        _supportedSettingsApplied = supportedSettingsApplied;
     }
 
     public VehimapDataRoot? DataRoot { get; private set; }
@@ -98,10 +101,13 @@ internal sealed class DesktopSessionController
             .ConfigureAwait(false);
         if (installerLocaleSeedResult.SettingsChanged)
         {
+            ResetNotificationHistory(result.DataSet.Settings);
             await _dataStore.SaveAsync(result.DataRoot, result.DataSet, cancellationToken).ConfigureAwait(false);
         }
 
         _installerLocaleSeedService.CompleteSeed(installerLocaleSeedResult);
+        CurrentSupportedSettings = _supportedSettingsService.Read(result.DataSet.Settings);
+        _supportedSettingsApplied?.Invoke(CurrentSupportedSettings);
         AuditItems = _auditService.BuildAudit(result.DataRoot, result.DataSet);
 
         RebuildMetaLookup();
@@ -118,6 +124,7 @@ internal sealed class DesktopSessionController
         }
 
         CurrentSupportedSettings = _supportedSettingsService.Read(result.DataSet.Settings, autostartEnabled);
+        _supportedSettingsApplied?.Invoke(CurrentSupportedSettings);
         LastDataStoreHealthReport = await _dataStoreHealthService.CheckAsync(result.DataRoot, cancellationToken).ConfigureAwait(false);
 
         return new DesktopSessionLoadResult(

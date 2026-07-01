@@ -11,8 +11,11 @@ internal static class DesktopLocalization
     private static readonly IAppCultureService CultureService = new AppCultureService();
     private static CultureInfo _currentCulture = CultureInfo.CurrentUICulture;
     private static IAppLocalizer _localizer = new ResourceAppLocalizer(_currentCulture);
+    private static readonly IAppLocalizer ForwardingLocalizer = new DelegatingAppLocalizer(() => Localizer);
 
     public static IAppLocalizer Localizer => _localizer;
+
+    public static IAppLocalizer LiveLocalizer => ForwardingLocalizer;
 
     public static CultureInfo CurrentCulture => _currentCulture;
 

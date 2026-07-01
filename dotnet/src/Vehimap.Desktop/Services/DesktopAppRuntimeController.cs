@@ -86,11 +86,11 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             if (DesktopBackgroundRuntimePolicy.CanHideOnLaunch(_trayService.IsSupported, _shell.ShouldHideOnLaunch()))
             {
                 HideMainWindow();
-                await RefreshBackgroundStateAsync(notifyWhenHidden: true, runAutomaticBackup: true).ConfigureAwait(false);
+                await RefreshBackgroundStateAsync(notifyWhenHidden: true, runAutomaticBackup: true, notifyDue: true).ConfigureAwait(false);
             }
             else
             {
-                await RefreshBackgroundStateAsync(notifyWhenHidden: false, runAutomaticBackup: true).ConfigureAwait(false);
+                await RefreshBackgroundStateAsync(notifyWhenHidden: false, runAutomaticBackup: true, notifyDue: true).ConfigureAwait(false);
             }
         }, InitialBackgroundDelay);
     }
@@ -190,7 +190,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         _ = ConfirmAndCloseMainWindowAsync();
     }
 
-    private async Task RefreshBackgroundStateAsync(bool notifyWhenHidden, bool runAutomaticBackup, bool reloadData = true)
+    private async Task RefreshBackgroundStateAsync(bool notifyWhenHidden, bool runAutomaticBackup, bool reloadData = true, bool notifyDue = true)
     {
         var hasPendingEdits = _shell.HasPendingEdits;
         if (reloadData && DesktopBackgroundRuntimePolicy.CanReloadInBackground(hasPendingEdits))
@@ -210,7 +210,8 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
             }
         }
 
-        if (!hasPendingEdits
+        if (notifyDue
+            && !hasPendingEdits
             && DesktopBackgroundRuntimePolicy.CanShowDueNotification(background.HasNotification, background.NotificationKey, _lastNotificationKey)
             && await _shell.ShouldShowAndRememberDueNotificationAsync(background.NotificationKey).ConfigureAwait(false))
         {

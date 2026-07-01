@@ -12,6 +12,11 @@ internal static class TestCultureInitializer
     [ModuleInitializer]
     internal static void Initialize()
     {
+        ResetToCzech();
+    }
+
+    internal static void ResetToCzech()
+    {
         var culture = CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage);
         CultureInfo.DefaultThreadCurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentUICulture = culture;

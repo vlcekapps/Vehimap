@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.Globalization;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 using Vehimap.Domain.Models;
 using Vehimap.Storage.Legacy;
 
@@ -721,7 +722,8 @@ public sealed partial class MainWindowViewModel
             completedDate,
             FormatCanonicalOdometerForEditor(completedOdometer),
             CurrentCulturePreferences,
-            CurrentUnitPreferences);
+            CurrentUnitPreferences,
+            DesktopLocalization.LiveLocalizer);
     }
 
     internal async Task<string> ApplyMaintenanceCompletionAsync(MaintenanceCompletionDialogResult completion)

@@ -268,9 +268,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new ManagedAttachmentPathService(),
             new ProcessFileLauncher(),
             new AvaloniaFilePickerService(),
-            new LegacyGlobalSearchService(new ManagedAttachmentPathService(), new LegacyTimelineService(DesktopLocalization.Localizer), DesktopLocalization.Localizer),
-            new LegacyTimelineService(DesktopLocalization.Localizer),
-            new LegacyCalendarExportService(new LegacyTimelineService(DesktopLocalization.Localizer), DesktopLocalization.Localizer),
+            new LegacyGlobalSearchService(new ManagedAttachmentPathService(), new LegacyTimelineService(DesktopLocalization.LiveLocalizer), DesktopLocalization.LiveLocalizer),
+            new LegacyTimelineService(DesktopLocalization.LiveLocalizer),
+            new LegacyCalendarExportService(new LegacyTimelineService(DesktopLocalization.LiveLocalizer), DesktopLocalization.LiveLocalizer),
             new AvaloniaTextFileSaveService(),
             new SqliteBackupService(),
             new AvaloniaFileDialogService(),
@@ -278,9 +278,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new AssemblyAppBuildInfoProvider(() => DesktopLocalization.Localizer),
             new PlatformAutostartService(),
             null,
-            new DesktopProjectionService(),
+            new DesktopProjectionService(DesktopLocalization.LiveLocalizer, DesktopLocalization.CurrentCulture),
             new DesktopNavigationCoordinator(),
-            new DesktopPrintableVehicleReportService(DesktopLocalization.Localizer),
+            new DesktopPrintableVehicleReportService(DesktopLocalization.LiveLocalizer),
             new AvaloniaAppShellDialogService(),
             new ProcessUpdateInstallLauncher())
     {
@@ -293,7 +293,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         return new LegacyVehimapBootstrapper(
             new LegacyDataRootLocator(AssemblyAppBuildInfoProvider.ResolveCurrentApplicationDataFolderName()),
             sqliteDataStore,
-            new SqliteDataMigrationService(legacyDataStore, sqliteDataStore, DesktopLocalization.Localizer));
+            new SqliteDataMigrationService(legacyDataStore, sqliteDataStore, DesktopLocalization.LiveLocalizer));
     }
 
     internal MainWindowViewModel(
@@ -337,36 +337,43 @@ public sealed partial class MainWindowViewModel : ObservableObject
             bootstrapper,
             dataStore,
             attachmentService,
-            new LegacyAuditService(attachmentService, DesktopLocalization.Localizer),
-            new LegacyCostAnalysisService(DesktopLocalization.Localizer),
+            new LegacyAuditService(attachmentService, DesktopLocalization.LiveLocalizer),
+            new LegacyCostAnalysisService(DesktopLocalization.LiveLocalizer),
             sessionBackupService,
             sessionAutostartService,
             sessionSupportedSettingsService,
             sessionAppBuildInfoProvider,
             sessionUpdateService,
-            dataStoreHealthService ?? new SqliteDataStoreHealthService(DesktopLocalization.Localizer));
+            dataStoreHealthService ?? new SqliteDataStoreHealthService(DesktopLocalization.LiveLocalizer),
+            supportedSettingsApplied: ApplyDesktopLocalization);
         _fileLauncher = fileLauncher;
         _filePickerService = filePickerService;
         _clipboardService = clipboardService ?? new AvaloniaClipboardService();
         _globalSearchService = globalSearchService;
         _timelineService = timelineService;
-        _fuelAnalysisService = fuelAnalysisService ?? new LegacyFuelAnalysisService(DesktopLocalization.Localizer);
-        _serviceBookService = serviceBookService ?? new LegacyServiceBookService(DesktopLocalization.Localizer);
-        _smartAdvisorService = smartAdvisorService ?? new LegacySmartAdvisorService(_timelineService, _fuelAnalysisService, DesktopLocalization.Localizer);
+        _fuelAnalysisService = fuelAnalysisService ?? new LegacyFuelAnalysisService(DesktopLocalization.LiveLocalizer);
+        _serviceBookService = serviceBookService ?? new LegacyServiceBookService(DesktopLocalization.LiveLocalizer);
+        _smartAdvisorService = smartAdvisorService ?? new LegacySmartAdvisorService(_timelineService, _fuelAnalysisService, DesktopLocalization.LiveLocalizer);
         _vehiclePackageService = vehiclePackageService ?? new VehiclePackageService();
         _calendarExportService = calendarExportService;
         _fileSaveService = fileSaveService;
         _fileDialogService = fileDialogService ?? new AvaloniaFileDialogService();
-        _projectionService = projectionService ?? new DesktopProjectionService(DesktopLocalization.Localizer, DesktopLocalization.CurrentCulture);
+        _projectionService = projectionService ?? new DesktopProjectionService(DesktopLocalization.LiveLocalizer, DesktopLocalization.CurrentCulture);
         _navigationCoordinator = navigationCoordinator ?? new DesktopNavigationCoordinator();
-        _printableVehicleReportService = printableVehicleReportService ?? new DesktopPrintableVehicleReportService(DesktopLocalization.Localizer);
-        _serviceBookExportService = serviceBookExportService ?? new DesktopServiceBookExportService(DesktopLocalization.Localizer);
+        _printableVehicleReportService = printableVehicleReportService ?? new DesktopPrintableVehicleReportService(DesktopLocalization.LiveLocalizer);
+        _serviceBookExportService = serviceBookExportService ?? new DesktopServiceBookExportService(DesktopLocalization.LiveLocalizer);
         AppShellController = new DesktopAppShellController(
             appShellDialogService ?? new AvaloniaAppShellDialogService(),
             updateInstallLauncher ?? new ProcessUpdateInstallLauncher());
         InitializeWorkspaces();
         Load(applyLaunchTabPreference: true);
     }
+
+    private static void ApplyDesktopLocalization(DesktopSupportedSettingsSnapshot settings) =>
+        DesktopLocalization.Configure(new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator));
 
     private bool CanOpenSelectedRecordFile => SelectedRecord is { FileExists: true } && !string.IsNullOrWhiteSpace(SelectedRecord.ResolvedPath);
 

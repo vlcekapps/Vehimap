@@ -13,7 +13,7 @@ namespace Vehimap.Desktop.Services;
 internal sealed class DesktopProjectionService
 {
     private readonly IAppLocalizer _localizer;
-    private readonly CultureInfo _formatCulture;
+    private CultureInfo _formatCulture;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
     private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
@@ -55,6 +55,7 @@ internal sealed class DesktopProjectionService
             settings.Language,
             settings.ThousandsSeparator,
             settings.DecimalSeparator);
+        _formatCulture = new AppCultureService().ResolveCulture(settings.Language);
         _unitPreferences = new AppUnitPreferences(settings.DistanceUnit, settings.VolumeUnit);
         _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
     }

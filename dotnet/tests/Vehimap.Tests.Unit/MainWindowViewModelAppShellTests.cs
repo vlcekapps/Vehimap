@@ -2,6 +2,7 @@
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Models;
@@ -443,6 +444,65 @@ public sealed class MainWindowViewModelAppShellTests
     }
 
     [Fact]
+    public void Background_snapshot_uses_saved_czech_language_even_when_starting_from_english_culture()
+    {
+        DesktopLocalization.Configure(new AppCulturePreferences(
+            AppCultureService.EnglishLanguage,
+            AppCultureService.CommaSeparator,
+            AppCultureService.DotSeparator));
+
+        try
+        {
+            var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+            var dataSet = BuildLocalizedBackgroundDataSet(AppCultureService.CzechLanguage);
+
+            var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet));
+
+            var snapshot = viewModel.BuildBackgroundSnapshot();
+
+            Assert.True(snapshot.HasNotification);
+            Assert.Contains("termínů k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
+            Assert.Contains("Konec zelené karty", snapshot.NotificationMessage, StringComparison.Ordinal);
+            Assert.Contains("Po termínu", snapshot.NotificationMessage, StringComparison.Ordinal);
+            Assert.Contains("Vozidla:", snapshot.ToolTipText, StringComparison.Ordinal);
+            Assert.DoesNotContain("Due dates", snapshot.ToolTipText, StringComparison.Ordinal);
+            Assert.DoesNotContain("due dates to review", snapshot.NotificationTitle, StringComparison.Ordinal);
+        }
+        finally
+        {
+            ResetCzechDesktopLocalization();
+        }
+    }
+
+    [Fact]
+    public void Background_snapshot_uses_saved_english_language_even_when_starting_from_czech_culture()
+    {
+        ResetCzechDesktopLocalization();
+
+        try
+        {
+            var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+            var dataSet = BuildLocalizedBackgroundDataSet(AppCultureService.EnglishLanguage);
+
+            var viewModel = CreateViewModel(dataRoot, new StubLegacyDataStore(dataSet));
+
+            var snapshot = viewModel.BuildBackgroundSnapshot();
+
+            Assert.True(snapshot.HasNotification);
+            Assert.Contains("due dates to review", snapshot.NotificationTitle, StringComparison.Ordinal);
+            Assert.Contains("Green card end", snapshot.NotificationMessage, StringComparison.Ordinal);
+            Assert.Contains("Overdue", snapshot.NotificationMessage, StringComparison.Ordinal);
+            Assert.Contains("Vehicles:", snapshot.ToolTipText, StringComparison.Ordinal);
+            Assert.DoesNotContain("Termíny", snapshot.ToolTipText, StringComparison.Ordinal);
+            Assert.DoesNotContain("termínů k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
+        }
+        finally
+        {
+            ResetCzechDesktopLocalization();
+        }
+    }
+
+    [Fact]
     public void Background_snapshot_uses_audit_notification_when_no_due_timeline_item_exists()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -482,15 +542,46 @@ public sealed class MainWindowViewModelAppShellTests
             new ManagedAttachmentPathService(),
             fileLauncher ?? new StubFileLauncher(),
             new StubFilePickerService(),
-            new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
-            new LegacyTimelineService(),
-            new LegacyCalendarExportService(),
+            new LegacyGlobalSearchService(
+                new ManagedAttachmentPathService(),
+                new LegacyTimelineService(DesktopLocalization.LiveLocalizer),
+                DesktopLocalization.LiveLocalizer),
+            new LegacyTimelineService(DesktopLocalization.LiveLocalizer),
+            new LegacyCalendarExportService(
+                new LegacyTimelineService(DesktopLocalization.LiveLocalizer),
+                DesktopLocalization.LiveLocalizer),
             new StubTextFileSaveService(),
             backupService ?? new StubBackupService(),
             new StubFileDialogService(),
             new DesktopSupportedSettingsService(),
             new StubBuildInfoProvider(),
             new StubAutostartService());
+    }
+
+    private static VehimapDataSet BuildLocalizedBackgroundDataSet(string language)
+    {
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "12/2099", "05/2025", "06/2026")
+            ]
+        };
+        dataSet.Settings.SetValue("app", "language", language);
+        dataSet.Settings.SetValue("notifications", "technical_reminder_days", "30");
+        dataSet.Settings.SetValue("notifications", "green_card_reminder_days", "30");
+        dataSet.Settings.SetValue("notifications", "maintenance_reminder_days", "31");
+        dataSet.Settings.SetValue("notifications", "maintenance_reminder_km", "1000");
+        return dataSet;
+    }
+
+    private static void ResetCzechDesktopLocalization()
+    {
+        DesktopLocalization.Configure(new AppCulturePreferences(
+            AppCultureService.CzechLanguage,
+            AppCultureService.NoSeparator,
+            AppCultureService.CommaSeparator));
     }
 
     private sealed class StubDataRootLocator : IDataRootLocator
