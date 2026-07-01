@@ -898,8 +898,8 @@ Vozidlo: {2}
   <data name="Audit.Title.MissingUsableOdometer" xml:space="preserve"><value>Chybí použitelný tachometr</value></data>
   <data name="Audit.Title.OdometerRegression" xml:space="preserve"><value>Klesající tachometr</value></data>
   <data name="Audit.Title.RecordWithoutPath" xml:space="preserve"><value>Doklad bez cesty</value></data>
-  <data name="FuelAnalysis.Accessible.GroupSummary" xml:space="preserve"><value>{0}, {1}, {2}, litry {3}, náklady {4}, průměrná cena za litr {5}, poslední tankování {6}</value></data>
-  <data name="FuelAnalysis.Accessible.Segment" xml:space="preserve"><value>Úsek spotřeby {0}, vzdálenost {1}, natankováno {2}, spotřeba {3}, cena za litr {4}, cena za kilometr {5}</value></data>
+  <data name="FuelAnalysis.Accessible.GroupSummary" xml:space="preserve"><value>{0}, {1}, {2}, palivo {3}, náklady {4}, průměrná cena za jednotku paliva {5}, poslední tankování {6}</value></data>
+  <data name="FuelAnalysis.Accessible.Segment" xml:space="preserve"><value>Úsek spotřeby {0}, vzdálenost {1}, natankováno {2}, spotřeba {3}, cena za jednotku paliva {4}, cena za vzdálenost {5}</value></data>
   <data name="FuelAnalysis.Accessible.Warning" xml:space="preserve"><value>{0}: {1}. {2}</value></data>
   <data name="FuelAnalysis.Accessible.WarningWithAction" xml:space="preserve"><value>{0}: {1}. {2}. Enter nebo tlačítko otevře související tankování.</value></data>
   <data name="FuelAnalysis.Group.EntryCount" xml:space="preserve"><value>{0} záznamů</value></data>
@@ -916,11 +916,13 @@ Vozidlo: {2}
   <data name="FuelAnalysis.Status.Unavailable" xml:space="preserve"><value>Spotřebu zatím nejde spočítat, jsou potřeba alespoň dvě plné nádrže s tachometrem.</value></data>
   <data name="FuelAnalysis.Summary.AverageConsumption" xml:space="preserve"><value>Průměrná spotřeba: {0}. {1}</value></data>
   <data name="FuelAnalysis.Summary.BestSegment" xml:space="preserve"><value>Nejlepší úsek: {0} se spotřebou {1}.</value></data>
-  <data name="FuelAnalysis.Summary.Main" xml:space="preserve"><value>Počet tankování: {0}. Celkem palivo: {1}. Celkové náklady: {2}. Průměrná cena za litr: {3}.</value></data>
+  <data name="FuelAnalysis.Summary.Main" xml:space="preserve"><value>Počet tankování: {0}. Celkem palivo: {1}. Celkové náklady: {2}. Průměrná cena za jednotku paliva: {3}.</value></data>
   <data name="FuelAnalysis.Summary.WorstSegment" xml:space="preserve"><value>Nejvyšší spotřeba: {0} se spotřebou {1}.</value></data>
   <data name="FuelAnalysis.Value.CostPerKmUnavailable" xml:space="preserve"><value>nedostupné</value></data>
   <data name="FuelAnalysis.Value.PricePerLiterUnavailable" xml:space="preserve"><value>nedostupná</value></data>
   <data name="FuelAnalysis.Value.ConsumptionUnavailable" xml:space="preserve"><value>nedostupná</value></data>
+  <data name="FuelAnalysis.Value.PricePerVolume" xml:space="preserve"><value>{0}/{1}</value></data>
+  <data name="FuelAnalysis.Value.ConsumptionPerDistance" xml:space="preserve"><value>{0} {1}/100 {2}</value></data>
   <data name="FuelAnalysis.Warning.ConsumptionHigh.Description" xml:space="preserve"><value>Úsek končící {0} je výrazně nad průměrem vozidla.</value></data>
   <data name="FuelAnalysis.Warning.ConsumptionHigh.Title" xml:space="preserve"><value>Nezvykle vysoká spotřeba</value></data>
   <data name="FuelAnalysis.Warning.ConsumptionLow.Description" xml:space="preserve"><value>Úsek končící {0} je výrazně pod průměrem vozidla.</value></data>
@@ -936,10 +938,10 @@ Vozidlo: {2}
   <data name="FuelAnalysis.Warning.OdometerInvalid.Title" xml:space="preserve"><value>Tachometr nejde použít</value></data>
   <data name="FuelAnalysis.Warning.OdometerRegression.Description" xml:space="preserve"><value>Tankování z {0} má tachometr {1} km, což je méně než dřívější hodnota {2} km.</value></data>
   <data name="FuelAnalysis.Warning.OdometerRegression.Title" xml:space="preserve"><value>Tachometr v čase klesá</value></data>
-  <data name="FuelAnalysis.Warning.PriceHigh.Description" xml:space="preserve"><value>Tankování z {0} má cenu za litr výrazně nad průměrem vozidla.</value></data>
-  <data name="FuelAnalysis.Warning.PriceHigh.Title" xml:space="preserve"><value>Nezvykle vysoká cena za litr</value></data>
-  <data name="FuelAnalysis.Warning.PriceLow.Description" xml:space="preserve"><value>Tankování z {0} má cenu za litr výrazně pod průměrem vozidla.</value></data>
-  <data name="FuelAnalysis.Warning.PriceLow.Title" xml:space="preserve"><value>Nezvykle nízká cena za litr</value></data>
+  <data name="FuelAnalysis.Warning.PriceHigh.Description" xml:space="preserve"><value>Tankování z {0} má cenu za jednotku paliva výrazně nad průměrem vozidla.</value></data>
+  <data name="FuelAnalysis.Warning.PriceHigh.Title" xml:space="preserve"><value>Nezvykle vysoká cena za jednotku paliva</value></data>
+  <data name="FuelAnalysis.Warning.PriceLow.Description" xml:space="preserve"><value>Tankování z {0} má cenu za jednotku paliva výrazně pod průměrem vozidla.</value></data>
+  <data name="FuelAnalysis.Warning.PriceLow.Title" xml:space="preserve"><value>Nezvykle nízká cena za jednotku paliva</value></data>
   <data name="FuelAnalysis.Warning.SegmentUnavailable.Description" xml:space="preserve"><value>Tankování z {0} má stejný nebo nižší tachometr než předchozí plná nádrž.</value></data>
   <data name="FuelAnalysis.Warning.SegmentUnavailable.Title" xml:space="preserve"><value>Úsek spotřeby nejde spočítat</value></data>
   <data name="UpdateCheck.AssetAction" xml:space="preserve"><value>Stáhnout asset</value></data>
@@ -1155,7 +1157,7 @@ Historie: {3}
 Doklady: {4}
 Celkem: {5}
 Ujeto: {6}
-Cena / km: {7}
+Cena / vzdálenost: {7}
 Stav výpočtu: {8}</value></data>
   <data name="CostWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F přesune fokus do hledání nákladového přehledu.</value></data>
   <data name="CostWorkspace.SearchSummary.Visible" xml:space="preserve"><value>Zobrazeno {0} vozidel v nákladovém přehledu. Ctrl+F přesune fokus do hledání, Ctrl+R přehled obnoví.</value></data>
@@ -1186,17 +1188,17 @@ Stav výpočtu: {8}</value></data>
   <data name="CostAnalysis.Status.NoMovement" xml:space="preserve"><value>Bez pohybu</value></data>
   <data name="CostAnalysis.Status.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
   <data name="Cost.Value.Unavailable" xml:space="preserve"><value>nedostupné</value></data>
-  <data name="Cost.Value.DistanceKm" xml:space="preserve"><value>{0} km</value></data>
   <data name="Cost.Value.Money" xml:space="preserve"><value>{0}</value></data>
-  <data name="Cost.Value.CostPerKm" xml:space="preserve"><value>{0}/km</value></data>
+  <data name="Cost.Value.CostPerDistance" xml:space="preserve"><value>{0}/{1}</value></data>
   <data name="Cost.Value.SignedMoney.Positive" xml:space="preserve"><value>+{0}</value></data>
   <data name="Cost.Value.SignedMoney.Negative" xml:space="preserve"><value>-{0}</value></data>
-  <data name="Cost.Value.SignedCostPerKm.Positive" xml:space="preserve"><value>+{0}/km</value></data>
-  <data name="Cost.Value.SignedCostPerKm.Negative" xml:space="preserve"><value>-{0}/km</value></data>
+  <data name="Cost.Value.SignedCostPerDistance.Positive" xml:space="preserve"><value>+{0}/{1}</value></data>
+  <data name="Cost.Value.SignedCostPerDistance.Negative" xml:space="preserve"><value>-{0}/{1}</value></data>
+  <data name="CostItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, náklady {2}, palivo {3}, historie {4}, doklady {5}, ujeto {6}, cena za vzdálenost {7}, stav {8}</value></data>
   <data name="Cost.Summary" xml:space="preserve"><value>{0}
-Celkem: {1} | Ujeto: {2} | Cena / km: {3}
+Celkem: {1} | Ujeto: {2} | Cena / vzdálenost: {3}
 Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
-  <data name="Cost.Comparison" xml:space="preserve"><value>Proti stejně dlouhému období loni: náklady {0}, cena / km {1}. U {2} vozidel s náklady zatím chybí spolehlivý výpočet ceny za kilometr.</value></data>
+  <data name="Cost.Comparison" xml:space="preserve"><value>Proti stejně dlouhému období loni: náklady {0}, cena / vzdálenost {1}. U {2} vozidel s náklady zatím chybí spolehlivý výpočet ceny za zvolenou vzdálenost.</value></data>
   <data name="CostExport.FleetNotReady" xml:space="preserve"><value>Souhrn nákladů zatím není připraven k exportu.</value></data>
   <data name="CostExport.FleetSummaryTitle" xml:space="preserve"><value>Export souhrnu nákladů</value></data>
   <data name="CostExport.VehicleDetailTitle" xml:space="preserve"><value>Export detailu nákladů</value></data>
@@ -1311,7 +1313,7 @@ Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
   <data name="SmartAdvisor.Category.Maintenance" xml:space="preserve"><value>Údržba</value></data>
   <data name="SmartAdvisor.Category.Other" xml:space="preserve"><value>Ostatní</value></data>
   <data name="SmartAdvisor.Detail.Audit" xml:space="preserve"><value>Audit dat: {0}. {1}</value></data>
-  <data name="SmartAdvisor.Detail.CostPerKmUnavailable" xml:space="preserve"><value>Doplňte použitelné tachometry v historii nebo tankování, aby šlo spočítat cenu na kilometr.</value></data>
+  <data name="SmartAdvisor.Detail.CostPerKmUnavailable" xml:space="preserve"><value>Doplňte použitelné tachometry v historii nebo tankování, aby šlo spočítat cenu za zvolenou vzdálenost.</value></data>
   <data name="SmartAdvisor.Detail.FuelAnalysis" xml:space="preserve"><value>Tankovací analýza upozorňuje na položku, kterou se vyplatí zkontrolovat.</value></data>
   <data name="SmartAdvisor.Priority.Critical" xml:space="preserve"><value>Naléhavé</value></data>
   <data name="SmartAdvisor.Priority.Info" xml:space="preserve"><value>Informace</value></data>
@@ -1322,9 +1324,9 @@ Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
   <data name="SmartAdvisor.Status.Part.Recommendation" xml:space="preserve"><value>{0} doporučení</value></data>
   <data name="SmartAdvisor.Status.Part.Warning" xml:space="preserve"><value>{0} upozornění</value></data>
   <data name="SmartAdvisor.Status.WithItems" xml:space="preserve"><value>Chytrý poradce našel {0} položek: {1}.</value></data>
-  <data name="SmartAdvisor.Summary.CostPerKmUnavailable" xml:space="preserve"><value>Vozidlo má náklady, ale chybí použitelný rozdíl tachometru pro výpočet ceny na kilometr.</value></data>
+  <data name="SmartAdvisor.Summary.CostPerKmUnavailable" xml:space="preserve"><value>Vozidlo má náklady, ale chybí použitelný rozdíl tachometru pro výpočet ceny za zvolenou vzdálenost.</value></data>
   <data name="SmartAdvisor.Summary.Timeline" xml:space="preserve"><value>{0}. {1}.</value></data>
-  <data name="SmartAdvisor.Title.CostPerKmUnavailable" xml:space="preserve"><value>Cena na kilometr není dostupná</value></data>
+  <data name="SmartAdvisor.Title.CostPerKmUnavailable" xml:space="preserve"><value>Cena za zvolenou vzdálenost není dostupná</value></data>
   <data name="SmartAdvisor.Title.Timeline" xml:space="preserve"><value>{0}: {1}</value></data>
   <data name="SmartAdvisor.Value.NoDueDate" xml:space="preserve"><value>bez termínu</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie chytrého poradce</value></data>

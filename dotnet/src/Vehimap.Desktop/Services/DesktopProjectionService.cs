@@ -12,11 +12,12 @@ namespace Vehimap.Desktop.Services;
 
 internal sealed class DesktopProjectionService
 {
-    private static readonly CultureInfo CzechCulture = CultureInfo.GetCultureInfo("cs-CZ");
     private readonly IAppLocalizer _localizer;
     private readonly CultureInfo _formatCulture;
     private readonly IAppNumberFormatService _numberFormatService;
+    private readonly IAppUnitFormatService _unitFormatService;
     private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private AppUnitPreferences _unitPreferences = new(AppUnitFormatService.Kilometers, AppUnitFormatService.Liters);
     private string _currency = AppCurrencyFormatService.CzechCrowns;
 
     public DesktopProjectionService()
@@ -36,11 +37,16 @@ internal sealed class DesktopProjectionService
     {
     }
 
-    public DesktopProjectionService(IAppLocalizer localizer, CultureInfo formatCulture, IAppNumberFormatService numberFormatService)
+    public DesktopProjectionService(
+        IAppLocalizer localizer,
+        CultureInfo formatCulture,
+        IAppNumberFormatService numberFormatService,
+        IAppUnitFormatService? unitFormatService = null)
     {
         _localizer = localizer;
         _formatCulture = formatCulture;
         _numberFormatService = numberFormatService;
+        _unitFormatService = unitFormatService ?? new AppUnitFormatService(numberFormatService);
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -49,6 +55,7 @@ internal sealed class DesktopProjectionService
             settings.Language,
             settings.ThousandsSeparator,
             settings.DecimalSeparator);
+        _unitPreferences = new AppUnitPreferences(settings.DistanceUnit, settings.VolumeUnit);
         _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
     }
 
@@ -158,9 +165,20 @@ internal sealed class DesktopProjectionService
                 FormatMoney(row.HistoryCost),
                 FormatMoney(row.RecordCost),
                 FormatMoney(row.TotalCost),
-                FormatDistanceKm(row.DistanceKm),
-                FormatCostPerKm(row.CostPerKm),
-                row.Status))
+                FormatDistance(row.DistanceKm),
+                FormatCostPerDistance(row.CostPerKm),
+                row.Status,
+                LF(
+                    "CostItem.AccessibleLabel",
+                    row.VehicleName,
+                    row.Category,
+                    FormatMoney(row.TotalCost),
+                    FormatMoney(row.FuelCost),
+                    FormatMoney(row.HistoryCost),
+                    FormatMoney(row.RecordCost),
+                    FormatDistance(row.DistanceKm),
+                    FormatCostPerDistance(row.CostPerKm),
+                    row.Status)))
             .ToList();
 
     public DesktopVehicleDetailProjection BuildVehicleDetail(
@@ -261,7 +279,7 @@ internal sealed class DesktopProjectionService
                 item.Item.Id,
                 FormatValue(item.Item.EntryDate, "bez data"),
                 FormatValue(item.Item.FuelType, "bez typu"),
-                FormatFuelLiters(item.Item.Liters),
+                FormatFuelVolume(item.Item.Liters),
                 FormatCostValue(item.Item.TotalCost),
                 FormatOdometerValue(item.Item.Odometer),
                 item.Item.FullTank ? "Plná nádrž" : "Částečné tankování",
@@ -281,7 +299,7 @@ internal sealed class DesktopProjectionService
     {
         var summaryLines = new List<string>
         {
-            LF("FuelAnalysis.Summary.Main", analysis.EntryCount, FormatFuelAnalysisLiters(analysis.TotalLiters), FormatFuelAnalysisMoney(analysis.TotalCost), FormatOptionalPricePerLiter(analysis.AveragePricePerLiter)),
+            LF("FuelAnalysis.Summary.Main", analysis.EntryCount, FormatFuelAnalysisVolume(analysis.TotalLiters), FormatFuelAnalysisMoney(analysis.TotalCost), FormatOptionalPricePerVolume(analysis.AveragePricePerLiter)),
             LF("FuelAnalysis.Summary.AverageConsumption", FormatOptionalConsumption(analysis.AverageConsumptionLitersPer100Km), analysis.Status)
         };
 
@@ -303,12 +321,12 @@ internal sealed class DesktopProjectionService
                 .Select(item =>
                 {
                     var period = FormatConsumptionSegmentPeriod(item);
-                    var distance = $"{item.DistanceKm} km";
-                    var liters = FormatFuelAnalysisLiters(item.Liters);
+                    var distance = FormatDistance(item.DistanceKm);
+                    var liters = FormatFuelAnalysisVolume(item.Liters);
                     var consumption = FormatFuelAnalysisConsumption(item.ConsumptionLitersPer100Km);
-                    var pricePerLiter = FormatOptionalPricePerLiter(item.PricePerLiter);
+                    var pricePerLiter = FormatOptionalPricePerVolume(item.PricePerLiter);
                     var costPerKm = item.CostPerKm.HasValue
-                        ? $"{FormatMoney(item.CostPerKm.Value)}/km"
+                        ? FormatCostPerDistance(item.CostPerKm.Value)
                         : L("FuelAnalysis.Value.CostPerKmUnavailable");
                     return new FuelConsumptionSegmentItemViewModel(
                         item.Id,
@@ -327,9 +345,9 @@ internal sealed class DesktopProjectionService
                 {
                     var fuel = BuildFuelGroupLabel(item.FuelType, item.FuelDetail);
                     var entryCount = LF("FuelAnalysis.Group.EntryCount", item.EntryCount);
-                    var liters = FormatFuelAnalysisLiters(item.Liters);
+                    var liters = FormatFuelAnalysisVolume(item.Liters);
                     var totalCost = FormatFuelAnalysisMoney(item.TotalCost);
-                    var averagePrice = FormatOptionalPricePerLiter(item.AveragePricePerLiter);
+                    var averagePrice = FormatOptionalPricePerVolume(item.AveragePricePerLiter);
                     var latestDate = item.LatestDate.HasValue
                         ? item.LatestDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
                         : L("FuelAnalysis.LatestDate.None");
@@ -527,8 +545,8 @@ internal sealed class DesktopProjectionService
             "Cost.Summary",
             summary.PeriodLabel,
             FormatMoney(summary.TotalCost),
-            FormatDistanceKm(summary.DistanceKm),
-            FormatCostPerKm(summary.CostPerKm),
+            FormatDistance(summary.DistanceKm),
+            FormatCostPerDistance(summary.CostPerKm),
             summary.ActiveWithoutCostCount,
             summary.ActiveVehicleCount);
     }
@@ -538,7 +556,7 @@ internal sealed class DesktopProjectionService
         return LF(
             "Cost.Comparison",
             FormatSignedMoney(summary.TotalCostDifference),
-            FormatSignedCostPerKm(summary.CostPerKmDifference),
+            FormatSignedCostPerDistance(summary.CostPerKmDifference),
             summary.CostPerKmUnavailableCount);
     }
 
@@ -721,7 +739,7 @@ internal sealed class DesktopProjectionService
         ];
     }
 
-    private static string BuildVehicleHistoryDetailSummary(VehimapDataSet dataSet, string vehicleId)
+    private string BuildVehicleHistoryDetailSummary(VehimapDataSet dataSet, string vehicleId)
     {
         var entries = dataSet.HistoryEntries
             .Where(item => item.VehicleId == vehicleId)
@@ -779,7 +797,7 @@ internal sealed class DesktopProjectionService
             summary += " Poslední tankování: ";
             summary += string.IsNullOrWhiteSpace(latestFuelEntry.Liters)
                 ? "bez údajů o litrech"
-                : FormatFuelLiters(latestFuelEntry.Liters);
+                : FormatFuelVolume(latestFuelEntry.Liters);
             if (!string.IsNullOrWhiteSpace(latestFuelEntry.TotalCost))
             {
                 summary += $" za {FormatCostValue(latestFuelEntry.TotalCost)}";
@@ -1001,12 +1019,12 @@ internal sealed class DesktopProjectionService
             || VehimapValueParser.TryParseMonthYear(text, out value);
     }
 
-    private static string BuildMaintenanceInterval(MaintenancePlan plan)
+    private string BuildMaintenanceInterval(MaintenancePlan plan)
     {
         var parts = new List<string>();
         if (TryParsePositiveInteger(plan.IntervalKm, out var intervalKm))
         {
-            parts.Add($"{intervalKm} km");
+            parts.Add(FormatDistance(intervalKm, decimalPlaces: 0));
         }
 
         if (TryParsePositiveInteger(plan.IntervalMonths, out var intervalMonths))
@@ -1017,7 +1035,7 @@ internal sealed class DesktopProjectionService
         return parts.Count == 0 ? "Bez intervalu" : string.Join(" / ", parts);
     }
 
-    private static string BuildMaintenanceLastService(MaintenancePlan plan)
+    private string BuildMaintenanceLastService(MaintenancePlan plan)
     {
         var date = string.IsNullOrWhiteSpace(plan.LastServiceDate) ? "bez data" : plan.LastServiceDate;
         return $"{date} | {FormatOdometerValue(plan.LastServiceOdometer)}";
@@ -1204,43 +1222,51 @@ internal sealed class DesktopProjectionService
         return FormatValue(value, "bez ceny");
     }
 
-    private static string FormatFuelLiters(string? value)
+    private string FormatFuelVolume(string? value)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (!VehimapValueParser.TryParseDecimalNumber(value, out var parsed))
         {
-            return "bez množství";
+            return FormatValue(value, "bez množství");
         }
 
-        return value.Contains('l', StringComparison.OrdinalIgnoreCase)
-            ? value
-            : $"{value} l";
+        return FormatVolume(parsed);
     }
 
-    private static string FormatOdometerValue(string? value)
+    private string FormatOdometerValue(string? value)
     {
         if (!VehimapValueParser.TryParseOdometer(value, out var parsed))
         {
             return FormatValue(value, "bez tachometru");
         }
 
-        return $"{parsed} km";
+        return FormatDistance(parsed, decimalPlaces: 0);
     }
 
-    private static string FormatCurrentOdometer(int? value) =>
-        value.HasValue ? $"{value.Value} km" : "neznámý";
+    private string FormatCurrentOdometer(int? value) =>
+        value.HasValue ? FormatDistance(value.Value, decimalPlaces: 0) : "neznámý";
 
     private string FormatMoney(decimal value) =>
         _numberFormatService.FormatMoney(value, _culturePreferences, _currency);
 
-    private string FormatDistanceKm(int? value) =>
+    private string FormatDistance(int? value) =>
         value.HasValue
-            ? LF("Cost.Value.DistanceKm", value.Value)
+            ? FormatDistance((decimal)value.Value)
             : L("Cost.Value.Unavailable");
 
-    private string FormatCostPerKm(decimal? value) =>
+    private string FormatDistance(decimal kilometers, int decimalPlaces = 1) =>
+        _unitFormatService.FormatDistanceFromKilometers(kilometers, _culturePreferences, _unitPreferences, decimalPlaces);
+
+    private string FormatCostPerDistance(decimal? value) =>
         value.HasValue
-            ? LF("Cost.Value.CostPerKm", FormatMoney(value.Value))
+            ? FormatCostPerDistance(value.Value)
             : L("Cost.Value.Unavailable");
+
+    private string FormatCostPerDistance(decimal value)
+    {
+        var normalized = _unitFormatService.Normalize(_unitPreferences);
+        var costPerDisplayedDistance = value * _unitFormatService.ConvertDistanceToKilometers(1m, normalized);
+        return LF("Cost.Value.CostPerDistance", FormatMoney(costPerDisplayedDistance), DistanceUnitLabel(normalized));
+    }
 
     private string FormatSignedMoney(decimal value)
     {
@@ -1249,16 +1275,18 @@ internal sealed class DesktopProjectionService
             : LF("Cost.Value.SignedMoney.Negative", FormatMoney(Math.Abs(value)));
     }
 
-    private string FormatSignedCostPerKm(decimal? value)
+    private string FormatSignedCostPerDistance(decimal? value)
     {
         if (!value.HasValue)
         {
             return L("Cost.Value.Unavailable");
         }
 
+        var normalized = _unitFormatService.Normalize(_unitPreferences);
+        var absoluteValue = Math.Abs(value.Value) * _unitFormatService.ConvertDistanceToKilometers(1m, normalized);
         return value.Value >= 0m
-            ? LF("Cost.Value.SignedCostPerKm.Positive", FormatMoney(value.Value))
-            : LF("Cost.Value.SignedCostPerKm.Negative", FormatMoney(Math.Abs(value.Value)));
+            ? LF("Cost.Value.SignedCostPerDistance.Positive", FormatMoney(absoluteValue), DistanceUnitLabel(normalized))
+            : LF("Cost.Value.SignedCostPerDistance.Negative", FormatMoney(absoluteValue), DistanceUnitLabel(normalized));
     }
 
     private bool IsInactiveCostStatus(string? status) =>
@@ -1287,21 +1315,67 @@ internal sealed class DesktopProjectionService
             _ => L("SmartAdvisor.Category.Other")
         };
 
-    private static string FormatLiters(decimal value) => $"{value.ToString("0.##", CzechCulture)} l";
-
-    private static string FormatConsumption(decimal value) => $"{value.ToString("0.00", CzechCulture)} l/100 km";
-
     private string FormatOptionalConsumption(decimal? value) =>
         value.HasValue ? FormatFuelAnalysisConsumption(value.Value) : L("FuelAnalysis.Value.ConsumptionUnavailable");
 
-    private string FormatOptionalPricePerLiter(decimal? value) =>
-        value.HasValue ? $"{FormatMoney(value.Value)}/l" : L("FuelAnalysis.Value.PricePerLiterUnavailable");
+    private string FormatOptionalPricePerVolume(decimal? value)
+    {
+        if (!value.HasValue)
+        {
+            return L("FuelAnalysis.Value.PricePerLiterUnavailable");
+        }
+
+        var normalized = _unitFormatService.Normalize(_unitPreferences);
+        var pricePerDisplayedVolume = value.Value * _unitFormatService.ConvertVolumeToLiters(1m, normalized);
+        return LF("FuelAnalysis.Value.PricePerVolume", FormatMoney(pricePerDisplayedVolume), VolumeUnitLabel(normalized));
+    }
 
     private string FormatFuelAnalysisMoney(decimal value) => FormatMoney(value);
 
-    private string FormatFuelAnalysisLiters(decimal value) => $"{value.ToString("0.##", _formatCulture)} l";
+    private string FormatFuelAnalysisVolume(decimal value) => FormatVolume(value);
 
-    private string FormatFuelAnalysisConsumption(decimal value) => $"{value.ToString("0.00", _formatCulture)} l/100 km";
+    private string FormatVolume(decimal liters)
+    {
+        var normalized = _unitFormatService.Normalize(_unitPreferences);
+        var displayedVolume = _unitFormatService.ConvertVolumeFromLiters(liters, normalized);
+        var decimalPlaces = displayedVolume == Math.Round(displayedVolume, 0) ? 0 : 2;
+        return $"{FormatDecimal(displayedVolume, decimalPlaces)} {VolumeUnitLabel(normalized)}";
+    }
+
+    private string FormatFuelAnalysisConsumption(decimal litersPer100Km)
+    {
+        var normalized = _unitFormatService.Normalize(_unitPreferences);
+        var distanceUnit = DistanceUnitLabel(normalized);
+        var volumeUnit = VolumeUnitLabel(normalized);
+
+        if (normalized.DistanceUnit == AppUnitFormatService.Miles
+            && normalized.VolumeUnit is AppUnitFormatService.UsGallons or AppUnitFormatService.ImperialGallons)
+        {
+            var kilometersPerDisplayedVolume = _unitFormatService.ConvertVolumeToLiters(1m, normalized) * 100m / litersPer100Km;
+            var milesPerDisplayedVolume = _unitFormatService.ConvertDistanceFromKilometers(kilometersPerDisplayedVolume, normalized);
+            var mpgLabel = normalized.VolumeUnit == AppUnitFormatService.ImperialGallons ? "mpg (imp)" : "mpg";
+            return $"{FormatDecimal(milesPerDisplayedVolume, 2)} {mpgLabel}";
+        }
+
+        var kilometersPer100DisplayedDistance = _unitFormatService.ConvertDistanceToKilometers(100m, normalized);
+        var litersPer100DisplayedDistance = litersPer100Km * kilometersPer100DisplayedDistance / 100m;
+        var volumePer100DisplayedDistance = _unitFormatService.ConvertVolumeFromLiters(litersPer100DisplayedDistance, normalized);
+        return LF("FuelAnalysis.Value.ConsumptionPerDistance", FormatDecimal(volumePer100DisplayedDistance, 2), volumeUnit, distanceUnit);
+    }
+
+    private string FormatDecimal(decimal value, int decimalPlaces) =>
+        _numberFormatService.FormatDecimal(value, _culturePreferences, decimalPlaces);
+
+    private static string DistanceUnitLabel(AppUnitPreferences preferences) =>
+        preferences.DistanceUnit == AppUnitFormatService.Miles ? "mi" : "km";
+
+    private static string VolumeUnitLabel(AppUnitPreferences preferences) =>
+        preferences.VolumeUnit switch
+        {
+            AppUnitFormatService.UsGallons => "US gal",
+            AppUnitFormatService.ImperialGallons => "imp gal",
+            _ => "l"
+        };
 
     private static string FormatConsumptionSegmentPeriod(FuelConsumptionSegment segment) =>
         $"{segment.StartDate:dd.MM.yyyy} až {segment.EndDate:dd.MM.yyyy}";

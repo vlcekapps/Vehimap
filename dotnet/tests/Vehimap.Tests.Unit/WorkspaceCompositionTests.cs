@@ -211,7 +211,7 @@ public sealed class WorkspaceCompositionTests
     {
         var viewModel = CreateViewModel();
         var auditItem = new AuditItemViewModel("veh_1", "Doklad", "rec_1", "Vážné", "Doklady", "Octavia", "Doklad bez cesty", "Doplňte cestu.");
-        var costVehicle = new CostVehicleItemViewModel("veh_1", "Octavia", "Osobní vozidla", "1 000 Kč", "0 Kč", "0 Kč", "1 000 Kč", "100 km", "10 Kč/km", "Vypočteno");
+        var costVehicle = new CostVehicleItemViewModel("veh_1", "Octavia", "Osobní vozidla", "1 000 Kč", "0 Kč", "0 Kč", "1 000 Kč", "100 km", "10 Kč/km", "Vypočteno", "Octavia, náklady 1 000 Kč");
         var timelineItem = new VehicleTimelineItemViewModel("custom", "Připomínka", "01.12.2099", "Objednat servis", "Zavolat servisu", "Budoucí", "Octavia", "veh_1", "rem_1", true, string.Empty);
 
         viewModel.AuditWorkspace.SetAuditSummary("Audit sdílený přes workspace.");

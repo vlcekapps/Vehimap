@@ -225,7 +225,7 @@ public sealed class LegacySmartAdvisorServiceTests
             && item.ActionLabel == "Open document");
         Assert.Contains(summary.Items, item =>
             item.Category == SmartAdvisorCategory.Costs
-            && item.Title == "Cost per kilometer is not available"
+            && item.Title == "Cost per distance is not available"
             && item.ActionLabel == "Open vehicle costs"
             && item.Detail.Contains("Add usable odometer values", StringComparison.Ordinal));
     }

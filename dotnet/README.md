@@ -19,8 +19,8 @@ Aktualni zamer:
 - release priorita je nejdrive stabilni Windows desktop pres Inno Setup instalator, potom Android, nasledne macOS a nakonec Linux
 - rada 2.0 zustava po zavedeni SQLite v delsi nightly stabilizaci; beta/stable se neplanuji, dokud storage gate a testerska vlna nebudou bez blockeru
 - lokalizacni zaklad se zavadi pred dalsimi velkymi funkcemi a pred Android UI; pilot uz pokryva nastaveni, O programu vcetne kopirovacich statusu a runtime rezimu, editor vozidla, hlavni shell, hlavni menu, levy panel seznamu vozidel, nazvy pracovnich karet, staticke povrchy editoru historie/tankovani/udrzby/pripominek/dokladu, runtime stavove a validacni hlasky pripominek/dokladu vcetne akci priloh, runtime souhrny/detailove panely/vysledky hledani a screen-reader popisky polozek hlavnich evidenci, dialog dokonceni udrzby, aktualizacni a notifikacni dialogy vcetne platformnich vysledku kontroly aktualizaci a validace manifestu, staticke texty jejich workspace karet, workspace `Detail vozidla`, `Globalni hledani`, `Casova osa`, `Blizici se terminy`, `Propadle terminy`, `Chytry poradce`, `Audit dat`, `Naklady`, `Dashboard`, kratke akcni workspace statusy dashboardu/udrzby/detailu vozidla, dynamicke/domain texty analyzy tankovani, auditu dat, Chytreho poradce, casove osy, globalniho hledani, terminovych prehledu, dashboard timeline, rychlych akci, app-shell workflow statusu, nakladoveho workflow, servisni knizky a rucniho ICS exportu, globalni bezpecnostni dialogy, chrome samostatnych workspace oken, pristupne okno `Akce na liste` a SQLite 2.0 migracni/health diagnostiku pres `.resx` zdroje
-- preference jazyka, oddelovacu cisel, jednotek vzdalenosti/objemu a meny se ukladaji do nastaveni datove sady; internim ulozistem zustavaji invariantni hodnoty, UI a exporty je budou formatovat podle preferenci
-- pred sirsim verejnym testovanim 2.0 musi projit jeste samostatny i18n/unit conformance pass pro plosne pouziti meny u peneznich castek, exportu a vsech zbylych km/l/mile/galon textu, aby lokalizace nebyla jen preklad popisku
+- preference jazyka, oddelovacu cisel, jednotek vzdalenosti/objemu a meny se ukladaji do nastaveni datove sady; internim ulozistem zustavaji invariantni hodnoty, UI a exporty je formatuji podle preferenci
+- pred sirsim verejnym testovanim 2.0 musi pokracovat i18n/unit conformance pass pro plosne pouziti meny u peneznich castek, exportu a vsech zbylych km/l/mile/galon textu, aby lokalizace nebyla jen preklad popisku
 
 ## Struktura
 
@@ -54,6 +54,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - tachometry v historii/tankovani, servisni intervaly, dokonceni udrzby a objem tankovani se v editorech zobrazuji a zadavaji ve zvolenych jednotkach, zatimco SQLite zustava v kanonickych km/l
 - zmena oddelovacu cisel jen znovu vykresli viditelne hodnoty; nejednoznacne kombinace, kde je oddelovac tisicu stejny jako desetinni oddelovac, nastaveni odmitne
 - mena ma prvni podporovanou volbu v nastaveni (`CZK`, `USD`, `EUR`, `GBP`) a spolecnou formatovaci sluzbu; dashboardove/nakladove souhrny, analyza tankovani, servisni knizka, casova osa, globalni hledani a nakladove TSV/HTML exporty uz ji pouzivaji, zatimco zbyvajici exportni/reportovaci texty zustavaji navazujici i18n pass bez automaticke kurzove konverze historickych hodnot
+- dashboardove naklady, srovnani obdobi a analyza tankovani uz zvolene jednotky pouzivaji i pro odvozene hodnoty: cena za vzdalenost se zobrazi za km nebo mili, palivo v litrech/galonech a pri kombinaci mile + galony se spotreba zobrazi jako `mpg`
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 
 ## Aktualni stav

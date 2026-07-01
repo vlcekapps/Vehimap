@@ -176,6 +176,6 @@ public sealed class LegacyFuelAnalysisServiceTests
 
         Assert.Contains(summary.Warnings, item =>
             item.FuelEntryId == "fuel_5"
-            && item.Title == "Nezvykle vysoká cena za litr");
+            && item.Title == "Nezvykle vysoká cena za jednotku paliva");
     }
 }

@@ -253,9 +253,11 @@ public sealed class DesktopProjectionAndNavigationServiceTests
 
         Assert.Equal("$350.00", item.FuelCost);
         Assert.Equal("$700.00", item.TotalCost);
-        Assert.Equal("$4.67/km", item.CostPerKm);
+        Assert.Equal("93.2 mi", item.Distance);
+        Assert.Equal("$7.51/mi", item.CostPerKm);
+        Assert.Contains("cost per distance $7.51/mi", item.AccessibleLabel, StringComparison.Ordinal);
         Assert.Contains("$700.00", projectionService.BuildCostSummary(summary), StringComparison.Ordinal);
-        Assert.Contains("-$1.25/km", projectionService.BuildCostComparison(summary), StringComparison.Ordinal);
+        Assert.Contains("-$2.01/mi", projectionService.BuildCostComparison(summary), StringComparison.Ordinal);
     }
 
     [Fact]
@@ -264,6 +266,23 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         var projectionService = new DesktopProjectionService(
             new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")),
             CultureInfo.GetCultureInfo("en-US"));
+        projectionService.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            15,
+            30,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
         var analysis = new FuelAnalysisSummary(
             "veh_1",
             2,
@@ -313,9 +332,14 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         var projection = projectionService.BuildFuelAnalysis(analysis);
 
         Assert.Contains("Refuel entries: 2", projection.Summary, StringComparison.Ordinal);
-        Assert.Contains("Average consumption: 8.20 l/100 km", projection.Summary, StringComparison.Ordinal);
+        Assert.Contains("Total fuel: 21.66 US gal", projection.Summary, StringComparison.Ordinal);
+        Assert.Contains("Average price per fuel unit: $189.27/US gal", projection.Summary, StringComparison.Ordinal);
+        Assert.Contains("Average consumption: 28.68 mpg", projection.Summary, StringComparison.Ordinal);
+        Assert.Equal("310.7 mi", projection.ConsumptionSegments.Single().Distance);
+        Assert.Equal("10.83 US gal", projection.ConsumptionSegments.Single().Liters);
+        Assert.Equal("$6.60/mi", projection.ConsumptionSegments.Single().CostPerKm);
         Assert.Contains("Consumption segment", projection.ConsumptionSegments.Single().AccessibleLabel, StringComparison.Ordinal);
-        Assert.Contains("liters 82 l", projection.GroupSummaries.Single().AccessibleLabel, StringComparison.Ordinal);
+        Assert.Contains("fuel 21.66 US gal", projection.GroupSummaries.Single().AccessibleLabel, StringComparison.Ordinal);
         Assert.Equal("Warning", projection.Warnings.Single().Severity);
         Assert.Contains("related refuel entry", projection.Warnings.Single().AccessibleLabel, StringComparison.Ordinal);
     }
@@ -395,7 +419,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
                     "Milena",
                     "Náklady",
                     "veh_1",
-                    "Cost per kilometer is not available",
+                    "Cost per distance is not available",
                     "The vehicle has costs.",
                     "Add odometers.",
                     "Open vehicle costs",
