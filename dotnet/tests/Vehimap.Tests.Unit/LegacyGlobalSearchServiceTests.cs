@@ -122,7 +122,11 @@ public sealed class LegacyGlobalSearchServiceTests
         Assert.Equal("Fuel", fuelResult.SectionLabel);
         Assert.StartsWith("Fuel -", fuelResult.Title, StringComparison.Ordinal);
         Assert.Contains("Full tank", fuelResult.Summary, StringComparison.Ordinal);
+        Assert.Contains("8.45 US gal", fuelResult.Summary, StringComparison.Ordinal);
+        Assert.Contains("7,705 mi", fuelResult.Summary, StringComparison.Ordinal);
         Assert.Contains("$1,200.00", fuelResult.Summary, StringComparison.Ordinal);
+        Assert.DoesNotContain("12400 km", fuelResult.Summary, StringComparison.Ordinal);
+        Assert.DoesNotContain("32 l", fuelResult.Summary, StringComparison.Ordinal);
 
         var recordResults = service.Search(DataRoot, dataSet, "asistence.pdf");
         var recordResult = Assert.Single(recordResults.Where(item => item.EntityId == "rec_2"));

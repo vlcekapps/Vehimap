@@ -23,7 +23,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private readonly ITimelineService _timelineService;
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
+    private readonly IAppUnitFormatService _unitFormatService;
     private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private AppUnitPreferences _unitPreferences = new(AppUnitFormatService.Kilometers, AppUnitFormatService.Liters);
     private string _currency = AppCurrencyFormatService.CzechCrowns;
 
     public LegacyGlobalSearchService(IFileAttachmentService attachmentService)
@@ -31,12 +33,18 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     {
     }
 
-    public LegacyGlobalSearchService(IFileAttachmentService attachmentService, ITimelineService timelineService, IAppLocalizer? localizer = null, IAppNumberFormatService? numberFormatService = null)
+    public LegacyGlobalSearchService(
+        IFileAttachmentService attachmentService,
+        ITimelineService timelineService,
+        IAppLocalizer? localizer = null,
+        IAppNumberFormatService? numberFormatService = null,
+        IAppUnitFormatService? unitFormatService = null)
     {
         _attachmentService = attachmentService;
         _timelineService = timelineService;
         _localizer = localizer ?? CreateDefaultLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+        _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -45,6 +53,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             settings.Language,
             settings.ThousandsSeparator,
             settings.DecimalSeparator);
+        _unitPreferences = new AppUnitPreferences(settings.DistanceUnit, settings.VolumeUnit);
         _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
         if (_timelineService is LegacyTimelineService legacyTimelineService)
         {
@@ -507,7 +516,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         LF("GlobalSearch.Value.Plate", string.IsNullOrWhiteSpace(plate) ? L("GlobalSearch.Value.NoPlate") : plate.Trim());
 
     private string FormatOdometer(string? value) =>
-        VehimapValueParser.TryParseOdometer(value, out var parsed) ? LF("GlobalSearch.Value.OdometerKm", parsed) : ValueOrFallback(value, string.Empty);
+        VehimapValueParser.TryParseOdometer(value, out var parsed)
+            ? _unitFormatService.FormatDistanceFromKilometers(parsed, _culturePreferences, _unitPreferences, decimalPlaces: 0)
+            : ValueOrFallback(value, string.Empty);
 
     private string FormatMoneyValue(string? value) =>
         VehimapValueParser.TryParseMoney(value, out var parsed)
@@ -521,7 +532,15 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             return string.Empty;
         }
 
-        return value.Contains('l', StringComparison.OrdinalIgnoreCase) ? value : LF("GlobalSearch.Value.Liters", value.Trim());
+        if (!VehimapValueParser.TryParseDecimalNumber(value, out var liters))
+        {
+            return value.Trim();
+        }
+
+        var normalized = _unitFormatService.Normalize(_unitPreferences);
+        var displayedVolume = _unitFormatService.ConvertVolumeFromLiters(liters, normalized);
+        var decimalPlaces = displayedVolume == Math.Round(displayedVolume, 0) ? 0 : 2;
+        return _unitFormatService.FormatVolumeFromLiters(liters, _culturePreferences, normalized, decimalPlaces);
     }
 
     private string BuildFuelTitle(FuelEntry entry)

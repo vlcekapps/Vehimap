@@ -55,6 +55,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - objem tankovani v litrech podporuje presnost na setiny podle realnych stojanu; ulozene hodnoty typu `3`, `3,1` a `3,12` se znovu otevrou bez zbytecnych nul a vypocty spotreby/ceny pouzivaji decimal hodnoty
 - zmena oddelovacu cisel jen znovu vykresli viditelne hodnoty; nejednoznacne kombinace, kde je oddelovac tisicu stejny jako desetinni oddelovac, nastaveni odmitne
 - mena ma prvni podporovanou volbu v nastaveni (`CZK`, `USD`, `EUR`, `GBP`) a spolecnou formatovaci sluzbu; dashboardove/nakladove souhrny, analyza tankovani, servisni knizka, casova osa, globalni hledani a nakladove TSV/HTML exporty uz ji pouzivaji, zatimco zbyvajici exportni/reportovaci texty zustavaji navazujici i18n pass bez automaticke kurzove konverze historickych hodnot
+- globalni hledani formatuje viditelne tachometry a mnozstvi paliva podle zvolenych jednotek, ale vyhledavaci index dal bere v uvahu i invariantni ulozene hodnoty
 - dashboardove naklady, srovnani obdobi a analyza tankovani uz zvolene jednotky pouzivaji i pro odvozene hodnoty: cena za vzdalenost se zobrazi za km nebo mili, palivo v litrech/galonech a pri kombinaci mile + galony se spotreba zobrazi jako `mpg`
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 
