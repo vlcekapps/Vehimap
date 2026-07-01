@@ -1917,8 +1917,10 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Value.InOneDay" xml:space="preserve"><value>Za 1 den</value></data>
   <data name="ServiceBook.Value.InDays" xml:space="preserve"><value>Za {0} dnů</value></data>
   <data name="ServiceBook.Value.MissingLastServiceDate" xml:space="preserve"><value>Chybí datum posledního servisu</value></data>
+  <data name="ServiceBook.Value.OverDistanceLimit" xml:space="preserve"><value>Po limitu o {0}</value></data>
   <data name="ServiceBook.Value.OverDistanceLimitKm" xml:space="preserve"><value>Po limitu o {0} km</value></data>
   <data name="ServiceBook.Value.ServiceNow" xml:space="preserve"><value>Servis nyní</value></data>
+  <data name="ServiceBook.Value.InDistance" xml:space="preserve"><value>Za {0}</value></data>
   <data name="ServiceBook.Value.InKm" xml:space="preserve"><value>Za {0} km</value></data>
   <data name="ServiceBook.Value.MissingOdometerForCalculation" xml:space="preserve"><value>Chybí tachometr pro výpočet</value></data>
   <data name="ServiceBook.Value.NoActiveInterval" xml:space="preserve"><value>Bez aktivního intervalu</value></data>

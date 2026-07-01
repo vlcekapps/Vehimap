@@ -118,4 +118,59 @@ public sealed class LegacyServiceBookServiceTests
         Assert.Equal("$2,500.00", summary.HistoryEntries.Single().Cost);
         Assert.Equal("$4,000.00", summary.Records.Single().Price);
     }
+
+    [Fact]
+    public void Build_vehicle_service_book_formats_distances_with_selected_unit()
+    {
+        var service = new LegacyServiceBookService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Cars", "", "Skoda 120L", "1AB2345", "", "", "", "", "", "")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "01.01.2026", "Service", "100000", "", "Oil")
+            ],
+            FuelEntries =
+            [
+                new FuelEntry("fuel_1", "veh_1", "01.03.2026", "102000", "35", "1600", true, "Natural 95", "")
+            ],
+            MaintenancePlans =
+            [
+                new MaintenancePlan("mnt_1", "veh_1", "Engine oil", "15000", "12", "01.01.2026", "100000", true, "")
+            ]
+        };
+
+        var summary = service.BuildVehicleServiceBook(dataSet, "veh_1", new DateOnly(2026, 3, 1));
+        var maintenance = Assert.Single(summary.MaintenancePlans);
+        var history = Assert.Single(summary.HistoryEntries);
+
+        Assert.Equal("63,380 mi", summary.CurrentOdometer);
+        Assert.Equal("62,137 mi", history.Odometer);
+        Assert.Contains("9,321 mi", maintenance.Interval);
+        Assert.Contains("8,078 mi", maintenance.Status);
+        Assert.DoesNotContain(" km", summary.CurrentOdometer);
+        Assert.DoesNotContain(" km", history.Odometer);
+        Assert.DoesNotContain(" km", maintenance.Interval);
+        Assert.DoesNotContain(" km", maintenance.Status);
+    }
 }

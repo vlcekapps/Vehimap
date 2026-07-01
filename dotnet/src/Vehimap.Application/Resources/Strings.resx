@@ -1917,8 +1917,10 @@ Status: {5}</value></data>
   <data name="ServiceBook.Value.InOneDay" xml:space="preserve"><value>In 1 day</value></data>
   <data name="ServiceBook.Value.InDays" xml:space="preserve"><value>In {0} days</value></data>
   <data name="ServiceBook.Value.MissingLastServiceDate" xml:space="preserve"><value>Last service date is missing</value></data>
+  <data name="ServiceBook.Value.OverDistanceLimit" xml:space="preserve"><value>Over distance limit by {0}</value></data>
   <data name="ServiceBook.Value.OverDistanceLimitKm" xml:space="preserve"><value>Over distance limit by {0} km</value></data>
   <data name="ServiceBook.Value.ServiceNow" xml:space="preserve"><value>Service now</value></data>
+  <data name="ServiceBook.Value.InDistance" xml:space="preserve"><value>In {0}</value></data>
   <data name="ServiceBook.Value.InKm" xml:space="preserve"><value>In {0} km</value></data>
   <data name="ServiceBook.Value.MissingOdometerForCalculation" xml:space="preserve"><value>Odometer is missing for calculation</value></data>
   <data name="ServiceBook.Value.NoActiveInterval" xml:space="preserve"><value>No active interval</value></data>

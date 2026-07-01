@@ -23,13 +23,19 @@ public sealed class LegacyServiceBookService : IServiceBookService
 
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
+    private readonly IAppUnitFormatService _unitFormatService;
     private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private AppUnitPreferences _unitPreferences = new(AppUnitFormatService.Kilometers, AppUnitFormatService.Liters);
     private string _currency = AppCurrencyFormatService.CzechCrowns;
 
-    public LegacyServiceBookService(IAppLocalizer? localizer = null, IAppNumberFormatService? numberFormatService = null)
+    public LegacyServiceBookService(
+        IAppLocalizer? localizer = null,
+        IAppNumberFormatService? numberFormatService = null,
+        IAppUnitFormatService? unitFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+        _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -38,6 +44,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
             settings.Language,
             settings.ThousandsSeparator,
             settings.DecimalSeparator);
+        _unitPreferences = new AppUnitPreferences(settings.DistanceUnit, settings.VolumeUnit);
         _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
     }
 
@@ -65,7 +72,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
             FormatValue(vehicle?.Category, L("ServiceBook.Value.NoCategory")),
             FormatValue(vehicle?.MakeModel, L("ServiceBook.Value.NoMakeModel")),
             FormatValue(vehicle?.Plate, L("ServiceBook.Value.NoPlate")),
-            currentOdometer.HasValue ? LF("ServiceBook.Value.OdometerKm", currentOdometer.Value) : L("ServiceBook.Value.Unknown"),
+            currentOdometer.HasValue ? FormatDistance(currentOdometer.Value) : L("ServiceBook.Value.Unknown"),
             totalHistoryCost,
             status,
             history,
@@ -202,7 +209,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
         var parts = new List<string>();
         if (TryParsePositiveInteger(plan.IntervalKm, out var intervalKm))
         {
-            parts.Add(LF("ServiceBook.Value.OdometerKm", intervalKm));
+            parts.Add(FormatDistance(intervalKm));
         }
 
         if (TryParsePositiveInteger(plan.IntervalMonths, out var intervalMonths))
@@ -256,9 +263,9 @@ public sealed class LegacyServiceBookService : IServiceBookService
                 var remainingKm = (lastServiceOdometer + intervalKm) - currentOdometer.Value;
                 parts.Add(remainingKm switch
                 {
-                    < 0 => LF("ServiceBook.Value.OverDistanceLimitKm", Math.Abs(remainingKm)),
+                    < 0 => LF("ServiceBook.Value.OverDistanceLimit", FormatDistance(Math.Abs(remainingKm))),
                     0 => L("ServiceBook.Value.ServiceNow"),
-                    _ => LF("ServiceBook.Value.InKm", remainingKm)
+                    _ => LF("ServiceBook.Value.InDistance", FormatDistance(remainingKm))
                 });
             }
             else
@@ -280,11 +287,14 @@ public sealed class LegacyServiceBookService : IServiceBookService
     {
         if (VehimapValueParser.TryParseOdometer(value, out var parsed))
         {
-            return LF("ServiceBook.Value.OdometerKm", parsed);
+            return FormatDistance(parsed);
         }
 
         return FormatValue(value, L("ServiceBook.Value.NoOdometer"));
     }
+
+    private string FormatDistance(decimal kilometers) =>
+        _unitFormatService.FormatDistanceFromKilometers(kilometers, _culturePreferences, _unitPreferences, decimalPlaces: 0);
 
     private string FormatMoneyText(string? value)
     {
