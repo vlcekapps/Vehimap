@@ -172,6 +172,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - runtime-specific desktop update manifesty `update/latest-dotnet-<rid>.ini`
 - Windows release artefakt jako per-user Inno Setup instalator misto verejneho portable ZIPu
 - Windows update tok pro Inno Setup installer: aplikace stahne a overi setup EXE v samostatnem progress dialogu se zrusenim, spusti ho interaktivne, pozada runtime o skutecne ukonceni aplikace misto schovani do tray a installer na konci nabidne spusteni nove verze
+- Windows Inno update rezim prevezme jazyk predchozi instalace, stale vyzada licencni souhlas, ale preskoci volbu slozky, zkratky/zastupce i pripravenostni stranku; po licenci tak update pokracuje rovnou instalaci a na konci ponecha volbu spustit aplikaci.
 - oddelene desktop kanaly `stable`, `beta` a `nightly` s vlastnim nazvem aplikace, update manifestem a systemovou datovou slozkou
 - rolling nightly release se vytvari automaticky kazdou noc nebo rucnim workflow dispatch spustenim kanalu `nightly` a pouziva unikatni prerelease verzi `<verze>-nightly.<run>.<attempt>`, aby se nightly instalace dokazaly aktualizovat mezi jednotlivymi buildy
 - legacy aliasy `update/latest-dotnet-preview-<rid>.ini`, ktere starym preview buildum umozni prejit na prvni stabilni desktop release

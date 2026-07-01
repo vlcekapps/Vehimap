@@ -54,6 +54,12 @@ function Get-ChannelAppId {
     }
 }
 
+function Get-InnoUninstallAppId {
+    param([string]$InnoAppId)
+
+    return $InnoAppId.Replace("{{", "{")
+}
+
 function Resolve-InnoCompiler {
     $envPath = $env:INNO_SETUP_COMPILER
     if (-not [string]::IsNullOrWhiteSpace($envPath) -and (Test-Path -LiteralPath $envPath -PathType Leaf)) {
@@ -132,10 +138,12 @@ function New-InnoSetupInstaller {
     $appName = Get-ChannelAppName -Channel $Channel
     $dataFolder = $appName
     $appId = Get-ChannelAppId -Channel $Channel
+    $uninstallAppId = Get-InnoUninstallAppId -InnoAppId $appId
     $signing = Get-InnoSigningConfiguration
     $generatedScriptPath = Join-Path ([System.IO.Path]::GetTempPath()) ("vehimap-installer-" + [guid]::NewGuid().ToString("N") + ".iss")
     $template = Get-Content -Raw -LiteralPath $templatePath
     $script = $template.Replace("{{APP_ID}}", $appId)
+    $script = $script.Replace("{{APP_ID_UNINSTALL_KEY}}", (Escape-InnoTemplateValue -Value $uninstallAppId))
     $script = $script.Replace("{{APP_NAME}}", $appName)
     $script = $script.Replace("{{APP_VERSION}}", $Version)
     $script = $script.Replace("{{INSTALL_FOLDER}}", $appName)

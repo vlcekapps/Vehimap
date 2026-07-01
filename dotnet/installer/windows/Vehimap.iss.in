@@ -16,6 +16,8 @@ OutputBaseFilename={{OUTPUT_BASE_FILENAME}}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+UsePreviousLanguage=yes
+ShowLanguageDialog=auto
 SetupIconFile={{SOURCE_DIR}}\Vehimap.ico
 UninstallDisplayIcon={app}\Vehimap.ico
 LicenseFile={{SOURCE_DIR}}\LICENSE
@@ -39,19 +41,49 @@ english.LaunchApp=Launch {{APP_NAME}}
 czech.LaunchApp=Spustit {{APP_NAME}}
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:DesktopIconTask}"; GroupDescription: "{cm:ShortcutsGroup}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:DesktopIconTask}"; GroupDescription: "{cm:ShortcutsGroup}"; Flags: unchecked; Check: IsFreshInstall
 
 [Files]
 Source: "{{SOURCE_DIR}}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "data\*"
 
 [Icons]
 Name: "{group}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"
-Name: "{userdesktop}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"; Tasks: desktopicon
+Name: "{userdesktop}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"; Tasks: desktopicon; Check: IsFreshInstall
 
 [Run]
 Filename: "{app}\Vehimap.Desktop.exe"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
 
 [Code]
+function IsUpgrade(): Boolean;
+var
+  Value: String;
+  UninstallKey: String;
+begin
+  UninstallKey := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{{APP_ID_UNINSTALL_KEY}}_is1';
+  Result :=
+    (RegQueryStringValue(HKCU, UninstallKey, 'UninstallString', Value) or
+     RegQueryStringValue(HKLM, UninstallKey, 'UninstallString', Value)) and
+    (Value <> '');
+end;
+
+function IsFreshInstall(): Boolean;
+begin
+  Result := not IsUpgrade();
+end;
+
+function ShouldSkipPage(PageID: Integer): Boolean;
+begin
+  Result := False;
+  if IsUpgrade() then
+  begin
+    Result :=
+      (PageID = wpSelectDir) or
+      (PageID = wpSelectProgramGroup) or
+      (PageID = wpSelectTasks) or
+      (PageID = wpReady);
+  end;
+end;
+
 function GetInstallerSeedJson(): String;
 begin
   if ActiveLanguage = 'czech' then
