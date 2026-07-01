@@ -66,6 +66,8 @@ public sealed class I18nFoundationTests
         Assert.Equal("Desktopový update kanál pro .NET větev zatím není publikovaný.", czech.GetString("UpdateService.Check.DotnetManifestUnavailable"));
         Assert.Equal("development Avalonia shell", english.GetString("AppBuildInfo.RuntimeMode.Development"));
         Assert.Equal("vývojový Avalonia shell", czech.GetString("AppBuildInfo.RuntimeMode.Development"));
+        Assert.Equal("Currency", english.GetString("Settings.Currency"));
+        Assert.Equal("Měna", czech.GetString("Settings.Currency"));
         Assert.Equal("Installer language preferences were added to the 2.0 data set.", english.GetString("InstallerLocaleSeed.Applied"));
         Assert.Equal("Instalační jazykové předvolby byly doplněny do datové sady 2.0.", czech.GetString("InstallerLocaleSeed.Applied"));
         Assert.Equal("Restore data from backup", english.GetString("AppShell.ImportBackup.ConfirmTitle"));
@@ -160,6 +162,23 @@ public sealed class I18nFoundationTests
         Assert.Equal(1234.5m, parsed);
     }
 
+    [Theory]
+    [InlineData("en-US", "comma", "dot", "USD", "$1,234.50")]
+    [InlineData("en-US", "comma", "dot", "EUR", "€1,234.50")]
+    [InlineData("cs-CZ", "none", "comma", "CZK", "1234,50 Kč")]
+    public void Number_format_service_formats_money_with_selected_currency_without_conversion(
+        string language,
+        string thousandsSeparator,
+        string decimalSeparator,
+        string currency,
+        string expected)
+    {
+        var service = new AppNumberFormatService();
+        var preferences = new AppCulturePreferences(language, thousandsSeparator, decimalSeparator);
+
+        Assert.Equal(expected, service.FormatMoney(1234.5m, preferences, currency, 2));
+    }
+
     [Fact]
     public void Unit_format_service_keeps_storage_in_metric_and_formats_display_units()
     {
@@ -174,14 +193,15 @@ public sealed class I18nFoundationTests
     }
 
     [Theory]
-    [InlineData("cs-CZ", "none", "comma", "km", "l")]
-    [InlineData("en-US", "comma", "dot", "mi", "us_gal")]
+    [InlineData("cs-CZ", "none", "comma", "km", "l", "CZK")]
+    [InlineData("en-US", "comma", "dot", "mi", "us_gal", "USD")]
     public void Locale_defaults_match_installer_language_policy(
         string language,
         string thousandsSeparator,
         string decimalSeparator,
         string distanceUnit,
-        string volumeUnit)
+        string volumeUnit,
+        string currency)
     {
         var defaults = new AppLocaleDefaultsService().GetDefaultsForLanguage(language);
 
@@ -190,6 +210,7 @@ public sealed class I18nFoundationTests
         Assert.Equal(decimalSeparator, defaults.DecimalSeparator);
         Assert.Equal(distanceUnit, defaults.DistanceUnit);
         Assert.Equal(volumeUnit, defaults.VolumeUnit);
+        Assert.Equal(currency, defaults.Currency);
     }
 
     [Fact]
@@ -205,6 +226,7 @@ public sealed class I18nFoundationTests
         Assert.Equal("dot", snapshot.DecimalSeparator);
         Assert.Equal("mi", snapshot.DistanceUnit);
         Assert.Equal("us_gal", snapshot.VolumeUnit);
+        Assert.Equal("USD", snapshot.Currency);
     }
 
     [Fact]
@@ -234,6 +256,7 @@ public sealed class I18nFoundationTests
             Assert.Equal("comma", settings.GetValue("app", "decimal_separator"));
             Assert.Equal("km", settings.GetValue("app", "distance_unit"));
             Assert.Equal("l", settings.GetValue("app", "volume_unit"));
+            Assert.Equal("CZK", settings.GetValue("app", "currency"));
             Assert.Equal("Instalační jazykové předvolby byly doplněny do datové sady 2.0.", result.Message);
             Assert.False(File.Exists(seedPath));
         }
@@ -268,6 +291,7 @@ public sealed class I18nFoundationTests
             Assert.Equal("dot", settings.GetValue("app", "decimal_separator"));
             Assert.Equal("mi", settings.GetValue("app", "distance_unit"));
             Assert.Equal("us_gal", settings.GetValue("app", "volume_unit"));
+            Assert.Equal("USD", settings.GetValue("app", "currency"));
         }
         finally
         {

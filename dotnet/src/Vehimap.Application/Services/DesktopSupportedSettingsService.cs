@@ -38,7 +38,8 @@ public sealed class DesktopSupportedSettingsService
             AppCultureService.NormalizeThousandsSeparator(settings.GetValue("app", "thousands_separator", localeDefaults.ThousandsSeparator)),
             AppCultureService.NormalizeDecimalSeparator(settings.GetValue("app", "decimal_separator", localeDefaults.DecimalSeparator)),
             AppUnitFormatService.NormalizeDistanceUnit(settings.GetValue("app", "distance_unit", localeDefaults.DistanceUnit)),
-            AppUnitFormatService.NormalizeVolumeUnit(settings.GetValue("app", "volume_unit", localeDefaults.VolumeUnit)));
+            AppUnitFormatService.NormalizeVolumeUnit(settings.GetValue("app", "volume_unit", localeDefaults.VolumeUnit)),
+            AppCurrencyFormatService.NormalizeCurrency(settings.GetValue("app", "currency", localeDefaults.Currency)));
     }
 
     public void Apply(VehimapSettings settings, DesktopSupportedSettingsSnapshot snapshot)
@@ -58,6 +59,7 @@ public sealed class DesktopSupportedSettingsService
         settings.SetValue("app", "decimal_separator", AppCultureService.NormalizeDecimalSeparator(snapshot.DecimalSeparator));
         settings.SetValue("app", "distance_unit", AppUnitFormatService.NormalizeDistanceUnit(snapshot.DistanceUnit));
         settings.SetValue("app", "volume_unit", AppUnitFormatService.NormalizeVolumeUnit(snapshot.VolumeUnit));
+        settings.SetValue("app", "currency", AppCurrencyFormatService.NormalizeCurrency(snapshot.Currency));
     }
 
     private static bool ReadBool(VehimapSettings settings, string section, string key, bool defaultValue)

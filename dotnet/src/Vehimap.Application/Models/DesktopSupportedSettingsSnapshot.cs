@@ -15,4 +15,5 @@ public sealed record DesktopSupportedSettingsSnapshot(
     string ThousandsSeparator = "culture",
     string DecimalSeparator = "culture",
     string DistanceUnit = "km",
-    string VolumeUnit = "l");
+    string VolumeUnit = "l",
+    string Currency = "CZK");

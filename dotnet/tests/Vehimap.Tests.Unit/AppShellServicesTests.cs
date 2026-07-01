@@ -196,11 +196,12 @@ public sealed class AppShellServicesTests : IDisposable
         settings.SetValue("app", "decimal_separator", "comma");
         settings.SetValue("app", "distance_unit", "km");
         settings.SetValue("app", "volume_unit", "l");
+        settings.SetValue("app", "currency", "CZK");
         settings.SetValue("backups", "automatic_backups_enabled", "1");
         settings.SetValue("custom", "untouched_key", "keep-me");
 
         var service = new DesktopSupportedSettingsService();
-        service.Apply(settings, new DesktopSupportedSettingsSnapshot(45, 20, 7, 750, false, true, true, true, 3, 21, "en-US", "comma", "dot", "mi", "us_gal"));
+        service.Apply(settings, new DesktopSupportedSettingsSnapshot(45, 20, 7, 750, false, true, true, true, 3, 21, "en-US", "comma", "dot", "mi", "us_gal", "USD"));
 
         Assert.Equal("45", settings.GetValue("notifications", "technical_reminder_days"));
         Assert.Equal("20", settings.GetValue("notifications", "green_card_reminder_days"));
@@ -216,6 +217,7 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Equal("dot", settings.GetValue("app", "decimal_separator"));
         Assert.Equal("mi", settings.GetValue("app", "distance_unit"));
         Assert.Equal("us_gal", settings.GetValue("app", "volume_unit"));
+        Assert.Equal("USD", settings.GetValue("app", "currency"));
         Assert.Equal("keep-me", settings.GetValue("custom", "untouched_key"));
     }
 

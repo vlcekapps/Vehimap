@@ -1017,15 +1017,17 @@ Vozidlo: {2}
   <data name="Settings.AutomaticBackupsIntervalDays" xml:space="preserve"><value>Interval automatické zálohy ve dnech</value></data>
   <data name="Settings.AutomaticBackupsIntervalHelp" xml:space="preserve"><value>Aktivní jen když je zapnuté pravidelné vytváření automatických záloh. Zadejte počet dnů mezi automatickými zálohami.</value></data>
   <data name="Settings.DecimalSeparator" xml:space="preserve"><value>Oddělovač desetin</value></data>
-  <data name="Settings.Description" xml:space="preserve"><value>Zde nastavíte upozornění, chování aplikace po spuštění, automatické zálohy, jazyk a formát čísel.</value></data>
+  <data name="Settings.Description" xml:space="preserve"><value>Zde nastavíte upozornění, chování aplikace po spuštění, automatické zálohy, jazyk, jednotky, měnu a formát čísel.</value></data>
   <data name="Settings.DistanceUnit" xml:space="preserve"><value>Jednotka vzdálenosti</value></data>
+  <data name="Settings.Currency" xml:space="preserve"><value>Měna</value></data>
+  <data name="Settings.CurrencyHelp" xml:space="preserve"><value>Měna ovlivní zobrazované a exportované popisky částek. Existující uložené částky se nepřepočítávají.</value></data>
   <data name="Settings.GreenCardReminderDays" xml:space="preserve"><value>Upozornění na zelenou kartu (dny)</value></data>
   <data name="Settings.GreenCardReminderDaysName" xml:space="preserve"><value>Upozornění na zelenou kartu ve dnech</value></data>
   <data name="Settings.HelpText" xml:space="preserve"><value>Ctrl+S uloží nastavení, Ctrl+B vytvoří zálohu ihned a Escape dialog zavře bez uložení.</value></data>
   <data name="Settings.HideOnLaunch" xml:space="preserve"><value>Po spuštění automaticky skrýt do lišty</value></data>
   <data name="Settings.Language" xml:space="preserve"><value>Jazyk</value></data>
   <data name="Settings.LanguageRestartNotice" xml:space="preserve"><value>Změna jazyka se uloží hned, ale celé uživatelské rozhraní ji použije až po restartu Vehimapu.</value></data>
-  <data name="Settings.LocaleFormattingHeading" xml:space="preserve"><value>Jazyk, čísla a jednotky</value></data>
+  <data name="Settings.LocaleFormattingHeading" xml:space="preserve"><value>Jazyk, čísla, jednotky a měna</value></data>
   <data name="Settings.MaintenanceReminderDays" xml:space="preserve"><value>Upozornění na údržbu (dny)</value></data>
   <data name="Settings.MaintenanceReminderDaysName" xml:space="preserve"><value>Upozornění na údržbu ve dnech</value></data>
   <data name="Settings.MaintenanceReminderDistance" xml:space="preserve"><value>Upozornění na údržbu podle vzdálenosti ({0})</value></data>
@@ -1035,6 +1037,10 @@ Vozidlo: {2}
   <data name="Settings.MaintenanceReminderKmName" xml:space="preserve"><value>Upozornění na údržbu v kilometrech</value></data>
   <data name="Settings.NumberFormattingHeading" xml:space="preserve"><value>Jazyk a formát čísel</value></data>
   <data name="Settings.Option.Culture" xml:space="preserve"><value>Podle jazyka</value></data>
+  <data name="Settings.Option.CurrencyCzk" xml:space="preserve"><value>Česká koruna (CZK)</value></data>
+  <data name="Settings.Option.CurrencyEur" xml:space="preserve"><value>Euro (EUR)</value></data>
+  <data name="Settings.Option.CurrencyGbp" xml:space="preserve"><value>Britská libra (GBP)</value></data>
+  <data name="Settings.Option.CurrencyUsd" xml:space="preserve"><value>Americký dolar (USD)</value></data>
   <data name="Settings.Option.Czech" xml:space="preserve"><value>Čeština</value></data>
   <data name="Settings.Option.DecimalComma" xml:space="preserve"><value>Čárka</value></data>
   <data name="Settings.Option.DecimalDot" xml:space="preserve"><value>Tečka</value></data>

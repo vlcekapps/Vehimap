@@ -66,6 +66,9 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
     [ObservableProperty]
     private SettingsOptionViewModel? selectedVolumeUnitOption;
 
+    [ObservableProperty]
+    private SettingsOptionViewModel? selectedCurrencyOption;
+
     public IReadOnlyList<SettingsOptionViewModel> LanguageOptions { get; private init; } = [];
 
     public IReadOnlyList<SettingsOptionViewModel> ThousandsSeparatorOptions { get; private init; } = [];
@@ -75,6 +78,8 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
     public IReadOnlyList<SettingsOptionViewModel> DistanceUnitOptions { get; private init; } = [];
 
     public IReadOnlyList<SettingsOptionViewModel> VolumeUnitOptions { get; private init; } = [];
+
+    public IReadOnlyList<SettingsOptionViewModel> CurrencyOptions { get; private init; } = [];
 
     public bool CanConfigureAutomaticBackups => AutomaticBackupsEnabled;
 
@@ -98,6 +103,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
         var decimalOptions = BuildDecimalSeparatorOptions(effectiveLocalizer);
         var distanceUnitOptions = BuildDistanceUnitOptions(effectiveLocalizer);
         var volumeUnitOptions = BuildVolumeUnitOptions(effectiveLocalizer);
+        var currencyOptions = BuildCurrencyOptions(effectiveLocalizer);
 
         var viewModel = new SettingsDialogViewModel
         {
@@ -117,11 +123,13 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             DecimalSeparatorOptions = decimalOptions,
             DistanceUnitOptions = distanceUnitOptions,
             VolumeUnitOptions = volumeUnitOptions,
+            CurrencyOptions = currencyOptions,
             SelectedLanguageOption = FindOption(languageOptions, AppCultureService.NormalizeLanguage(snapshot.Language)),
             SelectedThousandsSeparatorOption = FindOption(thousandsOptions, AppCultureService.NormalizeThousandsSeparator(snapshot.ThousandsSeparator)),
             SelectedDecimalSeparatorOption = FindOption(decimalOptions, AppCultureService.NormalizeDecimalSeparator(snapshot.DecimalSeparator)),
             SelectedDistanceUnitOption = FindOption(distanceUnitOptions, AppUnitFormatService.NormalizeDistanceUnit(snapshot.DistanceUnit)),
             SelectedVolumeUnitOption = FindOption(volumeUnitOptions, AppUnitFormatService.NormalizeVolumeUnit(snapshot.VolumeUnit)),
+            SelectedCurrencyOption = FindOption(currencyOptions, AppCurrencyFormatService.NormalizeCurrency(snapshot.Currency)),
             StatusMessage = effectiveLocalizer.GetString("Settings.AutomaticBackupStatusInitial")
         };
 
@@ -179,7 +187,8 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             SelectedThousandsSeparatorOption?.Value ?? AppCultureService.CultureSeparator,
             SelectedDecimalSeparatorOption?.Value ?? AppCultureService.CultureSeparator,
             SelectedDistanceUnitOption?.Value ?? AppUnitFormatService.Kilometers,
-            SelectedVolumeUnitOption?.Value ?? AppUnitFormatService.Liters);
+            SelectedVolumeUnitOption?.Value ?? AppUnitFormatService.Liters,
+            SelectedCurrencyOption?.Value ?? AppCurrencyFormatService.CzechCrowns);
         errorMessage = string.Empty;
         return true;
     }
@@ -403,6 +412,14 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             new(AppUnitFormatService.Liters, localizer.GetString("Settings.Option.Liters")),
             new(AppUnitFormatService.UsGallons, localizer.GetString("Settings.Option.UsGallons")),
             new(AppUnitFormatService.ImperialGallons, localizer.GetString("Settings.Option.ImperialGallons"))
+        ];
+
+    private static IReadOnlyList<SettingsOptionViewModel> BuildCurrencyOptions(IAppLocalizer localizer) =>
+        [
+            new(AppCurrencyFormatService.CzechCrowns, localizer.GetString("Settings.Option.CurrencyCzk")),
+            new(AppCurrencyFormatService.UsDollars, localizer.GetString("Settings.Option.CurrencyUsd")),
+            new(AppCurrencyFormatService.Euros, localizer.GetString("Settings.Option.CurrencyEur")),
+            new(AppCurrencyFormatService.BritishPounds, localizer.GetString("Settings.Option.CurrencyGbp"))
         ];
 
     private static SettingsOptionViewModel FindOption(IReadOnlyList<SettingsOptionViewModel> options, string value) =>

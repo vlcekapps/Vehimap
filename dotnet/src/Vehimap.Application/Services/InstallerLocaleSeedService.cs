@@ -71,6 +71,7 @@ public sealed class InstallerLocaleSeedService
         changed |= SetIfMissing(settings, "app", "decimal_separator", defaults.DecimalSeparator);
         changed |= SetIfMissing(settings, "app", "distance_unit", defaults.DistanceUnit);
         changed |= SetIfMissing(settings, "app", "volume_unit", defaults.VolumeUnit);
+        changed |= SetIfMissing(settings, "app", "currency", defaults.Currency);
 
         return new InstallerLocaleSeedApplyResult(
             true,

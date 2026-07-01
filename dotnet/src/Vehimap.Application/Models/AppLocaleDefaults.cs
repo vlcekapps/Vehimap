@@ -5,4 +5,5 @@ public sealed record AppLocaleDefaults(
     string ThousandsSeparator,
     string DecimalSeparator,
     string DistanceUnit,
-    string VolumeUnit);
+    string VolumeUnit,
+    string Currency = "CZK");

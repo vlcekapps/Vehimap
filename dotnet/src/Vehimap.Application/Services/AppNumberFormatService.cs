@@ -41,6 +41,14 @@ public sealed class AppNumberFormatService : IAppNumberFormatService
         return value.ToString("N" + places.ToString(CultureInfo.InvariantCulture), CreateNumberFormat(preferences));
     }
 
+    public string FormatMoney(decimal value, AppCulturePreferences preferences, string currency, int decimalPlaces = 2)
+    {
+        var places = Math.Clamp(decimalPlaces, 0, 9);
+        var format = CreateNumberFormat(preferences);
+        format.CurrencySymbol = AppCurrencyFormatService.GetCurrencySymbol(currency);
+        return value.ToString("C" + places.ToString(CultureInfo.InvariantCulture), format);
+    }
+
     public bool TryParseDecimal(string text, AppCulturePreferences preferences, out decimal value)
     {
         var format = CreateNumberFormat(preferences);

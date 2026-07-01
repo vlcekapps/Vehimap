@@ -18,13 +18,15 @@ public sealed class AppLocaleDefaultsService
                 AppCultureService.NoSeparator,
                 AppCultureService.CommaSeparator,
                 AppUnitFormatService.Kilometers,
-                AppUnitFormatService.Liters)
+                AppUnitFormatService.Liters,
+                AppCurrencyFormatService.CzechCrowns)
             : new AppLocaleDefaults(
                 AppCultureService.EnglishLanguage,
                 AppCultureService.CommaSeparator,
                 AppCultureService.DotSeparator,
                 AppUnitFormatService.Miles,
-                AppUnitFormatService.UsGallons);
+                AppUnitFormatService.UsGallons,
+                AppCurrencyFormatService.UsDollars);
     }
 
     private static string ResolveSystemDefaultLanguage() =>

@@ -23,13 +23,13 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Do stejne app-level lokalizacni vrstvy patri i hlasky installer locale seedu, potvrzeni obnovy zalohy, kratke native tray menu, popisy zavirani rozpracovanych evidencnich editoru v samostatnych oknech a platformni texty kontroly/stahovani aktualizaci.
 - SQLite 2.0 migracni hlasky, cleanup zbylych legacy TSV/INI souboru a health diagnostika datove sady jsou take soucasti lokalizacniho pilotu.
 - Dialog `Balicek pro vozidlo` / `Doporucene servisni sablony` je v pilotni lokalizaci pro titulky, napovedu, tlacitka, souhrny a pristupne popisky polozek; samotny katalog sablon zustava samostatny budouci template-id/catalog pass, protoze potvrzene hodnoty se ukladaji jako uzivatelska data.
-- Nastaveni uz nese jazyk, oddelovac tisicu, oddelovac desetin, jednotku vzdalenosti a jednotku objemu paliva.
+- Nastaveni uz nese jazyk, oddelovac tisicu, oddelovac desetin, jednotku vzdalenosti, jednotku objemu paliva a menu.
 - Podporovane jednotky jsou kilometry/mile a litry/US galony/imperialni galony.
 - Vzdalenostni nastaveni v UI, napr. upozorneni na udrzbu podle vzdalenosti, se zobrazuji a parsují ve zvolene jednotce, ale runtime storage dal uklada normalizovane kilometry.
 - Tachometry, servisni intervaly, dokonceni udrzby a objem tankovani se v editorech zobrazuji a parsují podle zvolenych jednotek, ale SQLite dal uklada kanonicke kilometry a litry.
 - Oddelovace cisel jsou jen formatovaci preference; prepnuti oddelovace znovu vykresli hodnoty a nejednoznacne kombinace tisicu/desetin se stejnym znakem se odmitnou.
 - Interni data zustavaji invariantni a SQLite storage se kvuli lokalizaci nemeni; zobrazeni, vstup a exporty budou postupne pouzivat formatovaci sluzby.
-- Pred sirsim verejnym testovanim 2.0 je blokujici samostatny i18n/unit conformance pass pro menu meny, formatovani peneznich castek, exportni vystupy a vsechny zbyvajici km/l/mile/galon texty. Preklad resource retezce sam o sobe nestaci, pokud hodnota porad obchazi formatovaci nebo jednotkovou sluzbu.
+- Pred sirsim verejnym testovanim 2.0 je blokujici samostatny i18n/unit conformance pass pro plosne pouziti zvolene meny, formatovani peneznich castek, exportni vystupy a vsechny zbyvajici km/l/mile/galon texty. Preklad resource retezce sam o sobe nestaci, pokud hodnota porad obchazi formatovaci, menovou nebo jednotkovou sluzbu.
 - Prekladatelska pravidla jsou v `dotnet/docs/I18N.md`; commit messages zustavaji vyhradne anglicky.
 
 ## Historicka mapa AHK modulu -> .NET vrstvy

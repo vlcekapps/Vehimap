@@ -1017,15 +1017,17 @@ Vehicle: {2}
   <data name="Settings.AutomaticBackupsIntervalDays" xml:space="preserve"><value>Automatic backup interval in days</value></data>
   <data name="Settings.AutomaticBackupsIntervalHelp" xml:space="preserve"><value>Available only when regular automatic backups are enabled. Enter the number of days between automatic backups.</value></data>
   <data name="Settings.DecimalSeparator" xml:space="preserve"><value>Decimal separator</value></data>
-  <data name="Settings.Description" xml:space="preserve"><value>Configure reminders, startup behavior, automatic backups, language and number formatting.</value></data>
+  <data name="Settings.Description" xml:space="preserve"><value>Configure reminders, startup behavior, automatic backups, language, units, currency and number formatting.</value></data>
   <data name="Settings.DistanceUnit" xml:space="preserve"><value>Distance unit</value></data>
+  <data name="Settings.Currency" xml:space="preserve"><value>Currency</value></data>
+  <data name="Settings.CurrencyHelp" xml:space="preserve"><value>Currency affects displayed and exported money labels. It does not convert existing stored amounts.</value></data>
   <data name="Settings.GreenCardReminderDays" xml:space="preserve"><value>Green card reminder (days)</value></data>
   <data name="Settings.GreenCardReminderDaysName" xml:space="preserve"><value>Green card reminder in days</value></data>
   <data name="Settings.HelpText" xml:space="preserve"><value>Ctrl+S saves settings, Ctrl+B creates a backup now and Escape closes the dialog without saving.</value></data>
   <data name="Settings.HideOnLaunch" xml:space="preserve"><value>Automatically hide to tray on launch</value></data>
   <data name="Settings.Language" xml:space="preserve"><value>Language</value></data>
   <data name="Settings.LanguageRestartNotice" xml:space="preserve"><value>Changing the language is saved immediately, but the whole user interface will use it after restarting Vehimap.</value></data>
-  <data name="Settings.LocaleFormattingHeading" xml:space="preserve"><value>Language, numbers and units</value></data>
+  <data name="Settings.LocaleFormattingHeading" xml:space="preserve"><value>Language, numbers, units and currency</value></data>
   <data name="Settings.MaintenanceReminderDays" xml:space="preserve"><value>Maintenance reminder (days)</value></data>
   <data name="Settings.MaintenanceReminderDaysName" xml:space="preserve"><value>Maintenance reminder in days</value></data>
   <data name="Settings.MaintenanceReminderDistance" xml:space="preserve"><value>Maintenance reminder distance ({0})</value></data>
@@ -1035,6 +1037,10 @@ Vehicle: {2}
   <data name="Settings.MaintenanceReminderKmName" xml:space="preserve"><value>Maintenance reminder in kilometers</value></data>
   <data name="Settings.NumberFormattingHeading" xml:space="preserve"><value>Language and number formatting</value></data>
   <data name="Settings.Option.Culture" xml:space="preserve"><value>Use language default</value></data>
+  <data name="Settings.Option.CurrencyCzk" xml:space="preserve"><value>Czech crown (CZK)</value></data>
+  <data name="Settings.Option.CurrencyEur" xml:space="preserve"><value>Euro (EUR)</value></data>
+  <data name="Settings.Option.CurrencyGbp" xml:space="preserve"><value>British pound (GBP)</value></data>
+  <data name="Settings.Option.CurrencyUsd" xml:space="preserve"><value>US dollar (USD)</value></data>
   <data name="Settings.Option.Czech" xml:space="preserve"><value>Czech</value></data>
   <data name="Settings.Option.DecimalComma" xml:space="preserve"><value>Comma</value></data>
   <data name="Settings.Option.DecimalDot" xml:space="preserve"><value>Dot</value></data>

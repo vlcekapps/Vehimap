@@ -73,7 +73,8 @@ public sealed class SettingsDialogViewModelTests
                 "comma",
                 "dot",
                 "mi",
-                "us_gal"),
+                "us_gal",
+                "USD"),
             "Bez automatické zálohy.",
             new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
 
@@ -82,6 +83,7 @@ public sealed class SettingsDialogViewModelTests
         Assert.Equal("dot", viewModel.SelectedDecimalSeparatorOption?.Value);
         Assert.Equal("mi", viewModel.SelectedDistanceUnitOption?.Value);
         Assert.Equal("us_gal", viewModel.SelectedVolumeUnitOption?.Value);
+        Assert.Equal("USD", viewModel.SelectedCurrencyOption?.Value);
 
         var valid = viewModel.TryBuildSnapshot(out var snapshot, out var errorMessage);
 
@@ -92,6 +94,43 @@ public sealed class SettingsDialogViewModelTests
         Assert.Equal("dot", snapshot.DecimalSeparator);
         Assert.Equal("mi", snapshot.DistanceUnit);
         Assert.Equal("us_gal", snapshot.VolumeUnit);
+        Assert.Equal("USD", snapshot.Currency);
+    }
+
+    [Fact]
+    public void Currency_option_round_trips_without_converting_existing_amounts()
+    {
+        var viewModel = SettingsDialogViewModel.FromSnapshot(
+            new DesktopSupportedSettingsSnapshot(
+                30,
+                30,
+                31,
+                1000,
+                false,
+                false,
+                true,
+                false,
+                7,
+                10,
+                "cs-CZ",
+                "none",
+                "comma",
+                "km",
+                "l",
+                "CZK"),
+            "Bez automatické zálohy.",
+            new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo("cs-CZ")));
+
+        Assert.Equal("CZK", viewModel.SelectedCurrencyOption?.Value);
+
+        viewModel.SelectedCurrencyOption = viewModel.CurrencyOptions.First(option => option.Value == "EUR");
+
+        var valid = viewModel.TryBuildSnapshot(out var snapshot, out var errorMessage);
+
+        Assert.True(valid);
+        Assert.Empty(errorMessage);
+        Assert.Equal("EUR", snapshot.Currency);
+        Assert.Equal(1000, snapshot.MaintenanceReminderKm);
     }
 
     [Fact]
