@@ -12,7 +12,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Runtime zapis po migraci je hlidany SQLite-only gate: bezne ulozeni nastaveni, vozidla, tankovani nebo dokladu smi menit `vehimap.db`, ale nesmi znovu vytvorit zive legacy TSV/INI soubory v `data/`.
 - Zdravi datove sady 2.0 lze overit rucne z menu `Soubor -> Zkontrolovat datovou sadu 2.0`; health check overuje otevreni `vehimap.db`, `PRAGMA quick_check`, ocekavane tabulky, schema marker, zapisovatelnost datove slozky, aktivni `attachments` a zbytky legacy TSV/INI bez automatickeho mazani nebo oprav databaze.
 - Migracni a health diagnostika datove sady 2.0 pouziva EN/CS `.resx` zdroje, vcetne hlasek automaticke migrace, cleanupu zbylych legacy TSV/INI souboru, `quick_check`, schema markeru, priloh a textu kopirovaneho z health dialogu.
-- Chybove obaly pri nacitani legacy TSV/INI a storage-level chyby exportu/importu `*.vehimapvehicle` pouzivaji EN/CS `.resx`; nizkourovnovy parser detail zustava pripojeny kvuli diagnostice konkretniho radku nebo souboru.
+- Chybove obaly pri nacitani legacy TSV/INI, storage-level chyby exportu/importu `*.vehimapvehicle` a parser/obalove chyby starsich textovych `.vehimapbak` zaloh pouzivaji EN/CS `.resx`; nizkourovnovy parser detail zustava pripojeny kvuli diagnostice konkretniho radku nebo souboru.
 - `Vehimap.Storage.Legacy` zustava read-only kompatibilitni vrstva pro migraci a import starsich zaloh, ne dlouhodoby runtime format 2.x.
 
 ## Lokalizace pred Androidem
@@ -62,7 +62,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - primarni cteni a zapis datove sady 2.0 do SQLite `data/vehimap.db`
 - jednorazovou automatickou migraci legacy TSV/INI souboru do SQLite s predmigracni kopii puvodnich dat a presunem zivych TSV/INI mimo runtime koren `data/`
 - diagnostiku poskozenych legacy TSV/INI souboru s nazvem souboru, plnou cestou a puvodnim parser detailem pro shell i testy
-- import/export `.vehimapbak` vcetne spravovanych priloh; nova 2.0 zaloha obsahuje SQLite databazi a starsi textove zalohy se importuji pres legacy parser s citelnou diagnostikou
+- import/export `.vehimapbak` vcetne spravovanych priloh; nova 2.0 zaloha obsahuje SQLite databazi a starsi textove zalohy se importuji pres legacy parser s citelnou lokalizovanou diagnostikou
 - SQLite 2.0 health check s rucnim dialogem, kopirovanim diagnostiky a testy pro zdravou databazi, poskozeny soubor, chybejici schema marker i zive legacy soubory vedle existujici databaze
 - prvni C# audit engine nad sdilenym datasetem bez zavislosti na konkretni runtime storage vrstve
 - prvni C# nakladovy souhrn vcetne ceny za zvolenou vzdalenost a srovnani proti stejne dlouhemu obdobi loni

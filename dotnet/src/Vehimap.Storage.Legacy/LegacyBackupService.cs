@@ -2,6 +2,7 @@
 using System.Text;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 
@@ -9,6 +10,13 @@ namespace Vehimap.Storage.Legacy;
 
 public sealed class LegacyBackupService : IBackupService
 {
+    private readonly IAppLocalizer _localizer;
+
+    public LegacyBackupService(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer();
+    }
+
     public async Task<BackupExportResult> ExportAsync(string backupPath, VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
     {
         var attachments = await CollectManagedAttachmentsAsync(dataRoot, dataSet, cancellationToken).ConfigureAwait(false);
@@ -39,7 +47,7 @@ public sealed class LegacyBackupService : IBackupService
         try
         {
             var content = await File.ReadAllTextAsync(backupPath, Encoding.UTF8, cancellationToken).ConfigureAwait(false);
-            var payload = LegacyBackupSerialization.Parse(content);
+            var payload = LegacyBackupSerialization.Parse(content, _localizer);
 
             var data = new VehimapDataSet
             {
@@ -66,7 +74,7 @@ public sealed class LegacyBackupService : IBackupService
     {
         var preRestoreBackupPath = await BackupCurrentFilesBeforeRestoreAsync(dataRoot, cancellationToken).ConfigureAwait(false);
 
-        var dataStore = new LegacyVehimapDataStore();
+        var dataStore = new LegacyVehimapDataStore(_localizer);
         await dataStore.SaveAsync(dataRoot, backupBundle.Data, cancellationToken).ConfigureAwait(false);
 
         var attachmentsRoot = LegacyVehimapDataStore.GetAttachmentsPath(dataRoot);
@@ -194,7 +202,7 @@ public sealed class LegacyBackupService : IBackupService
         return new ManagedAttachmentCollection(items, missingCount);
     }
 
-    private static LegacyBackupException CreateImportException(string backupPath, Exception exception)
+    private LegacyBackupException CreateImportException(string backupPath, Exception exception)
     {
         var resolvedPath = ResolveBackupPathForMessage(backupPath);
         var detail = string.IsNullOrWhiteSpace(exception.Message)
@@ -203,15 +211,15 @@ public sealed class LegacyBackupService : IBackupService
 
         return new LegacyBackupException(
             resolvedPath,
-            $"Zálohu se nepodařilo načíst: {resolvedPath}. Detail: {detail}",
+            _localizer.Format("LegacyBackup.ImportFailed", resolvedPath, detail),
             exception);
     }
 
-    private static string ResolveBackupPathForMessage(string backupPath)
+    private string ResolveBackupPathForMessage(string backupPath)
     {
         if (string.IsNullOrWhiteSpace(backupPath))
         {
-            return "(nebyla zadána cesta k záloze)";
+            return _localizer.GetString("LegacyBackup.PathMissing");
         }
 
         try

@@ -121,6 +121,12 @@
   <data name="LegacyData.LoadFailed" xml:space="preserve"><value>The {0} file ({1}) could not be loaded.</value></data>
   <data name="LegacyData.CheckFile" xml:space="preserve"><value>Check file: {0}</value></data>
   <data name="LegacyData.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
+  <data name="LegacyBackup.Error.InvalidHeader" xml:space="preserve"><value>The backup file does not have a valid header.</value></data>
+  <data name="LegacyBackup.Error.InvalidFormat" xml:space="preserve"><value>The file is not a Vehimap backup.</value></data>
+  <data name="LegacyBackup.Error.IncompleteOrCorrupt" xml:space="preserve"><value>The backup file is incomplete or corrupted.</value></data>
+  <data name="LegacyBackup.Error.MissingHeaderItem" xml:space="preserve"><value>The backup file does not contain item {0}.</value></data>
+  <data name="LegacyBackup.ImportFailed" xml:space="preserve"><value>Backup could not be loaded: {0}. Detail: {1}</value></data>
+  <data name="LegacyBackup.PathMissing" xml:space="preserve"><value>(backup path was not provided)</value></data>
   <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Installer language preferences were added to the 2.0 data set.</value></data>
   <data name="InstallerLocaleSeed.InvalidLanguage" xml:space="preserve"><value>Installer language preferences do not contain a supported concrete language.</value></data>
   <data name="InstallerLocaleSeed.InvalidRead" xml:space="preserve"><value>Installer language preferences could not be read: {0}</value></data>

@@ -55,7 +55,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - globalni napoveda rozbalovacich seznamu, pending-edit lock/confirmation hlasky vcetne popisu cilove akce a GitHub feedback issue sablona uz take pouzivaji EN/CS `.resx`
 - app-level okraje jako installer locale seed statusy, potvrzeni obnovy zalohy, kratke native tray menu, close-action texty samostatnych evidencnich oken, platformni vysledky kontroly aktualizaci a validacni chyby update manifestu uz take pouzivaji EN/CS `.resx`; startup background/tray/notifikacni texty se sestavuji az po nacteni jazyka z datove sady, aby se po update nemichala cestina s anglictinou
 - SQLite 2.0 migracni hlasky, cleanup zbylych legacy TSV/INI souboru, health check detaily a text kopirovany z dialogu `Kontrola datove sady 2.0` uz take pouzivaji EN/CS `.resx`
-- storage-level chyby balicku vozidel a obalove chyby nacitani legacy TSV/INI uz take pouzivaji EN/CS `.resx`; konkretni parser detail zustava pripojeny kvuli diagnostice
+- storage-level chyby balicku vozidel, obalove chyby nacitani legacy TSV/INI a parser/obalove chyby starsich textovych `.vehimapbak` zaloh uz take pouzivaji EN/CS `.resx`; konkretni parser detail zustava pripojeny kvuli diagnostice
 - kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
 - vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry
 - jednotkove citlive popisky, vyhledavaci napovedy a stavove texty nesmi bez konkretni hodnoty tvrdit pevne `km` nebo `litry`; nastaveni, balicek pro vozidlo, nakladove hledani/stavy a obecne prazdne texty tankovani uz pouzivaji dynamickou jednotku nebo neutralni formulaci
@@ -87,7 +87,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - exportovat nove `.vehimapbak` zalohy jako SQLite backup s `vehimap.db` a referenced spravovanymi prilohami
 - exportovat a importovat jedno vozidlo jako `*.vehimapvehicle` balicek vcetne historie, tankovani, dokladu, pripominek, udrzby a relevantnich spravovanych priloh
 - pri poskozenem legacy `TSV` nebo `INI` souboru ukazat konkretni nazev souboru, plnou cestu a parser detail v chybovem stavu shellu
-- pri nedostupnem nebo poskozenem `.vehimapbak` souboru ukazat cestu k zaloze a parser/I/O detail ve stavovem textu misto neobslouzene vyjimky v shellu
+- pri nedostupnem nebo poskozenem `.vehimapbak` souboru ukazat cestu k zaloze a parser/I/O detail ve stavovem textu misto neobslouzene vyjimky v shellu; u starsich textovych zaloh se ramcova importni hlaska i parserove chyby lokalizuji podle aktivniho jazyka
 - pri zruseni nebo selhani app-level akci z menu/tray, jako jsou nastaveni, export/import zalohy, O programu a kontrola aktualizaci, zapsat citelnou stavovou hlasku misto neobslouzene vyjimky
 - otevrit stranku `Podekovat autorovi` z menu `Aplikace`, dialogu `O programu` i pristupneho tray okna pres stejny externi launcher jako release poznamky nebo update odkazy
 - otevrit predvyplneny GitHub issue `Nahlasit zpetnou vazbu` z menu `Aplikace` i pristupneho tray okna; sablona doplni verzi, kanal, platformu a zakladni pocty, ale zamerne neobsahuje datovou slozku ani nazvy vozidel

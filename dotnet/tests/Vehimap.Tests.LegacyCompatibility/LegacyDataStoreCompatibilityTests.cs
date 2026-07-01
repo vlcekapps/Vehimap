@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Globalization;
+using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Storage.Legacy;
@@ -230,6 +232,37 @@ public sealed class LegacyDataStoreCompatibilityTests
             Assert.Equal(Path.GetFullPath(backupPath), exception.BackupPath);
             Assert.Contains(Path.GetFullPath(backupPath), exception.Message, StringComparison.Ordinal);
             Assert.Contains("formátu zálohy Vehimap", exception.Message, StringComparison.Ordinal);
+            Assert.IsType<FormatException>(exception.InnerException);
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
+    public async Task Import_backup_uses_configured_localizer_for_wrapper_and_parser_errors()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-invalid-backup-en-" + Guid.NewGuid());
+        var backupPath = Path.Combine(tempRoot, "broken.vehimapbak");
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+        var backupService = new LegacyBackupService(english);
+
+        try
+        {
+            Directory.CreateDirectory(tempRoot);
+            await File.WriteAllTextAsync(backupPath, "# Not a Vehimap backup\nsettings_length=0\nvehicles_length=0\n\n");
+
+            var exception = await Assert.ThrowsAsync<LegacyBackupException>(() => backupService.ImportAsync(backupPath));
+
+            Assert.Equal(Path.GetFullPath(backupPath), exception.BackupPath);
+            Assert.Contains("Backup could not be loaded", exception.Message, StringComparison.Ordinal);
+            Assert.Contains("The file is not a Vehimap backup", exception.Message, StringComparison.Ordinal);
+            Assert.DoesNotContain("Zálohu", exception.Message, StringComparison.Ordinal);
+            Assert.DoesNotContain("Soubor není", exception.Message, StringComparison.Ordinal);
             Assert.IsType<FormatException>(exception.InnerException);
         }
         finally

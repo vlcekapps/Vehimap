@@ -272,7 +272,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new LegacyTimelineService(DesktopLocalization.LiveLocalizer),
             new LegacyCalendarExportService(new LegacyTimelineService(DesktopLocalization.LiveLocalizer), DesktopLocalization.LiveLocalizer),
             new AvaloniaTextFileSaveService(),
-            new SqliteBackupService(),
+            new SqliteBackupService(DesktopLocalization.LiveLocalizer),
             new AvaloniaFileDialogService(),
             new DesktopSupportedSettingsService(),
             new AssemblyAppBuildInfoProvider(() => DesktopLocalization.Localizer),
@@ -325,7 +325,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         IVehiclePackageService? vehiclePackageService = null,
         IDataStoreHealthService? dataStoreHealthService = null)
     {
-        var sessionBackupService = backupService ?? new SqliteBackupService();
+        var sessionBackupService = backupService ?? new SqliteBackupService(DesktopLocalization.LiveLocalizer);
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
         var sessionAppBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider(() => DesktopLocalization.Localizer);
         var sessionAutostartService = autostartService ?? new PlatformAutostartService();

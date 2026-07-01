@@ -121,6 +121,12 @@
   <data name="LegacyData.LoadFailed" xml:space="preserve"><value>Soubor {0} ({1}) se nepodařilo načíst.</value></data>
   <data name="LegacyData.CheckFile" xml:space="preserve"><value>Zkontrolujte soubor: {0}</value></data>
   <data name="LegacyData.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
+  <data name="LegacyBackup.Error.InvalidHeader" xml:space="preserve"><value>Soubor zálohy nemá platnou hlavičku.</value></data>
+  <data name="LegacyBackup.Error.InvalidFormat" xml:space="preserve"><value>Soubor není ve formátu zálohy Vehimap.</value></data>
+  <data name="LegacyBackup.Error.IncompleteOrCorrupt" xml:space="preserve"><value>Soubor zálohy je neúplný nebo poškozený.</value></data>
+  <data name="LegacyBackup.Error.MissingHeaderItem" xml:space="preserve"><value>Soubor zálohy neobsahuje položku {0}.</value></data>
+  <data name="LegacyBackup.ImportFailed" xml:space="preserve"><value>Zálohu se nepodařilo načíst: {0}. Detail: {1}</value></data>
+  <data name="LegacyBackup.PathMissing" xml:space="preserve"><value>(nebyla zadána cesta k záloze)</value></data>
   <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Instalační jazykové předvolby byly doplněny do datové sady 2.0.</value></data>
   <data name="InstallerLocaleSeed.InvalidLanguage" xml:space="preserve"><value>Instalační jazykové předvolby neobsahují podporovaný konkrétní jazyk.</value></data>
   <data name="InstallerLocaleSeed.InvalidRead" xml:space="preserve"><value>Instalační jazykové předvolby se nepodařilo načíst: {0}</value></data>

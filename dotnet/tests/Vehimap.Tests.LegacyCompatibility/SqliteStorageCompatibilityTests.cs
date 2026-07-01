@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Globalization;
 using Microsoft.Data.Sqlite;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -466,6 +467,33 @@ public sealed class SqliteStorageCompatibilityTests
             Assert.Equal("Božena", loaded.Vehicles[0].Name);
             Assert.True(File.Exists(Path.Combine(sqliteRoot.DataPath, "vehimap.db")));
             Assert.True(File.Exists(Path.Combine(sqliteRoot.DataPath, "attachments", "veh_1", "faktura.pdf")));
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
+    public async Task Sqlite_backup_service_uses_configured_localizer_for_legacy_fallback_errors()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-legacy-backup-en");
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+        var sqliteBackup = new SqliteBackupService(english);
+        var backupPath = Path.Combine(tempRoot, "broken-legacy.vehimapbak");
+
+        try
+        {
+            Directory.CreateDirectory(tempRoot);
+            await File.WriteAllTextAsync(backupPath, "# Not a Vehimap backup\nsettings_length=0\nvehicles_length=0\n\n");
+
+            var exception = await Assert.ThrowsAsync<LegacyBackupException>(() => sqliteBackup.ImportAsync(backupPath));
+
+            Assert.Equal(Path.GetFullPath(backupPath), exception.BackupPath);
+            Assert.Contains("Backup could not be loaded", exception.Message, StringComparison.Ordinal);
+            Assert.Contains("The file is not a Vehimap backup", exception.Message, StringComparison.Ordinal);
+            Assert.DoesNotContain("Zálohu", exception.Message, StringComparison.Ordinal);
+            Assert.IsType<FormatException>(exception.InnerException);
         }
         finally
         {

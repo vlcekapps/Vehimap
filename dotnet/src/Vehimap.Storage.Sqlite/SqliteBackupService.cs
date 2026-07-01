@@ -30,7 +30,12 @@ public sealed class SqliteBackupService : IBackupService
     private readonly IBackupService _legacyBackupService;
 
     public SqliteBackupService()
-        : this(new SqliteVehimapDataStore(), new LegacyBackupService())
+        : this(new SqliteVehimapDataStore(), CreateLegacyBackupService(null))
+    {
+    }
+
+    public SqliteBackupService(IAppLocalizer localizer)
+        : this(new SqliteVehimapDataStore(), CreateLegacyBackupService(localizer))
     {
     }
 
@@ -39,6 +44,9 @@ public sealed class SqliteBackupService : IBackupService
         _dataStore = dataStore;
         _legacyBackupService = legacyBackupService;
     }
+
+    private static IBackupService CreateLegacyBackupService(IAppLocalizer? localizer) =>
+        new LegacyBackupService(localizer);
 
     public async Task<BackupExportResult> ExportAsync(
         string backupPath,

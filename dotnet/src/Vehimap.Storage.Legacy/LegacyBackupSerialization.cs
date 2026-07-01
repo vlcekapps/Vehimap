@@ -1,17 +1,21 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Application.Abstractions;
+using Vehimap.Application.Services;
+
 namespace Vehimap.Storage.Legacy;
 
 internal static class LegacyBackupSerialization
 {
     public const string BackupHeaderV6 = "# Vehimap backup v6";
 
-    public static LegacyBackupPayload Parse(string content)
+    public static LegacyBackupPayload Parse(string content, IAppLocalizer? localizer = null)
     {
+        localizer ??= new ResourceAppLocalizer();
         var normalized = LegacySectionSerialization.NormalizeTextForStorage(content);
         var delimiter = normalized.IndexOf("\n\n", StringComparison.Ordinal);
         if (delimiter < 0)
         {
-            throw new FormatException("Soubor zálohy nemá platnou hlavičku.");
+            throw new FormatException(localizer.GetString("LegacyBackup.Error.InvalidHeader"));
         }
 
         var header = normalized[..delimiter];
@@ -19,7 +23,7 @@ internal static class LegacyBackupSerialization
         var headerLines = header.Split('\n');
         if (headerLines.Length < 3)
         {
-            throw new FormatException("Soubor není ve formátu zálohy Vehimap.");
+            throw new FormatException(localizer.GetString("LegacyBackup.Error.InvalidFormat"));
         }
 
         var version = headerLines[0].Trim();
@@ -35,36 +39,36 @@ internal static class LegacyBackupSerialization
 
         if (!supported.Contains(version))
         {
-            throw new FormatException("Soubor není ve formátu zálohy Vehimap.");
+            throw new FormatException(localizer.GetString("LegacyBackup.Error.InvalidFormat"));
         }
 
-        var settingsLength = ReadLength(headerLines, 1, "settings_length");
-        var vehiclesLength = ReadLength(headerLines, 2, "vehicles_length");
+        var settingsLength = ReadLength(headerLines, 1, "settings_length", localizer);
+        var vehiclesLength = ReadLength(headerLines, 2, "vehicles_length", localizer);
         var historyLength = version is "# Vehimap backup v2" or "# Vehimap backup v3" or "# Vehimap backup v4" or "# Vehimap backup v5" or "# Vehimap backup v6"
-            ? ReadLength(headerLines, 3, "history_length")
+            ? ReadLength(headerLines, 3, "history_length", localizer)
             : 0;
         var fuelLength = version is "# Vehimap backup v3" or "# Vehimap backup v4" or "# Vehimap backup v5" or "# Vehimap backup v6"
-            ? ReadLength(headerLines, 4, "fuel_length")
+            ? ReadLength(headerLines, 4, "fuel_length", localizer)
             : 0;
         var recordsLength = version is "# Vehimap backup v3" or "# Vehimap backup v4" or "# Vehimap backup v5" or "# Vehimap backup v6"
-            ? ReadLength(headerLines, 5, "records_length")
+            ? ReadLength(headerLines, 5, "records_length", localizer)
             : 0;
         var metaLength = version is "# Vehimap backup v4" or "# Vehimap backup v5" or "# Vehimap backup v6"
-            ? ReadLength(headerLines, 6, "meta_length")
+            ? ReadLength(headerLines, 6, "meta_length", localizer)
             : 0;
         var remindersLength = version is "# Vehimap backup v4" or "# Vehimap backup v5" or "# Vehimap backup v6"
-            ? ReadLength(headerLines, 7, "reminders_length")
+            ? ReadLength(headerLines, 7, "reminders_length", localizer)
             : 0;
         var maintenanceLength = version is "# Vehimap backup v5" or "# Vehimap backup v6"
-            ? ReadLength(headerLines, 8, "maintenance_length")
+            ? ReadLength(headerLines, 8, "maintenance_length", localizer)
             : 0;
         var attachmentsLength = version == "# Vehimap backup v6"
-            ? ReadLength(headerLines, 9, "attachments_length")
+            ? ReadLength(headerLines, 9, "attachments_length", localizer)
             : 0;
 
         if (payload.Length != settingsLength + vehiclesLength + historyLength + fuelLength + recordsLength + metaLength + remindersLength + maintenanceLength + attachmentsLength)
         {
-            throw new FormatException("Soubor zálohy je neúplný nebo poškozený.");
+            throw new FormatException(localizer.GetString("LegacyBackup.Error.IncompleteOrCorrupt"));
         }
 
         var offset = 0;
@@ -117,11 +121,11 @@ internal static class LegacyBackupSerialization
         return $"{header}\n\n{settings}{vehicles}{history}{fuel}{records}{meta}{reminders}{maintenance}{attachments}";
     }
 
-    private static int ReadLength(string[] lines, int index, string key)
+    private static int ReadLength(string[] lines, int index, string key, IAppLocalizer localizer)
     {
         if (index >= lines.Length)
         {
-            throw new FormatException($"Soubor zálohy neobsahuje položku {key}.");
+            throw new FormatException(localizer.Format("LegacyBackup.Error.MissingHeaderItem", key));
         }
 
         var prefix = $"{key}=";
@@ -129,7 +133,7 @@ internal static class LegacyBackupSerialization
             !int.TryParse(lines[index][prefix.Length..], out var length) ||
             length < 0)
         {
-            throw new FormatException($"Soubor zálohy neobsahuje položku {key}.");
+            throw new FormatException(localizer.Format("LegacyBackup.Error.MissingHeaderItem", key));
         }
 
         return length;
