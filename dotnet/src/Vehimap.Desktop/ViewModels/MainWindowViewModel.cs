@@ -266,7 +266,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new SqliteVehimapDataStore(),
             CreateDefaultBootstrapper(),
             new ManagedAttachmentPathService(),
-            new ProcessFileLauncher(),
+            new ProcessFileLauncher(DesktopLocalization.LiveLocalizer),
             new AvaloniaFilePickerService(),
             new LegacyGlobalSearchService(new ManagedAttachmentPathService(), new LegacyTimelineService(DesktopLocalization.LiveLocalizer), DesktopLocalization.LiveLocalizer),
             new LegacyTimelineService(DesktopLocalization.LiveLocalizer),
@@ -276,7 +276,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new AvaloniaFileDialogService(),
             new DesktopSupportedSettingsService(),
             new AssemblyAppBuildInfoProvider(() => DesktopLocalization.Localizer),
-            new PlatformAutostartService(),
+            new PlatformAutostartService(DesktopLocalization.LiveLocalizer),
             null,
             new DesktopProjectionService(DesktopLocalization.LiveLocalizer, DesktopLocalization.CurrentCulture),
             new DesktopNavigationCoordinator(),
@@ -328,7 +328,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         var sessionBackupService = backupService ?? new SqliteBackupService(DesktopLocalization.LiveLocalizer);
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
         var sessionAppBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider(() => DesktopLocalization.Localizer);
-        var sessionAutostartService = autostartService ?? new PlatformAutostartService();
+        var sessionAutostartService = autostartService ?? new PlatformAutostartService(DesktopLocalization.LiveLocalizer);
         var sessionUpdateService = updateService ?? new LegacyUpdateService(
             sessionAppBuildInfoProvider,
             localizerProvider: () => DesktopLocalization.Localizer);

@@ -152,6 +152,12 @@
   <data name="FeedbackIssue.UnknownValue" xml:space="preserve"><value>unknown</value></data>
   <data name="FeedbackIssue.VehicleCountLabel" xml:space="preserve"><value>Vehicle count</value></data>
   <data name="FeedbackIssue.VersionLabel" xml:space="preserve"><value>Version</value></data>
+  <data name="Platform.FileLauncher.EmptyPath" xml:space="preserve"><value>Path to open must not be empty.</value></data>
+  <data name="Platform.FileLauncher.FileUnsupported" xml:space="preserve"><value>Opening files is not supported on this platform.</value></data>
+  <data name="Platform.FileLauncher.FolderUnsupported" xml:space="preserve"><value>Opening folders is not supported on this platform.</value></data>
+  <data name="Platform.Autostart.WScriptUnavailable" xml:space="preserve"><value>WScript.Shell is not available for creating the startup shortcut.</value></data>
+  <data name="Platform.Autostart.WScriptCreateFailed" xml:space="preserve"><value>WScript.Shell could not be created.</value></data>
+  <data name="Platform.Autostart.ShortcutCreateFailed" xml:space="preserve"><value>The startup shortcut COM object could not be created.</value></data>
   <data name="GlobalSearchWorkspace.ClearSearchName" xml:space="preserve"><value>Clear global search</value></data>
   <data name="GlobalSearchWorkspace.DetailHeading" xml:space="preserve"><value>Result detail</value></data>
   <data name="GlobalSearchWorkspace.ItemType" xml:space="preserve"><value>Search result</value></data>
@@ -1599,6 +1605,7 @@ Status: {5}</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleOpenFailed" xml:space="preserve"><value>The new vehicle was saved, but the follow-up vehicle bundle could not be opened: {0}</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>New vehicle was saved. The vehicle bundle had no new items.</value></data>
   <data name="VehicleDetail.Status.SaveFailedPrefix" xml:space="preserve"><value>Vehicle could not be saved</value></data>
+  <data name="VehicleDetail.Status.SelectVehicleFirst" xml:space="preserve"><value>Select a vehicle first.</value></data>
   <data name="VehicleDetail.Status.VehicleUpdated" xml:space="preserve"><value>Vehicle was updated.</value></data>
   <data name="VehicleDelete.AttachmentCleanup.DeleteFailed" xml:space="preserve"><value>Managed attachments could not be deleted: {0}</value></data>
   <data name="VehicleDelete.AttachmentCleanup.UnsafePath" xml:space="preserve"><value>Managed attachments were not deleted because the target path is outside the managed attachments data folder.</value></data>

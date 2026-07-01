@@ -18,7 +18,15 @@ public sealed class LegacyServiceBookService : IServiceBookService
         "faktura",
         "účtenka",
         "uctenka",
-        "doklad o servisu"
+        "doklad o servisu",
+        "service",
+        "maintenance",
+        "repair",
+        "invoice",
+        "receipt",
+        "service record",
+        "workshop",
+        "garage"
     ];
 
     private readonly IAppLocalizer _localizer;

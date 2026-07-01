@@ -120,6 +120,31 @@ public sealed class LegacyServiceBookServiceTests
     }
 
     [Fact]
+    public void Build_vehicle_service_book_includes_english_service_record_keywords()
+    {
+        var service = new LegacyServiceBookService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Molly", "Cars", "", "Ford Focus", "", "", "", "", "", "", "")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_1", "veh_1", "Invoice", "Annual service invoice", "Workshop", "02/2026", "02/2026", "400", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/invoice.pdf", "Oil and filters"),
+                new VehicleRecord("rec_2", "veh_1", "Insurance", "Policy", "Insurer", "01/2026", "01/2027", "200", VehicleRecordAttachmentMode.External, "", "")
+            ]
+        };
+
+        var summary = service.BuildVehicleServiceBook(dataSet, "veh_1", new DateOnly(2026, 3, 1));
+
+        var record = Assert.Single(summary.Records);
+        Assert.Equal("rec_1", record.Id);
+        Assert.Equal("Invoice", record.RecordType);
+        Assert.DoesNotContain(summary.Records, item => item.Id == "rec_2");
+    }
+
+    [Fact]
     public void Build_vehicle_service_book_formats_distances_with_selected_unit()
     {
         var service = new LegacyServiceBookService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));

@@ -245,7 +245,7 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public Task<string> ApplyVehicleStarterBundleAsync(IReadOnlyList<VehicleStarterBundleTemplate> items)
     {
         return Root.SelectedVehicle is null
-            ? Task.FromResult("Nejprve vyberte vozidlo.")
+            ? Task.FromResult(L("VehicleDetail.Status.SelectVehicleFirst"))
             : Root.ApplyVehicleStarterBundleAsync(Root.SelectedVehicle.Id, items);
     }
 

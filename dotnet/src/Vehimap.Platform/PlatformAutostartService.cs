@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Platform;
 
@@ -12,6 +13,13 @@ public sealed class PlatformAutostartService : IAutostartService
     private const string WindowsShortcutName = "Vehimap Desktop.lnk";
     private const string LinuxDesktopFileName = "vehimap-desktop.desktop";
     private const string MacLaunchAgentFileName = "cz.vlcekapps.vehimap.desktop.plist";
+
+    private readonly IAppLocalizer _localizer;
+
+    public PlatformAutostartService(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer();
+    }
 
     public Task<bool> IsEnabledAsync(CancellationToken cancellationToken = default)
     {
@@ -32,12 +40,12 @@ public sealed class PlatformAutostartService : IAutostartService
         return Task.CompletedTask;
     }
 
-    private static void EnableAutostart()
+    private void EnableAutostart()
     {
         var command = ResolveLaunchCommand();
         if (OperatingSystem.IsWindows())
         {
-            CreateWindowsShortcut(GetAutostartEntryPath(), command);
+            CreateWindowsShortcut(GetAutostartEntryPath(), command, _localizer);
             return;
         }
 
@@ -119,20 +127,20 @@ public sealed class PlatformAutostartService : IAutostartService
     }
 
     [SupportedOSPlatform("windows")]
-    private static void CreateWindowsShortcut(string shortcutPath, LaunchCommand command)
+    private static void CreateWindowsShortcut(string shortcutPath, LaunchCommand command, IAppLocalizer localizer)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(shortcutPath)!);
 
         var shellType = Type.GetTypeFromProgID("WScript.Shell")
-            ?? throw new InvalidOperationException("Není dostupný WScript.Shell pro vytvoření zástupce po startu.");
+            ?? throw new InvalidOperationException(localizer.GetString("Platform.Autostart.WScriptUnavailable"));
         var shell = Activator.CreateInstance(shellType)
-            ?? throw new InvalidOperationException("Nepodařilo se vytvořit WScript.Shell.");
+            ?? throw new InvalidOperationException(localizer.GetString("Platform.Autostart.WScriptCreateFailed"));
         object? shortcut = null;
 
         try
         {
             shortcut = shellType.InvokeMember("CreateShortcut", BindingFlags.InvokeMethod, null, shell, [shortcutPath])
-                ?? throw new InvalidOperationException("Nepodařilo se vytvořit COM objekt zástupce po startu.");
+                ?? throw new InvalidOperationException(localizer.GetString("Platform.Autostart.ShortcutCreateFailed"));
             var shortcutType = shortcut.GetType();
             shortcutType.InvokeMember("TargetPath", BindingFlags.SetProperty, null, shortcut, [command.ExecutablePath]);
             shortcutType.InvokeMember("Arguments", BindingFlags.SetProperty, null, shortcut, [string.Join(' ', command.Arguments.Select(QuoteCommandArgument))]);

@@ -26,7 +26,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Pilotni lokalizace se vztahuje i na accessibility metadata, napriklad `AutomationProperties.Name` u seznamu, scrollovanych oblasti a kontejneru; tyto texty nesmi zustat natvrdo v XAML.
 - Editor vozidla uz pouziva EN/CS `.resx` i pro titulky dialogu, uvodni instrukce a validacni hlasky ve stavovem live-regionu, nejen pro staticke field labely.
 - App-level ochranny text pro rozpracovane editory, globalni napoveda rozbalovacich seznamu a GitHub feedback issue sablona uz take pouzivaji EN/CS `.resx`, aby se shellove texty ridily aktivnim jazykem.
-- Do stejne app-level lokalizacni vrstvy patri i hlasky installer locale seedu, potvrzeni obnovy zalohy, kratke native tray menu, popisy zavirani rozpracovanych evidencnich editoru v samostatnych oknech a platformni texty kontroly/stahovani aktualizaci.
+- Do stejne app-level lokalizacni vrstvy patri i hlasky installer locale seedu, potvrzeni obnovy zalohy, kratke native tray menu, popisy zavirani rozpracovanych evidencnich editoru v samostatnych oknech, platformni texty kontroly/stahovani aktualizaci, diagnostika otevreni souboru/slozky a vytvoreni autostartu.
 - SQLite 2.0 migracni hlasky, cleanup zbylych legacy TSV/INI souboru a health diagnostika datove sady jsou take soucasti lokalizacniho pilotu.
 - Dialog `Balicek pro vozidlo` / `Doporucene servisni sablony` je v pilotni lokalizaci pro titulky, napovedu, tlacitka, souhrny a pristupne popisky polozek; samotny katalog sablon zustava samostatny budouci template-id/catalog pass, protoze potvrzene hodnoty se ukladaji jako uzivatelska data.
 - Nastaveni uz nese jazyk, oddelovac tisicu, oddelovac desetin, jednotku vzdalenosti, jednotku objemu paliva a menu.

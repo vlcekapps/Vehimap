@@ -152,6 +152,12 @@
   <data name="FeedbackIssue.UnknownValue" xml:space="preserve"><value>nezjištěno</value></data>
   <data name="FeedbackIssue.VehicleCountLabel" xml:space="preserve"><value>Počet vozidel</value></data>
   <data name="FeedbackIssue.VersionLabel" xml:space="preserve"><value>Verze</value></data>
+  <data name="Platform.FileLauncher.EmptyPath" xml:space="preserve"><value>Cesta k otevření nesmí být prázdná.</value></data>
+  <data name="Platform.FileLauncher.FileUnsupported" xml:space="preserve"><value>Otevření souboru není pro tuto platformu podporované.</value></data>
+  <data name="Platform.FileLauncher.FolderUnsupported" xml:space="preserve"><value>Otevření složky není pro tuto platformu podporované.</value></data>
+  <data name="Platform.Autostart.WScriptUnavailable" xml:space="preserve"><value>Není dostupný WScript.Shell pro vytvoření zástupce po startu.</value></data>
+  <data name="Platform.Autostart.WScriptCreateFailed" xml:space="preserve"><value>Nepodařilo se vytvořit WScript.Shell.</value></data>
+  <data name="Platform.Autostart.ShortcutCreateFailed" xml:space="preserve"><value>Nepodařilo se vytvořit COM objekt zástupce po startu.</value></data>
   <data name="GlobalSearchWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat globální hledání</value></data>
   <data name="GlobalSearchWorkspace.DetailHeading" xml:space="preserve"><value>Detail výsledku</value></data>
   <data name="GlobalSearchWorkspace.ItemType" xml:space="preserve"><value>Výsledek hledání</value></data>
@@ -1599,6 +1605,7 @@ Stav: {5}</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleOpenFailed" xml:space="preserve"><value>Nové vozidlo bylo uloženo, ale navazující balíček se nepodařilo otevřít: {0}</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>Nové vozidlo bylo uloženo. Balíček pro vozidlo už neměl žádné nové položky.</value></data>
   <data name="VehicleDetail.Status.SaveFailedPrefix" xml:space="preserve"><value>Vozidlo se nepodařilo uložit</value></data>
+  <data name="VehicleDetail.Status.SelectVehicleFirst" xml:space="preserve"><value>Nejprve vyberte vozidlo.</value></data>
   <data name="VehicleDetail.Status.VehicleUpdated" xml:space="preserve"><value>Vozidlo bylo upraveno.</value></data>
   <data name="VehicleDelete.AttachmentCleanup.DeleteFailed" xml:space="preserve"><value>Spravované přílohy se nepodařilo smazat: {0}</value></data>
   <data name="VehicleDelete.AttachmentCleanup.UnsafePath" xml:space="preserve"><value>Spravované přílohy nebyly smazány, protože cílová cesta neleží v datové složce příloh.</value></data>

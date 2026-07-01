@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Diagnostics;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Platform;
 
@@ -8,16 +9,26 @@ public sealed class ProcessFileLauncher : IFileLauncher
 {
     private readonly Action<ProcessStartInfo> _startProcess;
     private readonly Func<FileLaunchPlatform> _platformResolver;
+    private readonly IAppLocalizer _localizer;
 
     public ProcessFileLauncher()
-        : this(StartProcess, ResolveCurrentPlatform)
+        : this(null)
     {
     }
 
-    internal ProcessFileLauncher(Action<ProcessStartInfo> startProcess, Func<FileLaunchPlatform> platformResolver)
+    public ProcessFileLauncher(IAppLocalizer? localizer)
+        : this(StartProcess, CreatePlatformResolver(localizer), localizer)
+    {
+    }
+
+    internal ProcessFileLauncher(
+        Action<ProcessStartInfo> startProcess,
+        Func<FileLaunchPlatform> platformResolver,
+        IAppLocalizer? localizer = null)
     {
         _startProcess = startProcess;
         _platformResolver = platformResolver;
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public Task OpenAsync(string path, CancellationToken cancellationToken = default)
@@ -36,19 +47,23 @@ public sealed class ProcessFileLauncher : IFileLauncher
 
     private void Launch(string path)
     {
-        _startProcess(BuildStartInfo(path, _platformResolver()));
+        _startProcess(BuildStartInfo(path, _platformResolver(), _localizer));
     }
 
     private void LaunchFolder(string path)
     {
-        _startProcess(BuildFolderStartInfo(path, _platformResolver()));
+        _startProcess(BuildFolderStartInfo(path, _platformResolver(), _localizer));
     }
 
-    internal static ProcessStartInfo BuildStartInfo(string path, FileLaunchPlatform platform)
+    internal static ProcessStartInfo BuildStartInfo(string path, FileLaunchPlatform platform) =>
+        BuildStartInfo(path, platform, null);
+
+    internal static ProcessStartInfo BuildStartInfo(string path, FileLaunchPlatform platform, IAppLocalizer? localizer)
     {
+        localizer ??= new ResourceAppLocalizer();
         if (string.IsNullOrWhiteSpace(path))
         {
-            throw new ArgumentException("Cesta k otevření nesmí být prázdná.", nameof(path));
+            throw new ArgumentException(localizer.GetString("Platform.FileLauncher.EmptyPath"), nameof(path));
         }
 
         return platform switch
@@ -60,15 +75,19 @@ public sealed class ProcessFileLauncher : IFileLauncher
             },
             FileLaunchPlatform.MacOS => BuildCommandStartInfo("open", path),
             FileLaunchPlatform.Linux => BuildCommandStartInfo("xdg-open", path),
-            _ => throw new PlatformNotSupportedException("Otevření souboru není pro tuto platformu podporované.")
+            _ => throw new PlatformNotSupportedException(localizer.GetString("Platform.FileLauncher.FileUnsupported"))
         };
     }
 
-    internal static ProcessStartInfo BuildFolderStartInfo(string path, FileLaunchPlatform platform)
+    internal static ProcessStartInfo BuildFolderStartInfo(string path, FileLaunchPlatform platform) =>
+        BuildFolderStartInfo(path, platform, null);
+
+    internal static ProcessStartInfo BuildFolderStartInfo(string path, FileLaunchPlatform platform, IAppLocalizer? localizer)
     {
+        localizer ??= new ResourceAppLocalizer();
         if (string.IsNullOrWhiteSpace(path))
         {
-            throw new ArgumentException("Cesta k otevření nesmí být prázdná.", nameof(path));
+            throw new ArgumentException(localizer.GetString("Platform.FileLauncher.EmptyPath"), nameof(path));
         }
 
         return platform switch
@@ -76,7 +95,7 @@ public sealed class ProcessFileLauncher : IFileLauncher
             FileLaunchPlatform.Windows => BuildCommandStartInfo("explorer.exe", path),
             FileLaunchPlatform.MacOS => BuildCommandStartInfo("open", path),
             FileLaunchPlatform.Linux => BuildCommandStartInfo("xdg-open", path),
-            _ => throw new PlatformNotSupportedException("Otevření složky není pro tuto platformu podporované.")
+            _ => throw new PlatformNotSupportedException(localizer.GetString("Platform.FileLauncher.FolderUnsupported"))
         };
     }
 
@@ -91,7 +110,13 @@ public sealed class ProcessFileLauncher : IFileLauncher
         return startInfo;
     }
 
-    private static FileLaunchPlatform ResolveCurrentPlatform()
+    private static Func<FileLaunchPlatform> CreatePlatformResolver(IAppLocalizer? localizer)
+    {
+        var resolvedLocalizer = localizer ?? new ResourceAppLocalizer();
+        return () => ResolveCurrentPlatform(resolvedLocalizer);
+    }
+
+    private static FileLaunchPlatform ResolveCurrentPlatform(IAppLocalizer localizer)
     {
         if (OperatingSystem.IsWindows())
         {
@@ -108,7 +133,7 @@ public sealed class ProcessFileLauncher : IFileLauncher
             return FileLaunchPlatform.Linux;
         }
 
-        throw new PlatformNotSupportedException("Otevření souboru není pro tuto platformu podporované.");
+        throw new PlatformNotSupportedException(localizer.GetString("Platform.FileLauncher.FileUnsupported"));
     }
 
     private static void StartProcess(ProcessStartInfo startInfo) => Process.Start(startInfo);

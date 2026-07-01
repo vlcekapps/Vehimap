@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Diagnostics;
+using System.Globalization;
+using Vehimap.Application.Services;
 using Vehimap.Platform;
 using Xunit;
 
@@ -92,11 +94,46 @@ public sealed class ProcessFileLauncherTests
     }
 
     [Fact]
+    public void Build_start_info_uses_configured_localizer_for_empty_path()
+    {
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+
+        var error = Assert.Throws<ArgumentException>(() =>
+            ProcessFileLauncher.BuildStartInfo(" ", FileLaunchPlatform.Windows, english));
+
+        Assert.Contains("Path to open must not be empty.", error.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("Cesta k otevření", error.Message, StringComparison.Ordinal);
+        Assert.Equal("path", error.ParamName);
+    }
+
+    [Fact]
+    public void Build_start_info_uses_configured_localizer_for_unsupported_platform()
+    {
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+
+        var error = Assert.Throws<PlatformNotSupportedException>(() =>
+            ProcessFileLauncher.BuildStartInfo("document.pdf", (FileLaunchPlatform)999, english));
+
+        Assert.Equal("Opening files is not supported on this platform.", error.Message);
+    }
+
+    [Fact]
     public void Build_folder_start_info_rejects_empty_path()
     {
         var error = Assert.Throws<ArgumentException>(() =>
             ProcessFileLauncher.BuildFolderStartInfo(" ", FileLaunchPlatform.Windows));
 
         Assert.Equal("path", error.ParamName);
+    }
+
+    [Fact]
+    public void Build_folder_start_info_uses_configured_localizer_for_unsupported_platform()
+    {
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+
+        var error = Assert.Throws<PlatformNotSupportedException>(() =>
+            ProcessFileLauncher.BuildFolderStartInfo("documents", (FileLaunchPlatform)999, english));
+
+        Assert.Equal("Opening folders is not supported on this platform.", error.Message);
     }
 }
