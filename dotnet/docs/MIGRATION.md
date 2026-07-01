@@ -29,7 +29,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - Tachometry, servisni intervaly, dokonceni udrzby a objem tankovani se v editorech zobrazuji a parsují podle zvolenych jednotek, ale SQLite dal uklada kanonicke kilometry a litry.
 - Oddelovace cisel jsou jen formatovaci preference; prepnuti oddelovace znovu vykresli hodnoty a nejednoznacne kombinace tisicu/desetin se stejnym znakem se odmitnou.
 - Interni data zustavaji invariantni a SQLite storage se kvuli lokalizaci nemeni; zobrazeni, vstup a exporty budou postupne pouzivat formatovaci sluzby.
-- Pred sirsim verejnym testovanim 2.0 je blokujici samostatny i18n/unit conformance pass pro plosne pouziti zvolene meny, formatovani peneznich castek, exportni vystupy a vsechny zbyvajici km/l/mile/galon texty. Dashboardove/nakladove souhrny, analyza tankovani, servisni knizka, casova osa, globalni hledani a HTML nakladovy export uz zvolenou menu respektuji; TSV exporty a dalsi zbyvajici exportni/reportovaci vystupy se musi dodelat. Preklad resource retezce sam o sobe nestaci, pokud hodnota porad obchazi formatovaci, menovou nebo jednotkovou sluzbu.
+- Pred sirsim verejnym testovanim 2.0 je blokujici samostatny i18n/unit conformance pass pro plosne pouziti zvolene meny, formatovani peneznich castek, exportni vystupy a vsechny zbyvajici km/l/mile/galon texty. Dashboardove/nakladove souhrny, analyza tankovani, servisni knizka, casova osa, globalni hledani a nakladove TSV/HTML exporty uz zvolenou menu a jednotky respektuji; dalsi zbyvajici exportni/reportovaci vystupy se musi dodelat. Preklad resource retezce sam o sobe nestaci, pokud hodnota porad obchazi formatovaci, menovou nebo jednotkovou sluzbu.
 - Prekladatelska pravidla jsou v `dotnet/docs/I18N.md`; commit messages zustavaji vyhradne anglicky.
 
 ## Historicka mapa AHK modulu -> .NET vrstvy
@@ -63,6 +63,7 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 - klavesove dotazeni nakladoveho workspace: `Ctrl+P` cte rozpad vybraneho vozidla, `Ctrl+O` nebo `Enter` otevre vozidlo a `Ctrl+U` / `F2` otevre editor vozidla
 - nakladovy workspace v Avalonia vetvi umi zvolit predvolbu obdobi nebo vlastni datumovy rozsah; volba se uklada do nastaveni datove sady a sdili ji dashboard i exporty
 - exporty nakladoveho workspace hlasi uspech, zruseni i selhani ve stavovem textu workspace i hlavniho shellu vcetne situace, kdy je HTML soubor ulozeny, ale nejde otevrit
+- exporty nakladoveho workspace do TSV i HTML pouzivaji EN/CS resource texty, zvolenou menu a zvolene jednotky vzdalenosti/objemu; cena za vzdalenost se v exportu zobrazi za km nebo mili podle preference, ale ulozene castky se bez kurzove politiky neprepocitavaji
 - builder casove osy vozidla nad historii, tankovanim, pripominkami, doklady, TK/ZK a planem udrzby
 - casova osa vozidla v Avalonia vetvi si pamatuje posledni filtr `Vse` / `Budouci` / `Minule` v nastaveni datove sady, ale rychle textove hledani zustava jen docasne
 - manualni ICS export budouciho kalendare z nove C# vetve vcetne foldingu dlouhych iCalendar radku

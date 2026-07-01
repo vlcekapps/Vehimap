@@ -1214,6 +1214,47 @@ Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
   <data name="CostExport.ReportSavedOpened" xml:space="preserve"><value>HTML sestava nákladů byla uložena do {0}.</value></data>
   <data name="CostExport.ReportSavedOpenFailed" xml:space="preserve"><value>HTML sestava nákladů byla uložena do {0}, ale nepodařilo se ji otevřít: {1}</value></data>
   <data name="CostExport.ReportFailed" xml:space="preserve"><value>Export HTML sestavy nákladů se nepodařil: {0}</value></data>
+  <data name="CostExport.Column.Vehicle" xml:space="preserve"><value>Vozidlo</value></data>
+  <data name="CostExport.Column.Category" xml:space="preserve"><value>Kategorie</value></data>
+  <data name="CostExport.Column.Fuel" xml:space="preserve"><value>Palivo</value></data>
+  <data name="CostExport.Column.History" xml:space="preserve"><value>Historie</value></data>
+  <data name="CostExport.Column.Records" xml:space="preserve"><value>Doklady</value></data>
+  <data name="CostExport.Column.Total" xml:space="preserve"><value>Celkem</value></data>
+  <data name="CostExport.Column.Distance" xml:space="preserve"><value>Ujeto</value></data>
+  <data name="CostExport.Column.CostPerDistance" xml:space="preserve"><value>Cena / vzdálenost</value></data>
+  <data name="CostExport.Column.Status" xml:space="preserve"><value>Stav</value></data>
+  <data name="CostExport.Column.Period" xml:space="preserve"><value>Období</value></data>
+  <data name="CostExport.Column.Date" xml:space="preserve"><value>Datum</value></data>
+  <data name="CostExport.Column.Group" xml:space="preserve"><value>Skupina</value></data>
+  <data name="CostExport.Column.Title" xml:space="preserve"><value>Název</value></data>
+  <data name="CostExport.Column.Amount" xml:space="preserve"><value>Částka</value></data>
+  <data name="CostExport.Column.ExtraInfo" xml:space="preserve"><value>Doplňující údaje</value></data>
+  <data name="CostExport.Column.Note" xml:space="preserve"><value>Poznámka</value></data>
+  <data name="CostExport.EmptyItems" xml:space="preserve"><value>Bez položek</value></data>
+  <data name="CostExport.HtmlLanguage" xml:space="preserve"><value>cs</value></data>
+  <data name="CostExport.ReportTitle" xml:space="preserve"><value>Vehimap - Náklady vozidla</value></data>
+  <data name="CostExport.ReportHeading" xml:space="preserve"><value>Náklady vozidla</value></data>
+  <data name="CostExport.ReportMeta" xml:space="preserve"><value>Vozidlo: {0} | Období: {1} | Vytvořeno: {2}</value></data>
+  <data name="CostExport.ReportSummaryHeading" xml:space="preserve"><value>Souhrn období</value></data>
+  <data name="CostExport.ReportSummaryUnavailable" xml:space="preserve"><value>Pro vybrané vozidlo není k dispozici nákladový souhrn.</value></data>
+  <data name="CostExport.ReportSummaryLine" xml:space="preserve"><value>Celkem nákladů: {0}. Ujeto: {1}. Cena na vzdálenost: {2}. Stav: {3}.</value></data>
+  <data name="CostExport.ReportDetailHeading" xml:space="preserve"><value>Detail položek období</value></data>
+  <data name="CostExport.ReportDetailEmpty" xml:space="preserve"><value>Ve zvoleném období nejsou žádné položky s vyplněnou číselnou částkou.</value></data>
+  <data name="CostExport.EntryGroup.Fuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="CostExport.EntryGroup.History" xml:space="preserve"><value>Historie a servis</value></data>
+  <data name="CostExport.EntryGroup.Records" xml:space="preserve"><value>Doklady a pojištění</value></data>
+  <data name="CostExport.Entry.FuelFallback" xml:space="preserve"><value>Tankování</value></data>
+  <data name="CostExport.Entry.HistoryFallback" xml:space="preserve"><value>Historie</value></data>
+  <data name="CostExport.Entry.RecordFallback" xml:space="preserve"><value>Doklad</value></data>
+  <data name="CostExport.Extra.Fuel" xml:space="preserve"><value>Palivo</value></data>
+  <data name="CostExport.Extra.Volume" xml:space="preserve"><value>Množství</value></data>
+  <data name="CostExport.Extra.Odometer" xml:space="preserve"><value>Tachometr</value></data>
+  <data name="CostExport.Extra.FullTank" xml:space="preserve"><value>Plná nádrž</value></data>
+  <data name="CostExport.Extra.RecordType" xml:space="preserve"><value>Druh</value></data>
+  <data name="CostExport.Extra.Provider" xml:space="preserve"><value>Poskytovatel</value></data>
+  <data name="CostExport.Extra.Attachment" xml:space="preserve"><value>Příloha</value></data>
+  <data name="CostExport.Value.CostPerDistance" xml:space="preserve"><value>{0}/{1}</value></data>
+  <data name="CostExport.Value.VehicleFallback" xml:space="preserve"><value>vozidlo</value></data>
   <data name="DashboardWorkspace.AuditHeading" xml:space="preserve"><value>Nejdůležitější audit</value></data>
   <data name="DashboardWorkspace.AuditListName" xml:space="preserve"><value>Přehled auditních položek na dashboardu</value></data>
   <data name="DashboardWorkspace.AuditOpen" xml:space="preserve"><value>Otevřít vozidlo</value></data>

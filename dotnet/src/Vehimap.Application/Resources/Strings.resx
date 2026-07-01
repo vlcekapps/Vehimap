@@ -1214,6 +1214,47 @@ Without numeric cost: {4} of {5} active vehicles.</value></data>
   <data name="CostExport.ReportSavedOpened" xml:space="preserve"><value>Cost HTML report was saved to {0}.</value></data>
   <data name="CostExport.ReportSavedOpenFailed" xml:space="preserve"><value>Cost HTML report was saved to {0}, but could not be opened: {1}</value></data>
   <data name="CostExport.ReportFailed" xml:space="preserve"><value>Cost HTML report export failed: {0}</value></data>
+  <data name="CostExport.Column.Vehicle" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="CostExport.Column.Category" xml:space="preserve"><value>Category</value></data>
+  <data name="CostExport.Column.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="CostExport.Column.History" xml:space="preserve"><value>History</value></data>
+  <data name="CostExport.Column.Records" xml:space="preserve"><value>Documents</value></data>
+  <data name="CostExport.Column.Total" xml:space="preserve"><value>Total</value></data>
+  <data name="CostExport.Column.Distance" xml:space="preserve"><value>Distance</value></data>
+  <data name="CostExport.Column.CostPerDistance" xml:space="preserve"><value>Cost / distance</value></data>
+  <data name="CostExport.Column.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="CostExport.Column.Period" xml:space="preserve"><value>Period</value></data>
+  <data name="CostExport.Column.Date" xml:space="preserve"><value>Date</value></data>
+  <data name="CostExport.Column.Group" xml:space="preserve"><value>Group</value></data>
+  <data name="CostExport.Column.Title" xml:space="preserve"><value>Title</value></data>
+  <data name="CostExport.Column.Amount" xml:space="preserve"><value>Amount</value></data>
+  <data name="CostExport.Column.ExtraInfo" xml:space="preserve"><value>Additional details</value></data>
+  <data name="CostExport.Column.Note" xml:space="preserve"><value>Note</value></data>
+  <data name="CostExport.EmptyItems" xml:space="preserve"><value>No items</value></data>
+  <data name="CostExport.HtmlLanguage" xml:space="preserve"><value>en</value></data>
+  <data name="CostExport.ReportTitle" xml:space="preserve"><value>Vehimap - Vehicle costs</value></data>
+  <data name="CostExport.ReportHeading" xml:space="preserve"><value>Vehicle costs</value></data>
+  <data name="CostExport.ReportMeta" xml:space="preserve"><value>Vehicle: {0} | Period: {1} | Generated: {2}</value></data>
+  <data name="CostExport.ReportSummaryHeading" xml:space="preserve"><value>Period summary</value></data>
+  <data name="CostExport.ReportSummaryUnavailable" xml:space="preserve"><value>Cost summary is not available for the selected vehicle.</value></data>
+  <data name="CostExport.ReportSummaryLine" xml:space="preserve"><value>Total costs: {0}. Distance: {1}. Cost per distance: {2}. Status: {3}.</value></data>
+  <data name="CostExport.ReportDetailHeading" xml:space="preserve"><value>Period item detail</value></data>
+  <data name="CostExport.ReportDetailEmpty" xml:space="preserve"><value>The selected period does not contain any items with a numeric amount.</value></data>
+  <data name="CostExport.EntryGroup.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="CostExport.EntryGroup.History" xml:space="preserve"><value>History and service</value></data>
+  <data name="CostExport.EntryGroup.Records" xml:space="preserve"><value>Documents and insurance</value></data>
+  <data name="CostExport.Entry.FuelFallback" xml:space="preserve"><value>Fuel entry</value></data>
+  <data name="CostExport.Entry.HistoryFallback" xml:space="preserve"><value>History</value></data>
+  <data name="CostExport.Entry.RecordFallback" xml:space="preserve"><value>Document</value></data>
+  <data name="CostExport.Extra.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="CostExport.Extra.Volume" xml:space="preserve"><value>Volume</value></data>
+  <data name="CostExport.Extra.Odometer" xml:space="preserve"><value>Odometer</value></data>
+  <data name="CostExport.Extra.FullTank" xml:space="preserve"><value>Full tank</value></data>
+  <data name="CostExport.Extra.RecordType" xml:space="preserve"><value>Type</value></data>
+  <data name="CostExport.Extra.Provider" xml:space="preserve"><value>Provider</value></data>
+  <data name="CostExport.Extra.Attachment" xml:space="preserve"><value>Attachment</value></data>
+  <data name="CostExport.Value.CostPerDistance" xml:space="preserve"><value>{0}/{1}</value></data>
+  <data name="CostExport.Value.VehicleFallback" xml:space="preserve"><value>vehicle</value></data>
   <data name="DashboardWorkspace.AuditHeading" xml:space="preserve"><value>Most important audit</value></data>
   <data name="DashboardWorkspace.AuditListName" xml:space="preserve"><value>Dashboard audit item overview</value></data>
   <data name="DashboardWorkspace.AuditOpen" xml:space="preserve"><value>Open vehicle</value></data>

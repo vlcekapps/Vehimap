@@ -53,7 +53,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry
 - tachometry v historii/tankovani, servisni intervaly, dokonceni udrzby a objem tankovani se v editorech zobrazuji a zadavaji ve zvolenych jednotkach, zatimco SQLite zustava v kanonickych km/l
 - zmena oddelovacu cisel jen znovu vykresli viditelne hodnoty; nejednoznacne kombinace, kde je oddelovac tisicu stejny jako desetinni oddelovac, nastaveni odmitne
-- mena ma prvni podporovanou volbu v nastaveni (`CZK`, `USD`, `EUR`, `GBP`) a spolecnou formatovaci sluzbu; dashboardove/nakladove souhrny, analyza tankovani, servisni knizka, casova osa, globalni hledani a HTML nakladovy export uz ji pouzivaji, zatimco TSV exporty a zbyvajici exportni/reportovaci texty zustavaji navazujici i18n pass bez automaticke kurzove konverze historickych hodnot
+- mena ma prvni podporovanou volbu v nastaveni (`CZK`, `USD`, `EUR`, `GBP`) a spolecnou formatovaci sluzbu; dashboardove/nakladove souhrny, analyza tankovani, servisni knizka, casova osa, globalni hledani a nakladove TSV/HTML exporty uz ji pouzivaji, zatimco zbyvajici exportni/reportovaci texty zustavaji navazujici i18n pass bez automaticke kurzove konverze historickych hodnot
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 
 ## Aktualni stav
