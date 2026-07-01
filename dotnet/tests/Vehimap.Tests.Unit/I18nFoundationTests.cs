@@ -61,6 +61,10 @@ public sealed class I18nFoundationTests
         Assert.Equal("ukončit aplikaci", czech.GetString("PendingEdits.Action.ExitApplication"));
         Assert.Equal("New vehicle was saved.", english.GetString("VehicleDetail.Status.NewVehicleSaved"));
         Assert.Equal("Nové vozidlo bylo uloženo.", czech.GetString("VehicleDetail.Status.NewVehicleSaved"));
+        Assert.Equal("The vehicle must have a name.", english.GetString("VehicleEditor.Validation.NameRequired"));
+        Assert.Equal("Vozidlo musí mít název.", czech.GetString("VehicleEditor.Validation.NameRequired"));
+        Assert.Equal("Edit vehicle", english.GetString("VehicleEditor.Title.Edit"));
+        Assert.Equal("Upravit vozidlo", czech.GetString("VehicleEditor.Title.Edit"));
         Assert.Equal("Downloading update package.", english.GetString("UpdateService.Install.DownloadProgress"));
         Assert.Equal("Stahuji aktualizační balíček.", czech.GetString("UpdateService.Install.DownloadProgress"));
         Assert.Equal("The desktop update channel for the .NET branch has not been published yet.", english.GetString("UpdateService.Check.DotnetManifestUnavailable"));
@@ -92,6 +96,7 @@ public sealed class I18nFoundationTests
         var overviewViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.Overviews.cs"));
         var workspaceStateViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.WorkspaceState.cs"));
         var vehicleEditingViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.VehicleEditing.cs"));
+        var vehicleDetailWorkspaceViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "VehicleDetailWorkspaceViewModel.cs"));
 
         Assert.Contains("PendingEdits.Action.ExitApplication", runtimeController);
         Assert.Contains("PendingEdits.Action.SwitchVehicle", mainWindow);
@@ -100,8 +105,14 @@ public sealed class I18nFoundationTests
         Assert.Contains("PendingEdits.Action.OpenAuditItem", shellViewModel);
         Assert.Contains("PendingEdits.Action.OpenUpcomingOverviewItem", overviewViewModel);
         Assert.Contains("PendingEdits.Action.OpenSmartAdvisorItem", workspaceStateViewModel);
+        Assert.Contains("VehicleEditor.Status.CreatePrompt", vehicleEditingViewModel);
+        Assert.Contains("VehicleEditor.Status.EditPrompt", vehicleEditingViewModel);
+        Assert.Contains("VehicleEditor.Validation.NameRequired", vehicleEditingViewModel);
+        Assert.Contains("VehicleEditor.Validation.NextTkRequired", vehicleEditingViewModel);
         Assert.Contains("VehicleDetail.Status.NewVehicleSaved", vehicleEditingViewModel);
         Assert.Contains("VehicleDetail.Status.NewVehicleBundleOpenFailed", mainWindow);
+        Assert.Contains("VehicleEditor.Title.New", vehicleDetailWorkspaceViewModel);
+        Assert.Contains("VehicleEditor.Title.Edit", vehicleDetailWorkspaceViewModel);
 
         var combined = string.Join(
             Environment.NewLine,
@@ -119,6 +130,12 @@ public sealed class I18nFoundationTests
         Assert.DoesNotContain("\"otevřít doporučení chytrého poradce\"", combined);
         Assert.DoesNotContain("\"Nové vozidlo bylo uloženo.", combined);
         Assert.DoesNotContain("\"Vozidlo bylo upraveno.", combined);
+        Assert.DoesNotContain("\"Vyplňte základní údaje o vozidle", combined);
+        Assert.DoesNotContain("\"Upravte údaje vozidla", combined);
+        Assert.DoesNotContain("\"Vozidlo musí mít název", combined);
+        Assert.DoesNotContain("\"Pole Příští TK je povinné", combined);
+        Assert.DoesNotContain("\"Nové vozidlo\"", vehicleDetailWorkspaceViewModel);
+        Assert.DoesNotContain("\"Upravit vozidlo\"", vehicleDetailWorkspaceViewModel);
     }
 
     [Fact]

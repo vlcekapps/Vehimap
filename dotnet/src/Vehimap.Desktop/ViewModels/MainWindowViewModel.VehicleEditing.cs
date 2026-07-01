@@ -69,7 +69,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorClimateProfile = string.Empty;
         VehicleDetailWorkspace.VehicleEditorTimingDrive = string.Empty;
         VehicleDetailWorkspace.VehicleEditorTransmission = string.Empty;
-        VehicleDetailWorkspace.VehicleEditorStatus = "Vyplňte základní údaje o vozidle a uložte je.";
+        VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Status.CreatePrompt");
         SetVehicleEditingState(true);
         RequestVehicleEditorDialog();
     }
@@ -102,7 +102,7 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorClimateProfile = LegacyVehicleValueNormalization.NormalizeVehicleClimateProfile(meta?.ClimateProfile);
         VehicleDetailWorkspace.VehicleEditorTimingDrive = LegacyVehicleValueNormalization.NormalizeVehicleTimingDrive(meta?.TimingDrive);
         VehicleDetailWorkspace.VehicleEditorTransmission = LegacyVehicleValueNormalization.NormalizeVehicleTransmission(meta?.Transmission);
-        VehicleDetailWorkspace.VehicleEditorStatus = "Upravte údaje vozidla a uložte změny.";
+        VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Status.EditPrompt");
         SetVehicleEditingState(true);
         RequestVehicleEditorDialog();
     }
@@ -188,49 +188,49 @@ public sealed partial class MainWindowViewModel
 
         if (string.IsNullOrWhiteSpace(name))
         {
-            VehicleDetailWorkspace.VehicleEditorStatus = "Vozidlo musí mít název.";
+            VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.NameRequired");
             RequestFocus(DesktopFocusTarget.VehicleEditorName);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(category))
         {
-            VehicleDetailWorkspace.VehicleEditorStatus = "Vozidlo musí mít kategorii.";
+            VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.CategoryRequired");
             RequestFocus(DesktopFocusTarget.VehicleEditorCategory);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(makeModel))
         {
-            VehicleDetailWorkspace.VehicleEditorStatus = "Vozidlo musí mít vyplněnou značku a model.";
+            VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.MakeModelRequired");
             RequestFocus(DesktopFocusTarget.VehicleEditorMakeModel);
             return;
         }
 
         if (lastTkText.Length > 0 && lastTk.Length == 0)
         {
-            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Poslední TK musí být ve formátu MM/RRRR.";
+            VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.LastTkInvalid");
             RequestFocus(DesktopFocusTarget.VehicleEditorLastTk);
             return;
         }
 
         if (nextTk.Length == 0)
         {
-            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Příští TK je povinné a musí být ve formátu MM/RRRR.";
+            VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.NextTkRequired");
             RequestFocus(DesktopFocusTarget.VehicleEditorNextTk);
             return;
         }
 
         if (greenCardFromText.Length > 0 && greenCardFrom.Length == 0)
         {
-            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Zelená karta od musí být ve formátu MM/RRRR.";
+            VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.GreenCardFromInvalid");
             RequestFocus(DesktopFocusTarget.VehicleEditorGreenCardFrom);
             return;
         }
 
         if (greenCardToText.Length > 0 && greenCardTo.Length == 0)
         {
-            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Zelená karta do musí být ve formátu MM/RRRR.";
+            VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.GreenCardToInvalid");
             RequestFocus(DesktopFocusTarget.VehicleEditorGreenCardTo);
             return;
         }
@@ -239,14 +239,14 @@ public sealed partial class MainWindowViewModel
             && LegacyVehicleValueNormalization.TryGetMonthYearOrder(greenCardTo, out var greenCardToOrder)
             && greenCardFromOrder > greenCardToOrder)
         {
-            VehicleDetailWorkspace.VehicleEditorStatus = "Pole Zelená karta od nesmí být později než pole Zelená karta do.";
+            VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.GreenCardRangeInvalid");
             RequestFocus(DesktopFocusTarget.VehicleEditorGreenCardFrom);
             return;
         }
 
         if (year.Length > 0 && (year.Length != 4 || !year.All(char.IsDigit)))
         {
-            VehicleDetailWorkspace.VehicleEditorStatus = "Rok výroby zadejte jako čtyřciferný rok, nebo pole nechte prázdné.";
+            VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.YearInvalid");
             RequestFocus(DesktopFocusTarget.VehicleEditorYear);
             return;
         }

@@ -1661,12 +1661,26 @@ Stav: {5}</value></data>
   <data name="VehicleEditor.ServiceProfile" xml:space="preserve"><value>Servisní profil</value></data>
   <data name="VehicleEditor.State" xml:space="preserve"><value>Stav vozidla</value></data>
   <data name="VehicleEditor.StateName" xml:space="preserve"><value>Stav vozidla</value></data>
+  <data name="VehicleEditor.Status.CreatePrompt" xml:space="preserve"><value>Vyplňte základní údaje o vozidle a uložte je.</value></data>
+  <data name="VehicleEditor.Status.EditPrompt" xml:space="preserve"><value>Upravte údaje vozidla a uložte změny.</value></data>
   <data name="VehicleEditor.Tags" xml:space="preserve"><value>Štítky</value></data>
   <data name="VehicleEditor.TagsHelp" xml:space="preserve"><value>Například rodina, veterán, pracovní</value></data>
   <data name="VehicleEditor.TimingDrive" xml:space="preserve"><value>Rozvody</value></data>
   <data name="VehicleEditor.TimingDriveName" xml:space="preserve"><value>Typ rozvodů vozidla</value></data>
+  <data name="VehicleEditor.Title.Default" xml:space="preserve"><value>Editor vozidla</value></data>
+  <data name="VehicleEditor.Title.Edit" xml:space="preserve"><value>Upravit vozidlo</value></data>
+  <data name="VehicleEditor.Title.New" xml:space="preserve"><value>Nové vozidlo</value></data>
   <data name="VehicleEditor.Transmission" xml:space="preserve"><value>Převodovka</value></data>
   <data name="VehicleEditor.TransmissionName" xml:space="preserve"><value>Převodovka vozidla</value></data>
+  <data name="VehicleEditor.Validation.CategoryRequired" xml:space="preserve"><value>Vozidlo musí mít kategorii.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardFromInvalid" xml:space="preserve"><value>Pole Zelená karta od musí být ve formátu MM/RRRR.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardRangeInvalid" xml:space="preserve"><value>Pole Zelená karta od nesmí být později než pole Zelená karta do.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardToInvalid" xml:space="preserve"><value>Pole Zelená karta do musí být ve formátu MM/RRRR.</value></data>
+  <data name="VehicleEditor.Validation.LastTkInvalid" xml:space="preserve"><value>Pole Poslední TK musí být ve formátu MM/RRRR.</value></data>
+  <data name="VehicleEditor.Validation.MakeModelRequired" xml:space="preserve"><value>Vozidlo musí mít vyplněnou značku a model.</value></data>
+  <data name="VehicleEditor.Validation.NameRequired" xml:space="preserve"><value>Vozidlo musí mít název.</value></data>
+  <data name="VehicleEditor.Validation.NextTkRequired" xml:space="preserve"><value>Pole Příští TK je povinné a musí být ve formátu MM/RRRR.</value></data>
+  <data name="VehicleEditor.Validation.YearInvalid" xml:space="preserve"><value>Rok výroby zadejte jako čtyřciferný rok, nebo pole nechte prázdné.</value></data>
   <data name="VehicleEditor.Warning" xml:space="preserve"><value>Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu.</value></data>
   <data name="VehicleEditor.Year" xml:space="preserve"><value>Rok</value></data>
   <data name="VehicleEditor.YearName" xml:space="preserve"><value>Rok vozidla</value></data>

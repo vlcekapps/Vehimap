@@ -1661,12 +1661,26 @@ Status: {5}</value></data>
   <data name="VehicleEditor.ServiceProfile" xml:space="preserve"><value>Service profile</value></data>
   <data name="VehicleEditor.State" xml:space="preserve"><value>Vehicle state</value></data>
   <data name="VehicleEditor.StateName" xml:space="preserve"><value>Vehicle state</value></data>
+  <data name="VehicleEditor.Status.CreatePrompt" xml:space="preserve"><value>Fill in the basic vehicle details and save them.</value></data>
+  <data name="VehicleEditor.Status.EditPrompt" xml:space="preserve"><value>Edit the vehicle details and save the changes.</value></data>
   <data name="VehicleEditor.Tags" xml:space="preserve"><value>Tags</value></data>
   <data name="VehicleEditor.TagsHelp" xml:space="preserve"><value>For example family, veteran, work</value></data>
   <data name="VehicleEditor.TimingDrive" xml:space="preserve"><value>Timing drive</value></data>
   <data name="VehicleEditor.TimingDriveName" xml:space="preserve"><value>Vehicle timing drive type</value></data>
+  <data name="VehicleEditor.Title.Default" xml:space="preserve"><value>Vehicle editor</value></data>
+  <data name="VehicleEditor.Title.Edit" xml:space="preserve"><value>Edit vehicle</value></data>
+  <data name="VehicleEditor.Title.New" xml:space="preserve"><value>New vehicle</value></data>
   <data name="VehicleEditor.Transmission" xml:space="preserve"><value>Transmission</value></data>
   <data name="VehicleEditor.TransmissionName" xml:space="preserve"><value>Vehicle transmission</value></data>
+  <data name="VehicleEditor.Validation.CategoryRequired" xml:space="preserve"><value>The vehicle must have a category.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardFromInvalid" xml:space="preserve"><value>The Green card from field must use the MM/YYYY format.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardRangeInvalid" xml:space="preserve"><value>The Green card from field must not be later than the Green card to field.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardToInvalid" xml:space="preserve"><value>The Green card to field must use the MM/YYYY format.</value></data>
+  <data name="VehicleEditor.Validation.LastTkInvalid" xml:space="preserve"><value>The Last technical inspection field must use the MM/YYYY format.</value></data>
+  <data name="VehicleEditor.Validation.MakeModelRequired" xml:space="preserve"><value>The vehicle must have a make and model.</value></data>
+  <data name="VehicleEditor.Validation.NameRequired" xml:space="preserve"><value>The vehicle must have a name.</value></data>
+  <data name="VehicleEditor.Validation.NextTkRequired" xml:space="preserve"><value>The Next technical inspection field is required and must use the MM/YYYY format.</value></data>
+  <data name="VehicleEditor.Validation.YearInvalid" xml:space="preserve"><value>Enter the production year as a four-digit year, or leave the field empty.</value></data>
   <data name="VehicleEditor.Warning" xml:space="preserve"><value>Changing the vehicle keeps related history, fuel records, documents, reminders and maintenance.</value></data>
   <data name="VehicleEditor.Year" xml:space="preserve"><value>Year</value></data>
   <data name="VehicleEditor.YearName" xml:space="preserve"><value>Vehicle year</value></data>
