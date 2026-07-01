@@ -1153,6 +1153,8 @@ public sealed class I18nFoundationTests
         Assert.DoesNotContain("Chybí km v období", czechResources);
         Assert.DoesNotContain("Bez km v období", czechResources);
         Assert.DoesNotContain("bez údajů o litrech", czechResources);
+        Assert.DoesNotContain("počet litrů", czechResources);
+        Assert.DoesNotContain("počtu litrů", czechResources);
     }
 
     private static SortedSet<string> ReadResourceKeys(string path)

@@ -265,7 +265,18 @@ Vozidlo: {2}
   <data name="FuelEditor.StationName" xml:space="preserve"><value>Místo tankování</value></data>
   <data name="FuelEditor.TotalCostLabel" xml:space="preserve"><value>Cena celkem</value></data>
   <data name="FuelEditor.TotalCostName" xml:space="preserve"><value>Cena tankování celkem</value></data>
+  <data name="FuelEditor.Persistence.DeleteFailed" xml:space="preserve"><value>Tankování se nepodařilo odstranit</value></data>
+  <data name="FuelEditor.Persistence.SaveFailed" xml:space="preserve"><value>Tankování se nepodařilo uložit</value></data>
+  <data name="FuelEditor.Status.Created" xml:space="preserve"><value>Nové tankování bylo uloženo.</value></data>
+  <data name="FuelEditor.Status.CreatePrompt" xml:space="preserve"><value>Vyplňte nové tankování a uložte jej.</value></data>
+  <data name="FuelEditor.Status.Deleted" xml:space="preserve"><value>Tankování bylo odstraněno.</value></data>
+  <data name="FuelEditor.Status.EditPrompt" xml:space="preserve"><value>Upravte tankování a uložte změny.</value></data>
+  <data name="FuelEditor.Status.Updated" xml:space="preserve"><value>Tankování bylo upraveno.</value></data>
+  <data name="FuelEditor.Validation.CostRequiresVolume" xml:space="preserve"><value>Pokud zadáváte cenu tankování, doplňte i množství paliva.</value></data>
+  <data name="FuelEditor.Validation.DateRequired" xml:space="preserve"><value>Pole Datum záznamu je povinné a musí být ve formátu DD.MM.RRRR.</value></data>
+  <data name="FuelEditor.Validation.OdometerRequired" xml:space="preserve"><value>Pole Stav tachometru je povinné a musí obsahovat číslo v {0}.</value></data>
   <data name="FuelEditor.Validation.TotalCostInvalid" xml:space="preserve"><value>Cenu celkem zadejte jako číslo, například 1890.</value></data>
+  <data name="FuelEditor.Validation.VolumeInvalid" xml:space="preserve"><value>Množství paliva zadejte jako číslo v {0}.</value></data>
   <data name="FuelEditor.VolumeHelp" xml:space="preserve"><value>Zadejte objem paliva v {0}. Vehimap hodnotu uloží interně v litrech.</value></data>
   <data name="FuelEditor.VolumeLabel" xml:space="preserve"><value>Množství ({0})</value></data>
   <data name="FuelEditor.VolumeName" xml:space="preserve"><value>Množství tankovaného paliva v {0}</value></data>
@@ -290,6 +301,17 @@ Vozidlo: {2}
   <data name="HistoryEditor.TypeExample" xml:space="preserve"><value>Například Servis</value></data>
   <data name="HistoryEditor.TypeLabel" xml:space="preserve"><value>Typ události</value></data>
   <data name="HistoryEditor.TypeName" xml:space="preserve"><value>Typ historické události</value></data>
+  <data name="HistoryEditor.Persistence.DeleteFailed" xml:space="preserve"><value>Historický záznam se nepodařilo odstranit</value></data>
+  <data name="HistoryEditor.Persistence.SaveFailed" xml:space="preserve"><value>Historický záznam se nepodařilo uložit</value></data>
+  <data name="HistoryEditor.Status.Created" xml:space="preserve"><value>Nový historický záznam byl uložen.</value></data>
+  <data name="HistoryEditor.Status.CreatePrompt" xml:space="preserve"><value>Vyplňte nový historický záznam a uložte jej.</value></data>
+  <data name="HistoryEditor.Status.Deleted" xml:space="preserve"><value>Historický záznam byl odstraněn.</value></data>
+  <data name="HistoryEditor.Status.EditPrompt" xml:space="preserve"><value>Upravte historický záznam a uložte změny.</value></data>
+  <data name="HistoryEditor.Status.Updated" xml:space="preserve"><value>Historický záznam byl upraven.</value></data>
+  <data name="HistoryEditor.Validation.CostInvalid" xml:space="preserve"><value>Cenu události zadejte jako číslo, například 2500.</value></data>
+  <data name="HistoryEditor.Validation.DateRequired" xml:space="preserve"><value>Pole Datum události je povinné a musí být ve formátu DD.MM.RRRR.</value></data>
+  <data name="HistoryEditor.Validation.OdometerInvalid" xml:space="preserve"><value>Stav tachometru zadejte jako číslo v {0}, nebo pole nechte prázdné.</value></data>
+  <data name="HistoryEditor.Validation.TypeRequired" xml:space="preserve"><value>Vyplňte prosím název události.</value></data>
   <data name="HistoryWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v historii vozidla</value></data>
   <data name="HistoryWorkspace.Create" xml:space="preserve"><value>Nový záznam</value></data>
   <data name="HistoryWorkspace.CreateName" xml:space="preserve"><value>Vytvořit nový historický záznam</value></data>
@@ -350,6 +372,21 @@ Vozidlo: {2}
   <data name="MaintenanceEditor.TitleExample" xml:space="preserve"><value>Například Motorový olej</value></data>
   <data name="MaintenanceEditor.TitleLabel" xml:space="preserve"><value>Název úkonu</value></data>
   <data name="MaintenanceEditor.TitleName" xml:space="preserve"><value>Název servisního úkonu</value></data>
+  <data name="MaintenanceEditor.Persistence.DeleteFailed" xml:space="preserve"><value>Servisní plán se nepodařilo odstranit</value></data>
+  <data name="MaintenanceEditor.Persistence.SaveFailed" xml:space="preserve"><value>Servisní plán se nepodařilo uložit</value></data>
+  <data name="MaintenanceEditor.Status.Created" xml:space="preserve"><value>Nový servisní plán byl uložen.</value></data>
+  <data name="MaintenanceEditor.Status.CreatePrompt" xml:space="preserve"><value>Vyplňte servisní plán a uložte jej.</value></data>
+  <data name="MaintenanceEditor.Status.Deleted" xml:space="preserve"><value>Servisní plán byl odstraněn.</value></data>
+  <data name="MaintenanceEditor.Status.EditPrompt" xml:space="preserve"><value>Upravte servisní plán a uložte změny.</value></data>
+  <data name="MaintenanceEditor.Status.Updated" xml:space="preserve"><value>Servisní plán byl upraven.</value></data>
+  <data name="MaintenanceEditor.Validation.IntervalDistanceInvalid" xml:space="preserve"><value>Interval vzdálenosti zadejte jako kladné číslo v {0}.</value></data>
+  <data name="MaintenanceEditor.Validation.IntervalMonthsInvalid" xml:space="preserve"><value>Interval měsíců zadejte jako kladné celé číslo.</value></data>
+  <data name="MaintenanceEditor.Validation.IntervalRequired" xml:space="preserve"><value>Plán údržby musí mít vyplněný vzdálenostní interval, interval měsíců nebo obojí.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceDateInvalid" xml:space="preserve"><value>Datum posledního servisu musí být ve formátu DD.MM.RRRR.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceDateRequired" xml:space="preserve"><value>Pro interval podle data vyplňte i datum posledního servisu ve formátu DD.MM.RRRR.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceOdometerInvalid" xml:space="preserve"><value>Stav tachometru posledního servisu zadejte jako číslo v {0}.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceOdometerRequired" xml:space="preserve"><value>Pro interval podle tachometru vyplňte i stav tachometru při posledním servisu.</value></data>
+  <data name="MaintenanceEditor.Validation.TitleRequired" xml:space="preserve"><value>Servisní plán musí mít název.</value></data>
   <data name="MaintenanceCompletion.AddHistory" xml:space="preserve"><value>Současně zapsat i do historie událostí</value></data>
   <data name="MaintenanceCompletion.AddHistoryName" xml:space="preserve"><value>Současně zapsat servisní úkon do historie událostí</value></data>
   <data name="MaintenanceCompletion.CancelName" xml:space="preserve"><value>Zrušit dokončení servisního úkonu</value></data>
@@ -367,9 +404,18 @@ Vozidlo: {2}
   <data name="MaintenanceCompletion.HistoryNoteName" xml:space="preserve"><value>Poznámka servisního úkonu do historie</value></data>
   <data name="MaintenanceCompletion.SaveName" xml:space="preserve"><value>Uložit dokončení servisního úkonu</value></data>
   <data name="MaintenanceCompletion.Title" xml:space="preserve"><value>Označit servisní úkon jako splněný</value></data>
+  <data name="MaintenanceCompletion.Persistence.SaveFailed" xml:space="preserve"><value>Splnění servisního úkonu se nepodařilo uložit</value></data>
+  <data name="MaintenanceCompletion.Status.Completed" xml:space="preserve"><value>Servisní úkon byl označen jako splněný k {0}. {1}{2}</value></data>
+  <data name="MaintenanceCompletion.Status.HistoryAddedSuffix" xml:space="preserve"><value> Událost byla zapsána i do historie.</value></data>
+  <data name="MaintenanceCompletion.Status.HistoryNoteDefault" xml:space="preserve"><value>Zapsáno z plánu údržby.</value></data>
+  <data name="MaintenanceCompletion.Status.OdometerEmpty" xml:space="preserve"><value>Tachometr zůstal prázdný.</value></data>
+  <data name="MaintenanceCompletion.Status.OdometerValue" xml:space="preserve"><value>Tachometr: {0} {1}.</value></data>
+  <data name="MaintenanceCompletion.Status.ReactivateFirst" xml:space="preserve"><value>Pozastavený plán nejdříve znovu aktivujte v úpravě úkonu.</value></data>
+  <data name="MaintenanceCompletion.Status.SelectPlanFirst" xml:space="preserve"><value>Nejprve vyberte servisní plán.</value></data>
+  <data name="MaintenanceCompletion.Status.Unavailable" xml:space="preserve"><value>Aktuální stav není k dispozici.</value></data>
   <data name="MaintenanceCompletion.Validation.CompletedDate" xml:space="preserve"><value>Datum provedení musí být ve formátu DD.MM.RRRR.</value></data>
   <data name="MaintenanceCompletion.Validation.CompletedOdometerNumber" xml:space="preserve"><value>Tachometr při provedení zadejte jako číslo v {0}.</value></data>
-  <data name="MaintenanceCompletion.Validation.CompletedOdometerRequired" xml:space="preserve"><value>Pro kilometrický interval vyplňte i stav tachometru při provedení úkonu.</value></data>
+  <data name="MaintenanceCompletion.Validation.CompletedOdometerRequired" xml:space="preserve"><value>Pro vzdálenostní interval vyplňte i stav tachometru při provedení úkonu.</value></data>
   <data name="MaintenanceCompletion.Validation.HistoryCost" xml:space="preserve"><value>Cenu do historie zadejte jako číslo, například 2500.</value></data>
   <data name="MaintenanceWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v plánu údržby</value></data>
   <data name="MaintenanceWorkspace.Complete" xml:space="preserve"><value>Splněno</value></data>
@@ -1536,6 +1582,19 @@ Stav: {5}</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>Nové vozidlo bylo uloženo. Balíček pro vozidlo už neměl žádné nové položky.</value></data>
   <data name="VehicleDetail.Status.SaveFailedPrefix" xml:space="preserve"><value>Vozidlo se nepodařilo uložit</value></data>
   <data name="VehicleDetail.Status.VehicleUpdated" xml:space="preserve"><value>Vozidlo bylo upraveno.</value></data>
+  <data name="VehicleDelete.AttachmentCleanup.DeleteFailed" xml:space="preserve"><value>Spravované přílohy se nepodařilo smazat: {0}</value></data>
+  <data name="VehicleDelete.AttachmentCleanup.UnsafePath" xml:space="preserve"><value>Spravované přílohy nebyly smazány, protože cílová cesta neleží v datové složce příloh.</value></data>
+  <data name="VehicleDelete.Confirmation.AttachmentWarning" xml:space="preserve"><value>Spravované přílohy tohoto vozidla budou smazány z datové složky. Externí soubory dokladů zůstanou beze změny.</value></data>
+  <data name="VehicleDelete.Confirmation.EvidenceHeading" xml:space="preserve"><value>Současně se odstraní navázaná evidence:</value></data>
+  <data name="VehicleDelete.Confirmation.FuelCount" xml:space="preserve"><value>- tankování: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.HistoryCount" xml:space="preserve"><value>- historie: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.Irreversible" xml:space="preserve"><value>Tuto akci nelze vrátit zpět.</value></data>
+  <data name="VehicleDelete.Confirmation.MaintenanceCount" xml:space="preserve"><value>- údržba: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.Question" xml:space="preserve"><value>Opravdu chcete odstranit vozidlo „{0}“?</value></data>
+  <data name="VehicleDelete.Confirmation.RecordCount" xml:space="preserve"><value>- doklady: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.ReminderCount" xml:space="preserve"><value>- připomínky: {0}</value></data>
+  <data name="VehicleDelete.Persistence.DeleteFailed" xml:space="preserve"><value>Vozidlo {0} se nepodařilo odstranit</value></data>
+  <data name="VehicleDelete.Status.Deleted" xml:space="preserve"><value>Vozidlo {0} bylo odstraněno.</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Category" xml:space="preserve"><value>{0}, {1}: {2}</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Full" xml:space="preserve"><value>{0}, {1}, {2}: {3}</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Simple" xml:space="preserve"><value>{0}: {1}</value></data>

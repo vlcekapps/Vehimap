@@ -835,7 +835,7 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("CreateMaintenanceButton");
 
             Assert.Equal("Název servisního úkonu", session.GetNameByAccessibilityId("MaintenanceEditorTitleBox"));
-            Assert.Equal("Interval údržby v kilometrech", session.GetNameByAccessibilityId("MaintenanceEditorIntervalKmBox"));
+            Assert.Equal("Interval údržby v km", session.GetNameByAccessibilityId("MaintenanceEditorIntervalKmBox"));
 
             session.SendKeysByAccessibilityId("MaintenanceEditorTitleBox", "Motorový olej");
             session.SendKeysByAccessibilityId("MaintenanceEditorIntervalKmBox", "15000");

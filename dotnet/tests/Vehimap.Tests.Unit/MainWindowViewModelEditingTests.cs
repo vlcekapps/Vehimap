@@ -678,7 +678,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         await viewModel.SaveFuelCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.FuelWorkspace.IsEditingFuel);
-        Assert.Equal("Pokud zadáváte cenu tankování, doplňte i počet litrů.", viewModel.FuelWorkspace.FuelEditorStatus);
+        Assert.Equal("Pokud zadáváte cenu tankování, doplňte i množství paliva.", viewModel.FuelWorkspace.FuelEditorStatus);
         Assert.Equal(DesktopFocusTarget.FuelEditorLiters, Assert.Single(requestedTargets));
         Assert.Empty(dataStore.CurrentDataSet.FuelEntries);
     }

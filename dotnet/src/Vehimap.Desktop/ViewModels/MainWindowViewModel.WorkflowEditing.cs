@@ -161,6 +161,9 @@ public sealed partial class MainWindowViewModel
         EditorNumberFormatService.TryParseDecimal(value, CurrentCulturePreferences, out number)
         || VehimapValueParser.TryParseDecimalNumber(value, out number);
 
+    private static string LWF(string key, params object?[] args) =>
+        DesktopLocalization.Localizer.Format(key, args);
+
     private void NotifyEditorUnitMetadataChanged()
     {
         HistoryWorkspace.NotifyUnitMetadataChanged();
@@ -182,7 +185,7 @@ public sealed partial class MainWindowViewModel
         HistoryEditorOdometer = string.Empty;
         HistoryEditorCost = string.Empty;
         HistoryEditorNote = string.Empty;
-        HistoryEditorStatus = "Vyplňte nový historický záznam a uložte jej.";
+        HistoryEditorStatus = LO("HistoryEditor.Status.CreatePrompt");
         IsEditingHistory = true;
         SelectedVehicleTabIndex = HistoryTabIndex;
         RequestWorkspaceEditorDialog(WorkspaceEditorKind.History, DesktopFocusTarget.HistoryList);
@@ -203,7 +206,7 @@ public sealed partial class MainWindowViewModel
         HistoryEditorOdometer = FormatCanonicalOdometerForEditor(entry.Odometer);
         HistoryEditorCost = entry.Cost;
         HistoryEditorNote = entry.Note;
-        HistoryEditorStatus = "Upravte historický záznam a uložte změny.";
+        HistoryEditorStatus = LO("HistoryEditor.Status.EditPrompt");
         IsEditingHistory = true;
         SelectedVehicleTabIndex = HistoryTabIndex;
         RequestWorkspaceEditorDialog(WorkspaceEditorKind.History, DesktopFocusTarget.HistoryList);
@@ -227,21 +230,21 @@ public sealed partial class MainWindowViewModel
 
         if (eventDate.Length == 0)
         {
-            HistoryEditorStatus = "Pole Datum události je povinné a musí být ve formátu DD.MM.RRRR.";
+            HistoryEditorStatus = LO("HistoryEditor.Validation.DateRequired");
             RequestFocus(DesktopFocusTarget.HistoryEditorDate);
             return;
         }
 
         if (eventType.Length == 0)
         {
-            HistoryEditorStatus = "Vyplňte prosím název události.";
+            HistoryEditorStatus = LO("HistoryEditor.Validation.TypeRequired");
             RequestFocus(DesktopFocusTarget.HistoryEditorType);
             return;
         }
 
         if (!TryNormalizeEditorDistanceToKilometers(odometerText, allowEmpty: true, out odometer))
         {
-            HistoryEditorStatus = $"Stav tachometru zadejte jako číslo v {CurrentDistanceUnitLabel}, nebo pole nechte prázdné.";
+            HistoryEditorStatus = LWF("HistoryEditor.Validation.OdometerInvalid", CurrentDistanceUnitLabel);
             RequestFocus(DesktopFocusTarget.HistoryEditorOdometer);
             return;
         }
@@ -250,7 +253,7 @@ public sealed partial class MainWindowViewModel
         {
             if (!VehimapValueParser.TryParseMoney(costText, out var parsedCost) || parsedCost < 0)
             {
-                HistoryEditorStatus = "Cenu události zadejte jako číslo, například 2500.";
+                HistoryEditorStatus = LO("HistoryEditor.Validation.CostInvalid");
                 RequestFocus(DesktopFocusTarget.HistoryEditorCost);
                 return;
             }
@@ -277,7 +280,7 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => HistoryEditorStatus = status,
                 failureFocus: DesktopFocusTarget.HistoryEditorDate,
-                failurePrefix: "Historický záznam se nepodařilo uložit"))
+                failurePrefix: LO("HistoryEditor.Persistence.SaveFailed")))
         {
             return;
         }
@@ -285,8 +288,8 @@ public sealed partial class MainWindowViewModel
         var wasNew = _editingHistoryId is null;
         CancelHistoryEditCore(clearStatus: false);
         HistoryEditorStatus = wasNew
-            ? "Nový historický záznam byl uložen."
-            : "Historický záznam byl upraven.";
+            ? LO("HistoryEditor.Status.Created")
+            : LO("HistoryEditor.Status.Updated");
         SelectedHistory = FindById(SelectedVehicleHistory, item => item.Id, historyId);
         RequestFocus(DesktopFocusTarget.HistoryList);
     }
@@ -313,11 +316,11 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => HistoryEditorStatus = status,
                 failureFocus: DesktopFocusTarget.HistoryList,
-                failurePrefix: "Historický záznam se nepodařilo odstranit"))
+                failurePrefix: LO("HistoryEditor.Persistence.DeleteFailed")))
         {
             return;
         }
-        HistoryEditorStatus = "Historický záznam byl odstraněn.";
+        HistoryEditorStatus = LO("HistoryEditor.Status.Deleted");
         RequestFocus(DesktopFocusTarget.HistoryList);
     }
 
@@ -339,7 +342,7 @@ public sealed partial class MainWindowViewModel
         FuelEditorOdometer = string.Empty;
         FuelEditorFullTank = true;
         FuelEditorNote = string.Empty;
-        FuelEditorStatus = "Vyplňte nové tankování a uložte jej.";
+        FuelEditorStatus = LO("FuelEditor.Status.CreatePrompt");
         IsEditingFuel = true;
         SelectedVehicleTabIndex = FuelTabIndex;
         RequestWorkspaceEditorDialog(WorkspaceEditorKind.Fuel, DesktopFocusTarget.FuelList);
@@ -364,7 +367,7 @@ public sealed partial class MainWindowViewModel
         FuelEditorOdometer = FormatCanonicalOdometerForEditor(entry.Odometer);
         FuelEditorFullTank = entry.FullTank;
         FuelEditorNote = entry.Note;
-        FuelEditorStatus = "Upravte tankování a uložte změny.";
+        FuelEditorStatus = LO("FuelEditor.Status.EditPrompt");
         IsEditingFuel = true;
         SelectedVehicleTabIndex = FuelTabIndex;
         RequestWorkspaceEditorDialog(WorkspaceEditorKind.Fuel, DesktopFocusTarget.FuelList);
@@ -389,21 +392,21 @@ public sealed partial class MainWindowViewModel
 
         if (entryDate.Length == 0)
         {
-            FuelEditorStatus = "Pole Datum záznamu je povinné a musí být ve formátu DD.MM.RRRR.";
+            FuelEditorStatus = LO("FuelEditor.Validation.DateRequired");
             RequestFocus(DesktopFocusTarget.FuelEditorDate);
             return;
         }
 
         if (!TryNormalizeEditorDistanceToKilometers(odometerText, allowEmpty: false, out odometer))
         {
-            FuelEditorStatus = $"Pole Stav tachometru je povinné a musí obsahovat číslo v {CurrentDistanceUnitLabel}.";
+            FuelEditorStatus = LWF("FuelEditor.Validation.OdometerRequired", CurrentDistanceUnitLabel);
             RequestFocus(DesktopFocusTarget.FuelEditorOdometer);
             return;
         }
 
         if (!TryNormalizeEditorVolumeToLiters(litersText, allowEmpty: true, out liters))
         {
-            FuelEditorStatus = $"Množství paliva zadejte jako číslo v {CurrentVolumeUnitLabel}.";
+            FuelEditorStatus = LWF("FuelEditor.Validation.VolumeInvalid", CurrentVolumeUnitLabel);
             RequestFocus(DesktopFocusTarget.FuelEditorLiters);
             return;
         }
@@ -422,7 +425,7 @@ public sealed partial class MainWindowViewModel
 
         if (totalCost.Length > 0 && liters.Length == 0)
         {
-            FuelEditorStatus = "Pokud zadáváte cenu tankování, doplňte i počet litrů.";
+            FuelEditorStatus = LO("FuelEditor.Validation.CostRequiresVolume");
             RequestFocus(DesktopFocusTarget.FuelEditorLiters);
             return;
         }
@@ -450,7 +453,7 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => FuelEditorStatus = status,
                 failureFocus: DesktopFocusTarget.FuelEditorDate,
-                failurePrefix: "Tankování se nepodařilo uložit"))
+                failurePrefix: LO("FuelEditor.Persistence.SaveFailed")))
         {
             return;
         }
@@ -458,8 +461,8 @@ public sealed partial class MainWindowViewModel
         var wasNew = _editingFuelId is null;
         CancelFuelEditCore(clearStatus: false);
         FuelEditorStatus = wasNew
-            ? "Nové tankování bylo uloženo."
-            : "Tankování bylo upraveno.";
+            ? LO("FuelEditor.Status.Created")
+            : LO("FuelEditor.Status.Updated");
         SelectedFuel = FindById(SelectedVehicleFuel, item => item.Id, fuelId);
         RequestFocus(DesktopFocusTarget.FuelList);
     }
@@ -486,11 +489,11 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => FuelEditorStatus = status,
                 failureFocus: DesktopFocusTarget.FuelList,
-                failurePrefix: "Tankování se nepodařilo odstranit"))
+                failurePrefix: LO("FuelEditor.Persistence.DeleteFailed")))
         {
             return;
         }
-        FuelEditorStatus = "Tankování bylo odstraněno.";
+        FuelEditorStatus = LO("FuelEditor.Status.Deleted");
         RequestFocus(DesktopFocusTarget.FuelList);
     }
 
@@ -510,7 +513,7 @@ public sealed partial class MainWindowViewModel
         MaintenanceEditorLastServiceOdometer = string.Empty;
         MaintenanceEditorIsActive = true;
         MaintenanceEditorNote = string.Empty;
-        MaintenanceEditorStatus = "Vyplňte servisní plán a uložte jej.";
+        MaintenanceEditorStatus = LO("MaintenanceEditor.Status.CreatePrompt");
         IsEditingMaintenance = true;
         SelectedVehicleTabIndex = MaintenanceTabIndex;
         RequestWorkspaceEditorDialog(WorkspaceEditorKind.Maintenance, DesktopFocusTarget.MaintenanceList);
@@ -533,7 +536,7 @@ public sealed partial class MainWindowViewModel
         MaintenanceEditorLastServiceOdometer = FormatCanonicalOdometerForEditor(plan.LastServiceOdometer);
         MaintenanceEditorIsActive = plan.IsActive;
         MaintenanceEditorNote = plan.Note;
-        MaintenanceEditorStatus = "Upravte servisní plán a uložte změny.";
+        MaintenanceEditorStatus = LO("MaintenanceEditor.Status.EditPrompt");
         IsEditingMaintenance = true;
         SelectedVehicleTabIndex = MaintenanceTabIndex;
         RequestWorkspaceEditorDialog(WorkspaceEditorKind.Maintenance, DesktopFocusTarget.MaintenanceList);
@@ -550,7 +553,7 @@ public sealed partial class MainWindowViewModel
         var title = (MaintenanceEditorTitle ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(title))
         {
-            MaintenanceEditorStatus = "Servisní plán musí mít název.";
+            MaintenanceEditorStatus = LO("MaintenanceEditor.Validation.TitleRequired");
             RequestFocus(DesktopFocusTarget.MaintenanceEditorTitle);
             return;
         }
@@ -566,49 +569,49 @@ public sealed partial class MainWindowViewModel
 
         if (!TryNormalizeEditorPositiveDistanceToKilometers(intervalKmText, allowEmpty: true, out intervalKm))
         {
-            MaintenanceEditorStatus = $"Interval vzdálenosti zadejte jako kladné číslo v {CurrentDistanceUnitLabel}.";
+            MaintenanceEditorStatus = LWF("MaintenanceEditor.Validation.IntervalDistanceInvalid", CurrentDistanceUnitLabel);
             RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalKm);
             return;
         }
 
         if (intervalKm.Length == 0 && intervalMonths.Length == 0)
         {
-            MaintenanceEditorStatus = "Plán údržby musí mít vyplněný interval kilometrů, měsíců nebo obojí.";
+            MaintenanceEditorStatus = LO("MaintenanceEditor.Validation.IntervalRequired");
             RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalKm);
             return;
         }
 
         if (intervalMonthsText.Length > 0 && intervalMonths.Length == 0)
         {
-            MaintenanceEditorStatus = "Interval měsíců zadejte jako kladné celé číslo.";
+            MaintenanceEditorStatus = LO("MaintenanceEditor.Validation.IntervalMonthsInvalid");
             RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalMonths);
             return;
         }
 
         if (lastServiceDateText.Length > 0 && lastServiceDate.Length == 0)
         {
-            MaintenanceEditorStatus = "Datum posledního servisu musí být ve formátu DD.MM.RRRR.";
+            MaintenanceEditorStatus = LO("MaintenanceEditor.Validation.LastServiceDateInvalid");
             RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceDate);
             return;
         }
 
         if (intervalMonths.Length > 0 && lastServiceDate.Length == 0)
         {
-            MaintenanceEditorStatus = "Pro interval podle data vyplňte i datum posledního servisu ve formátu DD.MM.RRRR.";
+            MaintenanceEditorStatus = LO("MaintenanceEditor.Validation.LastServiceDateRequired");
             RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceDate);
             return;
         }
 
         if (!TryNormalizeEditorDistanceToKilometers(lastServiceOdometerText, allowEmpty: true, out lastServiceOdometer))
         {
-            MaintenanceEditorStatus = $"Stav tachometru posledního servisu zadejte jako číslo v {CurrentDistanceUnitLabel}.";
+            MaintenanceEditorStatus = LWF("MaintenanceEditor.Validation.LastServiceOdometerInvalid", CurrentDistanceUnitLabel);
             RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceOdometer);
             return;
         }
 
         if (intervalKm.Length > 0 && lastServiceOdometer.Length == 0)
         {
-            MaintenanceEditorStatus = "Pro interval podle tachometru vyplňte i stav tachometru při posledním servisu.";
+            MaintenanceEditorStatus = LO("MaintenanceEditor.Validation.LastServiceOdometerRequired");
             RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceOdometer);
             return;
         }
@@ -634,7 +637,7 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => MaintenanceEditorStatus = status,
                 failureFocus: DesktopFocusTarget.MaintenanceEditorTitle,
-                failurePrefix: "Servisní plán se nepodařilo uložit"))
+                failurePrefix: LO("MaintenanceEditor.Persistence.SaveFailed")))
         {
             return;
         }
@@ -642,8 +645,8 @@ public sealed partial class MainWindowViewModel
         var wasNew = _editingMaintenanceId is null;
         CancelMaintenanceEditCore(clearStatus: false);
         MaintenanceEditorStatus = wasNew
-            ? "Nový servisní plán byl uložen."
-            : "Servisní plán byl upraven.";
+            ? LO("MaintenanceEditor.Status.Created")
+            : LO("MaintenanceEditor.Status.Updated");
         SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, maintenanceId);
         RequestFocus(DesktopFocusTarget.MaintenanceList);
     }
@@ -670,11 +673,11 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => MaintenanceEditorStatus = status,
                 failureFocus: DesktopFocusTarget.MaintenanceList,
-                failurePrefix: "Servisní plán se nepodařilo odstranit"))
+                failurePrefix: LO("MaintenanceEditor.Persistence.DeleteFailed")))
         {
             return;
         }
-        MaintenanceEditorStatus = "Servisní plán byl odstraněn.";
+        MaintenanceEditorStatus = LO("MaintenanceEditor.Status.Deleted");
         RequestFocus(DesktopFocusTarget.MaintenanceList);
     }
 
@@ -717,7 +720,7 @@ public sealed partial class MainWindowViewModel
         return new MaintenanceCompletionDialogViewModel(
             SelectedVehicle.Name,
             plan.Title,
-            SelectedMaintenance?.Status ?? "Aktuální stav není k dispozici.",
+            SelectedMaintenance?.Status ?? LO("MaintenanceCompletion.Status.Unavailable"),
             !string.IsNullOrWhiteSpace(plan.IntervalKm),
             completedDate,
             FormatCanonicalOdometerForEditor(completedOdometer),
@@ -731,17 +734,17 @@ public sealed partial class MainWindowViewModel
         var plan = GetSelectedMaintenanceModel();
         if (SelectedVehicle is null || plan is null)
         {
-            return "Nejprve vyberte servisní plán.";
+            return LO("MaintenanceCompletion.Status.SelectPlanFirst");
         }
 
         if (!plan.IsActive)
         {
-            return "Pozastavený plán nejdříve znovu aktivujte v úpravě úkonu.";
+            return LO("MaintenanceCompletion.Status.ReactivateFirst");
         }
 
         if (!VehimapValueParser.TryParseEventDate(completion.CompletedDate, out var completedDate))
         {
-            return "Datum provedení musí být ve formátu DD.MM.RRRR.";
+            return LO("MaintenanceCompletion.Validation.CompletedDate");
         }
 
         var completedOdometer = (completion.CompletedOdometer ?? string.Empty).Trim();
@@ -749,14 +752,14 @@ public sealed partial class MainWindowViewModel
         {
             if (!VehimapValueParser.TryParseOdometer(completedOdometer, out var parsedOdometer))
             {
-                return "Tachometr při provedení zadejte jako celé číslo.";
+                return LWF("MaintenanceCompletion.Validation.CompletedOdometerNumber", CurrentDistanceUnitLabel);
             }
 
             completedOdometer = parsedOdometer.ToString(CultureInfo.InvariantCulture);
         }
         else if (!string.IsNullOrWhiteSpace(plan.IntervalKm))
         {
-            return "Pro kilometrický interval vyplňte i stav tachometru při provedení úkonu.";
+            return LO("MaintenanceCompletion.Validation.CompletedOdometerRequired");
         }
 
         var historyCost = (completion.HistoryCost ?? string.Empty).Trim();
@@ -764,7 +767,7 @@ public sealed partial class MainWindowViewModel
         {
             if (!VehimapValueParser.TryParseMoney(historyCost, out var parsedCost))
             {
-                return "Cenu do historie zadejte jako číslo, například 2500.";
+                return LO("MaintenanceCompletion.Validation.HistoryCost");
             }
 
             historyCost = parsedCost.ToString("0.##", CultureInfo.InvariantCulture);
@@ -784,7 +787,7 @@ public sealed partial class MainWindowViewModel
         if (completion.AddHistory)
         {
             var historyNote = string.IsNullOrWhiteSpace(completion.HistoryNote)
-                ? "Zapsáno z plánu údržby."
+                ? LO("MaintenanceCompletion.Status.HistoryNoteDefault")
                 : completion.HistoryNote.Trim();
             UpsertHistoryEntry(new VehicleHistoryEntry(
                 GenerateLegacyId(_dataSet.HistoryEntries.Select(item => item.Id)),
@@ -803,18 +806,18 @@ public sealed partial class MainWindowViewModel
                 rollbackDataSet: rollbackDataSet,
                 setFailureStatus: status => MaintenanceEditorStatus = status,
                 failureFocus: DesktopFocusTarget.MaintenanceList,
-                failurePrefix: "Splnění servisního úkonu se nepodařilo uložit"))
+                failurePrefix: LO("MaintenanceCompletion.Persistence.SaveFailed")))
         {
             return MaintenanceEditorStatus;
         }
 
         var odometerMessage = string.IsNullOrWhiteSpace(updatedPlan.LastServiceOdometer)
-            ? "Tachometr zůstal prázdný."
-            : $"Tachometr: {FormatCanonicalOdometerForEditor(updatedPlan.LastServiceOdometer)} {CurrentDistanceUnitLabel}.";
+            ? LO("MaintenanceCompletion.Status.OdometerEmpty")
+            : LWF("MaintenanceCompletion.Status.OdometerValue", FormatCanonicalOdometerForEditor(updatedPlan.LastServiceOdometer), CurrentDistanceUnitLabel);
         var historyMessage = completion.AddHistory
-            ? " Událost byla zapsána i do historie."
+            ? LO("MaintenanceCompletion.Status.HistoryAddedSuffix")
             : string.Empty;
-        var message = $"Servisní úkon byl označen jako splněný k {completedDateText}. {odometerMessage}{historyMessage}";
+        var message = LWF("MaintenanceCompletion.Status.Completed", completedDateText, odometerMessage, historyMessage);
         MaintenanceEditorStatus = message;
         SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, updatedPlan.Id);
         RequestFocus(DesktopFocusTarget.MaintenanceList);

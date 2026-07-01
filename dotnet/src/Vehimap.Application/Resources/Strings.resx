@@ -265,7 +265,18 @@ Vehicle: {2}
   <data name="FuelEditor.StationName" xml:space="preserve"><value>Fuel station</value></data>
   <data name="FuelEditor.TotalCostLabel" xml:space="preserve"><value>Total cost</value></data>
   <data name="FuelEditor.TotalCostName" xml:space="preserve"><value>Total fuel cost</value></data>
+  <data name="FuelEditor.Persistence.DeleteFailed" xml:space="preserve"><value>Fuel entry could not be deleted</value></data>
+  <data name="FuelEditor.Persistence.SaveFailed" xml:space="preserve"><value>Fuel entry could not be saved</value></data>
+  <data name="FuelEditor.Status.Created" xml:space="preserve"><value>New fuel entry has been saved.</value></data>
+  <data name="FuelEditor.Status.CreatePrompt" xml:space="preserve"><value>Fill in the new fuel entry and save it.</value></data>
+  <data name="FuelEditor.Status.Deleted" xml:space="preserve"><value>Fuel entry has been deleted.</value></data>
+  <data name="FuelEditor.Status.EditPrompt" xml:space="preserve"><value>Edit the fuel entry and save the changes.</value></data>
+  <data name="FuelEditor.Status.Updated" xml:space="preserve"><value>Fuel entry has been updated.</value></data>
+  <data name="FuelEditor.Validation.CostRequiresVolume" xml:space="preserve"><value>If you enter fuel cost, also fill in the fuel volume.</value></data>
+  <data name="FuelEditor.Validation.DateRequired" xml:space="preserve"><value>Date is required and must be in DD.MM.YYYY format.</value></data>
+  <data name="FuelEditor.Validation.OdometerRequired" xml:space="preserve"><value>Odometer is required and must be a number in {0}.</value></data>
   <data name="FuelEditor.Validation.TotalCostInvalid" xml:space="preserve"><value>Enter the total cost as a number, for example 1890.</value></data>
+  <data name="FuelEditor.Validation.VolumeInvalid" xml:space="preserve"><value>Enter fuel volume as a number in {0}.</value></data>
   <data name="FuelEditor.VolumeHelp" xml:space="preserve"><value>Enter fuel volume in {0}. Vehimap stores the value internally in liters.</value></data>
   <data name="FuelEditor.VolumeLabel" xml:space="preserve"><value>Volume ({0})</value></data>
   <data name="FuelEditor.VolumeName" xml:space="preserve"><value>Fuel volume in {0}</value></data>
@@ -290,6 +301,17 @@ Vehicle: {2}
   <data name="HistoryEditor.TypeExample" xml:space="preserve"><value>For example Service</value></data>
   <data name="HistoryEditor.TypeLabel" xml:space="preserve"><value>Event type</value></data>
   <data name="HistoryEditor.TypeName" xml:space="preserve"><value>History event type</value></data>
+  <data name="HistoryEditor.Persistence.DeleteFailed" xml:space="preserve"><value>History entry could not be deleted</value></data>
+  <data name="HistoryEditor.Persistence.SaveFailed" xml:space="preserve"><value>History entry could not be saved</value></data>
+  <data name="HistoryEditor.Status.Created" xml:space="preserve"><value>New history entry has been saved.</value></data>
+  <data name="HistoryEditor.Status.CreatePrompt" xml:space="preserve"><value>Fill in the new history entry and save it.</value></data>
+  <data name="HistoryEditor.Status.Deleted" xml:space="preserve"><value>History entry has been deleted.</value></data>
+  <data name="HistoryEditor.Status.EditPrompt" xml:space="preserve"><value>Edit the history entry and save the changes.</value></data>
+  <data name="HistoryEditor.Status.Updated" xml:space="preserve"><value>History entry has been updated.</value></data>
+  <data name="HistoryEditor.Validation.CostInvalid" xml:space="preserve"><value>Enter the event cost as a number, for example 2500.</value></data>
+  <data name="HistoryEditor.Validation.DateRequired" xml:space="preserve"><value>Event date is required and must be in DD.MM.YYYY format.</value></data>
+  <data name="HistoryEditor.Validation.OdometerInvalid" xml:space="preserve"><value>Enter odometer as a number in {0}, or leave the field empty.</value></data>
+  <data name="HistoryEditor.Validation.TypeRequired" xml:space="preserve"><value>Fill in the event name.</value></data>
   <data name="HistoryWorkspace.ClearSearchName" xml:space="preserve"><value>Clear vehicle history search</value></data>
   <data name="HistoryWorkspace.Create" xml:space="preserve"><value>New entry</value></data>
   <data name="HistoryWorkspace.CreateName" xml:space="preserve"><value>Create a new history entry</value></data>
@@ -350,6 +372,21 @@ Vehicle: {2}
   <data name="MaintenanceEditor.TitleExample" xml:space="preserve"><value>For example Engine oil</value></data>
   <data name="MaintenanceEditor.TitleLabel" xml:space="preserve"><value>Task name</value></data>
   <data name="MaintenanceEditor.TitleName" xml:space="preserve"><value>Maintenance task name</value></data>
+  <data name="MaintenanceEditor.Persistence.DeleteFailed" xml:space="preserve"><value>Maintenance plan could not be deleted</value></data>
+  <data name="MaintenanceEditor.Persistence.SaveFailed" xml:space="preserve"><value>Maintenance plan could not be saved</value></data>
+  <data name="MaintenanceEditor.Status.Created" xml:space="preserve"><value>New maintenance plan has been saved.</value></data>
+  <data name="MaintenanceEditor.Status.CreatePrompt" xml:space="preserve"><value>Fill in the maintenance plan and save it.</value></data>
+  <data name="MaintenanceEditor.Status.Deleted" xml:space="preserve"><value>Maintenance plan has been deleted.</value></data>
+  <data name="MaintenanceEditor.Status.EditPrompt" xml:space="preserve"><value>Edit the maintenance plan and save the changes.</value></data>
+  <data name="MaintenanceEditor.Status.Updated" xml:space="preserve"><value>Maintenance plan has been updated.</value></data>
+  <data name="MaintenanceEditor.Validation.IntervalDistanceInvalid" xml:space="preserve"><value>Enter the distance interval as a positive number in {0}.</value></data>
+  <data name="MaintenanceEditor.Validation.IntervalMonthsInvalid" xml:space="preserve"><value>Enter the month interval as a positive whole number.</value></data>
+  <data name="MaintenanceEditor.Validation.IntervalRequired" xml:space="preserve"><value>The maintenance plan must have a distance interval, a month interval, or both.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceDateInvalid" xml:space="preserve"><value>Last service date must be in DD.MM.YYYY format.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceDateRequired" xml:space="preserve"><value>For a date interval, also fill in the last service date in DD.MM.YYYY format.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceOdometerInvalid" xml:space="preserve"><value>Enter the last service odometer as a number in {0}.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceOdometerRequired" xml:space="preserve"><value>For an odometer-based interval, also fill in the odometer at the last service.</value></data>
+  <data name="MaintenanceEditor.Validation.TitleRequired" xml:space="preserve"><value>Maintenance plan title is required.</value></data>
   <data name="MaintenanceCompletion.AddHistory" xml:space="preserve"><value>Also write to event history</value></data>
   <data name="MaintenanceCompletion.AddHistoryName" xml:space="preserve"><value>Also write the maintenance item to event history</value></data>
   <data name="MaintenanceCompletion.CancelName" xml:space="preserve"><value>Cancel maintenance completion</value></data>
@@ -367,6 +404,15 @@ Vehicle: {2}
   <data name="MaintenanceCompletion.HistoryNoteName" xml:space="preserve"><value>Maintenance item note for history</value></data>
   <data name="MaintenanceCompletion.SaveName" xml:space="preserve"><value>Save maintenance completion</value></data>
   <data name="MaintenanceCompletion.Title" xml:space="preserve"><value>Mark maintenance item as completed</value></data>
+  <data name="MaintenanceCompletion.Persistence.SaveFailed" xml:space="preserve"><value>Maintenance completion could not be saved</value></data>
+  <data name="MaintenanceCompletion.Status.Completed" xml:space="preserve"><value>Maintenance item was marked as completed on {0}. {1}{2}</value></data>
+  <data name="MaintenanceCompletion.Status.HistoryAddedSuffix" xml:space="preserve"><value> The event was also written to history.</value></data>
+  <data name="MaintenanceCompletion.Status.HistoryNoteDefault" xml:space="preserve"><value>Written from the maintenance plan.</value></data>
+  <data name="MaintenanceCompletion.Status.OdometerEmpty" xml:space="preserve"><value>Odometer stayed empty.</value></data>
+  <data name="MaintenanceCompletion.Status.OdometerValue" xml:space="preserve"><value>Odometer: {0} {1}.</value></data>
+  <data name="MaintenanceCompletion.Status.ReactivateFirst" xml:space="preserve"><value>Reactivate the paused plan in task editing first.</value></data>
+  <data name="MaintenanceCompletion.Status.SelectPlanFirst" xml:space="preserve"><value>Select a maintenance plan first.</value></data>
+  <data name="MaintenanceCompletion.Status.Unavailable" xml:space="preserve"><value>Current status is not available.</value></data>
   <data name="MaintenanceCompletion.Validation.CompletedDate" xml:space="preserve"><value>Completion date must be in DD.MM.YYYY format.</value></data>
   <data name="MaintenanceCompletion.Validation.CompletedOdometerNumber" xml:space="preserve"><value>Completion odometer must be a number in {0}.</value></data>
   <data name="MaintenanceCompletion.Validation.CompletedOdometerRequired" xml:space="preserve"><value>For a distance interval, also fill in the odometer when the item was completed.</value></data>
@@ -1536,6 +1582,19 @@ Status: {5}</value></data>
   <data name="VehicleDetail.Status.NewVehicleBundleNoItems" xml:space="preserve"><value>New vehicle was saved. The vehicle bundle had no new items.</value></data>
   <data name="VehicleDetail.Status.SaveFailedPrefix" xml:space="preserve"><value>Vehicle could not be saved</value></data>
   <data name="VehicleDetail.Status.VehicleUpdated" xml:space="preserve"><value>Vehicle was updated.</value></data>
+  <data name="VehicleDelete.AttachmentCleanup.DeleteFailed" xml:space="preserve"><value>Managed attachments could not be deleted: {0}</value></data>
+  <data name="VehicleDelete.AttachmentCleanup.UnsafePath" xml:space="preserve"><value>Managed attachments were not deleted because the target path is outside the managed attachments data folder.</value></data>
+  <data name="VehicleDelete.Confirmation.AttachmentWarning" xml:space="preserve"><value>Managed attachments for this vehicle will be deleted from the data folder. External document files stay unchanged.</value></data>
+  <data name="VehicleDelete.Confirmation.EvidenceHeading" xml:space="preserve"><value>Linked records will be deleted too:</value></data>
+  <data name="VehicleDelete.Confirmation.FuelCount" xml:space="preserve"><value>- fuel entries: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.HistoryCount" xml:space="preserve"><value>- history entries: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.Irreversible" xml:space="preserve"><value>This action cannot be undone.</value></data>
+  <data name="VehicleDelete.Confirmation.MaintenanceCount" xml:space="preserve"><value>- maintenance plans: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.Question" xml:space="preserve"><value>Do you really want to delete vehicle “{0}”?</value></data>
+  <data name="VehicleDelete.Confirmation.RecordCount" xml:space="preserve"><value>- documents: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.ReminderCount" xml:space="preserve"><value>- reminders: {0}</value></data>
+  <data name="VehicleDelete.Persistence.DeleteFailed" xml:space="preserve"><value>Vehicle {0} could not be deleted</value></data>
+  <data name="VehicleDelete.Status.Deleted" xml:space="preserve"><value>Vehicle {0} has been deleted.</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Category" xml:space="preserve"><value>{0}, {1}: {2}</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Full" xml:space="preserve"><value>{0}, {1}, {2}: {3}</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Simple" xml:space="preserve"><value>{0}: {1}</value></data>

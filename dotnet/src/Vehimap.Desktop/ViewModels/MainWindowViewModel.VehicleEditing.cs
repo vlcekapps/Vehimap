@@ -146,14 +146,14 @@ public sealed partial class MainWindowViewModel
                 setFailureStatus: status => VehicleDetailWorkspace.VehicleEditorStatus = status,
                 failureFocus: DesktopFocusTarget.VehicleDetailPrimaryAction,
                 requireVehicleSelection: false,
-                failurePrefix: $"Vozidlo {vehicleName} se nepodařilo odstranit"))
+                failurePrefix: LFO("VehicleDelete.Persistence.DeleteFailed", vehicleName)))
         {
             return;
         }
 
         var attachmentCleanupWarning = DeleteManagedAttachmentDirectory(vehicleId);
 
-        var status = $"Vozidlo {vehicleName} bylo odstraněno.";
+        var status = LFO("VehicleDelete.Status.Deleted", vehicleName);
         if (!string.IsNullOrWhiteSpace(attachmentCleanupWarning))
         {
             status += $" {attachmentCleanupWarning}";
@@ -593,18 +593,18 @@ public sealed partial class MainWindowViewModel
         return string.Join(
             Environment.NewLine,
             [
-                $"Opravdu chcete odstranit vozidlo „{vehicleName}“?",
+                LFO("VehicleDelete.Confirmation.Question", vehicleName),
                 string.Empty,
-                "Současně se odstraní navázaná evidence:",
-                $"- historie: {historyCount}",
-                $"- tankování: {fuelCount}",
-                $"- doklady: {recordCount}",
-                $"- připomínky: {reminderCount}",
-                $"- údržba: {maintenanceCount}",
+                LO("VehicleDelete.Confirmation.EvidenceHeading"),
+                LFO("VehicleDelete.Confirmation.HistoryCount", historyCount),
+                LFO("VehicleDelete.Confirmation.FuelCount", fuelCount),
+                LFO("VehicleDelete.Confirmation.RecordCount", recordCount),
+                LFO("VehicleDelete.Confirmation.ReminderCount", reminderCount),
+                LFO("VehicleDelete.Confirmation.MaintenanceCount", maintenanceCount),
                 string.Empty,
-                "Spravované přílohy tohoto vozidla budou smazány z datové složky. Externí soubory dokladů zůstanou beze změny.",
+                LO("VehicleDelete.Confirmation.AttachmentWarning"),
                 string.Empty,
-                "Tuto akci nelze vrátit zpět."
+                LO("VehicleDelete.Confirmation.Irreversible")
             ]);
     }
 
@@ -645,7 +645,7 @@ public sealed partial class MainWindowViewModel
                 + Path.DirectorySeparatorChar;
             if (!vehicleAttachmentDirectory.StartsWith(safeRootPrefix, comparison))
             {
-                return "Spravované přílohy nebyly smazány, protože cílová cesta neleží v datové složce příloh.";
+                return LO("VehicleDelete.AttachmentCleanup.UnsafePath");
             }
 
             if (Directory.Exists(vehicleAttachmentDirectory))
@@ -657,7 +657,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex)
         {
-            return $"Spravované přílohy se nepodařilo smazat: {ex.Message}";
+            return LFO("VehicleDelete.AttachmentCleanup.DeleteFailed", ex.Message);
         }
     }
 
