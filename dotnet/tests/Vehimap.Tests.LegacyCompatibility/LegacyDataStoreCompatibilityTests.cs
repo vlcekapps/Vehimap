@@ -305,6 +305,36 @@ public sealed class LegacyDataStoreCompatibilityTests
     }
 
     [Fact]
+    public async Task Import_backup_uses_configured_localizer_for_attachment_parser_errors()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-invalid-attachment-backup-en-" + Guid.NewGuid());
+        var backupPath = Path.Combine(tempRoot, "broken-attachment.vehimapbak");
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+        var backupService = new LegacyBackupService(english);
+        var attachments = "# Vehimap attachments v1\nattachments/veh_1/tp.pdf\t%%%invalid-base64%%%\n";
+
+        try
+        {
+            Directory.CreateDirectory(tempRoot);
+            await File.WriteAllTextAsync(backupPath, BuildBackupContent(attachments));
+
+            var exception = await Assert.ThrowsAsync<LegacyBackupException>(() => backupService.ImportAsync(backupPath));
+
+            Assert.Equal(Path.GetFullPath(backupPath), exception.BackupPath);
+            Assert.Contains("The attachments row 2 contains invalid file content.", exception.Message, StringComparison.Ordinal);
+            Assert.DoesNotContain("Řádek příloh", exception.Message, StringComparison.Ordinal);
+            Assert.IsType<FormatException>(exception.InnerException);
+        }
+        finally
+        {
+            if (Directory.Exists(tempRoot))
+            {
+                Directory.Delete(tempRoot, true);
+            }
+        }
+    }
+
+    [Fact]
     public async Task Restore_creates_import_backup_with_current_files_and_attachments()
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-import-backup-" + Guid.NewGuid());

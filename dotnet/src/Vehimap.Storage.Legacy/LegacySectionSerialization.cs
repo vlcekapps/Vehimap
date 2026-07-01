@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
+using Vehimap.Application.Abstractions;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Storage.Legacy;
 
@@ -157,17 +159,18 @@ internal static class LegacySectionSerialization
         return string.Join('\n', lines);
     }
 
-    public static List<Vehicle> ParseVehicles(string content)
+    public static List<Vehicle> ParseVehicles(string content, IAppLocalizer? localizer = null)
     {
-        var (header, rows) = ReadDataRows(content);
-        EnsureAllowedHeader(header, VehiclesHeaderV3, VehiclesHeaderV4);
+        var resolvedLocalizer = ResolveLocalizer(localizer);
+        var (header, rows) = ReadDataRows(content, resolvedLocalizer);
+        EnsureAllowedHeader(header, resolvedLocalizer, VehiclesHeaderV3, VehiclesHeaderV4);
 
         return rows.Select((row, index) =>
         {
             var fields = SplitTabRow(row);
             if (fields.Count != 12)
             {
-                throw new FormatException($"Řádek vozidel {index + 2} musí obsahovat 12 polí.");
+                throw InvalidFieldCount(resolvedLocalizer, "LegacyData.Section.Vehicles", index + 2, FieldCount(resolvedLocalizer, 12));
             }
 
             return new Vehicle(
@@ -209,17 +212,18 @@ internal static class LegacySectionSerialization
         return string.Join('\n', lines);
     }
 
-    public static List<VehicleHistoryEntry> ParseHistory(string content)
+    public static List<VehicleHistoryEntry> ParseHistory(string content, IAppLocalizer? localizer = null)
     {
-        var (header, rows) = ReadDataRows(content);
-        EnsureAllowedHeader(header, HistoryHeaderV1);
+        var resolvedLocalizer = ResolveLocalizer(localizer);
+        var (header, rows) = ReadDataRows(content, resolvedLocalizer);
+        EnsureAllowedHeader(header, resolvedLocalizer, HistoryHeaderV1);
 
         return rows.Select((row, index) =>
         {
             var fields = SplitTabRow(row);
             if (fields.Count is not 6 and not 7)
             {
-                throw new FormatException($"Řádek historie {index + 2} musí obsahovat 6 nebo 7 polí.");
+                throw InvalidFieldCount(resolvedLocalizer, "LegacyData.Section.History", index + 2, resolvedLocalizer.GetString("LegacySection.FieldCount.SixOrSeven"));
             }
 
             return new VehicleHistoryEntry(
@@ -251,10 +255,11 @@ internal static class LegacySectionSerialization
         return string.Join('\n', lines);
     }
 
-    public static List<FuelEntry> ParseFuel(string content)
+    public static List<FuelEntry> ParseFuel(string content, IAppLocalizer? localizer = null)
     {
-        var (header, rows) = ReadDataRows(content);
-        EnsureAllowedHeader(header, FuelHeaderV1, FuelHeaderV2);
+        var resolvedLocalizer = ResolveLocalizer(localizer);
+        var (header, rows) = ReadDataRows(content, resolvedLocalizer);
+        EnsureAllowedHeader(header, resolvedLocalizer, FuelHeaderV1, FuelHeaderV2);
         var isV2 = string.Equals(header, FuelHeaderV2, StringComparison.Ordinal);
 
         return rows.Select((row, index) =>
@@ -263,7 +268,7 @@ internal static class LegacySectionSerialization
             var expected = isV2 ? 11 : 9;
             if (fields.Count != expected)
             {
-                throw new FormatException($"Řádek tankování {index + 2} musí obsahovat {expected} polí.");
+                throw InvalidFieldCount(resolvedLocalizer, "LegacyData.Section.Fuel", index + 2, FieldCount(resolvedLocalizer, expected));
             }
 
             return new FuelEntry(
@@ -303,10 +308,11 @@ internal static class LegacySectionSerialization
         return string.Join('\n', lines);
     }
 
-    public static List<VehicleRecord> ParseRecords(string content)
+    public static List<VehicleRecord> ParseRecords(string content, IAppLocalizer? localizer = null)
     {
-        var (header, rows) = ReadDataRows(content);
-        EnsureAllowedHeader(header, RecordsHeaderV1, RecordsHeaderV2);
+        var resolvedLocalizer = ResolveLocalizer(localizer);
+        var (header, rows) = ReadDataRows(content, resolvedLocalizer);
+        EnsureAllowedHeader(header, resolvedLocalizer, RecordsHeaderV1, RecordsHeaderV2);
         var isV2 = string.Equals(header, RecordsHeaderV2, StringComparison.Ordinal);
 
         return rows.Select((row, index) =>
@@ -315,7 +321,7 @@ internal static class LegacySectionSerialization
             var expected = isV2 ? 11 : 10;
             if (fields.Count != expected)
             {
-                throw new FormatException($"Řádek dokladů {index + 2} musí obsahovat {expected} polí.");
+                throw InvalidFieldCount(resolvedLocalizer, "LegacyData.Section.Records", index + 2, FieldCount(resolvedLocalizer, expected));
             }
 
             return new VehicleRecord(
@@ -355,10 +361,11 @@ internal static class LegacySectionSerialization
         return string.Join('\n', lines);
     }
 
-    public static List<VehicleMeta> ParseVehicleMeta(string content)
+    public static List<VehicleMeta> ParseVehicleMeta(string content, IAppLocalizer? localizer = null)
     {
-        var (header, rows) = ReadDataRows(content);
-        EnsureAllowedHeader(header, MetaHeaderV1, MetaHeaderV2);
+        var resolvedLocalizer = ResolveLocalizer(localizer);
+        var (header, rows) = ReadDataRows(content, resolvedLocalizer);
+        EnsureAllowedHeader(header, resolvedLocalizer, MetaHeaderV1, MetaHeaderV2);
         var isV2 = string.Equals(header, MetaHeaderV2, StringComparison.Ordinal);
 
         return rows.Select((row, index) =>
@@ -367,7 +374,7 @@ internal static class LegacySectionSerialization
             var expected = isV2 ? 7 : 3;
             if (fields.Count != expected)
             {
-                throw new FormatException($"Řádek vehicle meta {index + 2} musí obsahovat {expected} polí.");
+                throw InvalidFieldCount(resolvedLocalizer, "LegacyData.Section.VehicleMeta", index + 2, FieldCount(resolvedLocalizer, expected));
             }
 
             return new VehicleMeta(
@@ -399,10 +406,11 @@ internal static class LegacySectionSerialization
         return string.Join('\n', lines);
     }
 
-    public static List<VehicleReminder> ParseReminders(string content)
+    public static List<VehicleReminder> ParseReminders(string content, IAppLocalizer? localizer = null)
     {
-        var (header, rows) = ReadDataRows(content);
-        EnsureAllowedHeader(header, RemindersHeaderV1, RemindersHeaderV2);
+        var resolvedLocalizer = ResolveLocalizer(localizer);
+        var (header, rows) = ReadDataRows(content, resolvedLocalizer);
+        EnsureAllowedHeader(header, resolvedLocalizer, RemindersHeaderV1, RemindersHeaderV2);
         var isV2 = string.Equals(header, RemindersHeaderV2, StringComparison.Ordinal);
 
         return rows.Select((row, index) =>
@@ -411,7 +419,7 @@ internal static class LegacySectionSerialization
             var expected = isV2 ? 7 : 6;
             if (fields.Count != expected)
             {
-                throw new FormatException($"Řádek připomínek {index + 2} musí obsahovat {expected} polí.");
+                throw InvalidFieldCount(resolvedLocalizer, "LegacyData.Section.Reminders", index + 2, FieldCount(resolvedLocalizer, expected));
             }
 
             return new VehicleReminder(
@@ -443,17 +451,18 @@ internal static class LegacySectionSerialization
         return string.Join('\n', lines);
     }
 
-    public static List<MaintenancePlan> ParseMaintenancePlans(string content)
+    public static List<MaintenancePlan> ParseMaintenancePlans(string content, IAppLocalizer? localizer = null)
     {
-        var (header, rows) = ReadDataRows(content);
-        EnsureAllowedHeader(header, MaintenanceHeaderV1);
+        var resolvedLocalizer = ResolveLocalizer(localizer);
+        var (header, rows) = ReadDataRows(content, resolvedLocalizer);
+        EnsureAllowedHeader(header, resolvedLocalizer, MaintenanceHeaderV1);
 
         return rows.Select((row, index) =>
         {
             var fields = SplitTabRow(row);
             if (fields.Count != 9)
             {
-                throw new FormatException($"Řádek plánů údržby {index + 2} musí obsahovat 9 polí.");
+                throw InvalidFieldCount(resolvedLocalizer, "LegacyData.Section.Maintenance", index + 2, FieldCount(resolvedLocalizer, 9));
             }
 
             return new MaintenancePlan(
@@ -489,23 +498,27 @@ internal static class LegacySectionSerialization
         return string.Join('\n', lines);
     }
 
-    public static List<ManagedAttachment> ParseAttachmentsSection(string content)
+    public static List<ManagedAttachment> ParseAttachmentsSection(string content, IAppLocalizer? localizer = null)
     {
-        var (header, rows) = ReadDataRows(content);
-        EnsureAllowedHeader(header, AttachmentsHeaderV1);
+        var resolvedLocalizer = ResolveLocalizer(localizer);
+        var (header, rows) = ReadDataRows(content, resolvedLocalizer);
+        EnsureAllowedHeader(header, resolvedLocalizer, AttachmentsHeaderV1);
 
         return rows.Select((row, index) =>
         {
             var fields = SplitTabRow(row);
             if (fields.Count != 2)
             {
-                throw new FormatException($"Řádek příloh {index + 2} musí obsahovat 2 pole.");
+                throw InvalidFieldCount(resolvedLocalizer, "LegacyData.Section.Attachments", index + 2, resolvedLocalizer.GetString("LegacySection.FieldCount.Two"));
             }
 
             var relativePath = NormalizeAttachmentRelativePath(UnescapeField(fields[0]));
             if (string.IsNullOrWhiteSpace(relativePath))
             {
-                throw new FormatException($"Řádek příloh {index + 2} obsahuje prázdnou relativní cestu.");
+                throw new FormatException(resolvedLocalizer.Format(
+                    "LegacySection.Error.EmptyAttachmentPath",
+                    resolvedLocalizer.GetString("LegacyData.Section.Attachments"),
+                    index + 2));
             }
 
             try
@@ -514,7 +527,12 @@ internal static class LegacySectionSerialization
             }
             catch (FormatException ex)
             {
-                throw new FormatException($"Řádek příloh {index + 2} obsahuje neplatný obsah souboru.", ex);
+                throw new FormatException(
+                    resolvedLocalizer.Format(
+                        "LegacySection.Error.InvalidAttachmentContent",
+                        resolvedLocalizer.GetString("LegacyData.Section.Attachments"),
+                        index + 2),
+                    ex);
             }
         }).ToList();
     }
@@ -532,7 +550,7 @@ internal static class LegacySectionSerialization
         return string.Join('\n', lines);
     }
 
-    private static (string Header, List<string> Rows) ReadDataRows(string content)
+    private static (string Header, List<string> Rows) ReadDataRows(string content, IAppLocalizer localizer)
     {
         var normalized = NormalizeTextForStorage(content);
         var lines = normalized.Split('\n');
@@ -560,7 +578,7 @@ internal static class LegacySectionSerialization
 
             if (line.StartsWith('#'))
             {
-                throw new FormatException("Soubor obsahuje neplatnou vnořenou hlavičku nebo komentář.");
+                throw new FormatException(localizer.GetString("LegacySection.Error.NestedHeader"));
             }
 
             rows.Add(line);
@@ -569,7 +587,7 @@ internal static class LegacySectionSerialization
         return (firstNonEmptyLine, rows);
     }
 
-    private static void EnsureAllowedHeader(string header, params string[] allowed)
+    private static void EnsureAllowedHeader(string header, IAppLocalizer localizer, params string[] allowed)
     {
         if (string.IsNullOrWhiteSpace(header))
         {
@@ -581,9 +599,22 @@ internal static class LegacySectionSerialization
             return;
         }
 
-        throw new FormatException($"Nepodporovaná hlavička: {header}");
+        throw new FormatException(localizer.Format("LegacySection.Error.UnsupportedHeader", header));
     }
 
     private static List<string> SplitTabRow(string row) =>
         row.Split('\t').ToList();
+
+    private static IAppLocalizer ResolveLocalizer(IAppLocalizer? localizer) =>
+        localizer ?? new ResourceAppLocalizer();
+
+    private static FormatException InvalidFieldCount(IAppLocalizer localizer, string sectionKey, int lineNumber, string expectedFields) =>
+        new(localizer.Format(
+            "LegacySection.Error.InvalidFieldCount",
+            localizer.GetString(sectionKey),
+            lineNumber,
+            expectedFields));
+
+    private static string FieldCount(IAppLocalizer localizer, int count) =>
+        localizer.Format("LegacySection.FieldCount.Count", count);
 }

@@ -20,13 +20,13 @@ public sealed class LegacyVehimapDataStore : ILegacyDataStore
         await EnsureDataFilesAsync(dataRoot, cancellationToken).ConfigureAwait(false);
 
         var settings = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.SettingsFileName, L("LegacyData.Section.Settings"), LegacySectionSerialization.ParseSettings, cancellationToken).ConfigureAwait(false);
-        var vehicles = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.VehiclesFileName, L("LegacyData.Section.Vehicles"), LegacySectionSerialization.ParseVehicles, cancellationToken).ConfigureAwait(false);
-        var history = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.HistoryFileName, L("LegacyData.Section.History"), LegacySectionSerialization.ParseHistory, cancellationToken).ConfigureAwait(false);
-        var fuel = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.FuelFileName, L("LegacyData.Section.Fuel"), LegacySectionSerialization.ParseFuel, cancellationToken).ConfigureAwait(false);
-        var records = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.RecordsFileName, L("LegacyData.Section.Records"), LegacySectionSerialization.ParseRecords, cancellationToken).ConfigureAwait(false);
-        var meta = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.MetaFileName, L("LegacyData.Section.VehicleMeta"), LegacySectionSerialization.ParseVehicleMeta, cancellationToken).ConfigureAwait(false);
-        var reminders = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.RemindersFileName, L("LegacyData.Section.Reminders"), LegacySectionSerialization.ParseReminders, cancellationToken).ConfigureAwait(false);
-        var maintenance = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.MaintenanceFileName, L("LegacyData.Section.Maintenance"), LegacySectionSerialization.ParseMaintenancePlans, cancellationToken).ConfigureAwait(false);
+        var vehicles = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.VehiclesFileName, L("LegacyData.Section.Vehicles"), content => LegacySectionSerialization.ParseVehicles(content, _localizer), cancellationToken).ConfigureAwait(false);
+        var history = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.HistoryFileName, L("LegacyData.Section.History"), content => LegacySectionSerialization.ParseHistory(content, _localizer), cancellationToken).ConfigureAwait(false);
+        var fuel = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.FuelFileName, L("LegacyData.Section.Fuel"), content => LegacySectionSerialization.ParseFuel(content, _localizer), cancellationToken).ConfigureAwait(false);
+        var records = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.RecordsFileName, L("LegacyData.Section.Records"), content => LegacySectionSerialization.ParseRecords(content, _localizer), cancellationToken).ConfigureAwait(false);
+        var meta = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.MetaFileName, L("LegacyData.Section.VehicleMeta"), content => LegacySectionSerialization.ParseVehicleMeta(content, _localizer), cancellationToken).ConfigureAwait(false);
+        var reminders = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.RemindersFileName, L("LegacyData.Section.Reminders"), content => LegacySectionSerialization.ParseReminders(content, _localizer), cancellationToken).ConfigureAwait(false);
+        var maintenance = await ReadAndParseAsync(dataRoot, LegacySectionSerialization.MaintenanceFileName, L("LegacyData.Section.Maintenance"), content => LegacySectionSerialization.ParseMaintenancePlans(content, _localizer), cancellationToken).ConfigureAwait(false);
 
         return new VehimapDataSet
         {

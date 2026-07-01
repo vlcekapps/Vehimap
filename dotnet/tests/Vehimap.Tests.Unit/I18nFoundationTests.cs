@@ -69,6 +69,12 @@ public sealed class I18nFoundationTests
         Assert.Equal("Stahuji aktualizační balíček.", czech.GetString("UpdateService.Install.DownloadProgress"));
         Assert.Equal("The desktop update channel for the .NET branch has not been published yet.", english.GetString("UpdateService.Check.DotnetManifestUnavailable"));
         Assert.Equal("Desktopový update kanál pro .NET větev zatím není publikovaný.", czech.GetString("UpdateService.Check.DotnetManifestUnavailable"));
+        Assert.Equal("The manifest does not contain release/version.", english.GetString("UpdateManifest.Error.MissingVersion"));
+        Assert.Equal("Manifest neobsahuje položku release/version.", czech.GetString("UpdateManifest.Error.MissingVersion"));
+        Assert.Equal("The vehicles row 2 must contain 12 fields.", english.Format("LegacySection.Error.InvalidFieldCount", english.GetString("LegacyData.Section.Vehicles"), 2, english.Format("LegacySection.FieldCount.Count", 12)));
+        Assert.Equal("Řádek vozidel 2 musí obsahovat 12 polí.", czech.Format("LegacySection.Error.InvalidFieldCount", czech.GetString("LegacyData.Section.Vehicles"), 2, czech.Format("LegacySection.FieldCount.Count", 12)));
+        Assert.Equal("The attachments row 2 contains invalid file content.", english.Format("LegacySection.Error.InvalidAttachmentContent", english.GetString("LegacyData.Section.Attachments"), 2));
+        Assert.Equal("Řádek příloh 2 obsahuje neplatný obsah souboru.", czech.Format("LegacySection.Error.InvalidAttachmentContent", czech.GetString("LegacyData.Section.Attachments"), 2));
         Assert.Equal("development Avalonia shell", english.GetString("AppBuildInfo.RuntimeMode.Development"));
         Assert.Equal("vývojový Avalonia shell", czech.GetString("AppBuildInfo.RuntimeMode.Development"));
         Assert.Equal("Currency", english.GetString("Settings.Currency"));
@@ -143,6 +149,7 @@ public sealed class I18nFoundationTests
     {
         var root = FindRepositoryRoot();
         var updateService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Platform", "LegacyUpdateService.cs"));
+        var updateManifestParser = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Services", "LegacyUpdateManifestParser.cs"));
         var buildInfoProvider = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Platform", "AssemblyAppBuildInfoProvider.cs"));
         var mainWindowViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
 
@@ -150,6 +157,9 @@ public sealed class I18nFoundationTests
         Assert.Contains("UpdateService.Install.DownloadProgress", updateService);
         Assert.Contains("UpdateService.Install.VerifyProgress", updateService);
         Assert.Contains("UpdateService.Download.HashMismatch", updateService);
+        Assert.Contains("UpdateManifest.Error.MissingVersion", updateManifestParser);
+        Assert.Contains("UpdateManifest.Error.InvalidVersion", updateManifestParser);
+        Assert.Contains("UpdateManifest.Error.UnsupportedAssetKind", updateManifestParser);
         Assert.Contains("AppBuildInfo.RuntimeMode.Development", buildInfoProvider);
         Assert.Contains("AppBuildInfo.RuntimeMode.Published", buildInfoProvider);
         Assert.Contains("localizerProvider: () => DesktopLocalization.Localizer", mainWindowViewModel);
@@ -158,8 +168,31 @@ public sealed class I18nFoundationTests
         Assert.DoesNotContain("Automaticka instalace", updateService);
         Assert.DoesNotContain("Pouzivate aktualni verzi", updateService);
         Assert.DoesNotContain("Manifest neobsahuje", updateService);
+        Assert.DoesNotContain("Manifest neobsahuje", updateManifestParser);
+        Assert.DoesNotContain("Manifest obsahuje", updateManifestParser);
         Assert.DoesNotContain("samostatná desktopová aplikace", buildInfoProvider);
         Assert.DoesNotContain("vývojový Avalonia shell", buildInfoProvider);
+    }
+
+    [Fact]
+    public void Legacy_section_parser_uses_resource_localization_for_diagnostics()
+    {
+        var root = FindRepositoryRoot();
+        var parser = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Storage.Legacy", "LegacySectionSerialization.cs"));
+        var dataStore = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Storage.Legacy", "LegacyVehimapDataStore.cs"));
+        var backupService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Storage.Legacy", "LegacyBackupService.cs"));
+
+        Assert.Contains("LegacySection.Error.InvalidFieldCount", parser);
+        Assert.Contains("LegacySection.Error.InvalidAttachmentContent", parser);
+        Assert.Contains("LegacySection.Error.UnsupportedHeader", parser);
+        Assert.Contains("ParseVehicles(content, _localizer)", dataStore);
+        Assert.Contains("ParseAttachmentsSection(payload.AttachmentsContent, _localizer)", backupService);
+
+        Assert.DoesNotContain("Řádek vozidel", parser);
+        Assert.DoesNotContain("Řádek tankování", parser);
+        Assert.DoesNotContain("Řádek příloh", parser);
+        Assert.DoesNotContain("Soubor obsahuje", parser);
+        Assert.DoesNotContain("Nepodporovaná hlavička", parser);
     }
 
     [Theory]

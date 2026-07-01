@@ -244,14 +244,16 @@ public sealed class LegacyUpdateService : IUpdateService
         }
 
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        return LegacyUpdateManifestParser.Parse(content);
+        return LegacyUpdateManifestParser.Parse(content, Localizer);
     }
 
-    private static async Task<LegacyUpdateManifest?> TryLoadLocalManifestAsync(string localManifestPath, CancellationToken cancellationToken)
+    private async Task<LegacyUpdateManifest?> TryLoadLocalManifestAsync(string localManifestPath, CancellationToken cancellationToken)
     {
         try
         {
-            return LegacyUpdateManifestParser.Parse(await File.ReadAllTextAsync(localManifestPath, cancellationToken).ConfigureAwait(false));
+            return LegacyUpdateManifestParser.Parse(
+                await File.ReadAllTextAsync(localManifestPath, cancellationToken).ConfigureAwait(false),
+                Localizer);
         }
         catch (OperationCanceledException)
         {

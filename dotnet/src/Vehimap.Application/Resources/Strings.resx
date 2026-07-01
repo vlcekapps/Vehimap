@@ -118,6 +118,7 @@
   <data name="LegacyData.Section.VehicleMeta" xml:space="preserve"><value>vehicle metadata</value></data>
   <data name="LegacyData.Section.Reminders" xml:space="preserve"><value>reminders</value></data>
   <data name="LegacyData.Section.Maintenance" xml:space="preserve"><value>maintenance plans</value></data>
+  <data name="LegacyData.Section.Attachments" xml:space="preserve"><value>attachments</value></data>
   <data name="LegacyData.LoadFailed" xml:space="preserve"><value>The {0} file ({1}) could not be loaded.</value></data>
   <data name="LegacyData.CheckFile" xml:space="preserve"><value>Check file: {0}</value></data>
   <data name="LegacyData.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
@@ -125,6 +126,14 @@
   <data name="LegacyBackup.Error.InvalidFormat" xml:space="preserve"><value>The file is not a Vehimap backup.</value></data>
   <data name="LegacyBackup.Error.IncompleteOrCorrupt" xml:space="preserve"><value>The backup file is incomplete or corrupted.</value></data>
   <data name="LegacyBackup.Error.MissingHeaderItem" xml:space="preserve"><value>The backup file does not contain item {0}.</value></data>
+  <data name="LegacySection.Error.EmptyAttachmentPath" xml:space="preserve"><value>The {0} row {1} contains an empty relative path.</value></data>
+  <data name="LegacySection.Error.InvalidAttachmentContent" xml:space="preserve"><value>The {0} row {1} contains invalid file content.</value></data>
+  <data name="LegacySection.Error.InvalidFieldCount" xml:space="preserve"><value>The {0} row {1} must contain {2}.</value></data>
+  <data name="LegacySection.Error.NestedHeader" xml:space="preserve"><value>The file contains an invalid nested header or comment.</value></data>
+  <data name="LegacySection.Error.UnsupportedHeader" xml:space="preserve"><value>Unsupported header: {0}</value></data>
+  <data name="LegacySection.FieldCount.Count" xml:space="preserve"><value>{0} fields</value></data>
+  <data name="LegacySection.FieldCount.SixOrSeven" xml:space="preserve"><value>6 or 7 fields</value></data>
+  <data name="LegacySection.FieldCount.Two" xml:space="preserve"><value>2 fields</value></data>
   <data name="LegacyBackup.ImportFailed" xml:space="preserve"><value>Backup could not be loaded: {0}. Detail: {1}</value></data>
   <data name="LegacyBackup.PathMissing" xml:space="preserve"><value>(backup path was not provided)</value></data>
   <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Installer language preferences were added to the 2.0 data set.</value></data>
@@ -1077,6 +1086,10 @@ Vehicle: {2}
   <data name="UpdateService.Install.VerifyProgress" xml:space="preserve"><value>Verifying the downloaded package size and SHA-256.</value></data>
   <data name="UpdateService.Install.WindowsOnly" xml:space="preserve"><value>Automatic installation is available only on Windows in this phase.</value></data>
   <data name="UpdateService.Install.WindowsOnlyDetailed" xml:space="preserve"><value>Automatic installation is available only on Windows in this phase; on this platform use the release page or asset.</value></data>
+  <data name="UpdateManifest.Error.InvalidAssetSize" xml:space="preserve"><value>The manifest does not contain a valid asset size.</value></data>
+  <data name="UpdateManifest.Error.InvalidVersion" xml:space="preserve"><value>The manifest contains an invalid version: {0}</value></data>
+  <data name="UpdateManifest.Error.MissingVersion" xml:space="preserve"><value>The manifest does not contain release/version.</value></data>
+  <data name="UpdateManifest.Error.UnsupportedAssetKind" xml:space="preserve"><value>The manifest contains an unsupported asset kind: {0}</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Back up now</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Close the settings dialog</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Save settings</value></data>

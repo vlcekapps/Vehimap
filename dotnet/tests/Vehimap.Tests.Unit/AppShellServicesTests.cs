@@ -306,6 +306,41 @@ public sealed class AppShellServicesTests : IDisposable
     }
 
     [Fact]
+    public void Manifest_parser_localizes_manifest_errors()
+    {
+        const string missingVersion = """
+            [release]
+            notes_url=https://example.com/release
+            """;
+        const string invalidVersion = """
+            [release]
+            version=not-a-version
+            """;
+        const string invalidAssetSize = """
+            [release]
+            version=1.0.9
+            asset_size=-1
+            """;
+        const string unsupportedAssetKind = """
+            [release]
+            version=1.0.9
+            asset_kind=package
+            """;
+
+        var englishMissing = Assert.Throws<InvalidOperationException>(() => LegacyUpdateManifestParser.Parse(missingVersion, EnglishLocalizer()));
+        var czechMissing = Assert.Throws<InvalidOperationException>(() => LegacyUpdateManifestParser.Parse(missingVersion, CzechLocalizer()));
+        var englishInvalidVersion = Assert.Throws<InvalidOperationException>(() => LegacyUpdateManifestParser.Parse(invalidVersion, EnglishLocalizer()));
+        var czechInvalidAssetSize = Assert.Throws<InvalidOperationException>(() => LegacyUpdateManifestParser.Parse(invalidAssetSize, CzechLocalizer()));
+        var englishUnsupportedAssetKind = Assert.Throws<InvalidOperationException>(() => LegacyUpdateManifestParser.Parse(unsupportedAssetKind, EnglishLocalizer()));
+
+        Assert.Equal("The manifest does not contain release/version.", englishMissing.Message);
+        Assert.Equal("Manifest neobsahuje položku release/version.", czechMissing.Message);
+        Assert.Equal("The manifest contains an invalid version: not-a-version", englishInvalidVersion.Message);
+        Assert.Equal("Manifest neobsahuje platnou velikost assetu.", czechInvalidAssetSize.Message);
+        Assert.Equal("The manifest contains an unsupported asset kind: package", englishUnsupportedAssetKind.Message);
+    }
+
+    [Fact]
     public async Task Windows_update_prepare_creates_install_plan_for_updater()
     {
         var updaterPath = Path.Combine(_tempRoot, "Vehimap.Updater.exe");

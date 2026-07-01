@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Globalization;
 using Vehimap.Application;
+using Vehimap.Application.Abstractions;
 
 namespace Vehimap.Application.Services;
 
 public static class LegacyUpdateManifestParser
 {
-    public static LegacyUpdateManifest Parse(string content)
+    public static LegacyUpdateManifest Parse(string content, IAppLocalizer? localizer = null)
     {
+        localizer ??= new ResourceAppLocalizer(CultureInfo.CurrentUICulture);
         string currentSection = string.Empty;
         var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -43,12 +45,12 @@ public static class LegacyUpdateManifestParser
 
         if (!values.TryGetValue("version", out var version) || string.IsNullOrWhiteSpace(version))
         {
-            throw new InvalidOperationException("Manifest neobsahuje položku release/version.");
+            throw new InvalidOperationException(localizer.GetString("UpdateManifest.Error.MissingVersion"));
         }
 
         if (!SemVersionService.IsValid(version))
         {
-            throw new InvalidOperationException($"Manifest obsahuje neplatnou verzi: {version}");
+            throw new InvalidOperationException(localizer.Format("UpdateManifest.Error.InvalidVersion", version));
         }
 
         values.TryGetValue("published_at", out var publishedAt);
@@ -64,13 +66,13 @@ public static class LegacyUpdateManifestParser
         {
             if (!long.TryParse(assetSizeRaw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedSize) || parsedSize <= 0)
             {
-                throw new InvalidOperationException("Manifest neobsahuje platnou velikost assetu.");
+                throw new InvalidOperationException(localizer.GetString("UpdateManifest.Error.InvalidAssetSize"));
             }
 
             assetSize = parsedSize;
         }
 
-        var assetKind = NormalizeAssetKind(assetKindRaw);
+        var assetKind = NormalizeAssetKind(assetKindRaw, localizer);
 
         return new LegacyUpdateManifest(
             version.Trim(),
@@ -86,7 +88,7 @@ public static class LegacyUpdateManifestParser
     private static string Normalize(string content) =>
         content.Replace("\r\n", "\n", StringComparison.Ordinal).Replace('\r', '\n');
 
-    private static string NormalizeAssetKind(string? assetKind)
+    private static string NormalizeAssetKind(string? assetKind, IAppLocalizer localizer)
     {
         if (string.IsNullOrWhiteSpace(assetKind))
         {
@@ -97,7 +99,7 @@ public static class LegacyUpdateManifestParser
         {
             "archive" => "archive",
             "installer" => "installer",
-            _ => throw new InvalidOperationException($"Manifest obsahuje nepodporovany typ assetu: {assetKind}")
+            _ => throw new InvalidOperationException(localizer.Format("UpdateManifest.Error.UnsupportedAssetKind", assetKind))
         };
     }
 }

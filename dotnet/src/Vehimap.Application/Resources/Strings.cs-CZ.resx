@@ -118,6 +118,7 @@
   <data name="LegacyData.Section.VehicleMeta" xml:space="preserve"><value>metadat vozidel</value></data>
   <data name="LegacyData.Section.Reminders" xml:space="preserve"><value>připomínek</value></data>
   <data name="LegacyData.Section.Maintenance" xml:space="preserve"><value>plánů údržby</value></data>
+  <data name="LegacyData.Section.Attachments" xml:space="preserve"><value>příloh</value></data>
   <data name="LegacyData.LoadFailed" xml:space="preserve"><value>Soubor {0} ({1}) se nepodařilo načíst.</value></data>
   <data name="LegacyData.CheckFile" xml:space="preserve"><value>Zkontrolujte soubor: {0}</value></data>
   <data name="LegacyData.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
@@ -125,6 +126,14 @@
   <data name="LegacyBackup.Error.InvalidFormat" xml:space="preserve"><value>Soubor není ve formátu zálohy Vehimap.</value></data>
   <data name="LegacyBackup.Error.IncompleteOrCorrupt" xml:space="preserve"><value>Soubor zálohy je neúplný nebo poškozený.</value></data>
   <data name="LegacyBackup.Error.MissingHeaderItem" xml:space="preserve"><value>Soubor zálohy neobsahuje položku {0}.</value></data>
+  <data name="LegacySection.Error.EmptyAttachmentPath" xml:space="preserve"><value>Řádek {0} {1} obsahuje prázdnou relativní cestu.</value></data>
+  <data name="LegacySection.Error.InvalidAttachmentContent" xml:space="preserve"><value>Řádek {0} {1} obsahuje neplatný obsah souboru.</value></data>
+  <data name="LegacySection.Error.InvalidFieldCount" xml:space="preserve"><value>Řádek {0} {1} musí obsahovat {2}.</value></data>
+  <data name="LegacySection.Error.NestedHeader" xml:space="preserve"><value>Soubor obsahuje neplatnou vnořenou hlavičku nebo komentář.</value></data>
+  <data name="LegacySection.Error.UnsupportedHeader" xml:space="preserve"><value>Nepodporovaná hlavička: {0}</value></data>
+  <data name="LegacySection.FieldCount.Count" xml:space="preserve"><value>{0} polí</value></data>
+  <data name="LegacySection.FieldCount.SixOrSeven" xml:space="preserve"><value>6 nebo 7 polí</value></data>
+  <data name="LegacySection.FieldCount.Two" xml:space="preserve"><value>2 pole</value></data>
   <data name="LegacyBackup.ImportFailed" xml:space="preserve"><value>Zálohu se nepodařilo načíst: {0}. Detail: {1}</value></data>
   <data name="LegacyBackup.PathMissing" xml:space="preserve"><value>(nebyla zadána cesta k záloze)</value></data>
   <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Instalační jazykové předvolby byly doplněny do datové sady 2.0.</value></data>
@@ -1077,6 +1086,10 @@ Vozidlo: {2}
   <data name="UpdateService.Install.VerifyProgress" xml:space="preserve"><value>Ověřuji velikost a SHA-256 staženého balíčku.</value></data>
   <data name="UpdateService.Install.WindowsOnly" xml:space="preserve"><value>Automatická instalace je v této etapě dostupná jen na Windows.</value></data>
   <data name="UpdateService.Install.WindowsOnlyDetailed" xml:space="preserve"><value>Automatická instalace je v této etapě dostupná jen na Windows; na této platformě použijte release stránku nebo asset.</value></data>
+  <data name="UpdateManifest.Error.InvalidAssetSize" xml:space="preserve"><value>Manifest neobsahuje platnou velikost assetu.</value></data>
+  <data name="UpdateManifest.Error.InvalidVersion" xml:space="preserve"><value>Manifest obsahuje neplatnou verzi: {0}</value></data>
+  <data name="UpdateManifest.Error.MissingVersion" xml:space="preserve"><value>Manifest neobsahuje položku release/version.</value></data>
+  <data name="UpdateManifest.Error.UnsupportedAssetKind" xml:space="preserve"><value>Manifest obsahuje nepodporovaný typ assetu: {0}</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Zálohovat ihned</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Zavřít dialog nastavení</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Uložit nastavení</value></data>

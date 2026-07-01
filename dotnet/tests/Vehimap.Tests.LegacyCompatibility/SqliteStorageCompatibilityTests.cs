@@ -593,7 +593,9 @@ public sealed class SqliteStorageCompatibilityTests
             Assert.Contains("vehicles file", error.Message, StringComparison.OrdinalIgnoreCase);
             Assert.Contains("could not be loaded", error.Message, StringComparison.OrdinalIgnoreCase);
             Assert.Contains("Check file:", error.Message, StringComparison.Ordinal);
+            Assert.Contains("The vehicles row 2 must contain 12 fields.", error.Message, StringComparison.Ordinal);
             Assert.DoesNotContain("Soubor vozidel", error.Message, StringComparison.Ordinal);
+            Assert.DoesNotContain("Řádek vozidel", error.Message, StringComparison.Ordinal);
         }
         finally
         {

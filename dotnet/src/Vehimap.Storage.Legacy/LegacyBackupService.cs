@@ -52,16 +52,16 @@ public sealed class LegacyBackupService : IBackupService
             var data = new VehimapDataSet
             {
                 Settings = LegacySectionSerialization.ParseSettings(payload.SettingsContent),
-                Vehicles = LegacySectionSerialization.ParseVehicles(payload.VehiclesContent),
-                HistoryEntries = LegacySectionSerialization.ParseHistory(payload.HistoryContent),
-                FuelEntries = LegacySectionSerialization.ParseFuel(payload.FuelContent),
-                Records = LegacySectionSerialization.ParseRecords(payload.RecordsContent),
-                VehicleMetaEntries = LegacySectionSerialization.ParseVehicleMeta(payload.MetaContent),
-                Reminders = LegacySectionSerialization.ParseReminders(payload.RemindersContent),
-                MaintenancePlans = LegacySectionSerialization.ParseMaintenancePlans(payload.MaintenanceContent)
+                Vehicles = LegacySectionSerialization.ParseVehicles(payload.VehiclesContent, _localizer),
+                HistoryEntries = LegacySectionSerialization.ParseHistory(payload.HistoryContent, _localizer),
+                FuelEntries = LegacySectionSerialization.ParseFuel(payload.FuelContent, _localizer),
+                Records = LegacySectionSerialization.ParseRecords(payload.RecordsContent, _localizer),
+                VehicleMetaEntries = LegacySectionSerialization.ParseVehicleMeta(payload.MetaContent, _localizer),
+                Reminders = LegacySectionSerialization.ParseReminders(payload.RemindersContent, _localizer),
+                MaintenancePlans = LegacySectionSerialization.ParseMaintenancePlans(payload.MaintenanceContent, _localizer)
             };
 
-            var attachments = LegacySectionSerialization.ParseAttachmentsSection(payload.AttachmentsContent);
+            var attachments = LegacySectionSerialization.ParseAttachmentsSection(payload.AttachmentsContent, _localizer);
             return new VehimapBackupBundle(data, attachments);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
