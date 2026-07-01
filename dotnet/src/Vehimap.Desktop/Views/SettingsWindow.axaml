@@ -33,7 +33,7 @@
                   Margin="0,18,0,0"
                   VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled"
-                  AutomationProperties.Name="Volby nastavení"
+                  AutomationProperties.Name="{i18n:Loc Settings.OptionsListName}"
                   AutomationProperties.AutomationId="SettingsContentScrollViewer">
       <StackPanel Spacing="18">
       <Border Padding="14" Background="#143A4A5A" CornerRadius="8">

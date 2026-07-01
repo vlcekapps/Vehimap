@@ -1059,6 +1059,7 @@ Vozidlo: {2}
   <data name="Settings.Option.ThousandsDot" xml:space="preserve"><value>Tečka</value></data>
   <data name="Settings.Option.ThousandsSpace" xml:space="preserve"><value>Mezera</value></data>
   <data name="Settings.Option.UsGallons" xml:space="preserve"><value>Americké galony</value></data>
+  <data name="Settings.OptionsListName" xml:space="preserve"><value>Volby nastavení</value></data>
   <data name="Settings.RestartRequiredStatus" xml:space="preserve"><value>Nastavení byla uložena. Vybraný jazyk se plně projeví po restartu Vehimapu.</value></data>
   <data name="Settings.RunAtStartup" xml:space="preserve"><value>Spustit po startu počítače</value></data>
   <data name="Settings.ShowDashboardOnLaunch" xml:space="preserve"><value>Po spuštění otevřít Dashboard místo Detailu</value></data>

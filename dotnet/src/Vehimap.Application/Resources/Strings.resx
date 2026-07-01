@@ -1059,6 +1059,7 @@ Vehicle: {2}
   <data name="Settings.Option.ThousandsDot" xml:space="preserve"><value>Dot</value></data>
   <data name="Settings.Option.ThousandsSpace" xml:space="preserve"><value>Space</value></data>
   <data name="Settings.Option.UsGallons" xml:space="preserve"><value>US gallons</value></data>
+  <data name="Settings.OptionsListName" xml:space="preserve"><value>Settings options</value></data>
   <data name="Settings.RestartRequiredStatus" xml:space="preserve"><value>Settings were saved. The selected language will fully apply after restarting Vehimap.</value></data>
   <data name="Settings.RunAtStartup" xml:space="preserve"><value>Start with the computer</value></data>
   <data name="Settings.ShowDashboardOnLaunch" xml:space="preserve"><value>Open Dashboard instead of Detail after launch</value></data>

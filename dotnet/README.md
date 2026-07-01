@@ -41,6 +41,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - anglictina je fallback v `Strings.resx`
 - cestina je v `Strings.cs-CZ.resx`
 - nove UI texty v lokalizovanych pilotnich castech patri do obou resource souboru
+- pristupne nazvy v pilotnich castech, vcetne seznamu a scrollovanych oblasti, patri take do resource souboru
 - commit messages zustavaji vzdy anglicky
 - prekladatele mohou pro upravy `.resx` pouzit Local ResX Editor: https://apps.microsoft.com/detail/9pkht426fq1k
 - jazyk se v prvni fazi plne projevi po restartu aplikace
