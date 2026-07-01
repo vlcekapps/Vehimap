@@ -1,16 +1,25 @@
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Platform;
 
 public sealed class AssemblyAppBuildInfoProvider : IAppBuildInfoProvider
 {
     private const string ReleaseChannelMetadataName = "VehimapReleaseChannel";
+    private readonly Func<IAppLocalizer> _localizerProvider;
+
     public const string DefaultUpdateManifestBaseUrl = "https://raw.githubusercontent.com/vlcekapps/Vehimap/main/update";
     public const string DefaultReleaseNotesUrl = "https://github.com/vlcekapps/Vehimap/releases";
+
+    public AssemblyAppBuildInfoProvider(Func<IAppLocalizer>? localizerProvider = null)
+    {
+        _localizerProvider = localizerProvider ?? (() => new ResourceAppLocalizer(CultureInfo.CurrentUICulture));
+    }
 
     public AppBuildInfo GetCurrent()
     {
@@ -44,7 +53,7 @@ public sealed class AssemblyAppBuildInfoProvider : IAppBuildInfoProvider
             applicationName,
             appVersion,
             fileVersion,
-            isPublishedBuild ? "samostatná desktopová aplikace" : "vývojový Avalonia shell",
+            isPublishedBuild ? L("AppBuildInfo.RuntimeMode.Published") : L("AppBuildInfo.RuntimeMode.Development"),
             applicationPath,
             RuntimeInformation.OSDescription,
             RuntimeInformation.FrameworkDescription,
@@ -54,6 +63,8 @@ public sealed class AssemblyAppBuildInfoProvider : IAppBuildInfoProvider
             isPublishedBuild,
             releaseChannel);
     }
+
+    private string L(string key) => _localizerProvider().GetString(key);
 
     internal static string ResolveRuntimeIdentifier()
     {

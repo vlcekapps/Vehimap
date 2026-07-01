@@ -60,6 +60,12 @@ public sealed class I18nFoundationTests
         Assert.Equal("ukončit aplikaci", czech.GetString("PendingEdits.Action.ExitApplication"));
         Assert.Equal("New vehicle was saved.", english.GetString("VehicleDetail.Status.NewVehicleSaved"));
         Assert.Equal("Nové vozidlo bylo uloženo.", czech.GetString("VehicleDetail.Status.NewVehicleSaved"));
+        Assert.Equal("Downloading update package.", english.GetString("UpdateService.Install.DownloadProgress"));
+        Assert.Equal("Stahuji aktualizační balíček.", czech.GetString("UpdateService.Install.DownloadProgress"));
+        Assert.Equal("The desktop update channel for the .NET branch has not been published yet.", english.GetString("UpdateService.Check.DotnetManifestUnavailable"));
+        Assert.Equal("Desktopový update kanál pro .NET větev zatím není publikovaný.", czech.GetString("UpdateService.Check.DotnetManifestUnavailable"));
+        Assert.Equal("development Avalonia shell", english.GetString("AppBuildInfo.RuntimeMode.Development"));
+        Assert.Equal("vývojový Avalonia shell", czech.GetString("AppBuildInfo.RuntimeMode.Development"));
         Assert.Equal("Installer language preferences were added to the 2.0 data set.", english.GetString("InstallerLocaleSeed.Applied"));
         Assert.Equal("Instalační jazykové předvolby byly doplněny do datové sady 2.0.", czech.GetString("InstallerLocaleSeed.Applied"));
         Assert.Equal("Restore data from backup", english.GetString("AppShell.ImportBackup.ConfirmTitle"));
@@ -110,6 +116,30 @@ public sealed class I18nFoundationTests
         Assert.DoesNotContain("\"otevřít doporučení chytrého poradce\"", combined);
         Assert.DoesNotContain("\"Nové vozidlo bylo uloženo.", combined);
         Assert.DoesNotContain("\"Vozidlo bylo upraveno.", combined);
+    }
+
+    [Fact]
+    public void Platform_update_service_uses_resource_localization_for_user_messages()
+    {
+        var root = FindRepositoryRoot();
+        var updateService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Platform", "LegacyUpdateService.cs"));
+        var buildInfoProvider = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Platform", "AssemblyAppBuildInfoProvider.cs"));
+        var mainWindowViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
+
+        Assert.Contains("UpdateService.Check.UpdateAvailable", updateService);
+        Assert.Contains("UpdateService.Install.DownloadProgress", updateService);
+        Assert.Contains("UpdateService.Install.VerifyProgress", updateService);
+        Assert.Contains("UpdateService.Download.HashMismatch", updateService);
+        Assert.Contains("AppBuildInfo.RuntimeMode.Development", buildInfoProvider);
+        Assert.Contains("AppBuildInfo.RuntimeMode.Published", buildInfoProvider);
+        Assert.Contains("localizerProvider: () => DesktopLocalization.Localizer", mainWindowViewModel);
+
+        Assert.DoesNotContain("Stahuji aktualizační balíček.", updateService);
+        Assert.DoesNotContain("Automaticka instalace", updateService);
+        Assert.DoesNotContain("Pouzivate aktualni verzi", updateService);
+        Assert.DoesNotContain("Manifest neobsahuje", updateService);
+        Assert.DoesNotContain("samostatná desktopová aplikace", buildInfoProvider);
+        Assert.DoesNotContain("vývojový Avalonia shell", buildInfoProvider);
     }
 
     [Theory]

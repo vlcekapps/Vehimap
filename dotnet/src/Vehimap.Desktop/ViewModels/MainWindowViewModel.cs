@@ -274,7 +274,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new SqliteBackupService(),
             new AvaloniaFileDialogService(),
             new DesktopSupportedSettingsService(),
-            new AssemblyAppBuildInfoProvider(),
+            new AssemblyAppBuildInfoProvider(() => DesktopLocalization.Localizer),
             new PlatformAutostartService(),
             null,
             new DesktopProjectionService(),
@@ -326,9 +326,11 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         var sessionBackupService = backupService ?? new SqliteBackupService();
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
-        var sessionAppBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider();
+        var sessionAppBuildInfoProvider = appBuildInfoProvider ?? new AssemblyAppBuildInfoProvider(() => DesktopLocalization.Localizer);
         var sessionAutostartService = autostartService ?? new PlatformAutostartService();
-        var sessionUpdateService = updateService ?? new LegacyUpdateService(sessionAppBuildInfoProvider);
+        var sessionUpdateService = updateService ?? new LegacyUpdateService(
+            sessionAppBuildInfoProvider,
+            localizerProvider: () => DesktopLocalization.Localizer);
 
         _session = new DesktopSessionController(
             bootstrapper,

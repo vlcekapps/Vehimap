@@ -40,6 +40,8 @@
   <data name="About.ThankAuthorHelpText" xml:space="preserve"><value>Otevře stránku, kde můžete autorovi poděkovat podporou tvorby.</value></data>
   <data name="About.Title" xml:space="preserve"><value>O programu</value></data>
   <data name="About.Version" xml:space="preserve"><value>Verze</value></data>
+  <data name="AppBuildInfo.RuntimeMode.Development" xml:space="preserve"><value>vývojový Avalonia shell</value></data>
+  <data name="AppBuildInfo.RuntimeMode.Published" xml:space="preserve"><value>samostatná desktopová aplikace</value></data>
   <data name="App.ComboBox.HelpText" xml:space="preserve"><value>Šipkami nahoru nebo dolů otevřete seznam a vyberte hodnotu.</value></data>
   <data name="Common.Cancel" xml:space="preserve"><value>Zrušit</value></data>
   <data name="Common.Clear" xml:space="preserve"><value>Vymazat</value></data>
@@ -978,6 +980,32 @@ Vozidlo: {2}
   <data name="UpdateInstall.ProgressHelpText" xml:space="preserve"><value>Průběh stahování a ověřování aktualizace v procentech.</value></data>
   <data name="UpdateInstall.ProgressWithBytes" xml:space="preserve"><value>{0} % ({1} z {2})</value></data>
   <data name="UpdateInstall.Title" xml:space="preserve"><value>Stahování aktualizace</value></data>
+  <data name="UpdateService.Check.Current" xml:space="preserve"><value>Používáte aktuální verzi Vehimap ({0}).</value></data>
+  <data name="UpdateService.Check.DotnetManifestUnavailable" xml:space="preserve"><value>Desktopový update kanál pro .NET větev zatím není publikovaný.</value></data>
+  <data name="UpdateService.Check.Failed" xml:space="preserve"><value>Kontrolu aktualizací se nepodařilo dokončit.</value></data>
+  <data name="UpdateService.Check.LocalNewer" xml:space="preserve"><value>Používáte novější lokální verzi ({0}) než je v manifestu ({1}).</value></data>
+  <data name="UpdateService.Check.ServerHttp" xml:space="preserve"><value>Server vrátil HTTP {0}.</value></data>
+  <data name="UpdateService.Check.UpdateAvailable" xml:space="preserve"><value>Je dostupná novější verze Vehimap ({0}).{1}</value></data>
+  <data name="UpdateService.Check.UpdateAvailableSizeSuffix" xml:space="preserve"><value> Velikost balíčku: {0}.</value></data>
+  <data name="UpdateService.Download.HashMismatch" xml:space="preserve"><value>Stažený archiv neodpovídá očekávanému SHA-256 hashi.</value></data>
+  <data name="UpdateService.Download.HttpFailed" xml:space="preserve"><value>Stažení assetu selhalo (HTTP {0}).</value></data>
+  <data name="UpdateService.Download.SizeMismatch" xml:space="preserve"><value>Stažený archiv má jinou velikost, než očekává manifest.</value></data>
+  <data name="UpdateService.Install.ArchiveReadyProgress" xml:space="preserve"><value>Rozbalená aktualizace je připravená k instalaci.</value></data>
+  <data name="UpdateService.Install.ArchiveReadyResult" xml:space="preserve"><value>Aktualizace je připravená k instalaci.</value></data>
+  <data name="UpdateService.Install.DownloadProgress" xml:space="preserve"><value>Stahuji aktualizační balíček.</value></data>
+  <data name="UpdateService.Install.InstallerReadyProgress" xml:space="preserve"><value>Instalátor aktualizace je ověřený a připravený ke spuštění.</value></data>
+  <data name="UpdateService.Install.InstallerReadyResult" xml:space="preserve"><value>Instalátor aktualizace je připravený ke spuštění.</value></data>
+  <data name="UpdateService.Install.InvalidAssetSize" xml:space="preserve"><value>Manifest neobsahuje platnou velikost assetu.</value></data>
+  <data name="UpdateService.Install.InvalidSha256" xml:space="preserve"><value>Manifest neobsahuje platný SHA-256 hash assetu.</value></data>
+  <data name="UpdateService.Install.ManualOnly" xml:space="preserve"><value>Aktualizaci lze zatím otevřít jen ručně přes release stránku nebo asset.</value></data>
+  <data name="UpdateService.Install.MissingAssetUrl" xml:space="preserve"><value>Manifest neobsahuje odkaz na release asset.</value></data>
+  <data name="UpdateService.Install.NoUpdate" xml:space="preserve"><value>Pro instalaci není připravená žádná novější verze.</value></data>
+  <data name="UpdateService.Install.PrepareFailed" xml:space="preserve"><value>Aktualizaci se nepodařilo připravit. {0}</value></data>
+  <data name="UpdateService.Install.PublishedBuildOnly" xml:space="preserve"><value>Automatická instalace je dostupná jen v publikovaném desktopovém buildu.</value></data>
+  <data name="UpdateService.Install.UpdaterMissing" xml:space="preserve"><value>Vedle aplikace chybí Vehimap.Updater, automatickou instalaci proto nelze připravit.</value></data>
+  <data name="UpdateService.Install.VerifyProgress" xml:space="preserve"><value>Ověřuji velikost a SHA-256 staženého balíčku.</value></data>
+  <data name="UpdateService.Install.WindowsOnly" xml:space="preserve"><value>Automatická instalace je v této etapě dostupná jen na Windows.</value></data>
+  <data name="UpdateService.Install.WindowsOnlyDetailed" xml:space="preserve"><value>Automatická instalace je v této etapě dostupná jen na Windows; na této platformě použijte release stránku nebo asset.</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Zálohovat ihned</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Zavřít dialog nastavení</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Uložit nastavení</value></data>

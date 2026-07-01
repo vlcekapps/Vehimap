@@ -28,7 +28,7 @@ public partial class App : Avalonia.Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var buildInfoProvider = new AssemblyAppBuildInfoProvider();
+            var buildInfoProvider = new AssemblyAppBuildInfoProvider(() => DesktopLocalization.Localizer);
             var mainWindowViewModel = new MainWindowViewModel();
             var supportedSettings = mainWindowViewModel.GetSupportedSettingsSnapshot();
 DesktopLocalization.Configure(new AppCulturePreferences(

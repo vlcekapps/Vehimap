@@ -29,7 +29,7 @@ public sealed class AppShellServicesTests : IDisposable
     [Fact]
     public void Build_info_provider_reads_same_semver_as_root_version_file()
     {
-        var provider = new AssemblyAppBuildInfoProvider();
+        var provider = new AssemblyAppBuildInfoProvider(() => EnglishLocalizer());
         var appInfo = provider.GetCurrent();
         var expectedVersion = File.ReadAllText(Path.Combine(FindRepositoryRoot(), "src", "VERSION")).Trim();
         var expectedManifestName = $"latest-dotnet-{ResolveExpectedRuntimeIdentifier()}.ini";
@@ -40,6 +40,17 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Equal(SemVersionService.NormalizeToFileVersion(expectedVersion), appInfo.FileVersion);
         Assert.EndsWith(expectedManifestName, appInfo.UpdateManifestUrl, StringComparison.OrdinalIgnoreCase);
         Assert.StartsWith(AssemblyAppBuildInfoProvider.DefaultReleaseNotesUrl, appInfo.ReleaseNotesUrl, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(appInfo.IsPublishedBuild ? "standalone desktop application" : "development Avalonia shell", appInfo.RuntimeMode);
+    }
+
+    [Fact]
+    public void Build_info_provider_localizes_runtime_mode()
+    {
+        var provider = new AssemblyAppBuildInfoProvider(() => CzechLocalizer());
+
+        var appInfo = provider.GetCurrent();
+
+        Assert.Equal(appInfo.IsPublishedBuild ? "samostatná desktopová aplikace" : "vývojový Avalonia shell", appInfo.RuntimeMode);
     }
 
     [Fact]
@@ -317,7 +328,7 @@ public sealed class AppShellServicesTests : IDisposable
                 true));
 
         using var httpClient = new HttpClient(new StubHttpMessageHandler(zipBytes));
-        var service = new LegacyUpdateService(buildInfo, httpClient);
+        var service = new LegacyUpdateService(buildInfo, httpClient, () => EnglishLocalizer());
         var result = await service.PrepareInstallAsync(new UpdateCheckResult(
             "1.0.2",
             "1.0.9",
@@ -359,7 +370,7 @@ public sealed class AppShellServicesTests : IDisposable
                 true));
 
         using var httpClient = new HttpClient(new StubHttpMessageHandler(installerBytes));
-        var service = new LegacyUpdateService(buildInfo, httpClient);
+        var service = new LegacyUpdateService(buildInfo, httpClient, () => EnglishLocalizer());
         var result = await service.PrepareInstallAsync(new UpdateCheckResult(
             "1.0.2",
             "1.0.9",
@@ -402,13 +413,13 @@ public sealed class AppShellServicesTests : IDisposable
                 true));
 
         using var httpClient = new HttpClient(new StubStatusHttpMessageHandler(HttpStatusCode.NotFound));
-        var service = new LegacyUpdateService(buildInfo, httpClient);
+        var service = new LegacyUpdateService(buildInfo, httpClient, () => EnglishLocalizer());
 
         var result = await service.CheckForUpdatesAsync("1.0.2");
 
         Assert.False(result.IsUpdateAvailable);
         Assert.Null(result.FailureReason);
-        Assert.Contains("zatim neni publikovany", result.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("has not been published", result.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -446,7 +457,7 @@ public sealed class AppShellServicesTests : IDisposable
                     true));
 
             using var httpClient = new HttpClient(new StubHttpMessageHandler(Encoding.UTF8.GetBytes(remoteManifest)));
-            var service = new LegacyUpdateService(buildInfo, httpClient);
+            var service = new LegacyUpdateService(buildInfo, httpClient, () => EnglishLocalizer());
 
             var result = await service.CheckForUpdatesAsync("1.0.2");
 
@@ -492,7 +503,7 @@ public sealed class AppShellServicesTests : IDisposable
                 true));
 
         using var httpClient = new HttpClient(new StubHttpMessageHandler(Encoding.UTF8.GetBytes(manifest)));
-        var service = new LegacyUpdateService(buildInfo, httpClient);
+        var service = new LegacyUpdateService(buildInfo, httpClient, () => EnglishLocalizer());
 
         var result = await service.CheckForUpdatesAsync("1.0.2");
 
@@ -642,6 +653,12 @@ public sealed class AppShellServicesTests : IDisposable
 
         return "win-x64";
     }
+
+    private static IAppLocalizer EnglishLocalizer() =>
+        new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+
+    private static IAppLocalizer CzechLocalizer() =>
+        new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ"));
 
     private static string ReadQueryValue(Uri uri, string key)
     {

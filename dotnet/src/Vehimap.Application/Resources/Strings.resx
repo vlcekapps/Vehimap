@@ -40,6 +40,8 @@
   <data name="About.ThankAuthorHelpText" xml:space="preserve"><value>Open the page where you can thank the author by supporting the work.</value></data>
   <data name="About.Title" xml:space="preserve"><value>About</value></data>
   <data name="About.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="AppBuildInfo.RuntimeMode.Development" xml:space="preserve"><value>development Avalonia shell</value></data>
+  <data name="AppBuildInfo.RuntimeMode.Published" xml:space="preserve"><value>standalone desktop application</value></data>
   <data name="App.ComboBox.HelpText" xml:space="preserve"><value>Press Up or Down Arrow to open the list and choose a value.</value></data>
   <data name="Common.Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="Common.Clear" xml:space="preserve"><value>Clear</value></data>
@@ -978,6 +980,32 @@ Vehicle: {2}
   <data name="UpdateInstall.ProgressHelpText" xml:space="preserve"><value>Download and verification progress in percent.</value></data>
   <data name="UpdateInstall.ProgressWithBytes" xml:space="preserve"><value>{0} % ({1} of {2})</value></data>
   <data name="UpdateInstall.Title" xml:space="preserve"><value>Downloading update</value></data>
+  <data name="UpdateService.Check.Current" xml:space="preserve"><value>You are using the current Vehimap version ({0}).</value></data>
+  <data name="UpdateService.Check.DotnetManifestUnavailable" xml:space="preserve"><value>The desktop update channel for the .NET branch has not been published yet.</value></data>
+  <data name="UpdateService.Check.Failed" xml:space="preserve"><value>Update check could not be completed.</value></data>
+  <data name="UpdateService.Check.LocalNewer" xml:space="preserve"><value>You are using a newer local version ({0}) than the manifest version ({1}).</value></data>
+  <data name="UpdateService.Check.ServerHttp" xml:space="preserve"><value>The server returned HTTP {0}.</value></data>
+  <data name="UpdateService.Check.UpdateAvailable" xml:space="preserve"><value>A newer Vehimap version ({0}) is available.{1}</value></data>
+  <data name="UpdateService.Check.UpdateAvailableSizeSuffix" xml:space="preserve"><value> Package size: {0}.</value></data>
+  <data name="UpdateService.Download.HashMismatch" xml:space="preserve"><value>The downloaded archive does not match the expected SHA-256 hash.</value></data>
+  <data name="UpdateService.Download.HttpFailed" xml:space="preserve"><value>Asset download failed (HTTP {0}).</value></data>
+  <data name="UpdateService.Download.SizeMismatch" xml:space="preserve"><value>The downloaded archive has a different size than the manifest expects.</value></data>
+  <data name="UpdateService.Install.ArchiveReadyProgress" xml:space="preserve"><value>The extracted update is ready to install.</value></data>
+  <data name="UpdateService.Install.ArchiveReadyResult" xml:space="preserve"><value>The update is ready to install.</value></data>
+  <data name="UpdateService.Install.DownloadProgress" xml:space="preserve"><value>Downloading update package.</value></data>
+  <data name="UpdateService.Install.InstallerReadyProgress" xml:space="preserve"><value>The update installer has been verified and is ready to run.</value></data>
+  <data name="UpdateService.Install.InstallerReadyResult" xml:space="preserve"><value>The update installer is ready to run.</value></data>
+  <data name="UpdateService.Install.InvalidAssetSize" xml:space="preserve"><value>The manifest does not contain a valid asset size.</value></data>
+  <data name="UpdateService.Install.InvalidSha256" xml:space="preserve"><value>The manifest does not contain a valid asset SHA-256 hash.</value></data>
+  <data name="UpdateService.Install.ManualOnly" xml:space="preserve"><value>The update can currently only be opened manually through the release page or asset.</value></data>
+  <data name="UpdateService.Install.MissingAssetUrl" xml:space="preserve"><value>The manifest does not contain a release asset URL.</value></data>
+  <data name="UpdateService.Install.NoUpdate" xml:space="preserve"><value>No newer version is ready for installation.</value></data>
+  <data name="UpdateService.Install.PrepareFailed" xml:space="preserve"><value>Update could not be prepared. {0}</value></data>
+  <data name="UpdateService.Install.PublishedBuildOnly" xml:space="preserve"><value>Automatic installation is available only in a published desktop build.</value></data>
+  <data name="UpdateService.Install.UpdaterMissing" xml:space="preserve"><value>Vehimap.Updater is missing next to the application, so automatic installation cannot be prepared.</value></data>
+  <data name="UpdateService.Install.VerifyProgress" xml:space="preserve"><value>Verifying the downloaded package size and SHA-256.</value></data>
+  <data name="UpdateService.Install.WindowsOnly" xml:space="preserve"><value>Automatic installation is available only on Windows in this phase.</value></data>
+  <data name="UpdateService.Install.WindowsOnlyDetailed" xml:space="preserve"><value>Automatic installation is available only on Windows in this phase; on this platform use the release page or asset.</value></data>
   <data name="Settings.Action.BackupNow" xml:space="preserve"><value>Back up now</value></data>
   <data name="Settings.Action.CancelName" xml:space="preserve"><value>Close the settings dialog</value></data>
   <data name="Settings.Action.SaveName" xml:space="preserve"><value>Save settings</value></data>
