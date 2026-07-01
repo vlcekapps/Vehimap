@@ -2133,4 +2133,124 @@ Status: {5}</value></data>
   <data name="MaintenanceTemplates.Status.NoNewItems" xml:space="preserve"><value>Recommended templates did not have any new service plans to add.</value></data>
   <data name="MaintenanceTemplates.Status.SaveFailedPrefix" xml:space="preserve"><value>Recommended templates could not be saved</value></data>
   <data name="MaintenanceTemplates.Status.Added" xml:space="preserve"><value>Recommended templates added {0} service plans.</value></data>
+  <data name="Projection.Value.NoPlate" xml:space="preserve"><value>No license plate</value></data>
+  <data name="Projection.Value.NoMakeModel" xml:space="preserve"><value>No make / model</value></data>
+  <data name="Projection.Value.NormalOperation" xml:space="preserve"><value>Normal operation</value></data>
+  <data name="Projection.Value.NoWarning" xml:space="preserve"><value>no warning</value></data>
+  <data name="Projection.Value.NoType" xml:space="preserve"><value>no type</value></data>
+  <data name="Projection.Value.NoOdometer" xml:space="preserve"><value>no odometer</value></data>
+  <data name="Projection.Value.NoPrice" xml:space="preserve"><value>no price</value></data>
+  <data name="Projection.Value.NoQuantity" xml:space="preserve"><value>no quantity</value></data>
+  <data name="Projection.Value.NoTitle" xml:space="preserve"><value>Untitled</value></data>
+  <data name="Projection.Value.NoDueDate" xml:space="preserve"><value>no due date</value></data>
+  <data name="Projection.Value.NoFuelDetail" xml:space="preserve"><value>no fuel detail</value></data>
+  <data name="Projection.Value.NoStation" xml:space="preserve"><value>no place</value></data>
+  <data name="Projection.Value.NoProvider" xml:space="preserve"><value>No provider</value></data>
+  <data name="Projection.Value.Document" xml:space="preserve"><value>Document</value></data>
+  <data name="Projection.Value.NoFuelVolumeData" xml:space="preserve"><value>no fuel volume data</value></data>
+  <data name="Projection.Value.UnknownOdometer" xml:space="preserve"><value>unknown</value></data>
+  <data name="History.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no history entries yet.</value></data>
+  <data name="History.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} history entries.</value></data>
+  <data name="Fuel.Projection.FullTank" xml:space="preserve"><value>Full tank</value></data>
+  <data name="Fuel.Projection.PartialFuel" xml:space="preserve"><value>Partial refuel</value></data>
+  <data name="Fuel.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no fuel entries yet.</value></data>
+  <data name="Fuel.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} fuel entries.</value></data>
+  <data name="Reminder.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no reminders yet.</value></data>
+  <data name="Reminder.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} reminders.</value></data>
+  <data name="Maintenance.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no maintenance plans yet.</value></data>
+  <data name="Maintenance.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} maintenance plans.</value></data>
+  <data name="Record.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no documents yet.</value></data>
+  <data name="Record.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} documents. Select an entry to open the file or its folder.</value></data>
+  <data name="Record.Projection.AttachmentMode.Managed" xml:space="preserve"><value>Managed copy</value></data>
+  <data name="Record.Projection.AttachmentMode.External" xml:space="preserve"><value>External path</value></data>
+  <data name="Record.Projection.Validity.FromEmpty" xml:space="preserve"><value>from not filled</value></data>
+  <data name="Record.Projection.Validity.From" xml:space="preserve"><value>from {0}</value></data>
+  <data name="Record.Projection.Validity.ToEmpty" xml:space="preserve"><value>to not filled</value></data>
+  <data name="Record.Projection.Validity.To" xml:space="preserve"><value>to {0}</value></data>
+  <data name="Record.Projection.Validity.Range" xml:space="preserve"><value>{0} | {1}</value></data>
+  <data name="Record.Projection.AttachmentState.NoPath" xml:space="preserve"><value>No path</value></data>
+  <data name="Record.Projection.AttachmentState.Available" xml:space="preserve"><value>File available</value></data>
+  <data name="Record.Projection.AttachmentState.ManagedMissing" xml:space="preserve"><value>Managed attachment missing</value></data>
+  <data name="Record.Projection.AttachmentState.Unresolved" xml:space="preserve"><value>Path not resolved</value></data>
+  <data name="Record.Projection.AttachmentState.ExternalMissing" xml:space="preserve"><value>External attachment missing</value></data>
+  <data name="VehicleDetail.Projection.EmptyHeading" xml:space="preserve"><value>No vehicle selected</value></data>
+  <data name="VehicleDetail.Projection.EmptyOverview" xml:space="preserve"><value>Select a vehicle on the left to show its basic summary.</value></data>
+  <data name="VehicleDetail.Projection.EmptyEvidence" xml:space="preserve"><value>Related records appear after selecting a vehicle.</value></data>
+  <data name="VehicleDetail.Projection.EmptyRecentHistory" xml:space="preserve"><value>Recent events appear after selecting a vehicle.</value></data>
+  <data name="VehicleDetail.Projection.Overview" xml:space="preserve"><value>{0} | {1} | {2}
+State: {3}
+Tags: {4}
+Last odometer: {5}
+Note: {6}</value></data>
+  <data name="VehicleDetail.Projection.Dates" xml:space="preserve"><value>Next technical inspection: {0}
+Green card until: {1}
+Status summary: {2}</value></data>
+  <data name="VehicleDetail.Projection.Profile" xml:space="preserve"><value>Powertrain: {0}
+Climate: {1}
+Timing drive: {2}
+Transmission: {3}</value></data>
+  <data name="VehicleDetail.Projection.RecentHistoryEmpty" xml:space="preserve"><value>Recent events: no history entries yet.</value></data>
+  <data name="VehicleDetail.Projection.RecentHistoryCount" xml:space="preserve"><value>Recent events: showing {0} newest entries.</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary" xml:space="preserve"><value>Related records: history {0}, fuel {1}, documents {2}, reminders {3}, maintenance plans {4}, active {5}.</value></data>
+  <data name="VehicleDetail.Section.History" xml:space="preserve"><value>History</value></data>
+  <data name="VehicleDetail.Section.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="VehicleDetail.Section.Reminders" xml:space="preserve"><value>Reminders</value></data>
+  <data name="VehicleDetail.Section.Records" xml:space="preserve"><value>Documents</value></data>
+  <data name="VehicleDetail.Section.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="VehicleDetail.Projection.History.Empty" xml:space="preserve"><value>No event history is stored for this vehicle yet.</value></data>
+  <data name="VehicleDetail.Projection.History.Latest" xml:space="preserve"><value>Total events: {0}. Latest event: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.History.Odometer" xml:space="preserve"><value>Odometer: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Fuel.Empty" xml:space="preserve"><value>No mileage or fuel entries are stored for this vehicle yet.</value></data>
+  <data name="VehicleDetail.Projection.Fuel.CountAndOdometer" xml:space="preserve"><value>Entries: {0}. Latest odometer: {1}.</value></data>
+  <data name="VehicleDetail.Projection.Fuel.LatestWithCost" xml:space="preserve"><value>Latest refuel: {0} for {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Fuel.Latest" xml:space="preserve"><value>Latest refuel: {0} ({1}).</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Empty" xml:space="preserve"><value>No custom reminders are stored for this vehicle yet.</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Nearest" xml:space="preserve"><value>Reminders: {0}. Nearest: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Record.Empty" xml:space="preserve"><value>No insurance or document records are stored for this vehicle yet.</value></data>
+  <data name="VehicleDetail.Projection.Record.Count" xml:space="preserve"><value>Records: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Record.TitleWithProvider" xml:space="preserve"><value>{0} ({1})</value></data>
+  <data name="VehicleDetail.Projection.Record.NearestValidity" xml:space="preserve"><value>Nearest validity: {0} until {1}.</value></data>
+  <data name="VehicleDetail.Projection.Record.NoValidity" xml:space="preserve"><value>No record has a validity date filled in.</value></data>
+  <data name="VehicleDetail.Projection.Record.MissingAttachments" xml:space="preserve"><value>Unavailable attachments: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Record.EmptyPaths" xml:space="preserve"><value>Without a filled path: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Empty" xml:space="preserve"><value>No maintenance plans are stored for this vehicle yet.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Count" xml:space="preserve"><value>Maintenance plans: {0}. Active: {1}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Paused" xml:space="preserve"><value>Paused: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.AllPaused" xml:space="preserve"><value>All plans are currently paused.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Nearest" xml:space="preserve"><value>Nearest: {0} ({1}).</value></data>
+  <data name="Reminder.Status.NoUsableDate" xml:space="preserve"><value>No usable due date</value></data>
+  <data name="Reminder.Status.Overdue" xml:space="preserve"><value>Overdue by {0} days</value></data>
+  <data name="Reminder.Status.Today" xml:space="preserve"><value>Today</value></data>
+  <data name="Reminder.Status.Tomorrow" xml:space="preserve"><value>Tomorrow</value></data>
+  <data name="Reminder.Status.InDays" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="Reminder.Repeat.None" xml:space="preserve"><value>no repeat</value></data>
+  <data name="Reminder.Repeat.NoneLegacy" xml:space="preserve"><value>Do not repeat</value></data>
+  <data name="Maintenance.Interval.OneMonth" xml:space="preserve"><value>1 month</value></data>
+  <data name="Maintenance.Interval.Months" xml:space="preserve"><value>{0} months</value></data>
+  <data name="Maintenance.Interval.None" xml:space="preserve"><value>No interval</value></data>
+  <data name="Maintenance.Status.Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Maintenance.Status.Overdue" xml:space="preserve"><value>Overdue by {0} days</value></data>
+  <data name="Maintenance.Status.Today" xml:space="preserve"><value>Service today</value></data>
+  <data name="Maintenance.Status.InOneDay" xml:space="preserve"><value>In 1 day</value></data>
+  <data name="Maintenance.Status.InDays" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="Maintenance.Status.MissingLastServiceDate" xml:space="preserve"><value>Missing last service date</value></data>
+  <data name="Maintenance.Status.OverDistanceLimit" xml:space="preserve"><value>Over the limit by {0}</value></data>
+  <data name="Maintenance.Status.Now" xml:space="preserve"><value>Service now</value></data>
+  <data name="Maintenance.Status.InDistance" xml:space="preserve"><value>In {0}</value></data>
+  <data name="Maintenance.Status.MissingOdometer" xml:space="preserve"><value>Missing odometer for calculation</value></data>
+  <data name="Maintenance.Status.NoActiveInterval" xml:space="preserve"><value>No active interval</value></data>
+  <data name="VehicleList.Summary.Empty" xml:space="preserve"><value>Vehicle list: there are no vehicles in the data yet.</value></data>
+  <data name="VehicleList.Filter.Category" xml:space="preserve"><value>category {0}</value></data>
+  <data name="VehicleList.Filter.HideInactive" xml:space="preserve"><value>excluding archived and parked</value></data>
+  <data name="VehicleList.Filter.Search" xml:space="preserve"><value>search "{0}"</value></data>
+  <data name="VehicleList.Summary.All" xml:space="preserve"><value>Vehicle list: {0} vehicles.</value></data>
+  <data name="VehicleList.Summary.Filtered" xml:space="preserve"><value>Vehicle list: showing {0} of {1}. {2}</value></data>
+  <data name="VehicleList.Status.Technical" xml:space="preserve"><value>Technical inspection: {0}</value></data>
+  <data name="VehicleList.Status.GreenCard" xml:space="preserve"><value>Green card: {0}</value></data>
+  <data name="VehicleList.Status.Reminder" xml:space="preserve"><value>Reminder: {0}</value></data>
+  <data name="VehicleList.Status.Maintenance" xml:space="preserve"><value>Maintenance: {0}</value></data>
+  <data name="VehicleList.Status.MissingGreenCard" xml:space="preserve"><value>Green card missing</value></data>
+  <data name="VehicleList.Status.AttentionCount" xml:space="preserve"><value>{0} items to review</value></data>
+  <data name="VehicleList.Status.Ok" xml:space="preserve"><value>OK</value></data>
+  <data name="FuelAnalysis.Value.SegmentPeriod" xml:space="preserve"><value>{0} to {1}</value></data>
 </root>

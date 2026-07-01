@@ -87,6 +87,116 @@ public sealed class DesktopProjectionAndNavigationServiceTests
     }
 
     [Fact]
+    public void Projection_service_localizes_vehicle_list_detail_and_records()
+    {
+        var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+        var projectionService = new DesktopProjectionService(localizer, CultureInfo.GetCultureInfo("en-US"));
+        projectionService.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            15,
+            30,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+        var timelineService = new LegacyTimelineService(localizer);
+        var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-projection-localization-tests", Guid.NewGuid().ToString("N"));
+        var dataRoot = new VehimapDataRoot(tempRoot, Path.Combine(tempRoot, "data"), true);
+        Directory.CreateDirectory(Path.Combine(dataRoot.DataPath, "attachments", "veh_1"));
+        var managedFile = Path.Combine(dataRoot.DataPath, "attachments", "veh_1", "insurance.pdf");
+        File.WriteAllText(managedFile, "test");
+
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Cars", "Family car", "Skoda 120L", "", "1988", "43", "", "08/2026", "05/2025", "")
+            ],
+            VehicleMetaEntries =
+            [
+                new VehicleMeta("veh_1", "", "", "", "", "", "")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "01.04.2026", "Service", "10000", "1000", "")
+            ],
+            FuelEntries =
+            [
+                new FuelEntry("fuel_1", "veh_1", "02.04.2026", "10050", "3.12", "350", true, "Gasoline", "", "Natural 95", "Shell")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_1", "veh_1", "", "", "", "", "05/2026", "2000", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/insurance.pdf", "")
+            ],
+            Reminders =
+            [
+                new VehicleReminder("rem_1", "veh_1", "Call service", "10.04.2026", "", "", "")
+            ],
+            MaintenancePlans =
+            [
+                new MaintenancePlan("mnt_1", "veh_1", "Oil service", "1609", "", "", "10000", true, "")
+            ]
+        };
+
+        var vehicleList = projectionService.BuildVehicleList(
+            dataSet,
+            dataSet.VehicleMetaEntries.ToDictionary(item => item.VehicleId, StringComparer.Ordinal),
+            [],
+            timelineService,
+            new DesktopVehicleListFilters(string.Empty, MainWindowViewModel.AllVehicleCategoriesLabel, MainWindowViewModel.AllVehicleStatusFilterLabel, false),
+            new DateOnly(2026, 4, 3));
+
+        var vehicle = Assert.Single(vehicleList.Items);
+        Assert.Equal("No license plate", vehicle.Plate);
+        Assert.Contains("Green card missing", vehicle.StatusSummary, StringComparison.Ordinal);
+        Assert.DoesNotContain("ZK chybí", vehicle.StatusSummary, StringComparison.Ordinal);
+        Assert.Equal("Vehicle list: 1 vehicles.", vehicleList.Summary);
+
+        var detail = projectionService.BuildVehicleDetail(
+            dataSet,
+            vehicle,
+            dataSet.VehicleMetaEntries.Single(),
+            dataRoot,
+            relativePath => Path.Combine(dataRoot.DataPath, relativePath.Replace('/', Path.DirectorySeparatorChar)),
+            new DateOnly(2026, 4, 3));
+
+        Assert.Contains("State: Normal operation", detail.Overview, StringComparison.Ordinal);
+        Assert.Contains("Related records: history 1, fuel 1, documents 1, reminders 1, maintenance plans 1, active 1.", detail.EvidenceSummary, StringComparison.Ordinal);
+        Assert.Contains("History", detail.EvidenceSummaries.Select(item => item.Title));
+        Assert.Contains("Fuel", detail.EvidenceSummaries.Select(item => item.Title));
+        Assert.Contains("Documents", detail.EvidenceSummaries.Select(item => item.Title));
+        Assert.Contains("Maintenance", detail.EvidenceSummaries.Select(item => item.Title));
+
+        Assert.Equal("The selected vehicle has 1 history entries.", projectionService.BuildHistory(dataSet, "veh_1").Summary);
+        Assert.Equal("The selected vehicle has 1 fuel entries.", projectionService.BuildFuel(dataSet, "veh_1").Summary);
+        Assert.Equal("Full tank", projectionService.BuildFuel(dataSet, "veh_1").Items.Single().TankState);
+        Assert.Equal("The selected vehicle has 1 reminders.", projectionService.BuildReminders(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Summary);
+        Assert.Equal("The selected vehicle has 1 maintenance plans.", projectionService.BuildMaintenance(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Summary);
+
+        var records = projectionService.BuildRecords(
+            dataRoot,
+            dataSet,
+            "veh_1",
+            relativePath => Path.Combine(dataRoot.DataPath, relativePath.Replace('/', Path.DirectorySeparatorChar)));
+
+        var record = Assert.Single(records.Items);
+        Assert.Equal("Document", record.RecordType);
+        Assert.Equal("Untitled", record.Title);
+        Assert.Equal("Managed copy", record.AttachmentMode);
+        Assert.Equal("File available", record.AttachmentState);
+        Assert.Equal("The selected vehicle has 1 documents. Select an entry to open the file or its folder.", records.Summary);
+    }
+
+    [Fact]
     public void Projection_service_filters_timeline_by_future_and_search_text()
     {
         var projectionService = new DesktopProjectionService();

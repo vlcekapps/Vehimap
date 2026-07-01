@@ -941,6 +941,25 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Domain_vehicle_projection_summaries_use_resource_localization_for_generated_messages()
+    {
+        var root = FindRepositoryRoot();
+        var projectionService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopProjectionService.cs"));
+
+        Assert.Contains("VehicleDetail.Projection.Overview", projectionService);
+        Assert.Contains("VehicleDetail.Projection.EvidenceSummary", projectionService);
+        Assert.Contains("VehicleDetail.Projection.Record.NearestValidity", projectionService);
+        Assert.Contains("VehicleList.Summary.Filtered", projectionService);
+        Assert.Contains("VehicleList.Status.MissingGreenCard", projectionService);
+        Assert.Contains("Record.Projection.AttachmentState.Available", projectionService);
+        Assert.Contains("History.Projection.Summary.Count", projectionService);
+        Assert.Contains("Fuel.Projection.Summary.Count", projectionService);
+        Assert.Contains("Reminder.Status.Overdue", projectionService);
+        Assert.Contains("Maintenance.Status.OverDistanceLimit", projectionService);
+        Assert.Contains("FuelAnalysis.Value.SegmentPeriod", projectionService);
+    }
+
+    [Fact]
     public void Domain_quick_actions_use_resource_localization_for_generated_messages()
     {
         var root = FindRepositoryRoot();

@@ -2133,4 +2133,124 @@ Stav: {5}</value></data>
   <data name="MaintenanceTemplates.Status.NoNewItems" xml:space="preserve"><value>Doporučené šablony už neměly žádné nové servisní plány k doplnění.</value></data>
   <data name="MaintenanceTemplates.Status.SaveFailedPrefix" xml:space="preserve"><value>Doporučené šablony se nepodařilo uložit</value></data>
   <data name="MaintenanceTemplates.Status.Added" xml:space="preserve"><value>Doporučené šablony přidaly {0} servisních plánů.</value></data>
+  <data name="Projection.Value.NoPlate" xml:space="preserve"><value>Bez SPZ</value></data>
+  <data name="Projection.Value.NoMakeModel" xml:space="preserve"><value>Bez značky / modelu</value></data>
+  <data name="Projection.Value.NormalOperation" xml:space="preserve"><value>Běžný provoz</value></data>
+  <data name="Projection.Value.NoWarning" xml:space="preserve"><value>bez upozornění</value></data>
+  <data name="Projection.Value.NoType" xml:space="preserve"><value>bez typu</value></data>
+  <data name="Projection.Value.NoOdometer" xml:space="preserve"><value>bez tachometru</value></data>
+  <data name="Projection.Value.NoPrice" xml:space="preserve"><value>bez ceny</value></data>
+  <data name="Projection.Value.NoQuantity" xml:space="preserve"><value>bez množství</value></data>
+  <data name="Projection.Value.NoTitle" xml:space="preserve"><value>Bez názvu</value></data>
+  <data name="Projection.Value.NoDueDate" xml:space="preserve"><value>bez termínu</value></data>
+  <data name="Projection.Value.NoFuelDetail" xml:space="preserve"><value>bez detailu paliva</value></data>
+  <data name="Projection.Value.NoStation" xml:space="preserve"><value>bez místa</value></data>
+  <data name="Projection.Value.NoProvider" xml:space="preserve"><value>Bez poskytovatele</value></data>
+  <data name="Projection.Value.Document" xml:space="preserve"><value>Doklad</value></data>
+  <data name="Projection.Value.NoFuelVolumeData" xml:space="preserve"><value>bez údajů o litrech</value></data>
+  <data name="Projection.Value.UnknownOdometer" xml:space="preserve"><value>neznámý</value></data>
+  <data name="History.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné záznamy v historii.</value></data>
+  <data name="History.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} historických záznamů.</value></data>
+  <data name="Fuel.Projection.FullTank" xml:space="preserve"><value>Plná nádrž</value></data>
+  <data name="Fuel.Projection.PartialFuel" xml:space="preserve"><value>Částečné tankování</value></data>
+  <data name="Fuel.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné záznamy tankování.</value></data>
+  <data name="Fuel.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} záznamů tankování.</value></data>
+  <data name="Reminder.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné připomínky.</value></data>
+  <data name="Reminder.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} připomínek.</value></data>
+  <data name="Maintenance.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné servisní plány.</value></data>
+  <data name="Maintenance.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} servisních plánů.</value></data>
+  <data name="Record.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné doklady.</value></data>
+  <data name="Record.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} dokladů. Vyberte záznam a můžete otevřít soubor nebo jeho složku.</value></data>
+  <data name="Record.Projection.AttachmentMode.Managed" xml:space="preserve"><value>Spravovaná kopie</value></data>
+  <data name="Record.Projection.AttachmentMode.External" xml:space="preserve"><value>Externí cesta</value></data>
+  <data name="Record.Projection.Validity.FromEmpty" xml:space="preserve"><value>od nevyplněno</value></data>
+  <data name="Record.Projection.Validity.From" xml:space="preserve"><value>od {0}</value></data>
+  <data name="Record.Projection.Validity.ToEmpty" xml:space="preserve"><value>do nevyplněno</value></data>
+  <data name="Record.Projection.Validity.To" xml:space="preserve"><value>do {0}</value></data>
+  <data name="Record.Projection.Validity.Range" xml:space="preserve"><value>{0} | {1}</value></data>
+  <data name="Record.Projection.AttachmentState.NoPath" xml:space="preserve"><value>Bez cesty</value></data>
+  <data name="Record.Projection.AttachmentState.Available" xml:space="preserve"><value>Soubor dostupný</value></data>
+  <data name="Record.Projection.AttachmentState.ManagedMissing" xml:space="preserve"><value>Chybí spravovaná příloha</value></data>
+  <data name="Record.Projection.AttachmentState.Unresolved" xml:space="preserve"><value>Cesta nevyřešena</value></data>
+  <data name="Record.Projection.AttachmentState.ExternalMissing" xml:space="preserve"><value>Chybí externí příloha</value></data>
+  <data name="VehicleDetail.Projection.EmptyHeading" xml:space="preserve"><value>Nevybrané vozidlo</value></data>
+  <data name="VehicleDetail.Projection.EmptyOverview" xml:space="preserve"><value>Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.</value></data>
+  <data name="VehicleDetail.Projection.EmptyEvidence" xml:space="preserve"><value>Navazující evidence se zobrazí po výběru vozidla.</value></data>
+  <data name="VehicleDetail.Projection.EmptyRecentHistory" xml:space="preserve"><value>Poslední události se zobrazí po výběru vozidla.</value></data>
+  <data name="VehicleDetail.Projection.Overview" xml:space="preserve"><value>{0} | {1} | {2}
+Stav: {3}
+Štítky: {4}
+Poslední tachometr: {5}
+Poznámka: {6}</value></data>
+  <data name="VehicleDetail.Projection.Dates" xml:space="preserve"><value>Příští TK: {0}
+Zelená karta do: {1}
+Souhrnný stav: {2}</value></data>
+  <data name="VehicleDetail.Projection.Profile" xml:space="preserve"><value>Pohon: {0}
+Klimatizace: {1}
+Rozvody: {2}
+Převodovka: {3}</value></data>
+  <data name="VehicleDetail.Projection.RecentHistoryEmpty" xml:space="preserve"><value>Poslední události: zatím žádné historické záznamy.</value></data>
+  <data name="VehicleDetail.Projection.RecentHistoryCount" xml:space="preserve"><value>Poslední události: zobrazeno {0} nejnovějších záznamů.</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary" xml:space="preserve"><value>Navazující evidence: historie {0}, tankování {1}, doklady {2}, připomínky {3}, servisní plány {4} z toho aktivních {5}.</value></data>
+  <data name="VehicleDetail.Section.History" xml:space="preserve"><value>Historie</value></data>
+  <data name="VehicleDetail.Section.Fuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="VehicleDetail.Section.Reminders" xml:space="preserve"><value>Připomínky</value></data>
+  <data name="VehicleDetail.Section.Records" xml:space="preserve"><value>Doklady</value></data>
+  <data name="VehicleDetail.Section.Maintenance" xml:space="preserve"><value>Údržba</value></data>
+  <data name="VehicleDetail.Projection.History.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím není uložená žádná historie událostí.</value></data>
+  <data name="VehicleDetail.Projection.History.Latest" xml:space="preserve"><value>Celkem událostí: {0}. Poslední událost: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.History.Odometer" xml:space="preserve"><value>Tachometr: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Fuel.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím nejsou uloženy žádné záznamy kilometrů ani tankování.</value></data>
+  <data name="VehicleDetail.Projection.Fuel.CountAndOdometer" xml:space="preserve"><value>Záznamů: {0}. Poslední tachometr: {1}.</value></data>
+  <data name="VehicleDetail.Projection.Fuel.LatestWithCost" xml:space="preserve"><value>Poslední tankování: {0} za {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Fuel.Latest" xml:space="preserve"><value>Poslední tankování: {0} ({1}).</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím nejsou uloženy žádné vlastní připomínky.</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Nearest" xml:space="preserve"><value>Připomínek: {0}. Nejbližší: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Record.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím není uložen žádný záznam pojištění ani dokladů.</value></data>
+  <data name="VehicleDetail.Projection.Record.Count" xml:space="preserve"><value>Záznamů: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Record.TitleWithProvider" xml:space="preserve"><value>{0} ({1})</value></data>
+  <data name="VehicleDetail.Projection.Record.NearestValidity" xml:space="preserve"><value>Nejbližší platnost: {0} do {1}.</value></data>
+  <data name="VehicleDetail.Projection.Record.NoValidity" xml:space="preserve"><value>U žádného záznamu není vyplněné datum platnosti.</value></data>
+  <data name="VehicleDetail.Projection.Record.MissingAttachments" xml:space="preserve"><value>Nedostupných příloh: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Record.EmptyPaths" xml:space="preserve"><value>Bez vyplněné cesty: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím nejsou uložené žádné plány údržby.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Count" xml:space="preserve"><value>Plánů údržby: {0}. Aktivních: {1}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Paused" xml:space="preserve"><value>Pozastavených: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.AllPaused" xml:space="preserve"><value>Všechny plány jsou momentálně pozastavené.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Nearest" xml:space="preserve"><value>Nejbližší: {0} ({1}).</value></data>
+  <data name="Reminder.Status.NoUsableDate" xml:space="preserve"><value>Bez použitelného termínu</value></data>
+  <data name="Reminder.Status.Overdue" xml:space="preserve"><value>Po termínu o {0} dnů</value></data>
+  <data name="Reminder.Status.Today" xml:space="preserve"><value>Dnes</value></data>
+  <data name="Reminder.Status.Tomorrow" xml:space="preserve"><value>Zítra</value></data>
+  <data name="Reminder.Status.InDays" xml:space="preserve"><value>Za {0} dnů</value></data>
+  <data name="Reminder.Repeat.None" xml:space="preserve"><value>bez opakování</value></data>
+  <data name="Reminder.Repeat.NoneLegacy" xml:space="preserve"><value>Neopakovat</value></data>
+  <data name="Maintenance.Interval.OneMonth" xml:space="preserve"><value>1 měsíc</value></data>
+  <data name="Maintenance.Interval.Months" xml:space="preserve"><value>{0} měsíců</value></data>
+  <data name="Maintenance.Interval.None" xml:space="preserve"><value>Bez intervalu</value></data>
+  <data name="Maintenance.Status.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
+  <data name="Maintenance.Status.Overdue" xml:space="preserve"><value>Po termínu o {0} dnů</value></data>
+  <data name="Maintenance.Status.Today" xml:space="preserve"><value>Servis dnes</value></data>
+  <data name="Maintenance.Status.InOneDay" xml:space="preserve"><value>Za 1 den</value></data>
+  <data name="Maintenance.Status.InDays" xml:space="preserve"><value>Za {0} dnů</value></data>
+  <data name="Maintenance.Status.MissingLastServiceDate" xml:space="preserve"><value>Chybí datum posledního servisu</value></data>
+  <data name="Maintenance.Status.OverDistanceLimit" xml:space="preserve"><value>Po limitu o {0}</value></data>
+  <data name="Maintenance.Status.Now" xml:space="preserve"><value>Servis nyní</value></data>
+  <data name="Maintenance.Status.InDistance" xml:space="preserve"><value>Za {0}</value></data>
+  <data name="Maintenance.Status.MissingOdometer" xml:space="preserve"><value>Chybí tachometr pro výpočet</value></data>
+  <data name="Maintenance.Status.NoActiveInterval" xml:space="preserve"><value>Bez aktivního intervalu</value></data>
+  <data name="VehicleList.Summary.Empty" xml:space="preserve"><value>Seznam vozidel: v datech zatím nejsou žádná vozidla.</value></data>
+  <data name="VehicleList.Filter.Category" xml:space="preserve"><value>kategorie {0}</value></data>
+  <data name="VehicleList.Filter.HideInactive" xml:space="preserve"><value>bez archivovaných a odstavených</value></data>
+  <data name="VehicleList.Filter.Search" xml:space="preserve"><value>hledání „{0}“</value></data>
+  <data name="VehicleList.Summary.All" xml:space="preserve"><value>Seznam vozidel: {0} vozidel.</value></data>
+  <data name="VehicleList.Summary.Filtered" xml:space="preserve"><value>Seznam vozidel: zobrazeno {0} z {1}. {2}</value></data>
+  <data name="VehicleList.Status.Technical" xml:space="preserve"><value>TK: {0}</value></data>
+  <data name="VehicleList.Status.GreenCard" xml:space="preserve"><value>ZK: {0}</value></data>
+  <data name="VehicleList.Status.Reminder" xml:space="preserve"><value>Připomínka: {0}</value></data>
+  <data name="VehicleList.Status.Maintenance" xml:space="preserve"><value>Údržba: {0}</value></data>
+  <data name="VehicleList.Status.MissingGreenCard" xml:space="preserve"><value>ZK chybí</value></data>
+  <data name="VehicleList.Status.AttentionCount" xml:space="preserve"><value>{0} položek k řešení</value></data>
+  <data name="VehicleList.Status.Ok" xml:space="preserve"><value>V pořádku</value></data>
+  <data name="FuelAnalysis.Value.SegmentPeriod" xml:space="preserve"><value>{0} až {1}</value></data>
 </root>
