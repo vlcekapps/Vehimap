@@ -10,7 +10,9 @@ public sealed class LegacyTimelineService : ITimelineService
 {
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
+    private readonly IAppUnitFormatService _unitFormatService;
     private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
+    private AppUnitPreferences _unitPreferences = new(AppUnitFormatService.Kilometers, AppUnitFormatService.Liters);
     private string _currency = AppCurrencyFormatService.CzechCrowns;
 
     public LegacyTimelineService()
@@ -18,10 +20,11 @@ public sealed class LegacyTimelineService : ITimelineService
     {
     }
 
-    public LegacyTimelineService(IAppLocalizer localizer, IAppNumberFormatService? numberFormatService = null)
+    public LegacyTimelineService(IAppLocalizer localizer, IAppNumberFormatService? numberFormatService = null, IAppUnitFormatService? unitFormatService = null)
     {
         _localizer = localizer;
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+        _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -30,6 +33,7 @@ public sealed class LegacyTimelineService : ITimelineService
             settings.Language,
             settings.ThousandsSeparator,
             settings.DecimalSeparator);
+        _unitPreferences = new AppUnitPreferences(settings.DistanceUnit, settings.VolumeUnit);
         _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
     }
 
@@ -218,17 +222,23 @@ public sealed class LegacyTimelineService : ITimelineService
         int reminderKm,
         out DateOnly dueDate,
         out string nextServiceText,
-        out string statusText) =>
-        TryBuildMaintenanceScheduleCore(
+        out string statusText)
+    {
+        var numberFormatService = new AppNumberFormatService();
+        return TryBuildMaintenanceScheduleCore(
             plan,
             currentOdometer,
             today,
             reminderDays,
             reminderKm,
             CreateDefaultLocalizer(),
+            new AppUnitFormatService(numberFormatService),
+            new AppCulturePreferences(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator),
+            new AppUnitPreferences(AppUnitFormatService.Kilometers, AppUnitFormatService.Liters),
             out dueDate,
             out nextServiceText,
             out statusText);
+    }
 
     private bool TryBuildMaintenanceScheduleLocalized(
         MaintenancePlan plan,
@@ -246,6 +256,9 @@ public sealed class LegacyTimelineService : ITimelineService
             reminderDays,
             reminderKm,
             _localizer,
+            _unitFormatService,
+            _culturePreferences,
+            _unitPreferences,
             out dueDate,
             out nextServiceText,
             out statusText);
@@ -257,6 +270,9 @@ public sealed class LegacyTimelineService : ITimelineService
         int reminderDays,
         int reminderKm,
         IAppLocalizer localizer,
+        IAppUnitFormatService unitFormatService,
+        AppCulturePreferences culturePreferences,
+        AppUnitPreferences unitPreferences,
         out DateOnly dueDate,
         out string nextServiceText,
         out string statusText)
@@ -279,17 +295,17 @@ public sealed class LegacyTimelineService : ITimelineService
             if (VehimapValueParser.TryParseOdometer(plan.LastServiceOdometer, out var lastServiceOdometer))
             {
                 var nextOdometer = lastServiceOdometer + intervalKm;
-                nextOdometerText = LF(localizer, "Timeline.Value.OdometerKm", nextOdometer);
+                nextOdometerText = FormatDistance(unitFormatService, culturePreferences, unitPreferences, nextOdometer);
                 if (currentOdometer.HasValue)
                 {
                     var remainingKm = nextOdometer - currentOdometer.Value;
                     if (remainingKm < 0)
                     {
-                        odometerStatus = LF(localizer, "Timeline.Status.OverDistanceLimitKm", Math.Abs(remainingKm));
+                        odometerStatus = LF(localizer, "Timeline.Status.OverDistanceLimit", FormatDistance(unitFormatService, culturePreferences, unitPreferences, Math.Abs(remainingKm)));
                     }
                     else if (remainingKm <= reminderKm)
                     {
-                        odometerStatus = LF(localizer, "Timeline.Status.WithinDistanceKm", remainingKm);
+                        odometerStatus = LF(localizer, "Timeline.Status.WithinDistance", FormatDistance(unitFormatService, culturePreferences, unitPreferences, remainingKm));
                     }
                 }
                 else
@@ -444,7 +460,15 @@ public sealed class LegacyTimelineService : ITimelineService
             return string.Empty;
         }
 
-        return liters.Contains('l', StringComparison.OrdinalIgnoreCase) ? liters : LF("Timeline.Value.Liters", liters.Trim());
+        if (!VehimapValueParser.TryParseDecimalNumber(liters, out var parsed))
+        {
+            return liters.Trim();
+        }
+
+        var normalized = _unitFormatService.Normalize(_unitPreferences);
+        var displayedVolume = _unitFormatService.ConvertVolumeFromLiters(parsed, normalized);
+        var decimalPlaces = displayedVolume == Math.Round(displayedVolume, 0) ? 0 : 2;
+        return _unitFormatService.FormatVolumeFromLiters(parsed, _culturePreferences, normalized, decimalPlaces);
     }
 
     private string FormatOdometerText(string? odometer)
@@ -454,7 +478,7 @@ public sealed class LegacyTimelineService : ITimelineService
             return string.Empty;
         }
 
-        return LF("Timeline.Value.OdometerKm", parsed);
+        return FormatDistance(parsed);
     }
 
     private string FormatReminderRepeatMode(string? repeatMode)
@@ -469,6 +493,16 @@ public sealed class LegacyTimelineService : ITimelineService
 
     private static string ValueOrFallback(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;
+
+    private string FormatDistance(decimal kilometers) =>
+        FormatDistance(_unitFormatService, _culturePreferences, _unitPreferences, kilometers);
+
+    private static string FormatDistance(
+        IAppUnitFormatService unitFormatService,
+        AppCulturePreferences culturePreferences,
+        AppUnitPreferences unitPreferences,
+        decimal kilometers) =>
+        unitFormatService.FormatDistanceFromKilometers(kilometers, culturePreferences, unitPreferences, decimalPlaces: 0);
 
     private static IAppLocalizer CreateDefaultLocalizer() =>
         new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));

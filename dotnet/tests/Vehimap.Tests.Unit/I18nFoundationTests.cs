@@ -874,6 +874,12 @@ public sealed class I18nFoundationTests
         Assert.Contains("Timeline.Status.Overdue", service);
         Assert.Contains("Timeline.Value.Cost", service);
         Assert.Contains("Timeline.Value.ServiceTask", service);
+        Assert.Contains("FormatDistanceFromKilometers", service);
+        Assert.Contains("FormatVolumeFromLiters", service);
+        Assert.DoesNotContain("Timeline.Value.OdometerKm", service);
+        Assert.DoesNotContain("Timeline.Value.Liters", service);
+        Assert.DoesNotContain("Timeline.Status.OverDistanceLimitKm", service);
+        Assert.DoesNotContain("Timeline.Status.WithinDistanceKm", service);
         Assert.Contains("new LegacyTimelineService(DesktopLocalization.LiveLocalizer)", mainWindowViewModel);
         Assert.Contains("TimelineWorkspace.Detail.Selected", timelineWorkspaceViewModel);
         Assert.Contains("TimelineWorkspace.Summary.Filtered", projectionService);

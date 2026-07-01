@@ -143,7 +143,7 @@ public sealed class LegacyTimelineServiceTests
         var maintenance = timeline.First(item => item.Kind == "maintenance");
         Assert.Equal("Maintenance plan", maintenance.KindLabel);
         Assert.Equal("Service task", maintenance.Title);
-        Assert.Equal("15.04.2026 | 23000 km", maintenance.Detail);
+        Assert.Equal("15.04.2026 | 14,292 mi", maintenance.Detail);
         Assert.Equal("In 14 days", maintenance.Status);
 
         var record = timeline.First(item => item.Kind == "record");
@@ -153,10 +153,13 @@ public sealed class LegacyTimelineServiceTests
         var history = timeline.First(item => item.Kind == "history");
         Assert.Equal("History", history.KindLabel);
         Assert.Equal("History", history.Title);
+        Assert.Contains("7,456 mi", history.Detail, StringComparison.Ordinal);
 
         var fuel = timeline.First(item => item.Kind == "fuel");
         Assert.Equal("Fuel", fuel.KindLabel);
         Assert.Equal("Fuel", fuel.Title);
+        Assert.Contains("7,736 mi", fuel.Detail, StringComparison.Ordinal);
+        Assert.Contains("10.57 US gal", fuel.Detail, StringComparison.Ordinal);
         Assert.Equal("$300.00", fuel.Status);
     }
 }

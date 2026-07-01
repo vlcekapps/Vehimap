@@ -1479,19 +1479,17 @@ Status: {5}</value></data>
   <data name="Timeline.Status.MissingCurrentOdometer" xml:space="preserve"><value>Current odometer is missing</value></data>
   <data name="Timeline.Status.MissingOdometerForCalculation" xml:space="preserve"><value>Odometer is missing for calculation</value></data>
   <data name="Timeline.Status.NoAlert" xml:space="preserve"><value>No alert</value></data>
-  <data name="Timeline.Status.OverDistanceLimitKm" xml:space="preserve"><value>Over distance limit by {0} km</value></data>
+  <data name="Timeline.Status.OverDistanceLimit" xml:space="preserve"><value>Over distance limit by {0}</value></data>
   <data name="Timeline.Status.Overdue" xml:space="preserve"><value>Overdue</value></data>
   <data name="Timeline.Status.Today" xml:space="preserve"><value>Due today</value></data>
-  <data name="Timeline.Status.WithinDistanceKm" xml:space="preserve"><value>Within {0} km</value></data>
+  <data name="Timeline.Status.WithinDistance" xml:space="preserve"><value>Within {0}</value></data>
   <data name="Timeline.Title.Fuel" xml:space="preserve"><value>Fuel</value></data>
   <data name="Timeline.Title.GreenCardEnd" xml:space="preserve"><value>Green card end</value></data>
   <data name="Timeline.Title.NextTechnicalInspection" xml:space="preserve"><value>Next technical inspection</value></data>
   <data name="Timeline.Title.Record" xml:space="preserve"><value>{0}: {1}</value></data>
   <data name="Timeline.Value.Cost" xml:space="preserve"><value>{0}</value></data>
-  <data name="Timeline.Value.Liters" xml:space="preserve"><value>{0} l</value></data>
   <data name="Timeline.Value.NoCost" xml:space="preserve"><value>-</value></data>
   <data name="Timeline.Value.NoRepeat" xml:space="preserve"><value>Do not repeat</value></data>
-  <data name="Timeline.Value.OdometerKm" xml:space="preserve"><value>{0} km</value></data>
   <data name="Timeline.Value.ServiceTask" xml:space="preserve"><value>Service task</value></data>
   <data name="Timeline.Value.Untitled" xml:space="preserve"><value>Untitled</value></data>
   <data name="VehicleList.Category" xml:space="preserve"><value>Category</value></data>
