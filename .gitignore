@@ -1,6 +1,7 @@
 *
 !.gitignore
 !README.md
+!README.en-US.md
 !RELEASE.md
 !CHANGELOG.md
 !favicon.ico

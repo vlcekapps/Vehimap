@@ -1,4 +1,8 @@
-# Vehimap .NET rewrite
+# Vehimap Developer README
+
+Tento dokument je určený pro vývojáře, testování, release přípravu a technické plánování. Uživatelský úvod k aplikaci je v kořenovém [README.md](../README.md).
+
+## Vehimap .NET rewrite
 
 Tato slozka obsahuje novou C# codebase pro multiplatformni desktopovy Vehimap.
 
