@@ -119,11 +119,11 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         {
             Vehicles =
             [
-                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Family car", "Skoda 120L", "", "1988", "43", "", "08/2026", "05/2025", "")
+                new Vehicle("veh_1", "pes od babičky", "Osobní vozidla", "Rodinné auto z garáže", "Škoda 120L", "", "1988", "43", "", "08/2026", "05/2025", "")
             ],
             VehicleMetaEntries =
             [
-                new VehicleMeta("veh_1", "Veterán", "", "Benzín", "Má klimatizaci", "Řemen", "Manuální")
+                new VehicleMeta("veh_1", "Veterán", "veterán; rodina", "Benzín", "Má klimatizaci", "Řemen", "Manuální")
             ],
             HistoryEntries =
             [
@@ -172,8 +172,11 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             relativePath => Path.Combine(dataRoot.DataPath, relativePath.Replace('/', Path.DirectorySeparatorChar)),
             new DateOnly(2026, 4, 3));
 
-        Assert.Contains("Skoda 120L | Passenger vehicles | No license plate", detail.Overview, StringComparison.Ordinal);
+        Assert.Equal("pes od babičky", detail.Heading);
+        Assert.Contains("Škoda 120L | Passenger vehicles | No license plate", detail.Overview, StringComparison.Ordinal);
         Assert.Contains("State: Veteran", detail.Overview, StringComparison.Ordinal);
+        Assert.Contains("Tags: veterán; rodina", detail.Overview, StringComparison.Ordinal);
+        Assert.Contains("Note: Rodinné auto z garáže", detail.Overview, StringComparison.Ordinal);
         Assert.Contains("Next technical inspection: 08/2026", detail.Dates, StringComparison.Ordinal);
         Assert.Contains("Green card until: not filled", detail.Dates, StringComparison.Ordinal);
         Assert.Contains("Status summary:", detail.Dates, StringComparison.Ordinal);

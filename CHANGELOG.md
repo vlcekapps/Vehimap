@@ -29,6 +29,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Import starších textových `.vehimapbak`, nové SQLite zálohy a balíčky vozidel nově odmítají nebezpečné cesty spravovaných příloh mimo `data/attachments`; sdílený path guard hlídá relativní cestu, zakazuje `..`, drive/UNC/absolutní cesty a ověřuje výsledné umístění přes full-path containment check.
 - Kontrola a příprava aktualizací už v běžném UI nezobrazuje syrové texty parserových nebo systémových výjimek; selhání zůstává lokalizované a technicky kategorizované bez úniku konkrétní low-level zprávy.
 - Shell při každém přepočtu projekcí znovu aplikuje jazyk z aktuální datové sady před sestavením detailu vozidla, seznamu a dashboardových souhrnů; anglický detail vozidla má regresní test proti návratu českých labelů typu `Příští TK`.
+- Lokalizační pravidla nově výslovně oddělují překládané rozhraní od uživatelsky zadaných dat; detail vozidla má regresní test, že anglické labely nepřepisují český název, model, štítky ani poznámku zadané uživatelem.
 - Start lokální/nightly aplikace už během programového refresh shellu neukládá preference řazení vyvolané synchronizací bindingů, takže UI vlákno nečeká na SQLite commit a okno po startu nezůstane ve stavu „neodpovídá“.
 
 ### Odstraněno
