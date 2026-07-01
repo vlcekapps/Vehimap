@@ -434,6 +434,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("InputElement.GotFocusEvent", codeBehind);
         Assert.Contains("OnElementGotFocus", codeBehind);
         Assert.Contains("_lastNonMenuFocusTarget", codeBehind);
+        Assert.Contains("RegisterVehicleListActivation(\"VehicleListBox\")", codeBehind);
+        Assert.Contains("OnVehicleListActivationKeyDown", codeBehind);
+        Assert.Contains("DesktopFocusTarget.VehicleDetailOpenInWindow", codeBehind);
+        Assert.Contains("DesktopFocusTarget.VehicleDetailPrimaryAction", codeBehind);
         Assert.DoesNotContain("FocusAndOpenMainMenu", codeBehind);
         Assert.DoesNotContain("IsSubMenuOpen = true", codeBehind);
         Assert.Contains("case Key.N", codeBehind);
@@ -447,6 +451,7 @@ public sealed class DesktopAccessibilityLabelTests
     public void Vehicle_detail_workspace_should_define_accessible_related_actions()
     {
         var xaml = ReadWorkspaceOrView("VehicleDetailWorkspaceView.axaml", true);
+        var codeBehind = ReadViewCodeBehind("Workspaces/VehicleDetailWorkspaceView.axaml.cs");
 
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailRelatedActionsPanel\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailRelatedActionsHelpText\"", xaml);
@@ -466,7 +471,27 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenServiceBookName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailCostsButton\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenCostsName}\"", xaml);
+        Assert.Contains("x:Name=\"VehicleDetailRecentHistoryListBox\"", xaml);
+        Assert.Contains("Focusable=\"True\"", xaml);
+        Assert.Contains("IsTabStop=\"True\"", xaml);
+        Assert.Contains("DesktopFocusTarget.VehicleDetailRecentHistoryList", codeBehind);
         Assert.Equal(8, Regex.Matches(xaml, "IsEnabled=\"\\{Binding CanOpenVehicleRelatedWorkspace\\}\"").Count);
+    }
+
+    [Fact]
+    public void Workspace_list_focus_should_target_named_listboxes_not_generated_items()
+    {
+        var workspaceBase = ReadViewCodeBehind("Workspaces/WorkspaceViewBase.cs");
+        var focusHelpers = ReadViewCodeBehind("Workspaces/WorkspaceFocusHelpers.cs");
+        var historyXaml = ReadWorkspaceOrView("HistoryWorkspaceView.axaml", true);
+
+        Assert.Contains("EnsureKeyboardFocusableLists", workspaceBase);
+        Assert.Contains("listBox.Focusable = true", workspaceBase);
+        Assert.Contains("listBox.IsTabStop = true", workspaceBase);
+        Assert.DoesNotContain("ContainerFromItem", focusHelpers);
+        Assert.Contains("x:Name=\"HistoryListBox\"", historyXaml);
+        Assert.Contains("Focusable=\"True\"", historyXaml);
+        Assert.Contains("IsTabStop=\"True\"", historyXaml);
     }
 
     [Fact]
@@ -1953,7 +1978,7 @@ public sealed class DesktopAccessibilityLabelTests
             ["DataStoreHealthWindow.axaml.cs"] = 1,
             ["EditorDialogFocusHelpers.cs"] = 2,
             ["KeyboardAccessibilityHelper.cs"] = 1,
-            ["MainWindow.axaml.cs"] = 4,
+            ["MainWindow.axaml.cs"] = 5,
             ["MaintenanceCompletionWindow.axaml.cs"] = 1,
             ["ModalWorkspaceWindowHelpers.cs"] = 1,
             ["NotificationWindow.axaml.cs"] = 1,
@@ -1983,11 +2008,13 @@ public sealed class DesktopAccessibilityLabelTests
         var accessibilityDocs = ReadDocumentationFile("ACCESSIBILITY.md");
         Assert.Contains("Documented keyboard/focus exceptions", accessibilityDocs);
         Assert.Contains("MainWindow.axaml.cs", accessibilityDocs);
+        Assert.Contains("Enter` on the focused vehicle list", accessibilityDocs);
         Assert.Contains("AvaloniaTrayService.cs", accessibilityDocs);
         Assert.Contains("Ctrl+Shift+Y", accessibilityDocs);
         Assert.Contains("KeyboardAccessibilityHelper.cs", accessibilityDocs);
         Assert.Contains("EditorDialogFocusHelpers.cs", accessibilityDocs);
         Assert.Contains("WorkspaceViewBase.cs", accessibilityDocs);
+        Assert.Contains("workspace list boxes are forced to be keyboard focusable", accessibilityDocs);
         Assert.Contains("VehicleStarterBundleWindow.axaml.cs", accessibilityDocs);
     }
 

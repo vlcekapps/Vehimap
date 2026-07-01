@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -11,6 +12,8 @@ namespace Vehimap.Desktop.Views.Workspaces;
 public interface IWorkspaceView
 {
     void FocusDefaultControl();
+
+    bool TryFocus(DesktopFocusTarget target);
 }
 
 public abstract class WorkspaceViewBase<TViewModel> : UserControl, IWorkspaceView
@@ -38,6 +41,7 @@ public abstract class WorkspaceViewBase<TViewModel> : UserControl, IWorkspaceVie
 
     protected WorkspaceViewBase()
     {
+        AttachedToVisualTree += (_, _) => EnsureKeyboardFocusableLists();
         DataContextChanged += OnDataContextChanged;
     }
 
@@ -50,6 +54,17 @@ public abstract class WorkspaceViewBase<TViewModel> : UserControl, IWorkspaceVie
         }
     }
 
+    public bool TryFocus(DesktopFocusTarget target)
+    {
+        if (!SupportsFocusTarget(target))
+        {
+            return false;
+        }
+
+        RequestFocus(target);
+        return true;
+    }
+
     protected abstract DesktopFocusTarget? GetDefaultFocusTarget();
 
     protected abstract bool SupportsFocusTarget(DesktopFocusTarget target);
@@ -58,6 +73,15 @@ public abstract class WorkspaceViewBase<TViewModel> : UserControl, IWorkspaceVie
 
     protected virtual void OnAllowEditingChanged()
     {
+    }
+
+    protected void EnsureKeyboardFocusableLists()
+    {
+        foreach (var listBox in this.GetVisualDescendants().OfType<ListBox>())
+        {
+            listBox.Focusable = true;
+            listBox.IsTabStop = true;
+        }
     }
 
     protected void RegisterShiftTabBackNavigation(params string[] controlNames) =>

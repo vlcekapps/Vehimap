@@ -24,12 +24,14 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
     }
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
-        target is DesktopFocusTarget.VehicleDetailPrimaryAction;
+        target is DesktopFocusTarget.VehicleDetailPrimaryAction
+            or DesktopFocusTarget.VehicleDetailRecentHistoryList;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
             DesktopFocusTarget.VehicleDetailPrimaryAction => ResolvePrimaryAction(),
+            DesktopFocusTarget.VehicleDetailRecentHistoryList => this.FindControl<ListBox>("VehicleDetailRecentHistoryListBox"),
             _ => null
         };
 

@@ -113,8 +113,14 @@ Avalonia shell. New entries require a regression test.
   strip. Keep until a native `TabControl` prototype proves better with NVDA.
 - `MainWindow.axaml.cs`: boundary focus between vehicle filters, the vehicle list and
   selected workspace tab header.
+- `MainWindow.axaml.cs`: `Enter` on the focused vehicle list opens the Detail workspace
+  and moves focus to the first logical Detail action, so screen readers announce a
+  stable destination instead of an implicit `ListBox` item activation.
 - `WorkspaceViewBase.cs`: reverse tab boundary from embedded workspace content back to
   the selected shell tab header when a workspace is hosted inside the main window.
+- `WorkspaceViewBase.cs`: workspace list boxes are forced to be keyboard focusable and
+  explicit tab stops after the view is attached. This protects list navigation on every
+  hosted card while each list keeps its own accessible name and item labels.
 - `KeyboardAccessibilityHelper.cs`: let text boxes keep standard cursor/editing keys,
   let combo boxes open with plain up/down arrows and provide the temporary `TextBox UIA
   text fallback` live region for caret context. The helper is registered on every
