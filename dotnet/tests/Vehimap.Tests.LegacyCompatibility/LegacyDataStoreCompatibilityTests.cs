@@ -15,7 +15,7 @@ public sealed class LegacyDataStoreCompatibilityTests
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-malformed-" + Guid.NewGuid());
         var dataRoot = new Vehimap.Application.Abstractions.VehimapDataRoot(tempRoot, Path.Combine(tempRoot, "data"), true);
-        var store = new LegacyVehimapDataStore();
+        var store = new LegacyVehimapDataStore(CzechLocalizer());
         var vehiclesPath = Path.Combine(dataRoot.DataPath, "vehicles.tsv");
 
         try
@@ -195,7 +195,7 @@ public sealed class LegacyDataStoreCompatibilityTests
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-missing-backup-" + Guid.NewGuid());
         var backupPath = Path.Combine(tempRoot, "missing.vehimapbak");
-        var backupService = new LegacyBackupService();
+        var backupService = new LegacyBackupService(CzechLocalizer());
 
         try
         {
@@ -220,7 +220,7 @@ public sealed class LegacyDataStoreCompatibilityTests
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-invalid-backup-" + Guid.NewGuid());
         var backupPath = Path.Combine(tempRoot, "broken.vehimapbak");
-        var backupService = new LegacyBackupService();
+        var backupService = new LegacyBackupService(CzechLocalizer());
 
         try
         {
@@ -279,7 +279,7 @@ public sealed class LegacyDataStoreCompatibilityTests
     {
         var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-invalid-attachment-backup-" + Guid.NewGuid());
         var backupPath = Path.Combine(tempRoot, "broken-attachment.vehimapbak");
-        var backupService = new LegacyBackupService();
+        var backupService = new LegacyBackupService(CzechLocalizer());
         var attachments = "# Vehimap attachments v1\nattachments/veh_1/tp.pdf\t%%%neni-base64%%%\n";
 
         try
@@ -485,4 +485,7 @@ public sealed class LegacyDataStoreCompatibilityTests
 
         return $"{header}\n\n{settings}{vehicles}{history}{fuel}{records}{meta}{reminders}{maintenance}{attachmentsContent}";
     }
+
+    private static ResourceAppLocalizer CzechLocalizer() =>
+        new(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
 }
