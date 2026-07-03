@@ -2380,6 +2380,10 @@ Transmission: {3}</value></data>
   <data name="VehicleList.Status.MissingGreenCard" xml:space="preserve"><value>Green card missing</value></data>
   <data name="VehicleList.Status.AttentionCount" xml:space="preserve"><value>{0} items to review</value></data>
   <data name="VehicleList.Status.Ok" xml:space="preserve"><value>OK</value></data>
+  <data name="VehicleListItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, license plate {3}, state {4}, {5}</value></data>
+  <data name="VehicleListItem.NoState" xml:space="preserve"><value>no state</value></data>
+  <data name="TimelineItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, {3}, status {4}, detail {5}</value></data>
+  <data name="SmartAdvisorItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, {3}. {4}. {5}. Action: {6}.</value></data>
   <data name="FuelAnalysis.Value.SegmentPeriod" xml:space="preserve"><value>{0} to {1}</value></data>
   <data name="Shell.Subtitle.Stable" xml:space="preserve"><value>Multiplatform desktop for Vehimap data.</value></data>
   <data name="Shell.Subtitle.Channel" xml:space="preserve"><value>Multiplatform desktop for the separate {0} channel.</value></data>

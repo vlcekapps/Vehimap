@@ -32,6 +32,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Lokalizační pravidla nově výslovně oddělují překládané rozhraní od uživatelsky zadaných dat; detail vozidla má regresní test, že anglické labely nepřepisují český název, model, štítky ani poznámku zadané uživatelem.
 - Start lokální/nightly aplikace už během programového refresh shellu neukládá preference řazení vyvolané synchronizací bindingů, takže UI vlákno nečeká na SQLite commit a okno po startu nezůstane ve stavu „neodpovídá“.
 - Uložené filtry, řazení, období nákladů a navigační cíle v C# shellu nově používají stabilní interní klíče místo viditelných EN/CS popisků; staré české i anglické labely z dřívějších nightly buildů zůstávají kompatibilními aliasy a při dalším uložení se normalizují.
+- I18n brána pro Windows nightly nově automaticky ověřuje anglické UI nad českými legacy daty: známé systémové hodnoty jako kategorie, palivo, doklad nebo opakování se zobrazují anglicky, zatímco uživatelsky zadané názvy, poznámky a texty zůstávají beze změny.
+- Produkční C# kód má novou statickou ochranu proti návratu českých UI literálů mimo `.resx`; povolené zůstávají jen zdokumentované legacy tokeny, kompatibilní aliasy a katalogy používané jako data/šablony.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.

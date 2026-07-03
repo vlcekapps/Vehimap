@@ -5,6 +5,7 @@ using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Enums;
@@ -91,6 +92,9 @@ public sealed class DesktopProjectionAndNavigationServiceTests
     [Fact]
     public void Projection_service_localizes_vehicle_list_detail_and_records()
     {
+        DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+        try
+        {
         var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
         var projectionService = new DesktopProjectionService(localizer, CultureInfo.GetCultureInfo("en-US"));
         projectionService.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
@@ -162,6 +166,11 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("Veteran", vehicle.State);
         Assert.Equal("Gasoline", vehicle.Powertrain);
         Assert.Equal("No license plate", vehicle.Plate);
+        Assert.Contains("license plate", vehicle.AccessibleLabel, StringComparison.Ordinal);
+        Assert.Contains("state Veteran", vehicle.AccessibleLabel, StringComparison.Ordinal);
+        Assert.DoesNotContain("SPZ", vehicle.AccessibleLabel, StringComparison.Ordinal);
+        Assert.DoesNotContain("stav", vehicle.AccessibleLabel, StringComparison.Ordinal);
+        Assert.Contains("pes od babičky", vehicle.AccessibleLabel, StringComparison.Ordinal);
         Assert.Contains("Green card missing", vehicle.StatusSummary, StringComparison.Ordinal);
         Assert.DoesNotContain("ZK chybí", vehicle.StatusSummary, StringComparison.Ordinal);
         Assert.Equal("Vehicle list: 1 vehicles.", vehicleList.Summary);
@@ -216,6 +225,134 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("Managed copy", record.AttachmentMode);
         Assert.Equal("File available", record.AttachmentState);
         Assert.Equal("The selected vehicle has 1 documents. Select an entry to open the file or its folder.", records.Summary);
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
+    }
+
+    [Fact]
+    public void Accessible_item_labels_follow_active_language_and_keep_user_data_raw()
+    {
+        try
+        {
+            DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+
+            var vehicle = new VehicleListItemViewModel(
+                "veh_1",
+                "pes od babičky",
+                "Passenger vehicles",
+                "No license plate",
+                "Škoda 120L",
+                "Rodinné auto",
+                "08/2026",
+                "05/2026",
+                "Veteran",
+                "Gasoline",
+                "Green card missing");
+            Assert.Contains("license plate No license plate", vehicle.AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains("state Veteran", vehicle.AccessibleLabel, StringComparison.Ordinal);
+            Assert.DoesNotContain("SPZ", vehicle.AccessibleLabel, StringComparison.Ordinal);
+            Assert.DoesNotContain("stav", vehicle.AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains("pes od babičky", vehicle.AccessibleLabel, StringComparison.Ordinal);
+
+            var timeline = new VehicleTimelineItemViewModel(
+                "technical",
+                "Technical inspection",
+                "08/2026",
+                "Next technical inspection",
+                "Škoda 120L",
+                "Upcoming",
+                "pes od babičky",
+                "veh_1",
+                "veh_1",
+                true,
+                string.Empty);
+            Assert.Contains("status Upcoming", timeline.AccessibleLabel, StringComparison.Ordinal);
+            Assert.DoesNotContain("stav", timeline.AccessibleLabel, StringComparison.Ordinal);
+
+            var advisor = new SmartAdvisorItemViewModel(
+                "advisor_1",
+                "Critical",
+                "Attachments",
+                "pes od babičky",
+                "veh_1",
+                "Doklad",
+                "rec_1",
+                "Missing attachment",
+                "Attachment is not available.",
+                "Open the document record.",
+                "Open document",
+                "no due date",
+                1);
+            Assert.Contains("Action: Open document", advisor.AccessibleLabel, StringComparison.Ordinal);
+            Assert.DoesNotContain("Akce:", advisor.AccessibleLabel, StringComparison.Ordinal);
+
+            var search = new GlobalSearchResultItemViewModel(
+                "veh_1",
+                "vehicle",
+                "veh_1",
+                "pes od babičky",
+                "Documents",
+                "Liability insurance",
+                "Valid until 05/2026");
+            Assert.Contains("vehicle pes od babičky", search.AccessibleLabel, StringComparison.Ordinal);
+            Assert.DoesNotContain("vozidlo pes od babičky", search.AccessibleLabel, StringComparison.Ordinal);
+
+            DesktopLocalization.Configure(new AppCulturePreferences("cs-CZ", "none", "comma"));
+
+            Assert.Contains("SPZ Bez SPZ", new VehicleListItemViewModel(
+                "veh_1",
+                "pes od babičky",
+                "Osobní vozidla",
+                "Bez SPZ",
+                "Škoda 120L",
+                "Rodinné auto",
+                "08/2026",
+                "05/2026",
+                "Veterán",
+                "Benzín",
+                "ZK chybí").AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains("stav Nadcházející", new VehicleTimelineItemViewModel(
+                "technical",
+                "Technická kontrola",
+                "08/2026",
+                "Příští TK",
+                "Škoda 120L",
+                "Nadcházející",
+                "pes od babičky",
+                "veh_1",
+                "veh_1",
+                true,
+                string.Empty).AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains("Akce: Otevřít doklad", new SmartAdvisorItemViewModel(
+                "advisor_1",
+                "Kritická",
+                "Přílohy",
+                "pes od babičky",
+                "veh_1",
+                "Doklad",
+                "rec_1",
+                "Chybí příloha",
+                "Soubor přílohy není dostupný.",
+                "Otevřete evidenci dokladů.",
+                "Otevřít doklad",
+                "bez termínu",
+                1).AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains("vozidlo pes od babičky", new GlobalSearchResultItemViewModel(
+                "veh_1",
+                "vehicle",
+                "veh_1",
+                "pes od babičky",
+                "Doklady",
+                "Povinné ručení",
+                "Platné do 05/2026").AccessibleLabel, StringComparison.Ordinal);
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
     }
 
     [Fact]
@@ -566,6 +703,9 @@ public sealed class DesktopProjectionAndNavigationServiceTests
     [Fact]
     public void Projection_service_localizes_smart_advisor_priority_category_and_due_date()
     {
+        DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+        try
+        {
         var projectionService = new DesktopProjectionService(
             new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")),
             CultureInfo.GetCultureInfo("en-US"));
@@ -609,8 +749,15 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("Critical", projection.Items[0].Priority);
         Assert.Equal("Attachments", projection.Items[0].Category);
         Assert.Equal("7/2/2026", projection.Items[0].DueDate);
+        Assert.Contains("Action: Open document", projection.Items[0].AccessibleLabel, StringComparison.Ordinal);
+        Assert.DoesNotContain("Akce:", projection.Items[0].AccessibleLabel, StringComparison.Ordinal);
         Assert.Equal("Recommendation", projection.Items[1].Priority);
         Assert.Equal("Costs", projection.Items[1].Category);
         Assert.Equal("no due date", projection.Items[1].DueDate);
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
     }
 }

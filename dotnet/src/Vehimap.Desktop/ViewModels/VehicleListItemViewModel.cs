@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record VehicleListItemViewModel(
@@ -15,9 +17,11 @@ public sealed record VehicleListItemViewModel(
     string StatusSummary)
 {
     public string AccessibleLabel =>
-        $"{Name}, {MakeModel}, {Category}, SPZ {Plate}, stav {StateOrFallback}, {StatusSummary}";
+        DesktopLocalization.Localizer.Format("VehicleListItem.AccessibleLabel", Name, MakeModel, Category, Plate, StateOrFallback, StatusSummary);
 
-    private string StateOrFallback => string.IsNullOrWhiteSpace(State) ? "bez stavu" : State;
+    private string StateOrFallback => string.IsNullOrWhiteSpace(State)
+        ? DesktopLocalization.Localizer.GetString("VehicleListItem.NoState")
+        : State;
 
     public override string ToString() => AccessibleLabel;
 }

@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record SmartAdvisorItemViewModel(
@@ -17,7 +19,7 @@ public sealed record SmartAdvisorItemViewModel(
     int PriorityRank)
 {
     public string AccessibleLabel =>
-        $"{Priority}, {Category}, {VehicleName}, {Title}. {Summary}. {Detail}. Akce: {ActionLabel}.";
+        DesktopLocalization.Localizer.Format("SmartAdvisorItem.AccessibleLabel", Priority, Category, VehicleName, Title, Summary, Detail, ActionLabel);
 
     public override string ToString() => AccessibleLabel;
 }

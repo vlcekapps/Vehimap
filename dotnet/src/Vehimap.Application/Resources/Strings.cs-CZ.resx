@@ -2380,6 +2380,10 @@ Převodovka: {3}</value></data>
   <data name="VehicleList.Status.MissingGreenCard" xml:space="preserve"><value>ZK chybí</value></data>
   <data name="VehicleList.Status.AttentionCount" xml:space="preserve"><value>{0} položek k řešení</value></data>
   <data name="VehicleList.Status.Ok" xml:space="preserve"><value>V pořádku</value></data>
+  <data name="VehicleListItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, SPZ {3}, stav {4}, {5}</value></data>
+  <data name="VehicleListItem.NoState" xml:space="preserve"><value>bez stavu</value></data>
+  <data name="TimelineItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, {3}, stav {4}, detail {5}</value></data>
+  <data name="SmartAdvisorItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, {3}. {4}. {5}. Akce: {6}.</value></data>
   <data name="FuelAnalysis.Value.SegmentPeriod" xml:space="preserve"><value>{0} až {1}</value></data>
   <data name="Shell.Subtitle.Stable" xml:space="preserve"><value>Multiplatformní desktop nad daty Vehimapu.</value></data>
   <data name="Shell.Subtitle.Channel" xml:space="preserve"><value>Multiplatformní desktop nad odděleným kanálem {0}.</value></data>

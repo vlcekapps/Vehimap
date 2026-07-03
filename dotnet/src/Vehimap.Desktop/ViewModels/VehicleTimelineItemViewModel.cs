@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed record VehicleTimelineItemViewModel(
@@ -15,7 +17,7 @@ public sealed record VehicleTimelineItemViewModel(
     string Note)
 {
     public string AccessibleLabel =>
-        $"{VehicleName}, {Date}, {KindLabel}, {Title}, stav {Status}, detail {Detail}";
+        DesktopLocalization.Localizer.Format("TimelineItem.AccessibleLabel", VehicleName, Date, KindLabel, Title, Status, Detail);
 
     public override string ToString() => AccessibleLabel;
 }

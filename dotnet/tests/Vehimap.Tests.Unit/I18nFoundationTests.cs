@@ -5,6 +5,8 @@ using System.Xml.Linq;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
+using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Models;
 using Xunit;
 
@@ -1252,6 +1254,71 @@ public sealed class I18nFoundationTests
         Assert.DoesNotContain("IReadOnlyList<string> ReminderRepeatModeOptions => LegacyKnownValues.ReminderRepeatModes", reminderWorkspace);
     }
 
+    [Fact]
+    public void Known_value_options_keep_values_stable_across_language_switches()
+    {
+        try
+        {
+            DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+            var englishCategory = KnownValueOptions.SelectVehicleCategory("Osobní vozidla");
+            var englishFuel = KnownValueOptions.SelectFuelType("Gasoline");
+            var customFuel = KnownValueOptions.SelectFuelType("Natural 100");
+
+            Assert.Equal("Osobní vozidla", englishCategory.Value);
+            Assert.Equal("Passenger vehicles", englishCategory.Label);
+            Assert.Equal("Benzin", englishFuel.Value);
+            Assert.Equal("Gasoline", englishFuel.Label);
+            Assert.Equal("Natural 100", customFuel.Value);
+            Assert.Equal("Natural 100", customFuel.Label);
+
+            DesktopLocalization.Configure(new AppCulturePreferences("cs-CZ", "none", "comma"));
+            var czechCategory = KnownValueOptions.SelectVehicleCategory(englishCategory.Value);
+            var czechFuel = KnownValueOptions.SelectFuelType(englishFuel.Value);
+
+            Assert.Equal("Osobní vozidla", czechCategory.Value);
+            Assert.Equal("Osobní vozidla", czechCategory.Label);
+            Assert.Equal("Benzin", czechFuel.Value);
+            Assert.Equal("Benzín", czechFuel.Label);
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
+    }
+
+    [Fact]
+    public void Production_czech_text_is_limited_to_i18n_compatibility_boundaries()
+    {
+        var root = FindRepositoryRoot();
+        var sourceRoot = Path.Combine(root, "dotnet", "src");
+        var failures = new List<string>();
+        foreach (var file in Directory.EnumerateFiles(sourceRoot, "*.*", SearchOption.AllDirectories)
+                     .Where(path => Path.GetExtension(path) is ".cs" or ".axaml")
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Resources{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase)))
+        {
+            var relativePath = Path.GetRelativePath(root, file).Replace('\\', '/');
+            var lineNumber = 0;
+            foreach (var line in File.ReadLines(file))
+            {
+                lineNumber++;
+                if (!CzechDiacriticsRegex().IsMatch(line) || IsAllowedProductionCzechCompatibilityLine(relativePath, line.Trim()))
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{lineNumber}: {line.Trim()}");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Hardcoded Czech production text is allowed only for legacy tokens, compatibility aliases and documented catalogs. Offending lines:" +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
     private static SortedSet<string> ReadResourceKeys(string path)
     {
         var document = XDocument.Load(path);
@@ -1265,6 +1332,69 @@ public sealed class I18nFoundationTests
 
     private static Regex CzechDiacriticsRegex() =>
         new("[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]", RegexOptions.Compiled);
+
+    private static bool IsAllowedProductionCzechCompatibilityLine(string relativePath, string line)
+    {
+        if (relativePath is
+            "dotnet/src/Vehimap.Storage.Legacy/LegacyKnownValues.cs" or
+            "dotnet/src/Vehimap.Storage.Legacy/LegacyVehicleValueNormalization.cs" or
+            "dotnet/src/Vehimap.Application/Services/LegacyKnownValueDisplayService.cs" or
+            "dotnet/src/Vehimap.Application/Services/LegacyServiceBookService.cs" or
+            "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs" or
+            "dotnet/src/Vehimap.Desktop/Services/DesktopEntityKinds.cs" or
+            "dotnet/src/Vehimap.Desktop/ViewModels/KnownValueOptions.cs" or
+            "dotnet/src/Vehimap.Desktop/ViewModels/MainWindowViewModel.CostPreferences.cs" or
+            "dotnet/src/Vehimap.Desktop/ViewModels/MainWindowViewModel.TimelinePreferences.cs" or
+            "dotnet/src/Vehimap.Desktop/ViewModels/MainWindowViewModel.VehicleListFilters.cs" or
+            "dotnet/src/Vehimap.Desktop/ViewModels/Workspaces/WorkspaceSortHelpers.cs")
+        {
+            return true;
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Application/Services/AppCurrencyFormatService.cs")
+        {
+            return line.Contains("\"Kč\"", StringComparison.Ordinal);
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Application/Services/VehimapValueParser.cs")
+        {
+            return line.Contains("\"kč\"", StringComparison.Ordinal);
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Desktop/Services/DesktopProjectionService.cs")
+        {
+            return line.Contains("\"Po termínu\"", StringComparison.Ordinal)
+                || line.Contains("\"nyní\"", StringComparison.Ordinal)
+                || line.Contains("\"Chybí\"", StringComparison.Ordinal)
+                || line.Contains("\"Budoucí\"", StringComparison.Ordinal)
+                || line.Contains("\"Minulé\"", StringComparison.Ordinal)
+                || line.Contains("\"Neaktivní\"", StringComparison.Ordinal)
+                || line.Contains("\"Bez upozornění\"", StringComparison.Ordinal)
+                || line.Contains("\"Běžný provoz\"", StringComparison.Ordinal);
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Desktop/Services/DesktopPrintableVehicleReportService.cs")
+        {
+            return line.Contains("\"Po termínu\"", StringComparison.Ordinal)
+                || line.Contains("\"Servis nyní\"", StringComparison.Ordinal)
+                || line.Contains("\"Bez upozornění\"", StringComparison.Ordinal);
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Desktop/ViewModels/MainWindowViewModel.Editing.cs")
+        {
+            return line.Contains("\"Každých 5 let\"", StringComparison.Ordinal)
+                || line.Contains("\"Každé 2 roky\"", StringComparison.Ordinal)
+                || line.Contains("\"Každý rok\"", StringComparison.Ordinal);
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Desktop/ViewModels/Workspaces/RecordWorkspaceViewModel.cs")
+        {
+            return line.Contains("\"Spravovaná kopie\"", StringComparison.Ordinal)
+                || line.Contains("\"Externí cesta\"", StringComparison.Ordinal);
+        }
+
+        return false;
+    }
 
     private static string CreateTempDirectory()
     {
