@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Storage.Legacy;
 
@@ -18,12 +20,22 @@ public sealed partial class MainWindowViewModel
     private const string EnglishAttentionVehicleStatusFilterLabel = "Only vehicles needing review";
     private const string EnglishOverdueVehicleStatusFilterLabel = "Only overdue vehicles";
     private const string EnglishMissingGreenVehicleStatusFilterLabel = "Only missing green card";
+    internal const string VehicleCategoryAllFilterKey = "all";
+    internal const string VehicleStatusAllFilterKey = "all";
+    internal const string VehicleStatusAttentionFilterKey = "attention";
+    internal const string VehicleStatusOverdueFilterKey = "overdue";
+    internal const string VehicleStatusMissingGreenCardFilterKey = "missing_green_card";
 
     internal static string AllVehicleCategoriesLabel => LO("VehicleList.FilterOption.AllCategories");
     internal static string AllVehicleStatusFilterLabel => LO("VehicleList.FilterOption.AllVehicles");
     internal static string AttentionVehicleStatusFilterLabel => LO("VehicleList.FilterOption.Attention");
     internal static string OverdueVehicleStatusFilterLabel => LO("VehicleList.FilterOption.Overdue");
     internal static string MissingGreenVehicleStatusFilterLabel => LO("VehicleList.FilterOption.MissingGreenCard");
+    private static LocalizedOptionViewModel AllVehicleCategoriesOption => new(VehicleCategoryAllFilterKey, AllVehicleCategoriesLabel);
+    private static LocalizedOptionViewModel AllVehicleStatusFilterOption => new(VehicleStatusAllFilterKey, AllVehicleStatusFilterLabel);
+    private static LocalizedOptionViewModel AttentionVehicleStatusFilterOption => new(VehicleStatusAttentionFilterKey, AttentionVehicleStatusFilterLabel);
+    private static LocalizedOptionViewModel OverdueVehicleStatusFilterOption => new(VehicleStatusOverdueFilterKey, OverdueVehicleStatusFilterLabel);
+    private static LocalizedOptionViewModel MissingGreenVehicleStatusFilterOption => new(VehicleStatusMissingGreenCardFilterKey, MissingGreenVehicleStatusFilterLabel);
 
     private const string VehicleListCategoryFilterSettingKey = "vehicle_category_filter";
     private const string VehicleListStatusFilterSettingKey = "vehicle_status_filter";
@@ -38,33 +50,33 @@ public sealed partial class MainWindowViewModel
     private string vehicleSearchText = string.Empty;
 
     [ObservableProperty]
-    private string selectedVehicleCategoryFilter = AllVehicleCategoriesLabel;
+    private LocalizedOptionViewModel selectedVehicleCategoryFilter = AllVehicleCategoriesOption;
 
     [ObservableProperty]
-    private string selectedVehicleStatusFilter = AllVehicleStatusFilterLabel;
+    private LocalizedOptionViewModel selectedVehicleStatusFilter = AllVehicleStatusFilterOption;
 
     [ObservableProperty]
     private bool hideInactiveVehicles;
 
-    public IReadOnlyList<string> VehicleCategoryFilters =>
+    public IReadOnlyList<LocalizedOptionViewModel> VehicleCategoryFilters =>
     [
-        AllVehicleCategoriesLabel,
-        .. LegacyKnownValues.Categories
+        AllVehicleCategoriesOption,
+        .. LegacyKnownValues.Categories.Select(category => new LocalizedOptionViewModel(category, LegacyKnownValueDisplayService.FormatCategory(category, DesktopLocalization.Localizer)))
     ];
 
-    public IReadOnlyList<string> VehicleStatusFilters =>
+    public IReadOnlyList<LocalizedOptionViewModel> VehicleStatusFilters =>
     [
-        AllVehicleStatusFilterLabel,
-        AttentionVehicleStatusFilterLabel,
-        OverdueVehicleStatusFilterLabel,
-        MissingGreenVehicleStatusFilterLabel
+        AllVehicleStatusFilterOption,
+        AttentionVehicleStatusFilterOption,
+        OverdueVehicleStatusFilterOption,
+        MissingGreenVehicleStatusFilterOption
     ];
 
     public bool CanClearVehicleFilters =>
         CanUseVehicleList
         && (!string.IsNullOrWhiteSpace(VehicleSearchText)
-            || !IsAllVehicleCategoryFilter(SelectedVehicleCategoryFilter)
-            || !IsAllVehicleStatusFilter(SelectedVehicleStatusFilter)
+            || !IsAllVehicleCategoryFilter(SelectedVehicleCategoryFilter.Value)
+            || !IsAllVehicleStatusFilter(SelectedVehicleStatusFilter.Value)
             || HideInactiveVehicles);
 
     partial void OnVehicleSearchTextChanged(string value)
@@ -72,12 +84,12 @@ public sealed partial class MainWindowViewModel
         HandleVehicleListFiltersChanged();
     }
 
-    partial void OnSelectedVehicleCategoryFilterChanged(string value)
+    partial void OnSelectedVehicleCategoryFilterChanged(LocalizedOptionViewModel value)
     {
         HandleVehicleListFiltersChanged(persistVehicleListPreferences: true);
     }
 
-    partial void OnSelectedVehicleStatusFilterChanged(string value)
+    partial void OnSelectedVehicleStatusFilterChanged(LocalizedOptionViewModel value)
     {
         HandleVehicleListFiltersChanged(persistVehicleListPreferences: true);
     }
@@ -94,8 +106,8 @@ public sealed partial class MainWindowViewModel
         try
         {
             VehicleSearchText = string.Empty;
-            SelectedVehicleCategoryFilter = AllVehicleCategoriesLabel;
-            SelectedVehicleStatusFilter = AllVehicleStatusFilterLabel;
+            SelectedVehicleCategoryFilter = AllVehicleCategoriesOption;
+            SelectedVehicleStatusFilter = AllVehicleStatusFilterOption;
             HideInactiveVehicles = false;
         }
         finally
@@ -116,8 +128,8 @@ public sealed partial class MainWindowViewModel
         try
         {
             HideInactiveVehicles = GetHideInactiveVehiclesEnabled();
-            SelectedVehicleCategoryFilter = NormalizeVehicleCategoryFilter(_dataSet.Settings.GetValue("app", VehicleListCategoryFilterSettingKey, AllVehicleCategoriesLabel));
-            SelectedVehicleStatusFilter = NormalizeVehicleStatusFilter(_dataSet.Settings.GetValue("app", VehicleListStatusFilterSettingKey, AllVehicleStatusFilterLabel));
+            SelectedVehicleCategoryFilter = NormalizeVehicleCategoryFilter(_dataSet.Settings.GetValue("app", VehicleListCategoryFilterSettingKey, VehicleCategoryAllFilterKey));
+            SelectedVehicleStatusFilter = NormalizeVehicleStatusFilter(_dataSet.Settings.GetValue("app", VehicleListStatusFilterSettingKey, VehicleStatusAllFilterKey));
         }
         finally
         {
@@ -164,8 +176,8 @@ public sealed partial class MainWindowViewModel
         }
 
         var hideInactiveValue = HideInactiveVehicles ? "1" : "0";
-        var categoryFilter = NormalizeVehicleCategoryFilter(SelectedVehicleCategoryFilter);
-        var statusFilter = NormalizeVehicleStatusFilter(SelectedVehicleStatusFilter);
+        var categoryFilter = NormalizeVehicleCategoryFilter(SelectedVehicleCategoryFilter.Value).Value;
+        var statusFilter = NormalizeVehicleStatusFilter(SelectedVehicleStatusFilter.Value).Value;
         PersistPreferenceSettingsAsync(
             settings =>
             {
@@ -176,61 +188,63 @@ public sealed partial class MainWindowViewModel
             LO("VehicleList.Persistence.FiltersFailed"));
     }
 
-    private string NormalizeVehicleCategoryFilter(string? value)
+    private LocalizedOptionViewModel NormalizeVehicleCategoryFilter(string? value)
     {
-        var normalized = string.IsNullOrWhiteSpace(value) ? AllVehicleCategoriesLabel : value.Trim();
+        var normalized = string.IsNullOrWhiteSpace(value) ? VehicleCategoryAllFilterKey : value.Trim();
         if (IsAllVehicleCategoryFilter(normalized))
         {
-            return AllVehicleCategoriesLabel;
+            return AllVehicleCategoriesOption;
         }
 
-        return VehicleCategoryFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
-            ? normalized
-            : AllVehicleCategoriesLabel;
+        var category = LegacyKnownValues.Categories.FirstOrDefault(item =>
+            string.Equals(item, normalized, StringComparison.Ordinal)
+            || string.Equals(LegacyKnownValueDisplayService.FormatCategory(item, DesktopLocalization.Localizer), normalized, StringComparison.OrdinalIgnoreCase));
+
+        return category is not null
+            ? new LocalizedOptionViewModel(category, LegacyKnownValueDisplayService.FormatCategory(category, DesktopLocalization.Localizer))
+            : AllVehicleCategoriesOption;
     }
 
-    private string NormalizeVehicleStatusFilter(string? value)
+    private LocalizedOptionViewModel NormalizeVehicleStatusFilter(string? value)
     {
-        var normalized = string.IsNullOrWhiteSpace(value) ? AllVehicleStatusFilterLabel : value.Trim();
+        var normalized = string.IsNullOrWhiteSpace(value) ? VehicleStatusAllFilterKey : value.Trim();
         if (IsAllVehicleStatusFilter(normalized))
         {
-            return AllVehicleStatusFilterLabel;
+            return AllVehicleStatusFilterOption;
         }
 
         if (IsAttentionVehicleStatusFilter(normalized))
         {
-            return AttentionVehicleStatusFilterLabel;
+            return AttentionVehicleStatusFilterOption;
         }
 
         if (IsOverdueVehicleStatusFilter(normalized))
         {
-            return OverdueVehicleStatusFilterLabel;
+            return OverdueVehicleStatusFilterOption;
         }
 
         if (IsMissingGreenCardVehicleStatusFilter(normalized))
         {
-            return MissingGreenVehicleStatusFilterLabel;
+            return MissingGreenVehicleStatusFilterOption;
         }
 
-        return VehicleStatusFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
-            ? normalized
-            : AllVehicleStatusFilterLabel;
+        return AllVehicleStatusFilterOption;
     }
 
     internal static bool IsAllVehicleCategoryFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, AllVehicleCategoriesLabel, LegacyAllVehicleCategoriesLabel, EnglishAllVehicleCategoriesLabel);
+        MatchesVehicleFilterLabel(value, VehicleCategoryAllFilterKey, AllVehicleCategoriesLabel, LegacyAllVehicleCategoriesLabel, EnglishAllVehicleCategoriesLabel);
 
     internal static bool IsAllVehicleStatusFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, AllVehicleStatusFilterLabel, LegacyAllVehicleStatusFilterLabel, EnglishAllVehicleStatusFilterLabel);
+        MatchesVehicleFilterLabel(value, VehicleStatusAllFilterKey, AllVehicleStatusFilterLabel, LegacyAllVehicleStatusFilterLabel, EnglishAllVehicleStatusFilterLabel);
 
     internal static bool IsAttentionVehicleStatusFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, AttentionVehicleStatusFilterLabel, LegacyAttentionVehicleStatusFilterLabel, EnglishAttentionVehicleStatusFilterLabel);
+        MatchesVehicleFilterLabel(value, VehicleStatusAttentionFilterKey, AttentionVehicleStatusFilterLabel, LegacyAttentionVehicleStatusFilterLabel, EnglishAttentionVehicleStatusFilterLabel);
 
     internal static bool IsOverdueVehicleStatusFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, OverdueVehicleStatusFilterLabel, LegacyOverdueVehicleStatusFilterLabel, EnglishOverdueVehicleStatusFilterLabel);
+        MatchesVehicleFilterLabel(value, VehicleStatusOverdueFilterKey, OverdueVehicleStatusFilterLabel, LegacyOverdueVehicleStatusFilterLabel, EnglishOverdueVehicleStatusFilterLabel);
 
     internal static bool IsMissingGreenCardVehicleStatusFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, MissingGreenVehicleStatusFilterLabel, LegacyMissingGreenVehicleStatusFilterLabel, EnglishMissingGreenVehicleStatusFilterLabel);
+        MatchesVehicleFilterLabel(value, VehicleStatusMissingGreenCardFilterKey, MissingGreenVehicleStatusFilterLabel, LegacyMissingGreenVehicleStatusFilterLabel, EnglishMissingGreenVehicleStatusFilterLabel);
 
     private static bool MatchesVehicleFilterLabel(string? value, params string[] candidates)
     {
@@ -254,8 +268,8 @@ public sealed partial class MainWindowViewModel
             _timelineService,
             new DesktopVehicleListFilters(
                 VehicleSearchText,
-                SelectedVehicleCategoryFilter,
-                SelectedVehicleStatusFilter,
+                SelectedVehicleCategoryFilter.Value,
+                SelectedVehicleStatusFilter.Value,
                 HideInactiveVehicles),
             DateOnly.FromDateTime(DateTime.Today));
 

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.Localization;
+using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Models;
 
@@ -40,9 +41,7 @@ public sealed partial class MainWindowViewModel
 
     private ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems => OverdueOverviewWorkspace.OverdueOverviewItems;
 
-    private static string OverviewAllFilterLabel => LO("Overview.Filter.All");
-
-    private static string OverviewDataIssueFilterLabel => LO("Overview.Filter.DataIssues");
+    private static string OverviewAllFilterLabel => OverviewFilterOptions.LabelForKey(OverviewFilterOptions.AllKey);
 
     private static string OverviewMissingGreenDateLabel => LO("Overview.MissingGreen.Date");
 
@@ -81,7 +80,7 @@ public sealed partial class MainWindowViewModel
 
         SelectVehicleAndOpenEntity(
             UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem.VehicleId,
-            "Vozidlo",
+            DesktopEntityKinds.Vehicle,
             UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem.VehicleId);
     }
 
@@ -116,7 +115,7 @@ public sealed partial class MainWindowViewModel
 
         SelectVehicleAndOpenEntity(
             OverdueOverviewWorkspace.SelectedOverdueOverviewItem.VehicleId,
-            "Vozidlo",
+            DesktopEntityKinds.Vehicle,
             OverdueOverviewWorkspace.SelectedOverdueOverviewItem.VehicleId);
     }
 
@@ -133,8 +132,8 @@ public sealed partial class MainWindowViewModel
         {
             UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = ReadOverviewBooleanSetting(OverviewIncludeMissingGreenSettingKey);
             UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview = ReadOverviewBooleanSetting(OverviewIncludeDataIssuesSettingKey);
-            UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = NormalizeUpcomingOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewUpcomingFilterSettingKey, OverviewAllFilterLabel));
-            OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = NormalizeOverdueOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewOverdueFilterSettingKey, OverviewAllFilterLabel));
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = NormalizeUpcomingOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewUpcomingFilterSettingKey, OverviewFilterOptions.AllKey));
+            OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = NormalizeOverdueOverviewFilter(_dataSet.Settings.GetValue("overview", OverviewOverdueFilterSettingKey, OverviewFilterOptions.AllKey));
             UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption = ReadOverviewSortOption(OverviewUpcomingSortSettingKey);
             UpcomingOverviewWorkspace.UpcomingOverviewSortDescending = ReadOverviewBooleanSetting(OverviewUpcomingSortDescendingSettingKey);
             OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption = ReadOverviewSortOption(OverviewOverdueSortSettingKey);
@@ -149,11 +148,11 @@ public sealed partial class MainWindowViewModel
     private bool ReadOverviewBooleanSetting(string key) =>
         string.Equals(_dataSet.Settings.GetValue("overview", key, "0").Trim(), "1", StringComparison.Ordinal);
 
-    private string ReadOverviewSortOption(string key) =>
+    private LocalizedOptionViewModel ReadOverviewSortOption(string key) =>
         WorkspaceSortHelpers.NormalizeSortOption(
-            _dataSet.Settings.GetValue("overview", key, WorkspaceSortHelpers.DateSortLabel),
+            _dataSet.Settings.GetValue("overview", key, WorkspaceSortHelpers.DateSortKey),
             WorkspaceSortHelpers.TimelineOverviewSortOptions,
-            WorkspaceSortHelpers.DateSortLabel);
+            WorkspaceSortHelpers.DateSortOption);
 
     private void PersistOverviewPreferencesAsync()
     {
@@ -164,11 +163,11 @@ public sealed partial class MainWindowViewModel
 
         var includeMissingGreen = UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview ? "1" : "0";
         var includeDataIssues = UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview ? "1" : "0";
-        var upcomingFilter = NormalizeUpcomingOverviewFilter(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
-        var overdueFilter = NormalizeOverdueOverviewFilter(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
-        var upcomingSort = WorkspaceSortHelpers.NormalizeSortOption(UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel);
+        var upcomingFilter = NormalizeUpcomingOverviewFilter(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value).Value;
+        var overdueFilter = NormalizeOverdueOverviewFilter(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value).Value;
+        var upcomingSort = WorkspaceSortHelpers.NormalizeSortKey(UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortOption);
         var upcomingDescending = UpcomingOverviewWorkspace.UpcomingOverviewSortDescending ? "1" : "0";
-        var overdueSort = WorkspaceSortHelpers.NormalizeSortOption(OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortLabel);
+        var overdueSort = WorkspaceSortHelpers.NormalizeSortKey(OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption, WorkspaceSortHelpers.TimelineOverviewSortOptions, WorkspaceSortHelpers.DateSortOption);
         var overdueDescending = OverdueOverviewWorkspace.OverdueOverviewSortDescending ? "1" : "0";
 
         PersistPreferenceSettingsAsync(
@@ -186,64 +185,65 @@ public sealed partial class MainWindowViewModel
             LO("Overview.Persistence.Error"));
     }
 
-    private string NormalizeUpcomingOverviewFilter(string? value) =>
+    private LocalizedOptionViewModel NormalizeUpcomingOverviewFilter(string? value) =>
         NormalizeOverviewFilter(value, UpcomingOverviewWorkspace.OverviewFilters);
 
-    private string NormalizeOverdueOverviewFilter(string? value) =>
+    private LocalizedOptionViewModel NormalizeOverdueOverviewFilter(string? value) =>
         NormalizeOverviewFilter(value, OverdueOverviewWorkspace.OverviewFilters);
 
-    private static string NormalizeOverviewFilter(string? value, IReadOnlyList<string> supportedFilters)
+    private static LocalizedOptionViewModel NormalizeOverviewFilter(string? value, IReadOnlyList<LocalizedOptionViewModel> supportedFilters)
     {
-        var normalized = string.IsNullOrWhiteSpace(value)
-            ? OverviewAllFilterLabel
-            : NormalizeOverviewFilterAlias(value.Trim());
-        return supportedFilters.Any(item => string.Equals(item, normalized, StringComparison.Ordinal))
-            ? normalized
-            : OverviewAllFilterLabel;
+        var normalizedKey = string.IsNullOrWhiteSpace(value)
+            ? OverviewFilterOptions.AllKey
+            : NormalizeOverviewFilterKey(value.Trim());
+        return supportedFilters.Any(item => string.Equals(item.Value, normalizedKey, StringComparison.Ordinal))
+            ? OverviewFilterOptions.Option(normalizedKey)
+            : OverviewFilterOptions.All;
     }
 
-    private static string NormalizeOverviewFilterAlias(string value)
+    private static string NormalizeOverviewFilterKey(string value)
     {
-        if (IsOverviewFilterValue(value, "Overview.Filter.All", OverviewAllFilterLegacyCzech, OverviewAllFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.AllKey, OverviewAllFilterLegacyCzech, OverviewAllFilterLegacyEnglish))
         {
-            return OverviewAllFilterLabel;
+            return OverviewFilterOptions.AllKey;
         }
 
-        if (IsOverviewFilterValue(value, "Overview.Filter.Technical", OverviewTechnicalFilterLegacyCzech, OverviewTechnicalFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.TechnicalKey, OverviewTechnicalFilterLegacyCzech, OverviewTechnicalFilterLegacyEnglish))
         {
-            return LO("Overview.Filter.Technical");
+            return OverviewFilterOptions.TechnicalKey;
         }
 
-        if (IsOverviewFilterValue(value, "Overview.Filter.GreenCards", OverviewGreenCardsFilterLegacyCzech, OverviewGreenCardsFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.GreenCardsKey, OverviewGreenCardsFilterLegacyCzech, OverviewGreenCardsFilterLegacyEnglish))
         {
-            return LO("Overview.Filter.GreenCards");
+            return OverviewFilterOptions.GreenCardsKey;
         }
 
-        if (IsOverviewFilterValue(value, "Overview.Filter.Reminders", OverviewRemindersFilterLegacyCzech, OverviewRemindersFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.RemindersKey, OverviewRemindersFilterLegacyCzech, OverviewRemindersFilterLegacyEnglish))
         {
-            return LO("Overview.Filter.Reminders");
+            return OverviewFilterOptions.RemindersKey;
         }
 
-        if (IsOverviewFilterValue(value, "Overview.Filter.Records", OverviewRecordsFilterLegacyCzech, OverviewRecordsFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.RecordsKey, OverviewRecordsFilterLegacyCzech, OverviewRecordsFilterLegacyEnglish))
         {
-            return LO("Overview.Filter.Records");
+            return OverviewFilterOptions.RecordsKey;
         }
 
-        if (IsOverviewFilterValue(value, "Overview.Filter.Maintenance", OverviewMaintenanceFilterLegacyCzech, OverviewMaintenanceFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.MaintenanceKey, OverviewMaintenanceFilterLegacyCzech, OverviewMaintenanceFilterLegacyEnglish))
         {
-            return LO("Overview.Filter.Maintenance");
+            return OverviewFilterOptions.MaintenanceKey;
         }
 
-        if (IsOverviewFilterValue(value, "Overview.Filter.DataIssues", OverviewDataIssuesFilterLegacyCzech, OverviewDataIssuesFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.DataIssuesKey, OverviewDataIssuesFilterLegacyCzech, OverviewDataIssuesFilterLegacyEnglish))
         {
-            return OverviewDataIssueFilterLabel;
+            return OverviewFilterOptions.DataIssuesKey;
         }
 
         return value;
     }
 
-    private static bool IsOverviewFilterValue(string value, string resourceKey, params string[] aliases) =>
-        string.Equals(value, LO(resourceKey), StringComparison.OrdinalIgnoreCase)
+    private static bool IsOverviewFilterValue(string value, string key, params string[] aliases) =>
+        string.Equals(value, key, StringComparison.OrdinalIgnoreCase)
+        || string.Equals(value, OverviewFilterOptions.LabelForKey(key), StringComparison.OrdinalIgnoreCase)
         || aliases.Any(alias => string.Equals(value, alias, StringComparison.OrdinalIgnoreCase));
 
     private void RefreshUpcomingOverview()
@@ -252,7 +252,7 @@ public sealed partial class MainWindowViewModel
         var items = WorkspaceSortHelpers.SortTimelineOverview(
                 BuildFleetOverviewItems(
                     isFuture: true,
-                    UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter,
+                    UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value,
                     UpcomingOverviewWorkspace.UpcomingOverviewSearchText,
                     UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview,
                     UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview),
@@ -280,7 +280,7 @@ public sealed partial class MainWindowViewModel
     {
         var previousKey = BuildOverviewSelectionKey(OverdueOverviewWorkspace.SelectedOverdueOverviewItem);
         var items = WorkspaceSortHelpers.SortTimelineOverview(
-                BuildFleetOverviewItems(isFuture: false, OverdueOverviewWorkspace.SelectedOverdueOverviewFilter, OverdueOverviewWorkspace.OverdueOverviewSearchText),
+                BuildFleetOverviewItems(isFuture: false, OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value, OverdueOverviewWorkspace.OverdueOverviewSearchText),
                 OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption,
                 OverdueOverviewWorkspace.OverdueOverviewSortDescending)
             .ToList();
@@ -345,35 +345,35 @@ public sealed partial class MainWindowViewModel
     private static bool MatchesOverviewFilter(VehicleTimelineItemViewModel item, string? filter)
     {
         var normalizedFilter = string.IsNullOrWhiteSpace(filter)
-            ? OverviewAllFilterLabel
-            : NormalizeOverviewFilterAlias(filter.Trim());
+            ? OverviewFilterOptions.AllKey
+            : NormalizeOverviewFilterKey(filter.Trim());
 
-        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.Technical", OverviewTechnicalFilterLegacyCzech, OverviewTechnicalFilterLegacyEnglish))
+        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.TechnicalKey, OverviewTechnicalFilterLegacyCzech, OverviewTechnicalFilterLegacyEnglish))
         {
             return item.Kind == "technical";
         }
 
-        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.GreenCards", OverviewGreenCardsFilterLegacyCzech, OverviewGreenCardsFilterLegacyEnglish))
+        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.GreenCardsKey, OverviewGreenCardsFilterLegacyCzech, OverviewGreenCardsFilterLegacyEnglish))
         {
             return item.Kind == "green";
         }
 
-        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.Reminders", OverviewRemindersFilterLegacyCzech, OverviewRemindersFilterLegacyEnglish))
+        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.RemindersKey, OverviewRemindersFilterLegacyCzech, OverviewRemindersFilterLegacyEnglish))
         {
             return item.Kind == "custom";
         }
 
-        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.Records", OverviewRecordsFilterLegacyCzech, OverviewRecordsFilterLegacyEnglish))
+        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.RecordsKey, OverviewRecordsFilterLegacyCzech, OverviewRecordsFilterLegacyEnglish))
         {
             return item.Kind == "record";
         }
 
-        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.Maintenance", OverviewMaintenanceFilterLegacyCzech, OverviewMaintenanceFilterLegacyEnglish))
+        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.MaintenanceKey, OverviewMaintenanceFilterLegacyCzech, OverviewMaintenanceFilterLegacyEnglish))
         {
             return item.Kind == "maintenance";
         }
 
-        if (IsOverviewFilterValue(normalizedFilter, "Overview.Filter.DataIssues", OverviewDataIssuesFilterLegacyCzech, OverviewDataIssuesFilterLegacyEnglish))
+        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.DataIssuesKey, OverviewDataIssuesFilterLegacyCzech, OverviewDataIssuesFilterLegacyEnglish))
         {
             return item.Kind == OverviewDataIssueKind;
         }

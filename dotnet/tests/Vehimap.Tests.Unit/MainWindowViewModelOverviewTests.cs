@@ -143,8 +143,8 @@ public sealed class MainWindowViewModelOverviewTests
         Assert.Equal("1", dataSet.Settings.GetValue("overview", "include_data_issues", "0"));
         Assert.Contains(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Kind == "green" && item.Title == "Chybí zelená karta");
         Assert.Contains(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Kind == "data_issue" && item.EntryId == "rec_1");
-        Assert.Contains("Datové nedostatky", viewModel.UpcomingOverviewWorkspace.OverviewFilters);
-        Assert.DoesNotContain("Datové nedostatky", viewModel.OverdueOverviewWorkspace.OverviewFilters);
+        Assert.Contains(viewModel.UpcomingOverviewWorkspace.OverviewFilters, option => option.Value == OverviewFilterOptions.DataIssuesKey && option.Label == "Datové nedostatky");
+        Assert.DoesNotContain(viewModel.OverdueOverviewWorkspace.OverviewFilters, option => option.Value == OverviewFilterOptions.DataIssuesKey);
         Assert.Contains("datových nedostatků", viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSummary, StringComparison.CurrentCulture);
     }
 
@@ -157,10 +157,10 @@ public sealed class MainWindowViewModelOverviewTests
 
         var viewModel = CreateViewModel(dataSet);
 
-        Assert.Equal("Technické kontroly", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
+        Assert.Equal(OverviewFilterOptions.TechnicalKey, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value);
         Assert.Single(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems);
         Assert.All(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => Assert.Equal("technical", item.Kind));
-        Assert.Equal("Doklady", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
+        Assert.Equal(OverviewFilterOptions.RecordsKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
         Assert.Single(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
         Assert.All(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems, item => Assert.Equal("record", item.Kind));
     }
@@ -171,11 +171,11 @@ public sealed class MainWindowViewModelOverviewTests
         var dataSet = BuildOverviewDataSet();
         var viewModel = CreateViewModel(dataSet);
 
-        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = "Připomínky";
-        viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = "Zelené karty";
+        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = OverviewFilterOptions.Option(OverviewFilterOptions.RemindersKey);
+        viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = OverviewFilterOptions.Option(OverviewFilterOptions.GreenCardsKey);
 
-        Assert.Equal("Připomínky", dataSet.Settings.GetValue("overview", "upcoming_filter", string.Empty));
-        Assert.Equal("Zelené karty", dataSet.Settings.GetValue("overview", "overdue_filter", string.Empty));
+        Assert.Equal(OverviewFilterOptions.RemindersKey, dataSet.Settings.GetValue("overview", "upcoming_filter", string.Empty));
+        Assert.Equal(OverviewFilterOptions.GreenCardsKey, dataSet.Settings.GetValue("overview", "overdue_filter", string.Empty));
         Assert.Single(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems);
         Assert.All(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => Assert.Equal("custom", item.Kind));
         Assert.Single(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
@@ -190,26 +190,26 @@ public sealed class MainWindowViewModelOverviewTests
         var overdueDate = DateOnly.FromDateTime(DateTime.Today).AddMonths(-2).ToString("MM/yyyy", CultureInfo.InvariantCulture);
         dataSet.Reminders.Add(new VehicleReminder("rem_2", "veh_2", "Kontrola veterána", upcomingDate, "7", "ročně", ""));
         dataSet.Records.Add(new VehicleRecord("rec_2", "veh_2", "Doklad", "Veteránský doklad", "", "", overdueDate, "", VehicleRecordAttachmentMode.External, "", ""));
-        dataSet.Settings.SetValue("overview", "upcoming_sort", WorkspaceSortHelpers.VehicleSortLabel);
+        dataSet.Settings.SetValue("overview", "upcoming_sort", WorkspaceSortHelpers.VehicleSortKey);
         dataSet.Settings.SetValue("overview", "upcoming_sort_descending", "0");
-        dataSet.Settings.SetValue("overview", "overdue_sort", WorkspaceSortHelpers.VehicleSortLabel);
+        dataSet.Settings.SetValue("overview", "overdue_sort", WorkspaceSortHelpers.VehicleSortKey);
         dataSet.Settings.SetValue("overview", "overdue_sort_descending", "0");
 
         var viewModel = CreateViewModel(dataSet);
 
-        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption);
-        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption);
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortKey, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption.Value);
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption.Value);
         Assert.Equal("Božena", viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.First().VehicleName);
         Assert.Equal("Božena", viewModel.OverdueOverviewWorkspace.OverdueOverviewItems.First().VehicleName);
 
-        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption = WorkspaceSortHelpers.StatusSortLabel;
+        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewSortOption = WorkspaceSortHelpers.StatusSortOption;
         viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSortDescending = true;
-        viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption = WorkspaceSortHelpers.TitleSortLabel;
+        viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewSortOption = WorkspaceSortHelpers.TitleSortOption;
         viewModel.OverdueOverviewWorkspace.OverdueOverviewSortDescending = true;
 
-        Assert.Equal(WorkspaceSortHelpers.StatusSortLabel, dataSet.Settings.GetValue("overview", "upcoming_sort", string.Empty));
+        Assert.Equal(WorkspaceSortHelpers.StatusSortKey, dataSet.Settings.GetValue("overview", "upcoming_sort", string.Empty));
         Assert.Equal("1", dataSet.Settings.GetValue("overview", "upcoming_sort_descending", string.Empty));
-        Assert.Equal(WorkspaceSortHelpers.TitleSortLabel, dataSet.Settings.GetValue("overview", "overdue_sort", string.Empty));
+        Assert.Equal(WorkspaceSortHelpers.TitleSortKey, dataSet.Settings.GetValue("overview", "overdue_sort", string.Empty));
         Assert.Equal("1", dataSet.Settings.GetValue("overview", "overdue_sort_descending", string.Empty));
     }
 
@@ -222,18 +222,18 @@ public sealed class MainWindowViewModelOverviewTests
 
         var viewModel = CreateViewModel(dataSet);
 
-        Assert.Equal("Vše", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
-        Assert.Equal("Vše", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
+        Assert.Equal(OverviewFilterOptions.AllKey, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value);
+        Assert.Equal(OverviewFilterOptions.AllKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
         Assert.Equal(2, viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems.Count);
         Assert.Equal(2, viewModel.OverdueOverviewWorkspace.OverdueOverviewItems.Count);
 
-        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = "Neznámý filtr";
-        viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = "Neznámý filtr";
+        viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = new LocalizedOptionViewModel("Neznámý filtr", "Neznámý filtr");
+        viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = new LocalizedOptionViewModel("Neznámý filtr", "Neznámý filtr");
 
-        Assert.Equal("Vše", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
-        Assert.Equal("Vše", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
-        Assert.Equal("Vše", dataSet.Settings.GetValue("overview", "upcoming_filter", string.Empty));
-        Assert.Equal("Vše", dataSet.Settings.GetValue("overview", "overdue_filter", string.Empty));
+        Assert.Equal(OverviewFilterOptions.AllKey, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value);
+        Assert.Equal(OverviewFilterOptions.AllKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
+        Assert.Equal(OverviewFilterOptions.AllKey, dataSet.Settings.GetValue("overview", "upcoming_filter", string.Empty));
+        Assert.Equal(OverviewFilterOptions.AllKey, dataSet.Settings.GetValue("overview", "overdue_filter", string.Empty));
     }
 
     [Fact]

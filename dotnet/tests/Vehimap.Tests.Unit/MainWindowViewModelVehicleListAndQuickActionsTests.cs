@@ -6,6 +6,7 @@ using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
@@ -45,7 +46,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             new DesktopVehicleListFilters(
                 "Milena",
                 "Osobní vozidla",
-                MainWindowViewModel.AllVehicleStatusFilterLabel,
+                MainWindowViewModel.VehicleStatusAllFilterKey,
                 true),
             new DateOnly(2026, 4, 3));
 
@@ -120,8 +121,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         viewModel.FocusRequested += target => requestedFocus = target;
 
         viewModel.VehicleSearchText = "Božena";
-        viewModel.SelectedVehicleCategoryFilter = "Osobní vozidla";
-        viewModel.SelectedVehicleStatusFilter = MainWindowViewModel.MissingGreenVehicleStatusFilterLabel;
+        viewModel.SelectedVehicleCategoryFilter = viewModel.VehicleCategoryFilters.Single(option => option.Value == "Osobní vozidla");
+        viewModel.SelectedVehicleStatusFilter = viewModel.VehicleStatusFilters.Single(option => option.Value == MainWindowViewModel.VehicleStatusMissingGreenCardFilterKey);
         viewModel.HideInactiveVehicles = true;
 
         Assert.True(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
@@ -130,14 +131,14 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         viewModel.ClearVehicleFiltersCommand.Execute(null);
 
         Assert.Equal(string.Empty, viewModel.VehicleSearchText);
-        Assert.Equal(MainWindowViewModel.AllVehicleCategoriesLabel, viewModel.SelectedVehicleCategoryFilter);
-        Assert.Equal(MainWindowViewModel.AllVehicleStatusFilterLabel, viewModel.SelectedVehicleStatusFilter);
+        Assert.Equal(MainWindowViewModel.VehicleCategoryAllFilterKey, viewModel.SelectedVehicleCategoryFilter.Value);
+        Assert.Equal(MainWindowViewModel.VehicleStatusAllFilterKey, viewModel.SelectedVehicleStatusFilter.Value);
         Assert.False(viewModel.HideInactiveVehicles);
         Assert.Equal(dataSet.Vehicles.Count, viewModel.Vehicles.Count);
         Assert.False(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
         Assert.Equal("0", dataSet.Settings.GetValue("app", "hide_inactive_vehicles", "0"));
-        Assert.Equal(MainWindowViewModel.AllVehicleCategoriesLabel, dataSet.Settings.GetValue("app", "vehicle_category_filter", string.Empty));
-        Assert.Equal(MainWindowViewModel.AllVehicleStatusFilterLabel, dataSet.Settings.GetValue("app", "vehicle_status_filter", string.Empty));
+        Assert.Equal(MainWindowViewModel.VehicleCategoryAllFilterKey, dataSet.Settings.GetValue("app", "vehicle_category_filter", string.Empty));
+        Assert.Equal(MainWindowViewModel.VehicleStatusAllFilterKey, dataSet.Settings.GetValue("app", "vehicle_status_filter", string.Empty));
         Assert.Equal(DesktopFocusTarget.VehicleSearch, requestedFocus);
         Assert.Contains("Filtry seznamu vozidel byly vymazány", viewModel.ShellStatus, StringComparison.CurrentCulture);
     }
@@ -152,8 +153,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         var viewModel = CreateViewModel(dataSet);
 
-        Assert.Equal("Osobní vozidla", viewModel.SelectedVehicleCategoryFilter);
-        Assert.Equal(MainWindowViewModel.AttentionVehicleStatusFilterLabel, viewModel.SelectedVehicleStatusFilter);
+        Assert.Equal("Osobní vozidla", viewModel.SelectedVehicleCategoryFilter.Value);
+        Assert.Equal(MainWindowViewModel.VehicleStatusAttentionFilterKey, viewModel.SelectedVehicleStatusFilter.Value);
         Assert.True(viewModel.HideInactiveVehicles);
         Assert.True(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
     }
@@ -164,12 +165,12 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         var dataSet = BuildQuickActionDataSet();
         var viewModel = CreateViewModel(dataSet);
 
-        viewModel.SelectedVehicleCategoryFilter = "Osobní vozidla";
-        viewModel.SelectedVehicleStatusFilter = MainWindowViewModel.OverdueVehicleStatusFilterLabel;
+        viewModel.SelectedVehicleCategoryFilter = viewModel.VehicleCategoryFilters.Single(option => option.Value == "Osobní vozidla");
+        viewModel.SelectedVehicleStatusFilter = viewModel.VehicleStatusFilters.Single(option => option.Value == MainWindowViewModel.VehicleStatusOverdueFilterKey);
         viewModel.HideInactiveVehicles = true;
 
         Assert.Equal("Osobní vozidla", dataSet.Settings.GetValue("app", "vehicle_category_filter", string.Empty));
-        Assert.Equal(MainWindowViewModel.OverdueVehicleStatusFilterLabel, dataSet.Settings.GetValue("app", "vehicle_status_filter", string.Empty));
+        Assert.Equal(MainWindowViewModel.VehicleStatusOverdueFilterKey, dataSet.Settings.GetValue("app", "vehicle_status_filter", string.Empty));
         Assert.Equal("1", dataSet.Settings.GetValue("app", "hide_inactive_vehicles", "0"));
     }
 
@@ -182,8 +183,8 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         var viewModel = CreateViewModel(dataSet);
 
-        Assert.Equal(MainWindowViewModel.AllVehicleCategoriesLabel, viewModel.SelectedVehicleCategoryFilter);
-        Assert.Equal(MainWindowViewModel.AllVehicleStatusFilterLabel, viewModel.SelectedVehicleStatusFilter);
+        Assert.Equal(MainWindowViewModel.VehicleCategoryAllFilterKey, viewModel.SelectedVehicleCategoryFilter.Value);
+        Assert.Equal(MainWindowViewModel.VehicleStatusAllFilterKey, viewModel.SelectedVehicleStatusFilter.Value);
         Assert.Equal(dataSet.Vehicles.Count, viewModel.Vehicles.Count);
         Assert.False(viewModel.ClearVehicleFiltersCommand.CanExecute(null));
     }
@@ -201,8 +202,10 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
             var viewModel = CreateViewModel(dataSet);
 
-            Assert.Equal("All categories", viewModel.SelectedVehicleCategoryFilter);
-            Assert.Equal("Only overdue vehicles", viewModel.SelectedVehicleStatusFilter);
+            Assert.Equal(MainWindowViewModel.VehicleCategoryAllFilterKey, viewModel.SelectedVehicleCategoryFilter.Value);
+            Assert.Equal("All categories", viewModel.SelectedVehicleCategoryFilter.Label);
+            Assert.Equal(MainWindowViewModel.VehicleStatusOverdueFilterKey, viewModel.SelectedVehicleStatusFilter.Value);
+            Assert.Equal("Only overdue vehicles", viewModel.SelectedVehicleStatusFilter.Label);
             Assert.True(MainWindowViewModel.IsOverdueVehicleStatusFilter("Jen po termínu"));
             Assert.True(MainWindowViewModel.IsOverdueVehicleStatusFilter("Only overdue vehicles"));
         }
@@ -253,7 +256,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         await viewModel.ReviewGreenCardsCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.IsUpcomingOverviewTabSelected);
-        Assert.Equal("Zelené karty", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
+        Assert.Equal(OverviewFilterOptions.GreenCardsKey, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value);
         Assert.Equal(DesktopFocusTarget.UpcomingOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems);
     }
@@ -277,7 +280,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         Assert.True(viewModel.IsUpcomingOverviewTabSelected);
         Assert.True(viewModel.UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview);
-        Assert.Equal("Zelené karty", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
+        Assert.Equal(OverviewFilterOptions.GreenCardsKey, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value);
         Assert.Equal(DesktopFocusTarget.UpcomingOverviewList, requestedFocus);
         Assert.Contains(
             viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems,
@@ -312,7 +315,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         await viewModel.ReviewRemindersCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.IsOverdueOverviewTabSelected);
-        Assert.Equal("Připomínky", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
+        Assert.Equal(OverviewFilterOptions.RemindersKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
         Assert.Contains("Připomínky k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
@@ -344,7 +347,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         await viewModel.ReviewMaintenanceCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.IsOverdueOverviewTabSelected);
-        Assert.Equal("Údržba", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
+        Assert.Equal(OverviewFilterOptions.MaintenanceKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
         Assert.Contains("Údržba k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
@@ -376,7 +379,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         await viewModel.ReviewRecordsCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.IsOverdueOverviewTabSelected);
-        Assert.Equal("Doklady", viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
+        Assert.Equal(OverviewFilterOptions.RecordsKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
         Assert.Contains("Doklady k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);

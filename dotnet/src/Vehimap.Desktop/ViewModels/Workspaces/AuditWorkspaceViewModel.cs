@@ -26,14 +26,14 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
     private AuditItemViewModel? selectedDashboardAuditItem;
 
     [ObservableProperty]
-    private string selectedAuditSortOption = WorkspaceSortHelpers.SeveritySortLabel;
+    private LocalizedOptionViewModel selectedAuditSortOption = WorkspaceSortHelpers.SeveritySortOption;
 
     [ObservableProperty]
     private bool auditSortDescending;
 
     public string WindowTitle => Root.AuditWindowTitle;
 
-    public IReadOnlyList<string> AuditSortOptions => WorkspaceSortHelpers.AuditSortOptions;
+    public IReadOnlyList<LocalizedOptionViewModel> AuditSortOptions => WorkspaceSortHelpers.AuditSortOptions;
 
     public ObservableCollection<AuditItemViewModel> AuditItems { get; } = [];
 
@@ -130,7 +130,7 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
         RefreshVisibleAuditItems();
     }
 
-    partial void OnSelectedAuditSortOptionChanged(string value)
+    partial void OnSelectedAuditSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleAuditWorkspaceSortChanged();
     }

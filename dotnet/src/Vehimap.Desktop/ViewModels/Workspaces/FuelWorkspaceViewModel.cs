@@ -35,12 +35,12 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     private string fuelAnalysisSummaryText = L("FuelWorkspace.AnalysisSummary.Initial");
 
     [ObservableProperty]
-    private string selectedFuelSortOption = WorkspaceSortHelpers.DateSortLabel;
+    private LocalizedOptionViewModel selectedFuelSortOption = WorkspaceSortHelpers.DateSortOption;
 
     [ObservableProperty]
     private bool fuelSortDescending = true;
 
-    public IReadOnlyList<string> FuelSortOptions => WorkspaceSortHelpers.FuelSortOptions;
+    public IReadOnlyList<LocalizedOptionViewModel> FuelSortOptions => WorkspaceSortHelpers.FuelSortOptions;
 
     public IReadOnlyList<string> FuelTypeOptions => LegacyKnownValues.FuelTypes;
 
@@ -265,7 +265,7 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
         RefreshVisibleFuelItems();
     }
 
-    partial void OnSelectedFuelSortOptionChanged(string value)
+    partial void OnSelectedFuelSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleFuelWorkspaceSortChanged();
     }

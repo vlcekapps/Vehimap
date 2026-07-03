@@ -21,7 +21,7 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     private string costComparison = string.Empty;
 
     [ObservableProperty]
-    private string selectedCostPeriodPreset = string.Empty;
+    private LocalizedOptionViewModel selectedCostPeriodPreset = CostPeriodOptions.YearToDate;
 
     [ObservableProperty]
     private string costPeriodStartText = string.Empty;
@@ -47,15 +47,7 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
 
     public ObservableCollection<CostVehicleItemViewModel> VisibleCostVehicles { get; } = [];
 
-    public IReadOnlyList<string> CostPeriodPresets { get; } =
-    [
-        L("CostPeriod.YearToDate"),
-        L("CostPeriod.Last30Days"),
-        L("CostPeriod.Last90Days"),
-        L("CostPeriod.CurrentYear"),
-        L("CostPeriod.PreviousYear"),
-        L("CostPeriod.Custom")
-    ];
+    public IReadOnlyList<LocalizedOptionViewModel> CostPeriodPresets => CostPeriodOptions.AllOptions;
 
     public bool CanUseSelectedCostVehicle => SelectedDashboardCostVehicle is not null;
     public bool CanClearCostSearch => !string.IsNullOrWhiteSpace(CostSearchText);
@@ -164,9 +156,9 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
         RefreshVisibleCostVehicles();
     }
 
-    partial void OnSelectedCostPeriodPresetChanged(string value)
+    partial void OnSelectedCostPeriodPresetChanged(LocalizedOptionViewModel value)
     {
-        Root.HandleCostPeriodPresetChanged(value);
+        Root.HandleCostPeriodPresetChanged(value.Value);
     }
 
     partial void OnCostPeriodStartTextChanged(string value)

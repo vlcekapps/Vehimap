@@ -17,10 +17,10 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
     private string upcomingOverviewSearchText = string.Empty;
 
     [ObservableProperty]
-    private string selectedUpcomingOverviewFilter = L("Overview.Filter.All");
+    private LocalizedOptionViewModel selectedUpcomingOverviewFilter = OverviewFilterOptions.All;
 
     [ObservableProperty]
-    private string selectedUpcomingOverviewSortOption = WorkspaceSortHelpers.DateSortLabel;
+    private LocalizedOptionViewModel selectedUpcomingOverviewSortOption = WorkspaceSortHelpers.DateSortOption;
 
     [ObservableProperty]
     private bool upcomingOverviewSortDescending;
@@ -44,18 +44,9 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
 
     public ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems { get; } = [];
 
-    public IReadOnlyList<string> OverviewFilters { get; } =
-    [
-        L("Overview.Filter.All"),
-        L("Overview.Filter.Technical"),
-        L("Overview.Filter.GreenCards"),
-        L("Overview.Filter.Reminders"),
-        L("Overview.Filter.Records"),
-        L("Overview.Filter.Maintenance"),
-        L("Overview.Filter.DataIssues")
-    ];
+    public IReadOnlyList<LocalizedOptionViewModel> OverviewFilters => OverviewFilterOptions.AllOptions;
 
-    public IReadOnlyList<string> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
+    public IReadOnlyList<LocalizedOptionViewModel> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
 
     public ICommand OpenSelectedUpcomingOverviewItemCommand => Root.OpenSelectedUpcomingOverviewItemCommand;
 
@@ -88,12 +79,12 @@ public sealed partial class UpcomingOverviewWorkspaceViewModel : WorkspaceViewMo
         Root.HandleUpcomingOverviewWorkspaceSearchChanged();
     }
 
-    partial void OnSelectedUpcomingOverviewFilterChanged(string value)
+    partial void OnSelectedUpcomingOverviewFilterChanged(LocalizedOptionViewModel value)
     {
         Root.HandleUpcomingOverviewWorkspaceFilterChanged();
     }
 
-    partial void OnSelectedUpcomingOverviewSortOptionChanged(string value)
+    partial void OnSelectedUpcomingOverviewSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleUpcomingOverviewWorkspaceSortChanged();
     }

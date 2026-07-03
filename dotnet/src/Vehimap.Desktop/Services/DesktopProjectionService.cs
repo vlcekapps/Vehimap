@@ -1476,7 +1476,7 @@ internal sealed class DesktopProjectionService
         if (!string.IsNullOrWhiteSpace(filters.StatusFilter)
             && !MainWindowViewModel.IsAllVehicleStatusFilter(filters.StatusFilter))
         {
-            filterParts.Add(filters.StatusFilter);
+            filterParts.Add(FormatVehicleStatusFilter(filters.StatusFilter));
         }
 
         if (filters.HideInactiveVehicles)
@@ -1558,6 +1558,26 @@ internal sealed class DesktopProjectionService
         }
 
         return true;
+    }
+
+    private string FormatVehicleStatusFilter(string statusFilter)
+    {
+        if (MainWindowViewModel.IsAttentionVehicleStatusFilter(statusFilter))
+        {
+            return L("VehicleList.FilterOption.Attention");
+        }
+
+        if (MainWindowViewModel.IsOverdueVehicleStatusFilter(statusFilter))
+        {
+            return L("VehicleList.FilterOption.Overdue");
+        }
+
+        if (MainWindowViewModel.IsMissingGreenCardVehicleStatusFilter(statusFilter))
+        {
+            return L("VehicleList.FilterOption.MissingGreenCard");
+        }
+
+        return statusFilter;
     }
 
     private bool HasVehicleAttention(IReadOnlyList<VehicleTimelineItem> timelineItems)

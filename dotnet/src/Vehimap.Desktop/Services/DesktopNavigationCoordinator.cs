@@ -7,19 +7,13 @@ internal sealed class DesktopNavigationCoordinator
 {
     public DesktopNavigationPlan BuildForEntity(string vehicleId, string entityKind, string entityId)
     {
-        return entityKind switch
+        return DesktopEntityKinds.Normalize(entityKind) switch
         {
-            "Vehicle" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Detail, DesktopFocusTarget.VehicleList, DesktopNavigationSelectionKind.Vehicle, entityId),
-            "History" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.History, DesktopFocusTarget.HistoryList, DesktopNavigationSelectionKind.History, entityId),
-            "Fuel" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Fuel, DesktopFocusTarget.FuelList, DesktopNavigationSelectionKind.Fuel, entityId),
-            "Record" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Record, DesktopFocusTarget.RecordList, DesktopNavigationSelectionKind.Record, entityId),
-            "Maintenance" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Maintenance, DesktopFocusTarget.MaintenanceList, DesktopNavigationSelectionKind.Maintenance, entityId),
-            "Reminder" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Reminder, DesktopFocusTarget.ReminderList, DesktopNavigationSelectionKind.Reminder, entityId),
-            "Historie" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.History, DesktopFocusTarget.HistoryList, DesktopNavigationSelectionKind.History, entityId),
-            "Tankování" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Fuel, DesktopFocusTarget.FuelList, DesktopNavigationSelectionKind.Fuel, entityId),
-            "Doklad" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Record, DesktopFocusTarget.RecordList, DesktopNavigationSelectionKind.Record, entityId),
-            "Údržba" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Maintenance, DesktopFocusTarget.MaintenanceList, DesktopNavigationSelectionKind.Maintenance, entityId),
-            "Připomínka" => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Reminder, DesktopFocusTarget.ReminderList, DesktopNavigationSelectionKind.Reminder, entityId),
+            DesktopEntityKinds.History => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.History, DesktopFocusTarget.HistoryList, DesktopNavigationSelectionKind.History, entityId),
+            DesktopEntityKinds.Fuel => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Fuel, DesktopFocusTarget.FuelList, DesktopNavigationSelectionKind.Fuel, entityId),
+            DesktopEntityKinds.Record => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Record, DesktopFocusTarget.RecordList, DesktopNavigationSelectionKind.Record, entityId),
+            DesktopEntityKinds.Maintenance => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Maintenance, DesktopFocusTarget.MaintenanceList, DesktopNavigationSelectionKind.Maintenance, entityId),
+            DesktopEntityKinds.Reminder => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Reminder, DesktopFocusTarget.ReminderList, DesktopNavigationSelectionKind.Reminder, entityId),
             _ => new DesktopNavigationPlan(vehicleId, DesktopTabIndexes.Detail, DesktopFocusTarget.VehicleList, DesktopNavigationSelectionKind.Vehicle, entityId)
         };
     }

@@ -24,19 +24,19 @@ public sealed partial class MainWindowViewModel
         _suppressEvidenceSortPreferenceRefresh = true;
         try
         {
-            HistoryWorkspace.SelectedHistorySortOption = ReadSortOption(HistorySortSettingKey, WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortLabel);
+            HistoryWorkspace.SelectedHistorySortOption = ReadSortOption(HistorySortSettingKey, WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortOption);
             HistoryWorkspace.HistorySortDescending = ReadSortDescending(HistorySortDescendingSettingKey, defaultValue: true);
 
-            FuelWorkspace.SelectedFuelSortOption = ReadSortOption(FuelSortSettingKey, WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortLabel);
+            FuelWorkspace.SelectedFuelSortOption = ReadSortOption(FuelSortSettingKey, WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortOption);
             FuelWorkspace.FuelSortDescending = ReadSortDescending(FuelSortDescendingSettingKey, defaultValue: true);
 
-            ReminderWorkspace.SelectedReminderSortOption = ReadSortOption(ReminderSortSettingKey, WorkspaceSortHelpers.ReminderSortOptions, WorkspaceSortHelpers.DueDateSortLabel);
+            ReminderWorkspace.SelectedReminderSortOption = ReadSortOption(ReminderSortSettingKey, WorkspaceSortHelpers.ReminderSortOptions, WorkspaceSortHelpers.DueDateSortOption);
             ReminderWorkspace.ReminderSortDescending = ReadSortDescending(ReminderSortDescendingSettingKey, defaultValue: false);
 
-            MaintenanceWorkspace.SelectedMaintenanceSortOption = ReadSortOption(MaintenanceSortSettingKey, WorkspaceSortHelpers.MaintenanceSortOptions, WorkspaceSortHelpers.TitleSortLabel);
+            MaintenanceWorkspace.SelectedMaintenanceSortOption = ReadSortOption(MaintenanceSortSettingKey, WorkspaceSortHelpers.MaintenanceSortOptions, WorkspaceSortHelpers.TitleSortOption);
             MaintenanceWorkspace.MaintenanceSortDescending = ReadSortDescending(MaintenanceSortDescendingSettingKey, defaultValue: false);
 
-            RecordWorkspace.SelectedRecordSortOption = ReadSortOption(RecordSortSettingKey, WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortLabel);
+            RecordWorkspace.SelectedRecordSortOption = ReadSortOption(RecordSortSettingKey, WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortOption);
             RecordWorkspace.RecordSortDescending = ReadSortDescending(RecordSortDescendingSettingKey, defaultValue: false);
         }
         finally
@@ -100,9 +100,9 @@ public sealed partial class MainWindowViewModel
         PersistEvidenceSortPreferencesAsync();
     }
 
-    private string ReadSortOption(string key, IReadOnlyList<string> supportedOptions, string defaultOption) =>
+    private LocalizedOptionViewModel ReadSortOption(string key, IReadOnlyList<LocalizedOptionViewModel> supportedOptions, LocalizedOptionViewModel defaultOption) =>
         WorkspaceSortHelpers.NormalizeSortOption(
-            _dataSet.Settings.GetValue(EvidenceSortSettingsSection, key, defaultOption),
+            _dataSet.Settings.GetValue(EvidenceSortSettingsSection, key, defaultOption.Value),
             supportedOptions,
             defaultOption);
 
@@ -120,15 +120,15 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var historySort = WorkspaceSortHelpers.NormalizeSortOption(HistoryWorkspace.SelectedHistorySortOption, WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortLabel);
+        var historySort = WorkspaceSortHelpers.NormalizeSortKey(HistoryWorkspace.SelectedHistorySortOption, WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortOption);
         var historyDescending = HistoryWorkspace.HistorySortDescending ? "1" : "0";
-        var fuelSort = WorkspaceSortHelpers.NormalizeSortOption(FuelWorkspace.SelectedFuelSortOption, WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortLabel);
+        var fuelSort = WorkspaceSortHelpers.NormalizeSortKey(FuelWorkspace.SelectedFuelSortOption, WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortOption);
         var fuelDescending = FuelWorkspace.FuelSortDescending ? "1" : "0";
-        var reminderSort = WorkspaceSortHelpers.NormalizeSortOption(ReminderWorkspace.SelectedReminderSortOption, WorkspaceSortHelpers.ReminderSortOptions, WorkspaceSortHelpers.DueDateSortLabel);
+        var reminderSort = WorkspaceSortHelpers.NormalizeSortKey(ReminderWorkspace.SelectedReminderSortOption, WorkspaceSortHelpers.ReminderSortOptions, WorkspaceSortHelpers.DueDateSortOption);
         var reminderDescending = ReminderWorkspace.ReminderSortDescending ? "1" : "0";
-        var maintenanceSort = WorkspaceSortHelpers.NormalizeSortOption(MaintenanceWorkspace.SelectedMaintenanceSortOption, WorkspaceSortHelpers.MaintenanceSortOptions, WorkspaceSortHelpers.TitleSortLabel);
+        var maintenanceSort = WorkspaceSortHelpers.NormalizeSortKey(MaintenanceWorkspace.SelectedMaintenanceSortOption, WorkspaceSortHelpers.MaintenanceSortOptions, WorkspaceSortHelpers.TitleSortOption);
         var maintenanceDescending = MaintenanceWorkspace.MaintenanceSortDescending ? "1" : "0";
-        var recordSort = WorkspaceSortHelpers.NormalizeSortOption(RecordWorkspace.SelectedRecordSortOption, WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortLabel);
+        var recordSort = WorkspaceSortHelpers.NormalizeSortKey(RecordWorkspace.SelectedRecordSortOption, WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortOption);
         var recordDescending = RecordWorkspace.RecordSortDescending ? "1" : "0";
 
         PersistPreferenceSettingsAsync(

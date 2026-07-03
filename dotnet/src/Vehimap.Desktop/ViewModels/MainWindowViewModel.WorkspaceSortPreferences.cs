@@ -21,13 +21,13 @@ public sealed partial class MainWindowViewModel
             AuditWorkspace.SelectedAuditSortOption = ReadWorkspaceSortOption(
                 AuditSortSettingKey,
                 WorkspaceSortHelpers.AuditSortOptions,
-                WorkspaceSortHelpers.SeveritySortLabel);
+                WorkspaceSortHelpers.SeveritySortOption);
             AuditWorkspace.AuditSortDescending = ReadWorkspaceSortDescending(AuditSortDescendingSettingKey, defaultValue: false);
 
             GlobalSearchWorkspace.SelectedGlobalSearchSortOption = ReadWorkspaceSortOption(
                 GlobalSearchSortSettingKey,
                 WorkspaceSortHelpers.GlobalSearchSortOptions,
-                WorkspaceSortHelpers.TypeSortLabel);
+                WorkspaceSortHelpers.TypeSortOption);
             GlobalSearchWorkspace.GlobalSearchSortDescending = ReadWorkspaceSortDescending(GlobalSearchSortDescendingSettingKey, defaultValue: false);
         }
         finally
@@ -58,9 +58,9 @@ public sealed partial class MainWindowViewModel
         PersistWorkspaceSortPreferencesAsync();
     }
 
-    private string ReadWorkspaceSortOption(string key, IReadOnlyList<string> supportedOptions, string defaultOption) =>
+    private LocalizedOptionViewModel ReadWorkspaceSortOption(string key, IReadOnlyList<LocalizedOptionViewModel> supportedOptions, LocalizedOptionViewModel defaultOption) =>
         WorkspaceSortHelpers.NormalizeSortOption(
-            _dataSet.Settings.GetValue(WorkspaceSortSettingsSection, key, defaultOption),
+            _dataSet.Settings.GetValue(WorkspaceSortSettingsSection, key, defaultOption.Value),
             supportedOptions,
             defaultOption);
 
@@ -81,12 +81,12 @@ public sealed partial class MainWindowViewModel
         var auditSort = WorkspaceSortHelpers.NormalizeSortOption(
             AuditWorkspace.SelectedAuditSortOption,
             WorkspaceSortHelpers.AuditSortOptions,
-            WorkspaceSortHelpers.SeveritySortLabel);
+            WorkspaceSortHelpers.SeveritySortOption).Value;
         var auditDescending = AuditWorkspace.AuditSortDescending ? "1" : "0";
         var globalSearchSort = WorkspaceSortHelpers.NormalizeSortOption(
             GlobalSearchWorkspace.SelectedGlobalSearchSortOption,
             WorkspaceSortHelpers.GlobalSearchSortOptions,
-            WorkspaceSortHelpers.TypeSortLabel);
+            WorkspaceSortHelpers.TypeSortOption).Value;
         var globalSearchDescending = GlobalSearchWorkspace.GlobalSearchSortDescending ? "1" : "0";
 
         PersistPreferenceSettingsAsync(

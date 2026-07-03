@@ -35,12 +35,12 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     private string recordSearchSummary = L("RecordWorkspace.SearchSummary.Initial");
 
     [ObservableProperty]
-    private string selectedRecordSortOption = WorkspaceSortHelpers.ValiditySortLabel;
+    private LocalizedOptionViewModel selectedRecordSortOption = WorkspaceSortHelpers.ValiditySortOption;
 
     [ObservableProperty]
     private bool recordSortDescending;
 
-    public IReadOnlyList<string> RecordSortOptions => WorkspaceSortHelpers.RecordSortOptions;
+    public IReadOnlyList<LocalizedOptionViewModel> RecordSortOptions => WorkspaceSortHelpers.RecordSortOptions;
     public IReadOnlyList<string> RecordTypeOptions => LegacyKnownValues.RecordTypes;
 
     public bool CanClearRecordSearch => !string.IsNullOrWhiteSpace(RecordSearchText);
@@ -200,7 +200,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
         RefreshVisibleRecordItems();
     }
 
-    partial void OnSelectedRecordSortOptionChanged(string value)
+    partial void OnSelectedRecordSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleRecordWorkspaceSortChanged();
     }

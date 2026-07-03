@@ -27,12 +27,12 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     private string historySearchSummary = L("HistoryWorkspace.SearchSummary.Initial");
 
     [ObservableProperty]
-    private string selectedHistorySortOption = WorkspaceSortHelpers.DateSortLabel;
+    private LocalizedOptionViewModel selectedHistorySortOption = WorkspaceSortHelpers.DateSortOption;
 
     [ObservableProperty]
     private bool historySortDescending = true;
 
-    public IReadOnlyList<string> HistorySortOptions => WorkspaceSortHelpers.HistorySortOptions;
+    public IReadOnlyList<LocalizedOptionViewModel> HistorySortOptions => WorkspaceSortHelpers.HistorySortOptions;
 
     public bool CanClearHistorySearch => !string.IsNullOrWhiteSpace(HistorySearchText);
 
@@ -145,7 +145,7 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
         RefreshVisibleHistoryItems();
     }
 
-    partial void OnSelectedHistorySortOptionChanged(string value)
+    partial void OnSelectedHistorySortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleHistoryWorkspaceSortChanged();
     }

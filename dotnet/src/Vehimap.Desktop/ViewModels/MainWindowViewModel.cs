@@ -975,7 +975,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return false;
         }
 
-        SelectVehicleAndOpenEntity(item.VehicleId, "Vozidlo", item.VehicleId);
+        SelectVehicleAndOpenEntity(item.VehicleId, DesktopEntityKinds.Vehicle, item.VehicleId);
         return true;
     }
 
@@ -1049,7 +1049,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        SelectVehicleAndOpenEntity(vehicleId, "Vozidlo", vehicleId);
+        SelectVehicleAndOpenEntity(vehicleId, DesktopEntityKinds.Vehicle, vehicleId);
     }
 
     [RelayCommand(CanExecute = nameof(CanEditSelectedDashboardVehicle))]
@@ -1101,7 +1101,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        SelectVehicleAndOpenEntity(vehicleId, "Historie", string.Empty);
+        SelectVehicleAndOpenEntity(vehicleId, DesktopEntityKinds.History, string.Empty);
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedDashboardVehicleCosts))]
@@ -1143,7 +1143,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
-        SelectVehicleAndOpenEntity(selectedCostVehicle.VehicleId, "Vozidlo", selectedCostVehicle.VehicleId);
+        SelectVehicleAndOpenEntity(selectedCostVehicle.VehicleId, DesktopEntityKinds.Vehicle, selectedCostVehicle.VehicleId);
     }
 
     internal async Task<bool> SelectDashboardMaintenanceForCompletionAsync()
@@ -1453,7 +1453,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             _timelineService,
             vehicleId,
             DateOnly.FromDateTime(DateTime.Today),
-            TimelineWorkspace.SelectedTimelineFilter,
+            TimelineWorkspace.SelectedTimelineFilter.Value,
             TimelineWorkspace.TimelineSearchText);
         foreach (var item in projection.Items)
         {
@@ -1497,7 +1497,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             _timelineService,
             SelectedVehicle.Id,
             DateOnly.FromDateTime(DateTime.Today),
-            TimelineWorkspace.SelectedTimelineFilter,
+            TimelineWorkspace.SelectedTimelineFilter.Value,
             TimelineWorkspace.TimelineSearchText);
         SelectedVehicleTimeline.Clear();
         foreach (var item in projection.Items)
@@ -1694,7 +1694,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private static bool IsVehicleAuditTarget(AuditItemViewModel item)
     {
         return string.IsNullOrWhiteSpace(item.EntityKind)
-            || string.Equals(item.EntityKind, "Vozidlo", StringComparison.Ordinal)
+            || string.Equals(DesktopEntityKinds.Normalize(item.EntityKind), DesktopEntityKinds.Vehicle, StringComparison.Ordinal)
             || string.Equals(item.EntityId, item.VehicleId, StringComparison.Ordinal);
     }
 
@@ -1736,21 +1736,21 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     private void StartEditForCurrentAuditTarget(string entityKind)
     {
-        switch (entityKind)
+        switch (DesktopEntityKinds.Normalize(entityKind))
         {
-            case "Historie":
+            case DesktopEntityKinds.History:
                 ExecuteWorkspaceShortcut(EditSelectedHistoryCommand);
                 break;
-            case "Tankování":
+            case DesktopEntityKinds.Fuel:
                 ExecuteWorkspaceShortcut(EditSelectedFuelCommand);
                 break;
-            case "Doklad":
+            case DesktopEntityKinds.Record:
                 ExecuteWorkspaceShortcut(EditSelectedRecordCommand);
                 break;
-            case "Údržba":
+            case DesktopEntityKinds.Maintenance:
                 ExecuteWorkspaceShortcut(EditSelectedMaintenanceCommand);
                 break;
-            case "Připomínka":
+            case DesktopEntityKinds.Reminder:
                 ExecuteWorkspaceShortcut(EditSelectedReminderCommand);
                 break;
             default:

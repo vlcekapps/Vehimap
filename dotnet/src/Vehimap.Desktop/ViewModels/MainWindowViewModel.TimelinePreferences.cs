@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Desktop.ViewModels.Workspaces;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
@@ -34,22 +36,22 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var timelineFilter = NormalizeTimelineFilterKey(TimelineWorkspace.SelectedTimelineFilter);
+        var timelineFilter = NormalizeTimelineFilterKey(TimelineWorkspace.SelectedTimelineFilter.Value);
         PersistPreferenceSettingsAsync(
             settings => settings.SetValue(TimelineSettingsSection, TimelineFilterSettingKey, timelineFilter),
             LO("TimelineWorkspace.PreferenceSaveFailed"));
     }
 
-    private string NormalizeTimelineFilter(string? value)
+    private LocalizedOptionViewModel NormalizeTimelineFilter(string? value)
     {
-        return TimelineFilterLabelFromKey(NormalizeTimelineFilterKey(value));
+        return TimelineFilterOptions.Option(NormalizeTimelineFilterKey(value));
     }
 
     private string NormalizeTimelineFilterKey(string? value)
     {
         var normalized = (value ?? string.Empty).Trim();
         if (string.Equals(normalized, TimelineFilterFutureKey, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, LO("TimelineWorkspace.Filter.Future"), StringComparison.CurrentCultureIgnoreCase)
+            || string.Equals(normalized, TimelineFilterOptions.LabelForKey(TimelineFilterOptions.FutureKey), StringComparison.CurrentCultureIgnoreCase)
             || string.Equals(normalized, "Budoucí", StringComparison.OrdinalIgnoreCase)
             || string.Equals(normalized, "Future", StringComparison.OrdinalIgnoreCase))
         {
@@ -57,7 +59,7 @@ public sealed partial class MainWindowViewModel
         }
 
         if (string.Equals(normalized, TimelineFilterPastKey, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, LO("TimelineWorkspace.Filter.Past"), StringComparison.CurrentCultureIgnoreCase)
+            || string.Equals(normalized, TimelineFilterOptions.LabelForKey(TimelineFilterOptions.PastKey), StringComparison.CurrentCultureIgnoreCase)
             || string.Equals(normalized, "Minulé", StringComparison.OrdinalIgnoreCase)
             || string.Equals(normalized, "Past", StringComparison.OrdinalIgnoreCase))
         {
@@ -65,7 +67,7 @@ public sealed partial class MainWindowViewModel
         }
 
         if (string.Equals(normalized, TimelineFilterAllKey, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, LO("TimelineWorkspace.Filter.All"), StringComparison.CurrentCultureIgnoreCase)
+            || string.Equals(normalized, TimelineFilterOptions.LabelForKey(TimelineFilterOptions.AllKey), StringComparison.CurrentCultureIgnoreCase)
             || string.Equals(normalized, "Vše", StringComparison.OrdinalIgnoreCase)
             || string.Equals(normalized, "All", StringComparison.OrdinalIgnoreCase))
         {
@@ -75,13 +77,5 @@ public sealed partial class MainWindowViewModel
         return TimelineFilterAllKey;
     }
 
-    private static string GetDefaultTimelineFilter() => LO("TimelineWorkspace.Filter.All");
-
-    private static string TimelineFilterLabelFromKey(string key) =>
-        key switch
-        {
-            TimelineFilterFutureKey => LO("TimelineWorkspace.Filter.Future"),
-            TimelineFilterPastKey => LO("TimelineWorkspace.Filter.Past"),
-            _ => LO("TimelineWorkspace.Filter.All")
-        };
+    private static string GetDefaultTimelineFilter() => TimelineFilterOptions.AllKey;
 }

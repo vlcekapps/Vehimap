@@ -4,6 +4,7 @@ using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Platform;
@@ -174,9 +175,9 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         dataStore.SaveException = new IOException("settings.ini nelze zapsat.");
         var changedCategory = LegacyKnownValues.Categories[0];
-        viewModel.SelectedVehicleCategoryFilter = changedCategory;
+        viewModel.SelectedVehicleCategoryFilter = viewModel.VehicleCategoryFilters.Single(option => option.Value == changedCategory);
 
-        Assert.Equal(changedCategory, viewModel.SelectedVehicleCategoryFilter);
+        Assert.Equal(changedCategory, viewModel.SelectedVehicleCategoryFilter.Value);
         Assert.Contains("Nepodařilo se uložit filtry seznamu vozidel", viewModel.ShellStatus);
 
         dataStore.SaveException = null;

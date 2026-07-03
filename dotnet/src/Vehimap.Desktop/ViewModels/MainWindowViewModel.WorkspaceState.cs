@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Desktop.Services;
+
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
@@ -504,7 +506,7 @@ public sealed partial class MainWindowViewModel
             return false;
         }
 
-        if (string.Equals(item.EntityKind, "Náklady", StringComparison.Ordinal))
+        if (string.Equals(DesktopEntityKinds.Normalize(item.EntityKind), DesktopEntityKinds.Costs, StringComparison.Ordinal))
         {
             SelectSmartAdvisorVehicle(item.VehicleId);
             SelectedVehicleTabIndex = CostTabIndex;
@@ -673,8 +675,8 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var normalizedFilter = NormalizeTimelineFilter(TimelineWorkspace.SelectedTimelineFilter);
-        if (!string.Equals(TimelineWorkspace.SelectedTimelineFilter, normalizedFilter, StringComparison.Ordinal))
+        var normalizedFilter = NormalizeTimelineFilter(TimelineWorkspace.SelectedTimelineFilter.Value);
+        if (!string.Equals(TimelineWorkspace.SelectedTimelineFilter.Value, normalizedFilter.Value, StringComparison.Ordinal))
         {
             TimelineWorkspace.SelectedTimelineFilter = normalizedFilter;
             return;
@@ -883,8 +885,8 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var normalizedFilter = NormalizeUpcomingOverviewFilter(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter);
-        if (!string.Equals(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter, normalizedFilter, StringComparison.Ordinal))
+        var normalizedFilter = NormalizeUpcomingOverviewFilter(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value);
+        if (!string.Equals(UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value, normalizedFilter.Value, StringComparison.Ordinal))
         {
             UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = normalizedFilter;
             return;
@@ -941,8 +943,8 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var normalizedFilter = NormalizeOverdueOverviewFilter(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter);
-        if (!string.Equals(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter, normalizedFilter, StringComparison.Ordinal))
+        var normalizedFilter = NormalizeOverdueOverviewFilter(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
+        if (!string.Equals(OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value, normalizedFilter.Value, StringComparison.Ordinal))
         {
             OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = normalizedFilter;
             return;

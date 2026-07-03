@@ -6,31 +6,31 @@ namespace Vehimap.Desktop.ViewModels.Workspaces;
 
 internal static class WorkspaceSortHelpers
 {
-    private const string DateSortKey = "date";
-    private const string TypeSortKey = "type";
-    private const string OdometerSortKey = "odometer";
-    private const string CostSortKey = "cost";
-    private const string NoteSortKey = "note";
-    private const string FuelTypeSortKey = "fuel_type";
-    private const string FuelDetailSortKey = "fuel_detail";
-    private const string FuelStationSortKey = "fuel_station";
-    private const string LitersSortKey = "fuel_volume";
-    private const string TotalCostSortKey = "total_cost";
-    private const string TankStateSortKey = "tank_state";
-    private const string TitleSortKey = "title";
-    private const string VehicleSortKey = "vehicle";
-    private const string DueDateSortKey = "due_date";
-    private const string StatusSortKey = "status";
-    private const string RepeatModeSortKey = "repeat_mode";
-    private const string IntervalSortKey = "interval";
-    private const string LastServiceSortKey = "last_service";
-    private const string ValiditySortKey = "validity";
-    private const string ProviderSortKey = "provider";
-    private const string AttachmentModeSortKey = "attachment_mode";
-    private const string AttachmentStateSortKey = "attachment_state";
-    private const string SeveritySortKey = "severity";
-    private const string CategorySortKey = "category";
-    private const string SummarySortKey = "summary";
+    internal const string DateSortKey = "date";
+    internal const string TypeSortKey = "type";
+    internal const string OdometerSortKey = "odometer";
+    internal const string CostSortKey = "cost";
+    internal const string NoteSortKey = "note";
+    internal const string FuelTypeSortKey = "fuel_type";
+    internal const string FuelDetailSortKey = "fuel_detail";
+    internal const string FuelStationSortKey = "fuel_station";
+    internal const string LitersSortKey = "fuel_volume";
+    internal const string TotalCostSortKey = "total_cost";
+    internal const string TankStateSortKey = "tank_state";
+    internal const string TitleSortKey = "title";
+    internal const string VehicleSortKey = "vehicle";
+    internal const string DueDateSortKey = "due_date";
+    internal const string StatusSortKey = "status";
+    internal const string RepeatModeSortKey = "repeat_mode";
+    internal const string IntervalSortKey = "interval";
+    internal const string LastServiceSortKey = "last_service";
+    internal const string ValiditySortKey = "validity";
+    internal const string ProviderSortKey = "provider";
+    internal const string AttachmentModeSortKey = "attachment_mode";
+    internal const string AttachmentStateSortKey = "attachment_state";
+    internal const string SeveritySortKey = "severity";
+    internal const string CategorySortKey = "category";
+    internal const string SummarySortKey = "summary";
 
     private static readonly SortOptionDefinition[] SortDefinitions =
     [
@@ -61,133 +61,70 @@ internal static class WorkspaceSortHelpers
         new(SummarySortKey, "WorkspaceSort.Summary", "Souhrn", "Summary")
     ];
 
-    public static string DateSortLabel => GetSortLabel(DateSortKey);
-    public static string TypeSortLabel => GetSortLabel(TypeSortKey);
-    public static string OdometerSortLabel => GetSortLabel(OdometerSortKey);
-    public static string CostSortLabel => GetSortLabel(CostSortKey);
-    public static string NoteSortLabel => GetSortLabel(NoteSortKey);
-    public static string FuelTypeSortLabel => GetSortLabel(FuelTypeSortKey);
-    public static string FuelDetailSortLabel => GetSortLabel(FuelDetailSortKey);
-    public static string FuelStationSortLabel => GetSortLabel(FuelStationSortKey);
-    public static string LitersSortLabel => GetSortLabel(LitersSortKey);
-    public static string TotalCostSortLabel => GetSortLabel(TotalCostSortKey);
-    public static string TankStateSortLabel => GetSortLabel(TankStateSortKey);
-    public static string TitleSortLabel => GetSortLabel(TitleSortKey);
-    public static string VehicleSortLabel => GetSortLabel(VehicleSortKey);
-    public static string DueDateSortLabel => GetSortLabel(DueDateSortKey);
-    public static string StatusSortLabel => GetSortLabel(StatusSortKey);
-    public static string RepeatModeSortLabel => GetSortLabel(RepeatModeSortKey);
-    public static string IntervalSortLabel => GetSortLabel(IntervalSortKey);
-    public static string LastServiceSortLabel => GetSortLabel(LastServiceSortKey);
-    public static string ValiditySortLabel => GetSortLabel(ValiditySortKey);
-    public static string ProviderSortLabel => GetSortLabel(ProviderSortKey);
-    public static string AttachmentModeSortLabel => GetSortLabel(AttachmentModeSortKey);
-    public static string AttachmentStateSortLabel => GetSortLabel(AttachmentStateSortKey);
-    public static string SeveritySortLabel => GetSortLabel(SeveritySortKey);
-    public static string CategorySortLabel => GetSortLabel(CategorySortKey);
-    public static string SummarySortLabel => GetSortLabel(SummarySortKey);
+    public static LocalizedOptionViewModel DateSortOption => GetSortOption(DateSortKey);
+    public static LocalizedOptionViewModel TypeSortOption => GetSortOption(TypeSortKey);
+    public static LocalizedOptionViewModel OdometerSortOption => GetSortOption(OdometerSortKey);
+    public static LocalizedOptionViewModel CostSortOption => GetSortOption(CostSortKey);
+    public static LocalizedOptionViewModel DueDateSortOption => GetSortOption(DueDateSortKey);
+    public static LocalizedOptionViewModel TitleSortOption => GetSortOption(TitleSortKey);
+    public static LocalizedOptionViewModel VehicleSortOption => GetSortOption(VehicleSortKey);
+    public static LocalizedOptionViewModel StatusSortOption => GetSortOption(StatusSortKey);
+    public static LocalizedOptionViewModel IntervalSortOption => GetSortOption(IntervalSortKey);
+    public static LocalizedOptionViewModel ValiditySortOption => GetSortOption(ValiditySortKey);
+    public static LocalizedOptionViewModel SeveritySortOption => GetSortOption(SeveritySortKey);
 
-    public static IReadOnlyList<string> HistorySortOptions =>
-    [
-        DateSortLabel,
-        TypeSortLabel,
-        OdometerSortLabel,
-        CostSortLabel,
-        NoteSortLabel
-    ];
+    public static IReadOnlyList<LocalizedOptionViewModel> HistorySortOptions =>
+        BuildOptions(DateSortKey, TypeSortKey, OdometerSortKey, CostSortKey, NoteSortKey);
 
-    public static IReadOnlyList<string> FuelSortOptions =>
-    [
-        DateSortLabel,
-        FuelTypeSortLabel,
-        FuelDetailSortLabel,
-        FuelStationSortLabel,
-        LitersSortLabel,
-        TotalCostSortLabel,
-        OdometerSortLabel,
-        TankStateSortLabel
-    ];
+    public static IReadOnlyList<LocalizedOptionViewModel> FuelSortOptions =>
+        BuildOptions(DateSortKey, FuelTypeSortKey, FuelDetailSortKey, FuelStationSortKey, LitersSortKey, TotalCostSortKey, OdometerSortKey, TankStateSortKey);
 
-    public static IReadOnlyList<string> ReminderSortOptions =>
-    [
-        DueDateSortLabel,
-        TitleSortLabel,
-        StatusSortLabel,
-        RepeatModeSortLabel,
-        NoteSortLabel
-    ];
+    public static IReadOnlyList<LocalizedOptionViewModel> ReminderSortOptions =>
+        BuildOptions(DueDateSortKey, TitleSortKey, StatusSortKey, RepeatModeSortKey, NoteSortKey);
 
-    public static IReadOnlyList<string> MaintenanceSortOptions =>
-    [
-        TitleSortLabel,
-        IntervalSortLabel,
-        LastServiceSortLabel,
-        StatusSortLabel,
-        NoteSortLabel
-    ];
+    public static IReadOnlyList<LocalizedOptionViewModel> MaintenanceSortOptions =>
+        BuildOptions(TitleSortKey, IntervalSortKey, LastServiceSortKey, StatusSortKey, NoteSortKey);
 
-    public static IReadOnlyList<string> RecordSortOptions =>
-    [
-        ValiditySortLabel,
-        TitleSortLabel,
-        TypeSortLabel,
-        ProviderSortLabel,
-        CostSortLabel,
-        AttachmentModeSortLabel,
-        AttachmentStateSortLabel
-    ];
+    public static IReadOnlyList<LocalizedOptionViewModel> RecordSortOptions =>
+        BuildOptions(ValiditySortKey, TitleSortKey, TypeSortKey, ProviderSortKey, CostSortKey, AttachmentModeSortKey, AttachmentStateSortKey);
 
-    public static IReadOnlyList<string> TimelineOverviewSortOptions =>
-    [
-        DateSortLabel,
-        TypeSortLabel,
-        VehicleSortLabel,
-        TitleSortLabel,
-        StatusSortLabel
-    ];
+    public static IReadOnlyList<LocalizedOptionViewModel> TimelineOverviewSortOptions =>
+        BuildOptions(DateSortKey, TypeSortKey, VehicleSortKey, TitleSortKey, StatusSortKey);
 
-    public static IReadOnlyList<string> AuditSortOptions =>
-    [
-        SeveritySortLabel,
-        VehicleSortLabel,
-        TitleSortLabel,
-        CategorySortLabel,
-        TypeSortLabel
-    ];
+    public static IReadOnlyList<LocalizedOptionViewModel> AuditSortOptions =>
+        BuildOptions(SeveritySortKey, VehicleSortKey, TitleSortKey, CategorySortKey, TypeSortKey);
 
-    public static IReadOnlyList<string> GlobalSearchSortOptions =>
-    [
-        TypeSortLabel,
-        VehicleSortLabel,
-        TitleSortLabel,
-        SummarySortLabel
-    ];
+    public static IReadOnlyList<LocalizedOptionViewModel> GlobalSearchSortOptions =>
+        BuildOptions(TypeSortKey, VehicleSortKey, TitleSortKey, SummarySortKey);
 
-    public static string NormalizeSortOption(string? value, IReadOnlyList<string> supportedOptions, string defaultOption)
+    public static LocalizedOptionViewModel NormalizeSortOption(string? value, IReadOnlyList<LocalizedOptionViewModel> supportedOptions, LocalizedOptionViewModel defaultOption)
     {
-        var defaultKey = TryGetSortKey(defaultOption) ?? DateSortKey;
-        var selectedKey = TryGetSortKey(value);
-        var supportedKeys = supportedOptions
-            .Select(TryGetSortKey)
-            .Where(key => key is not null)
-            .ToHashSet(StringComparer.Ordinal);
-
-        return selectedKey is not null && supportedKeys.Contains(selectedKey)
-            ? GetSortLabel(selectedKey)
-            : GetSortLabel(defaultKey);
+        var selectedKey = NormalizeSortKey(value, supportedOptions, defaultOption);
+        return GetSortOption(selectedKey);
     }
 
-    private static string NormalizeSortKey(string? value, IReadOnlyList<string> supportedOptions, string defaultOption)
+    public static LocalizedOptionViewModel NormalizeSortOption(LocalizedOptionViewModel? value, IReadOnlyList<LocalizedOptionViewModel> supportedOptions, LocalizedOptionViewModel defaultOption) =>
+        NormalizeSortOption(value?.Value, supportedOptions, defaultOption);
+
+    public static string NormalizeSortKey(LocalizedOptionViewModel? value, IReadOnlyList<LocalizedOptionViewModel> supportedOptions, LocalizedOptionViewModel defaultOption) =>
+        NormalizeSortKey(value?.Value, supportedOptions, defaultOption);
+
+    public static string NormalizeSortKey(string? value, IReadOnlyList<LocalizedOptionViewModel> supportedOptions, LocalizedOptionViewModel defaultOption)
     {
-        var defaultKey = TryGetSortKey(defaultOption) ?? DateSortKey;
+        var defaultKey = TryGetSortKey(defaultOption.Value) ?? DateSortKey;
         var selectedKey = TryGetSortKey(value);
         var supportedKeys = supportedOptions
-            .Select(TryGetSortKey)
-            .Where(key => key is not null)
+            .Select(option => option.Value)
             .ToHashSet(StringComparer.Ordinal);
 
         return selectedKey is not null && supportedKeys.Contains(selectedKey) ? selectedKey : defaultKey;
     }
+
+    private static IReadOnlyList<LocalizedOptionViewModel> BuildOptions(params string[] keys) =>
+        keys.Select(GetSortOption).ToList();
+
+    private static LocalizedOptionViewModel GetSortOption(string key) =>
+        new(key, GetSortLabel(key));
 
     private static string GetSortLabel(string key) =>
         DesktopLocalization.Localizer.GetString(GetSortDefinition(key).ResourceKey);
@@ -220,10 +157,10 @@ internal static class WorkspaceSortHelpers
 
     public static IEnumerable<VehicleHistoryItemViewModel> SortHistory(
         IEnumerable<VehicleHistoryItemViewModel> items,
-        string selectedOption,
+        LocalizedOptionViewModel? selectedOption,
         bool descending)
     {
-        return NormalizeSortKey(selectedOption, HistorySortOptions, DateSortLabel) switch
+        return NormalizeSortKey(selectedOption, HistorySortOptions, DateSortOption) switch
         {
             TypeSortKey => OrderByText(items, descending, item => item.EventType, item => item.Date),
             OdometerSortKey => OrderByNumber(items, descending, item => TryParseOdometer(item.Odometer), item => item.Date),
@@ -235,10 +172,10 @@ internal static class WorkspaceSortHelpers
 
     public static IEnumerable<VehicleFuelItemViewModel> SortFuel(
         IEnumerable<VehicleFuelItemViewModel> items,
-        string selectedOption,
+        LocalizedOptionViewModel? selectedOption,
         bool descending)
     {
-        return NormalizeSortKey(selectedOption, FuelSortOptions, DateSortLabel) switch
+        return NormalizeSortKey(selectedOption, FuelSortOptions, DateSortOption) switch
         {
             FuelTypeSortKey => OrderByText(items, descending, item => item.FuelType, item => item.Date),
             FuelDetailSortKey => OrderByText(items, descending, item => item.FuelDetail, item => item.Date),
@@ -253,10 +190,10 @@ internal static class WorkspaceSortHelpers
 
     public static IEnumerable<VehicleReminderItemViewModel> SortReminders(
         IEnumerable<VehicleReminderItemViewModel> items,
-        string selectedOption,
+        LocalizedOptionViewModel? selectedOption,
         bool descending)
     {
-        return NormalizeSortKey(selectedOption, ReminderSortOptions, DueDateSortLabel) switch
+        return NormalizeSortKey(selectedOption, ReminderSortOptions, DueDateSortOption) switch
         {
             TitleSortKey => OrderByText(items, descending, item => item.Title, item => item.DueDate),
             StatusSortKey => OrderByText(items, descending, item => item.Status, item => item.DueDate),
@@ -268,10 +205,10 @@ internal static class WorkspaceSortHelpers
 
     public static IEnumerable<VehicleMaintenanceItemViewModel> SortMaintenance(
         IEnumerable<VehicleMaintenanceItemViewModel> items,
-        string selectedOption,
+        LocalizedOptionViewModel? selectedOption,
         bool descending)
     {
-        return NormalizeSortKey(selectedOption, MaintenanceSortOptions, TitleSortLabel) switch
+        return NormalizeSortKey(selectedOption, MaintenanceSortOptions, TitleSortOption) switch
         {
             IntervalSortKey => OrderByNumber(items, descending, item => TryParseFirstNumber(item.Interval), item => item.Title),
             LastServiceSortKey => OrderByDate(items, descending, item => TryParseMaintenanceLastService(item.LastService), item => item.Title),
@@ -283,10 +220,10 @@ internal static class WorkspaceSortHelpers
 
     public static IEnumerable<VehicleRecordItemViewModel> SortRecords(
         IEnumerable<VehicleRecordItemViewModel> items,
-        string selectedOption,
+        LocalizedOptionViewModel? selectedOption,
         bool descending)
     {
-        return NormalizeSortKey(selectedOption, RecordSortOptions, ValiditySortLabel) switch
+        return NormalizeSortKey(selectedOption, RecordSortOptions, ValiditySortOption) switch
         {
             TitleSortKey => OrderByText(items, descending, item => item.Title, item => item.Validity),
             TypeSortKey => OrderByText(items, descending, item => item.RecordType, item => item.Validity),
@@ -300,10 +237,10 @@ internal static class WorkspaceSortHelpers
 
     public static IEnumerable<VehicleTimelineItemViewModel> SortTimelineOverview(
         IEnumerable<VehicleTimelineItemViewModel> items,
-        string selectedOption,
+        LocalizedOptionViewModel? selectedOption,
         bool descending)
     {
-        return NormalizeSortKey(selectedOption, TimelineOverviewSortOptions, DateSortLabel) switch
+        return NormalizeSortKey(selectedOption, TimelineOverviewSortOptions, DateSortOption) switch
         {
             TypeSortKey => OrderByText(items, descending, item => item.KindLabel, item => item.Date),
             VehicleSortKey => OrderByText(items, descending, item => item.VehicleName, item => item.Date),
@@ -315,10 +252,10 @@ internal static class WorkspaceSortHelpers
 
     public static IEnumerable<AuditItemViewModel> SortAudit(
         IEnumerable<AuditItemViewModel> items,
-        string selectedOption,
+        LocalizedOptionViewModel? selectedOption,
         bool descending)
     {
-        return NormalizeSortKey(selectedOption, AuditSortOptions, SeveritySortLabel) switch
+        return NormalizeSortKey(selectedOption, AuditSortOptions, SeveritySortOption) switch
         {
             VehicleSortKey => OrderByText(items, descending, item => item.VehicleName, item => item.Title),
             TitleSortKey => OrderByText(items, descending, item => item.Title, item => item.VehicleName),
@@ -330,10 +267,10 @@ internal static class WorkspaceSortHelpers
 
     public static IEnumerable<GlobalSearchResultItemViewModel> SortGlobalSearch(
         IEnumerable<GlobalSearchResultItemViewModel> items,
-        string selectedOption,
+        LocalizedOptionViewModel? selectedOption,
         bool descending)
     {
-        return NormalizeSortKey(selectedOption, GlobalSearchSortOptions, TypeSortLabel) switch
+        return NormalizeSortKey(selectedOption, GlobalSearchSortOptions, TypeSortOption) switch
         {
             VehicleSortKey => OrderByText(items, descending, item => item.VehicleName, item => item.Title),
             TitleSortKey => OrderByText(items, descending, item => item.Title, item => item.VehicleName),

@@ -26,14 +26,14 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
     private string selectedSearchResultDetail = L("GlobalSearch.Detail.EmptySelection");
 
     [ObservableProperty]
-    private string selectedGlobalSearchSortOption = WorkspaceSortHelpers.TypeSortLabel;
+    private LocalizedOptionViewModel selectedGlobalSearchSortOption = WorkspaceSortHelpers.TypeSortOption;
 
     [ObservableProperty]
     private bool globalSearchSortDescending;
 
     public string WindowTitle => Root.GlobalSearchWindowTitle;
 
-    public IReadOnlyList<string> GlobalSearchSortOptions => WorkspaceSortHelpers.GlobalSearchSortOptions;
+    public IReadOnlyList<LocalizedOptionViewModel> GlobalSearchSortOptions => WorkspaceSortHelpers.GlobalSearchSortOptions;
 
     public ObservableCollection<GlobalSearchResultItemViewModel> GlobalSearchResults { get; } = [];
 
@@ -75,7 +75,7 @@ public sealed partial class GlobalSearchWorkspaceViewModel : WorkspaceViewModelB
         Root.NotifyGlobalSearchWorkspaceSelectionChanged();
     }
 
-    partial void OnSelectedGlobalSearchSortOptionChanged(string value)
+    partial void OnSelectedGlobalSearchSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleGlobalSearchWorkspaceSortChanged();
     }

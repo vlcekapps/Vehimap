@@ -200,9 +200,9 @@ public sealed class WorkspaceCompositionTests
     {
         var viewModel = CreateViewModel();
 
-        Assert.Contains("Vlastní období", viewModel.CostWorkspace.CostPeriodPresets);
-        Assert.Contains("Datové nedostatky", viewModel.UpcomingOverviewWorkspace.OverviewFilters);
-        Assert.DoesNotContain("Datové nedostatky", viewModel.OverdueOverviewWorkspace.OverviewFilters);
+        Assert.Contains(viewModel.CostWorkspace.CostPeriodPresets, option => option.Value == MainWindowViewModel.CostPeriodCustomKey && option.Label == "Vlastní období");
+        Assert.Contains(viewModel.UpcomingOverviewWorkspace.OverviewFilters, option => option.Value == OverviewFilterOptions.DataIssuesKey && option.Label == "Datové nedostatky");
+        Assert.DoesNotContain(viewModel.OverdueOverviewWorkspace.OverviewFilters, option => option.Value == OverviewFilterOptions.DataIssuesKey);
         Assert.Contains("Servis / Souhrn - Pravidelný servis", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
         Assert.Contains("Motor / Olej a filtry - Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceTemplateOptions);
         Assert.Contains(RecordWorkspaceViewModel.ManagedAttachmentModeLabel, viewModel.RecordWorkspace.RecordAttachmentModes);
@@ -219,12 +219,12 @@ public sealed class WorkspaceCompositionTests
         {
             DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
 
-            Assert.Contains("Date", WorkspaceSortHelpers.HistorySortOptions);
-            Assert.Contains("Fuel volume", WorkspaceSortHelpers.FuelSortOptions);
-            Assert.Equal("Date", WorkspaceSortHelpers.NormalizeSortOption("Datum", WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortLabel));
-            Assert.Equal("Fuel volume", WorkspaceSortHelpers.NormalizeSortOption("Litry", WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortLabel));
-            Assert.Equal("Attachment mode", WorkspaceSortHelpers.NormalizeSortOption("Režim přílohy", WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortLabel));
-            Assert.Equal("Record area", WorkspaceSortHelpers.NormalizeSortOption("Evidence", WorkspaceSortHelpers.AuditSortOptions, WorkspaceSortHelpers.SeveritySortLabel));
+            Assert.Contains(WorkspaceSortHelpers.HistorySortOptions, option => option.Value == WorkspaceSortHelpers.DateSortKey && option.Label == "Date");
+            Assert.Contains(WorkspaceSortHelpers.FuelSortOptions, option => option.Value == WorkspaceSortHelpers.LitersSortKey && option.Label == "Fuel volume");
+            Assert.Equal(WorkspaceSortHelpers.DateSortKey, WorkspaceSortHelpers.NormalizeSortOption("Datum", WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortOption).Value);
+            Assert.Equal(WorkspaceSortHelpers.LitersSortKey, WorkspaceSortHelpers.NormalizeSortOption("Litry", WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortOption).Value);
+            Assert.Equal(WorkspaceSortHelpers.AttachmentModeSortKey, WorkspaceSortHelpers.NormalizeSortOption("Režim přílohy", WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortOption).Value);
+            Assert.Equal(WorkspaceSortHelpers.CategorySortKey, WorkspaceSortHelpers.NormalizeSortOption("Evidence", WorkspaceSortHelpers.AuditSortOptions, WorkspaceSortHelpers.SeveritySortOption).Value);
         }
         finally
         {

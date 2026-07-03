@@ -317,13 +317,13 @@ public sealed class MainWindowViewModelNavigationTests
             dataSet.Records.Add(new VehicleRecord("rec_3", "veh_1", "Doklad", "Drahý doklad", "", "", "02/2027", "900", VehicleRecordAttachmentMode.External, "", ""));
         });
 
-        viewModel.HistoryWorkspace.SelectedHistorySortOption = WorkspaceSortHelpers.CostSortLabel;
+        viewModel.HistoryWorkspace.SelectedHistorySortOption = WorkspaceSortHelpers.CostSortOption;
         viewModel.HistoryWorkspace.HistorySortDescending = true;
-        viewModel.FuelWorkspace.SelectedFuelSortOption = WorkspaceSortHelpers.OdometerSortLabel;
+        viewModel.FuelWorkspace.SelectedFuelSortOption = WorkspaceSortHelpers.OdometerSortOption;
         viewModel.FuelWorkspace.FuelSortDescending = false;
-        viewModel.ReminderWorkspace.SelectedReminderSortOption = WorkspaceSortHelpers.TitleSortLabel;
-        viewModel.MaintenanceWorkspace.SelectedMaintenanceSortOption = WorkspaceSortHelpers.IntervalSortLabel;
-        viewModel.RecordWorkspace.SelectedRecordSortOption = WorkspaceSortHelpers.CostSortLabel;
+        viewModel.ReminderWorkspace.SelectedReminderSortOption = WorkspaceSortHelpers.TitleSortOption;
+        viewModel.MaintenanceWorkspace.SelectedMaintenanceSortOption = WorkspaceSortHelpers.IntervalSortOption;
+        viewModel.RecordWorkspace.SelectedRecordSortOption = WorkspaceSortHelpers.CostSortOption;
         viewModel.RecordWorkspace.RecordSortDescending = true;
 
         Assert.Equal("hist_2", viewModel.HistoryWorkspace.VisibleHistoryItems.First().Id);
@@ -331,14 +331,14 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Equal("rem_2", viewModel.ReminderWorkspace.VisibleReminderItems.First().Id);
         Assert.Equal("mnt_2", viewModel.MaintenanceWorkspace.VisibleMaintenanceItems.First().Id);
         Assert.Equal("rec_3", viewModel.RecordWorkspace.VisibleRecordItems.First().Id);
-        Assert.Equal(WorkspaceSortHelpers.CostSortLabel, dataSetRef!.Settings.GetValue("evidence_sort", "history_sort"));
+        Assert.Equal(WorkspaceSortHelpers.CostSortKey, dataSetRef!.Settings.GetValue("evidence_sort", "history_sort"));
         Assert.Equal("1", dataSetRef.Settings.GetValue("evidence_sort", "history_descending"));
-        Assert.Equal(WorkspaceSortHelpers.OdometerSortLabel, dataSetRef.Settings.GetValue("evidence_sort", "fuel_sort"));
+        Assert.Equal(WorkspaceSortHelpers.OdometerSortKey, dataSetRef.Settings.GetValue("evidence_sort", "fuel_sort"));
         Assert.Equal("0", dataSetRef.Settings.GetValue("evidence_sort", "fuel_descending"));
-        Assert.Equal(WorkspaceSortHelpers.TitleSortLabel, dataSetRef.Settings.GetValue("evidence_sort", "reminder_sort"));
-        Assert.Equal(WorkspaceSortHelpers.IntervalSortLabel, dataSetRef.Settings.GetValue("evidence_sort", "maintenance_sort"));
+        Assert.Equal(WorkspaceSortHelpers.TitleSortKey, dataSetRef.Settings.GetValue("evidence_sort", "reminder_sort"));
+        Assert.Equal(WorkspaceSortHelpers.IntervalSortKey, dataSetRef.Settings.GetValue("evidence_sort", "maintenance_sort"));
         Assert.Equal("0", dataSetRef.Settings.GetValue("evidence_sort", "maintenance_descending"));
-        Assert.Equal(WorkspaceSortHelpers.CostSortLabel, dataSetRef.Settings.GetValue("evidence_sort", "record_sort"));
+        Assert.Equal(WorkspaceSortHelpers.CostSortKey, dataSetRef.Settings.GetValue("evidence_sort", "record_sort"));
         Assert.Equal("1", dataSetRef.Settings.GetValue("evidence_sort", "record_descending"));
     }
 
@@ -352,22 +352,22 @@ public sealed class MainWindowViewModelNavigationTests
             dataSet.Reminders.Add(new VehicleReminder("rem_2", "veh_1", "AAA kontrola", "01.01.2099", "30", "Ročně", ""));
             dataSet.MaintenancePlans.Add(new MaintenancePlan("mnt_2", "veh_1", "AAA filtr", "5000", "6", "05.01.2026", "9800", true, ""));
             dataSet.Records.Add(new VehicleRecord("rec_3", "veh_1", "Doklad", "Drahý doklad", "", "", "02/2027", "900", VehicleRecordAttachmentMode.External, "", ""));
-            dataSet.Settings.SetValue("evidence_sort", "history_sort", WorkspaceSortHelpers.CostSortLabel);
+            dataSet.Settings.SetValue("evidence_sort", "history_sort", WorkspaceSortHelpers.CostSortKey);
             dataSet.Settings.SetValue("evidence_sort", "history_descending", "1");
-            dataSet.Settings.SetValue("evidence_sort", "fuel_sort", WorkspaceSortHelpers.OdometerSortLabel);
+            dataSet.Settings.SetValue("evidence_sort", "fuel_sort", WorkspaceSortHelpers.OdometerSortKey);
             dataSet.Settings.SetValue("evidence_sort", "fuel_descending", "0");
-            dataSet.Settings.SetValue("evidence_sort", "reminder_sort", WorkspaceSortHelpers.TitleSortLabel);
-            dataSet.Settings.SetValue("evidence_sort", "maintenance_sort", WorkspaceSortHelpers.IntervalSortLabel);
+            dataSet.Settings.SetValue("evidence_sort", "reminder_sort", WorkspaceSortHelpers.TitleSortKey);
+            dataSet.Settings.SetValue("evidence_sort", "maintenance_sort", WorkspaceSortHelpers.IntervalSortKey);
             dataSet.Settings.SetValue("evidence_sort", "maintenance_descending", "0");
-            dataSet.Settings.SetValue("evidence_sort", "record_sort", WorkspaceSortHelpers.CostSortLabel);
+            dataSet.Settings.SetValue("evidence_sort", "record_sort", WorkspaceSortHelpers.CostSortKey);
             dataSet.Settings.SetValue("evidence_sort", "record_descending", "1");
         });
 
-        Assert.Equal(WorkspaceSortHelpers.CostSortLabel, viewModel.HistoryWorkspace.SelectedHistorySortOption);
-        Assert.Equal(WorkspaceSortHelpers.OdometerSortLabel, viewModel.FuelWorkspace.SelectedFuelSortOption);
-        Assert.Equal(WorkspaceSortHelpers.TitleSortLabel, viewModel.ReminderWorkspace.SelectedReminderSortOption);
-        Assert.Equal(WorkspaceSortHelpers.IntervalSortLabel, viewModel.MaintenanceWorkspace.SelectedMaintenanceSortOption);
-        Assert.Equal(WorkspaceSortHelpers.CostSortLabel, viewModel.RecordWorkspace.SelectedRecordSortOption);
+        Assert.Equal(WorkspaceSortHelpers.CostSortKey, viewModel.HistoryWorkspace.SelectedHistorySortOption.Value);
+        Assert.Equal(WorkspaceSortHelpers.OdometerSortKey, viewModel.FuelWorkspace.SelectedFuelSortOption.Value);
+        Assert.Equal(WorkspaceSortHelpers.TitleSortKey, viewModel.ReminderWorkspace.SelectedReminderSortOption.Value);
+        Assert.Equal(WorkspaceSortHelpers.IntervalSortKey, viewModel.MaintenanceWorkspace.SelectedMaintenanceSortOption.Value);
+        Assert.Equal(WorkspaceSortHelpers.CostSortKey, viewModel.RecordWorkspace.SelectedRecordSortOption.Value);
         Assert.Equal("hist_2", viewModel.HistoryWorkspace.VisibleHistoryItems.First().Id);
         Assert.Equal("fuel_2", viewModel.FuelWorkspace.VisibleFuelItems.First().Id);
         Assert.Equal("rem_2", viewModel.ReminderWorkspace.VisibleReminderItems.First().Id);
@@ -387,15 +387,15 @@ public sealed class MainWindowViewModelNavigationTests
             dataSet.Records.Add(new VehicleRecord("rec_3", "veh_2", "Doklad", "Chybějící příloha", "", "", "02/2027", "", VehicleRecordAttachmentMode.External, "", "Prověřit"));
         });
 
-        viewModel.AuditWorkspace.SelectedAuditSortOption = WorkspaceSortHelpers.VehicleSortLabel;
+        viewModel.AuditWorkspace.SelectedAuditSortOption = WorkspaceSortHelpers.VehicleSortOption;
         viewModel.GlobalSearchWorkspace.GlobalSearchText = "Chybějící příloha";
-        viewModel.GlobalSearchWorkspace.SelectedGlobalSearchSortOption = WorkspaceSortHelpers.VehicleSortLabel;
+        viewModel.GlobalSearchWorkspace.SelectedGlobalSearchSortOption = WorkspaceSortHelpers.VehicleSortOption;
 
         Assert.Equal("Božena", viewModel.AuditWorkspace.VisibleAuditItems.First().VehicleName);
         Assert.Equal("Božena", viewModel.GlobalSearchWorkspace.GlobalSearchResults.First().VehicleName);
-        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, dataSetRef!.Settings.GetValue("workspace_sort", "audit_sort"));
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortKey, dataSetRef!.Settings.GetValue("workspace_sort", "audit_sort"));
         Assert.Equal("0", dataSetRef.Settings.GetValue("workspace_sort", "audit_descending"));
-        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, dataSetRef.Settings.GetValue("workspace_sort", "global_search_sort"));
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortKey, dataSetRef.Settings.GetValue("workspace_sort", "global_search_sort"));
         Assert.Equal("0", dataSetRef.Settings.GetValue("workspace_sort", "global_search_descending"));
     }
 
@@ -407,16 +407,16 @@ public sealed class MainWindowViewModelNavigationTests
             dataSet.Vehicles.Add(new Vehicle("veh_2", "Božena", "Osobní vozidla", "Srazové auto", "Škoda 100", "", "1975", "35", "", "", "", ""));
             dataSet.VehicleMetaEntries.Add(new VehicleMeta("veh_2", "Aktivní", "", "Benzín", "", "Řemen", "Manuál"));
             dataSet.Records.Add(new VehicleRecord("rec_3", "veh_2", "Doklad", "Chybějící příloha", "", "", "02/2027", "", VehicleRecordAttachmentMode.External, "", "Prověřit"));
-            dataSet.Settings.SetValue("workspace_sort", "audit_sort", WorkspaceSortHelpers.VehicleSortLabel);
+            dataSet.Settings.SetValue("workspace_sort", "audit_sort", WorkspaceSortHelpers.VehicleSortKey);
             dataSet.Settings.SetValue("workspace_sort", "audit_descending", "0");
-            dataSet.Settings.SetValue("workspace_sort", "global_search_sort", WorkspaceSortHelpers.VehicleSortLabel);
+            dataSet.Settings.SetValue("workspace_sort", "global_search_sort", WorkspaceSortHelpers.VehicleSortKey);
             dataSet.Settings.SetValue("workspace_sort", "global_search_descending", "0");
         });
 
         viewModel.GlobalSearchWorkspace.GlobalSearchText = "Chybějící příloha";
 
-        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.AuditWorkspace.SelectedAuditSortOption);
-        Assert.Equal(WorkspaceSortHelpers.VehicleSortLabel, viewModel.GlobalSearchWorkspace.SelectedGlobalSearchSortOption);
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortKey, viewModel.AuditWorkspace.SelectedAuditSortOption.Value);
+        Assert.Equal(WorkspaceSortHelpers.VehicleSortKey, viewModel.GlobalSearchWorkspace.SelectedGlobalSearchSortOption.Value);
         Assert.Equal("Božena", viewModel.AuditWorkspace.VisibleAuditItems.First().VehicleName);
         Assert.Equal("Božena", viewModel.GlobalSearchWorkspace.GlobalSearchResults.First().VehicleName);
     }
@@ -512,7 +512,8 @@ public sealed class MainWindowViewModelNavigationTests
         viewModel.CostWorkspace.CostPeriodEndText = "28.02.2026";
         viewModel.CostWorkspace.ApplyCostPeriodCommand.Execute(null);
 
-        Assert.Equal("Vlastní období", viewModel.CostWorkspace.SelectedCostPeriodPreset);
+        Assert.Equal(MainWindowViewModel.CostPeriodCustomKey, viewModel.CostWorkspace.SelectedCostPeriodPreset.Value);
+        Assert.Equal("Vlastní období", viewModel.CostWorkspace.SelectedCostPeriodPreset.Label);
         Assert.Equal("01.02.2026", viewModel.CostWorkspace.CostPeriodStartText);
         Assert.Equal("28.02.2026", viewModel.CostWorkspace.CostPeriodEndText);
         Assert.Contains("Od 01.02.2026 do 28.02.2026", viewModel.CostWorkspace.CostSummary, StringComparison.CurrentCulture);
@@ -532,7 +533,8 @@ public sealed class MainWindowViewModelNavigationTests
             dataSet.Settings.SetValue("costs", "period_end", "2026-02-28");
         });
 
-        Assert.Equal("Vlastní období", viewModel.CostWorkspace.SelectedCostPeriodPreset);
+        Assert.Equal(MainWindowViewModel.CostPeriodCustomKey, viewModel.CostWorkspace.SelectedCostPeriodPreset.Value);
+        Assert.Equal("Vlastní období", viewModel.CostWorkspace.SelectedCostPeriodPreset.Label);
         Assert.Equal("01.02.2026", viewModel.CostWorkspace.CostPeriodStartText);
         Assert.Equal("28.02.2026", viewModel.CostWorkspace.CostPeriodEndText);
         Assert.Contains("Od 01.02.2026 do 28.02.2026", viewModel.CostWorkspace.CostSummary, StringComparison.CurrentCulture);
@@ -774,7 +776,7 @@ public sealed class MainWindowViewModelNavigationTests
         var viewModel = CreateViewModel(configureDataSet: dataSet =>
             dataSet.Settings.SetValue("timeline", "filter", "Budoucí"));
 
-        Assert.Equal("Budoucí", viewModel.TimelineWorkspace.SelectedTimelineFilter);
+        Assert.Equal(TimelineFilterOptions.FutureKey, viewModel.TimelineWorkspace.SelectedTimelineFilter.Value);
         Assert.NotEmpty(viewModel.TimelineWorkspace.SelectedVehicleTimeline);
         Assert.All(viewModel.TimelineWorkspace.SelectedVehicleTimeline, item => Assert.True(item.IsFuture));
     }
@@ -785,7 +787,7 @@ public sealed class MainWindowViewModelNavigationTests
         VehimapDataSet? dataSetRef = null;
         var viewModel = CreateViewModel(configureDataSet: dataSet => dataSetRef = dataSet);
 
-        viewModel.TimelineWorkspace.SelectedTimelineFilter = "Minulé";
+        viewModel.TimelineWorkspace.SelectedTimelineFilter = TimelineFilterOptions.Option(TimelineFilterOptions.PastKey);
 
         Assert.Equal("past", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
         Assert.NotEmpty(viewModel.TimelineWorkspace.SelectedVehicleTimeline);
@@ -802,13 +804,13 @@ public sealed class MainWindowViewModelNavigationTests
             dataSetRef = dataSet;
         });
 
-        Assert.Equal("Vše", viewModel.TimelineWorkspace.SelectedTimelineFilter);
+        Assert.Equal(TimelineFilterOptions.AllKey, viewModel.TimelineWorkspace.SelectedTimelineFilter.Value);
         Assert.Contains(viewModel.TimelineWorkspace.SelectedVehicleTimeline, item => item.IsFuture);
         Assert.Contains(viewModel.TimelineWorkspace.SelectedVehicleTimeline, item => !item.IsFuture);
 
-        viewModel.TimelineWorkspace.SelectedTimelineFilter = "Neznámý filtr";
+        viewModel.TimelineWorkspace.SelectedTimelineFilter = new LocalizedOptionViewModel("Neznámý filtr", "Neznámý filtr");
 
-        Assert.Equal("Vše", viewModel.TimelineWorkspace.SelectedTimelineFilter);
+        Assert.Equal(TimelineFilterOptions.AllKey, viewModel.TimelineWorkspace.SelectedTimelineFilter.Value);
         Assert.Equal("all", dataSetRef?.Settings.GetValue("timeline", "filter", string.Empty));
     }
 

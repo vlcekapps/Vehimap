@@ -28,12 +28,12 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     private string reminderSearchSummary = L("ReminderWorkspace.SearchSummary.Initial");
 
     [ObservableProperty]
-    private string selectedReminderSortOption = WorkspaceSortHelpers.DueDateSortLabel;
+    private LocalizedOptionViewModel selectedReminderSortOption = WorkspaceSortHelpers.DueDateSortOption;
 
     [ObservableProperty]
     private bool reminderSortDescending;
 
-    public IReadOnlyList<string> ReminderSortOptions => WorkspaceSortHelpers.ReminderSortOptions;
+    public IReadOnlyList<LocalizedOptionViewModel> ReminderSortOptions => WorkspaceSortHelpers.ReminderSortOptions;
     public IReadOnlyList<string> ReminderRepeatModeOptions => LegacyKnownValues.ReminderRepeatModes;
 
     public bool CanClearReminderSearch => !string.IsNullOrWhiteSpace(ReminderSearchText);
@@ -142,7 +142,7 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
         RefreshVisibleReminderItems();
     }
 
-    partial void OnSelectedReminderSortOptionChanged(string value)
+    partial void OnSelectedReminderSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleReminderWorkspaceSortChanged();
     }

@@ -17,10 +17,10 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
     private string overdueOverviewSearchText = string.Empty;
 
     [ObservableProperty]
-    private string selectedOverdueOverviewFilter = L("Overview.Filter.All");
+    private LocalizedOptionViewModel selectedOverdueOverviewFilter = OverviewFilterOptions.All;
 
     [ObservableProperty]
-    private string selectedOverdueOverviewSortOption = WorkspaceSortHelpers.DateSortLabel;
+    private LocalizedOptionViewModel selectedOverdueOverviewSortOption = WorkspaceSortHelpers.DateSortOption;
 
     [ObservableProperty]
     private bool overdueOverviewSortDescending;
@@ -38,17 +38,9 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
 
     public ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems { get; } = [];
 
-    public IReadOnlyList<string> OverviewFilters { get; } =
-    [
-        L("Overview.Filter.All"),
-        L("Overview.Filter.Technical"),
-        L("Overview.Filter.GreenCards"),
-        L("Overview.Filter.Reminders"),
-        L("Overview.Filter.Records"),
-        L("Overview.Filter.Maintenance")
-    ];
+    public IReadOnlyList<LocalizedOptionViewModel> OverviewFilters => OverviewFilterOptions.DueDateOptions;
 
-    public IReadOnlyList<string> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
+    public IReadOnlyList<LocalizedOptionViewModel> OverviewSortOptions => WorkspaceSortHelpers.TimelineOverviewSortOptions;
 
     public ICommand OpenSelectedOverdueOverviewItemCommand => Root.OpenSelectedOverdueOverviewItemCommand;
 
@@ -81,12 +73,12 @@ public sealed partial class OverdueOverviewWorkspaceViewModel : WorkspaceViewMod
         Root.HandleOverdueOverviewWorkspaceSearchChanged();
     }
 
-    partial void OnSelectedOverdueOverviewFilterChanged(string value)
+    partial void OnSelectedOverdueOverviewFilterChanged(LocalizedOptionViewModel value)
     {
         Root.HandleOverdueOverviewWorkspaceFilterChanged();
     }
 
-    partial void OnSelectedOverdueOverviewSortOptionChanged(string value)
+    partial void OnSelectedOverdueOverviewSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleOverdueOverviewWorkspaceSortChanged();
     }

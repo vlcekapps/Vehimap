@@ -31,6 +31,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Shell při každém přepočtu projekcí znovu aplikuje jazyk z aktuální datové sady před sestavením detailu vozidla, seznamu a dashboardových souhrnů; anglický detail vozidla má regresní test proti návratu českých labelů typu `Příští TK`.
 - Lokalizační pravidla nově výslovně oddělují překládané rozhraní od uživatelsky zadaných dat; detail vozidla má regresní test, že anglické labely nepřepisují český název, model, štítky ani poznámku zadané uživatelem.
 - Start lokální/nightly aplikace už během programového refresh shellu neukládá preference řazení vyvolané synchronizací bindingů, takže UI vlákno nečeká na SQLite commit a okno po startu nezůstane ve stavu „neodpovídá“.
+- Uložené filtry, řazení, období nákladů a navigační cíle v C# shellu nově používají stabilní interní klíče místo viditelných EN/CS popisků; staré české i anglické labely z dřívějších nightly buildů zůstávají kompatibilními aliasy a při dalším uložení se normalizují.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.

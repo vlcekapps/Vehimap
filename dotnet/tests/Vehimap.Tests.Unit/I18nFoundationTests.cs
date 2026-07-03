@@ -996,12 +996,13 @@ public sealed class I18nFoundationTests
         var upcomingWorkspaceViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "UpcomingOverviewWorkspaceViewModel.cs"));
         var overdueWorkspaceViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "OverdueOverviewWorkspaceViewModel.cs"));
         var dashboardWorkspaceViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "DashboardWorkspaceViewModel.cs"));
+        var overviewFilterOptions = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "OverviewFilterOptions.cs"));
         var overviewsViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.Overviews.cs"));
         var projectionService = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "DesktopProjectionService.cs"));
 
-        Assert.Contains("Overview.Filter.All", upcomingWorkspaceViewModel);
+        Assert.Contains("Overview.Filter.All", overviewFilterOptions);
         Assert.Contains("Overview.Detail.Selected", upcomingWorkspaceViewModel);
-        Assert.Contains("Overview.Filter.DataIssues", upcomingWorkspaceViewModel);
+        Assert.Contains("Overview.Filter.DataIssues", overviewFilterOptions);
         Assert.Contains("Overview.Detail.EmptyOverdue", overdueWorkspaceViewModel);
         Assert.Contains("DashboardTimeline.Detail.Selected", dashboardWorkspaceViewModel);
         Assert.Contains("Overview.Summary.UpcomingWithItems", overviewsViewModel);
@@ -1039,12 +1040,13 @@ public sealed class I18nFoundationTests
         var quickActionsViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.QuickActions.cs"));
         var workspaceStateViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.WorkspaceState.cs"));
         var appShellViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.AppShell.cs"));
+        var overviewFilterOptions = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "OverviewFilterOptions.cs"));
 
         Assert.Contains("QuickActions.Status.NearestTechnical", quickActionsViewModel);
         Assert.Contains("QuickActions.Status.ReviewRecordOpened", quickActionsViewModel);
         Assert.Contains("QuickActions.Status.OpenedBackgroundTimeline", quickActionsViewModel);
         Assert.Contains("Timeline.Status.NoAlert", quickActionsViewModel);
-        Assert.Contains("Overview.Filter.GreenCards", quickActionsViewModel);
+        Assert.Contains("Overview.Filter.GreenCards", overviewFilterOptions);
         Assert.Contains("Overview.MissingGreen.Title", quickActionsViewModel);
         Assert.Contains("IsTimelineStatusAttention(item.Status)", appShellViewModel);
         Assert.Contains("WorkspaceStatus.TimelineRefreshed", workspaceStateViewModel);

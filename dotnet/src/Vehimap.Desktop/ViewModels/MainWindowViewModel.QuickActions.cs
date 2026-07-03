@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.Localization;
+using Vehimap.Desktop.ViewModels.Workspaces;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -45,7 +46,7 @@ public sealed partial class MainWindowViewModel
 
         OpenQuickActionOverview(
             "technical",
-            LO("Overview.Filter.Technical"),
+            OverviewFilterOptions.TechnicalKey,
             LO("QuickActions.Status.NoTechnical"),
             "QuickActions.Status.ReviewTechnicalOpened");
     }
@@ -103,7 +104,7 @@ public sealed partial class MainWindowViewModel
 
         OpenQuickActionOverview(
             "green",
-            LO("Overview.Filter.GreenCards"),
+            OverviewFilterOptions.GreenCardsKey,
             LO("QuickActions.Status.NoGreenCardsDue"),
             "QuickActions.Status.ReviewGreenOpened",
             includeMissingGreenCards: hasMissingGreenCard);
@@ -138,7 +139,7 @@ public sealed partial class MainWindowViewModel
 
         OpenQuickActionOverview(
             "custom",
-            LO("Overview.Filter.Reminders"),
+            OverviewFilterOptions.RemindersKey,
             LO("QuickActions.Status.NoReminder"),
             "QuickActions.Status.ReviewReminderOpened");
     }
@@ -172,7 +173,7 @@ public sealed partial class MainWindowViewModel
 
         OpenQuickActionOverview(
             "maintenance",
-            LO("Overview.Filter.Maintenance"),
+            OverviewFilterOptions.MaintenanceKey,
             LO("QuickActions.Status.NoMaintenance"),
             "QuickActions.Status.ReviewMaintenanceOpened");
     }
@@ -206,7 +207,7 @@ public sealed partial class MainWindowViewModel
 
         OpenQuickActionOverview(
             "record",
-            LO("Overview.Filter.Records"),
+            OverviewFilterOptions.RecordsKey,
             LO("QuickActions.Status.NoRecord"),
             "QuickActions.Status.ReviewRecordOpened");
     }
@@ -264,7 +265,7 @@ public sealed partial class MainWindowViewModel
 
     private void OpenQuickActionOverview(
         string kind,
-        string overviewFilterLabel,
+        string overviewFilterKey,
         string emptyMessage,
         string openedStatusResourceKey,
         bool includeMissingGreenCards = false)
@@ -284,7 +285,7 @@ public sealed partial class MainWindowViewModel
         {
             UpcomingOverviewWorkspace.UpcomingOverviewSearchText = string.Empty;
             UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = includeMissingGreenCards;
-            UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = overviewFilterLabel;
+            UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = OverviewFilterOptions.Option(overviewFilterKey);
             RefreshUpcomingOverview();
             SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
             UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem = FindById(
@@ -296,7 +297,7 @@ public sealed partial class MainWindowViewModel
         else
         {
             OverdueOverviewWorkspace.OverdueOverviewSearchText = string.Empty;
-            OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = overviewFilterLabel;
+            OverdueOverviewWorkspace.SelectedOverdueOverviewFilter = OverviewFilterOptions.Option(overviewFilterKey);
             RefreshOverdueOverview();
             SelectedVehicleTabIndex = OverdueOverviewTabIndex;
             OverdueOverviewWorkspace.SelectedOverdueOverviewItem = FindById(
@@ -314,7 +315,7 @@ public sealed partial class MainWindowViewModel
         var missingCount = _dataSet.Vehicles.Count(vehicle => string.IsNullOrWhiteSpace(vehicle.GreenCardTo));
         UpcomingOverviewWorkspace.UpcomingOverviewSearchText = string.Empty;
         UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview = true;
-        UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = LO("Overview.Filter.GreenCards");
+        UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter = OverviewFilterOptions.Option(OverviewFilterOptions.GreenCardsKey);
         RefreshUpcomingOverview();
         SelectedVehicleTabIndex = UpcomingOverviewTabIndex;
         UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem =

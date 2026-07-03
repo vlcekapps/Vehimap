@@ -41,12 +41,14 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("rec_2", plan.EntityId);
     }
 
-    [Fact]
-    public void Navigation_coordinator_routes_entity_reminder_to_reminder_tab()
+    [Theory]
+    [InlineData(DesktopEntityKinds.Reminder)]
+    [InlineData("Připomínka")]
+    public void Navigation_coordinator_routes_entity_reminder_to_reminder_tab(string entityKind)
     {
         var coordinator = new DesktopNavigationCoordinator();
 
-        var plan = coordinator.BuildForEntity("veh_1", "Připomínka", "rem_1");
+        var plan = coordinator.BuildForEntity("veh_1", entityKind, "rem_1");
 
         Assert.Equal(DesktopTabIndexes.Reminder, plan.TabIndex);
         Assert.Equal(DesktopFocusTarget.ReminderList, plan.FocusTarget);

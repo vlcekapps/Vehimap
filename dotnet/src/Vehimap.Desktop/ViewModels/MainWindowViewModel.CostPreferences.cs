@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Globalization;
 using Vehimap.Application;
+using Vehimap.Desktop.ViewModels.Workspaces;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -35,8 +36,8 @@ public sealed partial class MainWindowViewModel
         var today = DateOnly.FromDateTime(DateTime.Today);
         var presetKey = NormalizeCostPeriodPresetKey(
             _dataSet.Settings.GetValue(CostPeriodSettingsSection, CostPeriodPresetSettingKey, CostPeriodYearToDateKey));
-        var preset = CostPeriodLabelFromKey(presetKey);
-        var (start, end) = BuildCostPeriodForPreset(preset, today);
+        var preset = CostPeriodOptions.Option(presetKey);
+        var (start, end) = BuildCostPeriodForPreset(preset.Value, today);
 
         if (string.Equals(presetKey, CostPeriodCustomKey, StringComparison.Ordinal))
         {
@@ -69,7 +70,7 @@ public sealed partial class MainWindowViewModel
         }
 
         var preset = NormalizeCostPeriodPreset(value);
-        if (!string.Equals(CostWorkspace.SelectedCostPeriodPreset, preset, StringComparison.Ordinal))
+        if (!string.Equals(CostWorkspace.SelectedCostPeriodPreset.Value, preset.Value, StringComparison.Ordinal))
         {
             _suppressCostPeriodRefresh = true;
             try
@@ -82,13 +83,13 @@ public sealed partial class MainWindowViewModel
             }
         }
 
-        if (string.Equals(NormalizeCostPeriodPresetKey(preset), CostPeriodCustomKey, StringComparison.Ordinal))
+        if (string.Equals(preset.Value, CostPeriodCustomKey, StringComparison.Ordinal))
         {
             CostWorkspace.CostPeriodStatus = LO("CostPeriod.Status.CustomPrompt");
             return;
         }
 
-        var (start, end) = BuildCostPeriodForPreset(preset, DateOnly.FromDateTime(DateTime.Today));
+        var (start, end) = BuildCostPeriodForPreset(preset.Value, DateOnly.FromDateTime(DateTime.Today));
         ApplyCostPeriodSelection(preset, start, end, persist: true, requestFocus: false, LO("CostPeriod.Status.PresetChanged"));
     }
 
@@ -99,12 +100,12 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (!string.Equals(NormalizeCostPeriodPresetKey(CostWorkspace.SelectedCostPeriodPreset), CostPeriodCustomKey, StringComparison.Ordinal))
+        if (!string.Equals(CostWorkspace.SelectedCostPeriodPreset.Value, CostPeriodCustomKey, StringComparison.Ordinal))
         {
             _suppressCostPeriodRefresh = true;
             try
             {
-                CostWorkspace.SelectedCostPeriodPreset = CostPeriodLabelFromKey(CostPeriodCustomKey);
+                CostWorkspace.SelectedCostPeriodPreset = CostPeriodOptions.Option(CostPeriodCustomKey);
             }
             finally
             {
@@ -146,7 +147,7 @@ public sealed partial class MainWindowViewModel
         }
 
         ApplyCostPeriodSelection(
-            NormalizeCostPeriodPreset(CostWorkspace.SelectedCostPeriodPreset),
+            NormalizeCostPeriodPreset(CostWorkspace.SelectedCostPeriodPreset.Value),
             start,
             end,
             persist: true,
@@ -196,7 +197,7 @@ public sealed partial class MainWindowViewModel
         }
     }
 
-    private void ApplyCostPeriodSelection(string preset, DateOnly start, DateOnly end, bool persist, bool requestFocus, string status)
+    private void ApplyCostPeriodSelection(LocalizedOptionViewModel preset, DateOnly start, DateOnly end, bool persist, bool requestFocus, string status)
     {
         _costPeriodStart = start;
         _costPeriodEnd = end;
@@ -210,7 +211,7 @@ public sealed partial class MainWindowViewModel
         RefreshCostWorkspaceFromSelectedPeriod(status, requestFocus);
     }
 
-    private void SetCostPeriodWorkspaceState(string preset, DateOnly start, DateOnly end, string status)
+    private void SetCostPeriodWorkspaceState(LocalizedOptionViewModel preset, DateOnly start, DateOnly end, string status)
     {
         _suppressCostPeriodRefresh = true;
         try
@@ -226,14 +227,14 @@ public sealed partial class MainWindowViewModel
         }
     }
 
-    private void PersistCostPeriodPreferencesAsync(string preset, DateOnly start, DateOnly end)
+    private void PersistCostPeriodPreferencesAsync(LocalizedOptionViewModel preset, DateOnly start, DateOnly end)
     {
         if (!_session.IsLoaded)
         {
             return;
         }
 
-        var normalizedPreset = NormalizeCostPeriodPresetKey(preset);
+        var normalizedPreset = NormalizeCostPeriodPresetKey(preset.Value);
         var startValue = start.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         var endValue = end.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         PersistPreferenceSettingsAsync(
@@ -246,9 +247,9 @@ public sealed partial class MainWindowViewModel
             LO("CostPeriod.PreferenceSaveFailed"));
     }
 
-    private string NormalizeCostPeriodPreset(string? value)
+    private LocalizedOptionViewModel NormalizeCostPeriodPreset(string? value)
     {
-        return CostPeriodLabelFromKey(NormalizeCostPeriodPresetKey(value));
+        return CostPeriodOptions.Option(NormalizeCostPeriodPresetKey(value));
     }
 
     private static (DateOnly Start, DateOnly End) BuildCostPeriodForPreset(string preset, DateOnly today)
@@ -280,10 +281,10 @@ public sealed partial class MainWindowViewModel
     private static string FormatCostDate(DateOnly date) =>
         date.ToString("dd.MM.yyyy", CzechCulture);
 
-    private static string BuildCostPeriodStatus(string preset, DateOnly start, DateOnly end) =>
+    private static string BuildCostPeriodStatus(LocalizedOptionViewModel preset, DateOnly start, DateOnly end) =>
         LFO(
             "CostPeriod.Status.CurrentPeriod",
-            CostPeriodLabelFromKey(NormalizeCostPeriodPresetKey(preset)),
+            preset.Label,
             FormatCostDate(start),
             FormatCostDate(end));
 
@@ -333,14 +334,4 @@ public sealed partial class MainWindowViewModel
         || string.Equals(normalized, LO(resourceKey), StringComparison.CurrentCultureIgnoreCase)
         || aliases.Any(alias => string.Equals(normalized, alias, StringComparison.OrdinalIgnoreCase));
 
-    private static string CostPeriodLabelFromKey(string key) =>
-        key switch
-        {
-            CostPeriodLast30DaysKey => LO("CostPeriod.Last30Days"),
-            CostPeriodLast90DaysKey => LO("CostPeriod.Last90Days"),
-            CostPeriodCurrentYearKey => LO("CostPeriod.CurrentYear"),
-            CostPeriodPreviousYearKey => LO("CostPeriod.PreviousYear"),
-            CostPeriodCustomKey => LO("CostPeriod.Custom"),
-            _ => LO("CostPeriod.YearToDate")
-        };
 }

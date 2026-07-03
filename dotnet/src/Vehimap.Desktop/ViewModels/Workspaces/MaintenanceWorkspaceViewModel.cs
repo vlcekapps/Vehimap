@@ -48,12 +48,12 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     private string maintenanceSearchSummary = L("MaintenanceWorkspace.SearchSummary.Initial");
 
     [ObservableProperty]
-    private string selectedMaintenanceSortOption = WorkspaceSortHelpers.TitleSortLabel;
+    private LocalizedOptionViewModel selectedMaintenanceSortOption = WorkspaceSortHelpers.TitleSortOption;
 
     [ObservableProperty]
     private bool maintenanceSortDescending;
 
-    public IReadOnlyList<string> MaintenanceSortOptions => WorkspaceSortHelpers.MaintenanceSortOptions;
+    public IReadOnlyList<LocalizedOptionViewModel> MaintenanceSortOptions => WorkspaceSortHelpers.MaintenanceSortOptions;
 
     public bool CanClearMaintenanceSearch => !string.IsNullOrWhiteSpace(MaintenanceSearchText);
 
@@ -243,7 +243,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         RefreshVisibleMaintenanceItems();
     }
 
-    partial void OnSelectedMaintenanceSortOptionChanged(string value)
+    partial void OnSelectedMaintenanceSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleMaintenanceWorkspaceSortChanged();
     }

@@ -20,7 +20,7 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
     private string timelineSearchText = string.Empty;
 
     [ObservableProperty]
-    private string selectedTimelineFilter = L("TimelineWorkspace.Filter.All");
+    private LocalizedOptionViewModel selectedTimelineFilter = TimelineFilterOptions.All;
 
     [ObservableProperty]
     private VehicleTimelineItemViewModel? selectedTimelineItem;
@@ -31,12 +31,7 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string exportStatus = L("TimelineWorkspace.ExportStatus.Initial");
 
-    public IReadOnlyList<string> TimelineFilters { get; } =
-    [
-        L("TimelineWorkspace.Filter.All"),
-        L("TimelineWorkspace.Filter.Future"),
-        L("TimelineWorkspace.Filter.Past")
-    ];
+    public IReadOnlyList<LocalizedOptionViewModel> TimelineFilters => TimelineFilterOptions.AllOptions;
 
     public ObservableCollection<VehicleTimelineItemViewModel> SelectedVehicleTimeline { get; } = [];
 
@@ -87,7 +82,7 @@ public sealed partial class TimelineWorkspaceViewModel : WorkspaceViewModelBase
         Root.HandleTimelineWorkspaceSearchChanged();
     }
 
-    partial void OnSelectedTimelineFilterChanged(string value)
+    partial void OnSelectedTimelineFilterChanged(LocalizedOptionViewModel value)
     {
         Root.HandleTimelineWorkspaceFilterChanged();
     }
