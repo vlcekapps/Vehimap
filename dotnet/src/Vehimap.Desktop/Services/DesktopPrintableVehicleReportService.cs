@@ -98,7 +98,7 @@ internal sealed class DesktopPrintableVehicleReportService
             .ToList();
 
         var builder = new StringBuilder();
-        builder.AppendLine($"  <h2>{Html(localizer.Format("PrintableReport.SectionHeading", category, vehicles.Count))}</h2>");
+        builder.AppendLine($"  <h2>{Html(localizer.Format("PrintableReport.SectionHeading", FormatCategory(category, localizer), vehicles.Count))}</h2>");
         if (vehicles.Count == 0)
         {
             builder.AppendLine($"  <p class=\"empty\">{Html(localizer.GetString("PrintableReport.EmptyCategory"))}</p>");
@@ -132,7 +132,7 @@ internal sealed class DesktopPrintableVehicleReportService
             builder.AppendLine($"        <td>{Html(vehicle.Plate)}</td>");
             builder.AppendLine($"        <td>{Html(vehicle.Year)}</td>");
             builder.AppendLine($"        <td>{Html(vehicle.Power)}</td>");
-            builder.AppendLine($"        <td>{Html(meta?.State ?? string.Empty)}</td>");
+            builder.AppendLine($"        <td>{Html(FormatVehicleState(meta?.State, localizer))}</td>");
             builder.AppendLine($"        <td>{Html(meta?.Tags ?? string.Empty)}</td>");
             builder.AppendLine($"        <td>{Html(vehicle.LastTk)}</td>");
             builder.AppendLine($"        <td>{Html(vehicle.NextTk)}</td>");
@@ -216,6 +216,12 @@ internal sealed class DesktopPrintableVehicleReportService
     private static bool IsNoAlertStatus(string status) =>
         string.Equals(status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase)
         || string.Equals(status, "No alert", StringComparison.CurrentCultureIgnoreCase);
+
+    private static string FormatCategory(string? value, IAppLocalizer localizer) =>
+        LegacyKnownValueDisplayService.FormatCategory(value, localizer);
+
+    private static string FormatVehicleState(string? value, IAppLocalizer localizer) =>
+        LegacyKnownValueDisplayService.FormatVehicleState(value, localizer);
 
     private CultureInfo ResolveReportCulture()
     {

@@ -47,9 +47,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
     public bool RequiresOdometer { get; }
 
     public string DistanceUnitLabel =>
-        string.Equals(_unitPreferences.DistanceUnit, AppUnitFormatService.Miles, StringComparison.Ordinal)
-            ? "mi"
-            : "km";
+        UnitFormatService.GetDistanceUnitLabel(_unitPreferences);
 
     public string CompletedOdometerLabel => _localizer.Format("MaintenanceCompletion.CompletedOdometerLabel", DistanceUnitLabel);
 

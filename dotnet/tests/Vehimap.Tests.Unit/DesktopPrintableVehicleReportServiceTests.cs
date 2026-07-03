@@ -85,7 +85,7 @@ public sealed class DesktopPrintableVehicleReportServiceTests
             ],
             VehicleMetaEntries =
             [
-                new VehicleMeta("veh_1", "In service", "Family", "Petrol", "", "", "")
+                new VehicleMeta("veh_1", "Běžný provoz", "Family", "Petrol", "", "", "")
             ]
         };
         dataSet.Settings.SetValue("notifications", "technical_reminder_days", "30");
@@ -100,12 +100,16 @@ public sealed class DesktopPrintableVehicleReportServiceTests
         Assert.Contains("<title>Vehimap - Printable vehicle overview</title>", decodedHtml);
         Assert.Contains("Generated:", decodedHtml);
         Assert.Contains("Vehicles total: 1", decodedHtml);
+        Assert.Contains("Passenger vehicles (1)", decodedHtml);
+        Assert.Contains("Normal operation", decodedHtml);
         Assert.Contains("<th>Name</th>", decodedHtml);
         Assert.Contains("<th>Green card valid to</th>", decodedHtml);
         Assert.Contains("There is no vehicle in this category.", decodedHtml);
         Assert.Contains("Inspection: In 27 days", decodedHtml);
         Assert.Contains("Green card: In 27 days", decodedHtml);
         Assert.DoesNotContain("Tiskový přehled", decodedHtml);
+        Assert.DoesNotContain("Osobní vozidla", decodedHtml);
+        Assert.DoesNotContain("Běžný provoz", decodedHtml);
         Assert.DoesNotContain("Vytvořeno:", decodedHtml);
         Assert.DoesNotContain("TK: Do 27 dnů", decodedHtml);
     }

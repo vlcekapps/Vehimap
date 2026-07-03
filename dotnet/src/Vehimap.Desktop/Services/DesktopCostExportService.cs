@@ -308,7 +308,7 @@ internal sealed class DesktopCostExportService
     {
         var normalized = _unitFormatService.Normalize(_unitPreferences);
         var kilometersPerDisplayedUnit = _unitFormatService.ConvertDistanceToKilometers(1m, normalized);
-        return LF("CostExport.Value.CostPerDistance", Money(costPerKm * kilometersPerDisplayedUnit), DistanceUnitLabel(normalized));
+        return LF("CostExport.Value.CostPerDistance", Money(costPerKm * kilometersPerDisplayedUnit), _unitFormatService.GetDistanceUnitLabel(normalized));
     }
 
     private string FormatFuelVolume(string? value)
@@ -324,11 +324,6 @@ internal sealed class DesktopCostExportService
             ? FormatDistance(kilometers, decimalPlaces: 0)
             : (value ?? string.Empty).Trim();
     }
-
-    private static string DistanceUnitLabel(AppUnitPreferences preferences) =>
-        string.Equals(preferences.DistanceUnit, AppUnitFormatService.Miles, StringComparison.Ordinal)
-            ? "mi"
-            : "km";
 
     private string L(string key) => _localizer.GetString(key);
 

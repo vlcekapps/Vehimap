@@ -270,6 +270,26 @@ public sealed class I18nFoundationTests
         Assert.InRange(service.ConvertVolumeToLiters(2.64172m, new AppUnitPreferences("km", "us_gal")), 9.999m, 10.001m);
     }
 
+    [Fact]
+    public void Money_distance_volume_and_separator_preferences_change_display_not_canonical_meaning()
+    {
+        var numberService = new AppNumberFormatService();
+        var unitService = new AppUnitFormatService(numberService);
+        var czech = new AppCulturePreferences("cs-CZ", "none", "comma");
+        var english = new AppCulturePreferences("en-US", "comma", "dot");
+        var metric = new AppUnitPreferences("km", "l");
+        var imperial = new AppUnitPreferences("mi", "us_gal");
+
+        Assert.Equal("1234,50 Kč", numberService.FormatMoney(1234.5m, czech, "CZK", 2));
+        Assert.Equal("$1,234.50", numberService.FormatMoney(1234.5m, english, "USD", 2));
+        Assert.Equal("1000 km", unitService.FormatDistanceFromKilometers(1000m, czech, metric, 0));
+        Assert.Equal("621.4 mi", unitService.FormatDistanceFromKilometers(1000m, english, imperial, 1));
+        Assert.Equal("42,00 l", unitService.FormatVolumeFromLiters(42m, czech, metric, 2));
+        Assert.Equal("11.10 US gal", unitService.FormatVolumeFromLiters(42m, english, imperial, 2));
+        Assert.Equal(1000, (int)Math.Round(unitService.ConvertDistanceToKilometers(unitService.ConvertDistanceFromKilometers(1000m, imperial), imperial), MidpointRounding.AwayFromZero));
+        Assert.Equal(42m, Math.Round(unitService.ConvertVolumeToLiters(unitService.ConvertVolumeFromLiters(42m, imperial), imperial), 2));
+    }
+
     [Theory]
     [InlineData("cs-CZ", "none", "comma", "km", "l", "CZK")]
     [InlineData("en-US", "comma", "dot", "mi", "us_gal", "USD")]
@@ -1220,6 +1240,40 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Production_unit_and_currency_labels_are_limited_to_formatting_boundaries()
+    {
+        var root = FindRepositoryRoot();
+        var sourceRoot = Path.Combine(root, "dotnet", "src");
+        var literalRegex = new Regex("\"(km|mi|l|US gal|imp gal|CZK|USD|EUR|GBP|Kč)\"", RegexOptions.Compiled);
+        var failures = new List<string>();
+        foreach (var file in Directory.EnumerateFiles(sourceRoot, "*.*", SearchOption.AllDirectories)
+                     .Where(path => Path.GetExtension(path) is ".cs" or ".axaml")
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Resources{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase)))
+        {
+            var relativePath = Path.GetRelativePath(root, file).Replace('\\', '/');
+            var lineNumber = 0;
+            foreach (var line in File.ReadLines(file))
+            {
+                lineNumber++;
+                if (!literalRegex.IsMatch(line) || IsAllowedProductionUnitCurrencyLine(relativePath, line.Trim()))
+                {
+                    continue;
+                }
+
+                failures.Add($"{relativePath}:{lineNumber}: {line.Trim()}");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Fixed unit and currency literals are allowed only in storage defaults and shared formatting services. Offending lines:" +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Known_value_editor_dropdowns_use_value_label_options()
     {
         var root = FindRepositoryRoot();
@@ -1391,6 +1445,26 @@ public sealed class I18nFoundationTests
         {
             return line.Contains("\"Spravovaná kopie\"", StringComparison.Ordinal)
                 || line.Contains("\"Externí cesta\"", StringComparison.Ordinal);
+        }
+
+        return false;
+    }
+
+    private static bool IsAllowedProductionUnitCurrencyLine(string relativePath, string line)
+    {
+        if (relativePath is
+            "dotnet/src/Vehimap.Application/Models/AppLocaleDefaults.cs" or
+            "dotnet/src/Vehimap.Application/Models/AppUnitPreferences.cs" or
+            "dotnet/src/Vehimap.Application/Models/DesktopSupportedSettingsSnapshot.cs" or
+            "dotnet/src/Vehimap.Application/Services/AppCurrencyFormatService.cs" or
+            "dotnet/src/Vehimap.Application/Services/AppUnitFormatService.cs")
+        {
+            return true;
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Application/Services/VehimapValueParser.cs")
+        {
+            return line.Contains("\"kč\"", StringComparison.Ordinal);
         }
 
         return false;

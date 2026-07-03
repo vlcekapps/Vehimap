@@ -1315,7 +1315,7 @@ internal sealed class DesktopProjectionService
     {
         var normalized = _unitFormatService.Normalize(_unitPreferences);
         var costPerDisplayedDistance = value * _unitFormatService.ConvertDistanceToKilometers(1m, normalized);
-        return LF("Cost.Value.CostPerDistance", FormatMoney(costPerDisplayedDistance), DistanceUnitLabel(normalized));
+        return LF("Cost.Value.CostPerDistance", FormatMoney(costPerDisplayedDistance), _unitFormatService.GetDistanceUnitLabel(normalized));
     }
 
     private string FormatSignedMoney(decimal value)
@@ -1335,8 +1335,8 @@ internal sealed class DesktopProjectionService
         var normalized = _unitFormatService.Normalize(_unitPreferences);
         var absoluteValue = Math.Abs(value.Value) * _unitFormatService.ConvertDistanceToKilometers(1m, normalized);
         return value.Value >= 0m
-            ? LF("Cost.Value.SignedCostPerDistance.Positive", FormatMoney(absoluteValue), DistanceUnitLabel(normalized))
-            : LF("Cost.Value.SignedCostPerDistance.Negative", FormatMoney(absoluteValue), DistanceUnitLabel(normalized));
+            ? LF("Cost.Value.SignedCostPerDistance.Positive", FormatMoney(absoluteValue), _unitFormatService.GetDistanceUnitLabel(normalized))
+            : LF("Cost.Value.SignedCostPerDistance.Negative", FormatMoney(absoluteValue), _unitFormatService.GetDistanceUnitLabel(normalized));
     }
 
     private bool IsInactiveCostStatus(string? status) =>
@@ -1377,7 +1377,7 @@ internal sealed class DesktopProjectionService
 
         var normalized = _unitFormatService.Normalize(_unitPreferences);
         var pricePerDisplayedVolume = value.Value * _unitFormatService.ConvertVolumeToLiters(1m, normalized);
-        return LF("FuelAnalysis.Value.PricePerVolume", FormatMoney(pricePerDisplayedVolume), VolumeUnitLabel(normalized));
+        return LF("FuelAnalysis.Value.PricePerVolume", FormatMoney(pricePerDisplayedVolume), _unitFormatService.GetVolumeUnitLabel(normalized));
     }
 
     private string FormatFuelAnalysisMoney(decimal value) => FormatMoney(value);
@@ -1389,14 +1389,14 @@ internal sealed class DesktopProjectionService
         var normalized = _unitFormatService.Normalize(_unitPreferences);
         var displayedVolume = _unitFormatService.ConvertVolumeFromLiters(liters, normalized);
         var decimalPlaces = displayedVolume == Math.Round(displayedVolume, 0) ? 0 : 2;
-        return $"{FormatDecimal(displayedVolume, decimalPlaces)} {VolumeUnitLabel(normalized)}";
+        return $"{FormatDecimal(displayedVolume, decimalPlaces)} {_unitFormatService.GetVolumeUnitLabel(normalized)}";
     }
 
     private string FormatFuelAnalysisConsumption(decimal litersPer100Km)
     {
         var normalized = _unitFormatService.Normalize(_unitPreferences);
-        var distanceUnit = DistanceUnitLabel(normalized);
-        var volumeUnit = VolumeUnitLabel(normalized);
+        var distanceUnit = _unitFormatService.GetDistanceUnitLabel(normalized);
+        var volumeUnit = _unitFormatService.GetVolumeUnitLabel(normalized);
 
         if (normalized.DistanceUnit == AppUnitFormatService.Miles
             && normalized.VolumeUnit is AppUnitFormatService.UsGallons or AppUnitFormatService.ImperialGallons)
@@ -1415,17 +1415,6 @@ internal sealed class DesktopProjectionService
 
     private string FormatDecimal(decimal value, int decimalPlaces) =>
         _numberFormatService.FormatDecimal(value, _culturePreferences, decimalPlaces);
-
-    private static string DistanceUnitLabel(AppUnitPreferences preferences) =>
-        preferences.DistanceUnit == AppUnitFormatService.Miles ? "mi" : "km";
-
-    private static string VolumeUnitLabel(AppUnitPreferences preferences) =>
-        preferences.VolumeUnit switch
-        {
-            AppUnitFormatService.UsGallons => "US gal",
-            AppUnitFormatService.ImperialGallons => "imp gal",
-            _ => "l"
-        };
 
     private string FormatConsumptionSegmentPeriod(FuelConsumptionSegment segment) =>
         LF(
