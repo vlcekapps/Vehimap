@@ -454,7 +454,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     {
         foreach (var title in new[] { "Vehimap Nightly", "Vehimap Beta", "Vehimap" })
         {
-            foreach (var element in rootDriver.FindElements(By.Name(title)))
+            foreach (var element in SafeFindElementsByName(rootDriver, title))
             {
                 yield return element;
             }
@@ -468,6 +468,18 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         foreach (var element in SafeFindElements(rootDriver, "//*[@NativeWindowHandle>'0' and contains(@Name,'Vehimap')]"))
         {
             yield return element;
+        }
+    }
+
+    private static IReadOnlyCollection<IWebElement> SafeFindElementsByName(WindowsDriver rootDriver, string name)
+    {
+        try
+        {
+            return rootDriver.FindElements(MobileBy.Name(name));
+        }
+        catch (WebDriverException)
+        {
+            return Array.Empty<IWebElement>();
         }
     }
 
