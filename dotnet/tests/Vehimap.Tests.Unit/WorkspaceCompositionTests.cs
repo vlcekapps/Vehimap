@@ -642,6 +642,16 @@ public sealed class WorkspaceCompositionTests
         Assert.Contains($"workspaces:{workspaceViewName}", mainWindowXaml, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Workspace_base_does_not_rebroadcast_all_root_property_changes()
+    {
+        var root = FindRepositoryRoot();
+        var workspaceBase = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "WorkspaceViewModelBase.cs"));
+
+        Assert.DoesNotContain("Root.PropertyChanged +=", workspaceBase, StringComparison.Ordinal);
+        Assert.DoesNotContain("OnPropertyChanged(string.Empty)", workspaceBase, StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("TimelineWindow", "TimelineWorkspaceView", "TimelineWorkspaceHost")]
     [InlineData("CostWindow", "CostWorkspaceView", "CostWorkspaceHost")]

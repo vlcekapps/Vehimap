@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
@@ -27,15 +28,18 @@ public partial class App : Avalonia.Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        MainWindow? mainWindowToShow = null;
+        var showMainWindowOnStartup = true;
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var buildInfoProvider = new AssemblyAppBuildInfoProvider(() => DesktopLocalization.Localizer);
             var mainWindowViewModel = new MainWindowViewModel();
             var supportedSettings = mainWindowViewModel.GetSupportedSettingsSnapshot();
-DesktopLocalization.Configure(new AppCulturePreferences(
-    supportedSettings.Language,
-    supportedSettings.ThousandsSeparator,
-    supportedSettings.DecimalSeparator));
+            showMainWindowOnStartup = !supportedSettings.HideOnLaunch;
+            DesktopLocalization.Configure(new AppCulturePreferences(
+                supportedSettings.Language,
+                supportedSettings.ThousandsSeparator,
+                supportedSettings.DecimalSeparator));
             var mainWindow = new MainWindow
             {
                 DataContext = mainWindowViewModel
@@ -59,9 +63,27 @@ DesktopLocalization.Configure(new AppCulturePreferences(
             SingleInstanceCoordinator?.SetActivationHandler(_runtimeController.RequestShowMainWindowAsync);
             desktop.Exit += OnDesktopExit;
             _ = _runtimeController.InitializeAsync();
+            mainWindowToShow = mainWindow;
         }
 
         base.OnFrameworkInitializationCompleted();
+
+        if (showMainWindowOnStartup && mainWindowToShow is not null)
+        {
+            Dispatcher.UIThread.Post(
+                () => ShowMainWindowOnStartup(mainWindowToShow),
+                DispatcherPriority.Loaded);
+        }
+    }
+
+    private static void ShowMainWindowOnStartup(MainWindow mainWindow)
+    {
+        if (!mainWindow.IsVisible)
+        {
+            mainWindow.Show();
+        }
+
+        mainWindow.Activate();
     }
 
     private async void OnDesktopExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)

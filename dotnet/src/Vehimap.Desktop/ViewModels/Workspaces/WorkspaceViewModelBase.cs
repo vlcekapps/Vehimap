@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Vehimap.Desktop.Localization;
 
@@ -10,7 +9,6 @@ public abstract class WorkspaceViewModelBase : ObservableObject, IDisposable
     protected WorkspaceViewModelBase(MainWindowViewModel root)
     {
         Root = root;
-        Root.PropertyChanged += OnRootPropertyChanged;
     }
 
     protected MainWindowViewModel Root { get; }
@@ -29,7 +27,6 @@ public abstract class WorkspaceViewModelBase : ObservableObject, IDisposable
 
     public virtual void Dispose()
     {
-        Root.PropertyChanged -= OnRootPropertyChanged;
     }
 
     protected void RequestFocus(DesktopFocusTarget target)
@@ -50,10 +47,5 @@ public abstract class WorkspaceViewModelBase : ObservableObject, IDisposable
     internal void DiscardPendingEdits(bool clearStatus = true)
     {
         Root.DiscardPendingEdits(clearStatus);
-    }
-
-    private void OnRootPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        OnPropertyChanged(string.Empty);
     }
 }
