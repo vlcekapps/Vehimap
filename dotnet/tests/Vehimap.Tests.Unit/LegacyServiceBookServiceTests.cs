@@ -120,6 +120,54 @@ public sealed class LegacyServiceBookServiceTests
     }
 
     [Fact]
+    public void Build_vehicle_service_book_localizes_known_vehicle_and_record_values()
+    {
+        var service = new LegacyServiceBookService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Testovací vozidlo", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "", "", "", "", "", "")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "01.01.2026", "Servis", "100000", "2500", "Olej")
+            ],
+            Records =
+            [
+                new VehicleRecord("rec_1", "veh_1", "Servisní dokument", "Faktura servis", "Autoservis", "02/2026", "02/2026", "4000", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/invoice.pdf", "Práce")
+            ]
+        };
+
+        var summary = service.BuildVehicleServiceBook(dataSet, "veh_1", new DateOnly(2026, 3, 1));
+
+        Assert.Equal("Passenger vehicles", summary.VehicleCategory);
+        Assert.Equal("Testovací vozidlo", summary.VehicleName);
+        Assert.Equal("Service document", summary.Records.Single().RecordType);
+        Assert.Equal("Faktura servis", summary.Records.Single().Title);
+        Assert.Equal("Práce", summary.Records.Single().Note);
+        Assert.DoesNotContain("Osobní vozidla", summary.VehicleCategory, StringComparison.Ordinal);
+        Assert.DoesNotContain("Servisní dokument", summary.Records.Single().RecordType, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Build_vehicle_service_book_includes_english_service_record_keywords()
     {
         var service = new LegacyServiceBookService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));

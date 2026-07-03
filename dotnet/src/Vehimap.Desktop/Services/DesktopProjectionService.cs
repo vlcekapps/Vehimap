@@ -158,28 +158,32 @@ internal sealed class DesktopProjectionService
     public IReadOnlyList<CostVehicleItemViewModel> BuildDashboardCostVehicles(CostAnalysisSummary costSummary) =>
         costSummary.Vehicles
             .Where(item => item.TotalCost > 0m || !IsInactiveCostStatus(item.Status))
-            .Select(row => new CostVehicleItemViewModel(
-                row.VehicleId,
-                row.VehicleName,
-                FormatCategory(row.Category),
-                FormatMoney(row.FuelCost),
-                FormatMoney(row.HistoryCost),
-                FormatMoney(row.RecordCost),
-                FormatMoney(row.TotalCost),
-                FormatDistance(row.DistanceKm),
-                FormatCostPerDistance(row.CostPerKm),
-                row.Status,
-                LF(
-                    "CostItem.AccessibleLabel",
+            .Select(row =>
+            {
+                var status = FormatCostStatus(row.Status);
+                return new CostVehicleItemViewModel(
+                    row.VehicleId,
                     row.VehicleName,
                     FormatCategory(row.Category),
-                    FormatMoney(row.TotalCost),
                     FormatMoney(row.FuelCost),
                     FormatMoney(row.HistoryCost),
                     FormatMoney(row.RecordCost),
+                    FormatMoney(row.TotalCost),
                     FormatDistance(row.DistanceKm),
                     FormatCostPerDistance(row.CostPerKm),
-                    row.Status)))
+                    status,
+                    LF(
+                        "CostItem.AccessibleLabel",
+                        row.VehicleName,
+                        FormatCategory(row.Category),
+                        FormatMoney(row.TotalCost),
+                        FormatMoney(row.FuelCost),
+                        FormatMoney(row.HistoryCost),
+                        FormatMoney(row.RecordCost),
+                        FormatDistance(row.DistanceKm),
+                        FormatCostPerDistance(row.CostPerKm),
+                        status));
+            })
             .ToList();
 
     public DesktopVehicleDetailProjection BuildVehicleDetail(
@@ -1340,9 +1344,26 @@ internal sealed class DesktopProjectionService
     }
 
     private bool IsInactiveCostStatus(string? status) =>
-        string.Equals(status, L("CostAnalysis.Status.Inactive"), StringComparison.CurrentCultureIgnoreCase)
-        || string.Equals(status, "Neaktivní", StringComparison.OrdinalIgnoreCase)
-        || string.Equals(status, "Inactive", StringComparison.OrdinalIgnoreCase);
+        string.Equals(FormatCostStatus(status), L("CostAnalysis.Status.Inactive"), StringComparison.CurrentCultureIgnoreCase);
+
+    private string FormatCostStatus(string? status)
+    {
+        var normalized = (status ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return string.Empty;
+        }
+
+        foreach (var key in CostStatusResourceKeys)
+        {
+            if (IsResourceValue(normalized, key))
+            {
+                return L(key);
+            }
+        }
+
+        return normalized;
+    }
 
     private string FormatSmartAdvisorPriority(SmartAdvisorPriority priority) =>
         priority switch
@@ -1444,6 +1465,26 @@ internal sealed class DesktopProjectionService
     private string L(string key) => _localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+
+    private static readonly string[] CostStatusResourceKeys =
+    [
+        "CostAnalysis.Status.NoCost",
+        "CostAnalysis.Status.OdometerRegression",
+        "CostAnalysis.Status.MissingDistanceWithCost",
+        "CostAnalysis.Status.NoDistance",
+        "CostAnalysis.Status.Ok",
+        "CostAnalysis.Status.ZeroDistanceWithCost",
+        "CostAnalysis.Status.NoMovement",
+        "CostAnalysis.Status.Inactive"
+    ];
+
+    private static bool IsResourceValue(string value, string key)
+    {
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)).GetString(key);
+        var czech = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)).GetString(key);
+        return string.Equals(value, english, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(value, czech, StringComparison.OrdinalIgnoreCase);
+    }
 
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;

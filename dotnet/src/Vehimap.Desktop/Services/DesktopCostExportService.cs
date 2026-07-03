@@ -78,7 +78,7 @@ internal sealed class DesktopCostExportService
                 Money(row.TotalCost),
                 row.DistanceKm.HasValue ? FormatDistance(row.DistanceKm.Value, decimalPlaces: 1) : string.Empty,
                 row.CostPerKm.HasValue ? FormatCostPerDistance(row.CostPerKm.Value) : string.Empty,
-                row.Status
+                FormatCostStatus(row.Status)
             ]));
         }
 
@@ -154,7 +154,7 @@ internal sealed class DesktopCostExportService
         {
             var distance = row.DistanceKm.HasValue ? FormatDistance(row.DistanceKm.Value, decimalPlaces: 1) : L("Cost.Value.Unavailable");
             var costPerDistance = row.CostPerKm.HasValue ? FormatCostPerDistance(row.CostPerKm.Value) : L("Cost.Value.Unavailable");
-            builder.AppendLine($"<p class=\"summary\">{Html(LF("CostExport.ReportSummaryLine", Money(row.TotalCost), distance, costPerDistance, row.Status))}</p>");
+            builder.AppendLine($"<p class=\"summary\">{Html(LF("CostExport.ReportSummaryLine", Money(row.TotalCost), distance, costPerDistance, FormatCostStatus(row.Status)))}</p>");
             builder.AppendLine($"<table><thead><tr><th>{Html(L("CostExport.Column.Group"))}</th><th>{Html(L("CostExport.Column.Amount"))}</th></tr></thead><tbody>");
             builder.AppendLine($"<tr><td>{Html(L("CostExport.EntryGroup.Fuel"))}</td><td>{Html(Money(row.FuelCost))}</td></tr>");
             builder.AppendLine($"<tr><td>{Html(L("CostExport.EntryGroup.History"))}</td><td>{Html(Money(row.HistoryCost))}</td></tr>");
@@ -311,6 +311,25 @@ internal sealed class DesktopCostExportService
         return LF("CostExport.Value.CostPerDistance", Money(costPerKm * kilometersPerDisplayedUnit), _unitFormatService.GetDistanceUnitLabel(normalized));
     }
 
+    private string FormatCostStatus(string? status)
+    {
+        var normalized = (status ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return string.Empty;
+        }
+
+        foreach (var key in CostStatusResourceKeys)
+        {
+            if (IsResourceValue(normalized, key))
+            {
+                return L(key);
+            }
+        }
+
+        return normalized;
+    }
+
     private string FormatFuelVolume(string? value)
     {
         return VehimapValueParser.TryParseDecimalNumber(value, out var liters)
@@ -328,6 +347,26 @@ internal sealed class DesktopCostExportService
     private string L(string key) => _localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+
+    private static readonly string[] CostStatusResourceKeys =
+    [
+        "CostAnalysis.Status.NoCost",
+        "CostAnalysis.Status.OdometerRegression",
+        "CostAnalysis.Status.MissingDistanceWithCost",
+        "CostAnalysis.Status.NoDistance",
+        "CostAnalysis.Status.Ok",
+        "CostAnalysis.Status.ZeroDistanceWithCost",
+        "CostAnalysis.Status.NoMovement",
+        "CostAnalysis.Status.Inactive"
+    ];
+
+    private static bool IsResourceValue(string value, string key)
+    {
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)).GetString(key);
+        var czech = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)).GetString(key);
+        return string.Equals(value, english, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(value, czech, StringComparison.OrdinalIgnoreCase);
+    }
 
     private static string Tsv(IEnumerable<string> fields) =>
         string.Join('\t', fields.Select(field => (field ?? string.Empty).Replace('\t', ' ').Replace('\r', ' ').Replace('\n', ' ')));

@@ -1244,7 +1244,7 @@ public sealed class I18nFoundationTests
     {
         var root = FindRepositoryRoot();
         var sourceRoot = Path.Combine(root, "dotnet", "src");
-        var literalRegex = new Regex("\"(km|mi|l|US gal|imp gal|CZK|USD|EUR|GBP|Kč)\"", RegexOptions.Compiled);
+        var literalRegex = new Regex("(?:\\s(?:km|mi|l)\\b|/(?:km|mi)\\b|US gal|imp gal|\\b(?:CZK|USD|EUR|GBP)\\b|Kč|\\bliters?\\b|\\blitres?\\b|\\blitr(?:y|ů|u|em)?\\b|\\bgalon(?:y|ů|u|em)?\\b)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         var failures = new List<string>();
         foreach (var file in Directory.EnumerateFiles(sourceRoot, "*.*", SearchOption.AllDirectories)
                      .Where(path => Path.GetExtension(path) is ".cs" or ".axaml")
@@ -1257,12 +1257,16 @@ public sealed class I18nFoundationTests
             foreach (var line in File.ReadLines(file))
             {
                 lineNumber++;
-                if (!literalRegex.IsMatch(line) || IsAllowedProductionUnitCurrencyLine(relativePath, line.Trim()))
+                var offendingLiterals = ExtractQuotedStringLiterals(line)
+                    .Where(literal => literalRegex.IsMatch(literal))
+                    .Where(literal => !IsResourceKeyLiteral(literal))
+                    .ToList();
+                if (offendingLiterals.Count == 0 || IsAllowedProductionUnitCurrencyLine(relativePath, line.Trim()))
                 {
                     continue;
                 }
 
-                failures.Add($"{relativePath}:{lineNumber}: {line.Trim()}");
+                failures.Add($"{relativePath}:{lineNumber}: {line.Trim()} [{string.Join(", ", offendingLiterals)}]");
             }
         }
 
@@ -1462,12 +1466,81 @@ public sealed class I18nFoundationTests
             return true;
         }
 
+        if (relativePath.StartsWith("dotnet/src/Vehimap.Storage.", StringComparison.Ordinal))
+        {
+            return true;
+        }
+
         if (relativePath is "dotnet/src/Vehimap.Application/Services/VehimapValueParser.cs")
         {
-            return line.Contains("\"kč\"", StringComparison.Ordinal);
+            return line.Contains("\"kč\"", StringComparison.Ordinal)
+                || line.Contains("\"czk\"", StringComparison.Ordinal);
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Application/Services/LegacySmartAdvisorService.cs")
+        {
+            return line.Contains("cost-per-km-unavailable", StringComparison.Ordinal);
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Application/Services/LegacyFuelAnalysisService.cs")
+        {
+            return line.Contains("fuel-analysis-liters-", StringComparison.Ordinal);
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Desktop/Views/Workspaces/FuelWorkspaceView.axaml")
+        {
+            return line.Contains("{Binding Liters}", StringComparison.Ordinal);
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Desktop/ViewModels/Workspaces/WorkspaceSortHelpers.cs")
+        {
+            return line.Contains("WorkspaceSort.FuelVolume", StringComparison.Ordinal);
         }
 
         return false;
+    }
+
+    private static bool IsResourceKeyLiteral(string value) =>
+        value.Contains('.', StringComparison.Ordinal)
+        && !value.Contains(' ', StringComparison.Ordinal)
+        && value.All(character => char.IsLetterOrDigit(character) || character is '.' or '_' or '-');
+
+    private static IEnumerable<string> ExtractQuotedStringLiterals(string line)
+    {
+        var index = 0;
+        while (index < line.Length)
+        {
+            if (line[index] != '"')
+            {
+                index++;
+                continue;
+            }
+
+            index++;
+            var start = index;
+            var builder = new System.Text.StringBuilder();
+            while (index < line.Length)
+            {
+                if (line[index] == '\\' && index + 1 < line.Length)
+                {
+                    builder.Append(line[index + 1]);
+                    index += 2;
+                    continue;
+                }
+
+                if (line[index] == '"')
+                {
+                    yield return builder.Length == 0
+                        ? line[start..index]
+                        : builder.ToString();
+                    index++;
+                    break;
+                }
+
+                builder.Append(line[index]);
+                index++;
+            }
+        }
     }
 
     private static string CreateTempDirectory()

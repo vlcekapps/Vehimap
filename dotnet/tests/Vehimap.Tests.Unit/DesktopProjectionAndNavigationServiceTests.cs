@@ -125,7 +125,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         {
             Vehicles =
             [
-                new Vehicle("veh_1", "pes od babičky", "Osobní vozidla", "Rodinné auto z garáže", "Škoda 120L", "", "1988", "43", "", "08/2026", "05/2025", "")
+                new Vehicle("veh_1", "Testovací vozidlo", "Osobní vozidla", "Rodinné auto z garáže", "Škoda 120L", "", "1988", "43", "", "08/2026", "05/2025", "")
             ],
             VehicleMetaEntries =
             [
@@ -170,7 +170,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Contains("state Veteran", vehicle.AccessibleLabel, StringComparison.Ordinal);
         Assert.DoesNotContain("SPZ", vehicle.AccessibleLabel, StringComparison.Ordinal);
         Assert.DoesNotContain("stav", vehicle.AccessibleLabel, StringComparison.Ordinal);
-        Assert.Contains("pes od babičky", vehicle.AccessibleLabel, StringComparison.Ordinal);
+        Assert.Contains("Testovací vozidlo", vehicle.AccessibleLabel, StringComparison.Ordinal);
         Assert.Contains("Green card missing", vehicle.StatusSummary, StringComparison.Ordinal);
         Assert.DoesNotContain("ZK chybí", vehicle.StatusSummary, StringComparison.Ordinal);
         Assert.Equal("Vehicle list: 1 vehicles.", vehicleList.Summary);
@@ -183,7 +183,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             relativePath => Path.Combine(dataRoot.DataPath, relativePath.Replace('/', Path.DirectorySeparatorChar)),
             new DateOnly(2026, 4, 3));
 
-        Assert.Equal("pes od babičky", detail.Heading);
+        Assert.Equal("Testovací vozidlo", detail.Heading);
         Assert.Contains("Škoda 120L | Passenger vehicles | No license plate", detail.Overview, StringComparison.Ordinal);
         Assert.Contains("State: Veteran", detail.Overview, StringComparison.Ordinal);
         Assert.Contains("Tags: veterán; rodina", detail.Overview, StringComparison.Ordinal);
@@ -241,7 +241,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
 
             var vehicle = new VehicleListItemViewModel(
                 "veh_1",
-                "pes od babičky",
+                "Testovací vozidlo",
                 "Passenger vehicles",
                 "No license plate",
                 "Škoda 120L",
@@ -255,7 +255,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             Assert.Contains("state Veteran", vehicle.AccessibleLabel, StringComparison.Ordinal);
             Assert.DoesNotContain("SPZ", vehicle.AccessibleLabel, StringComparison.Ordinal);
             Assert.DoesNotContain("stav", vehicle.AccessibleLabel, StringComparison.Ordinal);
-            Assert.Contains("pes od babičky", vehicle.AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains("Testovací vozidlo", vehicle.AccessibleLabel, StringComparison.Ordinal);
 
             var timeline = new VehicleTimelineItemViewModel(
                 "technical",
@@ -264,7 +264,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
                 "Next technical inspection",
                 "Škoda 120L",
                 "Upcoming",
-                "pes od babičky",
+                "Testovací vozidlo",
                 "veh_1",
                 "veh_1",
                 true,
@@ -276,7 +276,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
                 "advisor_1",
                 "Critical",
                 "Attachments",
-                "pes od babičky",
+                "Testovací vozidlo",
                 "veh_1",
                 "Doklad",
                 "rec_1",
@@ -293,18 +293,18 @@ public sealed class DesktopProjectionAndNavigationServiceTests
                 "veh_1",
                 "vehicle",
                 "veh_1",
-                "pes od babičky",
+                "Testovací vozidlo",
                 "Documents",
                 "Liability insurance",
                 "Valid until 05/2026");
-            Assert.Contains("vehicle pes od babičky", search.AccessibleLabel, StringComparison.Ordinal);
-            Assert.DoesNotContain("vozidlo pes od babičky", search.AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains("vehicle Testovací vozidlo", search.AccessibleLabel, StringComparison.Ordinal);
+            Assert.DoesNotContain("vozidlo Testovací vozidlo", search.AccessibleLabel, StringComparison.Ordinal);
 
             DesktopLocalization.Configure(new AppCulturePreferences("cs-CZ", "none", "comma"));
 
             Assert.Contains("SPZ Bez SPZ", new VehicleListItemViewModel(
                 "veh_1",
-                "pes od babičky",
+                "Testovací vozidlo",
                 "Osobní vozidla",
                 "Bez SPZ",
                 "Škoda 120L",
@@ -321,7 +321,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
                 "Příští TK",
                 "Škoda 120L",
                 "Nadcházející",
-                "pes od babičky",
+                "Testovací vozidlo",
                 "veh_1",
                 "veh_1",
                 true,
@@ -330,7 +330,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
                 "advisor_1",
                 "Kritická",
                 "Přílohy",
-                "pes od babičky",
+                "Testovací vozidlo",
                 "veh_1",
                 "Doklad",
                 "rec_1",
@@ -340,11 +340,11 @@ public sealed class DesktopProjectionAndNavigationServiceTests
                 "Otevřít doklad",
                 "bez termínu",
                 1).AccessibleLabel, StringComparison.Ordinal);
-            Assert.Contains("vozidlo pes od babičky", new GlobalSearchResultItemViewModel(
+            Assert.Contains("vozidlo Testovací vozidlo", new GlobalSearchResultItemViewModel(
                 "veh_1",
                 "vehicle",
                 "veh_1",
-                "pes od babičky",
+                "Testovací vozidlo",
                 "Doklady",
                 "Povinné ručení",
                 "Platné do 05/2026").AccessibleLabel, StringComparison.Ordinal);

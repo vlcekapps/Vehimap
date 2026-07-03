@@ -77,7 +77,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
         return new ServiceBookSummary(
             vehicleId,
             vehicleName,
-            FormatValue(vehicle?.Category, L("ServiceBook.Value.NoCategory")),
+            FormatCategory(vehicle?.Category),
             FormatValue(vehicle?.MakeModel, L("ServiceBook.Value.NoMakeModel")),
             FormatValue(vehicle?.Plate, L("ServiceBook.Value.NoPlate")),
             currentOdometer.HasValue ? FormatDistance(currentOdometer.Value) : L("ServiceBook.Value.Unknown"),
@@ -155,7 +155,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
             .ThenBy(item => item.Entry.Title, StringComparer.CurrentCultureIgnoreCase)
             .Select(item => new ServiceBookRecordEntry(
                 item.Entry.Id,
-                FormatValue(item.Entry.RecordType, L("ServiceBook.Value.Record")),
+                FormatRecordType(item.Entry.RecordType),
                 FormatValue(item.Entry.Title, L("ServiceBook.Value.Untitled")),
                 FormatValue(item.Entry.Provider, L("ServiceBook.Value.NoProvider")),
                 BuildRecordValidity(item.Entry),
@@ -313,6 +313,16 @@ public sealed class LegacyServiceBookService : IServiceBookService
 
         return FormatValue(value, L("ServiceBook.Value.NoPrice"));
     }
+
+    private string FormatCategory(string? value) =>
+        string.IsNullOrWhiteSpace(value)
+            ? L("ServiceBook.Value.NoCategory")
+            : LegacyKnownValueDisplayService.FormatCategory(value, _localizer);
+
+    private string FormatRecordType(string? value) =>
+        string.IsNullOrWhiteSpace(value)
+            ? L("ServiceBook.Value.Record")
+            : LegacyKnownValueDisplayService.FormatRecordType(value, _localizer);
 
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
