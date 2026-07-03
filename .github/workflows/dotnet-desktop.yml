@@ -188,7 +188,21 @@ jobs:
         run: |
           npm install -g appium
           appium driver install windows
-          appium driver run windows install-wad
+
+          $winAppDriverUrl = "https://github.com/microsoft/WinAppDriver/releases/download/v1.2.1/WindowsApplicationDriver_1.2.1.msi"
+          $winAppDriverSha256 = "A76A8F4E44B29BAD331ACF6B6C248FCC65324F502F28826AD2ACD5F3C80857FE"
+          $installerPath = Join-Path $env:RUNNER_TEMP "WindowsApplicationDriver_1.2.1.msi"
+
+          Invoke-WebRequest -Uri $winAppDriverUrl -OutFile $installerPath -UseBasicParsing
+          $actualSha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $installerPath).Hash
+          if ($actualSha256 -ne $winAppDriverSha256) {
+            throw "WinAppDriver MSI checksum mismatch. Expected $winAppDriverSha256, got $actualSha256."
+          }
+
+          $installProcess = Start-Process -FilePath "msiexec.exe" -ArgumentList @("/i", $installerPath, "/qn", "/norestart") -Wait -PassThru
+          if ($installProcess.ExitCode -notin @(0, 3010)) {
+            throw "WinAppDriver MSI installation failed with exit code $($installProcess.ExitCode)."
+          }
       - name: Run Appium UI smoke
         shell: pwsh
         timeout-minutes: 15
