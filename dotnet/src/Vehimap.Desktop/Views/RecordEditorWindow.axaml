@@ -42,7 +42,7 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc RecordEditor.TypeLabel}" />
             <ComboBox x:Name="RecordEditorTypeBox"
                       ItemsSource="{Binding RecordTypeOptions}"
-                      SelectedItem="{Binding RecordEditorRecordType}"
+                      SelectedItem="{Binding SelectedRecordTypeOption}"
                       AutomationProperties.Name="{i18n:Loc RecordEditor.TypeName}"
                       AutomationProperties.AutomationId="RecordEditorTypeBox"
                       AutomationProperties.IsRequiredForForm="True" />

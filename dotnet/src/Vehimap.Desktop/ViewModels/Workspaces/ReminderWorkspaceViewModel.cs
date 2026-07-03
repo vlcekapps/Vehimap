@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Vehimap.Storage.Legacy;
+using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -34,7 +34,7 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     private bool reminderSortDescending;
 
     public IReadOnlyList<LocalizedOptionViewModel> ReminderSortOptions => WorkspaceSortHelpers.ReminderSortOptions;
-    public IReadOnlyList<string> ReminderRepeatModeOptions => LegacyKnownValues.ReminderRepeatModes;
+    public IReadOnlyList<LocalizedOptionViewModel> ReminderRepeatModeOptions => KnownValueOptions.ReminderRepeatModes(ReminderEditorRepeatMode);
 
     public bool CanClearReminderSearch => !string.IsNullOrWhiteSpace(ReminderSearchText);
 
@@ -67,6 +67,12 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
 
     [ObservableProperty]
     private string reminderEditorRepeatMode = string.Empty;
+
+    public LocalizedOptionViewModel SelectedReminderRepeatModeOption
+    {
+        get => KnownValueOptions.SelectReminderRepeatMode(ReminderEditorRepeatMode);
+        set => ReminderEditorRepeatMode = value?.Value ?? string.Empty;
+    }
 
     [ObservableProperty]
     private string reminderEditorNote = string.Empty;
@@ -145,6 +151,12 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     partial void OnSelectedReminderSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleReminderWorkspaceSortChanged();
+    }
+
+    partial void OnReminderEditorRepeatModeChanged(string value)
+    {
+        OnPropertyChanged(nameof(SelectedReminderRepeatModeOption));
+        OnPropertyChanged(nameof(ReminderRepeatModeOptions));
     }
 
     partial void OnReminderSortDescendingChanged(bool value)

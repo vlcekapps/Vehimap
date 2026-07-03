@@ -5,7 +5,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Domain.Enums;
-using Vehimap.Storage.Legacy;
+using Vehimap.Desktop.ViewModels;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -41,7 +41,7 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     private bool recordSortDescending;
 
     public IReadOnlyList<LocalizedOptionViewModel> RecordSortOptions => WorkspaceSortHelpers.RecordSortOptions;
-    public IReadOnlyList<string> RecordTypeOptions => LegacyKnownValues.RecordTypes;
+    public IReadOnlyList<LocalizedOptionViewModel> RecordTypeOptions => KnownValueOptions.RecordTypes(RecordEditorRecordType);
 
     public bool CanClearRecordSearch => !string.IsNullOrWhiteSpace(RecordSearchText);
 
@@ -62,6 +62,12 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
 
     [ObservableProperty]
     private string recordEditorRecordType = string.Empty;
+
+    public LocalizedOptionViewModel SelectedRecordTypeOption
+    {
+        get => KnownValueOptions.SelectRecordType(RecordEditorRecordType);
+        set => RecordEditorRecordType = value?.Value ?? string.Empty;
+    }
 
     [ObservableProperty]
     private string recordEditorTitle = string.Empty;
@@ -203,6 +209,12 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     partial void OnSelectedRecordSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleRecordWorkspaceSortChanged();
+    }
+
+    partial void OnRecordEditorRecordTypeChanged(string value)
+    {
+        OnPropertyChanged(nameof(SelectedRecordTypeOption));
+        OnPropertyChanged(nameof(RecordTypeOptions));
     }
 
     partial void OnRecordSortDescendingChanged(bool value)

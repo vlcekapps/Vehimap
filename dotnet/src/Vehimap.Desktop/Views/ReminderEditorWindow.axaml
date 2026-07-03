@@ -74,7 +74,7 @@
                   Grid.Row="4"
                   Margin="0,6,0,0"
                   ItemsSource="{Binding ReminderRepeatModeOptions}"
-                  SelectedItem="{Binding ReminderEditorRepeatMode}"
+                  SelectedItem="{Binding SelectedReminderRepeatModeOption}"
                   AutomationProperties.Name="{i18n:Loc ReminderEditor.RepeatName}"
                   AutomationProperties.AutomationId="ReminderEditorRepeatModeBox" />
         <TextBlock Grid.Row="5" Margin="0,14,0,0" FontWeight="SemiBold" Text="{i18n:Loc ReminderEditor.NoteLabel}" />

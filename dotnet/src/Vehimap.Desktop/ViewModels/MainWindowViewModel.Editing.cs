@@ -47,7 +47,7 @@ public sealed partial class MainWindowViewModel
         ReminderEditorTitle = string.Empty;
         ReminderEditorDueDate = string.Empty;
         ReminderEditorDays = "30";
-        ReminderEditorRepeatMode = "Neopakovat";
+        ReminderEditorRepeatMode = KnownValueOptions.DefaultReminderRepeatMode.Value;
         ReminderEditorNote = string.Empty;
         ReminderEditorStatus = LO("ReminderEditor.Status.CreatePrompt");
         IsEditingReminder = true;
@@ -68,7 +68,7 @@ public sealed partial class MainWindowViewModel
         ReminderEditorTitle = reminder.Title;
         ReminderEditorDueDate = reminder.DueDate;
         ReminderEditorDays = reminder.ReminderDays;
-        ReminderEditorRepeatMode = LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(reminder.RepeatMode);
+        ReminderEditorRepeatMode = KnownValueOptions.NormalizeReminderRepeatModeValue(reminder.RepeatMode);
         ReminderEditorNote = reminder.Note;
         ReminderEditorStatus = LO("ReminderEditor.Status.EditPrompt");
         IsEditingReminder = true;
@@ -117,7 +117,7 @@ public sealed partial class MainWindowViewModel
             title,
             dueDate,
             reminderDays,
-            LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(ReminderEditorRepeatMode),
+            KnownValueOptions.NormalizeReminderRepeatModeValue(ReminderEditorRepeatMode),
             (ReminderEditorNote ?? string.Empty).Trim());
 
         var rollbackDataSet = CloneDataSet(_dataSet);
@@ -221,7 +221,7 @@ public sealed partial class MainWindowViewModel
         }
 
         _editingRecordId = null;
-        RecordEditorRecordType = "Doklad";
+        RecordEditorRecordType = KnownValueOptions.DefaultRecordType.Value;
         RecordEditorTitle = string.Empty;
         RecordEditorProvider = string.Empty;
         RecordEditorValidFrom = string.Empty;
@@ -288,7 +288,7 @@ public sealed partial class MainWindowViewModel
 
         var title = (RecordEditorTitle ?? string.Empty).Trim();
         var recordTypeText = (RecordEditorRecordType ?? string.Empty).Trim();
-        var recordType = LegacyVehicleValueNormalization.NormalizeRecordType(recordTypeText);
+        var recordType = KnownValueOptions.NormalizeRecordTypeValue(recordTypeText);
         if (string.IsNullOrWhiteSpace(recordTypeText))
         {
             RecordEditorStatus = LO("RecordEditor.Validation.TypeRequired");
@@ -443,7 +443,7 @@ public sealed partial class MainWindowViewModel
     private void BeginRecordEdit(VehicleRecord record, bool preferManagedImport)
     {
         _editingRecordId = record.Id;
-        RecordEditorRecordType = LegacyVehicleValueNormalization.NormalizeRecordType(record.RecordType);
+        RecordEditorRecordType = KnownValueOptions.NormalizeRecordTypeValue(record.RecordType);
         RecordEditorTitle = record.Title;
         RecordEditorProvider = record.Provider;
         RecordEditorValidFrom = record.ValidFrom;
@@ -492,7 +492,7 @@ public sealed partial class MainWindowViewModel
     private static bool TryGetReminderRepeatIntervalMonths(string? repeatMode, out int intervalMonths)
     {
         intervalMonths = 0;
-        var normalized = LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(repeatMode);
+        var normalized = KnownValueOptions.NormalizeReminderRepeatModeValue(repeatMode);
         if (string.Equals(normalized, "Každých 5 let", StringComparison.Ordinal))
         {
             intervalMonths = 60;

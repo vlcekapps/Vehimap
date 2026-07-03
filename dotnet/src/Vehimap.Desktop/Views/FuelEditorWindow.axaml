@@ -52,7 +52,7 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc FuelEditor.FuelTypeLabel}" />
             <ComboBox x:Name="FuelEditorFuelTypeBox"
                       ItemsSource="{Binding FuelTypeOptions}"
-                      SelectedItem="{Binding FuelEditorFuelType}"
+                      SelectedItem="{Binding SelectedFuelTypeOption}"
                       AutomationProperties.Name="{i18n:Loc FuelEditor.FuelTypeName}"
                       AutomationProperties.AutomationId="FuelEditorFuelTypeBox" />
           </StackPanel>

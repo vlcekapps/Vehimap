@@ -54,7 +54,7 @@ public sealed partial class MainWindowViewModel
     {
         _editingVehicleId = null;
         VehicleDetailWorkspace.VehicleEditorName = string.Empty;
-        VehicleDetailWorkspace.VehicleEditorCategory = "Osobní vozidla";
+        VehicleDetailWorkspace.VehicleEditorCategory = KnownValueOptions.DefaultVehicleCategory.Value;
         VehicleDetailWorkspace.VehicleEditorNote = string.Empty;
         VehicleDetailWorkspace.VehicleEditorMakeModel = string.Empty;
         VehicleDetailWorkspace.VehicleEditorPlate = string.Empty;
@@ -87,7 +87,7 @@ public sealed partial class MainWindowViewModel
         var meta = GetSelectedVehicleMetaModel();
         _editingVehicleId = vehicle.Id;
         VehicleDetailWorkspace.VehicleEditorName = vehicle.Name;
-        VehicleDetailWorkspace.VehicleEditorCategory = vehicle.Category;
+        VehicleDetailWorkspace.VehicleEditorCategory = KnownValueOptions.NormalizeVehicleCategoryValue(vehicle.Category);
         VehicleDetailWorkspace.VehicleEditorNote = vehicle.VehicleNote;
         VehicleDetailWorkspace.VehicleEditorMakeModel = vehicle.MakeModel;
         VehicleDetailWorkspace.VehicleEditorPlate = vehicle.Plate;
@@ -97,12 +97,12 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorNextTk = vehicle.NextTk;
         VehicleDetailWorkspace.VehicleEditorGreenCardFrom = vehicle.GreenCardFrom;
         VehicleDetailWorkspace.VehicleEditorGreenCardTo = vehicle.GreenCardTo;
-        VehicleDetailWorkspace.VehicleEditorState = LegacyVehicleValueNormalization.NormalizeVehicleState(meta?.State);
+        VehicleDetailWorkspace.VehicleEditorState = KnownValueOptions.NormalizeVehicleStateValue(meta?.State);
         VehicleDetailWorkspace.VehicleEditorTags = meta?.Tags ?? string.Empty;
-        VehicleDetailWorkspace.VehicleEditorPowertrain = LegacyVehicleValueNormalization.NormalizeVehiclePowertrain(meta?.Powertrain);
-        VehicleDetailWorkspace.VehicleEditorClimateProfile = LegacyVehicleValueNormalization.NormalizeVehicleClimateProfile(meta?.ClimateProfile);
-        VehicleDetailWorkspace.VehicleEditorTimingDrive = LegacyVehicleValueNormalization.NormalizeVehicleTimingDrive(meta?.TimingDrive);
-        VehicleDetailWorkspace.VehicleEditorTransmission = LegacyVehicleValueNormalization.NormalizeVehicleTransmission(meta?.Transmission);
+        VehicleDetailWorkspace.VehicleEditorPowertrain = KnownValueOptions.NormalizeVehiclePowertrainValue(meta?.Powertrain);
+        VehicleDetailWorkspace.VehicleEditorClimateProfile = KnownValueOptions.NormalizeVehicleClimateProfileValue(meta?.ClimateProfile);
+        VehicleDetailWorkspace.VehicleEditorTimingDrive = KnownValueOptions.NormalizeVehicleTimingDriveValue(meta?.TimingDrive);
+        VehicleDetailWorkspace.VehicleEditorTransmission = KnownValueOptions.NormalizeVehicleTransmissionValue(meta?.Transmission);
         VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Status.EditPrompt");
         SetVehicleEditingState(true);
         RequestVehicleEditorDialog();
@@ -174,7 +174,7 @@ public sealed partial class MainWindowViewModel
         }
 
         var name = (VehicleDetailWorkspace.VehicleEditorName ?? string.Empty).Trim();
-        var category = (VehicleDetailWorkspace.VehicleEditorCategory ?? string.Empty).Trim();
+        var category = KnownValueOptions.NormalizeVehicleCategoryValue(VehicleDetailWorkspace.VehicleEditorCategory);
         var makeModel = (VehicleDetailWorkspace.VehicleEditorMakeModel ?? string.Empty).Trim();
         var plate = (VehicleDetailWorkspace.VehicleEditorPlate ?? string.Empty).Trim().ToUpperInvariant();
         var year = (VehicleDetailWorkspace.VehicleEditorYear ?? string.Empty).Trim();
@@ -404,7 +404,7 @@ public sealed partial class MainWindowViewModel
                 }
                 case VehicleStarterBundleSection.Record:
                 {
-                    var recordType = LegacyVehicleValueNormalization.NormalizeRecordType(item.RecordType);
+                    var recordType = KnownValueOptions.NormalizeRecordTypeValue(item.RecordType);
                     var key = BuildBundleRecordKey(recordType, item.Title);
                     var titleVariants = VehicleStarterBundleService.GetKnownTemplateTitleVariants(item.Title);
                     if (string.IsNullOrWhiteSpace(key) || titleVariants.Any(title => recordKeys.Contains(BuildBundleRecordKey(recordType, title))))
@@ -430,7 +430,7 @@ public sealed partial class MainWindowViewModel
                 }
                 case VehicleStarterBundleSection.Reminder:
                 {
-                    var repeatMode = LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(item.RepeatMode);
+                    var repeatMode = KnownValueOptions.NormalizeReminderRepeatModeValue(item.RepeatMode);
                     var key = BuildBundleReminderKey(item.Title, repeatMode);
                     var titleVariants = VehicleStarterBundleService.GetKnownTemplateTitleVariants(item.Title);
                     if (string.IsNullOrWhiteSpace(key) || titleVariants.Any(title => reminderKeys.Contains(BuildBundleReminderKey(title, repeatMode))))
@@ -665,12 +665,12 @@ public sealed partial class MainWindowViewModel
     {
         var updatedMeta = new VehicleMeta(
             vehicleId,
-            LegacyVehicleValueNormalization.NormalizeVehicleState(VehicleDetailWorkspace.VehicleEditorState),
+            KnownValueOptions.NormalizeVehicleStateValue(VehicleDetailWorkspace.VehicleEditorState),
             LegacyVehicleMetaNormalization.NormalizeTagList(VehicleDetailWorkspace.VehicleEditorTags),
-            LegacyVehicleValueNormalization.NormalizeVehiclePowertrain(VehicleDetailWorkspace.VehicleEditorPowertrain),
-            LegacyVehicleValueNormalization.NormalizeVehicleClimateProfile(VehicleDetailWorkspace.VehicleEditorClimateProfile),
-            LegacyVehicleValueNormalization.NormalizeVehicleTimingDrive(VehicleDetailWorkspace.VehicleEditorTimingDrive),
-            LegacyVehicleValueNormalization.NormalizeVehicleTransmission(VehicleDetailWorkspace.VehicleEditorTransmission));
+            KnownValueOptions.NormalizeVehiclePowertrainValue(VehicleDetailWorkspace.VehicleEditorPowertrain),
+            KnownValueOptions.NormalizeVehicleClimateProfileValue(VehicleDetailWorkspace.VehicleEditorClimateProfile),
+            KnownValueOptions.NormalizeVehicleTimingDriveValue(VehicleDetailWorkspace.VehicleEditorTimingDrive),
+            KnownValueOptions.NormalizeVehicleTransmissionValue(VehicleDetailWorkspace.VehicleEditorTransmission));
 
         if (string.IsNullOrWhiteSpace(updatedMeta.State)
             && string.IsNullOrWhiteSpace(updatedMeta.Tags)
@@ -755,5 +755,5 @@ public sealed partial class MainWindowViewModel
         $"{NormalizeBundleKey(recordType)}|{NormalizeBundleKey(title)}";
 
     private static string BuildBundleReminderKey(string title, string repeatMode) =>
-        $"{NormalizeBundleKey(title)}|{NormalizeBundleKey(LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(repeatMode))}";
+        $"{NormalizeBundleKey(title)}|{NormalizeBundleKey(KnownValueOptions.NormalizeReminderRepeatModeValue(repeatMode))}";
 }

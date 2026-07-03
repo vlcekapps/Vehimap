@@ -54,7 +54,7 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Category}" />
             <ComboBox x:Name="VehicleEditorCategoryBox"
                       ItemsSource="{Binding VehicleCategoryOptions}"
-                      SelectedItem="{Binding VehicleEditorCategory}"
+                      SelectedItem="{Binding SelectedVehicleCategoryOption}"
                       AutomationProperties.Name="{i18n:Loc VehicleEditor.CategoryName}"
                       AutomationProperties.AutomationId="VehicleEditorCategoryBox"
                       AutomationProperties.IsRequiredForForm="True" />
@@ -102,7 +102,7 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.State}" />
             <ComboBox x:Name="VehicleEditorStateBox"
                       ItemsSource="{Binding VehicleStateOptions}"
-                      SelectedItem="{Binding VehicleEditorState}"
+                      SelectedItem="{Binding SelectedVehicleStateOption}"
                       AutomationProperties.Name="{i18n:Loc VehicleEditor.StateName}"
                       AutomationProperties.AutomationId="VehicleEditorStateBox" />
           </StackPanel>
@@ -149,7 +149,7 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Powertrain}" />
             <ComboBox x:Name="VehicleEditorPowertrainBox"
                       ItemsSource="{Binding VehiclePowertrainOptions}"
-                      SelectedItem="{Binding VehicleEditorPowertrain}"
+                      SelectedItem="{Binding SelectedVehiclePowertrainOption}"
                       AutomationProperties.Name="{i18n:Loc VehicleEditor.PowertrainName}"
                       AutomationProperties.AutomationId="VehicleEditorPowertrainBox" />
           </StackPanel>
@@ -157,7 +157,7 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Climate}" />
             <ComboBox x:Name="VehicleEditorClimateProfileBox"
                       ItemsSource="{Binding VehicleClimateProfileOptions}"
-                      SelectedItem="{Binding VehicleEditorClimateProfile}"
+                      SelectedItem="{Binding SelectedVehicleClimateProfileOption}"
                       AutomationProperties.Name="{i18n:Loc VehicleEditor.ClimateName}"
                       AutomationProperties.AutomationId="VehicleEditorClimateProfileBox" />
           </StackPanel>
@@ -165,7 +165,7 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.TimingDrive}" />
             <ComboBox x:Name="VehicleEditorTimingDriveBox"
                       ItemsSource="{Binding VehicleTimingDriveOptions}"
-                      SelectedItem="{Binding VehicleEditorTimingDrive}"
+                      SelectedItem="{Binding SelectedVehicleTimingDriveOption}"
                       AutomationProperties.Name="{i18n:Loc VehicleEditor.TimingDriveName}"
                       AutomationProperties.AutomationId="VehicleEditorTimingDriveBox" />
           </StackPanel>
@@ -173,7 +173,7 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.Transmission}" />
             <ComboBox x:Name="VehicleEditorTransmissionBox"
                       ItemsSource="{Binding VehicleTransmissionOptions}"
-                      SelectedItem="{Binding VehicleEditorTransmission}"
+                      SelectedItem="{Binding SelectedVehicleTransmissionOption}"
                       AutomationProperties.Name="{i18n:Loc VehicleEditor.TransmissionName}"
                       AutomationProperties.AutomationId="VehicleEditorTransmissionBox" />
           </StackPanel>

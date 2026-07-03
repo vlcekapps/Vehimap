@@ -3,8 +3,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Services;
-using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -42,7 +42,7 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
 
     public IReadOnlyList<LocalizedOptionViewModel> FuelSortOptions => WorkspaceSortHelpers.FuelSortOptions;
 
-    public IReadOnlyList<string> FuelTypeOptions => LegacyKnownValues.FuelTypes;
+    public IReadOnlyList<LocalizedOptionViewModel> FuelTypeOptions => KnownValueOptions.FuelTypes(FuelEditorFuelType);
 
     public bool CanClearFuelSearch => !string.IsNullOrWhiteSpace(FuelSearchText);
 
@@ -78,6 +78,12 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
 
     [ObservableProperty]
     private string fuelEditorFuelType = string.Empty;
+
+    public LocalizedOptionViewModel SelectedFuelTypeOption
+    {
+        get => KnownValueOptions.SelectFuelType(FuelEditorFuelType);
+        set => FuelEditorFuelType = value?.Value ?? string.Empty;
+    }
 
     [ObservableProperty]
     private string fuelEditorFuelDetail = string.Empty;
@@ -268,6 +274,12 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     partial void OnSelectedFuelSortOptionChanged(LocalizedOptionViewModel value)
     {
         Root.HandleFuelWorkspaceSortChanged();
+    }
+
+    partial void OnFuelEditorFuelTypeChanged(string value)
+    {
+        OnPropertyChanged(nameof(SelectedFuelTypeOption));
+        OnPropertyChanged(nameof(FuelTypeOptions));
     }
 
     partial void OnFuelSortDescendingChanged(bool value)

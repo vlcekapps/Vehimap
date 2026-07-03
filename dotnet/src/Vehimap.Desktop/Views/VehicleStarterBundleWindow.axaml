@@ -121,8 +121,8 @@
 
             <StackPanel IsVisible="{Binding SelectedItem.IsRecord}">
               <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.RecordTypeLabel}" />
-              <ComboBox ItemsSource="{Binding RecordTypeOptions}"
-                        SelectedItem="{Binding SelectedItem.RecordType}"
+              <ComboBox ItemsSource="{Binding SelectedItem.RecordTypeOptions}"
+                        SelectedItem="{Binding SelectedItem.SelectedRecordTypeOption}"
                         AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.RecordTypeName}"
                         AutomationProperties.AutomationId="BundleRecordTypeBox" />
               <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.RecordTitleLabel}" />
@@ -175,8 +175,8 @@
                 </StackPanel>
                 <StackPanel Grid.Column="2" Spacing="6">
                   <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.ReminderRepeatLabel}" />
-                  <ComboBox ItemsSource="{Binding ReminderRepeatModeOptions}"
-                            SelectedItem="{Binding SelectedItem.RepeatMode}"
+                  <ComboBox ItemsSource="{Binding SelectedItem.ReminderRepeatModeOptions}"
+                            SelectedItem="{Binding SelectedItem.SelectedReminderRepeatModeOption}"
                             AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.ReminderRepeatName}"
                             AutomationProperties.AutomationId="BundleReminderRepeatModeBox" />
                 </StackPanel>

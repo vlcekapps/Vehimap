@@ -136,7 +136,7 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
-    public void Vehicle_starter_bundle_items_should_normalize_dropdown_values()
+    public void Vehicle_starter_bundle_items_should_preserve_custom_dropdown_values_and_normalize_aliases()
     {
         var recordItem = new VehicleStarterBundleItemEditorViewModel(
             new VehicleStarterBundleTemplate(
@@ -171,8 +171,8 @@ public sealed class DesktopAccessibilityLabelTests
                 "Ročně",
                 string.Empty));
 
-        Assert.Equal("Povinné ručení", recordItem.RecordType);
-        Assert.Equal("Povinné ručení", recordItem.ToTemplate().RecordType);
+        Assert.Equal("Vlastní typ", recordItem.RecordType);
+        Assert.Equal("Vlastní typ", recordItem.ToTemplate().RecordType);
         Assert.Equal("Každý rok", reminderItem.RepeatMode);
         Assert.Equal("Každý rok", reminderItem.ToTemplate().RepeatMode);
     }
@@ -187,10 +187,10 @@ public sealed class DesktopAccessibilityLabelTests
                 "Osobní vozidla",
                 []));
 
-        Assert.Contains("Povinné ručení", viewModel.RecordTypeOptions);
-        Assert.Contains("Doklad", viewModel.RecordTypeOptions);
-        Assert.Contains("Neopakovat", viewModel.ReminderRepeatModeOptions);
-        Assert.Contains("Každý rok", viewModel.ReminderRepeatModeOptions);
+        Assert.Contains(viewModel.RecordTypeOptions, item => item.Value == "Povinné ručení" && item.Label == "Povinné ručení");
+        Assert.Contains(viewModel.RecordTypeOptions, item => item.Value == "Doklad" && item.Label == "Doklad");
+        Assert.Contains(viewModel.ReminderRepeatModeOptions, item => item.Value == "Neopakovat" && item.Label == "Neopakovat");
+        Assert.Contains(viewModel.ReminderRepeatModeOptions, item => item.Value == "Každý rok" && item.Label == "Každý rok");
     }
 
     [Fact]
@@ -633,10 +633,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", bundleXaml);
         Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc VehicleStarterBundle.ItemsHelpText}\"", bundleXaml);
         Assert.Contains("AutomationProperties.ItemType=\"{i18n:Loc VehicleStarterBundle.ItemType}\"", bundleXaml);
-        Assert.Contains("ItemsSource=\"{Binding RecordTypeOptions}\"", bundleXaml);
-        Assert.Contains("SelectedItem=\"{Binding SelectedItem.RecordType}\"", bundleXaml);
-        Assert.Contains("ItemsSource=\"{Binding ReminderRepeatModeOptions}\"", bundleXaml);
-        Assert.Contains("SelectedItem=\"{Binding SelectedItem.RepeatMode}\"", bundleXaml);
+        Assert.Contains("ItemsSource=\"{Binding SelectedItem.RecordTypeOptions}\"", bundleXaml);
+        Assert.Contains("SelectedItem=\"{Binding SelectedItem.SelectedRecordTypeOption}\"", bundleXaml);
+        Assert.Contains("ItemsSource=\"{Binding SelectedItem.ReminderRepeatModeOptions}\"", bundleXaml);
+        Assert.Contains("SelectedItem=\"{Binding SelectedItem.SelectedReminderRepeatModeOption}\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleStarterBundle.SelectAllName}\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleStarterBundle.ClearSelectionName}\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleStarterBundle.ApplyName}\"", bundleXaml);

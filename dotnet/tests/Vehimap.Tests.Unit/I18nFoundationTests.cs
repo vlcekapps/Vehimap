@@ -1217,6 +1217,41 @@ public sealed class I18nFoundationTests
         Assert.DoesNotContain("počtu litrů", czechResources);
     }
 
+    [Fact]
+    public void Known_value_editor_dropdowns_use_value_label_options()
+    {
+        var root = FindRepositoryRoot();
+        var vehicleWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "VehicleDetailWorkspaceViewModel.cs"));
+        var fuelWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "FuelWorkspaceViewModel.cs"));
+        var recordWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "RecordWorkspaceViewModel.cs"));
+        var reminderWorkspace = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "Workspaces", "ReminderWorkspaceViewModel.cs"));
+        var bundleItem = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleStarterBundleItemEditorViewModel.cs"));
+        var vehicleEditorXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "VehicleEditorWindow.axaml"));
+        var fuelEditorXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "FuelEditorWindow.axaml"));
+        var recordEditorXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "RecordEditorWindow.axaml"));
+        var reminderEditorXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "ReminderEditorWindow.axaml"));
+        var bundleXaml = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "VehicleStarterBundleWindow.axaml"));
+
+        Assert.Contains("IReadOnlyList<LocalizedOptionViewModel> VehicleCategoryOptions", vehicleWorkspace);
+        Assert.Contains("IReadOnlyList<LocalizedOptionViewModel> FuelTypeOptions", fuelWorkspace);
+        Assert.Contains("IReadOnlyList<LocalizedOptionViewModel> RecordTypeOptions", recordWorkspace);
+        Assert.Contains("IReadOnlyList<LocalizedOptionViewModel> ReminderRepeatModeOptions", reminderWorkspace);
+        Assert.Contains("IReadOnlyList<LocalizedOptionViewModel> RecordTypeOptions", bundleItem);
+        Assert.Contains("IReadOnlyList<LocalizedOptionViewModel> ReminderRepeatModeOptions", bundleItem);
+
+        Assert.Contains("SelectedItem=\"{Binding SelectedVehicleCategoryOption}\"", vehicleEditorXaml);
+        Assert.Contains("SelectedItem=\"{Binding SelectedFuelTypeOption}\"", fuelEditorXaml);
+        Assert.Contains("SelectedItem=\"{Binding SelectedRecordTypeOption}\"", recordEditorXaml);
+        Assert.Contains("SelectedItem=\"{Binding SelectedReminderRepeatModeOption}\"", reminderEditorXaml);
+        Assert.Contains("SelectedItem=\"{Binding SelectedItem.SelectedRecordTypeOption}\"", bundleXaml);
+        Assert.Contains("SelectedItem=\"{Binding SelectedItem.SelectedReminderRepeatModeOption}\"", bundleXaml);
+
+        Assert.DoesNotContain("IReadOnlyList<string> VehicleCategoryOptions => LegacyKnownValues.Categories", vehicleWorkspace);
+        Assert.DoesNotContain("IReadOnlyList<string> FuelTypeOptions => LegacyKnownValues.FuelTypes", fuelWorkspace);
+        Assert.DoesNotContain("IReadOnlyList<string> RecordTypeOptions => LegacyKnownValues.RecordTypes", recordWorkspace);
+        Assert.DoesNotContain("IReadOnlyList<string> ReminderRepeatModeOptions => LegacyKnownValues.ReminderRepeatModes", reminderWorkspace);
+    }
+
     private static SortedSet<string> ReadResourceKeys(string path)
     {
         var document = XDocument.Load(path);

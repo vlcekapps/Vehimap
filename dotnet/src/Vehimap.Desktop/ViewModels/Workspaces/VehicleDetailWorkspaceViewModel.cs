@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Services;
-using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels.Workspaces;
 
@@ -118,12 +117,12 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
         set => SetProperty(ref vehicleEditorStatus, value);
     }
 
-    public IReadOnlyList<string> VehicleCategoryOptions => LegacyKnownValues.Categories;
-    public IReadOnlyList<string> VehicleStateOptions => LegacyKnownValues.VehicleStates;
-    public IReadOnlyList<string> VehiclePowertrainOptions => LegacyKnownValues.VehiclePowertrains;
-    public IReadOnlyList<string> VehicleClimateProfileOptions => LegacyKnownValues.VehicleClimateProfiles;
-    public IReadOnlyList<string> VehicleTimingDriveOptions => LegacyKnownValues.VehicleTimingDrives;
-    public IReadOnlyList<string> VehicleTransmissionOptions => LegacyKnownValues.VehicleTransmissions;
+    public IReadOnlyList<LocalizedOptionViewModel> VehicleCategoryOptions => KnownValueOptions.VehicleCategories(VehicleEditorCategory);
+    public IReadOnlyList<LocalizedOptionViewModel> VehicleStateOptions => KnownValueOptions.VehicleStates(VehicleEditorState);
+    public IReadOnlyList<LocalizedOptionViewModel> VehiclePowertrainOptions => KnownValueOptions.VehiclePowertrains(VehicleEditorPowertrain);
+    public IReadOnlyList<LocalizedOptionViewModel> VehicleClimateProfileOptions => KnownValueOptions.VehicleClimateProfiles(VehicleEditorClimateProfile);
+    public IReadOnlyList<LocalizedOptionViewModel> VehicleTimingDriveOptions => KnownValueOptions.VehicleTimingDrives(VehicleEditorTimingDrive);
+    public IReadOnlyList<LocalizedOptionViewModel> VehicleTransmissionOptions => KnownValueOptions.VehicleTransmissions(VehicleEditorTransmission);
     public bool CanOpenVehicleStarterBundle => Root.CanOpenVehicleStarterBundle;
     public bool CanOpenVehicleRelatedWorkspace => Root.SelectedVehicle is not null && Root.CanUseWorkspaceNavigation;
 
@@ -136,7 +135,19 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public string VehicleEditorCategory
     {
         get => vehicleEditorCategory;
-        set => SetProperty(ref vehicleEditorCategory, value);
+        set
+        {
+            if (SetProperty(ref vehicleEditorCategory, value))
+            {
+                NotifyKnownValueOptionChanged(nameof(SelectedVehicleCategoryOption), nameof(VehicleCategoryOptions));
+            }
+        }
+    }
+
+    public LocalizedOptionViewModel SelectedVehicleCategoryOption
+    {
+        get => KnownValueOptions.SelectVehicleCategory(VehicleEditorCategory);
+        set => VehicleEditorCategory = value?.Value ?? string.Empty;
     }
 
     public string VehicleEditorNote
@@ -196,7 +207,19 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public string VehicleEditorState
     {
         get => vehicleEditorState;
-        set => SetProperty(ref vehicleEditorState, value);
+        set
+        {
+            if (SetProperty(ref vehicleEditorState, value))
+            {
+                NotifyKnownValueOptionChanged(nameof(SelectedVehicleStateOption), nameof(VehicleStateOptions));
+            }
+        }
+    }
+
+    public LocalizedOptionViewModel SelectedVehicleStateOption
+    {
+        get => KnownValueOptions.SelectVehicleState(VehicleEditorState);
+        set => VehicleEditorState = value?.Value ?? string.Empty;
     }
 
     public string VehicleEditorTags
@@ -208,25 +231,73 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public string VehicleEditorPowertrain
     {
         get => vehicleEditorPowertrain;
-        set => SetProperty(ref vehicleEditorPowertrain, value);
+        set
+        {
+            if (SetProperty(ref vehicleEditorPowertrain, value))
+            {
+                NotifyKnownValueOptionChanged(nameof(SelectedVehiclePowertrainOption), nameof(VehiclePowertrainOptions));
+            }
+        }
+    }
+
+    public LocalizedOptionViewModel SelectedVehiclePowertrainOption
+    {
+        get => KnownValueOptions.SelectVehiclePowertrain(VehicleEditorPowertrain);
+        set => VehicleEditorPowertrain = value?.Value ?? string.Empty;
     }
 
     public string VehicleEditorClimateProfile
     {
         get => vehicleEditorClimateProfile;
-        set => SetProperty(ref vehicleEditorClimateProfile, value);
+        set
+        {
+            if (SetProperty(ref vehicleEditorClimateProfile, value))
+            {
+                NotifyKnownValueOptionChanged(nameof(SelectedVehicleClimateProfileOption), nameof(VehicleClimateProfileOptions));
+            }
+        }
+    }
+
+    public LocalizedOptionViewModel SelectedVehicleClimateProfileOption
+    {
+        get => KnownValueOptions.SelectVehicleClimateProfile(VehicleEditorClimateProfile);
+        set => VehicleEditorClimateProfile = value?.Value ?? string.Empty;
     }
 
     public string VehicleEditorTimingDrive
     {
         get => vehicleEditorTimingDrive;
-        set => SetProperty(ref vehicleEditorTimingDrive, value);
+        set
+        {
+            if (SetProperty(ref vehicleEditorTimingDrive, value))
+            {
+                NotifyKnownValueOptionChanged(nameof(SelectedVehicleTimingDriveOption), nameof(VehicleTimingDriveOptions));
+            }
+        }
+    }
+
+    public LocalizedOptionViewModel SelectedVehicleTimingDriveOption
+    {
+        get => KnownValueOptions.SelectVehicleTimingDrive(VehicleEditorTimingDrive);
+        set => VehicleEditorTimingDrive = value?.Value ?? string.Empty;
     }
 
     public string VehicleEditorTransmission
     {
         get => vehicleEditorTransmission;
-        set => SetProperty(ref vehicleEditorTransmission, value);
+        set
+        {
+            if (SetProperty(ref vehicleEditorTransmission, value))
+            {
+                NotifyKnownValueOptionChanged(nameof(SelectedVehicleTransmissionOption), nameof(VehicleTransmissionOptions));
+            }
+        }
+    }
+
+    public LocalizedOptionViewModel SelectedVehicleTransmissionOption
+    {
+        get => KnownValueOptions.SelectVehicleTransmission(VehicleEditorTransmission);
+        set => VehicleEditorTransmission = value?.Value ?? string.Empty;
     }
 
     public ICommand CreateVehicleCommand => Root.CreateVehicleCommand;
@@ -316,5 +387,11 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
         Root.SelectedVehicleTabIndex = tabIndex;
         RequestFocus(focusTarget);
         return true;
+    }
+
+    private void NotifyKnownValueOptionChanged(string selectedOptionPropertyName, string optionsPropertyName)
+    {
+        OnPropertyChanged(selectedOptionPropertyName);
+        OnPropertyChanged(optionsPropertyName);
     }
 }

@@ -352,7 +352,7 @@ public sealed partial class MainWindowViewModel
 
         _editingFuelId = entry.Id;
         FuelEditorDate = entry.EntryDate;
-        FuelEditorFuelType = LegacyVehicleValueNormalization.NormalizeFuelType(entry.FuelType);
+        FuelEditorFuelType = KnownValueOptions.NormalizeFuelTypeValue(entry.FuelType);
         FuelEditorFuelDetail = entry.FuelDetail;
         FuelEditorStation = entry.Station;
         FuelEditorLiters = FormatCanonicalVolumeForEditor(entry.Liters);
@@ -432,7 +432,7 @@ public sealed partial class MainWindowViewModel
             liters,
             totalCost,
             FuelEditorFullTank,
-            LegacyVehicleValueNormalization.NormalizeFuelType(FuelEditorFuelType),
+            KnownValueOptions.NormalizeFuelTypeValue(FuelEditorFuelType),
             (FuelEditorNote ?? string.Empty).Trim(),
             (FuelEditorFuelDetail ?? string.Empty).Trim(),
             (FuelEditorStation ?? string.Empty).Trim());

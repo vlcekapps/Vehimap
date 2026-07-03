@@ -2,6 +2,7 @@
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.ViewModels.Workspaces;
@@ -368,7 +369,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
-    public async Task Save_record_command_normalizes_unknown_type_to_legacy_default()
+    public async Task Save_record_command_preserves_custom_record_type()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
         Directory.CreateDirectory(dataRoot.DataPath);
@@ -384,7 +385,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         await viewModel.SaveRecordCommand.ExecuteAsync(null);
 
         var savedRecord = Assert.Single(dataStore.CurrentDataSet.Records);
-        Assert.Equal("Povinné ručení", savedRecord.RecordType);
+        Assert.Equal("Vlastní typ", savedRecord.RecordType);
     }
 
     [Fact]
@@ -621,7 +622,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
-    public async Task Save_fuel_command_normalizes_unknown_fuel_type_to_legacy_default()
+    public async Task Save_fuel_command_preserves_custom_fuel_type()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
         Directory.CreateDirectory(dataRoot.DataPath);
@@ -640,11 +641,11 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         await viewModel.SaveFuelCommand.ExecuteAsync(null);
 
         var savedFuel = Assert.Single(dataStore.CurrentDataSet.FuelEntries);
-        Assert.Equal(string.Empty, savedFuel.FuelType);
+        Assert.Equal("Natural 95", savedFuel.FuelType);
     }
 
     [Fact]
-    public void Edit_selected_fuel_normalizes_unknown_fuel_type_for_dropdown()
+    public void Edit_selected_fuel_preserves_unknown_fuel_type_for_dropdown()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
         Directory.CreateDirectory(dataRoot.DataPath);
@@ -656,7 +657,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.EditSelectedFuelCommand.Execute(null);
 
-        Assert.Equal(string.Empty, viewModel.FuelWorkspace.FuelEditorFuelType);
+        Assert.Equal("Natural 95", viewModel.FuelWorkspace.FuelEditorFuelType);
+        Assert.Equal("Natural 95", viewModel.FuelWorkspace.SelectedFuelTypeOption.Label);
     }
 
     [Fact]
@@ -1059,7 +1061,79 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
-    public async Task Save_vehicle_command_normalizes_unknown_meta_dropdown_values()
+    public async Task Known_value_editor_options_show_english_labels_but_save_legacy_values()
+    {
+        DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+        try
+        {
+            var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+            Directory.CreateDirectory(dataRoot.DataPath);
+
+            var dataSet = BuildBaseDataSet();
+            ConfigureNumberFormatAndUnits(dataSet, "en-US", "comma", "dot", "mi", "us_gal");
+            var dataStore = new MutableStubLegacyDataStore(dataSet);
+            var viewModel = CreateViewModel(dataRoot, dataStore);
+
+            viewModel.EditSelectedVehicleCommand.Execute(null);
+            viewModel.VehicleDetailWorkspace.SelectedVehicleCategoryOption = Assert.Single(
+                viewModel.VehicleDetailWorkspace.VehicleCategoryOptions,
+                item => item.Label == "Passenger vehicles");
+            viewModel.VehicleDetailWorkspace.SelectedVehiclePowertrainOption = Assert.Single(
+                viewModel.VehicleDetailWorkspace.VehiclePowertrainOptions,
+                item => item.Label == "Gasoline");
+            viewModel.VehicleDetailWorkspace.VehicleEditorName = "Milena";
+            viewModel.VehicleDetailWorkspace.VehicleEditorMakeModel = "Skoda 120L";
+            viewModel.VehicleDetailWorkspace.VehicleEditorNextTk = "08/2026";
+
+            await viewModel.SaveVehicleCommand.ExecuteAsync(null);
+
+            var savedVehicle = Assert.Single(dataStore.CurrentDataSet.Vehicles);
+            Assert.Equal("Osobní vozidla", savedVehicle.Category);
+            var savedMeta = Assert.Single(dataStore.CurrentDataSet.VehicleMetaEntries);
+            Assert.Equal("Benzín", savedMeta.Powertrain);
+
+            viewModel.CreateFuelCommand.Execute(null);
+            viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
+            viewModel.FuelWorkspace.SelectedFuelTypeOption = Assert.Single(
+                viewModel.FuelWorkspace.FuelTypeOptions,
+                item => item.Label == "Gasoline");
+            viewModel.FuelWorkspace.FuelEditorLiters = "10";
+            viewModel.FuelWorkspace.FuelEditorOdometer = "1000";
+
+            await viewModel.SaveFuelCommand.ExecuteAsync(null);
+
+            Assert.Equal("Benzin", Assert.Single(dataStore.CurrentDataSet.FuelEntries).FuelType);
+
+            viewModel.CreateRecordCommand.Execute(null);
+            viewModel.RecordWorkspace.SelectedRecordTypeOption = Assert.Single(
+                viewModel.RecordWorkspace.RecordTypeOptions,
+                item => item.Label == "Document");
+            viewModel.RecordWorkspace.RecordEditorTitle = "Insurance note";
+
+            await viewModel.SaveRecordCommand.ExecuteAsync(null);
+
+            Assert.Equal("Doklad", Assert.Single(dataStore.CurrentDataSet.Records).RecordType);
+
+            viewModel.CreateReminderCommand.Execute(null);
+            viewModel.ReminderWorkspace.ReminderEditorTitle = "Inspection";
+            viewModel.ReminderWorkspace.ReminderEditorDueDate = "10.10.2026";
+            viewModel.ReminderWorkspace.ReminderEditorDays = "14";
+            viewModel.ReminderWorkspace.SelectedReminderRepeatModeOption = Assert.Single(
+                viewModel.ReminderWorkspace.ReminderRepeatModeOptions,
+                item => item.Label == "Every year");
+
+            await viewModel.SaveReminderCommand.ExecuteAsync(null);
+
+            Assert.Equal("Každý rok", Assert.Single(dataStore.CurrentDataSet.Reminders).RepeatMode);
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
+    }
+
+    [Fact]
+    public async Task Save_vehicle_command_preserves_custom_meta_dropdown_values_and_normalizes_aliases()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
         Directory.CreateDirectory(dataRoot.DataPath);
@@ -1079,16 +1153,16 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         await viewModel.SaveVehicleCommand.ExecuteAsync(null);
 
         var savedMeta = Assert.Single(dataStore.CurrentDataSet.VehicleMetaEntries.Where(item => item.VehicleId == "veh_1"));
-        Assert.Equal(string.Empty, savedMeta.State);
-        Assert.Equal(string.Empty, savedMeta.Powertrain);
-        Assert.Equal(string.Empty, savedMeta.ClimateProfile);
-        Assert.Equal(string.Empty, savedMeta.TimingDrive);
-        Assert.Equal(string.Empty, savedMeta.Transmission);
+        Assert.Equal("Neznámý stav", savedMeta.State);
+        Assert.Equal("Benzín", savedMeta.Powertrain);
+        Assert.Equal("klima", savedMeta.ClimateProfile);
+        Assert.Equal("Řetěz", savedMeta.TimingDrive);
+        Assert.Equal("Manuální", savedMeta.Transmission);
         Assert.Equal("test", savedMeta.Tags);
     }
 
     [Fact]
-    public void Edit_selected_vehicle_normalizes_unknown_meta_values_for_dropdowns()
+    public void Edit_selected_vehicle_preserves_unknown_meta_values_for_dropdowns()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
         Directory.CreateDirectory(dataRoot.DataPath);
@@ -1100,11 +1174,11 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.EditSelectedVehicleCommand.Execute(null);
 
-        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorState);
-        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain);
-        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile);
-        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive);
-        Assert.Equal(string.Empty, viewModel.VehicleDetailWorkspace.VehicleEditorTransmission);
+        Assert.Equal("Neznámý stav", viewModel.VehicleDetailWorkspace.VehicleEditorState);
+        Assert.Equal("Benzín", viewModel.VehicleDetailWorkspace.VehicleEditorPowertrain);
+        Assert.Equal("klima", viewModel.VehicleDetailWorkspace.VehicleEditorClimateProfile);
+        Assert.Equal("Řetěz", viewModel.VehicleDetailWorkspace.VehicleEditorTimingDrive);
+        Assert.Equal("Manuální", viewModel.VehicleDetailWorkspace.VehicleEditorTransmission);
         Assert.Equal("test", viewModel.VehicleDetailWorkspace.VehicleEditorTags);
     }
 
@@ -1212,7 +1286,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
-    public async Task Vehicle_starter_bundle_apply_normalizes_record_type_and_reminder_repeat_mode()
+    public async Task Vehicle_starter_bundle_apply_preserves_custom_record_type_and_normalizes_reminder_repeat_mode()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
         Directory.CreateDirectory(dataRoot.DataPath);
@@ -1258,7 +1332,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         Assert.Contains("Balíček pro vozidlo přidal", message);
         var savedRecord = Assert.Single(dataStore.CurrentDataSet.Records);
-        Assert.Equal("Povinné ručení", savedRecord.RecordType);
+        Assert.Equal("Vlastní typ", savedRecord.RecordType);
         var savedReminder = Assert.Single(dataStore.CurrentDataSet.Reminders);
         Assert.Equal("Každý rok", savedReminder.RepeatMode);
     }

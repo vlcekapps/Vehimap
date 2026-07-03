@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Vehimap.Application.Models;
 using Vehimap.Desktop.Localization;
-using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels;
 
@@ -16,7 +15,7 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
         IntervalKm = template.IntervalKm;
         IntervalMonths = template.IntervalMonths;
         RecordType = template.Section == VehicleStarterBundleSection.Record
-            ? LegacyVehicleValueNormalization.NormalizeRecordType(template.RecordType)
+            ? KnownValueOptions.NormalizeRecordTypeValue(template.RecordType)
             : template.RecordType;
         Provider = template.Provider;
         ValidFrom = template.ValidFrom;
@@ -25,7 +24,7 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
         DueDate = template.DueDate;
         ReminderDays = template.ReminderDays;
         RepeatMode = template.Section == VehicleStarterBundleSection.Reminder
-            ? LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(template.RepeatMode)
+            ? KnownValueOptions.NormalizeReminderRepeatModeValue(template.RepeatMode)
             : template.RepeatMode;
         Note = template.Note;
         Category = template.Category;
@@ -78,6 +77,14 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
     [ObservableProperty]
     private string recordType;
 
+    public IReadOnlyList<LocalizedOptionViewModel> RecordTypeOptions => KnownValueOptions.RecordTypes(RecordType);
+
+    public LocalizedOptionViewModel SelectedRecordTypeOption
+    {
+        get => KnownValueOptions.SelectRecordType(RecordType);
+        set => RecordType = value?.Value ?? string.Empty;
+    }
+
     [ObservableProperty]
     private string provider;
 
@@ -99,6 +106,14 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
     [ObservableProperty]
     private string repeatMode;
 
+    public IReadOnlyList<LocalizedOptionViewModel> ReminderRepeatModeOptions => KnownValueOptions.ReminderRepeatModes(RepeatMode);
+
+    public LocalizedOptionViewModel SelectedReminderRepeatModeOption
+    {
+        get => KnownValueOptions.SelectReminderRepeatMode(RepeatMode);
+        set => RepeatMode = value?.Value ?? string.Empty;
+    }
+
     [ObservableProperty]
     private string note;
 
@@ -106,13 +121,25 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
 
     partial void OnTitleChanged(string value) => OnPropertyChanged(nameof(AccessibleLabel));
 
+    partial void OnRecordTypeChanged(string value)
+    {
+        OnPropertyChanged(nameof(SelectedRecordTypeOption));
+        OnPropertyChanged(nameof(RecordTypeOptions));
+    }
+
+    partial void OnRepeatModeChanged(string value)
+    {
+        OnPropertyChanged(nameof(SelectedReminderRepeatModeOption));
+        OnPropertyChanged(nameof(ReminderRepeatModeOptions));
+    }
+
     public VehicleStarterBundleTemplate ToTemplate()
     {
         var recordType = IsRecord
-            ? LegacyVehicleValueNormalization.NormalizeRecordType(RecordType)
+            ? KnownValueOptions.NormalizeRecordTypeValue(RecordType)
             : RecordType.Trim();
         var repeatMode = IsReminder
-            ? LegacyVehicleValueNormalization.NormalizeReminderRepeatMode(RepeatMode)
+            ? KnownValueOptions.NormalizeReminderRepeatModeValue(RepeatMode)
             : RepeatMode.Trim();
 
         return new(
