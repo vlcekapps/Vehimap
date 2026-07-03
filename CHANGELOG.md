@@ -36,6 +36,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Produkční C# kód má novou statickou ochranu proti návratu českých UI literálů mimo `.resx`; povolené zůstávají jen zdokumentované legacy tokeny, kompatibilní aliasy a katalogy používané jako data/šablony.
 - I18n/unit/currency brána nově hlídá pevné jednotkové a měnové literály v produkčním C# kódu; texty typu `km`, `mi`, `l`, `US gal`, `Kč`, `CZK` nebo `USD` smí být jen ve storage defaultech a sdílených formátovacích službách. Tiskový HTML přehled vozidel zároveň překládá známé legacy kategorie a stavy vozidel podle aktivního jazyka.
 - GitHub Actions UI smoke už neinstaluje WinAppDriver přes anonymní GitHub API volání z Appium driveru; workflow stahuje známý MSI asset přímo, ověřuje SHA-256 a instaluje jej přes `msiexec`, aby veřejné nightly nespadlo na rate limitu runneru.
+- Appium UI smoke spouští izolovanou kopii desktopové aplikace sám, čeká na nativní hlavní okno a k Appiu se připojuje přes `appTopLevelWindow`; tím se omezuje flaky selhání WinAppDriveru při hledání čerstvě otevřeného okna podle processId.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.

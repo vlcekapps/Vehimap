@@ -3,6 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Vehimap.Tests.UI;
@@ -14,11 +15,13 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     private const uint GlobalMemoryZeroInit = 0x0040;
 
     private readonly WindowsDriver _driver;
+    private readonly Process? _launchedProcess;
     private readonly string? _temporaryAppRoot;
 
-    private DesktopAppiumTestSession(WindowsDriver driver, string? temporaryAppRoot)
+    private DesktopAppiumTestSession(WindowsDriver driver, Process? launchedProcess, string? temporaryAppRoot)
     {
         _driver = driver;
+        _launchedProcess = launchedProcess;
         _temporaryAppRoot = temporaryAppRoot;
     }
 
@@ -40,20 +43,22 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             return false;
         }
 
+        Process? launchedProcess = null;
         try
         {
             var isolatedLaunch = CreateIsolatedLaunchCopy(configuration.AppPath);
+            launchedProcess = StartIsolatedApp(isolatedLaunch.AppPath, isolatedLaunch.RootPath);
+            var windowHandle = WaitForMainWindowHandle(launchedProcess, TimeSpan.FromSeconds(45));
 
             var options = new AppiumOptions();
             options.PlatformName = "Windows";
             options.AutomationName = "Windows";
-            options.App = isolatedLaunch.AppPath;
             options.DeviceName = "WindowsPC";
-            options.AddAdditionalAppiumOption("ms:waitForAppLaunch", 30);
+            options.AddAdditionalAppiumOption("appTopLevelWindow", windowHandle.ToInt64().ToString("x"));
 
             var driver = new WindowsDriver(configuration.ServerUri, options, configuration.CommandTimeout);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
-            session = new DesktopAppiumTestSession(driver, isolatedLaunch.RootPath);
+            session = new DesktopAppiumTestSession(driver, launchedProcess, isolatedLaunch.RootPath);
             session.WaitForElementByAccessibilityId("VehicleListBox");
             return true;
         }
@@ -61,6 +66,11 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         {
             reason = ex.Message;
             session?.Dispose();
+            if (session is null)
+            {
+                DisposeLaunchedProcess(launchedProcess);
+            }
+
             session = null;
             if (DesktopUiTestConfiguration.RequireAvailability)
             {
@@ -335,6 +345,8 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         {
         }
 
+        DisposeLaunchedProcess(_launchedProcess);
+
         if (!string.IsNullOrWhiteSpace(_temporaryAppRoot))
         {
             try
@@ -358,6 +370,66 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         SeedLocalUpdateManifests(Path.Combine(targetRoot, "update"));
 
         return (Path.Combine(targetRoot, Path.GetFileName(sourceAppPath)), targetRoot);
+    }
+
+    private static Process StartIsolatedApp(string appPath, string workingDirectory)
+    {
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = appPath,
+            WorkingDirectory = workingDirectory,
+            UseShellExecute = false
+        };
+
+        return Process.Start(startInfo)
+            ?? throw new InvalidOperationException("Nepodařilo se spustit izolovanou kopii aplikace pro Appium.");
+    }
+
+    private static IntPtr WaitForMainWindowHandle(Process process, TimeSpan timeout)
+    {
+        var timeoutAt = DateTime.UtcNow.Add(timeout);
+
+        while (DateTime.UtcNow < timeoutAt)
+        {
+            if (process.HasExited)
+            {
+                throw new InvalidOperationException($"Izolovaná kopie aplikace skončila před vytvořením okna. Exit code: {process.ExitCode}.");
+            }
+
+            process.Refresh();
+            if (process.MainWindowHandle != IntPtr.Zero)
+            {
+                return process.MainWindowHandle;
+            }
+
+            Thread.Sleep(250);
+        }
+
+        throw new TimeoutException("Izolovaná kopie aplikace nevytvořila hlavní okno v časovém limitu.");
+    }
+
+    private static void DisposeLaunchedProcess(Process? process)
+    {
+        if (process is null)
+        {
+            return;
+        }
+
+        try
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+                process.WaitForExit(5000);
+            }
+        }
+        catch
+        {
+        }
+        finally
+        {
+            process.Dispose();
+        }
     }
 
     private static void CopyDirectory(string sourceRoot, string targetRoot)
