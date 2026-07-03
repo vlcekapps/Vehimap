@@ -32,6 +32,36 @@ public sealed class MainWindowViewModelAppShellTests
     }
 
     [Fact]
+    public async Task Deferred_startup_initialization_loads_data_once()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        var dataStore = new StubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore, loadOnCreate: false);
+
+        Assert.Equal(0, dataStore.LoadCount);
+        Assert.Empty(viewModel.Vehicles);
+        Assert.False(viewModel.CanUseDataActions);
+
+        await viewModel.InitializeAsync();
+
+        Assert.Equal(1, dataStore.LoadCount);
+        Assert.True(viewModel.CanUseDataActions);
+        Assert.Equal("Milena", viewModel.SelectedVehicle?.Name);
+
+        await viewModel.InitializeAsync();
+
+        Assert.Equal(1, dataStore.LoadCount);
+    }
+
+    [Fact]
     public void Minimize_to_tray_menu_state_is_exposed_by_view_model()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -533,7 +563,8 @@ public sealed class MainWindowViewModelAppShellTests
         VehimapDataRoot dataRoot,
         ILegacyDataStore dataStore,
         IBackupService? backupService = null,
-        IFileLauncher? fileLauncher = null)
+        IFileLauncher? fileLauncher = null,
+        bool loadOnCreate = true)
     {
         var bootstrapper = new LegacyVehimapBootstrapper(new StubDataRootLocator(dataRoot), dataStore);
         return new MainWindowViewModel(
@@ -555,7 +586,8 @@ public sealed class MainWindowViewModelAppShellTests
             new StubFileDialogService(),
             new DesktopSupportedSettingsService(),
             new StubBuildInfoProvider(),
-            new StubAutostartService());
+            new StubAutostartService(),
+            loadOnCreate: loadOnCreate);
     }
 
     private static VehimapDataSet BuildLocalizedBackgroundDataSet(string language)
@@ -605,8 +637,13 @@ public sealed class MainWindowViewModelAppShellTests
 
         public VehimapDataSet CurrentDataSet { get; set; }
 
+        public int LoadCount { get; private set; }
+
         public Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
-            => Task.FromResult(CurrentDataSet);
+        {
+            LoadCount++;
+            return Task.FromResult(CurrentDataSet);
+        }
 
         public Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {

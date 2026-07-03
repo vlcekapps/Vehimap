@@ -97,6 +97,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - pri poskozenem legacy `TSV` nebo `INI` souboru ukazat konkretni nazev souboru, plnou cestu a parser detail v chybovem stavu shellu
 - pri nedostupnem nebo poskozenem `.vehimapbak` souboru ukazat cestu k zaloze a parser/I/O detail ve stavovem textu misto neobslouzene vyjimky v shellu; u starsich textovych zaloh se ramcova importni hlaska i parserove chyby lokalizuji podle aktivniho jazyka
 - pri zruseni nebo selhani app-level akci z menu/tray, jako jsou nastaveni, export/import zalohy, O programu a kontrola aktualizaci, zapsat citelnou stavovou hlasku misto neobslouzene vyjimky
+- startovat desktop shell dvoufazove: `MainWindowViewModel` ve verejnem konstruktoru nevykonava synchronni nacitani dat, hlavni okno se muze zobrazit hned a runtime controller potom asynchronne inicializuje datovou sadu, tray, background snapshot a notifikace
 - otevrit stranku `Podekovat autorovi` z menu `Aplikace`, dialogu `O programu` i pristupneho tray okna pres stejny externi launcher jako release poznamky nebo update odkazy
 - otevrit predvyplneny GitHub issue `Nahlasit zpetnou vazbu` z menu `Aplikace` i pristupneho tray okna; sablona doplni verzi, kanal, platformu a zakladni pocty, ale zamerne neobsahuje datovou slozku ani nazvy vozidel
 - pri exportu `.vehimapbak` hlasit pocet zahrnutych spravovanych priloh a pocet chybejicich spravovanych priloh, ktere byly bezpecne preskoceny stejne jako v AHK vetvi
