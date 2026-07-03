@@ -13,6 +13,8 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     private const uint ClipboardUnicodeTextFormat = 13;
     private const uint GlobalMemoryMoveable = 0x0002;
     private const uint GlobalMemoryZeroInit = 0x0040;
+    private const string NativeWindowHandleAttribute = "NativeWindowHandle";
+    private const string ProcessIdAttribute = "ProcessId";
 
     private readonly WindowsDriver _driver;
     private readonly Process? _launchedProcess;
@@ -48,13 +50,13 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         {
             var isolatedLaunch = CreateIsolatedLaunchCopy(configuration.AppPath);
             launchedProcess = StartIsolatedApp(isolatedLaunch.AppPath, isolatedLaunch.RootPath);
-            var windowHandle = WaitForMainWindowHandle(launchedProcess, TimeSpan.FromSeconds(45));
+            var windowHandle = FindMainWindowHandle(configuration, launchedProcess, TimeSpan.FromSeconds(60));
 
             var options = new AppiumOptions();
             options.PlatformName = "Windows";
             options.AutomationName = "Windows";
             options.DeviceName = "WindowsPC";
-            options.AddAdditionalAppiumOption("appTopLevelWindow", windowHandle.ToInt64().ToString("x"));
+            options.AddAdditionalAppiumOption("appTopLevelWindow", windowHandle);
 
             var driver = new WindowsDriver(configuration.ServerUri, options, configuration.CommandTimeout);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
@@ -385,9 +387,10 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             ?? throw new InvalidOperationException("Nepodařilo se spustit izolovanou kopii aplikace pro Appium.");
     }
 
-    private static IntPtr WaitForMainWindowHandle(Process process, TimeSpan timeout)
+    private static string FindMainWindowHandle(DesktopUiTestConfiguration configuration, Process process, TimeSpan timeout)
     {
         var timeoutAt = DateTime.UtcNow.Add(timeout);
+        Exception? lastRootError = null;
 
         while (DateTime.UtcNow < timeoutAt)
         {
@@ -399,13 +402,96 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             process.Refresh();
             if (process.MainWindowHandle != IntPtr.Zero)
             {
-                return process.MainWindowHandle;
+                return process.MainWindowHandle.ToInt64().ToString("x");
             }
 
-            Thread.Sleep(250);
+            if (TryFindMainWindowHandleViaRootSession(configuration, process.Id, out var windowHandle, out lastRootError))
+            {
+                return windowHandle;
+            }
+
+            Thread.Sleep(500);
         }
 
-        throw new TimeoutException("Izolovaná kopie aplikace nevytvořila hlavní okno v časovém limitu.");
+        var message = $"Izolovaná kopie aplikace nevytvořila hlavní okno v časovém limitu. ProcessId: {process.Id}.";
+        throw lastRootError is null
+            ? new TimeoutException(message)
+            : new TimeoutException(message, lastRootError);
+    }
+
+    private static bool TryFindMainWindowHandleViaRootSession(
+        DesktopUiTestConfiguration configuration,
+        int processId,
+        out string windowHandle,
+        out Exception? error)
+    {
+        windowHandle = string.Empty;
+        error = null;
+
+        WindowsDriver? rootDriver = null;
+        try
+        {
+            var rootOptions = new AppiumOptions();
+            rootOptions.PlatformName = "Windows";
+            rootOptions.AutomationName = "Windows";
+            rootOptions.DeviceName = "WindowsPC";
+            rootOptions.App = "Root";
+
+            rootDriver = new WindowsDriver(configuration.ServerUri, rootOptions, configuration.CommandTimeout);
+            rootDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(250);
+
+            foreach (var element in rootDriver.FindElements(By.XPath($"//*[@{ProcessIdAttribute}='{processId}']")))
+            {
+                var nativeWindowHandle = element.GetAttribute(NativeWindowHandleAttribute) ?? string.Empty;
+                if (TryConvertNativeWindowHandle(nativeWindowHandle, out windowHandle))
+                {
+                    return true;
+                }
+            }
+        }
+        catch (Exception ex) when (ex is WebDriverException or InvalidOperationException)
+        {
+            error = ex;
+        }
+        finally
+        {
+            try
+            {
+                rootDriver?.Quit();
+            }
+            catch
+            {
+            }
+        }
+
+        return false;
+    }
+
+    private static bool TryConvertNativeWindowHandle(string nativeWindowHandle, out string windowHandle)
+    {
+        windowHandle = string.Empty;
+        if (string.IsNullOrWhiteSpace(nativeWindowHandle))
+        {
+            return false;
+        }
+
+        if (long.TryParse(nativeWindowHandle, out var decimalHandle) && decimalHandle > 0)
+        {
+            windowHandle = decimalHandle.ToString("x");
+            return true;
+        }
+
+        var trimmed = nativeWindowHandle.StartsWith("0x", StringComparison.OrdinalIgnoreCase)
+            ? nativeWindowHandle[2..]
+            : nativeWindowHandle;
+
+        if (long.TryParse(trimmed, System.Globalization.NumberStyles.HexNumber, null, out var hexHandle) && hexHandle > 0)
+        {
+            windowHandle = trimmed;
+            return true;
+        }
+
+        return false;
     }
 
     private static void DisposeLaunchedProcess(Process? process)

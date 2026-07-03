@@ -284,7 +284,7 @@ CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 - zapsat i prechodove `latest-dotnet-preview-<rid>.ini` aliasy pro uz vydane preview buildy
 - pred commitem vygenerovanych manifestu overit Windows manifest pres `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel <kanal> -SkipNetwork`; stable pri tom hlida i AHK retirement gate, nightly/beta overuji kanalovy manifest bez stable-only kroku
 - pred uploadem Windows release artefaktu spustit `Test-DotnetInstallerSmoke.ps1`, aby se setup EXE, `.sha256` a JSON metadata overily uz v publish jobu
-- na Windows runneru spustit Appium smoke nad publish buildem desktop release vcetne kontroly app-level menu a dostupnosti rychlych akci; CI instaluje WinAppDriver z pevneho MSI assetu se SHA-256 kontrolou misto anonymniho Appium `install-wad` GitHub API dotazu a UI testy se k desktopu pripojuji pres nativni `appTopLevelWindow`, aby nightly nepadaly na rate limitu ani na krehkem hledani noveho okna podle processId
+- na Windows runneru spustit Appium smoke nad publish buildem desktop release vcetne kontroly app-level menu a dostupnosti rychlych akci; CI instaluje WinAppDriver z pevneho MSI assetu se SHA-256 kontrolou misto anonymniho Appium `install-wad` GitHub API dotazu a UI testy se k desktopu pripojuji pres `appTopLevelWindow` po dohledani okna pres nativni handle nebo Appium `Root` UI Automation session, aby nightly nepadaly na rate limitu ani na krehkem hledani noveho okna podle processId
 
 Pred vytvorenim tagu lze lokalne spustit stejnou release readiness branu:
 
