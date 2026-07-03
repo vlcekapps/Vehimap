@@ -3,7 +3,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Vehimap.Tests.UI;
@@ -14,16 +13,14 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     private const uint GlobalMemoryMoveable = 0x0002;
     private const uint GlobalMemoryZeroInit = 0x0040;
     private const string NativeWindowHandleAttribute = "NativeWindowHandle";
-    private const string ProcessIdAttribute = "ProcessId";
+    private const string NameAttribute = "Name";
 
     private readonly WindowsDriver _driver;
-    private readonly Process? _launchedProcess;
     private readonly string? _temporaryAppRoot;
 
-    private DesktopAppiumTestSession(WindowsDriver driver, Process? launchedProcess, string? temporaryAppRoot)
+    private DesktopAppiumTestSession(WindowsDriver driver, string? temporaryAppRoot)
     {
         _driver = driver;
-        _launchedProcess = launchedProcess;
         _temporaryAppRoot = temporaryAppRoot;
     }
 
@@ -45,22 +42,12 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             return false;
         }
 
-        Process? launchedProcess = null;
         try
         {
             var isolatedLaunch = CreateIsolatedLaunchCopy(configuration.AppPath);
-            launchedProcess = StartIsolatedApp(isolatedLaunch.AppPath, isolatedLaunch.RootPath);
-            var windowHandle = FindMainWindowHandle(configuration, launchedProcess, TimeSpan.FromSeconds(60));
-
-            var options = new AppiumOptions();
-            options.PlatformName = "Windows";
-            options.AutomationName = "Windows";
-            options.DeviceName = "WindowsPC";
-            options.AddAdditionalAppiumOption("appTopLevelWindow", windowHandle);
-
-            var driver = new WindowsDriver(configuration.ServerUri, options, configuration.CommandTimeout);
+            var driver = CreateDriver(configuration, isolatedLaunch);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
-            session = new DesktopAppiumTestSession(driver, launchedProcess, isolatedLaunch.RootPath);
+            session = new DesktopAppiumTestSession(driver, isolatedLaunch.RootPath);
             session.WaitForElementByAccessibilityId("VehicleListBox");
             return true;
         }
@@ -68,11 +55,6 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         {
             reason = ex.Message;
             session?.Dispose();
-            if (session is null)
-            {
-                DisposeLaunchedProcess(launchedProcess);
-            }
-
             session = null;
             if (DesktopUiTestConfiguration.RequireAvailability)
             {
@@ -347,8 +329,6 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         {
         }
 
-        DisposeLaunchedProcess(_launchedProcess);
-
         if (!string.IsNullOrWhiteSpace(_temporaryAppRoot))
         {
             try
@@ -374,54 +354,61 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         return (Path.Combine(targetRoot, Path.GetFileName(sourceAppPath)), targetRoot);
     }
 
-    private static Process StartIsolatedApp(string appPath, string workingDirectory)
+    private static WindowsDriver CreateDriver(
+        DesktopUiTestConfiguration configuration,
+        (string AppPath, string RootPath) isolatedLaunch)
     {
-        var startInfo = new ProcessStartInfo
+        Exception? launchError = null;
+        try
         {
-            FileName = appPath,
-            WorkingDirectory = workingDirectory,
-            UseShellExecute = false
-        };
-
-        return Process.Start(startInfo)
-            ?? throw new InvalidOperationException("Nepodařilo se spustit izolovanou kopii aplikace pro Appium.");
-    }
-
-    private static string FindMainWindowHandle(DesktopUiTestConfiguration configuration, Process process, TimeSpan timeout)
-    {
-        var timeoutAt = DateTime.UtcNow.Add(timeout);
-        Exception? lastRootError = null;
-
-        while (DateTime.UtcNow < timeoutAt)
+            return CreateDriverByLaunchingApp(configuration, isolatedLaunch);
+        }
+        catch (Exception ex) when (ex is WebDriverException or InvalidOperationException)
         {
-            if (process.HasExited)
-            {
-                throw new InvalidOperationException($"Izolovaná kopie aplikace skončila před vytvořením okna. Exit code: {process.ExitCode}.");
-            }
-
-            process.Refresh();
-            if (process.MainWindowHandle != IntPtr.Zero)
-            {
-                return process.MainWindowHandle.ToInt64().ToString("x");
-            }
-
-            if (TryFindMainWindowHandleViaRootSession(configuration, process.Id, out var windowHandle, out lastRootError))
-            {
-                return windowHandle;
-            }
-
-            Thread.Sleep(500);
+            launchError = ex;
         }
 
-        var message = $"Izolovaná kopie aplikace nevytvořila hlavní okno v časovém limitu. ProcessId: {process.Id}.";
-        throw lastRootError is null
-            ? new TimeoutException(message)
-            : new TimeoutException(message, lastRootError);
+        if (TryFindMainWindowHandleViaRootSession(configuration, out var windowHandle, out var rootError))
+        {
+            return CreateDriverFromWindowHandle(configuration, windowHandle);
+        }
+
+        throw new InvalidOperationException(
+            "WinAppDriver spustil nebo hledal aplikaci, ale nepodařilo se dohledat hlavní okno přes přímé spuštění ani přes Root UI Automation session.",
+            rootError ?? launchError);
+    }
+
+    private static WindowsDriver CreateDriverByLaunchingApp(
+        DesktopUiTestConfiguration configuration,
+        (string AppPath, string RootPath) isolatedLaunch)
+    {
+        var options = CreateBaseWindowsOptions();
+        options.App = isolatedLaunch.AppPath;
+        options.AddAdditionalAppiumOption("appWorkingDir", isolatedLaunch.RootPath);
+        options.AddAdditionalAppiumOption("ms:waitForAppLaunch", 45);
+
+        return new WindowsDriver(configuration.ServerUri, options, configuration.CommandTimeout);
+    }
+
+    private static WindowsDriver CreateDriverFromWindowHandle(DesktopUiTestConfiguration configuration, string windowHandle)
+    {
+        var options = CreateBaseWindowsOptions();
+        options.AddAdditionalAppiumOption("appTopLevelWindow", windowHandle);
+
+        return new WindowsDriver(configuration.ServerUri, options, configuration.CommandTimeout);
+    }
+
+    private static AppiumOptions CreateBaseWindowsOptions()
+    {
+        var options = new AppiumOptions();
+        options.PlatformName = "Windows";
+        options.AutomationName = "Windows";
+        options.DeviceName = "WindowsPC";
+        return options;
     }
 
     private static bool TryFindMainWindowHandleViaRootSession(
         DesktopUiTestConfiguration configuration,
-        int processId,
         out string windowHandle,
         out Exception? error)
     {
@@ -431,19 +418,15 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         WindowsDriver? rootDriver = null;
         try
         {
-            var rootOptions = new AppiumOptions();
-            rootOptions.PlatformName = "Windows";
-            rootOptions.AutomationName = "Windows";
-            rootOptions.DeviceName = "WindowsPC";
+            var rootOptions = CreateBaseWindowsOptions();
             rootOptions.App = "Root";
 
             rootDriver = new WindowsDriver(configuration.ServerUri, rootOptions, configuration.CommandTimeout);
             rootDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(250);
 
-            foreach (var element in rootDriver.FindElements(By.XPath($"//*[@{ProcessIdAttribute}='{processId}']")))
+            foreach (var element in FindVehimapWindowCandidates(rootDriver))
             {
-                var nativeWindowHandle = element.GetAttribute(NativeWindowHandleAttribute) ?? string.Empty;
-                if (TryConvertNativeWindowHandle(nativeWindowHandle, out windowHandle))
+                if (TryGetWindowHandle(element, out windowHandle))
                 {
                     return true;
                 }
@@ -465,6 +448,53 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         }
 
         return false;
+    }
+
+    private static IEnumerable<IWebElement> FindVehimapWindowCandidates(WindowsDriver rootDriver)
+    {
+        foreach (var title in new[] { "Vehimap Nightly", "Vehimap Beta", "Vehimap" })
+        {
+            foreach (var element in rootDriver.FindElements(By.Name(title)))
+            {
+                yield return element;
+            }
+        }
+
+        foreach (var element in SafeFindElements(rootDriver, "//*[contains(@Name,'Vehimap')]"))
+        {
+            yield return element;
+        }
+
+        foreach (var element in SafeFindElements(rootDriver, "//*[@NativeWindowHandle>'0' and contains(@Name,'Vehimap')]"))
+        {
+            yield return element;
+        }
+    }
+
+    private static IReadOnlyCollection<IWebElement> SafeFindElements(WindowsDriver rootDriver, string xpath)
+    {
+        try
+        {
+            return rootDriver.FindElements(By.XPath(xpath));
+        }
+        catch (WebDriverException)
+        {
+            return Array.Empty<IWebElement>();
+        }
+    }
+
+    private static bool TryGetWindowHandle(IWebElement element, out string windowHandle)
+    {
+        windowHandle = string.Empty;
+
+        var name = element.GetAttribute(NameAttribute) ?? string.Empty;
+        if (!name.Contains("Vehimap", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var nativeWindowHandle = element.GetAttribute(NativeWindowHandleAttribute) ?? string.Empty;
+        return TryConvertNativeWindowHandle(nativeWindowHandle, out windowHandle);
     }
 
     private static bool TryConvertNativeWindowHandle(string nativeWindowHandle, out string windowHandle)
@@ -492,30 +522,6 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         }
 
         return false;
-    }
-
-    private static void DisposeLaunchedProcess(Process? process)
-    {
-        if (process is null)
-        {
-            return;
-        }
-
-        try
-        {
-            if (!process.HasExited)
-            {
-                process.Kill(entireProcessTree: true);
-                process.WaitForExit(5000);
-            }
-        }
-        catch
-        {
-        }
-        finally
-        {
-            process.Dispose();
-        }
     }
 
     private static void CopyDirectory(string sourceRoot, string targetRoot)
