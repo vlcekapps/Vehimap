@@ -282,8 +282,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new DesktopNavigationCoordinator(),
             new DesktopPrintableVehicleReportService(DesktopLocalization.LiveLocalizer),
             new AvaloniaAppShellDialogService(),
-            new ProcessUpdateInstallLauncher(),
-            loadOnCreate: false)
+            new ProcessUpdateInstallLauncher())
     {
     }
 
@@ -324,8 +323,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         DesktopServiceBookExportService? serviceBookExportService = null,
         ISmartAdvisorService? smartAdvisorService = null,
         IVehiclePackageService? vehiclePackageService = null,
-        IDataStoreHealthService? dataStoreHealthService = null,
-        bool loadOnCreate = true)
+        IDataStoreHealthService? dataStoreHealthService = null)
     {
         var sessionBackupService = backupService ?? new SqliteBackupService(DesktopLocalization.LiveLocalizer);
         var sessionSupportedSettingsService = supportedSettingsService ?? new DesktopSupportedSettingsService();
@@ -368,10 +366,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             appShellDialogService ?? new AvaloniaAppShellDialogService(),
             updateInstallLauncher ?? new ProcessUpdateInstallLauncher());
         InitializeWorkspaces();
-        if (loadOnCreate)
-        {
-            Load(applyLaunchTabPreference: true);
-        }
+        Load(applyLaunchTabPreference: true);
     }
 
     private static void ApplyDesktopLocalization(DesktopSupportedSettingsSnapshot settings) =>
@@ -530,16 +525,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
         Load(SelectedVehicle?.Id, SelectedVehicleTabIndex, applyLaunchTabPreference: false);
         RequestBackgroundRefresh();
         RequestFocus(DesktopFocusTarget.VehicleList);
-    }
-
-    public async Task InitializeAsync(CancellationToken cancellationToken = default)
-    {
-        if (_session.IsLoaded)
-        {
-            return;
-        }
-
-        await LoadAsync(applyLaunchTabPreference: true, cancellationToken: cancellationToken);
     }
 
     [RelayCommand]
@@ -1236,18 +1221,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
     private void Load(string? preferredVehicleId = null, int? preferredTabIndex = null, bool applyLaunchTabPreference = false)
     {
-        LoadAsync(preferredVehicleId, preferredTabIndex, applyLaunchTabPreference).GetAwaiter().GetResult();
-    }
-
-    private async Task LoadAsync(
-        string? preferredVehicleId = null,
-        int? preferredTabIndex = null,
-        bool applyLaunchTabPreference = false,
-        CancellationToken cancellationToken = default)
-    {
         try
         {
-            await _session.LoadAsync(AppContext.BaseDirectory, cancellationToken);
+            _session.LoadAsync(AppContext.BaseDirectory).GetAwaiter().GetResult();
             RefreshShellFromSessionState(preferredVehicleId, preferredTabIndex, applyLaunchTabPreference);
             if (_session.LastMigrationResult is { } migrationResult
                 && (migrationResult.Migrated || !string.IsNullOrWhiteSpace(migrationResult.PreMigrationBackupPath)))

@@ -65,8 +65,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         _mainWindow.Closing += OnMainWindowClosing;
         _shell.BackgroundRefreshRequested += OnShellBackgroundRefreshRequested;
         _systemResumeService.Resumed += OnSystemResumed;
-        await _shell.InitializeAsync(cancellationToken);
-        await _systemResumeService.InitializeAsync(cancellationToken);
+        await _systemResumeService.InitializeAsync(cancellationToken).ConfigureAwait(false);
 
         await _trayService.InitializeAsync(
                 new TrayServiceConfiguration(
@@ -76,7 +75,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
                     ShowDashboardAsync,
                     ExitApplicationAsync),
                 cancellationToken)
-            .ConfigureAwait(true);
+            .ConfigureAwait(false);
         _shell.IsMinimizeToTrayAvailable = _trayService.IsSupported;
 
         _dueTimer.Start();
