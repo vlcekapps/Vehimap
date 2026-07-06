@@ -1419,19 +1419,6 @@ public sealed class I18nFoundationTests
             return line.Contains("\"kč\"", StringComparison.Ordinal);
         }
 
-        if (relativePath is "dotnet/src/Vehimap.Desktop/ViewModels/MainWindowViewModel.Editing.cs")
-        {
-            return line.Contains("\"Každých 5 let\"", StringComparison.Ordinal)
-                || line.Contains("\"Každé 2 roky\"", StringComparison.Ordinal)
-                || line.Contains("\"Každý rok\"", StringComparison.Ordinal);
-        }
-
-        if (relativePath is "dotnet/src/Vehimap.Desktop/ViewModels/Workspaces/RecordWorkspaceViewModel.cs")
-        {
-            return line.Contains("\"Spravovaná kopie\"", StringComparison.Ordinal)
-                || line.Contains("\"Externí cesta\"", StringComparison.Ordinal);
-        }
-
         return false;
     }
 

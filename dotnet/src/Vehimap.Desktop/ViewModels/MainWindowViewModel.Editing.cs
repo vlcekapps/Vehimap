@@ -493,19 +493,19 @@ public sealed partial class MainWindowViewModel
     {
         intervalMonths = 0;
         var normalized = KnownValueOptions.NormalizeReminderRepeatModeValue(repeatMode);
-        if (string.Equals(normalized, "Každých 5 let", StringComparison.Ordinal))
+        if (string.Equals(normalized, LegacyKnownValues.ReminderRepeatEveryFiveYears, StringComparison.Ordinal))
         {
             intervalMonths = 60;
             return true;
         }
 
-        if (string.Equals(normalized, "Každé 2 roky", StringComparison.Ordinal))
+        if (string.Equals(normalized, LegacyKnownValues.ReminderRepeatEveryTwoYears, StringComparison.Ordinal))
         {
             intervalMonths = 24;
             return true;
         }
 
-        if (string.Equals(normalized, "Každý rok", StringComparison.Ordinal))
+        if (string.Equals(normalized, LegacyKnownValues.ReminderRepeatYearly, StringComparison.Ordinal))
         {
             intervalMonths = 12;
             return true;

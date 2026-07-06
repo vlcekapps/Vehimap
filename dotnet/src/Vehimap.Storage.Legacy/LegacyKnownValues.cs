@@ -6,6 +6,10 @@ public static class LegacyKnownValues
     public const string VehicleStateNormalOperation = "Běžný provoz";
     public const string VehicleStateOutOfService = "Odstaveno";
     public const string VehicleStateArchive = "Archiv";
+    public const string ReminderRepeatNone = "Neopakovat";
+    public const string ReminderRepeatYearly = "Každý rok";
+    public const string ReminderRepeatEveryTwoYears = "Každé 2 roky";
+    public const string ReminderRepeatEveryFiveYears = "Každých 5 let";
 
     public static readonly string[] Categories =
     [
@@ -85,9 +89,9 @@ public static class LegacyKnownValues
 
     public static readonly string[] ReminderRepeatModes =
     [
-        "Neopakovat",
-        "Každý rok",
-        "Každé 2 roky",
-        "Každých 5 let"
+        ReminderRepeatNone,
+        ReminderRepeatYearly,
+        ReminderRepeatEveryTwoYears,
+        ReminderRepeatEveryFiveYears
     ];
 }
