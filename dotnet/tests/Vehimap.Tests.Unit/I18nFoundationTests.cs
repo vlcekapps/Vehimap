@@ -1419,25 +1419,6 @@ public sealed class I18nFoundationTests
             return line.Contains("\"kč\"", StringComparison.Ordinal);
         }
 
-        if (relativePath is "dotnet/src/Vehimap.Desktop/Services/DesktopProjectionService.cs")
-        {
-            return line.Contains("\"Po termínu\"", StringComparison.Ordinal)
-                || line.Contains("\"nyní\"", StringComparison.Ordinal)
-                || line.Contains("\"Chybí\"", StringComparison.Ordinal)
-                || line.Contains("\"Budoucí\"", StringComparison.Ordinal)
-                || line.Contains("\"Minulé\"", StringComparison.Ordinal)
-                || line.Contains("\"Neaktivní\"", StringComparison.Ordinal)
-                || line.Contains("\"Bez upozornění\"", StringComparison.Ordinal)
-                || line.Contains("\"Běžný provoz\"", StringComparison.Ordinal);
-        }
-
-        if (relativePath is "dotnet/src/Vehimap.Desktop/Services/DesktopPrintableVehicleReportService.cs")
-        {
-            return line.Contains("\"Po termínu\"", StringComparison.Ordinal)
-                || line.Contains("\"Servis nyní\"", StringComparison.Ordinal)
-                || line.Contains("\"Bez upozornění\"", StringComparison.Ordinal);
-        }
-
         if (relativePath is "dotnet/src/Vehimap.Desktop/ViewModels/MainWindowViewModel.Editing.cs")
         {
             return line.Contains("\"Každých 5 let\"", StringComparison.Ordinal)

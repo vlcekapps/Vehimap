@@ -174,27 +174,32 @@ internal sealed class DesktopPrintableVehicleReportService
 
     private static int GetStatusPriority(string status)
     {
-        if (status.Contains("Po termínu", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Po limitu", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Overdue", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Over distance limit", StringComparison.CurrentCultureIgnoreCase))
+        if (ContainsResourceStatus(status,
+                "Timeline.Status.Overdue",
+                "Timeline.Status.OverDistanceLimit",
+                "Maintenance.Status.Overdue",
+                "Maintenance.Status.OverDistanceLimit",
+                "Reminder.Status.Overdue"))
         {
             return 0;
         }
 
-        if (string.Equals(status, "Dnes", StringComparison.CurrentCultureIgnoreCase)
-            || string.Equals(status, "Today", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Servis dnes", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Servis nyní", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Service today", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Service now", StringComparison.CurrentCultureIgnoreCase))
+        if (MatchesResourceStatus(status,
+                "Timeline.Status.Today",
+                "Reminder.Status.Today",
+                "Maintenance.Status.Today",
+                "Maintenance.Status.Now"))
         {
             return 1;
         }
 
-        if (status.StartsWith("Do ", StringComparison.CurrentCultureIgnoreCase)
-            || status.StartsWith("Za ", StringComparison.CurrentCultureIgnoreCase)
-            || status.StartsWith("In ", StringComparison.CurrentCultureIgnoreCase))
+        if (StartsWithResourceStatusPrefix(status,
+                "Timeline.Status.DaysLeft",
+                "Timeline.Status.WithinDistance",
+                "Maintenance.Status.InDays",
+                "Maintenance.Status.InOneDay",
+                "Maintenance.Status.InDistance",
+                "Reminder.Status.InDays"))
         {
             return 2;
         }
@@ -214,14 +219,50 @@ internal sealed class DesktopPrintableVehicleReportService
     }
 
     private static bool IsNoAlertStatus(string status) =>
-        string.Equals(status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase)
-        || string.Equals(status, "No alert", StringComparison.CurrentCultureIgnoreCase);
+        MatchesResourceStatus(status, "Timeline.Status.NoAlert");
+
+    private static bool MatchesResourceStatus(string status, params string[] keys) =>
+        ResourceStatusValues(keys)
+            .Any(value => string.Equals(status, value, StringComparison.OrdinalIgnoreCase));
+
+    private static bool ContainsResourceStatus(string status, params string[] keys) =>
+        ResourceStatusValues(keys)
+            .Any(value => !string.IsNullOrWhiteSpace(value) && status.Contains(value, StringComparison.OrdinalIgnoreCase));
+
+    private static bool StartsWithResourceStatusPrefix(string status, params string[] keys) =>
+        ResourceStatusValues(keys)
+            .Select(GetTemplatePrefix)
+            .Where(prefix => !string.IsNullOrWhiteSpace(prefix))
+            .Any(prefix => status.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+
+    private static IEnumerable<string> ResourceStatusValues(IEnumerable<string> keys)
+    {
+        foreach (var key in keys)
+        {
+            yield return EnglishStatusLocalizer.GetString(key);
+            yield return CzechStatusLocalizer.GetString(key);
+        }
+    }
+
+    private static string GetTemplatePrefix(string value)
+    {
+        var placeholderIndex = value.IndexOf("{0}", StringComparison.Ordinal);
+        return placeholderIndex < 0
+            ? value
+            : value[..placeholderIndex];
+    }
 
     private static string FormatCategory(string? value, IAppLocalizer localizer) =>
         LegacyKnownValueDisplayService.FormatCategory(value, localizer);
 
     private static string FormatVehicleState(string? value, IAppLocalizer localizer) =>
         LegacyKnownValueDisplayService.FormatVehicleState(value, localizer);
+
+    private static readonly IAppLocalizer EnglishStatusLocalizer =
+        new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+
+    private static readonly IAppLocalizer CzechStatusLocalizer =
+        new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
 
     private CultureInfo ResolveReportCulture()
     {

@@ -7,6 +7,7 @@ using Vehimap.Application.Services;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.Services;
 
@@ -1011,32 +1012,37 @@ internal sealed class DesktopProjectionService
         return summary;
     }
 
-    private static int BuildMaintenanceStatusPriority(string status)
+    private int BuildMaintenanceStatusPriority(string status)
     {
-        if (status.Contains("Po termínu", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Po limitu", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Overdue", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Over the limit", StringComparison.CurrentCultureIgnoreCase))
+        if (ContainsResourceStatus(
+                status,
+                "Maintenance.Status.Overdue",
+                "Maintenance.Status.OverDistanceLimit"))
         {
             return 0;
         }
 
-        if (status.Contains("dnes", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("nyní", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("today", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("now", StringComparison.CurrentCultureIgnoreCase))
+        if (MatchesResourceStatus(
+                status,
+                "Maintenance.Status.Today",
+                "Maintenance.Status.Now"))
         {
             return 1;
         }
 
-        if (status.StartsWith("Za ", StringComparison.CurrentCultureIgnoreCase)
-            || status.StartsWith("In ", StringComparison.CurrentCultureIgnoreCase))
+        if (StartsWithResourceStatusPrefix(
+                status,
+                "Maintenance.Status.InOneDay",
+                "Maintenance.Status.InDays",
+                "Maintenance.Status.InDistance"))
         {
             return 2;
         }
 
-        if (status.Contains("Chybí", StringComparison.CurrentCultureIgnoreCase)
-            || status.Contains("Missing", StringComparison.CurrentCultureIgnoreCase))
+        if (ContainsResourceStatus(
+                status,
+                "Maintenance.Status.MissingLastServiceDate",
+                "Maintenance.Status.MissingOdometer"))
         {
             return 3;
         }
@@ -1179,17 +1185,13 @@ internal sealed class DesktopProjectionService
     {
         var normalized = (value ?? string.Empty).Trim();
         if (string.Equals(normalized, "future", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, L("TimelineWorkspace.Filter.Future"), StringComparison.CurrentCultureIgnoreCase)
-            || string.Equals(normalized, "Budoucí", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, "Future", StringComparison.OrdinalIgnoreCase))
+            || IsResourceValue(normalized, "TimelineWorkspace.Filter.Future"))
         {
             return "future";
         }
 
         if (string.Equals(normalized, "past", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, L("TimelineWorkspace.Filter.Past"), StringComparison.CurrentCultureIgnoreCase)
-            || string.Equals(normalized, "Minulé", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, "Past", StringComparison.OrdinalIgnoreCase))
+            || IsResourceValue(normalized, "TimelineWorkspace.Filter.Past"))
         {
             return "past";
         }
@@ -1478,13 +1480,48 @@ internal sealed class DesktopProjectionService
         "CostAnalysis.Status.Inactive"
     ];
 
-    private static bool IsResourceValue(string value, string key)
+    private static bool IsResourceValue(string value, string key) =>
+        ResourceValues([key])
+            .Any(resourceValue => string.Equals(value, resourceValue, StringComparison.OrdinalIgnoreCase));
+
+    private static bool MatchesResourceStatus(string value, params string[] keys) =>
+        ResourceValues(keys)
+            .Any(resourceValue => string.Equals(value, resourceValue, StringComparison.OrdinalIgnoreCase));
+
+    private static bool ContainsResourceStatus(string value, params string[] keys) =>
+        ResourceValues(keys)
+            .Select(GetTemplatePrefix)
+            .Where(prefix => !string.IsNullOrWhiteSpace(prefix))
+            .Any(prefix => value.Contains(prefix, StringComparison.OrdinalIgnoreCase));
+
+    private static bool StartsWithResourceStatusPrefix(string value, params string[] keys) =>
+        ResourceValues(keys)
+            .Select(GetTemplatePrefix)
+            .Where(prefix => !string.IsNullOrWhiteSpace(prefix))
+            .Any(prefix => value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+
+    private static IEnumerable<string> ResourceValues(IEnumerable<string> keys)
     {
-        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)).GetString(key);
-        var czech = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)).GetString(key);
-        return string.Equals(value, english, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(value, czech, StringComparison.OrdinalIgnoreCase);
+        foreach (var key in keys)
+        {
+            yield return EnglishResourceLocalizer.GetString(key);
+            yield return CzechResourceLocalizer.GetString(key);
+        }
     }
+
+    private static string GetTemplatePrefix(string value)
+    {
+        var placeholderIndex = value.IndexOf("{0}", StringComparison.Ordinal);
+        return placeholderIndex < 0
+            ? value
+            : value[..placeholderIndex];
+    }
+
+    private static readonly IAppLocalizer EnglishResourceLocalizer =
+        new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+
+    private static readonly IAppLocalizer CzechResourceLocalizer =
+        new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
 
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;
@@ -1641,13 +1678,17 @@ internal sealed class DesktopProjectionService
     }
 
     private bool IsNoWarningStatus(string status) =>
-        string.Equals(status, L("Projection.Value.NoWarning"), StringComparison.CurrentCultureIgnoreCase)
-        || string.Equals(status, "Bez upozornění", StringComparison.CurrentCultureIgnoreCase)
-        || string.Equals(status, "No warning", StringComparison.CurrentCultureIgnoreCase);
+        MatchesResourceStatus(
+            status,
+            "Projection.Value.NoWarning",
+            "Timeline.Status.NoAlert");
 
-    private static bool IsOverdueStatus(string status) =>
-        status.Contains("Po termínu", StringComparison.CurrentCultureIgnoreCase)
-        || status.Contains("Overdue", StringComparison.CurrentCultureIgnoreCase);
+    private bool IsOverdueStatus(string status) =>
+        ContainsResourceStatus(
+            status,
+            "Timeline.Status.Overdue",
+            "Reminder.Status.Overdue",
+            "Maintenance.Status.Overdue");
 
     private static bool IsVehicleStatusTimelineItem(string kind) =>
         kind is "technical" or "green" or "custom" or "maintenance";
@@ -1655,12 +1696,12 @@ internal sealed class DesktopProjectionService
     private static bool IsVehicleInactive(VehicleMeta? meta)
     {
         var normalizedState = NormalizeVehicleState(meta?.State);
-        return string.Equals(normalizedState, "Archiv", StringComparison.CurrentCultureIgnoreCase)
-            || string.Equals(normalizedState, "Odstaveno", StringComparison.CurrentCultureIgnoreCase);
+        return string.Equals(normalizedState, LegacyKnownValues.VehicleStateArchive, StringComparison.CurrentCultureIgnoreCase)
+            || string.Equals(normalizedState, LegacyKnownValues.VehicleStateOutOfService, StringComparison.CurrentCultureIgnoreCase);
     }
 
     private static string NormalizeVehicleState(string? state) =>
-        string.IsNullOrWhiteSpace(state) ? "Běžný provoz" : state.Trim();
+        string.IsNullOrWhiteSpace(state) ? LegacyKnownValues.VehicleStateNormalOperation : state.Trim();
 
     private string FormatCategory(string? value) =>
         LegacyKnownValueDisplayService.FormatCategory(value, _localizer);

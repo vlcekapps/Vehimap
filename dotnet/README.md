@@ -26,6 +26,7 @@ Aktualni zamer:
 - preference jazyka, oddelovacu cisel, jednotek vzdalenosti/objemu a meny se ukladaji do nastaveni datove sady; internim ulozistem zustavaji invariantni hodnoty, UI a exporty je formatuji podle preferenci
 - pred Androidem zustava povinna i18n/unit/currency conformance brana: penize, tachometry, vzdalenosti, servisni intervaly a objemy paliva se v uzivatelsky viditelnych vystupech formatuji pres sdilene sluzby; pevne jednotkove a menove literaly v produkcnim UI/projekcich/reportech hlida staticky test
 - i18n conformance brana uz kontroluje konkretni string literaly, ne cele radky kodu; servisni knizka, dashboard a TSV/HTML exporty nakladu proto musi lokalizovat zname legacy hodnoty a stavove texty stejne jako viditelne jednotky a menu
+- hlavni projekce a tiskovy HTML prehled uz nerozpoznavaji ceske stavove aliasy vlastnimi UI stringy, ale pres EN/CS resource hodnoty a legacy konstanty
 
 ## Struktura
 
