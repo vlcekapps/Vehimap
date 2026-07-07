@@ -6,10 +6,10 @@ public sealed record FuelConsumptionSegmentItemViewModel(
     string FuelEntryId,
     string Period,
     string Distance,
-    string Liters,
+    string FuelAmount,
     string Consumption,
-    string PricePerLiter,
-    string CostPerKm,
+    string PricePerVolume,
+    string CostPerDistance,
     string AccessibleLabel)
 {
     public override string ToString() => AccessibleLabel;
@@ -21,9 +21,9 @@ public sealed record FuelGroupSummaryItemViewModel(
     string Station,
     string Fuel,
     string EntryCount,
-    string Liters,
+    string FuelAmount,
     string TotalCost,
-    string AveragePricePerLiter,
+    string AveragePricePerVolume,
     string LatestDate,
     string AccessibleLabel)
 {

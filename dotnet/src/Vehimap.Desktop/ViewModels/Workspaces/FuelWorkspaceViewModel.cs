@@ -240,7 +240,7 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
                 LF("FuelWorkspace.Detail.Fuel", value.FuelType),
                 LF("FuelWorkspace.Detail.FuelDetail", value.FuelDetail),
                 LF("FuelWorkspace.Detail.Station", value.Station),
-                LF("FuelWorkspace.Detail.Volume", value.Liters),
+                LF("FuelWorkspace.Detail.Volume", value.FuelAmount),
                 LF("FuelWorkspace.Detail.TotalCost", value.TotalCost),
                 LF("FuelWorkspace.Detail.Odometer", value.Odometer),
                 LF("FuelWorkspace.Detail.TankState", value.TankState),
@@ -313,7 +313,7 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
             || Contains(item.FuelType, query)
             || Contains(item.FuelDetail, query)
             || Contains(item.Station, query)
-            || Contains(item.Liters, query)
+            || Contains(item.FuelAmount, query)
             || Contains(item.TotalCost, query)
             || Contains(item.Odometer, query)
             || Contains(item.TankState, query)

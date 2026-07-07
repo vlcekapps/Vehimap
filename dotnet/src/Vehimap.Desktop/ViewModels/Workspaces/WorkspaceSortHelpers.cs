@@ -190,7 +190,7 @@ internal static class WorkspaceSortHelpers
             FuelTypeSortKey => OrderByText(items, descending, item => item.FuelType, item => item.Date),
             FuelDetailSortKey => OrderByText(items, descending, item => item.FuelDetail, item => item.Date),
             FuelStationSortKey => OrderByText(items, descending, item => item.Station, item => item.Date),
-            LitersSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.Liters), item => item.Date),
+            LitersSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.FuelAmount), item => item.Date),
             TotalCostSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.TotalCost), item => item.Date),
             OdometerSortKey => OrderByNumber(items, descending, item => TryParseOdometer(item.Odometer), item => item.Date),
             TankStateSortKey => OrderByText(items, descending, item => item.TankState, item => item.Date),

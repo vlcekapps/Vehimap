@@ -81,7 +81,7 @@
                   <TextBlock Text="{Binding FuelType}" />
                   <TextBlock Opacity="0.75" Text="{Binding FuelDetail}" TextWrapping="Wrap" />
                 </StackPanel>
-                <TextBlock Grid.Column="2" Text="{Binding Liters}" />
+                <TextBlock Grid.Column="2" Text="{Binding FuelAmount}" />
                 <TextBlock Grid.Column="3" Text="{Binding TotalCost}" />
                 <TextBlock Grid.Column="4" Text="{Binding Odometer}" />
                 <TextBlock Grid.Column="5" Text="{Binding Station}" TextWrapping="Wrap" />
@@ -204,7 +204,7 @@
                   <StackPanel>
                     <TextBlock Text="{Binding Station}" />
                     <TextBlock Opacity="0.78" Text="{Binding Fuel}" />
-                    <TextBlock Opacity="0.78" Text="{Binding AveragePricePerLiter}" />
+                    <TextBlock Opacity="0.78" Text="{Binding AveragePricePerVolume}" />
                   </StackPanel>
                 </Border>
               </DataTemplate>

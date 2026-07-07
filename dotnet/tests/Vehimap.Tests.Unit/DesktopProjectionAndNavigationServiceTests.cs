@@ -651,8 +651,8 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Contains("Average price per fuel unit: $189.27/US gal", projection.Summary, StringComparison.Ordinal);
         Assert.Contains("Average consumption: 28.68 mpg", projection.Summary, StringComparison.Ordinal);
         Assert.Equal("310.7 mi", projection.ConsumptionSegments.Single().Distance);
-        Assert.Equal("10.83 US gal", projection.ConsumptionSegments.Single().Liters);
-        Assert.Equal("$6.60/mi", projection.ConsumptionSegments.Single().CostPerKm);
+        Assert.Equal("10.83 US gal", projection.ConsumptionSegments.Single().FuelAmount);
+        Assert.Equal("$6.60/mi", projection.ConsumptionSegments.Single().CostPerDistance);
         Assert.Contains("Consumption segment", projection.ConsumptionSegments.Single().AccessibleLabel, StringComparison.Ordinal);
         Assert.Contains("fuel 21.66 US gal", projection.GroupSummaries.Single().AccessibleLabel, StringComparison.Ordinal);
         Assert.Equal("Warning", projection.Warnings.Single().Severity);

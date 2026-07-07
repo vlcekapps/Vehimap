@@ -340,10 +340,10 @@ internal sealed class DesktopProjectionService
                 {
                     var period = FormatConsumptionSegmentPeriod(item);
                     var distance = FormatDistance(item.DistanceKm);
-                    var liters = FormatFuelAnalysisVolume(item.Liters);
+                    var fuelAmount = FormatFuelAnalysisVolume(item.Liters);
                     var consumption = FormatFuelAnalysisConsumption(item.ConsumptionLitersPer100Km);
-                    var pricePerLiter = FormatOptionalPricePerVolume(item.PricePerLiter);
-                    var costPerKm = item.CostPerKm.HasValue
+                    var pricePerVolume = FormatOptionalPricePerVolume(item.PricePerLiter);
+                    var costPerDistance = item.CostPerKm.HasValue
                         ? FormatCostPerDistance(item.CostPerKm.Value)
                         : L("FuelAnalysis.Value.CostPerKmUnavailable");
                     return new FuelConsumptionSegmentItemViewModel(
@@ -351,11 +351,11 @@ internal sealed class DesktopProjectionService
                         item.EndFuelEntryId,
                         period,
                         distance,
-                        liters,
+                        fuelAmount,
                         consumption,
-                        pricePerLiter,
-                        costPerKm,
-                        LF("FuelAnalysis.Accessible.Segment", period, distance, liters, consumption, pricePerLiter, costPerKm));
+                        pricePerVolume,
+                        costPerDistance,
+                        LF("FuelAnalysis.Accessible.Segment", period, distance, fuelAmount, consumption, pricePerVolume, costPerDistance));
                 })
                 .ToList(),
             analysis.GroupSummaries
@@ -363,7 +363,7 @@ internal sealed class DesktopProjectionService
                 {
                     var fuel = BuildFuelGroupLabel(item.FuelType, item.FuelDetail);
                     var entryCount = LF("FuelAnalysis.Group.EntryCount", item.EntryCount);
-                    var liters = FormatFuelAnalysisVolume(item.Liters);
+                    var fuelAmount = FormatFuelAnalysisVolume(item.Liters);
                     var totalCost = FormatFuelAnalysisMoney(item.TotalCost);
                     var averagePrice = FormatOptionalPricePerVolume(item.AveragePricePerLiter);
                     var latestDate = item.LatestDate.HasValue
@@ -375,11 +375,11 @@ internal sealed class DesktopProjectionService
                         item.Station,
                         fuel,
                         entryCount,
-                        liters,
+                        fuelAmount,
                         totalCost,
                         averagePrice,
                         latestDate,
-                        LF("FuelAnalysis.Accessible.GroupSummary", item.Station, fuel, entryCount, liters, totalCost, averagePrice, latestDate));
+                        LF("FuelAnalysis.Accessible.GroupSummary", item.Station, fuel, entryCount, fuelAmount, totalCost, averagePrice, latestDate));
                 })
                 .ToList(),
             analysis.Warnings
