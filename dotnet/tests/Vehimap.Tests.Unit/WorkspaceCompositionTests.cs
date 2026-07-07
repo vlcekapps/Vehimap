@@ -233,6 +233,35 @@ public sealed class WorkspaceCompositionTests
     }
 
     [Fact]
+    public void Desktop_entity_kind_normalization_accepts_resource_aliases()
+    {
+        try
+        {
+            DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+
+            Assert.Equal(DesktopEntityKinds.Fuel, DesktopEntityKinds.Normalize("Fuel"));
+            Assert.Equal(DesktopEntityKinds.Record, DesktopEntityKinds.Normalize("Documents"));
+            Assert.Equal(DesktopEntityKinds.Maintenance, DesktopEntityKinds.Normalize("Service"));
+
+            DesktopLocalization.Configure(new AppCulturePreferences("cs-CZ", "none", "comma"));
+
+            Assert.Equal(DesktopEntityKinds.Vehicle, DesktopEntityKinds.Normalize("Vozidlo"));
+            Assert.Equal(DesktopEntityKinds.Fuel, DesktopEntityKinds.Normalize("Tankování"));
+            Assert.Equal(DesktopEntityKinds.Record, DesktopEntityKinds.Normalize("Doklady"));
+            Assert.Equal(DesktopEntityKinds.Maintenance, DesktopEntityKinds.Normalize("Údržba"));
+            Assert.Equal(DesktopEntityKinds.Reminder, DesktopEntityKinds.Normalize("Připomínky"));
+            Assert.Equal(DesktopEntityKinds.Costs, DesktopEntityKinds.Normalize("Náklady"));
+            Assert.Equal(DesktopEntityKinds.Fuel, DesktopEntityKinds.Normalize("tankovani"));
+            Assert.Equal(DesktopEntityKinds.Maintenance, DesktopEntityKinds.Normalize("udrzba"));
+            Assert.Equal(DesktopEntityKinds.Reminder, DesktopEntityKinds.Normalize("pripominka"));
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
+    }
+
+    [Fact]
     public void Dashboard_workspace_reads_shared_audit_cost_and_timeline_state()
     {
         var viewModel = CreateViewModel();

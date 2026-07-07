@@ -188,6 +188,16 @@
   <data name="GlobalSearch.Attention.GreenCard" xml:space="preserve"><value>Green card</value></data>
   <data name="GlobalSearch.Attention.StatusPart" xml:space="preserve"><value>{0}: {1}</value></data>
   <data name="GlobalSearch.Attention.TechnicalInspection" xml:space="preserve"><value>Technical inspection</value></data>
+  <data name="DesktopEntityKind.Costs" xml:space="preserve"><value>Costs</value></data>
+  <data name="DesktopEntityKind.Fuel" xml:space="preserve"><value>Fuel</value></data>
+  <data name="DesktopEntityKind.History" xml:space="preserve"><value>History</value></data>
+  <data name="DesktopEntityKind.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
+  <data name="DesktopEntityKind.Maintenance.ServiceAlias" xml:space="preserve"><value>Service</value></data>
+  <data name="DesktopEntityKind.Record" xml:space="preserve"><value>Document</value></data>
+  <data name="DesktopEntityKind.Records" xml:space="preserve"><value>Documents</value></data>
+  <data name="DesktopEntityKind.Reminder" xml:space="preserve"><value>Reminder</value></data>
+  <data name="DesktopEntityKind.Reminders" xml:space="preserve"><value>Reminders</value></data>
+  <data name="DesktopEntityKind.Vehicle" xml:space="preserve"><value>Vehicle</value></data>
   <data name="GlobalSearch.Entity.Fuel" xml:space="preserve"><value>Fuel</value></data>
   <data name="GlobalSearch.Entity.History" xml:space="preserve"><value>History</value></data>
   <data name="GlobalSearch.Entity.Maintenance" xml:space="preserve"><value>Maintenance</value></data>

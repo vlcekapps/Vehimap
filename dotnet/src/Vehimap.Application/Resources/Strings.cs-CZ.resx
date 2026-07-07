@@ -188,6 +188,16 @@
   <data name="GlobalSearch.Attention.GreenCard" xml:space="preserve"><value>ZK</value></data>
   <data name="GlobalSearch.Attention.StatusPart" xml:space="preserve"><value>{0}: {1}</value></data>
   <data name="GlobalSearch.Attention.TechnicalInspection" xml:space="preserve"><value>TK</value></data>
+  <data name="DesktopEntityKind.Costs" xml:space="preserve"><value>Náklady</value></data>
+  <data name="DesktopEntityKind.Fuel" xml:space="preserve"><value>Tankování</value></data>
+  <data name="DesktopEntityKind.History" xml:space="preserve"><value>Historie</value></data>
+  <data name="DesktopEntityKind.Maintenance" xml:space="preserve"><value>Údržba</value></data>
+  <data name="DesktopEntityKind.Maintenance.ServiceAlias" xml:space="preserve"><value>Servis</value></data>
+  <data name="DesktopEntityKind.Record" xml:space="preserve"><value>Doklad</value></data>
+  <data name="DesktopEntityKind.Records" xml:space="preserve"><value>Doklady</value></data>
+  <data name="DesktopEntityKind.Reminder" xml:space="preserve"><value>Připomínka</value></data>
+  <data name="DesktopEntityKind.Reminders" xml:space="preserve"><value>Připomínky</value></data>
+  <data name="DesktopEntityKind.Vehicle" xml:space="preserve"><value>Vozidlo</value></data>
   <data name="GlobalSearch.Entity.Fuel" xml:space="preserve"><value>Tankování</value></data>
   <data name="GlobalSearch.Entity.History" xml:space="preserve"><value>Historie</value></data>
   <data name="GlobalSearch.Entity.Maintenance" xml:space="preserve"><value>Údržba</value></data>

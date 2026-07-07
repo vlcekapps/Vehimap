@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Desktop.Localization;
+
 namespace Vehimap.Desktop.Services;
 
 internal static class DesktopEntityKinds
@@ -19,16 +21,61 @@ internal static class DesktopEntityKinds
             return Vehicle;
         }
 
-        return normalized.ToLowerInvariant() switch
+        if (MatchesEntityKind(normalized, Vehicle, "DesktopEntityKind.Vehicle"))
         {
-            Vehicle or "vozidlo" => Vehicle,
-            History or "historie" => History,
-            Fuel or "tankování" or "tankovani" or "fuel" => Fuel,
-            Record or "doklad" or "doklady" => Record,
-            Maintenance or "údržba" or "udrzba" or "servis" => Maintenance,
-            Reminder or "připomínka" or "pripominka" or "připomínky" or "pripominky" => Reminder,
-            Costs or "náklady" or "naklady" or "cost" => Costs,
-            _ => normalized
-        };
+            return Vehicle;
+        }
+
+        if (MatchesEntityKind(normalized, History, "DesktopEntityKind.History"))
+        {
+            return History;
+        }
+
+        if (MatchesEntityKind(normalized, Fuel, "DesktopEntityKind.Fuel", "tankovani", "fuel"))
+        {
+            return Fuel;
+        }
+
+        if (MatchesEntityKind(normalized, Record, "DesktopEntityKind.Record", "DesktopEntityKind.Records", "doklad", "doklady"))
+        {
+            return Record;
+        }
+
+        if (MatchesEntityKind(normalized, Maintenance, "DesktopEntityKind.Maintenance", "DesktopEntityKind.Maintenance.ServiceAlias", "udrzba", "servis"))
+        {
+            return Maintenance;
+        }
+
+        if (MatchesEntityKind(normalized, Reminder, "DesktopEntityKind.Reminder", "DesktopEntityKind.Reminders", "pripominka", "pripominky"))
+        {
+            return Reminder;
+        }
+
+        if (MatchesEntityKind(normalized, Costs, "DesktopEntityKind.Costs", "naklady", "cost"))
+        {
+            return Costs;
+        }
+
+        return normalized;
+    }
+
+    private static bool MatchesEntityKind(string value, string stableValue, params string[] aliases)
+    {
+        if (string.Equals(value, stableValue, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var resourceKeys = aliases
+            .Where(alias => alias.StartsWith("DesktopEntityKind.", StringComparison.Ordinal))
+            .ToArray();
+        if (resourceKeys.Length > 0 && LocalizedCompatibilityAliases.MatchesAnyResource(value, resourceKeys))
+        {
+            return true;
+        }
+
+        return aliases
+            .Where(alias => !alias.StartsWith("DesktopEntityKind.", StringComparison.Ordinal))
+            .Any(alias => string.Equals(value, alias, StringComparison.OrdinalIgnoreCase));
     }
 }

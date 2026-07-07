@@ -1399,7 +1399,6 @@ public sealed class I18nFoundationTests
             "dotnet/src/Vehimap.Application/Services/LegacyKnownValueDisplayService.cs" or
             "dotnet/src/Vehimap.Application/Services/LegacyServiceBookService.cs" or
             "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs" or
-            "dotnet/src/Vehimap.Desktop/Services/DesktopEntityKinds.cs" or
             "dotnet/src/Vehimap.Desktop/ViewModels/KnownValueOptions.cs")
         {
             return true;
