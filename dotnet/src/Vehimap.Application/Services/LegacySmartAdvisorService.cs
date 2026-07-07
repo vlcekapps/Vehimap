@@ -189,7 +189,7 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
         foreach (var vehicle in costSummary.Vehicles.Where(item => item.TotalCost > 0m && !item.CostPerKm.HasValue))
         {
             items.Add(new SmartAdvisorItem(
-                $"cost-{vehicle.VehicleId}-cost-per-km-unavailable",
+                $"cost-{vehicle.VehicleId}-cost-per-distance-unavailable",
                 SmartAdvisorPriority.Recommendation,
                 SmartAdvisorCategory.Costs,
                 vehicle.VehicleId,

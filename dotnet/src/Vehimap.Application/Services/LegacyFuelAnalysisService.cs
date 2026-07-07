@@ -128,7 +128,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
         else if (!string.IsNullOrWhiteSpace(entry.Liters))
         {
             warnings.Add(new FuelAnalysisWarning(
-                $"fuel-analysis-liters-{entry.Id}",
+                $"fuel-analysis-amount-{entry.Id}",
                 entry.Id,
                 FuelAnalysisWarningSeverity.Warning,
                 L("FuelAnalysis.Warning.LitersInvalid.Title"),

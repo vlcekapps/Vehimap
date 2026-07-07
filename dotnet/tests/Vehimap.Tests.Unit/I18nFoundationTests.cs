@@ -1467,16 +1467,6 @@ public sealed class I18nFoundationTests
                 || line.Contains("\"czk\"", StringComparison.Ordinal);
         }
 
-        if (relativePath is "dotnet/src/Vehimap.Application/Services/LegacySmartAdvisorService.cs")
-        {
-            return line.Contains("cost-per-km-unavailable", StringComparison.Ordinal);
-        }
-
-        if (relativePath is "dotnet/src/Vehimap.Application/Services/LegacyFuelAnalysisService.cs")
-        {
-            return line.Contains("fuel-analysis-liters-", StringComparison.Ordinal);
-        }
-
         if (relativePath is "dotnet/src/Vehimap.Desktop/Views/Workspaces/FuelWorkspaceView.axaml")
         {
             return line.Contains("{Binding Liters}", StringComparison.Ordinal);
