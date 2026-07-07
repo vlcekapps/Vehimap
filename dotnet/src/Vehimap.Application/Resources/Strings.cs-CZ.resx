@@ -595,12 +595,12 @@ Vozidlo: {2}
   <data name="RecordItem.ProviderPart" xml:space="preserve"><value>, poskytovatel {0}</value></data>
   <data name="RecordItem.NotePart" xml:space="preserve"><value>, poznámka {0}</value></data>
   <data name="RecordItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}{2}, platnost {3}, režim {4}, stav přílohy {5}{6}</value></data>
-  <data name="RecordAttachmentAction.CopyPathFailed" xml:space="preserve"><value>Cestu dokladu se nepodařilo zkopírovat: {0}</value></data>
+  <data name="RecordAttachmentAction.CopyPathFailed" xml:space="preserve"><value>Cestu dokladu se nepodařilo zkopírovat.</value></data>
   <data name="RecordAttachmentAction.FileOpened" xml:space="preserve"><value>Příloha dokladu byla otevřena: {0}.</value></data>
-  <data name="RecordAttachmentAction.FileOpenFailed" xml:space="preserve"><value>Přílohu dokladu se nepodařilo otevřít: {0}</value></data>
+  <data name="RecordAttachmentAction.FileOpenFailed" xml:space="preserve"><value>Přílohu dokladu se nepodařilo otevřít.</value></data>
   <data name="RecordAttachmentAction.FileUnavailable" xml:space="preserve"><value>Příloha dokladu není dostupná: {0}.</value></data>
   <data name="RecordAttachmentAction.FolderOpened" xml:space="preserve"><value>Složka přílohy dokladu byla otevřena: {0}.</value></data>
-  <data name="RecordAttachmentAction.FolderOpenFailed" xml:space="preserve"><value>Složku přílohy dokladu se nepodařilo otevřít: {0}</value></data>
+  <data name="RecordAttachmentAction.FolderOpenFailed" xml:space="preserve"><value>Složku přílohy dokladu se nepodařilo otevřít.</value></data>
   <data name="RecordAttachmentAction.NoCopyPath" xml:space="preserve"><value>Doklad nemá dostupnou cestu ke zkopírování.</value></data>
   <data name="RecordAttachmentAction.NoFolder" xml:space="preserve"><value>Doklad nemá dostupnou složku přílohy.</value></data>
   <data name="RecordAttachmentAction.NoPath" xml:space="preserve"><value>Doklad nemá dostupnou cestu k příloze.</value></data>

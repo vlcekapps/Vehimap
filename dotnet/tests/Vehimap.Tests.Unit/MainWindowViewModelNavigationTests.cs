@@ -1022,7 +1022,7 @@ public sealed class MainWindowViewModelNavigationTests
             await viewModel.OpenSelectedRecordFileCommand.ExecuteAsync(null);
 
             Assert.Contains("Přílohu dokladu se nepodařilo otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
-            Assert.Contains("Soubor nejde otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
+            Assert.DoesNotContain("Soubor nejde otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
             Assert.Equal(viewModel.RecordWorkspace.RecordEditorStatus, viewModel.ShellStatus);
         }
         finally
@@ -1046,7 +1046,7 @@ public sealed class MainWindowViewModelNavigationTests
             await viewModel.OpenSelectedRecordFolderCommand.ExecuteAsync(null);
 
             Assert.Contains("Složku přílohy dokladu se nepodařilo otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
-            Assert.Contains("Složka nejde otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
+            Assert.DoesNotContain("Složka nejde otevřít", viewModel.RecordWorkspace.RecordEditorStatus);
             Assert.Equal(viewModel.RecordWorkspace.RecordEditorStatus, viewModel.ShellStatus);
         }
         finally
@@ -1070,7 +1070,7 @@ public sealed class MainWindowViewModelNavigationTests
             await viewModel.CopySelectedRecordPathCommand.ExecuteAsync(null);
 
             Assert.Contains("Cestu dokladu se nepodařilo zkopírovat", viewModel.RecordWorkspace.RecordEditorStatus);
-            Assert.Contains("Schránka není dostupná", viewModel.RecordWorkspace.RecordEditorStatus);
+            Assert.DoesNotContain("Schránka není dostupná", viewModel.RecordWorkspace.RecordEditorStatus);
             Assert.Equal(viewModel.RecordWorkspace.RecordEditorStatus, viewModel.ShellStatus);
         }
         finally

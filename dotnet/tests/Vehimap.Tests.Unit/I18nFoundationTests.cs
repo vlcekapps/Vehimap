@@ -51,6 +51,12 @@ public sealed class I18nFoundationTests
         Assert.Equal("Vyplňte doklad a podle potřeby vyberte přílohu.", czech.GetString("RecordEditor.Status.CreatePrompt"));
         Assert.Equal("Document attachment has been opened: invoice.pdf.", english.Format("RecordAttachmentAction.FileOpened", "invoice.pdf"));
         Assert.Equal("Příloha dokladu byla otevřena: faktura.pdf.", czech.Format("RecordAttachmentAction.FileOpened", "faktura.pdf"));
+        Assert.Equal("Document attachment could not be opened.", english.GetString("RecordAttachmentAction.FileOpenFailed"));
+        Assert.Equal("Přílohu dokladu se nepodařilo otevřít.", czech.GetString("RecordAttachmentAction.FileOpenFailed"));
+        Assert.Equal("Document attachment folder could not be opened.", english.GetString("RecordAttachmentAction.FolderOpenFailed"));
+        Assert.Equal("Složku přílohy dokladu se nepodařilo otevřít.", czech.GetString("RecordAttachmentAction.FolderOpenFailed"));
+        Assert.Equal("Document path could not be copied.", english.GetString("RecordAttachmentAction.CopyPathFailed"));
+        Assert.Equal("Cestu dokladu se nepodařilo zkopírovat.", czech.GetString("RecordAttachmentAction.CopyPathFailed"));
         Assert.Equal("Vehicle bundle", english.GetString("VehicleStarterBundle.Title"));
         Assert.Equal("Balíček pro vozidlo", czech.GetString("VehicleStarterBundle.Title"));
         Assert.Equal("Selected: 3 items | Service 1 | Documents 1 | Reminders 1", english.Format("VehicleStarterBundle.Summary.SectionCounts", 3, 1, 1, 1));
@@ -606,6 +612,12 @@ public sealed class I18nFoundationTests
         Assert.Contains("RecordEditor.FileDialog.ManagedTitle", editingViewModel);
         Assert.Contains("RecordAttachmentAction.NoPath", shellViewModel);
         Assert.Contains("RecordAttachmentAction.FileOpened", shellViewModel);
+        Assert.Contains("LO(\"RecordAttachmentAction.FileOpenFailed\")", shellViewModel);
+        Assert.Contains("LO(\"RecordAttachmentAction.FolderOpenFailed\")", shellViewModel);
+        Assert.Contains("LO(\"RecordAttachmentAction.CopyPathFailed\")", shellViewModel);
+        Assert.DoesNotContain("RecordAttachmentAction.FileOpenFailed\", ex.Message", shellViewModel);
+        Assert.DoesNotContain("RecordAttachmentAction.FolderOpenFailed\", ex.Message", shellViewModel);
+        Assert.DoesNotContain("RecordAttachmentAction.CopyPathFailed\", ex.Message", shellViewModel);
         Assert.DoesNotContain("Vyplňte připomínku a uložte ji.", editingViewModel);
         Assert.DoesNotContain("Vyplňte doklad a podle potřeby vyberte přílohu.", editingViewModel);
         Assert.DoesNotContain("Doklad nemá dostupnou cestu k příloze.", shellViewModel);

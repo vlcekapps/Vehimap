@@ -69,6 +69,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Runtime služby, projekce a exporty už při chybějícím explicitním settings snapshotu nepoužívají natvrdo český formátovací profil `km/l/CZK`; výchozí jednotky, oddělovače a měna se odvozují ze stejné locale default policy jako instalační seed.
 - Kopírovací live statusy v dialozích `O programu`, `Kontrola datové sady 2.0` a `Kontrola aktualizací` už při selhání nezobrazují syrový text výjimky; uživatel dostane krátkou lokalizovanou hlášku bez technického šumu.
 - Krátké statusy automatického ukládání filtrů, řazení a dalších preferencí už při selhání nezobrazují syrový text výjimky; zůstává jen lokalizovaná uživatelská hláška.
+- Krátké statusy akcí nad přílohami dokladů (`Otevřít`, `Otevřít složku`, `Kopírovat cestu`) už při selhání nezobrazují syrový text výjimky; konkrétní cesta zůstává viditelná jen u úspěšných akcí a dostupnostních hlášek.
 - GitHub Actions UI smoke už neinstaluje WinAppDriver přes anonymní GitHub API volání z Appium driveru; workflow stahuje známý MSI asset přímo, ověřuje SHA-256 a instaluje jej přes `msiexec`, aby veřejné nightly nespadlo na rate limitu runneru.
 - Appium UI smoke znovu nechává izolovanou desktopovou aplikaci spustit WinAppDriverem, doplňuje jí pracovní adresář izolované kopie a při křehkém selhání přímého attachi dohledá otevřené okno přes Appium `Root` UI Automation session podle názvu `Vehimap`; tím se omezuje flaky selhání hosted runneru při hledání čerstvě otevřeného okna podle processId.
 

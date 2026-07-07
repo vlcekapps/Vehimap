@@ -895,7 +895,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetRecordAttachmentActionStatus(LFO("RecordAttachmentAction.FileOpenFailed", ex.Message));
+            SetRecordAttachmentActionStatus(LO("RecordAttachmentAction.FileOpenFailed"));
         }
     }
 
@@ -916,7 +916,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetRecordAttachmentActionStatus(LFO("RecordAttachmentAction.FolderOpenFailed", ex.Message));
+            SetRecordAttachmentActionStatus(LO("RecordAttachmentAction.FolderOpenFailed"));
         }
     }
 
@@ -937,7 +937,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetRecordAttachmentActionStatus(LFO("RecordAttachmentAction.CopyPathFailed", ex.Message));
+            SetRecordAttachmentActionStatus(LO("RecordAttachmentAction.CopyPathFailed"));
         }
     }
 
