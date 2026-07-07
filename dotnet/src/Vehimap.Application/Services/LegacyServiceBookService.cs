@@ -9,26 +9,6 @@ namespace Vehimap.Application.Services;
 
 public sealed class LegacyServiceBookService : IServiceBookService
 {
-    private static readonly string[] ServiceRecordKeywords =
-    [
-        "servis",
-        "údržba",
-        "udrzba",
-        "oprava",
-        "faktura",
-        "účtenka",
-        "uctenka",
-        "doklad o servisu",
-        "service",
-        "maintenance",
-        "repair",
-        "invoice",
-        "receipt",
-        "service record",
-        "workshop",
-        "garage"
-    ];
-
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
@@ -185,12 +165,16 @@ public sealed class LegacyServiceBookService : IServiceBookService
         return samples.Count == 0 ? null : samples.Max();
     }
 
-    private static bool IsServiceRecord(VehicleRecord record)
+    private bool IsServiceRecord(VehicleRecord record)
     {
         var haystack = $"{record.RecordType} {record.Title}";
-        return ServiceRecordKeywords.Any(keyword =>
+        return ServiceRecordKeywords().Any(keyword =>
             haystack.Contains(keyword, StringComparison.CurrentCultureIgnoreCase));
     }
+
+    private IEnumerable<string> ServiceRecordKeywords() =>
+        L("ServiceBook.RecordKeywords")
+            .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
     private string BuildRecordValidity(VehicleRecord record)
     {

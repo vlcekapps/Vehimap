@@ -41,6 +41,10 @@ public sealed class I18nFoundationTests
         Assert.Equal("Od začátku roku", czech.GetString("CostPeriod.YearToDate"));
         Assert.Equal("OK", english.GetString("CostAnalysis.Status.Ok"));
         Assert.Equal("V pořádku", czech.GetString("CostAnalysis.Status.Ok"));
+        Assert.Contains("invoice", english.GetString("ServiceBook.RecordKeywords"), StringComparison.Ordinal);
+        Assert.Contains("faktura", english.GetString("ServiceBook.RecordKeywords"), StringComparison.Ordinal);
+        Assert.Contains("receipt", czech.GetString("ServiceBook.RecordKeywords"), StringComparison.Ordinal);
+        Assert.Contains("účtenka", czech.GetString("ServiceBook.RecordKeywords"), StringComparison.Ordinal);
         Assert.Equal("Fill in the reminder and save it.", english.GetString("ReminderEditor.Status.CreatePrompt"));
         Assert.Equal("Vyplňte připomínku a uložte ji.", czech.GetString("ReminderEditor.Status.CreatePrompt"));
         Assert.Equal("Fill in the document and choose an attachment if needed.", english.GetString("RecordEditor.Status.CreatePrompt"));
@@ -454,6 +458,7 @@ public sealed class I18nFoundationTests
         Assert.Contains("ServiceBook.Export.Title", exportService);
         Assert.Contains("ServiceBook.Export.Column.Primary", exportService);
         Assert.Contains("ServiceBook.Window.SelectedItemEmpty", windowViewModel);
+        Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), exportService);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), shellServiceBook);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), windowViewModel);
@@ -1406,7 +1411,6 @@ public sealed class I18nFoundationTests
             "dotnet/src/Vehimap.Storage.Legacy/LegacyKnownValues.cs" or
             "dotnet/src/Vehimap.Storage.Legacy/LegacyVehicleValueNormalization.cs" or
             "dotnet/src/Vehimap.Application/Services/LegacyKnownValueDisplayService.cs" or
-            "dotnet/src/Vehimap.Application/Services/LegacyServiceBookService.cs" or
             "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs")
         {
             return true;
