@@ -8,6 +8,19 @@ namespace Vehimap.Application.Services;
 
 public sealed class VehicleStarterBundleService
 {
+    private const string CategoryPassengerVehicles = "passenger_vehicles";
+    private const string CategoryMotorcycles = "motorcycles";
+    private const string CategoryTrucks = "trucks";
+    private const string CategoryBuses = "buses";
+    private const string CategoryOther = "other";
+    private const string PowertrainGasoline = "gasoline";
+    private const string PowertrainDiesel = "diesel";
+    private const string PowertrainHybrid = "hybrid";
+    private const string PowertrainPlugInHybrid = "plug_in_hybrid";
+    private const string PowertrainElectric = "electric";
+    private const string PowertrainLpgCng = "lpg_cng";
+    private const string PowertrainOther = "other";
+
     private static readonly IAppLocalizer EnglishTemplateLocalizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
     private static readonly IAppLocalizer CzechTemplateLocalizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
 
@@ -230,79 +243,79 @@ public sealed class VehicleStarterBundleService
 
     private static IReadOnlyList<VehicleStarterBundleTemplate> GetRecommendedMaintenanceTemplates(Vehicle vehicle, VehicleMeta? meta)
     {
-        var labels = new List<string>();
-        var category = NormalizeCategory(vehicle.Category);
-        var powertrain = ResolvePowertrain(vehicle, meta);
-        var isElectric = string.Equals(powertrain, "Elektro", StringComparison.Ordinal);
-        var isDiesel = string.Equals(powertrain, "Nafta", StringComparison.Ordinal);
-        var recommendClimate = ShouldRecommendClimateMaintenance(category, meta);
-        var recommendTiming = ShouldRecommendTimingMaintenance(powertrain, meta);
-        var recommendTransmission = ShouldRecommendTransmissionMaintenance(powertrain, meta);
+        var templateKeys = new List<string>();
+        var categoryKey = ResolveCategoryKey(vehicle.Category);
+        var powertrainKey = ResolvePowertrainKey(vehicle, meta);
+        var isElectric = string.Equals(powertrainKey, PowertrainElectric, StringComparison.Ordinal);
+        var isDiesel = string.Equals(powertrainKey, PowertrainDiesel, StringComparison.Ordinal);
+        var recommendClimate = ShouldRecommendClimateMaintenance(categoryKey, meta);
+        var recommendTiming = ShouldRecommendTimingMaintenance(powertrainKey, meta);
+        var recommendTransmission = ShouldRecommendTransmissionMaintenance(powertrainKey, meta);
 
-        switch (category)
+        switch (categoryKey)
         {
-            case "Osobní vozidla":
+            case CategoryPassengerVehicles:
                 if (isElectric)
                 {
-                    labels.AddRange(["Kabinový filtr", "Brzdová kapalina", "Chladicí kapalina"]);
+                    templateKeys.AddRange(["CabinFilter", "BrakeFluid", "Coolant"]);
                 }
                 else
                 {
-                    labels.AddRange(["Motorový olej a filtr", "Vzduchový filtr", "Kabinový filtr", "Brzdová kapalina", "Chladicí kapalina"]);
+                    templateKeys.AddRange(["EngineOilFilter", "AirFilter", "CabinFilter", "BrakeFluid", "Coolant"]);
                     if (recommendTiming)
                     {
-                        labels.Add("Rozvody");
+                        templateKeys.Add("TimingDrive");
                     }
 
                     if (recommendTransmission)
                     {
-                        labels.Add("Převodový olej");
+                        templateKeys.Add("TransmissionOil");
                     }
                 }
                 break;
 
-            case "Motocykly":
-                labels.AddRange(isElectric
-                    ? ["Brzdová kapalina"]
-                    : ["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina"]);
+            case CategoryMotorcycles:
+                templateKeys.AddRange(isElectric
+                    ? ["BrakeFluid"]
+                    : ["EngineOilFilter", "AirFilter", "BrakeFluid", "Coolant"]);
                 break;
 
-            case "Nákladní vozidla":
-            case "Autobusy":
+            case CategoryTrucks:
+            case CategoryBuses:
                 if (isElectric)
                 {
-                    labels.AddRange(["Brzdová kapalina", "Chladicí kapalina"]);
+                    templateKeys.AddRange(["BrakeFluid", "Coolant"]);
                 }
                 else
                 {
-                    labels.AddRange(["Motorový olej a filtr", "Vzduchový filtr", "Brzdová kapalina", "Chladicí kapalina"]);
+                    templateKeys.AddRange(["EngineOilFilter", "AirFilter", "BrakeFluid", "Coolant"]);
                     if (recommendTransmission)
                     {
-                        labels.Add("Převodový olej");
+                        templateKeys.Add("TransmissionOil");
                     }
                 }
                 break;
 
             default:
-                labels.AddRange(isElectric
-                    ? ["Brzdová kapalina"]
-                    : ["Brzdová kapalina", "Chladicí kapalina"]);
+                templateKeys.AddRange(isElectric
+                    ? ["BrakeFluid"]
+                    : ["BrakeFluid", "Coolant"]);
                 break;
         }
 
         if (recommendClimate)
         {
-            labels.Add("Klimatizace a dezinfekce");
+            templateKeys.Add("AirConditioning");
         }
 
         if (isDiesel && !isElectric)
         {
-            labels.Add("Palivový filtr");
+            templateKeys.Add("FuelFilter");
         }
 
-        return labels
+        return templateKeys
             .Distinct(StringComparer.Ordinal)
-            .Select(GetMaintenanceTemplateByTitle)
+            .Select(GetMaintenanceTemplateByKey)
             .Where(static template => template is not null)
             .Cast<VehicleStarterBundleTemplate>()
             .ToList();
@@ -311,29 +324,22 @@ public sealed class VehicleStarterBundleService
     private static IReadOnlyList<VehicleStarterBundleTemplate> GetReminderTemplates(Vehicle vehicle, DateOnly today)
     {
         var dueDate = today.AddDays(30).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-        var category = NormalizeCategory(vehicle.Category);
-        var title = category switch
+        var categoryKey = ResolveCategoryKey(vehicle.Category);
+        var reminderKey = categoryKey switch
         {
-            "Motocykly" => "Předsezónní kontrola motocyklu",
-            "Nákladní vozidla" or "Autobusy" => "Pravidelná provozní kontrola",
-            "Ostatní" => "Pravidelná kontrola stavu",
-            _ => "Pravidelná kontrola stavu vozidla"
+            CategoryMotorcycles => "MotorcyclePreSeasonCheck",
+            CategoryTrucks or CategoryBuses => "OperationalCheck",
+            CategoryOther => "ConditionCheck",
+            _ => "VehicleConditionCheck"
         };
-
-        var note = category switch
-        {
-            "Motocykly" => "Zkontrolujte brzdy, řetěz, pneumatiky, kapaliny a baterii.",
-            "Nákladní vozidla" or "Autobusy" => "Zkontrolujte kapaliny, osvětlení, pneumatiky a povinnou výbavu.",
-            "Ostatní" => "Doplňte vlastní kontrolní kroky podle typu zařízení.",
-            _ => "Zkontrolujte výbavu, kapaliny, osvětlení a stav pneumatik."
-        };
+        var titleKey = $"VehicleStarterBundle.Catalog.Reminder.{reminderKey}.Title";
 
         return
         [
             new VehicleStarterBundleTemplate(
                 VehicleStarterBundleSection.Reminder,
                 "Připomínka",
-                title,
+                CzechTemplateLocalizer.GetString(titleKey),
                 string.Empty,
                 string.Empty,
                 string.Empty,
@@ -344,12 +350,16 @@ public sealed class VehicleStarterBundleService
                 dueDate,
                 "14",
                 "Každý rok",
-                note)
+                CzechTemplateLocalizer.GetString($"{titleKey}.Note"))
         ];
     }
 
     private static VehicleStarterBundleTemplate? GetMaintenanceTemplateByTitle(string title) =>
         MaintenanceTemplates.FirstOrDefault(item => string.Equals(item.Title, title, StringComparison.Ordinal));
+
+    private static VehicleStarterBundleTemplate? GetMaintenanceTemplateByKey(string key) =>
+        MaintenanceTemplates.FirstOrDefault(item =>
+            string.Equals(ResolveTemplateKeyByLegacyTitle(item.Title), $"VehicleStarterBundle.Catalog.Maintenance.{key}.Title", StringComparison.Ordinal));
 
     private static VehicleStarterBundleTemplate Maintenance(
         string category,
@@ -485,51 +495,51 @@ public sealed class VehicleStarterBundleService
 
     private static string BuildProfileLabel(Vehicle vehicle, VehicleMeta? meta, IAppLocalizer localizer)
     {
-        var parts = new List<string> { LocalizeVehicleCategory(NormalizeCategory(vehicle.Category), localizer) };
-        var powertrain = ResolvePowertrain(vehicle, meta);
-        if (!string.IsNullOrWhiteSpace(powertrain))
+        var parts = new List<string> { LocalizeVehicleCategory(ResolveCategoryKey(vehicle.Category), vehicle.Category, localizer) };
+        var powertrainKey = ResolvePowertrainKey(vehicle, meta);
+        if (!string.IsNullOrWhiteSpace(powertrainKey))
         {
-            parts.Add(powertrain switch
+            parts.Add(powertrainKey switch
             {
-                "Benzín" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Gasoline"),
-                "Nafta" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Diesel"),
-                "Hybrid" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Hybrid"),
-                "Plug-in hybrid" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.PlugInHybrid"),
-                "Elektro" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Electric"),
-                "LPG / CNG" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.LpgCng"),
-                "Jiné" => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Other"),
-                _ => powertrain.ToLowerInvariant()
+                PowertrainGasoline => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Gasoline"),
+                PowertrainDiesel => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Diesel"),
+                PowertrainHybrid => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Hybrid"),
+                PowertrainPlugInHybrid => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.PlugInHybrid"),
+                PowertrainElectric => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Electric"),
+                PowertrainLpgCng => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.LpgCng"),
+                PowertrainOther => localizer.GetString("VehicleStarterBundle.Profile.Powertrain.Other"),
+                _ => FormatUnknownProfileValue(meta?.Powertrain)
             });
         }
 
         if (!string.IsNullOrWhiteSpace(meta?.ClimateProfile))
         {
-            parts.Add(meta.ClimateProfile switch
+            parts.Add(ResolveClimateKey(meta.ClimateProfile) switch
             {
-                "Má klimatizaci" => localizer.GetString("VehicleStarterBundle.Profile.Climate.Has"),
-                "Bez klimatizace" => localizer.GetString("VehicleStarterBundle.Profile.Climate.None"),
-                _ => meta.ClimateProfile.ToLowerInvariant()
+                "has" => localizer.GetString("VehicleStarterBundle.Profile.Climate.Has"),
+                "none" => localizer.GetString("VehicleStarterBundle.Profile.Climate.None"),
+                _ => FormatUnknownProfileValue(meta.ClimateProfile)
             });
         }
 
         if (!string.IsNullOrWhiteSpace(meta?.TimingDrive))
         {
-            parts.Add(meta.TimingDrive switch
+            parts.Add(ResolveTimingDriveKey(meta.TimingDrive) switch
             {
-                "Řemen" => localizer.GetString("VehicleStarterBundle.Profile.Timing.Belt"),
-                "Řetěz" => localizer.GetString("VehicleStarterBundle.Profile.Timing.Chain"),
-                "Není relevantní" => localizer.GetString("VehicleStarterBundle.Profile.Timing.NotRelevant"),
+                "belt" => localizer.GetString("VehicleStarterBundle.Profile.Timing.Belt"),
+                "chain" => localizer.GetString("VehicleStarterBundle.Profile.Timing.Chain"),
+                "not_relevant" => localizer.GetString("VehicleStarterBundle.Profile.Timing.NotRelevant"),
                 _ => localizer.Format("VehicleStarterBundle.Profile.Timing.Other", meta.TimingDrive.ToLowerInvariant())
             });
         }
 
         if (!string.IsNullOrWhiteSpace(meta?.Transmission))
         {
-            parts.Add(meta.Transmission switch
+            parts.Add(ResolveTransmissionKey(meta.Transmission) switch
             {
-                "Manuální" => localizer.GetString("VehicleStarterBundle.Profile.Transmission.Manual"),
-                "Automatická" => localizer.GetString("VehicleStarterBundle.Profile.Transmission.Automatic"),
-                "Není relevantní" => localizer.GetString("VehicleStarterBundle.Profile.Transmission.NotRelevant"),
+                "manual" => localizer.GetString("VehicleStarterBundle.Profile.Transmission.Manual"),
+                "automatic" => localizer.GetString("VehicleStarterBundle.Profile.Transmission.Automatic"),
+                "not_relevant" => localizer.GetString("VehicleStarterBundle.Profile.Transmission.NotRelevant"),
                 _ => localizer.Format("VehicleStarterBundle.Profile.Transmission.Other", meta.Transmission.ToLowerInvariant())
             });
         }
@@ -537,113 +547,243 @@ public sealed class VehicleStarterBundleService
         return string.Join(", ", parts.Where(static item => !string.IsNullOrWhiteSpace(item)));
     }
 
-    private static string LocalizeVehicleCategory(string value, IAppLocalizer localizer) =>
-        value switch
+    private static string LocalizeVehicleCategory(string categoryKey, string? rawCategory, IAppLocalizer localizer) =>
+        categoryKey switch
         {
-            "Osobní vozidla" => localizer.GetString("VehicleStarterBundle.Profile.Category.PassengerVehicles"),
-            "Motocykly" => localizer.GetString("VehicleStarterBundle.Profile.Category.Motorcycles"),
-            "Nákladní vozidla" => localizer.GetString("VehicleStarterBundle.Profile.Category.Trucks"),
-            "Autobusy" => localizer.GetString("VehicleStarterBundle.Profile.Category.Buses"),
-            "Ostatní" => localizer.GetString("VehicleStarterBundle.Profile.Category.Other"),
-            _ => value
+            CategoryPassengerVehicles => localizer.GetString("VehicleStarterBundle.Profile.Category.PassengerVehicles"),
+            CategoryMotorcycles => localizer.GetString("VehicleStarterBundle.Profile.Category.Motorcycles"),
+            CategoryTrucks => localizer.GetString("VehicleStarterBundle.Profile.Category.Trucks"),
+            CategoryBuses => localizer.GetString("VehicleStarterBundle.Profile.Category.Buses"),
+            CategoryOther => localizer.GetString("VehicleStarterBundle.Profile.Category.Other"),
+            _ => rawCategory ?? string.Empty
         };
 
-    private static string ResolvePowertrain(Vehicle vehicle, VehicleMeta? meta)
+    private static string ResolvePowertrainKey(Vehicle vehicle, VehicleMeta? meta)
     {
         if (!string.IsNullOrWhiteSpace(meta?.Powertrain))
         {
-            return meta.Powertrain;
+            return ResolvePowertrainKey(meta.Powertrain);
         }
 
         var haystack = string.Join(' ', NormalizeCategory(vehicle.Category), vehicle.MakeModel, vehicle.VehicleNote).ToLowerInvariant();
 
         if (ContainsAny(haystack, "plug-in hybrid", "plug in hybrid", "phev"))
         {
-            return "Plug-in hybrid";
+            return PowertrainPlugInHybrid;
         }
 
         if (ContainsAny(haystack, "hybrid", "hev"))
         {
-            return "Hybrid";
+            return PowertrainHybrid;
         }
 
-        if (ContainsAny(haystack, "elektro", "electric", "bev", "tesla", "ev"))
+        if (ContainsAnyPowertrain(haystack, "KnownValue.Powertrain.Electric", "bev", "tesla", "ev"))
         {
-            return "Elektro";
+            return PowertrainElectric;
         }
 
-        if (ContainsAny(haystack, "diesel", "nafta", "tdi", "hdi", "dci", "cdi", "crdi", "multijet", "tdci"))
+        if (ContainsAnyPowertrain(haystack, "KnownValue.Powertrain.Diesel", "tdi", "hdi", "dci", "cdi", "crdi", "multijet", "tdci"))
         {
-            return "Nafta";
+            return PowertrainDiesel;
         }
 
-        if (ContainsAny(haystack, "lpg", "cng", "gpl"))
+        if (ContainsAnyPowertrain(haystack, "KnownValue.Powertrain.LpgCng", "gpl"))
         {
-            return "LPG / CNG";
+            return PowertrainLpgCng;
         }
 
-        if (ContainsAny(haystack, "benzin", "benzín", "gasoline", "tsi", "tfsi", "mpi", "gdi", "fsi", "ecoboost"))
+        if (ContainsAnyPowertrain(haystack, "KnownValue.Powertrain.Gasoline", "KnownValue.Powertrain.Gasoline.LegacyAscii", "tsi", "tfsi", "mpi", "gdi", "fsi", "ecoboost"))
         {
-            return "Benzín";
+            return PowertrainGasoline;
         }
 
         return string.Empty;
     }
 
-    private static bool ShouldRecommendClimateMaintenance(string category, VehicleMeta? meta)
+    private static string ResolvePowertrainKey(string? value)
     {
-        if (string.Equals(meta?.ClimateProfile, "Má klimatizaci", StringComparison.Ordinal))
+        if (MatchesLocalizedValue(value, "KnownValue.Powertrain.Gasoline", "KnownValue.Powertrain.Gasoline.LegacyAscii"))
+        {
+            return PowertrainGasoline;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Powertrain.Diesel"))
+        {
+            return PowertrainDiesel;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Powertrain.Hybrid"))
+        {
+            return PowertrainHybrid;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Powertrain.PluginHybrid"))
+        {
+            return PowertrainPlugInHybrid;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Powertrain.Electric"))
+        {
+            return PowertrainElectric;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Powertrain.LpgCng"))
+        {
+            return PowertrainLpgCng;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Powertrain.Other"))
+        {
+            return PowertrainOther;
+        }
+
+        return string.Empty;
+    }
+
+    private static bool ShouldRecommendClimateMaintenance(string categoryKey, VehicleMeta? meta)
+    {
+        if (ResolveClimateKey(meta?.ClimateProfile) == "has")
         {
             return true;
         }
 
-        if (string.Equals(meta?.ClimateProfile, "Bez klimatizace", StringComparison.Ordinal))
+        if (ResolveClimateKey(meta?.ClimateProfile) == "none")
         {
             return false;
         }
 
-        return category is "Osobní vozidla" or "Nákladní vozidla" or "Autobusy";
+        return categoryKey is CategoryPassengerVehicles or CategoryTrucks or CategoryBuses;
     }
 
-    private static bool ShouldRecommendTimingMaintenance(string powertrain, VehicleMeta? meta)
+    private static bool ShouldRecommendTimingMaintenance(string powertrainKey, VehicleMeta? meta)
     {
-        if (string.Equals(powertrain, "Elektro", StringComparison.Ordinal))
+        if (string.Equals(powertrainKey, PowertrainElectric, StringComparison.Ordinal))
         {
             return false;
         }
 
-        return meta?.TimingDrive switch
+        return ResolveTimingDriveKey(meta?.TimingDrive) switch
         {
-            "Řemen" => true,
-            "Řetěz" => false,
-            "Není relevantní" => false,
+            "belt" => true,
+            "chain" => false,
+            "not_relevant" => false,
             _ => true
         };
     }
 
-    private static bool ShouldRecommendTransmissionMaintenance(string powertrain, VehicleMeta? meta)
+    private static bool ShouldRecommendTransmissionMaintenance(string powertrainKey, VehicleMeta? meta)
     {
-        if (string.Equals(powertrain, "Elektro", StringComparison.Ordinal))
+        if (string.Equals(powertrainKey, PowertrainElectric, StringComparison.Ordinal))
         {
             return false;
         }
 
-        return meta?.Transmission switch
+        return ResolveTransmissionKey(meta?.Transmission) switch
         {
-            "Automatická" => true,
-            "Manuální" => false,
-            "Není relevantní" => false,
+            "automatic" => true,
+            "manual" => false,
+            "not_relevant" => false,
             _ => true
         };
     }
 
     private static bool IsRoadVehicleCategory(string? category) =>
-        !string.IsNullOrWhiteSpace(category) && !string.Equals(NormalizeCategory(category), "Ostatní", StringComparison.Ordinal);
+        !string.IsNullOrWhiteSpace(category) && ResolveCategoryKey(category) != CategoryOther;
 
     private static string NormalizeCategory(string? category)
     {
         var value = (category ?? string.Empty).Trim();
-        return string.IsNullOrWhiteSpace(value) ? "Ostatní" : value;
+        return string.IsNullOrWhiteSpace(value) ? CzechTemplateLocalizer.GetString("KnownValue.Category.Other") : value;
+    }
+
+    private static string ResolveCategoryKey(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return CategoryOther;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Category.PassengerVehicles", "KnownValue.Category.PassengerVehicles.LegacyShort"))
+        {
+            return CategoryPassengerVehicles;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Category.Motorcycles"))
+        {
+            return CategoryMotorcycles;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Category.Trucks", "KnownValue.Category.Trucks.LegacyShort"))
+        {
+            return CategoryTrucks;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Category.Buses"))
+        {
+            return CategoryBuses;
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Category.Other"))
+        {
+            return CategoryOther;
+        }
+
+        return value.Trim();
+    }
+
+    private static string ResolveClimateKey(string? value)
+    {
+        if (MatchesLocalizedValue(value, "KnownValue.Climate.HasAirConditioning"))
+        {
+            return "has";
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Climate.NoAirConditioning"))
+        {
+            return "none";
+        }
+
+        return string.Empty;
+    }
+
+    private static string ResolveTimingDriveKey(string? value)
+    {
+        if (MatchesLocalizedValue(value, "KnownValue.TimingDrive.Belt"))
+        {
+            return "belt";
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.TimingDrive.Chain"))
+        {
+            return "chain";
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Common.NotRelevant"))
+        {
+            return "not_relevant";
+        }
+
+        return string.Empty;
+    }
+
+    private static string ResolveTransmissionKey(string? value)
+    {
+        if (MatchesLocalizedValue(value, "KnownValue.Transmission.Manual"))
+        {
+            return "manual";
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Transmission.Automatic"))
+        {
+            return "automatic";
+        }
+
+        if (MatchesLocalizedValue(value, "KnownValue.Common.NotRelevant"))
+        {
+            return "not_relevant";
+        }
+
+        return string.Empty;
     }
 
     private static string NormalizeKey(string? value) =>
@@ -668,6 +808,36 @@ public sealed class VehicleStarterBundleService
 
         return $"{normalizedTitle}|{NormalizeKey(repeatMode)}";
     }
+
+    private static bool MatchesLocalizedValue(string? value, params string[] resourceKeys)
+    {
+        var normalizedValue = NormalizeKey(value);
+        if (string.IsNullOrWhiteSpace(normalizedValue))
+        {
+            return false;
+        }
+
+        return resourceKeys.Any(key =>
+            NormalizeKey(EnglishTemplateLocalizer.GetString(key)) == normalizedValue
+            || NormalizeKey(CzechTemplateLocalizer.GetString(key)) == normalizedValue);
+    }
+
+    private static bool ContainsAnyPowertrain(string haystack, params string[] valuesOrResourceKeys) =>
+        valuesOrResourceKeys.Any(valueOrResourceKey =>
+        {
+            if (valueOrResourceKey.StartsWith("KnownValue.", StringComparison.Ordinal))
+            {
+                return ContainsAny(
+                    haystack,
+                    EnglishTemplateLocalizer.GetString(valueOrResourceKey).ToLowerInvariant(),
+                    CzechTemplateLocalizer.GetString(valueOrResourceKey).ToLowerInvariant());
+            }
+
+            return haystack.Contains(valueOrResourceKey, StringComparison.OrdinalIgnoreCase);
+        });
+
+    private static string FormatUnknownProfileValue(string? value) =>
+        (value ?? string.Empty).Trim().ToLowerInvariant();
 
     private static bool ContainsAny(string haystack, params string[] values) =>
         values.Any(value => haystack.Contains(value, StringComparison.OrdinalIgnoreCase));

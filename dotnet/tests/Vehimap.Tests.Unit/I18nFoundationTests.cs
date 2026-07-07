@@ -1413,10 +1413,14 @@ public sealed class I18nFoundationTests
     {
         if (relativePath is
             "dotnet/src/Vehimap.Storage.Legacy/LegacyKnownValues.cs" or
-            "dotnet/src/Vehimap.Storage.Legacy/LegacyVehicleValueNormalization.cs" or
-            "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs")
+            "dotnet/src/Vehimap.Storage.Legacy/LegacyVehicleValueNormalization.cs")
         {
             return true;
+        }
+
+        if (relativePath is "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs")
+        {
+            return IsAllowedVehicleStarterBundleCatalogLine(line);
         }
 
         if (relativePath is "dotnet/src/Vehimap.Application/Services/AppCurrencyFormatService.cs")
@@ -1431,6 +1435,14 @@ public sealed class I18nFoundationTests
 
         return false;
     }
+
+    private static bool IsAllowedVehicleStarterBundleCatalogLine(string line) =>
+        line.StartsWith("Maintenance(", StringComparison.Ordinal)
+        || line.StartsWith("new(VehicleStarterBundleSection.Record,", StringComparison.Ordinal)
+        || line.StartsWith("[\"", StringComparison.Ordinal)
+        || line is "\"Připomínka\","
+        || line is "\"Každý rok\","
+        || line.Contains("=> localizer.GetString(\"VehicleStarterBundle.Catalog.", StringComparison.Ordinal);
 
     private static bool IsAllowedProductionUnitCurrencyLine(string relativePath, string line)
     {
