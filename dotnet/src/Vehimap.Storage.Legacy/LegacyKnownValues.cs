@@ -3,6 +3,11 @@ namespace Vehimap.Storage.Legacy;
 
 public static class LegacyKnownValues
 {
+    public const string CategoryPassengerVehicles = "Osobní vozidla";
+    public const string CategoryMotorcycles = "Motocykly";
+    public const string CategoryTrucks = "Nákladní vozidla";
+    public const string CategoryBuses = "Autobusy";
+    public const string CategoryOther = "Ostatní";
     public const string VehicleStateNormalOperation = "Běžný provoz";
     public const string VehicleStateOutOfService = "Odstaveno";
     public const string VehicleStateArchive = "Archiv";
@@ -13,11 +18,11 @@ public static class LegacyKnownValues
 
     public static readonly string[] Categories =
     [
-        "Osobní vozidla",
-        "Motocykly",
-        "Nákladní vozidla",
-        "Autobusy",
-        "Ostatní"
+        CategoryPassengerVehicles,
+        CategoryMotorcycles,
+        CategoryTrucks,
+        CategoryBuses,
+        CategoryOther
     ];
 
     public static readonly string[] RecordTypes =

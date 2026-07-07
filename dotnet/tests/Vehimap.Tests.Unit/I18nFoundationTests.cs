@@ -1466,8 +1466,7 @@ public sealed class I18nFoundationTests
     private static bool IsAllowedProductionCzechCompatibilityLine(string relativePath, string line)
     {
         if (relativePath is
-            "dotnet/src/Vehimap.Storage.Legacy/LegacyKnownValues.cs" or
-            "dotnet/src/Vehimap.Storage.Legacy/LegacyVehicleValueNormalization.cs")
+            "dotnet/src/Vehimap.Storage.Legacy/LegacyKnownValues.cs")
         {
             return true;
         }

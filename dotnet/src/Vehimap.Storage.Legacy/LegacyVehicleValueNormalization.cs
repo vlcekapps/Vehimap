@@ -5,6 +5,9 @@ namespace Vehimap.Storage.Legacy;
 
 public static partial class LegacyVehicleValueNormalization
 {
+    private const string ShortCategoryPassengerVehicles = "Osobn\u00ED";
+    private const string ShortCategoryTrucks = "N\u00E1kladn\u00ED";
+
     private static readonly string[] EventDateFormats =
     [
         "dd.MM.yyyy",
@@ -20,14 +23,14 @@ public static partial class LegacyVehicleValueNormalization
     public static string NormalizeCategory(string? category)
     {
         var value = (category ?? string.Empty).Trim();
-        if (string.Equals(value, "Osobní", StringComparison.Ordinal))
+        if (string.Equals(value, ShortCategoryPassengerVehicles, StringComparison.Ordinal))
         {
-            return "Osobní vozidla";
+            return LegacyKnownValues.CategoryPassengerVehicles;
         }
 
-        if (string.Equals(value, "Nákladní", StringComparison.Ordinal))
+        if (string.Equals(value, ShortCategoryTrucks, StringComparison.Ordinal))
         {
-            return "Nákladní vozidla";
+            return LegacyKnownValues.CategoryTrucks;
         }
 
         foreach (var allowed in LegacyKnownValues.Categories)
@@ -38,7 +41,7 @@ public static partial class LegacyVehicleValueNormalization
             }
         }
 
-        return "Ostatní";
+        return LegacyKnownValues.CategoryOther;
     }
 
     public static string NormalizeRecordType(string? recordType)
@@ -105,35 +108,35 @@ public static partial class LegacyVehicleValueNormalization
             .ToLowerInvariant()
             .Replace("\u00A0", string.Empty, StringComparison.Ordinal)
             .Replace(" ", string.Empty, StringComparison.Ordinal)
-            .Replace("á", "a", StringComparison.Ordinal)
-            .Replace("č", "c", StringComparison.Ordinal)
-            .Replace("ď", "d", StringComparison.Ordinal)
-            .Replace("é", "e", StringComparison.Ordinal)
-            .Replace("ě", "e", StringComparison.Ordinal)
-            .Replace("í", "i", StringComparison.Ordinal)
-            .Replace("ň", "n", StringComparison.Ordinal)
-            .Replace("ó", "o", StringComparison.Ordinal)
-            .Replace("ř", "r", StringComparison.Ordinal)
-            .Replace("š", "s", StringComparison.Ordinal)
-            .Replace("ť", "t", StringComparison.Ordinal)
-            .Replace("ú", "u", StringComparison.Ordinal)
-            .Replace("ů", "u", StringComparison.Ordinal)
-            .Replace("ý", "y", StringComparison.Ordinal)
-            .Replace("ž", "z", StringComparison.Ordinal);
+            .Replace("\u00E1", "a", StringComparison.Ordinal)
+            .Replace("\u010D", "c", StringComparison.Ordinal)
+            .Replace("\u010F", "d", StringComparison.Ordinal)
+            .Replace("\u00E9", "e", StringComparison.Ordinal)
+            .Replace("\u011B", "e", StringComparison.Ordinal)
+            .Replace("\u00ED", "i", StringComparison.Ordinal)
+            .Replace("\u0148", "n", StringComparison.Ordinal)
+            .Replace("\u00F3", "o", StringComparison.Ordinal)
+            .Replace("\u0159", "r", StringComparison.Ordinal)
+            .Replace("\u0161", "s", StringComparison.Ordinal)
+            .Replace("\u0165", "t", StringComparison.Ordinal)
+            .Replace("\u00FA", "u", StringComparison.Ordinal)
+            .Replace("\u016F", "u", StringComparison.Ordinal)
+            .Replace("\u00FD", "y", StringComparison.Ordinal)
+            .Replace("\u017E", "z", StringComparison.Ordinal);
 
         if (folded.Contains("5"))
         {
-            return "Každých 5 let";
+            return LegacyKnownValues.ReminderRepeatEveryFiveYears;
         }
 
         if (folded.Contains('2'))
         {
-            return "Každé 2 roky";
+            return LegacyKnownValues.ReminderRepeatEveryTwoYears;
         }
 
         if (folded.Contains("rok", StringComparison.Ordinal) || folded.Contains("rocne", StringComparison.Ordinal))
         {
-            return "Každý rok";
+            return LegacyKnownValues.ReminderRepeatYearly;
         }
 
         return LegacyKnownValues.ReminderRepeatModes[0];
