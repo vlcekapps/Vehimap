@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Application.Services;
+
 namespace Vehimap.Application.Models;
 
 public sealed record AppLocaleDefaults(
@@ -7,4 +9,4 @@ public sealed record AppLocaleDefaults(
     string DecimalSeparator,
     string DistanceUnit,
     string VolumeUnit,
-    string Currency = "CZK");
+    string Currency = AppCurrencyFormatService.DefaultCurrency);

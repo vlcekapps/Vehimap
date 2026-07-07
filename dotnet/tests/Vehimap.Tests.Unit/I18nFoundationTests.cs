@@ -286,6 +286,19 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Currency_format_service_uses_explicit_default_and_named_symbols()
+    {
+        Assert.Equal(AppCurrencyFormatService.CzechCrowns, AppCurrencyFormatService.DefaultCurrency);
+        Assert.Equal(AppCurrencyFormatService.CzechCrowns, AppCurrencyFormatService.NormalizeCurrency(null));
+        Assert.Equal(AppCurrencyFormatService.CzechCrowns, AppCurrencyFormatService.NormalizeCurrency("cad"));
+        Assert.Equal(AppCurrencyFormatService.UsDollars, AppCurrencyFormatService.NormalizeCurrency(" usd "));
+        Assert.Equal("Kč", AppCurrencyFormatService.GetCurrencySymbol(AppCurrencyFormatService.CzechCrowns));
+        Assert.Equal("$", AppCurrencyFormatService.GetCurrencySymbol(AppCurrencyFormatService.UsDollars));
+        Assert.Equal("€", AppCurrencyFormatService.GetCurrencySymbol(AppCurrencyFormatService.Euros));
+        Assert.Equal("£", AppCurrencyFormatService.GetCurrencySymbol(AppCurrencyFormatService.BritishPounds));
+    }
+
+    [Fact]
     public void Unit_format_service_keeps_storage_in_metric_and_formats_display_units()
     {
         var service = new AppUnitFormatService();
@@ -1474,11 +1487,6 @@ public sealed class I18nFoundationTests
         if (relativePath is "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs")
         {
             return IsAllowedVehicleStarterBundleCatalogLine(line);
-        }
-
-        if (relativePath is "dotnet/src/Vehimap.Application/Services/AppCurrencyFormatService.cs")
-        {
-            return line.Contains("\"Kč\"", StringComparison.Ordinal);
         }
 
         if (relativePath is "dotnet/src/Vehimap.Application/Services/VehimapValueParser.cs")

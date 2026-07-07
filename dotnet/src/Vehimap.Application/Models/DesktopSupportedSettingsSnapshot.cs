@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Application.Services;
+
 namespace Vehimap.Application.Models;
 
 public sealed record DesktopSupportedSettingsSnapshot(
@@ -17,4 +19,4 @@ public sealed record DesktopSupportedSettingsSnapshot(
     string DecimalSeparator = "culture",
     string DistanceUnit = "km",
     string VolumeUnit = "l",
-    string Currency = "CZK");
+    string Currency = AppCurrencyFormatService.DefaultCurrency);
