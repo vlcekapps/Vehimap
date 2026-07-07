@@ -24,9 +24,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
-    private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
-    private AppUnitPreferences _unitPreferences = new(AppUnitFormatService.Kilometers, AppUnitFormatService.Liters);
-    private string _currency = AppCurrencyFormatService.CzechCrowns;
+    private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
+    private AppUnitPreferences _unitPreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToUnitPreferences();
+    private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
 
     public LegacyGlobalSearchService(IFileAttachmentService attachmentService)
         : this(attachmentService, new LegacyTimelineService(), null)

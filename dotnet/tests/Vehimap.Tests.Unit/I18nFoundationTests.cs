@@ -1508,6 +1508,40 @@ public sealed class I18nFoundationTests
             string.Join(Environment.NewLine, failures));
     }
 
+    [Fact]
+    public void Runtime_services_do_not_default_unit_and_currency_formatting_to_czech()
+    {
+        var root = FindRepositoryRoot();
+        var sourceRoot = Path.Combine(root, "dotnet", "src");
+        var forbiddenPatterns = new Regex(
+            @"new\s+AppCulturePreferences\(\s*AppCultureService\.CzechLanguage|new\s+AppUnitPreferences\(\s*AppUnitFormatService\.Kilometers\s*,\s*AppUnitFormatService\.Liters\s*\)|=\s*AppCurrencyFormatService\.CzechCrowns",
+            RegexOptions.Compiled);
+        var failures = new List<string>();
+
+        foreach (var file in Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                     .Where(path => !path.EndsWith(Path.Combine("Services", "AppLocaleDefaultsService.cs"), StringComparison.OrdinalIgnoreCase)))
+        {
+            var relativePath = Path.GetRelativePath(root, file).Replace('\\', '/');
+            var lineNumber = 0;
+            foreach (var line in File.ReadLines(file))
+            {
+                lineNumber++;
+                if (forbiddenPatterns.IsMatch(line))
+                {
+                    failures.Add($"{relativePath}:{lineNumber}: {line.Trim()}");
+                }
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Runtime services must derive fallback formatting from AppLocaleDefaultsService.GetCurrentCultureDefaults(), not from hardcoded Czech km/l/CZK defaults. Offending lines:" +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
     private static SortedSet<string> ReadResourceKeys(string path)
     {
         var document = XDocument.Load(path);

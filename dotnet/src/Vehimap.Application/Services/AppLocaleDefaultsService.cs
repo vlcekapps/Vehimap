@@ -5,6 +5,9 @@ namespace Vehimap.Application.Services;
 
 public sealed class AppLocaleDefaultsService
 {
+    public static AppLocaleDefaults GetCurrentCultureDefaults() =>
+        new AppLocaleDefaultsService().GetDefaultsForLanguage(AppCultureService.SystemLanguage);
+
     public AppLocaleDefaults GetDefaultsForLanguage(string? language)
     {
         var normalized = AppCultureService.NormalizeLanguage(language);

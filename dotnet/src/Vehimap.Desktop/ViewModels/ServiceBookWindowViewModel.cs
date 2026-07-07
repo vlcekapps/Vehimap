@@ -38,7 +38,7 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
         _exportHtml = exportHtml;
         _localizer = localizer ?? new ResourceAppLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
-        var settings = supportedSettings ?? new DesktopSupportedSettingsSnapshot(30, 30, 31, 1000, false, false, false, false, 1, 30);
+        var settings = supportedSettings ?? CreateDefaultSettingsSnapshot();
         _culturePreferences = new AppCulturePreferences(settings.Language, settings.ThousandsSeparator, settings.DecimalSeparator);
         _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
         WindowTitle = LF("ServiceBook.Window.TitleWithVehicle", summary.VehicleName);
@@ -211,6 +211,28 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
 
     private string FormatMoney(decimal value) =>
         _numberFormatService.FormatMoney(value, _culturePreferences, _currency);
+
+    private static DesktopSupportedSettingsSnapshot CreateDefaultSettingsSnapshot()
+    {
+        var defaults = AppLocaleDefaultsService.GetCurrentCultureDefaults();
+        return new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            defaults.Language,
+            defaults.ThousandsSeparator,
+            defaults.DecimalSeparator,
+            defaults.DistanceUnit,
+            defaults.VolumeUnit,
+            defaults.Currency);
+    }
 
     private string L(string key) => _localizer.GetString(key);
 

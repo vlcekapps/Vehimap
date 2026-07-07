@@ -9,4 +9,11 @@ public sealed record AppLocaleDefaults(
     string DecimalSeparator,
     string DistanceUnit,
     string VolumeUnit,
-    string Currency = AppCurrencyFormatService.DefaultCurrency);
+    string Currency = AppCurrencyFormatService.DefaultCurrency)
+{
+    public AppCulturePreferences ToCulturePreferences() =>
+        new(Language, ThousandsSeparator, DecimalSeparator);
+
+    public AppUnitPreferences ToUnitPreferences() =>
+        new(DistanceUnit, VolumeUnit);
+}

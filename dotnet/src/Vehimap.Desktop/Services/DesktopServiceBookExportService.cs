@@ -13,8 +13,8 @@ internal sealed class DesktopServiceBookExportService
 {
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
-    private AppCulturePreferences _culturePreferences = new(AppCultureService.CzechLanguage, AppCultureService.NoSeparator, AppCultureService.CommaSeparator);
-    private string _currency = AppCurrencyFormatService.CzechCrowns;
+    private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
+    private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
 
     public DesktopServiceBookExportService(IAppLocalizer? localizer = null, IAppNumberFormatService? numberFormatService = null)
     {
