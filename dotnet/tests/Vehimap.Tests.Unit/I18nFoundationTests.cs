@@ -1548,6 +1548,23 @@ public sealed class I18nFoundationTests
             string.Join(Environment.NewLine, failures));
     }
 
+    [Fact]
+    public void Preference_persistence_statuses_do_not_append_raw_exception_messages()
+    {
+        var root = FindRepositoryRoot();
+        var preferencePersistence = File.ReadAllText(Path.Combine(
+            root,
+            "dotnet",
+            "src",
+            "Vehimap.Desktop",
+            "ViewModels",
+            "MainWindowViewModel.PreferencePersistence.cs"));
+
+        Assert.Contains("ShellStatus = failurePrefix;", preferencePersistence);
+        Assert.DoesNotContain("ex.Message", preferencePersistence);
+        Assert.DoesNotContain("\": {ex.Message}\"", preferencePersistence);
+    }
+
     private static SortedSet<string> ReadResourceKeys(string path)
     {
         var document = XDocument.Load(path);

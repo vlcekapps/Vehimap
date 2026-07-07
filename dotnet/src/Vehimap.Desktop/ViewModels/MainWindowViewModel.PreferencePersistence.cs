@@ -45,7 +45,7 @@ public sealed partial class MainWindowViewModel
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 _session.RestoreDataSet(rollbackDataSet);
-                ShellStatus = $"{failurePrefix}: {ex.Message}";
+                ShellStatus = failurePrefix;
             }
         }
         finally

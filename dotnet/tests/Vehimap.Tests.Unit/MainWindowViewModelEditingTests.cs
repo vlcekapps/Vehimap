@@ -180,6 +180,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         Assert.Equal(changedCategory, viewModel.SelectedVehicleCategoryFilter.Value);
         Assert.Contains("Nepodařilo se uložit filtry seznamu vozidel", viewModel.ShellStatus);
+        Assert.DoesNotContain("settings.ini", viewModel.ShellStatus, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("nelze zapsat", viewModel.ShellStatus, StringComparison.OrdinalIgnoreCase);
 
         dataStore.SaveException = null;
         viewModel.CreateHistoryCommand.Execute(null);
