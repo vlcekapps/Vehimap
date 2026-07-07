@@ -982,6 +982,8 @@ public sealed class I18nFoundationTests
         Assert.Contains("Timeline.Value.ServiceTask", service);
         Assert.Contains("FormatDistanceFromKilometers", service);
         Assert.Contains("FormatVolumeFromLiters", service);
+        Assert.Contains("FormatFuelVolume", service);
+        Assert.DoesNotContain("FormatFuelLiters", service);
         Assert.DoesNotContain("Timeline.Value.OdometerKm", service);
         Assert.DoesNotContain("Timeline.Value.Liters", service);
         Assert.DoesNotContain("Timeline.Status.OverDistanceLimitKm", service);
@@ -1022,6 +1024,8 @@ public sealed class I18nFoundationTests
         Assert.Contains("GlobalSearch.Value.Money", service);
         Assert.Contains("GlobalSearch.Attachment.Managed", service);
         Assert.Contains("FormatDistanceFromKilometers", service);
+        Assert.Contains("FormatFuelVolume", service);
+        Assert.DoesNotContain("FormatFuelLiters", service);
         Assert.DoesNotContain("GlobalSearch.Value.OdometerKm", service);
         Assert.DoesNotContain("GlobalSearch.Value.Liters", service);
         Assert.Contains("GlobalSearch.Summary.WithResults", mainWindowViewModel);

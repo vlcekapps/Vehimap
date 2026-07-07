@@ -89,7 +89,7 @@ public sealed class LegacyTimelineService : ITimelineService
                 date,
                 FormatEventDate(date),
                 L("Timeline.Title.Fuel"),
-                JoinParts(FormatOdometerText(entry.Odometer), FormatFuelLiters(entry.Liters), FormatFuelType(entry.FuelType), entry.FuelDetail, entry.Station, entry.Note),
+                JoinParts(FormatOdometerText(entry.Odometer), FormatFuelVolume(entry.Liters), FormatFuelType(entry.FuelType), entry.FuelDetail, entry.Station, entry.Note),
                 FormatCostStatus(entry.TotalCost),
                 entry.Id,
                 entry.Note,
@@ -453,7 +453,7 @@ public sealed class LegacyTimelineService : ITimelineService
         return string.IsNullOrWhiteSpace(value) ? L("Timeline.Value.NoCost") : value;
     }
 
-    private string FormatFuelLiters(string? liters)
+    private string FormatFuelVolume(string? liters)
     {
         if (string.IsNullOrWhiteSpace(liters))
         {

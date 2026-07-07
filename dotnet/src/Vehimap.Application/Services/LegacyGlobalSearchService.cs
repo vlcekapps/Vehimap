@@ -162,7 +162,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var summary = JoinParts(
                 ValueOrFallback(entry.EntryDate, L("Common.NoDate")),
                 ValueOrFallback(FormatFuelType(entry.FuelType), L("GlobalSearch.Value.NoFuelType")),
-                FormatFuelLiters(entry.Liters),
+                FormatFuelVolume(entry.Liters),
                 FormatOdometer(entry.Odometer),
                 FormatMoneyValue(entry.TotalCost),
                 entry.FullTank ? L("GlobalSearch.Value.FullTank") : string.Empty,
@@ -534,7 +534,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             ? LF("GlobalSearch.Value.Money", _numberFormatService.FormatMoney(parsed, _culturePreferences, _currency))
             : ValueOrFallback(value, string.Empty);
 
-    private string FormatFuelLiters(string? value)
+    private string FormatFuelVolume(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
