@@ -36,7 +36,7 @@ public sealed partial class ServiceBookWindowViewModel : ObservableObject
         Summary = summary;
         _openItem = openItem;
         _exportHtml = exportHtml;
-        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         var settings = supportedSettings ?? new DesktopSupportedSettingsSnapshot(30, 30, 31, 1000, false, false, false, false, 1, 30);
         _culturePreferences = new AppCulturePreferences(settings.Language, settings.ThousandsSeparator, settings.DecimalSeparator);

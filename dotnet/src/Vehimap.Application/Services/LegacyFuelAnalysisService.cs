@@ -20,7 +20,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
     private AppUnitPreferences _unitPreferences = new(AppUnitFormatService.Kilometers, AppUnitFormatService.Liters);
 
     public LegacyFuelAnalysisService()
-        : this(new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)))
+        : this(new ResourceAppLocalizer())
     {
     }
 

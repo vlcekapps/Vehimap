@@ -23,8 +23,8 @@ internal sealed class DesktopProjectionService
 
     public DesktopProjectionService()
         : this(
-            new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)),
-            CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage))
+            new ResourceAppLocalizer(),
+            CultureInfo.CurrentCulture)
     {
     }
 

@@ -21,7 +21,7 @@ public sealed class LegacyAuditService : IAuditService
     public LegacyAuditService(IFileAttachmentService attachmentService, IAppLocalizer? localizer = null)
     {
         _attachmentService = attachmentService;
-        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public IReadOnlyList<AuditItem> BuildAudit(VehimapDataRoot dataRoot, VehimapDataSet dataSet)

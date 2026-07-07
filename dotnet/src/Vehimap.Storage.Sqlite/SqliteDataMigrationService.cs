@@ -29,7 +29,7 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
     {
         _legacyDataStore = legacyDataStore;
         _targetDataStore = targetDataStore;
-        _localizer = localizer ?? new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public async Task<DataMigrationResult> MigrateIfNeededAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)

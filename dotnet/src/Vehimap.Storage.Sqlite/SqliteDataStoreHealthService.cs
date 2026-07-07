@@ -37,7 +37,7 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
 
     public SqliteDataStoreHealthService(IAppLocalizer? localizer = null)
     {
-        _localizer = localizer ?? new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public async Task<DataStoreHealthReport> CheckAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)

@@ -33,7 +33,7 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
     {
         _timelineService = timelineService;
         _fuelAnalysisService = fuelAnalysisService;
-        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public SmartAdvisorSummary BuildSmartAdvisor(

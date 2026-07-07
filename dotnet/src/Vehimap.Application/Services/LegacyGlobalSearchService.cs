@@ -639,7 +639,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         LegacyKnownValueDisplayService.FormatReminderRepeatMode(value, _localizer);
 
     private static IAppLocalizer CreateDefaultLocalizer() =>
-        new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        new ResourceAppLocalizer();
 
     private string L(string key) => _localizer.GetString(key);
 

@@ -21,7 +21,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
         IAppNumberFormatService? numberFormatService = null,
         IAppUnitFormatService? unitFormatService = null)
     {
-        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
     }

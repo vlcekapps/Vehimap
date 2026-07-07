@@ -1475,6 +1475,39 @@ public sealed class I18nFoundationTests
             string.Join(Environment.NewLine, failures));
     }
 
+    [Fact]
+    public void Runtime_services_do_not_default_user_visible_localization_to_czech()
+    {
+        var root = FindRepositoryRoot();
+        var sourceRoot = Path.Combine(root, "dotnet", "src");
+        var fallbackRegex = new Regex(
+            @"(?:localizer\s*\?\?\s*new\s+ResourceAppLocalizer\(\s*CultureInfo\.GetCultureInfo\(AppCultureService\.CzechLanguage\)\s*\)|:\s*this\(\s*new\s+ResourceAppLocalizer\(\s*CultureInfo\.GetCultureInfo\(AppCultureService\.CzechLanguage\)\s*\)\s*\)|=>\s*new\s+ResourceAppLocalizer\(\s*CultureInfo\.GetCultureInfo\(AppCultureService\.CzechLanguage\)\s*\))",
+            RegexOptions.Compiled);
+        var failures = new List<string>();
+
+        foreach (var file in Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase)))
+        {
+            var relativePath = Path.GetRelativePath(root, file).Replace('\\', '/');
+            var lineNumber = 0;
+            foreach (var line in File.ReadLines(file))
+            {
+                lineNumber++;
+                if (fallbackRegex.IsMatch(line))
+                {
+                    failures.Add($"{relativePath}:{lineNumber}: {line.Trim()}");
+                }
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Runtime services must default to CurrentUICulture via ResourceAppLocalizer(), not to Czech. Explicit Czech localizers are allowed only for compatibility alias generation or bilingual template catalogs. Offending lines:" +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
     private static SortedSet<string> ReadResourceKeys(string path)
     {
         var document = XDocument.Load(path);

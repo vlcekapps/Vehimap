@@ -129,7 +129,7 @@ public sealed class VehicleStarterBundleService
     private readonly IAppLocalizer _localizer;
 
     public VehicleStarterBundleService()
-        : this(new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)))
+        : this(new ResourceAppLocalizer())
     {
     }
 

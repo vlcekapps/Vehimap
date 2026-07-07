@@ -511,7 +511,7 @@ public sealed class LegacyTimelineService : ITimelineService
         unitFormatService.FormatDistanceFromKilometers(kilometers, culturePreferences, unitPreferences, decimalPlaces: 0);
 
     private static IAppLocalizer CreateDefaultLocalizer() =>
-        new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        new ResourceAppLocalizer();
 
     private string L(string key) => _localizer.GetString(key);
 

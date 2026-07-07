@@ -18,7 +18,7 @@ internal sealed class DesktopServiceBookExportService
 
     public DesktopServiceBookExportService(IAppLocalizer? localizer = null, IAppNumberFormatService? numberFormatService = null)
     {
-        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
     }
 

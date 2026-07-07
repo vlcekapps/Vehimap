@@ -16,7 +16,7 @@ internal sealed class DesktopPrintableVehicleReportService
 
     public DesktopPrintableVehicleReportService(IAppLocalizer? localizer = null)
     {
-        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public string BuildFileName(DateTime generatedAt) =>

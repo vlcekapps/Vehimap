@@ -23,7 +23,7 @@ public sealed class LegacyCalendarExportService : ICalendarExportService
     public LegacyCalendarExportService(ITimelineService timelineService, IAppLocalizer? localizer = null)
     {
         _timelineService = timelineService;
-        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public CalendarExportResult BuildUpcomingCalendar(VehimapDataSet dataSet, DateOnly today, DateTimeOffset generatedAtUtc)

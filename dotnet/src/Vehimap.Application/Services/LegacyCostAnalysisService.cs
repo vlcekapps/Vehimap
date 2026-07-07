@@ -11,7 +11,7 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
 
     public LegacyCostAnalysisService(IAppLocalizer? localizer = null)
     {
-        _localizer = localizer ?? new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        _localizer = localizer ?? new ResourceAppLocalizer();
     }
 
     public CostAnalysisSummary BuildYearToDateSummary(VehimapDataSet dataSet, DateOnly today)
