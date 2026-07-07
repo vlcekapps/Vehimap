@@ -243,7 +243,16 @@ public sealed class LegacySmartAdvisorServiceTests
             Vehicles =
             {
                 CreateVehicle("veh_1", "Milena", nextTk: "05/2026"),
-                CreateVehicle("veh_2", "Karosa", nextTk: "06/2026")
+                CreateVehicle("veh_2", "Karosa", nextTk: "06/2026"),
+                CreateVehicle("veh_3", "Božena")
+            },
+            HistoryEntries =
+            {
+                new VehicleHistoryEntry("hist_1", "veh_3", "01.06.2026", "Service", "12000", "", "")
+            },
+            MaintenancePlans =
+            {
+                new MaintenancePlan("mnt_1", "veh_3", "Oil service", "1000", "12", "01.06.2026", "10000", true, "")
             }
         };
 
@@ -259,6 +268,10 @@ public sealed class LegacySmartAdvisorServiceTests
             item.VehicleId == "veh_2"
             && item.Priority == SmartAdvisorPriority.Warning
             && item.Summary.Contains("In ", StringComparison.Ordinal));
+        Assert.Contains(summary.Items, item =>
+            item.VehicleId == "veh_3"
+            && item.Priority == SmartAdvisorPriority.Warning
+            && item.Summary.Contains("Over distance limit", StringComparison.Ordinal));
     }
 
     private static LegacySmartAdvisorService CreateService() =>

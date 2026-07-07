@@ -21,16 +21,6 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
     private const string CategoryCostsCs = "N\u00E1klady";
     private const string CategoryTechnicalInspectionCs = "Technick\u00E1 kontrola";
     private const string CategoryGreenCardCs = "Zelen\u00E1 karta";
-    private const string TimelineStatusOverdue = "Po term\u00EDnu";
-    private const string TimelineStatusToday = "Dnes";
-    private const string TimelineStatusWithin = "Do ";
-    private const string TimelineStatusOverLimit = "Po limitu";
-    private const string TimelineStatusMissing = "Chyb\u00ED";
-    private const string TimelineStatusOverdueEn = "Overdue";
-    private const string TimelineStatusTodayEn = "Due today";
-    private const string TimelineStatusWithinEn = "In ";
-    private const string TimelineStatusOverLimitEn = "Over distance limit";
-    private const string TimelineStatusMissingEn = "missing";
 
     private readonly ITimelineService _timelineService;
     private readonly IFuelAnalysisService _fuelAnalysisService;
@@ -239,23 +229,21 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
     private static bool IsAdvisorTimelineKind(string kind) =>
         kind is "technical" or "green" or "custom" or "maintenance" or "record";
 
-    private static SmartAdvisorPriority BuildTimelinePriority(string status)
+    private SmartAdvisorPriority BuildTimelinePriority(string status)
     {
-        if (ContainsAny(status, TimelineStatusOverdue, TimelineStatusOverdueEn))
+        if (ContainsLocalizedStatus(status, "Timeline.Status.Overdue"))
         {
             return SmartAdvisorPriority.Critical;
         }
 
-        if (ContainsAny(
+        if (ContainsLocalizedStatus(
             status,
-            TimelineStatusToday,
-            TimelineStatusWithin,
-            TimelineStatusOverLimit,
-            TimelineStatusMissing,
-            TimelineStatusTodayEn,
-            TimelineStatusWithinEn,
-            TimelineStatusOverLimitEn,
-            TimelineStatusMissingEn))
+            "Timeline.Status.Today",
+            "Timeline.Status.DaysLeft",
+            "Timeline.Status.WithinDistance",
+            "Timeline.Status.OverDistanceLimit",
+            "Timeline.Status.MissingCurrentOdometer",
+            "Timeline.Status.MissingOdometerForCalculation"))
         {
             return SmartAdvisorPriority.Warning;
         }
@@ -346,6 +334,28 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
         }
 
         return false;
+    }
+
+    private bool ContainsLocalizedStatus(string value, params string[] resourceKeys)
+    {
+        foreach (var resourceKey in resourceKeys)
+        {
+            var needle = GetLocalizedStatusNeedle(resourceKey);
+            if (!string.IsNullOrWhiteSpace(needle)
+                && value.Contains(needle, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private string GetLocalizedStatusNeedle(string resourceKey)
+    {
+        var value = L(resourceKey);
+        var placeholderIndex = value.IndexOf("{0}", StringComparison.Ordinal);
+        return placeholderIndex >= 0 ? value[..placeholderIndex] : value;
     }
 
     private string L(string key) => _localizer.GetString(key);

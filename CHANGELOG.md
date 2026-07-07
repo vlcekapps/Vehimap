@@ -64,6 +64,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Automaticky generované připomínky ze startovacího balíčku už nepoužívají volné české literály `Připomínka` a `Každý rok`; zůstávají jako pojmenované legacy tokeny a hardcoded-Czech allowlist pro `VehicleStarterBundleService.cs` je tím užší.
 - Měnový formatter má explicitní `DefaultCurrency`, pojmenované symboly a testovaný fallback pro neznámé měny; `AppCurrencyFormatService.cs` už nepotřebuje zvláštní hardcoded-Czech výjimku kvůli symbolu koruny.
 - Parser částek dál podporuje běžné vstupy s `Kč` a `CZK`, ale český marker koruny je pojmenovaný kompatibilní token; `VehimapValueParser.cs` už není v hardcoded-Czech allowlistu.
+- Chytrý poradce už nerozpoznává timeline stavy přes vlastní české/anglické texty typu `Po limitu` nebo `Over distance limit`; používá stejné EN/CS resource hodnoty jako timeline služba a test pokrývá i údržbu po limitu tachometru.
 - GitHub Actions UI smoke už neinstaluje WinAppDriver přes anonymní GitHub API volání z Appium driveru; workflow stahuje známý MSI asset přímo, ověřuje SHA-256 a instaluje jej přes `msiexec`, aby veřejné nightly nespadlo na rate limitu runneru.
 - Appium UI smoke znovu nechává izolovanou desktopovou aplikaci spustit WinAppDriverem, doplňuje jí pracovní adresář izolované kopie a při křehkém selhání přímého attachi dohledá otevřené okno přes Appium `Root` UI Automation session podle názvu `Vehimap`; tím se omezuje flaky selhání hosted runneru při hledání čerstvě otevřeného okna podle processId.
 
