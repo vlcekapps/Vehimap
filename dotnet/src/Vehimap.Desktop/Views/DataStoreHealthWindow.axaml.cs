@@ -70,9 +70,9 @@ public partial class DataStoreHealthWindow : Window
             await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
             model.StatusMessage = DesktopLocalization.Localizer.GetString("DataStoreHealth.CopySuccessStatus");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            model.StatusMessage = DesktopLocalization.Localizer.Format("DataStoreHealth.CopyFailedStatus", ex.Message);
+            model.StatusMessage = DesktopLocalization.Localizer.GetString("DataStoreHealth.CopyFailedStatus");
         }
     }
 }

@@ -32,7 +32,7 @@
   <data name="About.HelpText" xml:space="preserve"><value>Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+K otevře poděkování autorovi, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.</value></data>
   <data name="About.Status.Basic" xml:space="preserve"><value>Základní informace o aplikaci jsou zobrazené. Diagnostická data lze zobrazit nebo zkopírovat pro podporu.</value></data>
   <data name="About.Status.DiagnosticsCopied" xml:space="preserve"><value>Diagnostická data byla zkopírována do schránky.</value></data>
-  <data name="About.Status.DiagnosticsCopyFailed" xml:space="preserve"><value>Diagnostická data se nepodařilo zkopírovat: {0}</value></data>
+  <data name="About.Status.DiagnosticsCopyFailed" xml:space="preserve"><value>Diagnostická data se nepodařilo zkopírovat.</value></data>
   <data name="About.Status.DiagnosticsHidden" xml:space="preserve"><value>Diagnostická data jsou skrytá. Běžný pohled obsahuje jen základní informace.</value></data>
   <data name="About.Status.DiagnosticsVisible" xml:space="preserve"><value>Diagnostická data jsou zobrazená. Lze je zkopírovat pro podporu.</value></data>
   <data name="About.Toggle.HideDiagnostics" xml:space="preserve"><value>Skrýt diagnostická data</value></data>
@@ -63,7 +63,7 @@
   <data name="DataStoreHealth.CloseName" xml:space="preserve"><value>Zavřít kontrolu datové sady 2.0</value></data>
   <data name="DataStoreHealth.CopyDiagnostics" xml:space="preserve"><value>Kopírovat diagnostiku</value></data>
   <data name="DataStoreHealth.CopyDiagnosticsName" xml:space="preserve"><value>Kopírovat diagnostiku datové sady 2.0 do schránky</value></data>
-  <data name="DataStoreHealth.CopyFailedStatus" xml:space="preserve"><value>Diagnostiku datové sady se nepodařilo zkopírovat: {0}</value></data>
+  <data name="DataStoreHealth.CopyFailedStatus" xml:space="preserve"><value>Diagnostiku datové sady se nepodařilo zkopírovat.</value></data>
   <data name="DataStoreHealth.CopySuccessStatus" xml:space="preserve"><value>Diagnostika datové sady byla zkopírována do schránky.</value></data>
   <data name="DataStoreHealth.DetailsName" xml:space="preserve"><value>Detaily kontroly datové sady 2.0</value></data>
   <data name="DataStoreHealth.Diagnostics.DatabasePath" xml:space="preserve"><value>Databáze: {0}</value></data>
@@ -1057,7 +1057,7 @@ Vozidlo: {2}
   <data name="UpdateCheck.Primary.DownloadAsset" xml:space="preserve"><value>Stáhnout asset</value></data>
   <data name="UpdateCheck.Primary.Install" xml:space="preserve"><value>Stáhnout a nainstalovat</value></data>
   <data name="UpdateCheck.Primary.OpenRelease" xml:space="preserve"><value>Otevřít release stránku</value></data>
-  <data name="UpdateCheck.Status.CopyFailed" xml:space="preserve"><value>Detaily kontroly aktualizací se nepodařilo zkopírovat: {0}</value></data>
+  <data name="UpdateCheck.Status.CopyFailed" xml:space="preserve"><value>Detaily kontroly aktualizací se nepodařilo zkopírovat.</value></data>
   <data name="UpdateCheck.Status.DetailsCopied" xml:space="preserve"><value>Detaily kontroly aktualizací byly zkopírovány do schránky.</value></data>
   <data name="UpdateCheck.Status.ReadyToCopy" xml:space="preserve"><value>Detaily kontroly jsou připravené ke zkopírování.</value></data>
   <data name="UpdateCheck.Title" xml:space="preserve"><value>Kontrola aktualizací</value></data>

@@ -830,6 +830,8 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc DataStoreHealth.HelpText}\"", dataStoreHealthWindow);
         Assert.Contains("Content=\"{i18n:Loc DataStoreHealth.CopyDiagnostics}\"", dataStoreHealthWindow);
         Assert.Contains("Content=\"{i18n:Loc Common.Close}\"", dataStoreHealthWindow);
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"DataStoreHealth.CopyFailedStatus\")", dataStoreHealthCodeBehind);
+        Assert.DoesNotContain("DataStoreHealth.CopyFailedStatus\", ex.Message", dataStoreHealthCodeBehind);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), dataStoreHealthWindow);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), dataStoreHealthViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), dataStoreHealthCodeBehind);
@@ -905,6 +907,8 @@ public sealed class I18nFoundationTests
         Assert.Contains("_localizer.Format(\"MaintenanceCompletion.CompletedOdometerLabel\"", maintenanceCompletionViewModel);
         Assert.Contains("_localizer.GetString(\"MaintenanceCompletion.Validation.CompletedDate\")", maintenanceCompletionViewModel);
         Assert.Contains("DesktopLocalization.Localizer.GetString(\"About.Status.DiagnosticsCopied\")", aboutCodeBehind);
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"About.Status.DiagnosticsCopyFailed\")", aboutCodeBehind);
+        Assert.DoesNotContain("About.Status.DiagnosticsCopyFailed\", ex.Message", aboutCodeBehind);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceCompletionWindow);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), maintenanceCompletionViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), aboutCodeBehind);
@@ -928,6 +932,8 @@ public sealed class I18nFoundationTests
         Assert.Contains("Content=\"{i18n:Loc UpdateCheck.CopyDetails}\"", updateCheckWindow);
         Assert.Contains("Content=\"{i18n:Loc Common.Close}\"", updateCheckWindow);
         Assert.Contains("DesktopLocalization.Localizer.GetString(\"UpdateCheck.Status.DetailsCopied\")", updateCheckCodeBehind);
+        Assert.Contains("DesktopLocalization.Localizer.GetString(\"UpdateCheck.Status.CopyFailed\")", updateCheckCodeBehind);
+        Assert.DoesNotContain("UpdateCheck.Status.CopyFailed\", ex.Message", updateCheckCodeBehind);
         Assert.Contains("_localizer.GetString(\"UpdateCheck.Heading.Default\")", updateDialogViewModel);
         Assert.Contains("_localizer.Format(\"UpdateCheck.Details.AssetUrl\"", updateDialogViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), updateCheckWindow);

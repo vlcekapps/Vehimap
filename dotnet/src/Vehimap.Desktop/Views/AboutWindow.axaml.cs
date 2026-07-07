@@ -89,9 +89,9 @@ public partial class AboutWindow : Window
             await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
             model.StatusMessage = DesktopLocalization.Localizer.GetString("About.Status.DiagnosticsCopied");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            model.StatusMessage = DesktopLocalization.Localizer.Format("About.Status.DiagnosticsCopyFailed", ex.Message);
+            model.StatusMessage = DesktopLocalization.Localizer.GetString("About.Status.DiagnosticsCopyFailed");
         }
     }
 }

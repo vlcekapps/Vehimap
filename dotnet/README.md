@@ -71,6 +71,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - storage-level chyby balicku vozidel, obalove chyby nacitani legacy TSV/INI a parser/obalove chyby starsich textovych `.vehimapbak` zaloh uz take pouzivaji EN/CS `.resx`; konkretni detail radku legacy TSV/attachment sekce zustava pripojeny kvuli diagnostice a ridi se aktivnim jazykem
 - bezparametrove runtime sluzby nesmi pouzivat cestinu jako nouzovy jazyk UI; pokud nedostanou explicitni localizer, pouziji aktualni UI kulturu pres `ResourceAppLocalizer()`. Explicitni ceske localizery zustavaji jen u kompatibilnich aliasu a dvojjazycnych katalogu.
 - stejne pravidlo plati pro formatovaci fallbacky: bez explicitniho settings snapshotu se jednotky, oddelovace a mena odvozuji z `AppLocaleDefaultsService.GetCurrentCultureDefaults()`, ne z pevneho ceskeho profilu `km/l/CZK`
+- kratke live statusy pro kopirovani diagnostiky nebo update detailu jsou uzivatelske hlasky: pri chybe zustavaji obecne a lokalizovane, bez primeho propsani technicke vyjimky
 - kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
 - vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry
 - jednotkove citlive popisky, vyhledavaci napovedy a stavove texty nesmi bez konkretni hodnoty tvrdit pevne `km` nebo `litry`; nastaveni, balicek pro vozidlo, nakladove hledani/stavy a obecne prazdne texty tankovani uz pouzivaji dynamickou jednotku nebo neutralni formulaci

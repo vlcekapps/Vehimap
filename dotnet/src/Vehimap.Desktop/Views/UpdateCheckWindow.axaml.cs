@@ -86,9 +86,9 @@ public partial class UpdateCheckWindow : Window
             await Clipboard.SetTextAsync(model.ClipboardText).ConfigureAwait(true);
             model.StatusMessage = DesktopLocalization.Localizer.GetString("UpdateCheck.Status.DetailsCopied");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            model.StatusMessage = DesktopLocalization.Localizer.Format("UpdateCheck.Status.CopyFailed", ex.Message);
+            model.StatusMessage = DesktopLocalization.Localizer.GetString("UpdateCheck.Status.CopyFailed");
         }
     }
 }
