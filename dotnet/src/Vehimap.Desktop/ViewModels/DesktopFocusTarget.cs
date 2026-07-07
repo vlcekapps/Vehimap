@@ -26,7 +26,7 @@ public enum DesktopFocusTarget
     FuelList,
     FuelEditorDate,
     FuelEditorOdometer,
-    FuelEditorLiters,
+    FuelEditorVolume,
     FuelEditorTotalCost,
     ReminderSearch,
     ReminderList,

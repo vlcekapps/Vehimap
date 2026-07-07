@@ -972,7 +972,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc FuelEditor.StationName}\"", fuelEditorXaml);
         Assert.Contains("Grid.Column=\"1\" Spacing=\"6\"", fuelEditorXaml);
         Assert.Contains("x:Name=\"FuelEditorOdometerBox\"", fuelEditorXaml);
-        Assert.Contains("x:Name=\"FuelEditorLitersBox\"", fuelEditorXaml);
+        Assert.Contains("x:Name=\"FuelEditorVolumeBox\"", fuelEditorXaml);
         Assert.Contains("x:Name=\"FuelEditorTotalCostBox\"", fuelEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"HistoryEditorDateBox\"", historyEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"HistoryEditorTypeBox\"", historyEditorXaml);

@@ -504,7 +504,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
         viewModel.FuelWorkspace.FuelEditorFuelDetail = "Shell FuelSave";
         viewModel.FuelWorkspace.FuelEditorStation = "Shell Brno Vídeňská";
-        viewModel.FuelWorkspace.FuelEditorLiters = "38.5";
+        viewModel.FuelWorkspace.FuelEditorVolume = "38.5";
         viewModel.FuelWorkspace.FuelEditorTotalCost = "1890";
         viewModel.FuelWorkspace.FuelEditorOdometer = "123789";
         viewModel.FuelWorkspace.FuelEditorFullTank = false;
@@ -542,7 +542,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
         viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
-        viewModel.FuelWorkspace.FuelEditorLiters = "10";
+        viewModel.FuelWorkspace.FuelEditorVolume = "10";
         viewModel.FuelWorkspace.FuelEditorOdometer = "100";
 
         await viewModel.SaveFuelCommand.ExecuteAsync(null);
@@ -566,7 +566,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.CreateFuelCommand.Execute(null);
         viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
         viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
-        viewModel.FuelWorkspace.FuelEditorLiters = "10,5";
+        viewModel.FuelWorkspace.FuelEditorVolume = "10,5";
         viewModel.FuelWorkspace.FuelEditorOdometer = "123456";
 
         await viewModel.SaveFuelCommand.ExecuteAsync(null);
@@ -592,7 +592,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.CreateFuelCommand.Execute(null);
         viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
         viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
-        viewModel.FuelWorkspace.FuelEditorLiters = enteredLiters;
+        viewModel.FuelWorkspace.FuelEditorVolume = enteredLiters;
         viewModel.FuelWorkspace.FuelEditorOdometer = "123456";
 
         await viewModel.SaveFuelCommand.ExecuteAsync(null);
@@ -618,7 +618,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.EditSelectedFuelCommand.Execute(null);
 
-        Assert.Equal(expectedEditorLiters, viewModel.FuelWorkspace.FuelEditorLiters);
+        Assert.Equal(expectedEditorLiters, viewModel.FuelWorkspace.FuelEditorVolume);
     }
 
     [Fact]
@@ -634,7 +634,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.CreateFuelCommand.Execute(null);
         viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
         viewModel.FuelWorkspace.FuelEditorFuelType = "Natural 95";
-        viewModel.FuelWorkspace.FuelEditorLiters = "38.5";
+        viewModel.FuelWorkspace.FuelEditorVolume = "38.5";
         viewModel.FuelWorkspace.FuelEditorTotalCost = "1890";
         viewModel.FuelWorkspace.FuelEditorOdometer = "123789";
 
@@ -682,7 +682,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         Assert.True(viewModel.FuelWorkspace.IsEditingFuel);
         Assert.Equal("Pokud zadáváte cenu tankování, doplňte i množství paliva.", viewModel.FuelWorkspace.FuelEditorStatus);
-        Assert.Equal(DesktopFocusTarget.FuelEditorLiters, Assert.Single(requestedTargets));
+        Assert.Equal(DesktopFocusTarget.FuelEditorVolume, Assert.Single(requestedTargets));
         Assert.Empty(dataStore.CurrentDataSet.FuelEntries);
     }
 
@@ -1097,7 +1097,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
             viewModel.FuelWorkspace.SelectedFuelTypeOption = Assert.Single(
                 viewModel.FuelWorkspace.FuelTypeOptions,
                 item => item.Label == "Gasoline");
-            viewModel.FuelWorkspace.FuelEditorLiters = "10";
+            viewModel.FuelWorkspace.FuelEditorVolume = "10";
             viewModel.FuelWorkspace.FuelEditorOdometer = "1000";
 
             await viewModel.SaveFuelCommand.ExecuteAsync(null);

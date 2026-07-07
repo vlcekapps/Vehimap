@@ -41,7 +41,7 @@ public partial class FuelEditorWindow : Window
         {
             DesktopFocusTarget.FuelEditorDate => "FuelEditorDateBox",
             DesktopFocusTarget.FuelEditorOdometer => "FuelEditorOdometerBox",
-            DesktopFocusTarget.FuelEditorLiters => "FuelEditorLitersBox",
+            DesktopFocusTarget.FuelEditorVolume => "FuelEditorVolumeBox",
             DesktopFocusTarget.FuelEditorTotalCost => "FuelEditorTotalCostBox",
             _ => null
         };

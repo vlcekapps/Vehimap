@@ -92,7 +92,7 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     private string fuelEditorStation = string.Empty;
 
     [ObservableProperty]
-    private string fuelEditorLiters = string.Empty;
+    private string fuelEditorVolume = string.Empty;
 
     public string FuelEditorVolumeLabel => LF("FuelEditor.VolumeLabel", Root.CurrentVolumeUnitLabel);
 

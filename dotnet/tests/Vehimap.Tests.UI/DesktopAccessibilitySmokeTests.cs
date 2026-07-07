@@ -810,7 +810,7 @@ public sealed class DesktopAccessibilitySmokeTests
             session.SendKeysByAccessibilityId("FuelEditorFuelTypeBox", "Nafta");
             session.SendKeysByAccessibilityId("FuelEditorFuelDetailBox", "Shell FuelSave");
             session.SendKeysByAccessibilityId("FuelEditorStationBox", "Shell Brno Vídeňská");
-            session.SendKeysByAccessibilityId("FuelEditorLitersBox", "38.5");
+            session.SendKeysByAccessibilityId("FuelEditorVolumeBox", "38.5");
             session.SendKeysByAccessibilityId("FuelEditorTotalCostBox", "1890");
             session.SendKeysByAccessibilityId("FuelEditorOdometerBox", "123789");
             session.SendKeysByAccessibilityId("FuelEditorNoteBox", "Appium tankování");

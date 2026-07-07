@@ -330,7 +330,7 @@ public sealed partial class MainWindowViewModel
         FuelEditorFuelType = string.Empty;
         FuelEditorFuelDetail = string.Empty;
         FuelEditorStation = string.Empty;
-        FuelEditorLiters = string.Empty;
+        FuelEditorVolume = string.Empty;
         FuelEditorTotalCost = string.Empty;
         FuelEditorOdometer = string.Empty;
         FuelEditorFullTank = true;
@@ -355,7 +355,7 @@ public sealed partial class MainWindowViewModel
         FuelEditorFuelType = KnownValueOptions.NormalizeFuelTypeValue(entry.FuelType);
         FuelEditorFuelDetail = entry.FuelDetail;
         FuelEditorStation = entry.Station;
-        FuelEditorLiters = FormatCanonicalVolumeForEditor(entry.Liters);
+        FuelEditorVolume = FormatCanonicalVolumeForEditor(entry.Liters);
         FuelEditorTotalCost = entry.TotalCost;
         FuelEditorOdometer = FormatCanonicalOdometerForEditor(entry.Odometer);
         FuelEditorFullTank = entry.FullTank;
@@ -378,7 +378,7 @@ public sealed partial class MainWindowViewModel
         var entryDate = LegacyVehicleValueNormalization.NormalizeEventDate(entryDateText);
         var odometerText = (FuelEditorOdometer ?? string.Empty).Trim();
         var odometer = string.Empty;
-        var litersText = (FuelEditorLiters ?? string.Empty).Trim();
+        var litersText = (FuelEditorVolume ?? string.Empty).Trim();
         var liters = string.Empty;
         var totalCostText = (FuelEditorTotalCost ?? string.Empty).Trim();
         var totalCost = string.Empty;
@@ -400,7 +400,7 @@ public sealed partial class MainWindowViewModel
         if (!TryNormalizeEditorVolumeToLiters(litersText, allowEmpty: true, out liters))
         {
             FuelEditorStatus = LWF("FuelEditor.Validation.VolumeInvalid", CurrentVolumeUnitLabel);
-            RequestFocus(DesktopFocusTarget.FuelEditorLiters);
+            RequestFocus(DesktopFocusTarget.FuelEditorVolume);
             return;
         }
 
@@ -419,7 +419,7 @@ public sealed partial class MainWindowViewModel
         if (totalCost.Length > 0 && liters.Length == 0)
         {
             FuelEditorStatus = LO("FuelEditor.Validation.CostRequiresVolume");
-            RequestFocus(DesktopFocusTarget.FuelEditorLiters);
+            RequestFocus(DesktopFocusTarget.FuelEditorVolume);
             return;
         }
 
@@ -938,7 +938,7 @@ public sealed partial class MainWindowViewModel
         FuelEditorFuelType = string.Empty;
         FuelEditorFuelDetail = string.Empty;
         FuelEditorStation = string.Empty;
-        FuelEditorLiters = string.Empty;
+        FuelEditorVolume = string.Empty;
         FuelEditorTotalCost = string.Empty;
         FuelEditorOdometer = string.Empty;
         FuelEditorFullTank = true;
