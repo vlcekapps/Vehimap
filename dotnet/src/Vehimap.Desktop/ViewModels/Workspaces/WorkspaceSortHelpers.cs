@@ -34,31 +34,31 @@ internal static class WorkspaceSortHelpers
 
     private static readonly SortOptionDefinition[] SortDefinitions =
     [
-        new(DateSortKey, "WorkspaceSort.Date", "Datum", "Date"),
-        new(TypeSortKey, "WorkspaceSort.Type", "Typ", "Type"),
-        new(OdometerSortKey, "WorkspaceSort.Odometer", "Tachometr", "Odometer"),
-        new(CostSortKey, "WorkspaceSort.Cost", "Cena", "Cost"),
-        new(NoteSortKey, "WorkspaceSort.Note", "Poznámka", "Note"),
-        new(FuelTypeSortKey, "WorkspaceSort.FuelType", "Palivo", "Fuel"),
-        new(FuelDetailSortKey, "WorkspaceSort.FuelDetail", "Detail paliva", "Fuel detail"),
-        new(FuelStationSortKey, "WorkspaceSort.FuelStation", "Místo tankování", "Fuel station"),
-        new(LitersSortKey, "WorkspaceSort.FuelVolume", "Litry", "Fuel volume"),
-        new(TotalCostSortKey, "WorkspaceSort.TotalCost", "Cena celkem", "Total cost"),
-        new(TankStateSortKey, "WorkspaceSort.TankState", "Stav nádrže", "Tank state"),
-        new(TitleSortKey, "WorkspaceSort.Title", "Název", "Title"),
-        new(VehicleSortKey, "WorkspaceSort.Vehicle", "Vozidlo", "Vehicle"),
-        new(DueDateSortKey, "WorkspaceSort.DueDate", "Termín", "Due date"),
-        new(StatusSortKey, "WorkspaceSort.Status", "Stav", "Status"),
-        new(RepeatModeSortKey, "WorkspaceSort.RepeatMode", "Opakování", "Repeat"),
-        new(IntervalSortKey, "WorkspaceSort.Interval", "Interval", "Interval"),
-        new(LastServiceSortKey, "WorkspaceSort.LastService", "Poslední servis", "Last service"),
-        new(ValiditySortKey, "WorkspaceSort.Validity", "Platnost", "Validity"),
-        new(ProviderSortKey, "WorkspaceSort.Provider", "Poskytovatel", "Provider"),
-        new(AttachmentModeSortKey, "WorkspaceSort.AttachmentMode", "Režim přílohy", "Attachment mode"),
-        new(AttachmentStateSortKey, "WorkspaceSort.AttachmentState", "Stav přílohy", "Attachment status"),
-        new(SeveritySortKey, "WorkspaceSort.Severity", "Závažnost", "Severity"),
-        new(CategorySortKey, "WorkspaceSort.Category", "Evidence", "Record area"),
-        new(SummarySortKey, "WorkspaceSort.Summary", "Souhrn", "Summary")
+        new(DateSortKey, "WorkspaceSort.Date"),
+        new(TypeSortKey, "WorkspaceSort.Type"),
+        new(OdometerSortKey, "WorkspaceSort.Odometer"),
+        new(CostSortKey, "WorkspaceSort.Cost"),
+        new(NoteSortKey, "WorkspaceSort.Note"),
+        new(FuelTypeSortKey, "WorkspaceSort.FuelType"),
+        new(FuelDetailSortKey, "WorkspaceSort.FuelDetail"),
+        new(FuelStationSortKey, "WorkspaceSort.FuelStation"),
+        new(LitersSortKey, "WorkspaceSort.FuelVolume"),
+        new(TotalCostSortKey, "WorkspaceSort.TotalCost"),
+        new(TankStateSortKey, "WorkspaceSort.TankState"),
+        new(TitleSortKey, "WorkspaceSort.Title"),
+        new(VehicleSortKey, "WorkspaceSort.Vehicle"),
+        new(DueDateSortKey, "WorkspaceSort.DueDate"),
+        new(StatusSortKey, "WorkspaceSort.Status"),
+        new(RepeatModeSortKey, "WorkspaceSort.RepeatMode"),
+        new(IntervalSortKey, "WorkspaceSort.Interval"),
+        new(LastServiceSortKey, "WorkspaceSort.LastService"),
+        new(ValiditySortKey, "WorkspaceSort.Validity"),
+        new(ProviderSortKey, "WorkspaceSort.Provider"),
+        new(AttachmentModeSortKey, "WorkspaceSort.AttachmentMode"),
+        new(AttachmentStateSortKey, "WorkspaceSort.AttachmentState"),
+        new(SeveritySortKey, "WorkspaceSort.Severity"),
+        new(CategorySortKey, "WorkspaceSort.Category"),
+        new(SummarySortKey, "WorkspaceSort.Summary")
     ];
 
     public static LocalizedOptionViewModel DateSortOption => GetSortOption(DateSortKey);
@@ -139,10 +139,11 @@ internal static class WorkspaceSortHelpers
 
         foreach (var definition in SortDefinitions)
         {
-            if (string.Equals(normalized, definition.Key, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(normalized, definition.LegacyLabel, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(normalized, definition.EnglishLabel, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(normalized, DesktopLocalization.Localizer.GetString(definition.ResourceKey), StringComparison.OrdinalIgnoreCase))
+            if (LocalizedCompatibilityAliases.MatchesStableValueOrResource(
+                    normalized,
+                    definition.Key,
+                    definition.ResourceKey)
+                || MatchesSortCompatibilityAlias(normalized, definition.Key))
             {
                 return definition.Key;
             }
@@ -150,6 +151,15 @@ internal static class WorkspaceSortHelpers
 
         return null;
     }
+
+    private static bool MatchesSortCompatibilityAlias(string normalized, string key) =>
+        key switch
+        {
+            LitersSortKey => LocalizedCompatibilityAliases.MatchesAnyResource(
+                normalized,
+                "WorkspaceSort.Legacy.FuelVolume.Liters"),
+            _ => false
+        };
 
     private static SortOptionDefinition GetSortDefinition(string key) =>
         SortDefinitions.FirstOrDefault(item => string.Equals(item.Key, key, StringComparison.Ordinal))
@@ -359,12 +369,34 @@ internal static class WorkspaceSortHelpers
 
         return severity.Trim().ToLowerInvariant() switch
         {
-            "chyba" or "error" => 0,
-            "varování" or "warning" => 1,
-            "upozornění" or "info" or "informace" => 2,
+            var value when IsErrorSeverity(value) => 0,
+            var value when IsWarningSeverity(value) => 1,
+            var value when IsInfoSeverity(value) => 2,
             _ => 3
         };
     }
+
+    private static bool IsErrorSeverity(string value) =>
+        LocalizedCompatibilityAliases.MatchesAnyResource(
+            value,
+            "Audit.Severity.Error",
+            "FuelAnalysis.Severity.Error",
+            "Overview.DataIssue.Severity.Error");
+
+    private static bool IsWarningSeverity(string value) =>
+        LocalizedCompatibilityAliases.MatchesAnyResource(
+            value,
+            "Audit.Severity.Warning",
+            "FuelAnalysis.Severity.Warning",
+            "Overview.DataIssue.Severity.Warning");
+
+    private static bool IsInfoSeverity(string value) =>
+        string.Equals(value, "info", StringComparison.OrdinalIgnoreCase)
+        || LocalizedCompatibilityAliases.MatchesAnyResource(
+            value,
+            "Audit.Severity.Info",
+            "FuelAnalysis.Severity.Info",
+            "Overview.DataIssue.Severity.Info");
 
     private static DateOnly? TryParseDate(string? value)
     {
@@ -417,5 +449,5 @@ internal static class WorkspaceSortHelpers
     private static decimal? TryParseMoney(string? value) =>
         VehimapValueParser.TryParseMoney(value, out var parsed) ? parsed : null;
 
-    private sealed record SortOptionDefinition(string Key, string ResourceKey, string LegacyLabel, string EnglishLabel);
+    private sealed record SortOptionDefinition(string Key, string ResourceKey);
 }

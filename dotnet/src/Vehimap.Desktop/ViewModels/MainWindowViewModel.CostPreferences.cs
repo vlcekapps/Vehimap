@@ -1,19 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Globalization;
 using Vehimap.Application;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels.Workspaces;
 
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    internal const string CostPeriodYearToDateLabel = "Od začátku roku";
-    internal const string CostPeriodLast30DaysLabel = "Posledních 30 dní";
-    internal const string CostPeriodLast90DaysLabel = "Posledních 90 dní";
-    internal const string CostPeriodCurrentYearLabel = "Aktuální rok";
-    internal const string CostPeriodPreviousYearLabel = "Minulý rok";
-    internal const string CostPeriodCustomLabel = "Vlastní období";
-
     internal const string CostPeriodYearToDateKey = "year_to_date";
     internal const string CostPeriodLast30DaysKey = "last_30_days";
     internal const string CostPeriodLast90DaysKey = "last_90_days";
@@ -296,32 +290,32 @@ public sealed partial class MainWindowViewModel
             return CostPeriodYearToDateKey;
         }
 
-        if (MatchesCostPeriodPreset(normalized, CostPeriodYearToDateKey, "CostPeriod.YearToDate", CostPeriodYearToDateLabel, "Year to date"))
+        if (MatchesCostPeriodPreset(normalized, CostPeriodYearToDateKey, "CostPeriod.YearToDate"))
         {
             return CostPeriodYearToDateKey;
         }
 
-        if (MatchesCostPeriodPreset(normalized, CostPeriodLast30DaysKey, "CostPeriod.Last30Days", CostPeriodLast30DaysLabel, "Last 30 days"))
+        if (MatchesCostPeriodPreset(normalized, CostPeriodLast30DaysKey, "CostPeriod.Last30Days"))
         {
             return CostPeriodLast30DaysKey;
         }
 
-        if (MatchesCostPeriodPreset(normalized, CostPeriodLast90DaysKey, "CostPeriod.Last90Days", CostPeriodLast90DaysLabel, "Last 90 days"))
+        if (MatchesCostPeriodPreset(normalized, CostPeriodLast90DaysKey, "CostPeriod.Last90Days"))
         {
             return CostPeriodLast90DaysKey;
         }
 
-        if (MatchesCostPeriodPreset(normalized, CostPeriodCurrentYearKey, "CostPeriod.CurrentYear", CostPeriodCurrentYearLabel, "Current year"))
+        if (MatchesCostPeriodPreset(normalized, CostPeriodCurrentYearKey, "CostPeriod.CurrentYear"))
         {
             return CostPeriodCurrentYearKey;
         }
 
-        if (MatchesCostPeriodPreset(normalized, CostPeriodPreviousYearKey, "CostPeriod.PreviousYear", CostPeriodPreviousYearLabel, "Previous year"))
+        if (MatchesCostPeriodPreset(normalized, CostPeriodPreviousYearKey, "CostPeriod.PreviousYear"))
         {
             return CostPeriodPreviousYearKey;
         }
 
-        if (MatchesCostPeriodPreset(normalized, CostPeriodCustomKey, "CostPeriod.Custom", CostPeriodCustomLabel, "Custom period"))
+        if (MatchesCostPeriodPreset(normalized, CostPeriodCustomKey, "CostPeriod.Custom"))
         {
             return CostPeriodCustomKey;
         }
@@ -329,9 +323,7 @@ public sealed partial class MainWindowViewModel
         return CostPeriodYearToDateKey;
     }
 
-    private static bool MatchesCostPeriodPreset(string normalized, string key, string resourceKey, params string[] aliases) =>
-        string.Equals(normalized, key, StringComparison.OrdinalIgnoreCase)
-        || string.Equals(normalized, LO(resourceKey), StringComparison.CurrentCultureIgnoreCase)
-        || aliases.Any(alias => string.Equals(normalized, alias, StringComparison.OrdinalIgnoreCase));
+    private static bool MatchesCostPeriodPreset(string normalized, string key, string resourceKey) =>
+        LocalizedCompatibilityAliases.MatchesStableValueOrResource(normalized, key, resourceKey);
 
 }

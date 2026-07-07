@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels.Workspaces;
 
 namespace Vehimap.Desktop.ViewModels;
@@ -50,26 +51,26 @@ public sealed partial class MainWindowViewModel
     private string NormalizeTimelineFilterKey(string? value)
     {
         var normalized = (value ?? string.Empty).Trim();
-        if (string.Equals(normalized, TimelineFilterFutureKey, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, TimelineFilterOptions.LabelForKey(TimelineFilterOptions.FutureKey), StringComparison.CurrentCultureIgnoreCase)
-            || string.Equals(normalized, "Budoucí", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, "Future", StringComparison.OrdinalIgnoreCase))
+        if (LocalizedCompatibilityAliases.MatchesStableValueOrResource(
+                normalized,
+                TimelineFilterFutureKey,
+                "TimelineWorkspace.Filter.Future"))
         {
             return TimelineFilterFutureKey;
         }
 
-        if (string.Equals(normalized, TimelineFilterPastKey, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, TimelineFilterOptions.LabelForKey(TimelineFilterOptions.PastKey), StringComparison.CurrentCultureIgnoreCase)
-            || string.Equals(normalized, "Minulé", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, "Past", StringComparison.OrdinalIgnoreCase))
+        if (LocalizedCompatibilityAliases.MatchesStableValueOrResource(
+                normalized,
+                TimelineFilterPastKey,
+                "TimelineWorkspace.Filter.Past"))
         {
             return TimelineFilterPastKey;
         }
 
-        if (string.Equals(normalized, TimelineFilterAllKey, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, TimelineFilterOptions.LabelForKey(TimelineFilterOptions.AllKey), StringComparison.CurrentCultureIgnoreCase)
-            || string.Equals(normalized, "Vše", StringComparison.OrdinalIgnoreCase)
-            || string.Equals(normalized, "All", StringComparison.OrdinalIgnoreCase))
+        if (LocalizedCompatibilityAliases.MatchesStableValueOrResource(
+                normalized,
+                TimelineFilterAllKey,
+                "TimelineWorkspace.Filter.All"))
         {
             return TimelineFilterAllKey;
         }

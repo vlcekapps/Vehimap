@@ -1400,11 +1400,7 @@ public sealed class I18nFoundationTests
             "dotnet/src/Vehimap.Application/Services/LegacyServiceBookService.cs" or
             "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs" or
             "dotnet/src/Vehimap.Desktop/Services/DesktopEntityKinds.cs" or
-            "dotnet/src/Vehimap.Desktop/ViewModels/KnownValueOptions.cs" or
-            "dotnet/src/Vehimap.Desktop/ViewModels/MainWindowViewModel.CostPreferences.cs" or
-            "dotnet/src/Vehimap.Desktop/ViewModels/MainWindowViewModel.TimelinePreferences.cs" or
-            "dotnet/src/Vehimap.Desktop/ViewModels/MainWindowViewModel.VehicleListFilters.cs" or
-            "dotnet/src/Vehimap.Desktop/ViewModels/Workspaces/WorkspaceSortHelpers.cs")
+            "dotnet/src/Vehimap.Desktop/ViewModels/KnownValueOptions.cs")
         {
             return true;
         }

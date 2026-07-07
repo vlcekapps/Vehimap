@@ -2357,6 +2357,7 @@ Transmission: {3}</value></data>
   <data name="WorkspaceSort.FuelDetail" xml:space="preserve"><value>Fuel detail</value></data>
   <data name="WorkspaceSort.FuelStation" xml:space="preserve"><value>Fuel station</value></data>
   <data name="WorkspaceSort.FuelVolume" xml:space="preserve"><value>Fuel volume</value></data>
+  <data name="WorkspaceSort.Legacy.FuelVolume.Liters" xml:space="preserve"><value>Liters</value></data>
   <data name="WorkspaceSort.TotalCost" xml:space="preserve"><value>Total cost</value></data>
   <data name="WorkspaceSort.TankState" xml:space="preserve"><value>Tank state</value></data>
   <data name="WorkspaceSort.Title" xml:space="preserve"><value>Title</value></data>

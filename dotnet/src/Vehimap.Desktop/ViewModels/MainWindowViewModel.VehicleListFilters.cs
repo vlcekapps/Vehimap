@@ -10,16 +10,6 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    private const string LegacyAllVehicleCategoriesLabel = "Všechny kategorie";
-    private const string LegacyAllVehicleStatusFilterLabel = "Všechna vozidla";
-    private const string LegacyAttentionVehicleStatusFilterLabel = "Jen s blížícím se termínem";
-    private const string LegacyOverdueVehicleStatusFilterLabel = "Jen po termínu";
-    private const string LegacyMissingGreenVehicleStatusFilterLabel = "Jen bez zelené karty";
-    private const string EnglishAllVehicleCategoriesLabel = "All categories";
-    private const string EnglishAllVehicleStatusFilterLabel = "All vehicles";
-    private const string EnglishAttentionVehicleStatusFilterLabel = "Only vehicles needing review";
-    private const string EnglishOverdueVehicleStatusFilterLabel = "Only overdue vehicles";
-    private const string EnglishMissingGreenVehicleStatusFilterLabel = "Only missing green card";
     internal const string VehicleCategoryAllFilterKey = "all";
     internal const string VehicleStatusAllFilterKey = "all";
     internal const string VehicleStatusAttentionFilterKey = "attention";
@@ -232,25 +222,19 @@ public sealed partial class MainWindowViewModel
     }
 
     internal static bool IsAllVehicleCategoryFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, VehicleCategoryAllFilterKey, AllVehicleCategoriesLabel, LegacyAllVehicleCategoriesLabel, EnglishAllVehicleCategoriesLabel);
+        LocalizedCompatibilityAliases.MatchesStableValueOrResource(value, VehicleCategoryAllFilterKey, "VehicleList.FilterOption.AllCategories");
 
     internal static bool IsAllVehicleStatusFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, VehicleStatusAllFilterKey, AllVehicleStatusFilterLabel, LegacyAllVehicleStatusFilterLabel, EnglishAllVehicleStatusFilterLabel);
+        LocalizedCompatibilityAliases.MatchesStableValueOrResource(value, VehicleStatusAllFilterKey, "VehicleList.FilterOption.AllVehicles");
 
     internal static bool IsAttentionVehicleStatusFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, VehicleStatusAttentionFilterKey, AttentionVehicleStatusFilterLabel, LegacyAttentionVehicleStatusFilterLabel, EnglishAttentionVehicleStatusFilterLabel);
+        LocalizedCompatibilityAliases.MatchesStableValueOrResource(value, VehicleStatusAttentionFilterKey, "VehicleList.FilterOption.Attention");
 
     internal static bool IsOverdueVehicleStatusFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, VehicleStatusOverdueFilterKey, OverdueVehicleStatusFilterLabel, LegacyOverdueVehicleStatusFilterLabel, EnglishOverdueVehicleStatusFilterLabel);
+        LocalizedCompatibilityAliases.MatchesStableValueOrResource(value, VehicleStatusOverdueFilterKey, "VehicleList.FilterOption.Overdue");
 
     internal static bool IsMissingGreenCardVehicleStatusFilter(string? value) =>
-        MatchesVehicleFilterLabel(value, VehicleStatusMissingGreenCardFilterKey, MissingGreenVehicleStatusFilterLabel, LegacyMissingGreenVehicleStatusFilterLabel, EnglishMissingGreenVehicleStatusFilterLabel);
-
-    private static bool MatchesVehicleFilterLabel(string? value, params string[] candidates)
-    {
-        var normalized = (value ?? string.Empty).Trim();
-        return candidates.Any(candidate => string.Equals(normalized, candidate, StringComparison.OrdinalIgnoreCase));
-    }
+        LocalizedCompatibilityAliases.MatchesStableValueOrResource(value, VehicleStatusMissingGreenCardFilterKey, "VehicleList.FilterOption.MissingGreenCard");
 
     private void RefreshVehicleList(string? preferredVehicleId = null)
     {

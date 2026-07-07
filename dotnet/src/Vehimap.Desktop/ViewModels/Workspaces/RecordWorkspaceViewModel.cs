@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 using Vehimap.Domain.Enums;
 using Vehimap.Desktop.ViewModels;
@@ -132,29 +131,10 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
         mode == VehicleRecordAttachmentMode.Managed ? ManagedAttachmentModeLabel : ExternalAttachmentModeLabel;
 
     internal static bool IsManagedAttachmentModeLabel(string? value) =>
-        MatchesAttachmentModeLabel(value, "managed", "Record.Projection.AttachmentMode.Managed");
+        LocalizedCompatibilityAliases.MatchesStableValueOrResource(value, "managed", "Record.Projection.AttachmentMode.Managed");
 
     internal static bool IsExternalAttachmentModeLabel(string? value) =>
-        MatchesAttachmentModeLabel(value, "external", "Record.Projection.AttachmentMode.External");
-
-    private static bool MatchesAttachmentModeLabel(string? value, string stableValue, string resourceKey)
-    {
-        var normalized = (value ?? string.Empty).Trim();
-        if (string.Equals(normalized, stableValue, StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        return EnumerateLocalizedAttachmentModeLabels(resourceKey)
-            .Any(candidate => string.Equals(normalized, candidate, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static IEnumerable<string> EnumerateLocalizedAttachmentModeLabels(string resourceKey)
-    {
-        yield return DesktopLocalization.Localizer.GetString(resourceKey);
-        yield return new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)).GetString(resourceKey);
-        yield return new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)).GetString(resourceKey);
-    }
+        LocalizedCompatibilityAliases.MatchesStableValueOrResource(value, "external", "Record.Projection.AttachmentMode.External");
 
     [RelayCommand]
     private void FocusSearch()
