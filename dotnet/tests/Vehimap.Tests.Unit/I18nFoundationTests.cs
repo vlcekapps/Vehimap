@@ -1467,11 +1467,6 @@ public sealed class I18nFoundationTests
                 || line.Contains("\"czk\"", StringComparison.Ordinal);
         }
 
-        if (relativePath is "dotnet/src/Vehimap.Desktop/ViewModels/Workspaces/WorkspaceSortHelpers.cs")
-        {
-            return line.Contains("WorkspaceSort.FuelVolume", StringComparison.Ordinal);
-        }
-
         return false;
     }
 

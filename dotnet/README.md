@@ -74,6 +74,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - dashboardove naklady, srovnani obdobi, casova osa a analyza tankovani uz zvolene jednotky pouzivaji i pro odvozene hodnoty: cena za vzdalenost se zobrazi za km nebo mili, palivo v litrech/galonech, pri kombinaci mile + galony se spotreba zobrazi jako `mpg` a upozorneni analyzy tankovani na klesajici tachometr pouziva aktivni jednotku vzdalenosti
 - i18n/unit/currency guard odmita nove pevne literaly `km`, `mi`, `l`, `US gal`, `imp gal`, `Kč`, `CZK`, `USD`, `EUR` a `GBP` v produkcnim UI/projekcnim kodu mimo storage defaulty, parser hranice a sdilene formatovaci sluzby
 - projekcni viewmodely a XAML bindingy pro jednotkove citlive hodnoty pouzivaji neutralni nazvy jako `FuelAmount`, `PricePerVolume` a `CostPerDistance`, aby UI nezamykalo kanonicke litry/kilometry do uzivatelskeho textu
+- interní sort helpery používají jednotkově neutrální názvy pro palivové množství, takže guard už nepotřebuje výjimku pro řazení podle objemu paliva
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 - i18n conformance gate navic overuje anglicke UI nad ceskymi legacy daty: systemove/known hodnoty se zobrazuji pres EN/CS `.resx`, ale uzivatelsky zadane nazvy, modely, poznamky a dalsi volny text zustavaji beze zmeny
 - produkcni C# zdroje maji staticky guard proti ceskym UI literalum mimo `.resx`; povolene vyjimky jsou jen legacy tokeny, kompatibilni aliasy, parser/search klicova slova a sablonova data

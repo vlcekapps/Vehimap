@@ -220,9 +220,9 @@ public sealed class WorkspaceCompositionTests
             DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
 
             Assert.Contains(WorkspaceSortHelpers.HistorySortOptions, option => option.Value == WorkspaceSortHelpers.DateSortKey && option.Label == "Date");
-            Assert.Contains(WorkspaceSortHelpers.FuelSortOptions, option => option.Value == WorkspaceSortHelpers.LitersSortKey && option.Label == "Fuel volume");
+            Assert.Contains(WorkspaceSortHelpers.FuelSortOptions, option => option.Value == WorkspaceSortHelpers.FuelVolumeSortKey && option.Label == "Fuel volume");
             Assert.Equal(WorkspaceSortHelpers.DateSortKey, WorkspaceSortHelpers.NormalizeSortOption("Datum", WorkspaceSortHelpers.HistorySortOptions, WorkspaceSortHelpers.DateSortOption).Value);
-            Assert.Equal(WorkspaceSortHelpers.LitersSortKey, WorkspaceSortHelpers.NormalizeSortOption("Litry", WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortOption).Value);
+            Assert.Equal(WorkspaceSortHelpers.FuelVolumeSortKey, WorkspaceSortHelpers.NormalizeSortOption("Litry", WorkspaceSortHelpers.FuelSortOptions, WorkspaceSortHelpers.DateSortOption).Value);
             Assert.Equal(WorkspaceSortHelpers.AttachmentModeSortKey, WorkspaceSortHelpers.NormalizeSortOption("Režim přílohy", WorkspaceSortHelpers.RecordSortOptions, WorkspaceSortHelpers.ValiditySortOption).Value);
             Assert.Equal(WorkspaceSortHelpers.CategorySortKey, WorkspaceSortHelpers.NormalizeSortOption("Evidence", WorkspaceSortHelpers.AuditSortOptions, WorkspaceSortHelpers.SeveritySortOption).Value);
         }

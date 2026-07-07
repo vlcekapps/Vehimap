@@ -14,7 +14,7 @@ internal static class WorkspaceSortHelpers
     internal const string FuelTypeSortKey = "fuel_type";
     internal const string FuelDetailSortKey = "fuel_detail";
     internal const string FuelStationSortKey = "fuel_station";
-    internal const string LitersSortKey = "fuel_volume";
+    internal const string FuelVolumeSortKey = "fuel_volume";
     internal const string TotalCostSortKey = "total_cost";
     internal const string TankStateSortKey = "tank_state";
     internal const string TitleSortKey = "title";
@@ -42,7 +42,7 @@ internal static class WorkspaceSortHelpers
         new(FuelTypeSortKey, "WorkspaceSort.FuelType"),
         new(FuelDetailSortKey, "WorkspaceSort.FuelDetail"),
         new(FuelStationSortKey, "WorkspaceSort.FuelStation"),
-        new(LitersSortKey, "WorkspaceSort.FuelVolume"),
+        new(FuelVolumeSortKey, "WorkspaceSort.FuelVolume"),
         new(TotalCostSortKey, "WorkspaceSort.TotalCost"),
         new(TankStateSortKey, "WorkspaceSort.TankState"),
         new(TitleSortKey, "WorkspaceSort.Title"),
@@ -77,7 +77,7 @@ internal static class WorkspaceSortHelpers
         BuildOptions(DateSortKey, TypeSortKey, OdometerSortKey, CostSortKey, NoteSortKey);
 
     public static IReadOnlyList<LocalizedOptionViewModel> FuelSortOptions =>
-        BuildOptions(DateSortKey, FuelTypeSortKey, FuelDetailSortKey, FuelStationSortKey, LitersSortKey, TotalCostSortKey, OdometerSortKey, TankStateSortKey);
+        BuildOptions(DateSortKey, FuelTypeSortKey, FuelDetailSortKey, FuelStationSortKey, FuelVolumeSortKey, TotalCostSortKey, OdometerSortKey, TankStateSortKey);
 
     public static IReadOnlyList<LocalizedOptionViewModel> ReminderSortOptions =>
         BuildOptions(DueDateSortKey, TitleSortKey, StatusSortKey, RepeatModeSortKey, NoteSortKey);
@@ -155,7 +155,7 @@ internal static class WorkspaceSortHelpers
     private static bool MatchesSortCompatibilityAlias(string normalized, string key) =>
         key switch
         {
-            LitersSortKey => LocalizedCompatibilityAliases.MatchesAnyResource(
+            FuelVolumeSortKey => LocalizedCompatibilityAliases.MatchesAnyResource(
                 normalized,
                 "WorkspaceSort.Legacy.FuelVolume.Liters"),
             _ => false
@@ -190,7 +190,7 @@ internal static class WorkspaceSortHelpers
             FuelTypeSortKey => OrderByText(items, descending, item => item.FuelType, item => item.Date),
             FuelDetailSortKey => OrderByText(items, descending, item => item.FuelDetail, item => item.Date),
             FuelStationSortKey => OrderByText(items, descending, item => item.Station, item => item.Date),
-            LitersSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.FuelAmount), item => item.Date),
+            FuelVolumeSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.FuelAmount), item => item.Date),
             TotalCostSortKey => OrderByMoney(items, descending, item => TryParseMoney(item.TotalCost), item => item.Date),
             OdometerSortKey => OrderByNumber(items, descending, item => TryParseOdometer(item.Odometer), item => item.Date),
             TankStateSortKey => OrderByText(items, descending, item => item.TankState, item => item.Date),
