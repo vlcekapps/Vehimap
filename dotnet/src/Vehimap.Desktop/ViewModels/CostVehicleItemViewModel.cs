@@ -10,7 +10,7 @@ public sealed record CostVehicleItemViewModel(
     string RecordCost,
     string TotalCost,
     string Distance,
-    string CostPerKm,
+    string CostPerDistance,
     string Status,
     string AccessibleLabel)
 {

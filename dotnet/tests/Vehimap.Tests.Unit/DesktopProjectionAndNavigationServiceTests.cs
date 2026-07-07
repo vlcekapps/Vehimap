@@ -523,7 +523,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("$350.00", item.FuelCost);
         Assert.Equal("$700.00", item.TotalCost);
         Assert.Equal("93.2 mi", item.Distance);
-        Assert.Equal("$7.51/mi", item.CostPerKm);
+        Assert.Equal("$7.51/mi", item.CostPerDistance);
         Assert.Contains("cost per distance $7.51/mi", item.AccessibleLabel, StringComparison.Ordinal);
         Assert.Contains("$700.00", projectionService.BuildCostSummary(summary), StringComparison.Ordinal);
         Assert.Contains("-$2.01/mi", projectionService.BuildCostComparison(summary), StringComparison.Ordinal);

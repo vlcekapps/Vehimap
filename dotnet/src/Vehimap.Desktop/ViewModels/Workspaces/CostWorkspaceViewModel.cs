@@ -141,7 +141,7 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
                 value.RecordCost,
                 value.TotalCost,
                 value.Distance,
-                value.CostPerKm,
+                value.CostPerDistance,
                 value.Status);
         OnPropertyChanged(nameof(CanUseSelectedCostVehicle));
         FocusSelectedCostDetailCommand.NotifyCanExecuteChanged();
@@ -186,7 +186,7 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
             || Contains(item.RecordCost, query)
             || Contains(item.TotalCost, query)
             || Contains(item.Distance, query)
-            || Contains(item.CostPerKm, query)
+            || Contains(item.CostPerDistance, query)
             || Contains(item.Status, query)
             || Contains(item.AccessibleLabel, query);
     }

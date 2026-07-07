@@ -164,7 +164,7 @@
                   <TextBlock FontWeight="SemiBold" Text="{Binding VehicleName}" />
                   <TextBlock Opacity="0.8" Text="{Binding Category}" />
                   <TextBlock Opacity="0.8" Text="{Binding TotalCost}" />
-                  <TextBlock Opacity="0.8" Text="{Binding CostPerKm}" />
+                  <TextBlock Opacity="0.8" Text="{Binding CostPerDistance}" />
                   <TextBlock Opacity="0.8" Text="{Binding Status}" TextWrapping="Wrap" />
                 </StackPanel>
               </Border>

@@ -185,7 +185,7 @@
               </StackPanel>
               <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding TotalCost}" />
               <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{Binding Distance}" />
-              <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding CostPerKm}" />
+              <TextBlock Grid.Column="3" VerticalAlignment="Center" Text="{Binding CostPerDistance}" />
               <TextBlock Grid.Column="4" VerticalAlignment="Center" Text="{Binding Status}" TextWrapping="Wrap" />
             </Grid>
           </Border>
