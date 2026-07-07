@@ -378,7 +378,7 @@ public sealed partial class MainWindowViewModel
         var entryDate = LegacyVehicleValueNormalization.NormalizeEventDate(entryDateText);
         var odometerText = (FuelEditorOdometer ?? string.Empty).Trim();
         var odometer = string.Empty;
-        var litersText = (FuelEditorVolume ?? string.Empty).Trim();
+        var volumeText = (FuelEditorVolume ?? string.Empty).Trim();
         var liters = string.Empty;
         var totalCostText = (FuelEditorTotalCost ?? string.Empty).Trim();
         var totalCost = string.Empty;
@@ -397,7 +397,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (!TryNormalizeEditorVolumeToLiters(litersText, allowEmpty: true, out liters))
+        if (!TryNormalizeEditorVolumeToLiters(volumeText, allowEmpty: true, out liters))
         {
             FuelEditorStatus = LWF("FuelEditor.Validation.VolumeInvalid", CurrentVolumeUnitLabel);
             RequestFocus(DesktopFocusTarget.FuelEditorVolume);
@@ -551,7 +551,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var intervalKmText = (MaintenanceEditorIntervalDistance ?? string.Empty).Trim();
+        var intervalDistanceText = (MaintenanceEditorIntervalDistance ?? string.Empty).Trim();
         var intervalMonthsText = (MaintenanceEditorIntervalMonths ?? string.Empty).Trim();
         var intervalKm = string.Empty;
         var intervalMonths = LegacyVehicleValueNormalization.NormalizePositiveInteger(intervalMonthsText);
@@ -560,7 +560,7 @@ public sealed partial class MainWindowViewModel
         var lastServiceOdometerText = (MaintenanceEditorLastServiceOdometer ?? string.Empty).Trim();
         var lastServiceOdometer = string.Empty;
 
-        if (!TryNormalizeEditorPositiveDistanceToKilometers(intervalKmText, allowEmpty: true, out intervalKm))
+        if (!TryNormalizeEditorPositiveDistanceToKilometers(intervalDistanceText, allowEmpty: true, out intervalKm))
         {
             MaintenanceEditorStatus = LWF("MaintenanceEditor.Validation.IntervalDistanceInvalid", CurrentDistanceUnitLabel);
             RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalDistance);

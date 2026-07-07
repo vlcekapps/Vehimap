@@ -45,6 +45,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Editor tankování používá pro pole množství paliva jednotkově neutrální property, focus target a `AutomationId` `FuelEditorVolume`; kanonický převod do litrů zůstává až ve vrstvě ukládání.
 - Editor plánu údržby používá pro vzdálenostní interval jednotkově neutrální property, focus target a `AutomationId` `MaintenanceEditorIntervalDistance`; kanonický převod do kilometrů zůstává až ve vrstvě ukládání.
 - Nastavení upozornění na údržbu podle vzdálenosti používá v dialogu jednotkově neutrální property a `AutomationId` `MaintenanceReminderDistanceBox`; uložený snapshot dál drží kanonickou hodnotu v kilometrech.
+- Editorová workflow vrstva používá pro vstupní hodnoty z UI jednotkově neutrální proměnné `volumeText` a `intervalDistanceText`; kanonické `liters`/`intervalKm` názvy zůstávají až za normalizací při ukládání.
 - Startovací balíček pro vozidlo používá pro servisní interval dynamický popisek podle aktuální jednotky a editační hodnotu převádí mezi zvolenou jednotkou a kanonickými kilometry; jeho accessibility id je nově jednotkově neutrální `BundleMaintenanceIntervalDistanceBox`.
 - Nepoužívané resource klíče startovacího balíčku `VehicleStarterBundle.MaintenanceIntervalKmLabel/Name` byly odstraněné, aby se do UI nemohl vrátit pevný kilometrový popisek.
 - Časová osa a globální hledání používají pro formátování paliva jednotkově neutrální helper `FormatFuelVolume`; viditelné výstupy dál respektují aktuální litry/galony, zatímco kanonická storage hodnota zůstává v litrech.

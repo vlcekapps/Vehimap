@@ -1267,6 +1267,18 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Unit_sensitive_editor_inputs_use_display_unit_names_at_ui_edge()
+    {
+        var root = FindRepositoryRoot();
+        var workflowEditing = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.WorkflowEditing.cs"));
+
+        Assert.Contains("volumeText", workflowEditing);
+        Assert.Contains("intervalDistanceText", workflowEditing);
+        Assert.DoesNotContain("litersText", workflowEditing);
+        Assert.DoesNotContain("intervalKmText", workflowEditing);
+    }
+
+    [Fact]
     public void Production_unit_and_currency_labels_are_limited_to_formatting_boundaries()
     {
         var root = FindRepositoryRoot();
