@@ -1426,8 +1426,9 @@ internal sealed class DesktopProjectionService
         {
             var kilometersPerDisplayedVolume = _unitFormatService.ConvertVolumeToLiters(1m, normalized) * 100m / litersPer100Km;
             var milesPerDisplayedVolume = _unitFormatService.ConvertDistanceFromKilometers(kilometersPerDisplayedVolume, normalized);
-            var mpgLabel = normalized.VolumeUnit == AppUnitFormatService.ImperialGallons ? "mpg (imp)" : "mpg";
-            return $"{FormatDecimal(milesPerDisplayedVolume, 2)} {mpgLabel}";
+            return normalized.VolumeUnit == AppUnitFormatService.ImperialGallons
+                ? LF("FuelAnalysis.Value.ConsumptionMpgImperial", FormatDecimal(milesPerDisplayedVolume, 2))
+                : LF("FuelAnalysis.Value.ConsumptionMpg", FormatDecimal(milesPerDisplayedVolume, 2));
         }
 
         var kilometersPer100DisplayedDistance = _unitFormatService.ConvertDistanceToKilometers(100m, normalized);

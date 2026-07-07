@@ -1010,6 +1010,8 @@ Vozidlo: {2}
   <data name="FuelAnalysis.Value.ConsumptionUnavailable" xml:space="preserve"><value>nedostupná</value></data>
   <data name="FuelAnalysis.Value.PricePerVolume" xml:space="preserve"><value>{0}/{1}</value></data>
   <data name="FuelAnalysis.Value.ConsumptionPerDistance" xml:space="preserve"><value>{0} {1}/100 {2}</value></data>
+  <data name="FuelAnalysis.Value.ConsumptionMpg" xml:space="preserve"><value>{0} mpg</value></data>
+  <data name="FuelAnalysis.Value.ConsumptionMpgImperial" xml:space="preserve"><value>{0} mpg (imp)</value></data>
   <data name="FuelAnalysis.Warning.ConsumptionHigh.Description" xml:space="preserve"><value>Úsek končící {0} je výrazně nad průměrem vozidla.</value></data>
   <data name="FuelAnalysis.Warning.ConsumptionHigh.Title" xml:space="preserve"><value>Nezvykle vysoká spotřeba</value></data>
   <data name="FuelAnalysis.Warning.ConsumptionLow.Description" xml:space="preserve"><value>Úsek končící {0} je výrazně pod průměrem vozidla.</value></data>

@@ -1010,6 +1010,8 @@ Vehicle: {2}
   <data name="FuelAnalysis.Value.ConsumptionUnavailable" xml:space="preserve"><value>unavailable</value></data>
   <data name="FuelAnalysis.Value.PricePerVolume" xml:space="preserve"><value>{0}/{1}</value></data>
   <data name="FuelAnalysis.Value.ConsumptionPerDistance" xml:space="preserve"><value>{0} {1}/100 {2}</value></data>
+  <data name="FuelAnalysis.Value.ConsumptionMpg" xml:space="preserve"><value>{0} mpg</value></data>
+  <data name="FuelAnalysis.Value.ConsumptionMpgImperial" xml:space="preserve"><value>{0} mpg (imp)</value></data>
   <data name="FuelAnalysis.Warning.ConsumptionHigh.Description" xml:space="preserve"><value>The segment ending {0} is significantly above this vehicle's average.</value></data>
   <data name="FuelAnalysis.Warning.ConsumptionHigh.Title" xml:space="preserve"><value>Unusually high consumption</value></data>
   <data name="FuelAnalysis.Warning.ConsumptionLow.Description" xml:space="preserve"><value>The segment ending {0} is significantly below this vehicle's average.</value></data>

@@ -1253,7 +1253,7 @@ public sealed class I18nFoundationTests
     {
         var root = FindRepositoryRoot();
         var sourceRoot = Path.Combine(root, "dotnet", "src");
-        var literalRegex = new Regex("(?:\\s(?:km|mi|l)\\b|/(?:km|mi)\\b|US gal|imp gal|\\b(?:CZK|USD|EUR|GBP)\\b|Kč|\\bliters?\\b|\\blitres?\\b|\\blitr(?:y|ů|u|em)?\\b|\\bgalon(?:y|ů|u|em)?\\b)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        var literalRegex = new Regex("(?:\\s(?:km|mi|l)\\b|/(?:km|mi)\\b|US gal|imp gal|\\bmpg\\b|\\b(?:CZK|USD|EUR|GBP)\\b|Kč|\\bliters?\\b|\\blitres?\\b|\\blitr(?:y|ů|u|em)?\\b|\\bgalon(?:y|ů|u|em)?\\b)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         var failures = new List<string>();
         foreach (var file in Directory.EnumerateFiles(sourceRoot, "*.*", SearchOption.AllDirectories)
                      .Where(path => Path.GetExtension(path) is ".cs" or ".axaml")
