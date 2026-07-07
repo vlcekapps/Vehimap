@@ -157,7 +157,7 @@ public sealed class SettingsDialogViewModelTests
             "No automatic backup.",
             new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
 
-        Assert.Equal("621.4", viewModel.MaintenanceReminderKm);
+        Assert.Equal("621.4", viewModel.MaintenanceReminderDistance);
         Assert.Equal("Maintenance reminder distance in mi", viewModel.MaintenanceReminderDistanceName);
 
         var valid = viewModel.TryBuildSnapshot(out var snapshot, out var errorMessage);
@@ -166,7 +166,7 @@ public sealed class SettingsDialogViewModelTests
         Assert.Empty(errorMessage);
         Assert.Equal(1000, snapshot.MaintenanceReminderKm);
 
-        viewModel.MaintenanceReminderKm = "100";
+        viewModel.MaintenanceReminderDistance = "100";
 
         valid = viewModel.TryBuildSnapshot(out snapshot, out errorMessage);
 
@@ -198,11 +198,11 @@ public sealed class SettingsDialogViewModelTests
             "Bez automatické zálohy.",
             new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo("cs-CZ")));
 
-        Assert.Equal("1000", viewModel.MaintenanceReminderKm);
+        Assert.Equal("1000", viewModel.MaintenanceReminderDistance);
 
         viewModel.SelectedDistanceUnitOption = viewModel.DistanceUnitOptions.First(option => option.Value == "mi");
 
-        Assert.Equal("621,4", viewModel.MaintenanceReminderKm);
+        Assert.Equal("621,4", viewModel.MaintenanceReminderDistance);
         Assert.Equal("Upozornění na údržbu podle vzdálenosti v mi", viewModel.MaintenanceReminderDistanceName);
 
         var valid = viewModel.TryBuildSnapshot(out var snapshot, out var errorMessage);
@@ -236,11 +236,11 @@ public sealed class SettingsDialogViewModelTests
             "No automatic backup.",
             new ResourceAppLocalizer(System.Globalization.CultureInfo.GetCultureInfo("en-US")));
 
-        Assert.Equal("999,999", viewModel.MaintenanceReminderKm);
+        Assert.Equal("999,999", viewModel.MaintenanceReminderDistance);
 
         viewModel.SelectedThousandsSeparatorOption = viewModel.ThousandsSeparatorOptions.First(option => option.Value == "none");
 
-        Assert.Equal("999999", viewModel.MaintenanceReminderKm);
+        Assert.Equal("999999", viewModel.MaintenanceReminderDistance);
 
         var valid = viewModel.TryBuildSnapshot(out var snapshot, out var errorMessage);
 

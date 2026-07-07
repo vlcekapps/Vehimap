@@ -136,10 +136,10 @@
           <TextBox Grid.Row="3"
                    Grid.Column="1"
                    Margin="0,12,0,0"
-                   Text="{Binding MaintenanceReminderKm}"
+                   Text="{Binding MaintenanceReminderDistance}"
                    AutomationProperties.Name="{Binding MaintenanceReminderDistanceName}"
                    AutomationProperties.HelpText="{Binding MaintenanceReminderDistanceHelp}"
-                   AutomationProperties.AutomationId="MaintenanceReminderKmBox" />
+                   AutomationProperties.AutomationId="MaintenanceReminderDistanceBox" />
 
           <CheckBox Grid.Row="4"
                     Grid.ColumnSpan="2"

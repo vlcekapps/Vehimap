@@ -8,8 +8,8 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class SettingsDialogViewModel : ObservableObject
 {
-    private const int MinMaintenanceReminderKm = 1;
-    private const int MaxMaintenanceReminderKm = 999999;
+    private const int MinMaintenanceReminderDistanceKilometers = 1;
+    private const int MaxMaintenanceReminderDistanceKilometers = 999999;
 
     private IAppLocalizer _localizer = new ResourceAppLocalizer();
     private readonly IAppNumberFormatService _numberFormatService = new AppNumberFormatService();
@@ -26,7 +26,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
     private string maintenanceReminderDays = string.Empty;
 
     [ObservableProperty]
-    private string maintenanceReminderKm = string.Empty;
+    private string maintenanceReminderDistance = string.Empty;
 
     [ObservableProperty]
     private bool runAtStartup;
@@ -144,7 +144,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             || !TryParseBoundedIntLocalized(GreenCardReminderDays, 0, 3650, _localizer.GetString("Settings.GreenCardReminderDaysName"), out var greenCardReminderDays, out errorMessage)
             || !TryParseBoundedIntLocalized(MaintenanceReminderDays, 0, 3650, _localizer.GetString("Settings.MaintenanceReminderDaysName"), out var maintenanceReminderDays, out errorMessage)
             || !TryValidateDistinctNumberSeparators(out errorMessage)
-            || !TryParseMaintenanceReminderDistance(out var maintenanceReminderKm, out errorMessage))
+            || !TryParseMaintenanceReminderDistance(out var maintenanceReminderDistanceKilometers, out errorMessage))
         {
             snapshot = default!;
             return false;
@@ -177,7 +177,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
             technicalReminderDays,
             greenCardReminderDays,
             maintenanceReminderDays,
-            maintenanceReminderKm,
+            maintenanceReminderDistanceKilometers,
             RunAtStartup,
             HideOnLaunch,
             ShowDashboardOnLaunch,
@@ -282,7 +282,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
     {
         var culturePreferences = BuildCulturePreferences();
         var unitPreferences = BuildUnitPreferences();
-        if (!_numberFormatService.TryParseDecimal(MaintenanceReminderKm, culturePreferences, out var distance)
+        if (!_numberFormatService.TryParseDecimal(MaintenanceReminderDistance, culturePreferences, out var distance)
             || distance <= 0m)
         {
             kilometers = 0;
@@ -292,7 +292,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
 
         var convertedKilometers = _unitFormatService.ConvertDistanceToKilometers(distance, unitPreferences);
         var roundedKilometers = (int)Math.Round(convertedKilometers, MidpointRounding.AwayFromZero);
-        if (roundedKilometers < MinMaintenanceReminderKm || roundedKilometers > MaxMaintenanceReminderKm)
+        if (roundedKilometers < MinMaintenanceReminderDistanceKilometers || roundedKilometers > MaxMaintenanceReminderDistanceKilometers)
         {
             kilometers = 0;
             errorMessage = BuildMaintenanceReminderDistanceRangeMessage(culturePreferences, unitPreferences);
@@ -307,14 +307,14 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
 
     private string BuildMaintenanceReminderDistanceRangeMessage(AppCulturePreferences culturePreferences, AppUnitPreferences unitPreferences)
     {
-        var minValue = FormatMaintenanceReminderDistance(MinMaintenanceReminderKm, culturePreferences, unitPreferences);
-        var maxValue = FormatMaintenanceReminderDistance(MaxMaintenanceReminderKm, culturePreferences, unitPreferences);
+        var minValue = FormatMaintenanceReminderDistance(MinMaintenanceReminderDistanceKilometers, culturePreferences, unitPreferences);
+        var maxValue = FormatMaintenanceReminderDistance(MaxMaintenanceReminderDistanceKilometers, culturePreferences, unitPreferences);
         return _localizer.Format("Settings.Validation.NumberRange", MaintenanceReminderDistanceName, minValue, maxValue);
     }
 
     private void SetMaintenanceReminderDistanceKilometers(int kilometers)
     {
-        maintenanceReminderDistanceKilometers = Math.Clamp(kilometers, MinMaintenanceReminderKm, MaxMaintenanceReminderKm);
+        maintenanceReminderDistanceKilometers = Math.Clamp(kilometers, MinMaintenanceReminderDistanceKilometers, MaxMaintenanceReminderDistanceKilometers);
         RefreshMaintenanceReminderDistanceText();
     }
 
@@ -326,11 +326,11 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
     {
         var culturePreferences = BuildCulturePreferences(language, thousandsSeparator, decimalSeparator);
         var unitPreferences = BuildUnitPreferences(distanceUnit);
-        if (_numberFormatService.TryParseDecimal(MaintenanceReminderKm, culturePreferences, out var distance)
+        if (_numberFormatService.TryParseDecimal(MaintenanceReminderDistance, culturePreferences, out var distance)
             && distance > 0m)
         {
             var convertedKilometers = _unitFormatService.ConvertDistanceToKilometers(distance, unitPreferences);
-            if (convertedKilometers >= MinMaintenanceReminderKm && convertedKilometers <= MaxMaintenanceReminderKm)
+            if (convertedKilometers >= MinMaintenanceReminderDistanceKilometers && convertedKilometers <= MaxMaintenanceReminderDistanceKilometers)
             {
                 maintenanceReminderDistanceKilometers = convertedKilometers;
             }
@@ -339,7 +339,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
 
     private void RefreshMaintenanceReminderDistanceText()
     {
-        MaintenanceReminderKm = FormatMaintenanceReminderDistance(maintenanceReminderDistanceKilometers, BuildCulturePreferences(), BuildUnitPreferences());
+        MaintenanceReminderDistance = FormatMaintenanceReminderDistance(maintenanceReminderDistanceKilometers, BuildCulturePreferences(), BuildUnitPreferences());
     }
 
     private string FormatMaintenanceReminderDistance(decimal kilometers, AppCulturePreferences culturePreferences, AppUnitPreferences unitPreferences)

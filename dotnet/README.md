@@ -80,6 +80,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - interní sort helpery používají jednotkově neutrální názvy pro palivové množství, takže guard už nepotřebuje výjimku pro řazení podle objemu paliva
 - editor tankovani ma jednotkove neutralni pole a accessibility id `FuelEditorVolumeBox`; do kanonickych litru se hodnota prevadi az pri ulozeni
 - editor planu udrzby ma jednotkove neutralni pole a accessibility id `MaintenanceEditorIntervalDistanceBox`; do kanonickych kilometru se interval prevadi az pri ulozeni
+- nastaveni upozorneni na udrzbu podle vzdalenosti ma jednotkove neutralni pole a accessibility id `MaintenanceReminderDistanceBox`; do snapshotu nastaveni se uklada kanonicka hodnota v kilometrech
 - startovaci balicek pro vozidlo pouziva pro servisni interval zvolenou jednotku a accessibility id `BundleMaintenanceIntervalDistanceBox`; vystupni sablona zustava kanonicky v kilometrech
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 - i18n conformance gate navic overuje anglicke UI nad ceskymi legacy daty: systemove/known hodnoty se zobrazuji pres EN/CS `.resx`, ale uzivatelsky zadane nazvy, modely, poznamky a dalsi volny text zustavaji beze zmeny

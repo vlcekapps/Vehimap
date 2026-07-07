@@ -433,6 +433,9 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc WorkspaceTabs.ContentName}\"", mainWindow);
         Assert.Contains("Title=\"{i18n:Loc Settings.Title}\"", settingsWindow);
         Assert.Contains("Settings.LocaleFormattingHeading", settingsWindow);
+        Assert.Contains("Text=\"{Binding MaintenanceReminderDistance}\"", settingsWindow);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceReminderDistanceBox\"", settingsWindow);
+        Assert.DoesNotContain("MaintenanceReminderKmBox", settingsWindow);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc Settings.OptionsListName}\"", settingsWindow);
         Assert.DoesNotContain("AutomationProperties.Name=\"Volby nastavení\"", settingsWindow);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc About.Title}\"", aboutWindow);
