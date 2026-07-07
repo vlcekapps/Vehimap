@@ -22,7 +22,7 @@
   <data name="About.Diagnostics.DataMode" xml:space="preserve"><value>Režim dat: {0}</value></data>
   <data name="About.Diagnostics.DataPath" xml:space="preserve"><value>Datová složka: {0}</value></data>
   <data name="About.Diagnostics.FileVersion" xml:space="preserve"><value>Souborová verze: {0}</value></data>
-  <data name="About.Diagnostics.Framework" xml:space="preserve"><value>.NET runtime: {0}</value></data>
+  <data name="About.Diagnostics.Framework" xml:space="preserve"><value>Běhové prostředí .NET: {0}</value></data>
   <data name="About.Diagnostics.Header" xml:space="preserve"><value>Vehimap - O programu</value></data>
   <data name="About.Diagnostics.Platform" xml:space="preserve"><value>Platforma: {0}</value></data>
   <data name="About.Diagnostics.ReleaseChannel" xml:space="preserve"><value>Kanál: {0}</value></data>
@@ -121,7 +121,7 @@
   <data name="LegacyData.Section.Attachments" xml:space="preserve"><value>příloh</value></data>
   <data name="LegacyData.LoadFailed" xml:space="preserve"><value>Soubor {0} ({1}) se nepodařilo načíst.</value></data>
   <data name="LegacyData.CheckFile" xml:space="preserve"><value>Zkontrolujte soubor: {0}</value></data>
-  <data name="LegacyData.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
+  <data name="LegacyData.Detail" xml:space="preserve"><value>Podrobnosti: {0}</value></data>
   <data name="LegacyBackup.Error.InvalidHeader" xml:space="preserve"><value>Soubor zálohy nemá platnou hlavičku.</value></data>
   <data name="LegacyBackup.Error.InvalidFormat" xml:space="preserve"><value>Soubor není ve formátu zálohy Vehimap.</value></data>
   <data name="LegacyBackup.Error.IncompleteOrCorrupt" xml:space="preserve"><value>Soubor zálohy je neúplný nebo poškozený.</value></data>
@@ -135,7 +135,7 @@
   <data name="LegacySection.FieldCount.Count" xml:space="preserve"><value>{0} polí</value></data>
   <data name="LegacySection.FieldCount.SixOrSeven" xml:space="preserve"><value>6 nebo 7 polí</value></data>
   <data name="LegacySection.FieldCount.Two" xml:space="preserve"><value>2 pole</value></data>
-  <data name="LegacyBackup.ImportFailed" xml:space="preserve"><value>Zálohu se nepodařilo načíst: {0}. Detail: {1}</value></data>
+  <data name="LegacyBackup.ImportFailed" xml:space="preserve"><value>Zálohu se nepodařilo načíst: {0}. Podrobnosti: {1}</value></data>
   <data name="LegacyBackup.PathMissing" xml:space="preserve"><value>(nebyla zadána cesta k záloze)</value></data>
   <data name="InstallerLocaleSeed.Applied" xml:space="preserve"><value>Instalační jazykové předvolby byly doplněny do datové sady 2.0.</value></data>
   <data name="InstallerLocaleSeed.InvalidLanguage" xml:space="preserve"><value>Instalační jazykové předvolby neobsahují podporovaný konkrétní jazyk.</value></data>
@@ -148,7 +148,7 @@
   <data name="FeedbackIssue.ChannelLabel" xml:space="preserve"><value>Kanál</value></data>
   <data name="FeedbackIssue.DataModeLabel" xml:space="preserve"><value>Režim dat</value></data>
   <data name="FeedbackIssue.ExpectedHeading" xml:space="preserve"><value>Očekávané chování</value></data>
-  <data name="FeedbackIssue.FrameworkLabel" xml:space="preserve"><value>Runtime</value></data>
+  <data name="FeedbackIssue.FrameworkLabel" xml:space="preserve"><value>Běhové prostředí</value></data>
   <data name="FeedbackIssue.KeyboardLabel" xml:space="preserve"><value>Klávesnice</value></data>
   <data name="FeedbackIssue.LargeTextLabel" xml:space="preserve"><value>Větší písmo nebo DPI</value></data>
   <data name="FeedbackIssue.Note" xml:space="preserve"><value>Poznámka: veřejný issue nepředvyplňuje datovou složku ani názvy vozidel. Pokud jsou potřeba, doplňte je prosím ručně jen v rozsahu, který chcete zveřejnit.</value></data>
@@ -1449,7 +1449,7 @@ Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
   <data name="TimelineWorkspace.Detail.Selected" xml:space="preserve"><value>Datum: {0}
 Druh: {1}
 Položka: {2}
-Detail: {3}
+Podrobnosti: {3}
 Stav: {4}
 Poznámka: {5}</value></data>
   <data name="TimelineWorkspace.ExportStatus.Initial" xml:space="preserve"><value>Kalendářový export zatím nebyl spuštěn.</value></data>
@@ -1521,7 +1521,7 @@ Datum: {1}
 Druh: {2}
 Položka: {3}
 Stav: {4}
-Detail: {5}</value></data>
+Podrobnosti: {5}</value></data>
   <data name="Overview.DataIssue.Date" xml:space="preserve"><value>Doplnit</value></data>
   <data name="Overview.DataIssue.Detail" xml:space="preserve"><value>{0}: {1}</value></data>
   <data name="Overview.DataIssue.KindLabel" xml:space="preserve"><value>Datový nedostatek</value></data>
@@ -2077,7 +2077,7 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Value.NoOdometer" xml:space="preserve"><value>bez tachometru</value></data>
   <data name="ServiceBook.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="ServiceBook.Value.NoPrice" xml:space="preserve"><value>bez ceny</value></data>
-  <data name="CalendarExport.Description.Detail" xml:space="preserve"><value>Detail: {0}</value></data>
+  <data name="CalendarExport.Description.Detail" xml:space="preserve"><value>Podrobnosti: {0}</value></data>
   <data name="CalendarExport.Description.DueDate" xml:space="preserve"><value>Termín: {0}</value></data>
   <data name="CalendarExport.Description.Item" xml:space="preserve"><value>Položka: {0}</value></data>
   <data name="CalendarExport.Description.Kind" xml:space="preserve"><value>Druh: {0}</value></data>
@@ -2098,7 +2098,7 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Export.EmptySection" xml:space="preserve"><value>V této části zatím nejsou žádné položky.</value></data>
   <data name="ServiceBook.Export.Column.Primary" xml:space="preserve"><value>Hlavní údaj</value></data>
   <data name="ServiceBook.Export.Column.Secondary" xml:space="preserve"><value>Doplňující údaj</value></data>
-  <data name="ServiceBook.Export.Column.Detail" xml:space="preserve"><value>Detail</value></data>
+  <data name="ServiceBook.Export.Column.Detail" xml:space="preserve"><value>Podrobnosti</value></data>
   <data name="ServiceBook.Export.Column.Status" xml:space="preserve"><value>Stav</value></data>
   <data name="VehicleStarterBundle.Catalog.Section.Maintenance" xml:space="preserve"><value>Servis</value></data>
   <data name="VehicleStarterBundle.Catalog.Section.Record" xml:space="preserve"><value>Doklad</value></data>
@@ -2458,7 +2458,7 @@ Kategorie: {1}
 Vozidlo: {2}
 Doporučení: {3}
 Souhrn: {4}
-Detail: {5}
+Podrobnosti: {5}
 Navržená akce: {6}</value></data>
   <data name="SmartAdvisor.Summary.FilteredEmpty" xml:space="preserve"><value>Aktuální filtry nenašly žádné doporučení.</value></data>
   <data name="SmartAdvisor.Summary.FilteredCount" xml:space="preserve"><value>Aktuální filtry zobrazují {0} z {1} doporučení.</value></data>

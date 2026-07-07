@@ -85,6 +85,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - startovaci balicek pro vozidlo pouziva pro servisni interval zvolenou jednotku a accessibility id `BundleMaintenanceIntervalDistanceBox`; vystupni sablona zustava kanonicky v kilometrech
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 - i18n conformance gate navic overuje anglicke UI nad ceskymi legacy daty: systemove/known hodnoty se zobrazuji pres EN/CS `.resx`, ale uzivatelsky zadane nazvy, modely, poznamky a dalsi volny text zustavaji beze zmeny
+- diagnostika, kalendarove exporty a servisni HTML reporty pouzivaji v cestine prirozene popisky jako `Běhové prostředí` a `Podrobnosti`, ne prevzate technicke texty typu `Runtime`/`Detail`
 - produkcni C# zdroje maji staticky guard proti ceskym UI literalum mimo `.resx`; povolene vyjimky jsou jen legacy tokeny, kompatibilni aliasy, parser/search klicova slova a sablonova data
 - viditelne ulozene volby, ktere jeste nejsou prevedene na stabilni interni klice, musi mit i18n aliasy; hlavni filtry seznamu vozidel a rezim dokladovych priloh uz rozpoznavaji stare ceske i nove anglicke labely; editorove ComboBoxy pro zname hodnoty ukladaji `Value` a nikdy viditelny `Label`
 - viditelne volby razeni v evidencich, terminovych prehledech, auditu a globalnim hledani uz pouzivaji `.resx` labely nad stabilnimi internimi klici; stare ceske i anglicke labely zustavaji kompatibilni jako ulozene preference

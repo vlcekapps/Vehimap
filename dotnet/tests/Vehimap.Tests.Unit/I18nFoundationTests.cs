@@ -87,6 +87,12 @@ public sealed class I18nFoundationTests
         Assert.Equal("Měna", czech.GetString("Settings.Currency"));
         Assert.Equal("Installer language preferences were added to the 2.0 data set.", english.GetString("InstallerLocaleSeed.Applied"));
         Assert.Equal("Instalační jazykové předvolby byly doplněny do datové sady 2.0.", czech.GetString("InstallerLocaleSeed.Applied"));
+        Assert.Equal(".NET runtime: 10.0", english.Format("About.Diagnostics.Framework", "10.0"));
+        Assert.Equal("Běhové prostředí .NET: 10.0", czech.Format("About.Diagnostics.Framework", "10.0"));
+        Assert.Equal("Detail: loaded", english.Format("LegacyData.Detail", "loaded"));
+        Assert.Equal("Podrobnosti: načteno", czech.Format("LegacyData.Detail", "načteno"));
+        Assert.Equal("Runtime", english.GetString("FeedbackIssue.FrameworkLabel"));
+        Assert.Equal("Běhové prostředí", czech.GetString("FeedbackIssue.FrameworkLabel"));
         Assert.Equal("Restore data from backup", english.GetString("AppShell.ImportBackup.ConfirmTitle"));
         Assert.Equal("Obnovit data ze zálohy", czech.GetString("AppShell.ImportBackup.ConfirmTitle"));
         Assert.Equal("close the fuel editor", english.GetString("WorkspaceWindow.CloseAction.Fuel"));
@@ -101,6 +107,10 @@ public sealed class I18nFoundationTests
         Assert.Equal("Povinné ručení", czech.GetString("KnownValue.RecordType.LiabilityInsurance"));
         Assert.Equal("Every 2 years", english.GetString("KnownValue.ReminderRepeat.EveryTwoYears"));
         Assert.Equal("Každé 2 roky", czech.GetString("KnownValue.ReminderRepeat.EveryTwoYears"));
+        Assert.Equal("Detail: service", english.Format("CalendarExport.Description.Detail", "service"));
+        Assert.Equal("Podrobnosti: servis", czech.Format("CalendarExport.Description.Detail", "servis"));
+        Assert.Equal("Detail", english.GetString("ServiceBook.Export.Column.Detail"));
+        Assert.Equal("Podrobnosti", czech.GetString("ServiceBook.Export.Column.Detail"));
         Assert.Equal("Missing.Key.For.Test", english.GetString("Missing.Key.For.Test"));
     }
 
