@@ -1,71 +1,74 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 
 namespace Vehimap.Application.Services;
 
 public static class LegacyKnownValueDisplayService
 {
-    private static readonly IReadOnlyDictionary<string, string> CategoryKeys = CreateMap(
-        ("Osobní vozidla", "KnownValue.Category.PassengerVehicles"),
-        ("Motocykly", "KnownValue.Category.Motorcycles"),
-        ("Nákladní vozidla", "KnownValue.Category.Trucks"),
-        ("Autobusy", "KnownValue.Category.Buses"),
-        ("Ostatní", "KnownValue.Category.Other"));
+    private static readonly KnownValueDisplayDefinition[] CategoryKeys = CreateDefinitions(
+        "KnownValue.Category.PassengerVehicles",
+        "KnownValue.Category.Motorcycles",
+        "KnownValue.Category.Trucks",
+        "KnownValue.Category.Buses",
+        "KnownValue.Category.Other");
 
-    private static readonly IReadOnlyDictionary<string, string> RecordTypeKeys = CreateMap(
-        ("Povinné ručení", "KnownValue.RecordType.LiabilityInsurance"),
-        ("Havarijní pojištění", "KnownValue.RecordType.ComprehensiveInsurance"),
-        ("Asistence", "KnownValue.RecordType.Assistance"),
-        ("Doklad", "KnownValue.RecordType.Document"),
-        ("Servisní dokument", "KnownValue.RecordType.ServiceDocument"),
-        ("Jiné", "KnownValue.RecordType.Other"));
+    private static readonly KnownValueDisplayDefinition[] RecordTypeKeys = CreateDefinitions(
+        "KnownValue.RecordType.LiabilityInsurance",
+        "KnownValue.RecordType.ComprehensiveInsurance",
+        "KnownValue.RecordType.Assistance",
+        "KnownValue.RecordType.Document",
+        "KnownValue.RecordType.ServiceDocument",
+        "KnownValue.RecordType.Other");
 
-    private static readonly IReadOnlyDictionary<string, string> VehicleStateKeys = CreateMap(
-        ("Běžný provoz", "KnownValue.VehicleState.NormalOperation"),
-        ("Veterán", "KnownValue.VehicleState.Veteran"),
-        ("Odstaveno", "KnownValue.VehicleState.OutOfService"),
-        ("V renovaci", "KnownValue.VehicleState.InRenovation"),
-        ("Na prodej", "KnownValue.VehicleState.ForSale"),
-        ("Archiv", "KnownValue.VehicleState.Archive"));
+    private static readonly KnownValueDisplayDefinition[] VehicleStateKeys = CreateDefinitions(
+        "KnownValue.VehicleState.NormalOperation",
+        "KnownValue.VehicleState.Veteran",
+        "KnownValue.VehicleState.OutOfService",
+        "KnownValue.VehicleState.InRenovation",
+        "KnownValue.VehicleState.ForSale",
+        "KnownValue.VehicleState.Archive");
 
-    private static readonly IReadOnlyDictionary<string, string> PowertrainKeys = CreateMap(
-        ("Benzín", "KnownValue.Powertrain.Gasoline"),
-        ("Benzin", "KnownValue.Powertrain.Gasoline"),
-        ("Nafta", "KnownValue.Powertrain.Diesel"),
-        ("Hybrid", "KnownValue.Powertrain.Hybrid"),
-        ("Plug-in hybrid", "KnownValue.Powertrain.PluginHybrid"),
-        ("Elektro", "KnownValue.Powertrain.Electric"),
-        ("LPG / CNG", "KnownValue.Powertrain.LpgCng"),
-        ("Jiné", "KnownValue.Powertrain.Other"));
+    private static readonly KnownValueDisplayDefinition[] PowertrainKeys =
+    [
+        Definition("KnownValue.Powertrain.Gasoline", "KnownValue.Powertrain.Gasoline.LegacyAscii"),
+        Definition("KnownValue.Powertrain.Diesel"),
+        Definition("KnownValue.Powertrain.Hybrid"),
+        Definition("KnownValue.Powertrain.PluginHybrid"),
+        Definition("KnownValue.Powertrain.Electric"),
+        Definition("KnownValue.Powertrain.LpgCng"),
+        Definition("KnownValue.Powertrain.Other")
+    ];
 
-    private static readonly IReadOnlyDictionary<string, string> ClimateProfileKeys = CreateMap(
-        ("Má klimatizaci", "KnownValue.Climate.HasAirConditioning"),
-        ("Bez klimatizace", "KnownValue.Climate.NoAirConditioning"));
+    private static readonly KnownValueDisplayDefinition[] ClimateProfileKeys = CreateDefinitions(
+        "KnownValue.Climate.HasAirConditioning",
+        "KnownValue.Climate.NoAirConditioning");
 
-    private static readonly IReadOnlyDictionary<string, string> TimingDriveKeys = CreateMap(
-        ("Řemen", "KnownValue.TimingDrive.Belt"),
-        ("Řetěz", "KnownValue.TimingDrive.Chain"),
-        ("Není relevantní", "KnownValue.Common.NotRelevant"));
+    private static readonly KnownValueDisplayDefinition[] TimingDriveKeys = CreateDefinitions(
+        "KnownValue.TimingDrive.Belt",
+        "KnownValue.TimingDrive.Chain",
+        "KnownValue.Common.NotRelevant");
 
-    private static readonly IReadOnlyDictionary<string, string> TransmissionKeys = CreateMap(
-        ("Manuální", "KnownValue.Transmission.Manual"),
-        ("Automatická", "KnownValue.Transmission.Automatic"),
-        ("Není relevantní", "KnownValue.Common.NotRelevant"));
+    private static readonly KnownValueDisplayDefinition[] TransmissionKeys = CreateDefinitions(
+        "KnownValue.Transmission.Manual",
+        "KnownValue.Transmission.Automatic",
+        "KnownValue.Common.NotRelevant");
 
-    private static readonly IReadOnlyDictionary<string, string> FuelTypeKeys = CreateMap(
-        ("Benzín", "KnownValue.FuelType.Gasoline"),
-        ("Benzin", "KnownValue.FuelType.Gasoline"),
-        ("Nafta", "KnownValue.FuelType.Diesel"),
-        ("LPG", "KnownValue.FuelType.Lpg"),
-        ("CNG", "KnownValue.FuelType.Cng"),
-        ("Elektřina", "KnownValue.FuelType.Electricity"),
-        ("Jiné", "KnownValue.FuelType.Other"));
+    private static readonly KnownValueDisplayDefinition[] FuelTypeKeys =
+    [
+        Definition("KnownValue.FuelType.Gasoline", "KnownValue.FuelType.Gasoline.LegacyAscii"),
+        Definition("KnownValue.FuelType.Diesel"),
+        Definition("KnownValue.FuelType.Lpg"),
+        Definition("KnownValue.FuelType.Cng"),
+        Definition("KnownValue.FuelType.Electricity"),
+        Definition("KnownValue.FuelType.Other")
+    ];
 
-    private static readonly IReadOnlyDictionary<string, string> ReminderRepeatModeKeys = CreateMap(
-        ("Neopakovat", "KnownValue.ReminderRepeat.None"),
-        ("Každý rok", "KnownValue.ReminderRepeat.Yearly"),
-        ("Každé 2 roky", "KnownValue.ReminderRepeat.EveryTwoYears"),
-        ("Každých 5 let", "KnownValue.ReminderRepeat.EveryFiveYears"));
+    private static readonly KnownValueDisplayDefinition[] ReminderRepeatModeKeys = CreateDefinitions(
+        "KnownValue.ReminderRepeat.None",
+        "KnownValue.ReminderRepeat.Yearly",
+        "KnownValue.ReminderRepeat.EveryTwoYears",
+        "KnownValue.ReminderRepeat.EveryFiveYears");
 
     public static string FormatCategory(string? value, IAppLocalizer localizer) =>
         FormatKnownValue(value, localizer, CategoryKeys);
@@ -94,7 +97,7 @@ public static class LegacyKnownValueDisplayService
     public static string FormatReminderRepeatMode(string? value, IAppLocalizer localizer) =>
         FormatKnownValue(value, localizer, ReminderRepeatModeKeys);
 
-    private static string FormatKnownValue(string? value, IAppLocalizer localizer, IReadOnlyDictionary<string, string> keyByLegacyValue)
+    private static string FormatKnownValue(string? value, IAppLocalizer localizer, IReadOnlyList<KnownValueDisplayDefinition> definitions)
     {
         var normalized = (value ?? string.Empty).Trim();
         if (normalized.Length == 0)
@@ -102,11 +105,28 @@ public static class LegacyKnownValueDisplayService
             return string.Empty;
         }
 
-        return keyByLegacyValue.TryGetValue(normalized, out var key)
-            ? localizer.GetString(key)
-            : normalized;
+        foreach (var definition in definitions)
+        {
+            if (definition.MatchResourceKeys.SelectMany(EnumerateResourceValues).Any(candidate => string.Equals(normalized, candidate, StringComparison.OrdinalIgnoreCase)))
+            {
+                return localizer.GetString(definition.DisplayResourceKey);
+            }
+        }
+
+        return normalized;
     }
 
-    private static IReadOnlyDictionary<string, string> CreateMap(params (string Value, string ResourceKey)[] pairs) =>
-        pairs.ToDictionary(pair => pair.Value, pair => pair.ResourceKey, StringComparer.OrdinalIgnoreCase);
+    private static KnownValueDisplayDefinition[] CreateDefinitions(params string[] resourceKeys) =>
+        resourceKeys.Select(resourceKey => Definition(resourceKey)).ToArray();
+
+    private static KnownValueDisplayDefinition Definition(string displayResourceKey, params string[] extraMatchResourceKeys) =>
+        new(displayResourceKey, [displayResourceKey, .. extraMatchResourceKeys]);
+
+    private static IEnumerable<string> EnumerateResourceValues(string resourceKey)
+    {
+        yield return new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)).GetString(resourceKey);
+        yield return new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)).GetString(resourceKey);
+    }
+
+    private sealed record KnownValueDisplayDefinition(string DisplayResourceKey, IReadOnlyList<string> MatchResourceKeys);
 }

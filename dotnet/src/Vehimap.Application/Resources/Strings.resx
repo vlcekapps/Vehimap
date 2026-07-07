@@ -2496,6 +2496,7 @@ Suggested action: {6}</value></data>
   <data name="KnownValue.VehicleState.ForSale" xml:space="preserve"><value>For sale</value></data>
   <data name="KnownValue.VehicleState.Archive" xml:space="preserve"><value>Archive</value></data>
   <data name="KnownValue.Powertrain.Gasoline" xml:space="preserve"><value>Gasoline</value></data>
+  <data name="KnownValue.Powertrain.Gasoline.LegacyAscii" xml:space="preserve"><value>Benzin</value></data>
   <data name="KnownValue.Powertrain.Diesel" xml:space="preserve"><value>Diesel</value></data>
   <data name="KnownValue.Powertrain.Hybrid" xml:space="preserve"><value>Hybrid</value></data>
   <data name="KnownValue.Powertrain.PluginHybrid" xml:space="preserve"><value>Plug-in hybrid</value></data>
@@ -2510,6 +2511,7 @@ Suggested action: {6}</value></data>
   <data name="KnownValue.Transmission.Manual" xml:space="preserve"><value>Manual</value></data>
   <data name="KnownValue.Transmission.Automatic" xml:space="preserve"><value>Automatic</value></data>
   <data name="KnownValue.FuelType.Gasoline" xml:space="preserve"><value>Gasoline</value></data>
+  <data name="KnownValue.FuelType.Gasoline.LegacyAscii" xml:space="preserve"><value>Benzin</value></data>
   <data name="KnownValue.FuelType.Diesel" xml:space="preserve"><value>Diesel</value></data>
   <data name="KnownValue.FuelType.Lpg" xml:space="preserve"><value>LPG</value></data>
   <data name="KnownValue.FuelType.Cng" xml:space="preserve"><value>CNG</value></data>

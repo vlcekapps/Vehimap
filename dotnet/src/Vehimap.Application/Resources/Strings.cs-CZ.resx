@@ -2496,6 +2496,7 @@ Navržená akce: {6}</value></data>
   <data name="KnownValue.VehicleState.ForSale" xml:space="preserve"><value>Na prodej</value></data>
   <data name="KnownValue.VehicleState.Archive" xml:space="preserve"><value>Archiv</value></data>
   <data name="KnownValue.Powertrain.Gasoline" xml:space="preserve"><value>Benzín</value></data>
+  <data name="KnownValue.Powertrain.Gasoline.LegacyAscii" xml:space="preserve"><value>Benzin</value></data>
   <data name="KnownValue.Powertrain.Diesel" xml:space="preserve"><value>Nafta</value></data>
   <data name="KnownValue.Powertrain.Hybrid" xml:space="preserve"><value>Hybrid</value></data>
   <data name="KnownValue.Powertrain.PluginHybrid" xml:space="preserve"><value>Plug-in hybrid</value></data>
@@ -2510,6 +2511,7 @@ Navržená akce: {6}</value></data>
   <data name="KnownValue.Transmission.Manual" xml:space="preserve"><value>Manuální</value></data>
   <data name="KnownValue.Transmission.Automatic" xml:space="preserve"><value>Automatická</value></data>
   <data name="KnownValue.FuelType.Gasoline" xml:space="preserve"><value>Benzín</value></data>
+  <data name="KnownValue.FuelType.Gasoline.LegacyAscii" xml:space="preserve"><value>Benzin</value></data>
   <data name="KnownValue.FuelType.Diesel" xml:space="preserve"><value>Nafta</value></data>
   <data name="KnownValue.FuelType.Lpg" xml:space="preserve"><value>LPG</value></data>
   <data name="KnownValue.FuelType.Cng" xml:space="preserve"><value>CNG</value></data>

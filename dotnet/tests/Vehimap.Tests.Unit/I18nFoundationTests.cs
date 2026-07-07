@@ -112,9 +112,13 @@ public sealed class I18nFoundationTests
 
         Assert.Equal("Passenger vehicles", LegacyKnownValueDisplayService.FormatCategory("Osobní vozidla", english));
         Assert.Equal("Osobní vozidla", LegacyKnownValueDisplayService.FormatCategory("Osobní vozidla", czech));
+        Assert.Equal("Passenger vehicles", LegacyKnownValueDisplayService.FormatCategory("Passenger vehicles", english));
+        Assert.Equal("Osobní vozidla", LegacyKnownValueDisplayService.FormatCategory("Passenger vehicles", czech));
         Assert.Equal("Gasoline", LegacyKnownValueDisplayService.FormatFuelType("Benzin", english));
+        Assert.Equal("Benzín", LegacyKnownValueDisplayService.FormatFuelType("Benzin", czech));
         Assert.Equal("Gasoline", LegacyKnownValueDisplayService.FormatPowertrain("Benzín", english));
         Assert.Equal("Every year", LegacyKnownValueDisplayService.FormatReminderRepeatMode("Každý rok", english));
+        Assert.Equal("Každý rok", LegacyKnownValueDisplayService.FormatReminderRepeatMode("Every year", czech));
         Assert.Equal("Custom category", LegacyKnownValueDisplayService.FormatCategory("Custom category", english));
         Assert.Equal(string.Empty, LegacyKnownValueDisplayService.FormatRecordType("", english));
     }
@@ -1410,7 +1414,6 @@ public sealed class I18nFoundationTests
         if (relativePath is
             "dotnet/src/Vehimap.Storage.Legacy/LegacyKnownValues.cs" or
             "dotnet/src/Vehimap.Storage.Legacy/LegacyVehicleValueNormalization.cs" or
-            "dotnet/src/Vehimap.Application/Services/LegacyKnownValueDisplayService.cs" or
             "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs")
         {
             return true;
