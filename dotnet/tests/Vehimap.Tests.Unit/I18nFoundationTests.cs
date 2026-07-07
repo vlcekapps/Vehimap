@@ -298,6 +298,16 @@ public sealed class I18nFoundationTests
         Assert.Equal("£", AppCurrencyFormatService.GetCurrencySymbol(AppCurrencyFormatService.BritishPounds));
     }
 
+    [Theory]
+    [InlineData("1 234,50 Kč", 1234.5)]
+    [InlineData("1 234,50 CZK", 1234.5)]
+    [InlineData("1,234.50 USD", 1234.5)]
+    public void Value_parser_accepts_common_money_markers_without_treating_them_as_ui_labels(string text, double expected)
+    {
+        Assert.True(VehimapValueParser.TryParseMoney(text, out var parsed));
+        Assert.Equal((decimal)expected, parsed);
+    }
+
     [Fact]
     public void Unit_format_service_keeps_storage_in_metric_and_formats_display_units()
     {
@@ -1489,11 +1499,6 @@ public sealed class I18nFoundationTests
             return IsAllowedVehicleStarterBundleCatalogLine(line);
         }
 
-        if (relativePath is "dotnet/src/Vehimap.Application/Services/VehimapValueParser.cs")
-        {
-            return line.Contains("\"kč\"", StringComparison.Ordinal);
-        }
-
         return false;
     }
 
@@ -1522,7 +1527,7 @@ public sealed class I18nFoundationTests
 
         if (relativePath is "dotnet/src/Vehimap.Application/Services/VehimapValueParser.cs")
         {
-            return line.Contains("\"kč\"", StringComparison.Ordinal)
+            return line.Contains("\"k\\u010D\"", StringComparison.Ordinal)
                 || line.Contains("\"czk\"", StringComparison.Ordinal);
         }
 

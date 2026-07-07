@@ -6,6 +6,9 @@ namespace Vehimap.Application.Services;
 
 public static class VehimapValueParser
 {
+    private const string CzechCrownsTextMarker = "k\u010D";
+    private const string CzechCrownsCodeMarker = "czk";
+
     private static readonly string[] EventDateFormats =
     [
         "dd.MM.yyyy",
@@ -91,8 +94,8 @@ public static class VehimapValueParser
         if (stripCommonMoneyMarkers)
         {
             clean = clean
-                .Replace("kč", string.Empty, StringComparison.Ordinal)
-                .Replace("czk", string.Empty, StringComparison.Ordinal);
+                .Replace(CzechCrownsTextMarker, string.Empty, StringComparison.Ordinal)
+                .Replace(CzechCrownsCodeMarker, string.Empty, StringComparison.Ordinal);
         }
 
         clean = clean

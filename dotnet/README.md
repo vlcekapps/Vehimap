@@ -58,6 +58,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - legacy normalizatory odkazuji na pojmenovane `LegacyKnownValues` konstanty misto vraceni novych ceskych literalu, takze kompatibilni storage tokeny zustavaji centralizovane na jednom miste
 - startovaci balicek pouziva pojmenovane legacy tokeny i pro automaticky generovane pripominky; volne ceske radky v aplikacni logice nejsou povolene mimo dokumentovany katalog/sablony
 - vychozi mena je sdilena konstanta `DefaultCurrency` a symboly men patri pouze do `AppCurrencyFormatService`; UI, reporty a exporty maji pouzivat formatovaci sluzbu, ne vlastni pevne popisky
+- parser cisel a castek smi rozpoznavat kompatibilni markery jako `Kc`/`Kč` a `CZK`, ale jen jako vstupni boundary tokeny; viditelne castky se vzdy formatuji pres sdilenou sluzbu
 - ulozene volby filtru, razeni, nakladovych obdobi a navigacnich cilu nepouzivaji viditelny EN/CS text jako ridici hodnotu; nove preference ukladaji stabilni klice jako `all`, `future`, `green_cards`, `cost`, `vehicle` nebo `custom` a stare ceske/anglicke labely slouzi jen jako resource-backed kompatibilni aliasy
 - audit, globalni hledani a Chytry poradce predavaji navigacni cile pres stabilni entity kindy `vehicle`, `history`, `fuel`, `record`, `maintenance`, `reminder` a `costs`; stare ceske nazvy entit jsou jen kompatibilni vstupni aliasy, ne nove runtime tokeny
 - editor vozidla uz pouziva `.resx` i pro titulky dialogu, uvodni statusy a validacni chyby, nejen pro popisky poli
