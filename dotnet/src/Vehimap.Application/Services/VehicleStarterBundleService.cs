@@ -20,6 +20,8 @@ public sealed class VehicleStarterBundleService
     private const string PowertrainElectric = "electric";
     private const string PowertrainLpgCng = "lpg_cng";
     private const string PowertrainOther = "other";
+    private const string LegacyReminderSectionLabel = "P\u0159ipom\u00EDnka";
+    private const string LegacyReminderRepeatYearly = "Ka\u017Ed\u00FD rok";
 
     private static readonly IAppLocalizer EnglishTemplateLocalizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
     private static readonly IAppLocalizer CzechTemplateLocalizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
@@ -338,7 +340,7 @@ public sealed class VehicleStarterBundleService
         [
             new VehicleStarterBundleTemplate(
                 VehicleStarterBundleSection.Reminder,
-                "Připomínka",
+                LegacyReminderSectionLabel,
                 CzechTemplateLocalizer.GetString(titleKey),
                 string.Empty,
                 string.Empty,
@@ -349,7 +351,7 @@ public sealed class VehicleStarterBundleService
                 string.Empty,
                 dueDate,
                 "14",
-                "Každý rok",
+                LegacyReminderRepeatYearly,
                 CzechTemplateLocalizer.GetString($"{titleKey}.Note"))
         ];
     }

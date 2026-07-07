@@ -1493,8 +1493,6 @@ public sealed class I18nFoundationTests
         line.StartsWith("Maintenance(", StringComparison.Ordinal)
         || line.StartsWith("new(VehicleStarterBundleSection.Record,", StringComparison.Ordinal)
         || line.StartsWith("[\"", StringComparison.Ordinal)
-        || line is "\"Připomínka\","
-        || line is "\"Každý rok\","
         || line.Contains("=> localizer.GetString(\"VehicleStarterBundle.Catalog.", StringComparison.Ordinal);
 
     private static bool IsAllowedProductionUnitCurrencyLine(string relativePath, string line)
