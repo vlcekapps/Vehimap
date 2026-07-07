@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Globalization;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 
@@ -8,11 +9,11 @@ namespace Vehimap.Application.Services;
 
 public sealed class LegacyAuditService : IAuditService
 {
-    private const string EntityVehicle = "Vozidlo";
-    private const string EntityHistory = "Historie";
-    private const string EntityFuel = "Tankov\u00E1n\u00ED";
-    private const string EntityRecord = "Doklad";
-    private const string EntityMaintenance = "\u00DAdr\u017Eba";
+    private const string EntityVehicle = ApplicationEntityKinds.Vehicle;
+    private const string EntityHistory = ApplicationEntityKinds.History;
+    private const string EntityFuel = ApplicationEntityKinds.Fuel;
+    private const string EntityRecord = ApplicationEntityKinds.Record;
+    private const string EntityMaintenance = ApplicationEntityKinds.Maintenance;
 
     private readonly IFileAttachmentService _attachmentService;
     private readonly IAppLocalizer _localizer;

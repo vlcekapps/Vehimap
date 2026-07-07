@@ -21,8 +21,8 @@ public sealed class LegacyGlobalSearchServiceTests
 
         var results = service.Search(DataRoot, dataSet, "Božena");
 
-        Assert.Contains(results, item => item.EntityKind == "Vozidlo" && item.VehicleId == "veh_1");
-        Assert.Contains(results, item => item.EntityKind == "Doklad" && item.EntityId == "rec_1");
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.Vehicle && item.VehicleId == "veh_1");
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.Record && item.EntityId == "rec_1");
     }
 
     [Fact]
@@ -34,8 +34,8 @@ public sealed class LegacyGlobalSearchServiceTests
         var tagResults = service.Search(DataRoot, dataSet, "garáž");
         var timingResults = service.Search(DataRoot, dataSet, "Řemen");
 
-        Assert.Contains(tagResults, item => item.EntityKind == "Vozidlo" && item.VehicleId == "veh_1");
-        Assert.Contains(timingResults, item => item.EntityKind == "Vozidlo" && item.VehicleId == "veh_1");
+        Assert.Contains(tagResults, item => item.EntityKind == ApplicationEntityKinds.Vehicle && item.VehicleId == "veh_1");
+        Assert.Contains(timingResults, item => item.EntityKind == ApplicationEntityKinds.Vehicle && item.VehicleId == "veh_1");
     }
 
     [Fact]
@@ -46,13 +46,13 @@ public sealed class LegacyGlobalSearchServiceTests
 
         var results = service.Search(DataRoot, dataSet, "Škoda 100");
 
-        Assert.Equal("Vozidlo", results[0].EntityKind);
-        Assert.Contains(results, item => item.EntityKind == "Vozidlo" && item.VehicleId == "veh_1");
-        Assert.Contains(results, item => item.EntityKind == "Historie" && item.EntityId == "hist_1");
-        Assert.Contains(results, item => item.EntityKind == "Tankování" && item.EntityId == "fuel_1");
-        Assert.Contains(results, item => item.EntityKind == "Doklad" && item.EntityId == "rec_1");
-        Assert.Contains(results, item => item.EntityKind == "Připomínka" && item.EntityId == "rem_1");
-        Assert.Contains(results, item => item.EntityKind == "Údržba" && item.EntityId == "mnt_1");
+        Assert.Equal(ApplicationEntityKinds.Vehicle, results[0].EntityKind);
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.Vehicle && item.VehicleId == "veh_1");
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.History && item.EntityId == "hist_1");
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.Fuel && item.EntityId == "fuel_1");
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.Record && item.EntityId == "rec_1");
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.Reminder && item.EntityId == "rem_1");
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.Maintenance && item.EntityId == "mnt_1");
     }
 
     [Fact]
@@ -63,10 +63,10 @@ public sealed class LegacyGlobalSearchServiceTests
 
         var results = service.Search(DataRoot, dataSet, "Po termínu");
 
-        Assert.Contains(results, item => item.EntityKind == "Vozidlo" && item.VehicleId == "veh_1");
-        Assert.Contains(results, item => item.EntityKind == "Připomínka" && item.EntityId == "rem_1");
-        Assert.DoesNotContain(results, item => item.EntityKind == "Historie" && item.EntityId == "hist_1");
-        Assert.DoesNotContain(results, item => item.EntityKind == "Tankování" && item.EntityId == "fuel_1");
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.Vehicle && item.VehicleId == "veh_1");
+        Assert.Contains(results, item => item.EntityKind == ApplicationEntityKinds.Reminder && item.EntityId == "rem_1");
+        Assert.DoesNotContain(results, item => item.EntityKind == ApplicationEntityKinds.History && item.EntityId == "hist_1");
+        Assert.DoesNotContain(results, item => item.EntityKind == ApplicationEntityKinds.Fuel && item.EntityId == "fuel_1");
     }
 
     [Fact]
@@ -118,7 +118,7 @@ public sealed class LegacyGlobalSearchServiceTests
 
         var fuelResults = service.Search(DataRoot, dataSet, "FuelSave");
         var fuelResult = Assert.Single(fuelResults.Where(item => item.EntityId == "fuel_1"));
-        Assert.Equal("Tankování", fuelResult.EntityKind);
+        Assert.Equal(ApplicationEntityKinds.Fuel, fuelResult.EntityKind);
         Assert.Equal("Fuel", fuelResult.SectionLabel);
         Assert.StartsWith("Fuel -", fuelResult.Title, StringComparison.Ordinal);
         Assert.Contains("Full tank", fuelResult.Summary, StringComparison.Ordinal);
@@ -130,14 +130,14 @@ public sealed class LegacyGlobalSearchServiceTests
 
         var maintenanceResults = service.Search(DataRoot, dataSet, "Minerální");
         var maintenanceResult = Assert.Single(maintenanceResults.Where(item => item.EntityId == "mnt_1"));
-        Assert.Equal("Údržba", maintenanceResult.EntityKind);
+        Assert.Equal(ApplicationEntityKinds.Maintenance, maintenanceResult.EntityKind);
         Assert.Equal("Maintenance", maintenanceResult.SectionLabel);
         Assert.Contains("6,214 mi", maintenanceResult.Summary, StringComparison.Ordinal);
         Assert.DoesNotContain("10000 km", maintenanceResult.Summary, StringComparison.Ordinal);
 
         var recordResults = service.Search(DataRoot, dataSet, "asistence.pdf");
         var recordResult = Assert.Single(recordResults.Where(item => item.EntityId == "rec_2"));
-        Assert.Equal("Doklad", recordResult.EntityKind);
+        Assert.Equal(ApplicationEntityKinds.Record, recordResult.EntityKind);
         Assert.Equal("Documents", recordResult.SectionLabel);
         Assert.Contains("Managed copy", recordResult.Summary, StringComparison.Ordinal);
     }
@@ -151,7 +151,7 @@ public sealed class LegacyGlobalSearchServiceTests
         var results = service.Search(DataRoot, dataSet, "asistence.pdf");
 
         var recordResult = Assert.Single(results);
-        Assert.Equal("Doklad", recordResult.EntityKind);
+        Assert.Equal(ApplicationEntityKinds.Record, recordResult.EntityKind);
         Assert.Equal("rec_2", recordResult.EntityId);
     }
 
@@ -164,8 +164,8 @@ public sealed class LegacyGlobalSearchServiceTests
         var detailResults = service.Search(DataRoot, dataSet, "FuelSave");
         var stationResults = service.Search(DataRoot, dataSet, "Station 42");
 
-        Assert.Contains(detailResults, item => item.EntityKind == "Tankování" && item.EntityId == "fuel_1");
-        Assert.Contains(stationResults, item => item.EntityKind == "Tankování" && item.EntityId == "fuel_1");
+        Assert.Contains(detailResults, item => item.EntityKind == ApplicationEntityKinds.Fuel && item.EntityId == "fuel_1");
+        Assert.Contains(stationResults, item => item.EntityKind == ApplicationEntityKinds.Fuel && item.EntityId == "fuel_1");
     }
 
     private static VehimapDataSet CreateDataSet() =>

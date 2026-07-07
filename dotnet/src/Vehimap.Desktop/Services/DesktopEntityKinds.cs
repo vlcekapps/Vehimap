@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using Vehimap.Desktop.Localization;
+using Vehimap.Application.Models;
 
 namespace Vehimap.Desktop.Services;
 
 internal static class DesktopEntityKinds
 {
-    public const string Vehicle = "vehicle";
-    public const string History = "history";
-    public const string Fuel = "fuel";
-    public const string Record = "record";
-    public const string Maintenance = "maintenance";
-    public const string Reminder = "reminder";
-    public const string Costs = "costs";
+    public const string Vehicle = ApplicationEntityKinds.Vehicle;
+    public const string History = ApplicationEntityKinds.History;
+    public const string Fuel = ApplicationEntityKinds.Fuel;
+    public const string Record = ApplicationEntityKinds.Record;
+    public const string Maintenance = ApplicationEntityKinds.Maintenance;
+    public const string Reminder = ApplicationEntityKinds.Reminder;
+    public const string Costs = ApplicationEntityKinds.Costs;
 
     public static string Normalize(string? value)
     {

@@ -9,13 +9,13 @@ namespace Vehimap.Application.Services;
 
 public sealed class LegacySmartAdvisorService : ISmartAdvisorService
 {
-    private const string EntityVehicle = "Vozidlo";
-    private const string EntityHistory = "Historie";
-    private const string EntityFuel = "Tankov\u00E1n\u00ED";
-    private const string EntityRecord = "Doklad";
-    private const string EntityMaintenance = "\u00DAdr\u017Eba";
-    private const string EntityReminder = "P\u0159ipom\u00EDnka";
-    private const string EntityCosts = "N\u00E1klady";
+    private const string EntityVehicle = ApplicationEntityKinds.Vehicle;
+    private const string EntityHistory = ApplicationEntityKinds.History;
+    private const string EntityFuel = ApplicationEntityKinds.Fuel;
+    private const string EntityRecord = ApplicationEntityKinds.Record;
+    private const string EntityMaintenance = ApplicationEntityKinds.Maintenance;
+    private const string EntityReminder = ApplicationEntityKinds.Reminder;
+    private const string EntityCosts = ApplicationEntityKinds.Costs;
     private const string CategoryAttachmentCs = "P\u0159\u00EDloha";
     private const string CategoryMaintenanceCs = "\u00DAdr\u017Eba";
     private const string CategoryCostsCs = "N\u00E1klady";
@@ -88,6 +88,7 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
         foreach (var audit in auditItems)
         {
             var category = MapAuditCategory(audit);
+            var entityKind = ApplicationEntityKinds.Normalize(audit.EntityKind);
             var priority = audit.Severity switch
             {
                 AuditSeverity.Error => SmartAdvisorPriority.Critical,
@@ -101,12 +102,12 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
                 category,
                 audit.VehicleId,
                 ValueOrFallback(audit.VehicleName, L("Common.UnknownVehicle")),
-                audit.EntityKind,
+                entityKind,
                 audit.EntityId,
                 audit.Title,
                 audit.Message,
                 LF("SmartAdvisor.Detail.Audit", audit.Category, audit.Message),
-                BuildActionLabel(audit.EntityKind),
+                BuildActionLabel(entityKind),
                 null));
         }
     }
@@ -221,7 +222,7 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
             return SmartAdvisorCategory.Costs;
         }
 
-        if (string.Equals(item.EntityKind, EntityFuel, StringComparison.CurrentCultureIgnoreCase))
+        if (string.Equals(ApplicationEntityKinds.Normalize(item.EntityKind), EntityFuel, StringComparison.Ordinal))
         {
             return SmartAdvisorCategory.Fuel;
         }

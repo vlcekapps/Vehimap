@@ -51,7 +51,7 @@ public sealed class LegacySmartAdvisorServiceTests
         var item = Assert.Single(summary.Items);
         Assert.Equal(SmartAdvisorPriority.Critical, item.Priority);
         Assert.Equal(SmartAdvisorCategory.Attachments, item.Category);
-        Assert.Equal("Doklad", item.EntityKind);
+        Assert.Equal(ApplicationEntityKinds.Record, item.EntityKind);
         Assert.Equal("rec_1", item.EntityId);
     }
 
@@ -129,7 +129,7 @@ public sealed class LegacySmartAdvisorServiceTests
 
         Assert.Contains(summary.Items, item =>
             item.Category == SmartAdvisorCategory.Fuel
-            && item.EntityKind == "Tankování"
+            && item.EntityKind == ApplicationEntityKinds.Fuel
             && item.EntityId == "fuel_1"
             && item.Title.Contains("Množství", StringComparison.CurrentCultureIgnoreCase));
     }
@@ -168,7 +168,7 @@ public sealed class LegacySmartAdvisorServiceTests
         var item = Assert.Single(summary.Items);
         Assert.Equal(SmartAdvisorCategory.Costs, item.Category);
         Assert.Equal(SmartAdvisorPriority.Recommendation, item.Priority);
-        Assert.Equal("Náklady", item.EntityKind);
+        Assert.Equal(ApplicationEntityKinds.Costs, item.EntityKind);
     }
 
     [Fact]

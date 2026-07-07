@@ -10,12 +10,12 @@ namespace Vehimap.Application.Services;
 public sealed class LegacyGlobalSearchService : IGlobalSearchService
 {
     private const int NoSearchMatchRank = 1_000_000;
-    private const string EntityVehicle = "Vozidlo";
-    private const string EntityHistory = "Historie";
-    private const string EntityFuel = "Tankov\u00E1n\u00ED";
-    private const string EntityRecord = "Doklad";
-    private const string EntityReminder = "P\u0159ipom\u00EDnka";
-    private const string EntityMaintenance = "\u00DAdr\u017Eba";
+    private const string EntityVehicle = ApplicationEntityKinds.Vehicle;
+    private const string EntityHistory = ApplicationEntityKinds.History;
+    private const string EntityFuel = ApplicationEntityKinds.Fuel;
+    private const string EntityRecord = ApplicationEntityKinds.Record;
+    private const string EntityReminder = ApplicationEntityKinds.Reminder;
+    private const string EntityMaintenance = ApplicationEntityKinds.Maintenance;
     private const string NeutralTimelineStatusCs = "Bez upozorn\u011Bn\u00ED";
     private const string NeutralTimelineStatusEn = "No alert";
 

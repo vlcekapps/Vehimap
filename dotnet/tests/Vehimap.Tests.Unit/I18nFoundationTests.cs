@@ -114,6 +114,20 @@ public sealed class I18nFoundationTests
         Assert.Equal("Missing.Key.For.Test", english.GetString("Missing.Key.For.Test"));
     }
 
+    [Theory]
+    [InlineData("vehicle", ApplicationEntityKinds.Vehicle)]
+    [InlineData("Vozidlo", ApplicationEntityKinds.Vehicle)]
+    [InlineData("fuel", ApplicationEntityKinds.Fuel)]
+    [InlineData("Tankování", ApplicationEntityKinds.Fuel)]
+    [InlineData("Doklad", ApplicationEntityKinds.Record)]
+    [InlineData("Údržba", ApplicationEntityKinds.Maintenance)]
+    [InlineData("Připomínka", ApplicationEntityKinds.Reminder)]
+    [InlineData("Náklady", ApplicationEntityKinds.Costs)]
+    public void Application_entity_kinds_accept_legacy_labels_but_return_stable_tokens(string input, string expected)
+    {
+        Assert.Equal(expected, ApplicationEntityKinds.Normalize(input));
+    }
+
     [Fact]
     public void Legacy_known_value_display_service_localizes_known_values_and_preserves_custom_values()
     {
