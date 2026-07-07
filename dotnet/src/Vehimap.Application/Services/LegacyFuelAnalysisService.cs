@@ -131,8 +131,8 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                 $"fuel-analysis-amount-{entry.Id}",
                 entry.Id,
                 FuelAnalysisWarningSeverity.Warning,
-                L("FuelAnalysis.Warning.LitersInvalid.Title"),
-                LF("FuelAnalysis.Warning.LitersInvalid.Description", FormatEntryDate(entry))));
+                L("FuelAnalysis.Warning.FuelAmountInvalid.Title"),
+                LF("FuelAnalysis.Warning.FuelAmountInvalid.Description", FormatEntryDate(entry))));
         }
 
         decimal? totalCost = null;

@@ -345,7 +345,7 @@ internal sealed class DesktopProjectionService
                     var pricePerVolume = FormatOptionalPricePerVolume(item.PricePerLiter);
                     var costPerDistance = item.CostPerKm.HasValue
                         ? FormatCostPerDistance(item.CostPerKm.Value)
-                        : L("FuelAnalysis.Value.CostPerKmUnavailable");
+                        : L("FuelAnalysis.Value.CostPerDistanceUnavailable");
                     return new FuelConsumptionSegmentItemViewModel(
                         item.Id,
                         item.EndFuelEntryId,
@@ -1395,7 +1395,7 @@ internal sealed class DesktopProjectionService
     {
         if (!value.HasValue)
         {
-            return L("FuelAnalysis.Value.PricePerLiterUnavailable");
+            return L("FuelAnalysis.Value.PricePerVolumeUnavailable");
         }
 
         var normalized = _unitFormatService.Normalize(_unitPreferences);

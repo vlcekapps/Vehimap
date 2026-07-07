@@ -75,6 +75,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - i18n/unit/currency guard odmita nove pevne literaly `km`, `mi`, `l`, `US gal`, `imp gal`, `Kč`, `CZK`, `USD`, `EUR` a `GBP` v produkcnim UI/projekcnim kodu mimo storage defaulty, parser hranice a sdilene formatovaci sluzby
 - projekcni viewmodely a XAML bindingy pro jednotkove citlive hodnoty pouzivaji neutralni nazvy jako `FuelAmount`, `PricePerVolume` a `CostPerDistance`, aby UI nezamykalo kanonicke litry/kilometry do uzivatelskeho textu
 - nákladové projekce v XAML používají `CostPerDistance`; kanonické výpočtové modely mohou dál počítat cenu za km, ale uživatelské UI ji zobrazuje podle zvolené vzdálenostní jednotky
+- resource klíče pro jednotkově citlivé texty používají neutrální názvy typu `CostPerDistanceUnavailable`, `PricePerVolumeUnavailable` a `FuelAmountInvalid`; pevné `km/liter` názvy zůstávají jen u kanonických modelů nebo kompatibilních aliasů
 - interní sort helpery používají jednotkově neutrální názvy pro palivové množství, takže guard už nepotřebuje výjimku pro řazení podle objemu paliva
 - editor tankovani ma jednotkove neutralni pole a accessibility id `FuelEditorVolumeBox`; do kanonickych litru se hodnota prevadi az pri ulozeni
 - editor planu udrzby ma jednotkove neutralni pole a accessibility id `MaintenanceEditorIntervalDistanceBox`; do kanonickych kilometru se interval prevadi az pri ulozeni

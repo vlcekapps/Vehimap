@@ -196,9 +196,9 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
                 ValueOrFallback(vehicle.VehicleName, L("Common.UnknownVehicle")),
                 EntityCosts,
                 vehicle.VehicleId,
-                L("SmartAdvisor.Title.CostPerKmUnavailable"),
-                L("SmartAdvisor.Summary.CostPerKmUnavailable"),
-                L("SmartAdvisor.Detail.CostPerKmUnavailable"),
+                L("SmartAdvisor.Title.CostPerDistanceUnavailable"),
+                L("SmartAdvisor.Summary.CostPerDistanceUnavailable"),
+                L("SmartAdvisor.Detail.CostPerDistanceUnavailable"),
                 L("SmartAdvisor.Action.OpenVehicleCosts"),
                 null));
         }

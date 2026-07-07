@@ -953,7 +953,8 @@ public sealed class I18nFoundationTests
 
         Assert.Contains("SmartAdvisor.Status.Empty", service);
         Assert.Contains("SmartAdvisor.Detail.FuelAnalysis", service);
-        Assert.Contains("SmartAdvisor.Title.CostPerKmUnavailable", service);
+        Assert.Contains("SmartAdvisor.Title.CostPerDistanceUnavailable", service);
+        Assert.DoesNotContain("SmartAdvisor.Title.CostPerKmUnavailable", service);
         Assert.Contains("SmartAdvisor.Action.OpenVehicleCosts", service);
         Assert.Contains("SmartAdvisor.Priority.Critical", projectionService);
         Assert.Contains("SmartAdvisor.Category.Attachments", projectionService);

@@ -1005,8 +1005,8 @@ Vozidlo: {2}
   <data name="FuelAnalysis.Summary.BestSegment" xml:space="preserve"><value>Nejlepší úsek: {0} se spotřebou {1}.</value></data>
   <data name="FuelAnalysis.Summary.Main" xml:space="preserve"><value>Počet tankování: {0}. Celkem palivo: {1}. Celkové náklady: {2}. Průměrná cena za jednotku paliva: {3}.</value></data>
   <data name="FuelAnalysis.Summary.WorstSegment" xml:space="preserve"><value>Nejvyšší spotřeba: {0} se spotřebou {1}.</value></data>
-  <data name="FuelAnalysis.Value.CostPerKmUnavailable" xml:space="preserve"><value>nedostupné</value></data>
-  <data name="FuelAnalysis.Value.PricePerLiterUnavailable" xml:space="preserve"><value>nedostupná</value></data>
+  <data name="FuelAnalysis.Value.CostPerDistanceUnavailable" xml:space="preserve"><value>nedostupné</value></data>
+  <data name="FuelAnalysis.Value.PricePerVolumeUnavailable" xml:space="preserve"><value>nedostupná</value></data>
   <data name="FuelAnalysis.Value.ConsumptionUnavailable" xml:space="preserve"><value>nedostupná</value></data>
   <data name="FuelAnalysis.Value.PricePerVolume" xml:space="preserve"><value>{0}/{1}</value></data>
   <data name="FuelAnalysis.Value.ConsumptionPerDistance" xml:space="preserve"><value>{0} {1}/100 {2}</value></data>
@@ -1021,8 +1021,8 @@ Vozidlo: {2}
   <data name="FuelAnalysis.Warning.ConsumptionUnavailable.Title" xml:space="preserve"><value>Spotřeba zatím není dostupná</value></data>
   <data name="FuelAnalysis.Warning.CostInvalid.Description" xml:space="preserve"><value>Tankování z {0} má nečíselnou nebo zápornou cenu.</value></data>
   <data name="FuelAnalysis.Warning.CostInvalid.Title" xml:space="preserve"><value>Cena tankování nejde použít</value></data>
-  <data name="FuelAnalysis.Warning.LitersInvalid.Description" xml:space="preserve"><value>Tankování z {0} má nečíselné nebo nulové množství paliva.</value></data>
-  <data name="FuelAnalysis.Warning.LitersInvalid.Title" xml:space="preserve"><value>Množství paliva nejde použít</value></data>
+  <data name="FuelAnalysis.Warning.FuelAmountInvalid.Description" xml:space="preserve"><value>Tankování z {0} má nečíselné nebo nulové množství paliva.</value></data>
+  <data name="FuelAnalysis.Warning.FuelAmountInvalid.Title" xml:space="preserve"><value>Množství paliva nejde použít</value></data>
   <data name="FuelAnalysis.Warning.OdometerInvalid.Description" xml:space="preserve"><value>Tankování z {0} má nečíselný nebo záporný stav tachometru.</value></data>
   <data name="FuelAnalysis.Warning.OdometerInvalid.Title" xml:space="preserve"><value>Tachometr nejde použít</value></data>
   <data name="FuelAnalysis.Warning.OdometerRegression.Description" xml:space="preserve"><value>Tankování z {0} má tachometr {1}, což je méně než dřívější hodnota {2}.</value></data>
@@ -1406,7 +1406,7 @@ Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
   <data name="SmartAdvisor.Category.Maintenance" xml:space="preserve"><value>Údržba</value></data>
   <data name="SmartAdvisor.Category.Other" xml:space="preserve"><value>Ostatní</value></data>
   <data name="SmartAdvisor.Detail.Audit" xml:space="preserve"><value>Audit dat: {0}. {1}</value></data>
-  <data name="SmartAdvisor.Detail.CostPerKmUnavailable" xml:space="preserve"><value>Doplňte použitelné tachometry v historii nebo tankování, aby šlo spočítat cenu za zvolenou vzdálenost.</value></data>
+  <data name="SmartAdvisor.Detail.CostPerDistanceUnavailable" xml:space="preserve"><value>Doplňte použitelné tachometry v historii nebo tankování, aby šlo spočítat cenu za zvolenou vzdálenost.</value></data>
   <data name="SmartAdvisor.Detail.FuelAnalysis" xml:space="preserve"><value>Tankovací analýza upozorňuje na položku, kterou se vyplatí zkontrolovat.</value></data>
   <data name="SmartAdvisor.Priority.Critical" xml:space="preserve"><value>Naléhavé</value></data>
   <data name="SmartAdvisor.Priority.Info" xml:space="preserve"><value>Informace</value></data>
@@ -1417,9 +1417,9 @@ Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
   <data name="SmartAdvisor.Status.Part.Recommendation" xml:space="preserve"><value>{0} doporučení</value></data>
   <data name="SmartAdvisor.Status.Part.Warning" xml:space="preserve"><value>{0} upozornění</value></data>
   <data name="SmartAdvisor.Status.WithItems" xml:space="preserve"><value>Chytrý poradce našel {0} položek: {1}.</value></data>
-  <data name="SmartAdvisor.Summary.CostPerKmUnavailable" xml:space="preserve"><value>Vozidlo má náklady, ale chybí použitelný rozdíl tachometru pro výpočet ceny za zvolenou vzdálenost.</value></data>
+  <data name="SmartAdvisor.Summary.CostPerDistanceUnavailable" xml:space="preserve"><value>Vozidlo má náklady, ale chybí použitelný rozdíl tachometru pro výpočet ceny za zvolenou vzdálenost.</value></data>
   <data name="SmartAdvisor.Summary.Timeline" xml:space="preserve"><value>{0}. {1}.</value></data>
-  <data name="SmartAdvisor.Title.CostPerKmUnavailable" xml:space="preserve"><value>Cena za zvolenou vzdálenost není dostupná</value></data>
+  <data name="SmartAdvisor.Title.CostPerDistanceUnavailable" xml:space="preserve"><value>Cena za zvolenou vzdálenost není dostupná</value></data>
   <data name="SmartAdvisor.Title.Timeline" xml:space="preserve"><value>{0}: {1}</value></data>
   <data name="SmartAdvisor.Value.NoDueDate" xml:space="preserve"><value>bez termínu</value></data>
   <data name="SmartAdvisorWorkspace.CategoryFilterName" xml:space="preserve"><value>Filtr kategorie chytrého poradce</value></data>
