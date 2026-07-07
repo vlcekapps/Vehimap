@@ -475,6 +475,8 @@ public sealed class I18nFoundationTests
         var bundleWindow = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Views", "VehicleStarterBundleWindow.axaml"));
         var dialogViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleStarterBundleDialogViewModel.cs"));
         var itemViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "VehicleStarterBundleItemEditorViewModel.cs"));
+        var englishResources = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx"));
+        var czechResources = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx"));
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", bundleWindow);
         Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc VehicleStarterBundle.ItemsHelpText}\"", bundleWindow);
@@ -488,6 +490,10 @@ public sealed class I18nFoundationTests
         Assert.Contains("Text=\"{Binding SelectedItem.IntervalDistance}\"", bundleWindow);
         Assert.Contains("AutomationProperties.AutomationId=\"BundleMaintenanceIntervalDistanceBox\"", bundleWindow);
         Assert.DoesNotContain("BundleMaintenanceIntervalKmBox", bundleWindow);
+        Assert.DoesNotContain("VehicleStarterBundle.MaintenanceIntervalKmLabel", englishResources);
+        Assert.DoesNotContain("VehicleStarterBundle.MaintenanceIntervalKmName", englishResources);
+        Assert.DoesNotContain("VehicleStarterBundle.MaintenanceIntervalKmLabel", czechResources);
+        Assert.DoesNotContain("VehicleStarterBundle.MaintenanceIntervalKmName", czechResources);
         Assert.Contains("VehicleStarterBundle.AccessibleLabel.Full", itemViewModel);
         Assert.Contains("VehicleStarterBundle.AccessibleLabel.Category", itemViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), bundleWindow);

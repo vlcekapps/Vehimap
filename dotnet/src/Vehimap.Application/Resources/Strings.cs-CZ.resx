@@ -1668,8 +1668,6 @@ Stav: {5}</value></data>
   <data name="VehicleStarterBundle.MaintenanceDetailHint" xml:space="preserve"><value>Vyberte šablonu vlevo a můžete upravit její intervaly nebo poznámku před přidáním.</value></data>
   <data name="VehicleStarterBundle.MaintenanceEmptySelection" xml:space="preserve"><value>Není vybraná žádná servisní šablona.</value></data>
   <data name="VehicleStarterBundle.MaintenanceHelpText" xml:space="preserve"><value>Dialog pro výběr doporučených servisních plánů podle kategorie a servisního profilu vozidla. Ctrl+S přidá vybrané šablony, Ctrl+A vybere vše, Ctrl+Shift+A výběr vymaže a Escape zavře dialog.</value></data>
-  <data name="VehicleStarterBundle.MaintenanceIntervalKmLabel" xml:space="preserve"><value>Vzdálenostní interval</value></data>
-  <data name="VehicleStarterBundle.MaintenanceIntervalKmName" xml:space="preserve"><value>Vzdálenostní interval údržby</value></data>
   <data name="VehicleStarterBundle.MaintenanceIntervalDistanceLabel" xml:space="preserve"><value>Vzdálenostní interval ({0})</value></data>
   <data name="VehicleStarterBundle.MaintenanceIntervalDistanceName" xml:space="preserve"><value>Vzdálenostní interval údržby v {0}</value></data>
   <data name="VehicleStarterBundle.MaintenanceIntervalMonthsLabel" xml:space="preserve"><value>Interval měsíců</value></data>
