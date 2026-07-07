@@ -37,7 +37,7 @@ public enum DesktopFocusTarget
     MaintenanceList,
     MaintenanceEditorTemplate,
     MaintenanceEditorTitle,
-    MaintenanceEditorIntervalKm,
+    MaintenanceEditorIntervalDistance,
     MaintenanceEditorIntervalMonths,
     MaintenanceEditorLastServiceDate,
     MaintenanceEditorLastServiceOdometer,

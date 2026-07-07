@@ -76,6 +76,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - projekcni viewmodely a XAML bindingy pro jednotkove citlive hodnoty pouzivaji neutralni nazvy jako `FuelAmount`, `PricePerVolume` a `CostPerDistance`, aby UI nezamykalo kanonicke litry/kilometry do uzivatelskeho textu
 - interní sort helpery používají jednotkově neutrální názvy pro palivové množství, takže guard už nepotřebuje výjimku pro řazení podle objemu paliva
 - editor tankovani ma jednotkove neutralni pole a accessibility id `FuelEditorVolumeBox`; do kanonickych litru se hodnota prevadi az pri ulozeni
+- editor planu udrzby ma jednotkove neutralni pole a accessibility id `MaintenanceEditorIntervalDistanceBox`; do kanonickych kilometru se interval prevadi az pri ulozeni
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 - i18n conformance gate navic overuje anglicke UI nad ceskymi legacy daty: systemove/known hodnoty se zobrazuji pres EN/CS `.resx`, ale uzivatelsky zadane nazvy, modely, poznamky a dalsi volny text zustavaji beze zmeny
 - produkcni C# zdroje maji staticky guard proti ceskym UI literalum mimo `.resx`; povolene vyjimky jsou jen legacy tokeny, kompatibilni aliasy, parser/search klicova slova a sablonova data

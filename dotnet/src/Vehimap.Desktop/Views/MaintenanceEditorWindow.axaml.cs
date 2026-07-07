@@ -41,7 +41,7 @@ public partial class MaintenanceEditorWindow : Window
         {
             DesktopFocusTarget.MaintenanceEditorTemplate => "MaintenanceTemplateComboBox",
             DesktopFocusTarget.MaintenanceEditorTitle => "MaintenanceEditorTitleBox",
-            DesktopFocusTarget.MaintenanceEditorIntervalKm => "MaintenanceEditorIntervalKmBox",
+            DesktopFocusTarget.MaintenanceEditorIntervalDistance => "MaintenanceEditorIntervalDistanceBox",
             DesktopFocusTarget.MaintenanceEditorIntervalMonths => "MaintenanceEditorIntervalMonthsBox",
             DesktopFocusTarget.MaintenanceEditorLastServiceDate => "MaintenanceEditorLastServiceDateBox",
             DesktopFocusTarget.MaintenanceEditorLastServiceOdometer => "MaintenanceEditorLastServiceOdometerBox",

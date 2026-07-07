@@ -79,7 +79,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     private string maintenanceEditorTitle = string.Empty;
 
     [ObservableProperty]
-    private string maintenanceEditorIntervalKm = string.Empty;
+    private string maintenanceEditorIntervalDistance = string.Empty;
 
     public string MaintenanceEditorIntervalDistanceLabel => LF("MaintenanceEditor.IntervalDistanceLabel", Root.CurrentDistanceUnitLabel);
 
@@ -267,7 +267,7 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
         }
 
         MaintenanceEditorTitle = template.Title;
-        MaintenanceEditorIntervalKm = Root.FormatCanonicalDistanceForEditor(template.IntervalKm);
+        MaintenanceEditorIntervalDistance = Root.FormatCanonicalDistanceForEditor(template.IntervalKm);
         MaintenanceEditorIntervalMonths = template.IntervalMonths;
         MaintenanceEditorNote = template.Note;
         var categoryText = string.IsNullOrWhiteSpace(template.Category)

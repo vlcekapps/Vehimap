@@ -983,9 +983,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceEditorTitleBox\"", maintenanceEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceTemplateComboBox\"", maintenanceEditorXaml);
         Assert.Contains("ItemsSource=\"{Binding MaintenanceTemplateOptions}\"", maintenanceEditorXaml);
-        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceEditorIntervalKmBox\"", maintenanceEditorXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceEditorIntervalDistanceBox\"", maintenanceEditorXaml);
         Assert.Contains("Grid.Column=\"1\" Spacing=\"6\"", maintenanceEditorXaml);
-        Assert.Contains("x:Name=\"MaintenanceEditorIntervalKmBox\"", maintenanceEditorXaml);
+        Assert.Contains("x:Name=\"MaintenanceEditorIntervalDistanceBox\"", maintenanceEditorXaml);
         Assert.Contains("x:Name=\"MaintenanceEditorIntervalMonthsBox\"", maintenanceEditorXaml);
         Assert.Contains("x:Name=\"MaintenanceEditorLastServiceDateBox\"", maintenanceEditorXaml);
         Assert.Contains("x:Name=\"MaintenanceEditorLastServiceOdometerBox\"", maintenanceEditorXaml);

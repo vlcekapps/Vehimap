@@ -582,7 +582,7 @@ public sealed class WorkspaceCompositionTests
             "MaintenanceEditorStatus",
             "SelectedMaintenanceTemplate",
             "MaintenanceEditorTitle",
-            "MaintenanceEditorIntervalKm",
+            "MaintenanceEditorIntervalDistance",
             "MaintenanceEditorIntervalMonths",
             "MaintenanceEditorLastServiceDate",
             "MaintenanceEditorLastServiceOdometer",

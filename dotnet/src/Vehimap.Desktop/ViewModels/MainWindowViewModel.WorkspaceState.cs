@@ -273,10 +273,10 @@ public sealed partial class MainWindowViewModel
         set => MaintenanceWorkspace.MaintenanceEditorTitle = value;
     }
 
-    private string MaintenanceEditorIntervalKm
+    private string MaintenanceEditorIntervalDistance
     {
-        get => MaintenanceWorkspace.MaintenanceEditorIntervalKm;
-        set => MaintenanceWorkspace.MaintenanceEditorIntervalKm = value;
+        get => MaintenanceWorkspace.MaintenanceEditorIntervalDistance;
+        set => MaintenanceWorkspace.MaintenanceEditorIntervalDistance = value;
     }
 
     private string MaintenanceEditorIntervalMonths

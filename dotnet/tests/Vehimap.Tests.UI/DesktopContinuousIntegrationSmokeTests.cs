@@ -872,10 +872,10 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             session.ClickByAccessibilityId("CreateMaintenanceButton");
 
             Assert.Equal("Název servisního úkonu", session.GetNameByAccessibilityId("MaintenanceEditorTitleBox"));
-            Assert.Equal("Interval údržby v km", session.GetNameByAccessibilityId("MaintenanceEditorIntervalKmBox"));
+            Assert.Equal("Interval údržby v km", session.GetNameByAccessibilityId("MaintenanceEditorIntervalDistanceBox"));
 
             session.SendKeysByAccessibilityId("MaintenanceEditorTitleBox", "Motorový olej");
-            session.SendKeysByAccessibilityId("MaintenanceEditorIntervalKmBox", "15000");
+            session.SendKeysByAccessibilityId("MaintenanceEditorIntervalDistanceBox", "15000");
             session.SendKeysByAccessibilityId("MaintenanceEditorIntervalMonthsBox", "12");
             session.SendKeysByAccessibilityId("MaintenanceEditorLastServiceDateBox", "01.04.2026");
             session.SendKeysByAccessibilityId("MaintenanceEditorLastServiceOdometerBox", "120000");

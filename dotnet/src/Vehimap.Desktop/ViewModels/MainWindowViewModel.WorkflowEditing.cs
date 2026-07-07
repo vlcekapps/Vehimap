@@ -500,7 +500,7 @@ public sealed partial class MainWindowViewModel
 
         _editingMaintenanceId = null;
         MaintenanceEditorTitle = string.Empty;
-        MaintenanceEditorIntervalKm = string.Empty;
+        MaintenanceEditorIntervalDistance = string.Empty;
         MaintenanceEditorIntervalMonths = string.Empty;
         MaintenanceEditorLastServiceDate = string.Empty;
         MaintenanceEditorLastServiceOdometer = string.Empty;
@@ -523,7 +523,7 @@ public sealed partial class MainWindowViewModel
 
         _editingMaintenanceId = plan.Id;
         MaintenanceEditorTitle = plan.Title;
-        MaintenanceEditorIntervalKm = FormatCanonicalDistanceForEditor(plan.IntervalKm);
+        MaintenanceEditorIntervalDistance = FormatCanonicalDistanceForEditor(plan.IntervalKm);
         MaintenanceEditorIntervalMonths = plan.IntervalMonths;
         MaintenanceEditorLastServiceDate = plan.LastServiceDate;
         MaintenanceEditorLastServiceOdometer = FormatCanonicalOdometerForEditor(plan.LastServiceOdometer);
@@ -551,7 +551,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var intervalKmText = (MaintenanceEditorIntervalKm ?? string.Empty).Trim();
+        var intervalKmText = (MaintenanceEditorIntervalDistance ?? string.Empty).Trim();
         var intervalMonthsText = (MaintenanceEditorIntervalMonths ?? string.Empty).Trim();
         var intervalKm = string.Empty;
         var intervalMonths = LegacyVehicleValueNormalization.NormalizePositiveInteger(intervalMonthsText);
@@ -563,14 +563,14 @@ public sealed partial class MainWindowViewModel
         if (!TryNormalizeEditorPositiveDistanceToKilometers(intervalKmText, allowEmpty: true, out intervalKm))
         {
             MaintenanceEditorStatus = LWF("MaintenanceEditor.Validation.IntervalDistanceInvalid", CurrentDistanceUnitLabel);
-            RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalKm);
+            RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalDistance);
             return;
         }
 
         if (intervalKm.Length == 0 && intervalMonths.Length == 0)
         {
             MaintenanceEditorStatus = LO("MaintenanceEditor.Validation.IntervalRequired");
-            RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalKm);
+            RequestFocus(DesktopFocusTarget.MaintenanceEditorIntervalDistance);
             return;
         }
 
@@ -954,7 +954,7 @@ public sealed partial class MainWindowViewModel
         _editingMaintenanceId = null;
         IsEditingMaintenance = false;
         MaintenanceEditorTitle = string.Empty;
-        MaintenanceEditorIntervalKm = string.Empty;
+        MaintenanceEditorIntervalDistance = string.Empty;
         MaintenanceEditorIntervalMonths = string.Empty;
         MaintenanceEditorLastServiceDate = string.Empty;
         MaintenanceEditorLastServiceOdometer = string.Empty;

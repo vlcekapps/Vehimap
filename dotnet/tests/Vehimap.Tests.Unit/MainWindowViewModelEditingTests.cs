@@ -698,7 +698,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.CreateMaintenanceCommand.Execute(null);
         viewModel.MaintenanceWorkspace.MaintenanceEditorTitle = "Motorový olej";
-        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm = "15000";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalDistance = "15000";
         viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalMonths = "12";
         viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceDate = "01.04.2026";
         viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceOdometer = "120000";
@@ -730,7 +730,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("Last service odometer (mi)", viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceOdometerLabel);
 
         viewModel.MaintenanceWorkspace.MaintenanceEditorTitle = "Motorový olej";
-        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm = "100";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalDistance = "100";
         viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceDate = "01.04.2026";
         viewModel.MaintenanceWorkspace.MaintenanceEditorLastServiceOdometer = "200";
 
@@ -755,7 +755,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var requestedTargets = new List<DesktopFocusTarget>();
         viewModel.FocusRequested += requestedTargets.Add;
         viewModel.MaintenanceWorkspace.MaintenanceEditorTitle = "Motorový olej";
-        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm = "15000";
+        viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalDistance = "15000";
 
         await viewModel.SaveMaintenanceCommand.ExecuteAsync(null);
 
@@ -785,7 +785,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.MaintenanceWorkspace.SelectedMaintenanceTemplate = cabinFilterOption;
 
         Assert.Equal("Kabinový filtr", viewModel.MaintenanceWorkspace.MaintenanceEditorTitle);
-        Assert.Equal("15000", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalKm);
+        Assert.Equal("15000", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalDistance);
         Assert.Equal("12", viewModel.MaintenanceWorkspace.MaintenanceEditorIntervalMonths);
         Assert.Equal("Pravidelná výměna pylového nebo kabinového filtru.", viewModel.MaintenanceWorkspace.MaintenanceEditorNote);
         Assert.Contains("předvyplnila", viewModel.MaintenanceWorkspace.MaintenanceEditorStatus);
