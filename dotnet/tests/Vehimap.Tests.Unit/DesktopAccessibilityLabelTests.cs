@@ -178,6 +178,35 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Vehicle_starter_bundle_maintenance_interval_should_follow_selected_distance_unit()
+    {
+        var item = new VehicleStarterBundleItemEditorViewModel(
+            new VehicleStarterBundleTemplate(
+                VehicleStarterBundleSection.Maintenance,
+                "Servis",
+                "Olej",
+                "1609",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty),
+            new AppCulturePreferences("en-US", "comma", "dot"),
+            new AppUnitPreferences("mi", "us_gal"));
+
+        Assert.Equal("999.8", item.IntervalDistance);
+
+        item.IntervalDistance = "100";
+
+        Assert.Equal("161", item.ToTemplate().IntervalKm);
+    }
+
+    [Fact]
     public void Vehicle_starter_bundle_dialog_should_expose_dropdown_options()
     {
         var viewModel = new VehicleStarterBundleDialogViewModel(
@@ -637,6 +666,9 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("SelectedItem=\"{Binding SelectedItem.SelectedRecordTypeOption}\"", bundleXaml);
         Assert.Contains("ItemsSource=\"{Binding SelectedItem.ReminderRepeatModeOptions}\"", bundleXaml);
         Assert.Contains("SelectedItem=\"{Binding SelectedItem.SelectedReminderRepeatModeOption}\"", bundleXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"BundleMaintenanceIntervalDistanceBox\"", bundleXaml);
+        Assert.Contains("Text=\"{Binding SelectedItem.IntervalDistance}\"", bundleXaml);
+        Assert.DoesNotContain("BundleMaintenanceIntervalKmBox", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleStarterBundle.SelectAllName}\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleStarterBundle.ClearSelectionName}\"", bundleXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleStarterBundle.ApplyName}\"", bundleXaml);

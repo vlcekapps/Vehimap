@@ -1,18 +1,32 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Globalization;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
+using Vehimap.Storage.Legacy;
 
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class VehicleStarterBundleItemEditorViewModel : ObservableObject
 {
-    public VehicleStarterBundleItemEditorViewModel(VehicleStarterBundleTemplate template)
+    private static readonly AppNumberFormatService NumberFormatService = new();
+    private static readonly AppUnitFormatService UnitFormatService = new();
+
+    private readonly AppCulturePreferences _culturePreferences;
+    private readonly AppUnitPreferences _unitPreferences;
+
+    public VehicleStarterBundleItemEditorViewModel(
+        VehicleStarterBundleTemplate template,
+        AppCulturePreferences? culturePreferences = null,
+        AppUnitPreferences? unitPreferences = null)
     {
+        _culturePreferences = culturePreferences ?? new AppCulturePreferences();
+        _unitPreferences = UnitFormatService.Normalize(unitPreferences ?? new AppUnitPreferences());
         Section = template.Section;
         SectionLabel = template.SectionLabel;
         Title = template.Title;
-        IntervalKm = template.IntervalKm;
+        IntervalDistance = FormatCanonicalDistanceForEditor(template.IntervalKm);
         IntervalMonths = template.IntervalMonths;
         RecordType = template.Section == VehicleStarterBundleSection.Record
             ? KnownValueOptions.NormalizeRecordTypeValue(template.RecordType)
@@ -69,7 +83,7 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
     private string title;
 
     [ObservableProperty]
-    private string intervalKm;
+    private string intervalDistance;
 
     [ObservableProperty]
     private string intervalMonths;
@@ -141,12 +155,13 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
         var repeatMode = IsReminder
             ? KnownValueOptions.NormalizeReminderRepeatModeValue(RepeatMode)
             : RepeatMode.Trim();
+        var intervalKm = NormalizeEditorDistanceToKilometers(IntervalDistance);
 
         return new(
             Section,
             SectionLabel,
             Title.Trim(),
-            IntervalKm.Trim(),
+            intervalKm,
             IntervalMonths.Trim(),
             recordType,
             Provider.Trim(),
@@ -159,6 +174,39 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
             Note.Trim(),
             Category.Trim(),
             Subcategory.Trim());
+    }
+
+    private string FormatCanonicalDistanceForEditor(string? canonicalKilometers)
+    {
+        var value = (canonicalKilometers ?? string.Empty).Trim();
+        if (value.Length == 0 || !VehimapValueParser.TryParseDecimalNumber(value, out var kilometers))
+        {
+            return value;
+        }
+
+        var decimalPlaces = string.Equals(AppUnitFormatService.NormalizeDistanceUnit(_unitPreferences.DistanceUnit), AppUnitFormatService.Miles, StringComparison.Ordinal)
+            ? 1
+            : 0;
+        var distance = UnitFormatService.ConvertDistanceFromKilometers(kilometers, _unitPreferences);
+        return NumberFormatService.FormatDecimal(distance, _culturePreferences, decimalPlaces);
+    }
+
+    private string NormalizeEditorDistanceToKilometers(string? text)
+    {
+        var value = (text ?? string.Empty).Trim();
+        if (value.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        if (!NumberFormatService.TryParseDecimal(value, _culturePreferences, out var distance)
+            && !VehimapValueParser.TryParseDecimalNumber(value, out distance))
+        {
+            return value;
+        }
+
+        var kilometers = UnitFormatService.ConvertDistanceToKilometers(distance, _unitPreferences);
+        return ((int)Math.Round(kilometers, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture);
     }
 
     private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);

@@ -484,6 +484,10 @@ public sealed class I18nFoundationTests
         Assert.Contains("VehicleStarterBundle.Summary.SectionCounts", dialogViewModel);
         Assert.Contains("VehicleStarterBundle.MaintenanceTitle", dialogViewModel);
         Assert.Contains("VehicleStarterBundle.Profile.Empty", dialogViewModel);
+        Assert.Contains("VehicleStarterBundle.MaintenanceIntervalDistanceLabel", dialogViewModel);
+        Assert.Contains("Text=\"{Binding SelectedItem.IntervalDistance}\"", bundleWindow);
+        Assert.Contains("AutomationProperties.AutomationId=\"BundleMaintenanceIntervalDistanceBox\"", bundleWindow);
+        Assert.DoesNotContain("BundleMaintenanceIntervalKmBox", bundleWindow);
         Assert.Contains("VehicleStarterBundle.AccessibleLabel.Full", itemViewModel);
         Assert.Contains("VehicleStarterBundle.AccessibleLabel.Category", itemViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), bundleWindow);

@@ -45,6 +45,10 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 
     public string WindowTitle => Root.VehicleDetailWindowTitle;
 
+    internal AppCulturePreferences CurrentCulturePreferences => Root.CurrentCulturePreferences;
+
+    internal AppUnitPreferences CurrentUnitPreferences => Root.CurrentUnitPreferences;
+
     public string VehiclePanelHeading
     {
         get => vehiclePanelHeading;

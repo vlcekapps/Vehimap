@@ -6,16 +6,24 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObject
 {
+    private static readonly AppUnitFormatService UnitFormatService = new();
+
+    private readonly AppCulturePreferences _culturePreferences;
+    private readonly AppUnitPreferences _unitPreferences;
     private readonly bool _showSectionCounts;
     private readonly string _emptySelectionText;
 
-    public VehicleStarterBundleDialogViewModel(VehicleStarterBundlePreview preview)
+    public VehicleStarterBundleDialogViewModel(
+        VehicleStarterBundlePreview preview,
+        AppCulturePreferences? culturePreferences = null,
+        AppUnitPreferences? unitPreferences = null)
         : this(
             preview,
             L("VehicleStarterBundle.Title"),
@@ -24,7 +32,9 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
             L("VehicleStarterBundle.ItemsListName"),
             L("VehicleStarterBundle.DetailHint"),
             L("VehicleStarterBundle.EmptySelection"),
-            showSectionCounts: true)
+            showSectionCounts: true,
+            culturePreferences,
+            unitPreferences)
     {
     }
 
@@ -36,8 +46,12 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         string itemsListName,
         string detailHint,
         string emptySelectionText,
-        bool showSectionCounts)
+        bool showSectionCounts,
+        AppCulturePreferences? culturePreferences,
+        AppUnitPreferences? unitPreferences)
     {
+        _culturePreferences = culturePreferences ?? new AppCulturePreferences();
+        _unitPreferences = UnitFormatService.Normalize(unitPreferences ?? new AppUnitPreferences());
         DialogTitle = dialogTitle;
         DialogHelpText = dialogHelpText;
         ItemsHeading = itemsHeading;
@@ -48,7 +62,8 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         VehicleId = preview.VehicleId;
         VehicleName = preview.VehicleName;
         ProfileLabel = string.IsNullOrWhiteSpace(preview.ProfileLabel) ? L("VehicleStarterBundle.Profile.Empty") : preview.ProfileLabel;
-        Items = new ObservableCollection<VehicleStarterBundleItemEditorViewModel>(preview.Items.Select(item => new VehicleStarterBundleItemEditorViewModel(item)));
+        Items = new ObservableCollection<VehicleStarterBundleItemEditorViewModel>(
+            preview.Items.Select(item => new VehicleStarterBundleItemEditorViewModel(item, _culturePreferences, _unitPreferences)));
         Items.CollectionChanged += OnItemsCollectionChanged;
 
         foreach (var item in Items)
@@ -60,7 +75,10 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         RefreshSummary();
     }
 
-    public static VehicleStarterBundleDialogViewModel CreateMaintenanceTemplates(VehicleStarterBundlePreview preview) =>
+    public static VehicleStarterBundleDialogViewModel CreateMaintenanceTemplates(
+        VehicleStarterBundlePreview preview,
+        AppCulturePreferences? culturePreferences = null,
+        AppUnitPreferences? unitPreferences = null) =>
         new(
             preview,
             L("VehicleStarterBundle.MaintenanceTitle"),
@@ -69,7 +87,9 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
             L("VehicleStarterBundle.MaintenanceItemsListName"),
             L("VehicleStarterBundle.MaintenanceDetailHint"),
             L("VehicleStarterBundle.MaintenanceEmptySelection"),
-            showSectionCounts: false);
+            showSectionCounts: false,
+            culturePreferences,
+            unitPreferences);
 
     public string DialogTitle { get; }
 
@@ -92,6 +112,15 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
     public IReadOnlyList<LocalizedOptionViewModel> RecordTypeOptions => KnownValueOptions.RecordTypes();
 
     public IReadOnlyList<LocalizedOptionViewModel> ReminderRepeatModeOptions => KnownValueOptions.ReminderRepeatModes();
+
+    public string DistanceUnitLabel =>
+        UnitFormatService.GetDistanceUnitLabel(_unitPreferences);
+
+    public string MaintenanceIntervalDistanceLabel =>
+        LF("VehicleStarterBundle.MaintenanceIntervalDistanceLabel", DistanceUnitLabel);
+
+    public string MaintenanceIntervalDistanceName =>
+        LF("VehicleStarterBundle.MaintenanceIntervalDistanceName", DistanceUnitLabel);
 
     [ObservableProperty]
     private VehicleStarterBundleItemEditorViewModel? selectedItem;

@@ -25,6 +25,9 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     }
 
     public string WindowTitle => Root.MaintenanceWindowTitle;
+    internal AppCulturePreferences CurrentCulturePreferences => Root.CurrentCulturePreferences;
+    internal AppUnitPreferences CurrentUnitPreferences => Root.CurrentUnitPreferences;
+
     public ObservableCollection<VehicleMaintenanceItemViewModel> SelectedVehicleMaintenance { get; } = [];
     public ObservableCollection<VehicleMaintenanceItemViewModel> VisibleMaintenanceItems { get; } = [];
     public bool CanOpenMaintenanceRecommendations => Root.CanOpenMaintenanceRecommendations;

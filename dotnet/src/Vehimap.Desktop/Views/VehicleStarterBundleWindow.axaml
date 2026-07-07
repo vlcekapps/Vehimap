@@ -105,10 +105,10 @@
                        AutomationProperties.AutomationId="BundleMaintenanceTitleBox" />
               <Grid Margin="0,12,0,0" ColumnDefinitions="*,*">
                 <StackPanel Margin="0,0,10,0" Spacing="6">
-                  <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.MaintenanceIntervalKmLabel}" />
-                  <TextBox Text="{Binding SelectedItem.IntervalKm}"
-                           AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.MaintenanceIntervalKmName}"
-                           AutomationProperties.AutomationId="BundleMaintenanceIntervalKmBox" />
+                  <TextBlock FontWeight="SemiBold" Text="{Binding MaintenanceIntervalDistanceLabel}" />
+                  <TextBox Text="{Binding SelectedItem.IntervalDistance}"
+                           AutomationProperties.Name="{Binding MaintenanceIntervalDistanceName}"
+                           AutomationProperties.AutomationId="BundleMaintenanceIntervalDistanceBox" />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="6">
                   <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleStarterBundle.MaintenanceIntervalMonthsLabel}" />

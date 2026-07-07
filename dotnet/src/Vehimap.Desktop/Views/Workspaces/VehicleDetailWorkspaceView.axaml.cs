@@ -69,7 +69,10 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
 
         var dialog = new VehicleStarterBundleWindow
         {
-            DataContext = new VehicleStarterBundleDialogViewModel(preview)
+            DataContext = new VehicleStarterBundleDialogViewModel(
+                preview,
+                ViewModel.CurrentCulturePreferences,
+                ViewModel.CurrentUnitPreferences)
         };
 
         var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(owner);

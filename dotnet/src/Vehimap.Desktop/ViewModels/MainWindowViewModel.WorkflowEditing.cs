@@ -26,13 +26,13 @@ public sealed partial class MainWindowViewModel
 
     private DesktopSupportedSettingsSnapshot CurrentSupportedSettings => _session.ReadSupportedSettings();
 
-    private AppCulturePreferences CurrentCulturePreferences =>
+    internal AppCulturePreferences CurrentCulturePreferences =>
         new(
             CurrentSupportedSettings.Language,
             CurrentSupportedSettings.ThousandsSeparator,
             CurrentSupportedSettings.DecimalSeparator);
 
-    private AppUnitPreferences CurrentUnitPreferences =>
+    internal AppUnitPreferences CurrentUnitPreferences =>
         new(
             CurrentSupportedSettings.DistanceUnit,
             CurrentSupportedSettings.VolumeUnit);

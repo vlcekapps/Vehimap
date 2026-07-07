@@ -91,7 +91,10 @@ public partial class MaintenanceWorkspaceView : WorkspaceViewBase<MaintenanceWor
 
         var dialog = new VehicleStarterBundleWindow
         {
-            DataContext = VehicleStarterBundleDialogViewModel.CreateMaintenanceTemplates(preview)
+            DataContext = VehicleStarterBundleDialogViewModel.CreateMaintenanceTemplates(
+                preview,
+                ViewModel.CurrentCulturePreferences,
+                ViewModel.CurrentUnitPreferences)
         };
 
         var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(owner);

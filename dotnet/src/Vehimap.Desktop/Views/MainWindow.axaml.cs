@@ -1356,7 +1356,10 @@ public partial class MainWindow : Window
 
             var dialog = new VehicleStarterBundleWindow
             {
-                DataContext = new VehicleStarterBundleDialogViewModel(preview)
+                DataContext = new VehicleStarterBundleDialogViewModel(
+                    preview,
+                    _viewModel.CurrentCulturePreferences,
+                    _viewModel.CurrentUnitPreferences)
             };
 
             var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(this).ConfigureAwait(true);
@@ -1674,7 +1677,10 @@ public partial class MainWindow : Window
 
         var dialog = new VehicleStarterBundleWindow
         {
-            DataContext = new VehicleStarterBundleDialogViewModel(preview)
+            DataContext = new VehicleStarterBundleDialogViewModel(
+                preview,
+                _viewModel.CurrentCulturePreferences,
+                _viewModel.CurrentUnitPreferences)
         };
 
         var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(this);
