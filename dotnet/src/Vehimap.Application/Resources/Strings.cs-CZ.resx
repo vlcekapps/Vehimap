@@ -2476,8 +2476,10 @@ Navržená akce: {6}</value></data>
   <data name="Dialog.Cancel" xml:space="preserve"><value>Zrušit</value></data>
   <data name="WorkspaceEditor.Error.UnknownKind" xml:space="preserve"><value>Neznámý typ editoru.</value></data>
   <data name="KnownValue.Category.PassengerVehicles" xml:space="preserve"><value>Osobní vozidla</value></data>
+  <data name="KnownValue.Category.PassengerVehicles.LegacyShort" xml:space="preserve"><value>Osobní</value></data>
   <data name="KnownValue.Category.Motorcycles" xml:space="preserve"><value>Motocykly</value></data>
   <data name="KnownValue.Category.Trucks" xml:space="preserve"><value>Nákladní vozidla</value></data>
+  <data name="KnownValue.Category.Trucks.LegacyShort" xml:space="preserve"><value>Nákladní</value></data>
   <data name="KnownValue.Category.Buses" xml:space="preserve"><value>Autobusy</value></data>
   <data name="KnownValue.Category.Other" xml:space="preserve"><value>Ostatní</value></data>
   <data name="KnownValue.RecordType.LiabilityInsurance" xml:space="preserve"><value>Povinné ručení</value></data>
@@ -2514,6 +2516,7 @@ Navržená akce: {6}</value></data>
   <data name="KnownValue.FuelType.Other" xml:space="preserve"><value>Jiné</value></data>
   <data name="KnownValue.ReminderRepeat.None" xml:space="preserve"><value>Neopakovat</value></data>
   <data name="KnownValue.ReminderRepeat.Yearly" xml:space="preserve"><value>Každý rok</value></data>
+  <data name="KnownValue.ReminderRepeat.Yearly.LegacyAdverb" xml:space="preserve"><value>Ročně</value></data>
   <data name="KnownValue.ReminderRepeat.EveryTwoYears" xml:space="preserve"><value>Každé 2 roky</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears" xml:space="preserve"><value>Každých 5 let</value></data>
 </root>

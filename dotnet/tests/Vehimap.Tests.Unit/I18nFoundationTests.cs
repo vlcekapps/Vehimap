@@ -1319,13 +1319,22 @@ public sealed class I18nFoundationTests
         {
             DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
             var englishCategory = KnownValueOptions.SelectVehicleCategory("Osobní vozidla");
+            var englishShortCategory = KnownValueOptions.SelectVehicleCategory("Osobní");
             var englishFuel = KnownValueOptions.SelectFuelType("Gasoline");
+            var englishAccentFuel = KnownValueOptions.SelectFuelType("Benzín");
+            var englishYearlyRepeat = KnownValueOptions.SelectReminderRepeatMode("Ročně");
             var customFuel = KnownValueOptions.SelectFuelType("Natural 100");
 
             Assert.Equal("Osobní vozidla", englishCategory.Value);
             Assert.Equal("Passenger vehicles", englishCategory.Label);
+            Assert.Equal("Osobní vozidla", englishShortCategory.Value);
+            Assert.Equal("Passenger vehicles", englishShortCategory.Label);
             Assert.Equal("Benzin", englishFuel.Value);
             Assert.Equal("Gasoline", englishFuel.Label);
+            Assert.Equal("Benzin", englishAccentFuel.Value);
+            Assert.Equal("Gasoline", englishAccentFuel.Label);
+            Assert.Equal("Každý rok", englishYearlyRepeat.Value);
+            Assert.Equal("Every year", englishYearlyRepeat.Label);
             Assert.Equal("Natural 100", customFuel.Value);
             Assert.Equal("Natural 100", customFuel.Label);
 
@@ -1398,8 +1407,7 @@ public sealed class I18nFoundationTests
             "dotnet/src/Vehimap.Storage.Legacy/LegacyVehicleValueNormalization.cs" or
             "dotnet/src/Vehimap.Application/Services/LegacyKnownValueDisplayService.cs" or
             "dotnet/src/Vehimap.Application/Services/LegacyServiceBookService.cs" or
-            "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs" or
-            "dotnet/src/Vehimap.Desktop/ViewModels/KnownValueOptions.cs")
+            "dotnet/src/Vehimap.Application/Services/VehicleStarterBundleService.cs")
         {
             return true;
         }

@@ -2476,8 +2476,10 @@ Suggested action: {6}</value></data>
   <data name="Dialog.Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="WorkspaceEditor.Error.UnknownKind" xml:space="preserve"><value>Unknown editor type.</value></data>
   <data name="KnownValue.Category.PassengerVehicles" xml:space="preserve"><value>Passenger vehicles</value></data>
+  <data name="KnownValue.Category.PassengerVehicles.LegacyShort" xml:space="preserve"><value>Passenger</value></data>
   <data name="KnownValue.Category.Motorcycles" xml:space="preserve"><value>Motorcycles</value></data>
   <data name="KnownValue.Category.Trucks" xml:space="preserve"><value>Trucks</value></data>
+  <data name="KnownValue.Category.Trucks.LegacyShort" xml:space="preserve"><value>Truck</value></data>
   <data name="KnownValue.Category.Buses" xml:space="preserve"><value>Buses</value></data>
   <data name="KnownValue.Category.Other" xml:space="preserve"><value>Other</value></data>
   <data name="KnownValue.RecordType.LiabilityInsurance" xml:space="preserve"><value>Liability insurance</value></data>
@@ -2514,6 +2516,7 @@ Suggested action: {6}</value></data>
   <data name="KnownValue.FuelType.Other" xml:space="preserve"><value>Other</value></data>
   <data name="KnownValue.ReminderRepeat.None" xml:space="preserve"><value>Do not repeat</value></data>
   <data name="KnownValue.ReminderRepeat.Yearly" xml:space="preserve"><value>Every year</value></data>
+  <data name="KnownValue.ReminderRepeat.Yearly.LegacyAdverb" xml:space="preserve"><value>Yearly</value></data>
   <data name="KnownValue.ReminderRepeat.EveryTwoYears" xml:space="preserve"><value>Every 2 years</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears" xml:space="preserve"><value>Every 5 years</value></data>
 </root>
