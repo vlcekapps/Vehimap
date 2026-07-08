@@ -328,7 +328,7 @@ public sealed class SqliteStorageCompatibilityTests
     {
         var tempRoot = CreateTempRoot("vehimap-sqlite-health-corrupt");
         var dataRoot = CreateDataRoot(tempRoot);
-        var healthService = new SqliteDataStoreHealthService();
+        var healthService = new SqliteDataStoreHealthService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
         var databasePath = Path.Combine(dataRoot.DataPath, "vehimap.db");
 
         try
@@ -340,7 +340,7 @@ public sealed class SqliteStorageCompatibilityTests
 
             Assert.Equal(DataStoreHealthStatus.Error, report.Status);
             Assert.True(File.Exists(databasePath));
-            Assert.Contains(report.Details, item => item.Contains("nepodařilo otevřít", StringComparison.OrdinalIgnoreCase)
+            Assert.Contains(report.Details, item => item.Contains("The database could not be opened or checked:", StringComparison.OrdinalIgnoreCase)
                 || item.Contains("SQLite quick_check", StringComparison.OrdinalIgnoreCase));
         }
         finally

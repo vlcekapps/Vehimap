@@ -72,6 +72,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Krátké statusy akcí nad přílohami dokladů (`Otevřít`, `Otevřít složku`, `Kopírovat cestu`) už při selhání nezobrazují syrový text výjimky; konkrétní cesta zůstává viditelná jen u úspěšných akcí a dostupnostních hlášek.
 - GitHub Actions UI smoke už neinstaluje WinAppDriver přes anonymní GitHub API volání z Appium driveru; workflow stahuje známý MSI asset přímo, ověřuje SHA-256 a instaluje jej přes `msiexec`, aby veřejné nightly nespadlo na rate limitu runneru.
 - Appium UI smoke znovu nechává izolovanou desktopovou aplikaci spustit WinAppDriverem, doplňuje jí pracovní adresář izolované kopie a při křehkém selhání přímého attachi dohledá otevřené okno přes Appium `Root` UI Automation session podle názvu `Vehimap`; tím se omezuje flaky selhání hosted runneru při hledání čerstvě otevřeného okna podle processId.
+- Compatibility test poškozené SQLite databáze už nespoléhá na jazyk prostředí runneru; veřejná nightly tak nespadne jen proto, že GitHub Actions vrátí anglický health-check detail místo českého.
 
 ### Odstraněno
 - Po prvním stabilním Windows C# release byla z repozitáře odstraněna původní AHK aplikace, její knihovny, smoke testy a generované AHK HTML výstupy (`src/Vehimap.ahk`, `src/GeneratedBuildInfo.ahk`, `src/lib`, `src/tests`, `src/readme.html`, `src/changelog.html`); `src/VERSION` a `.NET` legacy storage kompatibilita zůstávají zachované.
