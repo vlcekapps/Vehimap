@@ -467,6 +467,23 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Remove-Item -LiteralPath $installFullPath -Recurse -Force", script, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void Windows_installer_shortcuts_include_localized_accessible_comments()
+    {
+        var templatePath = Path.Combine(FindRepositoryRoot(), "dotnet", "installer", "windows", "Vehimap.iss.in");
+        var template = File.ReadAllText(templatePath);
+        var iconLines = NormalizeLineEndings(template)
+            .Split('\n')
+            .Where(line => line.StartsWith("Name: \"{group}\\", StringComparison.Ordinal)
+                || line.StartsWith("Name: \"{userdesktop}\\", StringComparison.Ordinal))
+            .ToArray();
+
+        Assert.Contains("english.ShortcutComment=Open {{APP_NAME}} vehicle records", template, StringComparison.Ordinal);
+        Assert.Contains("czech.ShortcutComment=Otevřít evidenci vozidel {{APP_NAME}}", template, StringComparison.Ordinal);
+        Assert.Equal(2, iconLines.Length);
+        Assert.All(iconLines, line => Assert.Contains("Comment: \"{cm:ShortcutComment}\"", line, StringComparison.Ordinal));
+    }
+
     private static string ReadWorkflow()
     {
         var workflowPath = Path.Combine(FindRepositoryRoot(), ".github", "workflows", "dotnet-desktop.yml");

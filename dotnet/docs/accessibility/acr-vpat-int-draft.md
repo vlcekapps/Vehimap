@@ -76,6 +76,8 @@ Vehimap should not publish a final customer ACR until these gates are green:
 - Pointer target evidence covers shell filters, workspace action panels, custom tab
   headers, dialog action buttons and installer shortcuts beyond the automated fixed
   XAML size guard.
+- Non-text/icon evidence covers localized installer shortcut comments for generated
+  Start menu and desktop shortcuts, with manual verification still required.
 - Label-in-name evidence covers resource-expanded controls such as the main workspace
   `Open window` / `V okně` actions, including speech-input-friendly accessible names.
 - Resize/reflow evidence covers explicit `CanResize` behavior for top-level desktop

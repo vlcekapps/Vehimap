@@ -27,8 +27,9 @@ customer-facing Accessibility Conformance Report.
    header focus border/background in standard and forced-colors modes, open every
    `In window` view, verify that the spoken name includes the visible `Open window`
    / `V okně` label, and return focus to the invoking surface.
-4. Verify pointer target size for shell filters, workspace action panels, custom
-   workspace tab headers, dialog action buttons and generated installer shortcuts.
+4. Verify pointer target size and localized shortcut descriptions for shell filters,
+   workspace action panels, custom workspace tab headers, dialog action buttons and
+   generated installer shortcuts.
 5. Create, edit, cancel and save vehicle, history, fuel, reminder, maintenance
    and document records. Verify first focus, Shift+Tab behavior, Escape,
    Ctrl+S, validation errors, window resize behavior and return focus.

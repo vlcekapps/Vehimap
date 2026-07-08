@@ -75,6 +75,9 @@ for a future ACR/VPAT-style report if one is needed.
   whenever practical. This protects speech input and WCAG 2.2 `Label in Name`. The
   main workspace `Open window` / `V okně` buttons have an EN/CS guard because their
   accessible names add the target workspace.
+- Windows installer shortcuts must include localized `Comment` metadata in the Inno
+  template so icon-only Start menu and desktop surfaces have a text alternative outside
+  the running UI. Keep this guarded alongside installer smoke tests.
 - Non-interactive but important controls such as `ProgressBar` still need a stable
   `AutomationId`, a human accessible name and short `HelpText` describing what is being
   measured.

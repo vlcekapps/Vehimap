@@ -39,6 +39,8 @@ english.ShortcutsGroup=Shortcuts:
 czech.ShortcutsGroup=Zástupci:
 english.LaunchApp=Launch {{APP_NAME}}
 czech.LaunchApp=Spustit {{APP_NAME}}
+english.ShortcutComment=Open {{APP_NAME}} vehicle records
+czech.ShortcutComment=Otevřít evidenci vozidel {{APP_NAME}}
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:DesktopIconTask}"; GroupDescription: "{cm:ShortcutsGroup}"; Flags: unchecked; Check: IsFreshInstall
@@ -47,8 +49,8 @@ Name: "desktopicon"; Description: "{cm:DesktopIconTask}"; GroupDescription: "{cm
 Source: "{{SOURCE_DIR}}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "data\*"
 
 [Icons]
-Name: "{group}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"
-Name: "{userdesktop}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"; Tasks: desktopicon; Check: IsFreshInstall
+Name: "{group}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"; Comment: "{cm:ShortcutComment}"
+Name: "{userdesktop}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"; Comment: "{cm:ShortcutComment}"; Tasks: desktopicon; Check: IsFreshInstall
 
 [Run]
 Filename: "{app}\Vehimap.Desktop.exe"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent

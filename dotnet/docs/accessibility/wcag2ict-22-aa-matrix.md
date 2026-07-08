@@ -35,7 +35,7 @@ certification or a substitute for independent audit.
 
 | Criterion | Level | Draft status | Vehimap relation | Evidence / next step |
 |---|---:|---|---|---|
-| 1.1.1 Non-text Content | A | Partially Supports | Desktop UI is text-first and does not rely on images for critical controls. Installer/desktop icons still need descriptive documentation rather than UIA names. | Manual screen-reader pass for icon-only platform surfaces and installer shortcuts. |
+| 1.1.1 Non-text Content | A | Partially Supports | Desktop UI is text-first and does not rely on images for critical controls. Windows installer shortcuts now include localized `Comment` metadata for icon-only Start menu and desktop surfaces. | Manual screen-reader pass for icon-only platform surfaces and generated installer shortcuts. |
 | 1.2.1-1.2.5 Time-based Media | A/AA | Not Applicable | Vehimap does not create audio/video media. | Reassess if help videos or media attachments become rendered content. |
 | 1.3.1 Info and Relationships | A | Partially Supports | Standard Avalonia controls, headings, item types/statuses, landmarks and accessible names are guarded. | Continue static UIA guard tests and manual NVDA verification of dense dialogs. |
 | 1.3.2 Meaningful Sequence | A | Partially Supports | Dialog editors and workspaces have intentional tab order; main shell focus order is regression-tested. | Manual pass across every tab after localization changes. |
