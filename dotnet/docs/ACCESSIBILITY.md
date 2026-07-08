@@ -111,6 +111,12 @@ for a future ACR/VPAT-style report if one is needed.
   `TextBox UIA text fallback`, not a replacement for standard controls.
 - Prefer Avalonia `HotKey`, `KeyBinding` and commands. A manual `KeyDown` handler is an
   exception, not the default.
+- Custom visual styles that override standard controls must keep an explicit visible
+  focus state. The app-level `RadioButton.tab-header:focus` and
+  `RadioButton.tab-header:checked:focus` styles provide the workspace tab strip with a
+  stable 2 px focus border and higher-contrast focused background in the standard theme;
+  do not remove them unless a manually verified replacement covers standard,
+  forced-colors and high-DPI modes.
 - Do not encode critical state only with color, icon shape, visual position or tooltip.
 
 ## Documented keyboard/focus exceptions
@@ -120,8 +126,9 @@ Avalonia shell. New entries require a regression test.
 
 - `MainWindow.axaml.cs`: global `Alt`/`F10` menu open/close, return focus to the previous
   non-menu control and do not put menu roots in normal `Tab` order.
-- `MainWindow.axaml.cs`: tab header keyboard behavior for the custom radio-button card
-  strip. Keep until a native `TabControl` prototype proves better with NVDA.
+- `MainWindow.axaml.cs` and `App.axaml`: tab header keyboard behavior and visible focus
+  styling for the custom radio-button card strip. Keep until a native `TabControl`
+  prototype proves better with NVDA and forced-colors evidence.
 - `MainWindow.axaml.cs`: boundary focus between vehicle filters, the vehicle list and
   selected workspace tab header.
 - `WorkspaceViewBase.cs`: reverse tab boundary from embedded workspace content back to

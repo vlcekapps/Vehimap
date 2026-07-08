@@ -44,11 +44,11 @@ certification or a substitute for independent audit.
 | 1.3.5 Identify Input Purpose | AA | Partially Supports | Native desktop fields expose names/help text, but HTML autocomplete tokens do not apply directly. | For ACR, explain platform difference and manually verify common personal-data fields. |
 | 1.4.1 Use of Color | A | Supports | Statuses and warnings use text labels, not only color. | Manual high-contrast pass remains required. |
 | 1.4.2 Audio Control | A | Not Applicable | Vehimap does not autoplay audio. | Reassess if sound alerts are introduced. |
-| 1.4.3 Contrast (Minimum) | AA | Partially Supports | Avalonia styling aims for readable contrast, but measured visual evidence is not complete. | Add forced-colors/contrast screenshots or manual measurements before public ACR. |
+| 1.4.3 Contrast (Minimum) | AA | Partially Supports | Avalonia styling aims for readable contrast and the custom workspace tab focus state now has an explicit higher-contrast standard-theme treatment, but measured visual evidence is not complete. | Add forced-colors/contrast screenshots or manual measurements before public ACR. |
 | 1.4.4 Resize Text | AA | Partially Supports | Main windows are resizable and major lists stretch; dialog editors are scrollable. | Manual 200/400% Windows scaling pass. |
 | 1.4.5 Images of Text | AA | Supports | Core UI does not use images of text. | Keep asset review in release checklist. |
 | 1.4.10 Reflow | AA | Partially Supports | Desktop UI supports resize and scrollable content; mobile/Android is not evaluated yet. | Manual high-DPI and small-window pass for all main screens. |
-| 1.4.11 Non-text Contrast | AA | Partially Supports | Focus indicators and controls are visible in standard theme. | Manual forced-colors and focus contrast evidence. |
+| 1.4.11 Non-text Contrast | AA | Partially Supports | Focus indicators and controls are visible in standard theme; the custom radio-button workspace tab strip has a guarded 2 px focus border and focused background. | Manual forced-colors and focus contrast evidence. |
 | 1.4.12 Text Spacing | AA | Partially Supports | Native desktop controls are less directly affected by web text-spacing CSS. | Document non-web applicability and verify large system font behavior. |
 | 1.4.13 Content on Hover or Focus | AA | Partially Supports | Workflows do not depend on hover-only content; tray native menu has a documented accessible alternative. | Keep tray exception in backlog and use `Aplikace -> Akce na liště` as supported path. |
 | 2.1.1 Keyboard | A | Partially Supports | Main shell, menu, workspaces and dialog editors are keyboard-first and covered by regression tests. | Full manual NVDA keyboard pass before ACR publication. |
@@ -63,7 +63,7 @@ certification or a substitute for independent audit.
 | 2.4.4 Link Purpose | A | Supports | Links/buttons use descriptive labels and help text for destructive actions. | Verify donation/release links and diagnostics actions. |
 | 2.4.5 Multiple Ways | AA | Supports | Major workflows are available through menu, tabs, window actions and search/advisor paths. | Reassess Android navigation later. |
 | 2.4.6 Headings and Labels | AA | Supports | Primary headings, labels and accessible names are guarded. | Keep resource-based accessible names in both languages. |
-| 2.4.7 Focus Visible | AA | Partially Supports | Keyboard focus is visible in tested Windows flows. | Manual forced-colors and high-DPI evidence needed. |
+| 2.4.7 Focus Visible | AA | Partially Supports | Keyboard focus is visible in tested Windows flows and the custom workspace tab headers have app-level focus styles covered by a static regression test. | Manual forced-colors and high-DPI evidence needed. |
 | 2.4.11 Focus Not Obscured | AA | Partially Supports | Main lists and dialogs are scrollable/resizable; previous focus regressions are covered. | Manual 400% and large system font pass. |
 | 2.5.1 Pointer Gestures | A | Supports | No path-based or multipoint gestures are required. | Reassess future mobile shell. |
 | 2.5.2 Pointer Cancellation | A | Supports | Actions are explicit commands, not down-event-only side effects. | Keep for future drag/drop features. |

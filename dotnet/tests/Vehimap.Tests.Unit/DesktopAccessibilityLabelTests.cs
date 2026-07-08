@@ -1628,6 +1628,20 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Workspace_tab_headers_should_keep_visible_focus_indicator()
+    {
+        var appXaml = ReadDesktopRootFile("App.axaml");
+
+        Assert.Contains("<Style Selector=\"RadioButton.tab-header\">", appXaml);
+        Assert.Contains("<Setter Property=\"BorderThickness\" Value=\"2\" />", appXaml);
+        Assert.Contains("<Style Selector=\"RadioButton.tab-header:focus\">", appXaml);
+        Assert.Contains("<Style Selector=\"RadioButton.tab-header:checked:focus\">", appXaml);
+        Assert.Contains("<Setter Property=\"BorderBrush\" Value=\"#FFFFD54F\" />", appXaml);
+        Assert.Contains("<Setter Property=\"Background\" Value=\"#253A4A5A\" />", appXaml);
+        Assert.Contains("<Setter Property=\"Background\" Value=\"#3557708C\" />", appXaml);
+    }
+
+    [Fact]
     public void Required_editor_fields_should_expose_required_for_form_metadata()
     {
         var requiredFields = new Dictionary<string, string>(StringComparer.Ordinal)

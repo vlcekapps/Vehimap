@@ -15,14 +15,22 @@
       <Setter Property="MinWidth" Value="96" />
       <Setter Property="Background" Value="#143A4A5A" />
       <Setter Property="BorderBrush" Value="#304050" />
-      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="BorderThickness" Value="2" />
       <Setter Property="CornerRadius" Value="6" />
       <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="RadioButton.tab-header:focus">
+      <Setter Property="Background" Value="#253A4A5A" />
+      <Setter Property="BorderBrush" Value="#FFFFD54F" />
     </Style>
     <Style Selector="RadioButton.tab-header:checked">
       <Setter Property="Background" Value="#2A57708C" />
       <Setter Property="BorderBrush" Value="#6AA4D8" />
       <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="RadioButton.tab-header:checked:focus">
+      <Setter Property="Background" Value="#3557708C" />
+      <Setter Property="BorderBrush" Value="#FFFFD54F" />
     </Style>
   </Application.Styles>
 </Application>

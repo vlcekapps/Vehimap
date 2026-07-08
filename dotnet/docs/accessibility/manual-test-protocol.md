@@ -21,8 +21,9 @@ customer-facing Accessibility Conformance Report.
    title announcement and initial focus on the vehicle list or primary action.
 2. Open and close the main menu with Alt/F10; verify normal Tab/Shift+Tab does
    not enter menu roots.
-3. Navigate the vehicle list, switch every workspace tab, open every `In window`
-   view and return focus to the invoking surface.
+3. Navigate the vehicle list, switch every workspace tab, verify the custom tab
+   header focus border/background in standard and forced-colors modes, open every
+   `In window` view and return focus to the invoking surface.
 4. Create, edit, cancel and save vehicle, history, fuel, reminder, maintenance
    and document records. Verify first focus, Shift+Tab behavior, Escape,
    Ctrl+S, validation errors and return focus.
