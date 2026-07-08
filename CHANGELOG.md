@@ -17,6 +17,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Windows instalátor doplňuje lokalizovaný komentář ke Start menu a desktop zástupci, aby ikonové povrchy měly textovou alternativu i mimo běžící UI.
 - Hlavní subtitle v desktop shellu má nově stabilní UIA název a `AutomationId`, takže statické accessibility testy hlídají i orientační text pod hlavním nadpisem.
 - Varovný/instruktážní text v editoru vozidla má nově stabilní UIA název a `AutomationId`, takže čtečka i statické guardy pokrývají i orientační text formuláře.
+- Dialog dokončení údržby zpřístupňuje kontext vozidla, plánu, aktuálního stavu a popisu akce jako UIA texty ještě před editačními poli.
 - Samostatná workspace okna mají nově přístupné souhrnné texty pod nadpisem s unikátními window-scoped `AutomationId`, takže UIA struktura neobsahuje jen nadpis a vložený obsah.
 - Vlastní workspace záložky v hlavním okně mají nově výrazný fokusový stav se stabilním 2px okrajem a světlejším pozadím; statický accessibility guard hlídá přítomnost stylu i alespoň 3:1 kontrast fokusového okraje, aby se z custom radio-button pásu znovu neztratila viditelná klávesnicová navigace.
 - Statické accessibility testy nově hlídají, aby pevně dimenzované interaktivní XAML prvky a akční `WrapPanel` položky neklesly pod 24px cílový rozměr; vlastní workspace záložky mají explicitní 34px minimální výšku.

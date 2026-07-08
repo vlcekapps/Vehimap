@@ -87,6 +87,9 @@ for a future ACR/VPAT-style report if one is needed.
 - Standalone workspace windows must expose their header summary texts through
   `AutomationProperties.Name` and window-scoped `AutomationId` values; use IDs that
   do not collide with the embedded workspace view hosted in the same window.
+- Dialog header context that identifies the affected item, selected plan or current
+  status must expose the same text through `AutomationProperties.Name` with stable
+  `AutomationId` values before the editable form controls.
 - Visible form guidance, warning or instruction text must also expose a human
   accessible name and stable `AutomationId`; do not rely on styled text alone for
   orienting screen-reader users.

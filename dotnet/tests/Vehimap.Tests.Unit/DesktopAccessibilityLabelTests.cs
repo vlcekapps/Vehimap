@@ -602,6 +602,10 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.Escape", notificationCodeBehind);
         Assert.Contains("CanResize=\"True\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionWindow\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionVehicleText\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionPlanText\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionCurrentStatusText\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionDescriptionText\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionFieldsScrollViewer\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionDateBox\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"MaintenanceCompletionOdometerBox\"", maintenanceCompletionXaml);
@@ -613,6 +617,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", maintenanceCompletionXaml);
         Assert.Contains("Title=\"{i18n:Loc MaintenanceCompletion.Title}\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc MaintenanceCompletion.HelpText}\"", maintenanceCompletionXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MaintenanceCompletion.Description}\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MaintenanceCompletion.CompletedDateName}\"", maintenanceCompletionXaml);
         Assert.Contains("Content=\"{i18n:Loc Common.Save}\"", maintenanceCompletionXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MaintenanceCompletion.CancelName}\"", maintenanceCompletionXaml);
@@ -1251,6 +1256,7 @@ public sealed class DesktopAccessibilityLabelTests
         var fuelEditorXaml = ReadWorkspaceOrView("FuelEditorWindow.axaml", false);
         var reminderEditorXaml = ReadWorkspaceOrView("ReminderEditorWindow.axaml", false);
         var maintenanceEditorXaml = ReadWorkspaceOrView("MaintenanceEditorWindow.axaml", false);
+        var maintenanceCompletionXaml = ReadWorkspaceOrView("MaintenanceCompletionWindow.axaml", false);
         var recordEditorXaml = ReadWorkspaceOrView("RecordEditorWindow.axaml", false);
         var modalWorkspaceWindowSummaries = new[]
         {
@@ -1285,6 +1291,11 @@ public sealed class DesktopAccessibilityLabelTests
             AssertAccessibleBoundText(xaml, automationId, bindingName);
         }
 
+        AssertAccessibleBoundText(maintenanceCompletionXaml, "MaintenanceCompletionVehicleText", "VehicleName");
+        AssertAccessibleBoundText(maintenanceCompletionXaml, "MaintenanceCompletionPlanText", "PlanTitle");
+        AssertAccessibleBoundText(maintenanceCompletionXaml, "MaintenanceCompletionCurrentStatusText", "CurrentStatus");
+        AssertAccessibleTextId(maintenanceCompletionXaml, "MaintenanceCompletionDescriptionText");
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MaintenanceCompletion.Description}\"", maintenanceCompletionXaml);
         AssertAccessibleBoundText(auditXaml, "AuditSummaryText", "AuditSummary");
         AssertAccessibleBoundText(historyXaml, "HistorySummaryText", "HistorySummary");
         AssertAccessibleBoundText(historyXaml, "HistorySearchSummaryText", "HistorySearchSummary");

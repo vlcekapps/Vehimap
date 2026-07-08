@@ -24,11 +24,23 @@
                  AutomationProperties.Name="{i18n:Loc MaintenanceCompletion.Title}"
                  AutomationProperties.AutomationId="MaintenanceCompletionHeadingText"
                  AutomationProperties.HeadingLevel="1" />
-      <TextBlock Text="{Binding VehicleName}" />
-      <TextBlock FontWeight="SemiBold" Text="{Binding PlanTitle}" />
-      <TextBlock Opacity="0.78" Text="{Binding CurrentStatus}" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding VehicleName}"
+                 AutomationProperties.Name="{Binding VehicleName}"
+                 AutomationProperties.AutomationId="MaintenanceCompletionVehicleText" />
+      <TextBlock FontWeight="SemiBold"
+                 Text="{Binding PlanTitle}"
+                 AutomationProperties.Name="{Binding PlanTitle}"
+                 AutomationProperties.AutomationId="MaintenanceCompletionPlanText" />
+      <TextBlock Opacity="0.78"
+                 Text="{Binding CurrentStatus}"
+                 AutomationProperties.Name="{Binding CurrentStatus}"
+                 AutomationProperties.AutomationId="MaintenanceCompletionCurrentStatusText"
+                 AutomationProperties.LiveSetting="Polite"
+                 TextWrapping="Wrap" />
       <TextBlock Opacity="0.78"
                  Text="{i18n:Loc MaintenanceCompletion.Description}"
+                 AutomationProperties.Name="{i18n:Loc MaintenanceCompletion.Description}"
+                 AutomationProperties.AutomationId="MaintenanceCompletionDescriptionText"
                  TextWrapping="Wrap" />
     </StackPanel>
 
