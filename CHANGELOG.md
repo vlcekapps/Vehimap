@@ -8,6 +8,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ### Dokumentace
 - Přepracován kořenový `README.md` na uživatelský úvod bez vývojářských interních pojmů; technické detaily jsou nově jasně oddělené do vývojářské dokumentace.
 - Přidán anglický uživatelský `README.en-US.md` a vzájemné jazykové odkazy v obsahu české i anglické verze.
+- Přibyla dokumentační sada `dotnet/docs/accessibility/` pro ACR-ready přípravu Vehimapu 2.0: VPAT 2.5Rev INT draft, WCAG2ICT/2.2 AA matrix, remediation backlog a ruční testovací protokol. Zatím jde o evidenční draft, ne o formální prohlášení o shodě.
 
 ### Změněno
 - Nightly větev začíná datovou řadu Vehimap 2.0: runtime úložiště se přepíná z průběžného zápisu legacy `TSV/INI` na primární SQLite databázi `data/vehimap.db`; legacy soubory z 1.0.2 zůstávají jen jako jednorázový migrační vstup, po ověřené migraci se přesunou do `data/migration-backups/.../removed-from-data-root/` a staré `.vehimapbak` zálohy se dál importují přes kompatibilní parser.
@@ -35,6 +36,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Uložené filtry, řazení, období nákladů a navigační cíle v C# shellu nově používají stabilní interní klíče místo viditelných EN/CS popisků; staré české i anglické labely z dřívějších nightly buildů zůstávají kompatibilními aliasy a při dalším uložení se normalizují.
 - Audit dat, globální hledání a Chytrý poradce nově předávají navigační cíle jako stabilní entity kindy `vehicle`, `history`, `fuel`, `record`, `maintenance`, `reminder` a `costs`; staré české názvy entit zůstávají jen kompatibilním vstupním aliasem.
 - I18n brána pro Windows nightly nově automaticky ověřuje anglické UI nad českými legacy daty: známé systémové hodnoty jako kategorie, palivo, doklad nebo opakování se zobrazují anglicky, zatímco uživatelsky zadané názvy, poznámky a texty zůstávají beze změny.
+- I18n conformance brána byla rozšířena na průřezový test hlavních projekcí: seznam/detail vozidel, historie, tankování, připomínky, údržba, doklady, časová osa, dashboard, audit, náklady, servisní knížka, globální hledání, analýza tankování a Chytrý poradce se ověřují nad stejnou českou legacy datovou sadou v anglickém profilu.
 - Produkční C# kód má novou statickou ochranu proti návratu českých UI literálů mimo `.resx`; povolené zůstávají jen zdokumentované legacy tokeny, kompatibilní aliasy a katalogy používané jako data/šablony.
 - I18n/unit/currency brána nově hlídá pevné jednotkové a měnové literály v produkčním C# kódu; texty typu `km`, `mi`, `l`, `US gal`, `Kč`, `CZK` nebo `USD` smí být jen ve storage defaultech a sdílených formátovacích službách. Tiskový HTML přehled vozidel zároveň překládá známé legacy kategorie a stavy vozidel podle aktivního jazyka.
 - Fuel analysis už nevrací `mpg` ani `mpg (imp)` jako pevný string přímo z projekční služby; spotřeba v mílích na galon jde přes EN/CS `.resx` a unit/currency guard hlídá i návrat pevných `mpg` literálů mimo resource/formátovací hranici.

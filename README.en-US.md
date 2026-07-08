@@ -92,6 +92,8 @@ Data can be exported to a backup and restored later. Newer Vehimap versions use 
 
 Vehimap is designed as a keyboard-first application. Important screens provide keyboard control, screen-reader-friendly labels, and separate dialogs for editing records.
 
+Vehimap 2.0 also has an ACR-ready evidence draft in progress for future customer accessibility review. This is not a formal conformance statement yet; that requires completed manual assistive-technology validation.
+
 ## Data And Privacy
 
 Vehimap stores data locally in the data folder of the selected installation channel. The application does not use cloud synchronization, and your vehicle records stay on your device.

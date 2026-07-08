@@ -8,10 +8,15 @@ for a future ACR/VPAT-style report if one is needed.
 ## Conformance status
 
 - Current status: accessibility-oriented / pre-conformance.
+- ACR-ready evidence work has started in `dotnet/docs/accessibility/`. The current
+  target format is a VPAT 2.5Rev INT draft with supporting WCAG2ICT/2.2 AA matrix,
+  remediation backlog and manual test protocol.
 - Primary validation target: Windows 11 with NVDA, with Narrator as a secondary check.
 - Future validation targets: macOS with VoiceOver and Linux with Orca after Windows 2.0
   storage and UI stabilization.
 - We do not claim formal WCAG, EN 301 549, Section 508, or VPAT conformance yet.
+- Any customer-facing ACR must remain a draft until the manual assistive-technology
+  evidence pass is complete and reviewed.
 - Known exceptions must stay documented, tested, and either retired or explicitly kept.
 - The current `TextBox UIA text fallback` is an explicitly temporary workaround for
   [AvaloniaUI/Avalonia#9770](https://github.com/AvaloniaUI/Avalonia/issues/9770). It
@@ -171,6 +176,14 @@ Manual evidence lives in `dotnet/docs/accessibility-evidence/`. Each run should 
 - scenarios tested;
 - pass/fail result;
 - known issues or temporary exceptions.
+
+ACR-ready planning documents live in `dotnet/docs/accessibility/`:
+
+- `README.md` describes the evidence set and its non-certification status.
+- `acr-vpat-int-draft.md` is the working VPAT 2.5Rev INT draft.
+- `wcag2ict-22-aa-matrix.md` tracks WCAG2ICT / WCAG 2.2 AA criteria for non-web software.
+- `a11y-remediation-backlog.md` keeps known gaps and temporary exceptions visible.
+- `manual-test-protocol.md` defines the repeatable Windows NVDA/Narrator and keyboard-only pass.
 
 ## Official references
 

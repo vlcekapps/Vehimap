@@ -8,6 +8,7 @@ using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Desktop.ViewModels.Workspaces;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Xunit;
@@ -759,5 +760,244 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         {
             TestCultureInitializer.ResetToCzech();
         }
+    }
+
+    [Fact]
+    public void English_ui_conformance_gate_localizes_core_outputs_over_czech_legacy_data()
+    {
+        DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+        try
+        {
+            var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+            var settings = new DesktopSupportedSettingsSnapshot(
+                30,
+                30,
+                31,
+                1000,
+                false,
+                false,
+                false,
+                false,
+                1,
+                30,
+                "en-US",
+                "comma",
+                "dot",
+                "mi",
+                "us_gal",
+                "USD");
+            var projectionService = new DesktopProjectionService(localizer, CultureInfo.GetCultureInfo("en-US"));
+            projectionService.ApplySupportedSettings(settings);
+            var timelineService = new LegacyTimelineService(localizer);
+            timelineService.ApplySupportedSettings(settings);
+            var fuelAnalysisService = new LegacyFuelAnalysisService(localizer);
+            fuelAnalysisService.ApplySupportedSettings(settings);
+            var serviceBookService = new LegacyServiceBookService(localizer);
+            serviceBookService.ApplySupportedSettings(settings);
+            var costService = new LegacyCostAnalysisService(localizer);
+            var attachmentService = new ProjectionAttachmentService();
+            var auditService = new LegacyAuditService(attachmentService, localizer);
+            var globalSearchService = new LegacyGlobalSearchService(attachmentService, timelineService, localizer);
+            globalSearchService.ApplySupportedSettings(settings);
+            var smartAdvisorService = new LegacySmartAdvisorService(timelineService, fuelAnalysisService, localizer);
+
+            var tempRoot = Path.Combine(Path.GetTempPath(), "vehimap-i18n-gate-" + Guid.NewGuid().ToString("N"));
+            var dataRoot = new VehimapDataRoot(tempRoot, Path.Combine(tempRoot, "data"), true);
+            Directory.CreateDirectory(Path.Combine(dataRoot.DataPath, "attachments", "veh_1"));
+            File.WriteAllText(Path.Combine(dataRoot.DataPath, "attachments", "veh_1", "service.pdf"), "test");
+            var dataSet = new VehimapDataSet
+            {
+                Settings = new VehimapSettings(),
+                Vehicles =
+                [
+                    new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto z garáže", "Škoda 120L", "", "1988", "43", "", "08/2026", "", "06/2026")
+                ],
+                VehicleMetaEntries =
+                [
+                    new VehicleMeta("veh_1", "Veterán", "veterán; rodina", "Benzín", "Má klimatizaci", "Řemen", "Manuální")
+                ],
+                HistoryEntries =
+                [
+                    new VehicleHistoryEntry("hist_1", "veh_1", "01.04.2026", "Servis garáže", "10000", "2500", "Olej a filtry")
+                ],
+                FuelEntries =
+                [
+                    new FuelEntry("fuel_1", "veh_1", "02.04.2026", "10100", "3.12", "350", true, "Benzin", "Poznámka řidiče", "Natural 95", "Shell")
+                ],
+                Records =
+                [
+                    new VehicleRecord("rec_1", "veh_1", "Servisní dokument", "Faktura z garáže", "Autoservis", "04/2026", "04/2026", "4000", VehicleRecordAttachmentMode.Managed, "attachments/veh_1/service.pdf", "Práce mechanika")
+                ],
+                Reminders =
+                [
+                    new VehicleReminder("rem_1", "veh_1", "Zavolat servis", "10.04.2026", "30", "Každý rok", "Zeptat se na brzdy")
+                ],
+                MaintenancePlans =
+                [
+                    new MaintenancePlan("mnt_1", "veh_1", "Motorový olej", "1609", "12", "01.04.2025", "9000", true, "Syntetika")
+                ]
+            };
+            dataSet.Settings.SetValue("app", "technical_reminder_days", "31");
+            dataSet.Settings.SetValue("app", "green_card_reminder_days", "31");
+            dataSet.Settings.SetValue("app", "maintenance_reminder_days", "31");
+            dataSet.Settings.SetValue("app", "maintenance_reminder_km", "1000");
+
+            var today = new DateOnly(2026, 4, 3);
+            var meta = dataSet.VehicleMetaEntries.ToDictionary(item => item.VehicleId, StringComparer.Ordinal);
+            var audit = auditService.BuildAudit(dataRoot, dataSet);
+            var vehicleList = projectionService.BuildVehicleList(
+                dataSet,
+                meta,
+                audit,
+                timelineService,
+                new DesktopVehicleListFilters(string.Empty, MainWindowViewModel.VehicleCategoryAllFilterKey, MainWindowViewModel.VehicleStatusAllFilterKey, false),
+                today);
+            var vehicle = Assert.Single(vehicleList.Items);
+            var detail = projectionService.BuildVehicleDetail(
+                dataSet,
+                vehicle,
+                dataSet.VehicleMetaEntries.Single(),
+                dataRoot,
+                relativePath => Path.Combine(dataRoot.DataPath, relativePath.Replace('/', Path.DirectorySeparatorChar)),
+                today);
+            var history = projectionService.BuildHistory(dataSet, "veh_1");
+            var fuel = projectionService.BuildFuel(dataSet, "veh_1");
+            var reminders = projectionService.BuildReminders(dataSet, "veh_1", today);
+            var maintenance = projectionService.BuildMaintenance(dataSet, "veh_1", today);
+            var records = projectionService.BuildRecords(
+                dataRoot,
+                dataSet,
+                "veh_1",
+                relativePath => Path.Combine(dataRoot.DataPath, relativePath.Replace('/', Path.DirectorySeparatorChar)));
+            var timeline = projectionService.BuildTimeline(dataSet, timelineService, "veh_1", today, TimelineFilterOptions.AllKey, null);
+            var dashboard = projectionService.BuildDashboardTimeline(dataSet, timelineService, today);
+            var costSummary = costService.BuildPeriodSummary(dataSet, new DateOnly(2026, 1, 1), new DateOnly(2026, 12, 31));
+            var serviceBook = serviceBookService.BuildVehicleServiceBook(dataSet, "veh_1", today);
+            var search = globalSearchService.Search(dataRoot, dataSet, "Milena");
+            var fuelAnalysis = projectionService.BuildFuelAnalysis(fuelAnalysisService.BuildVehicleFuelAnalysis(dataSet, "veh_1"));
+            var advisor = projectionService.BuildSmartAdvisor(smartAdvisorService.BuildSmartAdvisor(dataSet, audit, costSummary, today));
+
+            Assert.Equal("Passenger vehicles", vehicle.Category);
+            Assert.Equal("Veteran", vehicle.State);
+            Assert.Equal("Gasoline", vehicle.Powertrain);
+            Assert.Contains("No license plate", vehicle.AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains("Next technical inspection", detail.Dates, StringComparison.Ordinal);
+            Assert.Contains("Green card", detail.Dates, StringComparison.Ordinal);
+            Assert.Contains("Powertrain: Gasoline", detail.Profile, StringComparison.Ordinal);
+            Assert.Contains("History", detail.EvidenceSummaries.Select(item => item.Title));
+            Assert.Contains("Fuel", detail.EvidenceSummaries.Select(item => item.Title));
+            Assert.Equal("The selected vehicle has 1 history entries.", history.Summary);
+            Assert.Equal("Gasoline", fuel.Items.Single().FuelType);
+            Assert.Equal("Full tank", fuel.Items.Single().TankState);
+            Assert.Equal("Every year", reminders.Items.Single().RepeatMode);
+            Assert.Contains("mi", maintenance.Items.Single().Interval, StringComparison.Ordinal);
+            Assert.Equal("Service document", records.Items.Single().RecordType);
+            Assert.Equal("Managed copy", records.Items.Single().AttachmentMode);
+            Assert.Equal("File available", records.Items.Single().AttachmentState);
+            Assert.Contains(timeline.Items, item => item.Title.Contains("Green card end", StringComparison.Ordinal));
+            Assert.Contains(dashboard.Items, item => item.Title.Contains("Green card end", StringComparison.Ordinal));
+            Assert.Contains("Warning", projectionService.BuildAuditItems(audit).Select(item => item.Severity));
+            Assert.Contains("$", projectionService.BuildCostSummary(costSummary), StringComparison.Ordinal);
+            Assert.Equal("Passenger vehicles", serviceBook.VehicleCategory);
+            Assert.Equal("Service document", serviceBook.Records.Single().RecordType);
+            Assert.Contains("mi", serviceBook.CurrentOdometer, StringComparison.Ordinal);
+            Assert.Contains(search, item => item.SectionLabel == "Vehicle");
+            Assert.Contains("US gal", fuelAnalysis.Summary, StringComparison.Ordinal);
+            Assert.Contains(advisor.Items, item => item.Category is "Deadlines" or "Data");
+
+            var userVisibleSystemTexts = new[]
+            {
+                vehicle.Category,
+                vehicle.StatusSummary,
+                vehicle.AccessibleLabel,
+                detail.Overview,
+                detail.Dates,
+                detail.Profile,
+                detail.EvidenceSummary,
+                string.Join(" | ", detail.EvidenceSummaries.Select(item => $"{item.Title}: {item.Summary}")),
+                history.Summary,
+                fuel.Summary,
+                fuel.Items.Single().AccessibleLabel,
+                reminders.Summary,
+                reminders.Items.Single().AccessibleLabel,
+                maintenance.Summary,
+                maintenance.Items.Single().AccessibleLabel,
+                records.Summary,
+                records.Items.Single().AccessibleLabel,
+                timeline.Summary,
+                string.Join(" | ", timeline.Items.Select(item => item.AccessibleLabel)),
+                dashboard.Summary,
+                string.Join(" | ", dashboard.Items.Select(item => item.AccessibleLabel)),
+                projectionService.BuildAuditSummary(audit),
+                string.Join(" | ", projectionService.BuildAuditItems(audit).Select(item => item.AccessibleLabel)),
+                projectionService.BuildCostSummary(costSummary),
+                projectionService.BuildCostComparison(costSummary),
+                serviceBook.Status,
+                serviceBook.VehicleCategory,
+                serviceBook.CurrentOdometer,
+                string.Join(" | ", serviceBook.HistoryEntries.Select(item => $"{item.Odometer} {item.Cost}")),
+                string.Join(" | ", serviceBook.MaintenancePlans.Select(item => $"{item.Interval} {item.Status}")),
+                string.Join(" | ", serviceBook.Records.Select(item => $"{item.RecordType} {item.AttachmentMode} {item.Price}")),
+                string.Join(" | ", search.Select(item => $"{item.SectionLabel}: {item.Summary}")),
+                fuelAnalysis.Summary,
+                string.Join(" | ", fuelAnalysis.ConsumptionSegments.Select(item => item.AccessibleLabel)),
+                advisor.Summary,
+                string.Join(" | ", advisor.Items.Select(item => item.AccessibleLabel))
+            };
+
+            AssertNoCzechSystemText(userVisibleSystemTexts);
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
+    }
+
+    private static void AssertNoCzechSystemText(IEnumerable<string?> values)
+    {
+        var forbidden = new[]
+        {
+            "Osobní vozidla",
+            "Bez SPZ",
+            "stav ",
+            "Příští TK",
+            "Zelená karta",
+            "ZK chybí",
+            "Benzín",
+            "Má klimatizaci",
+            "Řemen",
+            "Manuální",
+            "Spravovaná kopie",
+            "Externí cesta",
+            "Soubor dostupný",
+            "Plná nádrž",
+            "Částečné tankování",
+            "Povinné ručení",
+            "Servisní dokument",
+            "Každý rok",
+            "Technická kontrola",
+            "Po termínu",
+            "Nadcházející",
+            "Bez upozornění",
+            "tachometr ",
+            "cena ",
+            "dokladů",
+            "připomínek",
+            "servisní plány"
+        };
+
+        foreach (var value in values.Where(value => !string.IsNullOrWhiteSpace(value)))
+        {
+            foreach (var text in forbidden)
+            {
+                Assert.DoesNotContain(text, value, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+    }
+
+    private sealed class ProjectionAttachmentService : IFileAttachmentService
+    {
+        public string ResolveManagedAttachmentPath(VehimapDataRoot dataRoot, string relativePath) =>
+            Path.Combine(dataRoot.DataPath, relativePath.Replace('/', Path.DirectorySeparatorChar));
     }
 }

@@ -92,6 +92,8 @@ Data lze exportovat do zálohy a později obnovit. Novější verze Vehimapu pou
 
 Vehimap je navržený jako keyboard-first aplikace. Důležité obrazovky mají klávesové ovládání, popsané prvky pro čtečky obrazovky a samostatné dialogy pro editaci záznamů.
 
+Pro Vehimap 2.0 vzniká také ACR-ready evidenční draft pro budoucí zákaznické posouzení přístupnosti. Nejde zatím o formální prohlášení o shodě; to bude možné až po dokončení ručních testů s asistivními technologiemi.
+
 ## Data A Soukromí
 
 Vehimap ukládá data lokálně do datové složky vybraného instalačního kanálu. Aplikace nepoužívá cloudovou synchronizaci a evidence vozidel zůstává na vašem zařízení.

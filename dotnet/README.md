@@ -26,6 +26,8 @@ Aktualni zamer:
 - preference jazyka, oddelovacu cisel, jednotek vzdalenosti/objemu a meny se ukladaji do nastaveni datove sady; internim ulozistem zustavaji invariantni hodnoty, UI a exporty je formatuji podle preferenci
 - pred Androidem zustava povinna i18n/unit/currency conformance brana: penize, tachometry, vzdalenosti, servisni intervaly, objemy paliva a spotreba v milich na galon se v uzivatelsky viditelnych vystupech formatuji pres sdilene sluzby nebo `.resx`; pevne jednotkove a menove literaly v produkcnim UI/projekcich/reportech hlida staticky test
 - i18n conformance brana uz kontroluje konkretni string literaly, ne cele radky kodu; servisni knizka, dashboard a TSV/HTML exporty nakladu proto musi lokalizovat zname legacy hodnoty a stavove texty stejne jako viditelne jednotky a menu
+- i18n conformance brana ma novy prurezovy EN profil nad ceskymi legacy daty; testuje hlavni projekce od seznamu/detailu vozidel pres evidence, dashboard, audit, naklady, servisni knizku, hledani, analyzu tankovani az po Chytreho poradce, aby pred Androidem nezustavaly ceske systemove texty v anglickem UI
+- accessibility prace smeruje k ACR-ready evidenci pro Vehimap 2.0; draft podklady pro VPAT 2.5Rev INT, WCAG2ICT/2.2 AA matrix, remediation backlog a manualni testovaci protokol jsou v `docs/accessibility/`, ale zatim nejde o formalni prohlaseni o shode
 - hlavni projekce a tiskovy HTML prehled uz nerozpoznavaji ceske stavove aliasy vlastnimi UI stringy, ale pres EN/CS resource hodnoty a legacy konstanty
 
 ## Struktura
@@ -97,6 +99,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - startovaci balicek pro vozidlo pouziva pro servisni interval zvolenou jednotku a accessibility id `BundleMaintenanceIntervalDistanceBox`; vystupni sablona zustava kanonicky v kilometrech
 - i18n guardy uz hlidaji pilotni hlavni shell/menu oblasti proti navratu novych hardcoded ceskych UI textu
 - i18n conformance gate navic overuje anglicke UI nad ceskymi legacy daty: systemove/known hodnoty se zobrazuji pres EN/CS `.resx`, ale uzivatelsky zadane nazvy, modely, poznamky a dalsi volny text zustavaji beze zmeny
+- pred Androidem musi zustat zelena prurezova i18n brana nad stejnou datovou sadou pro EN/CS, vcetne jednotek, meny, legacy known values a hlavni desktopove projekce
 - diagnostika, kalendarove exporty a servisni HTML reporty pouzivaji v cestine prirozene popisky jako `Běhové prostředí` a `Podrobnosti`, ne prevzate technicke texty typu `Runtime`/`Detail`
 - produkcni C# zdroje maji staticky guard proti ceskym UI literalum mimo `.resx`; povolene vyjimky jsou jen legacy tokeny, kompatibilni aliasy, parser/search klicova slova a sablonova data
 - viditelne ulozene volby, ktere jeste nejsou prevedene na stabilni interni klice, musi mit i18n aliasy; hlavni filtry seznamu vozidel a rezim dokladovych priloh uz rozpoznavaji stare ceske i nove anglicke labely; editorove ComboBoxy pro zname hodnoty ukladaji `Value` a nikdy viditelny `Label`
@@ -230,6 +233,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - staticky hlidat, ze kopirovatelne `SelectableTextBlock` hodnoty s `AutomationId` vystavuji popisek i aktualni hodnotu pres `*AccessibleName` binding
 - staticky hlidat, ze podminene vypnuta nastaveni pres `AutomationProperties.HelpText` vysvetluji, ktera volba je znovu aktivuje
 - staticky hlidat live regiony u stavovych, chybovych a prubehovych textu, jeden hlavni nadpis kazdeho samostatneho okna/dialogu a `AccessibilityView=Control` u landmarku podle oficialniho Avalonia accessibility modelu
+- udrzovat ACR-ready evidence draft v `docs/accessibility/`; formalni VPAT/ACR lze tvrdit az po dokonceni manualni validace s NVDA/Narratorem, keyboard-only, forced colors a skalovanim
 - staticky hlidat, ze menu zkratky viditelne pres `InputGesture` jsou vystavene i jako `AutomationProperties.AcceleratorKey` a ze progress bary maji citelny nazev, ID i napovedu
 - staticky hlidat, ze seznamove polozky s `AccessibleLabel` maji `AutomationProperties.ItemType` a ze `AutomationProperties.ItemStatus` pouzivaji jen skutecne stavove, prioritni nebo dostupnostni vlastnosti
 - staticky hlidat, ze runtime povinna editorova pole vystavuji `AutomationProperties.IsRequiredForForm` a volitelna pole se za povinna nevydavaji
