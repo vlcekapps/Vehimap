@@ -30,6 +30,14 @@ public sealed partial class UpdateDialogViewModel : ObservableObject
                     ? _localizer.GetString("UpdateCheck.Primary.OpenRelease")
                     : _localizer.GetString("UpdateCheck.Primary.DownloadAsset")
             : _localizer.GetString("Common.Close");
+        PrimaryActionHelpText = result.IsUpdateAvailable
+            ? result.CanInstallAutomatically
+                ? _localizer.GetString("UpdateCheck.Primary.InstallHelp")
+                : !string.IsNullOrWhiteSpace(result.NotesUrl)
+                    ? _localizer.GetString("UpdateCheck.Primary.OpenReleaseHelp")
+                    : _localizer.GetString("UpdateCheck.Primary.DownloadAssetHelp")
+            : _localizer.GetString("UpdateCheck.CloseName");
+        AssetActionHelpText = _localizer.GetString("UpdateCheck.AssetActionHelp");
     }
 
     public UpdateCheckResult Result { get; }
@@ -43,6 +51,10 @@ public sealed partial class UpdateDialogViewModel : ObservableObject
     public string ClipboardText { get; }
 
     public string PrimaryActionLabel { get; }
+
+    public string PrimaryActionHelpText { get; }
+
+    public string AssetActionHelpText { get; }
 
     [ObservableProperty]
     private string statusMessage = string.Empty;

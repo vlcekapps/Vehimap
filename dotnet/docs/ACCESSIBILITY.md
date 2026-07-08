@@ -56,6 +56,10 @@ for a future ACR/VPAT-style report if one is needed.
   Examples: deleting a vehicle or record, restoring from backup, importing a vehicle
   package into the current data set, or installing an update that will replace the
   running app.
+- If one button can perform different actions depending on runtime state, bind its
+  help text to the same decision as the visible action. For example, the update-check
+  primary action must distinguish opening release notes, downloading a package and
+  launching the installer that closes/replaces the running app.
 - If a field uses `PlaceholderText` for an example value or filter hint, expose the
   same instruction through `AutomationProperties.HelpText`. Placeholder text is a
   visual hint, not a reliable accessible instruction once the field has focus or

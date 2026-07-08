@@ -67,6 +67,7 @@
               Click="OnPrimaryActionClick"
               Content="{Binding PrimaryActionLabel}"
               AutomationProperties.Name="{Binding PrimaryActionLabel}"
+              AutomationProperties.HelpText="{Binding PrimaryActionHelpText}"
               AutomationProperties.AutomationId="PrimaryActionButton" />
       <Button x:Name="AssetActionButton"
               MinWidth="170"
@@ -74,6 +75,7 @@
               Click="OnAssetActionClick"
               Content="{i18n:Loc UpdateCheck.AssetAction}"
               AutomationProperties.Name="{i18n:Loc UpdateCheck.AssetActionName}"
+              AutomationProperties.HelpText="{Binding AssetActionHelpText}"
               AutomationProperties.AutomationId="AssetActionButton" />
       <Button x:Name="CopyDetailsButton"
               MinWidth="150"

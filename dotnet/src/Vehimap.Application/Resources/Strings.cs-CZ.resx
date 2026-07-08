@@ -1035,6 +1035,7 @@ Vozidlo: {2}
   <data name="FuelAnalysis.Warning.SegmentUnavailable.Description" xml:space="preserve"><value>Tankování z {0} má stejný nebo nižší tachometr než předchozí plná nádrž.</value></data>
   <data name="FuelAnalysis.Warning.SegmentUnavailable.Title" xml:space="preserve"><value>Úsek spotřeby nejde spočítat</value></data>
   <data name="UpdateCheck.AssetAction" xml:space="preserve"><value>Stáhnout asset</value></data>
+  <data name="UpdateCheck.AssetActionHelp" xml:space="preserve"><value>Otevře přímé stažení aktualizačního balíčku v prohlížeči pro ruční instalaci.</value></data>
   <data name="UpdateCheck.AssetActionName" xml:space="preserve"><value>Stáhnout aktualizační asset</value></data>
   <data name="UpdateCheck.CloseName" xml:space="preserve"><value>Zavřít kontrolu aktualizací</value></data>
   <data name="UpdateCheck.ClipboardTitle" xml:space="preserve"><value>Vehimap - kontrola aktualizací</value></data>
@@ -1056,8 +1057,11 @@ Vozidlo: {2}
   <data name="UpdateCheck.HelpText" xml:space="preserve"><value>Výsledek kontroly aktualizací. Fokus je na hlavní dostupné akci; Ctrl+Shift+C zkopíruje detaily a Escape dialog zavře.</value></data>
   <data name="UpdateCheck.ManualInstallFallback" xml:space="preserve"><value>Použijte release stránku nebo stáhněte asset ručně.</value></data>
   <data name="UpdateCheck.Primary.DownloadAsset" xml:space="preserve"><value>Stáhnout asset</value></data>
+  <data name="UpdateCheck.Primary.DownloadAssetHelp" xml:space="preserve"><value>Otevře stažení aktualizačního balíčku v prohlížeči pro ruční instalaci.</value></data>
   <data name="UpdateCheck.Primary.Install" xml:space="preserve"><value>Stáhnout a nainstalovat</value></data>
+  <data name="UpdateCheck.Primary.InstallHelp" xml:space="preserve"><value>Stáhne a ověří aktualizaci, potom spustí instalátor. Vehimap se zavře, aby bylo možné nahradit běžící aplikaci.</value></data>
   <data name="UpdateCheck.Primary.OpenRelease" xml:space="preserve"><value>Otevřít release stránku</value></data>
+  <data name="UpdateCheck.Primary.OpenReleaseHelp" xml:space="preserve"><value>Otevře release stránku v prohlížeči, kde můžete zkontrolovat poznámky a aktualizaci stáhnout ručně.</value></data>
   <data name="UpdateCheck.Status.CopyFailed" xml:space="preserve"><value>Detaily kontroly aktualizací se nepodařilo zkopírovat.</value></data>
   <data name="UpdateCheck.Status.DetailsCopied" xml:space="preserve"><value>Detaily kontroly aktualizací byly zkopírovány do schránky.</value></data>
   <data name="UpdateCheck.Status.ReadyToCopy" xml:space="preserve"><value>Detaily kontroly jsou připravené ke zkopírování.</value></data>

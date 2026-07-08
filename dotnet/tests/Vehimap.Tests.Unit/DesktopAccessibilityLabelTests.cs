@@ -591,6 +591,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("Key.C", updateCodeBehind);
         Assert.Contains("KeyModifiers.Control | KeyModifiers.Shift", updateCodeBehind);
         Assert.Contains("AutomationProperties.Name=\"{Binding PrimaryActionLabel}\"", updateXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{Binding PrimaryActionHelpText}\"", updateXaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{Binding AssetActionHelpText}\"", updateXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"CopyUpdateDetailsButton\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc UpdateCheck.CopyDetailsName}\"", updateXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc UpdateCheck.CloseName}\"", updateXaml);
@@ -1550,6 +1552,10 @@ public sealed class DesktopAccessibilityLabelTests
             ["DeleteMaintenanceButton"] = "odstraní vybraný servisní plán",
             ["DeleteRecordButton"] = "odstraní vybraný doklad"
         };
+        var requiredBoundHelpText = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["PrimaryActionButton"] = "{Binding PrimaryActionHelpText}"
+        };
         var actionPattern = new Regex(
             "<(?<type>Button|MenuItem)(?=[\\s>/])(?<attributes>[\\s\\S]*?AutomationProperties\\.AutomationId=\"(?<id>[^\"]+)\"[\\s\\S]*?)(?:/>|>)",
             RegexOptions.Singleline);
@@ -1563,6 +1569,16 @@ public sealed class DesktopAccessibilityLabelTests
                 var automationId = match.Groups["id"].Value;
                 if (!requiredHelpTextFragments.TryGetValue(automationId, out var expectedFragment))
                 {
+                    if (requiredBoundHelpText.TryGetValue(automationId, out var expectedBinding))
+                    {
+                        seen.Add(automationId);
+                        var boundHelpText = ExtractAttributeValue(match.Groups["attributes"].Value, "AutomationProperties.HelpText");
+                        if (!string.Equals(boundHelpText, expectedBinding, StringComparison.Ordinal))
+                        {
+                            failures.Add($"{relativePath}:{GetLineNumber(xaml, match.Index)} {automationId} má používat kontextový HelpText {expectedBinding}.");
+                        }
+                    }
+
                     continue;
                 }
 
@@ -1588,9 +1604,14 @@ public sealed class DesktopAccessibilityLabelTests
             failures.Add($"{missingId} nebylo nalezeno mezi rizikovými akcemi.");
         }
 
+        foreach (var missingId in requiredBoundHelpText.Keys.Except(seen, StringComparer.Ordinal))
+        {
+            failures.Add($"{missingId} nebylo nalezeno mezi rizikovými akcemi.");
+        }
+
         Assert.True(
             failures.Count == 0,
-            "Mazání, obnova a import dat musí čtečce oznámit dopad akce, ne jen krátký popisek tlačítka:"
+            "Mazání, obnova, import dat a instalace aktualizací musí čtečce oznámit dopad akce, ne jen krátký popisek tlačítka:"
                 + Environment.NewLine
                 + string.Join(Environment.NewLine, failures));
     }

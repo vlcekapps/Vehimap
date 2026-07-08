@@ -1035,6 +1035,7 @@ Vehicle: {2}
   <data name="FuelAnalysis.Warning.SegmentUnavailable.Description" xml:space="preserve"><value>Refuel entry from {0} has the same or lower odometer value than the previous full tank.</value></data>
   <data name="FuelAnalysis.Warning.SegmentUnavailable.Title" xml:space="preserve"><value>Consumption segment cannot be calculated</value></data>
   <data name="UpdateCheck.AssetAction" xml:space="preserve"><value>Download asset</value></data>
+  <data name="UpdateCheck.AssetActionHelp" xml:space="preserve"><value>Opens the direct update package download in your browser for manual installation.</value></data>
   <data name="UpdateCheck.AssetActionName" xml:space="preserve"><value>Download update asset</value></data>
   <data name="UpdateCheck.CloseName" xml:space="preserve"><value>Close update check</value></data>
   <data name="UpdateCheck.ClipboardTitle" xml:space="preserve"><value>Vehimap - update check</value></data>
@@ -1056,8 +1057,11 @@ Vehicle: {2}
   <data name="UpdateCheck.HelpText" xml:space="preserve"><value>Update check result. Focus is on the primary available action; Ctrl+Shift+C copies details and Escape closes the dialog.</value></data>
   <data name="UpdateCheck.ManualInstallFallback" xml:space="preserve"><value>Use the release page or download the asset manually.</value></data>
   <data name="UpdateCheck.Primary.DownloadAsset" xml:space="preserve"><value>Download asset</value></data>
+  <data name="UpdateCheck.Primary.DownloadAssetHelp" xml:space="preserve"><value>Opens the update package download in your browser for manual installation.</value></data>
   <data name="UpdateCheck.Primary.Install" xml:space="preserve"><value>Download and install</value></data>
+  <data name="UpdateCheck.Primary.InstallHelp" xml:space="preserve"><value>Downloads and verifies the update, then starts the installer. Vehimap will close so the running app can be replaced.</value></data>
   <data name="UpdateCheck.Primary.OpenRelease" xml:space="preserve"><value>Open release page</value></data>
+  <data name="UpdateCheck.Primary.OpenReleaseHelp" xml:space="preserve"><value>Opens the release page in your browser so you can review notes and download the update manually.</value></data>
   <data name="UpdateCheck.Status.CopyFailed" xml:space="preserve"><value>Update check details could not be copied.</value></data>
   <data name="UpdateCheck.Status.DetailsCopied" xml:space="preserve"><value>Update check details were copied to the clipboard.</value></data>
   <data name="UpdateCheck.Status.ReadyToCopy" xml:space="preserve"><value>Check details are ready to copy.</value></data>

@@ -630,6 +630,34 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Contains("Asset ke stažení: https://example.com/vehimap.zip", model.ClipboardText, StringComparison.Ordinal);
         Assert.Contains($"SHA-256: {sha256}", model.ClipboardText, StringComparison.Ordinal);
         Assert.Equal("Otevřít release stránku", model.PrimaryActionLabel);
+        Assert.Equal(
+            "Otevře release stránku v prohlížeči, kde můžete zkontrolovat poznámky a aktualizaci stáhnout ručně.",
+            model.PrimaryActionHelpText);
+        Assert.Equal(
+            "Otevře přímé stažení aktualizačního balíčku v prohlížeči pro ruční instalaci.",
+            model.AssetActionHelpText);
+    }
+
+    [Fact]
+    public void Update_dialog_primary_action_help_text_describes_install_consequence()
+    {
+        var model = new UpdateDialogViewModel(
+            new UpdateCheckResult(
+                "1.0.2",
+                "1.0.3",
+                true,
+                "2026-04-02",
+                "https://example.com/release",
+                "https://example.com/vehimap-setup.exe",
+                new string('b', 64),
+                4096,
+                true,
+                "Je dostupna novejsi verze."),
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")));
+
+        Assert.Equal("Stáhnout a nainstalovat", model.PrimaryActionLabel);
+        Assert.Contains("spustí instalátor", model.PrimaryActionHelpText, StringComparison.Ordinal);
+        Assert.Contains("nahradit běžící aplikaci", model.PrimaryActionHelpText, StringComparison.Ordinal);
     }
 
     public void Dispose()

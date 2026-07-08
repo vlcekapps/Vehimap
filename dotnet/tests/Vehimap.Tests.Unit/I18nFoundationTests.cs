@@ -946,12 +946,15 @@ public sealed class I18nFoundationTests
         Assert.Contains("Title=\"{i18n:Loc UpdateCheck.Title}\"", updateCheckWindow);
         Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc UpdateCheck.HelpText}\"", updateCheckWindow);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc UpdateCheck.DetailsName}\"", updateCheckWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{Binding PrimaryActionHelpText}\"", updateCheckWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{Binding AssetActionHelpText}\"", updateCheckWindow);
         Assert.Contains("Content=\"{i18n:Loc UpdateCheck.CopyDetails}\"", updateCheckWindow);
         Assert.Contains("Content=\"{i18n:Loc Common.Close}\"", updateCheckWindow);
         Assert.Contains("DesktopLocalization.Localizer.GetString(\"UpdateCheck.Status.DetailsCopied\")", updateCheckCodeBehind);
         Assert.Contains("DesktopLocalization.Localizer.GetString(\"UpdateCheck.Status.CopyFailed\")", updateCheckCodeBehind);
         Assert.DoesNotContain("UpdateCheck.Status.CopyFailed\", ex.Message", updateCheckCodeBehind);
         Assert.Contains("_localizer.GetString(\"UpdateCheck.Heading.Default\")", updateDialogViewModel);
+        Assert.Contains("_localizer.GetString(\"UpdateCheck.Primary.InstallHelp\")", updateDialogViewModel);
         Assert.Contains("_localizer.Format(\"UpdateCheck.Details.AssetUrl\"", updateDialogViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), updateCheckWindow);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), updateCheckCodeBehind);
