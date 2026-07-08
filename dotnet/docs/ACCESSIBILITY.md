@@ -98,6 +98,11 @@ for a future ACR/VPAT-style report if one is needed.
 - Keyboard access must work without a mouse. `Tab` moves forward, `Shift+Tab` moves
   backward, `Alt`/`F10` opens and closes the main menu, and form text boxes keep normal
   editing navigation.
+- Top-level windows must explicitly declare `CanResize`. Standard shell, workspace,
+  service-book, settings and editor windows use `CanResize="True"` so high-DPI and
+  large-font users can recover clipped content. Only short transient surfaces such as
+  notifications or update progress may use `CanResize="False"`, and those exceptions
+  must stay covered by tests and manual evidence.
 - Prefer modal dialog editors for complex forms that can otherwise mix with unrelated
   host-window actions. Vehicle, history, fuel, reminder, maintenance and record editors
   now use this pattern. A dialog editor must have one primary heading, first focus on

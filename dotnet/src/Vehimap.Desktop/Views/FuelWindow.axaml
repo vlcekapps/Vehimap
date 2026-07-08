@@ -10,6 +10,7 @@
         Height="820"
         MinWidth="1100"
         MinHeight="680"
+        CanResize="True"
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="{i18n:Loc WorkspaceWindow.FuelName}"

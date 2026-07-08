@@ -10,6 +10,7 @@
         Height="840"
         MinWidth="1120"
         MinHeight="700"
+        CanResize="True"
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="{i18n:Loc WorkspaceWindow.RecordsName}"

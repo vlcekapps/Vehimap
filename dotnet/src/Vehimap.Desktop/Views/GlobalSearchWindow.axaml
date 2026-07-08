@@ -10,6 +10,7 @@
         Height="760"
         MinWidth="980"
         MinHeight="620"
+        CanResize="True"
         WindowStartupLocation="CenterOwner"
         Title="{Binding WindowTitle}"
         AutomationProperties.Name="{i18n:Loc WorkspaceWindow.GlobalSearchName}"

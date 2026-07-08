@@ -2130,6 +2130,43 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Top_level_windows_should_make_resize_behavior_explicit()
+    {
+        var nonResizableWindows = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "NotificationWindow.axaml",
+            "UpdateInstallProgressWindow.axaml"
+        };
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadTopLevelDesktopWindowXamlFiles())
+        {
+            var rootMatch = Regex.Match(xaml, "<Window(?<attributes>[\\s\\S]*?)>", RegexOptions.Singleline);
+            Assert.True(rootMatch.Success, $"{relativePath} must have a readable Window root.");
+
+            var fileName = Path.GetFileName(relativePath);
+            var canResize = ExtractAttributeValue(rootMatch.Groups["attributes"].Value, "CanResize");
+            if (canResize is null)
+            {
+                failures.Add($"{relativePath}: Window root must explicitly set CanResize.");
+                continue;
+            }
+
+            var expected = nonResizableWindows.Contains(fileName) ? "False" : "True";
+            if (!string.Equals(canResize, expected, StringComparison.Ordinal))
+            {
+                failures.Add($"{relativePath}: CanResize={canResize}, expected {expected}.");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Top-level windows must explicitly declare resize behavior for high-DPI/reflow evidence; only documented transient windows may be non-resizable:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Landmark_elements_should_be_exposed_in_control_accessibility_view()
     {
         var landmarkPattern = new Regex(

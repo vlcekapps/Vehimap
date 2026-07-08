@@ -19,6 +19,8 @@ customer-facing Accessibility Conformance Report.
 
 1. Start Vehimap with empty data and with migrated 1.x/2.0 data; verify window
    title announcement and initial focus on the vehicle list or primary action.
+   Resize the main window at 200% and 400% scaling and verify that focused content
+   remains reachable.
 2. Open and close the main menu with Alt/F10; verify normal Tab/Shift+Tab does
    not enter menu roots.
 3. Navigate the vehicle list, switch every workspace tab, verify the custom tab
@@ -29,7 +31,7 @@ customer-facing Accessibility Conformance Report.
    workspace tab headers, dialog action buttons and generated installer shortcuts.
 5. Create, edit, cancel and save vehicle, history, fuel, reminder, maintenance
    and document records. Verify first focus, Shift+Tab behavior, Escape,
-   Ctrl+S, validation errors and return focus.
+   Ctrl+S, validation errors, window resize behavior and return focus.
 6. Exercise text fields with character, word and line navigation; record whether
    the temporary TextBox UIA fallback was needed.
 7. Check combo boxes with Up/Down, Alt+Down, Enter and Escape.
