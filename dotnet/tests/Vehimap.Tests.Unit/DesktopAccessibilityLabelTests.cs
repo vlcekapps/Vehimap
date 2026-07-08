@@ -337,6 +337,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("IsEnabled=\"{Binding CanExportSelectedVehiclePackage}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ImportVehiclePackageMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MainMenu.Vehicle.ImportPackageName}\"", xaml);
+        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc MainMenu.Vehicle.ImportPackageHelp}\"", xaml);
         Assert.Contains("IsEnabled=\"{Binding CanImportVehiclePackage}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenSelectedVehicleCostsMenuItem\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenTimelineMenuItem\"", xaml);
@@ -1540,6 +1541,7 @@ public sealed class DesktopAccessibilityLabelTests
         {
             ["BackupImportButton"] = "nahradí aktuální datovou sadu",
             ["ImportBackupTrayActionButton"] = "nahradí aktuální datovou sadu",
+            ["ImportVehiclePackageMenuItem"] = "do aktuální datové sady",
             ["DeleteVehicleMenuItem"] = "odstraní vybrané vozidlo",
             ["DeleteVehicleButton"] = "odstraní vybrané vozidlo",
             ["DeleteHistoryButton"] = "odstraní vybraný historický záznam",
@@ -1588,7 +1590,7 @@ public sealed class DesktopAccessibilityLabelTests
 
         Assert.True(
             failures.Count == 0,
-            "Mazání a obnova dat musí čtečce oznámit dopad akce, ne jen krátký popisek tlačítka:"
+            "Mazání, obnova a import dat musí čtečce oznámit dopad akce, ne jen krátký popisek tlačítka:"
                 + Environment.NewLine
                 + string.Join(Environment.NewLine, failures));
     }

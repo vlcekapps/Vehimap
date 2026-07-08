@@ -51,9 +51,11 @@ for a future ACR/VPAT-style report if one is needed.
 - Conditionally disabled controls must use `AutomationProperties.HelpText` to explain
   the prerequisite that enables them. A screen-reader user must not have to infer why a
   field is disabled from visual grouping alone.
-- Destructive or data-replacing actions must use `AutomationProperties.HelpText` to
-  describe the consequence in user language. Examples: deleting a vehicle or record,
-  restoring from backup, or installing an update that will replace the running app.
+- Destructive, data-importing or data-replacing actions must use
+  `AutomationProperties.HelpText` to describe the consequence in user language.
+  Examples: deleting a vehicle or record, restoring from backup, importing a vehicle
+  package into the current data set, or installing an update that will replace the
+  running app.
 - If a field uses `PlaceholderText` for an example value or filter hint, expose the
   same instruction through `AutomationProperties.HelpText`. Placeholder text is a
   visual hint, not a reliable accessible instruction once the field has focus or

@@ -11,6 +11,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Přibyla dokumentační sada `dotnet/docs/accessibility/` pro ACR-ready přípravu Vehimapu 2.0: VPAT 2.5Rev INT draft, WCAG2ICT/2.2 AA matrix, remediation backlog a ruční testovací protokol. Zatím jde o evidenční draft, ne o formální prohlášení o shodě.
 
 ### Změněno
+- Import balíčku vozidla v hlavním menu má nově lokalizovaný přístupný help text, který před aktivací vysvětluje import do aktuální datové sady; statický accessibility guard ho hlídá společně s obnovou zálohy a mazáním dat.
 - Nightly větev začíná datovou řadu Vehimap 2.0: runtime úložiště se přepíná z průběžného zápisu legacy `TSV/INI` na primární SQLite databázi `data/vehimap.db`; legacy soubory z 1.0.2 zůstávají jen jako jednorázový migrační vstup, po ověřené migraci se přesunou do `data/migration-backups/.../removed-from-data-root/` a staré `.vehimapbak` zálohy se dál importují přes kompatibilní parser.
 - Export/import `.vehimapbak` v C# větvi má nový SQLite formát se souborem `vehimap.db` a referenced spravovanými přílohami; před obnovou se dál vytváří ochranná kopie aktuální databáze, legacy souborů i `data/attachments`.
 - Desktop shell po načtení hlásí `Datová sada 2.0 (SQLite)` a při prvním startu nad legacy daty oznámí automatickou migraci včetně cesty k předmigrační záloze.

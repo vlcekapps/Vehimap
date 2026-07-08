@@ -35,7 +35,9 @@ customer-facing Accessibility Conformance Report.
 8. Run Settings language/unit/currency changes and confirm localized status
    messages after restart.
 9. Run backup export, restore, vehicle package import/export, data health check,
-   update check and update install progress.
+   update check and update install progress. Verify that screen-reader help text
+   describes whether the action imports into or replaces the current data set before
+   activation, and then verify confirmation, cancel and final status messages.
 10. Trigger notifications and tray action alternatives. Use `Aplikace -> Akce na
     liště` / `Ctrl+Shift+Y` as the supported screen-reader path.
 11. Export calendar, service book HTML, cost TSV/HTML and printable vehicle
@@ -52,4 +54,3 @@ For each run, save a note in `dotnet/docs/accessibility-evidence/` with:
 - screenshots or speech-viewer excerpts when useful;
 - whether failures are product bugs, platform limitations or known documented
   exceptions.
-

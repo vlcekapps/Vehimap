@@ -798,6 +798,7 @@ Vehicle: {2}
   <data name="MainMenu.Vehicle.History" xml:space="preserve"><value>Selected vehicle history</value></data>
   <data name="MainMenu.Vehicle.HistoryName" xml:space="preserve"><value>Open selected vehicle history</value></data>
   <data name="MainMenu.Vehicle.ImportPackage" xml:space="preserve"><value>Import vehicle package</value></data>
+  <data name="MainMenu.Vehicle.ImportPackageHelp" xml:space="preserve"><value>Selects a vehicle package and imports its vehicle records and managed attachments into the current data set after pending edits are resolved.</value></data>
   <data name="MainMenu.Vehicle.ImportPackageName" xml:space="preserve"><value>Import vehicle from a package</value></data>
   <data name="MainMenu.Vehicle.Maintenance" xml:space="preserve"><value>Maintenance plan</value></data>
   <data name="MainMenu.Vehicle.MaintenanceName" xml:space="preserve"><value>Open selected vehicle maintenance plan</value></data>

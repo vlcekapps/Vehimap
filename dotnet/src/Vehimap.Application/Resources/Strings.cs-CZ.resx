@@ -798,6 +798,7 @@ Vozidlo: {2}
   <data name="MainMenu.Vehicle.History" xml:space="preserve"><value>Historie vybraného vozidla</value></data>
   <data name="MainMenu.Vehicle.HistoryName" xml:space="preserve"><value>Otevřít historii vybraného vozidla</value></data>
   <data name="MainMenu.Vehicle.ImportPackage" xml:space="preserve"><value>Importovat balíček vozidla</value></data>
+  <data name="MainMenu.Vehicle.ImportPackageHelp" xml:space="preserve"><value>Vybere balíček vozidla a po vyřešení rozpracovaných úprav importuje jeho vozidlo, evidence a spravované přílohy do aktuální datové sady.</value></data>
   <data name="MainMenu.Vehicle.ImportPackageName" xml:space="preserve"><value>Importovat vozidlo z balíčku</value></data>
   <data name="MainMenu.Vehicle.Maintenance" xml:space="preserve"><value>Plán údržby</value></data>
   <data name="MainMenu.Vehicle.MaintenanceName" xml:space="preserve"><value>Otevřít plán údržby vybraného vozidla</value></data>

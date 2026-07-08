@@ -232,6 +232,7 @@
                     Click="OnImportVehiclePackageMenuClick"
                     IsEnabled="{Binding CanImportVehiclePackage}"
                     AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.ImportPackageName}"
+                    AutomationProperties.HelpText="{i18n:Loc MainMenu.Vehicle.ImportPackageHelp}"
                     AutomationProperties.AutomationId="ImportVehiclePackageMenuItem" />
           <Separator />
           <MenuItem x:Name="OpenSelectedVehicleCostsMenuItem"
