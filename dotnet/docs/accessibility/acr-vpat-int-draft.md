@@ -71,7 +71,8 @@ Vehimap should not publish a final customer ACR until these gates are green:
   update, backup/restore, audit, dashboard, documents, maintenance, service
   book and smart advisor workflows.
 - Forced-colors and high-DPI evidence covers the custom workspace tab strip,
-  including the app-level focus styles in `App.axaml`.
+  including the app-level focus styles and automated standard-theme contrast guard
+  in `App.axaml`.
 - The i18n conformance gate passes English UI over Czech legacy data and Czech
   UI over the same data without translating user-entered content.
 - Known exceptions are either remediated or explicitly listed in the backlog

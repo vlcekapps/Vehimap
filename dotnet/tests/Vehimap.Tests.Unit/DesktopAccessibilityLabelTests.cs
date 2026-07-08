@@ -1631,6 +1631,22 @@ public sealed class DesktopAccessibilityLabelTests
     public void Workspace_tab_headers_should_keep_visible_focus_indicator()
     {
         var appXaml = ReadDesktopRootFile("App.axaml");
+        var normalFocusedBackground = GetStyleSetterValue(
+            appXaml,
+            "RadioButton.tab-header:focus",
+            "Background");
+        var checkedFocusedBackground = GetStyleSetterValue(
+            appXaml,
+            "RadioButton.tab-header:checked:focus",
+            "Background");
+        var focusBorderBrush = GetStyleSetterValue(
+            appXaml,
+            "RadioButton.tab-header:focus",
+            "BorderBrush");
+        var checkedFocusBorderBrush = GetStyleSetterValue(
+            appXaml,
+            "RadioButton.tab-header:checked:focus",
+            "BorderBrush");
 
         Assert.Contains("<Style Selector=\"RadioButton.tab-header\">", appXaml);
         Assert.Contains("<Setter Property=\"BorderThickness\" Value=\"2\" />", appXaml);
@@ -1639,6 +1655,12 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("<Setter Property=\"BorderBrush\" Value=\"#FFFFD54F\" />", appXaml);
         Assert.Contains("<Setter Property=\"Background\" Value=\"#253A4A5A\" />", appXaml);
         Assert.Contains("<Setter Property=\"Background\" Value=\"#3557708C\" />", appXaml);
+        Assert.True(
+            ContrastRatio(focusBorderBrush, normalFocusedBackground) >= 3.0,
+            "Workspace tab focus border must keep at least 3:1 non-text contrast against the focused background.");
+        Assert.True(
+            ContrastRatio(checkedFocusBorderBrush, checkedFocusedBackground) >= 3.0,
+            "Checked workspace tab focus border must keep at least 3:1 non-text contrast against the focused background.");
     }
 
     [Fact]
@@ -2536,6 +2558,63 @@ public sealed class DesktopAccessibilityLabelTests
         {
             yield return (Path.GetRelativePath(repositoryRoot, file), File.ReadAllText(file));
         }
+    }
+
+    private static string GetStyleSetterValue(string xaml, string selector, string property)
+    {
+        var styleMatch = Regex.Match(
+            xaml,
+            $"<Style\\s+Selector=\"{Regex.Escape(selector)}\">(?<body>[\\s\\S]*?)</Style>",
+            RegexOptions.Singleline);
+        Assert.True(styleMatch.Success, $"Style {selector} was not found.");
+
+        var setterMatch = Regex.Match(
+            styleMatch.Groups["body"].Value,
+            $"<Setter\\s+Property=\"{Regex.Escape(property)}\"\\s+Value=\"(?<value>[^\"]+)\"\\s*/>",
+            RegexOptions.Singleline);
+        Assert.True(setterMatch.Success, $"Style {selector} does not set {property}.");
+
+        return setterMatch.Groups["value"].Value;
+    }
+
+    private static double ContrastRatio(string firstColor, string secondColor)
+    {
+        var firstLuminance = RelativeLuminance(ParseHexColor(firstColor));
+        var secondLuminance = RelativeLuminance(ParseHexColor(secondColor));
+        var lighter = Math.Max(firstLuminance, secondLuminance);
+        var darker = Math.Min(firstLuminance, secondLuminance);
+
+        return (lighter + 0.05) / (darker + 0.05);
+    }
+
+    private static (double Red, double Green, double Blue) ParseHexColor(string value)
+    {
+        Assert.StartsWith("#", value);
+        var hex = value[1..];
+        if (hex.Length == 8)
+        {
+            hex = hex[2..];
+        }
+
+        Assert.True(hex.Length == 6, $"Color {value} must use #RRGGBB or #AARRGGBB notation.");
+        return (
+            byte.Parse(hex[..2], NumberStyles.HexNumber, CultureInfo.InvariantCulture) / 255.0,
+            byte.Parse(hex[2..4], NumberStyles.HexNumber, CultureInfo.InvariantCulture) / 255.0,
+            byte.Parse(hex[4..6], NumberStyles.HexNumber, CultureInfo.InvariantCulture) / 255.0);
+    }
+
+    private static double RelativeLuminance((double Red, double Green, double Blue) color)
+    {
+        return 0.2126 * LinearizeSrgb(color.Red)
+            + 0.7152 * LinearizeSrgb(color.Green)
+            + 0.0722 * LinearizeSrgb(color.Blue);
+    }
+
+    private static double LinearizeSrgb(double channel)
+    {
+        return channel <= 0.03928
+            ? channel / 12.92
+            : Math.Pow((channel + 0.055) / 1.055, 2.4);
     }
 
     private static int GetLineNumber(string content, int index)

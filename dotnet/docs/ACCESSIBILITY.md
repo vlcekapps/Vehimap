@@ -114,9 +114,10 @@ for a future ACR/VPAT-style report if one is needed.
 - Custom visual styles that override standard controls must keep an explicit visible
   focus state. The app-level `RadioButton.tab-header:focus` and
   `RadioButton.tab-header:checked:focus` styles provide the workspace tab strip with a
-  stable 2 px focus border and higher-contrast focused background in the standard theme;
-  do not remove them unless a manually verified replacement covers standard,
-  forced-colors and high-DPI modes.
+  stable 2 px focus border and higher-contrast focused background in the standard theme.
+  The automated accessibility guard checks that the focus border keeps at least 3:1
+  non-text contrast against the focused background; do not remove the styles unless a
+  manually verified replacement covers standard, forced-colors and high-DPI modes.
 - Do not encode critical state only with color, icon shape, visual position or tooltip.
 
 ## Documented keyboard/focus exceptions
