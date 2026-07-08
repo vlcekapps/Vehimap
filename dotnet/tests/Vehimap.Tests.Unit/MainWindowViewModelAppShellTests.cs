@@ -137,6 +137,33 @@ public sealed class MainWindowViewModelAppShellTests
     }
 
     [Fact]
+    public async Task Dashboard_workspace_show_on_launch_failure_restores_state_without_raw_exception_status()
+    {
+        var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
+        var dataSet = new VehimapDataSet
+        {
+            Settings = new VehimapSettings(),
+            Vehicles =
+            [
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "1AB2345", "1988", "43", "", "08/2026", "05/2025", "06/2026")
+            ]
+        };
+        dataSet.Settings.SetValue("app", "show_dashboard_on_launch", "0");
+        var dataStore = new StubLegacyDataStore(dataSet)
+        {
+            SaveException = new IOException("settings.ini nelze zapsat.")
+        };
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        await viewModel.SetDashboardShowOnLaunchAsync(true);
+
+        Assert.False(viewModel.DashboardWorkspace.ShowDashboardOnLaunch);
+        Assert.Contains("Volbu dashboardu při startu se nepodařilo uložit", viewModel.ShellStatus);
+        Assert.DoesNotContain("settings.ini", viewModel.ShellStatus, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("nelze zapsat", viewModel.ShellStatus, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task Saving_supported_settings_persists_values_and_keeps_other_keys()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
@@ -605,11 +632,18 @@ public sealed class MainWindowViewModelAppShellTests
 
         public VehimapDataSet CurrentDataSet { get; set; }
 
+        public Exception? SaveException { get; init; }
+
         public Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
             => Task.FromResult(CurrentDataSet);
 
         public Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
         {
+            if (SaveException is not null)
+            {
+                throw SaveException;
+            }
+
             CurrentDataSet = dataSet;
             return Task.CompletedTask;
         }

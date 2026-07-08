@@ -57,6 +57,8 @@ public sealed class I18nFoundationTests
         Assert.Equal("Složku přílohy dokladu se nepodařilo otevřít.", czech.GetString("RecordAttachmentAction.FolderOpenFailed"));
         Assert.Equal("Document path could not be copied.", english.GetString("RecordAttachmentAction.CopyPathFailed"));
         Assert.Equal("Cestu dokladu se nepodařilo zkopírovat.", czech.GetString("RecordAttachmentAction.CopyPathFailed"));
+        Assert.Equal("Dashboard startup preference could not be saved.", english.GetString("AppShell.Dashboard.ShowOnLaunchFailed"));
+        Assert.Equal("Volbu dashboardu při startu se nepodařilo uložit.", czech.GetString("AppShell.Dashboard.ShowOnLaunchFailed"));
         Assert.Equal("Vehicle bundle", english.GetString("VehicleStarterBundle.Title"));
         Assert.Equal("Balíček pro vozidlo", czech.GetString("VehicleStarterBundle.Title"));
         Assert.Equal("Selected: 3 items | Service 1 | Documents 1 | Reminders 1", english.Format("VehicleStarterBundle.Summary.SectionCounts", 3, 1, 1, 1));
@@ -603,6 +605,7 @@ public sealed class I18nFoundationTests
     {
         var root = FindRepositoryRoot();
         var editingViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.Editing.cs"));
+        var appShellViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.AppShell.cs"));
         var shellViewModel = File.ReadAllText(Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "MainWindowViewModel.cs"));
 
         Assert.Contains("ReminderEditor.Status.CreatePrompt", editingViewModel);
@@ -618,6 +621,8 @@ public sealed class I18nFoundationTests
         Assert.DoesNotContain("RecordAttachmentAction.FileOpenFailed\", ex.Message", shellViewModel);
         Assert.DoesNotContain("RecordAttachmentAction.FolderOpenFailed\", ex.Message", shellViewModel);
         Assert.DoesNotContain("RecordAttachmentAction.CopyPathFailed\", ex.Message", shellViewModel);
+        Assert.Contains("LO(\"AppShell.Dashboard.ShowOnLaunchFailed\")", appShellViewModel);
+        Assert.DoesNotContain("AppShell.Dashboard.ShowOnLaunchFailed\", ex.Message", appShellViewModel);
         Assert.DoesNotContain("Vyplňte připomínku a uložte ji.", editingViewModel);
         Assert.DoesNotContain("Vyplňte doklad a podle potřeby vyberte přílohu.", editingViewModel);
         Assert.DoesNotContain("Doklad nemá dostupnou cestu k příloze.", shellViewModel);

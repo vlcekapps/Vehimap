@@ -73,6 +73,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - stejne pravidlo plati pro formatovaci fallbacky: bez explicitniho settings snapshotu se jednotky, oddelovace a mena odvozuji z `AppLocaleDefaultsService.GetCurrentCultureDefaults()`, ne z pevneho ceskeho profilu `km/l/CZK`
 - kratke live statusy pro kopirovani diagnostiky nebo update detailu jsou uzivatelske hlasky: pri chybe zustavaji obecne a lokalizovane, bez primeho propsani technicke vyjimky
 - kratke statusy automatickeho ukladani filtru, razeni a dalsich preferenci se ridi stejnym pravidlem: uzivatel vidi lokalizovanou hlasku, technicky detail patri jen do diagnostiky nebo logu
+- kratke statusy pro ulozeni volby dashboardu pri startu se ridi stejnym pravidlem a po selhani vraci prepinac na skutecne ulozenou hodnotu
 - kratke statusy akci nad prilohami dokladu se pri chybe take drzi lokalizovane uzivatelske hlasky; konkretni cesta se ukazuje jen pri uspesne akci nebo dostupnostnim stavu
 - kilometry/litry zustavaji invariantni storage zaklad; uzivatelske jednotky pro mile, US galony a imperialni galony patri do formatovaci vrstvy
 - vzdalenostni nastaveni jako upozorneni na udrzbu se v UI zadavaji ve zvolene jednotce, ale do datove sady se ukladaji normalizovane kilometry

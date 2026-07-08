@@ -1845,7 +1845,7 @@ Stav: {5}</value></data>
   <data name="VehiclePackage.AttachmentFallbackFileName" xml:space="preserve"><value>priloha.bin</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchEnabled" xml:space="preserve"><value>Dashboard se bude zobrazovat při startu aplikace.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchDisabled" xml:space="preserve"><value>Dashboard se při startu aplikace nebude otevírat automaticky.</value></data>
-  <data name="AppShell.Dashboard.ShowOnLaunchFailed" xml:space="preserve"><value>Volbu dashboardu při startu se nepodařilo uložit: {0}</value></data>
+  <data name="AppShell.Dashboard.ShowOnLaunchFailed" xml:space="preserve"><value>Volbu dashboardu při startu se nepodařilo uložit.</value></data>
   <data name="AppShell.AutomaticBackup.NotLoaded" xml:space="preserve"><value>Automatickou zálohu nelze vytvořit bez načtených dat.</value></data>
   <data name="AppShell.AutomaticBackup.CreateAction" xml:space="preserve"><value>vytvořit zálohu</value></data>
   <data name="AppShell.PrintableReport.NotLoaded" xml:space="preserve"><value>Tiskový přehled nelze otevřít bez načtených dat.</value></data>

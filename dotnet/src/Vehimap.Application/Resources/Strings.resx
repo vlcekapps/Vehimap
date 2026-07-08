@@ -1845,7 +1845,7 @@ Status: {5}</value></data>
   <data name="VehiclePackage.AttachmentFallbackFileName" xml:space="preserve"><value>attachment.bin</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchEnabled" xml:space="preserve"><value>Dashboard will be shown when the app starts.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchDisabled" xml:space="preserve"><value>Dashboard will not open automatically when the app starts.</value></data>
-  <data name="AppShell.Dashboard.ShowOnLaunchFailed" xml:space="preserve"><value>Failed to save dashboard startup preference: {0}</value></data>
+  <data name="AppShell.Dashboard.ShowOnLaunchFailed" xml:space="preserve"><value>Dashboard startup preference could not be saved.</value></data>
   <data name="AppShell.AutomaticBackup.NotLoaded" xml:space="preserve"><value>Automatic backup cannot be created without loaded data.</value></data>
   <data name="AppShell.AutomaticBackup.CreateAction" xml:space="preserve"><value>create backup</value></data>
   <data name="AppShell.PrintableReport.NotLoaded" xml:space="preserve"><value>Printable report cannot be opened without loaded data.</value></data>

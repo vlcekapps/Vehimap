@@ -269,10 +269,10 @@ public sealed partial class MainWindowViewModel
                 : LO("AppShell.Dashboard.ShowOnLaunchDisabled");
             DashboardWorkspace.SyncShowDashboardOnLaunch(showDashboardOnLaunch);
         }
-        catch (Exception ex)
+        catch
         {
             DashboardWorkspace.SyncShowDashboardOnLaunch(current.ShowDashboardOnLaunch);
-            ShellStatus = LFO("AppShell.Dashboard.ShowOnLaunchFailed", ex.Message);
+            ShellStatus = LO("AppShell.Dashboard.ShowOnLaunchFailed");
         }
     }
 
