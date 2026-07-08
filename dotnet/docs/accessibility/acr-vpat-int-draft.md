@@ -73,6 +73,9 @@ Vehimap should not publish a final customer ACR until these gates are green:
 - Forced-colors and high-DPI evidence covers the custom workspace tab strip,
   including the app-level focus styles and automated standard-theme contrast guard
   in `App.axaml`.
+- Pointer target evidence covers shell filters, workspace action panels, custom tab
+  headers, dialog action buttons and installer shortcuts beyond the automated fixed
+  XAML size guard.
 - The i18n conformance gate passes English UI over Czech legacy data and Czech
   UI over the same data without translating user-entered content.
 - Known exceptions are either remediated or explicitly listed in the backlog

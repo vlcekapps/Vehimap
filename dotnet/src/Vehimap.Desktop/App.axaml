@@ -13,6 +13,7 @@
       <Setter Property="Margin" Value="0,0,8,8" />
       <Setter Property="Padding" Value="12,8" />
       <Setter Property="MinWidth" Value="96" />
+      <Setter Property="MinHeight" Value="34" />
       <Setter Property="Background" Value="#143A4A5A" />
       <Setter Property="BorderBrush" Value="#304050" />
       <Setter Property="BorderThickness" Value="2" />

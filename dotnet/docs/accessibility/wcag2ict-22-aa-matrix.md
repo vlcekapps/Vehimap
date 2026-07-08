@@ -70,7 +70,7 @@ certification or a substitute for independent audit.
 | 2.5.3 Label in Name | A | Partially Supports | Visible button text and accessible names are generally aligned through resources. | Manual check icon/automation-only controls. |
 | 2.5.4 Motion Actuation | A | Not Applicable | Vehimap does not use device motion controls. | Reassess Android. |
 | 2.5.7 Dragging Movements | AA | Supports | No drag-only workflow is required. | Reassess future ordering features. |
-| 2.5.8 Target Size | AA | Partially Supports | Desktop controls are standard-sized, but target-size measurement evidence is incomplete. | Manual pointer target pass before public ACR. |
+| 2.5.8 Target Size | AA | Partially Supports | Desktop controls are standard-sized, custom tab headers have an explicit 34 px minimum height, and fixed interactive XAML dimensions are guarded against dropping below 24 px. | Manual pointer target pass before public ACR. |
 | 3.1.1 Language | A | Partially Supports | Application language is controlled by settings/installer seed; resources cover EN/CS. | Keep i18n gate green and verify first-render language after update. |
 | 3.1.2 Language of Parts | AA | Partially Supports | User-entered mixed-language data is preserved, not translated. | ACR should explicitly define product UI vs. user data responsibility. |
 | 3.2.1 On Focus | A | Supports | Focus does not intentionally trigger unexpected context changes. | Keep manual shell/dialog pass. |

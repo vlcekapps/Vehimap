@@ -111,6 +111,11 @@ for a future ACR/VPAT-style report if one is needed.
   `TextBox UIA text fallback`, not a replacement for standard controls.
 - Prefer Avalonia `HotKey`, `KeyBinding` and commands. A manual `KeyDown` handler is an
   exception, not the default.
+- Interactive controls with explicit fixed `Width`, `Height`, `MinWidth` or
+  `MinHeight` must not drop below 24 px. Action panels that size button slots through
+  `WrapPanel.ItemWidth` or `WrapPanel.ItemHeight` must follow the same floor. The guard
+  test intentionally treats this as a minimum target-size floor; manual pointer testing
+  is still required before a customer-facing ACR.
 - Custom visual styles that override standard controls must keep an explicit visible
   focus state. The app-level `RadioButton.tab-header:focus` and
   `RadioButton.tab-header:checked:focus` styles provide the workspace tab strip with a

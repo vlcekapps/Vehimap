@@ -24,24 +24,26 @@ customer-facing Accessibility Conformance Report.
 3. Navigate the vehicle list, switch every workspace tab, verify the custom tab
    header focus border/background in standard and forced-colors modes, open every
    `In window` view and return focus to the invoking surface.
-4. Create, edit, cancel and save vehicle, history, fuel, reminder, maintenance
+4. Verify pointer target size for shell filters, workspace action panels, custom
+   workspace tab headers, dialog action buttons and generated installer shortcuts.
+5. Create, edit, cancel and save vehicle, history, fuel, reminder, maintenance
    and document records. Verify first focus, Shift+Tab behavior, Escape,
    Ctrl+S, validation errors and return focus.
-5. Exercise text fields with character, word and line navigation; record whether
+6. Exercise text fields with character, word and line navigation; record whether
    the temporary TextBox UIA fallback was needed.
-6. Check combo boxes with Up/Down, Alt+Down, Enter and Escape.
-7. Run data audit, smart advisor, timeline, global search, service book, cost
+7. Check combo boxes with Up/Down, Alt+Down, Enter and Escape.
+8. Run data audit, smart advisor, timeline, global search, service book, cost
    reports and dashboard. Verify list item names, item type/status and open
    actions.
-8. Run Settings language/unit/currency changes and confirm localized status
+9. Run Settings language/unit/currency changes and confirm localized status
    messages after restart.
-9. Run backup export, restore, vehicle package import/export, data health check,
+10. Run backup export, restore, vehicle package import/export, data health check,
    update check and update install progress. Verify that screen-reader help text
    describes whether the action imports into or replaces the current data set before
    activation, and then verify confirmation, cancel and final status messages.
-10. Trigger notifications and tray action alternatives. Use `Aplikace -> Akce na
+11. Trigger notifications and tray action alternatives. Use `Aplikace -> Akce na
     liště` / `Ctrl+Shift+Y` as the supported screen-reader path.
-11. Export calendar, service book HTML, cost TSV/HTML and printable vehicle
+12. Export calendar, service book HTML, cost TSV/HTML and printable vehicle
     report; verify labels, units and user-entered data preservation.
 
 ## Evidence To Record

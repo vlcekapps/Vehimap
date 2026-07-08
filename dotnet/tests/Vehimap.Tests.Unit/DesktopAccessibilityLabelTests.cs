@@ -1363,6 +1363,60 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Fixed_interactive_target_sizes_should_not_drop_below_accessibility_floor()
+    {
+        const double minimumTargetSize = 24.0;
+        var interactiveControlPattern = new Regex(
+            "<(?<type>TextBox|ComboBox|CheckBox|Button|RadioButton)(?=[\\s>/])(?<attributes>[\\s\\S]*?)(?:/>|>)",
+            RegexOptions.Singleline);
+        var wrapPanelPattern = new Regex(
+            "<WrapPanel(?<attributes>[^>]*)>",
+            RegexOptions.Singleline);
+        var interactiveSizePattern = new Regex(
+            "\\b(?<property>Width|Height|MinWidth|MinHeight)=\"(?<value>[0-9]+(?:\\.[0-9]+)?)\"",
+            RegexOptions.Singleline);
+        var wrapPanelSizePattern = new Regex(
+            "\\b(?<property>ItemWidth|ItemHeight)=\"(?<value>[0-9]+(?:\\.[0-9]+)?)\"",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+
+        foreach (var (relativePath, xaml) in ReadAllDesktopXamlFiles())
+        {
+            foreach (Match match in interactiveControlPattern.Matches(xaml))
+            {
+                AssertFixedTargetSizes(
+                    failures,
+                    relativePath,
+                    xaml,
+                    match.Index,
+                    match.Groups["type"].Value,
+                    match.Groups["attributes"].Value,
+                    interactiveSizePattern,
+                    minimumTargetSize);
+            }
+
+            foreach (Match match in wrapPanelPattern.Matches(xaml))
+            {
+                AssertFixedTargetSizes(
+                    failures,
+                    relativePath,
+                    xaml,
+                    match.Index,
+                    "WrapPanel item",
+                    match.Groups["attributes"].Value,
+                    wrapPanelSizePattern,
+                    minimumTargetSize);
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Pevne nastavene rozmery interaktivnich prvku a akcni WrapPanel itemy musi zustat alespon 24 px podle WCAG 2.2 target-size evidence:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Heading_texts_should_have_stable_accessibility_metadata()
     {
         var headingPattern = new Regex(
@@ -1631,6 +1685,10 @@ public sealed class DesktopAccessibilityLabelTests
     public void Workspace_tab_headers_should_keep_visible_focus_indicator()
     {
         var appXaml = ReadDesktopRootFile("App.axaml");
+        var tabHeaderMinHeight = GetStyleSetterValue(
+            appXaml,
+            "RadioButton.tab-header",
+            "MinHeight");
         var normalFocusedBackground = GetStyleSetterValue(
             appXaml,
             "RadioButton.tab-header:focus",
@@ -1650,11 +1708,15 @@ public sealed class DesktopAccessibilityLabelTests
 
         Assert.Contains("<Style Selector=\"RadioButton.tab-header\">", appXaml);
         Assert.Contains("<Setter Property=\"BorderThickness\" Value=\"2\" />", appXaml);
+        Assert.Equal("34", tabHeaderMinHeight);
         Assert.Contains("<Style Selector=\"RadioButton.tab-header:focus\">", appXaml);
         Assert.Contains("<Style Selector=\"RadioButton.tab-header:checked:focus\">", appXaml);
         Assert.Contains("<Setter Property=\"BorderBrush\" Value=\"#FFFFD54F\" />", appXaml);
         Assert.Contains("<Setter Property=\"Background\" Value=\"#253A4A5A\" />", appXaml);
         Assert.Contains("<Setter Property=\"Background\" Value=\"#3557708C\" />", appXaml);
+        Assert.True(
+            ParseInvariantDouble(tabHeaderMinHeight) >= 24.0,
+            "Workspace tab headers must keep an explicit target height of at least 24 px.");
         Assert.True(
             ContrastRatio(focusBorderBrush, normalFocusedBackground) >= 3.0,
             "Workspace tab focus border must keep at least 3:1 non-text contrast against the focused background.");
@@ -2560,6 +2622,29 @@ public sealed class DesktopAccessibilityLabelTests
         }
     }
 
+    private static void AssertFixedTargetSizes(
+        List<string> failures,
+        string relativePath,
+        string xaml,
+        int index,
+        string controlLabel,
+        string attributes,
+        Regex sizePattern,
+        double minimumTargetSize)
+    {
+        foreach (Match sizeMatch in sizePattern.Matches(attributes))
+        {
+            var value = ParseInvariantDouble(sizeMatch.Groups["value"].Value);
+            if (value >= minimumTargetSize)
+            {
+                continue;
+            }
+
+            failures.Add(
+                $"{relativePath}:{GetLineNumber(xaml, index)} {controlLabel} ma {sizeMatch.Groups["property"].Value}={sizeMatch.Groups["value"].Value}, minimum je {minimumTargetSize.ToString("0", CultureInfo.InvariantCulture)} px.");
+        }
+    }
+
     private static string GetStyleSetterValue(string xaml, string selector, string property)
     {
         var styleMatch = Regex.Match(
@@ -2576,6 +2661,9 @@ public sealed class DesktopAccessibilityLabelTests
 
         return setterMatch.Groups["value"].Value;
     }
+
+    private static double ParseInvariantDouble(string value) =>
+        double.Parse(value, NumberStyles.Float, CultureInfo.InvariantCulture);
 
     private static double ContrastRatio(string firstColor, string secondColor)
     {
