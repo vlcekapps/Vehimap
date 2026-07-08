@@ -1251,6 +1251,7 @@ public sealed class DesktopAccessibilityLabelTests
         var maintenanceEditorXaml = ReadWorkspaceOrView("MaintenanceEditorWindow.axaml", false);
         var recordEditorXaml = ReadWorkspaceOrView("RecordEditorWindow.axaml", false);
 
+        AssertAccessibleBoundText(mainXaml, "AppSubtitleText", "Subtitle");
         AssertAccessibleBoundText(mainXaml, "LoadErrorText", "LoadError");
         AssertAccessibleBoundText(mainXaml, "ShellStatusText", "ShellStatus");
         AssertAccessibleBoundText(mainXaml, "VehicleListSummaryText", "VehicleListSummary");
@@ -2307,6 +2308,7 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.AccessibilityView=\"Control\"", mainXaml);
         Assert.Contains("AutomationProperties.HeadingLevel=\"1\"", mainXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"AppTitleText\"", mainXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"AppSubtitleText\"", mainXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"ShellStatusText\" AutomationProperties.LiveSetting=\"Polite\"", mainXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"LoadErrorText\" AutomationProperties.LiveSetting=\"Assertive\"", mainXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleDetailStatusText\"", vehicleDetailXaml);

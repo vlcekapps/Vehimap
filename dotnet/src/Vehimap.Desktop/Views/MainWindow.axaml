@@ -35,7 +35,9 @@
                    AutomationProperties.AutomationId="AppTitleText"
                    AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.75"
-                   Text="{Binding Subtitle}" />
+                   Text="{Binding Subtitle}"
+                   AutomationProperties.Name="{Binding Subtitle}"
+                   AutomationProperties.AutomationId="AppSubtitleText" />
       </StackPanel>
 
       <Menu Grid.Column="1"
