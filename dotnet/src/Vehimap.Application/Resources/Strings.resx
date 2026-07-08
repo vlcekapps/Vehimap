@@ -567,6 +567,7 @@ Vehicle: {2}
   <data name="RecordWorkspace.ListName" xml:space="preserve"><value>Documents for the selected vehicle</value></data>
   <data name="RecordWorkspace.MoveToManaged" xml:space="preserve"><value>Move to attachments</value></data>
   <data name="RecordWorkspace.MoveToManagedName" xml:space="preserve"><value>Convert selected document to a managed copy</value></data>
+  <data name="RecordWorkspace.MoveToManagedHelp" xml:space="preserve"><value>Opens the document editor with managed attachment import selected. Saving copies the attachment into Vehimap managed storage and updates the selected record.</value></data>
   <data name="RecordWorkspace.OpenFile" xml:space="preserve"><value>Open file</value></data>
   <data name="RecordWorkspace.OpenFileName" xml:space="preserve"><value>Open selected document attachment file</value></data>
   <data name="RecordWorkspace.OpenFolder" xml:space="preserve"><value>Open folder</value></data>
@@ -1657,6 +1658,7 @@ Status: {5}</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Simple" xml:space="preserve"><value>{0}: {1}</value></data>
   <data name="VehicleStarterBundle.Apply" xml:space="preserve"><value>Add selected</value></data>
   <data name="VehicleStarterBundle.ApplyName" xml:space="preserve"><value>Add selected bundle items</value></data>
+  <data name="VehicleStarterBundle.ApplyHelp" xml:space="preserve"><value>Adds the selected bundle items to the current vehicle and saves them after the dialog closes.</value></data>
   <data name="VehicleStarterBundle.ClearSelection" xml:space="preserve"><value>Clear selection</value></data>
   <data name="VehicleStarterBundle.ClearSelectionName" xml:space="preserve"><value>Clear selected bundle items</value></data>
   <data name="VehicleStarterBundle.CloseName" xml:space="preserve"><value>Close bundle without adding items</value></data>

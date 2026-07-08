@@ -87,6 +87,10 @@ for a future ACR/VPAT-style report if one is needed.
   validation errors, save results, import/restore results, update progress and shell
   status. Use `Polite` for routine progress and save/status messages; reserve
   `Assertive` for validation errors, load failures and other blocking errors.
+- Data-changing or data-replacing actions must expose consequence-oriented
+  `AutomationProperties.HelpText`, not only short button/menu labels. The static
+  guard covers restore/import/delete/update actions plus managed-attachment
+  conversion and vehicle starter-bundle apply actions.
 - Every heading must expose a stable `AutomationId` and a human accessible name. Every
   top-level window or modal dialog must expose exactly one primary heading with
   `AutomationProperties.HeadingLevel="1"`. Long dialogs and dense workspaces may use

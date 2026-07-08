@@ -202,6 +202,7 @@
               Content="{i18n:Loc VehicleStarterBundle.Apply}"
               IsEnabled="{Binding CanApply}"
               AutomationProperties.Name="{i18n:Loc VehicleStarterBundle.ApplyName}"
+              AutomationProperties.HelpText="{i18n:Loc VehicleStarterBundle.ApplyHelp}"
               AutomationProperties.AutomationId="ApplyBundleButton" />
       <Button x:Name="CancelBundleButton"
               Click="OnCancelClick"

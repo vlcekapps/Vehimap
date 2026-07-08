@@ -80,6 +80,9 @@ Vehimap should not publish a final customer ACR until these gates are green:
   `Open window` / `V okně` actions, including speech-input-friendly accessible names.
 - Resize/reflow evidence covers explicit `CanResize` behavior for top-level desktop
   windows, including documented non-resizable transient exceptions.
+- Error-prevention evidence covers consequence-oriented accessible help text for
+  restore/import/delete/update actions plus managed-attachment conversion and
+  starter-bundle apply actions.
 - The i18n conformance gate passes English UI over Czech legacy data and Czech
   UI over the same data without translating user-entered content.
 - Known exceptions are either remediated or explicitly listed in the backlog

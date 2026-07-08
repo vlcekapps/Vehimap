@@ -40,9 +40,10 @@ customer-facing Accessibility Conformance Report.
    actions.
 9. Run Settings language/unit/currency changes and confirm localized status
    messages after restart.
-10. Run backup export, restore, vehicle package import/export, data health check,
-   update check and update install progress. Verify that screen-reader help text
-   describes whether the action imports into or replaces the current data set before
+10. Run backup export, restore, vehicle package import/export, managed-attachment
+   conversion, starter-bundle apply, data health check, update check and update
+   install progress. Verify that screen-reader help text describes whether the
+   action imports into, replaces or adds data to the current data set before
    activation, and then verify confirmation, cancel and final status messages.
 11. Trigger notifications and tray action alternatives. Use `Aplikace -> Akce na
     liště` / `Ctrl+Shift+Y` as the supported screen-reader path.

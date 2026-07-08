@@ -13,6 +13,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ### Změněno
 - Dialog kontroly aktualizací má nově kontextový přístupný help text pro primární akci: čtečka rozliší otevření release stránky, ruční stažení assetu a automatickou instalaci, která spustí instalátor a nahradí běžící aplikaci.
 - Import balíčku vozidla v hlavním menu má nově lokalizovaný přístupný help text, který před aktivací vysvětluje import do aktuální datové sady; statický accessibility guard ho hlídá společně s obnovou zálohy a mazáním dat.
+- Převod dokladu na spravovanou přílohu a použití startovního balíčku vozidla mají nově lokalizovaný přístupný help text s dopadem akce; stejný guard hlídá, aby se z rizikových datových akcí znovu nestaly jen krátké popisky.
 - Vlastní workspace záložky v hlavním okně mají nově výrazný fokusový stav se stabilním 2px okrajem a světlejším pozadím; statický accessibility guard hlídá přítomnost stylu i alespoň 3:1 kontrast fokusového okraje, aby se z custom radio-button pásu znovu neztratila viditelná klávesnicová navigace.
 - Statické accessibility testy nově hlídají, aby pevně dimenzované interaktivní XAML prvky a akční `WrapPanel` položky neklesly pod 24px cílový rozměr; vlastní workspace záložky mají explicitní 34px minimální výšku.
 - Tlačítka `Open window` / `V okně` v hlavních workspace tabech mají upravené přístupné názvy tak, aby obsahovaly stejný viditelný label i cílový workspace; EN/CS guard tím pokrývá část WCAG `Label in Name`.

@@ -84,7 +84,7 @@
               <Button Command="{Binding CreateRecordCommand}" Content="{i18n:Loc RecordWorkspace.Create}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.CreateName}" AutomationProperties.AutomationId="CreateRecordButton" />
               <Button Command="{Binding EditSelectedRecordCommand}" Content="{i18n:Loc Common.Edit}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.EditName}" AutomationProperties.AutomationId="EditRecordButton" />
               <Button Command="{Binding DeleteSelectedRecordCommand}" Content="{i18n:Loc Common.Delete}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.DeleteName}" AutomationProperties.HelpText="{i18n:Loc RecordWorkspace.DeleteHelp}" AutomationProperties.AutomationId="DeleteRecordButton" />
-              <Button Command="{Binding MoveSelectedRecordToManagedCommand}" Content="{i18n:Loc RecordWorkspace.MoveToManaged}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.MoveToManagedName}" AutomationProperties.AutomationId="MoveRecordToManagedButton" />
+              <Button Command="{Binding MoveSelectedRecordToManagedCommand}" Content="{i18n:Loc RecordWorkspace.MoveToManaged}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.MoveToManagedName}" AutomationProperties.HelpText="{i18n:Loc RecordWorkspace.MoveToManagedHelp}" AutomationProperties.AutomationId="MoveRecordToManagedButton" />
             </WrapPanel>
             <WrapPanel x:Name="RecordFileActionPanel" ItemWidth="138" ItemHeight="34">
               <Button Command="{Binding OpenSelectedRecordFileCommand}" Content="{i18n:Loc RecordWorkspace.OpenFile}" AutomationProperties.Name="{i18n:Loc RecordWorkspace.OpenFileName}" AutomationProperties.AutomationId="OpenRecordFileButton" />

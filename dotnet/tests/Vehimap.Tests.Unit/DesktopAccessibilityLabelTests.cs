@@ -1666,7 +1666,9 @@ public sealed class DesktopAccessibilityLabelTests
             ["DeleteFuelButton"] = "odstraní vybraný záznam tankování",
             ["DeleteReminderButton"] = "odstraní vybranou připomínku",
             ["DeleteMaintenanceButton"] = "odstraní vybraný servisní plán",
-            ["DeleteRecordButton"] = "odstraní vybraný doklad"
+            ["DeleteRecordButton"] = "odstraní vybraný doklad",
+            ["MoveRecordToManagedButton"] = "spravovanou přílohou",
+            ["ApplyBundleButton"] = "vybrané položky balíčku k aktuálnímu vozidlu"
         };
         var requiredBoundHelpText = new Dictionary<string, string>(StringComparer.Ordinal)
         {
@@ -1727,7 +1729,7 @@ public sealed class DesktopAccessibilityLabelTests
 
         Assert.True(
             failures.Count == 0,
-            "Mazání, obnova, import dat a instalace aktualizací musí čtečce oznámit dopad akce, ne jen krátký popisek tlačítka:"
+            "Mazání, obnova, import dat, spravované přílohy, startovní balíčky a instalace aktualizací musí čtečce oznámit dopad akce, ne jen krátký popisek tlačítka:"
                 + Environment.NewLine
                 + string.Join(Environment.NewLine, failures));
     }
