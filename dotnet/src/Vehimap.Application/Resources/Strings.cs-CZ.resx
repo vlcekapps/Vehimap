@@ -813,20 +813,20 @@ Vozidlo: {2}
   <data name="MainMenu.Vehicle.StarterBundleName" xml:space="preserve"><value>Otevřít balíček pro vybrané vozidlo</value></data>
   <data name="MainMenu.Vehicle.Timeline" xml:space="preserve"><value>Časová osa vozidla</value></data>
   <data name="MainMenu.Vehicle.TimelineName" xml:space="preserve"><value>Otevřít časovou osu vybraného vozidla</value></data>
-  <data name="OpenWorkspaceWindow.Audit" xml:space="preserve"><value>Otevřít audit v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Cost" xml:space="preserve"><value>Otevřít náklady v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Dashboard" xml:space="preserve"><value>Otevřít dashboard v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Detail" xml:space="preserve"><value>Otevřít detail vozidla v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Fuel" xml:space="preserve"><value>Otevřít tankování v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.GlobalSearch" xml:space="preserve"><value>Otevřít globální hledání v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.History" xml:space="preserve"><value>Otevřít historii v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Maintenance" xml:space="preserve"><value>Otevřít plán údržby v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Overdue" xml:space="preserve"><value>Otevřít propadlé termíny v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Record" xml:space="preserve"><value>Otevřít doklady v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Reminder" xml:space="preserve"><value>Otevřít připomínky v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.SmartAdvisor" xml:space="preserve"><value>Otevřít chytrého poradce v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Timeline" xml:space="preserve"><value>Otevřít časovou osu v samostatném okně</value></data>
-  <data name="OpenWorkspaceWindow.Upcoming" xml:space="preserve"><value>Otevřít blížící se termíny v samostatném okně</value></data>
+  <data name="OpenWorkspaceWindow.Audit" xml:space="preserve"><value>V okně: audit dat</value></data>
+  <data name="OpenWorkspaceWindow.Cost" xml:space="preserve"><value>V okně: náklady</value></data>
+  <data name="OpenWorkspaceWindow.Dashboard" xml:space="preserve"><value>V okně: dashboard</value></data>
+  <data name="OpenWorkspaceWindow.Detail" xml:space="preserve"><value>V okně: detail vozidla</value></data>
+  <data name="OpenWorkspaceWindow.Fuel" xml:space="preserve"><value>V okně: tankování</value></data>
+  <data name="OpenWorkspaceWindow.GlobalSearch" xml:space="preserve"><value>V okně: globální hledání</value></data>
+  <data name="OpenWorkspaceWindow.History" xml:space="preserve"><value>V okně: historie</value></data>
+  <data name="OpenWorkspaceWindow.Maintenance" xml:space="preserve"><value>V okně: plán údržby</value></data>
+  <data name="OpenWorkspaceWindow.Overdue" xml:space="preserve"><value>V okně: propadlé termíny</value></data>
+  <data name="OpenWorkspaceWindow.Record" xml:space="preserve"><value>V okně: doklady</value></data>
+  <data name="OpenWorkspaceWindow.Reminder" xml:space="preserve"><value>V okně: připomínky</value></data>
+  <data name="OpenWorkspaceWindow.SmartAdvisor" xml:space="preserve"><value>V okně: chytrý poradce</value></data>
+  <data name="OpenWorkspaceWindow.Timeline" xml:space="preserve"><value>V okně: časová osa</value></data>
+  <data name="OpenWorkspaceWindow.Upcoming" xml:space="preserve"><value>V okně: blížící se termíny</value></data>
   <data name="WorkspaceWindow.AuditHelpText" xml:space="preserve"><value>Samostatné okno pro audit dat a problémových stavů. Escape okno zavře.</value></data>
   <data name="WorkspaceWindow.AuditName" xml:space="preserve"><value>Audit dat</value></data>
   <data name="WorkspaceWindow.CloseAuditName" xml:space="preserve"><value>Zavřít okno auditu</value></data>

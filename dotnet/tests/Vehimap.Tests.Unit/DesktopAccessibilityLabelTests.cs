@@ -1417,6 +1417,68 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Workspace_open_window_buttons_should_keep_visible_label_in_accessible_name()
+    {
+        var mainXaml = ReadViewFile("MainWindow.axaml");
+        var englishResources = ReadResourceValues("Strings.resx");
+        var czechResources = ReadResourceValues("Strings.cs-CZ.resx");
+        var buttonPattern = new Regex(
+            "<Button(?<attributes>[\\s\\S]*?)(?:/>|>)",
+            RegexOptions.Singleline);
+        var localizedNamePattern = new Regex(
+            "^\\{i18n:Loc (?<key>OpenWorkspaceWindow\\.[^}\\s]+)\\}$",
+            RegexOptions.Singleline);
+        var failures = new List<string>();
+        var checkedButtons = 0;
+
+        foreach (Match match in buttonPattern.Matches(mainXaml))
+        {
+            var attributes = match.Groups["attributes"].Value;
+            var content = ExtractAttributeValue(attributes, "Content");
+            if (!string.Equals(content, "{i18n:Loc WorkspaceTabs.OpenInWindow}", StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            checkedButtons++;
+            var automationId = ExtractAttributeValue(attributes, "AutomationProperties.AutomationId")
+                ?? $"line {GetLineNumber(mainXaml, match.Index)}";
+            var name = ExtractAttributeValue(attributes, "AutomationProperties.Name");
+            var nameMatch = name is null
+                ? Match.Empty
+                : localizedNamePattern.Match(name);
+
+            if (!nameMatch.Success)
+            {
+                failures.Add($"{automationId} must bind AutomationProperties.Name to OpenWorkspaceWindow.*.");
+                continue;
+            }
+
+            AssertLocalizedNameContainsVisibleLabel(
+                failures,
+                automationId,
+                englishResources,
+                "WorkspaceTabs.OpenInWindow",
+                nameMatch.Groups["key"].Value,
+                "en-US");
+            AssertLocalizedNameContainsVisibleLabel(
+                failures,
+                automationId,
+                czechResources,
+                "WorkspaceTabs.OpenInWindow",
+                nameMatch.Groups["key"].Value,
+                "cs-CZ");
+        }
+
+        Assert.Equal(14, checkedButtons);
+        Assert.True(
+            failures.Count == 0,
+            "Workspace open-window buttons must keep the visible label inside AutomationProperties.Name for Label in Name / speech input:"
+                + Environment.NewLine
+                + string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Heading_texts_should_have_stable_accessibility_metadata()
     {
         var headingPattern = new Regex(
@@ -2645,6 +2707,40 @@ public sealed class DesktopAccessibilityLabelTests
         }
     }
 
+    private static void AssertLocalizedNameContainsVisibleLabel(
+        List<string> failures,
+        string controlLabel,
+        IReadOnlyDictionary<string, string> resources,
+        string visibleLabelKey,
+        string accessibleNameKey,
+        string language)
+    {
+        if (!resources.TryGetValue(visibleLabelKey, out var visibleLabel))
+        {
+            failures.Add($"{controlLabel} is missing {language} visible label key {visibleLabelKey}.");
+            return;
+        }
+
+        if (!resources.TryGetValue(accessibleNameKey, out var accessibleName))
+        {
+            failures.Add($"{controlLabel} is missing {language} accessible name key {accessibleNameKey}.");
+            return;
+        }
+
+        var normalizedVisibleLabel = NormalizeAccessibleLabelForComparison(visibleLabel);
+        var normalizedAccessibleName = NormalizeAccessibleLabelForComparison(accessibleName);
+        if (normalizedAccessibleName.Contains(normalizedVisibleLabel, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        failures.Add(
+            $"{controlLabel} {language} name '{accessibleName}' must include visible label '{visibleLabel}'.");
+    }
+
+    private static string NormalizeAccessibleLabelForComparison(string value) =>
+        Regex.Replace(value, "\\s+", " ").Trim().ToUpperInvariant();
+
     private static string GetStyleSetterValue(string xaml, string selector, string property)
     {
         var styleMatch = Regex.Match(
@@ -2764,8 +2860,13 @@ public sealed class DesktopAccessibilityLabelTests
 
     private static IReadOnlyDictionary<string, string> ReadCzechResourceValues()
     {
+        return ReadResourceValues("Strings.cs-CZ.resx");
+    }
+
+    private static IReadOnlyDictionary<string, string> ReadResourceValues(string fileName)
+    {
         var repositoryRoot = FindRepositoryRoot();
-        var path = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx");
+        var path = Path.Combine(repositoryRoot, "dotnet", "src", "Vehimap.Application", "Resources", fileName);
         var document = XDocument.Load(path);
         return document.Root!
             .Elements("data")

@@ -76,6 +76,8 @@ Vehimap should not publish a final customer ACR until these gates are green:
 - Pointer target evidence covers shell filters, workspace action panels, custom tab
   headers, dialog action buttons and installer shortcuts beyond the automated fixed
   XAML size guard.
+- Label-in-name evidence covers resource-expanded controls such as the main workspace
+  `Open window` / `V okně` actions, including speech-input-friendly accessible names.
 - The i18n conformance gate passes English UI over Czech legacy data and Czech
   UI over the same data without translating user-entered content.
 - Known exceptions are either remediated or explicitly listed in the backlog

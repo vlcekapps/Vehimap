@@ -70,6 +70,11 @@ for a future ACR/VPAT-style report if one is needed.
 - If a menu item exposes a visible `InputGesture`, it must also expose the same shortcut
   through `AutomationProperties.AcceleratorKey` so assistive technologies can announce
   the accelerator consistently.
+- For controls whose visible `Content` or `Header` is localized separately from
+  `AutomationProperties.Name`, keep the visible label text inside the accessible name
+  whenever practical. This protects speech input and WCAG 2.2 `Label in Name`. The
+  main workspace `Open window` / `V okně` buttons have an EN/CS guard because their
+  accessible names add the target workspace.
 - Non-interactive but important controls such as `ProgressBar` still need a stable
   `AutomationId`, a human accessible name and short `HelpText` describing what is being
   measured.

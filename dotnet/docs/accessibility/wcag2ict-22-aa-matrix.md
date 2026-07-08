@@ -67,7 +67,7 @@ certification or a substitute for independent audit.
 | 2.4.11 Focus Not Obscured | AA | Partially Supports | Main lists and dialogs are scrollable/resizable; previous focus regressions are covered. | Manual 400% and large system font pass. |
 | 2.5.1 Pointer Gestures | A | Supports | No path-based or multipoint gestures are required. | Reassess future mobile shell. |
 | 2.5.2 Pointer Cancellation | A | Supports | Actions are explicit commands, not down-event-only side effects. | Keep for future drag/drop features. |
-| 2.5.3 Label in Name | A | Partially Supports | Visible button text and accessible names are generally aligned through resources. | Manual check icon/automation-only controls. |
+| 2.5.3 Label in Name | A | Partially Supports | Visible button text and accessible names are generally aligned through resources; main workspace `Open window` / `V okně` buttons now keep the visible label inside the EN/CS accessible name and are guarded. | Manual check icon/automation-only controls and remaining resource-expanded labels. |
 | 2.5.4 Motion Actuation | A | Not Applicable | Vehimap does not use device motion controls. | Reassess Android. |
 | 2.5.7 Dragging Movements | AA | Supports | No drag-only workflow is required. | Reassess future ordering features. |
 | 2.5.8 Target Size | AA | Partially Supports | Desktop controls are standard-sized, custom tab headers have an explicit 34 px minimum height, and fixed interactive XAML dimensions are guarded against dropping below 24 px. | Manual pointer target pass before public ACR. |
