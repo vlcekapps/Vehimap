@@ -27,6 +27,8 @@
                    AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.78"
                    Text="{Binding GlobalSearchSummary}"
+                   AutomationProperties.Name="{Binding GlobalSearchSummary}"
+                   AutomationProperties.AutomationId="GlobalSearchWindowSummaryText"
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"

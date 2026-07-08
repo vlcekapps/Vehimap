@@ -27,6 +27,8 @@
                    AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.78"
                    Text="{Binding HistorySummary}"
+                   AutomationProperties.Name="{Binding HistorySummary}"
+                   AutomationProperties.AutomationId="HistoryWindowSummaryText"
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"

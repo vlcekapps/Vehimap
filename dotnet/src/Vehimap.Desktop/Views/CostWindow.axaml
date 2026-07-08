@@ -27,9 +27,13 @@
                    AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.78"
                    Text="{Binding CostSummary}"
+                   AutomationProperties.Name="{Binding CostSummary}"
+                   AutomationProperties.AutomationId="CostWindowSummaryText"
                    TextWrapping="Wrap" />
         <TextBlock Opacity="0.78"
                    Text="{Binding CostComparison}"
+                   AutomationProperties.Name="{Binding CostComparison}"
+                   AutomationProperties.AutomationId="CostWindowComparisonText"
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"

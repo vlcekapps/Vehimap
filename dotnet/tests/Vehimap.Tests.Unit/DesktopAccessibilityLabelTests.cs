@@ -1252,6 +1252,27 @@ public sealed class DesktopAccessibilityLabelTests
         var reminderEditorXaml = ReadWorkspaceOrView("ReminderEditorWindow.axaml", false);
         var maintenanceEditorXaml = ReadWorkspaceOrView("MaintenanceEditorWindow.axaml", false);
         var recordEditorXaml = ReadWorkspaceOrView("RecordEditorWindow.axaml", false);
+        var modalWorkspaceWindowSummaries = new[]
+        {
+            (Xaml: ReadViewFile("AuditWindow.axaml"), AutomationId: "AuditWindowSummaryText", BindingName: "AuditSummary"),
+            (Xaml: ReadViewFile("CostWindow.axaml"), AutomationId: "CostWindowSummaryText", BindingName: "CostSummary"),
+            (Xaml: ReadViewFile("CostWindow.axaml"), AutomationId: "CostWindowComparisonText", BindingName: "CostComparison"),
+            (Xaml: ReadViewFile("DashboardWindow.axaml"), AutomationId: "DashboardWindowAuditSummaryText", BindingName: "AuditSummary"),
+            (Xaml: ReadViewFile("DashboardWindow.axaml"), AutomationId: "DashboardWindowCostSummaryText", BindingName: "CostSummary"),
+            (Xaml: ReadViewFile("DashboardWindow.axaml"), AutomationId: "DashboardWindowCostComparisonText", BindingName: "CostComparison"),
+            (Xaml: ReadViewFile("DashboardWindow.axaml"), AutomationId: "DashboardWindowTimelineSummaryText", BindingName: "DashboardTimelineSummary"),
+            (Xaml: ReadViewFile("FuelWindow.axaml"), AutomationId: "FuelWindowSummaryText", BindingName: "FuelSummary"),
+            (Xaml: ReadViewFile("GlobalSearchWindow.axaml"), AutomationId: "GlobalSearchWindowSummaryText", BindingName: "GlobalSearchSummary"),
+            (Xaml: ReadViewFile("HistoryWindow.axaml"), AutomationId: "HistoryWindowSummaryText", BindingName: "HistorySummary"),
+            (Xaml: ReadViewFile("MaintenanceWindow.axaml"), AutomationId: "MaintenanceWindowSummaryText", BindingName: "MaintenanceSummary"),
+            (Xaml: ReadViewFile("OverdueOverviewWindow.axaml"), AutomationId: "OverdueOverviewWindowSummaryText", BindingName: "OverdueOverviewSummary"),
+            (Xaml: ReadViewFile("RecordsWindow.axaml"), AutomationId: "RecordsWindowSummaryText", BindingName: "RecordSummary"),
+            (Xaml: ReadViewFile("RemindersWindow.axaml"), AutomationId: "RemindersWindowSummaryText", BindingName: "ReminderSummary"),
+            (Xaml: ReadViewFile("SmartAdvisorWindow.axaml"), AutomationId: "SmartAdvisorWindowSummaryText", BindingName: "SmartAdvisorSummary"),
+            (Xaml: ReadViewFile("TimelineWindow.axaml"), AutomationId: "TimelineWindowSummaryText", BindingName: "TimelineSummary"),
+            (Xaml: ReadViewFile("UpcomingOverviewWindow.axaml"), AutomationId: "UpcomingOverviewWindowSummaryText", BindingName: "UpcomingOverviewSummary"),
+            (Xaml: ReadViewFile("VehicleDetailWindow.axaml"), AutomationId: "VehicleDetailWindowOverviewText", BindingName: "SelectedVehicleOverview")
+        };
 
         AssertAccessibleBoundText(mainXaml, "AppSubtitleText", "Subtitle");
         AssertAccessibleBoundText(mainXaml, "LoadErrorText", "LoadError");
@@ -1259,6 +1280,11 @@ public sealed class DesktopAccessibilityLabelTests
         AssertAccessibleBoundText(mainXaml, "VehicleListSummaryText", "VehicleListSummary");
         AssertAccessibleBoundText(mainXaml, "VehicleListLockStatusText", "VehicleListLockStatus");
         AssertAccessibleBoundText(mainXaml, "WorkspaceNavigationLockStatusText", "WorkspaceNavigationLockStatus");
+        foreach (var (xaml, automationId, bindingName) in modalWorkspaceWindowSummaries)
+        {
+            AssertAccessibleBoundText(xaml, automationId, bindingName);
+        }
+
         AssertAccessibleBoundText(auditXaml, "AuditSummaryText", "AuditSummary");
         AssertAccessibleBoundText(historyXaml, "HistorySummaryText", "HistorySummary");
         AssertAccessibleBoundText(historyXaml, "HistorySearchSummaryText", "HistorySearchSummary");

@@ -27,6 +27,8 @@
                    AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.78"
                    Text="{Binding MaintenanceSummary}"
+                   AutomationProperties.Name="{Binding MaintenanceSummary}"
+                   AutomationProperties.AutomationId="MaintenanceWindowSummaryText"
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"

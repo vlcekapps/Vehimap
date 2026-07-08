@@ -79,8 +79,8 @@ Vehimap should not publish a final customer ACR until these gates are green:
 - Non-text/icon evidence covers localized installer shortcut comments for generated
   Start menu and desktop shortcuts, with manual verification still required.
 - UIA-structure evidence covers primary headings, landmarks, shell context text,
-  visible form guidance, item types/statuses, accessible names and live regions in
-  the desktop shell.
+  standalone workspace summaries, visible form guidance, item types/statuses,
+  accessible names and live regions in the desktop shell.
 - Label-in-name evidence covers resource-expanded controls such as the main workspace
   `Open window` / `V okně` actions, including speech-input-friendly accessible names.
 - Resize/reflow evidence covers explicit `CanResize` behavior for top-level desktop

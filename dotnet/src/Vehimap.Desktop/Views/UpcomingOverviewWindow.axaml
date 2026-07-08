@@ -27,6 +27,8 @@
                    AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.78"
                    Text="{Binding UpcomingOverviewSummary}"
+                   AutomationProperties.Name="{Binding UpcomingOverviewSummary}"
+                   AutomationProperties.AutomationId="UpcomingOverviewWindowSummaryText"
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"

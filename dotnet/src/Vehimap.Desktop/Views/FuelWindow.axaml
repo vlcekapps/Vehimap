@@ -27,6 +27,8 @@
                    AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.78"
                    Text="{Binding FuelSummary}"
+                   AutomationProperties.Name="{Binding FuelSummary}"
+                   AutomationProperties.AutomationId="FuelWindowSummaryText"
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"

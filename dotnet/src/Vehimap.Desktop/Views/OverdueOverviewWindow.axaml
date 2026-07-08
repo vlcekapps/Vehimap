@@ -27,6 +27,8 @@
                    AutomationProperties.HeadingLevel="1" />
         <TextBlock Opacity="0.78"
                    Text="{Binding OverdueOverviewSummary}"
+                   AutomationProperties.Name="{Binding OverdueOverviewSummary}"
+                   AutomationProperties.AutomationId="OverdueOverviewWindowSummaryText"
                    TextWrapping="Wrap" />
       </StackPanel>
       <Button Grid.Column="1"
