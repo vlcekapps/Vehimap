@@ -1058,6 +1058,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("x:Name=\"VehicleEditorGreenCardToBox\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleEditor.Tags}\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTagsBox\"", vehicleEditorXaml);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleEditor.Warning}\"", vehicleEditorXaml);
+        Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorWarningText\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorClimateProfileBox\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTimingDriveBox\"", vehicleEditorXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"VehicleEditorTransmissionBox\"", vehicleEditorXaml);

@@ -204,6 +204,8 @@
                    Margin="0,14,0,0"
                    Opacity="0.72"
                    Text="{i18n:Loc VehicleEditor.Warning}"
+                   AutomationProperties.Name="{i18n:Loc VehicleEditor.Warning}"
+                   AutomationProperties.AutomationId="VehicleEditorWarningText"
                    TextWrapping="Wrap" />
       </Grid>
     </ScrollViewer>

@@ -84,6 +84,9 @@ for a future ACR/VPAT-style report if one is needed.
 - Visible shell context text that orients the user, such as the main window subtitle,
   must expose the same bound text through `AutomationProperties.Name` with a stable
   `AutomationId` so it remains available in UI Automation structure checks.
+- Visible form guidance, warning or instruction text must also expose a human
+  accessible name and stable `AutomationId`; do not rely on styled text alone for
+  orienting screen-reader users.
 - Meaningful list item templates whose root exposes
   `AutomationProperties.Name="{Binding AccessibleLabel}"` must also expose
   `AutomationProperties.ItemType`, for example vehicle, document, audit item or fuel
