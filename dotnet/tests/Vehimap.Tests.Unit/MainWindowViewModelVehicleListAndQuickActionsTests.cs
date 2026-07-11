@@ -88,13 +88,20 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             item => item.Title == "Tankování" && item.Summary.Contains("Poslední tankování: 35 l za 1200", StringComparison.CurrentCulture));
         Assert.Contains(
             viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
-            item => item.Title == "Připomínky" && item.Summary.Contains("Nejbližší: Objednat servis", StringComparison.CurrentCulture));
+            item => item.Title == "Připomínky"
+                && item.Summary.Contains("1 připomínka", StringComparison.CurrentCulture)
+                && item.Summary.Contains("Nejbližší: Objednat servis", StringComparison.CurrentCulture));
         Assert.Contains(
             viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
-            item => item.Title == "Doklady" && item.Summary.Contains("Bez vyplněné cesty: 1", StringComparison.CurrentCulture));
+            item => item.Title == "Doklady"
+                && item.Summary.Contains("1 doklad", StringComparison.CurrentCulture)
+                && item.Summary.Contains("1 doklad nemá vyplněnou cestu", StringComparison.CurrentCulture));
         Assert.Contains(
             viewModel.VehicleDetailWorkspace.EvidenceSummaryItems,
-            item => item.Title == "Údržba" && item.Summary.Contains("Nejbližší: Motorový olej", StringComparison.CurrentCulture));
+            item => item.Title == "Údržba"
+                && item.Summary.Contains("1 servisní plán", StringComparison.CurrentCulture)
+                && item.Summary.Contains("1 aktivní plán", StringComparison.CurrentCulture)
+                && item.Summary.Contains("Nejbližší: Motorový olej", StringComparison.CurrentCulture));
     }
 
     [Fact]
@@ -110,6 +117,21 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Equal("Milena", viewModel.SelectedVehicle?.Name);
         Assert.Equal(DesktopFocusTarget.VehicleList, requestedFocus);
         Assert.Contains("Nejbližší technická kontrola", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Review_technical_quick_action_uses_pluralized_status()
+    {
+        var viewModel = CreateViewModel(BuildQuickActionDataSet());
+        DesktopFocusTarget? requestedFocus = null;
+        viewModel.FocusRequested += target => requestedFocus = target;
+
+        await viewModel.ReviewTechnicalCommand.ExecuteAsync(null);
+
+        Assert.True(viewModel.IsOverdueOverviewTabSelected);
+        Assert.Equal(OverviewFilterOptions.TechnicalKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
+        Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
+        Assert.Contains("1 termín technické kontroly vyžaduje kontrolu", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
     [Fact]
@@ -259,6 +281,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Equal(OverviewFilterOptions.GreenCardsKey, viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewFilter.Value);
         Assert.Equal(DesktopFocusTarget.UpcomingOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems);
+        Assert.Contains("zelená karta vyžaduje kontrolu", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
     [Fact]

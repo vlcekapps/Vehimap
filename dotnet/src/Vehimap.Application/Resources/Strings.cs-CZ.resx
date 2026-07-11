@@ -820,7 +820,9 @@ Vozidlo: {2}
   <data name="QuickActions.Status.NoTechnical" xml:space="preserve"><value>Momentálně není žádné vozidlo s blížící se nebo propadlou technickou kontrolou.</value></data>
   <data name="QuickActions.Status.OpenedBackgroundAudit" xml:space="preserve"><value>Otevřena auditní položka: {0} - {1}.</value></data>
   <data name="QuickActions.Status.OpenedBackgroundTimeline" xml:space="preserve"><value>Otevřeno aktuální upozornění: {0} - {1} ({2}).</value></data>
-  <data name="QuickActions.Status.ReviewGreenOpened" xml:space="preserve"><value>Zelené karty k prověření: {0}. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened.One" xml:space="preserve"><value>1 zelená karta vyžaduje kontrolu. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened.Few" xml:space="preserve"><value>{0} zelené karty vyžadují kontrolu. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened.Other" xml:space="preserve"><value>{0} zelených karet vyžaduje kontrolu. Otevřen je příslušný přehled.</value></data>
   <data name="QuickActions.Status.ReviewMaintenanceOpened.One" xml:space="preserve"><value>1 úkon údržby vyžaduje kontrolu. Otevřen je příslušný přehled.</value></data>
   <data name="QuickActions.Status.ReviewMaintenanceOpened.Few" xml:space="preserve"><value>{0} úkony údržby vyžadují kontrolu. Otevřen je příslušný přehled.</value></data>
   <data name="QuickActions.Status.ReviewMaintenanceOpened.Other" xml:space="preserve"><value>{0} úkonů údržby vyžaduje kontrolu. Otevřen je příslušný přehled.</value></data>
@@ -830,7 +832,9 @@ Vozidlo: {2}
   <data name="QuickActions.Status.ReviewReminderOpened.One" xml:space="preserve"><value>1 připomínka vyžaduje kontrolu. Otevřen je příslušný přehled.</value></data>
   <data name="QuickActions.Status.ReviewReminderOpened.Few" xml:space="preserve"><value>{0} připomínky vyžadují kontrolu. Otevřen je příslušný přehled.</value></data>
   <data name="QuickActions.Status.ReviewReminderOpened.Other" xml:space="preserve"><value>{0} připomínek vyžaduje kontrolu. Otevřen je příslušný přehled.</value></data>
-  <data name="QuickActions.Status.ReviewTechnicalOpened" xml:space="preserve"><value>Technické kontroly k prověření: {0}. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewTechnicalOpened.One" xml:space="preserve"><value>1 termín technické kontroly vyžaduje kontrolu. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewTechnicalOpened.Few" xml:space="preserve"><value>{0} termíny technické kontroly vyžadují kontrolu. Otevřen je příslušný přehled.</value></data>
+  <data name="QuickActions.Status.ReviewTechnicalOpened.Other" xml:space="preserve"><value>{0} termínů technické kontroly vyžaduje kontrolu. Otevřen je příslušný přehled.</value></data>
   <data name="MainMenu.Vehicle" xml:space="preserve"><value>_Vozidlo</value></data>
   <data name="MainMenu.Vehicle.Costs" xml:space="preserve"><value>Náklady a souhrny</value></data>
   <data name="MainMenu.Vehicle.CostsName" xml:space="preserve"><value>Otevřít náklady a souhrny vybraného vozidla</value></data>
@@ -1575,9 +1579,21 @@ Poznámka: {5}</value></data>
   <data name="TimelineWorkspace.SearchName" xml:space="preserve"><value>Hledání v časové ose</value></data>
   <data name="TimelineWorkspace.SearchPlaceholder" xml:space="preserve"><value>Položka, stav nebo poznámka</value></data>
   <data name="TimelineWorkspace.ShowFilter" xml:space="preserve"><value>Zobrazit</value></data>
-  <data name="TimelineWorkspace.Summary.All" xml:space="preserve"><value>Celkem položek: {0}. Budoucí: {1}. Minulé: {2}.</value></data>
+  <data name="TimelineWorkspace.Summary.All" xml:space="preserve"><value>{0}. {1}. {2}.</value></data>
   <data name="TimelineWorkspace.Summary.Empty" xml:space="preserve"><value>Pro toto vozidlo zatím nejsou žádné časové položky s datem.</value></data>
-  <data name="TimelineWorkspace.Summary.Filtered" xml:space="preserve"><value>Celkem položek: {0}. Budoucí: {1}. Minulé: {2}. Po filtru zobrazeno: {3}.</value></data>
+  <data name="TimelineWorkspace.Summary.Filtered" xml:space="preserve"><value>{0}. {1}. {2}. {3}.</value></data>
+  <data name="TimelineWorkspace.Summary.TotalCount.One" xml:space="preserve"><value>Celkem 1 položka</value></data>
+  <data name="TimelineWorkspace.Summary.TotalCount.Few" xml:space="preserve"><value>Celkem {0} položky</value></data>
+  <data name="TimelineWorkspace.Summary.TotalCount.Other" xml:space="preserve"><value>Celkem {0} položek</value></data>
+  <data name="TimelineWorkspace.Summary.FutureCount.One" xml:space="preserve"><value>1 budoucí položka</value></data>
+  <data name="TimelineWorkspace.Summary.FutureCount.Few" xml:space="preserve"><value>{0} budoucí položky</value></data>
+  <data name="TimelineWorkspace.Summary.FutureCount.Other" xml:space="preserve"><value>{0} budoucích položek</value></data>
+  <data name="TimelineWorkspace.Summary.PastCount.One" xml:space="preserve"><value>1 minulá položka</value></data>
+  <data name="TimelineWorkspace.Summary.PastCount.Few" xml:space="preserve"><value>{0} minulé položky</value></data>
+  <data name="TimelineWorkspace.Summary.PastCount.Other" xml:space="preserve"><value>{0} minulých položek</value></data>
+  <data name="TimelineWorkspace.Summary.VisibleCount.One" xml:space="preserve"><value>Po filtru zobrazena 1 položka</value></data>
+  <data name="TimelineWorkspace.Summary.VisibleCount.Few" xml:space="preserve"><value>Po filtru zobrazeny {0} položky</value></data>
+  <data name="TimelineWorkspace.Summary.VisibleCount.Other" xml:space="preserve"><value>Po filtru zobrazeno {0} položek</value></data>
   <data name="TimelineWorkspace.Summary.Initial" xml:space="preserve"><value>Časová osa vybraného vozidla se zobrazí po výběru vozidla.</value></data>
   <data name="UpcomingOverviewWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v přehledu blížících se termínů</value></data>
   <data name="UpcomingOverviewWorkspace.DetailHeading" xml:space="preserve"><value>Detail termínu</value></data>
@@ -2575,7 +2591,9 @@ Převodovka: {3}</value></data>
   <data name="VehicleDetail.Projection.Fuel.LatestWithCost" xml:space="preserve"><value>Poslední tankování: {0} za {1} ({2}).</value></data>
   <data name="VehicleDetail.Projection.Fuel.Latest" xml:space="preserve"><value>Poslední tankování: {0} ({1}).</value></data>
   <data name="VehicleDetail.Projection.Reminder.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím nejsou uloženy žádné vlastní připomínky.</value></data>
-  <data name="VehicleDetail.Projection.Reminder.Nearest" xml:space="preserve"><value>Připomínek: {0}. Nejbližší: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Nearest.One" xml:space="preserve"><value>1 připomínka. Nejbližší: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Nearest.Few" xml:space="preserve"><value>{0} připomínky. Nejbližší: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Nearest.Other" xml:space="preserve"><value>{0} připomínek. Nejbližší: {1} ({2}).</value></data>
   <data name="VehicleDetail.Projection.Record.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím není uložen žádný záznam pojištění ani dokladů.</value></data>
   <data name="VehicleDetail.Projection.Record.Count" xml:space="preserve"><value>Záznamů: {0}.</value></data>
   <data name="VehicleDetail.Projection.Record.Count.One" xml:space="preserve"><value>Záznam: {0}.</value></data>
@@ -2584,11 +2602,23 @@ Převodovka: {3}</value></data>
   <data name="VehicleDetail.Projection.Record.TitleWithProvider" xml:space="preserve"><value>{0} ({1})</value></data>
   <data name="VehicleDetail.Projection.Record.NearestValidity" xml:space="preserve"><value>Nejbližší platnost: {0} do {1}.</value></data>
   <data name="VehicleDetail.Projection.Record.NoValidity" xml:space="preserve"><value>U žádného záznamu není vyplněné datum platnosti.</value></data>
-  <data name="VehicleDetail.Projection.Record.MissingAttachments" xml:space="preserve"><value>Nedostupných příloh: {0}.</value></data>
-  <data name="VehicleDetail.Projection.Record.EmptyPaths" xml:space="preserve"><value>Bez vyplněné cesty: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Record.MissingAttachments.One" xml:space="preserve"><value>1 příloha je nedostupná.</value></data>
+  <data name="VehicleDetail.Projection.Record.MissingAttachments.Few" xml:space="preserve"><value>{0} přílohy jsou nedostupné.</value></data>
+  <data name="VehicleDetail.Projection.Record.MissingAttachments.Other" xml:space="preserve"><value>{0} příloh je nedostupných.</value></data>
+  <data name="VehicleDetail.Projection.Record.EmptyPaths.One" xml:space="preserve"><value>1 doklad nemá vyplněnou cestu.</value></data>
+  <data name="VehicleDetail.Projection.Record.EmptyPaths.Few" xml:space="preserve"><value>{0} doklady nemají vyplněnou cestu.</value></data>
+  <data name="VehicleDetail.Projection.Record.EmptyPaths.Other" xml:space="preserve"><value>{0} dokladů nemá vyplněnou cestu.</value></data>
   <data name="VehicleDetail.Projection.Maintenance.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím nejsou uložené žádné plány údržby.</value></data>
-  <data name="VehicleDetail.Projection.Maintenance.Count" xml:space="preserve"><value>Plánů údržby: {0}. Aktivních: {1}.</value></data>
-  <data name="VehicleDetail.Projection.Maintenance.Paused" xml:space="preserve"><value>Pozastavených: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Count" xml:space="preserve"><value>{0}. {1}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.PlanCount.One" xml:space="preserve"><value>1 servisní plán</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.PlanCount.Few" xml:space="preserve"><value>{0} servisní plány</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.PlanCount.Other" xml:space="preserve"><value>{0} servisních plánů</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.ActiveCount.One" xml:space="preserve"><value>1 aktivní plán</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.ActiveCount.Few" xml:space="preserve"><value>{0} aktivní plány</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.ActiveCount.Other" xml:space="preserve"><value>{0} aktivních plánů</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Paused.One" xml:space="preserve"><value>1 plán je pozastavený.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Paused.Few" xml:space="preserve"><value>{0} plány jsou pozastavené.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Paused.Other" xml:space="preserve"><value>{0} plánů je pozastavených.</value></data>
   <data name="VehicleDetail.Projection.Maintenance.AllPaused" xml:space="preserve"><value>Všechny plány jsou momentálně pozastavené.</value></data>
   <data name="VehicleDetail.Projection.Maintenance.Nearest" xml:space="preserve"><value>Nejbližší: {0} ({1}).</value></data>
   <data name="Reminder.Status.NoUsableDate" xml:space="preserve"><value>Bez použitelného termínu</value></data>

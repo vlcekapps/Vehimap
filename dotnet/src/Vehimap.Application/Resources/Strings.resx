@@ -820,7 +820,9 @@ Vehicle: {2}
   <data name="QuickActions.Status.NoTechnical" xml:space="preserve"><value>No vehicles currently have an upcoming or overdue technical inspection alert.</value></data>
   <data name="QuickActions.Status.OpenedBackgroundAudit" xml:space="preserve"><value>Opened audit item: {0} - {1}.</value></data>
   <data name="QuickActions.Status.OpenedBackgroundTimeline" xml:space="preserve"><value>Opened current notification: {0} - {1} ({2}).</value></data>
-  <data name="QuickActions.Status.ReviewGreenOpened" xml:space="preserve"><value>Green cards to review: {0}. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened.One" xml:space="preserve"><value>1 green card needs review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened.Few" xml:space="preserve"><value>{0} green cards need review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened.Other" xml:space="preserve"><value>{0} green cards need review. The matching overview is open.</value></data>
   <data name="QuickActions.Status.ReviewMaintenanceOpened.One" xml:space="preserve"><value>1 maintenance task needs review. The matching overview is open.</value></data>
   <data name="QuickActions.Status.ReviewMaintenanceOpened.Few" xml:space="preserve"><value>{0} maintenance tasks need review. The matching overview is open.</value></data>
   <data name="QuickActions.Status.ReviewMaintenanceOpened.Other" xml:space="preserve"><value>{0} maintenance tasks need review. The matching overview is open.</value></data>
@@ -830,7 +832,9 @@ Vehicle: {2}
   <data name="QuickActions.Status.ReviewReminderOpened.One" xml:space="preserve"><value>1 reminder needs review. The matching overview is open.</value></data>
   <data name="QuickActions.Status.ReviewReminderOpened.Few" xml:space="preserve"><value>{0} reminders need review. The matching overview is open.</value></data>
   <data name="QuickActions.Status.ReviewReminderOpened.Other" xml:space="preserve"><value>{0} reminders need review. The matching overview is open.</value></data>
-  <data name="QuickActions.Status.ReviewTechnicalOpened" xml:space="preserve"><value>Technical inspections to review: {0}. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewTechnicalOpened.One" xml:space="preserve"><value>1 technical inspection due date needs review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewTechnicalOpened.Few" xml:space="preserve"><value>{0} technical inspection due dates need review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewTechnicalOpened.Other" xml:space="preserve"><value>{0} technical inspection due dates need review. The matching overview is open.</value></data>
   <data name="MainMenu.Vehicle" xml:space="preserve"><value>_Vehicle</value></data>
   <data name="MainMenu.Vehicle.Costs" xml:space="preserve"><value>Costs and summaries</value></data>
   <data name="MainMenu.Vehicle.CostsName" xml:space="preserve"><value>Open costs and summaries for selected vehicle</value></data>
@@ -1575,9 +1579,21 @@ Note: {5}</value></data>
   <data name="TimelineWorkspace.SearchName" xml:space="preserve"><value>Search in timeline</value></data>
   <data name="TimelineWorkspace.SearchPlaceholder" xml:space="preserve"><value>Item, status or note</value></data>
   <data name="TimelineWorkspace.ShowFilter" xml:space="preserve"><value>Show</value></data>
-  <data name="TimelineWorkspace.Summary.All" xml:space="preserve"><value>Total items: {0}. Future: {1}. Past: {2}.</value></data>
+  <data name="TimelineWorkspace.Summary.All" xml:space="preserve"><value>{0}. {1}. {2}.</value></data>
   <data name="TimelineWorkspace.Summary.Empty" xml:space="preserve"><value>This vehicle does not have any dated timeline items yet.</value></data>
-  <data name="TimelineWorkspace.Summary.Filtered" xml:space="preserve"><value>Total items: {0}. Future: {1}. Past: {2}. Visible after filters: {3}.</value></data>
+  <data name="TimelineWorkspace.Summary.Filtered" xml:space="preserve"><value>{0}. {1}. {2}. {3}.</value></data>
+  <data name="TimelineWorkspace.Summary.TotalCount.One" xml:space="preserve"><value>1 item total</value></data>
+  <data name="TimelineWorkspace.Summary.TotalCount.Few" xml:space="preserve"><value>{0} items total</value></data>
+  <data name="TimelineWorkspace.Summary.TotalCount.Other" xml:space="preserve"><value>{0} items total</value></data>
+  <data name="TimelineWorkspace.Summary.FutureCount.One" xml:space="preserve"><value>1 future item</value></data>
+  <data name="TimelineWorkspace.Summary.FutureCount.Few" xml:space="preserve"><value>{0} future items</value></data>
+  <data name="TimelineWorkspace.Summary.FutureCount.Other" xml:space="preserve"><value>{0} future items</value></data>
+  <data name="TimelineWorkspace.Summary.PastCount.One" xml:space="preserve"><value>1 past item</value></data>
+  <data name="TimelineWorkspace.Summary.PastCount.Few" xml:space="preserve"><value>{0} past items</value></data>
+  <data name="TimelineWorkspace.Summary.PastCount.Other" xml:space="preserve"><value>{0} past items</value></data>
+  <data name="TimelineWorkspace.Summary.VisibleCount.One" xml:space="preserve"><value>1 item visible after filters</value></data>
+  <data name="TimelineWorkspace.Summary.VisibleCount.Few" xml:space="preserve"><value>{0} items visible after filters</value></data>
+  <data name="TimelineWorkspace.Summary.VisibleCount.Other" xml:space="preserve"><value>{0} items visible after filters</value></data>
   <data name="TimelineWorkspace.Summary.Initial" xml:space="preserve"><value>The selected vehicle timeline will appear after a vehicle is selected.</value></data>
   <data name="UpcomingOverviewWorkspace.ClearSearchName" xml:space="preserve"><value>Clear upcoming due date search</value></data>
   <data name="UpcomingOverviewWorkspace.DetailHeading" xml:space="preserve"><value>Due date detail</value></data>
@@ -2575,7 +2591,9 @@ Transmission: {3}</value></data>
   <data name="VehicleDetail.Projection.Fuel.LatestWithCost" xml:space="preserve"><value>Latest refuel: {0} for {1} ({2}).</value></data>
   <data name="VehicleDetail.Projection.Fuel.Latest" xml:space="preserve"><value>Latest refuel: {0} ({1}).</value></data>
   <data name="VehicleDetail.Projection.Reminder.Empty" xml:space="preserve"><value>No custom reminders are stored for this vehicle yet.</value></data>
-  <data name="VehicleDetail.Projection.Reminder.Nearest" xml:space="preserve"><value>Reminders: {0}. Nearest: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Nearest.One" xml:space="preserve"><value>1 reminder. Nearest: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Nearest.Few" xml:space="preserve"><value>{0} reminders. Nearest: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.Reminder.Nearest.Other" xml:space="preserve"><value>{0} reminders. Nearest: {1} ({2}).</value></data>
   <data name="VehicleDetail.Projection.Record.Empty" xml:space="preserve"><value>No insurance or document records are stored for this vehicle yet.</value></data>
   <data name="VehicleDetail.Projection.Record.Count" xml:space="preserve"><value>Records: {0}.</value></data>
   <data name="VehicleDetail.Projection.Record.Count.One" xml:space="preserve"><value>Record: {0}.</value></data>
@@ -2584,11 +2602,23 @@ Transmission: {3}</value></data>
   <data name="VehicleDetail.Projection.Record.TitleWithProvider" xml:space="preserve"><value>{0} ({1})</value></data>
   <data name="VehicleDetail.Projection.Record.NearestValidity" xml:space="preserve"><value>Nearest validity: {0} until {1}.</value></data>
   <data name="VehicleDetail.Projection.Record.NoValidity" xml:space="preserve"><value>No record has a validity date filled in.</value></data>
-  <data name="VehicleDetail.Projection.Record.MissingAttachments" xml:space="preserve"><value>Unavailable attachments: {0}.</value></data>
-  <data name="VehicleDetail.Projection.Record.EmptyPaths" xml:space="preserve"><value>Without a filled path: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Record.MissingAttachments.One" xml:space="preserve"><value>1 attachment is unavailable.</value></data>
+  <data name="VehicleDetail.Projection.Record.MissingAttachments.Few" xml:space="preserve"><value>{0} attachments are unavailable.</value></data>
+  <data name="VehicleDetail.Projection.Record.MissingAttachments.Other" xml:space="preserve"><value>{0} attachments are unavailable.</value></data>
+  <data name="VehicleDetail.Projection.Record.EmptyPaths.One" xml:space="preserve"><value>1 document has no path filled in.</value></data>
+  <data name="VehicleDetail.Projection.Record.EmptyPaths.Few" xml:space="preserve"><value>{0} documents have no path filled in.</value></data>
+  <data name="VehicleDetail.Projection.Record.EmptyPaths.Other" xml:space="preserve"><value>{0} documents have no path filled in.</value></data>
   <data name="VehicleDetail.Projection.Maintenance.Empty" xml:space="preserve"><value>No maintenance plans are stored for this vehicle yet.</value></data>
-  <data name="VehicleDetail.Projection.Maintenance.Count" xml:space="preserve"><value>Maintenance plans: {0}. Active: {1}.</value></data>
-  <data name="VehicleDetail.Projection.Maintenance.Paused" xml:space="preserve"><value>Paused: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Count" xml:space="preserve"><value>{0}. {1}.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.PlanCount.One" xml:space="preserve"><value>1 maintenance plan</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.PlanCount.Few" xml:space="preserve"><value>{0} maintenance plans</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.PlanCount.Other" xml:space="preserve"><value>{0} maintenance plans</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.ActiveCount.One" xml:space="preserve"><value>1 active plan</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.ActiveCount.Few" xml:space="preserve"><value>{0} active plans</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.ActiveCount.Other" xml:space="preserve"><value>{0} active plans</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Paused.One" xml:space="preserve"><value>1 plan is paused.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Paused.Few" xml:space="preserve"><value>{0} plans are paused.</value></data>
+  <data name="VehicleDetail.Projection.Maintenance.Paused.Other" xml:space="preserve"><value>{0} plans are paused.</value></data>
   <data name="VehicleDetail.Projection.Maintenance.AllPaused" xml:space="preserve"><value>All plans are currently paused.</value></data>
   <data name="VehicleDetail.Projection.Maintenance.Nearest" xml:space="preserve"><value>Nearest: {0} ({1}).</value></data>
   <data name="Reminder.Status.NoUsableDate" xml:space="preserve"><value>No usable due date</value></data>

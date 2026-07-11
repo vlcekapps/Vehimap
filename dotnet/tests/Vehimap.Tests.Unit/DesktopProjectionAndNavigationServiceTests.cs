@@ -384,7 +384,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
 
         var item = Assert.Single(projection.Items);
         Assert.Equal("rem_1", item.EntryId);
-        Assert.Contains("Po filtru zobrazeno: 1", projection.Summary);
+        Assert.Contains("Po filtru zobrazena 1 položka", projection.Summary);
     }
 
     [Fact]

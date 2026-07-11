@@ -495,8 +495,17 @@ internal sealed class DesktopProjectionService
         var summary = allItems.Count == 0
             ? L("TimelineWorkspace.Summary.Empty")
             : filteredItems.Count == allItems.Count
-                ? LF("TimelineWorkspace.Summary.All", allItems.Count, futureCount, pastCount)
-                : LF("TimelineWorkspace.Summary.Filtered", allItems.Count, futureCount, pastCount, filteredItems.Count);
+                ? LF(
+                    "TimelineWorkspace.Summary.All",
+                    LP("TimelineWorkspace.Summary.TotalCount", allItems.Count, allItems.Count),
+                    LP("TimelineWorkspace.Summary.FutureCount", futureCount, futureCount),
+                    LP("TimelineWorkspace.Summary.PastCount", pastCount, pastCount))
+                : LF(
+                    "TimelineWorkspace.Summary.Filtered",
+                    LP("TimelineWorkspace.Summary.TotalCount", allItems.Count, allItems.Count),
+                    LP("TimelineWorkspace.Summary.FutureCount", futureCount, futureCount),
+                    LP("TimelineWorkspace.Summary.PastCount", pastCount, pastCount),
+                    LP("TimelineWorkspace.Summary.VisibleCount", filteredItems.Count, filteredItems.Count));
 
         return new DesktopListProjection<VehicleTimelineItemViewModel>(filteredItems, summary);
     }
@@ -910,8 +919,9 @@ internal sealed class DesktopProjectionService
             details.Add(repeatLabel);
         }
 
-        return LF(
+        return LP(
             "VehicleDetail.Projection.Reminder.Nearest",
+            entries.Count,
             entries.Count,
             FormatValue(nearest.Title, L("Projection.Value.NoTitle")),
             string.Join(", ", details));
@@ -978,12 +988,18 @@ internal sealed class DesktopProjectionService
 
         if (missingPathCount > 0)
         {
-            summary += " " + LF("VehicleDetail.Projection.Record.MissingAttachments", missingPathCount);
+            summary += " " + LP(
+                "VehicleDetail.Projection.Record.MissingAttachments",
+                missingPathCount,
+                missingPathCount);
         }
 
         if (emptyPathCount > 0)
         {
-            summary += " " + LF("VehicleDetail.Projection.Record.EmptyPaths", emptyPathCount);
+            summary += " " + LP(
+                "VehicleDetail.Projection.Record.EmptyPaths",
+                emptyPathCount,
+                emptyPathCount);
         }
 
         return summary;
@@ -1013,10 +1029,13 @@ internal sealed class DesktopProjectionService
 
         var activeCount = plans.Count(item => item.Plan.IsActive);
         var pausedCount = plans.Count - activeCount;
-        var summary = LF("VehicleDetail.Projection.Maintenance.Count", plans.Count, activeCount);
+        var summary = LF(
+            "VehicleDetail.Projection.Maintenance.Count",
+            LP("VehicleDetail.Projection.Maintenance.PlanCount", plans.Count, plans.Count),
+            LP("VehicleDetail.Projection.Maintenance.ActiveCount", activeCount, activeCount));
         if (pausedCount > 0)
         {
-            summary += " " + LF("VehicleDetail.Projection.Maintenance.Paused", pausedCount);
+            summary += " " + LP("VehicleDetail.Projection.Maintenance.Paused", pausedCount, pausedCount);
         }
 
         if (activeCount == 0)

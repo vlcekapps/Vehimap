@@ -188,6 +188,12 @@ public sealed class I18nFoundationTests
         Assert.Equal("Bylo obnoveno 5 spravovaných příloh.", service.Format(czech, "AppShell.ImportBackup.RestoredManagedAttachments", 5, 5));
         Assert.Equal("- 1 document", service.Format(english, "VehicleDelete.Confirmation.RecordCount", 1, 1));
         Assert.Equal("- 4 doklady", service.Format(czech, "VehicleDelete.Confirmation.RecordCount", 4, 4));
+        Assert.Equal("1 green card needs review. The matching overview is open.", service.Format(english, "QuickActions.Status.ReviewGreenOpened", 1, 1));
+        Assert.Equal("3 termíny technické kontroly vyžadují kontrolu. Otevřen je příslušný přehled.", service.Format(czech, "QuickActions.Status.ReviewTechnicalOpened", 3, 3));
+        Assert.Equal("Celkem 5 položek", service.Format(czech, "TimelineWorkspace.Summary.TotalCount", 5, 5));
+        Assert.Equal("Po filtru zobrazeny 2 položky", service.Format(czech, "TimelineWorkspace.Summary.VisibleCount", 2, 2));
+        Assert.Equal("1 attachment is unavailable.", service.Format(english, "VehicleDetail.Projection.Record.MissingAttachments", 1, 1));
+        Assert.Equal("5 plánů je pozastavených.", service.Format(czech, "VehicleDetail.Projection.Maintenance.Paused", 5, 5));
         Assert.Equal(AppCultureService.EnglishLanguage, english.Culture.Name);
         Assert.Equal(AppCultureService.CzechLanguage, czech.Culture.Name);
     }
@@ -293,7 +299,19 @@ public sealed class I18nFoundationTests
             "AppShell.VehiclePackage.MissingAttachments",
             "AppShell.VehiclePackage.RestoredAttachments",
             "AutomaticBackup.Result.IncludedAttachments",
-            "AutomaticBackup.Result.MissingAttachments"
+            "AutomaticBackup.Result.MissingAttachments",
+            "QuickActions.Status.ReviewGreenOpened",
+            "QuickActions.Status.ReviewTechnicalOpened",
+            "TimelineWorkspace.Summary.TotalCount",
+            "TimelineWorkspace.Summary.FutureCount",
+            "TimelineWorkspace.Summary.PastCount",
+            "TimelineWorkspace.Summary.VisibleCount",
+            "VehicleDetail.Projection.Reminder.Nearest",
+            "VehicleDetail.Projection.Record.MissingAttachments",
+            "VehicleDetail.Projection.Record.EmptyPaths",
+            "VehicleDetail.Projection.Maintenance.PlanCount",
+            "VehicleDetail.Projection.Maintenance.ActiveCount",
+            "VehicleDetail.Projection.Maintenance.Paused"
         };
         var directFormattingRegex = new Regex(
             @"(?:\.Format|\bLF|\bLFO)\(\s*""(?<key>[A-Za-z0-9_.-]+)""",
