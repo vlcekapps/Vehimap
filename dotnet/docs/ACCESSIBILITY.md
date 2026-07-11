@@ -137,7 +137,10 @@ for a future ACR/VPAT-style report if one is needed.
   [AvaloniaUI/Avalonia#9770](https://github.com/AvaloniaUI/Avalonia/issues/9770), the
   desktop shell may add a tested live-region fallback that announces field name, caret
   position and nearby characters after keyboard navigation. This is a temporary
-  `TextBox UIA text fallback`, not a replacement for standard controls.
+  `TextBox UIA text fallback`, not a replacement for standard controls. While present,
+  its EN/CS selection counts must use the shared pluralization service and its caret,
+  selection and snippet boundaries must use Unicode text elements so emoji and combining
+  sequences are not announced as split UTF-16 code units.
 - Prefer Avalonia `HotKey`, `KeyBinding` and commands. A manual `KeyDown` handler is an
   exception, not the default.
 - Interactive controls with explicit fixed `Width`, `Height`, `MinWidth` or

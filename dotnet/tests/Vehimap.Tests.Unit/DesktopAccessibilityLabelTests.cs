@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Globalization;
+using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Views;
 using Vehimap.Application.Models;
@@ -2307,8 +2308,67 @@ public sealed class DesktopAccessibilityLabelTests
             selectionStart: 1,
             selectionEnd: 3);
 
-        Assert.Contains("vybráno 2 znaků", selectionAnnouncement);
+        Assert.Contains("vybrány 2 znaky", selectionAnnouncement);
         Assert.Contains("bc", selectionAnnouncement);
+    }
+
+    [Fact]
+    public void Textbox_keyboard_fallback_uses_unicode_text_elements_and_active_language()
+    {
+        try
+        {
+            TestCultureInitializer.ResetToCzech();
+            const string value = "A😀e\u0301";
+
+            var caretAnnouncement = KeyboardAccessibilityHelper.BuildTextBoxEditingAnnouncement(
+                "Název vozidla",
+                value,
+                caretIndex: 3,
+                selectionStart: 3,
+                selectionEnd: 3);
+
+            Assert.Contains("za znakem 😀", caretAnnouncement);
+            Assert.Contains("před znakem e\u0301", caretAnnouncement);
+            Assert.Contains("pozice 2 z 3", caretAnnouncement);
+            Assert.DoesNotContain("�", caretAnnouncement);
+
+            var selectionAnnouncement = KeyboardAccessibilityHelper.BuildTextBoxEditingAnnouncement(
+                "Název vozidla",
+                value,
+                caretIndex: 5,
+                selectionStart: 1,
+                selectionEnd: 5);
+
+            Assert.Contains("vybrány 2 znaky", selectionAnnouncement);
+            Assert.Contains("😀e\u0301", selectionAnnouncement);
+
+            var longValue = new string('a', 31) + "😀😀";
+            var longSelectionAnnouncement = KeyboardAccessibilityHelper.BuildTextBoxEditingAnnouncement(
+                "Název vozidla",
+                longValue,
+                caretIndex: longValue.Length,
+                selectionStart: 0,
+                selectionEnd: longValue.Length);
+
+            Assert.Contains("vybráno 33 znaků", longSelectionAnnouncement);
+            Assert.Contains(new string('a', 31) + "😀...", longSelectionAnnouncement);
+            Assert.DoesNotContain("�", longSelectionAnnouncement);
+
+            DesktopLocalization.Configure(new AppCulturePreferences("en-US", "comma", "dot"));
+            var englishAnnouncement = KeyboardAccessibilityHelper.BuildTextBoxEditingAnnouncement(
+                "Vehicle name",
+                value,
+                caretIndex: 3,
+                selectionStart: 1,
+                selectionEnd: 3);
+
+            Assert.Contains("selected 1 character", englishAnnouncement);
+            Assert.Contains("😀", englishAnnouncement);
+        }
+        finally
+        {
+            TestCultureInitializer.ResetToCzech();
+        }
     }
 
     [Fact]

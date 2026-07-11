@@ -2787,6 +2787,9 @@ Navržená akce: {6}</value></data>
   <data name="Audit.Summary.SearchCount.Other" xml:space="preserve"><value>Hledání „{0}“ našlo {1} z {2} auditních položek.</value></data>
   <data name="Keyboard.TextBox.LabelFallback" xml:space="preserve"><value>Textové pole</value></data>
   <data name="Keyboard.TextBox.Selection" xml:space="preserve"><value>{0}: vybráno {1} znaků, {2}.</value></data>
+  <data name="Keyboard.TextBox.Selection.One" xml:space="preserve"><value>{0}: vybrán {1} znak, {2}.</value></data>
+  <data name="Keyboard.TextBox.Selection.Few" xml:space="preserve"><value>{0}: vybrány {1} znaky, {2}.</value></data>
+  <data name="Keyboard.TextBox.Selection.Other" xml:space="preserve"><value>{0}: vybráno {1} znaků, {2}.</value></data>
   <data name="Keyboard.TextBox.Empty" xml:space="preserve"><value>{0}: prázdné pole.</value></data>
   <data name="Keyboard.TextBox.Start" xml:space="preserve"><value>{0}: začátek textu, před znakem {1}, pozice 0 z {2}.</value></data>
   <data name="Keyboard.TextBox.End" xml:space="preserve"><value>{0}: konec textu, za znakem {1}, pozice {2} z {2}.</value></data>

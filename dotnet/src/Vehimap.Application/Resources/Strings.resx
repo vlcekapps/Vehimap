@@ -2787,6 +2787,9 @@ Suggested action: {6}</value></data>
   <data name="Audit.Summary.SearchCount.Other" xml:space="preserve"><value>Search "{0}" found {1} of {2} audit items.</value></data>
   <data name="Keyboard.TextBox.LabelFallback" xml:space="preserve"><value>Text field</value></data>
   <data name="Keyboard.TextBox.Selection" xml:space="preserve"><value>{0}: selected {1} characters, {2}.</value></data>
+  <data name="Keyboard.TextBox.Selection.One" xml:space="preserve"><value>{0}: selected {1} character, {2}.</value></data>
+  <data name="Keyboard.TextBox.Selection.Few" xml:space="preserve"><value>{0}: selected {1} characters, {2}.</value></data>
+  <data name="Keyboard.TextBox.Selection.Other" xml:space="preserve"><value>{0}: selected {1} characters, {2}.</value></data>
   <data name="Keyboard.TextBox.Empty" xml:space="preserve"><value>{0}: empty field.</value></data>
   <data name="Keyboard.TextBox.Start" xml:space="preserve"><value>{0}: start of text, before character {1}, position 0 of {2}.</value></data>
   <data name="Keyboard.TextBox.End" xml:space="preserve"><value>{0}: end of text, after character {1}, position {2} of {2}.</value></data>

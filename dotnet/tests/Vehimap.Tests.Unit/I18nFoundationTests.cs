@@ -194,6 +194,8 @@ public sealed class I18nFoundationTests
         Assert.Equal("Po filtru zobrazeny 2 položky", service.Format(czech, "TimelineWorkspace.Summary.VisibleCount", 2, 2));
         Assert.Equal("1 attachment is unavailable.", service.Format(english, "VehicleDetail.Projection.Record.MissingAttachments", 1, 1));
         Assert.Equal("5 plánů je pozastavených.", service.Format(czech, "VehicleDetail.Projection.Maintenance.Paused", 5, 5));
+        Assert.Equal("Name: selected 1 character, A.", service.Format(english, "Keyboard.TextBox.Selection", 1, "Name", 1, "A"));
+        Assert.Equal("Název: vybrány 3 znaky, abc.", service.Format(czech, "Keyboard.TextBox.Selection", 3, "Název", 3, "abc"));
         Assert.Equal(AppCultureService.EnglishLanguage, english.Culture.Name);
         Assert.Equal(AppCultureService.CzechLanguage, czech.Culture.Name);
     }
@@ -311,7 +313,8 @@ public sealed class I18nFoundationTests
             "VehicleDetail.Projection.Record.EmptyPaths",
             "VehicleDetail.Projection.Maintenance.PlanCount",
             "VehicleDetail.Projection.Maintenance.ActiveCount",
-            "VehicleDetail.Projection.Maintenance.Paused"
+            "VehicleDetail.Projection.Maintenance.Paused",
+            "Keyboard.TextBox.Selection"
         };
         var directFormattingRegex = new Regex(
             @"(?:\.Format|\bLF|\bLFO)\(\s*""(?<key>[A-Za-z0-9_.-]+)""",

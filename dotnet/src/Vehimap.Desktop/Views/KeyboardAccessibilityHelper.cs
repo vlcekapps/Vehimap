@@ -7,7 +7,9 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using System.Globalization;
 using System.Runtime.CompilerServices;
+using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 
 namespace Vehimap.Desktop.Views;
@@ -15,6 +17,7 @@ namespace Vehimap.Desktop.Views;
 internal static class KeyboardAccessibilityHelper
 {
     private static readonly ConditionalWeakTable<Window, TextBlock> TextEditingLiveRegions = new();
+    private static readonly AppPluralizationService PluralizationService = new();
 
     public static void RegisterWindow(Window window)
     {
@@ -182,11 +185,20 @@ internal static class KeyboardAccessibilityHelper
         var caret = Math.Clamp(caretIndex, 0, length);
         var start = Math.Clamp(Math.Min(selectionStart, selectionEnd), 0, length);
         var end = Math.Clamp(Math.Max(selectionStart, selectionEnd), 0, length);
+        var textElementStarts = StringInfo.ParseCombiningCharacters(value);
+        var textElementLength = textElementStarts.Length;
+        var textElementCaret = CountTextElementsBefore(textElementStarts, caret);
 
         if (start != end)
         {
             var selected = value[start..end];
-            return LF("Keyboard.TextBox.Selection", label, end - start, DescribeSnippet(selected));
+            var selectedCount = StringInfo.ParseCombiningCharacters(selected).Length;
+            return LP(
+                "Keyboard.TextBox.Selection",
+                selectedCount,
+                label,
+                selectedCount,
+                DescribeSnippet(selected));
         }
 
         if (length == 0)
@@ -196,21 +208,29 @@ internal static class KeyboardAccessibilityHelper
 
         if (caret == 0)
         {
-            return LF("Keyboard.TextBox.Start", label, DescribeCharacter(value[0]), length);
+            return LF(
+                "Keyboard.TextBox.Start",
+                label,
+                DescribeTextElement(GetTextElement(value, textElementStarts, 0)),
+                textElementLength);
         }
 
         if (caret >= length)
         {
-            return LF("Keyboard.TextBox.End", label, DescribeCharacter(value[^1]), length);
+            return LF(
+                "Keyboard.TextBox.End",
+                label,
+                DescribeTextElement(GetTextElement(value, textElementStarts, textElementLength - 1)),
+                textElementLength);
         }
 
         return LF(
             "Keyboard.TextBox.Middle",
             label,
-            DescribeCharacter(value[caret - 1]),
-            DescribeCharacter(value[caret]),
-            caret,
-            length);
+            DescribeTextElement(GetTextElement(value, textElementStarts, textElementCaret - 1)),
+            DescribeTextElement(GetTextElement(value, textElementStarts, textElementCaret)),
+            textElementCaret,
+            textElementLength);
     }
 
     private static TextBlock CreateTextEditingLiveRegion()
@@ -269,23 +289,43 @@ internal static class KeyboardAccessibilityHelper
             return L("Keyboard.TextBox.EmptySelection");
         }
 
-        return normalized.Length <= maxLength
+        var textElementStarts = StringInfo.ParseCombiningCharacters(normalized);
+        return textElementStarts.Length <= maxLength
             ? normalized
-            : normalized[..maxLength] + "...";
+            : normalized[..textElementStarts[maxLength]] + "...";
     }
 
-    private static string DescribeCharacter(char character) =>
-        character switch
+    private static string DescribeTextElement(string textElement) =>
+        textElement switch
         {
-            '\r' or '\n' => L("Keyboard.TextBox.LineBreak"),
-            '\t' => L("Keyboard.TextBox.Tab"),
-            ' ' => L("Keyboard.TextBox.Space"),
-            _ => character.ToString()
+            "\r" or "\n" or "\r\n" => L("Keyboard.TextBox.LineBreak"),
+            "\t" => L("Keyboard.TextBox.Tab"),
+            " " => L("Keyboard.TextBox.Space"),
+            _ => textElement
         };
+
+    private static int CountTextElementsBefore(int[] textElementStarts, int caret)
+    {
+        var index = Array.BinarySearch(textElementStarts, caret);
+        return index >= 0 ? index : ~index;
+    }
+
+    private static string GetTextElement(string value, int[] textElementStarts, int index)
+    {
+        var safeIndex = Math.Clamp(index, 0, textElementStarts.Length - 1);
+        var start = textElementStarts[safeIndex];
+        var end = safeIndex + 1 < textElementStarts.Length
+            ? textElementStarts[safeIndex + 1]
+            : value.Length;
+        return value[start..end];
+    }
 
     private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
 
     private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
+
+    private static string LP(string key, int count, params object?[] args) =>
+        PluralizationService.Format(DesktopLocalization.Localizer, key, count, args);
 
     private static TControl? FindSourceControl<TControl>(object? source)
         where TControl : Control
