@@ -71,7 +71,7 @@ public sealed class LegacyTimelineServiceTests
         Assert.True(timeline[0].IsFuture);
         Assert.True(timeline.TakeWhile(item => item.IsFuture).SequenceEqual(timeline.Where(item => item.IsFuture).OrderBy(item => item.Date)));
         Assert.Equal("05.04.2026", timeline.First(item => item.Kind == "custom").DateText);
-        Assert.Equal("Do 14 dnů", timeline.First(item => item.Kind == "maintenance").Status);
+        Assert.Equal("Za 14 dní", timeline.First(item => item.Kind == "maintenance").Status);
     }
 
     [Fact]

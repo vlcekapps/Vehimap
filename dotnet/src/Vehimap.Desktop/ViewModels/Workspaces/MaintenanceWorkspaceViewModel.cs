@@ -321,13 +321,13 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     {
         if (string.IsNullOrWhiteSpace(MaintenanceSearchText))
         {
-            MaintenanceSearchSummary = LF("MaintenanceWorkspace.SearchSummary.All", VisibleMaintenanceItems.Count);
+            MaintenanceSearchSummary = LP("MaintenanceWorkspace.SearchSummary.All", VisibleMaintenanceItems.Count, VisibleMaintenanceItems.Count);
             return;
         }
 
         MaintenanceSearchSummary = VisibleMaintenanceItems.Count == 0
             ? LF("MaintenanceWorkspace.SearchSummary.Empty", MaintenanceSearchText.Trim())
-            : LF("MaintenanceWorkspace.SearchSummary.Filtered", MaintenanceSearchText.Trim(), VisibleMaintenanceItems.Count);
+            : LP("MaintenanceWorkspace.SearchSummary.Filtered", VisibleMaintenanceItems.Count, MaintenanceSearchText.Trim(), VisibleMaintenanceItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

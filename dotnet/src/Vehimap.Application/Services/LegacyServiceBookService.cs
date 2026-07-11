@@ -13,6 +13,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
     private readonly IAppDateFormatService _dateFormatService;
+    private readonly IAppPluralizationService _pluralizationService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
     private AppUnitPreferences _unitPreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToUnitPreferences();
     private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
@@ -21,12 +22,14 @@ public sealed class LegacyServiceBookService : IServiceBookService
         IAppLocalizer? localizer = null,
         IAppNumberFormatService? numberFormatService = null,
         IAppUnitFormatService? unitFormatService = null,
-        IAppDateFormatService? dateFormatService = null)
+        IAppDateFormatService? dateFormatService = null,
+        IAppPluralizationService? pluralizationService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
         _dateFormatService = dateFormatService ?? new AppDateFormatService();
+        _pluralizationService = pluralizationService ?? new AppPluralizationService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -209,9 +212,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
 
         if (TryParsePositiveInteger(plan.IntervalMonths, out var intervalMonths))
         {
-            parts.Add(intervalMonths == 1
-                ? L("ServiceBook.Value.MonthSingular")
-                : LF("ServiceBook.Value.MonthPlural", intervalMonths));
+            parts.Add(LP("ServiceBook.Value.MonthCount", intervalMonths, intervalMonths));
         }
 
         return parts.Count == 0 ? L("ServiceBook.Value.NoInterval") : string.Join(" / ", parts);
@@ -244,10 +245,10 @@ public sealed class LegacyServiceBookService : IServiceBookService
                 var delta = nextDate.DayNumber - today.DayNumber;
                 parts.Add(delta switch
                 {
-                    < 0 => LF("ServiceBook.Value.OverdueDays", Math.Abs(delta)),
+                    < 0 => LP("ServiceBook.Value.OverdueDays", Math.Abs(delta), Math.Abs(delta)),
                     0 => L("ServiceBook.Value.ServiceToday"),
                     1 => L("ServiceBook.Value.InOneDay"),
-                    _ => LF("ServiceBook.Value.InDays", delta)
+                    _ => LP("ServiceBook.Value.InDays", delta, delta)
                 });
             }
             else
@@ -322,4 +323,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
     private string L(string key) => _localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+
+    private string LP(string keyPrefix, int count, params object?[] args) =>
+        _pluralizationService.Format(_localizer, _culturePreferences, keyPrefix, count, args);
 }

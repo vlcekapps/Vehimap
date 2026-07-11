@@ -61,8 +61,8 @@ public sealed class DesktopPrintableVehicleReportServiceTests
         Assert.Contains("<th>Zelená karta do</th>", decodedHtml);
         Assert.Equal(LegacyKnownValues.Categories.Length, CountOccurrences(html, "<h2>"));
         Assert.Contains("V této kategorii není žádné vozidlo.", decodedHtml);
-        Assert.Contains("TK: Do 27 dnů", decodedHtml);
-        Assert.Contains("ZK: Do 27 dnů", decodedHtml);
+        Assert.Contains("TK: Za 27 dní", decodedHtml);
+        Assert.Contains("ZK: Za 27 dní", decodedHtml);
 
         var milenaIndex = decodedHtml.IndexOf("Milena", StringComparison.Ordinal);
         var bozenaIndex = decodedHtml.IndexOf("Božena", StringComparison.Ordinal);
@@ -113,7 +113,7 @@ public sealed class DesktopPrintableVehicleReportServiceTests
         Assert.DoesNotContain("Osobní vozidla", decodedHtml);
         Assert.DoesNotContain("Běžný provoz", decodedHtml);
         Assert.DoesNotContain("Vytvořeno:", decodedHtml);
-        Assert.DoesNotContain("TK: Do 27 dnů", decodedHtml);
+        Assert.DoesNotContain("TK: Za 27 dní", decodedHtml);
     }
 
     private static int CountOccurrences(string text, string needle)

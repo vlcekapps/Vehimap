@@ -191,13 +191,13 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(HistorySearchText))
         {
-            HistorySearchSummary = LF("HistoryWorkspace.SearchSummary.All", VisibleHistoryItems.Count);
+            HistorySearchSummary = LP("HistoryWorkspace.SearchSummary.All", VisibleHistoryItems.Count, VisibleHistoryItems.Count);
             return;
         }
 
         HistorySearchSummary = VisibleHistoryItems.Count == 0
             ? LF("HistoryWorkspace.SearchSummary.Empty", HistorySearchText.Trim())
-            : LF("HistoryWorkspace.SearchSummary.Filtered", HistorySearchText.Trim(), VisibleHistoryItems.Count);
+            : LP("HistoryWorkspace.SearchSummary.Filtered", VisibleHistoryItems.Count, HistorySearchText.Trim(), VisibleHistoryItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

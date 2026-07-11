@@ -8,6 +8,8 @@ namespace Vehimap.Application.Services;
 
 public sealed class LegacyTimelineService : ITimelineService
 {
+    private static readonly IAppPluralizationService PluralizationService = new AppPluralizationService();
+
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
@@ -334,7 +336,7 @@ public sealed class LegacyTimelineService : ITimelineService
             ? formattedDueDate
             : LF(localizer, "Timeline.Detail.DateAndOdometer", formattedDueDate, nextOdometerText);
 
-        var dateStatus = BuildExpirationStatusCore(dueDate, today, reminderDays, localizer);
+        var dateStatus = BuildExpirationStatusCore(dueDate, today, reminderDays, localizer, culturePreferences);
         statusText = JoinParts(dateStatus, odometerStatus);
         if (string.IsNullOrWhiteSpace(statusText))
         {
@@ -374,12 +376,22 @@ public sealed class LegacyTimelineService : ITimelineService
     }
 
     internal static string BuildExpirationStatus(DateOnly dueDate, DateOnly today, int reminderDays) =>
-        BuildExpirationStatusCore(dueDate, today, reminderDays, CreateDefaultLocalizer());
+        BuildExpirationStatusCore(
+            dueDate,
+            today,
+            reminderDays,
+            CreateDefaultLocalizer(),
+            AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences());
 
     private string BuildExpirationStatusText(DateOnly dueDate, DateOnly today, int reminderDays) =>
-        BuildExpirationStatusCore(dueDate, today, reminderDays, _localizer);
+        BuildExpirationStatusCore(dueDate, today, reminderDays, _localizer, _culturePreferences);
 
-    private static string BuildExpirationStatusCore(DateOnly dueDate, DateOnly today, int reminderDays, IAppLocalizer localizer)
+    private static string BuildExpirationStatusCore(
+        DateOnly dueDate,
+        DateOnly today,
+        int reminderDays,
+        IAppLocalizer localizer,
+        AppCulturePreferences culturePreferences)
     {
         if (dueDate < today)
         {
@@ -392,7 +404,7 @@ public sealed class LegacyTimelineService : ITimelineService
             var daysLeft = dueDate.DayNumber - today.DayNumber;
             return daysLeft < 1
                 ? L(localizer, "Timeline.Status.Today")
-                : LF(localizer, "Timeline.Status.DaysLeft", daysLeft);
+                : PluralizationService.Format(localizer, culturePreferences, "Timeline.Status.DaysLeft", daysLeft, daysLeft);
         }
 
         return string.Empty;

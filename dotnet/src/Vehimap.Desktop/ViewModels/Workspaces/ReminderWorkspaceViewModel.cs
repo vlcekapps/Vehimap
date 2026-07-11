@@ -199,13 +199,13 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(ReminderSearchText))
         {
-            ReminderSearchSummary = LF("ReminderWorkspace.SearchSummary.All", VisibleReminderItems.Count);
+            ReminderSearchSummary = LP("ReminderWorkspace.SearchSummary.All", VisibleReminderItems.Count, VisibleReminderItems.Count);
             return;
         }
 
         ReminderSearchSummary = VisibleReminderItems.Count == 0
             ? LF("ReminderWorkspace.SearchSummary.Empty", ReminderSearchText.Trim())
-            : LF("ReminderWorkspace.SearchSummary.Filtered", ReminderSearchText.Trim(), VisibleReminderItems.Count);
+            : LP("ReminderWorkspace.SearchSummary.Filtered", VisibleReminderItems.Count, ReminderSearchText.Trim(), VisibleReminderItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

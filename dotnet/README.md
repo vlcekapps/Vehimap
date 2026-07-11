@@ -50,6 +50,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - cestina je v `Strings.cs-CZ.resx`
 - nove UI texty v lokalizovanych pilotnich castech patri do obou resource souboru
 - i18n testy hlidaji nejen shodu EN/CS klicu, ale i neprazdne hodnoty, shodne formatovaci placeholdery a doslovne odkazy na neexistujici resource klice
+- pocetni vety pouzivaji `IAppPluralizationService`: resource rodina ma varianty `.One`, `.Few` a `.Other`, anglictina vybira jednotne/mnozne cislo a cestina spravny tvar pro `1`, `2-4` a ostatni pocty; primy `LF/Format` nad migrovanou univerzalni count sablonou blokuje test
 - shodne EN/CS hodnoty obsahujici slova musi byt ve statickem testu vyslovne proverene; tim se odhali omylem zkopirovany, ale neprelozeny text, zatimco ciste formatovaci sablony mohou zustat shodne
 - anglicky resource katalog nesmi obsahovat ceskou diakritiku; vyjimku maji jen zdokumentovana dvojjazycna parserova nebo vyhledavaci data
 - pristupne nazvy v pilotnich castech, vcetne seznamu a scrollovanych oblasti, patri take do resource souboru

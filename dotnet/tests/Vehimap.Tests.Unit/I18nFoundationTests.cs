@@ -82,6 +82,144 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Plural_resource_families_are_complete_in_both_languages()
+    {
+        var root = FindRepositoryRoot();
+        var english = ReadResourceKeys(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx"));
+        var czech = ReadResourceKeys(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx"));
+        var prefixes = english
+            .Where(key => key.EndsWith(".One", StringComparison.Ordinal) || key.EndsWith(".Few", StringComparison.Ordinal))
+            .Select(key => key[..key.LastIndexOf('.')])
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(key => key, StringComparer.Ordinal)
+            .ToArray();
+        var failures = new List<string>();
+
+        foreach (var prefix in prefixes)
+        {
+            foreach (var suffix in new[] { "One", "Few", "Other" })
+            {
+                var key = $"{prefix}.{suffix}";
+                if (!english.Contains(key))
+                {
+                    failures.Add($"English: {key}");
+                }
+
+                if (!czech.Contains(key))
+                {
+                    failures.Add($"Czech: {key}");
+                }
+            }
+        }
+
+        Assert.NotEmpty(prefixes);
+        Assert.True(
+            failures.Count == 0,
+            "Every plural resource family must define One, Few and Other variants in both languages." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
+    [Theory]
+    [InlineData("en-US", 0, AppPluralForm.Other)]
+    [InlineData("en-US", 1, AppPluralForm.One)]
+    [InlineData("en-US", 2, AppPluralForm.Other)]
+    [InlineData("cs-CZ", 0, AppPluralForm.Other)]
+    [InlineData("cs-CZ", 1, AppPluralForm.One)]
+    [InlineData("cs-CZ", 2, AppPluralForm.Few)]
+    [InlineData("cs-CZ", 4, AppPluralForm.Few)]
+    [InlineData("cs-CZ", 5, AppPluralForm.Other)]
+    [InlineData("cs-CZ", 21, AppPluralForm.Other)]
+    public void Pluralization_service_selects_expected_english_and_czech_forms(
+        string language,
+        int count,
+        AppPluralForm expected)
+    {
+        var service = new AppPluralizationService();
+
+        Assert.Equal(expected, service.SelectForm(count, new AppCulturePreferences(language)));
+    }
+
+    [Fact]
+    public void Pluralization_service_formats_natural_vehicle_counts_in_both_languages()
+    {
+        var service = new AppPluralizationService();
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+        var czech = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        var englishPreferences = new AppCulturePreferences(AppCultureService.EnglishLanguage);
+        var czechPreferences = new AppCulturePreferences(AppCultureService.CzechLanguage);
+
+        Assert.Equal("Vehicle list: 1 vehicle.", service.Format(english, englishPreferences, "VehicleList.Summary.All", 1, 1));
+        Assert.Equal("Vehicle list: 2 vehicles.", service.Format(english, englishPreferences, "VehicleList.Summary.All", 2, 2));
+        Assert.Equal("Seznam vozidel: 1 vozidlo.", service.Format(czech, czechPreferences, "VehicleList.Summary.All", 1, 1));
+        Assert.Equal("Seznam vozidel: 3 vozidla.", service.Format(czech, czechPreferences, "VehicleList.Summary.All", 3, 3));
+        Assert.Equal("Seznam vozidel: 5 vozidel.", service.Format(czech, czechPreferences, "VehicleList.Summary.All", 5, 5));
+    }
+
+    [Fact]
+    public void Migrated_count_sentences_use_pluralization_in_production_code()
+    {
+        var root = FindRepositoryRoot();
+        var sourceRoot = Path.Combine(root, "dotnet", "src");
+        var migratedPrefixes = new[]
+        {
+            "GlobalSearch.Summary.WithResults",
+            "HistoryWorkspace.SearchSummary.All",
+            "HistoryWorkspace.SearchSummary.Filtered",
+            "FuelWorkspace.SearchSummary.All",
+            "FuelWorkspace.SearchSummary.Filtered",
+            "ReminderWorkspace.SearchSummary.All",
+            "ReminderWorkspace.SearchSummary.Filtered",
+            "MaintenanceWorkspace.SearchSummary.All",
+            "MaintenanceWorkspace.SearchSummary.Filtered",
+            "RecordWorkspace.SearchSummary.All",
+            "RecordWorkspace.SearchSummary.Filtered",
+            "CostWorkspace.SearchSummary.Visible",
+            "CostWorkspace.SearchSummary.WithResults",
+            "History.Projection.Summary.Count",
+            "Fuel.Projection.Summary.Count",
+            "Reminder.Projection.Summary.Count",
+            "Maintenance.Projection.Summary.Count",
+            "Record.Projection.Summary.Count",
+            "Timeline.Status.DaysLeft",
+            "ServiceBook.Value.MonthCount",
+            "ServiceBook.Value.OverdueDays",
+            "ServiceBook.Value.InDays",
+            "Reminder.Status.Overdue",
+            "Reminder.Status.InDays",
+            "Maintenance.Interval.MonthCount",
+            "Maintenance.Status.Overdue",
+            "Maintenance.Status.InDays",
+            "VehicleList.Summary.All",
+            "VehicleList.Status.AttentionCount"
+        };
+        var directFormattingRegex = new Regex(
+            @"(?:\.Format|\bLF)\(\s*""(?<key>[A-Za-z0-9_.-]+)""",
+            RegexOptions.Compiled);
+        var failures = new List<string>();
+
+        foreach (var file in Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase)))
+        {
+            var content = File.ReadAllText(file);
+            foreach (Match match in directFormattingRegex.Matches(content))
+            {
+                if (migratedPrefixes.Contains(match.Groups["key"].Value, StringComparer.Ordinal))
+                {
+                    failures.Add($"{Path.GetRelativePath(root, file)}: {match.Groups["key"].Value}");
+                }
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Pluralized count sentences must be formatted through AppPluralizationService/LP, not directly through LF or IAppLocalizer.Format." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void English_and_czech_resources_do_not_share_unreviewed_visible_text()
     {
         var root = FindRepositoryRoot();

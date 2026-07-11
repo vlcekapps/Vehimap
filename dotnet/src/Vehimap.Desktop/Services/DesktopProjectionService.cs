@@ -17,6 +17,7 @@ internal sealed class DesktopProjectionService
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
     private readonly IAppDateFormatService _dateFormatService;
+    private readonly IAppPluralizationService _pluralizationService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
     private AppUnitPreferences _unitPreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToUnitPreferences();
     private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
@@ -43,13 +44,15 @@ internal sealed class DesktopProjectionService
         CultureInfo formatCulture,
         IAppNumberFormatService numberFormatService,
         IAppUnitFormatService? unitFormatService = null,
-        IAppDateFormatService? dateFormatService = null)
+        IAppDateFormatService? dateFormatService = null,
+        IAppPluralizationService? pluralizationService = null)
     {
         _localizer = localizer;
         _culturePreferences = new AppLocaleDefaultsService().GetDefaultsForLanguage(formatCulture.Name).ToCulturePreferences();
         _numberFormatService = numberFormatService;
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(numberFormatService);
         _dateFormatService = dateFormatService ?? new AppDateFormatService();
+        _pluralizationService = pluralizationService ?? new AppPluralizationService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -276,7 +279,7 @@ internal sealed class DesktopProjectionService
 
         var summary = items.Count == 0
             ? L("History.Projection.Summary.Empty")
-            : LF("History.Projection.Summary.Count", items.Count);
+            : LP("History.Projection.Summary.Count", items.Count, items.Count);
 
         return new DesktopListProjection<VehicleHistoryItemViewModel>(items, summary);
     }
@@ -309,7 +312,7 @@ internal sealed class DesktopProjectionService
 
         var summary = items.Count == 0
             ? L("Fuel.Projection.Summary.Empty")
-            : LF("Fuel.Projection.Summary.Count", items.Count);
+            : LP("Fuel.Projection.Summary.Count", items.Count, items.Count);
 
         return new DesktopListProjection<VehicleFuelItemViewModel>(items, summary);
     }
@@ -425,7 +428,7 @@ internal sealed class DesktopProjectionService
 
         var summary = items.Count == 0
             ? L("Reminder.Projection.Summary.Empty")
-            : LF("Reminder.Projection.Summary.Count", items.Count);
+            : LP("Reminder.Projection.Summary.Count", items.Count, items.Count);
 
         return new DesktopListProjection<VehicleReminderItemViewModel>(items, summary);
     }
@@ -450,7 +453,7 @@ internal sealed class DesktopProjectionService
 
         var summary = items.Count == 0
             ? L("Maintenance.Projection.Summary.Empty")
-            : LF("Maintenance.Projection.Summary.Count", items.Count);
+            : LP("Maintenance.Projection.Summary.Count", items.Count, items.Count);
 
         return new DesktopListProjection<VehicleMaintenanceItemViewModel>(items, summary);
     }
@@ -507,7 +510,7 @@ internal sealed class DesktopProjectionService
 
         var summary = items.Count == 0
             ? L("Record.Projection.Summary.Empty")
-            : LF("Record.Projection.Summary.Count", items.Count);
+            : LP("Record.Projection.Summary.Count", items.Count, items.Count);
 
         return new DesktopListProjection<VehicleRecordItemViewModel>(items, summary);
     }
@@ -1061,7 +1064,8 @@ internal sealed class DesktopProjectionService
         var delta = dueDate.DayNumber - today.DayNumber;
         if (delta < 0)
         {
-            return LF("Reminder.Status.Overdue", Math.Abs(delta));
+            var overdueDays = Math.Abs(delta);
+            return LP("Reminder.Status.Overdue", overdueDays, overdueDays);
         }
 
         if (delta == 0)
@@ -1069,7 +1073,7 @@ internal sealed class DesktopProjectionService
             return L("Reminder.Status.Today");
         }
 
-        return delta == 1 ? L("Reminder.Status.Tomorrow") : LF("Reminder.Status.InDays", delta);
+        return delta == 1 ? L("Reminder.Status.Tomorrow") : LP("Reminder.Status.InDays", delta, delta);
     }
 
     private static bool TryParseReminderDate(string? text, out DateOnly value)
@@ -1088,9 +1092,7 @@ internal sealed class DesktopProjectionService
 
         if (TryParsePositiveInteger(plan.IntervalMonths, out var intervalMonths))
         {
-            parts.Add(intervalMonths == 1
-                ? L("Maintenance.Interval.OneMonth")
-                : LF("Maintenance.Interval.Months", intervalMonths));
+            parts.Add(LP("Maintenance.Interval.MonthCount", intervalMonths, intervalMonths));
         }
 
         return parts.Count == 0 ? L("Maintenance.Interval.None") : string.Join(" / ", parts);
@@ -1119,7 +1121,8 @@ internal sealed class DesktopProjectionService
                 var delta = nextDate.DayNumber - today.DayNumber;
                 if (delta < 0)
                 {
-                    parts.Add(LF("Maintenance.Status.Overdue", Math.Abs(delta)));
+                    var overdueDays = Math.Abs(delta);
+                    parts.Add(LP("Maintenance.Status.Overdue", overdueDays, overdueDays));
                 }
                 else if (delta == 0)
                 {
@@ -1127,7 +1130,7 @@ internal sealed class DesktopProjectionService
                 }
                 else
                 {
-                    parts.Add(delta == 1 ? L("Maintenance.Status.InOneDay") : LF("Maintenance.Status.InDays", delta));
+                    parts.Add(delta == 1 ? L("Maintenance.Status.InOneDay") : LP("Maintenance.Status.InDays", delta, delta));
                 }
             }
             else
@@ -1263,7 +1266,7 @@ internal sealed class DesktopProjectionService
         var attentionCount = audit.Count(item => item.VehicleId == vehicle.Id);
         if (attentionCount > 0)
         {
-            parts.Add(LF("VehicleList.Status.AttentionCount", attentionCount));
+            parts.Add(LP("VehicleList.Status.AttentionCount", attentionCount, attentionCount));
         }
 
         return parts.Count == 0 ? L("VehicleList.Status.Ok") : string.Join(" | ", parts);
@@ -1486,6 +1489,9 @@ internal sealed class DesktopProjectionService
 
     private string LF(string key, params object?[] args) => _localizer.Format(key, args);
 
+    private string LP(string keyPrefix, int count, params object?[] args) =>
+        _pluralizationService.Format(_localizer, _culturePreferences, keyPrefix, count, args);
+
     private static readonly string[] CostStatusResourceKeys =
     [
         "CostAnalysis.Status.NoCost",
@@ -1575,7 +1581,7 @@ internal sealed class DesktopProjectionService
         }
 
         return filterParts.Count == 0
-            ? LF("VehicleList.Summary.All", visibleCount)
+            ? LP("VehicleList.Summary.All", visibleCount, visibleCount)
             : LF("VehicleList.Summary.Filtered", visibleCount, totalCount, string.Join(" | ", filterParts));
     }
 

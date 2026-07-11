@@ -199,13 +199,13 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(CostSearchText))
         {
-            CostSearchSummary = LF("CostWorkspace.SearchSummary.Visible", VisibleCostVehicles.Count);
+            CostSearchSummary = LP("CostWorkspace.SearchSummary.Visible", VisibleCostVehicles.Count, VisibleCostVehicles.Count);
             return;
         }
 
         CostSearchSummary = VisibleCostVehicles.Count == 0
             ? LF("CostWorkspace.SearchSummary.Empty", CostSearchText.Trim())
-            : LF("CostWorkspace.SearchSummary.WithResults", CostSearchText.Trim(), VisibleCostVehicles.Count);
+            : LP("CostWorkspace.SearchSummary.WithResults", VisibleCostVehicles.Count, CostSearchText.Trim(), VisibleCostVehicles.Count);
     }
 
     private static bool Contains(string value, string query) =>

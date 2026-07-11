@@ -87,7 +87,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("Soubor dostupný", item.AttachmentState);
         Assert.Equal(managedFile, item.ResolvedPath);
         Assert.True(item.FileExists);
-        Assert.Contains("1 dokladů", projection.Summary);
+        Assert.Contains("1 doklad", projection.Summary);
     }
 
     [Fact]
@@ -174,7 +174,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Contains("Testovací vozidlo", vehicle.AccessibleLabel, StringComparison.Ordinal);
         Assert.Contains("Green card missing", vehicle.StatusSummary, StringComparison.Ordinal);
         Assert.DoesNotContain("ZK chybí", vehicle.StatusSummary, StringComparison.Ordinal);
-        Assert.Equal("Vehicle list: 1 vehicles.", vehicleList.Summary);
+        Assert.Equal("Vehicle list: 1 vehicle.", vehicleList.Summary);
 
         var detail = projectionService.BuildVehicleDetail(
             dataSet,
@@ -205,14 +205,14 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Contains("Documents", detail.EvidenceSummaries.Select(item => item.Title));
         Assert.Contains("Maintenance", detail.EvidenceSummaries.Select(item => item.Title));
 
-        Assert.Equal("The selected vehicle has 1 history entries.", projectionService.BuildHistory(dataSet, "veh_1").Summary);
-        Assert.Equal("The selected vehicle has 1 fuel entries.", projectionService.BuildFuel(dataSet, "veh_1").Summary);
+        Assert.Equal("The selected vehicle has 1 history entry.", projectionService.BuildHistory(dataSet, "veh_1").Summary);
+        Assert.Equal("The selected vehicle has 1 fuel entry.", projectionService.BuildFuel(dataSet, "veh_1").Summary);
         var fuel = Assert.Single(projectionService.BuildFuel(dataSet, "veh_1").Items);
         Assert.Equal("Gasoline", fuel.FuelType);
         Assert.Equal("Full tank", fuel.TankState);
-        Assert.Equal("The selected vehicle has 1 reminders.", projectionService.BuildReminders(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Summary);
+        Assert.Equal("The selected vehicle has 1 reminder.", projectionService.BuildReminders(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Summary);
         Assert.Equal("Every year", projectionService.BuildReminders(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Items.Single().RepeatMode);
-        Assert.Equal("The selected vehicle has 1 maintenance plans.", projectionService.BuildMaintenance(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Summary);
+        Assert.Equal("The selected vehicle has 1 maintenance plan.", projectionService.BuildMaintenance(dataSet, "veh_1", new DateOnly(2026, 4, 3)).Summary);
 
         var records = projectionService.BuildRecords(
             dataRoot,
@@ -225,7 +225,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("Untitled", record.Title);
         Assert.Equal("Managed copy", record.AttachmentMode);
         Assert.Equal("File available", record.AttachmentState);
-        Assert.Equal("The selected vehicle has 1 documents. Select an entry to open the file or its folder.", records.Summary);
+        Assert.Equal("The selected vehicle has 1 document. Select the entry to open the file or its folder.", records.Summary);
         }
         finally
         {
@@ -930,7 +930,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             Assert.Contains("Powertrain: Gasoline", detail.Profile, StringComparison.Ordinal);
             Assert.Contains("History", detail.EvidenceSummaries.Select(item => item.Title));
             Assert.Contains("Fuel", detail.EvidenceSummaries.Select(item => item.Title));
-            Assert.Equal("The selected vehicle has 1 history entries.", history.Summary);
+            Assert.Equal("The selected vehicle has 1 history entry.", history.Summary);
             Assert.Equal("Gasoline", fuel.Items.Single().FuelType);
             Assert.Equal("Full tank", fuel.Items.Single().TankState);
             Assert.Equal("Every year", reminders.Items.Single().RepeatMode);

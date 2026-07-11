@@ -278,13 +278,13 @@ public sealed partial class RecordWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(RecordSearchText))
         {
-            RecordSearchSummary = LF("RecordWorkspace.SearchSummary.All", VisibleRecordItems.Count);
+            RecordSearchSummary = LP("RecordWorkspace.SearchSummary.All", VisibleRecordItems.Count, VisibleRecordItems.Count);
             return;
         }
 
         RecordSearchSummary = VisibleRecordItems.Count == 0
             ? LF("RecordWorkspace.SearchSummary.Empty", RecordSearchText.Trim())
-            : LF("RecordWorkspace.SearchSummary.Filtered", RecordSearchText.Trim(), VisibleRecordItems.Count);
+            : LP("RecordWorkspace.SearchSummary.Filtered", VisibleRecordItems.Count, RecordSearchText.Trim(), VisibleRecordItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

@@ -327,13 +327,13 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     {
         if (string.IsNullOrWhiteSpace(FuelSearchText))
         {
-            FuelSearchSummary = LF("FuelWorkspace.SearchSummary.All", VisibleFuelItems.Count);
+            FuelSearchSummary = LP("FuelWorkspace.SearchSummary.All", VisibleFuelItems.Count, VisibleFuelItems.Count);
             return;
         }
 
         FuelSearchSummary = VisibleFuelItems.Count == 0
             ? LF("FuelWorkspace.SearchSummary.Empty", FuelSearchText.Trim())
-            : LF("FuelWorkspace.SearchSummary.Filtered", FuelSearchText.Trim(), VisibleFuelItems.Count);
+            : LP("FuelWorkspace.SearchSummary.Filtered", VisibleFuelItems.Count, FuelSearchText.Trim(), VisibleFuelItems.Count);
     }
 
     private void NotifyFuelAnalysisStateChanged()

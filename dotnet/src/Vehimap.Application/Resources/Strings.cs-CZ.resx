@@ -215,6 +215,9 @@ Vozidlo: {2}
   <data name="GlobalSearch.Summary.EmptyQuery" xml:space="preserve"><value>Zadejte hledaný text a zobrazí se odpovídající vozidla i záznamy napříč aplikací.</value></data>
   <data name="GlobalSearch.Summary.NoResults" xml:space="preserve"><value>Pro dotaz „{0}“ nebyly nalezeny žádné výsledky.</value></data>
   <data name="GlobalSearch.Summary.WithResults" xml:space="preserve"><value>Dotaz „{0}“: {1} výsledků. Enter otevře vybranou položku.</value></data>
+  <data name="GlobalSearch.Summary.WithResults.One" xml:space="preserve"><value>Dotaz „{0}“: {1} výsledek. Enter otevře vybranou položku.</value></data>
+  <data name="GlobalSearch.Summary.WithResults.Few" xml:space="preserve"><value>Dotaz „{0}“: {1} výsledky. Enter otevře vybranou položku.</value></data>
+  <data name="GlobalSearch.Summary.WithResults.Other" xml:space="preserve"><value>Dotaz „{0}“: {1} výsledků. Enter otevře vybranou položku.</value></data>
   <data name="GlobalSearch.Title.FuelWithLabel" xml:space="preserve"><value>Tankování - {0}</value></data>
   <data name="GlobalSearch.Title.OdometerState" xml:space="preserve"><value>Stav tachometru</value></data>
   <data name="GlobalSearch.Validity.From" xml:space="preserve"><value>od {0}</value></data>
@@ -278,8 +281,14 @@ Vozidlo: {2}
   <data name="FuelWorkspace.Detail.TankState" xml:space="preserve"><value>Stav nádrže: {0}</value></data>
   <data name="FuelWorkspace.Detail.Note" xml:space="preserve"><value>Poznámka: {0}</value></data>
   <data name="FuelWorkspace.SearchSummary.All" xml:space="preserve"><value>Zobrazeno {0} tankování. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="FuelWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Zobrazeno {0} tankování. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="FuelWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Zobrazena {0} tankování. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="FuelWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Zobrazeno {0} tankování. Ctrl+F přesune fokus do hledání.</value></data>
   <data name="FuelWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Hledání „{0}“ nenašlo v tankování žádný záznam.</value></data>
   <data name="FuelWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Hledání „{0}“ našlo {1} tankování.</value></data>
+  <data name="FuelWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Hledání „{0}“ našlo {1} tankování.</value></data>
+  <data name="FuelWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Hledání „{0}“ našlo {1} tankování.</value></data>
+  <data name="FuelWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Hledání „{0}“ našlo {1} tankování.</value></data>
   <data name="FuelItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, detail paliva {2}, místo tankování {3}, {4}, cena {5}, tachometr {6}, {7}, poznámka {8}</value></data>
   <data name="FuelWorkspace.WarningItemType" xml:space="preserve"><value>Upozornění analýzy tankování</value></data>
   <data name="FuelWorkspace.WarningsHeading" xml:space="preserve"><value>Upozornění</value></data>
@@ -382,8 +391,14 @@ Vozidlo: {2}
   <data name="HistoryWorkspace.Detail.Cost" xml:space="preserve"><value>Cena: {0}</value></data>
   <data name="HistoryWorkspace.Detail.Note" xml:space="preserve"><value>Poznámka: {0}</value></data>
   <data name="HistoryWorkspace.SearchSummary.All" xml:space="preserve"><value>Zobrazeno {0} historických záznamů. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Zobrazen {0} historický záznam. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Zobrazeny {0} historické záznamy. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Zobrazeno {0} historických záznamů. Ctrl+F přesune fokus do hledání.</value></data>
   <data name="HistoryWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Hledání „{0}“ nenašlo v historii žádný záznam.</value></data>
   <data name="HistoryWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Hledání „{0}“ našlo {1} historických záznamů.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Hledání „{0}“ našlo {1} historický záznam.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Hledání „{0}“ našlo {1} historické záznamy.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Hledání „{0}“ našlo {1} historických záznamů.</value></data>
   <data name="HistoryItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, tachometr {2}, cena {3}, poznámka {4}</value></data>
   <data name="MaintenanceEditor.CancelName" xml:space="preserve"><value>Zrušit úpravu servisního plánu</value></data>
   <data name="MaintenanceEditor.CustomTemplate" xml:space="preserve"><value>Vlastní položka</value></data>
@@ -495,8 +510,14 @@ Vozidlo: {2}
   <data name="MaintenanceWorkspace.Detail.Status" xml:space="preserve"><value>Stav: {0}</value></data>
   <data name="MaintenanceWorkspace.Detail.Note" xml:space="preserve"><value>Poznámka: {0}</value></data>
   <data name="MaintenanceWorkspace.SearchSummary.All" xml:space="preserve"><value>Zobrazeno {0} servisních plánů. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Zobrazen {0} servisní plán. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Zobrazeny {0} servisní plány. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Zobrazeno {0} servisních plánů. Ctrl+F přesune fokus do hledání.</value></data>
   <data name="MaintenanceWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Hledání „{0}“ nenašlo v údržbě žádný záznam.</value></data>
   <data name="MaintenanceWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Hledání „{0}“ našlo {1} servisních plánů.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Hledání „{0}“ našlo {1} servisní plán.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Hledání „{0}“ našlo {1} servisní plány.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Hledání „{0}“ našlo {1} servisních plánů.</value></data>
   <data name="MaintenanceItem.AccessibleLabel" xml:space="preserve"><value>{0}, interval {1}, poslední servis {2}, stav {3}, poznámka {4}</value></data>
   <data name="RecordEditor.AttachmentModeLabel" xml:space="preserve"><value>Režim přílohy</value></data>
   <data name="RecordEditor.AttachmentModeName" xml:space="preserve"><value>Režim přílohy dokladu</value></data>
@@ -595,8 +616,14 @@ Vozidlo: {2}
   <data name="RecordWorkspace.Detail.ResolvedPath" xml:space="preserve"><value>Vyřešená cesta: {0}</value></data>
   <data name="RecordWorkspace.Detail.Note" xml:space="preserve"><value>Poznámka: {0}</value></data>
   <data name="RecordWorkspace.SearchSummary.All" xml:space="preserve"><value>Zobrazeno {0} dokladů. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="RecordWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Zobrazen {0} doklad. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="RecordWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Zobrazeny {0} doklady. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="RecordWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Zobrazeno {0} dokladů. Ctrl+F přesune fokus do hledání.</value></data>
   <data name="RecordWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Hledání „{0}“ nenašlo v dokladech žádný záznam.</value></data>
   <data name="RecordWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Hledání „{0}“ našlo {1} dokladů.</value></data>
+  <data name="RecordWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Hledání „{0}“ našlo {1} doklad.</value></data>
+  <data name="RecordWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Hledání „{0}“ našlo {1} doklady.</value></data>
+  <data name="RecordWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Hledání „{0}“ našlo {1} dokladů.</value></data>
   <data name="RecordItem.ProviderPart" xml:space="preserve"><value>, poskytovatel {0}</value></data>
   <data name="RecordItem.NotePart" xml:space="preserve"><value>, poznámka {0}</value></data>
   <data name="RecordItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}{2}, platnost {3}, režim {4}, stav přílohy {5}{6}</value></data>
@@ -669,8 +696,14 @@ Vozidlo: {2}
   <data name="ReminderWorkspace.Detail.Repeat" xml:space="preserve"><value>Opakování: {0}</value></data>
   <data name="ReminderWorkspace.Detail.Note" xml:space="preserve"><value>Poznámka: {0}</value></data>
   <data name="ReminderWorkspace.SearchSummary.All" xml:space="preserve"><value>Zobrazeno {0} připomínek. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Zobrazena {0} připomínka. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Zobrazeny {0} připomínky. Ctrl+F přesune fokus do hledání.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Zobrazeno {0} připomínek. Ctrl+F přesune fokus do hledání.</value></data>
   <data name="ReminderWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Hledání „{0}“ nenašlo v připomínkách žádný záznam.</value></data>
   <data name="ReminderWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Hledání „{0}“ našlo {1} připomínek.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Hledání „{0}“ našlo {1} připomínku.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Hledání „{0}“ našlo {1} připomínky.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Hledání „{0}“ našlo {1} připomínek.</value></data>
   <data name="ReminderItem.AccessibleLabel" xml:space="preserve"><value>{0}, termín {1}, stav {2}, opakování {3}, poznámka {4}</value></data>
   <data name="MainMenu.App" xml:space="preserve"><value>_Aplikace</value></data>
   <data name="MainMenu.App.About" xml:space="preserve"><value>O programu</value></data>
@@ -1265,8 +1298,14 @@ Cena / vzdálenost: {7}
 Stav výpočtu: {8}</value></data>
   <data name="CostWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F přesune fokus do hledání nákladového přehledu.</value></data>
   <data name="CostWorkspace.SearchSummary.Visible" xml:space="preserve"><value>Zobrazeno {0} vozidel v nákladovém přehledu. Ctrl+F přesune fokus do hledání, Ctrl+R přehled obnoví.</value></data>
+  <data name="CostWorkspace.SearchSummary.Visible.One" xml:space="preserve"><value>Zobrazeno {0} vozidlo v nákladovém přehledu. Ctrl+F přesune fokus do hledání, Ctrl+R přehled obnoví.</value></data>
+  <data name="CostWorkspace.SearchSummary.Visible.Few" xml:space="preserve"><value>Zobrazena {0} vozidla v nákladovém přehledu. Ctrl+F přesune fokus do hledání, Ctrl+R přehled obnoví.</value></data>
+  <data name="CostWorkspace.SearchSummary.Visible.Other" xml:space="preserve"><value>Zobrazeno {0} vozidel v nákladovém přehledu. Ctrl+F přesune fokus do hledání, Ctrl+R přehled obnoví.</value></data>
   <data name="CostWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Hledání „{0}“ nenašlo v nákladech žádné vozidlo.</value></data>
   <data name="CostWorkspace.SearchSummary.WithResults" xml:space="preserve"><value>Hledání „{0}“ našlo {1} vozidel v nákladech.</value></data>
+  <data name="CostWorkspace.SearchSummary.WithResults.One" xml:space="preserve"><value>Hledání „{0}“ našlo {1} vozidlo v nákladech.</value></data>
+  <data name="CostWorkspace.SearchSummary.WithResults.Few" xml:space="preserve"><value>Hledání „{0}“ našlo {1} vozidla v nákladech.</value></data>
+  <data name="CostWorkspace.SearchSummary.WithResults.Other" xml:space="preserve"><value>Hledání „{0}“ našlo {1} vozidel v nákladech.</value></data>
   <data name="CostPeriod.YearToDate" xml:space="preserve"><value>Od začátku roku</value></data>
   <data name="CostPeriod.Last30Days" xml:space="preserve"><value>Posledních 30 dní</value></data>
   <data name="CostPeriod.Last90Days" xml:space="preserve"><value>Posledních 90 dní</value></data>
@@ -1590,7 +1629,10 @@ Stav: {5}</value></data>
   <data name="Timeline.Kind.Record" xml:space="preserve"><value>Doklad</value></data>
   <data name="Timeline.Kind.Reminder" xml:space="preserve"><value>Připomínka</value></data>
   <data name="Timeline.Kind.TechnicalInspection" xml:space="preserve"><value>Technická kontrola</value></data>
-  <data name="Timeline.Status.DaysLeft" xml:space="preserve"><value>Do {0} dnů</value></data>
+  <data name="Timeline.Status.DaysLeft" xml:space="preserve"><value>Za {0} dní</value></data>
+  <data name="Timeline.Status.DaysLeft.One" xml:space="preserve"><value>Za {0} den</value></data>
+  <data name="Timeline.Status.DaysLeft.Few" xml:space="preserve"><value>Za {0} dny</value></data>
+  <data name="Timeline.Status.DaysLeft.Other" xml:space="preserve"><value>Za {0} dní</value></data>
   <data name="Timeline.Status.MissingCurrentOdometer" xml:space="preserve"><value>Chybí aktuální tachometr</value></data>
   <data name="Timeline.Status.MissingOdometerForCalculation" xml:space="preserve"><value>Chybí tachometr pro výpočet</value></data>
   <data name="Timeline.Status.NoAlert" xml:space="preserve"><value>Bez upozornění</value></data>
@@ -2085,12 +2127,21 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Value.NoInterval" xml:space="preserve"><value>bez intervalu</value></data>
   <data name="ServiceBook.Value.MonthSingular" xml:space="preserve"><value>1 měsíc</value></data>
   <data name="ServiceBook.Value.MonthPlural" xml:space="preserve"><value>{0} měsíců</value></data>
+  <data name="ServiceBook.Value.MonthCount.One" xml:space="preserve"><value>{0} měsíc</value></data>
+  <data name="ServiceBook.Value.MonthCount.Few" xml:space="preserve"><value>{0} měsíce</value></data>
+  <data name="ServiceBook.Value.MonthCount.Other" xml:space="preserve"><value>{0} měsíců</value></data>
   <data name="ServiceBook.Value.LastService" xml:space="preserve"><value>{0} | {1}</value></data>
   <data name="ServiceBook.Value.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
   <data name="ServiceBook.Value.OverdueDays" xml:space="preserve"><value>Po termínu o {0} dnů</value></data>
+  <data name="ServiceBook.Value.OverdueDays.One" xml:space="preserve"><value>Po termínu o {0} den</value></data>
+  <data name="ServiceBook.Value.OverdueDays.Few" xml:space="preserve"><value>Po termínu o {0} dny</value></data>
+  <data name="ServiceBook.Value.OverdueDays.Other" xml:space="preserve"><value>Po termínu o {0} dní</value></data>
   <data name="ServiceBook.Value.ServiceToday" xml:space="preserve"><value>Servis dnes</value></data>
   <data name="ServiceBook.Value.InOneDay" xml:space="preserve"><value>Za 1 den</value></data>
   <data name="ServiceBook.Value.InDays" xml:space="preserve"><value>Za {0} dnů</value></data>
+  <data name="ServiceBook.Value.InDays.One" xml:space="preserve"><value>Za {0} den</value></data>
+  <data name="ServiceBook.Value.InDays.Few" xml:space="preserve"><value>Za {0} dny</value></data>
+  <data name="ServiceBook.Value.InDays.Other" xml:space="preserve"><value>Za {0} dní</value></data>
   <data name="ServiceBook.Value.MissingLastServiceDate" xml:space="preserve"><value>Chybí datum posledního servisu</value></data>
   <data name="ServiceBook.Value.OverDistanceLimit" xml:space="preserve"><value>Po limitu o {0}</value></data>
   <data name="ServiceBook.Value.ServiceNow" xml:space="preserve"><value>Servis nyní</value></data>
@@ -2284,16 +2335,31 @@ Stav: {5}</value></data>
   <data name="Projection.Value.UnknownOdometer" xml:space="preserve"><value>neznámý</value></data>
   <data name="History.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné záznamy v historii.</value></data>
   <data name="History.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} historických záznamů.</value></data>
+  <data name="History.Projection.Summary.Count.One" xml:space="preserve"><value>Vybrané vozidlo má {0} historický záznam.</value></data>
+  <data name="History.Projection.Summary.Count.Few" xml:space="preserve"><value>Vybrané vozidlo má {0} historické záznamy.</value></data>
+  <data name="History.Projection.Summary.Count.Other" xml:space="preserve"><value>Vybrané vozidlo má {0} historických záznamů.</value></data>
   <data name="Fuel.Projection.FullTank" xml:space="preserve"><value>Plná nádrž</value></data>
   <data name="Fuel.Projection.PartialFuel" xml:space="preserve"><value>Částečné tankování</value></data>
   <data name="Fuel.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné záznamy tankování.</value></data>
   <data name="Fuel.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} záznamů tankování.</value></data>
+  <data name="Fuel.Projection.Summary.Count.One" xml:space="preserve"><value>Vybrané vozidlo má {0} záznam tankování.</value></data>
+  <data name="Fuel.Projection.Summary.Count.Few" xml:space="preserve"><value>Vybrané vozidlo má {0} záznamy tankování.</value></data>
+  <data name="Fuel.Projection.Summary.Count.Other" xml:space="preserve"><value>Vybrané vozidlo má {0} záznamů tankování.</value></data>
   <data name="Reminder.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné připomínky.</value></data>
   <data name="Reminder.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} připomínek.</value></data>
+  <data name="Reminder.Projection.Summary.Count.One" xml:space="preserve"><value>Vybrané vozidlo má {0} připomínku.</value></data>
+  <data name="Reminder.Projection.Summary.Count.Few" xml:space="preserve"><value>Vybrané vozidlo má {0} připomínky.</value></data>
+  <data name="Reminder.Projection.Summary.Count.Other" xml:space="preserve"><value>Vybrané vozidlo má {0} připomínek.</value></data>
   <data name="Maintenance.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné servisní plány.</value></data>
   <data name="Maintenance.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} servisních plánů.</value></data>
+  <data name="Maintenance.Projection.Summary.Count.One" xml:space="preserve"><value>Vybrané vozidlo má {0} servisní plán.</value></data>
+  <data name="Maintenance.Projection.Summary.Count.Few" xml:space="preserve"><value>Vybrané vozidlo má {0} servisní plány.</value></data>
+  <data name="Maintenance.Projection.Summary.Count.Other" xml:space="preserve"><value>Vybrané vozidlo má {0} servisních plánů.</value></data>
   <data name="Record.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné doklady.</value></data>
   <data name="Record.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} dokladů. Vyberte záznam a můžete otevřít soubor nebo jeho složku.</value></data>
+  <data name="Record.Projection.Summary.Count.One" xml:space="preserve"><value>Vybrané vozidlo má {0} doklad. Vyberte jej a můžete otevřít soubor nebo jeho složku.</value></data>
+  <data name="Record.Projection.Summary.Count.Few" xml:space="preserve"><value>Vybrané vozidlo má {0} doklady. Vyberte záznam a můžete otevřít soubor nebo jeho složku.</value></data>
+  <data name="Record.Projection.Summary.Count.Other" xml:space="preserve"><value>Vybrané vozidlo má {0} dokladů. Vyberte záznam a můžete otevřít soubor nebo jeho složku.</value></data>
   <data name="Record.Projection.AttachmentMode.Managed" xml:space="preserve"><value>Spravovaná kopie</value></data>
   <data name="Record.Projection.AttachmentMode.External" xml:space="preserve"><value>Externí cesta</value></data>
   <data name="Record.Projection.Validity.FromEmpty" xml:space="preserve"><value>od nevyplněno</value></data>
@@ -2354,19 +2420,34 @@ Převodovka: {3}</value></data>
   <data name="VehicleDetail.Projection.Maintenance.Nearest" xml:space="preserve"><value>Nejbližší: {0} ({1}).</value></data>
   <data name="Reminder.Status.NoUsableDate" xml:space="preserve"><value>Bez použitelného termínu</value></data>
   <data name="Reminder.Status.Overdue" xml:space="preserve"><value>Po termínu o {0} dnů</value></data>
+  <data name="Reminder.Status.Overdue.One" xml:space="preserve"><value>Po termínu o {0} den</value></data>
+  <data name="Reminder.Status.Overdue.Few" xml:space="preserve"><value>Po termínu o {0} dny</value></data>
+  <data name="Reminder.Status.Overdue.Other" xml:space="preserve"><value>Po termínu o {0} dní</value></data>
   <data name="Reminder.Status.Today" xml:space="preserve"><value>Dnes</value></data>
   <data name="Reminder.Status.Tomorrow" xml:space="preserve"><value>Zítra</value></data>
   <data name="Reminder.Status.InDays" xml:space="preserve"><value>Za {0} dnů</value></data>
+  <data name="Reminder.Status.InDays.One" xml:space="preserve"><value>Za {0} den</value></data>
+  <data name="Reminder.Status.InDays.Few" xml:space="preserve"><value>Za {0} dny</value></data>
+  <data name="Reminder.Status.InDays.Other" xml:space="preserve"><value>Za {0} dní</value></data>
   <data name="Reminder.Repeat.None" xml:space="preserve"><value>bez opakování</value></data>
   <data name="Reminder.Repeat.NoneLegacy" xml:space="preserve"><value>Neopakovat</value></data>
   <data name="Maintenance.Interval.OneMonth" xml:space="preserve"><value>1 měsíc</value></data>
   <data name="Maintenance.Interval.Months" xml:space="preserve"><value>{0} měsíců</value></data>
+  <data name="Maintenance.Interval.MonthCount.One" xml:space="preserve"><value>{0} měsíc</value></data>
+  <data name="Maintenance.Interval.MonthCount.Few" xml:space="preserve"><value>{0} měsíce</value></data>
+  <data name="Maintenance.Interval.MonthCount.Other" xml:space="preserve"><value>{0} měsíců</value></data>
   <data name="Maintenance.Interval.None" xml:space="preserve"><value>Bez intervalu</value></data>
   <data name="Maintenance.Status.Inactive" xml:space="preserve"><value>Neaktivní</value></data>
   <data name="Maintenance.Status.Overdue" xml:space="preserve"><value>Po termínu o {0} dnů</value></data>
+  <data name="Maintenance.Status.Overdue.One" xml:space="preserve"><value>Po termínu o {0} den</value></data>
+  <data name="Maintenance.Status.Overdue.Few" xml:space="preserve"><value>Po termínu o {0} dny</value></data>
+  <data name="Maintenance.Status.Overdue.Other" xml:space="preserve"><value>Po termínu o {0} dní</value></data>
   <data name="Maintenance.Status.Today" xml:space="preserve"><value>Servis dnes</value></data>
   <data name="Maintenance.Status.InOneDay" xml:space="preserve"><value>Za 1 den</value></data>
   <data name="Maintenance.Status.InDays" xml:space="preserve"><value>Za {0} dnů</value></data>
+  <data name="Maintenance.Status.InDays.One" xml:space="preserve"><value>Za {0} den</value></data>
+  <data name="Maintenance.Status.InDays.Few" xml:space="preserve"><value>Za {0} dny</value></data>
+  <data name="Maintenance.Status.InDays.Other" xml:space="preserve"><value>Za {0} dní</value></data>
   <data name="Maintenance.Status.MissingLastServiceDate" xml:space="preserve"><value>Chybí datum posledního servisu</value></data>
   <data name="Maintenance.Status.OverDistanceLimit" xml:space="preserve"><value>Po limitu o {0}</value></data>
   <data name="Maintenance.Status.Now" xml:space="preserve"><value>Servis nyní</value></data>
@@ -2383,6 +2464,9 @@ Převodovka: {3}</value></data>
   <data name="VehicleList.Filter.HideInactive" xml:space="preserve"><value>bez archivovaných a odstavených</value></data>
   <data name="VehicleList.Filter.Search" xml:space="preserve"><value>hledání „{0}“</value></data>
   <data name="VehicleList.Summary.All" xml:space="preserve"><value>Seznam vozidel: {0} vozidel.</value></data>
+  <data name="VehicleList.Summary.All.One" xml:space="preserve"><value>Seznam vozidel: {0} vozidlo.</value></data>
+  <data name="VehicleList.Summary.All.Few" xml:space="preserve"><value>Seznam vozidel: {0} vozidla.</value></data>
+  <data name="VehicleList.Summary.All.Other" xml:space="preserve"><value>Seznam vozidel: {0} vozidel.</value></data>
   <data name="VehicleList.Summary.Filtered" xml:space="preserve"><value>Seznam vozidel: zobrazeno {0} z {1}. {2}</value></data>
   <data name="WorkspaceSort.Date" xml:space="preserve"><value>Datum</value></data>
   <data name="WorkspaceSort.Type" xml:space="preserve"><value>Typ</value></data>
@@ -2416,6 +2500,9 @@ Převodovka: {3}</value></data>
   <data name="VehicleList.Status.Maintenance" xml:space="preserve"><value>Údržba: {0}</value></data>
   <data name="VehicleList.Status.MissingGreenCard" xml:space="preserve"><value>ZK chybí</value></data>
   <data name="VehicleList.Status.AttentionCount" xml:space="preserve"><value>{0} položek k řešení</value></data>
+  <data name="VehicleList.Status.AttentionCount.One" xml:space="preserve"><value>{0} položka k řešení</value></data>
+  <data name="VehicleList.Status.AttentionCount.Few" xml:space="preserve"><value>{0} položky k řešení</value></data>
+  <data name="VehicleList.Status.AttentionCount.Other" xml:space="preserve"><value>{0} položek k řešení</value></data>
   <data name="VehicleList.Status.Ok" xml:space="preserve"><value>V pořádku</value></data>
   <data name="VehicleListItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, SPZ {3}, stav {4}, {5}</value></data>
   <data name="VehicleListItem.NoState" xml:space="preserve"><value>bez stavu</value></data>

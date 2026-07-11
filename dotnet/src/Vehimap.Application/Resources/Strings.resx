@@ -215,6 +215,9 @@ Vehicle: {2}
   <data name="GlobalSearch.Summary.EmptyQuery" xml:space="preserve"><value>Enter search text to show matching vehicles and records across the application.</value></data>
   <data name="GlobalSearch.Summary.NoResults" xml:space="preserve"><value>No results were found for “{0}”.</value></data>
   <data name="GlobalSearch.Summary.WithResults" xml:space="preserve"><value>Query “{0}”: {1} results. Enter opens the selected item.</value></data>
+  <data name="GlobalSearch.Summary.WithResults.One" xml:space="preserve"><value>Query “{0}”: {1} result. Enter opens the selected item.</value></data>
+  <data name="GlobalSearch.Summary.WithResults.Few" xml:space="preserve"><value>Query “{0}”: {1} results. Enter opens the selected item.</value></data>
+  <data name="GlobalSearch.Summary.WithResults.Other" xml:space="preserve"><value>Query “{0}”: {1} results. Enter opens the selected item.</value></data>
   <data name="GlobalSearch.Title.FuelWithLabel" xml:space="preserve"><value>Fuel - {0}</value></data>
   <data name="GlobalSearch.Title.OdometerState" xml:space="preserve"><value>Odometer state</value></data>
   <data name="GlobalSearch.Validity.From" xml:space="preserve"><value>from {0}</value></data>
@@ -278,8 +281,14 @@ Vehicle: {2}
   <data name="FuelWorkspace.Detail.TankState" xml:space="preserve"><value>Tank state: {0}</value></data>
   <data name="FuelWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
   <data name="FuelWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} fuel entries. Ctrl+F moves focus to search.</value></data>
+  <data name="FuelWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Showing {0} fuel entry. Ctrl+F moves focus to search.</value></data>
+  <data name="FuelWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Showing {0} fuel entries. Ctrl+F moves focus to search.</value></data>
+  <data name="FuelWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Showing {0} fuel entries. Ctrl+F moves focus to search.</value></data>
   <data name="FuelWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any fuel entries.</value></data>
   <data name="FuelWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} fuel entries.</value></data>
+  <data name="FuelWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Search “{0}” found {1} fuel entry.</value></data>
+  <data name="FuelWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Search “{0}” found {1} fuel entries.</value></data>
+  <data name="FuelWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Search “{0}” found {1} fuel entries.</value></data>
   <data name="FuelItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, fuel detail {2}, station {3}, {4}, cost {5}, odometer {6}, {7}, note {8}</value></data>
   <data name="FuelWorkspace.WarningItemType" xml:space="preserve"><value>Fuel analysis warning</value></data>
   <data name="FuelWorkspace.WarningsHeading" xml:space="preserve"><value>Warnings</value></data>
@@ -382,8 +391,14 @@ Vehicle: {2}
   <data name="HistoryWorkspace.Detail.Cost" xml:space="preserve"><value>Cost: {0}</value></data>
   <data name="HistoryWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
   <data name="HistoryWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} history entries. Ctrl+F moves focus to search.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Showing {0} history entry. Ctrl+F moves focus to search.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Showing {0} history entries. Ctrl+F moves focus to search.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Showing {0} history entries. Ctrl+F moves focus to search.</value></data>
   <data name="HistoryWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any history entries.</value></data>
   <data name="HistoryWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} history entries.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Search “{0}” found {1} history entry.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Search “{0}” found {1} history entries.</value></data>
+  <data name="HistoryWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Search “{0}” found {1} history entries.</value></data>
   <data name="HistoryItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, odometer {2}, cost {3}, note {4}</value></data>
   <data name="MaintenanceEditor.CancelName" xml:space="preserve"><value>Cancel maintenance plan editing</value></data>
   <data name="MaintenanceEditor.CustomTemplate" xml:space="preserve"><value>Custom item</value></data>
@@ -495,8 +510,14 @@ Vehicle: {2}
   <data name="MaintenanceWorkspace.Detail.Status" xml:space="preserve"><value>Status: {0}</value></data>
   <data name="MaintenanceWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
   <data name="MaintenanceWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} maintenance plans. Ctrl+F moves focus to search.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Showing {0} maintenance plan. Ctrl+F moves focus to search.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Showing {0} maintenance plans. Ctrl+F moves focus to search.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Showing {0} maintenance plans. Ctrl+F moves focus to search.</value></data>
   <data name="MaintenanceWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any maintenance entries.</value></data>
   <data name="MaintenanceWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} maintenance plans.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Search “{0}” found {1} maintenance plan.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Search “{0}” found {1} maintenance plans.</value></data>
+  <data name="MaintenanceWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Search “{0}” found {1} maintenance plans.</value></data>
   <data name="MaintenanceItem.AccessibleLabel" xml:space="preserve"><value>{0}, interval {1}, last service {2}, status {3}, note {4}</value></data>
   <data name="RecordEditor.AttachmentModeLabel" xml:space="preserve"><value>Attachment mode</value></data>
   <data name="RecordEditor.AttachmentModeName" xml:space="preserve"><value>Document attachment mode</value></data>
@@ -595,8 +616,14 @@ Vehicle: {2}
   <data name="RecordWorkspace.Detail.ResolvedPath" xml:space="preserve"><value>Resolved path: {0}</value></data>
   <data name="RecordWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
   <data name="RecordWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} documents. Ctrl+F moves focus to search.</value></data>
+  <data name="RecordWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Showing {0} document. Ctrl+F moves focus to search.</value></data>
+  <data name="RecordWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Showing {0} documents. Ctrl+F moves focus to search.</value></data>
+  <data name="RecordWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Showing {0} documents. Ctrl+F moves focus to search.</value></data>
   <data name="RecordWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any documents.</value></data>
   <data name="RecordWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} documents.</value></data>
+  <data name="RecordWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Search “{0}” found {1} document.</value></data>
+  <data name="RecordWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Search “{0}” found {1} documents.</value></data>
+  <data name="RecordWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Search “{0}” found {1} documents.</value></data>
   <data name="RecordItem.ProviderPart" xml:space="preserve"><value>, provider {0}</value></data>
   <data name="RecordItem.NotePart" xml:space="preserve"><value>, note {0}</value></data>
   <data name="RecordItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}{2}, validity {3}, mode {4}, attachment state {5}{6}</value></data>
@@ -669,8 +696,14 @@ Vehicle: {2}
   <data name="ReminderWorkspace.Detail.Repeat" xml:space="preserve"><value>Repeat: {0}</value></data>
   <data name="ReminderWorkspace.Detail.Note" xml:space="preserve"><value>Note: {0}</value></data>
   <data name="ReminderWorkspace.SearchSummary.All" xml:space="preserve"><value>Showing {0} reminders. Ctrl+F moves focus to search.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.All.One" xml:space="preserve"><value>Showing {0} reminder. Ctrl+F moves focus to search.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.All.Few" xml:space="preserve"><value>Showing {0} reminders. Ctrl+F moves focus to search.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.All.Other" xml:space="preserve"><value>Showing {0} reminders. Ctrl+F moves focus to search.</value></data>
   <data name="ReminderWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any reminders.</value></data>
   <data name="ReminderWorkspace.SearchSummary.Filtered" xml:space="preserve"><value>Search “{0}” found {1} reminders.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.Filtered.One" xml:space="preserve"><value>Search “{0}” found {1} reminder.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.Filtered.Few" xml:space="preserve"><value>Search “{0}” found {1} reminders.</value></data>
+  <data name="ReminderWorkspace.SearchSummary.Filtered.Other" xml:space="preserve"><value>Search “{0}” found {1} reminders.</value></data>
   <data name="ReminderItem.AccessibleLabel" xml:space="preserve"><value>{0}, due date {1}, status {2}, repeat {3}, note {4}</value></data>
   <data name="MainMenu.App" xml:space="preserve"><value>_Application</value></data>
   <data name="MainMenu.App.About" xml:space="preserve"><value>About</value></data>
@@ -1265,8 +1298,14 @@ Cost / distance: {7}
 Calculation status: {8}</value></data>
   <data name="CostWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to cost overview search.</value></data>
   <data name="CostWorkspace.SearchSummary.Visible" xml:space="preserve"><value>Showing {0} vehicles in the cost overview. Ctrl+F moves focus to search, Ctrl+R refreshes the overview.</value></data>
+  <data name="CostWorkspace.SearchSummary.Visible.One" xml:space="preserve"><value>Showing {0} vehicle in the cost overview. Ctrl+F moves focus to search, Ctrl+R refreshes the overview.</value></data>
+  <data name="CostWorkspace.SearchSummary.Visible.Few" xml:space="preserve"><value>Showing {0} vehicles in the cost overview. Ctrl+F moves focus to search, Ctrl+R refreshes the overview.</value></data>
+  <data name="CostWorkspace.SearchSummary.Visible.Other" xml:space="preserve"><value>Showing {0} vehicles in the cost overview. Ctrl+F moves focus to search, Ctrl+R refreshes the overview.</value></data>
   <data name="CostWorkspace.SearchSummary.Empty" xml:space="preserve"><value>Search “{0}” did not find any vehicle in costs.</value></data>
   <data name="CostWorkspace.SearchSummary.WithResults" xml:space="preserve"><value>Search “{0}” found {1} vehicles in costs.</value></data>
+  <data name="CostWorkspace.SearchSummary.WithResults.One" xml:space="preserve"><value>Search “{0}” found {1} vehicle in costs.</value></data>
+  <data name="CostWorkspace.SearchSummary.WithResults.Few" xml:space="preserve"><value>Search “{0}” found {1} vehicles in costs.</value></data>
+  <data name="CostWorkspace.SearchSummary.WithResults.Other" xml:space="preserve"><value>Search “{0}” found {1} vehicles in costs.</value></data>
   <data name="CostPeriod.YearToDate" xml:space="preserve"><value>Year to date</value></data>
   <data name="CostPeriod.Last30Days" xml:space="preserve"><value>Last 30 days</value></data>
   <data name="CostPeriod.Last90Days" xml:space="preserve"><value>Last 90 days</value></data>
@@ -1591,6 +1630,9 @@ Status: {5}</value></data>
   <data name="Timeline.Kind.Reminder" xml:space="preserve"><value>Reminder</value></data>
   <data name="Timeline.Kind.TechnicalInspection" xml:space="preserve"><value>Technical inspection</value></data>
   <data name="Timeline.Status.DaysLeft" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="Timeline.Status.DaysLeft.One" xml:space="preserve"><value>In {0} day</value></data>
+  <data name="Timeline.Status.DaysLeft.Few" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="Timeline.Status.DaysLeft.Other" xml:space="preserve"><value>In {0} days</value></data>
   <data name="Timeline.Status.MissingCurrentOdometer" xml:space="preserve"><value>Current odometer is missing</value></data>
   <data name="Timeline.Status.MissingOdometerForCalculation" xml:space="preserve"><value>Odometer is missing for calculation</value></data>
   <data name="Timeline.Status.NoAlert" xml:space="preserve"><value>No alert</value></data>
@@ -2085,12 +2127,21 @@ Status: {5}</value></data>
   <data name="ServiceBook.Value.NoInterval" xml:space="preserve"><value>no interval</value></data>
   <data name="ServiceBook.Value.MonthSingular" xml:space="preserve"><value>1 month</value></data>
   <data name="ServiceBook.Value.MonthPlural" xml:space="preserve"><value>{0} months</value></data>
+  <data name="ServiceBook.Value.MonthCount.One" xml:space="preserve"><value>{0} month</value></data>
+  <data name="ServiceBook.Value.MonthCount.Few" xml:space="preserve"><value>{0} months</value></data>
+  <data name="ServiceBook.Value.MonthCount.Other" xml:space="preserve"><value>{0} months</value></data>
   <data name="ServiceBook.Value.LastService" xml:space="preserve"><value>{0} | {1}</value></data>
   <data name="ServiceBook.Value.Inactive" xml:space="preserve"><value>Inactive</value></data>
   <data name="ServiceBook.Value.OverdueDays" xml:space="preserve"><value>Overdue by {0} days</value></data>
+  <data name="ServiceBook.Value.OverdueDays.One" xml:space="preserve"><value>Overdue by {0} day</value></data>
+  <data name="ServiceBook.Value.OverdueDays.Few" xml:space="preserve"><value>Overdue by {0} days</value></data>
+  <data name="ServiceBook.Value.OverdueDays.Other" xml:space="preserve"><value>Overdue by {0} days</value></data>
   <data name="ServiceBook.Value.ServiceToday" xml:space="preserve"><value>Service today</value></data>
   <data name="ServiceBook.Value.InOneDay" xml:space="preserve"><value>In 1 day</value></data>
   <data name="ServiceBook.Value.InDays" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="ServiceBook.Value.InDays.One" xml:space="preserve"><value>In {0} day</value></data>
+  <data name="ServiceBook.Value.InDays.Few" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="ServiceBook.Value.InDays.Other" xml:space="preserve"><value>In {0} days</value></data>
   <data name="ServiceBook.Value.MissingLastServiceDate" xml:space="preserve"><value>Last service date is missing</value></data>
   <data name="ServiceBook.Value.OverDistanceLimit" xml:space="preserve"><value>Over distance limit by {0}</value></data>
   <data name="ServiceBook.Value.ServiceNow" xml:space="preserve"><value>Service now</value></data>
@@ -2284,16 +2335,31 @@ Status: {5}</value></data>
   <data name="Projection.Value.UnknownOdometer" xml:space="preserve"><value>unknown</value></data>
   <data name="History.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no history entries yet.</value></data>
   <data name="History.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} history entries.</value></data>
+  <data name="History.Projection.Summary.Count.One" xml:space="preserve"><value>The selected vehicle has {0} history entry.</value></data>
+  <data name="History.Projection.Summary.Count.Few" xml:space="preserve"><value>The selected vehicle has {0} history entries.</value></data>
+  <data name="History.Projection.Summary.Count.Other" xml:space="preserve"><value>The selected vehicle has {0} history entries.</value></data>
   <data name="Fuel.Projection.FullTank" xml:space="preserve"><value>Full tank</value></data>
   <data name="Fuel.Projection.PartialFuel" xml:space="preserve"><value>Partial refuel</value></data>
   <data name="Fuel.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no fuel entries yet.</value></data>
   <data name="Fuel.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} fuel entries.</value></data>
+  <data name="Fuel.Projection.Summary.Count.One" xml:space="preserve"><value>The selected vehicle has {0} fuel entry.</value></data>
+  <data name="Fuel.Projection.Summary.Count.Few" xml:space="preserve"><value>The selected vehicle has {0} fuel entries.</value></data>
+  <data name="Fuel.Projection.Summary.Count.Other" xml:space="preserve"><value>The selected vehicle has {0} fuel entries.</value></data>
   <data name="Reminder.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no reminders yet.</value></data>
   <data name="Reminder.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} reminders.</value></data>
+  <data name="Reminder.Projection.Summary.Count.One" xml:space="preserve"><value>The selected vehicle has {0} reminder.</value></data>
+  <data name="Reminder.Projection.Summary.Count.Few" xml:space="preserve"><value>The selected vehicle has {0} reminders.</value></data>
+  <data name="Reminder.Projection.Summary.Count.Other" xml:space="preserve"><value>The selected vehicle has {0} reminders.</value></data>
   <data name="Maintenance.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no maintenance plans yet.</value></data>
   <data name="Maintenance.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} maintenance plans.</value></data>
+  <data name="Maintenance.Projection.Summary.Count.One" xml:space="preserve"><value>The selected vehicle has {0} maintenance plan.</value></data>
+  <data name="Maintenance.Projection.Summary.Count.Few" xml:space="preserve"><value>The selected vehicle has {0} maintenance plans.</value></data>
+  <data name="Maintenance.Projection.Summary.Count.Other" xml:space="preserve"><value>The selected vehicle has {0} maintenance plans.</value></data>
   <data name="Record.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no documents yet.</value></data>
   <data name="Record.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} documents. Select an entry to open the file or its folder.</value></data>
+  <data name="Record.Projection.Summary.Count.One" xml:space="preserve"><value>The selected vehicle has {0} document. Select the entry to open the file or its folder.</value></data>
+  <data name="Record.Projection.Summary.Count.Few" xml:space="preserve"><value>The selected vehicle has {0} documents. Select an entry to open the file or its folder.</value></data>
+  <data name="Record.Projection.Summary.Count.Other" xml:space="preserve"><value>The selected vehicle has {0} documents. Select an entry to open the file or its folder.</value></data>
   <data name="Record.Projection.AttachmentMode.Managed" xml:space="preserve"><value>Managed copy</value></data>
   <data name="Record.Projection.AttachmentMode.External" xml:space="preserve"><value>External path</value></data>
   <data name="Record.Projection.Validity.FromEmpty" xml:space="preserve"><value>from not filled</value></data>
@@ -2354,19 +2420,34 @@ Transmission: {3}</value></data>
   <data name="VehicleDetail.Projection.Maintenance.Nearest" xml:space="preserve"><value>Nearest: {0} ({1}).</value></data>
   <data name="Reminder.Status.NoUsableDate" xml:space="preserve"><value>No usable due date</value></data>
   <data name="Reminder.Status.Overdue" xml:space="preserve"><value>Overdue by {0} days</value></data>
+  <data name="Reminder.Status.Overdue.One" xml:space="preserve"><value>Overdue by {0} day</value></data>
+  <data name="Reminder.Status.Overdue.Few" xml:space="preserve"><value>Overdue by {0} days</value></data>
+  <data name="Reminder.Status.Overdue.Other" xml:space="preserve"><value>Overdue by {0} days</value></data>
   <data name="Reminder.Status.Today" xml:space="preserve"><value>Today</value></data>
   <data name="Reminder.Status.Tomorrow" xml:space="preserve"><value>Tomorrow</value></data>
   <data name="Reminder.Status.InDays" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="Reminder.Status.InDays.One" xml:space="preserve"><value>In {0} day</value></data>
+  <data name="Reminder.Status.InDays.Few" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="Reminder.Status.InDays.Other" xml:space="preserve"><value>In {0} days</value></data>
   <data name="Reminder.Repeat.None" xml:space="preserve"><value>no repeat</value></data>
   <data name="Reminder.Repeat.NoneLegacy" xml:space="preserve"><value>Do not repeat</value></data>
   <data name="Maintenance.Interval.OneMonth" xml:space="preserve"><value>1 month</value></data>
   <data name="Maintenance.Interval.Months" xml:space="preserve"><value>{0} months</value></data>
+  <data name="Maintenance.Interval.MonthCount.One" xml:space="preserve"><value>{0} month</value></data>
+  <data name="Maintenance.Interval.MonthCount.Few" xml:space="preserve"><value>{0} months</value></data>
+  <data name="Maintenance.Interval.MonthCount.Other" xml:space="preserve"><value>{0} months</value></data>
   <data name="Maintenance.Interval.None" xml:space="preserve"><value>No interval</value></data>
   <data name="Maintenance.Status.Inactive" xml:space="preserve"><value>Inactive</value></data>
   <data name="Maintenance.Status.Overdue" xml:space="preserve"><value>Overdue by {0} days</value></data>
+  <data name="Maintenance.Status.Overdue.One" xml:space="preserve"><value>Overdue by {0} day</value></data>
+  <data name="Maintenance.Status.Overdue.Few" xml:space="preserve"><value>Overdue by {0} days</value></data>
+  <data name="Maintenance.Status.Overdue.Other" xml:space="preserve"><value>Overdue by {0} days</value></data>
   <data name="Maintenance.Status.Today" xml:space="preserve"><value>Service today</value></data>
   <data name="Maintenance.Status.InOneDay" xml:space="preserve"><value>In 1 day</value></data>
   <data name="Maintenance.Status.InDays" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="Maintenance.Status.InDays.One" xml:space="preserve"><value>In {0} day</value></data>
+  <data name="Maintenance.Status.InDays.Few" xml:space="preserve"><value>In {0} days</value></data>
+  <data name="Maintenance.Status.InDays.Other" xml:space="preserve"><value>In {0} days</value></data>
   <data name="Maintenance.Status.MissingLastServiceDate" xml:space="preserve"><value>Missing last service date</value></data>
   <data name="Maintenance.Status.OverDistanceLimit" xml:space="preserve"><value>Over the limit by {0}</value></data>
   <data name="Maintenance.Status.Now" xml:space="preserve"><value>Service now</value></data>
@@ -2383,6 +2464,9 @@ Transmission: {3}</value></data>
   <data name="VehicleList.Filter.HideInactive" xml:space="preserve"><value>excluding archived and parked</value></data>
   <data name="VehicleList.Filter.Search" xml:space="preserve"><value>search "{0}"</value></data>
   <data name="VehicleList.Summary.All" xml:space="preserve"><value>Vehicle list: {0} vehicles.</value></data>
+  <data name="VehicleList.Summary.All.One" xml:space="preserve"><value>Vehicle list: {0} vehicle.</value></data>
+  <data name="VehicleList.Summary.All.Few" xml:space="preserve"><value>Vehicle list: {0} vehicles.</value></data>
+  <data name="VehicleList.Summary.All.Other" xml:space="preserve"><value>Vehicle list: {0} vehicles.</value></data>
   <data name="VehicleList.Summary.Filtered" xml:space="preserve"><value>Vehicle list: showing {0} of {1}. {2}</value></data>
   <data name="WorkspaceSort.Date" xml:space="preserve"><value>Date</value></data>
   <data name="WorkspaceSort.Type" xml:space="preserve"><value>Type</value></data>
@@ -2416,6 +2500,9 @@ Transmission: {3}</value></data>
   <data name="VehicleList.Status.Maintenance" xml:space="preserve"><value>Maintenance: {0}</value></data>
   <data name="VehicleList.Status.MissingGreenCard" xml:space="preserve"><value>Green card missing</value></data>
   <data name="VehicleList.Status.AttentionCount" xml:space="preserve"><value>{0} items to review</value></data>
+  <data name="VehicleList.Status.AttentionCount.One" xml:space="preserve"><value>{0} item to review</value></data>
+  <data name="VehicleList.Status.AttentionCount.Few" xml:space="preserve"><value>{0} items to review</value></data>
+  <data name="VehicleList.Status.AttentionCount.Other" xml:space="preserve"><value>{0} items to review</value></data>
   <data name="VehicleList.Status.Ok" xml:space="preserve"><value>OK</value></data>
   <data name="VehicleListItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, license plate {3}, state {4}, {5}</value></data>
   <data name="VehicleListItem.NoState" xml:space="preserve"><value>no state</value></data>

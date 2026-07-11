@@ -20,6 +20,8 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel : ObservableObject
 {
+    private static readonly IAppPluralizationService PluralizationService = new AppPluralizationService();
+
     private const int DetailTabIndex = DesktopTabIndexes.Detail;
     private const int HistoryTabIndex = DesktopTabIndexes.History;
     private const int FuelTabIndex = DesktopTabIndexes.Fuel;
@@ -1555,7 +1557,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
 
         GlobalSearchWorkspace.GlobalSearchSummary = results.Count == 0
             ? DesktopLocalization.Localizer.Format("GlobalSearch.Summary.NoResults", GlobalSearchWorkspace.GlobalSearchText.Trim())
-            : DesktopLocalization.Localizer.Format("GlobalSearch.Summary.WithResults", GlobalSearchWorkspace.GlobalSearchText.Trim(), results.Count);
+            : PluralizationService.Format(
+                DesktopLocalization.Localizer,
+                CurrentCulturePreferences,
+                "GlobalSearch.Summary.WithResults",
+                results.Count,
+                GlobalSearchWorkspace.GlobalSearchText.Trim(),
+                results.Count);
 
         var previousKey = previousSelection is null
             ? string.Empty
