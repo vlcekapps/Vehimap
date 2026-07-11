@@ -1784,6 +1784,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private static string FormatValue(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value;
 
+    private string FormatPlural(string keyPrefix, int count, params object?[] args) =>
+        PluralizationService.Format(DesktopLocalization.Localizer, CurrentCulturePreferences, keyPrefix, count, args);
+
     private async Task<bool> ConfirmDiscardPendingEditsBeforeNavigationAsync(string actionDescription)
     {
         if (!HasPendingEdits)

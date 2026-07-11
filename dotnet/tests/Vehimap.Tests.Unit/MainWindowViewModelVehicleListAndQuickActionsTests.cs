@@ -74,7 +74,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Contains("doklady 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
         Assert.Contains("připomínky 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
         Assert.Contains("servisní plány 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
-        Assert.Contains("zobrazeno 2", viewModel.VehicleDetailWorkspace.SelectedVehicleRecentHistorySummary, StringComparison.CurrentCulture);
+        Assert.Contains("zobrazeny 2", viewModel.VehicleDetailWorkspace.SelectedVehicleRecentHistorySummary, StringComparison.CurrentCulture);
         Assert.Equal(2, viewModel.VehicleDetailWorkspace.RecentHistoryItems.Count);
         Assert.Equal("Novější servis", viewModel.VehicleDetailWorkspace.RecentHistoryItems[0].EventType);
         Assert.DoesNotContain(viewModel.VehicleDetailWorkspace.RecentHistoryItems, item => item.Id == "hist_3");

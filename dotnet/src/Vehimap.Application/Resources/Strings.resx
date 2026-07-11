@@ -228,6 +228,10 @@ Vehicle: {2}
   <data name="GlobalSearch.Value.Inactive" xml:space="preserve"><value>Inactive</value></data>
   <data name="GlobalSearch.Value.Money" xml:space="preserve"><value>{0}</value></data>
   <data name="GlobalSearch.Value.Months" xml:space="preserve"><value>{0} months</value></data>
+  <data name="GlobalSearch.Value.Months.One" xml:space="preserve"><value>{0} month</value></data>
+  <data name="GlobalSearch.Value.Months.Few" xml:space="preserve"><value>{0} months</value></data>
+  <data name="GlobalSearch.Value.Months.Other" xml:space="preserve"><value>{0} months</value></data>
+  <data name="GlobalSearch.Value.MonthIntervalRaw" xml:space="preserve"><value>Month interval: {0}</value></data>
   <data name="GlobalSearch.Value.No" xml:space="preserve"><value>no</value></data>
   <data name="GlobalSearch.Value.NoCategory" xml:space="preserve"><value>No category</value></data>
   <data name="GlobalSearch.Value.NoDueDate" xml:space="preserve"><value>no due date</value></data>
@@ -1013,6 +1017,15 @@ Vehicle: {2}
   <data name="Audit.Severity.Warning" xml:space="preserve"><value>Warning</value></data>
   <data name="Audit.Summary.Empty" xml:space="preserve"><value>Data audit has not found any issues that need action.</value></data>
   <data name="Audit.Summary.WithItems" xml:space="preserve"><value>There are {0} items to resolve: {1} errors and {2} warnings.</value></data>
+  <data name="Audit.Summary.WithItems.One" xml:space="preserve"><value>There is {0} item to resolve: {1} and {2}.</value></data>
+  <data name="Audit.Summary.WithItems.Few" xml:space="preserve"><value>There are {0} items to resolve: {1} and {2}.</value></data>
+  <data name="Audit.Summary.WithItems.Other" xml:space="preserve"><value>There are {0} items to resolve: {1} and {2}.</value></data>
+  <data name="Audit.Summary.ErrorCount.One" xml:space="preserve"><value>{0} error</value></data>
+  <data name="Audit.Summary.ErrorCount.Few" xml:space="preserve"><value>{0} errors</value></data>
+  <data name="Audit.Summary.ErrorCount.Other" xml:space="preserve"><value>{0} errors</value></data>
+  <data name="Audit.Summary.WarningCount.One" xml:space="preserve"><value>{0} warning</value></data>
+  <data name="Audit.Summary.WarningCount.Few" xml:space="preserve"><value>{0} warnings</value></data>
+  <data name="Audit.Summary.WarningCount.Other" xml:space="preserve"><value>{0} warnings</value></data>
   <data name="Audit.Title.InvalidAmount" xml:space="preserve"><value>Invalid amount</value></data>
   <data name="Audit.Title.InvalidGreenCardRange" xml:space="preserve"><value>Invalid green card range</value></data>
   <data name="Audit.Title.InvalidValidityRange" xml:space="preserve"><value>Invalid validity range</value></data>
@@ -1029,6 +1042,9 @@ Vehicle: {2}
   <data name="FuelAnalysis.Accessible.Warning" xml:space="preserve"><value>{0}: {1}. {2}</value></data>
   <data name="FuelAnalysis.Accessible.WarningWithAction" xml:space="preserve"><value>{0}: {1}. {2}. Enter or the button opens the related refuel entry.</value></data>
   <data name="FuelAnalysis.Group.EntryCount" xml:space="preserve"><value>{0} entries</value></data>
+  <data name="FuelAnalysis.Group.EntryCount.One" xml:space="preserve"><value>{0} entry</value></data>
+  <data name="FuelAnalysis.Group.EntryCount.Few" xml:space="preserve"><value>{0} entries</value></data>
+  <data name="FuelAnalysis.Group.EntryCount.Other" xml:space="preserve"><value>{0} entries</value></data>
   <data name="FuelAnalysis.Group.UnknownFuelDetail" xml:space="preserve"><value>No detail</value></data>
   <data name="FuelAnalysis.Group.UnknownFuelType" xml:space="preserve"><value>No type</value></data>
   <data name="FuelAnalysis.Group.UnknownStation" xml:space="preserve"><value>No place</value></data>
@@ -1341,7 +1357,19 @@ Calculation status: {8}</value></data>
   <data name="Cost.Summary" xml:space="preserve"><value>{0}
 Total: {1} | Distance: {2} | Cost / distance: {3}
 Without numeric cost: {4} of {5} active vehicles.</value></data>
+  <data name="Cost.Summary.One" xml:space="preserve"><value>{0}
+Total: {1} | Distance: {2} | Cost / distance: {3}
+Without numeric cost: {4} of {5} active vehicle.</value></data>
+  <data name="Cost.Summary.Few" xml:space="preserve"><value>{0}
+Total: {1} | Distance: {2} | Cost / distance: {3}
+Without numeric cost: {4} of {5} active vehicles.</value></data>
+  <data name="Cost.Summary.Other" xml:space="preserve"><value>{0}
+Total: {1} | Distance: {2} | Cost / distance: {3}
+Without numeric cost: {4} of {5} active vehicles.</value></data>
   <data name="Cost.Comparison" xml:space="preserve"><value>Compared with the same-length period last year: costs {0}, cost / distance {1}. For {2} vehicles with costs, a reliable cost-per-distance calculation is still missing.</value></data>
+  <data name="Cost.Comparison.One" xml:space="preserve"><value>Compared with the same-length period last year: costs {0}, cost / distance {1}. For {2} vehicle with costs, a reliable cost-per-distance calculation is still missing.</value></data>
+  <data name="Cost.Comparison.Few" xml:space="preserve"><value>Compared with the same-length period last year: costs {0}, cost / distance {1}. For {2} vehicles with costs, a reliable cost-per-distance calculation is still missing.</value></data>
+  <data name="Cost.Comparison.Other" xml:space="preserve"><value>Compared with the same-length period last year: costs {0}, cost / distance {1}. For {2} vehicles with costs, a reliable cost-per-distance calculation is still missing.</value></data>
   <data name="CostExport.FleetNotReady" xml:space="preserve"><value>Cost summary is not ready for export yet.</value></data>
   <data name="CostExport.FleetSummaryTitle" xml:space="preserve"><value>Export cost summary</value></data>
   <data name="CostExport.FileName.FleetSummary" xml:space="preserve"><value>vehimap-cost-summary-{0}-{1}.tsv</value></data>
@@ -1468,9 +1496,21 @@ Without numeric cost: {4} of {5} active vehicles.</value></data>
   <data name="SmartAdvisor.Priority.Warning" xml:space="preserve"><value>Warning</value></data>
   <data name="SmartAdvisor.Status.Empty" xml:space="preserve"><value>Smart advisor did not find anything urgent. The data looks OK according to the known rules.</value></data>
   <data name="SmartAdvisor.Status.Part.Critical" xml:space="preserve"><value>{0} critical</value></data>
+  <data name="SmartAdvisor.Status.Part.Critical.One" xml:space="preserve"><value>{0} critical item</value></data>
+  <data name="SmartAdvisor.Status.Part.Critical.Few" xml:space="preserve"><value>{0} critical items</value></data>
+  <data name="SmartAdvisor.Status.Part.Critical.Other" xml:space="preserve"><value>{0} critical items</value></data>
   <data name="SmartAdvisor.Status.Part.Recommendation" xml:space="preserve"><value>{0} recommendations</value></data>
+  <data name="SmartAdvisor.Status.Part.Recommendation.One" xml:space="preserve"><value>{0} recommendation</value></data>
+  <data name="SmartAdvisor.Status.Part.Recommendation.Few" xml:space="preserve"><value>{0} recommendations</value></data>
+  <data name="SmartAdvisor.Status.Part.Recommendation.Other" xml:space="preserve"><value>{0} recommendations</value></data>
   <data name="SmartAdvisor.Status.Part.Warning" xml:space="preserve"><value>{0} warnings</value></data>
+  <data name="SmartAdvisor.Status.Part.Warning.One" xml:space="preserve"><value>{0} warning</value></data>
+  <data name="SmartAdvisor.Status.Part.Warning.Few" xml:space="preserve"><value>{0} warnings</value></data>
+  <data name="SmartAdvisor.Status.Part.Warning.Other" xml:space="preserve"><value>{0} warnings</value></data>
   <data name="SmartAdvisor.Status.WithItems" xml:space="preserve"><value>Smart advisor found {0} items: {1}.</value></data>
+  <data name="SmartAdvisor.Status.WithItems.One" xml:space="preserve"><value>Smart advisor found {0} item: {1}.</value></data>
+  <data name="SmartAdvisor.Status.WithItems.Few" xml:space="preserve"><value>Smart advisor found {0} items: {1}.</value></data>
+  <data name="SmartAdvisor.Status.WithItems.Other" xml:space="preserve"><value>Smart advisor found {0} items: {1}.</value></data>
   <data name="SmartAdvisor.Summary.CostPerDistanceUnavailable" xml:space="preserve"><value>The vehicle has costs, but no usable odometer difference for calculating cost per distance.</value></data>
   <data name="SmartAdvisor.Summary.Timeline" xml:space="preserve"><value>{0}. {1}.</value></data>
   <data name="SmartAdvisor.Title.CostPerDistanceUnavailable" xml:space="preserve"><value>Cost per distance is not available</value></data>
@@ -1611,16 +1651,34 @@ Status: {5}</value></data>
   <data name="Overview.Summary.DashboardEmpty" xml:space="preserve"><value>The available data does not contain any future due dates with a concrete date yet.</value></data>
   <data name="Overview.Summary.DashboardInitial" xml:space="preserve"><value>Nearest due dates across vehicles will appear after the data is loaded.</value></data>
   <data name="Overview.Summary.DashboardWithItems" xml:space="preserve"><value>The nearest {0} future due dates across all vehicles are ready to open.</value></data>
+  <data name="Overview.Summary.DashboardWithItems.One" xml:space="preserve"><value>The nearest {0} future due date across all vehicles is ready to open.</value></data>
+  <data name="Overview.Summary.DashboardWithItems.Few" xml:space="preserve"><value>The nearest {0} future due dates across all vehicles are ready to open.</value></data>
+  <data name="Overview.Summary.DashboardWithItems.Other" xml:space="preserve"><value>The nearest {0} future due dates across all vehicles are ready to open.</value></data>
   <data name="Overview.Summary.OverdueEmpty" xml:space="preserve"><value>The available data does not contain any overdue due dates with a concrete date yet.</value></data>
   <data name="Overview.Summary.OverdueInitial" xml:space="preserve"><value>Overdue due dates across vehicles will appear after the data is loaded.</value></data>
   <data name="Overview.Summary.OverdueWithItems" xml:space="preserve"><value>Overdue due dates: {0}. Select an item to open the record or vehicle.</value></data>
+  <data name="Overview.Summary.OverdueWithItems.One" xml:space="preserve"><value>Overdue due date: {0}. Select it to open the record or vehicle.</value></data>
+  <data name="Overview.Summary.OverdueWithItems.Few" xml:space="preserve"><value>Overdue due dates: {0}. Select an item to open the record or vehicle.</value></data>
+  <data name="Overview.Summary.OverdueWithItems.Other" xml:space="preserve"><value>Overdue due dates: {0}. Select an item to open the record or vehicle.</value></data>
   <data name="Overview.Summary.UpcomingDataIssuesHidden" xml:space="preserve"><value>The audit has {0} data issues; you can add them with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingDataIssuesHidden.One" xml:space="preserve"><value>The audit has {0} data issue; you can add it with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingDataIssuesHidden.Few" xml:space="preserve"><value>The audit has {0} data issues; you can add them with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingDataIssuesHidden.Other" xml:space="preserve"><value>The audit has {0} data issues; you can add them with the option below the filter.</value></data>
   <data name="Overview.Summary.UpcomingEmpty" xml:space="preserve"><value>The available data does not contain any upcoming due dates with a concrete date yet.</value></data>
   <data name="Overview.Summary.UpcomingEmptyWithDataIssues" xml:space="preserve"><value>The available data does not contain any upcoming due dates or data issues to complete yet.</value></data>
   <data name="Overview.Summary.UpcomingInitial" xml:space="preserve"><value>Upcoming due dates across vehicles will appear after the data is loaded.</value></data>
   <data name="Overview.Summary.UpcomingMissingGreenCardsHidden" xml:space="preserve"><value>{0} vehicles do not have a filled green card; you can add them with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden.One" xml:space="preserve"><value>{0} vehicle does not have a filled green card; you can add it with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden.Few" xml:space="preserve"><value>{0} vehicles do not have a filled green card; you can add them with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden.Other" xml:space="preserve"><value>{0} vehicles do not have a filled green card; you can add them with the option below the filter.</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues" xml:space="preserve"><value>Data issues included: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingVisibleDataIssues.One" xml:space="preserve"><value>Data issue included: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingVisibleDataIssues.Few" xml:space="preserve"><value>Data issues included: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingVisibleDataIssues.Other" xml:space="preserve"><value>Data issues included: {0}.</value></data>
   <data name="Overview.Summary.UpcomingWithItems" xml:space="preserve"><value>Upcoming items: {0}. Select an item to open the record or vehicle.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems.One" xml:space="preserve"><value>Upcoming item: {0}. Select it to open the record or vehicle.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems.Few" xml:space="preserve"><value>Upcoming items: {0}. Select an item to open the record or vehicle.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems.Other" xml:space="preserve"><value>Upcoming items: {0}. Select an item to open the record or vehicle.</value></data>
   <data name="Timeline.Detail.DateAndOdometer" xml:space="preserve"><value>{0} | {1}</value></data>
   <data name="Timeline.Kind.Fuel" xml:space="preserve"><value>Fuel</value></data>
   <data name="Timeline.Kind.GreenCard" xml:space="preserve"><value>Green card</value></data>
@@ -1768,7 +1826,13 @@ Status: {5}</value></data>
   <data name="VehicleStarterBundle.SelectAll" xml:space="preserve"><value>Select all</value></data>
   <data name="VehicleStarterBundle.SelectAllName" xml:space="preserve"><value>Select all bundle items</value></data>
   <data name="VehicleStarterBundle.Summary.MaintenanceOnly" xml:space="preserve"><value>Selected: {0} service templates.</value></data>
+  <data name="VehicleStarterBundle.Summary.MaintenanceOnly.One" xml:space="preserve"><value>Selected: {0} service template.</value></data>
+  <data name="VehicleStarterBundle.Summary.MaintenanceOnly.Few" xml:space="preserve"><value>Selected: {0} service templates.</value></data>
+  <data name="VehicleStarterBundle.Summary.MaintenanceOnly.Other" xml:space="preserve"><value>Selected: {0} service templates.</value></data>
   <data name="VehicleStarterBundle.Summary.SectionCounts" xml:space="preserve"><value>Selected: {0} items | Service {1} | Documents {2} | Reminders {3}</value></data>
+  <data name="VehicleStarterBundle.Summary.SectionCounts.One" xml:space="preserve"><value>Selected: {0} item | Service {1} | Documents {2} | Reminders {3}</value></data>
+  <data name="VehicleStarterBundle.Summary.SectionCounts.Few" xml:space="preserve"><value>Selected: {0} items | Service {1} | Documents {2} | Reminders {3}</value></data>
+  <data name="VehicleStarterBundle.Summary.SectionCounts.Other" xml:space="preserve"><value>Selected: {0} items | Service {1} | Documents {2} | Reminders {3}</value></data>
   <data name="VehicleStarterBundle.Title" xml:space="preserve"><value>Vehicle bundle</value></data>
   <data name="WorkspaceTabs.Audit" xml:space="preserve"><value>Audit</value></data>
   <data name="WorkspaceTabs.AuditName" xml:space="preserve"><value>Audit tab</value></data>
@@ -1945,8 +2009,14 @@ Status: {5}</value></data>
   <data name="AppShell.Background.NearestAttention" xml:space="preserve"><value>Nearest item to review: {0} - {1} ({2}, {3})</value></data>
   <data name="AppShell.Background.NearestUpcoming" xml:space="preserve"><value>Nearest item: {0} - {1} ({2})</value></data>
   <data name="AppShell.Background.NotificationTimelineTitle" xml:space="preserve"><value>Vehimap: {0} due dates to review</value></data>
+  <data name="AppShell.Background.NotificationTimelineTitle.One" xml:space="preserve"><value>Vehimap: {0} due date to review</value></data>
+  <data name="AppShell.Background.NotificationTimelineTitle.Few" xml:space="preserve"><value>Vehimap: {0} due dates to review</value></data>
+  <data name="AppShell.Background.NotificationTimelineTitle.Other" xml:space="preserve"><value>Vehimap: {0} due dates to review</value></data>
   <data name="AppShell.Background.NotificationTimelineMessage" xml:space="preserve"><value>{0}: {1} ({2}). {3}</value></data>
   <data name="AppShell.Background.NotificationAuditTitle" xml:space="preserve"><value>Vehimap: {0} items to review</value></data>
+  <data name="AppShell.Background.NotificationAuditTitle.One" xml:space="preserve"><value>Vehimap: {0} item to review</value></data>
+  <data name="AppShell.Background.NotificationAuditTitle.Few" xml:space="preserve"><value>Vehimap: {0} items to review</value></data>
+  <data name="AppShell.Background.NotificationAuditTitle.Other" xml:space="preserve"><value>Vehimap: {0} items to review</value></data>
   <data name="AppShell.Background.NotificationAuditMessage" xml:space="preserve"><value>{0}: {1}. {2}</value></data>
   <data name="AppShell.About.DataModePortable" xml:space="preserve"><value>Portable mode: data stored next to the application</value></data>
   <data name="AppShell.About.DataModeSystem" xml:space="preserve"><value>Standard mode: system data folder</value></data>
@@ -2125,8 +2195,6 @@ Status: {5}</value></data>
   <data name="ServiceBook.Value.ValidFrom" xml:space="preserve"><value>from {0}</value></data>
   <data name="ServiceBook.Value.ValidRange" xml:space="preserve"><value>{0} to {1}</value></data>
   <data name="ServiceBook.Value.NoInterval" xml:space="preserve"><value>no interval</value></data>
-  <data name="ServiceBook.Value.MonthSingular" xml:space="preserve"><value>1 month</value></data>
-  <data name="ServiceBook.Value.MonthPlural" xml:space="preserve"><value>{0} months</value></data>
   <data name="ServiceBook.Value.MonthCount.One" xml:space="preserve"><value>{0} month</value></data>
   <data name="ServiceBook.Value.MonthCount.Few" xml:space="preserve"><value>{0} months</value></data>
   <data name="ServiceBook.Value.MonthCount.Other" xml:space="preserve"><value>{0} months</value></data>
@@ -2309,9 +2377,21 @@ Status: {5}</value></data>
   <data name="VehicleStarterBundle.Status.NoNewItems" xml:space="preserve"><value>The vehicle bundle did not have any new items to add.</value></data>
   <data name="VehicleStarterBundle.Status.SaveFailedPrefix" xml:space="preserve"><value>The vehicle bundle could not be saved</value></data>
   <data name="VehicleStarterBundle.Status.AddedPart.Maintenance" xml:space="preserve"><value>{0} service</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Maintenance.One" xml:space="preserve"><value>{0} service task</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Maintenance.Few" xml:space="preserve"><value>{0} service tasks</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Maintenance.Other" xml:space="preserve"><value>{0} service tasks</value></data>
   <data name="VehicleStarterBundle.Status.AddedPart.Record" xml:space="preserve"><value>{0} document</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Record.One" xml:space="preserve"><value>{0} document</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Record.Few" xml:space="preserve"><value>{0} documents</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Record.Other" xml:space="preserve"><value>{0} documents</value></data>
   <data name="VehicleStarterBundle.Status.AddedPart.Reminder" xml:space="preserve"><value>{0} reminder</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Reminder.One" xml:space="preserve"><value>{0} reminder</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Reminder.Few" xml:space="preserve"><value>{0} reminders</value></data>
+  <data name="VehicleStarterBundle.Status.AddedPart.Reminder.Other" xml:space="preserve"><value>{0} reminders</value></data>
   <data name="VehicleStarterBundle.Status.Added" xml:space="preserve"><value>Vehicle bundle added {0} items: {1}.</value></data>
+  <data name="VehicleStarterBundle.Status.Added.One" xml:space="preserve"><value>Vehicle bundle added {0} item: {1}.</value></data>
+  <data name="VehicleStarterBundle.Status.Added.Few" xml:space="preserve"><value>Vehicle bundle added {0} items: {1}.</value></data>
+  <data name="VehicleStarterBundle.Status.Added.Other" xml:space="preserve"><value>Vehicle bundle added {0} items: {1}.</value></data>
   <data name="MaintenanceTemplates.Status.NotLoaded" xml:space="preserve"><value>Recommended templates cannot be used before data is loaded.</value></data>
   <data name="MaintenanceTemplates.Status.NoSelectedItems" xml:space="preserve"><value>Recommended templates did not contain any selected service plans.</value></data>
   <data name="MaintenanceTemplates.Status.NoNewItems" xml:space="preserve"><value>Recommended templates did not have any new service plans to add.</value></data>
@@ -2391,6 +2471,9 @@ Timing drive: {2}
 Transmission: {3}</value></data>
   <data name="VehicleDetail.Projection.RecentHistoryEmpty" xml:space="preserve"><value>Recent events: no history entries yet.</value></data>
   <data name="VehicleDetail.Projection.RecentHistoryCount" xml:space="preserve"><value>Recent events: showing {0} newest entries.</value></data>
+  <data name="VehicleDetail.Projection.RecentHistoryCount.One" xml:space="preserve"><value>Recent events: showing {0} newest entry.</value></data>
+  <data name="VehicleDetail.Projection.RecentHistoryCount.Few" xml:space="preserve"><value>Recent events: showing {0} newest entries.</value></data>
+  <data name="VehicleDetail.Projection.RecentHistoryCount.Other" xml:space="preserve"><value>Recent events: showing {0} newest entries.</value></data>
   <data name="VehicleDetail.Projection.EvidenceSummary" xml:space="preserve"><value>Related records: history {0}, fuel {1}, documents {2}, reminders {3}, maintenance plans {4}, active {5}.</value></data>
   <data name="VehicleDetail.Section.History" xml:space="preserve"><value>History</value></data>
   <data name="VehicleDetail.Section.Fuel" xml:space="preserve"><value>Fuel</value></data>
@@ -2402,12 +2485,18 @@ Transmission: {3}</value></data>
   <data name="VehicleDetail.Projection.History.Odometer" xml:space="preserve"><value>Odometer: {0}.</value></data>
   <data name="VehicleDetail.Projection.Fuel.Empty" xml:space="preserve"><value>No mileage or fuel entries are stored for this vehicle yet.</value></data>
   <data name="VehicleDetail.Projection.Fuel.CountAndOdometer" xml:space="preserve"><value>Entries: {0}. Latest odometer: {1}.</value></data>
+  <data name="VehicleDetail.Projection.Fuel.CountAndOdometer.One" xml:space="preserve"><value>Entry: {0}. Latest odometer: {1}.</value></data>
+  <data name="VehicleDetail.Projection.Fuel.CountAndOdometer.Few" xml:space="preserve"><value>Entries: {0}. Latest odometer: {1}.</value></data>
+  <data name="VehicleDetail.Projection.Fuel.CountAndOdometer.Other" xml:space="preserve"><value>Entries: {0}. Latest odometer: {1}.</value></data>
   <data name="VehicleDetail.Projection.Fuel.LatestWithCost" xml:space="preserve"><value>Latest refuel: {0} for {1} ({2}).</value></data>
   <data name="VehicleDetail.Projection.Fuel.Latest" xml:space="preserve"><value>Latest refuel: {0} ({1}).</value></data>
   <data name="VehicleDetail.Projection.Reminder.Empty" xml:space="preserve"><value>No custom reminders are stored for this vehicle yet.</value></data>
   <data name="VehicleDetail.Projection.Reminder.Nearest" xml:space="preserve"><value>Reminders: {0}. Nearest: {1} ({2}).</value></data>
   <data name="VehicleDetail.Projection.Record.Empty" xml:space="preserve"><value>No insurance or document records are stored for this vehicle yet.</value></data>
   <data name="VehicleDetail.Projection.Record.Count" xml:space="preserve"><value>Records: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Record.Count.One" xml:space="preserve"><value>Record: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Record.Count.Few" xml:space="preserve"><value>Records: {0}.</value></data>
+  <data name="VehicleDetail.Projection.Record.Count.Other" xml:space="preserve"><value>Records: {0}.</value></data>
   <data name="VehicleDetail.Projection.Record.TitleWithProvider" xml:space="preserve"><value>{0} ({1})</value></data>
   <data name="VehicleDetail.Projection.Record.NearestValidity" xml:space="preserve"><value>Nearest validity: {0} until {1}.</value></data>
   <data name="VehicleDetail.Projection.Record.NoValidity" xml:space="preserve"><value>No record has a validity date filled in.</value></data>
@@ -2431,8 +2520,6 @@ Transmission: {3}</value></data>
   <data name="Reminder.Status.InDays.Other" xml:space="preserve"><value>In {0} days</value></data>
   <data name="Reminder.Repeat.None" xml:space="preserve"><value>no repeat</value></data>
   <data name="Reminder.Repeat.NoneLegacy" xml:space="preserve"><value>Do not repeat</value></data>
-  <data name="Maintenance.Interval.OneMonth" xml:space="preserve"><value>1 month</value></data>
-  <data name="Maintenance.Interval.Months" xml:space="preserve"><value>{0} months</value></data>
   <data name="Maintenance.Interval.MonthCount.One" xml:space="preserve"><value>{0} month</value></data>
   <data name="Maintenance.Interval.MonthCount.Few" xml:space="preserve"><value>{0} months</value></data>
   <data name="Maintenance.Interval.MonthCount.Other" xml:space="preserve"><value>{0} months</value></data>
@@ -2572,8 +2659,14 @@ Detail: {5}
 Suggested action: {6}</value></data>
   <data name="SmartAdvisor.Summary.FilteredEmpty" xml:space="preserve"><value>The current filters did not find any recommendation.</value></data>
   <data name="SmartAdvisor.Summary.FilteredCount" xml:space="preserve"><value>The current filters show {0} of {1} recommendations.</value></data>
+  <data name="SmartAdvisor.Summary.FilteredCount.One" xml:space="preserve"><value>The current filters show {0} of {1} recommendation.</value></data>
+  <data name="SmartAdvisor.Summary.FilteredCount.Few" xml:space="preserve"><value>The current filters show {0} of {1} recommendations.</value></data>
+  <data name="SmartAdvisor.Summary.FilteredCount.Other" xml:space="preserve"><value>The current filters show {0} of {1} recommendations.</value></data>
   <data name="Audit.Summary.SearchEmpty" xml:space="preserve"><value>No audit items match search "{0}".</value></data>
   <data name="Audit.Summary.SearchCount" xml:space="preserve"><value>Search "{0}" found {1} of {2} audit items.</value></data>
+  <data name="Audit.Summary.SearchCount.One" xml:space="preserve"><value>Search "{0}" found {1} of {2} audit item.</value></data>
+  <data name="Audit.Summary.SearchCount.Few" xml:space="preserve"><value>Search "{0}" found {1} of {2} audit items.</value></data>
+  <data name="Audit.Summary.SearchCount.Other" xml:space="preserve"><value>Search "{0}" found {1} of {2} audit items.</value></data>
   <data name="Keyboard.TextBox.LabelFallback" xml:space="preserve"><value>Text field</value></data>
   <data name="Keyboard.TextBox.Selection" xml:space="preserve"><value>{0}: selected {1} characters, {2}.</value></data>
   <data name="Keyboard.TextBox.Empty" xml:space="preserve"><value>{0}: empty field.</value></data>

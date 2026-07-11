@@ -145,7 +145,7 @@ public sealed class MainWindowViewModelOverviewTests
         Assert.Contains(viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems, item => item.Kind == "data_issue" && item.EntryId == "rec_1");
         Assert.Contains(viewModel.UpcomingOverviewWorkspace.OverviewFilters, option => option.Value == OverviewFilterOptions.DataIssuesKey && option.Label == "Datové nedostatky");
         Assert.DoesNotContain(viewModel.OverdueOverviewWorkspace.OverviewFilters, option => option.Value == OverviewFilterOptions.DataIssuesKey);
-        Assert.Contains("datových nedostatků", viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSummary, StringComparison.CurrentCulture);
+        Assert.Contains("Z toho datové nedostatky:", viewModel.UpcomingOverviewWorkspace.UpcomingOverviewSummary, StringComparison.CurrentCulture);
     }
 
     [Fact]

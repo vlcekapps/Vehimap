@@ -9,6 +9,12 @@ public interface IAppPluralizationService
 
     string Format(
         IAppLocalizer localizer,
+        string resourceKeyPrefix,
+        int count,
+        params object?[] args);
+
+    string Format(
+        IAppLocalizer localizer,
         AppCulturePreferences preferences,
         string resourceKeyPrefix,
         int count,

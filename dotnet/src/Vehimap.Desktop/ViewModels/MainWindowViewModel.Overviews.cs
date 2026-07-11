@@ -282,7 +282,7 @@ public sealed partial class MainWindowViewModel
 
         OverdueOverviewWorkspace.OverdueOverviewSummary = items.Count == 0
             ? LO("Overview.Summary.OverdueEmpty")
-            : LFO("Overview.Summary.OverdueWithItems", items.Count);
+            : FormatPlural("Overview.Summary.OverdueWithItems", items.Count, items.Count);
 
         OverdueOverviewWorkspace.SelectedOverdueOverviewItem = FindById(OverdueOverviewItems, BuildOverviewSelectionKey, previousKey) ?? OverdueOverviewItems.FirstOrDefault();
         if (OverdueOverviewWorkspace.SelectedOverdueOverviewItem is null)
@@ -436,21 +436,21 @@ public sealed partial class MainWindowViewModel
             ? UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview
                 ? LO("Overview.Summary.UpcomingEmptyWithDataIssues")
                 : LO("Overview.Summary.UpcomingEmpty")
-            : LFO("Overview.Summary.UpcomingWithItems", items.Count);
+            : FormatPlural("Overview.Summary.UpcomingWithItems", items.Count, items.Count);
 
         if (visibleDataIssueCount > 0)
         {
-            summary += " " + LFO("Overview.Summary.UpcomingVisibleDataIssues", visibleDataIssueCount);
+            summary += " " + FormatPlural("Overview.Summary.UpcomingVisibleDataIssues", visibleDataIssueCount, visibleDataIssueCount);
         }
 
         if (missingGreenCount > 0 && !UpcomingOverviewWorkspace.IncludeMissingGreenCardsInUpcomingOverview)
         {
-            summary += " " + LFO("Overview.Summary.UpcomingMissingGreenCardsHidden", missingGreenCount);
+            summary += " " + FormatPlural("Overview.Summary.UpcomingMissingGreenCardsHidden", missingGreenCount, missingGreenCount);
         }
 
         if (dataIssueCount > 0 && !UpcomingOverviewWorkspace.IncludeDataIssuesInUpcomingOverview)
         {
-            summary += " " + LFO("Overview.Summary.UpcomingDataIssuesHidden", dataIssueCount);
+            summary += " " + FormatPlural("Overview.Summary.UpcomingDataIssuesHidden", dataIssueCount, dataIssueCount);
         }
 
         return summary;

@@ -255,7 +255,7 @@ public sealed partial class SmartAdvisorWorkspaceViewModel : WorkspaceViewModelB
 
         SmartAdvisorSummary = VisibleSmartAdvisorItems.Count == 0
             ? L("SmartAdvisor.Summary.FilteredEmpty")
-            : LF("SmartAdvisor.Summary.FilteredCount", VisibleSmartAdvisorItems.Count, SmartAdvisorItems.Count);
+            : LP("SmartAdvisor.Summary.FilteredCount", SmartAdvisorItems.Count, VisibleSmartAdvisorItems.Count, SmartAdvisorItems.Count);
     }
 
     private void NotifyFilterStateChanged()

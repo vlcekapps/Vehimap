@@ -18,15 +18,18 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
     private readonly ITimelineService _timelineService;
     private readonly IFuelAnalysisService _fuelAnalysisService;
     private readonly IAppLocalizer _localizer;
+    private readonly IAppPluralizationService _pluralizationService;
 
     public LegacySmartAdvisorService(
         ITimelineService timelineService,
         IFuelAnalysisService fuelAnalysisService,
-        IAppLocalizer? localizer = null)
+        IAppLocalizer? localizer = null,
+        IAppPluralizationService? pluralizationService = null)
     {
         _timelineService = timelineService;
         _fuelAnalysisService = fuelAnalysisService;
         _localizer = localizer ?? new ResourceAppLocalizer();
+        _pluralizationService = pluralizationService ?? new AppPluralizationService();
     }
 
     public SmartAdvisorSummary BuildSmartAdvisor(
@@ -284,20 +287,20 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
         var parts = new List<string>();
         if (criticalCount > 0)
         {
-            parts.Add(LF("SmartAdvisor.Status.Part.Critical", criticalCount));
+            parts.Add(LP("SmartAdvisor.Status.Part.Critical", criticalCount, criticalCount));
         }
 
         if (warningCount > 0)
         {
-            parts.Add(LF("SmartAdvisor.Status.Part.Warning", warningCount));
+            parts.Add(LP("SmartAdvisor.Status.Part.Warning", warningCount, warningCount));
         }
 
         if (recommendationCount > 0)
         {
-            parts.Add(LF("SmartAdvisor.Status.Part.Recommendation", recommendationCount));
+            parts.Add(LP("SmartAdvisor.Status.Part.Recommendation", recommendationCount, recommendationCount));
         }
 
-        return LF("SmartAdvisor.Status.WithItems", totalCount, string.Join(", ", parts));
+        return LP("SmartAdvisor.Status.WithItems", totalCount, totalCount, string.Join(", ", parts));
     }
 
     private static string ValueOrFallback(string? value, string fallback) =>
@@ -341,4 +344,7 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
     private string L(string key) => _localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+
+    private string LP(string keyPrefix, int count, params object?[] args) =>
+        _pluralizationService.Format(_localizer, keyPrefix, count, args);
 }

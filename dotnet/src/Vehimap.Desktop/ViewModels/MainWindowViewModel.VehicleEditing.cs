@@ -474,20 +474,20 @@ public sealed partial class MainWindowViewModel
         var parts = new List<string>();
         if (addedMaintenance > 0)
         {
-            parts.Add(LFO("VehicleStarterBundle.Status.AddedPart.Maintenance", addedMaintenance));
+            parts.Add(FormatPlural("VehicleStarterBundle.Status.AddedPart.Maintenance", addedMaintenance, addedMaintenance));
         }
 
         if (addedRecords > 0)
         {
-            parts.Add(LFO("VehicleStarterBundle.Status.AddedPart.Record", addedRecords));
+            parts.Add(FormatPlural("VehicleStarterBundle.Status.AddedPart.Record", addedRecords, addedRecords));
         }
 
         if (addedReminders > 0)
         {
-            parts.Add(LFO("VehicleStarterBundle.Status.AddedPart.Reminder", addedReminders));
+            parts.Add(FormatPlural("VehicleStarterBundle.Status.AddedPart.Reminder", addedReminders, addedReminders));
         }
 
-        return LFO("VehicleStarterBundle.Status.Added", addedCount, string.Join(", ", parts));
+        return FormatPlural("VehicleStarterBundle.Status.Added", addedCount, addedCount, string.Join(", ", parts));
     }
 
     internal async Task<string> ApplyMaintenanceTemplatesAsync(string vehicleId, IReadOnlyList<VehicleStarterBundleTemplate> items)

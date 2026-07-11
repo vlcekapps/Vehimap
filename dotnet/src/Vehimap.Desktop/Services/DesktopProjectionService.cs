@@ -250,7 +250,7 @@ internal sealed class DesktopProjectionService
             BuildVehicleEvidenceSummary(dataSet, vehicle.Id),
             recentHistory.Count == 0
                 ? L("VehicleDetail.Projection.RecentHistoryEmpty")
-                : LF("VehicleDetail.Projection.RecentHistoryCount", recentHistory.Count),
+                : LP("VehicleDetail.Projection.RecentHistoryCount", recentHistory.Count, recentHistory.Count),
             evidenceSummaries,
             recentHistory);
     }
@@ -366,7 +366,7 @@ internal sealed class DesktopProjectionService
                 .Select(item =>
                 {
                     var fuel = BuildFuelGroupLabel(item.FuelType, item.FuelDetail);
-                    var entryCount = LF("FuelAnalysis.Group.EntryCount", item.EntryCount);
+                    var entryCount = LP("FuelAnalysis.Group.EntryCount", item.EntryCount, item.EntryCount);
                     var fuelAmount = FormatFuelAnalysisVolume(item.Liters);
                     var totalCost = FormatFuelAnalysisMoney(item.TotalCost);
                     var averagePrice = FormatOptionalPricePerVolume(item.AveragePricePerLiter);
@@ -544,7 +544,7 @@ internal sealed class DesktopProjectionService
 
         var summary = items.Count == 0
             ? L("Overview.Summary.DashboardEmpty")
-            : LF("Overview.Summary.DashboardWithItems", items.Count);
+            : LP("Overview.Summary.DashboardWithItems", items.Count, items.Count);
 
         return new DesktopListProjection<VehicleTimelineItemViewModel>(items, summary);
     }
@@ -558,13 +558,19 @@ internal sealed class DesktopProjectionService
 
         var errorCount = audit.Count(item => item.Severity == AuditSeverity.Error);
         var warningCount = audit.Count(item => item.Severity == AuditSeverity.Warning);
-        return LF("Audit.Summary.WithItems", audit.Count, errorCount, warningCount);
+        return LP(
+            "Audit.Summary.WithItems",
+            audit.Count,
+            audit.Count,
+            LP("Audit.Summary.ErrorCount", errorCount, errorCount),
+            LP("Audit.Summary.WarningCount", warningCount, warningCount));
     }
 
     public string BuildCostSummary(CostAnalysisSummary summary)
     {
-        return LF(
+        return LP(
             "Cost.Summary",
+            summary.ActiveVehicleCount,
             summary.PeriodLabel,
             FormatMoney(summary.TotalCost),
             FormatDistance(summary.DistanceKm),
@@ -575,8 +581,9 @@ internal sealed class DesktopProjectionService
 
     public string BuildCostComparison(CostAnalysisSummary summary)
     {
-        return LF(
+        return LP(
             "Cost.Comparison",
+            summary.CostPerKmUnavailableCount,
             FormatSignedMoney(summary.TotalCostDifference),
             FormatSignedCostPerDistance(summary.CostPerKmDifference),
             summary.CostPerKmUnavailableCount);
@@ -824,7 +831,7 @@ internal sealed class DesktopProjectionService
             return L("VehicleDetail.Projection.Fuel.Empty");
         }
 
-        var summary = LF("VehicleDetail.Projection.Fuel.CountAndOdometer", entries.Count, FormatOdometerValue(entries[0].Odometer));
+        var summary = LP("VehicleDetail.Projection.Fuel.CountAndOdometer", entries.Count, entries.Count, FormatOdometerValue(entries[0].Odometer));
         var latestFuelEntry = entries.FirstOrDefault(item => !string.IsNullOrWhiteSpace(item.Liters) || !string.IsNullOrWhiteSpace(item.TotalCost));
         if (latestFuelEntry is not null)
         {
@@ -939,7 +946,7 @@ internal sealed class DesktopProjectionService
             }
         }
 
-        var summary = LF("VehicleDetail.Projection.Record.Count", entries.Count);
+        var summary = LP("VehicleDetail.Projection.Record.Count", entries.Count, entries.Count);
         var nearestRecord = entries.FirstOrDefault(item => !string.IsNullOrWhiteSpace(item.ValidTo));
         if (nearestRecord is not null)
         {

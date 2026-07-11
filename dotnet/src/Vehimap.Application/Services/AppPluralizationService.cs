@@ -31,6 +31,13 @@ public sealed class AppPluralizationService : IAppPluralizationService
 
     public string Format(
         IAppLocalizer localizer,
+        string resourceKeyPrefix,
+        int count,
+        params object?[] args) =>
+        Format(localizer, new AppCulturePreferences(localizer.Culture.Name), resourceKeyPrefix, count, args);
+
+    public string Format(
+        IAppLocalizer localizer,
         AppCulturePreferences preferences,
         string resourceKeyPrefix,
         int count,

@@ -166,7 +166,7 @@ public sealed partial class AuditWorkspaceViewModel : WorkspaceViewModelBase
 
         AuditSummary = VisibleAuditItems.Count == 0
             ? DesktopLocalization.Localizer.Format("Audit.Summary.SearchEmpty", AuditSearchText.Trim())
-            : DesktopLocalization.Localizer.Format("Audit.Summary.SearchCount", AuditSearchText.Trim(), VisibleAuditItems.Count, AuditItems.Count);
+            : LP("Audit.Summary.SearchCount", AuditItems.Count, AuditSearchText.Trim(), VisibleAuditItems.Count, AuditItems.Count);
     }
 
     private static bool Contains(string value, string query) =>

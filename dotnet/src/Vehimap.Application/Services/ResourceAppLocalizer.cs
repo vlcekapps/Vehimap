@@ -28,6 +28,8 @@ public sealed class ResourceAppLocalizer : IAppLocalizer
         _culture = culture;
     }
 
+    public CultureInfo Culture => _culture;
+
     public string GetString(string key)
     {
         if (string.IsNullOrWhiteSpace(key))

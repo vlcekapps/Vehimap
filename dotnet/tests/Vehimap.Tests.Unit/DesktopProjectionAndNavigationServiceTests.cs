@@ -738,7 +738,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("Warning", items[1].Severity);
         Assert.Contains("Error, Milena, Missing license plate", items[0].AccessibleLabel, StringComparison.Ordinal);
         Assert.Equal(
-            "There are 2 items to resolve: 1 errors and 1 warnings.",
+            "There are 2 items to resolve: 1 error and 1 warning.",
             projectionService.BuildAuditSummary(audit));
         Assert.Equal(
             "Data audit has not found any issues that need action.",
@@ -759,7 +759,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             1,
             1,
             0,
-            "Smart advisor found 2 items: 1 critical, 1 warnings.",
+            "Smart advisor found 2 items: 1 critical item, 1 warning.",
             [
                 new SmartAdvisorItem(
                     "advisor_1",

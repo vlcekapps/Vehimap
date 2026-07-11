@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
@@ -14,6 +15,7 @@ namespace Vehimap.Desktop.ViewModels;
 public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObject
 {
     private static readonly AppUnitFormatService UnitFormatService = new();
+    private static readonly IAppPluralizationService PluralizationService = new AppPluralizationService();
 
     private readonly AppCulturePreferences _culturePreferences;
     private readonly AppUnitPreferences _unitPreferences;
@@ -200,12 +202,15 @@ public sealed partial class VehicleStarterBundleDialogViewModel : ObservableObje
         SummaryText = selectedItems.Count == 0
             ? _emptySelectionText
             : _showSectionCounts
-                ? LF("VehicleStarterBundle.Summary.SectionCounts", selectedItems.Count, maintenanceCount, recordCount, reminderCount)
-                : LF("VehicleStarterBundle.Summary.MaintenanceOnly", maintenanceCount);
+                ? LP("VehicleStarterBundle.Summary.SectionCounts", selectedItems.Count, selectedItems.Count, maintenanceCount, recordCount, reminderCount)
+                : LP("VehicleStarterBundle.Summary.MaintenanceOnly", maintenanceCount, maintenanceCount);
         OnPropertyChanged(nameof(CanApply));
     }
 
     private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
 
     private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
+
+    private string LP(string keyPrefix, int count, params object?[] args) =>
+        PluralizationService.Format(DesktopLocalization.Localizer, _culturePreferences, keyPrefix, count, args);
 }

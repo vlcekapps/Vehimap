@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Domain.Enums;
@@ -21,6 +22,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
     private readonly IAppDateFormatService _dateFormatService;
+    private readonly IAppPluralizationService _pluralizationService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
     private AppUnitPreferences _unitPreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToUnitPreferences();
     private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
@@ -36,7 +38,8 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         IAppLocalizer? localizer = null,
         IAppNumberFormatService? numberFormatService = null,
         IAppUnitFormatService? unitFormatService = null,
-        IAppDateFormatService? dateFormatService = null)
+        IAppDateFormatService? dateFormatService = null,
+        IAppPluralizationService? pluralizationService = null)
     {
         _attachmentService = attachmentService;
         _timelineService = timelineService;
@@ -44,6 +47,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
         _dateFormatService = dateFormatService ?? new AppDateFormatService();
+        _pluralizationService = pluralizationService ?? new AppPluralizationService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -607,7 +611,10 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
 
         if (!string.IsNullOrWhiteSpace(plan.IntervalMonths))
         {
-            parts.Add(LF("GlobalSearch.Value.Months", plan.IntervalMonths.Trim()));
+            var intervalMonthsText = plan.IntervalMonths.Trim();
+            parts.Add(int.TryParse(intervalMonthsText, NumberStyles.Integer, CultureInfo.InvariantCulture, out var intervalMonths)
+                ? LP("GlobalSearch.Value.Months", intervalMonths, intervalMonths)
+                : LF("GlobalSearch.Value.MonthIntervalRaw", intervalMonthsText));
         }
 
         return string.Join(" / ", parts);
@@ -659,4 +666,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private string L(string key) => _localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+
+    private string LP(string keyPrefix, int count, params object?[] args) =>
+        _pluralizationService.Format(_localizer, _culturePreferences, keyPrefix, count, args);
 }

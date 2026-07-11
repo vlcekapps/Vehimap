@@ -466,7 +466,7 @@ public sealed class MainWindowViewModelAppShellTests
 
         Assert.True(snapshot.HasNotification);
         Assert.StartsWith("timeline|", snapshot.NotificationKey, StringComparison.Ordinal);
-        Assert.Contains("termínů k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
+        Assert.Equal("Vehimap: 1 termín k řešení", snapshot.NotificationTitle);
         Assert.Contains("Milena", snapshot.NotificationMessage, StringComparison.Ordinal);
         Assert.Contains("Po termínu", snapshot.NotificationMessage, StringComparison.Ordinal);
         Assert.Contains("Nejbližší k řešení", snapshot.ToolTipText, StringComparison.Ordinal);
@@ -493,12 +493,12 @@ public sealed class MainWindowViewModelAppShellTests
             var snapshot = viewModel.BuildBackgroundSnapshot();
 
             Assert.True(snapshot.HasNotification);
-            Assert.Contains("termínů k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
+            Assert.Equal("Vehimap: 1 termín k řešení", snapshot.NotificationTitle);
             Assert.Contains("Konec zelené karty", snapshot.NotificationMessage, StringComparison.Ordinal);
             Assert.Contains("Po termínu", snapshot.NotificationMessage, StringComparison.Ordinal);
             Assert.Contains("Vozidla:", snapshot.ToolTipText, StringComparison.Ordinal);
             Assert.DoesNotContain("Due dates", snapshot.ToolTipText, StringComparison.Ordinal);
-            Assert.DoesNotContain("due dates to review", snapshot.NotificationTitle, StringComparison.Ordinal);
+            Assert.DoesNotContain("due date to review", snapshot.NotificationTitle, StringComparison.Ordinal);
         }
         finally
         {
@@ -521,12 +521,12 @@ public sealed class MainWindowViewModelAppShellTests
             var snapshot = viewModel.BuildBackgroundSnapshot();
 
             Assert.True(snapshot.HasNotification);
-            Assert.Contains("due dates to review", snapshot.NotificationTitle, StringComparison.Ordinal);
+            Assert.Equal("Vehimap: 1 due date to review", snapshot.NotificationTitle);
             Assert.Contains("Green card end", snapshot.NotificationMessage, StringComparison.Ordinal);
             Assert.Contains("Overdue", snapshot.NotificationMessage, StringComparison.Ordinal);
             Assert.Contains("Vehicles:", snapshot.ToolTipText, StringComparison.Ordinal);
             Assert.DoesNotContain("Termíny", snapshot.ToolTipText, StringComparison.Ordinal);
-            Assert.DoesNotContain("termínů k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
+            Assert.DoesNotContain("termín k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
         }
         finally
         {
@@ -557,7 +557,7 @@ public sealed class MainWindowViewModelAppShellTests
 
         Assert.True(snapshot.HasNotification);
         Assert.StartsWith("audit|", snapshot.NotificationKey, StringComparison.Ordinal);
-        Assert.Contains("položek k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
+        Assert.Equal("Vehimap: 1 položka k řešení", snapshot.NotificationTitle);
         Assert.Contains("Chybí SPZ", snapshot.NotificationMessage, StringComparison.Ordinal);
     }
 

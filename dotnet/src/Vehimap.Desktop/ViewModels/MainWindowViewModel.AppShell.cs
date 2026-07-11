@@ -392,7 +392,7 @@ public sealed partial class MainWindowViewModel
             return new DesktopBackgroundSnapshot(
                 string.Join(Environment.NewLine, toolTipLines),
                 $"timeline|{attentionTimelineItems.Count}|{firstAttention.VehicleId}|{firstAttention.Kind}|{firstAttention.EntryId}|{firstAttention.Date}",
-                LFO("AppShell.Background.NotificationTimelineTitle", attentionTimelineItems.Count),
+                FormatPlural("AppShell.Background.NotificationTimelineTitle", attentionTimelineItems.Count, attentionTimelineItems.Count),
                 LFO("AppShell.Background.NotificationTimelineMessage", firstAttention.VehicleName, firstAttention.Title, firstAttention.Date, firstAttention.Status),
                 true);
         }
@@ -403,7 +403,7 @@ public sealed partial class MainWindowViewModel
             return new DesktopBackgroundSnapshot(
                 string.Join(Environment.NewLine, toolTipLines),
                 $"audit|{AuditItems.Count}|{firstAudit.VehicleId}|{firstAudit.EntityKind}|{firstAudit.EntityId}",
-                LFO("AppShell.Background.NotificationAuditTitle", AuditItems.Count),
+                FormatPlural("AppShell.Background.NotificationAuditTitle", AuditItems.Count, AuditItems.Count),
                 LFO("AppShell.Background.NotificationAuditMessage", firstAudit.VehicleName, firstAudit.Title, firstAudit.Message),
                 true);
         }

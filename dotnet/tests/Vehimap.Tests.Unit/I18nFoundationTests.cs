@@ -154,6 +154,28 @@ public sealed class I18nFoundationTests
         Assert.Equal("Seznam vozidel: 1 vozidlo.", service.Format(czech, czechPreferences, "VehicleList.Summary.All", 1, 1));
         Assert.Equal("Seznam vozidel: 3 vozidla.", service.Format(czech, czechPreferences, "VehicleList.Summary.All", 3, 3));
         Assert.Equal("Seznam vozidel: 5 vozidel.", service.Format(czech, czechPreferences, "VehicleList.Summary.All", 5, 5));
+        Assert.Equal("1 entry", service.Format(english, "FuelAnalysis.Group.EntryCount", 1, 1));
+        Assert.Equal("3 záznamy", service.Format(czech, "FuelAnalysis.Group.EntryCount", 3, 3));
+        Assert.Equal(
+            "There are 2 items to resolve: 1 error and 5 warnings.",
+            service.Format(
+                english,
+                "Audit.Summary.WithItems",
+                2,
+                2,
+                service.Format(english, "Audit.Summary.ErrorCount", 1, 1),
+                service.Format(english, "Audit.Summary.WarningCount", 5, 5)));
+        Assert.Equal(
+            "K řešení jsou 2 položky: 1 chyba a 5 upozornění.",
+            service.Format(
+                czech,
+                "Audit.Summary.WithItems",
+                2,
+                2,
+                service.Format(czech, "Audit.Summary.ErrorCount", 1, 1),
+                service.Format(czech, "Audit.Summary.WarningCount", 5, 5)));
+        Assert.Equal(AppCultureService.EnglishLanguage, english.Culture.Name);
+        Assert.Equal(AppCultureService.CzechLanguage, czech.Culture.Name);
     }
 
     [Fact]
@@ -191,10 +213,40 @@ public sealed class I18nFoundationTests
             "Maintenance.Status.Overdue",
             "Maintenance.Status.InDays",
             "VehicleList.Summary.All",
-            "VehicleList.Status.AttentionCount"
+            "VehicleList.Status.AttentionCount",
+            "Audit.Summary.WithItems",
+            "Audit.Summary.ErrorCount",
+            "Audit.Summary.WarningCount",
+            "Audit.Summary.SearchCount",
+            "FuelAnalysis.Group.EntryCount",
+            "Cost.Summary",
+            "SmartAdvisor.Status.WithItems",
+            "SmartAdvisor.Status.Part.Critical",
+            "SmartAdvisor.Status.Part.Warning",
+            "SmartAdvisor.Status.Part.Recommendation",
+            "SmartAdvisor.Summary.FilteredCount",
+            "Overview.Summary.DashboardWithItems",
+            "Overview.Summary.OverdueWithItems",
+            "Overview.Summary.UpcomingWithItems",
+            "Overview.Summary.UpcomingVisibleDataIssues",
+            "Overview.Summary.UpcomingMissingGreenCardsHidden",
+            "Overview.Summary.UpcomingDataIssuesHidden",
+            "VehicleStarterBundle.Summary.MaintenanceOnly",
+            "VehicleStarterBundle.Summary.SectionCounts",
+            "VehicleStarterBundle.Status.Added",
+            "VehicleStarterBundle.Status.AddedPart.Maintenance",
+            "VehicleStarterBundle.Status.AddedPart.Record",
+            "VehicleStarterBundle.Status.AddedPart.Reminder",
+            "VehicleDetail.Projection.RecentHistoryCount",
+            "VehicleDetail.Projection.Fuel.CountAndOdometer",
+            "VehicleDetail.Projection.Record.Count",
+            "GlobalSearch.Value.Months",
+            "Cost.Comparison",
+            "AppShell.Background.NotificationTimelineTitle",
+            "AppShell.Background.NotificationAuditTitle"
         };
         var directFormattingRegex = new Regex(
-            @"(?:\.Format|\bLF)\(\s*""(?<key>[A-Za-z0-9_.-]+)""",
+            @"(?:\.Format|\bLF|\bLFO)\(\s*""(?<key>[A-Za-z0-9_.-]+)""",
             RegexOptions.Compiled);
         var failures = new List<string>();
 
@@ -389,8 +441,8 @@ public sealed class I18nFoundationTests
         Assert.Equal("Volbu dashboardu při startu se nepodařilo uložit.", czech.GetString("AppShell.Dashboard.ShowOnLaunchFailed"));
         Assert.Equal("Vehicle bundle", english.GetString("VehicleStarterBundle.Title"));
         Assert.Equal("Balíček pro vozidlo", czech.GetString("VehicleStarterBundle.Title"));
-        Assert.Equal("Selected: 3 items | Service 1 | Documents 1 | Reminders 1", english.Format("VehicleStarterBundle.Summary.SectionCounts", 3, 1, 1, 1));
-        Assert.Equal("Vybráno: 3 položek | Servis 1 | Doklady 1 | Připomínky 1", czech.Format("VehicleStarterBundle.Summary.SectionCounts", 3, 1, 1, 1));
+        Assert.Equal("Selected: 1 item | Service 1 | Documents 0 | Reminders 0", english.Format("VehicleStarterBundle.Summary.SectionCounts.One", 1, 1, 0, 0));
+        Assert.Equal("Vybrány: 3 položky | Servis 1 | Doklady 1 | Připomínky 1", czech.Format("VehicleStarterBundle.Summary.SectionCounts.Few", 3, 1, 1, 1));
         Assert.Equal("Press Up or Down Arrow to open the list and choose a value.", english.GetString("App.ComboBox.HelpText"));
         Assert.Equal("Šipkami nahoru nebo dolů otevřete seznam a vyberte hodnotu.", czech.GetString("App.ComboBox.HelpText"));
         Assert.Equal("Vehimap Nightly: feedback for nightly 2.0.0", english.Format("FeedbackIssue.Title", "Vehimap Nightly", "nightly", "2.0.0"));
