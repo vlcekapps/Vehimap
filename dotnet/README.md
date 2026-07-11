@@ -117,6 +117,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - viditelne ulozene volby pouzivaji stabilni interni klice a EN/CS resource aliasy jen pro nacteni starsich nightly preferenci; editorove ComboBoxy pro zname hodnoty ukladaji `Value` a nikdy viditelny `Label`
 - viditelne volby razeni v evidencich, terminovych prehledech, auditu a globalnim hledani uz pouzivaji `.resx` labely nad stabilnimi internimi klici; stare ceske i anglicke labely zustavaji kompatibilni jako ulozene preference
 - docasny TextBox UIA fallback pouziva pro vybrane znaky EN/CS pluralizaci a Unicode textove prvky; emoji nebo znak s kombinovanou diakritikou se ve screen-reader oznameni pocita jako jeden znak a zkraceny kontext ho nesmi rozpulit
+- lokalizacni hranice zahrnuje i systemove file pickery a diagnostiku `O programu`: kredit autora a viditelny typ souboru iCalendar pochazeji z EN/CS resources, zatimco URL, pripona `ics` a pattern `*.ics` zustavaji invariantni technicke hodnoty
 
 ## Aktualni stav
 

@@ -3,14 +3,30 @@ using System.Text;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using Vehimap.Application.Abstractions;
+using Vehimap.Application.Services;
 
 namespace Vehimap.Desktop.Services;
 
 public sealed class AvaloniaTextFileSaveService : ITextFileSaveService
 {
+    private readonly IAppLocalizer _localizer;
+
+    public AvaloniaTextFileSaveService(IAppLocalizer? localizer = null)
+    {
+        _localizer = localizer ?? new ResourceAppLocalizer();
+    }
+
     public async Task<string?> SaveTextAsync(string title, string suggestedFileName, string content, CancellationToken cancellationToken = default)
     {
-        return await SaveTextAsync(title, suggestedFileName, content, "iCalendar", "ics", ["*.ics"], cancellationToken)
+        return await SaveTextAsync(
+                title,
+                suggestedFileName,
+                content,
+                _localizer.GetString("AppShell.FileDialog.CalendarFileType"),
+                "ics",
+                ["*.ics"],
+                cancellationToken)
             .ConfigureAwait(true);
     }
 

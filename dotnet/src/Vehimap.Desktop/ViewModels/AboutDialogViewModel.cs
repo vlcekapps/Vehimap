@@ -7,7 +7,6 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class AboutDialogViewModel : ObservableObject
 {
-    private const string AuthorText = "by Vlcek apps";
     public const string AuthorSupportUrl = "https://obchod.pvlcek.cz/produkt/kupte-autorovi-kavu-podpora-tvorby-podcastu-a-karosy/";
 
     public AboutDialogViewModel(
@@ -41,7 +40,7 @@ public sealed partial class AboutDialogViewModel : ObservableObject
 
     public string Title { get; }
 
-    public string Author => AuthorText;
+    public string Author => _localizer.GetString("About.AuthorCredit");
 
     private readonly IAppLocalizer _localizer;
 

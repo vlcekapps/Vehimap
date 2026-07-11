@@ -93,19 +93,39 @@ public sealed class AppShellServicesTests : IDisposable
             "https://example.com/release",
             "nightly");
 
-        Assert.Equal("by Vlcek apps", model.Author);
+        Assert.Equal("od Vlcek apps", model.Author);
         Assert.Equal("Poděkovat autorovi", model.ThankAuthorLabel);
         Assert.Equal("Otevře stránku, kde můžete autorovi poděkovat podporou tvorby.", model.ThankAuthorHelpText);
         Assert.Equal("1.2.3-nightly.45.1 (nightly)", model.DisplayVersion);
         Assert.False(model.IsDiagnosticsVisible);
         Assert.Equal("Zobrazit diagnostická data", model.ToggleDiagnosticsLabel);
-        Assert.Contains("Autor: by Vlcek apps", model.DiagnosticText, StringComparison.Ordinal);
+        Assert.Contains("Autor: od Vlcek apps", model.DiagnosticText, StringComparison.Ordinal);
 
         model.ToggleDiagnostics();
 
         Assert.True(model.IsDiagnosticsVisible);
         Assert.Equal("Skrýt diagnostická data", model.ToggleDiagnosticsLabel);
         Assert.Contains("Kanál: nightly", model.DiagnosticText, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void About_dialog_author_credit_uses_requested_language()
+    {
+        var model = new AboutDialogViewModel(
+            "Vehimap",
+            "2.0.0",
+            "2.0.0.0",
+            "published",
+            @"C:\vehimap\data",
+            "System data folder",
+            "Windows 11 x64",
+            ".NET 10.0",
+            @"C:\vehimap\Vehimap.Desktop.exe",
+            "https://example.com/release",
+            localizer: EnglishLocalizer());
+
+        Assert.Equal("by Vlcek apps", model.Author);
+        Assert.Contains("Author: by Vlcek apps", model.DiagnosticText, StringComparison.Ordinal);
     }
 
     [Fact]

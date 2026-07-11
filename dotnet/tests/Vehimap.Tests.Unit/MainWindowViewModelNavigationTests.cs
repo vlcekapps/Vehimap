@@ -1211,6 +1211,9 @@ public sealed class MainWindowViewModelNavigationTests
 
         Assert.Equal("Export termínů do kalendáře", saveService.LastTitle);
         Assert.Equal($"vehimap-kalendar-{DateTime.Today:yyyy-MM-dd}.ics", saveService.LastSuggestedFileName);
+        Assert.Equal("Soubor iCalendar", saveService.LastFileTypeName);
+        Assert.Equal("ics", saveService.LastDefaultExtension);
+        Assert.Contains("*.ics", saveService.LastPatterns);
         Assert.Contains("BEGIN:VCALENDAR", saveService.LastContent);
         Assert.Contains("Kalendář uložen", viewModel.TimelineWorkspace.ExportStatus);
         Assert.Contains(@"C:\exports\terminy.ics", viewModel.TimelineWorkspace.ExportStatus);
@@ -1473,6 +1476,7 @@ public sealed class MainWindowViewModelNavigationTests
         public string LastFileTypeName { get; private set; } = string.Empty;
         public string LastDefaultExtension { get; private set; } = string.Empty;
         public string LastContent { get; private set; } = string.Empty;
+        public IReadOnlyList<string> LastPatterns { get; private set; } = [];
 
         public Task<string?> SaveTextAsync(string title, string suggestedFileName, string content, CancellationToken cancellationToken = default)
         {
@@ -1496,6 +1500,7 @@ public sealed class MainWindowViewModelNavigationTests
             LastFileTypeName = fileTypeName;
             LastDefaultExtension = defaultExtension;
             LastContent = content;
+            LastPatterns = patterns;
             return Task.FromResult<string?>(_path);
         }
     }

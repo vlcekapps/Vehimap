@@ -10,6 +10,7 @@
   <data name="About.Action.ReleaseNotes" xml:space="preserve"><value>Release poznámky</value></data>
   <data name="About.Application" xml:space="preserve"><value>Aplikace</value></data>
   <data name="About.Author" xml:space="preserve"><value>Autor</value></data>
+  <data name="About.AuthorCredit" xml:space="preserve"><value>od Vlcek apps</value></data>
   <data name="About.BasicInfo" xml:space="preserve"><value>Základní informace o aplikaci</value></data>
   <data name="About.CloseName" xml:space="preserve"><value>Zavřít dialog O programu</value></data>
   <data name="About.CopyDiagnosticsName" xml:space="preserve"><value>Kopírovat diagnostická data o aplikaci do schránky</value></data>
@@ -1964,6 +1965,7 @@ Stav: {5}</value></data>
   <data name="AppShell.FileDialog.VehiclePackageImportTitle" xml:space="preserve"><value>Import balíčku vozidla</value></data>
   <data name="AppShell.FileDialog.VehiclePackageFileType" xml:space="preserve"><value>Balíček vozidla Vehimap</value></data>
   <data name="AppShell.FileDialog.CalendarExportTitle" xml:space="preserve"><value>Export termínů do kalendáře</value></data>
+  <data name="AppShell.FileDialog.CalendarFileType" xml:space="preserve"><value>Soubor iCalendar</value></data>
   <data name="AppShell.FileName.CalendarExport" xml:space="preserve"><value>vehimap-kalendar-{0}.ics</value></data>
   <data name="AppShell.FileDialog.PrintableReportTitle" xml:space="preserve"><value>Uložit tiskový přehled vozidel</value></data>
   <data name="AppShell.FileDialog.HtmlFileType" xml:space="preserve"><value>HTML soubor</value></data>

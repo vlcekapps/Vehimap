@@ -274,7 +274,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             new LegacyGlobalSearchService(new ManagedAttachmentPathService(), new LegacyTimelineService(DesktopLocalization.LiveLocalizer), DesktopLocalization.LiveLocalizer),
             new LegacyTimelineService(DesktopLocalization.LiveLocalizer),
             new LegacyCalendarExportService(new LegacyTimelineService(DesktopLocalization.LiveLocalizer), DesktopLocalization.LiveLocalizer),
-            new AvaloniaTextFileSaveService(),
+            new AvaloniaTextFileSaveService(DesktopLocalization.LiveLocalizer),
             new SqliteBackupService(DesktopLocalization.LiveLocalizer),
             new AvaloniaFileDialogService(),
             new DesktopSupportedSettingsService(),
@@ -656,7 +656,13 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 "AppShell.FileName.CalendarExport",
                 today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             var savedPath = await _fileSaveService
-                .SaveTextAsync(LO("AppShell.FileDialog.CalendarExportTitle"), suggestedFileName, export.IcsContent)
+                .SaveTextAsync(
+                    LO("AppShell.FileDialog.CalendarExportTitle"),
+                    suggestedFileName,
+                    export.IcsContent,
+                    LO("AppShell.FileDialog.CalendarFileType"),
+                    "ics",
+                    ["*.ics"])
                 .ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(savedPath))

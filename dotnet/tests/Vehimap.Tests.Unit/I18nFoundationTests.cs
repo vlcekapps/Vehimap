@@ -477,6 +477,40 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Localized_desktop_edge_surfaces_do_not_hardcode_visible_english_labels()
+    {
+        var root = FindRepositoryRoot();
+        var files = new[]
+        {
+            Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "ViewModels", "AboutDialogViewModel.cs"),
+            Path.Combine(root, "dotnet", "src", "Vehimap.Desktop", "Services", "AvaloniaTextFileSaveService.cs")
+        };
+        var literalRegex = new Regex("\"(?<value>(?:\\\\.|[^\"\\\\])*)\"", RegexOptions.Compiled);
+        var failures = new List<string>();
+
+        foreach (var file in files)
+        {
+            var content = File.ReadAllText(file);
+            foreach (Match match in literalRegex.Matches(content))
+            {
+                var value = match.Groups["value"].Value;
+                if (Regex.IsMatch(value, @"[A-Za-z]\s+[A-Za-z]", RegexOptions.CultureInvariant)
+                    || string.Equals(value, "iCalendar", StringComparison.Ordinal))
+                {
+                    failures.Add($"{Path.GetRelativePath(root, file)}: {value}");
+                }
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Small user-facing desktop boundary classes must resolve visible labels through resources. " +
+            "Invariant URLs, extensions and stable tokens may remain literals." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Resource_localizer_returns_expected_language_values()
     {
         var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
@@ -484,6 +518,10 @@ public sealed class I18nFoundationTests
 
         Assert.Equal("Vehimap settings", english.GetString("Settings.Title"));
         Assert.Equal("Nastavení Vehimapu", czech.GetString("Settings.Title"));
+        Assert.Equal("by Vlcek apps", english.GetString("About.AuthorCredit"));
+        Assert.Equal("od Vlcek apps", czech.GetString("About.AuthorCredit"));
+        Assert.Equal("iCalendar file", english.GetString("AppShell.FileDialog.CalendarFileType"));
+        Assert.Equal("Soubor iCalendar", czech.GetString("AppShell.FileDialog.CalendarFileType"));
         Assert.Equal("Service book", english.GetString("ServiceBook.Window.Title"));
         Assert.Equal("Servisní knížka", czech.GetString("ServiceBook.Window.Title"));
         Assert.Equal("Vehimap - Service book", english.GetString("ServiceBook.Export.Title"));
