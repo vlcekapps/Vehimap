@@ -1300,6 +1300,10 @@ Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
   <data name="Cost.Comparison" xml:space="preserve"><value>Proti stejně dlouhému období loni: náklady {0}, cena / vzdálenost {1}. U {2} vozidel s náklady zatím chybí spolehlivý výpočet ceny za zvolenou vzdálenost.</value></data>
   <data name="CostExport.FleetNotReady" xml:space="preserve"><value>Souhrn nákladů zatím není připraven k exportu.</value></data>
   <data name="CostExport.FleetSummaryTitle" xml:space="preserve"><value>Export souhrnu nákladů</value></data>
+  <data name="CostExport.FileName.FleetSummary" xml:space="preserve"><value>vehimap-naklady-souhrn-{0}-{1}.tsv</value></data>
+  <data name="CostExport.FileName.VehicleDetail" xml:space="preserve"><value>{0}-naklady-detail-{1}-{2}.tsv</value></data>
+  <data name="CostExport.FileName.VehicleReport" xml:space="preserve"><value>{0}-naklady-sestava-{1}-{2}.html</value></data>
+  <data name="CostExport.FileName.VehicleFallback" xml:space="preserve"><value>vozidlo</value></data>
   <data name="CostExport.VehicleDetailTitle" xml:space="preserve"><value>Export detailu nákladů</value></data>
   <data name="CostExport.VehicleReportTitle" xml:space="preserve"><value>Export HTML sestavy nákladů</value></data>
   <data name="CostExport.TsvFileType" xml:space="preserve"><value>TSV soubor</value></data>
@@ -1804,6 +1808,7 @@ Stav: {5}</value></data>
   <data name="AppShell.FileDialog.VehiclePackageImportTitle" xml:space="preserve"><value>Import balíčku vozidla</value></data>
   <data name="AppShell.FileDialog.VehiclePackageFileType" xml:space="preserve"><value>Balíček vozidla Vehimap</value></data>
   <data name="AppShell.FileDialog.CalendarExportTitle" xml:space="preserve"><value>Export termínů do kalendáře</value></data>
+  <data name="AppShell.FileName.CalendarExport" xml:space="preserve"><value>vehimap-kalendar-{0}.ics</value></data>
   <data name="AppShell.FileDialog.PrintableReportTitle" xml:space="preserve"><value>Uložit tiskový přehled vozidel</value></data>
   <data name="AppShell.FileDialog.HtmlFileType" xml:space="preserve"><value>HTML soubor</value></data>
   <data name="AppShell.FileName.VehiclePackagePrefix" xml:space="preserve"><value>vehimap-vozidlo</value></data>
@@ -1849,7 +1854,6 @@ Stav: {5}</value></data>
   <data name="VehiclePackage.Error.MissingVehicleData" xml:space="preserve"><value>Balíček vozidla neobsahuje data vozidla.</value></data>
   <data name="VehiclePackage.Error.ExactlyOneVehicleRequired" xml:space="preserve"><value>Balíček musí obsahovat právě jedno vozidlo.</value></data>
   <data name="VehiclePackage.Error.InvalidAttachmentPath" xml:space="preserve"><value>Balíček vozidla obsahuje nebezpečnou cestu spravované přílohy.</value></data>
-  <data name="VehiclePackage.AttachmentFallbackFileName" xml:space="preserve"><value>priloha.bin</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchEnabled" xml:space="preserve"><value>Dashboard se bude zobrazovat při startu aplikace.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchDisabled" xml:space="preserve"><value>Dashboard se při startu aplikace nebude otevírat automaticky.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchFailed" xml:space="preserve"><value>Volbu dashboardu při startu se nepodařilo uložit.</value></data>

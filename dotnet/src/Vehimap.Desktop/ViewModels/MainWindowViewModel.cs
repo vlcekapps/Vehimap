@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Collections.ObjectModel;
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application;
@@ -649,7 +650,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 return;
             }
 
-            var suggestedFileName = $"vehimap-kalendar-{today:yyyy-MM-dd}.ics";
+            var suggestedFileName = LFO(
+                "AppShell.FileName.CalendarExport",
+                today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             var savedPath = await _fileSaveService
                 .SaveTextAsync(LO("AppShell.FileDialog.CalendarExportTitle"), suggestedFileName, export.IcsContent)
                 .ConfigureAwait(false);

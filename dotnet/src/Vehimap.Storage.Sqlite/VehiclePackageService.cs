@@ -13,6 +13,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
 {
     private const string ManifestFileName = "manifest.json";
     private const string DataFileName = "vehicle.json";
+    private const string AttachmentFallbackFileName = "attachment.bin";
     private const string PackageFormat = "vehimap.vehicle-package";
     private const int PackageVersion = 1;
 
@@ -262,7 +263,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
         var fileName = Path.GetFileName(normalized.Replace('/', Path.DirectorySeparatorChar));
         if (string.IsNullOrWhiteSpace(fileName))
         {
-            fileName = L("VehiclePackage.AttachmentFallbackFileName");
+            fileName = AttachmentFallbackFileName;
         }
 
         return $"{SqliteStoragePaths.AttachmentsDirectoryName}/{vehicleId}/{fileName}";

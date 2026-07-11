@@ -11,6 +11,9 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Přibyla dokumentační sada `dotnet/docs/accessibility/` pro ACR-ready přípravu Vehimapu 2.0: VPAT 2.5Rev INT draft, WCAG2ICT/2.2 AA matrix, remediation backlog a ruční testovací protokol. Zatím jde o evidenční draft, ne o formální prohlášení o shodě.
 
 ### Změněno
+- Navrhované názvy ICS a nákladových TSV/HTML exportů se nově řídí aktivním jazykem; anglické UI už nenabízí české části názvů `kalendar`, `naklady` ani fallback `vozidlo`. Nouzové názvy spravovaných příloh jsou naopak invariantní (`attachment` / `attachment.bin`), protože se ukládají jako datová cesta a nesmějí měnit význam podle jazyka UI.
+- I18n testovací brána nově vedle shody EN/CS klíčů ověřuje neprázdné hodnoty, přesnou shodu formátovacích placeholderů, existenci všech doslovně použitých resource klíčů a nepřítomnost české diakritiky v anglickém UI katalogu mimo výslovně povolená dvojjazyčná parserová data.
+- Anglická nápověda místa tankování používá přirozený anglický příklad místo české adresy; uživatelsky zadané názvy čerpacích stanic se nadále nepřekládají.
 - Dialog kontroly aktualizací má nově kontextový přístupný help text pro primární akci: čtečka rozliší otevření release stránky, ruční stažení assetu a automatickou instalaci, která spustí instalátor a nahradí běžící aplikaci.
 - Import balíčku vozidla v hlavním menu má nově lokalizovaný přístupný help text, který před aktivací vysvětluje import do aktuální datové sady; statický accessibility guard ho hlídá společně s obnovou zálohy a mazáním dat.
 - Převod dokladu na spravovanou přílohu a použití startovního balíčku vozidla mají nově lokalizovaný přístupný help text s dopadem akce; stejný guard hlídá, aby se z rizikových datových akcí znovu nestaly jen krátké popisky.

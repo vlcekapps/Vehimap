@@ -192,13 +192,24 @@ internal sealed class DesktopCostExportService
     }
 
     public string BuildFleetSummaryFileName(CostAnalysisSummary summary) =>
-        $"vehimap-naklady-souhrn-{summary.PeriodStart:yyyy-MM-dd}-{summary.PeriodEnd:yyyy-MM-dd}.tsv";
+        LF(
+            "CostExport.FileName.FleetSummary",
+            summary.PeriodStart.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            summary.PeriodEnd.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
     public string BuildVehicleDetailFileName(VehimapDataSet dataSet, string vehicleId, DateOnly periodStart, DateOnly periodEnd) =>
-        $"{SafeFileName(GetVehicleName(dataSet, vehicleId))}-naklady-detail-{periodStart:yyyy-MM-dd}-{periodEnd:yyyy-MM-dd}.tsv";
+        LF(
+            "CostExport.FileName.VehicleDetail",
+            SafeFileName(GetVehicleName(dataSet, vehicleId)),
+            periodStart.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            periodEnd.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
     public string BuildVehicleReportFileName(VehimapDataSet dataSet, string vehicleId, DateOnly periodStart, DateOnly periodEnd) =>
-        $"{SafeFileName(GetVehicleName(dataSet, vehicleId))}-naklady-sestava-{periodStart:yyyy-MM-dd}-{periodEnd:yyyy-MM-dd}.html";
+        LF(
+            "CostExport.FileName.VehicleReport",
+            SafeFileName(GetVehicleName(dataSet, vehicleId)),
+            periodStart.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            periodEnd.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
     private List<CostExportEntry> BuildVehicleCostEntries(VehimapDataSet dataSet, string vehicleId, DateOnly periodStart, DateOnly periodEnd)
     {
@@ -377,16 +388,16 @@ internal sealed class DesktopCostExportService
     private static string JoinNonEmpty(IEnumerable<string> values) =>
         string.Join("; ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
 
-    private static string SafeFileName(string value)
+    private string SafeFileName(string value)
     {
-        var safe = string.IsNullOrWhiteSpace(value) ? "vozidlo" : value.Trim();
+        var safe = string.IsNullOrWhiteSpace(value) ? L("CostExport.FileName.VehicleFallback") : value.Trim();
         foreach (var invalidChar in Path.GetInvalidFileNameChars())
         {
             safe = safe.Replace(invalidChar, '_');
         }
 
         safe = string.Join("_", safe.Split(' ', StringSplitOptions.RemoveEmptyEntries));
-        return string.IsNullOrWhiteSpace(safe) ? "vozidlo" : safe.Trim('_', '.');
+        return string.IsNullOrWhiteSpace(safe) ? L("CostExport.FileName.VehicleFallback") : safe.Trim('_', '.');
     }
 
     private static string Html(string? value) => WebUtility.HtmlEncode(value ?? string.Empty);

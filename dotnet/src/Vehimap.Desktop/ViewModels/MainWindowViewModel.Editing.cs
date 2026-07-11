@@ -11,6 +11,8 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
+    private const string ManagedAttachmentFallbackBaseName = "attachment";
+
     private string? _editingReminderId;
     private string? _editingRecordId;
 
@@ -870,7 +872,7 @@ public sealed partial class MainWindowViewModel
         var fileName = SanitizeFileName(Path.GetFileNameWithoutExtension(sourcePath));
         if (string.IsNullOrWhiteSpace(fileName))
         {
-            fileName = "priloha";
+            fileName = ManagedAttachmentFallbackBaseName;
         }
 
         var extension = Path.GetExtension(sourcePath);
@@ -998,7 +1000,7 @@ public sealed partial class MainWindowViewModel
         var value = (fileName ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(value))
         {
-            return "priloha";
+            return ManagedAttachmentFallbackBaseName;
         }
 
         foreach (var invalidChar in Path.GetInvalidFileNameChars())

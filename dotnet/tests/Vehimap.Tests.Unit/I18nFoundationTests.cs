@@ -26,6 +26,101 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void Translation_resources_are_non_empty_and_preserve_format_placeholders()
+    {
+        var root = FindRepositoryRoot();
+        var english = ReadResourceValues(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx"));
+        var czech = ReadResourceValues(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx"));
+        var failures = new List<string>();
+
+        foreach (var key in english.Keys.OrderBy(value => value, StringComparer.Ordinal))
+        {
+            if (string.IsNullOrWhiteSpace(english[key]))
+            {
+                failures.Add($"{key}: English value is empty.");
+            }
+
+            if (string.IsNullOrWhiteSpace(czech[key]))
+            {
+                failures.Add($"{key}: Czech value is empty.");
+            }
+
+            var englishPlaceholders = ExtractFormatPlaceholders(english[key]);
+            var czechPlaceholders = ExtractFormatPlaceholders(czech[key]);
+            if (!englishPlaceholders.SequenceEqual(czechPlaceholders, StringComparer.Ordinal))
+            {
+                failures.Add($"{key}: EN placeholders [{string.Join(", ", englishPlaceholders)}], CS placeholders [{string.Join(", ", czechPlaceholders)}].");
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Translation resources must be non-empty and preserve the same composite-format placeholders." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void English_ui_resources_do_not_contain_czech_diacritics_outside_documented_compatibility_data()
+    {
+        var root = FindRepositoryRoot();
+        var english = ReadResourceValues(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx"));
+        var allowedBilingualDataKeys = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "ServiceBook.RecordKeywords"
+        };
+        var failures = english
+            .Where(item => CzechDiacriticsRegex().IsMatch(item.Value) && !allowedBilingualDataKeys.Contains(item.Key))
+            .Select(item => $"{item.Key}: {item.Value}")
+            .ToArray();
+
+        Assert.True(
+            failures.Length == 0,
+            "English UI resources must not contain Czech diacritics. Explicit bilingual parser/search data needs a documented allowlist entry." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void Literal_resource_keys_referenced_by_production_source_exist()
+    {
+        var root = FindRepositoryRoot();
+        var resourceKeys = ReadResourceKeys(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx"));
+        var sourceRoot = Path.Combine(root, "dotnet", "src");
+        var methodReferenceRegex = new Regex(
+            @"(?:GetString|Format|L|LF|LO|LFO)\(\s*""(?<key>[A-Za-z0-9_.-]+)""",
+            RegexOptions.Compiled);
+        var xamlReferenceRegex = new Regex(
+            @"\{i18n:Loc\s+(?<key>[A-Za-z0-9_.-]+)\}",
+            RegexOptions.Compiled);
+        var failures = new List<string>();
+
+        foreach (var file in Directory.EnumerateFiles(sourceRoot, "*.*", SearchOption.AllDirectories)
+                     .Where(path => Path.GetExtension(path) is ".cs" or ".axaml")
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+                     .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase)))
+        {
+            var relativePath = Path.GetRelativePath(root, file).Replace('\\', '/');
+            var content = File.ReadAllText(file);
+            foreach (var match in methodReferenceRegex.Matches(content).Cast<Match>()
+                         .Concat(xamlReferenceRegex.Matches(content).Cast<Match>()))
+            {
+                var key = match.Groups["key"].Value;
+                if (!resourceKeys.Contains(key))
+                {
+                    failures.Add($"{relativePath}: {key}");
+                }
+            }
+        }
+
+        Assert.True(
+            failures.Count == 0,
+            "Literal localization keys referenced by production source must exist in the resource catalog." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures.Distinct(StringComparer.Ordinal).OrderBy(value => value, StringComparer.Ordinal)));
+    }
+
+    [Fact]
     public void Resource_localizer_returns_expected_language_values()
     {
         var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
@@ -1086,8 +1181,35 @@ public sealed class I18nFoundationTests
         Assert.Contains("CalendarExport.Description.Vehicle", service);
         Assert.Contains("AppShell.CalendarExport.SavedWithSkippedMaintenance", mainWindowViewModel);
         Assert.Contains("AppShell.FileDialog.CalendarExportTitle", mainWindowViewModel);
+        Assert.Contains("AppShell.FileName.CalendarExport", mainWindowViewModel);
+        Assert.DoesNotContain("vehimap-kalendar", mainWindowViewModel, StringComparison.Ordinal);
         Assert.Contains("TimelineFilterFutureKey", preferencesViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
+    }
+
+    [Fact]
+    public void Managed_attachment_storage_fallback_is_language_neutral()
+    {
+        var root = FindRepositoryRoot();
+        var editing = File.ReadAllText(Path.Combine(
+            root,
+            "dotnet",
+            "src",
+            "Vehimap.Desktop",
+            "ViewModels",
+            "MainWindowViewModel.Editing.cs"));
+
+        Assert.Contains("ManagedAttachmentFallbackBaseName = \"attachment\"", editing, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"priloha\"", editing, StringComparison.Ordinal);
+
+        var vehiclePackageService = File.ReadAllText(Path.Combine(
+            root,
+            "dotnet",
+            "src",
+            "Vehimap.Storage.Sqlite",
+            "VehiclePackageService.cs"));
+        Assert.Contains("AttachmentFallbackFileName = \"attachment.bin\"", vehiclePackageService, StringComparison.Ordinal);
+        Assert.DoesNotContain("VehiclePackage.AttachmentFallbackFileName", vehiclePackageService, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -1595,6 +1717,26 @@ public sealed class I18nFoundationTests
             .Where(name => !string.IsNullOrWhiteSpace(name))!,
             StringComparer.Ordinal);
     }
+
+    private static SortedDictionary<string, string> ReadResourceValues(string path)
+    {
+        var document = XDocument.Load(path);
+        return new SortedDictionary<string, string>(
+            document.Root!
+                .Elements("data")
+                .Where(element => !string.IsNullOrWhiteSpace(element.Attribute("name")?.Value))
+                .ToDictionary(
+                    element => element.Attribute("name")!.Value,
+                    element => element.Element("value")?.Value ?? string.Empty,
+                    StringComparer.Ordinal),
+            StringComparer.Ordinal);
+    }
+
+    private static string[] ExtractFormatPlaceholders(string value) =>
+        Regex.Matches(value, @"(?<!\{)\{\d+(?:[^}]*)?\}(?!\})")
+            .Select(match => match.Value)
+            .OrderBy(placeholder => placeholder, StringComparer.Ordinal)
+            .ToArray();
 
     private static Regex CzechDiacriticsRegex() =>
         new("[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]", RegexOptions.Compiled);

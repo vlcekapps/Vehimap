@@ -1208,6 +1208,7 @@ public sealed class MainWindowViewModelNavigationTests
         await viewModel.ExportCalendarCommand.ExecuteAsync(null);
 
         Assert.Equal("Export termínů do kalendáře", saveService.LastTitle);
+        Assert.Equal($"vehimap-kalendar-{DateTime.Today:yyyy-MM-dd}.ics", saveService.LastSuggestedFileName);
         Assert.Contains("BEGIN:VCALENDAR", saveService.LastContent);
         Assert.Contains("Kalendář uložen", viewModel.TimelineWorkspace.ExportStatus);
         Assert.Contains(@"C:\exports\terminy.ics", viewModel.TimelineWorkspace.ExportStatus);
@@ -1464,6 +1465,7 @@ public sealed class MainWindowViewModelNavigationTests
         }
 
         public string LastTitle { get; private set; } = string.Empty;
+        public string LastSuggestedFileName { get; private set; } = string.Empty;
         public string LastFileTypeName { get; private set; } = string.Empty;
         public string LastDefaultExtension { get; private set; } = string.Empty;
         public string LastContent { get; private set; } = string.Empty;
@@ -1471,6 +1473,7 @@ public sealed class MainWindowViewModelNavigationTests
         public Task<string?> SaveTextAsync(string title, string suggestedFileName, string content, CancellationToken cancellationToken = default)
         {
             LastTitle = title;
+            LastSuggestedFileName = suggestedFileName;
             LastContent = content;
             return Task.FromResult<string?>(_path);
         }
@@ -1485,6 +1488,7 @@ public sealed class MainWindowViewModelNavigationTests
             CancellationToken cancellationToken = default)
         {
             LastTitle = title;
+            LastSuggestedFileName = suggestedFileName;
             LastFileTypeName = fileTypeName;
             LastDefaultExtension = defaultExtension;
             LastContent = content;

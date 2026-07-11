@@ -303,7 +303,7 @@ Vehicle: {2}
   <data name="FuelEditor.OdometerLabel" xml:space="preserve"><value>Odometer ({0})</value></data>
   <data name="FuelEditor.OdometerName" xml:space="preserve"><value>Fuel entry odometer in {0}</value></data>
   <data name="FuelEditor.SaveName" xml:space="preserve"><value>Save fuel entry</value></data>
-  <data name="FuelEditor.StationExample" xml:space="preserve"><value>For example Shell Brno Vídeňská</value></data>
+  <data name="FuelEditor.StationExample" xml:space="preserve"><value>For example Shell, Oxford Road</value></data>
   <data name="FuelEditor.StationLabel" xml:space="preserve"><value>Fuel station</value></data>
   <data name="FuelEditor.StationName" xml:space="preserve"><value>Fuel station</value></data>
   <data name="FuelEditor.TotalCostLabel" xml:space="preserve"><value>Total cost</value></data>
@@ -1300,6 +1300,10 @@ Without numeric cost: {4} of {5} active vehicles.</value></data>
   <data name="Cost.Comparison" xml:space="preserve"><value>Compared with the same-length period last year: costs {0}, cost / distance {1}. For {2} vehicles with costs, a reliable cost-per-distance calculation is still missing.</value></data>
   <data name="CostExport.FleetNotReady" xml:space="preserve"><value>Cost summary is not ready for export yet.</value></data>
   <data name="CostExport.FleetSummaryTitle" xml:space="preserve"><value>Export cost summary</value></data>
+  <data name="CostExport.FileName.FleetSummary" xml:space="preserve"><value>vehimap-cost-summary-{0}-{1}.tsv</value></data>
+  <data name="CostExport.FileName.VehicleDetail" xml:space="preserve"><value>{0}-cost-detail-{1}-{2}.tsv</value></data>
+  <data name="CostExport.FileName.VehicleReport" xml:space="preserve"><value>{0}-cost-report-{1}-{2}.html</value></data>
+  <data name="CostExport.FileName.VehicleFallback" xml:space="preserve"><value>vehicle</value></data>
   <data name="CostExport.VehicleDetailTitle" xml:space="preserve"><value>Export cost detail</value></data>
   <data name="CostExport.VehicleReportTitle" xml:space="preserve"><value>Export cost HTML report</value></data>
   <data name="CostExport.TsvFileType" xml:space="preserve"><value>TSV file</value></data>
@@ -1804,6 +1808,7 @@ Status: {5}</value></data>
   <data name="AppShell.FileDialog.VehiclePackageImportTitle" xml:space="preserve"><value>Import vehicle package</value></data>
   <data name="AppShell.FileDialog.VehiclePackageFileType" xml:space="preserve"><value>Vehimap vehicle package</value></data>
   <data name="AppShell.FileDialog.CalendarExportTitle" xml:space="preserve"><value>Export due dates to calendar</value></data>
+  <data name="AppShell.FileName.CalendarExport" xml:space="preserve"><value>vehimap-calendar-{0}.ics</value></data>
   <data name="AppShell.FileDialog.PrintableReportTitle" xml:space="preserve"><value>Save printable vehicle report</value></data>
   <data name="AppShell.FileDialog.HtmlFileType" xml:space="preserve"><value>HTML file</value></data>
   <data name="AppShell.FileName.VehiclePackagePrefix" xml:space="preserve"><value>vehimap-vehicle</value></data>
@@ -1849,7 +1854,6 @@ Status: {5}</value></data>
   <data name="VehiclePackage.Error.MissingVehicleData" xml:space="preserve"><value>The vehicle package does not contain vehicle data.</value></data>
   <data name="VehiclePackage.Error.ExactlyOneVehicleRequired" xml:space="preserve"><value>The package must contain exactly one vehicle.</value></data>
   <data name="VehiclePackage.Error.InvalidAttachmentPath" xml:space="preserve"><value>The vehicle package contains an unsafe managed attachment path.</value></data>
-  <data name="VehiclePackage.AttachmentFallbackFileName" xml:space="preserve"><value>attachment.bin</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchEnabled" xml:space="preserve"><value>Dashboard will be shown when the app starts.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchDisabled" xml:space="preserve"><value>Dashboard will not open automatically when the app starts.</value></data>
   <data name="AppShell.Dashboard.ShowOnLaunchFailed" xml:space="preserve"><value>Dashboard startup preference could not be saved.</value></data>

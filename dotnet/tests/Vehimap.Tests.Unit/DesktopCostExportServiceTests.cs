@@ -121,6 +121,42 @@ public sealed class DesktopCostExportServiceTests
         Assert.DoesNotContain("Kč", detail);
     }
 
+    [Fact]
+    public void Suggested_export_file_names_follow_the_active_language()
+    {
+        var service = new DesktopCostExportService();
+        var summary = BuildSummary();
+        var dataSet = BuildDataSet();
+        var start = new DateOnly(2026, 1, 1);
+        var end = new DateOnly(2026, 12, 31);
+
+        Assert.Equal("vehimap-naklady-souhrn-2026-01-01-2026-12-31.tsv", service.BuildFleetSummaryFileName(summary));
+        Assert.Equal("Milena-naklady-detail-2026-01-01-2026-12-31.tsv", service.BuildVehicleDetailFileName(dataSet, "veh_1", start, end));
+        Assert.Equal("Milena-naklady-sestava-2026-01-01-2026-12-31.html", service.BuildVehicleReportFileName(dataSet, "veh_1", start, end));
+
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            31,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
+
+        Assert.Equal("vehimap-cost-summary-2026-01-01-2026-12-31.tsv", service.BuildFleetSummaryFileName(summary));
+        Assert.Equal("Milena-cost-detail-2026-01-01-2026-12-31.tsv", service.BuildVehicleDetailFileName(dataSet, "veh_1", start, end));
+        Assert.Equal("Milena-cost-report-2026-01-01-2026-12-31.html", service.BuildVehicleReportFileName(dataSet, "veh_1", start, end));
+    }
+
     private static CostAnalysisSummary BuildSummary()
     {
         return new CostAnalysisSummary(

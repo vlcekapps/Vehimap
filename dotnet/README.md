@@ -49,6 +49,8 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - anglictina je fallback v `Strings.resx`
 - cestina je v `Strings.cs-CZ.resx`
 - nove UI texty v lokalizovanych pilotnich castech patri do obou resource souboru
+- i18n testy hlidaji nejen shodu EN/CS klicu, ale i neprazdne hodnoty, shodne formatovaci placeholdery a doslovne odkazy na neexistujici resource klice
+- anglicky resource katalog nesmi obsahovat ceskou diakritiku; vyjimku maji jen zdokumentovana dvojjazycna parserova nebo vyhledavaci data
 - pristupne nazvy v pilotnich castech, vcetne seznamu a scrollovanych oblasti, patri take do resource souboru
 - commit messages zustavaji vzdy anglicky
 - prekladatele mohou pro upravy `.resx` pouzit Local ResX Editor: https://apps.microsoft.com/detail/9pkht426fq1k
@@ -87,6 +89,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - globalni hledani formatuje viditelne tachometry, servisni intervaly a mnozstvi paliva podle zvolenych jednotek; servisni knizka stejne formatuje tachometry a servisni vzdalenosti, zatimco vyhledavaci index dal bere v uvahu i invariantni ulozene hodnoty
 - dashboardove naklady, srovnani obdobi, casova osa a analyza tankovani uz zvolene jednotky pouzivaji i pro odvozene hodnoty: cena za vzdalenost se zobrazi za km nebo mili, palivo v litrech/galonech, pri kombinaci mile + galony se spotreba zobrazi jako `mpg` a upozorneni analyzy tankovani na klesajici tachometr pouziva aktivni jednotku vzdalenosti
 - i18n/unit/currency guard odmita nove pevne literaly `km`, `mi`, `l`, `US gal`, `imp gal`, `Kč`, `CZK`, `USD`, `EUR` a `GBP` v produkcnim UI/projekcnim kodu mimo storage defaulty, parser hranice a sdilene formatovaci sluzby
+- navrhovane nazvy kalendarovych a nakladovych exportu se lokalizuji pres `.resx`; fallback nazvy spravovanych priloh zustavaji invariantni anglicke ASCII tokeny, protoze jsou soucasti ulozene relativni cesty, ne UI label
 - projekcni viewmodely a XAML bindingy pro jednotkove citlive hodnoty pouzivaji neutralni nazvy jako `FuelAmount`, `PricePerVolume` a `CostPerDistance`, aby UI nezamykalo kanonicke litry/kilometry do uzivatelskeho textu
 - nákladové projekce v XAML používají `CostPerDistance`; kanonické výpočtové modely mohou dál počítat cenu za km, ale uživatelské UI ji zobrazuje podle zvolené vzdálenostní jednotky
 - resource klíče pro jednotkově citlivé texty používají neutrální názvy typu `CostPerDistanceUnavailable`, `PricePerVolumeUnavailable` a `FuelAmountInvalid`; pevné `km/liter` názvy zůstávají jen u kanonických modelů nebo kompatibilních aliasů
