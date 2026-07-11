@@ -96,7 +96,9 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             status = DataStoreHealthStatus.Error;
-            details.Add(LF("DataStoreHealth.Report.DatabaseCheckFailed", ex.Message));
+            details.Add(LF(
+                "DataStoreHealth.Report.DatabaseCheckFailed",
+                UserFacingExceptionMessageService.Describe(ex, _localizer)));
         }
 
         var summary = status switch
@@ -133,7 +135,9 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         catch (Exception ex)
         {
             status = DataStoreHealthStatus.Error;
-            details.Add(LF("DataStoreHealth.Report.DataPathNotWritable", ex.Message));
+            details.Add(LF(
+                "DataStoreHealth.Report.DataPathNotWritable",
+                UserFacingExceptionMessageService.Describe(ex, _localizer)));
             try
             {
                 if (File.Exists(probePath))

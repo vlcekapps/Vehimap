@@ -52,7 +52,11 @@ public sealed class InstallerLocaleSeedService
         }
         catch (Exception ex) when (ex is JsonException or IOException or UnauthorizedAccessException)
         {
-            return MoveInvalidSeed(seedPath, _localizer.Format("InstallerLocaleSeed.InvalidRead", ex.Message));
+            return MoveInvalidSeed(
+                seedPath,
+                _localizer.Format(
+                    "InstallerLocaleSeed.InvalidRead",
+                    UserFacingExceptionMessageService.Describe(ex, _localizer)));
         }
 
         var language = AppCultureService.NormalizeLanguage(seed?.Language);

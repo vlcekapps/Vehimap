@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels.Workspaces;
@@ -32,6 +33,9 @@ public sealed partial class MainWindowViewModel
     private static string LO(string key) => DesktopLocalization.Localizer.GetString(key);
 
     private static string LFO(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
+
+    private static string UserFacingError(Exception exception) =>
+        UserFacingExceptionMessageService.Describe(exception, DesktopLocalization.Localizer);
 
     [RelayCommand(CanExecute = nameof(CanOpenSelectedUpcomingOverviewItem))]
     private async Task OpenSelectedUpcomingOverviewItemAsync()

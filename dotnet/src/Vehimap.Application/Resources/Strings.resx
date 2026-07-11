@@ -548,6 +548,7 @@ Vehicle: {2}
   <data name="RecordEditor.Status.MoveExternalToManagedPrompt" xml:space="preserve"><value>When saved, the current external attachment will be copied to managed attachments.</value></data>
   <data name="RecordEditor.Status.Updated" xml:space="preserve"><value>Document has been updated.</value></data>
   <data name="RecordEditor.Validation.ManagedSourceMissing" xml:space="preserve"><value>The selected file for the managed copy could not be found.</value></data>
+  <data name="RecordEditor.Validation.AttachmentPreparationFailed" xml:space="preserve"><value>The document attachment could not be prepared: {0}</value></data>
   <data name="RecordEditor.Validation.PriceInvalid" xml:space="preserve"><value>Enter the document price as a number, for example 2000.</value></data>
   <data name="RecordEditor.Validation.TitleRequired" xml:space="preserve"><value>Document title is required.</value></data>
   <data name="RecordEditor.Validation.TypeRequired" xml:space="preserve"><value>Select the record type.</value></data>
@@ -1557,6 +1558,13 @@ Status: {5}</value></data>
   <data name="Overview.MissingGreen.Title" xml:space="preserve"><value>Missing green card</value></data>
   <data name="Overview.Persistence.Error" xml:space="preserve"><value>Failed to save due date overview preferences</value></data>
   <data name="Persistence.GenericSaveFailed" xml:space="preserve"><value>Changes could not be saved</value></data>
+  <data name="Error.Detail.AccessDenied" xml:space="preserve"><value>Access to the requested file or folder was denied.</value></data>
+  <data name="Error.Detail.FileOrFolderUnavailable" xml:space="preserve"><value>The requested file or folder is not available.</value></data>
+  <data name="Error.Detail.FileOperationFailed" xml:space="preserve"><value>A file operation could not be completed.</value></data>
+  <data name="Error.Detail.NetworkFailed" xml:space="preserve"><value>The network request could not be completed.</value></data>
+  <data name="Error.Detail.InvalidData" xml:space="preserve"><value>The selected data is invalid or damaged.</value></data>
+  <data name="Error.Detail.OperationFailed" xml:space="preserve"><value>The requested operation could not be completed.</value></data>
+  <data name="Error.Detail.Unexpected" xml:space="preserve"><value>An unexpected error occurred.</value></data>
   <data name="Overview.Summary.DashboardEmpty" xml:space="preserve"><value>The available data does not contain any future due dates with a concrete date yet.</value></data>
   <data name="Overview.Summary.DashboardInitial" xml:space="preserve"><value>Nearest due dates across vehicles will appear after the data is loaded.</value></data>
   <data name="Overview.Summary.DashboardWithItems" xml:space="preserve"><value>The nearest {0} future due dates across all vehicles are ready to open.</value></data>

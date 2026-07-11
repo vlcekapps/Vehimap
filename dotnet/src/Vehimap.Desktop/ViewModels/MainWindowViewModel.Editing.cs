@@ -357,9 +357,15 @@ public sealed partial class MainWindowViewModel
         {
             filePath = await BuildRecordFilePathAsync(existingRecord, attachmentMode);
         }
-        catch (Exception ex)
+        catch (RecordEditorValidationException ex)
         {
-            RecordEditorStatus = ex.Message;
+            RecordEditorStatus = LO(ex.ResourceKey);
+            RequestFocus(DesktopFocusTarget.RecordEditorPathInput);
+            return;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            RecordEditorStatus = LFO("RecordEditor.Validation.AttachmentPreparationFailed", UserFacingError(ex));
             RequestFocus(DesktopFocusTarget.RecordEditorPathInput);
             return;
         }
@@ -585,7 +591,7 @@ public sealed partial class MainWindowViewModel
                 _session.RestoreDataSet(rollbackDataSet);
             }
 
-            var message = $"{failurePrefix ?? LO("Persistence.GenericSaveFailed")}: {ex.Message}";
+            var message = $"{failurePrefix ?? LO("Persistence.GenericSaveFailed")}: {UserFacingError(ex)}";
             setFailureStatus?.Invoke(message);
             ShellStatus = message;
             if (failureFocus is { } focusTarget)
@@ -706,7 +712,7 @@ public sealed partial class MainWindowViewModel
         var sourcePath = ResolvePotentialPath(inputPath);
         if (!File.Exists(sourcePath))
         {
-            throw new InvalidOperationException(LO("RecordEditor.Validation.ManagedSourceMissing"));
+            throw new RecordEditorValidationException("RecordEditor.Validation.ManagedSourceMissing");
         }
 
         var existingManagedPath = existingRecord?.AttachmentMode == VehicleRecordAttachmentMode.Managed
@@ -1034,5 +1040,10 @@ public sealed partial class MainWindowViewModel
             Path.GetFullPath(left).TrimEnd(Path.DirectorySeparatorChar),
             Path.GetFullPath(right).TrimEnd(Path.DirectorySeparatorChar),
             OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+    }
+
+    private sealed class RecordEditorValidationException(string resourceKey) : Exception
+    {
+        public string ResourceKey { get; } = resourceKey;
     }
 }

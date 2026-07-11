@@ -96,7 +96,8 @@ public sealed class DesktopAppShellControllerTests
         await controller.OpenSettingsAsync(null!, viewModel);
 
         Assert.Contains("Nastavení se nepodařilo dokončit", viewModel.ShellStatus);
-        Assert.Contains("settings.ini nelze zapsat", viewModel.ShellStatus);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", viewModel.ShellStatus);
+        Assert.DoesNotContain("settings.ini", viewModel.ShellStatus, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -134,7 +135,8 @@ public sealed class DesktopAppShellControllerTests
         await controller.OpenAboutAsync(null!, viewModel);
 
         Assert.Contains("Externí odkaz se nepodařilo otevřít", viewModel.ShellStatus);
-        Assert.Contains("Prohlížeč není dostupný", viewModel.ShellStatus);
+        Assert.Contains("Požadovanou operaci se nepodařilo dokončit", viewModel.ShellStatus);
+        Assert.DoesNotContain("Prohlížeč není dostupný", viewModel.ShellStatus);
     }
 
     [Fact]
@@ -345,7 +347,8 @@ public sealed class DesktopAppShellControllerTests
         Assert.False(shouldClose);
         Assert.NotNull(dialogService.LastUpdateModel);
         Assert.Equal("Kontrola aktualizací se nepodařila", dialogService.LastUpdateModel!.Heading);
-        Assert.Contains("Manifest nejde načíst", dialogService.LastUpdateModel.Summary);
+        Assert.Contains("Požadovanou operaci se nepodařilo dokončit", dialogService.LastUpdateModel.Summary);
+        Assert.DoesNotContain("Manifest nejde načíst", dialogService.LastUpdateModel.Summary);
         Assert.Equal(dialogService.LastUpdateModel.Summary, viewModel.ShellStatus);
     }
 
@@ -368,7 +371,8 @@ public sealed class DesktopAppShellControllerTests
 
         Assert.False(shouldClose);
         Assert.Contains("Kontrolu aktualizací se nepodařilo dokončit", viewModel.ShellStatus);
-        Assert.Contains("Updater nelze spustit", viewModel.ShellStatus);
+        Assert.Contains("Požadovanou operaci se nepodařilo dokončit", viewModel.ShellStatus);
+        Assert.DoesNotContain("Updater nelze spustit", viewModel.ShellStatus);
     }
 
     [Fact]

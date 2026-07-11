@@ -375,7 +375,7 @@ internal sealed class DesktopSessionController
         }
         catch (Exception ex)
         {
-            return new AutomaticBackupResult(false, true, string.Empty, LFO("AutomaticBackup.Result.Failed", ex.Message));
+            return new AutomaticBackupResult(false, true, string.Empty, LFO("AutomaticBackup.Result.Failed", UserFacingError(ex)));
         }
     }
 
@@ -533,6 +533,9 @@ internal sealed class DesktopSessionController
     private static string LO(string key) => DesktopLocalization.Localizer.GetString(key);
 
     private static string LFO(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
+
+    private static string UserFacingError(Exception exception) =>
+        UserFacingExceptionMessageService.Describe(exception, DesktopLocalization.Localizer);
 }
 
 internal sealed record DesktopSessionLoadResult(

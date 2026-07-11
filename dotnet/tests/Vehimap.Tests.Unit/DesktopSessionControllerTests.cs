@@ -514,7 +514,8 @@ public sealed class DesktopSessionControllerTests
 
         Assert.False(result.Created);
         Assert.True(result.IsError);
-        Assert.Contains("settings.ini nelze zapsat", result.Message);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", result.Message);
+        Assert.DoesNotContain("settings.ini", result.Message, StringComparison.OrdinalIgnoreCase);
         Assert.True(File.Exists(backupService.ExportedPath));
         Assert.Equal(string.Empty, session.DataSet.Settings.GetValue("backups", "last_automatic_backup_stamp"));
         Assert.Equal(string.Empty, session.DataSet.Settings.GetValue("backups", "last_automatic_backup_path"));

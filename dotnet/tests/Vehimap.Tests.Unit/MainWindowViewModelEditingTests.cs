@@ -102,7 +102,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         Assert.True(viewModel.HistoryWorkspace.IsEditingHistory);
         Assert.Contains("Historický záznam se nepodařilo uložit", viewModel.HistoryWorkspace.HistoryEditorStatus);
-        Assert.Contains("history.tsv nelze zapsat", viewModel.HistoryWorkspace.HistoryEditorStatus);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", viewModel.HistoryWorkspace.HistoryEditorStatus);
+        Assert.DoesNotContain("history.tsv", viewModel.HistoryWorkspace.HistoryEditorStatus, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(viewModel.HistoryWorkspace.HistoryEditorStatus, viewModel.ShellStatus);
         Assert.Equal(DesktopFocusTarget.HistoryEditorDate, requestedTargets.Last());
     }
@@ -131,7 +132,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         Assert.True(viewModel.RecordWorkspace.IsEditingRecord);
         Assert.Contains("Doklad se nepodařilo uložit", viewModel.RecordWorkspace.RecordEditorStatus);
-        Assert.Contains("records.tsv nelze zapsat", viewModel.RecordWorkspace.RecordEditorStatus);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", viewModel.RecordWorkspace.RecordEditorStatus);
+        Assert.DoesNotContain("records.tsv", viewModel.RecordWorkspace.RecordEditorStatus, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(viewModel.RecordWorkspace.RecordEditorStatus, viewModel.ShellStatus);
         Assert.Equal(DesktopFocusTarget.RecordEditorTitle, requestedTargets.Last());
     }
@@ -160,7 +162,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
         Assert.Contains("Vozidlo se nepodařilo uložit", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
-        Assert.Contains("vehicles.tsv nelze zapsat", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
+        Assert.DoesNotContain("vehicles.tsv", viewModel.VehicleDetailWorkspace.VehicleEditorStatus, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(viewModel.VehicleDetailWorkspace.VehicleEditorStatus, viewModel.ShellStatus);
         Assert.Equal(DesktopFocusTarget.VehicleEditorName, requestedTargets.Last());
     }
@@ -256,7 +259,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.Equal("veh_1", viewModel.SelectedVehicle?.Id);
         Assert.Contains("Vozidlo Milena se", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
         Assert.Contains("odstranit", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
-        Assert.Contains("vehicles.tsv is locked", viewModel.ShellStatus);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", viewModel.ShellStatus);
+        Assert.DoesNotContain("vehicles.tsv", viewModel.ShellStatus, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(DesktopFocusTarget.VehicleDetailPrimaryAction, requestedTargets.Last());
     }
 
@@ -286,7 +290,8 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         Assert.True(File.Exists(managedFile));
         Assert.Equal("rec_1", viewModel.RecordWorkspace.SelectedRecord?.Id);
         Assert.Contains("Doklad se nepodařilo odstranit", viewModel.RecordWorkspace.RecordEditorStatus);
-        Assert.Contains("records.tsv is locked", viewModel.ShellStatus);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", viewModel.ShellStatus);
+        Assert.DoesNotContain("records.tsv", viewModel.ShellStatus, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(DesktopFocusTarget.RecordList, requestedTargets.Last());
     }
 

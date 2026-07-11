@@ -37,7 +37,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetCostExportStatus(LFO("CostExport.FleetFailed", ex.Message));
+            SetCostExportStatus(LFO("CostExport.FleetFailed", UserFacingError(ex)));
         }
     }
 
@@ -78,7 +78,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetCostExportStatus(LFO("CostExport.DetailFailed", ex.Message));
+            SetCostExportStatus(LFO("CostExport.DetailFailed", UserFacingError(ex)));
         }
     }
 
@@ -126,12 +126,12 @@ public sealed partial class MainWindowViewModel
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
-                SetCostExportStatus(LFO("CostExport.ReportSavedOpenFailed", savedPath, ex.Message));
+                SetCostExportStatus(LFO("CostExport.ReportSavedOpenFailed", savedPath, UserFacingError(ex)));
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetCostExportStatus(LFO("CostExport.ReportFailed", ex.Message));
+            SetCostExportStatus(LFO("CostExport.ReportFailed", UserFacingError(ex)));
         }
     }
 

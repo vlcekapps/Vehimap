@@ -129,12 +129,12 @@ public sealed partial class MainWindowViewModel
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
-                ShellStatus = LFO("ServiceBook.Status.ExportSavedOpenFailed", savedPath, ex.Message);
+                ShellStatus = LFO("ServiceBook.Status.ExportSavedOpenFailed", savedPath, UserFacingError(ex));
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = LFO("ServiceBook.Status.ExportFailed", ex.Message);
+            ShellStatus = LFO("ServiceBook.Status.ExportFailed", UserFacingError(ex));
         }
 
         return ShellStatus;

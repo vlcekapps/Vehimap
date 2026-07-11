@@ -548,6 +548,7 @@ Vozidlo: {2}
   <data name="RecordEditor.Status.MoveExternalToManagedPrompt" xml:space="preserve"><value>Po uložení se současná externí příloha zkopíruje do spravovaných příloh.</value></data>
   <data name="RecordEditor.Status.Updated" xml:space="preserve"><value>Doklad byl upraven.</value></data>
   <data name="RecordEditor.Validation.ManagedSourceMissing" xml:space="preserve"><value>Vybraný soubor pro spravovanou kopii se nepodařilo najít.</value></data>
+  <data name="RecordEditor.Validation.AttachmentPreparationFailed" xml:space="preserve"><value>Přílohu dokladu se nepodařilo připravit: {0}</value></data>
   <data name="RecordEditor.Validation.PriceInvalid" xml:space="preserve"><value>Cenu dokladu zadejte jako číslo, například 2000.</value></data>
   <data name="RecordEditor.Validation.TitleRequired" xml:space="preserve"><value>Doklad musí mít název.</value></data>
   <data name="RecordEditor.Validation.TypeRequired" xml:space="preserve"><value>Vyberte prosím druh záznamu.</value></data>
@@ -1557,6 +1558,13 @@ Stav: {5}</value></data>
   <data name="Overview.MissingGreen.Title" xml:space="preserve"><value>Chybí zelená karta</value></data>
   <data name="Overview.Persistence.Error" xml:space="preserve"><value>Nepodařilo se uložit volby přehledu termínů</value></data>
   <data name="Persistence.GenericSaveFailed" xml:space="preserve"><value>Změny se nepodařilo uložit</value></data>
+  <data name="Error.Detail.AccessDenied" xml:space="preserve"><value>Přístup k požadovanému souboru nebo složce byl odepřen.</value></data>
+  <data name="Error.Detail.FileOrFolderUnavailable" xml:space="preserve"><value>Požadovaný soubor nebo složka nejsou dostupné.</value></data>
+  <data name="Error.Detail.FileOperationFailed" xml:space="preserve"><value>Souborovou operaci se nepodařilo dokončit.</value></data>
+  <data name="Error.Detail.NetworkFailed" xml:space="preserve"><value>Síťový požadavek se nepodařilo dokončit.</value></data>
+  <data name="Error.Detail.InvalidData" xml:space="preserve"><value>Vybraná data jsou neplatná nebo poškozená.</value></data>
+  <data name="Error.Detail.OperationFailed" xml:space="preserve"><value>Požadovanou operaci se nepodařilo dokončit.</value></data>
+  <data name="Error.Detail.Unexpected" xml:space="preserve"><value>Došlo k neočekávané chybě.</value></data>
   <data name="Overview.Summary.DashboardEmpty" xml:space="preserve"><value>V dostupných datech zatím nejsou žádné budoucí termíny s konkrétním datem.</value></data>
   <data name="Overview.Summary.DashboardInitial" xml:space="preserve"><value>Nejbližší termíny napříč vozidly se zobrazí po načtení dat.</value></data>
   <data name="Overview.Summary.DashboardWithItems" xml:space="preserve"><value>Napříč všemi vozidly je nejbližších {0} budoucích termínů připravených k otevření.</value></data>

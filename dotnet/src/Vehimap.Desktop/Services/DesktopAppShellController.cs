@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Vehimap.Application;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.ViewModels;
 using Vehimap.Desktop.Views;
@@ -42,7 +43,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = DesktopLocalization.Localizer.Format("Shell.SettingsFailed", ex.Message);
+            shell.ShellStatus = DesktopLocalization.Localizer.Format("Shell.SettingsFailed", UserFacingError(ex));
         }
     }
 
@@ -61,7 +62,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = LF("AppShell.Controller.ExportBackupStartFailed", ex.Message);
+            shell.ShellStatus = LF("AppShell.Controller.ExportBackupStartFailed", UserFacingError(ex));
         }
     }
 
@@ -83,7 +84,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = LF("AppShell.Controller.ExportVehiclePackageStartFailed", ex.Message);
+            shell.ShellStatus = LF("AppShell.Controller.ExportVehiclePackageStartFailed", UserFacingError(ex));
         }
     }
 
@@ -108,7 +109,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = LF("AppShell.Controller.ImportVehiclePackageStartFailed", ex.Message);
+            shell.ShellStatus = LF("AppShell.Controller.ImportVehiclePackageStartFailed", UserFacingError(ex));
         }
     }
 
@@ -140,7 +141,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = LF("AppShell.Controller.ImportBackupStartFailed", ex.Message);
+            shell.ShellStatus = LF("AppShell.Controller.ImportBackupStartFailed", UserFacingError(ex));
         }
     }
 
@@ -164,7 +165,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = LF("AppShell.Controller.DataStoreHealthFailed", ex.Message);
+            shell.ShellStatus = LF("AppShell.Controller.DataStoreHealthFailed", UserFacingError(ex));
         }
     }
 
@@ -188,7 +189,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = LF("AppShell.Controller.AboutFailed", ex.Message);
+            shell.ShellStatus = LF("AppShell.Controller.AboutFailed", UserFacingError(ex));
         }
     }
 
@@ -274,7 +275,7 @@ internal sealed class DesktopAppShellController
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            shell.ShellStatus = LF("AppShell.Controller.UpdateCheckFailed", ex.Message);
+            shell.ShellStatus = LF("AppShell.Controller.UpdateCheckFailed", UserFacingError(ex));
             return false;
         }
     }
@@ -294,4 +295,7 @@ internal sealed class DesktopAppShellController
     private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
 
     private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
+
+    private static string UserFacingError(Exception exception) =>
+        UserFacingExceptionMessageService.Describe(exception, DesktopLocalization.Localizer);
 }

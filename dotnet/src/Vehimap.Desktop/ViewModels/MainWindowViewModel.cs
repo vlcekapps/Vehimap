@@ -669,7 +669,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            SetCalendarExportStatus(LFO("AppShell.CalendarExport.Failed", ex.Message));
+            SetCalendarExportStatus(LFO("AppShell.CalendarExport.Failed", UserFacingError(ex)));
         }
     }
 
@@ -1252,7 +1252,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return string.Join(
                 Environment.NewLine,
                 [
-                    exception.Message,
+                    UserFacingError(exception),
                     string.Empty,
                     LFO("Shell.LoadError.DatabasePath", databasePath),
                     LFO("Shell.LoadError.DataFolder", dataRoot.DataPath),
@@ -1261,7 +1261,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
         catch
         {
-            return exception.Message;
+            return UserFacingError(exception);
         }
     }
 

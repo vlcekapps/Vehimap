@@ -1174,7 +1174,8 @@ public sealed class MainWindowViewModelNavigationTests
         await viewModel.ExportFleetCostSummaryCommand.ExecuteAsync(null);
 
         Assert.Contains("Export souhrnu nákladů se nepodařil", viewModel.CostWorkspace.CostExportStatus);
-        Assert.Contains("Cílový soubor nelze zapsat", viewModel.CostWorkspace.CostExportStatus);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", viewModel.CostWorkspace.CostExportStatus);
+        Assert.DoesNotContain("Cílový soubor", viewModel.CostWorkspace.CostExportStatus);
         Assert.Equal(viewModel.CostWorkspace.CostExportStatus, viewModel.ShellStatus);
     }
 
@@ -1195,7 +1196,8 @@ public sealed class MainWindowViewModelNavigationTests
         Assert.Contains("<!DOCTYPE html>", saveService.LastContent);
         Assert.Contains(@"C:\exports\octavia-naklady.html", viewModel.CostWorkspace.CostExportStatus);
         Assert.Contains("nepodařilo se ji otevřít", viewModel.CostWorkspace.CostExportStatus);
-        Assert.Contains("Prohlížeč není dostupný", viewModel.CostWorkspace.CostExportStatus);
+        Assert.Contains("Požadovanou operaci se nepodařilo dokončit", viewModel.CostWorkspace.CostExportStatus);
+        Assert.DoesNotContain("Prohlížeč není dostupný", viewModel.CostWorkspace.CostExportStatus);
         Assert.Equal(viewModel.CostWorkspace.CostExportStatus, viewModel.ShellStatus);
     }
 
@@ -1223,7 +1225,8 @@ public sealed class MainWindowViewModelNavigationTests
         await viewModel.ExportCalendarCommand.ExecuteAsync(null);
 
         Assert.Contains("Export kalendáře se nepodařil", viewModel.TimelineWorkspace.ExportStatus);
-        Assert.Contains("Cílovou složku nelze zapsat", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.DoesNotContain("Cílovou složku", viewModel.TimelineWorkspace.ExportStatus);
         Assert.Equal(viewModel.TimelineWorkspace.ExportStatus, viewModel.ShellStatus);
     }
 
@@ -1235,7 +1238,8 @@ public sealed class MainWindowViewModelNavigationTests
         await viewModel.ExportCalendarCommand.ExecuteAsync(null);
 
         Assert.Contains("Export kalendáře se nepodařil", viewModel.TimelineWorkspace.ExportStatus);
-        Assert.Contains("Generátor ICS selhal", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.Contains("Požadovanou operaci se nepodařilo dokončit", viewModel.TimelineWorkspace.ExportStatus);
+        Assert.DoesNotContain("Generátor ICS selhal", viewModel.TimelineWorkspace.ExportStatus);
         Assert.Equal(viewModel.TimelineWorkspace.ExportStatus, viewModel.ShellStatus);
     }
 

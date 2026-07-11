@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.Windows.Input;
 using Vehimap.Application.Models;
+using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
@@ -63,6 +64,9 @@ public partial class MainWindow : Window
     private static string L(string key) => DesktopLocalization.Localizer.GetString(key);
 
     private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
+
+    private static string UserFacingError(Exception exception) =>
+        UserFacingExceptionMessageService.Describe(exception, DesktopLocalization.Localizer);
 
     private MainWindowViewModel? _viewModel;
     private bool _initialFocusCompleted;
@@ -1374,7 +1378,7 @@ public partial class MainWindow : Window
         catch (Exception ex)
         {
             _viewModel.VehicleDetailWorkspace.SetVehicleStarterBundleStatus(
-                LF("VehicleDetail.Status.NewVehicleBundleOpenFailed", ex.Message));
+                LF("VehicleDetail.Status.NewVehicleBundleOpenFailed", UserFacingError(ex)));
         }
     }
 

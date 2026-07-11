@@ -84,7 +84,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = LFO("AppShell.ExportBackup.Failed", ex.Message);
+            ShellStatus = LFO("AppShell.ExportBackup.Failed", UserFacingError(ex));
         }
 
         return ShellStatus;
@@ -116,7 +116,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = LFO("AppShell.ImportBackup.Failed", ex.Message);
+            ShellStatus = LFO("AppShell.ImportBackup.Failed", UserFacingError(ex));
         }
 
         return ShellStatus;
@@ -177,7 +177,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = LFO("AppShell.VehiclePackage.ExportFailed", ex.Message);
+            ShellStatus = LFO("AppShell.VehiclePackage.ExportFailed", UserFacingError(ex));
         }
 
         return ShellStatus;
@@ -214,7 +214,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = LFO("AppShell.VehiclePackage.ImportFailed", ex.Message);
+            ShellStatus = LFO("AppShell.VehiclePackage.ImportFailed", UserFacingError(ex));
         }
 
         return ShellStatus;
@@ -360,7 +360,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex)
         {
-            ShellStatus = LFO("AppShell.PrintableReport.Failed", ex.Message);
+            ShellStatus = LFO("AppShell.PrintableReport.Failed", UserFacingError(ex));
         }
 
         return ShellStatus;
@@ -483,7 +483,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = LFO("AppShell.External.Failed", ex.Message);
+            ShellStatus = LFO("AppShell.External.Failed", UserFacingError(ex));
         }
 
         return ShellStatus;
@@ -511,7 +511,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex)
         {
-            ShellStatus = LFO("AppShell.DataFolder.Failed", ex.Message);
+            ShellStatus = LFO("AppShell.DataFolder.Failed", UserFacingError(ex));
         }
 
         return ShellStatus;
@@ -539,7 +539,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex)
         {
-            ShellStatus = LFO("AppShell.AutomaticBackupFolder.Failed", ex.Message);
+            ShellStatus = LFO("AppShell.AutomaticBackupFolder.Failed", UserFacingError(ex));
         }
 
         return ShellStatus;
@@ -566,7 +566,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex)
         {
-            ShellStatus = LFO("AppShell.PreMigrationBackupFolder.Failed", ex.Message);
+            ShellStatus = LFO("AppShell.PreMigrationBackupFolder.Failed", UserFacingError(ex));
         }
 
         return ShellStatus;
@@ -593,7 +593,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = LFO("AppShell.Update.CheckFailed", ex.Message);
+            ShellStatus = LFO("AppShell.Update.CheckFailed", UserFacingError(ex));
             return new UpdateCheckResult(
                 appInfo.AppVersion,
                 appInfo.AppVersion,
@@ -622,7 +622,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            ShellStatus = LFO("AppShell.Update.PrepareInstallFailed", ex.Message);
+            ShellStatus = LFO("AppShell.Update.PrepareInstallFailed", UserFacingError(ex));
             return new UpdateInstallResult(false, ShellStatus, null);
         }
     }

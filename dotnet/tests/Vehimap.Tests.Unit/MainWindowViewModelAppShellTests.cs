@@ -15,7 +15,7 @@ namespace Vehimap.Tests.Unit;
 public sealed class MainWindowViewModelAppShellTests
 {
     [Fact]
-    public void Load_error_keeps_legacy_file_diagnostic_message_visible()
+    public void Load_error_hides_raw_legacy_parser_details_and_keeps_recovery_message_visible()
     {
         var dataRoot = new VehimapDataRoot(@"C:\vehimap-test", @"C:\vehimap-test\data", true);
         var loadException = new LegacyDataLoadException(
@@ -26,9 +26,10 @@ public sealed class MainWindowViewModelAppShellTests
 
         var viewModel = CreateViewModel(dataRoot, new FailingLegacyDataStore(loadException));
 
-        Assert.Contains("vehicles.tsv", viewModel.LoadError, StringComparison.Ordinal);
-        Assert.Contains(@"C:\vehimap-test\data\vehicles.tsv", viewModel.LoadError, StringComparison.Ordinal);
-        Assert.Contains("Řádek vozidel", viewModel.LoadError, StringComparison.Ordinal);
+        Assert.Contains("Vybraná data jsou neplatná nebo poškozená", viewModel.LoadError, StringComparison.Ordinal);
+        Assert.Contains("Vehimap poškozenou databázi automaticky nemaže", viewModel.LoadError, StringComparison.Ordinal);
+        Assert.DoesNotContain("vehicles.tsv", viewModel.LoadError, StringComparison.Ordinal);
+        Assert.DoesNotContain("Řádek vozidel", viewModel.LoadError, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -240,7 +241,8 @@ public sealed class MainWindowViewModelAppShellTests
         var status = await viewModel.ExportBackupAsync(@"C:\backups\vehimap.vehimapbak");
 
         Assert.Contains("Export zálohy se nepodařil", status);
-        Assert.Contains("Disk je plný", status);
+        Assert.Contains("Souborovou operaci se nepodařilo dokončit", status);
+        Assert.DoesNotContain("Disk je plný", status);
         Assert.Equal(status, viewModel.ShellStatus);
     }
 
@@ -312,8 +314,9 @@ public sealed class MainWindowViewModelAppShellTests
         var status = await viewModel.ImportBackupAsync(backupPath);
 
         Assert.Contains("Obnova ze zálohy se nepodařila", status);
-        Assert.Contains(backupPath, status);
-        Assert.Contains("formátu zálohy Vehimap", status);
+        Assert.Contains("Vybraná data jsou neplatná nebo poškozená", status);
+        Assert.DoesNotContain(backupPath, status);
+        Assert.DoesNotContain("formátu zálohy Vehimap", status);
         Assert.Equal(status, viewModel.ShellStatus);
     }
 

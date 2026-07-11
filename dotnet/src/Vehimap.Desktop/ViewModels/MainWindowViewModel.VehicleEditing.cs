@@ -657,7 +657,7 @@ public sealed partial class MainWindowViewModel
         }
         catch (Exception ex)
         {
-            return LFO("VehicleDelete.AttachmentCleanup.DeleteFailed", ex.Message);
+            return LFO("VehicleDelete.AttachmentCleanup.DeleteFailed", UserFacingError(ex));
         }
     }
 

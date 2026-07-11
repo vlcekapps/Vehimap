@@ -296,6 +296,45 @@ public sealed class I18nFoundationTests
         Assert.False(LocalizedResourceValueMatcher.Matches(english, "Custom category", "Audit.Category.Maintenance"));
     }
 
+    [Fact]
+    public void User_facing_exception_messages_are_localized_and_hide_raw_technical_details()
+    {
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+        var czech = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
+        const string rawDetail = @"C:\private\vehimap.db is locked by another process.";
+
+        Assert.Equal(
+            "A file operation could not be completed.",
+            UserFacingExceptionMessageService.Describe(new IOException(rawDetail), english));
+        Assert.Equal(
+            "Souborovou operaci se nepodařilo dokončit.",
+            UserFacingExceptionMessageService.Describe(new IOException(rawDetail), czech));
+        Assert.Equal(
+            "Přístup k požadovanému souboru nebo složce byl odepřen.",
+            UserFacingExceptionMessageService.Describe(new UnauthorizedAccessException(rawDetail), czech));
+        Assert.Equal(
+            "Požadovaný soubor nebo složka nejsou dostupné.",
+            UserFacingExceptionMessageService.Describe(new FileNotFoundException(rawDetail), czech));
+        Assert.Equal(
+            "Síťový požadavek se nepodařilo dokončit.",
+            UserFacingExceptionMessageService.Describe(new HttpRequestException(rawDetail), czech));
+        Assert.Equal(
+            "Vybraná data jsou neplatná nebo poškozená.",
+            UserFacingExceptionMessageService.Describe(new InvalidDataException(rawDetail), czech));
+        Assert.Equal(
+            "Požadovanou operaci se nepodařilo dokončit.",
+            UserFacingExceptionMessageService.Describe(new InvalidOperationException(rawDetail), czech));
+        Assert.Equal(
+            "Došlo k neočekávané chybě.",
+            UserFacingExceptionMessageService.Describe(new Exception(rawDetail), czech));
+        Assert.DoesNotContain(
+            rawDetail,
+            UserFacingExceptionMessageService.Describe(
+                new InvalidOperationException("wrapper", new IOException(rawDetail)),
+                czech),
+            StringComparison.Ordinal);
+    }
+
     [Theory]
     [InlineData("vehicle", ApplicationEntityKinds.Vehicle)]
     [InlineData("Vozidlo", ApplicationEntityKinds.Vehicle)]
@@ -1836,6 +1875,28 @@ public sealed class I18nFoundationTests
         Assert.Contains("ShellStatus = failurePrefix;", preferencePersistence);
         Assert.DoesNotContain("ex.Message", preferencePersistence);
         Assert.DoesNotContain("\": {ex.Message}\"", preferencePersistence);
+    }
+
+    [Fact]
+    public void Desktop_user_facing_statuses_do_not_append_raw_exception_messages()
+    {
+        var root = FindRepositoryRoot();
+        var desktopRoot = Path.Combine(root, "dotnet", "src", "Vehimap.Desktop");
+        var failures = Directory
+            .EnumerateFiles(desktopRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => (Path: path, Line: line, Number: index + 1)))
+            .Where(item => Regex.IsMatch(item.Line, @"\b(?:ex|exception)\.Message\b"))
+            .Select(item => $"{Path.GetRelativePath(root, item.Path).Replace('\\', '/')}:{item.Number}: {item.Line.Trim()}")
+            .ToArray();
+
+        Assert.True(
+            failures.Length == 0,
+            "Desktop user-facing status paths must classify exceptions through UserFacingExceptionMessageService instead of exposing raw exception text." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
     }
 
     private static SortedSet<string> ReadResourceKeys(string path)
