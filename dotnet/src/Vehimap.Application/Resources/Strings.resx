@@ -2531,8 +2531,12 @@ Suggested action: {6}</value></data>
   <data name="KnownValue.FuelType.Electricity" xml:space="preserve"><value>Electricity</value></data>
   <data name="KnownValue.FuelType.Other" xml:space="preserve"><value>Other</value></data>
   <data name="KnownValue.ReminderRepeat.None" xml:space="preserve"><value>Do not repeat</value></data>
+  <data name="KnownValue.ReminderRepeat.None.LegacyShort" xml:space="preserve"><value>None</value></data>
   <data name="KnownValue.ReminderRepeat.Yearly" xml:space="preserve"><value>Every year</value></data>
   <data name="KnownValue.ReminderRepeat.Yearly.LegacyAdverb" xml:space="preserve"><value>Yearly</value></data>
+  <data name="KnownValue.ReminderRepeat.Yearly.LegacyAscii" xml:space="preserve"><value>Rocne</value></data>
   <data name="KnownValue.ReminderRepeat.EveryTwoYears" xml:space="preserve"><value>Every 2 years</value></data>
+  <data name="KnownValue.ReminderRepeat.EveryTwoYears.LegacyWords" xml:space="preserve"><value>Every two years</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears" xml:space="preserve"><value>Every 5 years</value></data>
+  <data name="KnownValue.ReminderRepeat.EveryFiveYears.LegacyWords" xml:space="preserve"><value>Every five years</value></data>
 </root>

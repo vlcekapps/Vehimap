@@ -11,6 +11,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Přibyla dokumentační sada `dotnet/docs/accessibility/` pro ACR-ready přípravu Vehimapu 2.0: VPAT 2.5Rev INT draft, WCAG2ICT/2.2 AA matrix, remediation backlog a ruční testovací protokol. Zatím jde o evidenční draft, ne o formální prohlášení o shodě.
 
 ### Změněno
+- Editorové known-value volby už neobsahují natvrdo zapsané anglické kompatibilní aliasy; kategorie, profily, paliva, doklady a opakování připomínek rozpoznávají staré EN/CS varianty výhradně přes společné resource keys a kanonické legacy hodnoty dál ukládají beze změny.
+- I18n katalog má novou překladovou quality gate: každá shodná EN/CS hodnota obsahující slova musí být výslovně prověřená, jinak test odhalí pravděpodobně zkopírovaný nepřeložený text. Formátovací šablony bez slov zůstávají povolené automaticky.
 - Přehledy termínů a rychlé akce už nemají vlastní české/anglické konstanty pro uložené filtry ani stav `Bez upozornění`; stabilní klíče a staré EN/CS hodnoty rozpoznávají přes společnou resource-backed kompatibilní vrstvu.
 - Aplikační služby globálního hledání, Chytrého poradce a known-value mapování používají nový sdílený `LocalizedResourceValueMatcher`; auditní kategorie a neutrální timeline stavy se tak porovnávají podle aktuálních, anglických i českých resource hodnot bez duplicitních jazykových slovníků v runtime kódu.
 - Navrhované názvy ICS a nákladových TSV/HTML exportů se nově řídí aktivním jazykem; anglické UI už nenabízí české části názvů `kalendar`, `naklady` ani fallback `vozidlo`. Nouzové názvy spravovaných příloh jsou naopak invariantní (`attachment` / `attachment.bin`), protože se ukládají jako datová cesta a nesmějí měnit význam podle jazyka UI.

@@ -82,6 +82,61 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void English_and_czech_resources_do_not_share_unreviewed_visible_text()
+    {
+        var root = FindRepositoryRoot();
+        var english = ReadResourceValues(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx"));
+        var czech = ReadResourceValues(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx"));
+        var reviewedSharedTextKeys = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "Audit.Severity.Info",
+            "CalendarExport.Summary",
+            "FuelAnalysis.Severity.Info",
+            "FuelAnalysis.Value.ConsumptionMpg",
+            "FuelAnalysis.Value.ConsumptionMpgImperial",
+            "KnownValue.FuelType.Cng",
+            "KnownValue.FuelType.Gasoline.LegacyAscii",
+            "KnownValue.FuelType.Lpg",
+            "KnownValue.Powertrain.Gasoline.LegacyAscii",
+            "KnownValue.Powertrain.Hybrid",
+            "KnownValue.Powertrain.LpgCng",
+            "KnownValue.Powertrain.PluginHybrid",
+            "MainMenu.Overview.Dashboard",
+            "MaintenanceWorkspace.Detail.Interval",
+            "Overview.DataIssue.Severity.Info",
+            "ServiceBook.RecordKeywords",
+            "Settings.Option.CurrencyEur",
+            "Shell.AuditCount",
+            "SmartAdvisor.Category.Data",
+            "UpdateCheck.Details.Sha256",
+            "VehicleStarterBundle.Profile.Powertrain.PlugInHybrid",
+            "Window.Dashboard.Title",
+            "Window.VehicleDetail.Title.Vehicle",
+            "WorkspaceSort.Interval",
+            "WorkspaceTabs.Audit",
+            "WorkspaceTabs.Dashboard",
+            "WorkspaceTabs.Detail",
+            "WorkspaceWindow.DashboardName"
+        };
+        var sharedTextKeys = english
+            .Where(item => string.Equals(item.Value, czech[item.Key], StringComparison.Ordinal))
+            .Where(item => Regex.Replace(item.Value, @"(?<!\{)\{\d+(?:[^}]*)?\}(?!\})", string.Empty).Any(char.IsLetter))
+            .Select(item => item.Key)
+            .ToHashSet(StringComparer.Ordinal);
+        var unexpected = sharedTextKeys.Except(reviewedSharedTextKeys).OrderBy(key => key, StringComparer.Ordinal).ToArray();
+        var stale = reviewedSharedTextKeys.Except(sharedTextKeys).OrderBy(key => key, StringComparer.Ordinal).ToArray();
+
+        Assert.True(
+            unexpected.Length == 0 && stale.Length == 0,
+            "Identical EN/CS text containing words must be reviewed explicitly. " +
+            "This catches copied but untranslated resource values while allowing format-only templates." +
+            Environment.NewLine +
+            $"Unexpected: {string.Join(", ", unexpected)}" +
+            Environment.NewLine +
+            $"Stale allowlist entries: {string.Join(", ", stale)}");
+    }
+
+    [Fact]
     public void Literal_resource_keys_referenced_by_production_source_exist()
     {
         var root = FindRepositoryRoot();
@@ -210,6 +265,10 @@ public sealed class I18nFoundationTests
         Assert.Equal("Povinné ručení", czech.GetString("KnownValue.RecordType.LiabilityInsurance"));
         Assert.Equal("Every 2 years", english.GetString("KnownValue.ReminderRepeat.EveryTwoYears"));
         Assert.Equal("Každé 2 roky", czech.GetString("KnownValue.ReminderRepeat.EveryTwoYears"));
+        Assert.Equal("Every two years", english.GetString("KnownValue.ReminderRepeat.EveryTwoYears.LegacyWords"));
+        Assert.Equal("Každé dva roky", czech.GetString("KnownValue.ReminderRepeat.EveryTwoYears.LegacyWords"));
+        Assert.Equal("Rocne", english.GetString("KnownValue.ReminderRepeat.Yearly.LegacyAscii"));
+        Assert.Equal("Ročně", czech.GetString("KnownValue.ReminderRepeat.Yearly.LegacyAscii"));
         Assert.Equal("Detail: service", english.Format("CalendarExport.Description.Detail", "service"));
         Assert.Equal("Podrobnosti: servis", czech.Format("CalendarExport.Description.Detail", "servis"));
         Assert.Equal("Detail", english.GetString("ServiceBook.Export.Column.Detail"));
@@ -266,6 +325,11 @@ public sealed class I18nFoundationTests
         Assert.Equal("Gasoline", LegacyKnownValueDisplayService.FormatPowertrain("Benzín", english));
         Assert.Equal("Every year", LegacyKnownValueDisplayService.FormatReminderRepeatMode("Každý rok", english));
         Assert.Equal("Každý rok", LegacyKnownValueDisplayService.FormatReminderRepeatMode("Every year", czech));
+        Assert.Equal("Passenger vehicles", LegacyKnownValueDisplayService.FormatCategory("Passenger", english));
+        Assert.Equal("Osobní vozidla", LegacyKnownValueDisplayService.FormatCategory("Passenger", czech));
+        Assert.Equal("Every year", LegacyKnownValueDisplayService.FormatReminderRepeatMode("Rocne", english));
+        Assert.Equal("Každé 2 roky", LegacyKnownValueDisplayService.FormatReminderRepeatMode("Every two years", czech));
+        Assert.Equal("Každých 5 let", LegacyKnownValueDisplayService.FormatReminderRepeatMode("Every five years", czech));
         Assert.Equal("Custom category", LegacyKnownValueDisplayService.FormatCategory("Custom category", english));
         Assert.Equal(string.Empty, LegacyKnownValueDisplayService.FormatRecordType("", english));
     }
@@ -1592,6 +1656,9 @@ public sealed class I18nFoundationTests
             var englishFuel = KnownValueOptions.SelectFuelType("Gasoline");
             var englishAccentFuel = KnownValueOptions.SelectFuelType("Benzín");
             var englishYearlyRepeat = KnownValueOptions.SelectReminderRepeatMode("Ročně");
+            var englishAsciiYearlyRepeat = KnownValueOptions.SelectReminderRepeatMode("Rocne");
+            var englishWordedTwoYearRepeat = KnownValueOptions.SelectReminderRepeatMode("Every two years");
+            var englishWordedFiveYearRepeat = KnownValueOptions.SelectReminderRepeatMode("Every five years");
             var customFuel = KnownValueOptions.SelectFuelType("Natural 100");
 
             Assert.Equal("Osobní vozidla", englishCategory.Value);
@@ -1604,6 +1671,12 @@ public sealed class I18nFoundationTests
             Assert.Equal("Gasoline", englishAccentFuel.Label);
             Assert.Equal("Každý rok", englishYearlyRepeat.Value);
             Assert.Equal("Every year", englishYearlyRepeat.Label);
+            Assert.Equal("Každý rok", englishAsciiYearlyRepeat.Value);
+            Assert.Equal("Every year", englishAsciiYearlyRepeat.Label);
+            Assert.Equal("Každé 2 roky", englishWordedTwoYearRepeat.Value);
+            Assert.Equal("Every 2 years", englishWordedTwoYearRepeat.Label);
+            Assert.Equal("Každých 5 let", englishWordedFiveYearRepeat.Value);
+            Assert.Equal("Every 5 years", englishWordedFiveYearRepeat.Label);
             Assert.Equal("Natural 100", customFuel.Value);
             Assert.Equal("Natural 100", customFuel.Label);
 
@@ -1620,6 +1693,32 @@ public sealed class I18nFoundationTests
         {
             TestCultureInitializer.ResetToCzech();
         }
+    }
+
+    [Fact]
+    public void Known_value_option_aliases_are_resource_backed()
+    {
+        var root = FindRepositoryRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "dotnet",
+            "src",
+            "Vehimap.Desktop",
+            "ViewModels",
+            "KnownValueOptions.cs"));
+        var invalidLiterals = source
+            .Split('\n')
+            .Where(line => line.Contains("Definition(", StringComparison.Ordinal))
+            .SelectMany(ExtractQuotedStringLiterals)
+            .Where(literal => !literal.StartsWith("KnownValue.", StringComparison.Ordinal))
+            .Distinct(StringComparer.Ordinal)
+            .OrderBy(literal => literal, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Empty(invalidLiterals);
+        Assert.Contains("AliasResourceKeys", source);
+        Assert.DoesNotContain("ResourceAliasPrefix", source);
+        Assert.DoesNotContain("MatchesAlias", source);
     }
 
     [Fact]

@@ -5,12 +5,14 @@ namespace Vehimap.Application.Services;
 
 public static class LegacyKnownValueDisplayService
 {
-    private static readonly KnownValueDisplayDefinition[] CategoryKeys = CreateDefinitions(
-        "KnownValue.Category.PassengerVehicles",
-        "KnownValue.Category.Motorcycles",
-        "KnownValue.Category.Trucks",
-        "KnownValue.Category.Buses",
-        "KnownValue.Category.Other");
+    private static readonly KnownValueDisplayDefinition[] CategoryKeys =
+    [
+        Definition("KnownValue.Category.PassengerVehicles", "KnownValue.Category.PassengerVehicles.LegacyShort"),
+        Definition("KnownValue.Category.Motorcycles"),
+        Definition("KnownValue.Category.Trucks", "KnownValue.Category.Trucks.LegacyShort"),
+        Definition("KnownValue.Category.Buses"),
+        Definition("KnownValue.Category.Other")
+    ];
 
     private static readonly KnownValueDisplayDefinition[] RecordTypeKeys = CreateDefinitions(
         "KnownValue.RecordType.LiabilityInsurance",
@@ -63,11 +65,16 @@ public static class LegacyKnownValueDisplayService
         Definition("KnownValue.FuelType.Other")
     ];
 
-    private static readonly KnownValueDisplayDefinition[] ReminderRepeatModeKeys = CreateDefinitions(
-        "KnownValue.ReminderRepeat.None",
-        "KnownValue.ReminderRepeat.Yearly",
-        "KnownValue.ReminderRepeat.EveryTwoYears",
-        "KnownValue.ReminderRepeat.EveryFiveYears");
+    private static readonly KnownValueDisplayDefinition[] ReminderRepeatModeKeys =
+    [
+        Definition("KnownValue.ReminderRepeat.None", "KnownValue.ReminderRepeat.None.LegacyShort"),
+        Definition(
+            "KnownValue.ReminderRepeat.Yearly",
+            "KnownValue.ReminderRepeat.Yearly.LegacyAdverb",
+            "KnownValue.ReminderRepeat.Yearly.LegacyAscii"),
+        Definition("KnownValue.ReminderRepeat.EveryTwoYears", "KnownValue.ReminderRepeat.EveryTwoYears.LegacyWords"),
+        Definition("KnownValue.ReminderRepeat.EveryFiveYears", "KnownValue.ReminderRepeat.EveryFiveYears.LegacyWords")
+    ];
 
     public static string FormatCategory(string? value, IAppLocalizer localizer) =>
         FormatKnownValue(value, localizer, CategoryKeys);

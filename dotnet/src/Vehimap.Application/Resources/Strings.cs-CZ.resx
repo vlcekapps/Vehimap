@@ -2531,8 +2531,12 @@ Navržená akce: {6}</value></data>
   <data name="KnownValue.FuelType.Electricity" xml:space="preserve"><value>Elektřina</value></data>
   <data name="KnownValue.FuelType.Other" xml:space="preserve"><value>Jiné</value></data>
   <data name="KnownValue.ReminderRepeat.None" xml:space="preserve"><value>Neopakovat</value></data>
+  <data name="KnownValue.ReminderRepeat.None.LegacyShort" xml:space="preserve"><value>Žádné opakování</value></data>
   <data name="KnownValue.ReminderRepeat.Yearly" xml:space="preserve"><value>Každý rok</value></data>
   <data name="KnownValue.ReminderRepeat.Yearly.LegacyAdverb" xml:space="preserve"><value>Ročně</value></data>
+  <data name="KnownValue.ReminderRepeat.Yearly.LegacyAscii" xml:space="preserve"><value>Ročně</value></data>
   <data name="KnownValue.ReminderRepeat.EveryTwoYears" xml:space="preserve"><value>Každé 2 roky</value></data>
+  <data name="KnownValue.ReminderRepeat.EveryTwoYears.LegacyWords" xml:space="preserve"><value>Každé dva roky</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears" xml:space="preserve"><value>Každých 5 let</value></data>
+  <data name="KnownValue.ReminderRepeat.EveryFiveYears.LegacyWords" xml:space="preserve"><value>Každých pět let</value></data>
 </root>
