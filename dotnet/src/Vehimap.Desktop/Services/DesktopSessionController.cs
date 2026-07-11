@@ -6,6 +6,7 @@ using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 using Vehimap.Domain.Models;
+using Vehimap.Platform;
 
 namespace Vehimap.Desktop.Services;
 
@@ -544,6 +545,11 @@ internal sealed class DesktopSessionController
         if (_costAnalysisService is LegacyCostAnalysisService legacyCostAnalysisService)
         {
             legacyCostAnalysisService.ApplySupportedSettings(settings);
+        }
+
+        if (_updateService is LegacyUpdateService legacyUpdateService)
+        {
+            legacyUpdateService.ApplySupportedSettings(settings);
         }
     }
 

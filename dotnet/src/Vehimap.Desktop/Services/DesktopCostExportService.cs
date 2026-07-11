@@ -16,6 +16,7 @@ internal sealed class DesktopCostExportService
     private readonly bool _usesManagedLocalizer;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
+    private readonly IAppDateFormatService _dateFormatService;
     private IAppLocalizer _localizer;
     private CultureInfo _formatCulture = CultureInfo.CurrentCulture;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
@@ -25,12 +26,14 @@ internal sealed class DesktopCostExportService
     public DesktopCostExportService(
         IAppLocalizer? localizer = null,
         IAppNumberFormatService? numberFormatService = null,
-        IAppUnitFormatService? unitFormatService = null)
+        IAppUnitFormatService? unitFormatService = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _usesManagedLocalizer = localizer is null;
         _localizer = localizer ?? new ResourceAppLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -143,7 +146,7 @@ internal sealed class DesktopCostExportService
         builder.AppendLine("table{width:100%;border-collapse:collapse;background:#fff}th,td{border:1px solid #cfd5cb;padding:8px 10px;text-align:left;vertical-align:top}th{background:#edf2e8}.empty{font-style:italic;color:#666}");
         builder.AppendLine("</style></head><body>");
         builder.AppendLine($"<h1>{Html(L("CostExport.ReportHeading"))}</h1>");
-        builder.AppendLine($"<p class=\"meta\">{Html(LF("CostExport.ReportMeta", vehicleName, periodLabel, generatedAt.ToString("g", _formatCulture)))}</p>");
+        builder.AppendLine($"<p class=\"meta\">{Html(LF("CostExport.ReportMeta", vehicleName, periodLabel, _dateFormatService.FormatDateTime(generatedAt, _culturePreferences)))}</p>");
 
         builder.AppendLine($"<div class=\"card\"><h2>{Html(L("CostExport.ReportSummaryHeading"))}</h2>");
         if (row is null)
@@ -294,7 +297,10 @@ internal sealed class DesktopCostExportService
     }
 
     private string BuildPeriodLabel(DateOnly periodStart, DateOnly periodEnd) =>
-        LF("CostAnalysis.PeriodLabel", periodStart.ToString("d", _formatCulture), periodEnd.ToString("d", _formatCulture));
+        LF(
+            "CostAnalysis.PeriodLabel",
+            _dateFormatService.FormatDate(periodStart, _culturePreferences),
+            _dateFormatService.FormatDate(periodEnd, _culturePreferences));
 
     private string GetVehicleName(VehimapDataSet dataSet, string vehicleId) =>
         dataSet.Vehicles.FirstOrDefault(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal))?.Name

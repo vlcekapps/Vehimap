@@ -9,13 +9,24 @@ namespace Vehimap.Desktop.ViewModels;
 public sealed partial class UpdateInstallProgressDialogViewModel : ObservableObject
 {
     private readonly IAppLocalizer _localizer;
+    private readonly AppCulturePreferences _culturePreferences;
+    private readonly IAppFileSizeFormatService _fileSizeFormatService;
+    private readonly IAppNumberFormatService _numberFormatService;
 
-    public UpdateInstallProgressDialogViewModel(IAppLocalizer? localizer = null)
+    public UpdateInstallProgressDialogViewModel(
+        IAppLocalizer? localizer = null,
+        AppCulturePreferences? culturePreferences = null,
+        IAppFileSizeFormatService? fileSizeFormatService = null,
+        IAppNumberFormatService? numberFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
+        _culturePreferences = culturePreferences ?? AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
+        _fileSizeFormatService = fileSizeFormatService ?? new AppFileSizeFormatService();
+        _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         Heading = _localizer.GetString("UpdateInstall.Title");
         StatusMessage = _localizer.GetString("UpdateInstall.InitialStatus");
         CancelButtonLabel = _localizer.GetString("UpdateInstall.Cancel");
+        ProgressText = FormatPercent(0);
     }
 
     [ObservableProperty]
@@ -28,7 +39,7 @@ public sealed partial class UpdateInstallProgressDialogViewModel : ObservableObj
     private double progressValue;
 
     [ObservableProperty]
-    private string progressText = "0 %";
+    private string progressText = string.Empty;
 
     [ObservableProperty]
     private bool isIndeterminate = true;
@@ -57,13 +68,15 @@ public sealed partial class UpdateInstallProgressDialogViewModel : ObservableObj
                 : boundedReceived * 100d / progress.TotalBytes.Value;
             ProgressText = _localizer.Format(
                 "UpdateInstall.ProgressWithBytes",
-                ProgressValue.ToString("0"),
-                FormatBytes(boundedReceived),
-                FormatBytes(progress.TotalBytes.Value));
+                FormatPercentValue(ProgressValue),
+                _fileSizeFormatService.FormatBytes(boundedReceived, _culturePreferences),
+                _fileSizeFormatService.FormatBytes(progress.TotalBytes.Value, _culturePreferences));
         }
         else if (progress.BytesReceived > 0)
         {
-            ProgressText = _localizer.Format("UpdateInstall.DownloadedBytes", FormatBytes(progress.BytesReceived));
+            ProgressText = _localizer.Format(
+                "UpdateInstall.DownloadedBytes",
+                _fileSizeFormatService.FormatBytes(progress.BytesReceived, _culturePreferences));
         }
     }
 
@@ -72,7 +85,7 @@ public sealed partial class UpdateInstallProgressDialogViewModel : ObservableObj
         StatusMessage = message;
         IsIndeterminate = false;
         ProgressValue = 100;
-        ProgressText = "100 %";
+        ProgressText = FormatPercent(100);
         CanCancel = false;
         CancelButtonLabel = _localizer.GetString("Common.Close");
     }
@@ -85,26 +98,9 @@ public sealed partial class UpdateInstallProgressDialogViewModel : ObservableObj
         CancelButtonLabel = _localizer.GetString("Common.Close");
     }
 
-    private static string FormatBytes(long sizeBytes)
-    {
-        if (sizeBytes < 1024)
-        {
-            return $"{sizeBytes} B";
-        }
+    private string FormatPercent(double value) =>
+        _localizer.Format("UpdateInstall.ProgressPercent", FormatPercentValue(value));
 
-        var sizeKb = sizeBytes / 1024d;
-        if (sizeKb < 1024)
-        {
-            return $"{sizeKb:0.0} KB";
-        }
-
-        var sizeMb = sizeKb / 1024d;
-        if (sizeMb < 1024)
-        {
-            return $"{sizeMb:0.0} MB";
-        }
-
-        var sizeGb = sizeMb / 1024d;
-        return $"{sizeGb:0.00} GB";
-    }
+    private string FormatPercentValue(double value) =>
+        _numberFormatService.FormatDecimal((decimal)value, _culturePreferences, 0);
 }

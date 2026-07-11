@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Globalization;
+using Vehimap.Application.Services;
 using Vehimap.Platform;
 using Xunit;
 
@@ -6,16 +8,19 @@ namespace Vehimap.Tests.Unit;
 
 public sealed class PlatformAutostartServiceTests
 {
-    [Fact]
-    public void Linux_desktop_entry_uses_product_name_without_preview_label()
+    [Theory]
+    [InlineData("en-US", "Comment=Start Vehimap automatically after sign-in")]
+    [InlineData("cs-CZ", "Comment=Spouštět Vehimap automaticky po přihlášení")]
+    public void Linux_desktop_entry_uses_localized_autostart_description(string language, string expectedComment)
     {
         var content = PlatformAutostartService.BuildLinuxDesktopEntryContent(
             new PlatformAutostartService.LaunchCommand(
                 "/opt/Vehimap Desktop/Vehimap.Desktop",
-                ["--data", "/home/test/Vehimap data"]));
+                ["--data", "/home/test/Vehimap data"]),
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo(language)));
 
-        Assert.Contains("Name=Vehimap Desktop", content, StringComparison.Ordinal);
-        Assert.Contains("Comment=Vehimap desktop", content, StringComparison.Ordinal);
+        Assert.Contains("Name=Vehimap", content, StringComparison.Ordinal);
+        Assert.Contains(expectedComment, content, StringComparison.Ordinal);
         Assert.DoesNotContain("preview", content, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("Exec=\"/opt/Vehimap Desktop/Vehimap.Desktop\" --data \"/home/test/Vehimap data\"", content, StringComparison.Ordinal);
     }

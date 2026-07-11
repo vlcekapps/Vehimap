@@ -13,10 +13,26 @@ namespace Vehimap.Desktop.Services;
 internal sealed class DesktopPrintableVehicleReportService
 {
     private readonly IAppLocalizer _localizer;
+    private readonly IAppDateFormatService _dateFormatService;
+    private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
 
-    public DesktopPrintableVehicleReportService(IAppLocalizer? localizer = null)
+    public DesktopPrintableVehicleReportService(
+        IAppLocalizer? localizer = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
+        _culturePreferences = new AppLocaleDefaultsService()
+            .GetDefaultsForLanguage(_localizer.GetString("PrintableReport.CultureName"))
+            .ToCulturePreferences();
+    }
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
     }
 
     public string BuildFileName(DateTime generatedAt) =>
@@ -37,7 +53,6 @@ internal sealed class DesktopPrintableVehicleReportService
             .Select(category => BuildCategorySection(category, dataSet, metaByVehicleId, timelineService, today, _localizer))
             .ToList();
 
-        var reportCulture = ResolveReportCulture();
         var builder = new StringBuilder();
         builder.AppendLine("<!DOCTYPE html>");
         builder.AppendLine($"<html lang=\"{Html(L("PrintableReport.HtmlLanguage"))}\">");
@@ -58,7 +73,7 @@ internal sealed class DesktopPrintableVehicleReportService
         builder.AppendLine("</head>");
         builder.AppendLine("<body>");
         builder.AppendLine($"  <h1>{Html(L("PrintableReport.Heading"))}</h1>");
-        builder.AppendLine($"  <p class=\"meta\">{Html(LF("PrintableReport.Meta", generatedAt.ToString("g", reportCulture), dataSet.Vehicles.Count))}</p>");
+        builder.AppendLine($"  <p class=\"meta\">{Html(LF("PrintableReport.Meta", _dateFormatService.FormatDateTime(generatedAt, _culturePreferences), dataSet.Vehicles.Count))}</p>");
         foreach (var section in sections)
         {
             builder.Append(section);
@@ -263,19 +278,6 @@ internal sealed class DesktopPrintableVehicleReportService
 
     private static readonly IAppLocalizer CzechStatusLocalizer =
         new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage));
-
-    private CultureInfo ResolveReportCulture()
-    {
-        var cultureName = L("PrintableReport.CultureName");
-        try
-        {
-            return CultureInfo.GetCultureInfo(cultureName);
-        }
-        catch (CultureNotFoundException)
-        {
-            return CultureInfo.CurrentCulture;
-        }
-    }
 
     private string L(string key) => _localizer.GetString(key);
 

@@ -168,6 +168,8 @@
   <data name="Platform.Autostart.WScriptUnavailable" xml:space="preserve"><value>Není dostupný WScript.Shell pro vytvoření zástupce po startu.</value></data>
   <data name="Platform.Autostart.WScriptCreateFailed" xml:space="preserve"><value>Nepodařilo se vytvořit WScript.Shell.</value></data>
   <data name="Platform.Autostart.ShortcutCreateFailed" xml:space="preserve"><value>Nepodařilo se vytvořit COM objekt zástupce po startu.</value></data>
+  <data name="Platform.Autostart.DisplayName" xml:space="preserve"><value>Vehimap</value></data>
+  <data name="Platform.Autostart.Description" xml:space="preserve"><value>Spouštět Vehimap automaticky po přihlášení</value></data>
   <data name="GlobalSearchWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat globální hledání</value></data>
   <data name="GlobalSearchWorkspace.DetailHeading" xml:space="preserve"><value>Detail výsledku</value></data>
   <data name="GlobalSearchWorkspace.ItemType" xml:space="preserve"><value>Výsledek hledání</value></data>
@@ -1080,6 +1082,7 @@ Vozidlo: {2}
   <data name="UpdateInstall.PrepareFailed" xml:space="preserve"><value>Aktualizaci se nepodařilo připravit: {0}</value></data>
   <data name="UpdateInstall.ProgressHelpText" xml:space="preserve"><value>Průběh stahování a ověřování aktualizace v procentech.</value></data>
   <data name="UpdateInstall.ProgressWithBytes" xml:space="preserve"><value>{0} % ({1} z {2})</value></data>
+  <data name="UpdateInstall.ProgressPercent" xml:space="preserve"><value>{0} %</value></data>
   <data name="UpdateInstall.Title" xml:space="preserve"><value>Stahování aktualizace</value></data>
   <data name="UpdateService.Check.Current" xml:space="preserve"><value>Používáte aktuální verzi Vehimap ({0}).</value></data>
   <data name="UpdateService.Check.DotnetManifestUnavailable" xml:space="preserve"><value>Aktualizační kanál pro tuto edici Vehimapu zatím nebyl zveřejněn.</value></data>

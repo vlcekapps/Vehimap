@@ -539,6 +539,23 @@ public sealed class AppShellServicesTests : IDisposable
 
             using var httpClient = new HttpClient(new StubHttpMessageHandler(Encoding.UTF8.GetBytes(remoteManifest)));
             var service = new LegacyUpdateService(buildInfo, httpClient, () => EnglishLocalizer());
+            service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+                30,
+                30,
+                30,
+                1000,
+                false,
+                false,
+                false,
+                false,
+                1,
+                30,
+                "en-US",
+                "comma",
+                "dot",
+                "mi",
+                "us_gal",
+                "USD"));
 
             var result = await service.CheckForUpdatesAsync("1.0.2");
 
@@ -546,6 +563,7 @@ public sealed class AppShellServicesTests : IDisposable
             Assert.Null(result.FailureReason);
             Assert.Equal("1.0.3", result.LatestVersion);
             Assert.Contains("1.0.3", result.Message, StringComparison.Ordinal);
+            Assert.Contains("2.0 KB", result.Message, StringComparison.Ordinal);
         }
         finally
         {
@@ -624,6 +642,7 @@ public sealed class AppShellServicesTests : IDisposable
 
         Assert.Contains("Automatická instalace: nedostupná", model.Details, StringComparison.Ordinal);
         Assert.Contains("Vydáno: 02.04.2026", model.Details, StringComparison.Ordinal);
+        Assert.Contains("Velikost assetu: 2,0 KB", model.Details, StringComparison.Ordinal);
         Assert.Contains("Vehimap.Updater", model.Details, StringComparison.Ordinal);
         Assert.Contains("Asset ke stažení: https://example.com/vehimap.zip", model.Details, StringComparison.Ordinal);
         Assert.Contains($"SHA-256: {sha256}", model.Details, StringComparison.Ordinal);
@@ -638,6 +657,27 @@ public sealed class AppShellServicesTests : IDisposable
         Assert.Equal(
             "Otevře přímé stažení aktualizačního balíčku v prohlížeči pro ruční instalaci.",
             model.AssetActionHelpText);
+    }
+
+    [Fact]
+    public void Update_install_progress_uses_selected_number_separators_for_file_sizes()
+    {
+        var model = new UpdateInstallProgressDialogViewModel(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")),
+            new AppCulturePreferences("cs-CZ", "space", "comma"));
+
+        Assert.Equal("0 %", model.ProgressText);
+
+        model.ApplyProgress(new UpdateInstallProgress(
+            "Stahování",
+            1572864,
+            3145728,
+            false));
+
+        Assert.Equal("50 % (1,5 MB z 3,0 MB)", model.ProgressText);
+
+        model.MarkCompleted("Hotovo");
+        Assert.Equal("100 %", model.ProgressText);
     }
 
     [Fact]

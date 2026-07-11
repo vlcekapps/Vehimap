@@ -104,6 +104,7 @@ public sealed class I18nFoundationTests
             "MainMenu.Overview.Dashboard",
             "MaintenanceWorkspace.Detail.Interval",
             "Overview.DataIssue.Severity.Info",
+            "Platform.Autostart.DisplayName",
             "ServiceBook.RecordKeywords",
             "Settings.Option.CurrencyEur",
             "Shell.AuditCount",
@@ -574,6 +575,24 @@ public sealed class I18nFoundationTests
         Assert.True(service.TryParseDate("10.03.2026", preferences, out var parsed));
         Assert.Equal(new DateOnly(2026, 3, 10), parsed);
         Assert.Equal("10.03.2026", VehimapValueParser.FormatCanonicalEventDate(parsed));
+    }
+
+    [Theory]
+    [InlineData("en-US", "comma", "dot", 512L, "512 B")]
+    [InlineData("en-US", "comma", "dot", 1536L, "1.5 KB")]
+    [InlineData("cs-CZ", "space", "comma", 1572864L, "1,5 MB")]
+    [InlineData("en-US", "comma", "dot", 1610612736L, "1.50 GB")]
+    public void File_size_format_service_respects_number_separator_preferences(
+        string language,
+        string thousandsSeparator,
+        string decimalSeparator,
+        long sizeBytes,
+        string expected)
+    {
+        var service = new AppFileSizeFormatService();
+        var preferences = new AppCulturePreferences(language, thousandsSeparator, decimalSeparator);
+
+        Assert.Equal(expected, service.FormatBytes(sizeBytes, preferences));
     }
 
     [Theory]
@@ -1259,6 +1278,8 @@ public sealed class I18nFoundationTests
         Assert.Contains("_localizer.GetString(\"UpdateCheck.Heading.Default\")", updateDialogViewModel);
         Assert.Contains("_localizer.GetString(\"UpdateCheck.Primary.InstallHelp\")", updateDialogViewModel);
         Assert.Contains("_localizer.Format(\"UpdateCheck.Details.AssetUrl\"", updateDialogViewModel);
+        Assert.Contains("_fileSizeFormatService.FormatBytes", updateDialogViewModel);
+        Assert.DoesNotContain("private static string FormatBytes", updateDialogViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), updateCheckWindow);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), updateCheckCodeBehind);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), updateDialogViewModel);
@@ -1270,6 +1291,10 @@ public sealed class I18nFoundationTests
         Assert.Contains("DesktopLocalization.Localizer.GetString(\"UpdateInstall.CancelledResult\")", updateInstallCodeBehind);
         Assert.Contains("_localizer.GetString(\"UpdateInstall.InitialStatus\")", updateInstallViewModel);
         Assert.Contains("UpdateInstall.ProgressWithBytes", updateInstallViewModel);
+        Assert.Contains("UpdateInstall.ProgressPercent", updateInstallViewModel);
+        Assert.Contains("_fileSizeFormatService.FormatBytes", updateInstallViewModel);
+        Assert.DoesNotContain("private static string FormatBytes", updateInstallViewModel);
+        Assert.DoesNotContain("ProgressText = \"100 %\"", updateInstallViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), updateInstallWindow);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), updateInstallCodeBehind);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), updateInstallViewModel);
@@ -1701,7 +1726,7 @@ public sealed class I18nFoundationTests
     {
         var root = FindRepositoryRoot();
         var sourceRoot = Path.Combine(root, "dotnet", "src");
-        var literalRegex = new Regex("(?:\\s(?:km|mi|l)\\b|/(?:km|mi)\\b|US gal|imp gal|\\bmpg\\b|\\b(?:CZK|USD|EUR|GBP)\\b|Kč|\\bliters?\\b|\\blitres?\\b|\\blitr(?:y|ů|u|em)?\\b|\\bgalon(?:y|ů|u|em)?\\b)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        var literalRegex = new Regex("(?:\\s(?:km|mi|l)\\b|/(?:km|mi)\\b|US gal|imp gal|\\bmpg\\b|\\b(?:KB|MB|GB|CZK|USD|EUR|GBP)\\b|Kč|\\bliters?\\b|\\blitres?\\b|\\blitr(?:y|ů|u|em)?\\b|\\bgalon(?:y|ů|u|em)?\\b)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         var failures = new List<string>();
         foreach (var file in Directory.EnumerateFiles(sourceRoot, "*.*", SearchOption.AllDirectories)
                      .Where(path => Path.GetExtension(path) is ".cs" or ".axaml")
@@ -1999,11 +2024,14 @@ public sealed class I18nFoundationTests
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(path => !path.EndsWith(Path.Combine("Services", "VehimapValueParser.cs"), StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.EndsWith(Path.Combine("Services", "AppDateFormatService.cs"), StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => (Path: path, Line: line, Number: index + 1)))
             .Where(item => item.Line.Contains("dd.MM.yyyy", StringComparison.Ordinal)
                 || item.Line.Contains("DD.MM.YYYY", StringComparison.Ordinal)
-                || item.Line.Contains("DD.MM.RRRR", StringComparison.Ordinal))
+                || item.Line.Contains("DD.MM.RRRR", StringComparison.Ordinal)
+                || item.Line.Contains(".ToString(\"d\"", StringComparison.Ordinal)
+                || item.Line.Contains(".ToString(\"g\"", StringComparison.Ordinal))
             .Select(item => $"{Path.GetRelativePath(root, item.Path).Replace('\\', '/')}:{item.Number}: {item.Line.Trim()}")
             .ToArray();
 
@@ -2077,6 +2105,7 @@ public sealed class I18nFoundationTests
             "dotnet/src/Vehimap.Application/Models/AppUnitPreferences.cs" or
             "dotnet/src/Vehimap.Application/Models/DesktopSupportedSettingsSnapshot.cs" or
             "dotnet/src/Vehimap.Application/Services/AppCurrencyFormatService.cs" or
+            "dotnet/src/Vehimap.Application/Services/AppFileSizeFormatService.cs" or
             "dotnet/src/Vehimap.Application/Services/AppUnitFormatService.cs")
         {
             return true;

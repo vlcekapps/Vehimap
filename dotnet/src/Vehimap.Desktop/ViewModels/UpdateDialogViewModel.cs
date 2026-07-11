@@ -12,16 +12,19 @@ public sealed partial class UpdateDialogViewModel : ObservableObject
 {
     private readonly IAppLocalizer _localizer;
     private readonly IAppDateFormatService _dateFormatService;
+    private readonly IAppFileSizeFormatService _fileSizeFormatService;
     private readonly AppCulturePreferences _culturePreferences;
 
     public UpdateDialogViewModel(
         UpdateCheckResult result,
         IAppLocalizer? localizer = null,
         AppCulturePreferences? culturePreferences = null,
-        IAppDateFormatService? dateFormatService = null)
+        IAppDateFormatService? dateFormatService = null,
+        IAppFileSizeFormatService? fileSizeFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
         _dateFormatService = dateFormatService ?? new AppDateFormatService();
+        _fileSizeFormatService = fileSizeFormatService ?? new AppFileSizeFormatService();
         _culturePreferences = culturePreferences ?? new AppCulturePreferences(CultureInfo.CurrentCulture.Name);
         Result = result;
         Heading = result.FailureReason is not null
@@ -88,7 +91,7 @@ public sealed partial class UpdateDialogViewModel : ObservableObject
 
         if (result.AssetSize is > 0)
         {
-            lines.Add(_localizer.Format("UpdateCheck.Details.AssetSize", FormatBytes(result.AssetSize.Value)));
+            lines.Add(_localizer.Format("UpdateCheck.Details.AssetSize", _fileSizeFormatService.FormatBytes(result.AssetSize.Value, _culturePreferences)));
         }
 
         if (result.IsUpdateAvailable)
@@ -145,26 +148,4 @@ public sealed partial class UpdateDialogViewModel : ObservableObject
         return _localizer.GetString("UpdateCheck.ManualInstallFallback");
     }
 
-    private static string FormatBytes(long sizeBytes)
-    {
-        if (sizeBytes < 1024)
-        {
-            return $"{sizeBytes} B";
-        }
-
-        var sizeKb = sizeBytes / 1024d;
-        if (sizeKb < 1024)
-        {
-            return $"{sizeKb:0.0} KB";
-        }
-
-        var sizeMb = sizeKb / 1024d;
-        if (sizeMb < 1024)
-        {
-            return $"{sizeMb:0.0} MB";
-        }
-
-        var sizeGb = sizeMb / 1024d;
-        return $"{sizeGb:0.00} GB";
-    }
 }

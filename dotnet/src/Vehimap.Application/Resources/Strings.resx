@@ -168,6 +168,8 @@
   <data name="Platform.Autostart.WScriptUnavailable" xml:space="preserve"><value>WScript.Shell is not available for creating the startup shortcut.</value></data>
   <data name="Platform.Autostart.WScriptCreateFailed" xml:space="preserve"><value>WScript.Shell could not be created.</value></data>
   <data name="Platform.Autostart.ShortcutCreateFailed" xml:space="preserve"><value>The startup shortcut COM object could not be created.</value></data>
+  <data name="Platform.Autostart.DisplayName" xml:space="preserve"><value>Vehimap</value></data>
+  <data name="Platform.Autostart.Description" xml:space="preserve"><value>Start Vehimap automatically after sign-in</value></data>
   <data name="GlobalSearchWorkspace.ClearSearchName" xml:space="preserve"><value>Clear global search</value></data>
   <data name="GlobalSearchWorkspace.DetailHeading" xml:space="preserve"><value>Result detail</value></data>
   <data name="GlobalSearchWorkspace.ItemType" xml:space="preserve"><value>Search result</value></data>
@@ -1080,6 +1082,7 @@ Vehicle: {2}
   <data name="UpdateInstall.PrepareFailed" xml:space="preserve"><value>Update could not be prepared: {0}</value></data>
   <data name="UpdateInstall.ProgressHelpText" xml:space="preserve"><value>Download and verification progress in percent.</value></data>
   <data name="UpdateInstall.ProgressWithBytes" xml:space="preserve"><value>{0} % ({1} of {2})</value></data>
+  <data name="UpdateInstall.ProgressPercent" xml:space="preserve"><value>{0} %</value></data>
   <data name="UpdateInstall.Title" xml:space="preserve"><value>Downloading update</value></data>
   <data name="UpdateService.Check.Current" xml:space="preserve"><value>You are using the current Vehimap version ({0}).</value></data>
   <data name="UpdateService.Check.DotnetManifestUnavailable" xml:space="preserve"><value>The update channel for this Vehimap edition has not been published yet.</value></data>

@@ -205,7 +205,7 @@ internal sealed class DesktopAppShellController
         {
             var result = await shell.CheckForUpdatesAsync(cancellationToken).ConfigureAwait(true);
             var action = await _dialogService
-                .ShowUpdateAsync(owner, new UpdateDialogViewModel(result, DesktopLocalization.Localizer))
+                .ShowUpdateAsync(owner, new UpdateDialogViewModel(result, DesktopLocalization.Localizer, shell.CurrentCulturePreferences))
                 .ConfigureAwait(true);
 
             switch (action)
@@ -221,7 +221,7 @@ internal sealed class DesktopAppShellController
 
                         var installResult = await _dialogService.ShowUpdateInstallProgressAsync(
                                 owner,
-                                new UpdateInstallProgressDialogViewModel(DesktopLocalization.Localizer),
+                                new UpdateInstallProgressDialogViewModel(DesktopLocalization.Localizer, shell.CurrentCulturePreferences),
                                 (progress, progressCancellationToken) => shell.PrepareUpdateInstallAsync(result, progress, progressCancellationToken))
                             .ConfigureAwait(true);
                         if (installResult.IsReady && installResult.InstallPlan is not null)
@@ -247,7 +247,8 @@ internal sealed class DesktopAppShellController
                                     false,
                                     installResult.Message,
                                     installResult.Message),
-                                    DesktopLocalization.Localizer))
+                                    DesktopLocalization.Localizer,
+                                    shell.CurrentCulturePreferences))
                             .ConfigureAwait(true);
                         return false;
                     }

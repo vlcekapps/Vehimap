@@ -471,6 +471,8 @@ public sealed class MainWindowViewModelAppShellTests
         Assert.Contains("Po termínu", snapshot.NotificationMessage, StringComparison.Ordinal);
         Assert.Contains("Nejbližší k řešení", snapshot.ToolTipText, StringComparison.Ordinal);
         Assert.Contains("Po termínu", snapshot.ToolTipText, StringComparison.Ordinal);
+        Assert.StartsWith("Vehimap" + Environment.NewLine, snapshot.ToolTipText, StringComparison.Ordinal);
+        Assert.DoesNotContain("Vehimap Desktop", snapshot.ToolTipText, StringComparison.Ordinal);
     }
 
     [Fact]

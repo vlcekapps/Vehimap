@@ -82,6 +82,8 @@ public sealed class DesktopCostExportServiceTests
         Assert.Contains("$700.00", html);
         Assert.Contains("93.2 mi", html);
         Assert.Contains("$7.51/mi", html);
+        Assert.Contains("From 1/1/2026 to 12/31/2026", html);
+        Assert.Contains("6/19/2026 8:00 PM", html);
         Assert.DoesNotContain("Kč", html);
     }
 

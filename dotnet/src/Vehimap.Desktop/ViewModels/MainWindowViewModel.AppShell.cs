@@ -373,7 +373,7 @@ public sealed partial class MainWindowViewModel
 
         var toolTipLines = new List<string>
         {
-            $"{appName} Desktop",
+            appName,
             LFO("AppShell.Background.TooltipSummary", VehicleCount, AuditCount, DashboardUpcomingTimeline.Count)
         };
 

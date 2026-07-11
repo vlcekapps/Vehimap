@@ -436,7 +436,7 @@ public sealed partial class MainWindowViewModel
     {
         var parts = value
             .Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Where(part => !string.Equals(part, "Vehimap Desktop", StringComparison.CurrentCultureIgnoreCase));
+            .Skip(1);
 
         return string.Join(" ", parts);
     }

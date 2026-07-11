@@ -53,7 +53,7 @@ public sealed class PlatformAutostartService : IAutostartService
         Directory.CreateDirectory(Path.GetDirectoryName(entryPath)!);
         var content = OperatingSystem.IsMacOS()
             ? BuildMacLaunchAgentContent(command)
-            : BuildLinuxDesktopEntryContent(command);
+            : BuildLinuxDesktopEntryContent(command, _localizer);
         File.WriteAllText(entryPath, content, new UTF8Encoding(false));
     }
 
@@ -145,7 +145,7 @@ public sealed class PlatformAutostartService : IAutostartService
             shortcutType.InvokeMember("TargetPath", BindingFlags.SetProperty, null, shortcut, [command.ExecutablePath]);
             shortcutType.InvokeMember("Arguments", BindingFlags.SetProperty, null, shortcut, [string.Join(' ', command.Arguments.Select(QuoteCommandArgument))]);
             shortcutType.InvokeMember("WorkingDirectory", BindingFlags.SetProperty, null, shortcut, [Path.GetDirectoryName(command.ExecutablePath) ?? AppContext.BaseDirectory]);
-            shortcutType.InvokeMember("Description", BindingFlags.SetProperty, null, shortcut, ["Vehimap Desktop"]);
+            shortcutType.InvokeMember("Description", BindingFlags.SetProperty, null, shortcut, [localizer.GetString("Platform.Autostart.Description")]);
             shortcutType.InvokeMember("Save", BindingFlags.InvokeMethod, null, shortcut, null);
         }
         finally
@@ -162,15 +162,16 @@ public sealed class PlatformAutostartService : IAutostartService
         }
     }
 
-    internal static string BuildLinuxDesktopEntryContent(LaunchCommand command)
+    internal static string BuildLinuxDesktopEntryContent(LaunchCommand command, IAppLocalizer? localizer = null)
     {
+        localizer ??= new ResourceAppLocalizer();
         var exec = string.Join(' ', new[] { QuoteCommandArgument(command.ExecutablePath) }.Concat(command.Arguments.Select(QuoteCommandArgument)));
         return $$"""
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=Vehimap Desktop
-Comment=Vehimap desktop
+Name={{localizer.GetString("Platform.Autostart.DisplayName")}}
+Comment={{localizer.GetString("Platform.Autostart.Description")}}
 Exec={{exec}}
 Terminal=false
 X-GNOME-Autostart-enabled=true

@@ -17,15 +17,19 @@ public sealed class LegacyUpdateService : IUpdateService
     private readonly IAppBuildInfoProvider _appBuildInfoProvider;
     private readonly HttpClient _httpClient;
     private readonly Func<IAppLocalizer> _localizerProvider;
+    private readonly IAppFileSizeFormatService _fileSizeFormatService;
+    private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
 
     public LegacyUpdateService(
         IAppBuildInfoProvider appBuildInfoProvider,
         HttpClient? httpClient = null,
-        Func<IAppLocalizer>? localizerProvider = null)
+        Func<IAppLocalizer>? localizerProvider = null,
+        IAppFileSizeFormatService? fileSizeFormatService = null)
     {
         _appBuildInfoProvider = appBuildInfoProvider;
         _httpClient = httpClient ?? SharedHttpClient;
         _localizerProvider = localizerProvider ?? (() => new ResourceAppLocalizer(CultureInfo.CurrentUICulture));
+        _fileSizeFormatService = fileSizeFormatService ?? new AppFileSizeFormatService();
     }
 
     private IAppLocalizer Localizer => _localizerProvider();
@@ -33,6 +37,14 @@ public sealed class LegacyUpdateService : IUpdateService
     private string L(string key) => Localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => Localizer.Format(key, args);
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
+    }
 
     public async Task<UpdateCheckResult> CheckForUpdatesAsync(string currentVersion, CancellationToken cancellationToken = default)
     {
@@ -49,7 +61,7 @@ public sealed class LegacyUpdateService : IUpdateService
             if (comparison < 0)
             {
                 var sizeText = manifest.AssetSize is > 0
-                    ? LF("UpdateService.Check.UpdateAvailableSizeSuffix", FormatSize(manifest.AssetSize.Value))
+                    ? LF("UpdateService.Check.UpdateAvailableSizeSuffix", _fileSizeFormatService.FormatBytes(manifest.AssetSize.Value, _culturePreferences))
                     : string.Empty;
                 return new UpdateCheckResult(
                     currentVersion,
@@ -437,29 +449,6 @@ public sealed class LegacyUpdateService : IUpdateService
         }
 
         return extractRoot;
-    }
-
-    private static string FormatSize(long sizeBytes)
-    {
-        if (sizeBytes < 1024)
-        {
-            return $"{sizeBytes} B";
-        }
-
-        var sizeKb = sizeBytes / 1024d;
-        if (sizeKb < 1024)
-        {
-            return $"{sizeKb:0.0} KB";
-        }
-
-        var sizeMb = sizeKb / 1024d;
-        if (sizeMb < 1024)
-        {
-            return $"{sizeMb:0.0} MB";
-        }
-
-        var sizeGb = sizeMb / 1024d;
-        return $"{sizeGb:0.00} GB";
     }
 
     private static void TryDeleteDirectory(string path)

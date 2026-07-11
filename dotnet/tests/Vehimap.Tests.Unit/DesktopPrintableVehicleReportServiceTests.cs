@@ -55,6 +55,7 @@ public sealed class DesktopPrintableVehicleReportServiceTests
         Assert.Contains("<title>Vehimap - Tiskový přehled vozidel</title>", decodedHtml);
         Assert.Contains("<html lang=\"cs\">", html);
         Assert.Contains("Vytvořeno:", decodedHtml);
+        Assert.Contains("03.04.2026 9:15", decodedHtml);
         Assert.Contains("Celkem vozidel: 3", decodedHtml);
         Assert.Contains("<th>Název</th>", decodedHtml);
         Assert.Contains("<th>Zelená karta do</th>", decodedHtml);
@@ -99,6 +100,7 @@ public sealed class DesktopPrintableVehicleReportServiceTests
         Assert.Contains("<html lang=\"en\">", html);
         Assert.Contains("<title>Vehimap - Printable vehicle overview</title>", decodedHtml);
         Assert.Contains("Generated:", decodedHtml);
+        Assert.Contains("4/3/2026 9:15 AM", decodedHtml);
         Assert.Contains("Vehicles total: 1", decodedHtml);
         Assert.Contains("Passenger vehicles (1)", decodedHtml);
         Assert.Contains("Normal operation", decodedHtml);

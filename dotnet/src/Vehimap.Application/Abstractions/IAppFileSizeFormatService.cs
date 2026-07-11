@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+using Vehimap.Application.Models;
+
+namespace Vehimap.Application.Abstractions;
+
+public interface IAppFileSizeFormatService
+{
+    string FormatBytes(long sizeBytes, AppCulturePreferences preferences);
+}

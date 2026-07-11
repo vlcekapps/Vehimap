@@ -1290,6 +1290,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         ApplyDesktopLocalization(supportedSettings);
         var appInfo = _session.GetAppInfo();
         _projectionService.ApplySupportedSettings(supportedSettings);
+        _printableVehicleReportService.ApplySupportedSettings(supportedSettings);
         _costExportService.ApplySupportedSettings(supportedSettings);
         _serviceBookExportService.ApplySupportedSettings(supportedSettings);
         if (_timelineService is LegacyTimelineService legacyTimelineService)
