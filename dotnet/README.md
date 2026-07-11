@@ -65,6 +65,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - parser cisel a castek smi rozpoznavat kompatibilni markery jako `Kc`/`Kč` a `CZK`, ale jen jako vstupni boundary tokeny; viditelne castky se vzdy formatuji pres sdilenou sluzbu
 - Chytry poradce pouziva pro rozpoznani stavu terminu stejne EN/CS resource hodnoty jako timeline; nema vlastni cesko-anglicky slovnik stavovych textu
 - ulozene volby filtru, razeni, nakladovych obdobi a navigacnich cilu nepouzivaji viditelny EN/CS text jako ridici hodnotu; nove preference ukladaji stabilni klice jako `all`, `future`, `green_cards`, `cost`, `vehicle` nebo `custom` a stare ceske/anglicke labely slouzi jen jako resource-backed kompatibilni aliasy
+- sdileny `LocalizedResourceValueMatcher` rozpoznava aktualni, anglicke i ceske resource hodnoty na kompatibilitnich hranicich; prehledy, rychle akce, globalni hledani, Chytry poradce a known-value mapovani proto nemaji vlastni jazykove konstanty
 - audit, globalni hledani a Chytry poradce predavaji navigacni cile pres stabilni entity kindy `vehicle`, `history`, `fuel`, `record`, `maintenance`, `reminder` a `costs`; stare ceske nazvy entit jsou jen kompatibilni vstupni aliasy, ne nove runtime tokeny
 - editor vozidla uz pouziva `.resx` i pro titulky dialogu, uvodni statusy a validacni chyby, nejen pro popisky poli
 - dialog `Balicek pro vozidlo` / `Doporucene servisni sablony` uz pouziva `.resx` pro titulky, napovedu, ovladaci prvky, souhrny, pristupne popisky polozek, katalogove nazvy, kategorie, podkategorie, poznamky, profil vozidla a stavove hlasky; kontrola duplicit rozpoznava stare ceske i nove anglicke nazvy sablon, aby zmena jazyka nenabizela uz pridane ukony znovu
@@ -105,7 +106,7 @@ Pravidla lokalizace jsou v `docs/I18N.md`. Strucne:
 - pred Androidem musi zustat zelena prurezova i18n brana nad stejnou datovou sadou pro EN/CS, vcetne jednotek, meny, legacy known values a hlavni desktopove projekce
 - diagnostika, kalendarove exporty a servisni HTML reporty pouzivaji v cestine prirozene popisky jako `Běhové prostředí` a `Podrobnosti`, ne prevzate technicke texty typu `Runtime`/`Detail`
 - produkcni C# zdroje maji staticky guard proti ceskym UI literalum mimo `.resx`; povolene vyjimky jsou jen legacy tokeny, kompatibilni aliasy, parser/search klicova slova a sablonova data
-- viditelne ulozene volby, ktere jeste nejsou prevedene na stabilni interni klice, musi mit i18n aliasy; hlavni filtry seznamu vozidel a rezim dokladovych priloh uz rozpoznavaji stare ceske i nove anglicke labely; editorove ComboBoxy pro zname hodnoty ukladaji `Value` a nikdy viditelny `Label`
+- viditelne ulozene volby pouzivaji stabilni interni klice a EN/CS resource aliasy jen pro nacteni starsich nightly preferenci; editorove ComboBoxy pro zname hodnoty ukladaji `Value` a nikdy viditelny `Label`
 - viditelne volby razeni v evidencich, terminovych prehledech, auditu a globalnim hledani uz pouzivaji `.resx` labely nad stabilnimi internimi klici; stare ceske i anglicke labely zustavaji kompatibilni jako ulozene preference
 
 ## Aktualni stav

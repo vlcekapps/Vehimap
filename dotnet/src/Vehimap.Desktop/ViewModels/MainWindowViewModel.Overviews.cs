@@ -13,20 +13,6 @@ namespace Vehimap.Desktop.ViewModels;
 public sealed partial class MainWindowViewModel
 {
     private const string OverviewDataIssueKind = "data_issue";
-    private const string OverviewAllFilterLegacyCzech = "V\u0161e";
-    private const string OverviewTechnicalFilterLegacyCzech = "Technick\u00E9 kontroly";
-    private const string OverviewGreenCardsFilterLegacyCzech = "Zelen\u00E9 karty";
-    private const string OverviewRemindersFilterLegacyCzech = "P\u0159ipom\u00EDnky";
-    private const string OverviewRecordsFilterLegacyCzech = "Doklady";
-    private const string OverviewMaintenanceFilterLegacyCzech = "\u00DAdr\u017Eba";
-    private const string OverviewDataIssuesFilterLegacyCzech = "Datov\u00E9 nedostatky";
-    private const string OverviewAllFilterLegacyEnglish = "All";
-    private const string OverviewTechnicalFilterLegacyEnglish = "Technical inspections";
-    private const string OverviewGreenCardsFilterLegacyEnglish = "Green cards";
-    private const string OverviewRemindersFilterLegacyEnglish = "Reminders";
-    private const string OverviewRecordsFilterLegacyEnglish = "Documents";
-    private const string OverviewMaintenanceFilterLegacyEnglish = "Maintenance";
-    private const string OverviewDataIssuesFilterLegacyEnglish = "Data issues";
     private const string OverviewIncludeMissingGreenSettingKey = "include_missing_green";
     private const string OverviewIncludeDataIssuesSettingKey = "include_data_issues";
     private const string OverviewUpcomingFilterSettingKey = "upcoming_filter";
@@ -40,8 +26,6 @@ public sealed partial class MainWindowViewModel
     private ObservableCollection<VehicleTimelineItemViewModel> UpcomingOverviewItems => UpcomingOverviewWorkspace.UpcomingOverviewItems;
 
     private ObservableCollection<VehicleTimelineItemViewModel> OverdueOverviewItems => OverdueOverviewWorkspace.OverdueOverviewItems;
-
-    private static string OverviewAllFilterLabel => OverviewFilterOptions.LabelForKey(OverviewFilterOptions.AllKey);
 
     private static string OverviewMissingGreenDateLabel => LO("Overview.MissingGreen.Date");
 
@@ -203,37 +187,37 @@ public sealed partial class MainWindowViewModel
 
     private static string NormalizeOverviewFilterKey(string value)
     {
-        if (IsOverviewFilterValue(value, OverviewFilterOptions.AllKey, OverviewAllFilterLegacyCzech, OverviewAllFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.AllKey))
         {
             return OverviewFilterOptions.AllKey;
         }
 
-        if (IsOverviewFilterValue(value, OverviewFilterOptions.TechnicalKey, OverviewTechnicalFilterLegacyCzech, OverviewTechnicalFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.TechnicalKey))
         {
             return OverviewFilterOptions.TechnicalKey;
         }
 
-        if (IsOverviewFilterValue(value, OverviewFilterOptions.GreenCardsKey, OverviewGreenCardsFilterLegacyCzech, OverviewGreenCardsFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.GreenCardsKey))
         {
             return OverviewFilterOptions.GreenCardsKey;
         }
 
-        if (IsOverviewFilterValue(value, OverviewFilterOptions.RemindersKey, OverviewRemindersFilterLegacyCzech, OverviewRemindersFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.RemindersKey))
         {
             return OverviewFilterOptions.RemindersKey;
         }
 
-        if (IsOverviewFilterValue(value, OverviewFilterOptions.RecordsKey, OverviewRecordsFilterLegacyCzech, OverviewRecordsFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.RecordsKey))
         {
             return OverviewFilterOptions.RecordsKey;
         }
 
-        if (IsOverviewFilterValue(value, OverviewFilterOptions.MaintenanceKey, OverviewMaintenanceFilterLegacyCzech, OverviewMaintenanceFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.MaintenanceKey))
         {
             return OverviewFilterOptions.MaintenanceKey;
         }
 
-        if (IsOverviewFilterValue(value, OverviewFilterOptions.DataIssuesKey, OverviewDataIssuesFilterLegacyCzech, OverviewDataIssuesFilterLegacyEnglish))
+        if (IsOverviewFilterValue(value, OverviewFilterOptions.DataIssuesKey))
         {
             return OverviewFilterOptions.DataIssuesKey;
         }
@@ -241,10 +225,11 @@ public sealed partial class MainWindowViewModel
         return value;
     }
 
-    private static bool IsOverviewFilterValue(string value, string key, params string[] aliases) =>
-        string.Equals(value, key, StringComparison.OrdinalIgnoreCase)
-        || string.Equals(value, OverviewFilterOptions.LabelForKey(key), StringComparison.OrdinalIgnoreCase)
-        || aliases.Any(alias => string.Equals(value, alias, StringComparison.OrdinalIgnoreCase));
+    private static bool IsOverviewFilterValue(string value, string key) =>
+        LocalizedCompatibilityAliases.MatchesStableValueOrResource(
+            value,
+            key,
+            OverviewFilterOptions.ResourceKeyForKey(key));
 
     private void RefreshUpcomingOverview()
     {
@@ -348,37 +333,16 @@ public sealed partial class MainWindowViewModel
             ? OverviewFilterOptions.AllKey
             : NormalizeOverviewFilterKey(filter.Trim());
 
-        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.TechnicalKey, OverviewTechnicalFilterLegacyCzech, OverviewTechnicalFilterLegacyEnglish))
+        return normalizedFilter switch
         {
-            return item.Kind == "technical";
-        }
-
-        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.GreenCardsKey, OverviewGreenCardsFilterLegacyCzech, OverviewGreenCardsFilterLegacyEnglish))
-        {
-            return item.Kind == "green";
-        }
-
-        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.RemindersKey, OverviewRemindersFilterLegacyCzech, OverviewRemindersFilterLegacyEnglish))
-        {
-            return item.Kind == "custom";
-        }
-
-        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.RecordsKey, OverviewRecordsFilterLegacyCzech, OverviewRecordsFilterLegacyEnglish))
-        {
-            return item.Kind == "record";
-        }
-
-        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.MaintenanceKey, OverviewMaintenanceFilterLegacyCzech, OverviewMaintenanceFilterLegacyEnglish))
-        {
-            return item.Kind == "maintenance";
-        }
-
-        if (IsOverviewFilterValue(normalizedFilter, OverviewFilterOptions.DataIssuesKey, OverviewDataIssuesFilterLegacyCzech, OverviewDataIssuesFilterLegacyEnglish))
-        {
-            return item.Kind == OverviewDataIssueKind;
-        }
-
-        return true;
+            OverviewFilterOptions.TechnicalKey => item.Kind == "technical",
+            OverviewFilterOptions.GreenCardsKey => item.Kind == "green",
+            OverviewFilterOptions.RemindersKey => item.Kind == "custom",
+            OverviewFilterOptions.RecordsKey => item.Kind == "record",
+            OverviewFilterOptions.MaintenanceKey => item.Kind == "maintenance",
+            OverviewFilterOptions.DataIssuesKey => item.Kind == OverviewDataIssueKind,
+            _ => true
+        };
     }
 
     private static bool MatchesOverviewSearch(VehicleTimelineItemViewModel item, string? search)

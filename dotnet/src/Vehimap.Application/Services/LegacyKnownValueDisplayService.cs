@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.Globalization;
 using Vehimap.Application.Abstractions;
 
 namespace Vehimap.Application.Services;
@@ -107,7 +106,7 @@ public static class LegacyKnownValueDisplayService
 
         foreach (var definition in definitions)
         {
-            if (definition.MatchResourceKeys.SelectMany(EnumerateResourceValues).Any(candidate => string.Equals(normalized, candidate, StringComparison.OrdinalIgnoreCase)))
+            if (LocalizedResourceValueMatcher.Matches(localizer, normalized, [.. definition.MatchResourceKeys]))
             {
                 return localizer.GetString(definition.DisplayResourceKey);
             }
@@ -121,12 +120,6 @@ public static class LegacyKnownValueDisplayService
 
     private static KnownValueDisplayDefinition Definition(string displayResourceKey, params string[] extraMatchResourceKeys) =>
         new(displayResourceKey, [displayResourceKey, .. extraMatchResourceKeys]);
-
-    private static IEnumerable<string> EnumerateResourceValues(string resourceKey)
-    {
-        yield return new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)).GetString(resourceKey);
-        yield return new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)).GetString(resourceKey);
-    }
 
     private sealed record KnownValueDisplayDefinition(string DisplayResourceKey, IReadOnlyList<string> MatchResourceKeys);
 }

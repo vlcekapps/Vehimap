@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.Globalization;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -16,12 +15,6 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
     private const string EntityMaintenance = ApplicationEntityKinds.Maintenance;
     private const string EntityReminder = ApplicationEntityKinds.Reminder;
     private const string EntityCosts = ApplicationEntityKinds.Costs;
-    private const string CategoryAttachmentCs = "P\u0159\u00EDloha";
-    private const string CategoryMaintenanceCs = "\u00DAdr\u017Eba";
-    private const string CategoryCostsCs = "N\u00E1klady";
-    private const string CategoryTechnicalInspectionCs = "Technick\u00E1 kontrola";
-    private const string CategoryGreenCardCs = "Zelen\u00E1 karta";
-
     private readonly ITimelineService _timelineService;
     private readonly IFuelAnalysisService _fuelAnalysisService;
     private readonly IAppLocalizer _localizer;
@@ -195,19 +188,19 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
         }
     }
 
-    private static SmartAdvisorCategory MapAuditCategory(AuditItem item)
+    private SmartAdvisorCategory MapAuditCategory(AuditItem item)
     {
-        if (IsAny(item.Category, CategoryAttachmentCs, "Attachment"))
+        if (LocalizedResourceValueMatcher.Matches(_localizer, item.Category, "Audit.Category.Attachment"))
         {
             return SmartAdvisorCategory.Attachments;
         }
 
-        if (IsAny(item.Category, CategoryMaintenanceCs, "Maintenance"))
+        if (LocalizedResourceValueMatcher.Matches(_localizer, item.Category, "Audit.Category.Maintenance"))
         {
             return SmartAdvisorCategory.Maintenance;
         }
 
-        if (IsAny(item.Category, CategoryCostsCs, "Costs"))
+        if (LocalizedResourceValueMatcher.Matches(_localizer, item.Category, "Audit.Category.Costs"))
         {
             return SmartAdvisorCategory.Costs;
         }
@@ -217,8 +210,8 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
             return SmartAdvisorCategory.Fuel;
         }
 
-        if (IsAny(item.Category, CategoryTechnicalInspectionCs, "Technical inspection")
-            || IsAny(item.Category, CategoryGreenCardCs, "Green card"))
+        if (LocalizedResourceValueMatcher.Matches(_localizer, item.Category, "Audit.Category.TechnicalInspection")
+            || LocalizedResourceValueMatcher.Matches(_localizer, item.Category, "Audit.Category.GreenCard"))
         {
             return SmartAdvisorCategory.Deadlines;
         }
@@ -309,19 +302,6 @@ public sealed class LegacySmartAdvisorService : ISmartAdvisorService
 
     private static string ValueOrFallback(string? value, string fallback) =>
         string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
-
-    private static bool IsAny(string value, params string[] expectedValues)
-    {
-        foreach (var expectedValue in expectedValues)
-        {
-            if (string.Equals(value, expectedValue, StringComparison.CurrentCultureIgnoreCase))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     private static bool ContainsAny(string value, params string[] expectedValues)
     {

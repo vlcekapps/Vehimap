@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Domain.Enums;
@@ -16,9 +15,6 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private const string EntityRecord = ApplicationEntityKinds.Record;
     private const string EntityReminder = ApplicationEntityKinds.Reminder;
     private const string EntityMaintenance = ApplicationEntityKinds.Maintenance;
-    private const string NeutralTimelineStatusCs = "Bez upozorn\u011Bn\u00ED";
-    private const string NeutralTimelineStatusEn = "No alert";
-
     private readonly IFileAttachmentService _attachmentService;
     private readonly ITimelineService _timelineService;
     private readonly IAppLocalizer _localizer;
@@ -417,10 +413,10 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             string.Equals(item.Kind, kind, StringComparison.Ordinal)
             && string.Equals(item.EntryId, entryId, StringComparison.Ordinal));
 
-    private static string FindTimelineStatus(IReadOnlyList<VehicleTimelineItem> timelineItems, string kind, string entryId) =>
+    private string FindTimelineStatus(IReadOnlyList<VehicleTimelineItem> timelineItems, string kind, string entryId) =>
         FormatSearchableTimelineStatus(FindTimelineItem(timelineItems, kind, entryId)?.Status);
 
-    private static string FormatSearchableTimelineStatus(string? status) =>
+    private string FormatSearchableTimelineStatus(string? status) =>
         IsAttentionStatus(status) ? status ?? string.Empty : string.Empty;
 
     private string BuildVehicleAttentionStatusText(IReadOnlyList<VehicleTimelineItem> timelineItems)
@@ -449,10 +445,9 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private static bool IsVehicleStatusTimelineItem(VehicleTimelineItem item) =>
         item.Kind is "technical" or "green" or "custom" or "maintenance";
 
-    private static bool IsAttentionStatus(string? status) =>
+    private bool IsAttentionStatus(string? status) =>
         !string.IsNullOrWhiteSpace(status)
-        && !string.Equals(status, NeutralTimelineStatusCs, StringComparison.CurrentCultureIgnoreCase)
-        && !string.Equals(status, NeutralTimelineStatusEn, StringComparison.CurrentCultureIgnoreCase);
+        && !LocalizedResourceValueMatcher.Matches(_localizer, status, "Timeline.Status.NoAlert");
 
     private static IReadOnlyList<string?> BuildSearchTexts(IReadOnlyList<string?> vehicleSearchTexts, params string?[] entrySearchTexts)
     {

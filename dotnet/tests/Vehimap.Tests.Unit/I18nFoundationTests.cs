@@ -217,6 +217,26 @@ public sealed class I18nFoundationTests
         Assert.Equal("Missing.Key.For.Test", english.GetString("Missing.Key.For.Test"));
     }
 
+    [Fact]
+    public void Localized_resource_value_matcher_accepts_current_english_and_czech_values()
+    {
+        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage));
+
+        Assert.True(LocalizedResourceValueMatcher.Matches(english, "Maintenance", "Audit.Category.Maintenance"));
+        Assert.True(LocalizedResourceValueMatcher.Matches(english, "Údržba", "Audit.Category.Maintenance"));
+        Assert.True(LocalizedResourceValueMatcher.MatchesStableValueOrResource(
+            english,
+            "technical",
+            "technical",
+            "Overview.Filter.Technical"));
+        Assert.True(LocalizedResourceValueMatcher.MatchesStableValueOrResource(
+            english,
+            "Technické kontroly",
+            "technical",
+            "Overview.Filter.Technical"));
+        Assert.False(LocalizedResourceValueMatcher.Matches(english, "Custom category", "Audit.Category.Maintenance"));
+    }
+
     [Theory]
     [InlineData("vehicle", ApplicationEntityKinds.Vehicle)]
     [InlineData("Vozidlo", ApplicationEntityKinds.Vehicle)]
@@ -1136,6 +1156,9 @@ public sealed class I18nFoundationTests
         Assert.DoesNotContain("Po limitu", service);
         Assert.DoesNotContain("Over distance limit", service);
         Assert.Contains("SmartAdvisor.Action.OpenVehicleCosts", service);
+        Assert.Contains("LocalizedResourceValueMatcher.Matches", service);
+        Assert.DoesNotContain("CategoryAttachmentCs", service);
+        Assert.DoesNotContain("\"Attachment\"", service);
         Assert.Contains("SmartAdvisor.Priority.Critical", projectionService);
         Assert.Contains("SmartAdvisor.Category.Attachments", projectionService);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), service);
@@ -1226,6 +1249,9 @@ public sealed class I18nFoundationTests
         Assert.Contains("GlobalSearch.Attachment.Managed", service);
         Assert.Contains("FormatDistanceFromKilometers", service);
         Assert.Contains("FormatFuelVolume", service);
+        Assert.Contains("LocalizedResourceValueMatcher.Matches", service);
+        Assert.DoesNotContain("NeutralTimelineStatusCs", service);
+        Assert.DoesNotContain("NeutralTimelineStatusEn", service);
         Assert.DoesNotContain("FormatFuelLiters", service);
         Assert.DoesNotContain("GlobalSearch.Value.OdometerKm", service);
         Assert.DoesNotContain("GlobalSearch.Value.Liters", service);
@@ -1255,6 +1281,10 @@ public sealed class I18nFoundationTests
         Assert.Contains("Overview.Summary.UpcomingWithItems", overviewsViewModel);
         Assert.Contains("Overview.MissingGreen.Title", overviewsViewModel);
         Assert.Contains("Overview.DataIssue.KindLabel", overviewsViewModel);
+        Assert.Contains("LocalizedCompatibilityAliases.MatchesStableValueOrResource", overviewsViewModel);
+        Assert.Contains("ResourceKeyForKey", overviewFilterOptions);
+        Assert.DoesNotContain("FilterLegacyCzech", overviewsViewModel);
+        Assert.DoesNotContain("FilterLegacyEnglish", overviewsViewModel);
         Assert.Contains("Overview.Summary.DashboardWithItems", projectionService);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), upcomingWorkspaceViewModel);
         Assert.DoesNotMatch(CzechDiacriticsRegex(), overdueWorkspaceViewModel);
@@ -1293,6 +1323,8 @@ public sealed class I18nFoundationTests
         Assert.Contains("QuickActions.Status.ReviewRecordOpened", quickActionsViewModel);
         Assert.Contains("QuickActions.Status.OpenedBackgroundTimeline", quickActionsViewModel);
         Assert.Contains("Timeline.Status.NoAlert", quickActionsViewModel);
+        Assert.Contains("LocalizedCompatibilityAliases.MatchesAnyResource", quickActionsViewModel);
+        Assert.DoesNotContain("QuickActionNoAlertLegacy", quickActionsViewModel);
         Assert.Contains("Overview.Filter.GreenCards", overviewFilterOptions);
         Assert.Contains("Overview.MissingGreen.Title", quickActionsViewModel);
         Assert.Contains("IsTimelineStatusAttention(item.Status)", appShellViewModel);

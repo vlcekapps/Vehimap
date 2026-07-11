@@ -40,14 +40,17 @@ internal static class OverviewFilterOptions
         new(key, LabelForKey(key));
 
     public static string LabelForKey(string key) =>
+        DesktopLocalization.Localizer.GetString(ResourceKeyForKey(key));
+
+    public static string ResourceKeyForKey(string key) =>
         key switch
         {
-            TechnicalKey => DesktopLocalization.Localizer.GetString("Overview.Filter.Technical"),
-            GreenCardsKey => DesktopLocalization.Localizer.GetString("Overview.Filter.GreenCards"),
-            RemindersKey => DesktopLocalization.Localizer.GetString("Overview.Filter.Reminders"),
-            RecordsKey => DesktopLocalization.Localizer.GetString("Overview.Filter.Records"),
-            MaintenanceKey => DesktopLocalization.Localizer.GetString("Overview.Filter.Maintenance"),
-            DataIssuesKey => DesktopLocalization.Localizer.GetString("Overview.Filter.DataIssues"),
-            _ => DesktopLocalization.Localizer.GetString("Overview.Filter.All")
+            TechnicalKey => "Overview.Filter.Technical",
+            GreenCardsKey => "Overview.Filter.GreenCards",
+            RemindersKey => "Overview.Filter.Reminders",
+            RecordsKey => "Overview.Filter.Records",
+            MaintenanceKey => "Overview.Filter.Maintenance",
+            DataIssuesKey => "Overview.Filter.DataIssues",
+            _ => "Overview.Filter.All"
         };
 }

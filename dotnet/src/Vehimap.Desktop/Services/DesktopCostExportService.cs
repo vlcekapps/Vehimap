@@ -371,13 +371,8 @@ internal sealed class DesktopCostExportService
         "CostAnalysis.Status.Inactive"
     ];
 
-    private static bool IsResourceValue(string value, string key)
-    {
-        var english = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)).GetString(key);
-        var czech = new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.CzechLanguage)).GetString(key);
-        return string.Equals(value, english, StringComparison.OrdinalIgnoreCase)
-            || string.Equals(value, czech, StringComparison.OrdinalIgnoreCase);
-    }
+    private bool IsResourceValue(string value, string key) =>
+        LocalizedResourceValueMatcher.Matches(_localizer, value, key);
 
     private static string Tsv(IEnumerable<string> fields) =>
         string.Join('\t', fields.Select(field => (field ?? string.Empty).Replace('\t', ' ').Replace('\r', ' ').Replace('\n', ' ')));

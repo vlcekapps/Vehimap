@@ -8,9 +8,6 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed partial class MainWindowViewModel
 {
-    private const string QuickActionNoAlertLegacyCzech = "Bez upozorn\u011Bn\u00ED";
-    private const string QuickActionNoAlertLegacyEnglish = "No alert";
-
     [RelayCommand]
     private async Task OpenNearestTechnicalAsync()
     {
@@ -333,9 +330,9 @@ public sealed partial class MainWindowViewModel
         }
 
         var normalizedStatus = status.Trim();
-        return !string.Equals(normalizedStatus, LO("Timeline.Status.NoAlert"), StringComparison.CurrentCultureIgnoreCase)
-            && !string.Equals(normalizedStatus, QuickActionNoAlertLegacyCzech, StringComparison.CurrentCultureIgnoreCase)
-            && !string.Equals(normalizedStatus, QuickActionNoAlertLegacyEnglish, StringComparison.OrdinalIgnoreCase);
+        return !LocalizedCompatibilityAliases.MatchesAnyResource(
+            normalizedStatus,
+            "Timeline.Status.NoAlert");
     }
 
     private bool HasAnyGreenCardConfigured() =>
