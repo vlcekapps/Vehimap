@@ -1081,7 +1081,7 @@ Vozidlo: {2}
   <data name="UpdateInstall.ProgressWithBytes" xml:space="preserve"><value>{0} % ({1} z {2})</value></data>
   <data name="UpdateInstall.Title" xml:space="preserve"><value>Stahování aktualizace</value></data>
   <data name="UpdateService.Check.Current" xml:space="preserve"><value>Používáte aktuální verzi Vehimap ({0}).</value></data>
-  <data name="UpdateService.Check.DotnetManifestUnavailable" xml:space="preserve"><value>Desktopový update kanál pro .NET větev zatím není publikovaný.</value></data>
+  <data name="UpdateService.Check.DotnetManifestUnavailable" xml:space="preserve"><value>Aktualizační kanál pro tuto edici Vehimapu zatím nebyl zveřejněn.</value></data>
   <data name="UpdateService.Check.Failed" xml:space="preserve"><value>Kontrolu aktualizací se nepodařilo dokončit.</value></data>
   <data name="UpdateService.Check.FailureReason" xml:space="preserve"><value>Kontrola aktualizací bezpečně selhala. Technická kategorie: {0}.</value></data>
   <data name="UpdateService.Check.LocalNewer" xml:space="preserve"><value>Používáte novější lokální verzi ({0}) než je v manifestu ({1}).</value></data>
@@ -1102,7 +1102,7 @@ Vozidlo: {2}
   <data name="UpdateService.Install.MissingAssetUrl" xml:space="preserve"><value>Manifest neobsahuje odkaz na release asset.</value></data>
   <data name="UpdateService.Install.NoUpdate" xml:space="preserve"><value>Pro instalaci není připravená žádná novější verze.</value></data>
   <data name="UpdateService.Install.PrepareFailed" xml:space="preserve"><value>Aktualizaci se nepodařilo připravit. {0}</value></data>
-  <data name="UpdateService.Install.PublishedBuildOnly" xml:space="preserve"><value>Automatická instalace je dostupná jen v publikovaném desktopovém buildu.</value></data>
+  <data name="UpdateService.Install.PublishedBuildOnly" xml:space="preserve"><value>Automatická instalace je dostupná jen v nainstalovaném vydání Vehimapu.</value></data>
   <data name="UpdateService.Install.UpdaterMissing" xml:space="preserve"><value>Vedle aplikace chybí Vehimap.Updater, automatickou instalaci proto nelze připravit.</value></data>
   <data name="UpdateService.Install.VerifyProgress" xml:space="preserve"><value>Ověřuji velikost a SHA-256 staženého balíčku.</value></data>
   <data name="UpdateService.Install.WindowsOnly" xml:space="preserve"><value>Automatická instalace je v této etapě dostupná jen na Windows.</value></data>
@@ -1188,11 +1188,11 @@ Vozidlo: {2}
   <data name="WorkspaceStatus.TimelineRefreshed" xml:space="preserve"><value>Časová osa byla obnovena.</value></data>
   <data name="WorkspaceStatus.UpcomingOverviewRefreshed" xml:space="preserve"><value>Přehled blížících se termínů byl obnoven.</value></data>
   <data name="Shell.AuditCount" xml:space="preserve"><value>Audit</value></data>
-  <data name="Shell.DataModeLabel" xml:space="preserve"><value>Režim dat</value></data>
+  <data name="Shell.DataModeLabel" xml:space="preserve"><value>Uložení dat</value></data>
   <data name="Shell.DataPathLabel" xml:space="preserve"><value>Datová složka</value></data>
-  <data name="Shell.Footer" xml:space="preserve"><value>Vehimap pracuje nad stejnými daty jako původní AHK verze a nabízí detail vozidla, historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady, dashboard, chytrého poradce, globální hledání i přehled termínů. Editace se otevírá v samostatných oknech s dotaženou přístupností a návratem přes Zrušit.</value></data>
+  <data name="Shell.Footer" xml:space="preserve"><value>Vyberte vozidlo a potom pomocí pracovních karet otevřete historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady a další přehledy. Editace se otevírá v samostatném okně, kde lze změny přehledně uložit nebo zrušit.</value></data>
   <data name="Shell.FuelCount" xml:space="preserve"><value>Tankování</value></data>
-  <data name="Shell.HelpText" xml:space="preserve"><value>Multiplatformní Vehimap. Po otevření je fokus v seznamu vozidel vlevo.</value></data>
+  <data name="Shell.HelpText" xml:space="preserve"><value>Evidence vozidel Vehimap. Po otevření je klávesový fokus v seznamu vozidel vlevo.</value></data>
   <data name="Shell.HistoryCount" xml:space="preserve"><value>Historie</value></data>
   <data name="Shell.MaintenanceCount" xml:space="preserve"><value>Údržba</value></data>
   <data name="Shell.RecordsCount" xml:space="preserve"><value>Doklady</value></data>
@@ -1832,7 +1832,7 @@ Stav: {5}</value></data>
   <data name="AppShell.ExportBackup.MissingManagedAttachments" xml:space="preserve"><value>Přeskočených chybějících spravovaných příloh: {0}.</value></data>
   <data name="AppShell.ExportBackup.Failed" xml:space="preserve"><value>Export zálohy se nepodařil: {0}</value></data>
   <data name="AppShell.ImportBackup.ConfirmTitle" xml:space="preserve"><value>Obnovit data ze zálohy</value></data>
-  <data name="AppShell.ImportBackup.ConfirmMessage" xml:space="preserve"><value>Opravdu chcete nahradit aktuální načtená data obsahem zálohy?{0}{0}{1}{0}{0}Tento krok přepíše aktuální pracovní data v desktopové větvi.</value></data>
+  <data name="AppShell.ImportBackup.ConfirmMessage" xml:space="preserve"><value>Opravdu chcete nahradit aktuální načtená data obsahem zálohy?{0}{0}{1}{0}{0}Tento krok nahradí aktuální datovou sadu Vehimapu.</value></data>
   <data name="AppShell.ImportBackup.ConfirmAction" xml:space="preserve"><value>Obnovit data</value></data>
   <data name="AppShell.ImportBackup.NotLoaded" xml:space="preserve"><value>Obnovu se nepodařilo připravit, protože nejsou načtená data.</value></data>
   <data name="AppShell.ImportBackup.Success" xml:space="preserve"><value>Data byla obnovena ze zálohy {0}.</value></data>
@@ -1902,8 +1902,8 @@ Stav: {5}</value></data>
   <data name="AppShell.Background.NotificationTimelineMessage" xml:space="preserve"><value>{0}: {1} ({2}). {3}</value></data>
   <data name="AppShell.Background.NotificationAuditTitle" xml:space="preserve"><value>Vehimap: {0} položek k řešení</value></data>
   <data name="AppShell.Background.NotificationAuditMessage" xml:space="preserve"><value>{0}: {1}. {2}</value></data>
-  <data name="AppShell.About.DataModePortable" xml:space="preserve"><value>Portable data vedle aplikace</value></data>
-  <data name="AppShell.About.DataModeSystem" xml:space="preserve"><value>Systémová datová složka</value></data>
+  <data name="AppShell.About.DataModePortable" xml:space="preserve"><value>Přenosný režim: data uložená vedle aplikace</value></data>
+  <data name="AppShell.About.DataModeSystem" xml:space="preserve"><value>Běžný režim: systémová datová složka</value></data>
   <data name="AppShell.About.DataPathNotLoaded" xml:space="preserve"><value>Datová složka zatím nebyla načtena</value></data>
   <data name="AppShell.External.Empty" xml:space="preserve"><value>Externí odkaz nelze otevřít, protože není vyplněná cesta ani URL.</value></data>
   <data name="AppShell.External.Opened" xml:space="preserve"><value>Externí odkaz byl otevřen: {0}.</value></data>
@@ -2418,11 +2418,11 @@ Převodovka: {3}</value></data>
   <data name="TimelineItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, {3}, stav {4}, detail {5}</value></data>
   <data name="SmartAdvisorItem.AccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}, {3}. {4}. {5}. Akce: {6}.</value></data>
   <data name="FuelAnalysis.Value.SegmentPeriod" xml:space="preserve"><value>{0} až {1}</value></data>
-  <data name="Shell.Subtitle.Stable" xml:space="preserve"><value>Multiplatformní desktop nad daty Vehimapu.</value></data>
-  <data name="Shell.Subtitle.Channel" xml:space="preserve"><value>Multiplatformní desktop nad odděleným kanálem {0}.</value></data>
-  <data name="Shell.Status.Ready" xml:space="preserve"><value>Desktopová aplikace je připravená.</value></data>
-  <data name="Shell.DataMode.Portable" xml:space="preserve"><value>Datová sada 2.0 (SQLite), portable data vedle aplikace</value></data>
-  <data name="Shell.DataMode.System" xml:space="preserve"><value>Datová sada 2.0 (SQLite), systémová datová složka</value></data>
+  <data name="Shell.Subtitle.Stable" xml:space="preserve"><value>Evidence vozidel, připomínky a údržba na jednom místě.</value></data>
+  <data name="Shell.Subtitle.Channel" xml:space="preserve"><value>Vehimap {0}: samostatný testovací kanál.</value></data>
+  <data name="Shell.Status.Ready" xml:space="preserve"><value>Vehimap je připraven.</value></data>
+  <data name="Shell.DataMode.Portable" xml:space="preserve"><value>Datová sada 2.0, přenosný režim: data uložená vedle aplikace</value></data>
+  <data name="Shell.DataMode.System" xml:space="preserve"><value>Datová sada 2.0, běžný režim: systémová datová složka</value></data>
   <data name="Shell.LoadError.DatabasePath" xml:space="preserve"><value>Databáze datové sady 2.0: {0}</value></data>
   <data name="Shell.LoadError.DataFolder" xml:space="preserve"><value>Datová složka: {0}</value></data>
   <data name="Shell.LoadError.CorruptDatabaseAdvice" xml:space="preserve"><value>Vehimap poškozenou databázi automaticky nemaže ani neopravuje. Obnovte poslední .vehimapbak nebo otevřete předmigrační zálohu, pokud existuje.</value></data>

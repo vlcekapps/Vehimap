@@ -63,7 +63,7 @@ public sealed class AppShellServicesTests : IDisposable
             "1.2.3.0",
             "portable",
             @"C:\vehimap\data",
-            "Portable data vedle aplikace",
+            "Přenosný režim: data uložená vedle aplikace",
             "Windows 11 x64",
             ".NET 10.0",
             @"C:\vehimap\Vehimap.Desktop.exe",

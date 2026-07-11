@@ -137,6 +137,45 @@ public sealed class I18nFoundationTests
     }
 
     [Fact]
+    public void User_facing_resources_do_not_expose_retired_development_terminology()
+    {
+        var root = FindRepositoryRoot();
+        var catalogs = new[]
+        {
+            (Language: "English", Values: ReadResourceValues(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.resx"))),
+            (Language: "Czech", Values: ReadResourceValues(Path.Combine(root, "dotnet", "src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx")))
+        };
+        var retiredPhrases = new[]
+        {
+            "desktop branch",
+            ".NET branch",
+            "original AHK version",
+            "portable data",
+            "published desktop build",
+            "multiplatform desktop for",
+            "accessible focus handling",
+            "desktopové větvi",
+            ".NET větev",
+            "původní AHK verze",
+            "publikovaném desktopovém buildu",
+            "multiplatformní desktop nad",
+            "dotaženou přístupností"
+        };
+        var failures = catalogs
+            .SelectMany(catalog => catalog.Values
+                .Where(item => retiredPhrases.Any(phrase => item.Value.Contains(phrase, StringComparison.OrdinalIgnoreCase)))
+                .Select(item => $"{catalog.Language} {item.Key}: {item.Value}"))
+            .ToArray();
+
+        Assert.True(
+            failures.Length == 0,
+            "User-facing resources must describe Vehimap behavior without retired implementation lineage or development jargon. " +
+            "Technical framework and storage names remain allowed in explicit diagnostics." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
     public void Literal_resource_keys_referenced_by_production_source_exist()
     {
         var root = FindRepositoryRoot();
@@ -231,8 +270,16 @@ public sealed class I18nFoundationTests
         Assert.Equal("Upravit vozidlo", czech.GetString("VehicleEditor.Title.Edit"));
         Assert.Equal("Downloading update package.", english.GetString("UpdateService.Install.DownloadProgress"));
         Assert.Equal("Stahuji aktualizační balíček.", czech.GetString("UpdateService.Install.DownloadProgress"));
-        Assert.Equal("The desktop update channel for the .NET branch has not been published yet.", english.GetString("UpdateService.Check.DotnetManifestUnavailable"));
-        Assert.Equal("Desktopový update kanál pro .NET větev zatím není publikovaný.", czech.GetString("UpdateService.Check.DotnetManifestUnavailable"));
+        Assert.Equal("The update channel for this Vehimap edition has not been published yet.", english.GetString("UpdateService.Check.DotnetManifestUnavailable"));
+        Assert.Equal("Aktualizační kanál pro tuto edici Vehimapu zatím nebyl zveřejněn.", czech.GetString("UpdateService.Check.DotnetManifestUnavailable"));
+        Assert.Equal("Portable mode: data stored next to the application", english.GetString("AppShell.About.DataModePortable"));
+        Assert.Equal("Přenosný režim: data uložená vedle aplikace", czech.GetString("AppShell.About.DataModePortable"));
+        Assert.Equal("Data storage", english.GetString("Shell.DataModeLabel"));
+        Assert.Equal("Uložení dat", czech.GetString("Shell.DataModeLabel"));
+        Assert.Equal("Vehimap is ready.", english.GetString("Shell.Status.Ready"));
+        Assert.Equal("Vehimap je připraven.", czech.GetString("Shell.Status.Ready"));
+        Assert.EndsWith("This step replaces the current Vehimap data set.", english.Format("AppShell.ImportBackup.ConfirmMessage", Environment.NewLine, "backup.vehimapbak"), StringComparison.Ordinal);
+        Assert.EndsWith("Tento krok nahradí aktuální datovou sadu Vehimapu.", czech.Format("AppShell.ImportBackup.ConfirmMessage", Environment.NewLine, "zaloha.vehimapbak"), StringComparison.Ordinal);
         Assert.Equal("The manifest does not contain release/version.", english.GetString("UpdateManifest.Error.MissingVersion"));
         Assert.Equal("Manifest neobsahuje položku release/version.", czech.GetString("UpdateManifest.Error.MissingVersion"));
         Assert.Equal("The vehicles row 2 must contain 12 fields.", english.Format("LegacySection.Error.InvalidFieldCount", english.GetString("LegacyData.Section.Vehicles"), 2, english.Format("LegacySection.FieldCount.Count", 12)));
