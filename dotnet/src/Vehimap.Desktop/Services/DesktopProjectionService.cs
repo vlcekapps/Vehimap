@@ -321,7 +321,13 @@ internal sealed class DesktopProjectionService
     {
         var summaryLines = new List<string>
         {
-            LF("FuelAnalysis.Summary.Main", analysis.EntryCount, FormatFuelAnalysisVolume(analysis.TotalLiters), FormatFuelAnalysisMoney(analysis.TotalCost), FormatOptionalPricePerVolume(analysis.AveragePricePerLiter)),
+            LP(
+                "FuelAnalysis.Summary.Main",
+                analysis.EntryCount,
+                analysis.EntryCount,
+                FormatFuelAnalysisVolume(analysis.TotalLiters),
+                FormatFuelAnalysisMoney(analysis.TotalCost),
+                FormatOptionalPricePerVolume(analysis.AveragePricePerLiter)),
             LF("FuelAnalysis.Summary.AverageConsumption", FormatOptionalConsumption(analysis.AverageConsumptionLitersPer100Km), analysis.Status)
         };
 

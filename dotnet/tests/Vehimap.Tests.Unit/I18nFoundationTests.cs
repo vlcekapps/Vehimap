@@ -183,6 +183,11 @@ public sealed class I18nFoundationTests
         Assert.Equal("1 item exported", service.Format(english, "AppShell.CalendarExport.ItemCount", 1, 1));
         Assert.Equal("Exportovány 3 položky", service.Format(czech, "AppShell.CalendarExport.ItemCount", 3, 3));
         Assert.Equal("Bylo přeskočeno 5 servisních úkolů bez data.", service.Format(czech, "AppShell.CalendarExport.SkippedMaintenanceCount", 5, 5));
+        Assert.Equal("1 refuel entry. Total fuel: 10 l. Total cost: $20. Average price per fuel unit: $2.", service.Format(english, "FuelAnalysis.Summary.Main", 1, 1, "10 l", "$20", "$2"));
+        Assert.Equal("3 záznamy tankování. Celkové množství paliva: 10 l. Celkové náklady: 20 Kč. Průměrná cena za jednotku paliva: 2 Kč.", service.Format(czech, "FuelAnalysis.Summary.Main", 3, 3, "10 l", "20 Kč", "2 Kč"));
+        Assert.Equal("Bylo obnoveno 5 spravovaných příloh.", service.Format(czech, "AppShell.ImportBackup.RestoredManagedAttachments", 5, 5));
+        Assert.Equal("- 1 document", service.Format(english, "VehicleDelete.Confirmation.RecordCount", 1, 1));
+        Assert.Equal("- 4 doklady", service.Format(czech, "VehicleDelete.Confirmation.RecordCount", 4, 4));
         Assert.Equal(AppCultureService.EnglishLanguage, english.Culture.Name);
         Assert.Equal(AppCultureService.CzechLanguage, czech.Culture.Name);
     }
@@ -271,7 +276,24 @@ public sealed class I18nFoundationTests
             "VehicleDetail.Projection.EvidenceSummary.ReminderCount",
             "VehicleDetail.Projection.EvidenceSummary.MaintenanceCount",
             "VehicleDetail.Projection.EvidenceSummary.ActiveMaintenanceCount",
-            "VehicleDetail.Projection.History.EventCount"
+            "VehicleDetail.Projection.History.EventCount",
+            "QuickActions.Status.ReviewReminderOpened",
+            "QuickActions.Status.ReviewMaintenanceOpened",
+            "QuickActions.Status.ReviewRecordOpened",
+            "FuelAnalysis.Summary.Main",
+            "VehicleDelete.Confirmation.HistoryCount",
+            "VehicleDelete.Confirmation.FuelCount",
+            "VehicleDelete.Confirmation.RecordCount",
+            "VehicleDelete.Confirmation.ReminderCount",
+            "VehicleDelete.Confirmation.MaintenanceCount",
+            "AppShell.ExportBackup.IncludedManagedAttachments",
+            "AppShell.ExportBackup.MissingManagedAttachments",
+            "AppShell.ImportBackup.RestoredManagedAttachments",
+            "AppShell.VehiclePackage.IncludedAttachments",
+            "AppShell.VehiclePackage.MissingAttachments",
+            "AppShell.VehiclePackage.RestoredAttachments",
+            "AutomaticBackup.Result.IncludedAttachments",
+            "AutomaticBackup.Result.MissingAttachments"
         };
         var directFormattingRegex = new Regex(
             @"(?:\.Format|\bLF|\bLFO)\(\s*""(?<key>[A-Za-z0-9_.-]+)""",

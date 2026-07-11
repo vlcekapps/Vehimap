@@ -318,7 +318,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Equal(OverviewFilterOptions.RemindersKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
-        Assert.Contains("Připomínky k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+        Assert.Contains("připomínka vyžaduje kontrolu", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
     [Fact]
@@ -350,7 +350,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Equal(OverviewFilterOptions.MaintenanceKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
-        Assert.Contains("Údržba k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+        Assert.Contains("úkon údržby vyžaduje kontrolu", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
     [Fact]
@@ -382,7 +382,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.Equal(OverviewFilterOptions.RecordsKey, viewModel.OverdueOverviewWorkspace.SelectedOverdueOverviewFilter.Value);
         Assert.Equal(DesktopFocusTarget.OverdueOverviewList, requestedFocus);
         Assert.NotEmpty(viewModel.OverdueOverviewWorkspace.OverdueOverviewItems);
-        Assert.Contains("Doklady k prověření", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+        Assert.Contains("doklad vyžaduje kontrolu", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
     [Fact]

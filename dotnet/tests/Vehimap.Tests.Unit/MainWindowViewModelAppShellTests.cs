@@ -215,8 +215,8 @@ public sealed class MainWindowViewModelAppShellTests
 
         Assert.Equal(@"C:\backups\vehimap.vehimapbak", backupService.ExportedPath);
         Assert.Contains("Záloha byla uložena", status);
-        Assert.Contains("Spravovaných příloh v záloze: 2", status);
-        Assert.Contains("Přeskočených chybějících spravovaných příloh: 1", status);
+        Assert.Contains("Záloha obsahuje 2 spravované přílohy", status);
+        Assert.Contains("Byla přeskočena 1 chybějící spravovaná příloha", status);
         Assert.Equal(status, viewModel.ShellStatus);
     }
 
@@ -285,7 +285,7 @@ public sealed class MainWindowViewModelAppShellTests
         Assert.Equal("Božena", viewModel.SelectedVehicle?.Name);
         Assert.Contains("Data byla obnovena ze zálohy", status);
         Assert.Contains(@"C:\vehimap-test\data\import-backups\2026-04-02_10-00-00", status);
-        Assert.Contains("Obnoveno spravovaných příloh: 2", status);
+        Assert.Contains("Byly obnoveny 2 spravované přílohy", status);
         Assert.Equal(status, viewModel.ShellStatus);
     }
 
@@ -411,7 +411,7 @@ public sealed class MainWindowViewModelAppShellTests
         Assert.EndsWith(".vehimapbak", backupService.ExportedPath, StringComparison.Ordinal);
         Assert.True(Directory.Exists(backupDirectory));
         Assert.Contains("Automatická záloha byla vytvořena", status);
-        Assert.Contains("Spravovaných příloh v záloze: 1", status);
+        Assert.Contains("Záloha obsahuje 1 spravovanou přílohu", status);
         Assert.Equal(backupService.ExportedPath, dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_path"));
         Assert.Equal(status, viewModel.ShellStatus);
     }

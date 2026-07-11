@@ -304,7 +304,7 @@ public sealed partial class MainWindowViewModel
             RequestFocus(DesktopFocusTarget.OverdueOverviewList);
         }
 
-        ShellStatus = LFO(openedStatusResourceKey, items.Count);
+        ShellStatus = FormatPlural(openedStatusResourceKey, items.Count, items.Count);
     }
 
     private void OpenMissingGreenCardsOverview()

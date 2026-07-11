@@ -691,7 +691,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
 
         var projection = projectionService.BuildFuelAnalysis(analysis);
 
-        Assert.Contains("Refuel entries: 2", projection.Summary, StringComparison.Ordinal);
+        Assert.Contains("2 refuel entries", projection.Summary, StringComparison.Ordinal);
         Assert.Contains("Total fuel: 21.66 US gal", projection.Summary, StringComparison.Ordinal);
         Assert.Contains("Average price per fuel unit: $189.27/US gal", projection.Summary, StringComparison.Ordinal);
         Assert.Contains("Average consumption: 28.68 mpg", projection.Summary, StringComparison.Ordinal);

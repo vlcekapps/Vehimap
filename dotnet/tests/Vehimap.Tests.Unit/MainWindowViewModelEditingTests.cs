@@ -1268,11 +1268,11 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         await viewModel.DeleteSelectedVehicleCommand.ExecuteAsync(null);
 
         Assert.NotNull(confirmationMessage);
-        Assert.Contains("historie: 1", confirmationMessage);
-        Assert.Contains("tankování: 1", confirmationMessage);
-        Assert.Contains("doklady: 1", confirmationMessage);
-        Assert.Contains("připomínky: 1", confirmationMessage);
-        Assert.Contains("údržba: 1", confirmationMessage);
+        Assert.Contains("- 1 záznam historie", confirmationMessage);
+        Assert.Contains("- 1 záznam tankování", confirmationMessage);
+        Assert.Contains("- 1 doklad", confirmationMessage);
+        Assert.Contains("- 1 připomínka", confirmationMessage);
+        Assert.Contains("- 1 servisní plán", confirmationMessage);
         Assert.DoesNotContain(dataStore.CurrentDataSet.Vehicles, item => item.Id == "veh_1");
         Assert.DoesNotContain(dataStore.CurrentDataSet.HistoryEntries, item => item.VehicleId == "veh_1");
         Assert.DoesNotContain(dataStore.CurrentDataSet.FuelEntries, item => item.VehicleId == "veh_1");

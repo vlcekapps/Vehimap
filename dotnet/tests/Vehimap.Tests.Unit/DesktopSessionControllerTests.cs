@@ -481,9 +481,9 @@ public sealed class DesktopSessionControllerTests
         Assert.True(result.Created);
         Assert.False(result.IsError);
         Assert.Equal(result.BackupPath, backupService.ExportedPath);
-        Assert.Contains("Spravovaných příloh v záloze", result.Message);
+        Assert.Contains("Záloha obsahuje 3 spravované přílohy", result.Message);
         Assert.Contains("3", result.Message);
-        Assert.Contains("Přeskočených chybějících spravovaných příloh", result.Message);
+        Assert.Contains("Byla přeskočena 1 chybějící spravovaná příloha", result.Message);
         Assert.False(string.IsNullOrWhiteSpace(dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_stamp")));
         Assert.Equal(result.BackupPath, dataStore.CurrentDataSet.Settings.GetValue("backups", "last_automatic_backup_path"));
     }

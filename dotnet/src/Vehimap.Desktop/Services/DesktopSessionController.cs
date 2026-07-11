@@ -43,6 +43,7 @@ internal sealed class DesktopSessionController
     private readonly IDataStoreHealthService _dataStoreHealthService;
     private readonly InstallerLocaleSeedService _installerLocaleSeedService;
     private readonly IAppDateFormatService _dateFormatService;
+    private readonly IAppPluralizationService _pluralizationService;
     private readonly Action<DesktopSupportedSettingsSnapshot>? _supportedSettingsApplied;
     private readonly Dictionary<string, VehicleMeta> _metaByVehicleId = new(StringComparer.Ordinal);
 
@@ -60,7 +61,8 @@ internal sealed class DesktopSessionController
         IDataStoreHealthService? dataStoreHealthService = null,
         InstallerLocaleSeedService? installerLocaleSeedService = null,
         Action<DesktopSupportedSettingsSnapshot>? supportedSettingsApplied = null,
-        IAppDateFormatService? dateFormatService = null)
+        IAppDateFormatService? dateFormatService = null,
+        IAppPluralizationService? pluralizationService = null)
     {
         _bootstrapper = bootstrapper;
         _dataStore = dataStore;
@@ -76,6 +78,7 @@ internal sealed class DesktopSessionController
         _installerLocaleSeedService = installerLocaleSeedService ?? new InstallerLocaleSeedService();
         _supportedSettingsApplied = supportedSettingsApplied;
         _dateFormatService = dateFormatService ?? new AppDateFormatService();
+        _pluralizationService = pluralizationService ?? new AppPluralizationService();
     }
 
     public VehimapDataRoot? DataRoot { get; private set; }
@@ -369,12 +372,18 @@ internal sealed class DesktopSessionController
             var message = LFO("AutomaticBackup.Result.Created", backupPath);
             if (exportResult.IncludedManagedAttachmentCount > 0)
             {
-                message += LFO("AutomaticBackup.Result.IncludedAttachments", exportResult.IncludedManagedAttachmentCount);
+                message += LP(
+                    "AutomaticBackup.Result.IncludedAttachments",
+                    exportResult.IncludedManagedAttachmentCount,
+                    exportResult.IncludedManagedAttachmentCount);
             }
 
             if (exportResult.MissingManagedAttachmentCount > 0)
             {
-                message += LFO("AutomaticBackup.Result.MissingAttachments", exportResult.MissingManagedAttachmentCount);
+                message += LP(
+                    "AutomaticBackup.Result.MissingAttachments",
+                    exportResult.MissingManagedAttachmentCount,
+                    exportResult.MissingManagedAttachmentCount);
             }
 
             return new AutomaticBackupResult(true, false, backupPath, message);
@@ -556,6 +565,9 @@ internal sealed class DesktopSessionController
     private static string LO(string key) => DesktopLocalization.Localizer.GetString(key);
 
     private static string LFO(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);
+
+    private string LP(string keyPrefix, int count, params object?[] args) =>
+        _pluralizationService.Format(DesktopLocalization.Localizer, keyPrefix, count, args);
 
     private static string UserFacingError(Exception exception) =>
         UserFacingExceptionMessageService.Describe(exception, DesktopLocalization.Localizer);

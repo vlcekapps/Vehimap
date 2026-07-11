@@ -74,12 +74,18 @@ public sealed partial class MainWindowViewModel
             ShellStatus = LFO("AppShell.ExportBackup.Success", backupPath);
             if (result.IncludedManagedAttachmentCount > 0)
             {
-                ShellStatus += " " + LFO("AppShell.ExportBackup.IncludedManagedAttachments", result.IncludedManagedAttachmentCount);
+                ShellStatus += " " + FormatPlural(
+                    "AppShell.ExportBackup.IncludedManagedAttachments",
+                    result.IncludedManagedAttachmentCount,
+                    result.IncludedManagedAttachmentCount);
             }
 
             if (result.MissingManagedAttachmentCount > 0)
             {
-                ShellStatus += " " + LFO("AppShell.ExportBackup.MissingManagedAttachments", result.MissingManagedAttachmentCount);
+                ShellStatus += " " + FormatPlural(
+                    "AppShell.ExportBackup.MissingManagedAttachments",
+                    result.MissingManagedAttachmentCount,
+                    result.MissingManagedAttachmentCount);
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
@@ -109,7 +115,10 @@ public sealed partial class MainWindowViewModel
 
             if (restoreResult.RestoredAttachmentCount > 0)
             {
-                ShellStatus += " " + LFO("AppShell.ImportBackup.RestoredManagedAttachments", restoreResult.RestoredAttachmentCount);
+                ShellStatus += " " + FormatPlural(
+                    "AppShell.ImportBackup.RestoredManagedAttachments",
+                    restoreResult.RestoredAttachmentCount,
+                    restoreResult.RestoredAttachmentCount);
             }
 
             RequestBackgroundRefresh();
@@ -167,12 +176,18 @@ public sealed partial class MainWindowViewModel
             ShellStatus = LFO("AppShell.VehiclePackage.ExportSuccess", result.VehicleName, result.PackagePath);
             if (result.IncludedAttachmentCount > 0)
             {
-                ShellStatus += " " + LFO("AppShell.VehiclePackage.IncludedAttachments", result.IncludedAttachmentCount);
+                ShellStatus += " " + FormatPlural(
+                    "AppShell.VehiclePackage.IncludedAttachments",
+                    result.IncludedAttachmentCount,
+                    result.IncludedAttachmentCount);
             }
 
             if (result.MissingAttachmentCount > 0)
             {
-                ShellStatus += " " + LFO("AppShell.VehiclePackage.MissingAttachments", result.MissingAttachmentCount);
+                ShellStatus += " " + FormatPlural(
+                    "AppShell.VehiclePackage.MissingAttachments",
+                    result.MissingAttachmentCount,
+                    result.MissingAttachmentCount);
             }
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
@@ -207,7 +222,10 @@ public sealed partial class MainWindowViewModel
             ShellStatus = LFO("AppShell.VehiclePackage.ImportSuccess", result.ImportedVehicleName);
             if (result.RestoredAttachmentCount > 0)
             {
-                ShellStatus += " " + LFO("AppShell.VehiclePackage.RestoredAttachments", result.RestoredAttachmentCount);
+                ShellStatus += " " + FormatPlural(
+                    "AppShell.VehiclePackage.RestoredAttachments",
+                    result.RestoredAttachmentCount,
+                    result.RestoredAttachmentCount);
             }
 
             RequestBackgroundRefresh();

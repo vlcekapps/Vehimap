@@ -821,9 +821,15 @@ Vehicle: {2}
   <data name="QuickActions.Status.OpenedBackgroundAudit" xml:space="preserve"><value>Opened audit item: {0} - {1}.</value></data>
   <data name="QuickActions.Status.OpenedBackgroundTimeline" xml:space="preserve"><value>Opened current notification: {0} - {1} ({2}).</value></data>
   <data name="QuickActions.Status.ReviewGreenOpened" xml:space="preserve"><value>Green cards to review: {0}. The matching overview is open.</value></data>
-  <data name="QuickActions.Status.ReviewMaintenanceOpened" xml:space="preserve"><value>Maintenance tasks to review: {0}. The matching overview is open.</value></data>
-  <data name="QuickActions.Status.ReviewRecordOpened" xml:space="preserve"><value>Documents to review: {0}. The matching overview is open.</value></data>
-  <data name="QuickActions.Status.ReviewReminderOpened" xml:space="preserve"><value>Reminders to review: {0}. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewMaintenanceOpened.One" xml:space="preserve"><value>1 maintenance task needs review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewMaintenanceOpened.Few" xml:space="preserve"><value>{0} maintenance tasks need review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewMaintenanceOpened.Other" xml:space="preserve"><value>{0} maintenance tasks need review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewRecordOpened.One" xml:space="preserve"><value>1 document needs review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewRecordOpened.Few" xml:space="preserve"><value>{0} documents need review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewRecordOpened.Other" xml:space="preserve"><value>{0} documents need review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewReminderOpened.One" xml:space="preserve"><value>1 reminder needs review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewReminderOpened.Few" xml:space="preserve"><value>{0} reminders need review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewReminderOpened.Other" xml:space="preserve"><value>{0} reminders need review. The matching overview is open.</value></data>
   <data name="QuickActions.Status.ReviewTechnicalOpened" xml:space="preserve"><value>Technical inspections to review: {0}. The matching overview is open.</value></data>
   <data name="MainMenu.Vehicle" xml:space="preserve"><value>_Vehicle</value></data>
   <data name="MainMenu.Vehicle.Costs" xml:space="preserve"><value>Costs and summaries</value></data>
@@ -1062,7 +1068,9 @@ Vehicle: {2}
   <data name="FuelAnalysis.Status.Unavailable" xml:space="preserve"><value>Consumption cannot be calculated yet. At least two full tanks with odometer values are required.</value></data>
   <data name="FuelAnalysis.Summary.AverageConsumption" xml:space="preserve"><value>Average consumption: {0}. {1}</value></data>
   <data name="FuelAnalysis.Summary.BestSegment" xml:space="preserve"><value>Best segment: {0} with consumption {1}.</value></data>
-  <data name="FuelAnalysis.Summary.Main" xml:space="preserve"><value>Refuel entries: {0}. Total fuel: {1}. Total cost: {2}. Average price per fuel unit: {3}.</value></data>
+  <data name="FuelAnalysis.Summary.Main.One" xml:space="preserve"><value>1 refuel entry. Total fuel: {1}. Total cost: {2}. Average price per fuel unit: {3}.</value></data>
+  <data name="FuelAnalysis.Summary.Main.Few" xml:space="preserve"><value>{0} refuel entries. Total fuel: {1}. Total cost: {2}. Average price per fuel unit: {3}.</value></data>
+  <data name="FuelAnalysis.Summary.Main.Other" xml:space="preserve"><value>{0} refuel entries. Total fuel: {1}. Total cost: {2}. Average price per fuel unit: {3}.</value></data>
   <data name="FuelAnalysis.Summary.WorstSegment" xml:space="preserve"><value>Highest consumption: {0} with consumption {1}.</value></data>
   <data name="FuelAnalysis.Value.CostPerDistanceUnavailable" xml:space="preserve"><value>unavailable</value></data>
   <data name="FuelAnalysis.Value.PricePerVolumeUnavailable" xml:space="preserve"><value>unavailable</value></data>
@@ -1764,13 +1772,23 @@ Status: {5}</value></data>
   <data name="VehicleDelete.AttachmentCleanup.UnsafePath" xml:space="preserve"><value>Managed attachments were not deleted because the target path is outside the managed attachments data folder.</value></data>
   <data name="VehicleDelete.Confirmation.AttachmentWarning" xml:space="preserve"><value>Managed attachments for this vehicle will be deleted from the data folder. External document files stay unchanged.</value></data>
   <data name="VehicleDelete.Confirmation.EvidenceHeading" xml:space="preserve"><value>Linked records will be deleted too:</value></data>
-  <data name="VehicleDelete.Confirmation.FuelCount" xml:space="preserve"><value>- fuel entries: {0}</value></data>
-  <data name="VehicleDelete.Confirmation.HistoryCount" xml:space="preserve"><value>- history entries: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.FuelCount.One" xml:space="preserve"><value>- 1 fuel entry</value></data>
+  <data name="VehicleDelete.Confirmation.FuelCount.Few" xml:space="preserve"><value>- {0} fuel entries</value></data>
+  <data name="VehicleDelete.Confirmation.FuelCount.Other" xml:space="preserve"><value>- {0} fuel entries</value></data>
+  <data name="VehicleDelete.Confirmation.HistoryCount.One" xml:space="preserve"><value>- 1 history entry</value></data>
+  <data name="VehicleDelete.Confirmation.HistoryCount.Few" xml:space="preserve"><value>- {0} history entries</value></data>
+  <data name="VehicleDelete.Confirmation.HistoryCount.Other" xml:space="preserve"><value>- {0} history entries</value></data>
   <data name="VehicleDelete.Confirmation.Irreversible" xml:space="preserve"><value>This action cannot be undone.</value></data>
-  <data name="VehicleDelete.Confirmation.MaintenanceCount" xml:space="preserve"><value>- maintenance plans: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.MaintenanceCount.One" xml:space="preserve"><value>- 1 maintenance plan</value></data>
+  <data name="VehicleDelete.Confirmation.MaintenanceCount.Few" xml:space="preserve"><value>- {0} maintenance plans</value></data>
+  <data name="VehicleDelete.Confirmation.MaintenanceCount.Other" xml:space="preserve"><value>- {0} maintenance plans</value></data>
   <data name="VehicleDelete.Confirmation.Question" xml:space="preserve"><value>Do you really want to delete vehicle “{0}”?</value></data>
-  <data name="VehicleDelete.Confirmation.RecordCount" xml:space="preserve"><value>- documents: {0}</value></data>
-  <data name="VehicleDelete.Confirmation.ReminderCount" xml:space="preserve"><value>- reminders: {0}</value></data>
+  <data name="VehicleDelete.Confirmation.RecordCount.One" xml:space="preserve"><value>- 1 document</value></data>
+  <data name="VehicleDelete.Confirmation.RecordCount.Few" xml:space="preserve"><value>- {0} documents</value></data>
+  <data name="VehicleDelete.Confirmation.RecordCount.Other" xml:space="preserve"><value>- {0} documents</value></data>
+  <data name="VehicleDelete.Confirmation.ReminderCount.One" xml:space="preserve"><value>- 1 reminder</value></data>
+  <data name="VehicleDelete.Confirmation.ReminderCount.Few" xml:space="preserve"><value>- {0} reminders</value></data>
+  <data name="VehicleDelete.Confirmation.ReminderCount.Other" xml:space="preserve"><value>- {0} reminders</value></data>
   <data name="VehicleDelete.Persistence.DeleteFailed" xml:space="preserve"><value>Vehicle {0} could not be deleted</value></data>
   <data name="VehicleDelete.Status.Deleted" xml:space="preserve"><value>Vehicle {0} has been deleted.</value></data>
   <data name="VehicleStarterBundle.AccessibleLabel.Category" xml:space="preserve"><value>{0}, {1}: {2}</value></data>
@@ -1948,8 +1966,12 @@ Status: {5}</value></data>
   <data name="AppShell.CalendarExport.SkippedMaintenanceCount.Other" xml:space="preserve"><value>{0} maintenance tasks without a date were skipped.</value></data>
   <data name="AppShell.ExportBackup.NotLoaded" xml:space="preserve"><value>Backup export could not be prepared because no data is loaded.</value></data>
   <data name="AppShell.ExportBackup.Success" xml:space="preserve"><value>Backup was saved to {0}.</value></data>
-  <data name="AppShell.ExportBackup.IncludedManagedAttachments" xml:space="preserve"><value>Managed attachments in the backup: {0}.</value></data>
-  <data name="AppShell.ExportBackup.MissingManagedAttachments" xml:space="preserve"><value>Skipped missing managed attachments: {0}.</value></data>
+  <data name="AppShell.ExportBackup.IncludedManagedAttachments.One" xml:space="preserve"><value>The backup contains 1 managed attachment.</value></data>
+  <data name="AppShell.ExportBackup.IncludedManagedAttachments.Few" xml:space="preserve"><value>The backup contains {0} managed attachments.</value></data>
+  <data name="AppShell.ExportBackup.IncludedManagedAttachments.Other" xml:space="preserve"><value>The backup contains {0} managed attachments.</value></data>
+  <data name="AppShell.ExportBackup.MissingManagedAttachments.One" xml:space="preserve"><value>1 missing managed attachment was skipped.</value></data>
+  <data name="AppShell.ExportBackup.MissingManagedAttachments.Few" xml:space="preserve"><value>{0} missing managed attachments were skipped.</value></data>
+  <data name="AppShell.ExportBackup.MissingManagedAttachments.Other" xml:space="preserve"><value>{0} missing managed attachments were skipped.</value></data>
   <data name="AppShell.ExportBackup.Failed" xml:space="preserve"><value>Backup export failed: {0}</value></data>
   <data name="AppShell.ImportBackup.ConfirmTitle" xml:space="preserve"><value>Restore data from backup</value></data>
   <data name="AppShell.ImportBackup.ConfirmMessage" xml:space="preserve"><value>Do you really want to replace the currently loaded data with the backup content?{0}{0}{1}{0}{0}This step replaces the current Vehimap data set.</value></data>
@@ -1957,7 +1979,9 @@ Status: {5}</value></data>
   <data name="AppShell.ImportBackup.NotLoaded" xml:space="preserve"><value>Backup restore could not be prepared because no data is loaded.</value></data>
   <data name="AppShell.ImportBackup.Success" xml:space="preserve"><value>Data was restored from backup {0}.</value></data>
   <data name="AppShell.ImportBackup.PreRestoreBackup" xml:space="preserve"><value>Original data was moved to {0} before restore.</value></data>
-  <data name="AppShell.ImportBackup.RestoredManagedAttachments" xml:space="preserve"><value>Restored managed attachments: {0}.</value></data>
+  <data name="AppShell.ImportBackup.RestoredManagedAttachments.One" xml:space="preserve"><value>1 managed attachment was restored.</value></data>
+  <data name="AppShell.ImportBackup.RestoredManagedAttachments.Few" xml:space="preserve"><value>{0} managed attachments were restored.</value></data>
+  <data name="AppShell.ImportBackup.RestoredManagedAttachments.Other" xml:space="preserve"><value>{0} managed attachments were restored.</value></data>
   <data name="AppShell.ImportBackup.Failed" xml:space="preserve"><value>Backup restore failed: {0}</value></data>
   <data name="AppShell.DataStoreHealth.Action" xml:space="preserve"><value>check the 2.0 data set</value></data>
   <data name="AppShell.DataStoreHealth.DeferredByPendingEdits" xml:space="preserve"><value>Data set check was postponed because edits are in progress.</value></data>
@@ -1968,13 +1992,19 @@ Status: {5}</value></data>
   <data name="AppShell.VehiclePackage.ExportNotLoaded" xml:space="preserve"><value>Vehicle package cannot be exported because no data is loaded.</value></data>
   <data name="AppShell.VehiclePackage.ExportAction" xml:space="preserve"><value>export vehicle package</value></data>
   <data name="AppShell.VehiclePackage.ExportSuccess" xml:space="preserve"><value>Vehicle package {0} was saved to {1}.</value></data>
-  <data name="AppShell.VehiclePackage.IncludedAttachments" xml:space="preserve"><value>Included managed attachments: {0}.</value></data>
-  <data name="AppShell.VehiclePackage.MissingAttachments" xml:space="preserve"><value>Skipped missing attachments: {0}.</value></data>
+  <data name="AppShell.VehiclePackage.IncludedAttachments.One" xml:space="preserve"><value>1 managed attachment was included.</value></data>
+  <data name="AppShell.VehiclePackage.IncludedAttachments.Few" xml:space="preserve"><value>{0} managed attachments were included.</value></data>
+  <data name="AppShell.VehiclePackage.IncludedAttachments.Other" xml:space="preserve"><value>{0} managed attachments were included.</value></data>
+  <data name="AppShell.VehiclePackage.MissingAttachments.One" xml:space="preserve"><value>1 missing attachment was skipped.</value></data>
+  <data name="AppShell.VehiclePackage.MissingAttachments.Few" xml:space="preserve"><value>{0} missing attachments were skipped.</value></data>
+  <data name="AppShell.VehiclePackage.MissingAttachments.Other" xml:space="preserve"><value>{0} missing attachments were skipped.</value></data>
   <data name="AppShell.VehiclePackage.ExportFailed" xml:space="preserve"><value>Vehicle package export failed: {0}</value></data>
   <data name="AppShell.VehiclePackage.ImportNotLoaded" xml:space="preserve"><value>Vehicle package cannot be imported because no data is loaded.</value></data>
   <data name="AppShell.VehiclePackage.ImportAction" xml:space="preserve"><value>import vehicle package</value></data>
   <data name="AppShell.VehiclePackage.ImportSuccess" xml:space="preserve"><value>Vehicle package {0} was imported.</value></data>
-  <data name="AppShell.VehiclePackage.RestoredAttachments" xml:space="preserve"><value>Restored managed attachments: {0}.</value></data>
+  <data name="AppShell.VehiclePackage.RestoredAttachments.One" xml:space="preserve"><value>1 managed attachment was restored.</value></data>
+  <data name="AppShell.VehiclePackage.RestoredAttachments.Few" xml:space="preserve"><value>{0} managed attachments were restored.</value></data>
+  <data name="AppShell.VehiclePackage.RestoredAttachments.Other" xml:space="preserve"><value>{0} managed attachments were restored.</value></data>
   <data name="AppShell.VehiclePackage.ImportFailed" xml:space="preserve"><value>Vehicle package import failed: {0}</value></data>
   <data name="VehiclePackage.Error.SelectedVehicleMissing" xml:space="preserve"><value>The selected vehicle no longer exists in the data set.</value></data>
   <data name="VehiclePackage.Error.InvalidManifest" xml:space="preserve"><value>The vehicle package does not contain a valid manifest.</value></data>
@@ -2692,8 +2722,12 @@ Transmission: {3}</value></data>
   <data name="AutomaticBackup.Result.Disabled" xml:space="preserve"><value>Automatic backups are disabled.</value></data>
   <data name="AutomaticBackup.Result.NotDue" xml:space="preserve"><value>Automatic backup is not due yet.</value></data>
   <data name="AutomaticBackup.Result.Created" xml:space="preserve"><value>Automatic backup was created at {0}.</value></data>
-  <data name="AutomaticBackup.Result.IncludedAttachments" xml:space="preserve"><value> Managed attachments in backup: {0}.</value></data>
-  <data name="AutomaticBackup.Result.MissingAttachments" xml:space="preserve"><value> Skipped missing managed attachments: {0}.</value></data>
+  <data name="AutomaticBackup.Result.IncludedAttachments.One" xml:space="preserve"><value> The backup contains 1 managed attachment.</value></data>
+  <data name="AutomaticBackup.Result.IncludedAttachments.Few" xml:space="preserve"><value> The backup contains {0} managed attachments.</value></data>
+  <data name="AutomaticBackup.Result.IncludedAttachments.Other" xml:space="preserve"><value> The backup contains {0} managed attachments.</value></data>
+  <data name="AutomaticBackup.Result.MissingAttachments.One" xml:space="preserve"><value> 1 missing managed attachment was skipped.</value></data>
+  <data name="AutomaticBackup.Result.MissingAttachments.Few" xml:space="preserve"><value> {0} missing managed attachments were skipped.</value></data>
+  <data name="AutomaticBackup.Result.MissingAttachments.Other" xml:space="preserve"><value> {0} missing managed attachments were skipped.</value></data>
   <data name="AutomaticBackup.Result.Failed" xml:space="preserve"><value>Automatic backup failed: {0}</value></data>
   <data name="DataStoreHealth.NotLoaded.Summary" xml:space="preserve"><value>Data set is not loaded.</value></data>
   <data name="DataStoreHealth.NotLoaded.Detail" xml:space="preserve"><value>The 2.0 data set check cannot run without a loaded data folder.</value></data>
