@@ -14,9 +14,9 @@ namespace Vehimap.Desktop.Services;
 internal sealed class DesktopProjectionService
 {
     private readonly IAppLocalizer _localizer;
-    private CultureInfo _formatCulture;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
+    private readonly IAppDateFormatService _dateFormatService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
     private AppUnitPreferences _unitPreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToUnitPreferences();
     private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
@@ -42,12 +42,14 @@ internal sealed class DesktopProjectionService
         IAppLocalizer localizer,
         CultureInfo formatCulture,
         IAppNumberFormatService numberFormatService,
-        IAppUnitFormatService? unitFormatService = null)
+        IAppUnitFormatService? unitFormatService = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _localizer = localizer;
-        _formatCulture = formatCulture;
+        _culturePreferences = new AppLocaleDefaultsService().GetDefaultsForLanguage(formatCulture.Name).ToCulturePreferences();
         _numberFormatService = numberFormatService;
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(numberFormatService);
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -56,7 +58,6 @@ internal sealed class DesktopProjectionService
             settings.Language,
             settings.ThousandsSeparator,
             settings.DecimalSeparator);
-        _formatCulture = new AppCultureService().ResolveCulture(settings.Language);
         _unitPreferences = new AppUnitPreferences(settings.DistanceUnit, settings.VolumeUnit);
         _currency = AppCurrencyFormatService.NormalizeCurrency(settings.Currency);
     }
@@ -152,7 +153,7 @@ internal sealed class DesktopProjectionService
                     item.Summary,
                     item.Detail,
                     item.ActionLabel,
-                    item.DueDate.HasValue ? item.DueDate.Value.ToString("d", _formatCulture) : L("SmartAdvisor.Value.NoDueDate"),
+                    item.DueDate.HasValue ? FormatDate(item.DueDate.Value) : L("SmartAdvisor.Value.NoDueDate"),
                     (int)item.Priority))
                 .ToList());
 
@@ -266,7 +267,7 @@ internal sealed class DesktopProjectionService
             .ThenBy(item => item.Item.EventType, StringComparer.CurrentCultureIgnoreCase)
             .Select(item => new VehicleHistoryItemViewModel(
                 item.Item.Id,
-                FormatValue(item.Item.EventDate, L("Common.NoDate")),
+                item.HasDate ? FormatDate(item.Date) : FormatValue(item.Item.EventDate, L("Common.NoDate")),
                 FormatValue(item.Item.EventType, L("Projection.Value.NoType")),
                 FormatValue(item.Item.Odometer, L("Projection.Value.NoOdometer")),
                 FormatValue(item.Item.Cost, L("Projection.Value.NoPrice")),
@@ -295,7 +296,7 @@ internal sealed class DesktopProjectionService
             .ThenBy(item => item.Item.FuelType, StringComparer.CurrentCultureIgnoreCase)
             .Select(item => new VehicleFuelItemViewModel(
                 item.Item.Id,
-                FormatValue(item.Item.EntryDate, L("Common.NoDate")),
+                item.HasDate ? FormatDate(item.Date) : FormatValue(item.Item.EntryDate, L("Common.NoDate")),
                 FormatKnownValue(item.Item.FuelType, L("Projection.Value.NoType"), FormatFuelType),
                 FormatFuelVolume(item.Item.Liters),
                 FormatCostValue(item.Item.TotalCost),
@@ -367,7 +368,7 @@ internal sealed class DesktopProjectionService
                     var totalCost = FormatFuelAnalysisMoney(item.TotalCost);
                     var averagePrice = FormatOptionalPricePerVolume(item.AveragePricePerLiter);
                     var latestDate = item.LatestDate.HasValue
-                        ? item.LatestDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
+                        ? FormatDate(item.LatestDate.Value)
                         : L("FuelAnalysis.LatestDate.None");
                     return new FuelGroupSummaryItemViewModel(
                         item.Id,
@@ -416,7 +417,7 @@ internal sealed class DesktopProjectionService
             .Select(item => new VehicleReminderItemViewModel(
                 item.Item.Id,
                 FormatValue(item.Item.Title, L("Projection.Value.NoTitle")),
-                FormatValue(item.Item.DueDate, L("Projection.Value.NoDueDate")),
+                item.HasDate ? FormatDate(item.Date) : FormatValue(item.Item.DueDate, L("Projection.Value.NoDueDate")),
                 BuildReminderStatus(item.Item, today),
                 FormatReminderRepeatMode(item.Item.RepeatMode),
                 FormatValue(item.Item.Note, L("Common.NoNote"))))
@@ -1097,7 +1098,7 @@ internal sealed class DesktopProjectionService
 
     private string BuildMaintenanceLastService(MaintenancePlan plan)
     {
-        var date = string.IsNullOrWhiteSpace(plan.LastServiceDate) ? L("Common.NoDate") : plan.LastServiceDate;
+        var date = FormatFullDate(plan.LastServiceDate, L("Common.NoDate"));
         return $"{date} | {FormatOdometerValue(plan.LastServiceOdometer)}";
     }
 
@@ -1443,8 +1444,24 @@ internal sealed class DesktopProjectionService
     private string FormatConsumptionSegmentPeriod(FuelConsumptionSegment segment) =>
         LF(
             "FuelAnalysis.Value.SegmentPeriod",
-            segment.StartDate.ToString("d", _formatCulture),
-            segment.EndDate.ToString("d", _formatCulture));
+            FormatDate(segment.StartDate),
+            FormatDate(segment.EndDate));
+
+    private string FormatDate(DateOnly value) =>
+        _dateFormatService.FormatDate(value, _culturePreferences);
+
+    private string FormatFullDate(string? value, string fallback)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+        {
+            return fallback;
+        }
+
+        return VehimapValueParser.TryParseEventDate(text, out var date)
+            ? FormatDate(date)
+            : text;
+    }
 
     private string BuildFuelGroupLabel(string fuelType, string fuelDetail)
     {

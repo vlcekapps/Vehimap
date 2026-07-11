@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.Globalization;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Domain.Models;
@@ -16,6 +15,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
+    private readonly IAppDateFormatService _dateFormatService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
     private AppUnitPreferences _unitPreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToUnitPreferences();
 
@@ -27,11 +27,13 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
     public LegacyFuelAnalysisService(
         IAppLocalizer localizer,
         IAppNumberFormatService? numberFormatService = null,
-        IAppUnitFormatService? unitFormatService = null)
+        IAppUnitFormatService? unitFormatService = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _localizer = localizer;
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -325,7 +327,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     segment.EndFuelEntryId,
                     FuelAnalysisWarningSeverity.Info,
                     L("FuelAnalysis.Warning.ConsumptionHigh.Title"),
-                    LF("FuelAnalysis.Warning.ConsumptionHigh.Description", segment.EndDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture))));
+                    LF("FuelAnalysis.Warning.ConsumptionHigh.Description", FormatDate(segment.EndDate))));
             }
             else if (segment.ConsumptionLitersPer100Km < average * ConsumptionOutlierLowMultiplier)
             {
@@ -334,7 +336,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     segment.EndFuelEntryId,
                     FuelAnalysisWarningSeverity.Info,
                     L("FuelAnalysis.Warning.ConsumptionLow.Title"),
-                    LF("FuelAnalysis.Warning.ConsumptionLow.Description", segment.EndDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture))));
+                    LF("FuelAnalysis.Warning.ConsumptionLow.Description", FormatDate(segment.EndDate))));
             }
         }
     }
@@ -446,7 +448,12 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
     }
 
     private string FormatEntryDate(FuelEntry entry) =>
-        string.IsNullOrWhiteSpace(entry.EntryDate) ? L("Common.NoDate") : entry.EntryDate;
+        string.IsNullOrWhiteSpace(entry.EntryDate)
+            ? L("Common.NoDate")
+            : VehimapValueParser.TryParseEventDate(entry.EntryDate, out var date) ? FormatDate(date) : entry.EntryDate;
+
+    private string FormatDate(DateOnly value) =>
+        _dateFormatService.FormatDate(value, _culturePreferences);
 
     private string L(string key) => _localizer.GetString(key);
 

@@ -619,9 +619,11 @@ public sealed class AppShellServicesTests : IDisposable
                 "Je dostupna novejsi verze.",
                 null,
                 "Vedle aplikace chybi Vehimap.Updater."),
-            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")));
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")),
+            new AppCulturePreferences("cs-CZ", "none", "comma"));
 
         Assert.Contains("Automatická instalace: nedostupná", model.Details, StringComparison.Ordinal);
+        Assert.Contains("Vydáno: 02.04.2026", model.Details, StringComparison.Ordinal);
         Assert.Contains("Vehimap.Updater", model.Details, StringComparison.Ordinal);
         Assert.Contains("Asset ke stažení: https://example.com/vehimap.zip", model.Details, StringComparison.Ordinal);
         Assert.Contains($"SHA-256: {sha256}", model.Details, StringComparison.Ordinal);
@@ -653,7 +655,8 @@ public sealed class AppShellServicesTests : IDisposable
                 4096,
                 true,
                 "Je dostupna novejsi verze."),
-            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")));
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")),
+            new AppCulturePreferences("cs-CZ", "none", "comma"));
 
         Assert.Equal("Stáhnout a nainstalovat", model.PrimaryActionLabel);
         Assert.Contains("spustí instalátor", model.PrimaryActionHelpText, StringComparison.Ordinal);

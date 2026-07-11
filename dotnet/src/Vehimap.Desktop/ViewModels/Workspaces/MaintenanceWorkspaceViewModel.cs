@@ -96,6 +96,8 @@ public sealed partial class MaintenanceWorkspaceViewModel : WorkspaceViewModelBa
     [ObservableProperty]
     private string maintenanceEditorLastServiceDate = string.Empty;
 
+    public string MaintenanceEditorLastServiceDateExample => LF("MaintenanceEditor.LastServiceDateExample", Root.CurrentDateExample);
+
     [ObservableProperty]
     private string maintenanceEditorLastServiceOdometer = string.Empty;
 

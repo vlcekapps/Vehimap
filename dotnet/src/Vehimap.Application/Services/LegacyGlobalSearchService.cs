@@ -20,6 +20,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
+    private readonly IAppDateFormatService _dateFormatService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
     private AppUnitPreferences _unitPreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToUnitPreferences();
     private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
@@ -34,13 +35,15 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
         ITimelineService timelineService,
         IAppLocalizer? localizer = null,
         IAppNumberFormatService? numberFormatService = null,
-        IAppUnitFormatService? unitFormatService = null)
+        IAppUnitFormatService? unitFormatService = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _attachmentService = attachmentService;
         _timelineService = timelineService;
         _localizer = localizer ?? CreateDefaultLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -119,7 +122,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var timeline = GetVehicleTimeline(timelineByVehicleId, entry.VehicleId);
             var title = ValueOrFallback(entry.EventType, L("GlobalSearch.Entity.History"));
             var summary = JoinParts(
-                ValueOrFallback(entry.EventDate, L("Common.NoDate")),
+                FormatFullDate(entry.EventDate, L("Common.NoDate")),
                 FormatOdometer(entry.Odometer),
                 FormatMoneyValue(entry.Cost),
                 ValueOrFallback(entry.Note, string.Empty));
@@ -128,6 +131,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 EntityHistory,
                 L("GlobalSearch.Entity.History"),
                 entry.EventDate,
+                FormatFullDate(entry.EventDate, string.Empty),
                 entry.EventType,
                 entry.Odometer,
                 entry.Cost,
@@ -156,7 +160,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var timeline = GetVehicleTimeline(timelineByVehicleId, entry.VehicleId);
             var title = BuildFuelTitle(entry);
             var summary = JoinParts(
-                ValueOrFallback(entry.EntryDate, L("Common.NoDate")),
+                FormatFullDate(entry.EntryDate, L("Common.NoDate")),
                 ValueOrFallback(FormatFuelType(entry.FuelType), L("GlobalSearch.Value.NoFuelType")),
                 FormatFuelVolume(entry.Liters),
                 FormatOdometer(entry.Odometer),
@@ -170,6 +174,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 EntityFuel,
                 L("GlobalSearch.Entity.Fuel"),
                 entry.EntryDate,
+                FormatFullDate(entry.EntryDate, string.Empty),
                 entry.Odometer,
                 entry.Liters,
                 entry.TotalCost,
@@ -255,7 +260,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var timelineStatus = FindTimelineStatus(timeline, "custom", reminder.Id);
             var title = ValueOrFallback(reminder.Title, L("GlobalSearch.Entity.Reminder"));
             var summary = JoinParts(
-                ValueOrFallback(reminder.DueDate, L("GlobalSearch.Value.NoDueDate")),
+                FormatFullDate(reminder.DueDate, L("GlobalSearch.Value.NoDueDate")),
                 ValueOrFallback(FormatReminderRepeatMode(reminder.RepeatMode), string.Empty),
                 timelineStatus,
                 ValueOrFallback(reminder.Note, string.Empty));
@@ -266,6 +271,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 L("GlobalSearch.Entity.Reminders"),
                 reminder.Title,
                 reminder.DueDate,
+                FormatFullDate(reminder.DueDate, string.Empty),
                 reminder.ReminderDays,
                 reminder.RepeatMode,
                 FormatReminderRepeatMode(reminder.RepeatMode),
@@ -298,7 +304,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
             var title = ValueOrFallback(plan.Title, L("GlobalSearch.Value.ServiceTask"));
             var summary = JoinParts(
                 BuildMaintenanceInterval(plan),
-                ValueOrFallback(plan.LastServiceDate, string.Empty),
+                FormatFullDate(plan.LastServiceDate, string.Empty),
                 FormatOdometer(plan.LastServiceOdometer),
                 timelineItem?.Detail,
                 timelineStatus,
@@ -312,6 +318,7 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
                 plan.IntervalKm,
                 plan.IntervalMonths,
                 plan.LastServiceDate,
+                FormatFullDate(plan.LastServiceDate, string.Empty),
                 plan.LastServiceOdometer,
                 timelineItem?.Detail,
                 timelineStatus,
@@ -632,6 +639,19 @@ public sealed class LegacyGlobalSearchService : IGlobalSearchService
 
     private string FormatReminderRepeatMode(string? value) =>
         LegacyKnownValueDisplayService.FormatReminderRepeatMode(value, _localizer);
+
+    private string FormatFullDate(string? value, string fallback)
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+        {
+            return fallback;
+        }
+
+        return VehimapValueParser.TryParseEventDate(text, out var date)
+            ? _dateFormatService.FormatDate(date, _culturePreferences)
+            : text;
+    }
 
     private static IAppLocalizer CreateDefaultLocalizer() =>
         new ResourceAppLocalizer();

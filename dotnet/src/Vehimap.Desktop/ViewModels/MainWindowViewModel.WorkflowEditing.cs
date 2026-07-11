@@ -13,6 +13,7 @@ public sealed partial class MainWindowViewModel
 {
     private static readonly AppNumberFormatService EditorNumberFormatService = new();
     private static readonly AppUnitFormatService EditorUnitFormatService = new();
+    private static readonly AppDateFormatService EditorDateFormatService = new();
 
     private string? _editingHistoryId;
     private string? _editingFuelId;
@@ -32,6 +33,9 @@ public sealed partial class MainWindowViewModel
             CurrentSupportedSettings.ThousandsSeparator,
             CurrentSupportedSettings.DecimalSeparator);
 
+    internal string CurrentDateExample =>
+        EditorDateFormatService.FormatDate(new DateOnly(2026, 4, 30), CurrentCulturePreferences);
+
     internal AppUnitPreferences CurrentUnitPreferences =>
         new(
             CurrentSupportedSettings.DistanceUnit,
@@ -42,6 +46,36 @@ public sealed partial class MainWindowViewModel
 
     private string FormatCanonicalOdometerForEditor(string? canonicalKilometers) =>
         FormatCanonicalDistanceForEditor(canonicalKilometers, allowDecimalMiles: false);
+
+    private string FormatCanonicalDateForEditor(string? canonicalDate)
+    {
+        var value = (canonicalDate ?? string.Empty).Trim();
+        return VehimapValueParser.TryParseEventDate(value, out var date)
+            ? EditorDateFormatService.FormatDate(date, CurrentCulturePreferences)
+            : value;
+    }
+
+    private bool TryNormalizeEditorDateToCanonical(string? text, bool allowEmpty, out string canonicalDate)
+    {
+        var value = (text ?? string.Empty).Trim();
+        if (value.Length == 0)
+        {
+            canonicalDate = string.Empty;
+            return allowEmpty;
+        }
+
+        if (!EditorDateFormatService.TryParseDate(value, CurrentCulturePreferences, out var date))
+        {
+            canonicalDate = string.Empty;
+            return false;
+        }
+
+        canonicalDate = VehimapValueParser.FormatCanonicalEventDate(date);
+        return true;
+    }
+
+    private string FormatDateForDisplay(DateOnly date) =>
+        EditorDateFormatService.FormatDate(date, CurrentCulturePreferences);
 
     private string FormatCanonicalDistanceForEditor(string? canonicalKilometers, bool allowDecimalMiles)
     {
@@ -194,7 +228,7 @@ public sealed partial class MainWindowViewModel
         }
 
         _editingHistoryId = entry.Id;
-        HistoryEditorDate = entry.EventDate;
+        HistoryEditorDate = FormatCanonicalDateForEditor(entry.EventDate);
         HistoryEditorType = entry.EventType;
         HistoryEditorOdometer = FormatCanonicalOdometerForEditor(entry.Odometer);
         HistoryEditorCost = entry.Cost;
@@ -214,16 +248,16 @@ public sealed partial class MainWindowViewModel
         }
 
         var eventDateText = (HistoryEditorDate ?? string.Empty).Trim();
-        var eventDate = LegacyVehicleValueNormalization.NormalizeEventDate(eventDateText);
+        var hasEventDate = TryNormalizeEditorDateToCanonical(eventDateText, allowEmpty: false, out var eventDate);
         var eventType = (HistoryEditorType ?? string.Empty).Trim();
         var odometerText = (HistoryEditorOdometer ?? string.Empty).Trim();
         var odometer = string.Empty;
         var costText = (HistoryEditorCost ?? string.Empty).Trim();
         var cost = string.Empty;
 
-        if (eventDate.Length == 0)
+        if (!hasEventDate)
         {
-            HistoryEditorStatus = LO("HistoryEditor.Validation.DateRequired");
+            HistoryEditorStatus = LWF("HistoryEditor.Validation.DateRequired", CurrentDateExample);
             RequestFocus(DesktopFocusTarget.HistoryEditorDate);
             return;
         }
@@ -351,7 +385,7 @@ public sealed partial class MainWindowViewModel
         }
 
         _editingFuelId = entry.Id;
-        FuelEditorDate = entry.EntryDate;
+        FuelEditorDate = FormatCanonicalDateForEditor(entry.EntryDate);
         FuelEditorFuelType = KnownValueOptions.NormalizeFuelTypeValue(entry.FuelType);
         FuelEditorFuelDetail = entry.FuelDetail;
         FuelEditorStation = entry.Station;
@@ -375,7 +409,7 @@ public sealed partial class MainWindowViewModel
         }
 
         var entryDateText = (FuelEditorDate ?? string.Empty).Trim();
-        var entryDate = LegacyVehicleValueNormalization.NormalizeEventDate(entryDateText);
+        var hasEntryDate = TryNormalizeEditorDateToCanonical(entryDateText, allowEmpty: false, out var entryDate);
         var odometerText = (FuelEditorOdometer ?? string.Empty).Trim();
         var odometer = string.Empty;
         var volumeText = (FuelEditorVolume ?? string.Empty).Trim();
@@ -383,9 +417,9 @@ public sealed partial class MainWindowViewModel
         var totalCostText = (FuelEditorTotalCost ?? string.Empty).Trim();
         var totalCost = string.Empty;
 
-        if (entryDate.Length == 0)
+        if (!hasEntryDate)
         {
-            FuelEditorStatus = LO("FuelEditor.Validation.DateRequired");
+            FuelEditorStatus = LWF("FuelEditor.Validation.DateRequired", CurrentDateExample);
             RequestFocus(DesktopFocusTarget.FuelEditorDate);
             return;
         }
@@ -525,7 +559,7 @@ public sealed partial class MainWindowViewModel
         MaintenanceEditorTitle = plan.Title;
         MaintenanceEditorIntervalDistance = FormatCanonicalDistanceForEditor(plan.IntervalKm);
         MaintenanceEditorIntervalMonths = plan.IntervalMonths;
-        MaintenanceEditorLastServiceDate = plan.LastServiceDate;
+        MaintenanceEditorLastServiceDate = FormatCanonicalDateForEditor(plan.LastServiceDate);
         MaintenanceEditorLastServiceOdometer = FormatCanonicalOdometerForEditor(plan.LastServiceOdometer);
         MaintenanceEditorIsActive = plan.IsActive;
         MaintenanceEditorNote = plan.Note;
@@ -556,7 +590,7 @@ public sealed partial class MainWindowViewModel
         var intervalKm = string.Empty;
         var intervalMonths = LegacyVehicleValueNormalization.NormalizePositiveInteger(intervalMonthsText);
         var lastServiceDateText = (MaintenanceEditorLastServiceDate ?? string.Empty).Trim();
-        var lastServiceDate = LegacyVehicleValueNormalization.NormalizeEventDate(lastServiceDateText);
+        var hasLastServiceDate = TryNormalizeEditorDateToCanonical(lastServiceDateText, allowEmpty: true, out var lastServiceDate);
         var lastServiceOdometerText = (MaintenanceEditorLastServiceOdometer ?? string.Empty).Trim();
         var lastServiceOdometer = string.Empty;
 
@@ -581,16 +615,16 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (lastServiceDateText.Length > 0 && lastServiceDate.Length == 0)
+        if (!hasLastServiceDate)
         {
-            MaintenanceEditorStatus = LO("MaintenanceEditor.Validation.LastServiceDateInvalid");
+            MaintenanceEditorStatus = LWF("MaintenanceEditor.Validation.LastServiceDateInvalid", CurrentDateExample);
             RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceDate);
             return;
         }
 
         if (intervalMonths.Length > 0 && lastServiceDate.Length == 0)
         {
-            MaintenanceEditorStatus = LO("MaintenanceEditor.Validation.LastServiceDateRequired");
+            MaintenanceEditorStatus = LWF("MaintenanceEditor.Validation.LastServiceDateRequired", CurrentDateExample);
             RequestFocus(DesktopFocusTarget.MaintenanceEditorLastServiceDate);
             return;
         }
@@ -683,7 +717,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var todayText = FormatMaintenanceServiceDate(DateOnly.FromDateTime(DateTime.Today));
+        var todayText = VehimapValueParser.FormatCanonicalEventDate(DateOnly.FromDateTime(DateTime.Today));
         var currentOdometer = TryGetCurrentVehicleOdometer(SelectedVehicle.Id, out var odometer)
             ? odometer.ToString(CultureInfo.InvariantCulture)
             : plan.LastServiceOdometer;
@@ -705,7 +739,7 @@ public sealed partial class MainWindowViewModel
             return null;
         }
 
-        var completedDate = FormatMaintenanceServiceDate(DateOnly.FromDateTime(DateTime.Today));
+        var completedDate = FormatDateForDisplay(DateOnly.FromDateTime(DateTime.Today));
         var completedOdometer = TryGetCurrentVehicleOdometer(SelectedVehicle.Id, out var odometer)
             ? odometer.ToString(CultureInfo.InvariantCulture)
             : plan.LastServiceOdometer;
@@ -737,7 +771,7 @@ public sealed partial class MainWindowViewModel
 
         if (!VehimapValueParser.TryParseEventDate(completion.CompletedDate, out var completedDate))
         {
-            return LO("MaintenanceCompletion.Validation.CompletedDate");
+            return LWF("MaintenanceCompletion.Validation.CompletedDate", CurrentDateExample);
         }
 
         var completedOdometer = (completion.CompletedOdometer ?? string.Empty).Trim();
@@ -766,7 +800,7 @@ public sealed partial class MainWindowViewModel
             historyCost = parsedCost.ToString("0.##", CultureInfo.InvariantCulture);
         }
 
-        var completedDateText = FormatMaintenanceServiceDate(completedDate);
+        var completedDateText = VehimapValueParser.FormatCanonicalEventDate(completedDate);
         var updatedPlan = plan with
         {
             LastServiceDate = completedDateText,
@@ -810,7 +844,7 @@ public sealed partial class MainWindowViewModel
         var historyMessage = completion.AddHistory
             ? LO("MaintenanceCompletion.Status.HistoryAddedSuffix")
             : string.Empty;
-        var message = LWF("MaintenanceCompletion.Status.Completed", completedDateText, odometerMessage, historyMessage);
+        var message = LWF("MaintenanceCompletion.Status.Completed", FormatDateForDisplay(completedDate), odometerMessage, historyMessage);
         MaintenanceEditorStatus = message;
         SelectedMaintenance = FindById(SelectedVehicleMaintenance, item => item.Id, updatedPlan.Id);
         RequestFocus(DesktopFocusTarget.MaintenanceList);
@@ -872,9 +906,6 @@ public sealed partial class MainWindowViewModel
 
         return found;
     }
-
-    private static string FormatMaintenanceServiceDate(DateOnly date) =>
-        date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 
     private void UpsertHistoryEntry(VehicleHistoryEntry updatedEntry)
     {

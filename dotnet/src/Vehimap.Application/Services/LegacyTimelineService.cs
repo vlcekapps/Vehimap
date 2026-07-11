@@ -11,6 +11,7 @@ public sealed class LegacyTimelineService : ITimelineService
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
+    private readonly IAppDateFormatService _dateFormatService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
     private AppUnitPreferences _unitPreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToUnitPreferences();
     private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
@@ -20,11 +21,16 @@ public sealed class LegacyTimelineService : ITimelineService
     {
     }
 
-    public LegacyTimelineService(IAppLocalizer localizer, IAppNumberFormatService? numberFormatService = null, IAppUnitFormatService? unitFormatService = null)
+    public LegacyTimelineService(
+        IAppLocalizer localizer,
+        IAppNumberFormatService? numberFormatService = null,
+        IAppUnitFormatService? unitFormatService = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _localizer = localizer;
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -234,6 +240,7 @@ public sealed class LegacyTimelineService : ITimelineService
             reminderKm,
             CreateDefaultLocalizer(),
             new AppUnitFormatService(numberFormatService),
+            new AppDateFormatService(),
             defaults.ToCulturePreferences(),
             defaults.ToUnitPreferences(),
             out dueDate,
@@ -258,6 +265,7 @@ public sealed class LegacyTimelineService : ITimelineService
             reminderKm,
             _localizer,
             _unitFormatService,
+            _dateFormatService,
             _culturePreferences,
             _unitPreferences,
             out dueDate,
@@ -272,6 +280,7 @@ public sealed class LegacyTimelineService : ITimelineService
         int reminderKm,
         IAppLocalizer localizer,
         IAppUnitFormatService unitFormatService,
+        IAppDateFormatService dateFormatService,
         AppCulturePreferences culturePreferences,
         AppUnitPreferences unitPreferences,
         out DateOnly dueDate,
@@ -320,9 +329,10 @@ public sealed class LegacyTimelineService : ITimelineService
             }
         }
 
+        var formattedDueDate = dateFormatService.FormatDate(dueDate, culturePreferences);
         nextServiceText = nextOdometerText is null
-            ? FormatEventDate(dueDate)
-            : LF(localizer, "Timeline.Detail.DateAndOdometer", FormatEventDate(dueDate), nextOdometerText);
+            ? formattedDueDate
+            : LF(localizer, "Timeline.Detail.DateAndOdometer", formattedDueDate, nextOdometerText);
 
         var dateStatus = BuildExpirationStatusCore(dueDate, today, reminderDays, localizer);
         statusText = JoinParts(dateStatus, odometerStatus);
@@ -442,7 +452,8 @@ public sealed class LegacyTimelineService : ITimelineService
 
     private static string BuildVehicleDetail(Vehicle vehicle) => JoinParts(vehicle.Plate, vehicle.MakeModel);
 
-    private static string FormatEventDate(DateOnly date) => date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+    private string FormatEventDate(DateOnly date) =>
+        _dateFormatService.FormatDate(date, _culturePreferences);
 
     private string FormatCostStatus(string? value)
     {

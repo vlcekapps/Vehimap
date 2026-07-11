@@ -143,7 +143,7 @@ public sealed class LegacyTimelineServiceTests
         var maintenance = timeline.First(item => item.Kind == "maintenance");
         Assert.Equal("Maintenance plan", maintenance.KindLabel);
         Assert.Equal("Service task", maintenance.Title);
-        Assert.Equal("15.04.2026 | 14,292 mi", maintenance.Detail);
+        Assert.Equal("4/15/2026 | 14,292 mi", maintenance.Detail);
         Assert.Equal("In 14 days", maintenance.Status);
 
         var record = timeline.First(item => item.Kind == "record");

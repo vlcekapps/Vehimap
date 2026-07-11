@@ -42,9 +42,9 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc FuelEditor.DateLabel}" />
             <TextBox x:Name="FuelEditorDateBox"
                      Text="{Binding FuelEditorDate}"
-                     PlaceholderText="{i18n:Loc FuelEditor.DateExample}"
+                     PlaceholderText="{Binding FuelEditorDateExample}"
                      AutomationProperties.Name="{i18n:Loc FuelEditor.DateName}"
-                     AutomationProperties.HelpText="{i18n:Loc FuelEditor.DateExample}"
+                     AutomationProperties.HelpText="{Binding FuelEditorDateExample}"
                      AutomationProperties.AutomationId="FuelEditorDateBox"
                      AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>

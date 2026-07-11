@@ -52,9 +52,9 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc ReminderEditor.DueDateLabel}" />
             <TextBox x:Name="ReminderEditorDueDateBox"
                      Text="{Binding ReminderEditorDueDate}"
-                     PlaceholderText="{i18n:Loc ReminderEditor.DueDateExample}"
+                     PlaceholderText="{Binding ReminderEditorDueDateExample}"
                      AutomationProperties.Name="{i18n:Loc ReminderEditor.DueDateName}"
-                     AutomationProperties.HelpText="{i18n:Loc ReminderEditor.DueDateExample}"
+                     AutomationProperties.HelpText="{Binding ReminderEditorDueDateExample}"
                      AutomationProperties.AutomationId="ReminderEditorDueDateBox"
                      AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>

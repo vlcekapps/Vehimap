@@ -76,6 +76,8 @@ public sealed partial class FuelWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string fuelEditorDate = string.Empty;
 
+    public string FuelEditorDateExample => LF("FuelEditor.DateExample", Root.CurrentDateExample);
+
     [ObservableProperty]
     private string fuelEditorFuelType = string.Empty;
 

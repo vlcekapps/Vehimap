@@ -35,7 +35,7 @@
                  Text="{Binding CostPeriodStartText}"
                  PlaceholderText="{i18n:Loc CostWorkspace.PeriodStartPlaceholder}"
                  AutomationProperties.Name="{i18n:Loc CostWorkspace.PeriodStartName}"
-                 AutomationProperties.HelpText="{i18n:Loc CostWorkspace.PeriodStartHelp}"
+                 AutomationProperties.HelpText="{Binding CostPeriodStartHelp}"
                  AutomationProperties.AutomationId="CostPeriodStartBox" />
         <TextBlock Grid.Column="2"
                    HorizontalAlignment="Center"
@@ -46,7 +46,7 @@
                  Text="{Binding CostPeriodEndText}"
                  PlaceholderText="{i18n:Loc CostWorkspace.PeriodEndPlaceholder}"
                  AutomationProperties.Name="{i18n:Loc CostWorkspace.PeriodEndName}"
-                 AutomationProperties.HelpText="{i18n:Loc CostWorkspace.PeriodEndHelp}"
+                 AutomationProperties.HelpText="{Binding CostPeriodEndHelp}"
                  AutomationProperties.AutomationId="CostPeriodEndBox" />
         <Button Grid.Column="4"
                 Margin="12,0,0,0"

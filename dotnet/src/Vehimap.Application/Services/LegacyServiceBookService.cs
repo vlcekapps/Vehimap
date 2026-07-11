@@ -12,6 +12,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
     private readonly IAppUnitFormatService _unitFormatService;
+    private readonly IAppDateFormatService _dateFormatService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
     private AppUnitPreferences _unitPreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToUnitPreferences();
     private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
@@ -19,11 +20,13 @@ public sealed class LegacyServiceBookService : IServiceBookService
     public LegacyServiceBookService(
         IAppLocalizer? localizer = null,
         IAppNumberFormatService? numberFormatService = null,
-        IAppUnitFormatService? unitFormatService = null)
+        IAppUnitFormatService? unitFormatService = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
         _unitFormatService = unitFormatService ?? new AppUnitFormatService(_numberFormatService);
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -88,7 +91,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
             .ThenBy(item => item.Entry.EventType, StringComparer.CurrentCultureIgnoreCase)
             .Select(item => new ServiceBookHistoryEntry(
                 item.Entry.Id,
-                FormatValue(item.Entry.EventDate, L("ServiceBook.Value.NoDate")),
+                item.Date.HasValue ? FormatDate(item.Date.Value) : FormatValue(item.Entry.EventDate, L("ServiceBook.Value.NoDate")),
                 item.Date,
                 FormatValue(item.Entry.EventType, L("ServiceBook.Section.History")),
                 FormatOdometer(item.Entry.Odometer),
@@ -216,9 +219,14 @@ public sealed class LegacyServiceBookService : IServiceBookService
 
     private string BuildMaintenanceLastService(MaintenancePlan plan)
     {
-        var date = FormatValue(plan.LastServiceDate, L("ServiceBook.Value.NoDate"));
+        var date = VehimapValueParser.TryParseEventDate(plan.LastServiceDate, out var lastServiceDate)
+            ? FormatDate(lastServiceDate)
+            : FormatValue(plan.LastServiceDate, L("ServiceBook.Value.NoDate"));
         return LF("ServiceBook.Value.LastService", date, FormatOdometer(plan.LastServiceOdometer));
     }
+
+    private string FormatDate(DateOnly value) =>
+        _dateFormatService.FormatDate(value, _culturePreferences);
 
     private string BuildMaintenanceStatus(MaintenancePlan plan, DateOnly today, int? currentOdometer)
     {

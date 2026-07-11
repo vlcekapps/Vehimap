@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Globalization;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 
@@ -6,6 +8,7 @@ namespace Vehimap.Desktop.ViewModels.Workspaces;
 
 internal static class WorkspaceSortHelpers
 {
+    private static readonly AppDateFormatService DateFormatService = new();
     internal const string DateSortKey = "date";
     internal const string TypeSortKey = "type";
     internal const string OdometerSortKey = "odometer";
@@ -400,7 +403,7 @@ internal static class WorkspaceSortHelpers
 
     private static DateOnly? TryParseDate(string? value)
     {
-        return VehimapValueParser.TryParseEventDate(value, out var eventDate)
+        return DateFormatService.TryParseDate(value, new AppCulturePreferences(CultureInfo.CurrentCulture.Name), out var eventDate)
             || VehimapValueParser.TryParseMonthYear(value, out eventDate)
             ? eventDate
             : null;

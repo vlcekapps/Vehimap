@@ -472,6 +472,30 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
     }
 
     [Fact]
+    public async Task History_editor_displays_english_date_and_saves_canonical_day_first_value()
+    {
+        var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);
+        Directory.CreateDirectory(dataRoot.DataPath);
+
+        var dataSet = BuildBaseDataSet();
+        ConfigureNumberFormatAndUnits(dataSet, "en-US", "comma", "dot", "mi", "us_gal");
+        dataSet.HistoryEntries.Add(new VehicleHistoryEntry("hist_1", "veh_1", "30.04.2026", "Service", "161", "2500", "Test"));
+        var dataStore = new MutableStubLegacyDataStore(dataSet);
+        var viewModel = CreateViewModel(dataRoot, dataStore);
+
+        viewModel.EditSelectedHistoryCommand.Execute(null);
+
+        Assert.Equal("4/30/2026", viewModel.HistoryWorkspace.HistoryEditorDate);
+        Assert.Contains("4/30/2026", viewModel.HistoryWorkspace.HistoryEditorDateExample, StringComparison.Ordinal);
+
+        viewModel.HistoryWorkspace.HistoryEditorDate = "5/1/2026";
+        await viewModel.SaveHistoryCommand.ExecuteAsync(null);
+
+        var saved = Assert.Single(dataStore.CurrentDataSet.HistoryEntries);
+        Assert.Equal("01.05.2026", saved.EventDate);
+    }
+
+    [Fact]
     public async Task Save_history_command_rejects_invalid_cost_and_focuses_field()
     {
         var dataRoot = new VehimapDataRoot(_tempRoot, Path.Combine(_tempRoot, "data"), true);

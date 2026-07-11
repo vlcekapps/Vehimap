@@ -577,6 +577,50 @@ public sealed class DesktopProjectionAndNavigationServiceTests
     }
 
     [Fact]
+    public void Projection_service_formats_full_dates_for_selected_ui_language()
+    {
+        var dataSet = new VehimapDataSet
+        {
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("hist_1", "veh_1", "30.04.2026", "Service", "10000", "100", "")
+            ],
+            FuelEntries =
+            [
+                new FuelEntry("fuel_1", "veh_1", "30.04.2026", "10000", "40", "100", true, "Gasoline", "")
+            ],
+            Reminders =
+            [
+                new VehicleReminder("rem_1", "veh_1", "Service", "30.04.2026", "7", "Do not repeat", "")
+            ],
+            MaintenancePlans =
+            [
+                new MaintenancePlan("mnt_1", "veh_1", "Service", "", "12", "30.04.2026", "10000", true, "")
+            ]
+        };
+
+        var english = new DesktopProjectionService(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")),
+            CultureInfo.GetCultureInfo("en-US"));
+        english.ApplySupportedSettings(CreateSettings("en-US", "comma", "dot", "mi", "us_gal", "USD"));
+
+        var czech = new DesktopProjectionService(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("cs-CZ")),
+            CultureInfo.GetCultureInfo("cs-CZ"));
+        czech.ApplySupportedSettings(CreateSettings("cs-CZ", "none", "comma", "km", "l", "CZK"));
+
+        Assert.Equal("4/30/2026", english.BuildHistory(dataSet, "veh_1").Items.Single().Date);
+        Assert.Equal("4/30/2026", english.BuildFuel(dataSet, "veh_1").Items.Single().Date);
+        Assert.Equal("4/30/2026", english.BuildReminders(dataSet, "veh_1", new DateOnly(2026, 4, 1)).Items.Single().DueDate);
+        Assert.StartsWith("4/30/2026", english.BuildMaintenance(dataSet, "veh_1", new DateOnly(2026, 4, 1)).Items.Single().LastService, StringComparison.Ordinal);
+
+        Assert.Equal("30.04.2026", czech.BuildHistory(dataSet, "veh_1").Items.Single().Date);
+        Assert.Equal("30.04.2026", czech.BuildFuel(dataSet, "veh_1").Items.Single().Date);
+        Assert.Equal("30.04.2026", czech.BuildReminders(dataSet, "veh_1", new DateOnly(2026, 4, 1)).Items.Single().DueDate);
+        Assert.StartsWith("30.04.2026", czech.BuildMaintenance(dataSet, "veh_1", new DateOnly(2026, 4, 1)).Items.Single().LastService, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Projection_service_localizes_fuel_analysis_summary_and_accessible_labels()
     {
         var projectionService = new DesktopProjectionService(
@@ -952,6 +996,31 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             TestCultureInitializer.ResetToCzech();
         }
     }
+
+    private static DesktopSupportedSettingsSnapshot CreateSettings(
+        string language,
+        string thousandsSeparator,
+        string decimalSeparator,
+        string distanceUnit,
+        string volumeUnit,
+        string currency) =>
+        new(
+            30,
+            30,
+            30,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            language,
+            thousandsSeparator,
+            decimalSeparator,
+            distanceUnit,
+            volumeUnit,
+            currency);
 
     private static void AssertNoCzechSystemText(IEnumerable<string?> values)
     {

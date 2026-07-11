@@ -80,9 +80,9 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc MaintenanceEditor.LastServiceDateLabel}" />
             <TextBox x:Name="MaintenanceEditorLastServiceDateBox"
                      Text="{Binding MaintenanceEditorLastServiceDate}"
-                     PlaceholderText="{i18n:Loc MaintenanceEditor.LastServiceDateExample}"
+                     PlaceholderText="{Binding MaintenanceEditorLastServiceDateExample}"
                      AutomationProperties.Name="{i18n:Loc MaintenanceEditor.LastServiceDateName}"
-                     AutomationProperties.HelpText="{i18n:Loc MaintenanceEditor.LastServiceDateExample}"
+                     AutomationProperties.HelpText="{Binding MaintenanceEditorLastServiceDateExample}"
                      AutomationProperties.AutomationId="MaintenanceEditorLastServiceDateBox" />
           </StackPanel>
           <StackPanel Grid.Column="1" Spacing="6">

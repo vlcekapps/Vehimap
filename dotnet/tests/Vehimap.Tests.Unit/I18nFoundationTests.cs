@@ -542,6 +542,41 @@ public sealed class I18nFoundationTests
     }
 
     [Theory]
+    [InlineData("en-US", "4/30/2026")]
+    [InlineData("cs-CZ", "30.04.2026")]
+    public void Date_format_service_formats_full_dates_for_selected_culture(string language, string expected)
+    {
+        var service = new AppDateFormatService();
+        var preferences = new AppCulturePreferences(language, "system", "system");
+
+        Assert.Equal(expected, service.FormatDate(new DateOnly(2026, 4, 30), preferences));
+    }
+
+    [Theory]
+    [InlineData("en-US", "4/30/2026")]
+    [InlineData("cs-CZ", "30.04.2026")]
+    [InlineData("en-US", "30.04.2026")]
+    public void Date_format_service_parses_current_culture_and_legacy_day_first_dates(string language, string input)
+    {
+        var service = new AppDateFormatService();
+        var preferences = new AppCulturePreferences(language, "system", "system");
+
+        Assert.True(service.TryParseDate(input, preferences, out var parsed));
+        Assert.Equal(new DateOnly(2026, 4, 30), parsed);
+    }
+
+    [Fact]
+    public void English_date_parser_preserves_unambiguous_legacy_day_first_meaning()
+    {
+        var service = new AppDateFormatService();
+        var preferences = new AppCulturePreferences("en-US", "system", "system");
+
+        Assert.True(service.TryParseDate("10.03.2026", preferences, out var parsed));
+        Assert.Equal(new DateOnly(2026, 3, 10), parsed);
+        Assert.Equal("10.03.2026", VehimapValueParser.FormatCanonicalEventDate(parsed));
+    }
+
+    [Theory]
     [InlineData("en-US", "comma", "dot", "USD", "$1,234.50")]
     [InlineData("en-US", "comma", "dot", "EUR", "€1,234.50")]
     [InlineData("cs-CZ", "none", "comma", "CZK", "1234,50 Kč")]
@@ -1008,7 +1043,8 @@ public sealed class I18nFoundationTests
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", costWorkspace);
         Assert.Contains("Text=\"{i18n:Loc CostWorkspace.PeriodHeading}\"", costWorkspace);
-        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc CostWorkspace.PeriodStartHelp}\"", costWorkspace);
+        Assert.Contains("AutomationProperties.HelpText=\"{Binding CostPeriodStartHelp}\"", costWorkspace);
+        Assert.Contains("AutomationProperties.HelpText=\"{Binding CostPeriodEndHelp}\"", costWorkspace);
         Assert.Contains("Content=\"{i18n:Loc CostWorkspace.ExportFleetSummary}\"", costWorkspace);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc CostWorkspace.OpenVehicleName}\"", costWorkspace);
         Assert.Contains("PlaceholderText=\"{i18n:Loc CostWorkspace.SearchPlaceholder}\"", costWorkspace);
@@ -1187,7 +1223,9 @@ public sealed class I18nFoundationTests
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc MaintenanceCompletion.HistoryNoteName}\"", maintenanceCompletionWindow);
         Assert.Contains("Content=\"{i18n:Loc Common.Save}\"", maintenanceCompletionWindow);
         Assert.Contains("_localizer.Format(\"MaintenanceCompletion.CompletedOdometerLabel\"", maintenanceCompletionViewModel);
-        Assert.Contains("_localizer.GetString(\"MaintenanceCompletion.Validation.CompletedDate\")", maintenanceCompletionViewModel);
+        Assert.Contains("_localizer.Format(\"MaintenanceCompletion.Validation.CompletedDate\"", maintenanceCompletionViewModel);
+        Assert.Contains("PlaceholderText=\"{Binding CompletedDateExample}\"", maintenanceCompletionWindow);
+        Assert.Contains("AutomationProperties.HelpText=\"{Binding CompletedDateExample}\"", maintenanceCompletionWindow);
         Assert.Contains("DesktopLocalization.Localizer.GetString(\"About.Status.DiagnosticsCopied\")", aboutCodeBehind);
         Assert.Contains("DesktopLocalization.Localizer.GetString(\"About.Status.DiagnosticsCopyFailed\")", aboutCodeBehind);
         Assert.DoesNotContain("About.Status.DiagnosticsCopyFailed\", ex.Message", aboutCodeBehind);
@@ -1942,6 +1980,36 @@ public sealed class I18nFoundationTests
         Assert.True(
             failures.Length == 0,
             "Desktop user-facing status paths must classify exceptions through UserFacingExceptionMessageService instead of exposing raw exception text." +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, failures));
+    }
+
+    [Fact]
+    public void User_visible_full_dates_do_not_use_a_fixed_czech_format()
+    {
+        var root = FindRepositoryRoot();
+        var sourceRoots = new[]
+        {
+            Path.Combine(root, "dotnet", "src", "Vehimap.Application"),
+            Path.Combine(root, "dotnet", "src", "Vehimap.Desktop")
+        };
+        var failures = sourceRoots
+            .SelectMany(path => Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
+            .Where(path => Path.GetExtension(path) is ".cs" or ".axaml" or ".resx")
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.EndsWith(Path.Combine("Services", "VehimapValueParser.cs"), StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => (Path: path, Line: line, Number: index + 1)))
+            .Where(item => item.Line.Contains("dd.MM.yyyy", StringComparison.Ordinal)
+                || item.Line.Contains("DD.MM.YYYY", StringComparison.Ordinal)
+                || item.Line.Contains("DD.MM.RRRR", StringComparison.Ordinal))
+            .Select(item => $"{Path.GetRelativePath(root, item.Path).Replace('\\', '/')}:{item.Number}: {item.Line.Trim()}")
+            .ToArray();
+
+        Assert.True(
+            failures.Length == 0,
+            "User-visible full dates must use IAppDateFormatService. The fixed format remains allowed only at canonical storage and legacy migration boundaries:" +
             Environment.NewLine +
             string.Join(Environment.NewLine, failures));
     }

@@ -283,7 +283,7 @@ Vozidlo: {2}
   <data name="FuelWorkspace.WarningsHeading" xml:space="preserve"><value>Upozornění</value></data>
   <data name="FuelWorkspace.WarningsName" xml:space="preserve"><value>Upozornění analýzy tankování</value></data>
   <data name="FuelEditor.CancelName" xml:space="preserve"><value>Zrušit úpravu tankování</value></data>
-  <data name="FuelEditor.DateExample" xml:space="preserve"><value>Například 15.06.2026</value></data>
+  <data name="FuelEditor.DateExample" xml:space="preserve"><value>Například {0}</value></data>
   <data name="FuelEditor.DateLabel" xml:space="preserve"><value>Datum</value></data>
   <data name="FuelEditor.DateName" xml:space="preserve"><value>Datum tankování</value></data>
   <data name="FuelEditor.EditTitle" xml:space="preserve"><value>Upravit tankování</value></data>
@@ -316,7 +316,7 @@ Vozidlo: {2}
   <data name="FuelEditor.Status.EditPrompt" xml:space="preserve"><value>Upravte tankování a uložte změny.</value></data>
   <data name="FuelEditor.Status.Updated" xml:space="preserve"><value>Tankování bylo upraveno.</value></data>
   <data name="FuelEditor.Validation.CostRequiresVolume" xml:space="preserve"><value>Pokud zadáváte cenu tankování, doplňte i množství paliva.</value></data>
-  <data name="FuelEditor.Validation.DateRequired" xml:space="preserve"><value>Pole Datum záznamu je povinné a musí být ve formátu DD.MM.RRRR.</value></data>
+  <data name="FuelEditor.Validation.DateRequired" xml:space="preserve"><value>Pole Datum záznamu je povinné. Zadejte datum například jako {0}.</value></data>
   <data name="FuelEditor.Validation.OdometerRequired" xml:space="preserve"><value>Pole Stav tachometru je povinné a musí obsahovat číslo v {0}.</value></data>
   <data name="FuelEditor.Validation.TotalCostInvalid" xml:space="preserve"><value>Cenu celkem zadejte jako číslo, například 1890.</value></data>
   <data name="FuelEditor.Validation.VolumeInvalid" xml:space="preserve"><value>Množství paliva zadejte jako číslo v {0}.</value></data>
@@ -327,7 +327,7 @@ Vozidlo: {2}
   <data name="HistoryEditor.CostExample" xml:space="preserve"><value>Například 2500</value></data>
   <data name="HistoryEditor.CostLabel" xml:space="preserve"><value>Cena</value></data>
   <data name="HistoryEditor.CostName" xml:space="preserve"><value>Cena historického záznamu</value></data>
-  <data name="HistoryEditor.DateExample" xml:space="preserve"><value>Například 15.06.2026</value></data>
+  <data name="HistoryEditor.DateExample" xml:space="preserve"><value>Například {0}</value></data>
   <data name="HistoryEditor.DateLabel" xml:space="preserve"><value>Datum</value></data>
   <data name="HistoryEditor.DateName" xml:space="preserve"><value>Datum historického záznamu</value></data>
   <data name="HistoryEditor.EditTitle" xml:space="preserve"><value>Upravit historický záznam</value></data>
@@ -352,7 +352,7 @@ Vozidlo: {2}
   <data name="HistoryEditor.Status.EditPrompt" xml:space="preserve"><value>Upravte historický záznam a uložte změny.</value></data>
   <data name="HistoryEditor.Status.Updated" xml:space="preserve"><value>Historický záznam byl upraven.</value></data>
   <data name="HistoryEditor.Validation.CostInvalid" xml:space="preserve"><value>Cenu události zadejte jako číslo, například 2500.</value></data>
-  <data name="HistoryEditor.Validation.DateRequired" xml:space="preserve"><value>Pole Datum události je povinné a musí být ve formátu DD.MM.RRRR.</value></data>
+  <data name="HistoryEditor.Validation.DateRequired" xml:space="preserve"><value>Pole Datum události je povinné. Zadejte datum například jako {0}.</value></data>
   <data name="HistoryEditor.Validation.OdometerInvalid" xml:space="preserve"><value>Stav tachometru zadejte jako číslo v {0}, nebo pole nechte prázdné.</value></data>
   <data name="HistoryEditor.Validation.TypeRequired" xml:space="preserve"><value>Vyplňte prosím název události.</value></data>
   <data name="HistoryWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v historii vozidla</value></data>
@@ -397,7 +397,7 @@ Vozidlo: {2}
   <data name="MaintenanceEditor.IntervalMonthsName" xml:space="preserve"><value>Interval údržby v měsících</value></data>
   <data name="MaintenanceEditor.IsActive" xml:space="preserve"><value>Aktivní servisní plán</value></data>
   <data name="MaintenanceEditor.IsActiveName" xml:space="preserve"><value>Servisní plán je aktivní</value></data>
-  <data name="MaintenanceEditor.LastServiceDateExample" xml:space="preserve"><value>Například 15.06.2026</value></data>
+  <data name="MaintenanceEditor.LastServiceDateExample" xml:space="preserve"><value>Například {0}</value></data>
   <data name="MaintenanceEditor.LastServiceDateLabel" xml:space="preserve"><value>Poslední servis - datum</value></data>
   <data name="MaintenanceEditor.LastServiceDateName" xml:space="preserve"><value>Datum posledního servisu</value></data>
   <data name="MaintenanceEditor.LastServiceOdometerHelp" xml:space="preserve"><value>Zadejte stav tachometru v {0}. Vehimap hodnotu uloží interně v kilometrech.</value></data>
@@ -425,8 +425,8 @@ Vozidlo: {2}
   <data name="MaintenanceEditor.Validation.IntervalDistanceInvalid" xml:space="preserve"><value>Interval vzdálenosti zadejte jako kladné číslo v {0}.</value></data>
   <data name="MaintenanceEditor.Validation.IntervalMonthsInvalid" xml:space="preserve"><value>Interval měsíců zadejte jako kladné celé číslo.</value></data>
   <data name="MaintenanceEditor.Validation.IntervalRequired" xml:space="preserve"><value>Plán údržby musí mít vyplněný vzdálenostní interval, interval měsíců nebo obojí.</value></data>
-  <data name="MaintenanceEditor.Validation.LastServiceDateInvalid" xml:space="preserve"><value>Datum posledního servisu musí být ve formátu DD.MM.RRRR.</value></data>
-  <data name="MaintenanceEditor.Validation.LastServiceDateRequired" xml:space="preserve"><value>Pro interval podle data vyplňte i datum posledního servisu ve formátu DD.MM.RRRR.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceDateInvalid" xml:space="preserve"><value>Zadejte platné datum posledního servisu, například {0}.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceDateRequired" xml:space="preserve"><value>Pro interval podle data zadejte i datum posledního servisu, například {0}.</value></data>
   <data name="MaintenanceEditor.Validation.LastServiceOdometerInvalid" xml:space="preserve"><value>Stav tachometru posledního servisu zadejte jako číslo v {0}.</value></data>
   <data name="MaintenanceEditor.Validation.LastServiceOdometerRequired" xml:space="preserve"><value>Pro interval podle tachometru vyplňte i stav tachometru při posledním servisu.</value></data>
   <data name="MaintenanceEditor.Validation.TitleRequired" xml:space="preserve"><value>Servisní plán musí mít název.</value></data>
@@ -435,6 +435,7 @@ Vozidlo: {2}
   <data name="MaintenanceCompletion.CancelName" xml:space="preserve"><value>Zrušit dokončení servisního úkonu</value></data>
   <data name="MaintenanceCompletion.CompletedDate" xml:space="preserve"><value>Datum provedení</value></data>
   <data name="MaintenanceCompletion.CompletedDateName" xml:space="preserve"><value>Datum provedení servisního úkonu</value></data>
+  <data name="MaintenanceCompletion.CompletedDateExample" xml:space="preserve"><value>Například {0}</value></data>
   <data name="MaintenanceCompletion.CompletedOdometerHelp" xml:space="preserve"><value>Zadejte stav tachometru v {0}. Vehimap hodnotu uloží interně v kilometrech.</value></data>
   <data name="MaintenanceCompletion.CompletedOdometerLabel" xml:space="preserve"><value>Tachometr při provedení ({0})</value></data>
   <data name="MaintenanceCompletion.CompletedOdometerName" xml:space="preserve"><value>Tachometr při provedení servisního úkonu v {0}</value></data>
@@ -456,7 +457,7 @@ Vozidlo: {2}
   <data name="MaintenanceCompletion.Status.ReactivateFirst" xml:space="preserve"><value>Pozastavený plán nejdříve znovu aktivujte v úpravě úkonu.</value></data>
   <data name="MaintenanceCompletion.Status.SelectPlanFirst" xml:space="preserve"><value>Nejprve vyberte servisní plán.</value></data>
   <data name="MaintenanceCompletion.Status.Unavailable" xml:space="preserve"><value>Aktuální stav není k dispozici.</value></data>
-  <data name="MaintenanceCompletion.Validation.CompletedDate" xml:space="preserve"><value>Datum provedení musí být ve formátu DD.MM.RRRR.</value></data>
+  <data name="MaintenanceCompletion.Validation.CompletedDate" xml:space="preserve"><value>Zadejte platné datum provedení, například {0}.</value></data>
   <data name="MaintenanceCompletion.Validation.CompletedOdometerNumber" xml:space="preserve"><value>Tachometr při provedení zadejte jako číslo v {0}.</value></data>
   <data name="MaintenanceCompletion.Validation.CompletedOdometerRequired" xml:space="preserve"><value>Pro vzdálenostní interval vyplňte i stav tachometru při provedení úkonu.</value></data>
   <data name="MaintenanceCompletion.Validation.HistoryCost" xml:space="preserve"><value>Cenu do historie zadejte jako číslo, například 2500.</value></data>
@@ -611,7 +612,7 @@ Vozidlo: {2}
   <data name="ReminderEditor.DaysExample" xml:space="preserve"><value>Například 30</value></data>
   <data name="ReminderEditor.DaysLabel" xml:space="preserve"><value>Předstih dnů</value></data>
   <data name="ReminderEditor.DaysName" xml:space="preserve"><value>Předstih připomínky ve dnech</value></data>
-  <data name="ReminderEditor.DueDateExample" xml:space="preserve"><value>Například 15.06.2026</value></data>
+  <data name="ReminderEditor.DueDateExample" xml:space="preserve"><value>Například {0}</value></data>
   <data name="ReminderEditor.DueDateLabel" xml:space="preserve"><value>Termín</value></data>
   <data name="ReminderEditor.DueDateName" xml:space="preserve"><value>Termín připomínky</value></data>
   <data name="ReminderEditor.EditTitle" xml:space="preserve"><value>Upravit připomínku</value></data>
@@ -636,7 +637,7 @@ Vozidlo: {2}
   <data name="ReminderEditor.Status.Deleted" xml:space="preserve"><value>Připomínka byla odstraněna.</value></data>
   <data name="ReminderEditor.Status.EditPrompt" xml:space="preserve"><value>Upravte připomínku a uložte změny.</value></data>
   <data name="ReminderEditor.Status.Updated" xml:space="preserve"><value>Připomínka byla upravena.</value></data>
-  <data name="ReminderEditor.Validation.DueDateRequired" xml:space="preserve"><value>Pole Termín je povinné a musí být ve formátu DD.MM.RRRR.</value></data>
+  <data name="ReminderEditor.Validation.DueDateRequired" xml:space="preserve"><value>Pole Termín je povinné. Zadejte datum například jako {0}.</value></data>
   <data name="ReminderEditor.Validation.ReminderDaysInvalid" xml:space="preserve"><value>Pole Upozornit dnů předem musí být celé číslo od 0 do 999.</value></data>
   <data name="ReminderEditor.Validation.TitleRequired" xml:space="preserve"><value>Připomínka musí mít název.</value></data>
   <data name="ReminderWorkspace.Advance" xml:space="preserve"><value>Další termín</value></data>
@@ -1232,13 +1233,13 @@ Vozidlo: {2}
   <data name="CostWorkspace.ListName" xml:space="preserve"><value>Seznam nákladových souhrnů vozidel</value></data>
   <data name="CostWorkspace.OpenVehicle" xml:space="preserve"><value>Zobrazit vozidlo</value></data>
   <data name="CostWorkspace.OpenVehicleName" xml:space="preserve"><value>Zobrazit detail vozidla z nákladového přehledu</value></data>
-  <data name="CostWorkspace.PeriodEndHelp" xml:space="preserve"><value>Datum konce období, například 31.12.2026</value></data>
+  <data name="CostWorkspace.PeriodEndHelp" xml:space="preserve"><value>Datum konce období, například {0}</value></data>
   <data name="CostWorkspace.PeriodEndName" xml:space="preserve"><value>Konec období nákladů</value></data>
   <data name="CostWorkspace.PeriodEndPlaceholder" xml:space="preserve"><value>Do</value></data>
   <data name="CostWorkspace.PeriodHeading" xml:space="preserve"><value>Období nákladů</value></data>
   <data name="CostWorkspace.PeriodPresetName" xml:space="preserve"><value>Předvolba období nákladů</value></data>
   <data name="CostWorkspace.PeriodSeparator" xml:space="preserve"><value>až</value></data>
-  <data name="CostWorkspace.PeriodStartHelp" xml:space="preserve"><value>Datum začátku období, například 01.01.2026</value></data>
+  <data name="CostWorkspace.PeriodStartHelp" xml:space="preserve"><value>Datum začátku období, například {0}</value></data>
   <data name="CostWorkspace.PeriodStartName" xml:space="preserve"><value>Začátek období nákladů</value></data>
   <data name="CostWorkspace.PeriodStartPlaceholder" xml:space="preserve"><value>Od</value></data>
   <data name="CostWorkspace.Refresh" xml:space="preserve"><value>Obnovit</value></data>
@@ -1272,8 +1273,8 @@ Stav výpočtu: {8}</value></data>
   <data name="CostPeriod.Status.CustomPrompt" xml:space="preserve"><value>Zadejte začátek a konec vlastního období a použijte tlačítko Přepočítat.</value></data>
   <data name="CostPeriod.Status.PresetChanged" xml:space="preserve"><value>Období nákladů bylo přepnuto.</value></data>
   <data name="CostPeriod.Status.CustomPending" xml:space="preserve"><value>Vlastní období bude použito po tlačítku Přepočítat.</value></data>
-  <data name="CostPeriod.Status.InvalidStartDate" xml:space="preserve"><value>Začátek období není platné datum. Zadejte například 01.01.2026.</value></data>
-  <data name="CostPeriod.Status.InvalidEndDate" xml:space="preserve"><value>Konec období není platné datum. Zadejte například 31.12.2026.</value></data>
+  <data name="CostPeriod.Status.InvalidStartDate" xml:space="preserve"><value>Začátek období není platné datum. Zadejte datum například jako {0}.</value></data>
+  <data name="CostPeriod.Status.InvalidEndDate" xml:space="preserve"><value>Konec období není platné datum. Zadejte datum například jako {0}.</value></data>
   <data name="CostPeriod.Status.Applied" xml:space="preserve"><value>Období nákladů bylo použito.</value></data>
   <data name="CostPeriod.Status.AppliedSwapped" xml:space="preserve"><value>Období nákladů bylo použito; začátek a konec byly prohozeny do správného pořadí.</value></data>
   <data name="CostPeriod.Status.CurrentPeriod" xml:space="preserve"><value>Aktuální období: {0}, od {1} do {2}. Srovnání používá stejné období loni.</value></data>

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+using System.Globalization;
 using Vehimap.Application;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -9,10 +11,18 @@ namespace Vehimap.Desktop.ViewModels;
 public sealed partial class UpdateDialogViewModel : ObservableObject
 {
     private readonly IAppLocalizer _localizer;
+    private readonly IAppDateFormatService _dateFormatService;
+    private readonly AppCulturePreferences _culturePreferences;
 
-    public UpdateDialogViewModel(UpdateCheckResult result, IAppLocalizer? localizer = null)
+    public UpdateDialogViewModel(
+        UpdateCheckResult result,
+        IAppLocalizer? localizer = null,
+        AppCulturePreferences? culturePreferences = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
+        _culturePreferences = culturePreferences ?? new AppCulturePreferences(CultureInfo.CurrentCulture.Name);
         Result = result;
         Heading = result.FailureReason is not null
             ? _localizer.GetString("UpdateCheck.Heading.Failed")
@@ -73,7 +83,7 @@ public sealed partial class UpdateDialogViewModel : ObservableObject
 
         if (!string.IsNullOrWhiteSpace(result.PublishedAt))
         {
-            lines.Add(_localizer.Format("UpdateCheck.Details.PublishedAt", result.PublishedAt));
+            lines.Add(_localizer.Format("UpdateCheck.Details.PublishedAt", FormatPublishedAt(result.PublishedAt)));
         }
 
         if (result.AssetSize is > 0)
@@ -105,6 +115,11 @@ public sealed partial class UpdateDialogViewModel : ObservableObject
 
         return string.Join(Environment.NewLine, lines);
     }
+
+    private string FormatPublishedAt(string value) =>
+        _dateFormatService.TryParseDate(value, _culturePreferences, out var date)
+            ? _dateFormatService.FormatDate(date, _culturePreferences)
+            : value;
 
     private string BuildClipboardText(string heading, string summary, string details)
     {

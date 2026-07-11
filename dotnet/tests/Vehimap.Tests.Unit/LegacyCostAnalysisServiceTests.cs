@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Globalization;
+using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
@@ -107,6 +108,23 @@ public sealed class LegacyCostAnalysisServiceTests
     public void BuildPeriodSummary_uses_supplied_localizer_for_period_and_statuses()
     {
         var service = new LegacyCostAnalysisService(new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+        service.ApplySupportedSettings(new DesktopSupportedSettingsSnapshot(
+            30,
+            30,
+            30,
+            1000,
+            false,
+            false,
+            false,
+            false,
+            1,
+            30,
+            "en-US",
+            "comma",
+            "dot",
+            "mi",
+            "us_gal",
+            "USD"));
         var dataSet = new VehimapDataSet
         {
             Vehicles =
@@ -122,7 +140,7 @@ public sealed class LegacyCostAnalysisServiceTests
 
         var summary = service.BuildPeriodSummary(dataSet, new DateOnly(2026, 2, 1), new DateOnly(2026, 2, 28));
 
-        Assert.Equal("From 01.02.2026 to 28.02.2026", summary.PeriodLabel);
+        Assert.Equal("From 2/1/2026 to 2/28/2026", summary.PeriodLabel);
         Assert.Single(summary.Vehicles);
         Assert.Equal("OK", summary.Vehicles[0].Status);
     }

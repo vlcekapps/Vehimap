@@ -15,6 +15,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
     private readonly AppCulturePreferences _culturePreferences;
     private readonly AppUnitPreferences _unitPreferences;
     private readonly IAppLocalizer _localizer;
+    private readonly IAppDateFormatService _dateFormatService;
 
     public MaintenanceCompletionDialogViewModel(
         string vehicleName,
@@ -25,7 +26,8 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         string completedOdometer,
         AppCulturePreferences? culturePreferences = null,
         AppUnitPreferences? unitPreferences = null,
-        IAppLocalizer? localizer = null)
+        IAppLocalizer? localizer = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         VehicleName = vehicleName;
         PlanTitle = planTitle;
@@ -36,6 +38,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         _culturePreferences = culturePreferences ?? new AppCulturePreferences();
         _unitPreferences = UnitFormatService.Normalize(unitPreferences ?? new AppUnitPreferences());
         _localizer = localizer ?? new ResourceAppLocalizer();
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
     }
 
     public string VehicleName { get; }
@@ -54,6 +57,9 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
     public string CompletedOdometerName => _localizer.Format("MaintenanceCompletion.CompletedOdometerName", DistanceUnitLabel);
 
     public string CompletedOdometerHelp => _localizer.Format("MaintenanceCompletion.CompletedOdometerHelp", DistanceUnitLabel);
+
+    public string CompletedDateExample =>
+        _localizer.Format("MaintenanceCompletion.CompletedDateExample", _dateFormatService.FormatDate(new DateOnly(2026, 4, 30), _culturePreferences));
 
     [ObservableProperty]
     private string completedDate = string.Empty;
@@ -81,9 +87,9 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         ErrorFocusTarget = null;
         result = null;
 
-        if (!VehimapValueParser.TryParseEventDate(CompletedDate, out var parsedDate))
+        if (!_dateFormatService.TryParseDate(CompletedDate, _culturePreferences, out var parsedDate))
         {
-            SetError(_localizer.GetString("MaintenanceCompletion.Validation.CompletedDate"), "MaintenanceCompletionDateBox");
+            SetError(_localizer.Format("MaintenanceCompletion.Validation.CompletedDate", _dateFormatService.FormatDate(new DateOnly(2026, 4, 30), _culturePreferences)), "MaintenanceCompletionDateBox");
             return false;
         }
 
@@ -121,7 +127,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         }
 
         result = new MaintenanceCompletionDialogResult(
-            parsedDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
+            VehimapValueParser.FormatCanonicalEventDate(parsedDate),
             normalizedOdometer,
             AddHistory,
             normalizedCost,

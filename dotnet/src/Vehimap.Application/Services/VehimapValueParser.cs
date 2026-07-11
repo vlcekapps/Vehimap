@@ -43,6 +43,9 @@ public static class VehimapValueParser
             out value);
     }
 
+    public static string FormatCanonicalEventDate(DateOnly value) =>
+        value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+
     public static bool TryParseMonthYear(string? text, out DateOnly value)
     {
         var input = (text ?? string.Empty).Trim();

@@ -43,6 +43,10 @@ public sealed partial class CostWorkspaceViewModel : WorkspaceViewModelBase
 
     public string WindowTitle => Root.CostWindowTitle;
 
+    public string CostPeriodStartHelp => Root.CostPeriodStartHelp;
+
+    public string CostPeriodEndHelp => Root.CostPeriodEndHelp;
+
     public ObservableCollection<CostVehicleItemViewModel> CostVehicles { get; } = [];
 
     public ObservableCollection<CostVehicleItemViewModel> VisibleCostVehicles { get; } = [];

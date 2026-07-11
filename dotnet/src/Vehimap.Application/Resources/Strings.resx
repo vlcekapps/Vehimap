@@ -283,7 +283,7 @@ Vehicle: {2}
   <data name="FuelWorkspace.WarningsHeading" xml:space="preserve"><value>Warnings</value></data>
   <data name="FuelWorkspace.WarningsName" xml:space="preserve"><value>Fuel analysis warnings</value></data>
   <data name="FuelEditor.CancelName" xml:space="preserve"><value>Cancel fuel entry editing</value></data>
-  <data name="FuelEditor.DateExample" xml:space="preserve"><value>For example 15.06.2026</value></data>
+  <data name="FuelEditor.DateExample" xml:space="preserve"><value>For example {0}</value></data>
   <data name="FuelEditor.DateLabel" xml:space="preserve"><value>Date</value></data>
   <data name="FuelEditor.DateName" xml:space="preserve"><value>Fuel entry date</value></data>
   <data name="FuelEditor.EditTitle" xml:space="preserve"><value>Edit fuel entry</value></data>
@@ -316,7 +316,7 @@ Vehicle: {2}
   <data name="FuelEditor.Status.EditPrompt" xml:space="preserve"><value>Edit the fuel entry and save the changes.</value></data>
   <data name="FuelEditor.Status.Updated" xml:space="preserve"><value>Fuel entry has been updated.</value></data>
   <data name="FuelEditor.Validation.CostRequiresVolume" xml:space="preserve"><value>If you enter fuel cost, also fill in the fuel volume.</value></data>
-  <data name="FuelEditor.Validation.DateRequired" xml:space="preserve"><value>Date is required and must be in DD.MM.YYYY format.</value></data>
+  <data name="FuelEditor.Validation.DateRequired" xml:space="preserve"><value>Date is required. Enter a date such as {0}.</value></data>
   <data name="FuelEditor.Validation.OdometerRequired" xml:space="preserve"><value>Odometer is required and must be a number in {0}.</value></data>
   <data name="FuelEditor.Validation.TotalCostInvalid" xml:space="preserve"><value>Enter the total cost as a number, for example 1890.</value></data>
   <data name="FuelEditor.Validation.VolumeInvalid" xml:space="preserve"><value>Enter fuel volume as a number in {0}.</value></data>
@@ -327,7 +327,7 @@ Vehicle: {2}
   <data name="HistoryEditor.CostExample" xml:space="preserve"><value>For example 2500</value></data>
   <data name="HistoryEditor.CostLabel" xml:space="preserve"><value>Cost</value></data>
   <data name="HistoryEditor.CostName" xml:space="preserve"><value>History entry cost</value></data>
-  <data name="HistoryEditor.DateExample" xml:space="preserve"><value>For example 15.06.2026</value></data>
+  <data name="HistoryEditor.DateExample" xml:space="preserve"><value>For example {0}</value></data>
   <data name="HistoryEditor.DateLabel" xml:space="preserve"><value>Date</value></data>
   <data name="HistoryEditor.DateName" xml:space="preserve"><value>History entry date</value></data>
   <data name="HistoryEditor.EditTitle" xml:space="preserve"><value>Edit history entry</value></data>
@@ -352,7 +352,7 @@ Vehicle: {2}
   <data name="HistoryEditor.Status.EditPrompt" xml:space="preserve"><value>Edit the history entry and save the changes.</value></data>
   <data name="HistoryEditor.Status.Updated" xml:space="preserve"><value>History entry has been updated.</value></data>
   <data name="HistoryEditor.Validation.CostInvalid" xml:space="preserve"><value>Enter the event cost as a number, for example 2500.</value></data>
-  <data name="HistoryEditor.Validation.DateRequired" xml:space="preserve"><value>Event date is required and must be in DD.MM.YYYY format.</value></data>
+  <data name="HistoryEditor.Validation.DateRequired" xml:space="preserve"><value>Event date is required. Enter a date such as {0}.</value></data>
   <data name="HistoryEditor.Validation.OdometerInvalid" xml:space="preserve"><value>Enter odometer as a number in {0}, or leave the field empty.</value></data>
   <data name="HistoryEditor.Validation.TypeRequired" xml:space="preserve"><value>Fill in the event name.</value></data>
   <data name="HistoryWorkspace.ClearSearchName" xml:space="preserve"><value>Clear vehicle history search</value></data>
@@ -397,7 +397,7 @@ Vehicle: {2}
   <data name="MaintenanceEditor.IntervalMonthsName" xml:space="preserve"><value>Maintenance interval in months</value></data>
   <data name="MaintenanceEditor.IsActive" xml:space="preserve"><value>Active maintenance plan</value></data>
   <data name="MaintenanceEditor.IsActiveName" xml:space="preserve"><value>Maintenance plan is active</value></data>
-  <data name="MaintenanceEditor.LastServiceDateExample" xml:space="preserve"><value>For example 15.06.2026</value></data>
+  <data name="MaintenanceEditor.LastServiceDateExample" xml:space="preserve"><value>For example {0}</value></data>
   <data name="MaintenanceEditor.LastServiceDateLabel" xml:space="preserve"><value>Last service date</value></data>
   <data name="MaintenanceEditor.LastServiceDateName" xml:space="preserve"><value>Last service date</value></data>
   <data name="MaintenanceEditor.LastServiceOdometerHelp" xml:space="preserve"><value>Enter odometer in {0}. Vehimap stores the value internally in kilometers.</value></data>
@@ -425,8 +425,8 @@ Vehicle: {2}
   <data name="MaintenanceEditor.Validation.IntervalDistanceInvalid" xml:space="preserve"><value>Enter the distance interval as a positive number in {0}.</value></data>
   <data name="MaintenanceEditor.Validation.IntervalMonthsInvalid" xml:space="preserve"><value>Enter the month interval as a positive whole number.</value></data>
   <data name="MaintenanceEditor.Validation.IntervalRequired" xml:space="preserve"><value>The maintenance plan must have a distance interval, a month interval, or both.</value></data>
-  <data name="MaintenanceEditor.Validation.LastServiceDateInvalid" xml:space="preserve"><value>Last service date must be in DD.MM.YYYY format.</value></data>
-  <data name="MaintenanceEditor.Validation.LastServiceDateRequired" xml:space="preserve"><value>For a date interval, also fill in the last service date in DD.MM.YYYY format.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceDateInvalid" xml:space="preserve"><value>Enter a valid last service date, such as {0}.</value></data>
+  <data name="MaintenanceEditor.Validation.LastServiceDateRequired" xml:space="preserve"><value>For a date interval, also enter the last service date, such as {0}.</value></data>
   <data name="MaintenanceEditor.Validation.LastServiceOdometerInvalid" xml:space="preserve"><value>Enter the last service odometer as a number in {0}.</value></data>
   <data name="MaintenanceEditor.Validation.LastServiceOdometerRequired" xml:space="preserve"><value>For an odometer-based interval, also fill in the odometer at the last service.</value></data>
   <data name="MaintenanceEditor.Validation.TitleRequired" xml:space="preserve"><value>Maintenance plan title is required.</value></data>
@@ -435,6 +435,7 @@ Vehicle: {2}
   <data name="MaintenanceCompletion.CancelName" xml:space="preserve"><value>Cancel maintenance completion</value></data>
   <data name="MaintenanceCompletion.CompletedDate" xml:space="preserve"><value>Completion date</value></data>
   <data name="MaintenanceCompletion.CompletedDateName" xml:space="preserve"><value>Maintenance item completion date</value></data>
+  <data name="MaintenanceCompletion.CompletedDateExample" xml:space="preserve"><value>For example {0}</value></data>
   <data name="MaintenanceCompletion.CompletedOdometerHelp" xml:space="preserve"><value>Enter the odometer in {0}. Vehimap stores the value internally in kilometers.</value></data>
   <data name="MaintenanceCompletion.CompletedOdometerLabel" xml:space="preserve"><value>Completion odometer ({0})</value></data>
   <data name="MaintenanceCompletion.CompletedOdometerName" xml:space="preserve"><value>Maintenance item completion odometer in {0}</value></data>
@@ -456,7 +457,7 @@ Vehicle: {2}
   <data name="MaintenanceCompletion.Status.ReactivateFirst" xml:space="preserve"><value>Reactivate the paused plan in task editing first.</value></data>
   <data name="MaintenanceCompletion.Status.SelectPlanFirst" xml:space="preserve"><value>Select a maintenance plan first.</value></data>
   <data name="MaintenanceCompletion.Status.Unavailable" xml:space="preserve"><value>Current status is not available.</value></data>
-  <data name="MaintenanceCompletion.Validation.CompletedDate" xml:space="preserve"><value>Completion date must be in DD.MM.YYYY format.</value></data>
+  <data name="MaintenanceCompletion.Validation.CompletedDate" xml:space="preserve"><value>Enter a valid completion date, such as {0}.</value></data>
   <data name="MaintenanceCompletion.Validation.CompletedOdometerNumber" xml:space="preserve"><value>Completion odometer must be a number in {0}.</value></data>
   <data name="MaintenanceCompletion.Validation.CompletedOdometerRequired" xml:space="preserve"><value>For a distance interval, also fill in the odometer when the item was completed.</value></data>
   <data name="MaintenanceCompletion.Validation.HistoryCost" xml:space="preserve"><value>History cost must be a number, for example 2500.</value></data>
@@ -611,7 +612,7 @@ Vehicle: {2}
   <data name="ReminderEditor.DaysExample" xml:space="preserve"><value>For example 30</value></data>
   <data name="ReminderEditor.DaysLabel" xml:space="preserve"><value>Reminder days</value></data>
   <data name="ReminderEditor.DaysName" xml:space="preserve"><value>Reminder advance in days</value></data>
-  <data name="ReminderEditor.DueDateExample" xml:space="preserve"><value>For example 15.06.2026</value></data>
+  <data name="ReminderEditor.DueDateExample" xml:space="preserve"><value>For example {0}</value></data>
   <data name="ReminderEditor.DueDateLabel" xml:space="preserve"><value>Due date</value></data>
   <data name="ReminderEditor.DueDateName" xml:space="preserve"><value>Reminder due date</value></data>
   <data name="ReminderEditor.EditTitle" xml:space="preserve"><value>Edit reminder</value></data>
@@ -636,7 +637,7 @@ Vehicle: {2}
   <data name="ReminderEditor.Status.Deleted" xml:space="preserve"><value>Reminder has been deleted.</value></data>
   <data name="ReminderEditor.Status.EditPrompt" xml:space="preserve"><value>Edit the reminder and save the changes.</value></data>
   <data name="ReminderEditor.Status.Updated" xml:space="preserve"><value>Reminder has been updated.</value></data>
-  <data name="ReminderEditor.Validation.DueDateRequired" xml:space="preserve"><value>Due date is required and must be in DD.MM.YYYY format.</value></data>
+  <data name="ReminderEditor.Validation.DueDateRequired" xml:space="preserve"><value>Due date is required. Enter a date such as {0}.</value></data>
   <data name="ReminderEditor.Validation.ReminderDaysInvalid" xml:space="preserve"><value>Reminder days must be a whole number from 0 to 999.</value></data>
   <data name="ReminderEditor.Validation.TitleRequired" xml:space="preserve"><value>Reminder title is required.</value></data>
   <data name="ReminderWorkspace.Advance" xml:space="preserve"><value>Next due date</value></data>
@@ -1232,13 +1233,13 @@ Vehicle: {2}
   <data name="CostWorkspace.ListName" xml:space="preserve"><value>Vehicle cost summary list</value></data>
   <data name="CostWorkspace.OpenVehicle" xml:space="preserve"><value>Show vehicle</value></data>
   <data name="CostWorkspace.OpenVehicleName" xml:space="preserve"><value>Show vehicle detail from cost overview</value></data>
-  <data name="CostWorkspace.PeriodEndHelp" xml:space="preserve"><value>End date of the cost period, for example 2026-12-31 or 31.12.2026</value></data>
+  <data name="CostWorkspace.PeriodEndHelp" xml:space="preserve"><value>End date of the cost period, for example {0}</value></data>
   <data name="CostWorkspace.PeriodEndName" xml:space="preserve"><value>Cost period end</value></data>
   <data name="CostWorkspace.PeriodEndPlaceholder" xml:space="preserve"><value>To</value></data>
   <data name="CostWorkspace.PeriodHeading" xml:space="preserve"><value>Cost period</value></data>
   <data name="CostWorkspace.PeriodPresetName" xml:space="preserve"><value>Cost period preset</value></data>
   <data name="CostWorkspace.PeriodSeparator" xml:space="preserve"><value>to</value></data>
-  <data name="CostWorkspace.PeriodStartHelp" xml:space="preserve"><value>Start date of the cost period, for example 2026-01-01 or 01.01.2026</value></data>
+  <data name="CostWorkspace.PeriodStartHelp" xml:space="preserve"><value>Start date of the cost period, for example {0}</value></data>
   <data name="CostWorkspace.PeriodStartName" xml:space="preserve"><value>Cost period start</value></data>
   <data name="CostWorkspace.PeriodStartPlaceholder" xml:space="preserve"><value>From</value></data>
   <data name="CostWorkspace.Refresh" xml:space="preserve"><value>Refresh</value></data>
@@ -1272,8 +1273,8 @@ Calculation status: {8}</value></data>
   <data name="CostPeriod.Status.CustomPrompt" xml:space="preserve"><value>Enter the start and end of the custom period and use Recalculate.</value></data>
   <data name="CostPeriod.Status.PresetChanged" xml:space="preserve"><value>Cost period was changed.</value></data>
   <data name="CostPeriod.Status.CustomPending" xml:space="preserve"><value>The custom period will be used after Recalculate.</value></data>
-  <data name="CostPeriod.Status.InvalidStartDate" xml:space="preserve"><value>Cost period start is not a valid date. For example, enter 2026-01-01 or 01.01.2026.</value></data>
-  <data name="CostPeriod.Status.InvalidEndDate" xml:space="preserve"><value>Cost period end is not a valid date. For example, enter 2026-12-31 or 31.12.2026.</value></data>
+  <data name="CostPeriod.Status.InvalidStartDate" xml:space="preserve"><value>Cost period start is not a valid date. Enter a date such as {0}.</value></data>
+  <data name="CostPeriod.Status.InvalidEndDate" xml:space="preserve"><value>Cost period end is not a valid date. Enter a date such as {0}.</value></data>
   <data name="CostPeriod.Status.Applied" xml:space="preserve"><value>Cost period was applied.</value></data>
   <data name="CostPeriod.Status.AppliedSwapped" xml:space="preserve"><value>Cost period was applied; start and end were swapped into the correct order.</value></data>
   <data name="CostPeriod.Status.CurrentPeriod" xml:space="preserve"><value>Current period: {0}, from {1} to {2}. Comparison uses the same period last year.</value></data>

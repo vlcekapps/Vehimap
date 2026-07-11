@@ -41,6 +41,7 @@ internal sealed class DesktopSessionController
     private readonly IFileAttachmentService _attachmentService;
     private readonly IDataStoreHealthService _dataStoreHealthService;
     private readonly InstallerLocaleSeedService _installerLocaleSeedService;
+    private readonly IAppDateFormatService _dateFormatService;
     private readonly Action<DesktopSupportedSettingsSnapshot>? _supportedSettingsApplied;
     private readonly Dictionary<string, VehicleMeta> _metaByVehicleId = new(StringComparer.Ordinal);
 
@@ -57,7 +58,8 @@ internal sealed class DesktopSessionController
         IUpdateService updateService,
         IDataStoreHealthService? dataStoreHealthService = null,
         InstallerLocaleSeedService? installerLocaleSeedService = null,
-        Action<DesktopSupportedSettingsSnapshot>? supportedSettingsApplied = null)
+        Action<DesktopSupportedSettingsSnapshot>? supportedSettingsApplied = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _bootstrapper = bootstrapper;
         _dataStore = dataStore;
@@ -72,6 +74,7 @@ internal sealed class DesktopSessionController
         _dataStoreHealthService = dataStoreHealthService ?? new NoOpDataStoreHealthService();
         _installerLocaleSeedService = installerLocaleSeedService ?? new InstallerLocaleSeedService();
         _supportedSettingsApplied = supportedSettingsApplied;
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
     }
 
     public VehimapDataRoot? DataRoot { get; private set; }
@@ -108,7 +111,7 @@ internal sealed class DesktopSessionController
 
         _installerLocaleSeedService.CompleteSeed(installerLocaleSeedResult);
         CurrentSupportedSettings = _supportedSettingsService.Read(result.DataSet.Settings);
-        _supportedSettingsApplied?.Invoke(CurrentSupportedSettings);
+        ApplySupportedSettings(CurrentSupportedSettings);
         AuditItems = _auditService.BuildAudit(result.DataRoot, result.DataSet);
 
         RebuildMetaLookup();
@@ -125,7 +128,7 @@ internal sealed class DesktopSessionController
         }
 
         CurrentSupportedSettings = _supportedSettingsService.Read(result.DataSet.Settings, autostartEnabled);
-        _supportedSettingsApplied?.Invoke(CurrentSupportedSettings);
+        ApplySupportedSettings(CurrentSupportedSettings);
         LastDataStoreHealthReport = await _dataStoreHealthService.CheckAsync(result.DataRoot, cancellationToken).ConfigureAwait(false);
 
         return new DesktopSessionLoadResult(
@@ -153,6 +156,7 @@ internal sealed class DesktopSessionController
         AuditItems = DataRoot is null ? [] : _auditService.BuildAudit(DataRoot, DataSet);
         RebuildMetaLookup();
         CurrentSupportedSettings = _supportedSettingsService.Read(DataSet.Settings, CurrentSupportedSettings.RunAtStartup);
+        ApplySupportedSettings(CurrentSupportedSettings);
     }
 
     private void RebuildMetaLookup()
@@ -226,6 +230,7 @@ internal sealed class DesktopSessionController
                 cancellationToken)
             .ConfigureAwait(false);
         CurrentSupportedSettings = snapshot;
+        ApplySupportedSettings(CurrentSupportedSettings);
     }
 
     public async Task<bool> ShouldShowAndRememberDueNotificationAsync(string notificationKey, DateOnly today, CancellationToken cancellationToken = default)
@@ -412,10 +417,13 @@ internal sealed class DesktopSessionController
     private string GetAutomaticBackupLastPath() =>
         DataSet.Settings.GetValue("backups", "last_automatic_backup_path", string.Empty).Trim();
 
-    private static string FormatAutomaticBackupStamp(string stamp)
+    private string FormatAutomaticBackupStamp(string stamp)
     {
         return DateTime.TryParseExact(stamp, "yyyyMMddHHmmss", null, DateTimeStyles.None, out var parsed)
-            ? parsed.ToString("dd.MM.yyyy HH:mm")
+            ? _dateFormatService.FormatDateTime(parsed, new AppCulturePreferences(
+                CurrentSupportedSettings.Language,
+                CurrentSupportedSettings.ThousandsSeparator,
+                CurrentSupportedSettings.DecimalSeparator))
             : LO("AutomaticBackup.Status.NeverCreated");
     }
 
@@ -527,6 +535,15 @@ internal sealed class DesktopSessionController
                 [LO("DataStoreHealth.NoOp.Detail")],
                 Path.Combine(dataRoot.DataPath, "vehimap.db"),
                 dataRoot.DataPath));
+        }
+    }
+
+    private void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _supportedSettingsApplied?.Invoke(settings);
+        if (_costAnalysisService is LegacyCostAnalysisService legacyCostAnalysisService)
+        {
+            legacyCostAnalysisService.ApplySupportedSettings(settings);
         }
     }
 

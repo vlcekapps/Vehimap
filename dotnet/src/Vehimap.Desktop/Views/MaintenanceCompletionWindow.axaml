@@ -56,7 +56,9 @@
                  Grid.Row="1"
                  Margin="0,6,0,0"
                  Text="{Binding CompletedDate}"
+                 PlaceholderText="{Binding CompletedDateExample}"
                  AutomationProperties.Name="{i18n:Loc MaintenanceCompletion.CompletedDateName}"
+                 AutomationProperties.HelpText="{Binding CompletedDateExample}"
                  AutomationProperties.AutomationId="MaintenanceCompletionDateBox"
                  AutomationProperties.IsRequiredForForm="True" />
 

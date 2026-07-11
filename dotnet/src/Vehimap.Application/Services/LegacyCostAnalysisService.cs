@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.Globalization;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Models;
 using Vehimap.Domain.Models;
 
 namespace Vehimap.Application.Services;
@@ -8,10 +8,21 @@ namespace Vehimap.Application.Services;
 public sealed class LegacyCostAnalysisService : ICostAnalysisService
 {
     private readonly IAppLocalizer _localizer;
+    private readonly IAppDateFormatService _dateFormatService;
+    private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
 
-    public LegacyCostAnalysisService(IAppLocalizer? localizer = null)
+    public LegacyCostAnalysisService(IAppLocalizer? localizer = null, IAppDateFormatService? dateFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
+    }
+
+    public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
+    {
+        _culturePreferences = new AppCulturePreferences(
+            settings.Language,
+            settings.ThousandsSeparator,
+            settings.DecimalSeparator);
     }
 
     public CostAnalysisSummary BuildYearToDateSummary(VehimapDataSet dataSet, DateOnly today)
@@ -235,8 +246,8 @@ public sealed class LegacyCostAnalysisService : ICostAnalysisService
     private string BuildPeriodLabel(DateOnly start, DateOnly end) =>
         LF("CostAnalysis.PeriodLabel", FormatPeriodDate(start), FormatPeriodDate(end));
 
-    private static string FormatPeriodDate(DateOnly date) =>
-        date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+    private string FormatPeriodDate(DateOnly date) =>
+        _dateFormatService.FormatDate(date, _culturePreferences);
 
     private string L(string key) => _localizer.GetString(key);
 

@@ -68,7 +68,7 @@ public sealed partial class MainWindowViewModel
 
         _editingReminderId = reminder.Id;
         ReminderEditorTitle = reminder.Title;
-        ReminderEditorDueDate = reminder.DueDate;
+        ReminderEditorDueDate = FormatCanonicalDateForEditor(reminder.DueDate);
         ReminderEditorDays = reminder.ReminderDays;
         ReminderEditorRepeatMode = KnownValueOptions.NormalizeReminderRepeatModeValue(reminder.RepeatMode);
         ReminderEditorNote = reminder.Note;
@@ -95,10 +95,9 @@ public sealed partial class MainWindowViewModel
         }
 
         var dueDateText = (ReminderEditorDueDate ?? string.Empty).Trim();
-        var dueDate = LegacyVehicleValueNormalization.NormalizeEventDate(dueDateText);
-        if (dueDate.Length == 0)
+        if (!TryNormalizeEditorDateToCanonical(dueDateText, allowEmpty: false, out var dueDate))
         {
-            ReminderEditorStatus = LO("ReminderEditor.Validation.DueDateRequired");
+            ReminderEditorStatus = LWF("ReminderEditor.Validation.DueDateRequired", CurrentDateExample);
             RequestFocus(DesktopFocusTarget.ReminderEditorDueDate);
             return;
         }
@@ -192,7 +191,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        var nextDueDateText = FormatReminderDueDate(nextDueDate);
+        var nextDueDateText = VehimapValueParser.FormatCanonicalEventDate(nextDueDate);
         var updatedReminder = reminder! with { DueDate = nextDueDateText };
         var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertReminder(updatedReminder);
@@ -209,7 +208,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        ReminderEditorStatus = LFO("ReminderEditor.Status.Advanced", nextDueDateText);
+        ReminderEditorStatus = LFO("ReminderEditor.Status.Advanced", FormatDateForDisplay(nextDueDate));
         SelectedReminder = FindById(SelectedVehicleReminders, item => item.Id, updatedReminder.Id);
         RequestFocus(DesktopFocusTarget.ReminderList);
     }
@@ -521,9 +520,6 @@ public sealed partial class MainWindowViewModel
 
         return false;
     }
-
-    private static string FormatReminderDueDate(DateOnly date) =>
-        date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 
     private VehicleRecord? GetSelectedRecordModel()
     {

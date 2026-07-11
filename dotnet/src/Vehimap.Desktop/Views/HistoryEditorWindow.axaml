@@ -42,9 +42,9 @@
                  Grid.Row="1"
                  Margin="0,6,0,0"
                  Text="{Binding HistoryEditorDate}"
-                 PlaceholderText="{i18n:Loc HistoryEditor.DateExample}"
+                 PlaceholderText="{Binding HistoryEditorDateExample}"
                  AutomationProperties.Name="{i18n:Loc HistoryEditor.DateName}"
-                 AutomationProperties.HelpText="{i18n:Loc HistoryEditor.DateExample}"
+                 AutomationProperties.HelpText="{Binding HistoryEditorDateExample}"
                  AutomationProperties.AutomationId="HistoryEditorDateBox"
                  AutomationProperties.IsRequiredForForm="True" />
         <Grid Grid.Row="2"

@@ -62,6 +62,8 @@ public sealed partial class ReminderWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string reminderEditorDueDate = string.Empty;
 
+    public string ReminderEditorDueDateExample => LF("ReminderEditor.DueDateExample", Root.CurrentDateExample);
+
     [ObservableProperty]
     private string reminderEditorDays = string.Empty;
 

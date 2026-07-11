@@ -57,6 +57,8 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private string historyEditorDate = string.Empty;
 
+    public string HistoryEditorDateExample => LF("HistoryEditor.DateExample", Root.CurrentDateExample);
+
     [ObservableProperty]
     private string historyEditorType = string.Empty;
 

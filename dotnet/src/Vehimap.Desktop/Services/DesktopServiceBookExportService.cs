@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.Globalization;
 using System.Net;
 using System.Text;
 using Vehimap.Application.Abstractions;
@@ -13,13 +12,18 @@ internal sealed class DesktopServiceBookExportService
 {
     private readonly IAppLocalizer _localizer;
     private readonly IAppNumberFormatService _numberFormatService;
+    private readonly IAppDateFormatService _dateFormatService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
     private string _currency = AppLocaleDefaultsService.GetCurrentCultureDefaults().Currency;
 
-    public DesktopServiceBookExportService(IAppLocalizer? localizer = null, IAppNumberFormatService? numberFormatService = null)
+    public DesktopServiceBookExportService(
+        IAppLocalizer? localizer = null,
+        IAppNumberFormatService? numberFormatService = null,
+        IAppDateFormatService? dateFormatService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
         _numberFormatService = numberFormatService ?? new AppNumberFormatService();
+        _dateFormatService = dateFormatService ?? new AppDateFormatService();
     }
 
     public void ApplySupportedSettings(DesktopSupportedSettingsSnapshot settings)
@@ -58,7 +62,7 @@ internal sealed class DesktopServiceBookExportService
         builder.AppendLine("<body>");
         builder.AppendLine($"  <h1>{L("ServiceBook.Export.Heading")}</h1>");
         builder.AppendLine($"  <p class=\"meta\">{Html(LF("ServiceBook.Export.VehicleMeta", summary.VehicleName, summary.VehicleMakeModel, summary.VehicleCategory, summary.VehiclePlate))}</p>");
-        builder.AppendLine($"  <p class=\"meta\">{Html(LF("ServiceBook.Export.OdometerMeta", summary.CurrentOdometer, generatedAt.ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)))}</p>");
+        builder.AppendLine($"  <p class=\"meta\">{Html(LF("ServiceBook.Export.OdometerMeta", summary.CurrentOdometer, _dateFormatService.FormatDateTime(generatedAt, _culturePreferences)))}</p>");
         builder.AppendLine($"  <p class=\"summary\">{Html(LF("ServiceBook.Export.Summary", summary.Status, FormatMoney(summary.TotalHistoryCost)))}</p>");
         AppendSection(builder, L("ServiceBook.Export.HistorySection"), historyItems);
         AppendSection(builder, L("ServiceBook.Export.MaintenanceSection"), maintenanceItems);

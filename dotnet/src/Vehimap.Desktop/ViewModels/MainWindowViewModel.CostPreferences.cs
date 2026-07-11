@@ -19,11 +19,15 @@ public sealed partial class MainWindowViewModel
     private const string CostPeriodPresetSettingKey = "period_preset";
     private const string CostPeriodStartSettingKey = "period_start";
     private const string CostPeriodEndSettingKey = "period_end";
-    private static readonly CultureInfo CzechCulture = CultureInfo.GetCultureInfo("cs-CZ");
-
     private bool _suppressCostPeriodRefresh;
     private DateOnly _costPeriodStart;
     private DateOnly _costPeriodEnd;
+
+    public string CostPeriodStartHelp =>
+        LFO("CostWorkspace.PeriodStartHelp", FormatDateForDisplay(new DateOnly(2026, 1, 1)));
+
+    public string CostPeriodEndHelp =>
+        LFO("CostWorkspace.PeriodEndHelp", FormatDateForDisplay(new DateOnly(2026, 12, 31)));
 
     private void ApplyCostPeriodPreferences()
     {
@@ -119,7 +123,7 @@ public sealed partial class MainWindowViewModel
 
         if (!TryParseCostDate(CostWorkspace.CostPeriodStartText, out var start))
         {
-            CostWorkspace.CostPeriodStatus = LO("CostPeriod.Status.InvalidStartDate");
+            CostWorkspace.CostPeriodStatus = LFO("CostPeriod.Status.InvalidStartDate", FormatDateForDisplay(new DateOnly(2026, 1, 1)));
             ShellStatus = CostWorkspace.CostPeriodStatus;
             RequestFocus(DesktopFocusTarget.CostPeriodStart);
             return;
@@ -127,7 +131,7 @@ public sealed partial class MainWindowViewModel
 
         if (!TryParseCostDate(CostWorkspace.CostPeriodEndText, out var end))
         {
-            CostWorkspace.CostPeriodStatus = LO("CostPeriod.Status.InvalidEndDate");
+            CostWorkspace.CostPeriodStatus = LFO("CostPeriod.Status.InvalidEndDate", FormatDateForDisplay(new DateOnly(2026, 12, 31)));
             ShellStatus = CostWorkspace.CostPeriodStatus;
             RequestFocus(DesktopFocusTarget.CostPeriodStart);
             return;
@@ -258,24 +262,13 @@ public sealed partial class MainWindowViewModel
         };
     }
 
-    private static bool TryParseCostDate(string? value, out DateOnly date)
-    {
-        date = default;
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return false;
-        }
+    private bool TryParseCostDate(string? value, out DateOnly date) =>
+        EditorDateFormatService.TryParseDate(value, CurrentCulturePreferences, out date);
 
-        var trimmed = value.Trim();
-        string[] formats = ["d.M.yyyy", "dd.MM.yyyy", "yyyy-MM-dd"];
-        return DateOnly.TryParseExact(trimmed, formats, CzechCulture, DateTimeStyles.None, out date)
-            || DateOnly.TryParse(trimmed, CzechCulture, DateTimeStyles.None, out date);
-    }
+    private string FormatCostDate(DateOnly date) =>
+        EditorDateFormatService.FormatDate(date, CurrentCulturePreferences);
 
-    private static string FormatCostDate(DateOnly date) =>
-        date.ToString("dd.MM.yyyy", CzechCulture);
-
-    private static string BuildCostPeriodStatus(LocalizedOptionViewModel preset, DateOnly start, DateOnly end) =>
+    private string BuildCostPeriodStatus(LocalizedOptionViewModel preset, DateOnly start, DateOnly end) =>
         LFO(
             "CostPeriod.Status.CurrentPeriod",
             preset.Label,
