@@ -496,7 +496,7 @@ public sealed class MainWindowViewModelAppShellTests
             Assert.Equal("Vehimap: 1 termín k řešení", snapshot.NotificationTitle);
             Assert.Contains("Konec zelené karty", snapshot.NotificationMessage, StringComparison.Ordinal);
             Assert.Contains("Po termínu", snapshot.NotificationMessage, StringComparison.Ordinal);
-            Assert.Contains("Vozidla:", snapshot.ToolTipText, StringComparison.Ordinal);
+            Assert.Contains("1 vozidlo", snapshot.ToolTipText, StringComparison.Ordinal);
             Assert.DoesNotContain("Due dates", snapshot.ToolTipText, StringComparison.Ordinal);
             Assert.DoesNotContain("due date to review", snapshot.NotificationTitle, StringComparison.Ordinal);
         }
@@ -524,7 +524,7 @@ public sealed class MainWindowViewModelAppShellTests
             Assert.Equal("Vehimap: 1 due date to review", snapshot.NotificationTitle);
             Assert.Contains("Green card end", snapshot.NotificationMessage, StringComparison.Ordinal);
             Assert.Contains("Overdue", snapshot.NotificationMessage, StringComparison.Ordinal);
-            Assert.Contains("Vehicles:", snapshot.ToolTipText, StringComparison.Ordinal);
+            Assert.Contains("1 vehicle", snapshot.ToolTipText, StringComparison.Ordinal);
             Assert.DoesNotContain("Termíny", snapshot.ToolTipText, StringComparison.Ordinal);
             Assert.DoesNotContain("termín k řešení", snapshot.NotificationTitle, StringComparison.Ordinal);
         }

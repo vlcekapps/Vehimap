@@ -52,7 +52,7 @@ public sealed class LegacyServiceBookServiceTests
         Assert.Equal("rec_1", record.Id);
         Assert.Equal("Spravovaná kopie", record.AttachmentMode);
         Assert.DoesNotContain(summary.Records, item => item.Id == "rec_2");
-        Assert.Contains("Záznamy historie: 2", summary.Status);
+        Assert.Equal("2 záznamy historie. 1 servisní plán. 1 servisní doklad.", summary.Status);
     }
 
     [Fact]

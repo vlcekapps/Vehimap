@@ -14,14 +14,17 @@ internal sealed class DesktopPrintableVehicleReportService
 {
     private readonly IAppLocalizer _localizer;
     private readonly IAppDateFormatService _dateFormatService;
+    private readonly IAppPluralizationService _pluralizationService;
     private AppCulturePreferences _culturePreferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
 
     public DesktopPrintableVehicleReportService(
         IAppLocalizer? localizer = null,
-        IAppDateFormatService? dateFormatService = null)
+        IAppDateFormatService? dateFormatService = null,
+        IAppPluralizationService? pluralizationService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
         _dateFormatService = dateFormatService ?? new AppDateFormatService();
+        _pluralizationService = pluralizationService ?? new AppPluralizationService();
         _culturePreferences = new AppLocaleDefaultsService()
             .GetDefaultsForLanguage(_localizer.GetString("PrintableReport.CultureName"))
             .ToCulturePreferences();
@@ -73,7 +76,10 @@ internal sealed class DesktopPrintableVehicleReportService
         builder.AppendLine("</head>");
         builder.AppendLine("<body>");
         builder.AppendLine($"  <h1>{Html(L("PrintableReport.Heading"))}</h1>");
-        builder.AppendLine($"  <p class=\"meta\">{Html(LF("PrintableReport.Meta", _dateFormatService.FormatDateTime(generatedAt, _culturePreferences), dataSet.Vehicles.Count))}</p>");
+        builder.AppendLine($"  <p class=\"meta\">{Html(LF(
+            "PrintableReport.Meta",
+            _dateFormatService.FormatDateTime(generatedAt, _culturePreferences),
+            LP("PrintableReport.VehicleCount", dataSet.Vehicles.Count, dataSet.Vehicles.Count)))}</p>");
         foreach (var section in sections)
         {
             builder.Append(section);
@@ -282,6 +288,9 @@ internal sealed class DesktopPrintableVehicleReportService
     private string L(string key) => _localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+
+    private string LP(string keyPrefix, int count, params object?[] args) =>
+        _pluralizationService.Format(_localizer, _culturePreferences, keyPrefix, count, args);
 
     private static string Html(string? value) => WebUtility.HtmlEncode(value ?? string.Empty);
 }

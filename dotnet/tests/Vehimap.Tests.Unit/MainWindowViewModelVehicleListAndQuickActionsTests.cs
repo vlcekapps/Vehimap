@@ -69,11 +69,11 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
 
         Assert.Contains("Poslední tachometr: 12650 km", viewModel.VehicleDetailWorkspace.SelectedVehicleOverview, StringComparison.CurrentCulture);
         Assert.Contains("Štítky: veterán, srazy", viewModel.VehicleDetailWorkspace.SelectedVehicleOverview, StringComparison.CurrentCulture);
-        Assert.Contains("historie 2", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
-        Assert.Contains("tankování 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
-        Assert.Contains("doklady 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
-        Assert.Contains("připomínky 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
-        Assert.Contains("servisní plány 1", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("2 záznamy historie", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("1 záznam tankování", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("1 doklad", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("1 připomínka", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
+        Assert.Contains("1 servisní plán", viewModel.VehicleDetailWorkspace.SelectedVehicleEvidenceSummary, StringComparison.CurrentCulture);
         Assert.Contains("zobrazeny 2", viewModel.VehicleDetailWorkspace.SelectedVehicleRecentHistorySummary, StringComparison.CurrentCulture);
         Assert.Equal(2, viewModel.VehicleDetailWorkspace.RecentHistoryItems.Count);
         Assert.Equal("Novější servis", viewModel.VehicleDetailWorkspace.RecentHistoryItems[0].EventType);
@@ -286,7 +286,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             viewModel.UpcomingOverviewWorkspace.UpcomingOverviewItems,
             item => item.VehicleId == "veh_missing" && item.Title == "Chybí zelená karta");
         Assert.Equal("veh_missing", viewModel.UpcomingOverviewWorkspace.SelectedUpcomingOverviewItem?.VehicleId);
-        Assert.Contains("bez zelené karty", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
+        Assert.Contains("nemá doplněnou zelenou kartu", viewModel.ShellStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
     [Fact]
@@ -490,7 +490,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
         Assert.False(quietModel.CanReviewRecords);
         Assert.False(quietModel.CanOpenBackgroundStatus);
         Assert.Contains("Pozadí je aktivní", quietModel.BackgroundStatus, StringComparison.Ordinal);
-        Assert.Contains("Vozidla:", quietModel.BackgroundStatus, StringComparison.Ordinal);
+        Assert.Contains("vozid", quietModel.BackgroundStatus, StringComparison.CurrentCultureIgnoreCase);
     }
 
     [Fact]

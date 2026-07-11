@@ -371,10 +371,15 @@ public sealed partial class MainWindowViewModel
         var attentionTimelineItems = BuildBackgroundAttentionItems();
         var appName = _session.GetAppInfo().ApplicationName;
 
+        var tooltipSummary = LFO(
+            "AppShell.Background.TooltipSummary",
+            FormatPlural("AppShell.Background.VehicleCount", VehicleCount, VehicleCount),
+            FormatPlural("AppShell.Background.ReviewCount", AuditCount, AuditCount),
+            FormatPlural("AppShell.Background.DueDateCount", DashboardUpcomingTimeline.Count, DashboardUpcomingTimeline.Count));
         var toolTipLines = new List<string>
         {
             appName,
-            LFO("AppShell.Background.TooltipSummary", VehicleCount, AuditCount, DashboardUpcomingTimeline.Count)
+            tooltipSummary
         };
 
         var firstAttention = attentionTimelineItems.FirstOrDefault();

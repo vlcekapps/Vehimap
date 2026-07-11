@@ -324,6 +324,32 @@ public sealed class SqliteStorageCompatibilityTests
     }
 
     [Fact]
+    public async Task Health_check_pluralizes_missing_managed_attachment_count()
+    {
+        var tempRoot = CreateTempRoot("vehimap-sqlite-health-attachments");
+        var dataRoot = CreateDataRoot(tempRoot);
+        var store = new SqliteVehimapDataStore();
+        var healthService = new SqliteDataStoreHealthService(
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US")));
+
+        try
+        {
+            await store.SaveAsync(dataRoot, BuildSampleDataSet());
+
+            var report = await healthService.CheckAsync(dataRoot);
+
+            Assert.Equal(DataStoreHealthStatus.Warning, report.Status);
+            Assert.Contains(
+                report.Details,
+                item => item.Contains("database references 1 managed attachment", StringComparison.Ordinal));
+        }
+        finally
+        {
+            DeleteTempRoot(tempRoot);
+        }
+    }
+
+    [Fact]
     public async Task Health_check_reports_error_for_corrupted_sqlite_database_without_deleting_it()
     {
         var tempRoot = CreateTempRoot("vehimap-sqlite-health-corrupt");

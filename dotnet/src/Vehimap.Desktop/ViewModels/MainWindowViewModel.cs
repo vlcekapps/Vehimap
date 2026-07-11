@@ -665,9 +665,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
                 return;
             }
 
+            var exportedItemCount = FormatPlural("AppShell.CalendarExport.ItemCount", export.Items.Count, export.Items.Count);
             SetCalendarExportStatus(export.SkippedMaintenanceCount > 0
-                ? LFO("AppShell.CalendarExport.SavedWithSkippedMaintenance", savedPath, export.Items.Count, export.SkippedMaintenanceCount)
-                : LFO("AppShell.CalendarExport.Saved", savedPath, export.Items.Count));
+                ? LFO(
+                    "AppShell.CalendarExport.SavedWithSkippedMaintenance",
+                    savedPath,
+                    exportedItemCount,
+                    FormatPlural(
+                        "AppShell.CalendarExport.SkippedMaintenanceCount",
+                        export.SkippedMaintenanceCount,
+                        export.SkippedMaintenanceCount))
+                : LFO("AppShell.CalendarExport.Saved", savedPath, exportedItemCount));
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {

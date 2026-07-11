@@ -199,7 +199,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Contains("Climate: Has air conditioning", detail.Profile, StringComparison.Ordinal);
         Assert.Contains("Timing drive: Belt", detail.Profile, StringComparison.Ordinal);
         Assert.Contains("Transmission: Manual", detail.Profile, StringComparison.Ordinal);
-        Assert.Contains("Related records: history 1, fuel 1, documents 1, reminders 1, maintenance plans 1, active 1.", detail.EvidenceSummary, StringComparison.Ordinal);
+        Assert.Contains("Related records: 1 history entry, 1 fuel entry, 1 document, 1 reminder, 1 maintenance plan (1 active).", detail.EvidenceSummary, StringComparison.Ordinal);
         Assert.Contains("History", detail.EvidenceSummaries.Select(item => item.Title));
         Assert.Contains("Fuel", detail.EvidenceSummaries.Select(item => item.Title));
         Assert.Contains("Documents", detail.EvidenceSummaries.Select(item => item.Title));

@@ -1387,7 +1387,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         var message = await viewModel.ApplyMaintenanceTemplatesAsync("veh_1", preview.Items);
 
-        Assert.Contains("Doporučené šablony přidaly", message);
+        Assert.Contains("doporučených servisních plánů", message, StringComparison.CurrentCulture);
         Assert.Contains(dataStore.CurrentDataSet.MaintenancePlans, item => item.VehicleId == "veh_1" && item.Title == "Motorový olej a filtr");
         Assert.Empty(dataStore.CurrentDataSet.Records);
         Assert.Empty(dataStore.CurrentDataSet.Reminders);

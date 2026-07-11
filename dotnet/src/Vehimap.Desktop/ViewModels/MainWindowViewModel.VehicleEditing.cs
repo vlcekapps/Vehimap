@@ -554,7 +554,7 @@ public sealed partial class MainWindowViewModel
         }
         SelectedVehicle = FindById(Vehicles, item => item.Id, vehicleId);
 
-        return LFO("MaintenanceTemplates.Status.Added", addedMaintenance);
+        return FormatPlural("MaintenanceTemplates.Status.Added", addedMaintenance, addedMaintenance);
     }
 
     internal void SetVehicleStarterBundleStatus(string message)

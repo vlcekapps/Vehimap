@@ -319,7 +319,7 @@ public sealed partial class MainWindowViewModel
             UpcomingOverviewItems.FirstOrDefault(item => string.Equals(item.Title, LO("Overview.MissingGreen.Title"), StringComparison.CurrentCultureIgnoreCase))
             ?? UpcomingOverviewItems.FirstOrDefault();
         RequestFocus(DesktopFocusTarget.UpcomingOverviewList);
-        ShellStatus = LFO("QuickActions.Status.MissingGreenCardsOpened", missingCount);
+        ShellStatus = FormatPlural("QuickActions.Status.MissingGreenCardsOpened", missingCount, missingCount);
     }
 
     private static bool IsTimelineStatusAttention(string? status)

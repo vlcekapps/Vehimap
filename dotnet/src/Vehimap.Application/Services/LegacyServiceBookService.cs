@@ -58,7 +58,11 @@ public sealed class LegacyServiceBookService : IServiceBookService
         var vehicleName = FormatValue(vehicle?.Name, L("ServiceBook.Value.UnknownVehicle"));
         var status = history.Count == 0 && maintenance.Count == 0 && records.Count == 0
             ? L("ServiceBook.Summary.Empty")
-            : LF("ServiceBook.Summary.Counts", history.Count, maintenance.Count, records.Count);
+            : LF(
+                "ServiceBook.Summary.Counts",
+                LP("ServiceBook.Summary.HistoryCount", history.Count, history.Count),
+                LP("ServiceBook.Summary.MaintenanceCount", maintenance.Count, maintenance.Count),
+                LP("ServiceBook.Summary.RecordCount", records.Count, records.Count));
 
         return new ServiceBookSummary(
             vehicleId,

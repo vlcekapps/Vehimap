@@ -85,7 +85,9 @@
   <data name="DataStoreHealth.OpenPreMigrationBackupName" xml:space="preserve"><value>Otevřít předmigrační zálohu</value></data>
   <data name="DataStoreHealth.Report.AttachmentsFolderExists" xml:space="preserve"><value>Složka spravovaných příloh existuje: {0}</value></data>
   <data name="DataStoreHealth.Report.AttachmentsFolderMissingNoManaged" xml:space="preserve"><value>Složka spravovaných příloh zatím neexistuje; vytvoří se při první spravované příloze.</value></data>
-  <data name="DataStoreHealth.Report.AttachmentsFolderMissingWithManaged" xml:space="preserve"><value>Složka spravovaných příloh chybí, ale databáze odkazuje na {0} spravovaných příloh: {1}</value></data>
+  <data name="DataStoreHealth.Report.AttachmentsFolderMissingWithManaged.One" xml:space="preserve"><value>Složka spravovaných příloh chybí, ale databáze odkazuje na 1 spravovanou přílohu: {1}</value></data>
+  <data name="DataStoreHealth.Report.AttachmentsFolderMissingWithManaged.Few" xml:space="preserve"><value>Složka spravovaných příloh chybí, ale databáze odkazuje na {0} spravované přílohy: {1}</value></data>
+  <data name="DataStoreHealth.Report.AttachmentsFolderMissingWithManaged.Other" xml:space="preserve"><value>Složka spravovaných příloh chybí, ale databáze odkazuje na {0} spravovaných příloh: {1}</value></data>
   <data name="DataStoreHealth.Report.DatabaseCheckFailed" xml:space="preserve"><value>Databázi se nepodařilo otevřít nebo zkontrolovat: {0}</value></data>
   <data name="DataStoreHealth.Report.DatabaseMissingDetail" xml:space="preserve"><value>Soubor databáze nebyl nalezen: {0}</value></data>
   <data name="DataStoreHealth.Report.DatabaseMissingSummary" xml:space="preserve"><value>Databáze datové sady 2.0 nebyla nalezena.</value></data>
@@ -800,7 +802,9 @@ Vozidlo: {2}
   <data name="QuickActions.Action.ReviewRecords" xml:space="preserve"><value>zkontrolovat doklady</value></data>
   <data name="QuickActions.Action.ReviewReminders" xml:space="preserve"><value>zkontrolovat připomínky</value></data>
   <data name="QuickActions.Action.ReviewTechnical" xml:space="preserve"><value>zkontrolovat technické kontroly</value></data>
-  <data name="QuickActions.Status.MissingGreenCardsOpened" xml:space="preserve"><value>Vozidla bez zelené karty k doplnění: {0}. Otevřen je přehled blížících se termínů.</value></data>
+  <data name="QuickActions.Status.MissingGreenCardsOpened.One" xml:space="preserve"><value>1 vozidlo nemá doplněnou zelenou kartu. Otevřen je přehled blížících se termínů.</value></data>
+  <data name="QuickActions.Status.MissingGreenCardsOpened.Few" xml:space="preserve"><value>{0} vozidla nemají doplněnou zelenou kartu. Otevřen je přehled blížících se termínů.</value></data>
+  <data name="QuickActions.Status.MissingGreenCardsOpened.Other" xml:space="preserve"><value>{0} vozidel nemá doplněnou zelenou kartu. Otevřen je přehled blížících se termínů.</value></data>
   <data name="QuickActions.Status.NearestGreenCard" xml:space="preserve"><value>Nejbližší zelená karta: {0} - {1}.</value></data>
   <data name="QuickActions.Status.NearestMaintenance" xml:space="preserve"><value>Nejbližší servis: {0} - {1} ({2}).</value></data>
   <data name="QuickActions.Status.NearestRecord" xml:space="preserve"><value>Nejbližší doklad: {0} - {1} ({2}).</value></data>
@@ -1934,8 +1938,14 @@ Stav: {5}</value></data>
   <data name="AppShell.CalendarExport.Cancelled" xml:space="preserve"><value>Export kalendáře byl zrušen.</value></data>
   <data name="AppShell.CalendarExport.Empty" xml:space="preserve"><value>Kalendář zatím neobsahuje žádné budoucí položky s konkrétním datem.</value></data>
   <data name="AppShell.CalendarExport.Failed" xml:space="preserve"><value>Export kalendáře se nepodařil: {0}</value></data>
-  <data name="AppShell.CalendarExport.Saved" xml:space="preserve"><value>Kalendář uložen do {0}. Položek: {1}.</value></data>
-  <data name="AppShell.CalendarExport.SavedWithSkippedMaintenance" xml:space="preserve"><value>Kalendář uložen do {0}. Položek: {1}. Přeskočené servisní úkoly bez data: {2}.</value></data>
+  <data name="AppShell.CalendarExport.Saved" xml:space="preserve"><value>Kalendář uložen do {0}. {1}.</value></data>
+  <data name="AppShell.CalendarExport.SavedWithSkippedMaintenance" xml:space="preserve"><value>Kalendář uložen do {0}. {1}. {2}</value></data>
+  <data name="AppShell.CalendarExport.ItemCount.One" xml:space="preserve"><value>Exportována 1 položka</value></data>
+  <data name="AppShell.CalendarExport.ItemCount.Few" xml:space="preserve"><value>Exportovány {0} položky</value></data>
+  <data name="AppShell.CalendarExport.ItemCount.Other" xml:space="preserve"><value>Exportováno {0} položek</value></data>
+  <data name="AppShell.CalendarExport.SkippedMaintenanceCount.One" xml:space="preserve"><value>Byl přeskočen 1 servisní úkol bez data.</value></data>
+  <data name="AppShell.CalendarExport.SkippedMaintenanceCount.Few" xml:space="preserve"><value>Byly přeskočeny {0} servisní úkoly bez data.</value></data>
+  <data name="AppShell.CalendarExport.SkippedMaintenanceCount.Other" xml:space="preserve"><value>Bylo přeskočeno {0} servisních úkolů bez data.</value></data>
   <data name="AppShell.ExportBackup.NotLoaded" xml:space="preserve"><value>Export se nepodařilo připravit, protože nejsou načtená data.</value></data>
   <data name="AppShell.ExportBackup.Success" xml:space="preserve"><value>Záloha byla uložena do {0}.</value></data>
   <data name="AppShell.ExportBackup.IncludedManagedAttachments" xml:space="preserve"><value>Spravovaných příloh v záloze: {0}.</value></data>
@@ -1986,7 +1996,10 @@ Stav: {5}</value></data>
   <data name="PrintableReport.HtmlLanguage" xml:space="preserve"><value>cs</value></data>
   <data name="PrintableReport.Title" xml:space="preserve"><value>Vehimap - Tiskový přehled vozidel</value></data>
   <data name="PrintableReport.Heading" xml:space="preserve"><value>Vehimap - Tiskový přehled vozidel</value></data>
-  <data name="PrintableReport.Meta" xml:space="preserve"><value>Vytvořeno: {0} | Celkem vozidel: {1}</value></data>
+  <data name="PrintableReport.Meta" xml:space="preserve"><value>Vytvořeno: {0} | {1}</value></data>
+  <data name="PrintableReport.VehicleCount.One" xml:space="preserve"><value>Celkem 1 vozidlo</value></data>
+  <data name="PrintableReport.VehicleCount.Few" xml:space="preserve"><value>Celkem {0} vozidla</value></data>
+  <data name="PrintableReport.VehicleCount.Other" xml:space="preserve"><value>Celkem {0} vozidel</value></data>
   <data name="PrintableReport.SectionHeading" xml:space="preserve"><value>{0} ({1})</value></data>
   <data name="PrintableReport.EmptyCategory" xml:space="preserve"><value>V této kategorii není žádné vozidlo.</value></data>
   <data name="PrintableReport.Column.Name" xml:space="preserve"><value>Název</value></data>
@@ -2005,7 +2018,16 @@ Stav: {5}</value></data>
   <data name="PrintableReport.Status.GreenCard" xml:space="preserve"><value>ZK</value></data>
   <data name="PrintableReport.Status.Reminder" xml:space="preserve"><value>Připomínka</value></data>
   <data name="PrintableReport.Status.Maintenance" xml:space="preserve"><value>Údržba</value></data>
-  <data name="AppShell.Background.TooltipSummary" xml:space="preserve"><value>Vozidla: {0} | K řešení: {1} | Termíny: {2}</value></data>
+  <data name="AppShell.Background.TooltipSummary" xml:space="preserve"><value>{0} | {1} | {2}</value></data>
+  <data name="AppShell.Background.VehicleCount.One" xml:space="preserve"><value>1 vozidlo</value></data>
+  <data name="AppShell.Background.VehicleCount.Few" xml:space="preserve"><value>{0} vozidla</value></data>
+  <data name="AppShell.Background.VehicleCount.Other" xml:space="preserve"><value>{0} vozidel</value></data>
+  <data name="AppShell.Background.ReviewCount.One" xml:space="preserve"><value>1 položka k řešení</value></data>
+  <data name="AppShell.Background.ReviewCount.Few" xml:space="preserve"><value>{0} položky k řešení</value></data>
+  <data name="AppShell.Background.ReviewCount.Other" xml:space="preserve"><value>{0} položek k řešení</value></data>
+  <data name="AppShell.Background.DueDateCount.One" xml:space="preserve"><value>1 termín</value></data>
+  <data name="AppShell.Background.DueDateCount.Few" xml:space="preserve"><value>{0} termíny</value></data>
+  <data name="AppShell.Background.DueDateCount.Other" xml:space="preserve"><value>{0} termínů</value></data>
   <data name="AppShell.Background.NearestAttention" xml:space="preserve"><value>Nejbližší k řešení: {0} - {1} ({2}, {3})</value></data>
   <data name="AppShell.Background.NearestUpcoming" xml:space="preserve"><value>Nejbližší: {0} - {1} ({2})</value></data>
   <data name="AppShell.Background.NotificationTimelineTitle" xml:space="preserve"><value>Vehimap: {0} termínů k řešení</value></data>
@@ -2176,7 +2198,16 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Attachment.Available" xml:space="preserve"><value>Příloha je dostupná: {0}</value></data>
   <data name="ServiceBook.Attachment.Missing" xml:space="preserve"><value>Příloha není dostupná: {0}</value></data>
   <data name="ServiceBook.Summary.Empty" xml:space="preserve"><value>Servisní knížka zatím nemá žádné položky. Historii, údržbu nebo servisní doklady doplníte v běžných evidencích vozidla.</value></data>
-  <data name="ServiceBook.Summary.Counts" xml:space="preserve"><value>Záznamy historie: {0}. Servisní plány: {1}. Servisní doklady: {2}.</value></data>
+  <data name="ServiceBook.Summary.Counts" xml:space="preserve"><value>{0}. {1}. {2}.</value></data>
+  <data name="ServiceBook.Summary.HistoryCount.One" xml:space="preserve"><value>1 záznam historie</value></data>
+  <data name="ServiceBook.Summary.HistoryCount.Few" xml:space="preserve"><value>{0} záznamy historie</value></data>
+  <data name="ServiceBook.Summary.HistoryCount.Other" xml:space="preserve"><value>{0} záznamů historie</value></data>
+  <data name="ServiceBook.Summary.MaintenanceCount.One" xml:space="preserve"><value>1 servisní plán</value></data>
+  <data name="ServiceBook.Summary.MaintenanceCount.Few" xml:space="preserve"><value>{0} servisní plány</value></data>
+  <data name="ServiceBook.Summary.MaintenanceCount.Other" xml:space="preserve"><value>{0} servisních plánů</value></data>
+  <data name="ServiceBook.Summary.RecordCount.One" xml:space="preserve"><value>1 servisní doklad</value></data>
+  <data name="ServiceBook.Summary.RecordCount.Few" xml:space="preserve"><value>{0} servisní doklady</value></data>
+  <data name="ServiceBook.Summary.RecordCount.Other" xml:space="preserve"><value>{0} servisních dokladů</value></data>
   <data name="ServiceBook.Value.UnknownVehicle" xml:space="preserve"><value>Neznámé vozidlo</value></data>
   <data name="ServiceBook.Value.NoCategory" xml:space="preserve"><value>bez kategorie</value></data>
   <data name="ServiceBook.Value.NoMakeModel" xml:space="preserve"><value>bez značky / modelu</value></data>
@@ -2396,7 +2427,9 @@ Stav: {5}</value></data>
   <data name="MaintenanceTemplates.Status.NoSelectedItems" xml:space="preserve"><value>Doporučené šablony neobsahovaly žádné vybrané servisní plány.</value></data>
   <data name="MaintenanceTemplates.Status.NoNewItems" xml:space="preserve"><value>Doporučené šablony už neměly žádné nové servisní plány k doplnění.</value></data>
   <data name="MaintenanceTemplates.Status.SaveFailedPrefix" xml:space="preserve"><value>Doporučené šablony se nepodařilo uložit</value></data>
-  <data name="MaintenanceTemplates.Status.Added" xml:space="preserve"><value>Doporučené šablony přidaly {0} servisních plánů.</value></data>
+  <data name="MaintenanceTemplates.Status.Added.One" xml:space="preserve"><value>Byl přidán 1 doporučený servisní plán.</value></data>
+  <data name="MaintenanceTemplates.Status.Added.Few" xml:space="preserve"><value>Byly přidány {0} doporučené servisní plány.</value></data>
+  <data name="MaintenanceTemplates.Status.Added.Other" xml:space="preserve"><value>Bylo přidáno {0} doporučených servisních plánů.</value></data>
   <data name="Projection.Value.NoPlate" xml:space="preserve"><value>Bez SPZ</value></data>
   <data name="Projection.Value.NoMakeModel" xml:space="preserve"><value>Bez značky / modelu</value></data>
   <data name="Projection.Value.NormalOperation" xml:space="preserve"><value>Běžný provoz</value></data>
@@ -2474,14 +2507,35 @@ Převodovka: {3}</value></data>
   <data name="VehicleDetail.Projection.RecentHistoryCount.One" xml:space="preserve"><value>Poslední události: zobrazen {0} nejnovější záznam.</value></data>
   <data name="VehicleDetail.Projection.RecentHistoryCount.Few" xml:space="preserve"><value>Poslední události: zobrazeny {0} nejnovější záznamy.</value></data>
   <data name="VehicleDetail.Projection.RecentHistoryCount.Other" xml:space="preserve"><value>Poslední události: zobrazeno {0} nejnovějších záznamů.</value></data>
-  <data name="VehicleDetail.Projection.EvidenceSummary" xml:space="preserve"><value>Navazující evidence: historie {0}, tankování {1}, doklady {2}, připomínky {3}, servisní plány {4} z toho aktivních {5}.</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary" xml:space="preserve"><value>Navazující evidence: {0}, {1}, {2}, {3}, {4} ({5}).</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.HistoryCount.One" xml:space="preserve"><value>1 záznam historie</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.HistoryCount.Few" xml:space="preserve"><value>{0} záznamy historie</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.HistoryCount.Other" xml:space="preserve"><value>{0} záznamů historie</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.FuelCount.One" xml:space="preserve"><value>1 záznam tankování</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.FuelCount.Few" xml:space="preserve"><value>{0} záznamy tankování</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.FuelCount.Other" xml:space="preserve"><value>{0} záznamů tankování</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.RecordCount.One" xml:space="preserve"><value>1 doklad</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.RecordCount.Few" xml:space="preserve"><value>{0} doklady</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.RecordCount.Other" xml:space="preserve"><value>{0} dokladů</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.ReminderCount.One" xml:space="preserve"><value>1 připomínka</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.ReminderCount.Few" xml:space="preserve"><value>{0} připomínky</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.ReminderCount.Other" xml:space="preserve"><value>{0} připomínek</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.MaintenanceCount.One" xml:space="preserve"><value>1 servisní plán</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.MaintenanceCount.Few" xml:space="preserve"><value>{0} servisní plány</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.MaintenanceCount.Other" xml:space="preserve"><value>{0} servisních plánů</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.ActiveMaintenanceCount.One" xml:space="preserve"><value>z toho 1 aktivní</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.ActiveMaintenanceCount.Few" xml:space="preserve"><value>z toho {0} aktivní</value></data>
+  <data name="VehicleDetail.Projection.EvidenceSummary.ActiveMaintenanceCount.Other" xml:space="preserve"><value>z toho {0} aktivních</value></data>
   <data name="VehicleDetail.Section.History" xml:space="preserve"><value>Historie</value></data>
   <data name="VehicleDetail.Section.Fuel" xml:space="preserve"><value>Tankování</value></data>
   <data name="VehicleDetail.Section.Reminders" xml:space="preserve"><value>Připomínky</value></data>
   <data name="VehicleDetail.Section.Records" xml:space="preserve"><value>Doklady</value></data>
   <data name="VehicleDetail.Section.Maintenance" xml:space="preserve"><value>Údržba</value></data>
   <data name="VehicleDetail.Projection.History.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím není uložená žádná historie událostí.</value></data>
-  <data name="VehicleDetail.Projection.History.Latest" xml:space="preserve"><value>Celkem událostí: {0}. Poslední událost: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.History.Latest" xml:space="preserve"><value>{0}. Poslední událost: {1} ({2}).</value></data>
+  <data name="VehicleDetail.Projection.History.EventCount.One" xml:space="preserve"><value>Celkem 1 událost</value></data>
+  <data name="VehicleDetail.Projection.History.EventCount.Few" xml:space="preserve"><value>Celkem {0} události</value></data>
+  <data name="VehicleDetail.Projection.History.EventCount.Other" xml:space="preserve"><value>Celkem {0} událostí</value></data>
   <data name="VehicleDetail.Projection.History.Odometer" xml:space="preserve"><value>Tachometr: {0}.</value></data>
   <data name="VehicleDetail.Projection.Fuel.Empty" xml:space="preserve"><value>K tomuto vozidlu zatím nejsou uloženy žádné záznamy kilometrů ani tankování.</value></data>
   <data name="VehicleDetail.Projection.Fuel.CountAndOdometer" xml:space="preserve"><value>Záznamů: {0}. Poslední tachometr: {1}.</value></data>

@@ -755,7 +755,14 @@ internal sealed class DesktopProjectionService
         var maintenanceCount = dataSet.MaintenancePlans.Count(item => item.VehicleId == vehicleId);
         var activeMaintenanceCount = dataSet.MaintenancePlans.Count(item => item.VehicleId == vehicleId && item.IsActive);
 
-        return LF("VehicleDetail.Projection.EvidenceSummary", historyCount, fuelCount, recordCount, reminderCount, maintenanceCount, activeMaintenanceCount);
+        return LF(
+            "VehicleDetail.Projection.EvidenceSummary",
+            LP("VehicleDetail.Projection.EvidenceSummary.HistoryCount", historyCount, historyCount),
+            LP("VehicleDetail.Projection.EvidenceSummary.FuelCount", fuelCount, fuelCount),
+            LP("VehicleDetail.Projection.EvidenceSummary.RecordCount", recordCount, recordCount),
+            LP("VehicleDetail.Projection.EvidenceSummary.ReminderCount", reminderCount, reminderCount),
+            LP("VehicleDetail.Projection.EvidenceSummary.MaintenanceCount", maintenanceCount, maintenanceCount),
+            LP("VehicleDetail.Projection.EvidenceSummary.ActiveMaintenanceCount", activeMaintenanceCount, activeMaintenanceCount));
     }
 
     private IReadOnlyList<VehicleDetailEvidenceSummaryItemViewModel> BuildVehicleEvidenceSummaryItems(
@@ -799,7 +806,7 @@ internal sealed class DesktopProjectionService
         var latest = entries[0].Item;
         var summary = LF(
             "VehicleDetail.Projection.History.Latest",
-            entries.Count,
+            LP("VehicleDetail.Projection.History.EventCount", entries.Count, entries.Count),
             FormatValue(latest.EventType, L("Projection.Value.NoType")),
             FormatValue(latest.EventDate, L("Common.NoDate")));
         if (!string.IsNullOrWhiteSpace(latest.Odometer))

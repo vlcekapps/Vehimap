@@ -34,10 +34,14 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
     ];
 
     private readonly IAppLocalizer _localizer;
+    private readonly IAppPluralizationService _pluralizationService;
 
-    public SqliteDataStoreHealthService(IAppLocalizer? localizer = null)
+    public SqliteDataStoreHealthService(
+        IAppLocalizer? localizer = null,
+        IAppPluralizationService? pluralizationService = null)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
+        _pluralizationService = pluralizationService ?? new AppPluralizationService();
     }
 
     public async Task<DataStoreHealthReport> CheckAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
@@ -251,7 +255,7 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
 
         if (managedCount > 0)
         {
-            details.Add(LF("DataStoreHealth.Report.AttachmentsFolderMissingWithManaged", managedCount, attachmentsPath));
+            details.Add(LP("DataStoreHealth.Report.AttachmentsFolderMissingWithManaged", managedCount, managedCount, attachmentsPath));
             return DataStoreHealthStatus.Warning;
         }
 
@@ -288,4 +292,7 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
     private string L(string key) => _localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+
+    private string LP(string keyPrefix, int count, params object?[] args) =>
+        _pluralizationService.Format(_localizer, keyPrefix, count, args);
 }
