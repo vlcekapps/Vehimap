@@ -6,7 +6,6 @@ namespace Vehimap.Desktop.ViewModels;
 
 public sealed record TrayActionsDialogViewModel(
     string Title,
-    string Description,
     string BackgroundStatus,
     string OpenBackgroundStatusLabel,
     string ShowMainWindowLabel,
@@ -74,7 +73,6 @@ public sealed record TrayActionsDialogViewModel(
         var effectiveLocalizer = localizer ?? new ResourceAppLocalizer();
         return new(
             effectiveLocalizer.GetString("TrayActions.Title"),
-            effectiveLocalizer.GetString("TrayActions.Description"),
             effectiveLocalizer.GetString("TrayActions.BackgroundStatusUnavailable"),
             effectiveLocalizer.GetString("TrayActions.OpenBackgroundStatusLabel"),
             effectiveLocalizer.GetString("TrayActions.ShowMainWindowLabel"),

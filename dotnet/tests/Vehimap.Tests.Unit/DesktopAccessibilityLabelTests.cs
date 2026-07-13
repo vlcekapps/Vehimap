@@ -698,7 +698,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("CanResize=\"True\"", trayActionsXaml);
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.WindowName}\"", trayActionsXaml);
-        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc TrayActions.HelpText}\"", trayActionsXaml);
+        Assert.DoesNotContain("TrayActions.HelpText", trayActionsXaml, StringComparison.Ordinal);
+        Assert.DoesNotContain("Text=\"{Binding Description}\"", trayActionsXaml, StringComparison.Ordinal);
         Assert.Contains("AutomationProperties.AutomationId=\"TrayActionsBackgroundStatusText\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenBackgroundStatusTrayActionButton\"", trayActionsXaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.OpenBackgroundStatusName}\"", trayActionsXaml);

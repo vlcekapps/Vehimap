@@ -25,7 +25,7 @@
     <KeyBinding Gesture="Ctrl+T" Command="{Binding FocusUpcomingOverviewCommand}" />
     <KeyBinding Gesture="Ctrl+Shift+T" Command="{Binding FocusOverdueOverviewCommand}" />
   </Window.KeyBindings>
-  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*,Auto">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*">
     <Grid ColumnDefinitions="*,Auto">
       <StackPanel Spacing="4">
         <TextBlock FontSize="28"
@@ -578,8 +578,7 @@
                    IsTabStop="True"
                    SelectionChanged="OnVehicleSelectionChanged"
                    AutomationProperties.Name="{i18n:Loc VehicleList.ListName}"
-                   AutomationProperties.AutomationId="VehicleListBox"
-                   AutomationProperties.HelpText="{i18n:Loc VehicleList.ListHelp}">
+                   AutomationProperties.AutomationId="VehicleListBox">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:VehicleListItemViewModel">
                 <Border Padding="10"
@@ -974,10 +973,5 @@
       </Border>
     </Grid>
 
-    <TextBlock Grid.Row="4"
-               Margin="0,16,0,0"
-               Opacity="0.75"
-               Text="{i18n:Loc Shell.Footer}"
-               TextWrapping="Wrap" />
   </Grid>
 </Window>

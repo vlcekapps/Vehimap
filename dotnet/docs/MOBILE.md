@@ -20,6 +20,12 @@ The current shell uses standard Avalonia `RadioButton` controls with persistent 
 labels and 56-device-independent-pixel touch height. On larger Android windows this may
 later adapt to a navigation rail without changing destination keys or viewmodels.
 
+Persistent mobile UI copy must identify content, state or a meaningful consequence. It
+must not explain obvious standard-control operation, repeat the names of visible
+navigation destinations or describe implementation stages. Longer onboarding and usage
+instructions belong in the future user guide, not in the limited phone viewport or in
+screen-reader metadata that is announced on every visit.
+
 ## Vehicle navigation
 
 The desktop workspaces become routes under the selected vehicle hub, not top-level tabs:
@@ -74,6 +80,8 @@ platform exception is required when an operating system cannot support the behav
 - Never require a swipe gesture, color, icon or pointer-only action.
 - Preserve persistent text labels in primary navigation.
 - Use headings, live status text and human-readable list item names.
+- Use `HelpText` only for non-obvious behavior, prerequisites or consequences; do not
+  turn it into a hidden tutorial for standard navigation, lists or buttons.
 - Handle Android system Back through Avalonia `TopLevel.BackRequested`: mark the event
   handled only after an inner route or non-home destination was actually popped. This
   contract applies to both three-button and gesture navigation; Back from `Home` remains

@@ -211,7 +211,7 @@
   <data name="GlobalSearch.Entity.Reminder" xml:space="preserve"><value>Připomínka</value></data>
   <data name="GlobalSearch.Entity.Reminders" xml:space="preserve"><value>Připomínky</value></data>
   <data name="GlobalSearch.Entity.Vehicle" xml:space="preserve"><value>Vozidlo</value></data>
-  <data name="GlobalSearch.Detail.EmptySelection" xml:space="preserve"><value>Vyberte výsledek a můžete přejít rovnou na správné vozidlo nebo evidenci.</value></data>
+  <data name="GlobalSearch.Detail.EmptySelection" xml:space="preserve"><value>Není vybrán žádný výsledek hledání.</value></data>
   <data name="GlobalSearch.Detail.Selected" xml:space="preserve"><value>{0}: {1}
 Vozidlo: {2}
 {3}</value></data>
@@ -276,7 +276,7 @@ Vozidlo: {2}
   <data name="FuelWorkspace.Summary.Initial" xml:space="preserve"><value>Tankování vybraného vozidla se zobrazí po výběru vozidla.</value></data>
   <data name="FuelWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F přesune fokus do hledání tankování.</value></data>
   <data name="FuelWorkspace.AnalysisSummary.Initial" xml:space="preserve"><value>Analýza tankování se zobrazí po výběru vozidla.</value></data>
-  <data name="FuelWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte tankování a zobrazí se detail položky.</value></data>
+  <data name="FuelWorkspace.Detail.Empty" xml:space="preserve"><value>Není vybráno žádné tankování.</value></data>
   <data name="FuelWorkspace.PanelHeading" xml:space="preserve"><value>Detail tankování</value></data>
   <data name="FuelWorkspace.Detail.Date" xml:space="preserve"><value>Datum: {0}</value></data>
   <data name="FuelWorkspace.Detail.Fuel" xml:space="preserve"><value>Palivo: {0}</value></data>
@@ -390,7 +390,7 @@ Vozidlo: {2}
   <data name="HistoryWorkspace.Title" xml:space="preserve"><value>Historické záznamy vybraného vozidla</value></data>
   <data name="HistoryWorkspace.Summary.Initial" xml:space="preserve"><value>Historie vybraného vozidla se zobrazí po výběru vozidla.</value></data>
   <data name="HistoryWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F přesune fokus do hledání historie.</value></data>
-  <data name="HistoryWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte historický záznam a zobrazí se detail položky.</value></data>
+  <data name="HistoryWorkspace.Detail.Empty" xml:space="preserve"><value>Není vybrán žádný historický záznam.</value></data>
   <data name="HistoryWorkspace.PanelHeading" xml:space="preserve"><value>Detail historie</value></data>
   <data name="HistoryWorkspace.Detail.Date" xml:space="preserve"><value>Datum: {0}</value></data>
   <data name="HistoryWorkspace.Detail.EventType" xml:space="preserve"><value>Typ události: {0}</value></data>
@@ -509,7 +509,7 @@ Vozidlo: {2}
   <data name="MaintenanceWorkspace.Title" xml:space="preserve"><value>Servisní plány vybraného vozidla</value></data>
   <data name="MaintenanceWorkspace.Summary.Initial" xml:space="preserve"><value>Plán údržby vybraného vozidla se zobrazí po výběru vozidla.</value></data>
   <data name="MaintenanceWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F přesune fokus do hledání údržby.</value></data>
-  <data name="MaintenanceWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte servisní úkon a zobrazí se detail položky.</value></data>
+  <data name="MaintenanceWorkspace.Detail.Empty" xml:space="preserve"><value>Není vybrán žádný servisní úkon.</value></data>
   <data name="MaintenanceWorkspace.PanelHeading" xml:space="preserve"><value>Detail údržby</value></data>
   <data name="MaintenanceWorkspace.Detail.Task" xml:space="preserve"><value>Úkon: {0}</value></data>
   <data name="MaintenanceWorkspace.Detail.Interval" xml:space="preserve"><value>Interval: {0}</value></data>
@@ -612,7 +612,7 @@ Vozidlo: {2}
   <data name="RecordWorkspace.Title" xml:space="preserve"><value>Seznam dokladů a příloh vybraného vozidla</value></data>
   <data name="RecordWorkspace.Summary.Initial" xml:space="preserve"><value>Doklady a přílohy vybraného vozidla se zobrazí po výběru vozidla.</value></data>
   <data name="RecordWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F přesune fokus do hledání dokladů.</value></data>
-  <data name="RecordWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte doklad a zobrazí se detail přílohy.</value></data>
+  <data name="RecordWorkspace.Detail.Empty" xml:space="preserve"><value>Není vybrán žádný doklad.</value></data>
   <data name="RecordWorkspace.PanelHeading" xml:space="preserve"><value>Detail dokladu</value></data>
   <data name="RecordWorkspace.Detail.Type" xml:space="preserve"><value>Typ: {0}</value></data>
   <data name="RecordWorkspace.Detail.Validity" xml:space="preserve"><value>Platnost: {0}</value></data>
@@ -695,7 +695,7 @@ Vozidlo: {2}
   <data name="ReminderWorkspace.Title" xml:space="preserve"><value>Seznam připomínek vybraného vozidla</value></data>
   <data name="ReminderWorkspace.Summary.Initial" xml:space="preserve"><value>Připomínky vybraného vozidla se zobrazí po výběru vozidla.</value></data>
   <data name="ReminderWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F přesune fokus do hledání připomínek.</value></data>
-  <data name="ReminderWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte připomínku a zobrazí se detail položky.</value></data>
+  <data name="ReminderWorkspace.Detail.Empty" xml:space="preserve"><value>Není vybrána žádná připomínka.</value></data>
   <data name="ReminderWorkspace.PanelHeading" xml:space="preserve"><value>Detail připomínky</value></data>
   <data name="ReminderWorkspace.Detail.Title" xml:space="preserve"><value>Název: {0}</value></data>
   <data name="ReminderWorkspace.Detail.DueDate" xml:space="preserve"><value>Termín: {0}</value></data>
@@ -935,7 +935,6 @@ Vozidlo: {2}
   <data name="TrayActions.CloseName" xml:space="preserve"><value>Zavřít akce lišty bez provedení změny</value></data>
   <data name="TrayActions.CreateAutomaticBackupNowLabel" xml:space="preserve"><value>Zálohovat ihned</value></data>
   <data name="TrayActions.CreateAutomaticBackupNowName" xml:space="preserve"><value>Vytvořit automatickou zálohu ihned</value></data>
-  <data name="TrayActions.Description" xml:space="preserve"><value>Vyberte akci pro běžící Vehimap. Toto okno nahrazuje nativní menu lišty pro přístupnější ovládání přes klávesnici a čtečku obrazovky.</value></data>
   <data name="TrayActions.ExitLabel" xml:space="preserve"><value>Ukončit aplikaci</value></data>
   <data name="TrayActions.ExitName" xml:space="preserve"><value>Ukončit Vehimap</value></data>
   <data name="TrayActions.ExportBackupLabel" xml:space="preserve"><value>Export dat do zálohy</value></data>
@@ -944,7 +943,6 @@ Vozidlo: {2}
   <data name="TrayActions.ExportCalendarName" xml:space="preserve"><value>Exportovat budoucí termíny do kalendáře</value></data>
   <data name="TrayActions.FeedbackIssueLabel" xml:space="preserve"><value>Nahlásit zpětnou vazbu</value></data>
   <data name="TrayActions.FeedbackIssueName" xml:space="preserve"><value>Otevřít formulář pro nahlášení zpětné vazby k Vehimapu</value></data>
-  <data name="TrayActions.HelpText" xml:space="preserve"><value>Vyberte akci pro běžící Vehimap. První tlačítko po otevření zobrazí hlavní okno aplikace; další tlačítka otevřou přehledy, nejbližší termíny, filtrované kontroly nebo souborové akce. Escape okno zavře bez akce.</value></data>
   <data name="TrayActions.ImportBackupHelpText" xml:space="preserve"><value>Vybere záložní soubor a po potvrzení nahradí aktuální datovou sadu. Před obnovou se vytvoří ochranná kopie současných dat.</value></data>
   <data name="TrayActions.ImportBackupLabel" xml:space="preserve"><value>Obnovit data ze zálohy</value></data>
   <data name="TrayActions.ImportBackupName" xml:space="preserve"><value>Obnovit data aplikace ze zálohy</value></data>
@@ -1260,7 +1258,6 @@ Vozidlo: {2}
   <data name="Shell.AuditCount" xml:space="preserve"><value>Audit</value></data>
   <data name="Shell.DataModeLabel" xml:space="preserve"><value>Uložení dat</value></data>
   <data name="Shell.DataPathLabel" xml:space="preserve"><value>Datová složka</value></data>
-  <data name="Shell.Footer" xml:space="preserve"><value>Vyberte vozidlo a potom pomocí pracovních karet otevřete historii, tankování, doklady, připomínky, údržbu, časovou osu, audit, náklady a další přehledy. Editace se otevírá v samostatném okně, kde lze změny přehledně uložit nebo zrušit.</value></data>
   <data name="Shell.FuelCount" xml:space="preserve"><value>Tankování</value></data>
   <data name="Shell.HelpText" xml:space="preserve"><value>Evidence vozidel Vehimap. Po otevření je klávesový fokus v seznamu vozidel vlevo.</value></data>
   <data name="Shell.HistoryCount" xml:space="preserve"><value>Historie</value></data>
@@ -1319,7 +1316,7 @@ Vozidlo: {2}
   <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, kategorie, částka, cena za vzdálenost nebo stav výpočtu...</value></data>
   <data name="CostWorkspace.PeriodStatus.Initial" xml:space="preserve"><value>Období nákladů se načte společně s daty.</value></data>
   <data name="CostWorkspace.ExportStatus.Initial" xml:space="preserve"><value>Exporty nákladů použijí právě zobrazené období.</value></data>
-  <data name="CostWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte vozidlo v seznamu a zobrazí se rozpad nákladů.</value></data>
+  <data name="CostWorkspace.Detail.Empty" xml:space="preserve"><value>Není vybráno žádné vozidlo.</value></data>
   <data name="CostWorkspace.Detail.Selected" xml:space="preserve"><value>Vozidlo: {0}
 Kategorie: {1}
 Palivo: {2}
@@ -1556,7 +1553,7 @@ Bez číselného nákladu: {4} z {5} aktivních vozidel.</value></data>
   <data name="SmartAdvisorWorkspace.VehicleFilterName" xml:space="preserve"><value>Filtr vozidla chytrého poradce</value></data>
   <data name="TimelineWorkspace.ClearSearchName" xml:space="preserve"><value>Vymazat hledání v časové ose</value></data>
   <data name="TimelineWorkspace.DetailHeading" xml:space="preserve"><value>Detail časové osy</value></data>
-  <data name="TimelineWorkspace.Detail.Empty" xml:space="preserve"><value>Vyberte položku časové osy a zobrazí se detail.</value></data>
+  <data name="TimelineWorkspace.Detail.Empty" xml:space="preserve"><value>Není vybrána žádná položka časové osy.</value></data>
   <data name="TimelineWorkspace.Detail.Selected" xml:space="preserve"><value>Datum: {0}
 Druh: {1}
 Položka: {2}
@@ -1638,7 +1635,7 @@ Poznámka: {5}</value></data>
   <data name="OverdueOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vozidlo, SPZ, termín nebo položka...</value></data>
   <data name="OverdueOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Řadit přehled propadlých termínů sestupně</value></data>
   <data name="OverdueOverviewWorkspace.SortName" xml:space="preserve"><value>Řazení přehledu propadlých termínů</value></data>
-  <data name="DashboardTimeline.Detail.Empty" xml:space="preserve"><value>Vyberte nejbližší termín a můžete přejít na související vozidlo nebo evidenci.</value></data>
+  <data name="DashboardTimeline.Detail.Empty" xml:space="preserve"><value>Není vybrán žádný termín.</value></data>
   <data name="DashboardTimeline.Detail.Selected" xml:space="preserve"><value>Vozidlo: {0}
 Datum: {1}
 Druh: {2}
@@ -1651,8 +1648,8 @@ Podrobnosti: {5}</value></data>
   <data name="Overview.DataIssue.Severity.Error" xml:space="preserve"><value>Chyba</value></data>
   <data name="Overview.DataIssue.Severity.Info" xml:space="preserve"><value>Info</value></data>
   <data name="Overview.DataIssue.Severity.Warning" xml:space="preserve"><value>Upozornění</value></data>
-  <data name="Overview.Detail.EmptyOverdue" xml:space="preserve"><value>Vyberte propadlý termín a můžete přejít na související vozidlo nebo evidenci.</value></data>
-  <data name="Overview.Detail.EmptyUpcoming" xml:space="preserve"><value>Vyberte termín a můžete přejít na související vozidlo nebo evidenci.</value></data>
+  <data name="Overview.Detail.EmptyOverdue" xml:space="preserve"><value>Není vybrán žádný propadlý termín.</value></data>
+  <data name="Overview.Detail.EmptyUpcoming" xml:space="preserve"><value>Není vybrán žádný termín.</value></data>
   <data name="Overview.Detail.Selected" xml:space="preserve"><value>{0}
 {1} | {2}
 {3}
@@ -1685,10 +1682,10 @@ Stav: {5}</value></data>
   <data name="Overview.Summary.DashboardWithItems.Other" xml:space="preserve"><value>Napříč všemi vozidly je nejbližších {0} budoucích termínů připravených k otevření.</value></data>
   <data name="Overview.Summary.OverdueEmpty" xml:space="preserve"><value>V dostupných datech zatím nejsou žádné propadlé termíny s konkrétním datem.</value></data>
   <data name="Overview.Summary.OverdueInitial" xml:space="preserve"><value>Propadlé termíny napříč vozidly se zobrazí po načtení dat.</value></data>
-  <data name="Overview.Summary.OverdueWithItems" xml:space="preserve"><value>Propadlých termínů: {0}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.</value></data>
-  <data name="Overview.Summary.OverdueWithItems.One" xml:space="preserve"><value>Propadlý termín: {0}. Vyberte jej a můžete otevřít evidenci nebo vozidlo.</value></data>
-  <data name="Overview.Summary.OverdueWithItems.Few" xml:space="preserve"><value>Propadlé termíny: {0}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.</value></data>
-  <data name="Overview.Summary.OverdueWithItems.Other" xml:space="preserve"><value>Propadlých termínů: {0}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.</value></data>
+  <data name="Overview.Summary.OverdueWithItems" xml:space="preserve"><value>Propadlých termínů: {0}.</value></data>
+  <data name="Overview.Summary.OverdueWithItems.One" xml:space="preserve"><value>Propadlý termín: {0}.</value></data>
+  <data name="Overview.Summary.OverdueWithItems.Few" xml:space="preserve"><value>Propadlé termíny: {0}.</value></data>
+  <data name="Overview.Summary.OverdueWithItems.Other" xml:space="preserve"><value>Propadlých termínů: {0}.</value></data>
   <data name="Overview.Summary.UpcomingDataIssuesHidden" xml:space="preserve"><value>Audit eviduje {0} datových nedostatků; můžete je přidat volbou pod filtrem.</value></data>
   <data name="Overview.Summary.UpcomingDataIssuesHidden.One" xml:space="preserve"><value>Audit eviduje {0} datový nedostatek; můžete jej přidat volbou pod filtrem.</value></data>
   <data name="Overview.Summary.UpcomingDataIssuesHidden.Few" xml:space="preserve"><value>Audit eviduje {0} datové nedostatky; můžete je přidat volbou pod filtrem.</value></data>
@@ -1704,10 +1701,10 @@ Stav: {5}</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues.One" xml:space="preserve"><value>Z toho datový nedostatek: {0}.</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues.Few" xml:space="preserve"><value>Z toho datové nedostatky: {0}.</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues.Other" xml:space="preserve"><value>Z toho datových nedostatků: {0}.</value></data>
-  <data name="Overview.Summary.UpcomingWithItems" xml:space="preserve"><value>Blížících se položek: {0}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.</value></data>
-  <data name="Overview.Summary.UpcomingWithItems.One" xml:space="preserve"><value>Blížící se položka: {0}. Vyberte ji a můžete otevřít evidenci nebo vozidlo.</value></data>
-  <data name="Overview.Summary.UpcomingWithItems.Few" xml:space="preserve"><value>Blížící se položky: {0}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.</value></data>
-  <data name="Overview.Summary.UpcomingWithItems.Other" xml:space="preserve"><value>Blížících se položek: {0}. Vyberte položku a můžete otevřít evidenci nebo vozidlo.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems" xml:space="preserve"><value>Blížících se položek: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems.One" xml:space="preserve"><value>Blížící se položka: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems.Few" xml:space="preserve"><value>Blížící se položky: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems.Other" xml:space="preserve"><value>Blížících se položek: {0}.</value></data>
   <data name="Timeline.Detail.DateAndOdometer" xml:space="preserve"><value>{0} | {1}</value></data>
   <data name="Timeline.Kind.Fuel" xml:space="preserve"><value>Tankování</value></data>
   <data name="Timeline.Kind.GreenCard" xml:space="preserve"><value>Zelená karta</value></data>
@@ -1742,7 +1739,6 @@ Stav: {5}</value></data>
   <data name="VehicleList.ClearFiltersName" xml:space="preserve"><value>Vymazat filtry seznamu vozidel</value></data>
   <data name="VehicleList.HideInactive" xml:space="preserve"><value>Skrýt archivovaná a odstavená vozidla</value></data>
   <data name="VehicleList.ItemType" xml:space="preserve"><value>Vozidlo</value></data>
-  <data name="VehicleList.ListHelp" xml:space="preserve"><value>Šipkami vyberte vozidlo. Detail a související evidence se zobrazí vpravo.</value></data>
   <data name="VehicleList.ListName" xml:space="preserve"><value>Seznam načtených vozidel</value></data>
   <data name="VehicleList.SearchHeading" xml:space="preserve"><value>Hledání v seznamu vozidel</value></data>
   <data name="VehicleList.SearchPlaceholder" xml:space="preserve"><value>Název, značka, SPZ, poznámka nebo štítek</value></data>
@@ -2210,7 +2206,7 @@ Stav: {5}</value></data>
   <data name="ServiceBook.Window.ItemType" xml:space="preserve"><value>Položka servisní knížky</value></data>
   <data name="ServiceBook.Window.VehicleSummary" xml:space="preserve"><value>{0} | {1} | SPZ {2} | Tachometr {3}</value></data>
   <data name="ServiceBook.Window.CostSummary" xml:space="preserve"><value>Součet číselných částek v historii: {0}.</value></data>
-  <data name="ServiceBook.Window.SelectedItemEmpty" xml:space="preserve"><value>Vyberte položku servisní knížky a můžete otevřít související evidenci.</value></data>
+  <data name="ServiceBook.Window.SelectedItemEmpty" xml:space="preserve"><value>Není vybrána žádná položka servisní knížky.</value></data>
   <data name="ServiceBook.Window.OpenRelatedFailed" xml:space="preserve"><value>Související položku se nepodařilo otevřít.</value></data>
   <data name="ServiceBook.Window.OpenRelatedSuccess" xml:space="preserve"><value>Související položka byla otevřena v hlavním okně.</value></data>
   <data name="ServiceBook.Status.NoVehicle" xml:space="preserve"><value>Servisní knížku nelze otevřít bez vybraného vozidla.</value></data>
@@ -2517,10 +2513,10 @@ Stav: {5}</value></data>
   <data name="Maintenance.Projection.Summary.Count.Few" xml:space="preserve"><value>Vybrané vozidlo má {0} servisní plány.</value></data>
   <data name="Maintenance.Projection.Summary.Count.Other" xml:space="preserve"><value>Vybrané vozidlo má {0} servisních plánů.</value></data>
   <data name="Record.Projection.Summary.Empty" xml:space="preserve"><value>Vybrané vozidlo zatím nemá žádné doklady.</value></data>
-  <data name="Record.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo má {0} dokladů. Vyberte záznam a můžete otevřít soubor nebo jeho složku.</value></data>
-  <data name="Record.Projection.Summary.Count.One" xml:space="preserve"><value>Vybrané vozidlo má {0} doklad. Vyberte jej a můžete otevřít soubor nebo jeho složku.</value></data>
-  <data name="Record.Projection.Summary.Count.Few" xml:space="preserve"><value>Vybrané vozidlo má {0} doklady. Vyberte záznam a můžete otevřít soubor nebo jeho složku.</value></data>
-  <data name="Record.Projection.Summary.Count.Other" xml:space="preserve"><value>Vybrané vozidlo má {0} dokladů. Vyberte záznam a můžete otevřít soubor nebo jeho složku.</value></data>
+  <data name="Record.Projection.Summary.Count" xml:space="preserve"><value>Vybrané vozidlo: {0} dokladů.</value></data>
+  <data name="Record.Projection.Summary.Count.One" xml:space="preserve"><value>Vybrané vozidlo: {0} doklad.</value></data>
+  <data name="Record.Projection.Summary.Count.Few" xml:space="preserve"><value>Vybrané vozidlo: {0} doklady.</value></data>
+  <data name="Record.Projection.Summary.Count.Other" xml:space="preserve"><value>Vybrané vozidlo: {0} dokladů.</value></data>
   <data name="Record.Projection.AttachmentMode.Managed" xml:space="preserve"><value>Spravovaná kopie</value></data>
   <data name="Record.Projection.AttachmentMode.External" xml:space="preserve"><value>Externí cesta</value></data>
   <data name="Record.Projection.Validity.FromEmpty" xml:space="preserve"><value>od nevyplněno</value></data>
@@ -2534,7 +2530,7 @@ Stav: {5}</value></data>
   <data name="Record.Projection.AttachmentState.Unresolved" xml:space="preserve"><value>Cesta nevyřešena</value></data>
   <data name="Record.Projection.AttachmentState.ExternalMissing" xml:space="preserve"><value>Chybí externí příloha</value></data>
   <data name="VehicleDetail.Projection.EmptyHeading" xml:space="preserve"><value>Nevybrané vozidlo</value></data>
-  <data name="VehicleDetail.Projection.EmptyOverview" xml:space="preserve"><value>Vyberte vozidlo vlevo a zobrazí se jeho základní souhrn.</value></data>
+  <data name="VehicleDetail.Projection.EmptyOverview" xml:space="preserve"><value>Není vybráno žádné vozidlo.</value></data>
   <data name="VehicleDetail.Projection.EmptyEvidence" xml:space="preserve"><value>Navazující evidence se zobrazí po výběru vozidla.</value></data>
   <data name="VehicleDetail.Projection.EmptyRecentHistory" xml:space="preserve"><value>Poslední události se zobrazí po výběru vozidla.</value></data>
   <data name="VehicleDetail.PanelHeading" xml:space="preserve"><value>Detail vozidla</value></data>
@@ -2769,7 +2765,7 @@ Převodovka: {3}</value></data>
   <data name="SmartAdvisor.Filter.AllCategories" xml:space="preserve"><value>Všechny kategorie</value></data>
   <data name="SmartAdvisor.Filter.AllVehicles" xml:space="preserve"><value>Všechna vozidla</value></data>
   <data name="SmartAdvisor.Summary.Initial" xml:space="preserve"><value>Chytrý poradce se zobrazí po načtení dat.</value></data>
-  <data name="SmartAdvisor.Detail.Empty" xml:space="preserve"><value>Vyberte doporučení a zobrazí se detail i navržená akce.</value></data>
+  <data name="SmartAdvisor.Detail.Empty" xml:space="preserve"><value>Není vybráno žádné doporučení.</value></data>
   <data name="SmartAdvisor.Detail.Selected" xml:space="preserve"><value>Priorita: {0}
 Kategorie: {1}
 Vozidlo: {2}
@@ -2856,14 +2852,12 @@ Navržená akce: {6}</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears.LegacyWords" xml:space="preserve"><value>Každých pět let</value></data>
   <data name="Mobile.App.Title" xml:space="preserve"><value>Vehimap Nightly pro Android</value></data>
   <data name="Mobile.Navigation.Name" xml:space="preserve"><value>Hlavní navigace</value></data>
-  <data name="Mobile.Navigation.Help" xml:space="preserve"><value>Vyberte Domů, Vozidla, Upozornění nebo Více.</value></data>
   <data name="Mobile.Navigation.Home" xml:space="preserve"><value>Domů</value></data>
   <data name="Mobile.Navigation.Vehicles" xml:space="preserve"><value>Vozidla</value></data>
   <data name="Mobile.Navigation.Alerts" xml:space="preserve"><value>Upozornění</value></data>
   <data name="Mobile.Navigation.More" xml:space="preserve"><value>Více</value></data>
   <data name="Mobile.Common.Back" xml:space="preserve"><value>Zpět</value></data>
   <data name="Mobile.Home.Heading" xml:space="preserve"><value>Domů</value></data>
-  <data name="Mobile.Home.Intro" xml:space="preserve"><value>Rychlý přehled vozidel a položek, které potřebují pozornost.</value></data>
   <data name="Mobile.Home.VehicleCount" xml:space="preserve"><value>Vozidla: {0}</value></data>
   <data name="Mobile.Home.AlertCount" xml:space="preserve"><value>Položky k řešení: {0}</value></data>
   <data name="Mobile.Home.TopAlertHeading" xml:space="preserve"><value>První položka k řešení</value></data>
@@ -2874,12 +2868,10 @@ Navržená akce: {6}</value></data>
   <data name="Mobile.Home.OpenAlerts" xml:space="preserve"><value>Otevřít upozornění</value></data>
   <data name="Mobile.Home.OpenAlertsName" xml:space="preserve"><value>Otevřít položky, které potřebují pozornost</value></data>
   <data name="Mobile.Vehicles.Heading" xml:space="preserve"><value>Vozidla</value></data>
-  <data name="Mobile.Vehicles.Intro" xml:space="preserve"><value>Vyberte vozidlo a potom otevřete jeho mobilní centrum.</value></data>
   <data name="Mobile.Vehicles.OpenSelected" xml:space="preserve"><value>Otevřít vybrané vozidlo</value></data>
   <data name="Mobile.Vehicles.OpenSelectedName" xml:space="preserve"><value>Otevřít centrum vybraného vozidla</value></data>
   <data name="Mobile.Vehicles.BackName" xml:space="preserve"><value>Vrátit se do seznamu vozidel</value></data>
   <data name="Mobile.Vehicles.HubHeading" xml:space="preserve"><value>{0}</value></data>
-  <data name="Mobile.Vehicles.HubIntro" xml:space="preserve"><value>Detail vozidla a souhrn evidencí. Jednotlivé evidence se budou otevírat z tohoto centra místo desktopových karet.</value></data>
   <data name="Mobile.Vehicles.EvidenceHeading" xml:space="preserve"><value>Evidence vozidla</value></data>
   <data name="Mobile.Vehicles.HistoryCount" xml:space="preserve"><value>Historické záznamy: {0}</value></data>
   <data name="Mobile.Vehicles.FuelCount" xml:space="preserve"><value>Tankování: {0}</value></data>
@@ -2887,9 +2879,7 @@ Navržená akce: {6}</value></data>
   <data name="Mobile.Vehicles.ReminderCount" xml:space="preserve"><value>Připomínky: {0}</value></data>
   <data name="Mobile.Vehicles.MaintenanceCount" xml:space="preserve"><value>Plány údržby: {0}</value></data>
   <data name="Mobile.Alerts.Heading" xml:space="preserve"><value>Upozornění</value></data>
-  <data name="Mobile.Alerts.Intro" xml:space="preserve"><value>Termíny, problémy s daty, údržba, tankování a další doporučení napříč vozidly.</value></data>
   <data name="Mobile.Alerts.ListName" xml:space="preserve"><value>Položky, které potřebují pozornost</value></data>
-  <data name="Mobile.Alerts.ListHelp" xml:space="preserve"><value>Procházejte doporučení seřazená podle priority.</value></data>
   <data name="Mobile.Alerts.Empty" xml:space="preserve"><value>Žádná položka nyní nepotřebuje vaši pozornost.</value></data>
   <data name="Mobile.Alerts.ItemType" xml:space="preserve"><value>Upozornění</value></data>
   <data name="Mobile.Alerts.ItemAccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}. {3}</value></data>
@@ -2898,22 +2888,12 @@ Navržená akce: {6}</value></data>
   <data name="Mobile.Alerts.Priority.Warning" xml:space="preserve"><value>Varování</value></data>
   <data name="Mobile.Alerts.Priority.Critical" xml:space="preserve"><value>Kritické</value></data>
   <data name="Mobile.More.Heading" xml:space="preserve"><value>Více</value></data>
-  <data name="Mobile.More.Intro" xml:space="preserve"><value>Akce a informace pro celou aplikaci, které nepatří k jednomu vozidlu.</value></data>
-  <data name="Mobile.More.DataSetHeading" xml:space="preserve"><value>Android datová sada</value></data>
-  <data name="Mobile.More.DataPathLabel" xml:space="preserve"><value>Datová složka</value></data>
-  <data name="Mobile.More.DataModeLabel" xml:space="preserve"><value>Režim dat</value></data>
-  <data name="Mobile.More.DataModeSystem" xml:space="preserve"><value>Systémová datová složka aplikace</value></data>
-  <data name="Mobile.Shell.Heading" xml:space="preserve"><value>Moje vozidla</value></data>
-  <data name="Mobile.Shell.Intro" xml:space="preserve"><value>Vyberte vozidlo a přečtěte si jeho základní údaje. Tato první Android nightly sdílí datový model a lokalizační základ Vehimapu 2.0.</value></data>
-  <data name="Mobile.Shell.ReadOnly" xml:space="preserve"><value>Preview pouze pro čtení: editace a přenos dat přibudou v další etapě Androidu.</value></data>
+  <data name="Mobile.More.DataSetHeading" xml:space="preserve"><value>Data aplikace</value></data>
   <data name="Mobile.VehicleList.Name" xml:space="preserve"><value>Seznam vozidel</value></data>
-  <data name="Mobile.VehicleList.Help" xml:space="preserve"><value>Vyberte vozidlo a jeho detail se zobrazí pod seznamem.</value></data>
-  <data name="Mobile.VehicleList.Empty" xml:space="preserve"><value>V Android datové sadě zatím nejsou uložena žádná vozidla.</value></data>
+  <data name="Mobile.VehicleList.Empty" xml:space="preserve"><value>Žádná vozidla.</value></data>
   <data name="Mobile.VehicleList.ItemType" xml:space="preserve"><value>Vozidlo</value></data>
   <data name="Mobile.VehicleList.ItemAccessibleLabel" xml:space="preserve"><value>{0}, {1}, kategorie {2}, státní poznávací značka {3}, stav {4}</value></data>
   <data name="Mobile.VehicleDetail.EmptyHeading" xml:space="preserve"><value>Detail vozidla</value></data>
-  <data name="Mobile.VehicleDetail.EmptyText" xml:space="preserve"><value>Nejprve vyberte vozidlo ze seznamu.</value></data>
-  <data name="Mobile.VehicleDetail.Heading" xml:space="preserve"><value>Detail vozidla: {0}</value></data>
   <data name="Mobile.VehicleDetail.Name" xml:space="preserve"><value>Název</value></data>
   <data name="Mobile.VehicleDetail.MakeModel" xml:space="preserve"><value>Značka a model</value></data>
   <data name="Mobile.VehicleDetail.Category" xml:space="preserve"><value>Kategorie</value></data>
@@ -2925,12 +2905,12 @@ Navržená akce: {6}</value></data>
   <data name="Mobile.VehicleDetail.GreenCardTo" xml:space="preserve"><value>Zelená karta platná do</value></data>
   <data name="Mobile.VehicleDetail.Note" xml:space="preserve"><value>Poznámka</value></data>
   <data name="Mobile.Action.Reload" xml:space="preserve"><value>Znovu načíst</value></data>
-  <data name="Mobile.Action.ReloadName" xml:space="preserve"><value>Znovu načíst Android datovou sadu</value></data>
-  <data name="Mobile.Status.Ready" xml:space="preserve"><value>Android datová sada je připravena k načtení.</value></data>
-  <data name="Mobile.Status.Loading" xml:space="preserve"><value>Načítají se vozidla...</value></data>
-  <data name="Mobile.Status.NoVehicles" xml:space="preserve"><value>Android datová sada je připravená, ale neobsahuje žádná vozidla.</value></data>
-  <data name="Mobile.Status.Loaded" xml:space="preserve"><value>Načtená vozidla: {0}.</value></data>
-  <data name="Mobile.Status.LoadFailed" xml:space="preserve"><value>Android datovou sadu se nepodařilo načíst. {0}</value></data>
+  <data name="Mobile.Action.ReloadName" xml:space="preserve"><value>Znovu načíst data</value></data>
+  <data name="Mobile.Status.Ready" xml:space="preserve"><value>Připraveno.</value></data>
+  <data name="Mobile.Status.Loading" xml:space="preserve"><value>Načítají se data...</value></data>
+  <data name="Mobile.Status.NoVehicles" xml:space="preserve"><value>Žádná vozidla.</value></data>
+  <data name="Mobile.Status.Loaded" xml:space="preserve"><value>Vozidla: {0}.</value></data>
+  <data name="Mobile.Status.LoadFailed" xml:space="preserve"><value>Data se nepodařilo načíst. {0}</value></data>
   <data name="Mobile.Value.UnnamedVehicle" xml:space="preserve"><value>Vozidlo bez názvu</value></data>
   <data name="Mobile.Value.NoCategory" xml:space="preserve"><value>Bez kategorie</value></data>
   <data name="Mobile.Value.NotEntered" xml:space="preserve"><value>Nevyplněno</value></data>

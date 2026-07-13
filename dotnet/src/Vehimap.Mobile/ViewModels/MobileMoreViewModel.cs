@@ -19,19 +19,7 @@ public sealed class MobileMoreViewModel : ObservableObject
 
     public string Heading => L("Mobile.More.Heading");
 
-    public string Intro => L("Mobile.More.Intro");
-
-    public string ReadOnlyText => L("Mobile.Shell.ReadOnly");
-
     public string DataSetHeading => L("Mobile.More.DataSetHeading");
-
-    public string DataPathLabel => L("Mobile.More.DataPathLabel");
-
-    public string DataPath => _session.DataRoot.DataPath;
-
-    public string DataModeLabel => L("Mobile.More.DataModeLabel");
-
-    public string DataMode => L("Mobile.More.DataModeSystem");
 
     public string ReloadText => L("Mobile.Action.Reload");
 
@@ -40,13 +28,7 @@ public sealed class MobileMoreViewModel : ObservableObject
     internal void Refresh()
     {
         OnPropertyChanged(nameof(Heading));
-        OnPropertyChanged(nameof(Intro));
-        OnPropertyChanged(nameof(ReadOnlyText));
         OnPropertyChanged(nameof(DataSetHeading));
-        OnPropertyChanged(nameof(DataPathLabel));
-        OnPropertyChanged(nameof(DataPath));
-        OnPropertyChanged(nameof(DataModeLabel));
-        OnPropertyChanged(nameof(DataMode));
         OnPropertyChanged(nameof(ReloadText));
         OnPropertyChanged(nameof(ReloadName));
     }

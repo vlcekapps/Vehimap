@@ -93,8 +93,6 @@ public sealed class MobileMainViewModel : ObservableObject
 
     public string NavigationName => L("Mobile.Navigation.Name");
 
-    public string NavigationHelp => L("Mobile.Navigation.Help");
-
     public string HomeNavigationText => L("Mobile.Navigation.Home");
 
     public string VehiclesNavigationText => L("Mobile.Navigation.Vehicles");
@@ -202,7 +200,6 @@ public sealed class MobileMainViewModel : ObservableObject
         {
             nameof(AppTitle),
             nameof(NavigationName),
-            nameof(NavigationHelp),
             nameof(HomeNavigationText),
             nameof(VehiclesNavigationText),
             nameof(AlertsNavigationText),

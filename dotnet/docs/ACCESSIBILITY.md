@@ -46,8 +46,11 @@ for a future ACR/VPAT-style report if one is needed.
 - Fields that runtime validation truly rejects as empty must expose
   `AutomationProperties.IsRequiredForForm`. Use it only for real required fields or
   explicit conditional requirements, never for helpful-but-optional values.
-- Use `AutomationProperties.HelpText` only for extra instructions, never as the only
-  label for a field.
+- Use `AutomationProperties.HelpText` only for non-obvious extra instructions, never as
+  the only label for a field. Do not repeat a control's visible name, list its obvious
+  choices or explain standard button/list/navigation operation. Repeated tutorial prose
+  increases screen-reader noise just as visible prose consumes compact layouts; longer
+  usage guidance belongs in the user guide.
 - Conditionally disabled controls must use `AutomationProperties.HelpText` to explain
   the prerequisite that enables them. A screen-reader user must not have to infer why a
   field is disabled from visual grouping alone.

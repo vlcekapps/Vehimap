@@ -51,7 +51,6 @@
             ColumnSpacing="4"
             AutomationProperties.AutomationId="MobilePrimaryNavigation"
             AutomationProperties.Name="{Binding NavigationName}"
-            AutomationProperties.HelpText="{Binding NavigationHelp}"
             AutomationProperties.LandmarkType="Navigation"
             AutomationProperties.AccessibilityView="Control">
         <RadioButton Name="MobileHomeNavigationButton"

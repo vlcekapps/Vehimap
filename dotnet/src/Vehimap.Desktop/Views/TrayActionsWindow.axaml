@@ -14,10 +14,9 @@
         WindowStartupLocation="CenterScreen"
         Title="{Binding Title}"
         AutomationProperties.Name="{i18n:Loc TrayActions.WindowName}"
-        AutomationProperties.AutomationId="TrayActionsWindow"
-        AutomationProperties.HelpText="{i18n:Loc TrayActions.HelpText}">
+        AutomationProperties.AutomationId="TrayActionsWindow">
   <Border Margin="16" Padding="20" Background="#1C2B38" CornerRadius="10">
-    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="14">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="14">
       <TextBlock FontSize="22"
                  FontWeight="SemiBold"
                  Text="{Binding Title}"
@@ -25,11 +24,7 @@
                  AutomationProperties.Name="{Binding Title}"
                  AutomationProperties.AutomationId="TrayActionsHeadingText"
                  AutomationProperties.HeadingLevel="1" />
-      <TextBlock Grid.Row="1"
-                 Opacity="0.82"
-                 Text="{Binding Description}"
-                 TextWrapping="Wrap" />
-      <Border Grid.Row="2"
+      <Border Grid.Row="1"
               Padding="10"
               Background="#263B4D"
               CornerRadius="8">
@@ -47,7 +42,7 @@
                   AutomationProperties.AutomationId="OpenBackgroundStatusTrayActionButton" />
         </StackPanel>
       </Border>
-      <ScrollViewer Grid.Row="3"
+      <ScrollViewer Grid.Row="2"
                     VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
                     AutomationProperties.Name="{i18n:Loc TrayActions.ScrollViewerName}"
@@ -229,7 +224,7 @@
                   AutomationProperties.AutomationId="ExitTrayActionButton" />
         </StackPanel>
       </ScrollViewer>
-      <Button Grid.Row="4"
+      <Button Grid.Row="3"
               x:Name="CloseTrayActionsButton"
               HorizontalAlignment="Right"
               MinWidth="120"

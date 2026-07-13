@@ -71,11 +71,7 @@ public sealed class MobileVehiclesViewModel : ObservableObject
 
     public string Heading => L("Mobile.Vehicles.Heading");
 
-    public string Intro => L("Mobile.Vehicles.Intro");
-
     public string VehicleListName => L("Mobile.VehicleList.Name");
-
-    public string VehicleListHelp => L("Mobile.VehicleList.Help");
 
     public string VehicleListEmptyText => L("Mobile.VehicleList.Empty");
 
@@ -90,8 +86,6 @@ public sealed class MobileVehiclesViewModel : ObservableObject
     public string VehicleHubHeading => ActiveVehicle is null
         ? L("Mobile.VehicleDetail.EmptyHeading")
         : LF("Mobile.Vehicles.HubHeading", ActiveVehicle.Name);
-
-    public string VehicleHubIntro => L("Mobile.Vehicles.HubIntro");
 
     public string NameLabel => L("Mobile.VehicleDetail.Name");
 
@@ -203,16 +197,13 @@ public sealed class MobileVehiclesViewModel : ObservableObject
         foreach (var propertyName in new[]
         {
             nameof(Heading),
-            nameof(Intro),
             nameof(VehicleListName),
-            nameof(VehicleListHelp),
             nameof(VehicleListEmptyText),
             nameof(OpenSelectedVehicleText),
             nameof(OpenSelectedVehicleName),
             nameof(BackText),
             nameof(BackName),
             nameof(VehicleHubHeading),
-            nameof(VehicleHubIntro),
             nameof(NameLabel),
             nameof(MakeModelLabel),
             nameof(CategoryLabel),

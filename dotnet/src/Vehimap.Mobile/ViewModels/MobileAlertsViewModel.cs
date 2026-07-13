@@ -27,15 +27,11 @@ public sealed class MobileAlertsViewModel : ObservableObject
 
     public string Heading => L("Mobile.Alerts.Heading");
 
-    public string Intro => L("Mobile.Alerts.Intro");
-
     public string Summary => string.IsNullOrWhiteSpace(_session.AdvisorSummary.Status)
         ? L("Mobile.Alerts.Empty")
         : _session.AdvisorSummary.Status;
 
     public string ListName => L("Mobile.Alerts.ListName");
-
-    public string ListHelp => L("Mobile.Alerts.ListHelp");
 
     public string EmptyText => L("Mobile.Alerts.Empty");
 
@@ -52,10 +48,8 @@ public sealed class MobileAlertsViewModel : ObservableObject
             ?? Alerts.FirstOrDefault();
         OnPropertyChanged(nameof(HasAlerts));
         OnPropertyChanged(nameof(Heading));
-        OnPropertyChanged(nameof(Intro));
         OnPropertyChanged(nameof(Summary));
         OnPropertyChanged(nameof(ListName));
-        OnPropertyChanged(nameof(ListHelp));
         OnPropertyChanged(nameof(EmptyText));
     }
 

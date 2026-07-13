@@ -24,8 +24,6 @@ public sealed class MobileHomeViewModel : ObservableObject
 
     public string Heading => L("Mobile.Home.Heading");
 
-    public string Intro => L("Mobile.Home.Intro");
-
     public string VehicleCountText => LF("Mobile.Home.VehicleCount", _session.DataSet.Vehicles.Count);
 
     public string AlertCountText => LF("Mobile.Home.AlertCount", _session.AdvisorSummary.TotalCount);
@@ -54,7 +52,6 @@ public sealed class MobileHomeViewModel : ObservableObject
     internal void Refresh()
     {
         OnPropertyChanged(nameof(Heading));
-        OnPropertyChanged(nameof(Intro));
         OnPropertyChanged(nameof(VehicleCountText));
         OnPropertyChanged(nameof(AlertCountText));
         OnPropertyChanged(nameof(TopAlertHeading));

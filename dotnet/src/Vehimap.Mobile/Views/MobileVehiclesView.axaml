@@ -8,7 +8,7 @@
   <Grid>
     <Grid IsVisible="{Binding IsVehicleListVisible}"
           Margin="18"
-          RowDefinitions="Auto,Auto,*,Auto,Auto"
+          RowDefinitions="Auto,*,Auto,Auto"
           RowSpacing="10">
       <TextBlock Grid.Row="0"
                  Text="{Binding Heading}"
@@ -18,16 +18,14 @@
                  AutomationProperties.AutomationId="MobileVehiclesHeading"
                  AutomationProperties.Name="{Binding Heading}"
                  AutomationProperties.HeadingLevel="1" />
-      <TextBlock Grid.Row="1" Text="{Binding Intro}" TextWrapping="Wrap" />
       <ListBox Name="MobileVehicleList"
-               Grid.Row="2"
+               Grid.Row="1"
                ItemsSource="{Binding Vehicles}"
                SelectedItem="{Binding SelectedVehicle}"
                MinHeight="180"
                IsTabStop="True"
                AutomationProperties.AutomationId="MobileVehicleList"
-               AutomationProperties.Name="{Binding VehicleListName}"
-               AutomationProperties.HelpText="{Binding VehicleListHelp}">
+               AutomationProperties.Name="{Binding VehicleListName}">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="vm:MobileVehicleListItemViewModel">
             <Border Padding="12"
@@ -44,14 +42,14 @@
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>
-      <TextBlock Grid.Row="3"
+      <TextBlock Grid.Row="2"
                  Text="{Binding VehicleListEmptyText}"
                  IsVisible="{Binding !HasVehicles}"
                  TextWrapping="Wrap"
                  AutomationProperties.AutomationId="MobileVehicleListEmptyStatus"
                  AutomationProperties.Name="{Binding VehicleListEmptyText}"
                  AutomationProperties.LiveSetting="Polite" />
-      <Button Grid.Row="4"
+      <Button Grid.Row="3"
               Content="{Binding OpenSelectedVehicleText}"
               Command="{Binding OpenSelectedVehicleCommand}"
               MinHeight="48"
@@ -77,7 +75,6 @@
                    AutomationProperties.AutomationId="MobileVehicleHubHeading"
                    AutomationProperties.Name="{Binding VehicleHubHeading}"
                    AutomationProperties.HeadingLevel="1" />
-        <TextBlock Text="{Binding VehicleHubIntro}" TextWrapping="Wrap" />
 
         <Border Padding="14" BorderThickness="1" CornerRadius="8">
           <StackPanel Spacing="9">

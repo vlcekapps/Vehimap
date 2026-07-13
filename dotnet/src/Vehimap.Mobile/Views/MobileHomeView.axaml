@@ -15,7 +15,6 @@
                  AutomationProperties.AutomationId="MobileHomeHeading"
                  AutomationProperties.Name="{Binding Heading}"
                  AutomationProperties.HeadingLevel="1" />
-      <TextBlock Text="{Binding Intro}" TextWrapping="Wrap" />
 
       <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
         <Border Grid.Column="0" Padding="14" BorderThickness="1" CornerRadius="8">

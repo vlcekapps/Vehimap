@@ -225,7 +225,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Equal("Untitled", record.Title);
         Assert.Equal("Managed copy", record.AttachmentMode);
         Assert.Equal("File available", record.AttachmentState);
-        Assert.Equal("The selected vehicle has 1 document. Select the entry to open the file or its folder.", records.Summary);
+        Assert.Equal("Selected vehicle: 1 document.", records.Summary);
         }
         finally
         {

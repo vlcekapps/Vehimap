@@ -108,6 +108,67 @@ public sealed class MobilePlatformFoundationTests
     }
 
     [Fact]
+    public void Primary_surfaces_do_not_embed_redundant_tutorial_copy()
+    {
+        var mobileViews = Directory.GetFiles(RepositoryPath("src", "Vehimap.Mobile", "Views"), "*.axaml")
+            .Select(File.ReadAllText)
+            .ToArray();
+        var mobileContent = string.Join(Environment.NewLine, mobileViews);
+        var desktopShell = File.ReadAllText(RepositoryPath("src", "Vehimap.Desktop", "Views", "MainWindow.axaml"));
+        var trayActions = File.ReadAllText(RepositoryPath("src", "Vehimap.Desktop", "Views", "TrayActionsWindow.axaml"));
+        var english = ReadResourceValues(RepositoryPath("src", "Vehimap.Application", "Resources", "Strings.resx"));
+        var czech = ReadResourceValues(RepositoryPath("src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx"));
+        var removedResourceKeys = new[]
+        {
+            "Mobile.Navigation.Help",
+            "Mobile.Home.Intro",
+            "Mobile.Vehicles.Intro",
+            "Mobile.Vehicles.HubIntro",
+            "Mobile.Alerts.Intro",
+            "Mobile.Alerts.ListHelp",
+            "Mobile.More.Intro",
+            "Mobile.Shell.Intro",
+            "Mobile.Shell.ReadOnly",
+            "Mobile.VehicleList.Help",
+            "Shell.Footer",
+            "VehicleList.ListHelp",
+            "TrayActions.Description",
+            "TrayActions.HelpText"
+        };
+
+        Assert.DoesNotContain("{Binding Intro}", mobileContent, StringComparison.Ordinal);
+        Assert.DoesNotContain("{Binding NavigationHelp}", mobileContent, StringComparison.Ordinal);
+        Assert.DoesNotContain("{Binding VehicleHubIntro}", mobileContent, StringComparison.Ordinal);
+        Assert.DoesNotContain("{Binding ReadOnlyText}", mobileContent, StringComparison.Ordinal);
+        Assert.DoesNotContain("Shell.Footer", desktopShell, StringComparison.Ordinal);
+        Assert.DoesNotContain("VehicleList.ListHelp", desktopShell, StringComparison.Ordinal);
+        Assert.DoesNotContain("TrayActions.HelpText", trayActions, StringComparison.Ordinal);
+        Assert.DoesNotContain("{Binding Description}", trayActions, StringComparison.Ordinal);
+        Assert.All(removedResourceKeys, key =>
+        {
+            Assert.DoesNotContain(key, english.Keys);
+            Assert.DoesNotContain(key, czech.Keys);
+        });
+
+        foreach (var key in new[]
+                 {
+                     "GlobalSearch.Detail.EmptySelection",
+                     "FuelWorkspace.Detail.Empty",
+                     "HistoryWorkspace.Detail.Empty",
+                     "MaintenanceWorkspace.Detail.Empty",
+                     "RecordWorkspace.Detail.Empty",
+                     "ReminderWorkspace.Detail.Empty",
+                     "CostWorkspace.Detail.Empty",
+                     "TimelineWorkspace.Detail.Empty",
+                     "SmartAdvisor.Detail.Empty"
+                 })
+        {
+            Assert.False(english[key].StartsWith("Select ", StringComparison.OrdinalIgnoreCase));
+            Assert.False(czech[key].StartsWith("Vyber", StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+    [Fact]
     public void Mobile_vehicle_hub_is_separate_from_the_list_and_contains_no_inline_editor()
     {
         var view = File.ReadAllText(RepositoryPath("src", "Vehimap.Mobile", "Views", "MobileVehiclesView.axaml"));
@@ -266,6 +327,15 @@ public sealed class MobilePlatformFoundationTests
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Select(value => value!)
             .ToHashSet(StringComparer.Ordinal);
+
+    private static Dictionary<string, string> ReadResourceValues(string path) =>
+        XDocument.Load(path)
+            .Descendants("data")
+            .Where(element => !string.IsNullOrWhiteSpace(element.Attribute("name")?.Value))
+            .ToDictionary(
+                element => element.Attribute("name")!.Value,
+                element => element.Element("value")?.Value ?? string.Empty,
+                StringComparer.Ordinal);
 
     private static string RepositoryPath(params string[] segments)
     {

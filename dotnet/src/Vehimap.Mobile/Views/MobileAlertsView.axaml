@@ -15,7 +15,6 @@
                AutomationProperties.Name="{Binding Heading}"
                AutomationProperties.HeadingLevel="1" />
     <StackPanel Grid.Row="1" Spacing="5">
-      <TextBlock Text="{Binding Intro}" TextWrapping="Wrap" />
       <TextBlock Text="{Binding Summary}"
                  FontWeight="SemiBold"
                  TextWrapping="Wrap"
@@ -28,8 +27,7 @@
              SelectedItem="{Binding SelectedAlert}"
              IsTabStop="True"
              AutomationProperties.AutomationId="MobileAlertsList"
-             AutomationProperties.Name="{Binding ListName}"
-             AutomationProperties.HelpText="{Binding ListHelp}">
+             AutomationProperties.Name="{Binding ListName}">
       <ListBox.ItemTemplate>
         <DataTemplate x:DataType="vm:MobileAlertItemViewModel">
           <Border Padding="12"

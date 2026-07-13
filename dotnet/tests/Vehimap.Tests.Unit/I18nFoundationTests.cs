@@ -1515,7 +1515,8 @@ public sealed class I18nFoundationTests
 
         Assert.Contains("xmlns:i18n=\"using:Vehimap.Desktop.Localization\"", trayActionsWindow);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.WindowName}\"", trayActionsWindow);
-        Assert.Contains("AutomationProperties.HelpText=\"{i18n:Loc TrayActions.HelpText}\"", trayActionsWindow);
+        Assert.DoesNotContain("TrayActions.HelpText", trayActionsWindow, StringComparison.Ordinal);
+        Assert.DoesNotContain("Text=\"{Binding Description}\"", trayActionsWindow, StringComparison.Ordinal);
         Assert.Contains("Text=\"{i18n:Loc TrayActions.Section.ApplicationAndOverviews}\"", trayActionsWindow);
         Assert.Contains("Text=\"{i18n:Loc TrayActions.Section.FileAndSettings}\"", trayActionsWindow);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc TrayActions.ExportBackupName}\"", trayActionsWindow);

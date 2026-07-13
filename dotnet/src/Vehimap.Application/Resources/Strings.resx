@@ -211,7 +211,7 @@
   <data name="GlobalSearch.Entity.Reminder" xml:space="preserve"><value>Reminder</value></data>
   <data name="GlobalSearch.Entity.Reminders" xml:space="preserve"><value>Reminders</value></data>
   <data name="GlobalSearch.Entity.Vehicle" xml:space="preserve"><value>Vehicle</value></data>
-  <data name="GlobalSearch.Detail.EmptySelection" xml:space="preserve"><value>Select a result to open the matching vehicle or record directly.</value></data>
+  <data name="GlobalSearch.Detail.EmptySelection" xml:space="preserve"><value>No search result selected.</value></data>
   <data name="GlobalSearch.Detail.Selected" xml:space="preserve"><value>{0}: {1}
 Vehicle: {2}
 {3}</value></data>
@@ -276,7 +276,7 @@ Vehicle: {2}
   <data name="FuelWorkspace.Summary.Initial" xml:space="preserve"><value>Fuel entries for the selected vehicle appear after choosing a vehicle.</value></data>
   <data name="FuelWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to fuel search.</value></data>
   <data name="FuelWorkspace.AnalysisSummary.Initial" xml:space="preserve"><value>Fuel analysis appears after choosing a vehicle.</value></data>
-  <data name="FuelWorkspace.Detail.Empty" xml:space="preserve"><value>Select a fuel entry to show its detail.</value></data>
+  <data name="FuelWorkspace.Detail.Empty" xml:space="preserve"><value>No fuel entry selected.</value></data>
   <data name="FuelWorkspace.PanelHeading" xml:space="preserve"><value>Fuel detail</value></data>
   <data name="FuelWorkspace.Detail.Date" xml:space="preserve"><value>Date: {0}</value></data>
   <data name="FuelWorkspace.Detail.Fuel" xml:space="preserve"><value>Fuel: {0}</value></data>
@@ -390,7 +390,7 @@ Vehicle: {2}
   <data name="HistoryWorkspace.Title" xml:space="preserve"><value>History entries for the selected vehicle</value></data>
   <data name="HistoryWorkspace.Summary.Initial" xml:space="preserve"><value>History for the selected vehicle appears after choosing a vehicle.</value></data>
   <data name="HistoryWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to history search.</value></data>
-  <data name="HistoryWorkspace.Detail.Empty" xml:space="preserve"><value>Select a history entry to show its detail.</value></data>
+  <data name="HistoryWorkspace.Detail.Empty" xml:space="preserve"><value>No history entry selected.</value></data>
   <data name="HistoryWorkspace.PanelHeading" xml:space="preserve"><value>History detail</value></data>
   <data name="HistoryWorkspace.Detail.Date" xml:space="preserve"><value>Date: {0}</value></data>
   <data name="HistoryWorkspace.Detail.EventType" xml:space="preserve"><value>Event type: {0}</value></data>
@@ -509,7 +509,7 @@ Vehicle: {2}
   <data name="MaintenanceWorkspace.Title" xml:space="preserve"><value>Maintenance plans for the selected vehicle</value></data>
   <data name="MaintenanceWorkspace.Summary.Initial" xml:space="preserve"><value>Maintenance plan for the selected vehicle appears after choosing a vehicle.</value></data>
   <data name="MaintenanceWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to maintenance search.</value></data>
-  <data name="MaintenanceWorkspace.Detail.Empty" xml:space="preserve"><value>Select a maintenance task to show its detail.</value></data>
+  <data name="MaintenanceWorkspace.Detail.Empty" xml:space="preserve"><value>No maintenance task selected.</value></data>
   <data name="MaintenanceWorkspace.PanelHeading" xml:space="preserve"><value>Maintenance detail</value></data>
   <data name="MaintenanceWorkspace.Detail.Task" xml:space="preserve"><value>Task: {0}</value></data>
   <data name="MaintenanceWorkspace.Detail.Interval" xml:space="preserve"><value>Interval: {0}</value></data>
@@ -612,7 +612,7 @@ Vehicle: {2}
   <data name="RecordWorkspace.Title" xml:space="preserve"><value>Documents and attachments for the selected vehicle</value></data>
   <data name="RecordWorkspace.Summary.Initial" xml:space="preserve"><value>Documents and attachments for the selected vehicle appear after choosing a vehicle.</value></data>
   <data name="RecordWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to document search.</value></data>
-  <data name="RecordWorkspace.Detail.Empty" xml:space="preserve"><value>Select a document to show attachment detail.</value></data>
+  <data name="RecordWorkspace.Detail.Empty" xml:space="preserve"><value>No document selected.</value></data>
   <data name="RecordWorkspace.PanelHeading" xml:space="preserve"><value>Document detail</value></data>
   <data name="RecordWorkspace.Detail.Type" xml:space="preserve"><value>Type: {0}</value></data>
   <data name="RecordWorkspace.Detail.Validity" xml:space="preserve"><value>Validity: {0}</value></data>
@@ -695,7 +695,7 @@ Vehicle: {2}
   <data name="ReminderWorkspace.Title" xml:space="preserve"><value>Reminders for the selected vehicle</value></data>
   <data name="ReminderWorkspace.Summary.Initial" xml:space="preserve"><value>Reminders for the selected vehicle appear after choosing a vehicle.</value></data>
   <data name="ReminderWorkspace.SearchSummary.Initial" xml:space="preserve"><value>Ctrl+F moves focus to reminder search.</value></data>
-  <data name="ReminderWorkspace.Detail.Empty" xml:space="preserve"><value>Select a reminder to show its detail.</value></data>
+  <data name="ReminderWorkspace.Detail.Empty" xml:space="preserve"><value>No reminder selected.</value></data>
   <data name="ReminderWorkspace.PanelHeading" xml:space="preserve"><value>Reminder detail</value></data>
   <data name="ReminderWorkspace.Detail.Title" xml:space="preserve"><value>Title: {0}</value></data>
   <data name="ReminderWorkspace.Detail.DueDate" xml:space="preserve"><value>Due date: {0}</value></data>
@@ -935,7 +935,6 @@ Vehicle: {2}
   <data name="TrayActions.CloseName" xml:space="preserve"><value>Close tray actions without making a change</value></data>
   <data name="TrayActions.CreateAutomaticBackupNowLabel" xml:space="preserve"><value>Back up now</value></data>
   <data name="TrayActions.CreateAutomaticBackupNowName" xml:space="preserve"><value>Create an automatic backup now</value></data>
-  <data name="TrayActions.Description" xml:space="preserve"><value>Choose an action for the running Vehimap. This window replaces the native tray menu with a more accessible keyboard and screen-reader friendly control surface.</value></data>
   <data name="TrayActions.ExitLabel" xml:space="preserve"><value>Exit application</value></data>
   <data name="TrayActions.ExitName" xml:space="preserve"><value>Exit Vehimap</value></data>
   <data name="TrayActions.ExportBackupLabel" xml:space="preserve"><value>Export data backup</value></data>
@@ -944,7 +943,6 @@ Vehicle: {2}
   <data name="TrayActions.ExportCalendarName" xml:space="preserve"><value>Export future due dates to a calendar</value></data>
   <data name="TrayActions.FeedbackIssueLabel" xml:space="preserve"><value>Report feedback</value></data>
   <data name="TrayActions.FeedbackIssueName" xml:space="preserve"><value>Open the feedback form for Vehimap</value></data>
-  <data name="TrayActions.HelpText" xml:space="preserve"><value>Choose an action for the running Vehimap. The first button shows the main application window; the other buttons open overviews, nearest due dates, filtered checks or file actions. Escape closes the window without an action.</value></data>
   <data name="TrayActions.ImportBackupHelpText" xml:space="preserve"><value>Selects a backup file and, after confirmation, replaces the current data set. A protective copy of current data is created before restore.</value></data>
   <data name="TrayActions.ImportBackupLabel" xml:space="preserve"><value>Restore data from backup</value></data>
   <data name="TrayActions.ImportBackupName" xml:space="preserve"><value>Restore application data from a backup</value></data>
@@ -1260,7 +1258,6 @@ Vehicle: {2}
   <data name="Shell.AuditCount" xml:space="preserve"><value>Audit</value></data>
   <data name="Shell.DataModeLabel" xml:space="preserve"><value>Data storage</value></data>
   <data name="Shell.DataPathLabel" xml:space="preserve"><value>Data folder</value></data>
-  <data name="Shell.Footer" xml:space="preserve"><value>Select a vehicle to view its records, then use the workspace tabs for history, fuel, documents, reminders, maintenance, timeline, audit, costs and other overviews. Editing opens in a separate window so changes can be saved or canceled clearly.</value></data>
   <data name="Shell.FuelCount" xml:space="preserve"><value>Fuel</value></data>
   <data name="Shell.HelpText" xml:space="preserve"><value>Vehimap vehicle records. After opening, keyboard focus is in the vehicle list on the left.</value></data>
   <data name="Shell.HistoryCount" xml:space="preserve"><value>History</value></data>
@@ -1319,7 +1316,7 @@ Vehicle: {2}
   <data name="CostWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, category, amount, cost per distance or calculation status...</value></data>
   <data name="CostWorkspace.PeriodStatus.Initial" xml:space="preserve"><value>The cost period loads together with the data.</value></data>
   <data name="CostWorkspace.ExportStatus.Initial" xml:space="preserve"><value>Cost exports use the currently displayed period.</value></data>
-  <data name="CostWorkspace.Detail.Empty" xml:space="preserve"><value>Select a vehicle in the list to show the cost breakdown.</value></data>
+  <data name="CostWorkspace.Detail.Empty" xml:space="preserve"><value>No vehicle selected.</value></data>
   <data name="CostWorkspace.Detail.Selected" xml:space="preserve"><value>Vehicle: {0}
 Category: {1}
 Fuel: {2}
@@ -1556,7 +1553,7 @@ Without numeric cost: {4} of {5} active vehicles.</value></data>
   <data name="SmartAdvisorWorkspace.VehicleFilterName" xml:space="preserve"><value>Smart advisor vehicle filter</value></data>
   <data name="TimelineWorkspace.ClearSearchName" xml:space="preserve"><value>Clear timeline search</value></data>
   <data name="TimelineWorkspace.DetailHeading" xml:space="preserve"><value>Timeline detail</value></data>
-  <data name="TimelineWorkspace.Detail.Empty" xml:space="preserve"><value>Select a timeline item to show details.</value></data>
+  <data name="TimelineWorkspace.Detail.Empty" xml:space="preserve"><value>No timeline item selected.</value></data>
   <data name="TimelineWorkspace.Detail.Selected" xml:space="preserve"><value>Date: {0}
 Kind: {1}
 Item: {2}
@@ -1638,7 +1635,7 @@ Note: {5}</value></data>
   <data name="OverdueOverviewWorkspace.SearchPlaceholder" xml:space="preserve"><value>Vehicle, license plate, due date or item...</value></data>
   <data name="OverdueOverviewWorkspace.SortDescendingName" xml:space="preserve"><value>Sort overdue due dates descending</value></data>
   <data name="OverdueOverviewWorkspace.SortName" xml:space="preserve"><value>Overdue due date sort order</value></data>
-  <data name="DashboardTimeline.Detail.Empty" xml:space="preserve"><value>Select the nearest due date to open the related vehicle or record.</value></data>
+  <data name="DashboardTimeline.Detail.Empty" xml:space="preserve"><value>No due date selected.</value></data>
   <data name="DashboardTimeline.Detail.Selected" xml:space="preserve"><value>Vehicle: {0}
 Date: {1}
 Type: {2}
@@ -1651,8 +1648,8 @@ Detail: {5}</value></data>
   <data name="Overview.DataIssue.Severity.Error" xml:space="preserve"><value>Error</value></data>
   <data name="Overview.DataIssue.Severity.Info" xml:space="preserve"><value>Info</value></data>
   <data name="Overview.DataIssue.Severity.Warning" xml:space="preserve"><value>Warning</value></data>
-  <data name="Overview.Detail.EmptyOverdue" xml:space="preserve"><value>Select an overdue due date to open the related vehicle or record.</value></data>
-  <data name="Overview.Detail.EmptyUpcoming" xml:space="preserve"><value>Select a due date to open the related vehicle or record.</value></data>
+  <data name="Overview.Detail.EmptyOverdue" xml:space="preserve"><value>No overdue due date selected.</value></data>
+  <data name="Overview.Detail.EmptyUpcoming" xml:space="preserve"><value>No due date selected.</value></data>
   <data name="Overview.Detail.Selected" xml:space="preserve"><value>{0}
 {1} | {2}
 {3}
@@ -1685,10 +1682,10 @@ Status: {5}</value></data>
   <data name="Overview.Summary.DashboardWithItems.Other" xml:space="preserve"><value>The nearest {0} future due dates across all vehicles are ready to open.</value></data>
   <data name="Overview.Summary.OverdueEmpty" xml:space="preserve"><value>The available data does not contain any overdue due dates with a concrete date yet.</value></data>
   <data name="Overview.Summary.OverdueInitial" xml:space="preserve"><value>Overdue due dates across vehicles will appear after the data is loaded.</value></data>
-  <data name="Overview.Summary.OverdueWithItems" xml:space="preserve"><value>Overdue due dates: {0}. Select an item to open the record or vehicle.</value></data>
-  <data name="Overview.Summary.OverdueWithItems.One" xml:space="preserve"><value>Overdue due date: {0}. Select it to open the record or vehicle.</value></data>
-  <data name="Overview.Summary.OverdueWithItems.Few" xml:space="preserve"><value>Overdue due dates: {0}. Select an item to open the record or vehicle.</value></data>
-  <data name="Overview.Summary.OverdueWithItems.Other" xml:space="preserve"><value>Overdue due dates: {0}. Select an item to open the record or vehicle.</value></data>
+  <data name="Overview.Summary.OverdueWithItems" xml:space="preserve"><value>Overdue due dates: {0}.</value></data>
+  <data name="Overview.Summary.OverdueWithItems.One" xml:space="preserve"><value>Overdue due date: {0}.</value></data>
+  <data name="Overview.Summary.OverdueWithItems.Few" xml:space="preserve"><value>Overdue due dates: {0}.</value></data>
+  <data name="Overview.Summary.OverdueWithItems.Other" xml:space="preserve"><value>Overdue due dates: {0}.</value></data>
   <data name="Overview.Summary.UpcomingDataIssuesHidden" xml:space="preserve"><value>The audit has {0} data issues; you can add them with the option below the filter.</value></data>
   <data name="Overview.Summary.UpcomingDataIssuesHidden.One" xml:space="preserve"><value>The audit has {0} data issue; you can add it with the option below the filter.</value></data>
   <data name="Overview.Summary.UpcomingDataIssuesHidden.Few" xml:space="preserve"><value>The audit has {0} data issues; you can add them with the option below the filter.</value></data>
@@ -1704,10 +1701,10 @@ Status: {5}</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues.One" xml:space="preserve"><value>Data issue included: {0}.</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues.Few" xml:space="preserve"><value>Data issues included: {0}.</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues.Other" xml:space="preserve"><value>Data issues included: {0}.</value></data>
-  <data name="Overview.Summary.UpcomingWithItems" xml:space="preserve"><value>Upcoming items: {0}. Select an item to open the record or vehicle.</value></data>
-  <data name="Overview.Summary.UpcomingWithItems.One" xml:space="preserve"><value>Upcoming item: {0}. Select it to open the record or vehicle.</value></data>
-  <data name="Overview.Summary.UpcomingWithItems.Few" xml:space="preserve"><value>Upcoming items: {0}. Select an item to open the record or vehicle.</value></data>
-  <data name="Overview.Summary.UpcomingWithItems.Other" xml:space="preserve"><value>Upcoming items: {0}. Select an item to open the record or vehicle.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems" xml:space="preserve"><value>Upcoming items: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems.One" xml:space="preserve"><value>Upcoming item: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems.Few" xml:space="preserve"><value>Upcoming items: {0}.</value></data>
+  <data name="Overview.Summary.UpcomingWithItems.Other" xml:space="preserve"><value>Upcoming items: {0}.</value></data>
   <data name="Timeline.Detail.DateAndOdometer" xml:space="preserve"><value>{0} | {1}</value></data>
   <data name="Timeline.Kind.Fuel" xml:space="preserve"><value>Fuel</value></data>
   <data name="Timeline.Kind.GreenCard" xml:space="preserve"><value>Green card</value></data>
@@ -1742,7 +1739,6 @@ Status: {5}</value></data>
   <data name="VehicleList.ClearFiltersName" xml:space="preserve"><value>Clear vehicle list filters</value></data>
   <data name="VehicleList.HideInactive" xml:space="preserve"><value>Hide archived and parked vehicles</value></data>
   <data name="VehicleList.ItemType" xml:space="preserve"><value>Vehicle</value></data>
-  <data name="VehicleList.ListHelp" xml:space="preserve"><value>Use arrow keys to select a vehicle. Detail and related records are shown on the right.</value></data>
   <data name="VehicleList.ListName" xml:space="preserve"><value>Loaded vehicle list</value></data>
   <data name="VehicleList.SearchHeading" xml:space="preserve"><value>Search in vehicle list</value></data>
   <data name="VehicleList.SearchPlaceholder" xml:space="preserve"><value>Name, make, license plate, note or tag</value></data>
@@ -2210,7 +2206,7 @@ Status: {5}</value></data>
   <data name="ServiceBook.Window.ItemType" xml:space="preserve"><value>Service book item</value></data>
   <data name="ServiceBook.Window.VehicleSummary" xml:space="preserve"><value>{0} | {1} | License plate {2} | Odometer {3}</value></data>
   <data name="ServiceBook.Window.CostSummary" xml:space="preserve"><value>Sum of numeric amounts in history: {0}.</value></data>
-  <data name="ServiceBook.Window.SelectedItemEmpty" xml:space="preserve"><value>Select a service book item to open the related record.</value></data>
+  <data name="ServiceBook.Window.SelectedItemEmpty" xml:space="preserve"><value>No service book item selected.</value></data>
   <data name="ServiceBook.Window.OpenRelatedFailed" xml:space="preserve"><value>The related item could not be opened.</value></data>
   <data name="ServiceBook.Window.OpenRelatedSuccess" xml:space="preserve"><value>The related item was opened in the main window.</value></data>
   <data name="ServiceBook.Status.NoVehicle" xml:space="preserve"><value>Service book cannot be opened without a selected vehicle.</value></data>
@@ -2517,10 +2513,10 @@ Status: {5}</value></data>
   <data name="Maintenance.Projection.Summary.Count.Few" xml:space="preserve"><value>The selected vehicle has {0} maintenance plans.</value></data>
   <data name="Maintenance.Projection.Summary.Count.Other" xml:space="preserve"><value>The selected vehicle has {0} maintenance plans.</value></data>
   <data name="Record.Projection.Summary.Empty" xml:space="preserve"><value>The selected vehicle has no documents yet.</value></data>
-  <data name="Record.Projection.Summary.Count" xml:space="preserve"><value>The selected vehicle has {0} documents. Select an entry to open the file or its folder.</value></data>
-  <data name="Record.Projection.Summary.Count.One" xml:space="preserve"><value>The selected vehicle has {0} document. Select the entry to open the file or its folder.</value></data>
-  <data name="Record.Projection.Summary.Count.Few" xml:space="preserve"><value>The selected vehicle has {0} documents. Select an entry to open the file or its folder.</value></data>
-  <data name="Record.Projection.Summary.Count.Other" xml:space="preserve"><value>The selected vehicle has {0} documents. Select an entry to open the file or its folder.</value></data>
+  <data name="Record.Projection.Summary.Count" xml:space="preserve"><value>Selected vehicle: {0} documents.</value></data>
+  <data name="Record.Projection.Summary.Count.One" xml:space="preserve"><value>Selected vehicle: {0} document.</value></data>
+  <data name="Record.Projection.Summary.Count.Few" xml:space="preserve"><value>Selected vehicle: {0} documents.</value></data>
+  <data name="Record.Projection.Summary.Count.Other" xml:space="preserve"><value>Selected vehicle: {0} documents.</value></data>
   <data name="Record.Projection.AttachmentMode.Managed" xml:space="preserve"><value>Managed copy</value></data>
   <data name="Record.Projection.AttachmentMode.External" xml:space="preserve"><value>External path</value></data>
   <data name="Record.Projection.Validity.FromEmpty" xml:space="preserve"><value>from not filled</value></data>
@@ -2534,7 +2530,7 @@ Status: {5}</value></data>
   <data name="Record.Projection.AttachmentState.Unresolved" xml:space="preserve"><value>Path not resolved</value></data>
   <data name="Record.Projection.AttachmentState.ExternalMissing" xml:space="preserve"><value>External attachment missing</value></data>
   <data name="VehicleDetail.Projection.EmptyHeading" xml:space="preserve"><value>No vehicle selected</value></data>
-  <data name="VehicleDetail.Projection.EmptyOverview" xml:space="preserve"><value>Select a vehicle on the left to show its basic summary.</value></data>
+  <data name="VehicleDetail.Projection.EmptyOverview" xml:space="preserve"><value>No vehicle selected.</value></data>
   <data name="VehicleDetail.Projection.EmptyEvidence" xml:space="preserve"><value>Related records appear after selecting a vehicle.</value></data>
   <data name="VehicleDetail.Projection.EmptyRecentHistory" xml:space="preserve"><value>Recent events appear after selecting a vehicle.</value></data>
   <data name="VehicleDetail.PanelHeading" xml:space="preserve"><value>Vehicle detail</value></data>
@@ -2769,7 +2765,7 @@ Transmission: {3}</value></data>
   <data name="SmartAdvisor.Filter.AllCategories" xml:space="preserve"><value>All categories</value></data>
   <data name="SmartAdvisor.Filter.AllVehicles" xml:space="preserve"><value>All vehicles</value></data>
   <data name="SmartAdvisor.Summary.Initial" xml:space="preserve"><value>Smart Advisor appears after data is loaded.</value></data>
-  <data name="SmartAdvisor.Detail.Empty" xml:space="preserve"><value>Select a recommendation to show the detail and suggested action.</value></data>
+  <data name="SmartAdvisor.Detail.Empty" xml:space="preserve"><value>No recommendation selected.</value></data>
   <data name="SmartAdvisor.Detail.Selected" xml:space="preserve"><value>Priority: {0}
 Category: {1}
 Vehicle: {2}
@@ -2856,14 +2852,12 @@ Suggested action: {6}</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears.LegacyWords" xml:space="preserve"><value>Every five years</value></data>
   <data name="Mobile.App.Title" xml:space="preserve"><value>Vehimap Nightly for Android</value></data>
   <data name="Mobile.Navigation.Name" xml:space="preserve"><value>Primary navigation</value></data>
-  <data name="Mobile.Navigation.Help" xml:space="preserve"><value>Choose Home, Vehicles, Alerts, or More.</value></data>
   <data name="Mobile.Navigation.Home" xml:space="preserve"><value>Home</value></data>
   <data name="Mobile.Navigation.Vehicles" xml:space="preserve"><value>Vehicles</value></data>
   <data name="Mobile.Navigation.Alerts" xml:space="preserve"><value>Alerts</value></data>
   <data name="Mobile.Navigation.More" xml:space="preserve"><value>More</value></data>
   <data name="Mobile.Common.Back" xml:space="preserve"><value>Back</value></data>
   <data name="Mobile.Home.Heading" xml:space="preserve"><value>Home</value></data>
-  <data name="Mobile.Home.Intro" xml:space="preserve"><value>A quick overview of your vehicles and the items that need attention.</value></data>
   <data name="Mobile.Home.VehicleCount" xml:space="preserve"><value>Vehicles: {0}</value></data>
   <data name="Mobile.Home.AlertCount" xml:space="preserve"><value>Items to review: {0}</value></data>
   <data name="Mobile.Home.TopAlertHeading" xml:space="preserve"><value>First item to review</value></data>
@@ -2874,12 +2868,10 @@ Suggested action: {6}</value></data>
   <data name="Mobile.Home.OpenAlerts" xml:space="preserve"><value>Open alerts</value></data>
   <data name="Mobile.Home.OpenAlertsName" xml:space="preserve"><value>Open items that need attention</value></data>
   <data name="Mobile.Vehicles.Heading" xml:space="preserve"><value>Vehicles</value></data>
-  <data name="Mobile.Vehicles.Intro" xml:space="preserve"><value>Select a vehicle, then open its mobile hub.</value></data>
   <data name="Mobile.Vehicles.OpenSelected" xml:space="preserve"><value>Open selected vehicle</value></data>
   <data name="Mobile.Vehicles.OpenSelectedName" xml:space="preserve"><value>Open the selected vehicle hub</value></data>
   <data name="Mobile.Vehicles.BackName" xml:space="preserve"><value>Return to the vehicle list</value></data>
   <data name="Mobile.Vehicles.HubHeading" xml:space="preserve"><value>{0}</value></data>
-  <data name="Mobile.Vehicles.HubIntro" xml:space="preserve"><value>Vehicle details and evidence summary. Individual evidence screens will open from this hub instead of desktop-style tabs.</value></data>
   <data name="Mobile.Vehicles.EvidenceHeading" xml:space="preserve"><value>Vehicle evidence</value></data>
   <data name="Mobile.Vehicles.HistoryCount" xml:space="preserve"><value>History entries: {0}</value></data>
   <data name="Mobile.Vehicles.FuelCount" xml:space="preserve"><value>Fuel entries: {0}</value></data>
@@ -2887,9 +2879,7 @@ Suggested action: {6}</value></data>
   <data name="Mobile.Vehicles.ReminderCount" xml:space="preserve"><value>Reminders: {0}</value></data>
   <data name="Mobile.Vehicles.MaintenanceCount" xml:space="preserve"><value>Maintenance plans: {0}</value></data>
   <data name="Mobile.Alerts.Heading" xml:space="preserve"><value>Alerts</value></data>
-  <data name="Mobile.Alerts.Intro" xml:space="preserve"><value>Deadlines, data issues, maintenance, fuel, and other recommendations across all vehicles.</value></data>
   <data name="Mobile.Alerts.ListName" xml:space="preserve"><value>Items that need attention</value></data>
-  <data name="Mobile.Alerts.ListHelp" xml:space="preserve"><value>Browse recommendations ordered by priority.</value></data>
   <data name="Mobile.Alerts.Empty" xml:space="preserve"><value>No item currently needs your attention.</value></data>
   <data name="Mobile.Alerts.ItemType" xml:space="preserve"><value>Alert</value></data>
   <data name="Mobile.Alerts.ItemAccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}. {3}</value></data>
@@ -2898,22 +2888,12 @@ Suggested action: {6}</value></data>
   <data name="Mobile.Alerts.Priority.Warning" xml:space="preserve"><value>Warning</value></data>
   <data name="Mobile.Alerts.Priority.Critical" xml:space="preserve"><value>Critical</value></data>
   <data name="Mobile.More.Heading" xml:space="preserve"><value>More</value></data>
-  <data name="Mobile.More.Intro" xml:space="preserve"><value>Application-wide actions and information that do not belong to one vehicle.</value></data>
-  <data name="Mobile.More.DataSetHeading" xml:space="preserve"><value>Android data set</value></data>
-  <data name="Mobile.More.DataPathLabel" xml:space="preserve"><value>Data folder</value></data>
-  <data name="Mobile.More.DataModeLabel" xml:space="preserve"><value>Data mode</value></data>
-  <data name="Mobile.More.DataModeSystem" xml:space="preserve"><value>System application data folder</value></data>
-  <data name="Mobile.Shell.Heading" xml:space="preserve"><value>My vehicles</value></data>
-  <data name="Mobile.Shell.Intro" xml:space="preserve"><value>Select a vehicle to read its basic details. This first Android nightly shares the Vehimap 2.0 data model and localization foundation.</value></data>
-  <data name="Mobile.Shell.ReadOnly" xml:space="preserve"><value>Read-only preview: editing and data transfer will be added in a later Android stage.</value></data>
+  <data name="Mobile.More.DataSetHeading" xml:space="preserve"><value>App data</value></data>
   <data name="Mobile.VehicleList.Name" xml:space="preserve"><value>Vehicle list</value></data>
-  <data name="Mobile.VehicleList.Help" xml:space="preserve"><value>Select a vehicle to show its details below the list.</value></data>
-  <data name="Mobile.VehicleList.Empty" xml:space="preserve"><value>No vehicles are stored in the Android data set yet.</value></data>
+  <data name="Mobile.VehicleList.Empty" xml:space="preserve"><value>No vehicles.</value></data>
   <data name="Mobile.VehicleList.ItemType" xml:space="preserve"><value>Vehicle</value></data>
   <data name="Mobile.VehicleList.ItemAccessibleLabel" xml:space="preserve"><value>{0}, {1}, category {2}, license plate {3}, status {4}</value></data>
   <data name="Mobile.VehicleDetail.EmptyHeading" xml:space="preserve"><value>Vehicle detail</value></data>
-  <data name="Mobile.VehicleDetail.EmptyText" xml:space="preserve"><value>Select a vehicle from the list first.</value></data>
-  <data name="Mobile.VehicleDetail.Heading" xml:space="preserve"><value>Vehicle detail: {0}</value></data>
   <data name="Mobile.VehicleDetail.Name" xml:space="preserve"><value>Name</value></data>
   <data name="Mobile.VehicleDetail.MakeModel" xml:space="preserve"><value>Make and model</value></data>
   <data name="Mobile.VehicleDetail.Category" xml:space="preserve"><value>Category</value></data>
@@ -2925,12 +2905,12 @@ Suggested action: {6}</value></data>
   <data name="Mobile.VehicleDetail.GreenCardTo" xml:space="preserve"><value>Green card valid to</value></data>
   <data name="Mobile.VehicleDetail.Note" xml:space="preserve"><value>Note</value></data>
   <data name="Mobile.Action.Reload" xml:space="preserve"><value>Reload</value></data>
-  <data name="Mobile.Action.ReloadName" xml:space="preserve"><value>Reload the Android data set</value></data>
-  <data name="Mobile.Status.Ready" xml:space="preserve"><value>Ready to load the Android data set.</value></data>
-  <data name="Mobile.Status.Loading" xml:space="preserve"><value>Loading vehicles...</value></data>
-  <data name="Mobile.Status.NoVehicles" xml:space="preserve"><value>The Android data set is ready but does not contain any vehicles.</value></data>
-  <data name="Mobile.Status.Loaded" xml:space="preserve"><value>Loaded vehicles: {0}.</value></data>
-  <data name="Mobile.Status.LoadFailed" xml:space="preserve"><value>The Android data set could not be loaded. {0}</value></data>
+  <data name="Mobile.Action.ReloadName" xml:space="preserve"><value>Reload data</value></data>
+  <data name="Mobile.Status.Ready" xml:space="preserve"><value>Ready.</value></data>
+  <data name="Mobile.Status.Loading" xml:space="preserve"><value>Loading data...</value></data>
+  <data name="Mobile.Status.NoVehicles" xml:space="preserve"><value>No vehicles.</value></data>
+  <data name="Mobile.Status.Loaded" xml:space="preserve"><value>Vehicles: {0}.</value></data>
+  <data name="Mobile.Status.LoadFailed" xml:space="preserve"><value>Data could not be loaded. {0}</value></data>
   <data name="Mobile.Value.UnnamedVehicle" xml:space="preserve"><value>Unnamed vehicle</value></data>
   <data name="Mobile.Value.NoCategory" xml:space="preserve"><value>No category</value></data>
   <data name="Mobile.Value.NotEntered" xml:space="preserve"><value>Not entered</value></data>
