@@ -112,7 +112,7 @@ internal sealed class AvaloniaTrayService : ITrayService
     {
         try
         {
-            using var stream = AssetLoader.Open(new Uri("avares://Vehimap.Desktop/Assets/vehimap-tray.png"));
+            using var stream = AssetLoader.Open(new Uri("avares://Vehimap/Assets/vehimap-tray.png"));
             return new WindowIcon(stream);
         }
         catch

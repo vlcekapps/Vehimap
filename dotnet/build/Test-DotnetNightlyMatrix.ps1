@@ -66,7 +66,7 @@ foreach ($runtimeIdentifier in $requestedRuntimeIdentifiers) {
 Write-Host ""
 Write-Host "Nightly matrix OK"
 foreach ($runtimeIdentifier in $requestedRuntimeIdentifiers) {
-    $appFileName = if ($runtimeIdentifier -like "win-*") { "Vehimap.Desktop.exe" } else { "Vehimap.Desktop" }
+    $appFileName = if ($runtimeIdentifier -like "win-*") { "Vehimap.exe" } else { "Vehimap" }
     $artifactRoot = Join-Path $dotnetRoot "artifacts\nightly\$runtimeIdentifier"
     $appPath = Join-Path $artifactRoot "app\$appFileName"
     $releasePath = Join-Path $artifactRoot "release"

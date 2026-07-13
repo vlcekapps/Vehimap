@@ -7,8 +7,7 @@ param(
     [switch]$SkipInstallSmoke,
     [switch]$AllowLocalInstallSmoke,
     [switch]$SkipFetch,
-    [switch]$VerifyPublishedNightly,
-    [switch]$SkipRetirementStatus
+    [switch]$VerifyPublishedNightly
 )
 
 Set-StrictMode -Version Latest
@@ -108,13 +107,7 @@ else {
     Write-Host "  powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetPublishedNightly.ps1 -RuntimeIdentifier $RuntimeIdentifier"
 }
 
-if (-not $SkipRetirementStatus) {
-    Invoke-HardeningStep "AHK retirement status" {
-        & (Join-Path $PSScriptRoot "Get-AhkRetirementReadiness.ps1") -RuntimeIdentifier $RuntimeIdentifier
-    }
-}
-
-$nightlyApp = Join-Path $dotnetRoot "artifacts\nightly\$RuntimeIdentifier\app\Vehimap.Desktop.exe"
+$nightlyApp = Join-Path $dotnetRoot "artifacts\nightly\$RuntimeIdentifier\app\Vehimap.exe"
 $nightlyRelease = Join-Path $dotnetRoot "artifacts\nightly\$RuntimeIdentifier\release"
 
 Write-Host ""

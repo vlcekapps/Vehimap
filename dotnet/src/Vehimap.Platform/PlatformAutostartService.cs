@@ -94,18 +94,18 @@ public sealed class PlatformAutostartService : IAutostartService
         var entryAssemblyLocation = Assembly.GetEntryAssembly()?.Location;
         var processPath = Environment.ProcessPath
             ?? entryAssemblyLocation
-            ?? Path.Combine(appBasePath, OperatingSystem.IsWindows() ? "Vehimap.Desktop.exe" : "Vehimap.Desktop");
+            ?? Path.Combine(appBasePath, OperatingSystem.IsWindows() ? "Vehimap.exe" : "Vehimap");
 
         if (IsDotnetHost(processPath))
         {
-            var dllPath = Path.Combine(appBasePath, "Vehimap.Desktop.dll");
+            var dllPath = Path.Combine(appBasePath, "Vehimap.dll");
             if (File.Exists(dllPath))
             {
                 return new LaunchCommand(processPath, [dllPath]);
             }
         }
 
-        var preferredExecutable = Path.Combine(appBasePath, OperatingSystem.IsWindows() ? "Vehimap.Desktop.exe" : "Vehimap.Desktop");
+        var preferredExecutable = Path.Combine(appBasePath, OperatingSystem.IsWindows() ? "Vehimap.exe" : "Vehimap");
         if (File.Exists(preferredExecutable))
         {
             return new LaunchCommand(preferredExecutable, []);

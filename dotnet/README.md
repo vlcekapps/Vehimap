@@ -16,7 +16,7 @@ Desktop publish a release balicky musi obsahovat `LICENSE`, `COPYING`, `COPYRIGH
 Aktualni zamer:
 
 - brat `.NET + Avalonia` jako primarni desktopovou vetev Vehimapu
-- drzet C# Avalonia jako jedinou aktivni aplikaci po finalnim AHK retirement commitu
+- drzet C# Avalonia jako jedinou aktivni aplikaci; AHK runtime, knihovny a testy jsou po dokoncenem retirementu odstranene
 - pouzivat od rady 2.0 primarne SQLite databazi `data/vehimap.db`
 - zachovat legacy kompatibilitu dat jako jednorazovou migraci/import bez navratu AHK-only runtime, knihoven nebo testu
 - cist legacy `TSV`, `INI`, starsi `.vehimapbak` a `data/attachments` pres `Vehimap.Storage.Legacy` jen pro migraci z 1.0.2 a import starsich zaloh; po uspesne migraci zive TSV/INI soubory z `data/` odlozit mimo runtime koren
@@ -275,7 +275,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - publikovat runtime-specific desktop manifesty `update/latest-dotnet-<rid>.ini`
 - udrzet prechodovy alias `update/latest-dotnet-preview-<rid>.ini`, aby se uz vydane preview buildy dokazaly aktualizovat na prvni stabilni desktop release
 - spoustet Windows Appium smoke i v CI nad publish buildem desktop release; CI smoke overuje prvni fokus po startu na seznamu vozidel, dostupnost seznamu pres `Tab` z filtru, navrat `Shift+Tab` z vybrane pracovni karty zpet na seznam, app-level menu `Soubor`, menu `Vozidlo`, menu `Rychle akce`, jejich aktualni action-state, vyvolani hlavniho menu pres `F10` bez automatickeho rozbaleni, zavreni menu druhym `F10` zpet na puvodni fokus, rozbaleni nabidky az sipkou dolu, vynechani menu pri beznem `Tab` / `Shift+Tab`, otevreni aktualniho upozorneni z menu `Rychle akce`, otevreni a zavreni app-level dialogu `Nastaveni`, `O programu` vcetne tlacitka `Podekovat autorovi` a `Zkontrolovat aktualizace`, otevreni a zavreni pristupnych tray akci z menu `Aplikace`, otevreni vsech samostatnych pracovnich oken, zavreni workspace pres `Escape`, navigaci z globalniho hledani, casove osy, terminovych prehledu a nakladu, zakladni ulozeni editoru pripominek, dokladu, historie, tankovani a udrzby v samostatnych oknech, navrat `Shift+Tab` z nazvu vozidla na `Zrusit` a potvrzeni pri zavirani rozpracovane editace, ulozeni voleb automatickych zaloh z dialogu `Nastaveni` vcetne okamziteho vytvoreni `.vehimapbak`, ulozeni volby Dashboardu pri startu vcetne validacni chyby, post-create i rucni `Balicek pro vozidlo`, doporucene servisni sablony a potvrzeni `Splneno` z `Planu udrzby` i Dashboardu, zatimco rozsirena sada nad izolovanou portable kopii testuje kopirovani diagnostiky z `O programu`, detailu kontroly aktualizaci i vyresene cesty spravovane prilohy dokladu do systemove schranky a dalsi realne vytvoreni okamzite automaticke zalohy
-- kontrolovat historickou migracni paritu AHK modulu pres `dotnet\build\Get-DotnetMigrationParity.ps1`; Windows hardening i AHK retirement gate tim overuji, ze kazdy odstraneny legacy modul ma pojmenovanou .NET evidence vrstvu
+- kontrolovat historickou migracni paritu AHK modulu pres `dotnet\build\Get-DotnetMigrationParity.ps1`, aby kazdy odstraneny legacy modul mel pojmenovanou .NET evidence vrstvu; nejde uz o release blocker vazany na aktualni stable manifest
 
 ## Lokalni build
 
@@ -309,11 +309,11 @@ Balickovaci skript vynechava `.pdb`, pro Windows vytvori per-user Inno Setup ins
 
 Lokalni testovaci vystupy jsou rozdelene podle kanalu, aby tester nemusel hledat mezi technickymi artefakty:
 
-- aktualni nightly aplikace: `dotnet\artifacts\nightly\win-x64\app\Vehimap.Desktop.exe`
+- aktualni nightly aplikace: `dotnet\artifacts\nightly\win-x64\app\Vehimap.exe`
 - aktualni nightly instalator: `dotnet\artifacts\nightly\win-x64\release\vehimap-desktop-nightly-<verze>-win-x64-setup.exe`
-- Linux nightly aplikace a archiv: `dotnet\artifacts\nightly\linux-x64\app\Vehimap.Desktop` a `dotnet\artifacts\nightly\linux-x64\release`
-- macOS Intel nightly aplikace a archiv: `dotnet\artifacts\nightly\osx-x64\app\Vehimap.Desktop` a `dotnet\artifacts\nightly\osx-x64\release`
-- macOS Apple Silicon nightly aplikace a archiv: `dotnet\artifacts\nightly\osx-arm64\app\Vehimap.Desktop` a `dotnet\artifacts\nightly\osx-arm64\release`
+- Linux nightly aplikace a archiv: `dotnet\artifacts\nightly\linux-x64\app\Vehimap` a `dotnet\artifacts\nightly\linux-x64\release`
+- macOS Intel nightly aplikace a archiv: `dotnet\artifacts\nightly\osx-x64\app\Vehimap` a `dotnet\artifacts\nightly\osx-x64\release`
+- macOS Apple Silicon nightly aplikace a archiv: `dotnet\artifacts\nightly\osx-arm64\app\Vehimap` a `dotnet\artifacts\nightly\osx-arm64\release`
 - budouci beta aplikace a instalator: `dotnet\artifacts\beta\win-x64\app` a `dotnet\artifacts\beta\win-x64\release`
 - budouci stable aplikace a instalator: `dotnet\artifacts\stable\win-x64\app` a `dotnet\artifacts\stable\win-x64\release`
 
@@ -339,7 +339,7 @@ CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 - pro nightly pouzit unikatni efektivni verzi `<verze-ze-src/VERSION>-nightly.<run>.<attempt>`, aby updater poznal kazdy novy nocni instalator jako skutecne novejsi build
 - po release zapsat runtime-specific desktop manifesty do `update/`
 - zapsat i prechodove `latest-dotnet-preview-<rid>.ini` aliasy pro uz vydane preview buildy
-- pred commitem vygenerovanych manifestu overit Windows manifest pres `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel <kanal> -SkipNetwork`; stable pri tom hlida i AHK retirement gate, nightly/beta overuji kanalovy manifest bez stable-only kroku
+- pred commitem vygenerovanych manifestu overit vsechny runtime manifesty pres `Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier <rid> -Channel <kanal> -SkipNetwork`; stable navic hlida prechodovy preview alias
 - pred uploadem Windows release artefaktu spustit `Test-DotnetInstallerSmoke.ps1`, aby se setup EXE, `.sha256` a JSON metadata overily uz v publish jobu
 - na Windows runneru spustit Appium smoke nad publish buildem desktop release vcetne kontroly app-level menu a dostupnosti rychlych akci; CI instaluje WinAppDriver z pevneho MSI assetu se SHA-256 kontrolou misto anonymniho Appium `install-wad` GitHub API dotazu a UI testy spousti izolovanou aplikaci pres WinAppDriver s pracovnim adresarem testovaci kopie; pokud primarni attach selze, fallback dohleda okno pres Appium `Root` UI Automation session a pripoji se pres `appTopLevelWindow`
 
@@ -356,7 +356,7 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetS
 
 Skript release readiness postavi solution, spusti unit/compat/UI kontrakty, publikuje self-contained desktop build, vytvori release balicek, `.sha256`, JSON metadata a overi odpovidajici update manifest. Vystup uklada do `dotnet\artifacts\<kanal>\<rid>\app` pro spustitelnou aplikaci a do `dotnet\artifacts\<kanal>\<rid>\release` pro instalator, metadata a checksum. Wrappery `Test-DotnetNightlyReadiness.ps1`, `Test-DotnetBetaReadiness.ps1` a `Test-DotnetStableReadiness.ps1` nastavují kanál bez ručního předávání `-Channel`. Readiness kontrola vybira metadata podle presne sestaveneho kanalu, verze a RID, aby starsi lokalni setup ve slozce `release` nemohl ovlivnit installer smoke ani manifest. Pro `stable` se kontroluje `latest-dotnet-win-x64.ini` bez preview odkazu, pro `nightly` se vytvori lokalni prerelease verzi `src/VERSION-nightly.local.<utc>` a kontroluje `latest-dotnet-nightly-win-x64.ini` proti rolling tagu `dotnet-nightly`.
 
-`Test-DotnetWindowsHardening.ps1` je pred-beta wrapper pro Windows stabilizaci: nejdrive vypise release train status, potom spusti cele `dotnet test`, nasledne nightly readiness a nakonec overi AHK retirement status. Plny instalacni smoke realneho Inno setupu se spousti automaticky jen v GitHub Actions; lokalne se kvuli ochrane existujici instalace stejneho kanalu drzi bezpecne overeni metadat/checksumu, pokud vedome nepridate `-AllowLocalInstallSmoke`. Po dobehu GitHub Actions lze pridat `-VerifyPublishedNightly`, aby stejny skript overil i publikovany nightly manifest a asset.
+`Test-DotnetWindowsHardening.ps1` je pred-beta wrapper pro Windows stabilizaci: nejdrive vypise release train status, overi historickou migracni paritu, potom spusti cele `dotnet test` a nasledne nightly readiness. Plny instalacni smoke realneho Inno setupu se spousti automaticky jen v GitHub Actions; lokalne se kvuli ochrane existujici instalace stejneho kanalu drzi bezpecne overeni metadat/checksumu, pokud vedome nepridate `-AllowLocalInstallSmoke`. Po dobehu GitHub Actions lze pridat `-VerifyPublishedNightly`, aby stejny skript overil i publikovany nightly manifest a asset.
 
 Pred samotnym hardeningem lze samostatne spustit i migracni parity kontrolu:
 
@@ -444,15 +444,6 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetP
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetPublishedStable.ps1 -RuntimeIdentifier win-x64
 ```
 
-Release train status nic netaguje ani nepublikuje. Jen shrne lokalni artefakty `nightly`, `beta` a `stable`, existenci manifestu v `update/`, dostupnost release skriptu, remote tagy a na konci vypise dalsi doporuceny krok. Kanálové wrappery `Test-DotnetPublishedNightly.ps1`, `Test-DotnetPublishedBeta.ps1` a `Test-DotnetPublishedStable.ps1` jen volaji spolecny `Test-DotnetPublishedRelease.ps1` se spravnym kanalem, aby pri rucni kontrole neslo omylem overovat spatny manifest. Nightly wrapper kontroluje `latest-dotnet-nightly-win-x64.ini`, rolling tag `dotnet-nightly`, prerelease verzi, release notes URL, dostupnost assetu, SHA-256, velikost assetu a `channel=nightly`; AHK retirement gate se u nightly nespousti. Stable wrapper zkontroluje `latest-dotnet-win-x64.ini`, prechodovy `latest-dotnet-preview-win-x64.ini`, release notes URL, dostupnost assetu, SHA-256, velikost assetu a nakonec spusti AHK retirement gate. Pokud je potreba jen offline kontrola po commitu manifestu, pridejte `-SkipNetwork`.
+Release train status nic netaguje ani nepublikuje. Jen shrne lokalni artefakty `nightly`, `beta` a `stable`, existenci manifestu v `update/`, dostupnost release skriptu, remote tagy a na konci vypise dalsi doporuceny krok. Kanalove wrappery `Test-DotnetPublishedNightly.ps1`, `Test-DotnetPublishedBeta.ps1` a `Test-DotnetPublishedStable.ps1` jen volaji spolecny `Test-DotnetPublishedRelease.ps1` se spravnym kanalem, aby pri rucni kontrole neslo omylem overovat spatny manifest. Nightly wrapper kontroluje `latest-dotnet-nightly-win-x64.ini`, rolling tag `dotnet-nightly`, prerelease verzi, release notes URL, dostupnost assetu, SHA-256, velikost assetu a `channel=nightly`. Stable wrapper navic zkontroluje prechodovy `latest-dotnet-preview-win-x64.ini`. Pokud je potreba jen offline kontrola po commitu manifestu, pridejte `-SkipNetwork`.
 
-Po finalnim odstraneni AHK vetve zustava retirement report jako ochranna kontrola:
-
-```powershell
-cd dotnet
-powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier win-x64 -FailOnBlockers
-```
-
-Report nic nemaze. Jen zkontroluje, ze stabilni desktop manifest existuje, ukazuje na `dotnet-v<verze>` release asset, preview alias pro starsi preview buildy miri na stejny obsah, lokalni stable build lezi v `dotnet/artifacts/stable/win-x64/app` a AHK-only artefakty (`src/Vehimap.ahk`, `src/lib`, `src/tests` a navazujici generovane vystupy) zustavaji odstranene. Pred prvnim stable releasem byl ocekavany blocker chybejici `update/latest-dotnet-win-x64.ini`; po stable release je blockerem naopak navrat AHK-only souboru.
-
-Stejna kontrola bezi i v GitHub Actions po vygenerovani desktop manifestu pro prvni stabilni release. Pokud by `latest-dotnet-win-x64.ini` neukazoval na spravny `dotnet-v<verze>` asset nebo by legacy preview alias nemiril na stejny obsah, release workflow skonci chybou jeste pred commitem manifestu.
+AHK aplikace, runtime knihovny a puvodni testy jsou z repozitare odstranene, proto uz release tok nema samostatnou AHK retirement gate. `Get-DotnetMigrationParity.ps1` zustava jako historicky auditni dukaz pokryti a `Vehimap.Storage.Legacy` jako read-only vstup pro migraci dat 1.x a import starych zaloh.

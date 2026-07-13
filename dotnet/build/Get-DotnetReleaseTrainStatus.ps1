@@ -117,8 +117,7 @@ foreach ($scriptName in @(
         "Test-DotnetPublishedNightly.ps1",
         "Test-DotnetPublishedBeta.ps1",
         "Test-DotnetPublishedStable.ps1",
-        "Test-DotnetPublishedRelease.ps1",
-        "Get-AhkRetirementReadiness.ps1")) {
+        "Test-DotnetPublishedRelease.ps1")) {
     $scriptPath = Join-Path $PSScriptRoot $scriptName
     if (Test-Path -LiteralPath $scriptPath -PathType Leaf) {
         Add-Pass "Existuje release skript $scriptName."
@@ -131,7 +130,7 @@ foreach ($scriptName in @(
 $channelStates = @{}
 foreach ($channel in @("nightly", "beta", "stable")) {
     $artifactRoot = Join-Path $dotnetRoot "artifacts\$channel\$RuntimeIdentifier"
-    $appPath = Join-Path $artifactRoot "app\Vehimap.Desktop.exe"
+    $appPath = Join-Path $artifactRoot "app\Vehimap.exe"
     $releaseDirectory = Join-Path $artifactRoot "release"
     $localManifestPath = Join-Path $artifactRoot (Get-ManifestFileName -Channel $channel)
     $repositoryManifestPath = Join-Path $repositoryRoot ("update\" + (Get-ManifestFileName -Channel $channel))
@@ -227,29 +226,6 @@ else {
     Add-Warning "Fetch a remote tag check byly preskoceny; release train status nemusi znat publikovane tagy."
 }
 
-$retiredAhkArtifacts = @(
-    "src\GeneratedBuildInfo.ahk",
-    "src\Vehimap.ahk",
-    "src\changelog.html",
-    "src\lib",
-    "src\readme.html",
-    "src\tests"
-)
-$ahkRetirementComplete = $true
-foreach ($relativePath in $retiredAhkArtifacts) {
-    if (Test-Path -LiteralPath (Join-Path $repositoryRoot $relativePath)) {
-        $ahkRetirementComplete = $false
-        break
-    }
-}
-
-if ($ahkRetirementComplete) {
-    Add-Pass "AHK-only artefakty jsou po retirement commitu odstranene."
-}
-else {
-    Add-Warning "AHK-only artefakty stale existuji; po stable release je dalsi krok finalni AHK retirement commit."
-}
-
 $nextStep = if (-not $channelStates["nightly"].PackageExists -or -not $channelStates["nightly"].LocalManifestExists) {
     "Spustte .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier $RuntimeIdentifier."
 }
@@ -283,11 +259,8 @@ elseif (-not $SkipFetch -and -not $channelStates["stable"].RemoteTagExists) {
 elseif (-not $channelStates["stable"].RepositoryManifestExists) {
     "Pockejte na stable release workflow, commit update/latest-dotnet-$RuntimeIdentifier.ini a potom spustte .\build\Test-DotnetPublishedStable.ps1 -RuntimeIdentifier $RuntimeIdentifier."
 }
-elseif (-not $ahkRetirementComplete) {
-    "Spustte .\build\Get-AhkRetirementReadiness.ps1 -RuntimeIdentifier $RuntimeIdentifier -FailOnBlockers a pripravte finalni AHK retirement commit."
-}
 else {
-    "AHK retirement je hotovy; pokracujte dalsi .NET nightly etapou bez obnovovani AHK-only souboru."
+    "Release train je pripraveny; pokracujte dalsi .NET nightly etapou."
 }
 
 Write-Host "Vehimap .NET release train status"

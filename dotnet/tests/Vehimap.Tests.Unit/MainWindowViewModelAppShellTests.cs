@@ -711,7 +711,7 @@ public sealed class MainWindowViewModelAppShellTests
             "1.0.2",
             "1.0.2.0",
             "vývojový Avalonia shell",
-            @"C:\vehimap\Vehimap.Desktop.exe",
+            @"C:\vehimap\Vehimap.exe",
             "Windows",
             ".NET 10",
             "https://example.com/latest.ini",

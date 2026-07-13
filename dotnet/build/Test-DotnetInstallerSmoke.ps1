@@ -132,7 +132,7 @@ if ([string]::IsNullOrWhiteSpace($InstallRoot)) {
 $installFullPath = Resolve-FullPath -Path $InstallRoot
 $installLogPath = Join-Path $installFullPath "install.log"
 $portableDataPath = Join-Path $installFullPath "data"
-$desktopExePath = Join-Path $installFullPath "Vehimap.Desktop.exe"
+$desktopExePath = Join-Path $installFullPath "Vehimap.exe"
 $uninstallerPath = Join-Path $installFullPath "unins000.exe"
 
 if (Test-Path -LiteralPath $installFullPath) {

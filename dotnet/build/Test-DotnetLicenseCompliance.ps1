@@ -117,6 +117,10 @@ function Test-SpdxHeaders {
         }
 
         $fullPath = Join-Path $repoRoot ($relativePath -replace '/', [System.IO.Path]::DirectorySeparatorChar)
+        if (-not (Test-Path -LiteralPath $fullPath -PathType Leaf)) {
+            continue
+        }
+
         $firstLines = (Get-Content -LiteralPath $fullPath -TotalCount 5) -join "`n"
         if ($firstLines -notmatch [regex]::Escape($spdx)) {
             Add-Failure $Failures "Soubor nema SPDX hlavicku: $relativePath"

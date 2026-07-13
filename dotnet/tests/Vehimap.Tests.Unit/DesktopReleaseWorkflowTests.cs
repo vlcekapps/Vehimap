@@ -74,8 +74,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("RuntimeIdentifier = $runtimeIdentifier", workflow, StringComparison.Ordinal);
         Assert.Contains("Channel = \"${{ needs.metadata.outputs.channel }}\"", workflow, StringComparison.Ordinal);
         Assert.Contains("SkipNetwork = $true", workflow, StringComparison.Ordinal);
-        Assert.Contains("if ($runtimeIdentifier -notlike \"win-*\")", workflow, StringComparison.Ordinal);
-        Assert.Contains("$verificationArguments[\"SkipRetirementGate\"] = $true", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("SkipRetirementGate", workflow, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedRelease.ps1 @verificationArguments", workflow, StringComparison.Ordinal);
         Assert.Contains("Commit desktop manifests", workflow, StringComparison.Ordinal);
         Assert.True(
@@ -106,7 +105,7 @@ public sealed class DesktopReleaseWorkflowTests
         var workflow = ReadWorkflow();
 
         Assert.Contains("Verify native desktop executable", workflow, StringComparison.Ordinal);
-        Assert.Contains("test -x \"artifacts/${{ matrix.rid }}/desktop/Vehimap.Desktop\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("test -x \"artifacts/${{ matrix.rid }}/desktop/Vehimap\"", workflow, StringComparison.Ordinal);
         Assert.Contains("Smoke test desktop archive package", workflow, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetArchiveSmoke.ps1 -ArchivePath $archivePath -PackageMetadataPath $metadata.FullName", workflow, StringComparison.Ordinal);
         Assert.Contains("Upload packaged artifact", workflow, StringComparison.Ordinal);
@@ -117,34 +116,30 @@ public sealed class DesktopReleaseWorkflowTests
     }
 
     [Fact]
-    public void Ahk_retirement_readiness_script_guards_final_removal()
+    public void Ahk_retirement_gate_is_removed_after_completed_migration()
     {
-        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Get-AhkRetirementReadiness.ps1");
+        var repositoryRoot = FindRepositoryRoot();
+        var retirementScriptPath = Path.Combine(repositoryRoot, "dotnet", "build", "Get-AhkRetirementReadiness.ps1");
+        var parityScriptPath = Path.Combine(repositoryRoot, "dotnet", "build", "Get-DotnetMigrationParity.ps1");
+
+        Assert.False(File.Exists(retirementScriptPath));
+        Assert.True(File.Exists(parityScriptPath));
+        Assert.False(File.Exists(Path.Combine(repositoryRoot, "src", "Vehimap.ahk")));
+        Assert.False(Directory.Exists(Path.Combine(repositoryRoot, "src", "lib")));
+    }
+
+    [Fact]
+    public void License_compliance_guard_skips_tracked_files_removed_from_the_worktree()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var scriptPath = Path.Combine(repositoryRoot, "dotnet", "build", "Test-DotnetLicenseCompliance.ps1");
         var script = File.ReadAllText(scriptPath);
 
-        Assert.Contains("Get-DotnetMigrationParity.ps1", script, StringComparison.Ordinal);
-        Assert.Contains("Migracni parity mapa AHK -> .NET je pruchozi.", script, StringComparison.Ordinal);
-        Assert.Contains("latest-dotnet-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
-        Assert.Contains("latest-dotnet-preview-$RuntimeIdentifier.ini", script, StringComparison.Ordinal);
-        Assert.Contains("Test-DotnetReleaseReadiness.ps1", script, StringComparison.Ordinal);
-        Assert.Contains("dotnet-v$version", script, StringComparison.Ordinal);
-        Assert.Contains("vehimap-desktop-stable-$version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
-        Assert.Contains("artifacts\\stable\\$RuntimeIdentifier\\app\\Vehimap.Desktop.exe", script, StringComparison.Ordinal);
-        Assert.Contains("Lokalni stable desktop build existuje", script, StringComparison.Ordinal);
-        Assert.Contains("asset_kind", script, StringComparison.Ordinal);
-        Assert.Contains("channel", script, StringComparison.Ordinal);
-        Assert.Contains("Stabilni manifest neobsahuje platny SHA-256 hash.", script, StringComparison.Ordinal);
-        Assert.DoesNotContain("artifacts\\desktop-release\\Vehimap.Desktop.exe", script, StringComparison.Ordinal);
-        Assert.DoesNotContain("Add-Blocker \"Stabilni manifest nema channel=stable.\"\n    }\n    else", NormalizeLineEndings(script), StringComparison.Ordinal);
-        Assert.Contains("src\\GeneratedBuildInfo.ahk", script, StringComparison.Ordinal);
-        Assert.Contains("src\\Vehimap.ahk", script, StringComparison.Ordinal);
-        Assert.Contains("src\\changelog.html", script, StringComparison.Ordinal);
-        Assert.Contains("src\\readme.html", script, StringComparison.Ordinal);
-        Assert.Contains("AHK-only artefakt stale existuje po retirement commitu", script, StringComparison.Ordinal);
-        Assert.Contains("AHK-only artefakt je odstranen", script, StringComparison.Ordinal);
-        Assert.Contains("$FailOnBlockers", script, StringComparison.Ordinal);
-        Assert.Contains("AHK retirement gate ma blockery", script, StringComparison.Ordinal);
-        Assert.DoesNotContain("AHK zatim nemazat", script, StringComparison.Ordinal);
+        var existenceCheck = script.IndexOf("Test-Path -LiteralPath $fullPath -PathType Leaf", StringComparison.Ordinal);
+        var contentRead = script.IndexOf("Get-Content -LiteralPath $fullPath", StringComparison.Ordinal);
+
+        Assert.True(existenceCheck >= 0, "The SPDX guard must ignore tracked files removed from the worktree.");
+        Assert.True(contentRead > existenceCheck, "The SPDX guard must verify file existence before reading it.");
     }
 
     [Fact]
@@ -269,8 +264,9 @@ public sealed class DesktopReleaseWorkflowTests
         var script = File.ReadAllText(scriptPath);
 
         Assert.Contains("Get-FileHash -Algorithm SHA256", script, StringComparison.Ordinal);
-        Assert.Contains("Vehimap.app/Contents/MacOS/Vehimap.Desktop", script, StringComparison.Ordinal);
-        Assert.Contains("$rootName/Vehimap.Desktop", script, StringComparison.Ordinal);
+        Assert.Contains("Vehimap.app/Contents/MacOS/Vehimap", script, StringComparison.Ordinal);
+        Assert.Contains("$rootName/Vehimap", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("Contents/MacOS/Vehimap.Desktop", script, StringComparison.Ordinal);
         Assert.Contains("THIRD-PARTY-NOTICES.md", script, StringComparison.Ordinal);
         Assert.Contains("if (-not $isWindowsHost)", script, StringComparison.Ordinal);
         Assert.Contains("Linux archiv neuchoval executable bit", script, StringComparison.Ordinal);
@@ -300,8 +296,8 @@ public sealed class DesktopReleaseWorkflowTests
         var configuration = File.ReadAllText(configurationPath);
 
         Assert.Contains("new[] { \"nightly\", \"beta\", \"stable\" }", configuration, StringComparison.Ordinal);
-        Assert.Contains("\"artifacts\", channel, \"win-x64\", \"app\", \"Vehimap.Desktop.exe\"", configuration, StringComparison.Ordinal);
-        Assert.Contains("\"desktop-release\", \"Vehimap.Desktop.exe\"", configuration, StringComparison.Ordinal);
+        Assert.Contains("\"artifacts\", channel, \"win-x64\", \"app\", \"Vehimap.exe\"", configuration, StringComparison.Ordinal);
+        Assert.Contains("\"desktop-release\", \"Vehimap.exe\"", configuration, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -393,10 +389,10 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("$nightlyReadinessArguments[\"AllowLocalInstallSmoke\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("Plny lokalni install smoke je preskocen kvuli ochrane existujici instalace stejneho kanalu.", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedNightly.ps1", script, StringComparison.Ordinal);
-        Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetStorageNightlyGate.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Dalsi krok v dlouhe 2.0 nightly etape", script, StringComparison.Ordinal);
-        Assert.Contains("artifacts\\nightly\\$RuntimeIdentifier\\app\\Vehimap.Desktop.exe", script, StringComparison.Ordinal);
+        Assert.Contains("artifacts\\nightly\\$RuntimeIdentifier\\app\\Vehimap.exe", script, StringComparison.Ordinal);
         Assert.DoesNotContain("Test-DotnetReleasePromotion.ps1", script, StringComparison.Ordinal);
         Assert.DoesNotContain("New-DotnetDesktopReleaseTag.ps1", script, StringComparison.Ordinal);
         Assert.DoesNotContain("TargetChannel beta", script, StringComparison.Ordinal);
@@ -421,7 +417,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Test-DotnetPublishedBeta.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedStable.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedRelease.ps1", script, StringComparison.Ordinal);
-        Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
         Assert.Contains("\"artifacts\\$channel\\$RuntimeIdentifier\"", script, StringComparison.Ordinal);
         Assert.Contains("vehimap-desktop-$channel-$version-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
         Assert.Contains("vehimap-desktop-nightly-*-$RuntimeIdentifier-setup.exe", script, StringComparison.Ordinal);
@@ -433,14 +429,13 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("bez -SkipFetch", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedBeta.ps1", script, StringComparison.Ordinal);
         Assert.Contains("Test-DotnetPublishedStable.ps1", script, StringComparison.Ordinal);
-        Assert.Contains("AHK-only artefakty jsou po retirement commitu odstranene.", script, StringComparison.Ordinal);
-        Assert.Contains("AHK retirement je hotovy", script, StringComparison.Ordinal);
+        Assert.Contains("Release train je pripraveny", script, StringComparison.Ordinal);
         Assert.DoesNotContain("New-DotnetDesktopReleaseTag.ps1 -RuntimeIdentifier $RuntimeIdentifier -Channel stable -Push", script, StringComparison.Ordinal);
         Assert.DoesNotContain("gh release create", script, StringComparison.Ordinal);
     }
 
     [Fact]
-    public void Published_release_verification_script_checks_manifest_release_and_retirement_gate()
+    public void Published_release_verification_script_checks_manifest_and_release_asset()
     {
         var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetPublishedRelease.ps1");
         var script = File.ReadAllText(scriptPath);
@@ -461,10 +456,9 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("releases/download/$releaseTag", script, StringComparison.Ordinal);
         Assert.Contains("Invoke-RemoteHeadCheck", script, StringComparison.Ordinal);
         Assert.Contains("$SkipNetwork", script, StringComparison.Ordinal);
-        Assert.Contains("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
-        Assert.Contains("-FailOnBlockers", script, StringComparison.Ordinal);
-        Assert.Contains("Preview alias a AHK retirement gate se overuji jen pro stable kanal.", script, StringComparison.Ordinal);
-        Assert.Contains("AHK retirement gate se spousti jen pro stable kanal.", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("Get-AhkRetirementReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("SkipRetirementGate", script, StringComparison.Ordinal);
+        Assert.Contains("Prechodovy preview alias se overuje jen pro stable kanal.", script, StringComparison.Ordinal);
         Assert.Contains("publikovany .NET desktop release je overeny", script, StringComparison.Ordinal);
     }
 
@@ -523,7 +517,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("/LOG=", script, StringComparison.Ordinal);
         Assert.Contains("$installFullPath", script, StringComparison.Ordinal);
         Assert.Contains("Join-Path $installFullPath \"data\"", script, StringComparison.Ordinal);
-        Assert.Contains("Vehimap.Desktop.exe", script, StringComparison.Ordinal);
+        Assert.Contains("Vehimap.exe", script, StringComparison.Ordinal);
         Assert.Contains("unins000.exe", script, StringComparison.Ordinal);
         Assert.Contains("Remove-Item -LiteralPath $installFullPath -Recurse -Force", script, StringComparison.Ordinal);
     }

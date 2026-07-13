@@ -21,7 +21,7 @@ internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath,
         var appPath = ResolveAppPath();
         if (string.IsNullOrWhiteSpace(appPath) || !File.Exists(appPath))
         {
-            reason = "Chybí publish build Vehimap.Desktop.exe pro UI test.";
+            reason = "Chybí publish build Vehimap.exe pro UI test.";
             return false;
         }
 
@@ -64,14 +64,14 @@ internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath,
 
         foreach (var channel in new[] { "nightly", "beta", "stable" })
         {
-            var channelPath = Path.Combine(repositoryRoot, "dotnet", "artifacts", channel, "win-x64", "app", "Vehimap.Desktop.exe");
+            var channelPath = Path.Combine(repositoryRoot, "dotnet", "artifacts", channel, "win-x64", "app", "Vehimap.exe");
             if (File.Exists(channelPath))
             {
                 return channelPath;
             }
         }
 
-        return Path.Combine(repositoryRoot, "dotnet", "artifacts", "desktop-release", "Vehimap.Desktop.exe");
+        return Path.Combine(repositoryRoot, "dotnet", "artifacts", "desktop-release", "Vehimap.exe");
     }
 
     private static string? FindRepositoryRoot()

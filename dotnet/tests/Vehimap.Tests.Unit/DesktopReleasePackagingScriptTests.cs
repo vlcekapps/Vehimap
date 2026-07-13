@@ -36,8 +36,8 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         var outputDirectory = Path.Combine(_tempRoot, "release");
         Directory.CreateDirectory(publishDirectory);
         Directory.CreateDirectory(Path.Combine(publishDirectory, "locales"));
-        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.Desktop.exe"), "desktop binary");
-        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.Desktop.pdb"), "debug symbols");
+        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.exe"), "desktop binary");
+        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.pdb"), "debug symbols");
         await File.WriteAllTextAsync(Path.Combine(publishDirectory, "locales", "cs.txt"), "cestina");
         CopyLicensePayloadToPublishDirectory(publishDirectory);
 
@@ -117,7 +117,7 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         var publishDirectory = Path.Combine(_tempRoot, "nightly-publish");
         var outputDirectory = Path.Combine(_tempRoot, "nightly-release");
         Directory.CreateDirectory(publishDirectory);
-        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.Desktop.exe"), "desktop nightly binary");
+        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.exe"), "desktop nightly binary");
         CopyLicensePayloadToPublishDirectory(publishDirectory);
 
         const string version = "9.8.7-nightly.123.1";
@@ -185,7 +185,7 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         var publishDirectory = Path.Combine(_tempRoot, "linux-nightly-publish");
         var outputDirectory = Path.Combine(_tempRoot, "linux-nightly-release");
         Directory.CreateDirectory(publishDirectory);
-        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.Desktop"), "linux desktop binary");
+        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap"), "linux desktop binary");
         CopyLicensePayloadToPublishDirectory(publishDirectory);
 
         const string version = "9.8.7-nightly.123.1";
@@ -265,7 +265,9 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         Assert.Contains("{\"language\":\"en-US\"}", template, StringComparison.Ordinal);
         Assert.DoesNotContain("settings.ini", template, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("[Run]", template, StringComparison.Ordinal);
-        Assert.Contains("Filename: \"{app}\\Vehimap.Desktop.exe\"", template, StringComparison.Ordinal);
+        Assert.Contains("Filename: \"{app}\\Vehimap.exe\"", template, StringComparison.Ordinal);
+        Assert.Contains("[InstallDelete]", template, StringComparison.Ordinal);
+        Assert.Contains("Name: \"{app}\\Vehimap.Desktop.exe\"", template, StringComparison.Ordinal);
         Assert.Contains("Flags: nowait postinstall skipifsilent", template, StringComparison.Ordinal);
     }
 
@@ -290,6 +292,9 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
         Assert.Contains("$dataFolder = $appName", script, StringComparison.Ordinal);
         Assert.Contains("{{DATA_FOLDER}}", script, StringComparison.Ordinal);
         Assert.Contains("<ApplicationIcon>..\\..\\..\\favicon.ico</ApplicationIcon>", project, StringComparison.Ordinal);
+        Assert.Contains("<AssemblyName>Vehimap</AssemblyName>", project, StringComparison.Ordinal);
+        Assert.Contains("Test-DesktopExecutable", script, StringComparison.Ordinal);
+        Assert.Contains("if ($RuntimeIdentifier -like \"win-*\") { \"Vehimap.exe\" } else { \"Vehimap\" }", script, StringComparison.Ordinal);
         Assert.Contains("!favicon.ico", gitIgnore, StringComparison.Ordinal);
     }
 

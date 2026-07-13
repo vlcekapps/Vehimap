@@ -48,12 +48,20 @@ Name: "desktopicon"; Description: "{cm:DesktopIconTask}"; GroupDescription: "{cm
 [Files]
 Source: "{{SOURCE_DIR}}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "data\*"
 
+; Remove binaries left by builds published before the executable was renamed to Vehimap.
+; InstallDelete entries also let Restart Manager close the legacy process before deletion.
+[InstallDelete]
+Type: files; Name: "{app}\Vehimap.Desktop.exe"
+Type: files; Name: "{app}\Vehimap.Desktop.dll"
+Type: files; Name: "{app}\Vehimap.Desktop.deps.json"
+Type: files; Name: "{app}\Vehimap.Desktop.runtimeconfig.json"
+
 [Icons]
-Name: "{group}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"; Comment: "{cm:ShortcutComment}"
-Name: "{userdesktop}\{{APP_NAME}}"; Filename: "{app}\Vehimap.Desktop.exe"; IconFilename: "{app}\Vehimap.ico"; Comment: "{cm:ShortcutComment}"; Tasks: desktopicon; Check: IsFreshInstall
+Name: "{group}\{{APP_NAME}}"; Filename: "{app}\Vehimap.exe"; IconFilename: "{app}\Vehimap.ico"; Comment: "{cm:ShortcutComment}"
+Name: "{userdesktop}\{{APP_NAME}}"; Filename: "{app}\Vehimap.exe"; IconFilename: "{app}\Vehimap.ico"; Comment: "{cm:ShortcutComment}"; Tasks: desktopicon; Check: IsFreshInstall
 
 [Run]
-Filename: "{app}\Vehimap.Desktop.exe"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\Vehimap.exe"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 function IsUpgrade(): Boolean;

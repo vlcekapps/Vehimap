@@ -77,12 +77,12 @@ if ($runtimeIdentifier -like "linux-*") {
 
     $entries = @($tarOutput | ForEach-Object { Get-NormalizedArchiveEntry -Value $_ })
     $rootName = $archive.Name.Substring(0, $archive.Name.Length - ".tar.gz".Length)
-    Assert-ArchiveEntry -Entries $entries -ExpectedEntry "$rootName/Vehimap.Desktop"
+    Assert-ArchiveEntry -Entries $entries -ExpectedEntry "$rootName/Vehimap"
     Assert-ArchiveEntry -Entries $entries -ExpectedEntry "$rootName/LICENSE"
     Assert-ArchiveEntry -Entries $entries -ExpectedEntry "$rootName/THIRD-PARTY-NOTICES.md"
 
     if (-not $isWindowsHost) {
-        $desktopEntry = "$rootName/Vehimap.Desktop"
+        $desktopEntry = "$rootName/Vehimap"
         $verboseEntry = & tar -tvzf $resolvedArchivePath | Where-Object { $_ -like "*$desktopEntry" } | Select-Object -First 1
         if ([string]::IsNullOrWhiteSpace($verboseEntry) -or $verboseEntry -notmatch "^...x") {
             throw "Linux archiv neuchoval executable bit souboru '$desktopEntry'."
@@ -98,7 +98,7 @@ elseif ($runtimeIdentifier -like "osx-*") {
     try {
         $entries = @($zip.Entries | ForEach-Object { Get-NormalizedArchiveEntry -Value $_.FullName })
         $desktopZipEntry = $zip.Entries |
-            Where-Object { (Get-NormalizedArchiveEntry -Value $_.FullName) -eq "Vehimap.app/Contents/MacOS/Vehimap.Desktop" } |
+            Where-Object { (Get-NormalizedArchiveEntry -Value $_.FullName) -eq "Vehimap.app/Contents/MacOS/Vehimap" } |
             Select-Object -First 1
         $desktopExternalAttributes = if ($null -eq $desktopZipEntry) { 0 } else { [int]$desktopZipEntry.ExternalAttributes }
     }
@@ -106,7 +106,7 @@ elseif ($runtimeIdentifier -like "osx-*") {
         $zip.Dispose()
     }
 
-    Assert-ArchiveEntry -Entries $entries -ExpectedEntry "Vehimap.app/Contents/MacOS/Vehimap.Desktop"
+    Assert-ArchiveEntry -Entries $entries -ExpectedEntry "Vehimap.app/Contents/MacOS/Vehimap"
     Assert-ArchiveEntry -Entries $entries -ExpectedEntry "Vehimap.app/Contents/Info.plist"
     Assert-ArchiveEntry -Entries $entries -ExpectedEntry "Vehimap.app/Contents/MacOS/LICENSE"
     Assert-ArchiveEntry -Entries $entries -ExpectedEntry "Vehimap.app/Contents/MacOS/THIRD-PARTY-NOTICES.md"

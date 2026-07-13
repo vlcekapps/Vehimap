@@ -245,7 +245,7 @@ function New-MacAppBundle {
   <key>CFBundleShortVersionString</key>
   <string>$Version</string>
   <key>CFBundleExecutable</key>
-  <string>Vehimap.Desktop</string>
+  <string>Vehimap</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>LSMinimumSystemVersion</key>
@@ -340,12 +340,26 @@ function Test-LicensePayload {
     }
 }
 
+function Test-DesktopExecutable {
+    param(
+        [string]$PayloadDirectory,
+        [string]$RuntimeIdentifier
+    )
+
+    $fileName = if ($RuntimeIdentifier -like "win-*") { "Vehimap.exe" } else { "Vehimap" }
+    $executablePath = Join-Path $PayloadDirectory $fileName
+    if (-not (Test-Path -LiteralPath $executablePath -PathType Leaf)) {
+        throw "Release payload neobsahuje ocekavany spustitelny soubor '$fileName'."
+    }
+}
+
 $resolvedPublishDirectory = (Resolve-Path -LiteralPath $PublishDirectory).Path
 if (-not (Test-Path -LiteralPath $resolvedPublishDirectory -PathType Container)) {
     throw "Publikační složka '$PublishDirectory' neexistuje."
 }
 
 Test-LicensePayload -PayloadDirectory $resolvedPublishDirectory
+Test-DesktopExecutable -PayloadDirectory $resolvedPublishDirectory -RuntimeIdentifier $RuntimeIdentifier
 
 New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
 $resolvedOutputDirectory = (Resolve-Path -LiteralPath $OutputDirectory).Path

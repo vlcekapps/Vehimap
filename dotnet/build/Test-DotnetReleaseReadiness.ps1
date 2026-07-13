@@ -221,7 +221,7 @@ try {
 
     Write-Host "Release readiness OK"
     Write-Host "Artifact root: $readinessRoot"
-    $appFileName = if ($RuntimeIdentifier -like "win-*") { "Vehimap.Desktop.exe" } else { "Vehimap.Desktop" }
+    $appFileName = if ($RuntimeIdentifier -like "win-*") { "Vehimap.exe" } else { "Vehimap" }
     Write-Host "App: $(Join-Path $publishDirectory $appFileName)"
     Write-Host "Package: $($package.FullName)"
     Write-Host "Manifest: $manifestPath"

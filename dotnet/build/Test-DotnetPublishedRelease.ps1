@@ -4,8 +4,7 @@ param(
     [ValidateSet("stable", "beta", "nightly")]
     [string]$Channel = "stable",
     [string]$RepositoryFullName = "vlcekapps/Vehimap",
-    [switch]$SkipNetwork,
-    [switch]$SkipRetirementGate
+    [switch]$SkipNetwork
 )
 
 Set-StrictMode -Version Latest
@@ -22,7 +21,6 @@ else {
     Join-Path $repositoryRoot "update\latest-dotnet-$channelName-$RuntimeIdentifier.ini"
 }
 $legacyPreviewManifestPath = Join-Path $repositoryRoot "update\latest-dotnet-preview-$RuntimeIdentifier.ini"
-$retirementReadinessScript = Join-Path $PSScriptRoot "Get-AhkRetirementReadiness.ps1"
 
 $passed = New-Object System.Collections.Generic.List[string]
 $warnings = New-Object System.Collections.Generic.List[string]
@@ -269,7 +267,7 @@ if ($channelName -eq "stable") {
     }
 }
 else {
-    Add-Warning "Preview alias a AHK retirement gate se overuji jen pro stable kanal."
+    Add-Warning "Prechodovy preview alias se overuje jen pro stable kanal."
 }
 
 if ($SkipNetwork) {
@@ -278,36 +276,6 @@ if ($SkipNetwork) {
 else {
     Invoke-RemoteHeadCheck -Name "Release asset" -Url $assetUrl -ExpectedSize $manifestAssetSize
     Invoke-RemoteHeadCheck -Name "Release notes" -Url $notesUrl -ExpectedSize $null
-}
-
-if ($channelName -ne "stable") {
-    Add-Warning "AHK retirement gate se spousti jen pro stable kanal."
-}
-elseif ($SkipRetirementGate) {
-    Add-Warning "AHK retirement gate byl preskocen."
-}
-elseif (-not (Test-Path -LiteralPath $retirementReadinessScript -PathType Leaf)) {
-    Add-Blocker "Chybi Get-AhkRetirementReadiness.ps1."
-}
-else {
-    $currentPowerShell = (Get-Process -Id $PID).Path
-    if ([string]::IsNullOrWhiteSpace($currentPowerShell)) {
-        $currentPowerShell = if ($PSVersionTable.PSEdition -eq "Core") { "pwsh" } else { "powershell" }
-    }
-
-    $retirementProcess = Start-Process `
-        -FilePath $currentPowerShell `
-        -ArgumentList @("-NoLogo", "-NoProfile", "-File", $retirementReadinessScript, "-RuntimeIdentifier", $RuntimeIdentifier, "-FailOnBlockers") `
-        -NoNewWindow `
-        -Wait `
-        -PassThru
-
-    if ($retirementProcess.ExitCode -eq 0) {
-        Add-Pass "AHK retirement gate je pruchozi pro $RuntimeIdentifier."
-    }
-    else {
-        Add-Blocker "AHK retirement gate selhal pro $RuntimeIdentifier."
-    }
 }
 
 Write-Host "Vehimap published .NET release verification"

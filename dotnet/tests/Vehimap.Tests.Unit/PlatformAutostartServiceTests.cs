@@ -15,14 +15,14 @@ public sealed class PlatformAutostartServiceTests
     {
         var content = PlatformAutostartService.BuildLinuxDesktopEntryContent(
             new PlatformAutostartService.LaunchCommand(
-                "/opt/Vehimap Desktop/Vehimap.Desktop",
+                "/opt/Vehimap Desktop/Vehimap",
                 ["--data", "/home/test/Vehimap data"]),
             new ResourceAppLocalizer(CultureInfo.GetCultureInfo(language)));
 
         Assert.Contains("Name=Vehimap", content, StringComparison.Ordinal);
         Assert.Contains(expectedComment, content, StringComparison.Ordinal);
         Assert.DoesNotContain("preview", content, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("Exec=\"/opt/Vehimap Desktop/Vehimap.Desktop\" --data \"/home/test/Vehimap data\"", content, StringComparison.Ordinal);
+        Assert.Contains("Exec=\"/opt/Vehimap Desktop/Vehimap\" --data \"/home/test/Vehimap data\"", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -30,10 +30,10 @@ public sealed class PlatformAutostartServiceTests
     {
         var content = PlatformAutostartService.BuildLinuxDesktopEntryContent(
             new PlatformAutostartService.LaunchCommand(
-                "/opt/Vehimap \"Desktop\"/Vehimap.Desktop",
+                "/opt/Vehimap \"Desktop\"/Vehimap",
                 ["--data", "/home/test/Vehimap \"portable\" data"]));
 
-        Assert.Contains("Exec=\"/opt/Vehimap \\\"Desktop\\\"/Vehimap.Desktop\" --data \"/home/test/Vehimap \\\"portable\\\" data\"", content, StringComparison.Ordinal);
+        Assert.Contains("Exec=\"/opt/Vehimap \\\"Desktop\\\"/Vehimap\" --data \"/home/test/Vehimap \\\"portable\\\" data\"", content, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -41,13 +41,13 @@ public sealed class PlatformAutostartServiceTests
     {
         var content = PlatformAutostartService.BuildMacLaunchAgentContent(
             new PlatformAutostartService.LaunchCommand(
-                "/Applications/Vehimap & Tools/Vehimap.Desktop",
+                "/Applications/Vehimap & Tools/Vehimap",
                 ["--data", "/Users/test/Vehimap <portable>"]));
 
         Assert.Contains("<key>Label</key>", content, StringComparison.Ordinal);
         Assert.Contains("<string>cz.vlcekapps.vehimap.desktop</string>", content, StringComparison.Ordinal);
         Assert.Contains("<key>ProgramArguments</key>", content, StringComparison.Ordinal);
-        Assert.Contains("<string>/Applications/Vehimap &amp; Tools/Vehimap.Desktop</string>", content, StringComparison.Ordinal);
+        Assert.Contains("<string>/Applications/Vehimap &amp; Tools/Vehimap</string>", content, StringComparison.Ordinal);
         Assert.Contains("<string>--data</string>", content, StringComparison.Ordinal);
         Assert.Contains("<string>/Users/test/Vehimap &lt;portable&gt;</string>", content, StringComparison.Ordinal);
         Assert.Contains("<key>RunAtLoad</key>", content, StringComparison.Ordinal);
@@ -59,9 +59,9 @@ public sealed class PlatformAutostartServiceTests
     [Theory]
     [InlineData("", "\"\"")]
     [InlineData(" ", "\"\"")]
-    [InlineData("/opt/Vehimap/Vehimap.Desktop", "/opt/Vehimap/Vehimap.Desktop")]
-    [InlineData("/opt/Vehimap Desktop/Vehimap.Desktop", "\"/opt/Vehimap Desktop/Vehimap.Desktop\"")]
-    [InlineData("/opt/Vehimap \"Desktop\"/Vehimap.Desktop", "\"/opt/Vehimap \\\"Desktop\\\"/Vehimap.Desktop\"")]
+    [InlineData("/opt/Vehimap/Vehimap", "/opt/Vehimap/Vehimap")]
+    [InlineData("/opt/Vehimap Desktop/Vehimap", "\"/opt/Vehimap Desktop/Vehimap\"")]
+    [InlineData("/opt/Vehimap \"Desktop\"/Vehimap", "\"/opt/Vehimap \\\"Desktop\\\"/Vehimap\"")]
     public void Quote_command_argument_matches_desktop_entry_expectations(string value, string expected)
     {
         Assert.Equal(expected, PlatformAutostartService.QuoteCommandArgument(value));

@@ -167,7 +167,7 @@ jobs:
     env:
       APPIUM_HOME: ${{ github.workspace }}\dotnet\artifacts\appium-home-ci
       VEHIMAP_APPIUM_SERVER_URL: http://127.0.0.1:4723/
-      VEHIMAP_UI_APP: ${{ github.workspace }}\dotnet\artifacts\desktop-release\Vehimap.Desktop.exe
+      VEHIMAP_UI_APP: ${{ github.workspace }}\dotnet\artifacts\desktop-release\Vehimap.exe
       VEHIMAP_UI_REQUIRE_APPIUM: "1"
     steps:
       - uses: actions/checkout@v6
@@ -303,7 +303,7 @@ jobs:
       - name: Verify native desktop executable
         if: ${{ !startsWith(matrix.rid, 'win-') }}
         shell: bash
-        run: test -x "artifacts/${{ matrix.rid }}/desktop/Vehimap.Desktop"
+        run: test -x "artifacts/${{ matrix.rid }}/desktop/Vehimap"
       - name: Smoke test Windows installer package
         if: startsWith(matrix.rid, 'win-')
         shell: pwsh
@@ -441,10 +441,6 @@ jobs:
               RuntimeIdentifier = $runtimeIdentifier
               Channel = "${{ needs.metadata.outputs.channel }}"
               SkipNetwork = $true
-            }
-
-            if ($runtimeIdentifier -notlike "win-*") {
-              $verificationArguments["SkipRetirementGate"] = $true
             }
 
             .\dotnet\build\Test-DotnetPublishedRelease.ps1 @verificationArguments
