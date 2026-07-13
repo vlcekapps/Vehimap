@@ -24,6 +24,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Test-DotnetPublishedRelease.ps1", workflow, StringComparison.Ordinal);
         Assert.Contains("vehimap-desktop-release-*", workflow, StringComparison.Ordinal);
         Assert.Contains("choco install innosetup", workflow, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetDeveloperEnvironment.ps1 -IncludeReleaseTools", workflow, StringComparison.Ordinal);
         Assert.Contains("-p:VehimapReleaseChannel=${{ needs.metadata.outputs.channel }}", workflow, StringComparison.Ordinal);
         Assert.Contains("--prerelease", workflow, StringComparison.Ordinal);
         Assert.Contains("timeout-minutes: 25", workflow, StringComparison.Ordinal);

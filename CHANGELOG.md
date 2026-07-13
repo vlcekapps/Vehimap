@@ -6,6 +6,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Dokumentace
+- Uživatelská README nyní popisují self-contained systémové požadavky a instalaci pro Windows, macOS, Ubuntu/Debian, Fedora a Arch Linux. Nový `CONTRIBUTING.md`, platformní `dotnet/docs/DEVELOPMENT.md` a kontrola `Test-DotnetDeveloperEnvironment.ps1` oddělují povinné vývojářské minimum od Inno Setupu, Appia, Xcode, accessibility nástrojů a budoucích Android/iOS workloadů.
 - Přepracován kořenový `README.md` na uživatelský úvod bez vývojářských interních pojmů; technické detaily jsou nově jasně oddělené do vývojářské dokumentace.
 - Přidán anglický uživatelský `README.en-US.md` a vzájemné jazykové odkazy v obsahu české i anglické verze.
 - Přibyla dokumentační sada `dotnet/docs/accessibility/` pro ACR-ready přípravu Vehimapu 2.0: VPAT 2.5Rev INT draft, WCAG2ICT/2.2 AA matrix, remediation backlog a ruční testovací protokol. Zatím jde o evidenční draft, ne o formální prohlášení o shodě.

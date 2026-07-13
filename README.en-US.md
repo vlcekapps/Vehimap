@@ -32,20 +32,71 @@ Your data is stored locally on your computer. Vehimap is not a cloud service and
 
 ## System Requirements
 
-The currently supported public version is the Windows desktop application.
+Published desktop packages are self-contained and include the required .NET runtime. Regular users do not need to install the .NET SDK, .NET Runtime, Avalonia, or PowerShell.
 
-- Windows 10 or Windows 11
-- 64-bit system
-- standard user account; administrator rights are not required for the default installation
+### Windows
 
-Other platforms are part of the long-term plan, but regular users should currently use the Windows version.
+- Windows 10 22H2 x64 or Windows 11 x64
+- standard user account; administrator rights are not required for the default per-user installation
+- Windows is the primary supported and accessibility-validated platform
+
+### macOS
+
+- macOS 14 Sonoma or later
+- the `osx-arm64` package for Apple Silicon, such as M1 through M4, or `osx-x64` for an Intel Mac
+- no separate .NET installation is required
+
+macOS packages currently pass build and structural smoke checks but still await complete native validation, Apple signing, and notarization. Treat them as test packages until that work is complete; macOS may require the first launch to be explicitly allowed in Privacy & Security settings.
+
+### Linux
+
+- 64-bit x86 system (`linux-x64`) with `glibc` 2.17 or later
+- an X11 or XWayland graphical session; a native Wayland backend is not currently a supported Vehimap path
+- Ubuntu 25.x, Fedora 43, and Debian 13 are Avalonia 12 Tier 1; older supported releases are Tier 2 and Arch Linux is Tier 3
+
+On Ubuntu or Debian, install the desktop libraries with:
+
+```bash
+sudo apt update
+sudo apt install libx11-6 libice6 libsm6 libfontconfig1 xdg-utils
+```
+
+On Fedora:
+
+```bash
+sudo dnf install libX11 libICE libSM fontconfig xdg-utils
+```
+
+On Arch Linux:
+
+```bash
+sudo pacman -S --needed libx11 libice libsm fontconfig xdg-utils
+```
+
+A Wayland-only installation may also need XWayland: package `xwayland` on Ubuntu/Debian, `xorg-x11-server-Xwayland` on Fedora, or `xorg-xwayland` on Arch. Minimal distributions must also provide the standard native .NET dependencies, particularly ICU, OpenSSL, `libstdc++`, zlib, Kerberos, certificates, and timezone data. Full desktop installations normally include them already.
+
+The current platform tiers and native libraries come from the [official Avalonia Supported Platforms documentation](https://docs.avaloniaui.net/docs/supported-platforms). ICU, OpenSSL, and other base dependencies for minimal Linux installations are maintained in the [.NET Linux installation documentation](https://learn.microsoft.com/dotnet/core/install/linux).
 
 ## Installation
 
+### Windows
+
 1. Open the [Releases](https://github.com/vlcekapps/Vehimap/releases) page.
-2. Download the Windows installer.
+2. Download the `win-x64-setup.exe` installer.
 3. Run the installer and complete the installation.
 4. Open Vehimap from the Start menu or the desktop shortcut.
+
+### macOS
+
+1. Download the `osx-arm64` or `osx-x64` ZIP for your processor.
+2. Extract `Vehimap.app` and move it to Applications.
+3. If Gatekeeper blocks the test package, explicitly allow it in Privacy & Security settings.
+
+### Linux
+
+1. Install the system libraries listed above and download the `linux-x64.tar.gz` archive.
+2. Extract it, open the resulting directory, and run the `Vehimap` file.
+3. If the executable bit was not preserved, run `chmod +x Vehimap` followed by `./Vehimap`.
 
 For everyday use, choose a stable release. Nightly builds are intended for braver testers and may contain work in progress.
 
@@ -119,6 +170,8 @@ If you want to thank the author, the application includes a `Thank the author` i
 This file is intended for regular users. Technical information for development, builds, tests, data migration, accessibility, and localization is available in separate documentation:
 
 - [Developer README](dotnet/README.md)
+- [Development environment requirements](dotnet/docs/DEVELOPMENT.md)
+- [Contributing guide](CONTRIBUTING.md)
 - [Migration plan](dotnet/docs/MIGRATION.md)
 - [Accessibility](dotnet/docs/ACCESSIBILITY.md)
 - [Localization](dotnet/docs/I18N.md)

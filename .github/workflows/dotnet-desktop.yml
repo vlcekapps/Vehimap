@@ -152,6 +152,9 @@ jobs:
       - name: Install Inno Setup for packaging tests
         shell: pwsh
         run: choco install innosetup -y --no-progress
+      - name: Verify developer and packaging prerequisites
+        shell: pwsh
+        run: ./build/Test-DotnetDeveloperEnvironment.ps1 -IncludeReleaseTools
       - name: Test
         run: dotnet test Vehimap.sln --no-build --configuration Release -p:UseSharedCompilation=false
 

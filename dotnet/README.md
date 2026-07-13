@@ -2,6 +2,8 @@
 
 Tento dokument je určený pro vývojáře, testování, release přípravu a technické plánování. Uživatelský úvod k aplikaci je v kořenovém [README.md](../README.md).
 
+Požadované nástroje, instalační příkazy pro Windows/macOS/Linux, volitelné Appium a release nástroje i budoucí Android/iOS prerequisites jsou v [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md). Základní prostředí lze ověřit bez IDE příkazem `pwsh ./build/Test-DotnetDeveloperEnvironment.ps1` ze složky `dotnet`.
+
 ## Vehimap .NET rewrite
 
 Tato slozka obsahuje novou C# codebase pro multiplatformni desktopovy Vehimap.
