@@ -291,6 +291,18 @@ public sealed class DesktopReleaseWorkflowTests
     }
 
     [Fact]
+    public void Local_nightly_orchestrator_adds_android_without_treating_it_as_a_desktop_rid()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Build-DotnetLocalNightlies.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("Test-DotnetNightlyMatrix.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetAndroidNightlyReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("SkipAndroid", script, StringComparison.Ordinal);
+        Assert.DoesNotContain("android-arm64\", \"linux-x64", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Desktop_ui_test_configuration_prefers_channel_artifacts_for_local_smoke()
     {
         var configurationPath = Path.Combine(FindRepositoryRoot(), "dotnet", "tests", "Vehimap.Tests.UI", "DesktopUiTestConfiguration.cs");

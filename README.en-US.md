@@ -77,6 +77,14 @@ A Wayland-only installation may also need XWayland: package `xwayland` on Ubuntu
 
 The current platform tiers and native libraries come from the [official Avalonia Supported Platforms documentation](https://docs.avaloniaui.net/docs/supported-platforms). ICU, OpenSSL, and other base dependencies for minimal Linux installations are maintained in the [.NET Linux installation documentation](https://learn.microsoft.com/dotnet/core/install/linux).
 
+### Android
+
+- Android 12 (API 31) or later
+- an ARM64 phone or tablet; the local development APK also carries x86-64 libraries for an emulator
+- no separate .NET or Avalonia installation is required
+
+Android is currently an experimental local nightly for development and testing. It is read-only and currently exposes the vehicle list and vehicle details in its own app data set; a publicly signed Android package is not available yet.
+
 ## Installation
 
 ### Windows
@@ -97,6 +105,10 @@ The current platform tiers and native libraries come from the [official Avalonia
 1. Install the system libraries listed above and download the `linux-x64.tar.gz` archive.
 2. Extract it, open the resulting directory, and run the `Vehimap` file.
 3. If the executable bit was not preserved, run `chmod +x Vehimap` followed by `./Vehimap`.
+
+### Android
+
+At this stage the Android APK is installed locally through developer tools and USB debugging only. Regular users should wait for the first publicly signed mobile release; contributors can follow [dotnet/docs/DEVELOPMENT.md](dotnet/docs/DEVELOPMENT.md).
 
 For everyday use, choose a stable release. Nightly builds are intended for braver testers and may contain work in progress.
 

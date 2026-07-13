@@ -5,7 +5,11 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ## [Unreleased]
 
+### Přidáno
+- Přibyl první Android základ Vehimapu 2.0: samostatný `net10.0-android` host, sdílený přístupný EN/CS read-only seznam a detail vozidel nad SQLite a oddělené nightly AppId. Nové readiness skripty ověřují API 31/36, APK metadata, ARM64/x86-64 nativní knihovny, licenční soubory, SHA-256 a umožňují jedním příkazem vytvořit shodně verzované lokální nightly pro Windows, Linux, macOS i Android.
+
 ### Dokumentace
+- Vývojářská dokumentace nyní vysvětluje Android SDK/JDK/workload a instalaci přes ADB i důvod, proč jsou spravované `.dll` běžnou součástí skutečných Linux/macOS .NET balíčků vedle ELF/Mach-O apphostu a nativních `.so`/`.dylib` knihoven.
 - Uživatelská README nyní popisují self-contained systémové požadavky a instalaci pro Windows, macOS, Ubuntu/Debian, Fedora a Arch Linux. Nový `CONTRIBUTING.md`, platformní `dotnet/docs/DEVELOPMENT.md` a kontrola `Test-DotnetDeveloperEnvironment.ps1` oddělují povinné vývojářské minimum od Inno Setupu, Appia, Xcode, accessibility nástrojů a budoucích Android/iOS workloadů.
 - Přepracován kořenový `README.md` na uživatelský úvod bez vývojářských interních pojmů; technické detaily jsou nově jasně oddělené do vývojářské dokumentace.
 - Přidán anglický uživatelský `README.en-US.md` a vzájemné jazykové odkazy v obsahu české i anglické verze.

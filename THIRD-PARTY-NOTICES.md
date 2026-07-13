@@ -6,7 +6,7 @@ Project license: **GNU GPL v3 or later** (`GPL-3.0-or-later`).
 
 Copyright (C) 2026 Pavel Vlček.
 
-This file lists third-party components used by the .NET desktop application and the Windows `win-x64` self-contained release. It separates runtime/shipped components from development-only test tooling. Before publishing a new release, run `dotnet list dotnet\Vehimap.sln package --include-transitive` and verify the publish output for the target runtime identifier.
+This file lists third-party components used by the .NET desktop application, self-contained desktop releases and the experimental Android APK. It separates runtime/shipped components from development-only test tooling. Before publishing a new release, run `dotnet list dotnet\Vehimap.sln package --include-transitive` and, for Android, `dotnet list dotnet\Vehimap.Android.sln package --include-transitive`, then verify the packaged output.
 
 ## Runtime and shipped components
 
@@ -15,6 +15,7 @@ This file lists third-party components used by the .NET desktop application and 
 | .NET runtime and framework assemblies | 10.0.x release toolchain | MIT | Self-contained desktop releases include Microsoft .NET runtime/framework components. |
 | Avalonia | 12.0.4 | MIT | Avalonia UI framework, including desktop UI assemblies. Copyright 2013-2026 The AvaloniaUI Project. |
 | Avalonia.Desktop | 12.0.4 | MIT | Avalonia desktop host package. |
+| Avalonia.Android | 12.0.4 | MIT | Avalonia Android host package included in the experimental APK. |
 | Avalonia.Themes.Fluent | 12.0.4 | MIT | Avalonia Fluent theme package. |
 | Avalonia.FreeDesktop | 12.0.4 | MIT | Transitive Avalonia package used for desktop platform support. |
 | Avalonia.FreeDesktop.AtSpi | 12.0.4 | MIT | Transitive Avalonia accessibility/platform package. |
@@ -28,18 +29,23 @@ This file lists third-party components used by the .NET desktop application and 
 | CommunityToolkit.Mvvm | 8.4.2 | MIT | MVVM helpers from .NET Community Toolkit. |
 | HarfBuzzSharp | 8.3.1.3 | MIT | Text shaping bindings. |
 | HarfBuzzSharp.NativeAssets.Win32 | 8.3.1.3 | MIT | Windows native HarfBuzz assets used by Windows builds. |
+| HarfBuzzSharp.NativeAssets.Android | 8.3.1.3 | MIT | Android native HarfBuzz assets included in the APK. |
 | MicroCom.Runtime | 0.11.4 | MIT | Transitive COM interop runtime used by Avalonia. |
 | Microsoft.Data.Sqlite | 10.0.0 | MIT | SQLite ADO.NET provider. |
 | Microsoft.Data.Sqlite.Core | 10.0.0 | MIT | Transitive core SQLite provider package. |
 | Microsoft.Win32.SystemEvents | 10.0.0 | MIT | Windows system event integration. |
 | SkiaSharp | 3.119.4 | MIT | Rendering library bindings. |
 | SkiaSharp.NativeAssets.Win32 | 3.119.4 | MIT | Windows native SkiaSharp assets used by Windows builds. |
+| SkiaSharp.NativeAssets.Android | 3.119.4 | MIT | Android native SkiaSharp assets included in the APK. |
 | SourceGear.sqlite3 | 3.50.4.5 | Public domain notice | Native SQLite build used by SQLitePCLRaw. See `LICENSES/SQLite-Public-Domain.txt`. |
 | SQLitePCLRaw.bundle_e_sqlite3 | 3.0.3 | Apache-2.0 | SQLitePCLRaw bundle package. |
 | SQLitePCLRaw.config.e_sqlite3 | 3.0.3 | Apache-2.0 | SQLitePCLRaw configuration package. |
 | SQLitePCLRaw.core | 3.0.3 | Apache-2.0 | SQLitePCLRaw core package. |
 | SQLitePCLRaw.provider.e_sqlite3 | 3.0.3 | Apache-2.0 | SQLitePCLRaw provider package. |
 | Tmds.DBus.Protocol | 0.92.0 | MIT | Transitive DBus protocol package used by Avalonia platform support. |
+| Xamarin.AndroidX binding packages | versions resolved by `Vehimap.Android.sln` | MIT AND Apache-2.0 | AndroidX Activity, AppCompat, Core, Fragment, Lifecycle, SavedState, Window, SplashScreen and their transitive binding families included in the APK. |
+| Xamarin.Kotlin and KotlinX binding packages | versions resolved by `Vehimap.Android.sln` | MIT AND Apache-2.0 | Kotlin standard library, coroutines and serialization bindings included transitively in the APK. |
+| Xamarin Google/annotation binding packages | versions resolved by `Vehimap.Android.sln` | MIT AND Apache-2.0 | Guava ListenableFuture, JetBrains annotations and JSpecify bindings included transitively in the APK. |
 
 ## Development and test-only components
 
@@ -59,8 +65,9 @@ Before publishing a binary package:
 
 1. Run `dotnet restore dotnet\Vehimap.sln` in a clean checkout.
 2. Run `dotnet list dotnet\Vehimap.sln package --include-transitive`.
-3. Publish the target runtime and inspect the publish output and `.deps.json`.
-4. Update this file for packages, runtime packs, native assets, icons, fonts, sample data or documentation that are actually distributed.
-5. Include `LICENSE`, `COPYING`, `COPYRIGHT-NOTICE.txt`, `THIRD-PARTY-NOTICES.md`, and `LICENSES/` in every binary release artifact.
+3. When packaging Android, run `dotnet list dotnet\Vehimap.Android.sln package --include-transitive` and compare the result with `docs/licensing/android-runtime-dependencies.md`.
+4. Publish the target runtime and inspect the publish output, `.deps.json` or APK contents.
+5. Update this file for packages, runtime packs, native assets, icons, fonts, sample data or documentation that are actually distributed.
+6. Include `LICENSE`, `COPYING`, `COPYRIGHT-NOTICE.txt`, `THIRD-PARTY-NOTICES.md`, and `LICENSES/` in every binary release artifact.
 
 This file is a practical compliance aid, not a legal audit.

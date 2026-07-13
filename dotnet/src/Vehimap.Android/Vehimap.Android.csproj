@@ -1,0 +1,39 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>31</SupportedOSPlatformVersion>
+    <RuntimeIdentifiers>android-arm64;android-x64</RuntimeIdentifiers>
+    <ApplicationId Condition="'$(VehimapReleaseChannel)' == 'stable'">cz.vlcekapps.vehimap</ApplicationId>
+    <ApplicationId Condition="'$(VehimapReleaseChannel)' == 'beta'">cz.vlcekapps.vehimap.beta</ApplicationId>
+    <ApplicationId Condition="'$(VehimapReleaseChannel)' == 'nightly'">cz.vlcekapps.vehimap.nightly</ApplicationId>
+    <ApplicationTitle Condition="'$(VehimapReleaseChannel)' == 'stable'">Vehimap</ApplicationTitle>
+    <ApplicationTitle Condition="'$(VehimapReleaseChannel)' == 'beta'">Vehimap Beta</ApplicationTitle>
+    <ApplicationTitle Condition="'$(VehimapReleaseChannel)' == 'nightly'">Vehimap Nightly</ApplicationTitle>
+    <ApplicationVersion Condition="'$(VehimapAndroidVersionCode)' == ''">2000000</ApplicationVersion>
+    <ApplicationVersion Condition="'$(VehimapAndroidVersionCode)' != ''">$(VehimapAndroidVersionCode)</ApplicationVersion>
+    <ApplicationDisplayVersion>$(VehimapVersion)</ApplicationDisplayVersion>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <AssemblyName>Vehimap.Android</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Android" Version="12.0.4" />
+    <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vehimap.Mobile\Vehimap.Mobile.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AndroidAsset Include="..\..\..\LICENSE" Link="legal\LICENSE" />
+    <AndroidAsset Include="..\..\..\COPYING" Link="legal\COPYING" />
+    <AndroidAsset Include="..\..\..\COPYRIGHT-NOTICE.txt" Link="legal\COPYRIGHT-NOTICE.txt" />
+    <AndroidAsset Include="..\..\..\THIRD-PARTY-NOTICES.md" Link="legal\THIRD-PARTY-NOTICES.md" />
+    <AndroidAsset Include="..\..\..\LICENSES\**\*" Link="legal\LICENSES\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

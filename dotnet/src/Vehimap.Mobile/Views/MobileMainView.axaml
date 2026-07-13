@@ -1,0 +1,114 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vehimap.Mobile.ViewModels"
+             x:Class="Vehimap.Mobile.Views.MobileMainView"
+             x:DataType="vm:MobileMainViewModel"
+             AutomationProperties.AutomationId="MobileMainView"
+             AutomationProperties.Name="{Binding AppTitle}">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="20" Spacing="12">
+      <TextBlock Text="{Binding Heading}"
+                 FontSize="26"
+                 FontWeight="Bold"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileMainHeading"
+                 AutomationProperties.Name="{Binding Heading}"
+                 AutomationProperties.HeadingLevel="1" />
+      <TextBlock Text="{Binding IntroText}"
+                 TextWrapping="Wrap" />
+      <TextBlock Text="{Binding ReadOnlyText}"
+                 FontWeight="SemiBold"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileReadOnlyStatus"
+                 AutomationProperties.Name="{Binding ReadOnlyText}" />
+      <TextBlock Text="{Binding StatusText}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileLoadStatus"
+                 AutomationProperties.Name="{Binding StatusText}"
+                 AutomationProperties.LiveSetting="Polite" />
+
+      <ListBox Name="MobileVehicleList"
+               ItemsSource="{Binding Vehicles}"
+               SelectedItem="{Binding SelectedVehicle}"
+               MinHeight="220"
+               MaxHeight="360"
+               IsTabStop="True"
+               AutomationProperties.AutomationId="MobileVehicleList"
+               AutomationProperties.Name="{Binding VehicleListName}"
+               AutomationProperties.HelpText="{Binding VehicleListHelp}">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:MobileVehicleListItemViewModel">
+            <Border Padding="10"
+                    AutomationProperties.AutomationId="{Binding AutomationId}"
+                    AutomationProperties.Name="{Binding AccessibleLabel}"
+                    AutomationProperties.ItemType="{Binding ItemType}"
+                    AutomationProperties.ItemStatus="{Binding State}">
+              <StackPanel Spacing="3">
+                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding MakeModel}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Category}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+
+      <TextBlock Text="{Binding VehicleListEmptyText}"
+                 IsVisible="{Binding !HasVehicles}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileVehicleListEmptyStatus"
+                 AutomationProperties.Name="{Binding VehicleListEmptyText}"
+                 AutomationProperties.LiveSetting="Polite" />
+
+      <Border Padding="14" BorderThickness="1" CornerRadius="6">
+        <StackPanel Spacing="7">
+          <TextBlock Text="{Binding VehicleDetailHeading}"
+                     FontSize="21"
+                     FontWeight="SemiBold"
+                     TextWrapping="Wrap"
+                     AutomationProperties.AutomationId="MobileVehicleDetailHeading"
+                     AutomationProperties.Name="{Binding VehicleDetailHeading}"
+                     AutomationProperties.HeadingLevel="2" />
+          <TextBlock Text="{Binding VehicleDetailEmptyText}"
+                     IsVisible="{Binding !HasSelectedVehicle}"
+                     TextWrapping="Wrap" />
+          <Grid IsVisible="{Binding HasSelectedVehicle}"
+                ColumnDefinitions="Auto,*"
+                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                ColumnSpacing="12"
+                RowSpacing="6">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding NameLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedVehicle.Name}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding MakeModelLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedVehicle.MakeModel}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding CategoryLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedVehicle.Category}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding PlateLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedVehicle.Plate}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding StateLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding SelectedVehicle.State}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="{Binding YearLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding SelectedVehicle.Year}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding PowerLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding SelectedVehicle.Power}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="{Binding NextTechnicalInspectionLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding SelectedVehicle.NextTechnicalInspection}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="{Binding GreenCardToLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding SelectedVehicle.GreenCardTo}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="{Binding NoteLabel}" FontWeight="SemiBold" />
+            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding SelectedVehicle.Note}" TextWrapping="Wrap" />
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <Button Name="MobileReloadButton"
+              Content="{Binding ReloadText}"
+              Command="{Binding ReloadCommand}"
+              HorizontalAlignment="Stretch"
+              AutomationProperties.AutomationId="MobileReloadButton"
+              AutomationProperties.Name="{Binding ReloadName}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

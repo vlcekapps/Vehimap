@@ -2,7 +2,7 @@
 
 Tento dokument je určený pro vývojáře, testování, release přípravu a technické plánování. Uživatelský úvod k aplikaci je v kořenovém [README.md](../README.md).
 
-Požadované nástroje, instalační příkazy pro Windows/macOS/Linux, volitelné Appium a release nástroje i budoucí Android/iOS prerequisites jsou v [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md). Základní prostředí lze ověřit bez IDE příkazem `pwsh ./build/Test-DotnetDeveloperEnvironment.ps1` ze složky `dotnet`.
+Požadované nástroje, instalační příkazy pro Windows/macOS/Linux, volitelné Appium a release nástroje i Android prerequisites jsou v [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md). Základní prostředí lze ověřit bez IDE příkazem `pwsh ./build/Test-DotnetDeveloperEnvironment.ps1` ze složky `dotnet`; Android nástroje přepínačem `-IncludeAndroidTools`.
 
 ## Vehimap .NET rewrite
 
@@ -23,6 +23,7 @@ Aktualni zamer:
 - zachovat legacy kompatibilitu dat jako jednorazovou migraci/import bez navratu AHK-only runtime, knihoven nebo testu
 - cist legacy `TSV`, `INI`, starsi `.vehimapbak` a `data/attachments` pres `Vehimap.Storage.Legacy` jen pro migraci z 1.0.2 a import starsich zaloh; po uspesne migraci zive TSV/INI soubory z `data/` odlozit mimo runtime koren
 - release priorita je nejdrive stabilni Windows desktop pres Inno Setup instalator, potom Android, nasledne macOS a nakonec Linux
+- Android má samostatný `net10.0-android` host a sdílený `Vehimap.Mobile` read-only shell; nejde o desktopový RID ani o veřejný mobilní release
 - rada 2.0 zustava po zavedeni SQLite v delsi nightly stabilizaci; beta/stable se neplanuji, dokud storage gate a testerska vlna nebudou bez blockeru
 - lokalizacni zaklad se zavadi pred dalsimi velkymi funkcemi a pred Android UI; pilot uz pokryva nastaveni, O programu vcetne kopirovacich statusu a runtime rezimu, editor vozidla vcetne mazani, hlavni shell, hlavni menu, levy panel seznamu vozidel, nazvy pracovnich karet, staticke povrchy editoru historie/tankovani/udrzby/pripominek/dokladu, runtime stavove a validacni hlasky evidencnich editoru vcetne akci priloh, runtime souhrny/detailove panely/vysledky hledani a screen-reader popisky polozek hlavnich evidenci, projekcni souhrny seznamu vozidel a detailu vozidla, dialog dokonceni udrzby, aktualizacni a notifikacni dialogy vcetne platformnich vysledku kontroly aktualizaci a validace manifestu, staticke texty jejich workspace karet, workspace `Detail vozidla`, `Globalni hledani`, `Casova osa`, `Blizici se terminy`, `Propadle terminy`, `Chytry poradce`, `Audit dat`, `Naklady`, `Dashboard`, kratke akcni workspace statusy dashboardu/udrzby/detailu vozidla, katalog balicku pro vozidlo a doporucene servisni sablony, dynamicke/domain texty analyzy tankovani, auditu dat, Chytreho poradce, casove osy, globalniho hledani, terminovych prehledu, dashboard timeline, rychlych akci, app-shell workflow statusu, nakladoveho workflow, servisni knizky, tiskoveho HTML prehledu vozidel a rucniho ICS exportu, globalni bezpecnostni dialogy, chrome samostatnych workspace oken, titulky samostatnych workspace oken, automaticke zalohy, filtrovane souhrny auditu/poradce, a11y text-edit live-region, pristupne okno `Akce na liste` a SQLite 2.0 migracni/health diagnostiku pres `.resx` zdroje
 - preference jazyka, oddelovacu cisel, jednotek vzdalenosti/objemu a meny se ukladaji do nastaveni datove sady; internim ulozistem zustavaji invariantni hodnoty, UI a exporty je formatuji podle preferenci
@@ -297,6 +298,14 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetN
 
 Skript používá jednu společnou `nightly.local` verzi pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`, testy spustí jen u prvního RID a každý publish samostatně zabalí a ověří. Na Windows jsou macOS/Linux výstupy cross-publish balíčky pro kontrolu obsahu; jejich skutečné spuštění, VoiceOver/Orca a platformní integrace se musí ověřit na nativním systému.
 
+Celou současnou matici včetně Android APK vytvoří:
+
+```powershell
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Build-DotnetLocalNightlies.ps1
+```
+
+Linuxový výstup obsahuje ELF apphost a `.so`, macOS výstup Mach-O apphost a `.dylib`. Soubory `.dll` jsou přenosné spravované .NET assemblies a jejich přítomnost je na obou platformách očekávaná; cílovou platformu určuje apphost, runtime metadata a přibalené nativní knihovny. Android se sestavuje odděleně jako `net10.0-android` APK, nikoli přes desktopový RID.
+
 ## Release balicky
 
 Lokalni packaging publish vystupu. Windows RID vytvori Inno Setup instalator, ostatni platformy archiv:
@@ -316,6 +325,7 @@ Lokalni testovaci vystupy jsou rozdelene podle kanalu, aby tester nemusel hledat
 - Linux nightly aplikace a archiv: `dotnet\artifacts\nightly\linux-x64\app\Vehimap` a `dotnet\artifacts\nightly\linux-x64\release`
 - macOS Intel nightly aplikace a archiv: `dotnet\artifacts\nightly\osx-x64\app\Vehimap` a `dotnet\artifacts\nightly\osx-x64\release`
 - macOS Apple Silicon nightly aplikace a archiv: `dotnet\artifacts\nightly\osx-arm64\app\Vehimap` a `dotnet\artifacts\nightly\osx-arm64\release`
+- Android nightly APK: `dotnet\artifacts\nightly\android\app\Vehimap.apk`; verzovaný APK, SHA-256 a metadata jsou v `dotnet\artifacts\nightly\android\release`
 - budouci beta aplikace a instalator: `dotnet\artifacts\beta\win-x64\app` a `dotnet\artifacts\beta\win-x64\release`
 - budouci stable aplikace a instalator: `dotnet\artifacts\stable\win-x64\app` a `dotnet\artifacts\stable\win-x64\release`
 

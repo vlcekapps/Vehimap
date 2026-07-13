@@ -2854,4 +2854,37 @@ Navržená akce: {6}</value></data>
   <data name="KnownValue.ReminderRepeat.EveryTwoYears.LegacyWords" xml:space="preserve"><value>Každé dva roky</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears" xml:space="preserve"><value>Každých 5 let</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears.LegacyWords" xml:space="preserve"><value>Každých pět let</value></data>
+  <data name="Mobile.App.Title" xml:space="preserve"><value>Vehimap Nightly pro Android</value></data>
+  <data name="Mobile.Shell.Heading" xml:space="preserve"><value>Moje vozidla</value></data>
+  <data name="Mobile.Shell.Intro" xml:space="preserve"><value>Vyberte vozidlo a přečtěte si jeho základní údaje. Tato první Android nightly sdílí datový model a lokalizační základ Vehimapu 2.0.</value></data>
+  <data name="Mobile.Shell.ReadOnly" xml:space="preserve"><value>Preview pouze pro čtení: editace a přenos dat přibudou v další etapě Androidu.</value></data>
+  <data name="Mobile.VehicleList.Name" xml:space="preserve"><value>Seznam vozidel</value></data>
+  <data name="Mobile.VehicleList.Help" xml:space="preserve"><value>Vyberte vozidlo a jeho detail se zobrazí pod seznamem.</value></data>
+  <data name="Mobile.VehicleList.Empty" xml:space="preserve"><value>V Android datové sadě zatím nejsou uložena žádná vozidla.</value></data>
+  <data name="Mobile.VehicleList.ItemType" xml:space="preserve"><value>Vozidlo</value></data>
+  <data name="Mobile.VehicleList.ItemAccessibleLabel" xml:space="preserve"><value>{0}, {1}, kategorie {2}, státní poznávací značka {3}, stav {4}</value></data>
+  <data name="Mobile.VehicleDetail.EmptyHeading" xml:space="preserve"><value>Detail vozidla</value></data>
+  <data name="Mobile.VehicleDetail.EmptyText" xml:space="preserve"><value>Nejprve vyberte vozidlo ze seznamu.</value></data>
+  <data name="Mobile.VehicleDetail.Heading" xml:space="preserve"><value>Detail vozidla: {0}</value></data>
+  <data name="Mobile.VehicleDetail.Name" xml:space="preserve"><value>Název</value></data>
+  <data name="Mobile.VehicleDetail.MakeModel" xml:space="preserve"><value>Značka a model</value></data>
+  <data name="Mobile.VehicleDetail.Category" xml:space="preserve"><value>Kategorie</value></data>
+  <data name="Mobile.VehicleDetail.Plate" xml:space="preserve"><value>Státní poznávací značka</value></data>
+  <data name="Mobile.VehicleDetail.State" xml:space="preserve"><value>Stav</value></data>
+  <data name="Mobile.VehicleDetail.Year" xml:space="preserve"><value>Rok</value></data>
+  <data name="Mobile.VehicleDetail.Power" xml:space="preserve"><value>Výkon</value></data>
+  <data name="Mobile.VehicleDetail.NextTechnicalInspection" xml:space="preserve"><value>Příští technická kontrola</value></data>
+  <data name="Mobile.VehicleDetail.GreenCardTo" xml:space="preserve"><value>Zelená karta platná do</value></data>
+  <data name="Mobile.VehicleDetail.Note" xml:space="preserve"><value>Poznámka</value></data>
+  <data name="Mobile.Action.Reload" xml:space="preserve"><value>Znovu načíst</value></data>
+  <data name="Mobile.Action.ReloadName" xml:space="preserve"><value>Znovu načíst Android datovou sadu</value></data>
+  <data name="Mobile.Status.Ready" xml:space="preserve"><value>Android datová sada je připravena k načtení.</value></data>
+  <data name="Mobile.Status.Loading" xml:space="preserve"><value>Načítají se vozidla...</value></data>
+  <data name="Mobile.Status.NoVehicles" xml:space="preserve"><value>Android datová sada je připravená, ale neobsahuje žádná vozidla.</value></data>
+  <data name="Mobile.Status.Loaded" xml:space="preserve"><value>Načtená vozidla: {0}.</value></data>
+  <data name="Mobile.Status.LoadFailed" xml:space="preserve"><value>Android datovou sadu se nepodařilo načíst. {0}</value></data>
+  <data name="Mobile.Value.UnnamedVehicle" xml:space="preserve"><value>Vozidlo bez názvu</value></data>
+  <data name="Mobile.Value.NoCategory" xml:space="preserve"><value>Bez kategorie</value></data>
+  <data name="Mobile.Value.NotEntered" xml:space="preserve"><value>Nevyplněno</value></data>
+  <data name="Mobile.Value.NoNote" xml:space="preserve"><value>Bez poznámky</value></data>
 </root>

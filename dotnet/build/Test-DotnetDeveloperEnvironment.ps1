@@ -2,7 +2,10 @@
 [CmdletBinding()]
 param(
     [switch]$IncludeReleaseTools,
-    [switch]$IncludeWindowsUiTools
+    [switch]$IncludeWindowsUiTools,
+    [switch]$IncludeAndroidTools,
+    [string]$AndroidSdkDirectory,
+    [string]$JavaSdkDirectory
 )
 
 Set-StrictMode -Version Latest
@@ -108,6 +111,56 @@ function Find-WinAppDriver {
     return $null
 }
 
+function Find-AndroidSdk {
+    $candidates = [System.Collections.Generic.List[string]]::new()
+    foreach ($candidate in @($AndroidSdkDirectory, $env:ANDROID_HOME, $env:ANDROID_SDK_ROOT)) {
+        if (-not [string]::IsNullOrWhiteSpace($candidate)) {
+            $candidates.Add($candidate)
+        }
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($env:LOCALAPPDATA)) {
+        $candidates.Add((Join-Path $env:LOCALAPPDATA "Android\Sdk"))
+    }
+
+    foreach ($candidate in $candidates) {
+        if (Test-Path -LiteralPath (Join-Path $candidate "platforms\android-36\android.jar") -PathType Leaf) {
+            return (Resolve-Path -LiteralPath $candidate).Path
+        }
+    }
+
+    return $null
+}
+
+function Find-JavaSdk {
+    $candidates = [System.Collections.Generic.List[string]]::new()
+    foreach ($candidate in @($JavaSdkDirectory, $env:JAVA_HOME)) {
+        if (-not [string]::IsNullOrWhiteSpace($candidate)) {
+            $candidates.Add($candidate)
+        }
+    }
+
+    if ($runningOnWindows) {
+        $candidates.Add("C:\Program Files\Android\Android Studio\jbr")
+        $candidates.Add("C:\nvgt\android-tools\java17")
+    }
+    elseif ($runningOnMacOS) {
+        $candidates.Add("/Applications/Android Studio.app/Contents/jbr/Contents/Home")
+    }
+    else {
+        $candidates.Add((Join-Path $HOME "android-studio\jbr"))
+    }
+
+    $javaBinary = if ($runningOnWindows) { "bin\java.exe" } else { "bin/java" }
+    foreach ($candidate in $candidates) {
+        if (Test-Path -LiteralPath (Join-Path $candidate $javaBinary) -PathType Leaf) {
+            return (Resolve-Path -LiteralPath $candidate).Path
+        }
+    }
+
+    return $null
+}
+
 if ($PSVersionTable.PSEdition -eq "Core" -and $PSVersionTable.PSVersion.Major -ge 7) {
     Add-Success "PowerShell $($PSVersionTable.PSVersion) ($($PSVersionTable.PSEdition))"
 }
@@ -206,6 +259,57 @@ if ($IncludeWindowsUiTools) {
         }
         else {
             Add-Success "WinAppDriver: $winAppDriverPath"
+        }
+    }
+}
+
+if ($IncludeAndroidTools) {
+    if ([string]::IsNullOrWhiteSpace($dotnetPath)) {
+        Add-Failure ".NET CLI is required to inspect Android workloads."
+    }
+    else {
+        $workloadOutput = @(& $dotnetPath workload list 2>&1)
+        if ($LASTEXITCODE -eq 0 -and ($workloadOutput | Where-Object { $_ -match '^android\s' })) {
+            Add-Success ".NET Android workload"
+        }
+        else {
+            Add-Failure ".NET Android workload was not found. Run 'dotnet workload install android'."
+        }
+    }
+
+    $androidSdk = Find-AndroidSdk
+    if ([string]::IsNullOrWhiteSpace($androidSdk)) {
+        Add-Failure "Android SDK with platform API 36 was not found."
+    }
+    else {
+        Add-Success "Android SDK API 36: $androidSdk"
+        $adbFileName = if ($runningOnWindows) { "adb.exe" } else { "adb" }
+        $adbPath = Join-Path $androidSdk "platform-tools\$adbFileName"
+        if (Test-Path -LiteralPath $adbPath -PathType Leaf) {
+            Add-Success "Android Debug Bridge: $adbPath"
+        }
+        else {
+            Add-Failure "Android platform-tools/adb was not found in '$androidSdk'."
+        }
+    }
+
+    $javaSdk = Find-JavaSdk
+    if ([string]::IsNullOrWhiteSpace($javaSdk)) {
+        Add-Failure "JDK 21 was not found. Android Studio's bundled JBR is supported."
+    }
+    else {
+        $javaBinary = if ($runningOnWindows) { "bin\java.exe" } else { "bin/java" }
+        $javaVersionOutput = (& (Join-Path $javaSdk $javaBinary) -version 2>&1) -join "`n"
+        $javaMajor = 0
+        if ($javaVersionOutput -match 'version\s+"(?<major>\d+)') {
+            $javaMajor = [int]$matches["major"]
+        }
+
+        if ($javaMajor -lt 21) {
+            Add-Failure "Android build requires JDK 21 or later; '$javaSdk' reports '$javaVersionOutput'."
+        }
+        else {
+            Add-Success "JDK ${javaMajor}: $javaSdk"
         }
     }
 }

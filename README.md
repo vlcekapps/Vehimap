@@ -77,6 +77,14 @@ Na čistě Wayland instalaci může být navíc potřeba XWayland: balíček `xw
 
 Aktuální platformní úrovně a nativní knihovny vycházejí z [oficiální dokumentace Avalonia Supported Platforms](https://docs.avaloniaui.net/docs/supported-platforms). Požadavky minimálních linuxových instalací na ICU, OpenSSL a další základní knihovny udržuje [.NET Linux installation documentation](https://learn.microsoft.com/dotnet/core/install/linux).
 
+### Android
+
+- Android 12 (API 31) nebo novější
+- telefon nebo tablet s ARM64; lokální vývojový APK obsahuje také x86-64 knihovny pro emulátor
+- žádná samostatná instalace .NET ani Avalonie není potřeba
+
+Android je nyní experimentální lokální nightly pro vývoj a testování. Nabízí zatím pouze čtení seznamu a detailu vozidel ve vlastní datové sadě aplikace; veřejný podepsaný Android balíček ještě nevydáváme.
+
 ## Instalace
 
 ### Windows
@@ -97,6 +105,10 @@ Aktuální platformní úrovně a nativní knihovny vycházejí z [oficiální d
 1. Nainstalujte výše uvedené systémové knihovny a stáhněte archiv `linux-x64.tar.gz`.
 2. Archiv rozbalte, otevřete jeho složku a spusťte soubor `Vehimap`.
 3. Pokud archiv nezachoval spustitelný příznak, použijte `chmod +x Vehimap` a poté `./Vehimap`.
+
+### Android
+
+Android APK se v této fázi instaluje pouze lokálně přes vývojářské nástroje a USB ladění. Běžní uživatelé mají počkat na první veřejně podepsané mobilní vydání; podrobný postup pro vývojáře je v [dotnet/docs/DEVELOPMENT.md](dotnet/docs/DEVELOPMENT.md).
 
 Pro běžné používání vybírejte stabilní vydání. Nightly verze jsou určené pro odvážnější testery a mohou obsahovat rozpracované změny.
 

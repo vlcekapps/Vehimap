@@ -1,6 +1,6 @@
 # Vehimap Development Environment
 
-This document describes the supported developer setup for desktop Vehimap. It is intended for contributors using a normal editor and command line; no AI service or proprietary builder is required.
+This document describes the supported developer setup for Vehimap desktop and the experimental Android nightly. It is intended for contributors using a normal editor and command line; no AI service or proprietary builder is required.
 
 ## Supported Development Scope
 
@@ -12,8 +12,9 @@ The current solution contains the .NET 10 desktop application and targets these 
 | Linux x64 | `linux-x64` | self-contained `tar.gz` directory |
 | macOS Intel | `osx-x64` | self-contained zipped `.app` |
 | macOS Apple Silicon | `osx-arm64` | self-contained zipped `.app` |
+| Android ARM64/x64 | `net10.0-android` | locally development-signed APK |
 
-Android and iOS projects do not exist in the solution yet. Their provisional prerequisites are documented below so contributors can plan ahead, but they are not required for desktop work.
+The Android project is deliberately kept in `Vehimap.Android.sln`, separate from the normal desktop `Vehimap.sln`. Desktop contributors therefore do not need the Android workload. iOS does not have a host project yet.
 
 ## Common Requirements
 
@@ -160,15 +161,49 @@ Use `osx-x64` instead of `osx-arm64` on an Intel Mac. Xcode is optional for basi
 | Windows accessibility | NVDA and Narrator |
 | Linux accessibility | Orca; Accerciser is recommended for tree inspection |
 | macOS accessibility | VoiceOver |
+| Android build | .NET Android workload, Android SDK API 36, JDK 21 |
+| Android device test | Android 12/API 31 or newer device or emulator, `adb` |
 
-## Future Android Development
+## Android Development
 
-Android tooling is not required until an Android project is added. The planned baseline is:
+Vehimap now has an experimental read-only Android nightly shell. It reads its own app-private SQLite data set and shares domain, storage, localization and known-value projection code with desktop Vehimap. It is a separate application, not a desktop RID and not yet a public Android release.
+
+The current baseline is:
 
 - official Microsoft .NET 10 SDK;
 - Android workload installed with `dotnet workload install android`;
-- Android SDK command-line tools or Android Studio, platform tools, and an emulator or device;
-- JDK 11 or later, with JDK 17 preferred for a reproducible team baseline.
+- Android Studio or Android command-line tools with SDK platform API 36, build tools and platform tools;
+- JDK 21; Android Studio's bundled JetBrains Runtime is supported;
+- Android 12/API 31 or newer device or emulator;
+- USB debugging and an accepted computer RSA key for physical-device installation.
+
+On Windows the readiness script automatically checks common locations such as `%LOCALAPPDATA%\Android\Sdk` and `C:\Program Files\Android\Android Studio\jbr`. Explicit paths can also be passed to the scripts.
+
+Verify the Android environment and build the APK from the repository root:
+
+```powershell
+pwsh ./dotnet/build/Test-DotnetDeveloperEnvironment.ps1 -IncludeAndroidTools
+pwsh ./dotnet/build/Test-DotnetAndroidNightlyReadiness.ps1
+```
+
+The easy-to-find APK is written to `dotnet/artifacts/nightly/android/app/Vehimap.apk`. It uses the separate package id `cz.vlcekapps.vehimap.nightly`, includes ARM64 and x86-64 native libraries and is signed with a local development key. It is suitable for local testing, not store distribution.
+
+Install and launch it on an authorized connected device:
+
+```powershell
+$adb = "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe"
+& $adb devices -l
+& $adb install -r ./dotnet/artifacts/nightly/android/app/Vehimap.apk
+& $adb shell monkey -p cz.vlcekapps.vehimap.nightly -c android.intent.category.LAUNCHER 1
+```
+
+Build every current local nightly target with one shared version:
+
+```powershell
+pwsh ./dotnet/build/Build-DotnetLocalNightlies.ps1
+```
+
+This creates desktop packages for `win-x64`, `linux-x64`, `osx-x64`, `osx-arm64` and the Android APK. Windows can cross-publish the Linux and macOS packages, but native execution, accessibility and platform integration still require their respective operating systems.
 
 On Linux, distribution-provided .NET packages may not include mobile workload support. Use the official Microsoft SDK if `dotnet workload install android` fails.
 

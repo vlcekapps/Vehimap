@@ -45,6 +45,10 @@ public sealed class DeveloperEnvironmentDocumentationTests
         Assert.Contains("Inno Setup 7", guide, StringComparison.Ordinal);
         Assert.Contains("WinAppDriver 1.2.1", guide, StringComparison.Ordinal);
         Assert.Contains("dotnet workload install android", guide, StringComparison.Ordinal);
+        Assert.Contains("Vehimap.Android.sln", guide, StringComparison.Ordinal);
+        Assert.Contains("API 36", guide, StringComparison.Ordinal);
+        Assert.Contains("JDK 21", guide, StringComparison.Ordinal);
+        Assert.Contains("Build-DotnetLocalNightlies.ps1", guide, StringComparison.Ordinal);
         Assert.Contains("dotnet workload install ios", guide, StringComparison.Ordinal);
         Assert.Contains("\"version\": \"10.0.100\"", globalJson, StringComparison.Ordinal);
         Assert.Contains("<TargetFramework>net10.0</TargetFramework>", buildProps, StringComparison.Ordinal);
@@ -67,6 +71,10 @@ public sealed class DeveloperEnvironmentDocumentationTests
         Assert.Contains("xcode-select", script, StringComparison.Ordinal);
         Assert.Contains("IncludeReleaseTools", script, StringComparison.Ordinal);
         Assert.Contains("IncludeWindowsUiTools", script, StringComparison.Ordinal);
+        Assert.Contains("IncludeAndroidTools", script, StringComparison.Ordinal);
+        Assert.Contains("Android SDK with platform API 36", script, StringComparison.Ordinal);
+        Assert.Contains("JDK 21", script, StringComparison.Ordinal);
+        Assert.Contains("dotnet workload install android", script, StringComparison.Ordinal);
         Assert.Contains("${Description}: $path", script, StringComparison.Ordinal);
         Assert.DoesNotContain("$Description: $path", script, StringComparison.Ordinal);
         Assert.DoesNotContain("$isWindows =", script, StringComparison.OrdinalIgnoreCase);

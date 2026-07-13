@@ -5,6 +5,10 @@
 !RELEASE.md
 !CHANGELOG.md
 !favicon.ico
+!docs/
+docs/*
+!docs/licensing/
+!docs/licensing/**
 !.github/
 !.github/workflows/
 !.github/workflows/dotnet-desktop.yml

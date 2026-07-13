@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vehimap.Storage.Sqlite", "src\Vehimap.Storage.Sqlite\Vehimap.Storage.Sqlite.csproj", "{77C6E6E8-E151-42CE-AEFD-055B844264BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vehimap.Mobile", "src\Vehimap.Mobile\Vehimap.Mobile.csproj", "{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,11 +157,24 @@ Global
 		{77C6E6E8-E151-42CE-AEFD-055B844264BC}.Release|x64.Build.0 = Release|Any CPU
 		{77C6E6E8-E151-42CE-AEFD-055B844264BC}.Release|x86.ActiveCfg = Release|Any CPU
 		{77C6E6E8-E151-42CE-AEFD-055B844264BC}.Release|x86.Build.0 = Release|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Debug|x64.Build.0 = Debug|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Debug|x86.Build.0 = Debug|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Release|x64.ActiveCfg = Release|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Release|x64.Build.0 = Release|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Release|x86.ActiveCfg = Release|Any CPU
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{77C6E6E8-E151-42CE-AEFD-055B844264BC} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{BF1965CD-26B5-4E5B-B5F1-0988A9147DD6} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
