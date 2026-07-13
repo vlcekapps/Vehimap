@@ -8,6 +8,7 @@ param(
     [switch]$InstallSmoke,
     [switch]$AllowLocalInstallSmoke,
     [int]$InstallerSmokeLaunchSeconds = 8,
+    [switch]$SkipSolutionBuild,
     [switch]$SkipTests
 )
 
@@ -70,12 +71,18 @@ Write-Host "Release tag: $releaseTag"
 
 Push-Location $dotnetRoot
 try {
-    dotnet build Vehimap.sln --configuration $Configuration -p:UseSharedCompilation=false
-    if ($LASTEXITCODE -ne 0) {
-        exit $LASTEXITCODE
+    if (-not $SkipSolutionBuild) {
+        dotnet build Vehimap.sln --configuration $Configuration -p:UseSharedCompilation=false
+        if ($LASTEXITCODE -ne 0) {
+            exit $LASTEXITCODE
+        }
     }
 
     if (-not $SkipTests) {
+        if ($SkipSolutionBuild) {
+            throw "Testy nelze spustit s -SkipSolutionBuild. Pridejte take -SkipTests."
+        }
+
         dotnet test tests\Vehimap.Tests.Unit\Vehimap.Tests.Unit.csproj --no-build --configuration $Configuration -p:UseSharedCompilation=false
         if ($LASTEXITCODE -ne 0) {
             exit $LASTEXITCODE
@@ -112,7 +119,7 @@ try {
         "vehimap-desktop-$channelName-$effectiveVersion-$RuntimeIdentifier-setup"
     }
     else {
-        "vehimap-desktop-$channelName-$effectiveVersion-$RuntimeIdentifier"
+        "vehimap-desktop-$effectiveVersion-$RuntimeIdentifier"
     }
     $metadataPath = Join-Path $releaseDirectory "$expectedPackageBaseName.json"
     if (-not (Test-Path -LiteralPath $metadataPath -PathType Leaf)) {
@@ -165,6 +172,11 @@ try {
 
         & $installerSmokeScript @installerSmokeArguments
     }
+    else {
+        & (Join-Path $PSScriptRoot "Test-DotnetArchiveSmoke.ps1") `
+            -ArchivePath $package.FullName `
+            -PackageMetadataPath $metadata.FullName
+    }
 
     $manifestContent = Get-Content -Raw -LiteralPath $manifestPath
     $manifestValues = @{}
@@ -209,7 +221,8 @@ try {
 
     Write-Host "Release readiness OK"
     Write-Host "Artifact root: $readinessRoot"
-    Write-Host "App: $(Join-Path $publishDirectory 'Vehimap.Desktop.exe')"
+    $appFileName = if ($RuntimeIdentifier -like "win-*") { "Vehimap.Desktop.exe" } else { "Vehimap.Desktop" }
+    Write-Host "App: $(Join-Path $publishDirectory $appFileName)"
     Write-Host "Package: $($package.FullName)"
     Write-Host "Manifest: $manifestPath"
 }

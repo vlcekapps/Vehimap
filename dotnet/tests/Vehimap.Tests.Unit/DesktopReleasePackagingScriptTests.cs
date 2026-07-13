@@ -174,6 +174,63 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
     }
 
     [Fact]
+    public async Task Package_script_and_archive_smoke_validate_linux_nightly_payload()
+    {
+        var powerShell = ResolvePowerShell();
+        if (powerShell is null || FindOnPath("tar") is null)
+        {
+            return;
+        }
+
+        var publishDirectory = Path.Combine(_tempRoot, "linux-nightly-publish");
+        var outputDirectory = Path.Combine(_tempRoot, "linux-nightly-release");
+        Directory.CreateDirectory(publishDirectory);
+        await File.WriteAllTextAsync(Path.Combine(publishDirectory, "Vehimap.Desktop"), "linux desktop binary");
+        CopyLicensePayloadToPublishDirectory(publishDirectory);
+
+        const string version = "9.8.7-nightly.123.1";
+        var repositoryRoot = FindRepositoryRoot();
+        var packageScript = Path.Combine(repositoryRoot, "dotnet", "build", "Package-DesktopRelease.ps1");
+        var archiveSmokeScript = Path.Combine(repositoryRoot, "dotnet", "build", "Test-DotnetArchiveSmoke.ps1");
+
+        var packageResult = await RunPowerShellAsync(
+            powerShell,
+            packageScript,
+            ("PublishDirectory", publishDirectory),
+            ("RuntimeIdentifier", "linux-x64"),
+            ("Version", version),
+            ("OutputDirectory", outputDirectory),
+            ("Channel", "nightly"));
+
+        Assert.Equal(0, packageResult.ExitCode);
+
+        var packageBaseName = $"vehimap-desktop-{version}-linux-x64";
+        var packagePath = Path.Combine(outputDirectory, packageBaseName + ".tar.gz");
+        var metadataPath = Path.Combine(outputDirectory, packageBaseName + ".json");
+        Assert.True(File.Exists(packagePath), packageResult.CombinedOutput);
+        Assert.True(File.Exists(packagePath + ".sha256"), packageResult.CombinedOutput);
+        Assert.True(File.Exists(metadataPath), packageResult.CombinedOutput);
+
+        using (var metadata = JsonDocument.Parse(await File.ReadAllTextAsync(metadataPath)))
+        {
+            var root = metadata.RootElement;
+            Assert.Equal("nightly", root.GetProperty("channel").GetString());
+            Assert.Equal("archive", root.GetProperty("assetKind").GetString());
+            Assert.Equal("linux-x64", root.GetProperty("runtimeIdentifier").GetString());
+            Assert.Equal(Path.GetFileName(packagePath), root.GetProperty("packageFile").GetString());
+        }
+
+        var smokeResult = await RunPowerShellAsync(
+            powerShell,
+            archiveSmokeScript,
+            ("ArchivePath", packagePath),
+            ("PackageMetadataPath", metadataPath));
+
+        Assert.Equal(0, smokeResult.ExitCode);
+        Assert.Contains("Archive smoke OK: linux-x64", smokeResult.CombinedOutput, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Inno_template_closes_running_applications_and_offers_postinstall_launch()
     {
         var templatePath = Path.Combine(FindRepositoryRoot(), "dotnet", "installer", "windows", "Vehimap.iss.in");

@@ -287,6 +287,14 @@ dotnet build
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyReadiness.ps1 -RuntimeIdentifier win-x64 -SkipTests
 ```
 
+Po jednorázovém otestování řešení lze vytvořit celou lokální desktop nightly matici jedním příkazem:
+
+```powershell
+powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\build\Test-DotnetNightlyMatrix.ps1
+```
+
+Skript používá jednu společnou `nightly.local` verzi pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`, testy spustí jen u prvního RID a každý publish samostatně zabalí a ověří. Na Windows jsou macOS/Linux výstupy cross-publish balíčky pro kontrolu obsahu; jejich skutečné spuštění, VoiceOver/Orca a platformní integrace se musí ověřit na nativním systému.
+
 ## Release balicky
 
 Lokalni packaging publish vystupu. Windows RID vytvori Inno Setup instalator, ostatni platformy archiv:
@@ -303,6 +311,9 @@ Lokalni testovaci vystupy jsou rozdelene podle kanalu, aby tester nemusel hledat
 
 - aktualni nightly aplikace: `dotnet\artifacts\nightly\win-x64\app\Vehimap.Desktop.exe`
 - aktualni nightly instalator: `dotnet\artifacts\nightly\win-x64\release\vehimap-desktop-nightly-<verze>-win-x64-setup.exe`
+- Linux nightly aplikace a archiv: `dotnet\artifacts\nightly\linux-x64\app\Vehimap.Desktop` a `dotnet\artifacts\nightly\linux-x64\release`
+- macOS Intel nightly aplikace a archiv: `dotnet\artifacts\nightly\osx-x64\app\Vehimap.Desktop` a `dotnet\artifacts\nightly\osx-x64\release`
+- macOS Apple Silicon nightly aplikace a archiv: `dotnet\artifacts\nightly\osx-arm64\app\Vehimap.Desktop` a `dotnet\artifacts\nightly\osx-arm64\release`
 - budouci beta aplikace a instalator: `dotnet\artifacts\beta\win-x64\app` a `dotnet\artifacts\beta\win-x64\release`
 - budouci stable aplikace a instalator: `dotnet\artifacts\stable\win-x64\app` a `dotnet\artifacts\stable\win-x64\release`
 
@@ -312,6 +323,8 @@ CI workflow `.github/workflows/dotnet-desktop.yml` umi:
 
 - otestovat `.NET` vetev na Windows
 - publikovat self-contained desktop buildy pro Windows, Linux a macOS
+- na nativnich Linux/macOS runnerech overit spustitelny publish soubor a strukturu, metadata, SHA-256 a licencni obsah archivu pred uploadem
+- pred commitem update manifestu overit vsechny ctyri RID, ne jen Windows
 - zabalit je do verzovanych artefaktu:
   - `vehimap-desktop-stable-<verze>-win-x64-setup.exe`
   - `vehimap-desktop-beta-<verze>-win-x64-setup.exe`

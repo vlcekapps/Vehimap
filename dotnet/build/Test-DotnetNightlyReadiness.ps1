@@ -6,6 +6,7 @@ param(
     [switch]$InstallSmoke,
     [switch]$AllowLocalInstallSmoke,
     [int]$InstallerSmokeLaunchSeconds = 8,
+    [switch]$SkipSolutionBuild,
     [switch]$SkipTests
 )
 
@@ -24,6 +25,10 @@ if (-not [string]::IsNullOrWhiteSpace($EffectiveVersion)) {
 
 if ($SkipTests) {
     $arguments["SkipTests"] = $true
+}
+
+if ($SkipSolutionBuild) {
+    $arguments["SkipSolutionBuild"] = $true
 }
 
 if ($InstallSmoke) {

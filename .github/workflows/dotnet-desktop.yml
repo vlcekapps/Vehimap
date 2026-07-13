@@ -300,6 +300,10 @@ jobs:
           -Version "${{ needs.metadata.outputs.effective_version }}"
           -OutputDirectory "artifacts/${{ matrix.rid }}/release"
           -Channel "${{ needs.metadata.outputs.channel }}"
+      - name: Verify native desktop executable
+        if: ${{ !startsWith(matrix.rid, 'win-') }}
+        shell: bash
+        run: test -x "artifacts/${{ matrix.rid }}/desktop/Vehimap.Desktop"
       - name: Smoke test Windows installer package
         if: startsWith(matrix.rid, 'win-')
         shell: pwsh
@@ -312,6 +316,18 @@ jobs:
           $package = Get-Content -Raw -LiteralPath $metadata.FullName | ConvertFrom-Json
           $installerPath = Join-Path $metadata.DirectoryName $package.packageFile
           ./build/Test-DotnetInstallerSmoke.ps1 -InstallerPath $installerPath -PackageMetadataPath $metadata.FullName
+      - name: Smoke test desktop archive package
+        if: ${{ !startsWith(matrix.rid, 'win-') }}
+        shell: pwsh
+        run: |
+          $metadata = Get-ChildItem -Path "artifacts/${{ matrix.rid }}/release" -Filter "*.json" | Sort-Object Name | Select-Object -First 1
+          if ($null -eq $metadata) {
+            throw "Nebyla nalezena package metadata pro desktop archiv."
+          }
+
+          $package = Get-Content -Raw -LiteralPath $metadata.FullName | ConvertFrom-Json
+          $archivePath = Join-Path $metadata.DirectoryName $package.packageFile
+          ./build/Test-DotnetArchiveSmoke.ps1 -ArchivePath $archivePath -PackageMetadataPath $metadata.FullName
       - name: Upload packaged artifact
         uses: actions/upload-artifact@v7
         with:
@@ -417,10 +433,22 @@ jobs:
               Copy-Item -LiteralPath $outputPath -Destination $legacyPreviewOutputPath -Force
             }
           }
-      - name: Verify generated Windows desktop manifest
+      - name: Verify generated desktop manifests
         shell: pwsh
         run: |
-          .\dotnet\build\Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel "${{ needs.metadata.outputs.channel }}" -SkipNetwork
+          foreach ($runtimeIdentifier in @("win-x64", "linux-x64", "osx-x64", "osx-arm64")) {
+            $verificationArguments = @{
+              RuntimeIdentifier = $runtimeIdentifier
+              Channel = "${{ needs.metadata.outputs.channel }}"
+              SkipNetwork = $true
+            }
+
+            if ($runtimeIdentifier -notlike "win-*") {
+              $verificationArguments["SkipRetirementGate"] = $true
+            }
+
+            .\dotnet\build\Test-DotnetPublishedRelease.ps1 @verificationArguments
+          }
       - name: Commit desktop manifests
         shell: pwsh
         run: |

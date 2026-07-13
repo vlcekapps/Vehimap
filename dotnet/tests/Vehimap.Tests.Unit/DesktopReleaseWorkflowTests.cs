@@ -20,7 +20,8 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("latest-dotnet-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
         Assert.Contains("latest-dotnet-\" + $channel + \"-\" + $rid + \".ini", workflow, StringComparison.Ordinal);
         Assert.Contains("Write-DotnetUpdateManifest.ps1", workflow, StringComparison.Ordinal);
-        Assert.Contains("Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel \"${{ needs.metadata.outputs.channel }}\" -SkipNetwork", workflow, StringComparison.Ordinal);
+        Assert.Contains("foreach ($runtimeIdentifier in @(\"win-x64\", \"linux-x64\", \"osx-x64\", \"osx-arm64\"))", workflow, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedRelease.ps1", workflow, StringComparison.Ordinal);
         Assert.Contains("vehimap-desktop-release-*", workflow, StringComparison.Ordinal);
         Assert.Contains("choco install innosetup", workflow, StringComparison.Ordinal);
         Assert.Contains("-p:VehimapReleaseChannel=${{ needs.metadata.outputs.channel }}", workflow, StringComparison.Ordinal);
@@ -64,17 +65,23 @@ public sealed class DesktopReleaseWorkflowTests
     }
 
     [Fact]
-    public void Dotnet_desktop_workflow_verifies_generated_windows_manifest_before_commit()
+    public void Dotnet_desktop_workflow_verifies_all_generated_manifests_before_commit()
     {
         var workflow = ReadWorkflow();
 
-        Assert.Contains("Verify generated Windows desktop manifest", workflow, StringComparison.Ordinal);
-        Assert.Contains("Test-DotnetPublishedRelease.ps1 -RuntimeIdentifier win-x64 -Channel \"${{ needs.metadata.outputs.channel }}\" -SkipNetwork", workflow, StringComparison.Ordinal);
+        Assert.Contains("Verify generated desktop manifests", workflow, StringComparison.Ordinal);
+        Assert.Contains("foreach ($runtimeIdentifier in @(\"win-x64\", \"linux-x64\", \"osx-x64\", \"osx-arm64\"))", workflow, StringComparison.Ordinal);
+        Assert.Contains("RuntimeIdentifier = $runtimeIdentifier", workflow, StringComparison.Ordinal);
+        Assert.Contains("Channel = \"${{ needs.metadata.outputs.channel }}\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("SkipNetwork = $true", workflow, StringComparison.Ordinal);
+        Assert.Contains("if ($runtimeIdentifier -notlike \"win-*\")", workflow, StringComparison.Ordinal);
+        Assert.Contains("$verificationArguments[\"SkipRetirementGate\"] = $true", workflow, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetPublishedRelease.ps1 @verificationArguments", workflow, StringComparison.Ordinal);
         Assert.Contains("Commit desktop manifests", workflow, StringComparison.Ordinal);
         Assert.True(
-            workflow.IndexOf("Verify generated Windows desktop manifest", StringComparison.Ordinal) <
+            workflow.IndexOf("Verify generated desktop manifests", StringComparison.Ordinal) <
             workflow.IndexOf("Commit desktop manifests", StringComparison.Ordinal),
-            "Generated manifest verification must run before committing update manifests.");
+            "Every generated manifest must be verified before committing update manifests.");
         Assert.DoesNotContain("Verify AHK retirement readiness after manifest generation", workflow, StringComparison.Ordinal);
     }
 
@@ -91,6 +98,22 @@ public sealed class DesktopReleaseWorkflowTests
             workflow.IndexOf("Smoke test Windows installer package", StringComparison.Ordinal) <
             workflow.IndexOf("Upload packaged artifact", StringComparison.Ordinal),
             "Windows installer smoke must run before uploading packaged artifacts.");
+    }
+
+    [Fact]
+    public void Dotnet_desktop_workflow_smokes_native_archives_before_upload()
+    {
+        var workflow = ReadWorkflow();
+
+        Assert.Contains("Verify native desktop executable", workflow, StringComparison.Ordinal);
+        Assert.Contains("test -x \"artifacts/${{ matrix.rid }}/desktop/Vehimap.Desktop\"", workflow, StringComparison.Ordinal);
+        Assert.Contains("Smoke test desktop archive package", workflow, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetArchiveSmoke.ps1 -ArchivePath $archivePath -PackageMetadataPath $metadata.FullName", workflow, StringComparison.Ordinal);
+        Assert.Contains("Upload packaged artifact", workflow, StringComparison.Ordinal);
+        Assert.True(
+            workflow.IndexOf("Smoke test desktop archive package", StringComparison.Ordinal) <
+            workflow.IndexOf("Upload packaged artifact", StringComparison.Ordinal),
+            "Desktop archive smoke must run before uploading packaged artifacts.");
     }
 
     [Fact]
@@ -207,6 +230,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("[string]$EffectiveVersion", script, StringComparison.Ordinal);
         Assert.Contains("[switch]$InstallSmoke", script, StringComparison.Ordinal);
         Assert.Contains("[switch]$AllowLocalInstallSmoke", script, StringComparison.Ordinal);
+        Assert.Contains("[switch]$SkipSolutionBuild", script, StringComparison.Ordinal);
         Assert.Contains("[int]$InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
         Assert.Contains("$version-nightly.local.$timestamp", script, StringComparison.Ordinal);
         Assert.Contains("\"nightly\" { \"dotnet-nightly\" }", script, StringComparison.Ordinal);
@@ -220,6 +244,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("-Version $effectiveVersion", script, StringComparison.Ordinal);
         Assert.Contains("-Channel $channelName", script, StringComparison.Ordinal);
         Assert.Contains("$expectedPackageBaseName = if ($RuntimeIdentifier -like \"win-*\")", script, StringComparison.Ordinal);
+        Assert.Contains("\"vehimap-desktop-$effectiveVersion-$RuntimeIdentifier\"", script, StringComparison.Ordinal);
         Assert.Contains("Join-Path $releaseDirectory \"$expectedPackageBaseName.json\"", script, StringComparison.Ordinal);
         Assert.DoesNotContain("Get-ChildItem -LiteralPath $releaseDirectory -Filter \"*.json\" | Sort-Object Name | Select-Object -First 1", script, StringComparison.Ordinal);
         Assert.Contains("Update manifest neobsahuje ocekavany kanal '$channelName'.", script, StringComparison.Ordinal);
@@ -230,7 +255,42 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("$installerSmokeArguments[\"Install\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$installerSmokeArguments[\"AllowLocalInstall\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$installerSmokeArguments[\"LaunchSeconds\"] = $InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetArchiveSmoke.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("-ArchivePath $package.FullName", script, StringComparison.Ordinal);
+        Assert.Contains("$appFileName = if ($RuntimeIdentifier -like \"win-*\")", script, StringComparison.Ordinal);
+        Assert.Contains("Join-Path $publishDirectory $appFileName", script, StringComparison.Ordinal);
         Assert.DoesNotContain("artifacts\\release-readiness\\$channelName", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Archive_smoke_checks_payload_integrity_and_native_executable_mode()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetArchiveSmoke.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("Get-FileHash -Algorithm SHA256", script, StringComparison.Ordinal);
+        Assert.Contains("Vehimap.app/Contents/MacOS/Vehimap.Desktop", script, StringComparison.Ordinal);
+        Assert.Contains("$rootName/Vehimap.Desktop", script, StringComparison.Ordinal);
+        Assert.Contains("THIRD-PARTY-NOTICES.md", script, StringComparison.Ordinal);
+        Assert.Contains("if (-not $isWindowsHost)", script, StringComparison.Ordinal);
+        Assert.Contains("Linux archiv neuchoval executable bit", script, StringComparison.Ordinal);
+        Assert.Contains("macOS archiv neuchoval executable bit", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Nightly_matrix_builds_all_supported_desktop_runtimes_with_one_version()
+    {
+        var scriptPath = Path.Combine(FindRepositoryRoot(), "dotnet", "build", "Test-DotnetNightlyMatrix.ps1");
+        var script = File.ReadAllText(scriptPath);
+
+        Assert.Contains("@(\"win-x64\", \"linux-x64\", \"osx-x64\", \"osx-arm64\")", script, StringComparison.Ordinal);
+        Assert.Contains("$baseVersion-nightly.local.$timestamp", script, StringComparison.Ordinal);
+        Assert.Contains("Test-DotnetNightlyReadiness.ps1", script, StringComparison.Ordinal);
+        Assert.Contains("EffectiveVersion = $EffectiveVersion", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"SkipTests\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"SkipSolutionBuild\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("artifacts\\nightly\\$runtimeIdentifier", script, StringComparison.Ordinal);
+        Assert.Contains("Nightly matrix OK", script, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -254,6 +314,7 @@ public sealed class DesktopReleaseWorkflowTests
         Assert.Contains("Channel = \"nightly\"", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"EffectiveVersion\"] = $EffectiveVersion", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"SkipTests\"] = $true", script, StringComparison.Ordinal);
+        Assert.Contains("$arguments[\"SkipSolutionBuild\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"InstallSmoke\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"AllowLocalInstallSmoke\"] = $true", script, StringComparison.Ordinal);
         Assert.Contains("$arguments[\"InstallerSmokeLaunchSeconds\"] = $InstallerSmokeLaunchSeconds", script, StringComparison.Ordinal);
