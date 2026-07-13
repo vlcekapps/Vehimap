@@ -196,6 +196,45 @@ Avalonia shell. New entries require a regression test.
 - `ServiceBookWindow.axaml.cs`: modal service-book keyboard commands that mirror the
   visible buttons.
 
+## Android and TalkBack framework status
+
+Last verified package: `Avalonia 12.0.4`.
+
+The first Android nightly uses standard Avalonia controls and exposes accessible names,
+actions and selection state through Avalonia automation peers. On the tested Android 16
+device, TalkBack reads the control name and the double-tap action hint, but does not
+always announce the standard role. For example, the reload action is a real Avalonia
+`Button` with a `ButtonAutomationPeer`, yet TalkBack does not say "button".
+
+This is tracked as an Avalonia Android backend limitation, not as a reason to append
+localized words such as "button" to visible labels, accessible names or help text.
+Avalonia 12.0.4 populates Android `AccessibilityNodeInfo.ClassName` from
+`peer.GetClassName()` but does not map `peer.GetAutomationControlType()` to a native
+Android role. Source inspection confirmed that Avalonia 12.1.0 still uses the same
+class-name path and does not yet provide the missing role mapping. Vehimap therefore
+must not add application-specific automation peers or Android class-name overrides just
+to mask this framework behavior.
+
+Framework source references:
+
+- [Avalonia 12.0.4 Android accessibility bridge](https://github.com/AvaloniaUI/Avalonia/blob/12.0.4/src/Android/Avalonia.Android/AvaloniaAccessHelper.cs#L195)
+- [Avalonia 12.1.0 Android accessibility bridge](https://github.com/AvaloniaUI/Avalonia/blob/12.1.0/src/Android/Avalonia.Android/AvaloniaAccessHelper.cs#L234)
+
+Every Avalonia package upgrade must repeat the Android TalkBack role smoke before the
+version is accepted:
+
+- install the current Android nightly on a physical device with TalkBack enabled;
+- verify that buttons, selectable vehicle cards/lists and future tab controls announce
+  their role, name, state and available action;
+- inspect the Android accessibility tree when speech and control semantics disagree;
+- update the verified package version above and the Android evidence log;
+- retire this exception only after the standard Avalonia controls expose correct roles
+  without Vehimap-specific label or peer workarounds.
+
+This limitation prevents an Android `Supports` claim for affected name/role/value
+requirements. It does not change the Windows evidence status, and it is not addressed
+by adding the control type to user-visible text.
+
 ## Temporary TextBox fallback retirement
 
 The `KeyboardAccessibilityHelper.cs` live-region fallback for text editing exists only
@@ -242,4 +281,6 @@ ACR-ready planning documents live in `dotnet/docs/accessibility/`:
 - [Avalonia focus](https://docs.avaloniaui.net/docs/input-interaction/focus)
 - [Avalonia keyboard and hotkeys](https://docs.avaloniaui.net/docs/input-interaction/keyboard-and-hotkeys)
 - [Avalonia TrayIcon](https://docs.avaloniaui.net/controls/navigation/trayicon/)
+- [Avalonia Android platform guide](https://docs.avaloniaui.net/docs/platform-specific-guides/android)
+- [Android custom view accessibility](https://developer.android.com/guide/topics/ui/accessibility/views/custom-views)
 - [Avalonia Linux platform guide](https://docs.avaloniaui.net/docs/platform-specific-guides/linux)

@@ -168,6 +168,12 @@ Use `osx-x64` instead of `osx-arm64` on an Intel Mac. Xcode is optional for basi
 
 Vehimap now has an experimental read-only Android nightly shell. It reads its own app-private SQLite data set and shares domain, storage, localization and known-value projection code with desktop Vehimap. It is a separate application, not a desktop RID and not yet a public Android release.
 
+Android accessibility must be tested with TalkBack on a physical device. The current
+Avalonia 12.0.4 backend exposes names and actions but has a documented standard-role
+announcement limitation; see `docs/ACCESSIBILITY.md`. Every Avalonia package upgrade
+must repeat the button, selectable-card/list and tab-role smoke and update the verified
+framework version before the upgrade is accepted.
+
 The current baseline is:
 
 - official Microsoft .NET 10 SDK;

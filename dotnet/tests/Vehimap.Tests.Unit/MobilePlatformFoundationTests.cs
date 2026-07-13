@@ -102,6 +102,35 @@ public sealed class MobilePlatformFoundationTests
     }
 
     [Fact]
+    public void Android_talkback_role_limitation_is_reviewed_for_the_pinned_Avalonia_version()
+    {
+        var projectPaths = new[]
+        {
+            RepositoryPath("src", "Vehimap.Desktop", "Vehimap.Desktop.csproj"),
+            RepositoryPath("src", "Vehimap.Mobile", "Vehimap.Mobile.csproj"),
+            RepositoryPath("src", "Vehimap.Android", "Vehimap.Android.csproj")
+        };
+        var versions = projectPaths
+            .SelectMany(path => XDocument.Load(path).Descendants("PackageReference"))
+            .Where(element => (element.Attribute("Include")?.Value ?? string.Empty)
+                .StartsWith("Avalonia", StringComparison.Ordinal))
+            .Select(element => element.Attribute("Version")?.Value ?? string.Empty)
+            .Where(version => !string.IsNullOrWhiteSpace(version))
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        var version = Assert.Single(versions);
+        var accessibilityGuide = File.ReadAllText(RepositoryPath("docs", "ACCESSIBILITY.md"));
+        var evidence = File.ReadAllText(RepositoryPath(
+            "docs", "accessibility-evidence", "2026-07-13-android-talkback-baseline.md"));
+
+        Assert.Contains($"Last verified package: `Avalonia {version}`", accessibilityGuide, StringComparison.Ordinal);
+        Assert.Contains("TalkBack", accessibilityGuide, StringComparison.Ordinal);
+        Assert.Contains("must not add application-specific automation peers", accessibilityGuide, StringComparison.Ordinal);
+        Assert.Contains("peer.GetAutomationControlType()", evidence, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Android_nightly_script_validates_package_metadata_and_payload()
     {
         var script = File.ReadAllText(RepositoryPath("build", "Test-DotnetAndroidNightlyReadiness.ps1"));

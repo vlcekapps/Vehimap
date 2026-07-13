@@ -1,4 +1,6 @@
 # Changelog
+
+- Android TalkBack baseline now records a framework-level role announcement limitation in Avalonia 12.0.4, confirms that the released 12.1.0 source still lacks native role mapping, and deliberately keeps standard controls instead of adding visible role words or Vehimap-specific automation peers. A regression guard requires the review and evidence version to be updated whenever Avalonia packages change.
 Všechny významné změny ve Vehimapu budou zapisovány sem.
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
