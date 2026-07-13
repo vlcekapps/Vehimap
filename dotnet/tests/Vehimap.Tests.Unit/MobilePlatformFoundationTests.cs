@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Globalization;
 using System.Xml.Linq;
+using Vehimap.Application.Abstractions;
 using Vehimap.Application.Services;
 using Vehimap.Domain.Models;
+using Vehimap.Mobile.Services;
 using Vehimap.Mobile.ViewModels;
 using Xunit;
 
@@ -90,15 +92,114 @@ public sealed class MobilePlatformFoundationTests
     }
 
     [Fact]
-    public void Mobile_startup_focus_uses_a_meaningful_control_for_empty_data()
+    public void Mobile_shell_uses_four_accessible_primary_destinations()
     {
         var view = File.ReadAllText(RepositoryPath("src", "Vehimap.Mobile", "Views", "MobileMainView.axaml"));
-        var codeBehind = File.ReadAllText(RepositoryPath("src", "Vehimap.Mobile", "Views", "MobileMainView.axaml.cs"));
 
-        Assert.Contains("Name=\"MobileReloadButton\"", view, StringComparison.Ordinal);
-        Assert.Contains("if (viewModel.HasVehicles)", codeBehind, StringComparison.Ordinal);
-        Assert.Contains("MobileVehicleList.Focus();", codeBehind, StringComparison.Ordinal);
-        Assert.Contains("MobileReloadButton.Focus();", codeBehind, StringComparison.Ordinal);
+        Assert.Equal(4, XDocument.Parse(view).Descendants().Count(element => element.Name.LocalName == "RadioButton"));
+        Assert.Contains("AutomationProperties.AutomationId=\"MobilePrimaryNavigation\"", view, StringComparison.Ordinal);
+        Assert.Contains("MobileHomeNavigationButton", view, StringComparison.Ordinal);
+        Assert.Contains("MobileVehiclesNavigationButton", view, StringComparison.Ordinal);
+        Assert.Contains("MobileAlertsNavigationButton", view, StringComparison.Ordinal);
+        Assert.Contains("MobileMoreNavigationButton", view, StringComparison.Ordinal);
+        Assert.Equal(4, XDocument.Parse(view).Descendants()
+            .Where(element => element.Name.LocalName == "RadioButton")
+            .Count(element => (string?)element.Attribute("MinHeight") == "56"));
+    }
+
+    [Fact]
+    public void Mobile_vehicle_hub_is_separate_from_the_list_and_contains_no_inline_editor()
+    {
+        var view = File.ReadAllText(RepositoryPath("src", "Vehimap.Mobile", "Views", "MobileVehiclesView.axaml"));
+        var mobileViews = Directory.GetFiles(RepositoryPath("src", "Vehimap.Mobile", "Views"), "*.axaml")
+            .Select(File.ReadAllText)
+            .ToArray();
+
+        Assert.Contains("IsVehicleListVisible", view, StringComparison.Ordinal);
+        Assert.Contains("IsVehicleHubVisible", view, StringComparison.Ordinal);
+        Assert.Contains("MobileVehicleHubBackButton", view, StringComparison.Ordinal);
+        Assert.All(mobileViews, content => Assert.DoesNotContain("EditorHost", content, StringComparison.Ordinal));
+        Assert.All(mobileViews, content => Assert.DoesNotContain("IsEditing", content, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Android_system_back_delegates_to_mobile_navigation_before_exiting()
+    {
+        var activity = File.ReadAllText(RepositoryPath("src", "Vehimap.Android", "MainActivity.cs"));
+        var mainView = File.ReadAllText(RepositoryPath("src", "Vehimap.Mobile", "Views", "MobileMainView.axaml.cs"));
+        var manifest = File.ReadAllText(RepositoryPath("src", "Vehimap.Android", "Properties", "AndroidManifest.xml"));
+
+        Assert.Contains("_topLevel.BackRequested += OnBackRequested", mainView, StringComparison.Ordinal);
+        Assert.Contains("viewModel.TryNavigateBack()", mainView, StringComparison.Ordinal);
+        Assert.Contains("e.Handled = true", mainView, StringComparison.Ordinal);
+        Assert.DoesNotContain("OnBackPressed", activity, StringComparison.Ordinal);
+        Assert.DoesNotContain("OnBackInvokedDispatcher", activity, StringComparison.Ordinal);
+        Assert.DoesNotContain("enableOnBackInvokedCallback", manifest, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Mobile_navigation_and_vehicle_hub_preserve_expected_back_stack()
+    {
+        var originalDefaultCulture = CultureInfo.DefaultThreadCurrentCulture;
+        var originalDefaultUiCulture = CultureInfo.DefaultThreadCurrentUICulture;
+        var originalCulture = CultureInfo.CurrentCulture;
+        var originalUiCulture = CultureInfo.CurrentUICulture;
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle(
+                    "veh-1",
+                    "Test vehicle",
+                    "Osobní vozidla",
+                    "User note",
+                    "Test model",
+                    "",
+                    "2024",
+                    "80",
+                    "",
+                    "",
+                    "",
+                    "")
+            ]
+        };
+        dataSet.Settings.SetValue("app", "language", AppCultureService.EnglishLanguage);
+        var root = new VehimapDataRoot(Path.GetTempPath(), Path.Combine(Path.GetTempPath(), $"vehimap-mobile-{Guid.NewGuid():N}"), false);
+        var cultureService = new NonMutatingCultureService();
+        var session = new MobileSessionController(
+            new StubDataStore(dataSet),
+            new StubMobileDataRootProvider(root),
+            cultureService,
+            new DesktopSupportedSettingsService(),
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)));
+        try
+        {
+            var viewModel = new MobileMainViewModel(session);
+
+            await viewModel.InitializeAsync();
+
+            Assert.True(viewModel.IsHomeSelected);
+            Assert.Single(viewModel.Vehicles.Vehicles);
+            Assert.NotEmpty(viewModel.Alerts.Alerts);
+
+            viewModel.SelectVehiclesCommand.Execute(null);
+            viewModel.Vehicles.OpenSelectedVehicleCommand.Execute(null);
+
+            Assert.True(viewModel.IsVehiclesSelected);
+            Assert.True(viewModel.Vehicles.IsVehicleHubVisible);
+            Assert.True(viewModel.TryNavigateBack());
+            Assert.True(viewModel.Vehicles.IsVehicleListVisible);
+            Assert.True(viewModel.TryNavigateBack());
+            Assert.True(viewModel.IsHomeSelected);
+            Assert.False(viewModel.TryNavigateBack());
+        }
+        finally
+        {
+            CultureInfo.DefaultThreadCurrentCulture = originalDefaultCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = originalDefaultUiCulture;
+            CultureInfo.CurrentCulture = originalCulture;
+            CultureInfo.CurrentUICulture = originalUiCulture;
+        }
     }
 
     [Fact]
@@ -176,5 +277,33 @@ public sealed class MobilePlatformFoundationTests
         }
 
         return Path.Combine([path, .. segments]);
+    }
+
+    private sealed class StubDataStore(VehimapDataSet dataSet) : IVehimapDataStore
+    {
+        public Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default) =>
+            Task.FromResult(dataSet);
+
+        public Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+    }
+
+    private sealed class StubMobileDataRootProvider(VehimapDataRoot dataRoot) : IMobileDataRootProvider
+    {
+        public VehimapDataRoot GetDataRoot() => dataRoot;
+    }
+
+    private sealed class NonMutatingCultureService : IAppCultureService
+    {
+        private readonly AppCultureService _inner = new();
+
+        public CultureInfo ResolveCulture(string language) => _inner.ResolveCulture(language);
+
+        public Vehimap.Application.Models.AppCulturePreferences Normalize(
+            Vehimap.Application.Models.AppCulturePreferences preferences) => _inner.Normalize(preferences);
+
+        public void ApplyThreadCulture(Vehimap.Application.Models.AppCulturePreferences preferences)
+        {
+        }
     }
 }

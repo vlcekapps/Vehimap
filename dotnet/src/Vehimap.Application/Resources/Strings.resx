@@ -2855,6 +2855,54 @@ Suggested action: {6}</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears" xml:space="preserve"><value>Every 5 years</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears.LegacyWords" xml:space="preserve"><value>Every five years</value></data>
   <data name="Mobile.App.Title" xml:space="preserve"><value>Vehimap Nightly for Android</value></data>
+  <data name="Mobile.Navigation.Name" xml:space="preserve"><value>Primary navigation</value></data>
+  <data name="Mobile.Navigation.Help" xml:space="preserve"><value>Choose Home, Vehicles, Alerts, or More.</value></data>
+  <data name="Mobile.Navigation.Home" xml:space="preserve"><value>Home</value></data>
+  <data name="Mobile.Navigation.Vehicles" xml:space="preserve"><value>Vehicles</value></data>
+  <data name="Mobile.Navigation.Alerts" xml:space="preserve"><value>Alerts</value></data>
+  <data name="Mobile.Navigation.More" xml:space="preserve"><value>More</value></data>
+  <data name="Mobile.Common.Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Mobile.Home.Heading" xml:space="preserve"><value>Home</value></data>
+  <data name="Mobile.Home.Intro" xml:space="preserve"><value>A quick overview of your vehicles and the items that need attention.</value></data>
+  <data name="Mobile.Home.VehicleCount" xml:space="preserve"><value>Vehicles: {0}</value></data>
+  <data name="Mobile.Home.AlertCount" xml:space="preserve"><value>Items to review: {0}</value></data>
+  <data name="Mobile.Home.TopAlertHeading" xml:space="preserve"><value>First item to review</value></data>
+  <data name="Mobile.Home.NoAlerts" xml:space="preserve"><value>No item currently needs your attention.</value></data>
+  <data name="Mobile.Home.TopAlert" xml:space="preserve"><value>{0}: {1}. {2}</value></data>
+  <data name="Mobile.Home.OpenVehicles" xml:space="preserve"><value>Open vehicles</value></data>
+  <data name="Mobile.Home.OpenVehiclesName" xml:space="preserve"><value>Open the vehicle list</value></data>
+  <data name="Mobile.Home.OpenAlerts" xml:space="preserve"><value>Open alerts</value></data>
+  <data name="Mobile.Home.OpenAlertsName" xml:space="preserve"><value>Open items that need attention</value></data>
+  <data name="Mobile.Vehicles.Heading" xml:space="preserve"><value>Vehicles</value></data>
+  <data name="Mobile.Vehicles.Intro" xml:space="preserve"><value>Select a vehicle, then open its mobile hub.</value></data>
+  <data name="Mobile.Vehicles.OpenSelected" xml:space="preserve"><value>Open selected vehicle</value></data>
+  <data name="Mobile.Vehicles.OpenSelectedName" xml:space="preserve"><value>Open the selected vehicle hub</value></data>
+  <data name="Mobile.Vehicles.BackName" xml:space="preserve"><value>Return to the vehicle list</value></data>
+  <data name="Mobile.Vehicles.HubHeading" xml:space="preserve"><value>{0}</value></data>
+  <data name="Mobile.Vehicles.HubIntro" xml:space="preserve"><value>Vehicle details and evidence summary. Individual evidence screens will open from this hub instead of desktop-style tabs.</value></data>
+  <data name="Mobile.Vehicles.EvidenceHeading" xml:space="preserve"><value>Vehicle evidence</value></data>
+  <data name="Mobile.Vehicles.HistoryCount" xml:space="preserve"><value>History entries: {0}</value></data>
+  <data name="Mobile.Vehicles.FuelCount" xml:space="preserve"><value>Fuel entries: {0}</value></data>
+  <data name="Mobile.Vehicles.RecordCount" xml:space="preserve"><value>Documents: {0}</value></data>
+  <data name="Mobile.Vehicles.ReminderCount" xml:space="preserve"><value>Reminders: {0}</value></data>
+  <data name="Mobile.Vehicles.MaintenanceCount" xml:space="preserve"><value>Maintenance plans: {0}</value></data>
+  <data name="Mobile.Alerts.Heading" xml:space="preserve"><value>Alerts</value></data>
+  <data name="Mobile.Alerts.Intro" xml:space="preserve"><value>Deadlines, data issues, maintenance, fuel, and other recommendations across all vehicles.</value></data>
+  <data name="Mobile.Alerts.ListName" xml:space="preserve"><value>Items that need attention</value></data>
+  <data name="Mobile.Alerts.ListHelp" xml:space="preserve"><value>Browse recommendations ordered by priority.</value></data>
+  <data name="Mobile.Alerts.Empty" xml:space="preserve"><value>No item currently needs your attention.</value></data>
+  <data name="Mobile.Alerts.ItemType" xml:space="preserve"><value>Alert</value></data>
+  <data name="Mobile.Alerts.ItemAccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}. {3}</value></data>
+  <data name="Mobile.Alerts.Priority.Info" xml:space="preserve"><value>Information</value></data>
+  <data name="Mobile.Alerts.Priority.Recommendation" xml:space="preserve"><value>Recommendation</value></data>
+  <data name="Mobile.Alerts.Priority.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Mobile.Alerts.Priority.Critical" xml:space="preserve"><value>Critical</value></data>
+  <data name="Mobile.More.Heading" xml:space="preserve"><value>More</value></data>
+  <data name="Mobile.More.Intro" xml:space="preserve"><value>Application-wide actions and information that do not belong to one vehicle.</value></data>
+  <data name="Mobile.More.DataSetHeading" xml:space="preserve"><value>Android data set</value></data>
+  <data name="Mobile.More.DataPathLabel" xml:space="preserve"><value>Data folder</value></data>
+  <data name="Mobile.More.DataModeLabel" xml:space="preserve"><value>Data mode</value></data>
+  <data name="Mobile.More.DataModeSystem" xml:space="preserve"><value>System application data folder</value></data>
   <data name="Mobile.Shell.Heading" xml:space="preserve"><value>My vehicles</value></data>
   <data name="Mobile.Shell.Intro" xml:space="preserve"><value>Select a vehicle to read its basic details. This first Android nightly shares the Vehimap 2.0 data model and localization foundation.</value></data>
   <data name="Mobile.Shell.ReadOnly" xml:space="preserve"><value>Read-only preview: editing and data transfer will be added in a later Android stage.</value></data>

@@ -1,0 +1,57 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vehimap.Mobile.ViewModels"
+             x:Class="Vehimap.Mobile.Views.MobileAlertsView"
+             x:DataType="vm:MobileAlertsViewModel"
+             AutomationProperties.AutomationId="MobileAlertsView">
+  <Grid Margin="18" RowDefinitions="Auto,Auto,*,Auto" RowSpacing="10">
+    <TextBlock Grid.Row="0"
+               Text="{Binding Heading}"
+               FontSize="26"
+               FontWeight="Bold"
+               TextWrapping="Wrap"
+               AutomationProperties.AutomationId="MobileAlertsHeading"
+               AutomationProperties.Name="{Binding Heading}"
+               AutomationProperties.HeadingLevel="1" />
+    <StackPanel Grid.Row="1" Spacing="5">
+      <TextBlock Text="{Binding Intro}" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding Summary}"
+                 FontWeight="SemiBold"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileAlertsSummary"
+                 AutomationProperties.Name="{Binding Summary}"
+                 AutomationProperties.LiveSetting="Polite" />
+    </StackPanel>
+    <ListBox Grid.Row="2"
+             ItemsSource="{Binding Alerts}"
+             SelectedItem="{Binding SelectedAlert}"
+             IsTabStop="True"
+             AutomationProperties.AutomationId="MobileAlertsList"
+             AutomationProperties.Name="{Binding ListName}"
+             AutomationProperties.HelpText="{Binding ListHelp}">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="vm:MobileAlertItemViewModel">
+          <Border Padding="12"
+                  AutomationProperties.AutomationId="{Binding AutomationId}"
+                  AutomationProperties.Name="{Binding AccessibleLabel}"
+                  AutomationProperties.ItemType="{Binding ItemType}"
+                  AutomationProperties.ItemStatus="{Binding Priority}">
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding VehicleName}" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding Summary}" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <TextBlock Grid.Row="3"
+               Text="{Binding EmptyText}"
+               IsVisible="{Binding !HasAlerts}"
+               TextWrapping="Wrap"
+               AutomationProperties.AutomationId="MobileAlertsEmptyStatus"
+               AutomationProperties.Name="{Binding EmptyText}"
+               AutomationProperties.LiveSetting="Polite" />
+  </Grid>
+</UserControl>

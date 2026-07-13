@@ -8,9 +8,11 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- Android klient má první skutečný mobilní shell se čtyřmi cíli `Domů`, `Vozidla`, `Upozornění` a `Více`. Domovská obrazovka a upozornění používají stejná SQLite data, audit, časovou osu, analýzu tankování a Chytrého poradce jako desktop; seznam vozidel otevírá samostatné mobilní centrum vozidla místo vkládání detailu pod seznam.
 - Přibyl první Android základ Vehimapu 2.0: samostatný `net10.0-android` host, sdílený přístupný EN/CS read-only seznam a detail vozidel nad SQLite a oddělené nightly AppId. Nové readiness skripty ověřují API 31/36, APK metadata, ARM64/x86-64 nativní knihovny, licenční soubory, SHA-256 a umožňují jedním příkazem vytvořit shodně verzované lokální nightly pro Windows, Linux, macOS i Android.
 
 ### Dokumentace
+- Nový `dotnet/docs/MOBILE.md` stanovuje mapování desktopových workspace na mobilní routes, pravidlo společné aplikační vrstvy a zákaz inline editorů. Každý mobilní editor bude samostatná celostránková nebo modalní obrazovka s jasným režimem, uložením, zrušením a návratem.
 - Vývojářská dokumentace nyní vysvětluje Android SDK/JDK/workload a instalaci přes ADB i důvod, proč jsou spravované `.dll` běžnou součástí skutečných Linux/macOS .NET balíčků vedle ELF/Mach-O apphostu a nativních `.so`/`.dylib` knihoven.
 - Uživatelská README nyní popisují self-contained systémové požadavky a instalaci pro Windows, macOS, Ubuntu/Debian, Fedora a Arch Linux. Nový `CONTRIBUTING.md`, platformní `dotnet/docs/DEVELOPMENT.md` a kontrola `Test-DotnetDeveloperEnvironment.ps1` oddělují povinné vývojářské minimum od Inno Setupu, Appia, Xcode, accessibility nástrojů a budoucích Android/iOS workloadů.
 - Přepracován kořenový `README.md` na uživatelský úvod bez vývojářských interních pojmů; technické detaily jsou nově jasně oddělené do vývojářské dokumentace.
@@ -18,6 +20,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Přibyla dokumentační sada `dotnet/docs/accessibility/` pro ACR-ready přípravu Vehimapu 2.0: VPAT 2.5Rev INT draft, WCAG2ICT/2.2 AA matrix, remediation backlog a ruční testovací protokol. Zatím jde o evidenční draft, ne o formální prohlášení o shodě.
 
 ### Změněno
+- Android system Back now follows Avalonia `TopLevel.BackRequested`: from a secondary primary destination or a nested vehicle route it navigates inside Vehimap first, while Back from `Home` exits normally. The behavior was verified on a physical Android 16 device using three-button navigation, and the same framework event also covers gesture navigation.
 - Distribuovaný desktopový spustitelný soubor se nově jmenuje jednoduše `Vehimap.exe` na Windows a `Vehimap` na Linuxu/macOS; architektonický projekt a namespace dál zůstávají `Vehimap.Desktop`. Windows aktualizace bezpečně odklidí staré `Vehimap.Desktop.*` binárky a macOS `.app` ukazuje na nový název. Již splněná AHK retirement gate byla odstraněna z release toku; read-only migrace dat 1.x a historická parity mapa zůstávají zachované. Licenční SPDX guard navíc korektně toleruje soubory právě odstraněné v pracovním stromu před commitem.
 - Desktop nightly tooling nyní umí jedním příkazem vytvořit shodně verzované lokální výstupy pro `win-x64`, `linux-x64`, `osx-x64` a `osx-arm64`. Ne-Windows readiness používá správné názvy archivů, ověřuje metadata, velikost, SHA-256, licenční obsah a strukturu Linux `tar.gz` nebo macOS `.app`; GitHub Actions navíc kontroluje nativní spustitelnost publish souboru a před commitem ověří update manifest všech čtyř RID.
 - Kredit autora v dialogu `O programu` a název typu souboru v systémovém dialogu exportu kalendáře nyní používají EN/CS resources (`by Vlcek apps` / `od Vlcek apps`, `iCalendar file` / `Soubor iCalendar`). Nový source guard hlídá, aby se do těchto malých UI hraničních tříd nevrátily hardcoded anglické labely.

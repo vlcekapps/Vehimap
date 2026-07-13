@@ -1,0 +1,51 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vehimap.Mobile.ViewModels"
+             x:Class="Vehimap.Mobile.Views.MobileMoreView"
+             x:DataType="vm:MobileMoreViewModel"
+             AutomationProperties.AutomationId="MobileMoreView">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="18" Spacing="12">
+      <TextBlock Text="{Binding Heading}"
+                 FontSize="26"
+                 FontWeight="Bold"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileMoreHeading"
+                 AutomationProperties.Name="{Binding Heading}"
+                 AutomationProperties.HeadingLevel="1" />
+      <TextBlock Text="{Binding Intro}" TextWrapping="Wrap" />
+      <TextBlock Text="{Binding ReadOnlyText}"
+                 FontWeight="SemiBold"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileReadOnlyStatus"
+                 AutomationProperties.Name="{Binding ReadOnlyText}" />
+
+      <Border Padding="14" BorderThickness="1" CornerRadius="8">
+        <StackPanel Spacing="7">
+          <TextBlock Text="{Binding DataSetHeading}"
+                     FontSize="19"
+                     FontWeight="SemiBold"
+                     TextWrapping="Wrap"
+                     AutomationProperties.HeadingLevel="2" />
+          <TextBlock Text="{Binding DataPathLabel}" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding DataPath}"
+                     TextWrapping="Wrap"
+                     AutomationProperties.AutomationId="MobileDataPath"
+                     AutomationProperties.Name="{Binding DataPath}" />
+          <TextBlock Text="{Binding DataModeLabel}" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding DataMode}" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <Button Name="MobileReloadButton"
+              Content="{Binding ReloadText}"
+              Command="{Binding ReloadCommand}"
+              MinHeight="48"
+              HorizontalAlignment="Stretch"
+              AutomationProperties.AutomationId="MobileReloadButton"
+              AutomationProperties.Name="{Binding ReloadName}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

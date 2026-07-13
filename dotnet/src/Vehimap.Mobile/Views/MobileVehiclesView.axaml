@@ -1,0 +1,126 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vehimap.Mobile.ViewModels"
+             x:Class="Vehimap.Mobile.Views.MobileVehiclesView"
+             x:DataType="vm:MobileVehiclesViewModel"
+             AutomationProperties.AutomationId="MobileVehiclesView">
+  <Grid>
+    <Grid IsVisible="{Binding IsVehicleListVisible}"
+          Margin="18"
+          RowDefinitions="Auto,Auto,*,Auto,Auto"
+          RowSpacing="10">
+      <TextBlock Grid.Row="0"
+                 Text="{Binding Heading}"
+                 FontSize="26"
+                 FontWeight="Bold"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileVehiclesHeading"
+                 AutomationProperties.Name="{Binding Heading}"
+                 AutomationProperties.HeadingLevel="1" />
+      <TextBlock Grid.Row="1" Text="{Binding Intro}" TextWrapping="Wrap" />
+      <ListBox Name="MobileVehicleList"
+               Grid.Row="2"
+               ItemsSource="{Binding Vehicles}"
+               SelectedItem="{Binding SelectedVehicle}"
+               MinHeight="180"
+               IsTabStop="True"
+               AutomationProperties.AutomationId="MobileVehicleList"
+               AutomationProperties.Name="{Binding VehicleListName}"
+               AutomationProperties.HelpText="{Binding VehicleListHelp}">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:MobileVehicleListItemViewModel">
+            <Border Padding="12"
+                    AutomationProperties.AutomationId="{Binding AutomationId}"
+                    AutomationProperties.Name="{Binding AccessibleLabel}"
+                    AutomationProperties.ItemType="{Binding ItemType}"
+                    AutomationProperties.ItemStatus="{Binding State}">
+              <StackPanel Spacing="3">
+                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding MakeModel}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Category}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <TextBlock Grid.Row="3"
+                 Text="{Binding VehicleListEmptyText}"
+                 IsVisible="{Binding !HasVehicles}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileVehicleListEmptyStatus"
+                 AutomationProperties.Name="{Binding VehicleListEmptyText}"
+                 AutomationProperties.LiveSetting="Polite" />
+      <Button Grid.Row="4"
+              Content="{Binding OpenSelectedVehicleText}"
+              Command="{Binding OpenSelectedVehicleCommand}"
+              MinHeight="48"
+              HorizontalAlignment="Stretch"
+              AutomationProperties.AutomationId="MobileOpenSelectedVehicleButton"
+              AutomationProperties.Name="{Binding OpenSelectedVehicleName}" />
+    </Grid>
+
+    <ScrollViewer IsVisible="{Binding IsVehicleHubVisible}"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+      <StackPanel Margin="18" Spacing="12">
+        <Button Content="{Binding BackText}"
+                Command="{Binding BackToVehicleListCommand}"
+                MinHeight="48"
+                HorizontalAlignment="Stretch"
+                AutomationProperties.AutomationId="MobileVehicleHubBackButton"
+                AutomationProperties.Name="{Binding BackName}" />
+        <TextBlock Text="{Binding VehicleHubHeading}"
+                   FontSize="26"
+                   FontWeight="Bold"
+                   TextWrapping="Wrap"
+                   AutomationProperties.AutomationId="MobileVehicleHubHeading"
+                   AutomationProperties.Name="{Binding VehicleHubHeading}"
+                   AutomationProperties.HeadingLevel="1" />
+        <TextBlock Text="{Binding VehicleHubIntro}" TextWrapping="Wrap" />
+
+        <Border Padding="14" BorderThickness="1" CornerRadius="8">
+          <StackPanel Spacing="9">
+            <TextBlock Text="{Binding NameLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.Name}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding MakeModelLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.MakeModel}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding CategoryLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.Category}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding PlateLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.Plate}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding StateLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.State}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding YearLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.Year}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding PowerLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.Power}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding NextTechnicalInspectionLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.NextTechnicalInspection}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding GreenCardToLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.GreenCardTo}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding NoteLabel}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding ActiveVehicle.Note}" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+
+        <TextBlock Text="{Binding EvidenceHeading}"
+                   FontSize="20"
+                   FontWeight="SemiBold"
+                   TextWrapping="Wrap"
+                   AutomationProperties.AutomationId="MobileVehicleEvidenceHeading"
+                   AutomationProperties.Name="{Binding EvidenceHeading}"
+                   AutomationProperties.HeadingLevel="2" />
+        <Border Padding="14" BorderThickness="1" CornerRadius="8">
+          <StackPanel Spacing="7">
+            <TextBlock Text="{Binding HistoryCountText}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding FuelCountText}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding RecordCountText}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding ReminderCountText}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding MaintenanceCountText}" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

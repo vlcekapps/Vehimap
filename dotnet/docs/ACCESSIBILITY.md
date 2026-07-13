@@ -215,6 +215,17 @@ class-name path and does not yet provide the missing role mapping. Vehimap there
 must not add application-specific automation peers or Android class-name overrides just
 to mask this framework behavior.
 
+The compact shell keeps four persistent text-labelled destinations (`Home`, `Vehicles`,
+`Alerts`, `More`) with at least 48 device-independent pixels of touch height. Vehicle
+evidence is reached through a separate vehicle hub instead of a desktop tab strip.
+Inline mobile editors are prohibited: every future create/edit workflow must be a
+dedicated full-screen or modal route with explicit Save, Cancel and Android Back behavior.
+System Back is handled through Avalonia `TopLevel.BackRequested`, not a Vehimap-specific
+Android dispatcher callback. A physical Android 16 smoke confirmed that three-button Back
+returns `Vehicles` to `Home`, while Back from `Home` exits; gesture navigation must use the
+same route contract.
+The complete mobile interaction contract is in `MOBILE.md`.
+
 Framework source references:
 
 - [Avalonia 12.0.4 Android accessibility bridge](https://github.com/AvaloniaUI/Avalonia/blob/12.0.4/src/Android/Avalonia.Android/AvaloniaAccessHelper.cs#L195)

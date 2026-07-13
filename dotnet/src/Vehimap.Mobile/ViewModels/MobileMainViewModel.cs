@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Vehimap.Application.Abstractions;
-using Vehimap.Application.Models;
 using Vehimap.Application.Services;
 using Vehimap.Mobile.Services;
 using Vehimap.Storage.Sqlite;
@@ -12,45 +10,53 @@ namespace Vehimap.Mobile.ViewModels;
 
 public sealed class MobileMainViewModel : ObservableObject
 {
-    private readonly IVehimapDataStore _dataStore;
-    private readonly IMobileDataRootProvider _dataRootProvider;
-    private readonly AppCultureService _cultureService;
-    private readonly DesktopSupportedSettingsService _settingsService;
-    private IAppLocalizer _localizer;
-    private MobileVehicleListItemViewModel? _selectedVehicle;
+    private readonly MobileSessionController _session;
+    private MobilePrimaryDestination _selectedDestination = MobilePrimaryDestination.Home;
     private string _statusText;
     private bool _isBusy;
     private bool _initialized;
 
-    public MobileMainViewModel(
-        IVehimapDataStore dataStore,
-        IMobileDataRootProvider dataRootProvider,
-        AppCultureService cultureService,
-        DesktopSupportedSettingsService settingsService,
-        IAppLocalizer localizer)
+    public MobileMainViewModel(MobileSessionController session)
     {
-        _dataStore = dataStore;
-        _dataRootProvider = dataRootProvider;
-        _cultureService = cultureService;
-        _settingsService = settingsService;
-        _localizer = localizer;
+        _session = session;
         _statusText = L("Mobile.Status.Ready");
         ReloadCommand = new AsyncRelayCommand(ReloadAsync, () => !IsBusy);
+        SelectHomeCommand = new RelayCommand(() => SelectDestination(MobilePrimaryDestination.Home));
+        SelectVehiclesCommand = new RelayCommand(() => SelectDestination(MobilePrimaryDestination.Vehicles));
+        SelectAlertsCommand = new RelayCommand(() => SelectDestination(MobilePrimaryDestination.Alerts));
+        SelectMoreCommand = new RelayCommand(() => SelectDestination(MobilePrimaryDestination.More));
+        Home = new MobileHomeViewModel(session, SelectDestination);
+        Vehicles = new MobileVehiclesViewModel(session);
+        Alerts = new MobileAlertsViewModel(session);
+        More = new MobileMoreViewModel(session, ReloadCommand);
     }
 
-    public ObservableCollection<MobileVehicleListItemViewModel> Vehicles { get; } = [];
+    public MobileHomeViewModel Home { get; }
+
+    public MobileVehiclesViewModel Vehicles { get; }
+
+    public MobileAlertsViewModel Alerts { get; }
+
+    public MobileMoreViewModel More { get; }
 
     public IAsyncRelayCommand ReloadCommand { get; }
 
-    public MobileVehicleListItemViewModel? SelectedVehicle
+    public IRelayCommand SelectHomeCommand { get; }
+
+    public IRelayCommand SelectVehiclesCommand { get; }
+
+    public IRelayCommand SelectAlertsCommand { get; }
+
+    public IRelayCommand SelectMoreCommand { get; }
+
+    public MobilePrimaryDestination SelectedDestination
     {
-        get => _selectedVehicle;
-        set
+        get => _selectedDestination;
+        private set
         {
-            if (SetProperty(ref _selectedVehicle, value))
+            if (SetProperty(ref _selectedDestination, value))
             {
-                OnPropertyChanged(nameof(HasSelectedVehicle));
-                OnPropertyChanged(nameof(VehicleDetailHeading));
+                RaiseNavigationProperties();
             }
         }
     }
@@ -73,65 +79,42 @@ public sealed class MobileMainViewModel : ObservableObject
         }
     }
 
-    public bool HasVehicles => Vehicles.Count > 0;
+    public bool IsHomeSelected => SelectedDestination == MobilePrimaryDestination.Home;
 
-    public bool HasSelectedVehicle => SelectedVehicle is not null;
+    public bool IsVehiclesSelected => SelectedDestination == MobilePrimaryDestination.Vehicles;
+
+    public bool IsAlertsSelected => SelectedDestination == MobilePrimaryDestination.Alerts;
+
+    public bool IsMoreSelected => SelectedDestination == MobilePrimaryDestination.More;
+
+    public bool HasVehicles => Vehicles.HasVehicles;
 
     public string AppTitle => L("Mobile.App.Title");
 
-    public string Heading => L("Mobile.Shell.Heading");
+    public string NavigationName => L("Mobile.Navigation.Name");
 
-    public string IntroText => L("Mobile.Shell.Intro");
+    public string NavigationHelp => L("Mobile.Navigation.Help");
 
-    public string ReadOnlyText => L("Mobile.Shell.ReadOnly");
+    public string HomeNavigationText => L("Mobile.Navigation.Home");
 
-    public string VehicleListName => L("Mobile.VehicleList.Name");
+    public string VehiclesNavigationText => L("Mobile.Navigation.Vehicles");
 
-    public string VehicleListHelp => L("Mobile.VehicleList.Help");
+    public string AlertsNavigationText => L("Mobile.Navigation.Alerts");
 
-    public string VehicleListEmptyText => L("Mobile.VehicleList.Empty");
-
-    public string VehicleDetailHeading => SelectedVehicle is null
-        ? L("Mobile.VehicleDetail.EmptyHeading")
-        : LF("Mobile.VehicleDetail.Heading", SelectedVehicle.Name);
-
-    public string VehicleDetailEmptyText => L("Mobile.VehicleDetail.EmptyText");
-
-    public string NameLabel => L("Mobile.VehicleDetail.Name");
-
-    public string MakeModelLabel => L("Mobile.VehicleDetail.MakeModel");
-
-    public string CategoryLabel => L("Mobile.VehicleDetail.Category");
-
-    public string PlateLabel => L("Mobile.VehicleDetail.Plate");
-
-    public string StateLabel => L("Mobile.VehicleDetail.State");
-
-    public string YearLabel => L("Mobile.VehicleDetail.Year");
-
-    public string PowerLabel => L("Mobile.VehicleDetail.Power");
-
-    public string NextTechnicalInspectionLabel => L("Mobile.VehicleDetail.NextTechnicalInspection");
-
-    public string GreenCardToLabel => L("Mobile.VehicleDetail.GreenCardTo");
-
-    public string NoteLabel => L("Mobile.VehicleDetail.Note");
-
-    public string ReloadText => L("Mobile.Action.Reload");
-
-    public string ReloadName => L("Mobile.Action.ReloadName");
+    public string MoreNavigationText => L("Mobile.Navigation.More");
 
     public static MobileMainViewModel CreateDefault()
     {
         var cultureService = new AppCultureService();
         var preferences = AppLocaleDefaultsService.GetCurrentCultureDefaults().ToCulturePreferences();
         var culture = cultureService.ResolveCulture(preferences.Language);
-        return new MobileMainViewModel(
+        var session = new MobileSessionController(
             new SqliteVehimapDataStore(),
             new MobileDataRootProvider(),
             cultureService,
             new DesktopSupportedSettingsService(),
             new ResourceAppLocalizer(culture));
+        return new MobileMainViewModel(session);
     }
 
     public async Task InitializeAsync()
@@ -145,7 +128,23 @@ public sealed class MobileMainViewModel : ObservableObject
         await ReloadAsync();
     }
 
-    public async Task ReloadAsync()
+    public bool TryNavigateBack()
+    {
+        if (SelectedDestination == MobilePrimaryDestination.Vehicles && Vehicles.TryNavigateBack())
+        {
+            return true;
+        }
+
+        if (SelectedDestination == MobilePrimaryDestination.Home)
+        {
+            return false;
+        }
+
+        SelectDestination(MobilePrimaryDestination.Home);
+        return true;
+    }
+
+    private async Task ReloadAsync()
     {
         if (IsBusy)
         {
@@ -156,43 +155,18 @@ public sealed class MobileMainViewModel : ObservableObject
         StatusText = L("Mobile.Status.Loading");
         try
         {
-            var dataSet = await _dataStore.LoadAsync(_dataRootProvider.GetDataRoot());
-            ConfigureLocalization(_settingsService.Read(dataSet.Settings));
-
-            var previouslySelectedId = SelectedVehicle?.Id;
-            var metaByVehicle = dataSet.VehicleMetaEntries
-                .GroupBy(item => item.VehicleId, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(group => group.Key, group => group.Last(), StringComparer.OrdinalIgnoreCase);
-            var projectedVehicles = dataSet.Vehicles
-                .OrderBy(item => item.Name, StringComparer.CurrentCultureIgnoreCase)
-                .Select(vehicle => new MobileVehicleListItemViewModel(
-                    vehicle,
-                    metaByVehicle.GetValueOrDefault(vehicle.Id),
-                    _localizer))
-                .ToArray();
-
-            Vehicles.Clear();
-            foreach (var vehicle in projectedVehicles)
-            {
-                Vehicles.Add(vehicle);
-            }
-
-            SelectedVehicle = Vehicles.FirstOrDefault(item =>
-                    string.Equals(item.Id, previouslySelectedId, StringComparison.OrdinalIgnoreCase))
-                ?? Vehicles.FirstOrDefault();
-            OnPropertyChanged(nameof(HasVehicles));
-            StatusText = Vehicles.Count == 0
-                ? L("Mobile.Status.NoVehicles")
-                : LF("Mobile.Status.Loaded", Vehicles.Count);
+            await _session.ReloadAsync();
+            RefreshChildViewModels();
+            RaiseLocalizedProperties();
+            StatusText = Vehicles.HasVehicles
+                ? LF("Mobile.Status.Loaded", Vehicles.Vehicles.Count)
+                : L("Mobile.Status.NoVehicles");
         }
         catch (Exception exception)
         {
-            Vehicles.Clear();
-            SelectedVehicle = null;
-            OnPropertyChanged(nameof(HasVehicles));
             StatusText = LF(
                 "Mobile.Status.LoadFailed",
-                UserFacingExceptionMessageService.Describe(exception, _localizer));
+                UserFacingExceptionMessageService.Describe(exception, _session.Localizer));
         }
         finally
         {
@@ -200,15 +174,26 @@ public sealed class MobileMainViewModel : ObservableObject
         }
     }
 
-    private void ConfigureLocalization(DesktopSupportedSettingsSnapshot settings)
+    private void SelectDestination(MobilePrimaryDestination destination)
     {
-        var preferences = new AppCulturePreferences(
-            settings.Language,
-            settings.ThousandsSeparator,
-            settings.DecimalSeparator);
-        _cultureService.ApplyThreadCulture(preferences);
-        _localizer = new ResourceAppLocalizer(_cultureService.ResolveCulture(preferences.Language));
-        RaiseLocalizedProperties();
+        SelectedDestination = destination;
+    }
+
+    private void RefreshChildViewModels()
+    {
+        Home.Refresh();
+        Vehicles.Refresh();
+        Alerts.Refresh();
+        More.Refresh();
+        OnPropertyChanged(nameof(HasVehicles));
+    }
+
+    private void RaiseNavigationProperties()
+    {
+        OnPropertyChanged(nameof(IsHomeSelected));
+        OnPropertyChanged(nameof(IsVehiclesSelected));
+        OnPropertyChanged(nameof(IsAlertsSelected));
+        OnPropertyChanged(nameof(IsMoreSelected));
     }
 
     private void RaiseLocalizedProperties()
@@ -216,33 +201,19 @@ public sealed class MobileMainViewModel : ObservableObject
         foreach (var propertyName in new[]
         {
             nameof(AppTitle),
-            nameof(Heading),
-            nameof(IntroText),
-            nameof(ReadOnlyText),
-            nameof(VehicleListName),
-            nameof(VehicleListHelp),
-            nameof(VehicleListEmptyText),
-            nameof(VehicleDetailHeading),
-            nameof(VehicleDetailEmptyText),
-            nameof(NameLabel),
-            nameof(MakeModelLabel),
-            nameof(CategoryLabel),
-            nameof(PlateLabel),
-            nameof(StateLabel),
-            nameof(YearLabel),
-            nameof(PowerLabel),
-            nameof(NextTechnicalInspectionLabel),
-            nameof(GreenCardToLabel),
-            nameof(NoteLabel),
-            nameof(ReloadText),
-            nameof(ReloadName)
+            nameof(NavigationName),
+            nameof(NavigationHelp),
+            nameof(HomeNavigationText),
+            nameof(VehiclesNavigationText),
+            nameof(AlertsNavigationText),
+            nameof(MoreNavigationText)
         })
         {
             OnPropertyChanged(propertyName);
         }
     }
 
-    private string L(string key) => _localizer.GetString(key);
+    private string L(string key) => _session.Localizer.GetString(key);
 
-    private string LF(string key, params object?[] args) => _localizer.Format(key, args);
+    private string LF(string key, params object?[] args) => _session.Localizer.Format(key, args);
 }

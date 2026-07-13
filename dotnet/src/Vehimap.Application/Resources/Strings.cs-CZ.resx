@@ -2855,6 +2855,54 @@ Navržená akce: {6}</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears" xml:space="preserve"><value>Každých 5 let</value></data>
   <data name="KnownValue.ReminderRepeat.EveryFiveYears.LegacyWords" xml:space="preserve"><value>Každých pět let</value></data>
   <data name="Mobile.App.Title" xml:space="preserve"><value>Vehimap Nightly pro Android</value></data>
+  <data name="Mobile.Navigation.Name" xml:space="preserve"><value>Hlavní navigace</value></data>
+  <data name="Mobile.Navigation.Help" xml:space="preserve"><value>Vyberte Domů, Vozidla, Upozornění nebo Více.</value></data>
+  <data name="Mobile.Navigation.Home" xml:space="preserve"><value>Domů</value></data>
+  <data name="Mobile.Navigation.Vehicles" xml:space="preserve"><value>Vozidla</value></data>
+  <data name="Mobile.Navigation.Alerts" xml:space="preserve"><value>Upozornění</value></data>
+  <data name="Mobile.Navigation.More" xml:space="preserve"><value>Více</value></data>
+  <data name="Mobile.Common.Back" xml:space="preserve"><value>Zpět</value></data>
+  <data name="Mobile.Home.Heading" xml:space="preserve"><value>Domů</value></data>
+  <data name="Mobile.Home.Intro" xml:space="preserve"><value>Rychlý přehled vozidel a položek, které potřebují pozornost.</value></data>
+  <data name="Mobile.Home.VehicleCount" xml:space="preserve"><value>Vozidla: {0}</value></data>
+  <data name="Mobile.Home.AlertCount" xml:space="preserve"><value>Položky k řešení: {0}</value></data>
+  <data name="Mobile.Home.TopAlertHeading" xml:space="preserve"><value>První položka k řešení</value></data>
+  <data name="Mobile.Home.NoAlerts" xml:space="preserve"><value>Žádná položka nyní nepotřebuje vaši pozornost.</value></data>
+  <data name="Mobile.Home.TopAlert" xml:space="preserve"><value>{0}: {1}. {2}</value></data>
+  <data name="Mobile.Home.OpenVehicles" xml:space="preserve"><value>Otevřít vozidla</value></data>
+  <data name="Mobile.Home.OpenVehiclesName" xml:space="preserve"><value>Otevřít seznam vozidel</value></data>
+  <data name="Mobile.Home.OpenAlerts" xml:space="preserve"><value>Otevřít upozornění</value></data>
+  <data name="Mobile.Home.OpenAlertsName" xml:space="preserve"><value>Otevřít položky, které potřebují pozornost</value></data>
+  <data name="Mobile.Vehicles.Heading" xml:space="preserve"><value>Vozidla</value></data>
+  <data name="Mobile.Vehicles.Intro" xml:space="preserve"><value>Vyberte vozidlo a potom otevřete jeho mobilní centrum.</value></data>
+  <data name="Mobile.Vehicles.OpenSelected" xml:space="preserve"><value>Otevřít vybrané vozidlo</value></data>
+  <data name="Mobile.Vehicles.OpenSelectedName" xml:space="preserve"><value>Otevřít centrum vybraného vozidla</value></data>
+  <data name="Mobile.Vehicles.BackName" xml:space="preserve"><value>Vrátit se do seznamu vozidel</value></data>
+  <data name="Mobile.Vehicles.HubHeading" xml:space="preserve"><value>{0}</value></data>
+  <data name="Mobile.Vehicles.HubIntro" xml:space="preserve"><value>Detail vozidla a souhrn evidencí. Jednotlivé evidence se budou otevírat z tohoto centra místo desktopových karet.</value></data>
+  <data name="Mobile.Vehicles.EvidenceHeading" xml:space="preserve"><value>Evidence vozidla</value></data>
+  <data name="Mobile.Vehicles.HistoryCount" xml:space="preserve"><value>Historické záznamy: {0}</value></data>
+  <data name="Mobile.Vehicles.FuelCount" xml:space="preserve"><value>Tankování: {0}</value></data>
+  <data name="Mobile.Vehicles.RecordCount" xml:space="preserve"><value>Doklady: {0}</value></data>
+  <data name="Mobile.Vehicles.ReminderCount" xml:space="preserve"><value>Připomínky: {0}</value></data>
+  <data name="Mobile.Vehicles.MaintenanceCount" xml:space="preserve"><value>Plány údržby: {0}</value></data>
+  <data name="Mobile.Alerts.Heading" xml:space="preserve"><value>Upozornění</value></data>
+  <data name="Mobile.Alerts.Intro" xml:space="preserve"><value>Termíny, problémy s daty, údržba, tankování a další doporučení napříč vozidly.</value></data>
+  <data name="Mobile.Alerts.ListName" xml:space="preserve"><value>Položky, které potřebují pozornost</value></data>
+  <data name="Mobile.Alerts.ListHelp" xml:space="preserve"><value>Procházejte doporučení seřazená podle priority.</value></data>
+  <data name="Mobile.Alerts.Empty" xml:space="preserve"><value>Žádná položka nyní nepotřebuje vaši pozornost.</value></data>
+  <data name="Mobile.Alerts.ItemType" xml:space="preserve"><value>Upozornění</value></data>
+  <data name="Mobile.Alerts.ItemAccessibleLabel" xml:space="preserve"><value>{0}, {1}, {2}. {3}</value></data>
+  <data name="Mobile.Alerts.Priority.Info" xml:space="preserve"><value>Informace</value></data>
+  <data name="Mobile.Alerts.Priority.Recommendation" xml:space="preserve"><value>Doporučení</value></data>
+  <data name="Mobile.Alerts.Priority.Warning" xml:space="preserve"><value>Varování</value></data>
+  <data name="Mobile.Alerts.Priority.Critical" xml:space="preserve"><value>Kritické</value></data>
+  <data name="Mobile.More.Heading" xml:space="preserve"><value>Více</value></data>
+  <data name="Mobile.More.Intro" xml:space="preserve"><value>Akce a informace pro celou aplikaci, které nepatří k jednomu vozidlu.</value></data>
+  <data name="Mobile.More.DataSetHeading" xml:space="preserve"><value>Android datová sada</value></data>
+  <data name="Mobile.More.DataPathLabel" xml:space="preserve"><value>Datová složka</value></data>
+  <data name="Mobile.More.DataModeLabel" xml:space="preserve"><value>Režim dat</value></data>
+  <data name="Mobile.More.DataModeSystem" xml:space="preserve"><value>Systémová datová složka aplikace</value></data>
   <data name="Mobile.Shell.Heading" xml:space="preserve"><value>Moje vozidla</value></data>
   <data name="Mobile.Shell.Intro" xml:space="preserve"><value>Vyberte vozidlo a přečtěte si jeho základní údaje. Tato první Android nightly sdílí datový model a lokalizační základ Vehimapu 2.0.</value></data>
   <data name="Mobile.Shell.ReadOnly" xml:space="preserve"><value>Preview pouze pro čtení: editace a přenos dat přibudou v další etapě Androidu.</value></data>

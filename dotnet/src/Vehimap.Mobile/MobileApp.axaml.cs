@@ -28,9 +28,11 @@ public partial class MobileApp : Avalonia.Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static MobileMainView CreateMainView() =>
-        new()
+    private static MobileMainView CreateMainView()
+    {
+        return new MobileMainView
         {
             DataContext = MobileMainViewModel.CreateDefault()
         };
+    }
 }
