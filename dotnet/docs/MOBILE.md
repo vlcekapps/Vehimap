@@ -42,9 +42,11 @@ The desktop workspaces become routes under the selected vehicle hub, not top-lev
 - vehicle-specific audit and recommendations.
 
 The mobile vertical slice provides the vehicle list, a separate read-only vehicle hub
-and real evidence counts. History and fuel are the first functional evidence routes:
-each opens a dedicated list and then a separate item-detail screen. Android Back unwinds
-`item detail -> evidence list -> vehicle hub -> vehicle list` before leaving the
+and real evidence counts. History, fuel, documents and reminders are functional evidence
+routes: each opens a dedicated list and then a separate item-detail screen. Documents
+report managed/external attachment availability without exposing an internal managed
+path; reminders report their localized due state, recurrence and lead time. Android Back
+unwinds `item detail -> evidence list -> vehicle hub -> vehicle list` before leaving the
 `Vehicles` destination. Remaining evidence counts stay informational until their route
 is functional; the shell must not expose placeholder actions that appear usable.
 

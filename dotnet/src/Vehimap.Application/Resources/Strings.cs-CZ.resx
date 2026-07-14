@@ -2877,6 +2877,8 @@ Navržená akce: {6}</value></data>
   <data name="Mobile.Vehicles.FuelCount" xml:space="preserve"><value>Tankování: {0}</value></data>
   <data name="Mobile.Vehicles.OpenHistoryName" xml:space="preserve"><value>Otevřít historii vybraného vozidla</value></data>
   <data name="Mobile.Vehicles.OpenFuelName" xml:space="preserve"><value>Otevřít tankování vybraného vozidla</value></data>
+  <data name="Mobile.Vehicles.OpenRecordsName" xml:space="preserve"><value>Otevřít doklady vybraného vozidla</value></data>
+  <data name="Mobile.Vehicles.OpenRemindersName" xml:space="preserve"><value>Otevřít připomínky vybraného vozidla</value></data>
   <data name="Mobile.Vehicles.RecordCount" xml:space="preserve"><value>Doklady: {0}</value></data>
   <data name="Mobile.Vehicles.ReminderCount" xml:space="preserve"><value>Připomínky: {0}</value></data>
   <data name="Mobile.Vehicles.MaintenanceCount" xml:space="preserve"><value>Plány údržby: {0}</value></data>
@@ -2888,6 +2890,17 @@ Navržená akce: {6}</value></data>
   <data name="Mobile.History.DetailHeading" xml:space="preserve"><value>Detail historického záznamu</value></data>
   <data name="Mobile.Fuel.Heading" xml:space="preserve"><value>Tankování: {0}</value></data>
   <data name="Mobile.Fuel.DetailHeading" xml:space="preserve"><value>Detail tankování</value></data>
+  <data name="Mobile.Records.Heading" xml:space="preserve"><value>Doklady: {0}</value></data>
+  <data name="Mobile.Records.DetailHeading" xml:space="preserve"><value>Detail dokladu</value></data>
+  <data name="Mobile.Records.Detail.Title" xml:space="preserve"><value>Název: {0}</value></data>
+  <data name="Mobile.Records.Detail.Provider" xml:space="preserve"><value>Poskytovatel: {0}</value></data>
+  <data name="Mobile.Reminders.Heading" xml:space="preserve"><value>Připomínky: {0}</value></data>
+  <data name="Mobile.Reminders.DetailHeading" xml:space="preserve"><value>Detail připomínky</value></data>
+  <data name="Mobile.Reminders.Detail.ReminderDays" xml:space="preserve"><value>Předstih upozornění: {0}</value></data>
+  <data name="Mobile.Reminders.ReminderDays" xml:space="preserve"><value>{0} dní předem</value></data>
+  <data name="Mobile.Reminders.ReminderDays.One" xml:space="preserve"><value>{0} den předem</value></data>
+  <data name="Mobile.Reminders.ReminderDays.Few" xml:space="preserve"><value>{0} dny předem</value></data>
+  <data name="Mobile.Reminders.ReminderDays.Other" xml:space="preserve"><value>{0} dní předem</value></data>
   <data name="Mobile.Alerts.Heading" xml:space="preserve"><value>Upozornění</value></data>
   <data name="Mobile.Alerts.ListName" xml:space="preserve"><value>Položky, které potřebují pozornost</value></data>
   <data name="Mobile.Alerts.Empty" xml:space="preserve"><value>Žádná položka nyní nepotřebuje vaši pozornost.</value></data>

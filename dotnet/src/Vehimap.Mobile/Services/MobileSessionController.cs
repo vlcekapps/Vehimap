@@ -46,6 +46,9 @@ public sealed class MobileSessionController
     public SmartAdvisorSummary AdvisorSummary { get; private set; } =
         new(0, 0, 0, 0, string.Empty, []);
 
+    public string ResolveManagedAttachmentPath(string relativePath) =>
+        _attachmentService.ResolveManagedAttachmentPath(DataRoot, relativePath);
+
     public async Task ReloadAsync(CancellationToken cancellationToken = default)
     {
         var dataSet = await _dataStore.LoadAsync(DataRoot, cancellationToken).ConfigureAwait(true);

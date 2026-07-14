@@ -123,8 +123,18 @@
                     HorizontalAlignment="Stretch"
                     AutomationProperties.AutomationId="MobileOpenFuelButton"
                     AutomationProperties.Name="{Binding OpenFuelName}" />
-            <TextBlock Text="{Binding RecordCountText}" TextWrapping="Wrap" />
-            <TextBlock Text="{Binding ReminderCountText}" TextWrapping="Wrap" />
+            <Button Content="{Binding RecordCountText}"
+                    Command="{Binding OpenRecordsCommand}"
+                    MinHeight="48"
+                    HorizontalAlignment="Stretch"
+                    AutomationProperties.AutomationId="MobileOpenRecordsButton"
+                    AutomationProperties.Name="{Binding OpenRecordsName}" />
+            <Button Content="{Binding ReminderCountText}"
+                    Command="{Binding OpenRemindersCommand}"
+                    MinHeight="48"
+                    HorizontalAlignment="Stretch"
+                    AutomationProperties.AutomationId="MobileOpenRemindersButton"
+                    AutomationProperties.Name="{Binding OpenRemindersName}" />
             <TextBlock Text="{Binding MaintenanceCountText}" TextWrapping="Wrap" />
           </StackPanel>
         </Border>

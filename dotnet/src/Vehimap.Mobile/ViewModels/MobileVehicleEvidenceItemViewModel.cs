@@ -5,7 +5,9 @@ public enum MobileVehicleEvidenceKind
 {
     None,
     History,
-    Fuel
+    Fuel,
+    Records,
+    Reminders
 }
 
 public sealed record MobileEvidenceDetailLineViewModel(

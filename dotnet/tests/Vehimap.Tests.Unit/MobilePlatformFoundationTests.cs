@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Xml.Linq;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Services;
+using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 using Vehimap.Mobile.Services;
 using Vehimap.Mobile.ViewModels;
@@ -191,6 +192,8 @@ public sealed class MobilePlatformFoundationTests
 
         Assert.Contains("MobileOpenHistoryButton", vehicleView, StringComparison.Ordinal);
         Assert.Contains("MobileOpenFuelButton", vehicleView, StringComparison.Ordinal);
+        Assert.Contains("MobileOpenRecordsButton", vehicleView, StringComparison.Ordinal);
+        Assert.Contains("MobileOpenRemindersButton", vehicleView, StringComparison.Ordinal);
         Assert.Contains("IsEvidenceVisible", vehicleView, StringComparison.Ordinal);
         Assert.Contains("IsListVisible", evidenceView, StringComparison.Ordinal);
         Assert.Contains("IsDetailVisible", evidenceView, StringComparison.Ordinal);
@@ -394,6 +397,108 @@ public sealed class MobilePlatformFoundationTests
         }
         finally
         {
+            CultureInfo.DefaultThreadCurrentCulture = originalDefaultCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = originalDefaultUiCulture;
+            CultureInfo.CurrentCulture = originalCulture;
+            CultureInfo.CurrentUICulture = originalUiCulture;
+        }
+    }
+
+    [Fact]
+    public async Task Mobile_record_and_reminder_routes_localize_system_values_and_hide_managed_paths()
+    {
+        var originalDefaultCulture = CultureInfo.DefaultThreadCurrentCulture;
+        var originalDefaultUiCulture = CultureInfo.DefaultThreadCurrentUICulture;
+        var originalCulture = CultureInfo.CurrentCulture;
+        var originalUiCulture = CultureInfo.CurrentUICulture;
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var dataPath = Path.Combine(Path.GetTempPath(), $"vehimap-mobile-{Guid.NewGuid():N}");
+        var attachmentPath = Path.Combine(dataPath, "attachments", "veh-1", "policy.pdf");
+        Directory.CreateDirectory(Path.GetDirectoryName(attachmentPath)!);
+        await File.WriteAllTextAsync(attachmentPath, "test attachment");
+        var record = new VehicleRecord(
+            "record-1",
+            "veh-1",
+            "Povinné ručení",
+            "Pojistka od rodiny",
+            "Pojišťovna U lesa",
+            "01/2026",
+            "01/2027",
+            "1250,50",
+            VehicleRecordAttachmentMode.Managed,
+            "attachments/veh-1/policy.pdf",
+            "Uživatelská poznámka k dokladu");
+        var reminder = new VehicleReminder(
+            "reminder-1",
+            "veh-1",
+            "Zavolat bratrovi",
+            VehimapValueParser.FormatCanonicalEventDate(today.AddDays(2)),
+            "14",
+            "Ročně",
+            "Uživatelská poznámka k připomínce");
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh-1", "Rodinný vůz", "Osobní vozidla", "", "Model uživatele", "", "", "", "", "", "", "")
+            ],
+            Records = [record],
+            Reminders = [reminder]
+        };
+        dataSet.Settings.SetValue("app", "language", AppCultureService.EnglishLanguage);
+        dataSet.Settings.SetValue("app", "thousands_separator", "comma");
+        dataSet.Settings.SetValue("app", "decimal_separator", "dot");
+        dataSet.Settings.SetValue("app", "currency", "USD");
+        var root = new VehimapDataRoot(dataPath, dataPath, false);
+        var session = new MobileSessionController(
+            new StubDataStore(dataSet),
+            new StubMobileDataRootProvider(root),
+            new NonMutatingCultureService(),
+            new DesktopSupportedSettingsService(),
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)));
+        try
+        {
+            var viewModel = new MobileMainViewModel(session);
+            await viewModel.InitializeAsync();
+            viewModel.SelectVehiclesCommand.Execute(null);
+            viewModel.Vehicles.OpenSelectedVehicleCommand.Execute(null);
+
+            viewModel.Vehicles.OpenRecordsCommand.Execute(null);
+            Assert.Equal(MobileVehicleEvidenceKind.Records, viewModel.Vehicles.Evidence.Kind);
+            var recordItem = Assert.Single(viewModel.Vehicles.Evidence.Items);
+            Assert.Equal("Pojistka od rodiny", recordItem.PrimaryText);
+            Assert.Contains("Liability insurance", recordItem.SecondaryText, StringComparison.Ordinal);
+            Assert.Contains("Pojišťovna U lesa", recordItem.SecondaryText, StringComparison.Ordinal);
+            Assert.Contains("$1,250.50", recordItem.TertiaryText, StringComparison.Ordinal);
+            Assert.Contains("File available", recordItem.ItemStatus, StringComparison.Ordinal);
+            Assert.Contains("Uživatelská poznámka k dokladu", recordItem.AccessibleLabel, StringComparison.Ordinal);
+            Assert.DoesNotContain(
+                "attachments/",
+                string.Join(" ", recordItem.DetailLines.Select(line => line.Text)),
+                StringComparison.OrdinalIgnoreCase);
+
+            Assert.True(viewModel.TryNavigateBack());
+            viewModel.Vehicles.OpenRemindersCommand.Execute(null);
+            Assert.Equal(MobileVehicleEvidenceKind.Reminders, viewModel.Vehicles.Evidence.Kind);
+            var reminderItem = Assert.Single(viewModel.Vehicles.Evidence.Items);
+            Assert.Equal("Zavolat bratrovi", reminderItem.PrimaryText);
+            Assert.Contains("In 2 days", reminderItem.ItemStatus, StringComparison.Ordinal);
+            Assert.Contains("Every year", reminderItem.TertiaryText, StringComparison.Ordinal);
+            Assert.Contains("Uživatelská poznámka k připomínce", reminderItem.AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains(
+                reminderItem.DetailLines,
+                line => line.Text.Contains("14 days in advance", StringComparison.Ordinal));
+
+            Assert.Equal("Povinné ručení", record.RecordType);
+            Assert.Equal("Ročně", reminder.RepeatMode);
+        }
+        finally
+        {
+            if (Directory.Exists(dataPath))
+            {
+                Directory.Delete(dataPath, recursive: true);
+            }
+
             CultureInfo.DefaultThreadCurrentCulture = originalDefaultCulture;
             CultureInfo.DefaultThreadCurrentUICulture = originalDefaultUiCulture;
             CultureInfo.CurrentCulture = originalCulture;

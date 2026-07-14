@@ -8,7 +8,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
-- Android centrum vozidla nově otevírá první dvě plnohodnotné read-only evidence: Historii a Tankování. Obě používají samostatný seznam a samostatný detail položky, lokalizují známé legacy hodnoty, respektují zvolené míle/galony/měnu a systémové Zpět prochází celou vnořenou navigaci bez inline editoru.
+- Android centrum vozidla nově otevírá čtyři plnohodnotné read-only evidence: Historii, Tankování, Doklady a Připomínky. Každá používá samostatný seznam a detail položky, lokalizuje známé legacy hodnoty a systémové Zpět prochází celou vnořenou navigaci bez inline editoru. Doklady oznamují dostupnost spravované či externí přílohy bez zveřejnění interní cesty; připomínky mají lokalizovaný termín, opakování, předstih a vypočtený stav.
 - Android klient má první skutečný mobilní shell se čtyřmi cíli `Domů`, `Vozidla`, `Upozornění` a `Více`. Domovská obrazovka a upozornění používají stejná SQLite data, audit, časovou osu, analýzu tankování a Chytrého poradce jako desktop; seznam vozidel otevírá samostatné mobilní centrum vozidla místo vkládání detailu pod seznam.
 - Přibyl první Android základ Vehimapu 2.0: samostatný `net10.0-android` host, sdílený přístupný EN/CS read-only seznam a detail vozidel nad SQLite a oddělené nightly AppId. Nové readiness skripty ověřují API 31/36, APK metadata, ARM64/x86-64 nativní knihovny, licenční soubory, SHA-256 a umožňují jedním příkazem vytvořit shodně verzované lokální nightly pro Windows, Linux, macOS i Android.
 

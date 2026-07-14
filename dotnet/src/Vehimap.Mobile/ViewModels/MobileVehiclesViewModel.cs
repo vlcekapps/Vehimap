@@ -21,6 +21,8 @@ public sealed class MobileVehiclesViewModel : ObservableObject
         BackToVehicleListCommand = new RelayCommand(BackToVehicleList);
         OpenHistoryCommand = new RelayCommand(OpenHistory, () => ActiveVehicle is not null);
         OpenFuelCommand = new RelayCommand(OpenFuel, () => ActiveVehicle is not null);
+        OpenRecordsCommand = new RelayCommand(OpenRecords, () => ActiveVehicle is not null);
+        OpenRemindersCommand = new RelayCommand(OpenReminders, () => ActiveVehicle is not null);
         Evidence = new MobileVehicleEvidenceViewModel(session, BackToVehicleHub);
     }
 
@@ -33,6 +35,10 @@ public sealed class MobileVehiclesViewModel : ObservableObject
     public IRelayCommand OpenHistoryCommand { get; }
 
     public IRelayCommand OpenFuelCommand { get; }
+
+    public IRelayCommand OpenRecordsCommand { get; }
+
+    public IRelayCommand OpenRemindersCommand { get; }
 
     public MobileVehicleEvidenceViewModel Evidence { get; }
 
@@ -59,6 +65,8 @@ public sealed class MobileVehiclesViewModel : ObservableObject
                 RaiseVehicleHubProperties();
                 OpenHistoryCommand.NotifyCanExecuteChanged();
                 OpenFuelCommand.NotifyCanExecuteChanged();
+                OpenRecordsCommand.NotifyCanExecuteChanged();
+                OpenRemindersCommand.NotifyCanExecuteChanged();
             }
         }
     }
@@ -130,6 +138,10 @@ public sealed class MobileVehiclesViewModel : ObservableObject
     public string OpenHistoryName => L("Mobile.Vehicles.OpenHistoryName");
 
     public string OpenFuelName => L("Mobile.Vehicles.OpenFuelName");
+
+    public string OpenRecordsName => L("Mobile.Vehicles.OpenRecordsName");
+
+    public string OpenRemindersName => L("Mobile.Vehicles.OpenRemindersName");
 
     public string HistoryCountText => BuildCount("Mobile.Vehicles.HistoryCount", _session.DataSet.HistoryEntries.Count(item => IsActiveVehicle(item.VehicleId)));
 
@@ -232,6 +244,10 @@ public sealed class MobileVehiclesViewModel : ObservableObject
 
     private void OpenFuel() => OpenEvidence(MobileVehicleEvidenceKind.Fuel);
 
+    private void OpenRecords() => OpenEvidence(MobileVehicleEvidenceKind.Records);
+
+    private void OpenReminders() => OpenEvidence(MobileVehicleEvidenceKind.Reminders);
+
     private void OpenEvidence(MobileVehicleEvidenceKind kind)
     {
         if (ActiveVehicle is null)
@@ -268,6 +284,21 @@ public sealed class MobileVehiclesViewModel : ObservableObject
                 ActiveVehicle.Name,
                 _session.Settings,
                 _session.Localizer),
+            MobileVehicleEvidenceKind.Records => _evidenceProjectionService.BuildRecords(
+                _session.DataRoot,
+                _session.DataSet,
+                ActiveVehicle.Id,
+                ActiveVehicle.Name,
+                _session.Settings,
+                _session.Localizer,
+                _session.ResolveManagedAttachmentPath),
+            MobileVehicleEvidenceKind.Reminders => _evidenceProjectionService.BuildReminders(
+                _session.DataSet,
+                ActiveVehicle.Id,
+                ActiveVehicle.Name,
+                _session.Settings,
+                _session.Localizer,
+                DateOnly.FromDateTime(DateTime.Today)),
             _ => null
         };
 
@@ -317,6 +348,8 @@ public sealed class MobileVehiclesViewModel : ObservableObject
             nameof(EvidenceHeading),
             nameof(OpenHistoryName),
             nameof(OpenFuelName),
+            nameof(OpenRecordsName),
+            nameof(OpenRemindersName),
             nameof(HistoryCountText),
             nameof(FuelCountText),
             nameof(RecordCountText),

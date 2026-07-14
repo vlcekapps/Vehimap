@@ -2877,6 +2877,8 @@ Suggested action: {6}</value></data>
   <data name="Mobile.Vehicles.FuelCount" xml:space="preserve"><value>Fuel entries: {0}</value></data>
   <data name="Mobile.Vehicles.OpenHistoryName" xml:space="preserve"><value>Open history for the selected vehicle</value></data>
   <data name="Mobile.Vehicles.OpenFuelName" xml:space="preserve"><value>Open fuel entries for the selected vehicle</value></data>
+  <data name="Mobile.Vehicles.OpenRecordsName" xml:space="preserve"><value>Open documents for the selected vehicle</value></data>
+  <data name="Mobile.Vehicles.OpenRemindersName" xml:space="preserve"><value>Open reminders for the selected vehicle</value></data>
   <data name="Mobile.Vehicles.RecordCount" xml:space="preserve"><value>Documents: {0}</value></data>
   <data name="Mobile.Vehicles.ReminderCount" xml:space="preserve"><value>Reminders: {0}</value></data>
   <data name="Mobile.Vehicles.MaintenanceCount" xml:space="preserve"><value>Maintenance plans: {0}</value></data>
@@ -2888,6 +2890,17 @@ Suggested action: {6}</value></data>
   <data name="Mobile.History.DetailHeading" xml:space="preserve"><value>History entry details</value></data>
   <data name="Mobile.Fuel.Heading" xml:space="preserve"><value>Fuel: {0}</value></data>
   <data name="Mobile.Fuel.DetailHeading" xml:space="preserve"><value>Fuel entry details</value></data>
+  <data name="Mobile.Records.Heading" xml:space="preserve"><value>Documents: {0}</value></data>
+  <data name="Mobile.Records.DetailHeading" xml:space="preserve"><value>Document details</value></data>
+  <data name="Mobile.Records.Detail.Title" xml:space="preserve"><value>Title: {0}</value></data>
+  <data name="Mobile.Records.Detail.Provider" xml:space="preserve"><value>Provider: {0}</value></data>
+  <data name="Mobile.Reminders.Heading" xml:space="preserve"><value>Reminders: {0}</value></data>
+  <data name="Mobile.Reminders.DetailHeading" xml:space="preserve"><value>Reminder details</value></data>
+  <data name="Mobile.Reminders.Detail.ReminderDays" xml:space="preserve"><value>Reminder lead time: {0}</value></data>
+  <data name="Mobile.Reminders.ReminderDays" xml:space="preserve"><value>{0} days in advance</value></data>
+  <data name="Mobile.Reminders.ReminderDays.One" xml:space="preserve"><value>{0} day in advance</value></data>
+  <data name="Mobile.Reminders.ReminderDays.Few" xml:space="preserve"><value>{0} days in advance</value></data>
+  <data name="Mobile.Reminders.ReminderDays.Other" xml:space="preserve"><value>{0} days in advance</value></data>
   <data name="Mobile.Alerts.Heading" xml:space="preserve"><value>Alerts</value></data>
   <data name="Mobile.Alerts.ListName" xml:space="preserve"><value>Items that need attention</value></data>
   <data name="Mobile.Alerts.Empty" xml:space="preserve"><value>No item currently needs your attention.</value></data>
