@@ -1,0 +1,99 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Vehimap.Mobile.ViewModels"
+             x:Class="Vehimap.Mobile.Views.MobileVehicleEvidenceView"
+             x:DataType="vm:MobileVehicleEvidenceViewModel"
+             AutomationProperties.AutomationId="MobileVehicleEvidenceView">
+  <Grid>
+    <Grid IsVisible="{Binding IsListVisible}"
+          Margin="18"
+          RowDefinitions="Auto,Auto,Auto,*,Auto"
+          RowSpacing="10">
+      <Button Grid.Row="0"
+              Content="{Binding BackText}"
+              Command="{Binding BackToVehicleCommand}"
+              MinHeight="48"
+              HorizontalAlignment="Stretch"
+              AutomationProperties.AutomationId="MobileEvidenceBackToVehicleButton"
+              AutomationProperties.Name="{Binding BackToVehicleName}" />
+      <TextBlock Grid.Row="1"
+                 Text="{Binding Heading}"
+                 FontSize="26"
+                 FontWeight="Bold"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileEvidenceHeading"
+                 AutomationProperties.Name="{Binding Heading}"
+                 AutomationProperties.HeadingLevel="1" />
+      <TextBlock Grid.Row="2"
+                 Text="{Binding Summary}"
+                 TextWrapping="Wrap"
+                 AutomationProperties.AutomationId="MobileEvidenceSummaryStatus"
+                 AutomationProperties.Name="{Binding Summary}"
+                 AutomationProperties.LiveSetting="Polite" />
+      <ListBox Grid.Row="3"
+               ItemsSource="{Binding Items}"
+               SelectedItem="{Binding SelectedItem}"
+               MinHeight="180"
+               IsTabStop="True"
+               AutomationProperties.AutomationId="MobileEvidenceList"
+               AutomationProperties.Name="{Binding ListName}">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:MobileVehicleEvidenceItemViewModel">
+            <Border Padding="12"
+                    AutomationProperties.AutomationId="{Binding AutomationId}"
+                    AutomationProperties.Name="{Binding AccessibleLabel}"
+                    AutomationProperties.ItemType="{Binding ItemType}"
+                    AutomationProperties.ItemStatus="{Binding ItemStatus}">
+              <StackPanel Spacing="3">
+                <TextBlock Text="{Binding PrimaryText}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SecondaryText}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding TertiaryText}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <Button Grid.Row="4"
+              Content="{Binding OpenSelectedText}"
+              Command="{Binding OpenSelectedItemCommand}"
+              MinHeight="48"
+              HorizontalAlignment="Stretch"
+              AutomationProperties.AutomationId="MobileOpenEvidenceDetailButton"
+              AutomationProperties.Name="{Binding OpenSelectedName}" />
+    </Grid>
+
+    <ScrollViewer IsVisible="{Binding IsDetailVisible}"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+      <StackPanel Margin="18" Spacing="12">
+        <Button Content="{Binding BackText}"
+                Command="{Binding BackToListCommand}"
+                MinHeight="48"
+                HorizontalAlignment="Stretch"
+                AutomationProperties.AutomationId="MobileEvidenceBackToListButton"
+                AutomationProperties.Name="{Binding BackToListName}" />
+        <TextBlock Text="{Binding DetailHeading}"
+                   FontSize="26"
+                   FontWeight="Bold"
+                   TextWrapping="Wrap"
+                   AutomationProperties.AutomationId="MobileEvidenceDetailHeading"
+                   AutomationProperties.Name="{Binding DetailHeading}"
+                   AutomationProperties.HeadingLevel="1" />
+        <Border Padding="14" BorderThickness="1" CornerRadius="8">
+          <ItemsControl ItemsSource="{Binding SelectedItem.DetailLines}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:MobileEvidenceDetailLineViewModel">
+                <TextBlock Margin="0,4"
+                           Text="{Binding Text}"
+                           TextWrapping="Wrap"
+                           AutomationProperties.AutomationId="{Binding AutomationId}"
+                           AutomationProperties.Name="{Binding Text}" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

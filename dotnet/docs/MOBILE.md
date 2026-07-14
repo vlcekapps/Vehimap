@@ -41,9 +41,17 @@ The desktop workspaces become routes under the selected vehicle hub, not top-lev
 - service book;
 - vehicle-specific audit and recommendations.
 
-The first mobile vertical slice provides the vehicle list, a separate read-only vehicle
-hub and real evidence counts. Each evidence route will be enabled only when it has a
-functional view; the shell must not expose placeholder actions that appear usable.
+The mobile vertical slice provides the vehicle list, a separate read-only vehicle hub
+and real evidence counts. History and fuel are the first functional evidence routes:
+each opens a dedicated list and then a separate item-detail screen. Android Back unwinds
+`item detail -> evidence list -> vehicle hub -> vehicle list` before leaving the
+`Vehicles` destination. Remaining evidence counts stay informational until their route
+is functional; the shell must not expose placeholder actions that appear usable.
+
+Read-only evidence routes use a shared mobile projection pattern. It formats canonical
+kilometers/liters and invariant monetary values with the current unit, separator and
+currency preferences, localizes known legacy values, and preserves all user-entered
+text. Mobile owns this compact presentation layer and must not reuse desktop viewmodels.
 
 ## Editor contract
 

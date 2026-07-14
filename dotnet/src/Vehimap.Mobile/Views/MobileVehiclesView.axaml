@@ -2,6 +2,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Vehimap.Mobile.ViewModels"
+             xmlns:views="using:Vehimap.Mobile.Views"
              x:Class="Vehimap.Mobile.Views.MobileVehiclesView"
              x:DataType="vm:MobileVehiclesViewModel"
              AutomationProperties.AutomationId="MobileVehiclesView">
@@ -110,8 +111,18 @@
                    AutomationProperties.HeadingLevel="2" />
         <Border Padding="14" BorderThickness="1" CornerRadius="8">
           <StackPanel Spacing="7">
-            <TextBlock Text="{Binding HistoryCountText}" TextWrapping="Wrap" />
-            <TextBlock Text="{Binding FuelCountText}" TextWrapping="Wrap" />
+            <Button Content="{Binding HistoryCountText}"
+                    Command="{Binding OpenHistoryCommand}"
+                    MinHeight="48"
+                    HorizontalAlignment="Stretch"
+                    AutomationProperties.AutomationId="MobileOpenHistoryButton"
+                    AutomationProperties.Name="{Binding OpenHistoryName}" />
+            <Button Content="{Binding FuelCountText}"
+                    Command="{Binding OpenFuelCommand}"
+                    MinHeight="48"
+                    HorizontalAlignment="Stretch"
+                    AutomationProperties.AutomationId="MobileOpenFuelButton"
+                    AutomationProperties.Name="{Binding OpenFuelName}" />
             <TextBlock Text="{Binding RecordCountText}" TextWrapping="Wrap" />
             <TextBlock Text="{Binding ReminderCountText}" TextWrapping="Wrap" />
             <TextBlock Text="{Binding MaintenanceCountText}" TextWrapping="Wrap" />
@@ -119,5 +130,9 @@
         </Border>
       </StackPanel>
     </ScrollViewer>
+
+    <Panel IsVisible="{Binding IsEvidenceVisible}">
+      <views:MobileVehicleEvidenceView DataContext="{Binding Evidence}" />
+    </Panel>
   </Grid>
 </UserControl>

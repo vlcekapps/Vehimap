@@ -184,6 +184,30 @@ public sealed class MobilePlatformFoundationTests
     }
 
     [Fact]
+    public void Mobile_vehicle_evidence_uses_separate_accessible_list_and_detail_routes()
+    {
+        var vehicleView = File.ReadAllText(RepositoryPath("src", "Vehimap.Mobile", "Views", "MobileVehiclesView.axaml"));
+        var evidenceView = File.ReadAllText(RepositoryPath("src", "Vehimap.Mobile", "Views", "MobileVehicleEvidenceView.axaml"));
+
+        Assert.Contains("MobileOpenHistoryButton", vehicleView, StringComparison.Ordinal);
+        Assert.Contains("MobileOpenFuelButton", vehicleView, StringComparison.Ordinal);
+        Assert.Contains("IsEvidenceVisible", vehicleView, StringComparison.Ordinal);
+        Assert.Contains("IsListVisible", evidenceView, StringComparison.Ordinal);
+        Assert.Contains("IsDetailVisible", evidenceView, StringComparison.Ordinal);
+        Assert.Contains("MobileEvidenceList", evidenceView, StringComparison.Ordinal);
+        Assert.Contains("MobileOpenEvidenceDetailButton", evidenceView, StringComparison.Ordinal);
+        Assert.Contains("AutomationProperties.ItemType=\"{Binding ItemType}\"", evidenceView, StringComparison.Ordinal);
+        Assert.Contains("AutomationProperties.ItemStatus=\"{Binding ItemStatus}\"", evidenceView, StringComparison.Ordinal);
+        Assert.DoesNotContain("TextBox", evidenceView, StringComparison.Ordinal);
+        Assert.DoesNotContain("EditorHost", evidenceView, StringComparison.Ordinal);
+
+        var document = XDocument.Parse(evidenceView);
+        Assert.All(
+            document.Descendants().Where(element => element.Name.LocalName == "Button"),
+            button => Assert.Equal("48", button.Attribute("MinHeight")?.Value));
+    }
+
+    [Fact]
     public void Android_system_back_delegates_to_mobile_navigation_before_exiting()
     {
         var activity = File.ReadAllText(RepositoryPath("src", "Vehimap.Android", "MainActivity.cs"));
@@ -222,6 +246,14 @@ public sealed class MobilePlatformFoundationTests
                     "",
                     "",
                     "")
+            ],
+            HistoryEntries =
+            [
+                new VehicleHistoryEntry("history-1", "veh-1", "02.01.2026", "Inspection", "161", "25", "User note")
+            ],
+            FuelEntries =
+            [
+                new FuelEntry("fuel-1", "veh-1", "03.01.2026", "170", "3.5", "12", true, "Benzín", "User note")
             ]
         };
         dataSet.Settings.SetValue("app", "language", AppCultureService.EnglishLanguage);
@@ -248,11 +280,117 @@ public sealed class MobilePlatformFoundationTests
 
             Assert.True(viewModel.IsVehiclesSelected);
             Assert.True(viewModel.Vehicles.IsVehicleHubVisible);
+
+            viewModel.Vehicles.OpenHistoryCommand.Execute(null);
+
+            Assert.True(viewModel.Vehicles.IsEvidenceVisible);
+            Assert.Equal(MobileVehicleEvidenceKind.History, viewModel.Vehicles.Evidence.Kind);
+            Assert.Single(viewModel.Vehicles.Evidence.Items);
+            viewModel.Vehicles.Evidence.OpenSelectedItemCommand.Execute(null);
+            Assert.True(viewModel.Vehicles.Evidence.IsDetailVisible);
+
+            Assert.True(viewModel.TryNavigateBack());
+            Assert.True(viewModel.Vehicles.Evidence.IsListVisible);
+            Assert.True(viewModel.TryNavigateBack());
+            Assert.True(viewModel.Vehicles.IsVehicleHubVisible);
+
+            viewModel.Vehicles.OpenFuelCommand.Execute(null);
+            Assert.True(viewModel.Vehicles.IsEvidenceVisible);
+            Assert.Equal(MobileVehicleEvidenceKind.Fuel, viewModel.Vehicles.Evidence.Kind);
+            Assert.Single(viewModel.Vehicles.Evidence.Items);
+
+            Assert.True(viewModel.TryNavigateBack());
+            Assert.True(viewModel.Vehicles.IsVehicleHubVisible);
             Assert.True(viewModel.TryNavigateBack());
             Assert.True(viewModel.Vehicles.IsVehicleListVisible);
             Assert.True(viewModel.TryNavigateBack());
             Assert.True(viewModel.IsHomeSelected);
             Assert.False(viewModel.TryNavigateBack());
+        }
+        finally
+        {
+            CultureInfo.DefaultThreadCurrentCulture = originalDefaultCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = originalDefaultUiCulture;
+            CultureInfo.CurrentCulture = originalCulture;
+            CultureInfo.CurrentUICulture = originalUiCulture;
+        }
+    }
+
+    [Fact]
+    public async Task Mobile_history_and_fuel_routes_localize_known_values_and_format_selected_units()
+    {
+        var originalDefaultCulture = CultureInfo.DefaultThreadCurrentCulture;
+        var originalDefaultUiCulture = CultureInfo.DefaultThreadCurrentUICulture;
+        var originalCulture = CultureInfo.CurrentCulture;
+        var originalUiCulture = CultureInfo.CurrentUICulture;
+        var history = new VehicleHistoryEntry(
+            "history-1",
+            "veh-1",
+            "02.01.2026",
+            "Servis od bratra",
+            "161",
+            "25",
+            "Ručně zadaná poznámka");
+        var fuel = new FuelEntry(
+            "fuel-1",
+            "veh-1",
+            "03.01.2026",
+            "170",
+            "3.785411784",
+            "12.5",
+            true,
+            "Benzín",
+            "Ručně zadaná poznámka",
+            "Natural 95",
+            "Čerpací stanice U lesa");
+        var dataSet = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("veh-1", "Rodinný vůz", "Osobní vozidla", "", "Model uživatele", "", "", "", "", "", "", "")
+            ],
+            HistoryEntries = [history],
+            FuelEntries = [fuel]
+        };
+        dataSet.Settings.SetValue("app", "language", AppCultureService.EnglishLanguage);
+        dataSet.Settings.SetValue("app", "thousands_separator", "comma");
+        dataSet.Settings.SetValue("app", "decimal_separator", "dot");
+        dataSet.Settings.SetValue("app", "distance_unit", "mi");
+        dataSet.Settings.SetValue("app", "volume_unit", "us_gal");
+        dataSet.Settings.SetValue("app", "currency", "USD");
+        var root = new VehimapDataRoot(Path.GetTempPath(), Path.Combine(Path.GetTempPath(), $"vehimap-mobile-{Guid.NewGuid():N}"), false);
+        var session = new MobileSessionController(
+            new StubDataStore(dataSet),
+            new StubMobileDataRootProvider(root),
+            new NonMutatingCultureService(),
+            new DesktopSupportedSettingsService(),
+            new ResourceAppLocalizer(CultureInfo.GetCultureInfo(AppCultureService.EnglishLanguage)));
+        try
+        {
+            var viewModel = new MobileMainViewModel(session);
+            await viewModel.InitializeAsync();
+            viewModel.SelectVehiclesCommand.Execute(null);
+            viewModel.Vehicles.OpenSelectedVehicleCommand.Execute(null);
+
+            viewModel.Vehicles.OpenHistoryCommand.Execute(null);
+            var historyItem = Assert.Single(viewModel.Vehicles.Evidence.Items);
+            Assert.Equal("Servis od bratra", historyItem.PrimaryText);
+            Assert.Contains("100 mi", historyItem.TertiaryText, StringComparison.Ordinal);
+            Assert.Contains("$25.00", historyItem.TertiaryText, StringComparison.Ordinal);
+            Assert.Contains("Ručně zadaná poznámka", historyItem.AccessibleLabel, StringComparison.Ordinal);
+
+            Assert.True(viewModel.TryNavigateBack());
+            viewModel.Vehicles.OpenFuelCommand.Execute(null);
+            var fuelItem = Assert.Single(viewModel.Vehicles.Evidence.Items);
+            Assert.Equal("Gasoline", fuelItem.PrimaryText);
+            Assert.Equal("Full tank", fuelItem.ItemStatus);
+            Assert.Contains("1.00 US gal", fuelItem.TertiaryText, StringComparison.Ordinal);
+            Assert.Contains("$12.50", fuelItem.TertiaryText, StringComparison.Ordinal);
+            Assert.Contains("Čerpací stanice U lesa", fuelItem.AccessibleLabel, StringComparison.Ordinal);
+            Assert.Contains("Natural 95", fuelItem.AccessibleLabel, StringComparison.Ordinal);
+
+            Assert.Equal("161", history.Odometer);
+            Assert.Equal("3.785411784", fuel.Liters);
         }
         finally
         {

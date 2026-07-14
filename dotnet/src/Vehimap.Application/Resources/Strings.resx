@@ -2875,9 +2875,19 @@ Suggested action: {6}</value></data>
   <data name="Mobile.Vehicles.EvidenceHeading" xml:space="preserve"><value>Vehicle evidence</value></data>
   <data name="Mobile.Vehicles.HistoryCount" xml:space="preserve"><value>History entries: {0}</value></data>
   <data name="Mobile.Vehicles.FuelCount" xml:space="preserve"><value>Fuel entries: {0}</value></data>
+  <data name="Mobile.Vehicles.OpenHistoryName" xml:space="preserve"><value>Open history for the selected vehicle</value></data>
+  <data name="Mobile.Vehicles.OpenFuelName" xml:space="preserve"><value>Open fuel entries for the selected vehicle</value></data>
   <data name="Mobile.Vehicles.RecordCount" xml:space="preserve"><value>Documents: {0}</value></data>
   <data name="Mobile.Vehicles.ReminderCount" xml:space="preserve"><value>Reminders: {0}</value></data>
   <data name="Mobile.Vehicles.MaintenanceCount" xml:space="preserve"><value>Maintenance plans: {0}</value></data>
+  <data name="Mobile.Evidence.BackToVehicleName" xml:space="preserve"><value>Return to vehicle {0}</value></data>
+  <data name="Mobile.Evidence.BackToListName" xml:space="preserve"><value>Return to {0}</value></data>
+  <data name="Mobile.Evidence.OpenSelected" xml:space="preserve"><value>Open details</value></data>
+  <data name="Mobile.Evidence.OpenSelectedName" xml:space="preserve"><value>Open details of the selected {0}</value></data>
+  <data name="Mobile.History.Heading" xml:space="preserve"><value>History: {0}</value></data>
+  <data name="Mobile.History.DetailHeading" xml:space="preserve"><value>History entry details</value></data>
+  <data name="Mobile.Fuel.Heading" xml:space="preserve"><value>Fuel: {0}</value></data>
+  <data name="Mobile.Fuel.DetailHeading" xml:space="preserve"><value>Fuel entry details</value></data>
   <data name="Mobile.Alerts.Heading" xml:space="preserve"><value>Alerts</value></data>
   <data name="Mobile.Alerts.ListName" xml:space="preserve"><value>Items that need attention</value></data>
   <data name="Mobile.Alerts.Empty" xml:space="preserve"><value>No item currently needs your attention.</value></data>

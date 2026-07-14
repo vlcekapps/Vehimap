@@ -9,15 +9,19 @@ namespace Vehimap.Mobile.ViewModels;
 public sealed class MobileVehiclesViewModel : ObservableObject
 {
     private readonly MobileSessionController _session;
+    private readonly MobileVehicleEvidenceProjectionService _evidenceProjectionService = new();
     private MobileVehicleListItemViewModel? _selectedVehicle;
     private MobileVehicleListItemViewModel? _activeVehicle;
-    private bool _isVehicleHubVisible;
+    private MobileVehicleScreen _screen;
 
     public MobileVehiclesViewModel(MobileSessionController session)
     {
         _session = session;
         OpenSelectedVehicleCommand = new RelayCommand(OpenSelectedVehicle, () => SelectedVehicle is not null);
         BackToVehicleListCommand = new RelayCommand(BackToVehicleList);
+        OpenHistoryCommand = new RelayCommand(OpenHistory, () => ActiveVehicle is not null);
+        OpenFuelCommand = new RelayCommand(OpenFuel, () => ActiveVehicle is not null);
+        Evidence = new MobileVehicleEvidenceViewModel(session, BackToVehicleHub);
     }
 
     public ObservableCollection<MobileVehicleListItemViewModel> Vehicles { get; } = [];
@@ -25,6 +29,12 @@ public sealed class MobileVehiclesViewModel : ObservableObject
     public IRelayCommand OpenSelectedVehicleCommand { get; }
 
     public IRelayCommand BackToVehicleListCommand { get; }
+
+    public IRelayCommand OpenHistoryCommand { get; }
+
+    public IRelayCommand OpenFuelCommand { get; }
+
+    public MobileVehicleEvidenceViewModel Evidence { get; }
 
     public MobileVehicleListItemViewModel? SelectedVehicle
     {
@@ -47,23 +57,31 @@ public sealed class MobileVehiclesViewModel : ObservableObject
             if (SetProperty(ref _activeVehicle, value))
             {
                 RaiseVehicleHubProperties();
+                OpenHistoryCommand.NotifyCanExecuteChanged();
+                OpenFuelCommand.NotifyCanExecuteChanged();
             }
         }
     }
 
-    public bool IsVehicleHubVisible
+    private MobileVehicleScreen Screen
     {
-        get => _isVehicleHubVisible;
-        private set
+        get => _screen;
+        set
         {
-            if (SetProperty(ref _isVehicleHubVisible, value))
+            if (SetProperty(ref _screen, value))
             {
                 OnPropertyChanged(nameof(IsVehicleListVisible));
+                OnPropertyChanged(nameof(IsVehicleHubVisible));
+                OnPropertyChanged(nameof(IsEvidenceVisible));
             }
         }
     }
 
-    public bool IsVehicleListVisible => !IsVehicleHubVisible;
+    public bool IsVehicleListVisible => Screen == MobileVehicleScreen.List;
+
+    public bool IsVehicleHubVisible => Screen == MobileVehicleScreen.Hub;
+
+    public bool IsEvidenceVisible => Screen == MobileVehicleScreen.Evidence;
 
     public bool HasVehicles => Vehicles.Count > 0;
 
@@ -109,6 +127,10 @@ public sealed class MobileVehiclesViewModel : ObservableObject
 
     public string EvidenceHeading => L("Mobile.Vehicles.EvidenceHeading");
 
+    public string OpenHistoryName => L("Mobile.Vehicles.OpenHistoryName");
+
+    public string OpenFuelName => L("Mobile.Vehicles.OpenFuelName");
+
     public string HistoryCountText => BuildCount("Mobile.Vehicles.HistoryCount", _session.DataSet.HistoryEntries.Count(item => IsActiveVehicle(item.VehicleId)));
 
     public string FuelCountText => BuildCount("Mobile.Vehicles.FuelCount", _session.DataSet.FuelEntries.Count(item => IsActiveVehicle(item.VehicleId)));
@@ -123,6 +145,9 @@ public sealed class MobileVehiclesViewModel : ObservableObject
     {
         var selectedId = SelectedVehicle?.Id;
         var activeId = ActiveVehicle?.Id;
+        var evidenceKind = Evidence.Kind;
+        var selectedEvidenceId = Evidence.SelectedItem?.Id;
+        var evidenceDetailWasVisible = Evidence.IsDetailVisible;
         var metaByVehicle = _session.DataSet.VehicleMetaEntries
             .GroupBy(item => item.VehicleId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Last(), StringComparer.OrdinalIgnoreCase);
@@ -145,7 +170,12 @@ public sealed class MobileVehiclesViewModel : ObservableObject
         ActiveVehicle = Vehicles.FirstOrDefault(item => string.Equals(item.Id, activeId, StringComparison.OrdinalIgnoreCase));
         if (ActiveVehicle is null)
         {
-            IsVehicleHubVisible = false;
+            Screen = MobileVehicleScreen.List;
+            Evidence.Clear();
+        }
+        else if (Screen == MobileVehicleScreen.Evidence)
+        {
+            LoadEvidence(evidenceKind, selectedEvidenceId, evidenceDetailWasVisible);
         }
 
         OnPropertyChanged(nameof(HasVehicles));
@@ -154,7 +184,18 @@ public sealed class MobileVehiclesViewModel : ObservableObject
 
     public bool TryNavigateBack()
     {
-        if (!IsVehicleHubVisible)
+        if (Screen == MobileVehicleScreen.Evidence)
+        {
+            if (Evidence.TryNavigateBack())
+            {
+                return true;
+            }
+
+            BackToVehicleHub();
+            return true;
+        }
+
+        if (Screen != MobileVehicleScreen.Hub)
         {
             return false;
         }
@@ -171,7 +212,7 @@ public sealed class MobileVehiclesViewModel : ObservableObject
         }
 
         ActiveVehicle = SelectedVehicle;
-        IsVehicleHubVisible = true;
+        Screen = MobileVehicleScreen.Hub;
     }
 
     private void BackToVehicleList()
@@ -182,8 +223,67 @@ public sealed class MobileVehiclesViewModel : ObservableObject
                 ?? SelectedVehicle;
         }
 
-        IsVehicleHubVisible = false;
+        Screen = MobileVehicleScreen.List;
+        Evidence.Clear();
         ActiveVehicle = null;
+    }
+
+    private void OpenHistory() => OpenEvidence(MobileVehicleEvidenceKind.History);
+
+    private void OpenFuel() => OpenEvidence(MobileVehicleEvidenceKind.Fuel);
+
+    private void OpenEvidence(MobileVehicleEvidenceKind kind)
+    {
+        if (ActiveVehicle is null)
+        {
+            return;
+        }
+
+        LoadEvidence(kind);
+        Screen = MobileVehicleScreen.Evidence;
+    }
+
+    private void LoadEvidence(
+        MobileVehicleEvidenceKind kind,
+        string? selectedItemId = null,
+        bool showDetail = false)
+    {
+        if (ActiveVehicle is null)
+        {
+            Evidence.Clear();
+            return;
+        }
+
+        var projection = kind switch
+        {
+            MobileVehicleEvidenceKind.History => _evidenceProjectionService.BuildHistory(
+                _session.DataSet,
+                ActiveVehicle.Id,
+                ActiveVehicle.Name,
+                _session.Settings,
+                _session.Localizer),
+            MobileVehicleEvidenceKind.Fuel => _evidenceProjectionService.BuildFuel(
+                _session.DataSet,
+                ActiveVehicle.Id,
+                ActiveVehicle.Name,
+                _session.Settings,
+                _session.Localizer),
+            _ => null
+        };
+
+        if (projection is null)
+        {
+            Evidence.Clear();
+            return;
+        }
+
+        Evidence.Load(projection, ActiveVehicle.Name, selectedItemId, showDetail);
+    }
+
+    private void BackToVehicleHub()
+    {
+        Evidence.Clear();
+        Screen = ActiveVehicle is null ? MobileVehicleScreen.List : MobileVehicleScreen.Hub;
     }
 
     private bool IsActiveVehicle(string vehicleId) =>
@@ -215,6 +315,8 @@ public sealed class MobileVehiclesViewModel : ObservableObject
             nameof(GreenCardToLabel),
             nameof(NoteLabel),
             nameof(EvidenceHeading),
+            nameof(OpenHistoryName),
+            nameof(OpenFuelName),
             nameof(HistoryCountText),
             nameof(FuelCountText),
             nameof(RecordCountText),
@@ -239,4 +341,11 @@ public sealed class MobileVehiclesViewModel : ObservableObject
     private string L(string key) => _session.Localizer.GetString(key);
 
     private string LF(string key, params object?[] args) => _session.Localizer.Format(key, args);
+
+    private enum MobileVehicleScreen
+    {
+        List,
+        Hub,
+        Evidence
+    }
 }
