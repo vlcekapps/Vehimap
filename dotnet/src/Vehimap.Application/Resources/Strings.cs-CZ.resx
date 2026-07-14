@@ -2896,7 +2896,7 @@ Navržená akce: {6}</value></data>
   <data name="Mobile.Records.Detail.Provider" xml:space="preserve"><value>Poskytovatel: {0}</value></data>
   <data name="Mobile.Reminders.Heading" xml:space="preserve"><value>Připomínky: {0}</value></data>
   <data name="Mobile.Reminders.DetailHeading" xml:space="preserve"><value>Detail připomínky</value></data>
-  <data name="Mobile.Reminders.Detail.ReminderDays" xml:space="preserve"><value>Předstih upozornění: {0}</value></data>
+  <data name="Mobile.Reminders.Detail.ReminderDays" xml:space="preserve"><value>Upozornit před termínem: {0}</value></data>
   <data name="Mobile.Reminders.ReminderDays" xml:space="preserve"><value>{0} dní předem</value></data>
   <data name="Mobile.Reminders.ReminderDays.One" xml:space="preserve"><value>{0} den předem</value></data>
   <data name="Mobile.Reminders.ReminderDays.Few" xml:space="preserve"><value>{0} dny předem</value></data>

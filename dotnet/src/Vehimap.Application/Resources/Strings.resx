@@ -2896,7 +2896,7 @@ Suggested action: {6}</value></data>
   <data name="Mobile.Records.Detail.Provider" xml:space="preserve"><value>Provider: {0}</value></data>
   <data name="Mobile.Reminders.Heading" xml:space="preserve"><value>Reminders: {0}</value></data>
   <data name="Mobile.Reminders.DetailHeading" xml:space="preserve"><value>Reminder details</value></data>
-  <data name="Mobile.Reminders.Detail.ReminderDays" xml:space="preserve"><value>Reminder lead time: {0}</value></data>
+  <data name="Mobile.Reminders.Detail.ReminderDays" xml:space="preserve"><value>Notify before due date: {0}</value></data>
   <data name="Mobile.Reminders.ReminderDays" xml:space="preserve"><value>{0} days in advance</value></data>
   <data name="Mobile.Reminders.ReminderDays.One" xml:space="preserve"><value>{0} day in advance</value></data>
   <data name="Mobile.Reminders.ReminderDays.Few" xml:space="preserve"><value>{0} days in advance</value></data>

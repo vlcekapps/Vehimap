@@ -84,12 +84,20 @@ public sealed class MobilePlatformFoundationTests
     [Fact]
     public void Mobile_resources_exist_in_both_supported_languages()
     {
-        var english = ReadResourceKeys(RepositoryPath("src", "Vehimap.Application", "Resources", "Strings.resx"));
-        var czech = ReadResourceKeys(RepositoryPath("src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx"));
+        var englishPath = RepositoryPath("src", "Vehimap.Application", "Resources", "Strings.resx");
+        var czechPath = RepositoryPath("src", "Vehimap.Application", "Resources", "Strings.cs-CZ.resx");
+        var english = ReadResourceKeys(englishPath);
+        var czech = ReadResourceKeys(czechPath);
         var mobileKeys = english.Where(key => key.StartsWith("Mobile.", StringComparison.Ordinal)).ToArray();
 
         Assert.NotEmpty(mobileKeys);
         Assert.All(mobileKeys, key => Assert.Contains(key, czech));
+        Assert.Equal(
+            "Notify before due date: {0}",
+            ReadResourceValues(englishPath)["Mobile.Reminders.Detail.ReminderDays"]);
+        Assert.Equal(
+            "Upozornit před termínem: {0}",
+            ReadResourceValues(czechPath)["Mobile.Reminders.Detail.ReminderDays"]);
     }
 
     [Fact]
@@ -487,7 +495,10 @@ public sealed class MobilePlatformFoundationTests
             Assert.Contains("Uživatelská poznámka k připomínce", reminderItem.AccessibleLabel, StringComparison.Ordinal);
             Assert.Contains(
                 reminderItem.DetailLines,
-                line => line.Text.Contains("14 days in advance", StringComparison.Ordinal));
+                line => string.Equals(
+                    line.Text,
+                    "Notify before due date: 14 days in advance",
+                    StringComparison.Ordinal));
 
             Assert.Equal("Povinné ručení", record.RecordType);
             Assert.Equal("Ročně", reminder.RepeatMode);
