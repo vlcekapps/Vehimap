@@ -87,7 +87,9 @@ public sealed class DeveloperEnvironmentDocumentationTests
     {
         var root = FindRepositoryRoot();
         var guide = File.ReadAllText(Path.Combine(root, "CONTRIBUTING.md"));
+        var gitIgnore = File.ReadAllText(Path.Combine(root, ".gitignore"));
 
+        Assert.Contains("!CONTRIBUTING.md", gitIgnore, StringComparison.Ordinal);
         Assert.Contains("dotnet/docs/DEVELOPMENT.md", guide, StringComparison.Ordinal);
         Assert.Contains("Commit messages are written in English", guide, StringComparison.Ordinal);
         Assert.Contains("English and Czech `.resx`", guide, StringComparison.Ordinal);
