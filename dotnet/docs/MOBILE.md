@@ -26,6 +26,14 @@ navigation destinations or describe implementation stages. Longer onboarding and
 instructions belong in the future user guide, not in the limited phone viewport or in
 screen-reader metadata that is announced on every visit.
 
+## Branding assets
+
+The repository-root `vehimap-logo.png` is the shared visual logo. The Android launcher
+asset must remain byte-identical to it, while desktop executable, tray and shortcut
+icons use the platform-specific `favicon.ico`. Product screens must not repeat the logo
+where it would displace useful content; desktop exposes it in the About dialog and
+mobile may expose it on a future dedicated About route.
+
 ## Vehicle navigation
 
 The desktop workspaces become routes under the selected vehicle hub, not top-level tabs:

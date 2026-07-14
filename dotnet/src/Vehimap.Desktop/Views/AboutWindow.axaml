@@ -39,32 +39,53 @@
             CornerRadius="8"
             AutomationProperties.Name="{i18n:Loc About.BasicInfo}"
             AutomationProperties.AutomationId="AboutSummaryPanel">
-      <Grid ColumnDefinitions="130,*"
-            RowDefinitions="Auto,Auto,Auto"
-            RowSpacing="8">
-        <TextBlock Grid.Row="0" Text="{i18n:Loc About.Application}" FontWeight="SemiBold" />
-        <TextBlock Grid.Row="0"
-                   Grid.Column="1"
-                   Text="{Binding Title}"
-                   TextWrapping="Wrap"
-                   AutomationProperties.Name="{Binding Title}"
-                   AutomationProperties.AutomationId="AboutApplicationText" />
+      <Grid ColumnDefinitions="104,*"
+            ColumnSpacing="14">
+        <Border Width="88"
+                Height="88"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                CornerRadius="44"
+                ClipToBounds="True">
+          <Image Width="104"
+                 Height="104"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"
+                 Stretch="UniformToFill"
+                 Source="avares://Vehimap/Assets/vehimap-logo.png"
+                 AutomationProperties.Name="{i18n:Loc About.LogoName}"
+                 AutomationProperties.AutomationId="AboutLogo"
+                 AutomationProperties.AccessibilityView="Content" />
+        </Border>
 
-        <TextBlock Grid.Row="1" Text="{i18n:Loc About.Author}" FontWeight="SemiBold" />
-        <TextBlock Grid.Row="1"
-                   Grid.Column="1"
-                   Text="{Binding Author}"
-                   TextWrapping="Wrap"
-                   AutomationProperties.Name="{Binding Author}"
-                   AutomationProperties.AutomationId="AboutAuthorText" />
+        <Grid Grid.Column="1"
+              ColumnDefinitions="130,*"
+              RowDefinitions="Auto,Auto,Auto"
+              RowSpacing="8">
+          <TextBlock Grid.Row="0" Text="{i18n:Loc About.Application}" FontWeight="SemiBold" />
+          <TextBlock Grid.Row="0"
+                     Grid.Column="1"
+                     Text="{Binding Title}"
+                     TextWrapping="Wrap"
+                     AutomationProperties.Name="{Binding Title}"
+                     AutomationProperties.AutomationId="AboutApplicationText" />
 
-        <TextBlock Grid.Row="2" Text="{i18n:Loc About.Version}" FontWeight="SemiBold" />
-        <TextBlock Grid.Row="2"
-                   Grid.Column="1"
-                   Text="{Binding DisplayVersion}"
-                   TextWrapping="Wrap"
-                   AutomationProperties.Name="{Binding DisplayVersion}"
-                   AutomationProperties.AutomationId="AboutVersionText" />
+          <TextBlock Grid.Row="1" Text="{i18n:Loc About.Author}" FontWeight="SemiBold" />
+          <TextBlock Grid.Row="1"
+                     Grid.Column="1"
+                     Text="{Binding Author}"
+                     TextWrapping="Wrap"
+                     AutomationProperties.Name="{Binding Author}"
+                     AutomationProperties.AutomationId="AboutAuthorText" />
+
+          <TextBlock Grid.Row="2" Text="{i18n:Loc About.Version}" FontWeight="SemiBold" />
+          <TextBlock Grid.Row="2"
+                     Grid.Column="1"
+                     Text="{Binding DisplayVersion}"
+                     TextWrapping="Wrap"
+                     AutomationProperties.Name="{Binding DisplayVersion}"
+                     AutomationProperties.AutomationId="AboutVersionText" />
+        </Grid>
       </Grid>
     </Border>
 

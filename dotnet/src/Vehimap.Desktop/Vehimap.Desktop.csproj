@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
+    <AvaloniaResource Include="..\..\..\vehimap-logo.png" Link="Assets\vehimap-logo.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -130,6 +130,7 @@ Tato vetev uz neni jen scaffold. Aktualne umi:
 - postavit celou solution pres `dotnet build`
 - spustit unit a kompatibilitni testy pres `dotnet test`
 - vygenerovat desktopovy release build pres `dotnet publish`
+- pouzivat korenovy `vehimap-logo.png` jako sdileny vizualni asset v desktopovem dialogu `O programu` a Android launcheru; Windows executable, tray a zastupci pouzivaji samostatnou platformni ikonu `favicon.ico`
 - primarne cist a zapisovat datovou sadu 2.0 v SQLite `data/vehimap.db`
 - pri prvnim startu nad daty 1.0.2 automaticky vytvorit predmigracni kopii v `data/migration-backups/<cas>`, nacist legacy `TSV/INI`, zapsat data do SQLite v jedne transakcni storage ceste a po overenem nacteni `vehimap.db` presunout zive TSV/INI do `data/migration-backups/<cas>/removed-from-data-root/`
 - ulozit cestu k predmigracni kopii do nastaveni datove sady a otevrit ji z menu `Soubor`, pokud tato slozka existuje

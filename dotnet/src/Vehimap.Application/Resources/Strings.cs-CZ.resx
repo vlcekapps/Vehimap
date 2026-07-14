@@ -31,6 +31,7 @@
   <data name="About.Diagnostics.RuntimeMode" xml:space="preserve"><value>Režim spuštění: {0}</value></data>
   <data name="About.Diagnostics.Title" xml:space="preserve"><value>Název: {0}</value></data>
   <data name="About.HelpText" xml:space="preserve"><value>Informace o aplikaci Vehimap. Ctrl+O otevře release poznámky, Ctrl+K otevře poděkování autorovi, Ctrl+Shift+C zkopíruje diagnostická data a Escape dialog zavře.</value></data>
+  <data name="About.LogoName" xml:space="preserve"><value>Logo aplikace Vehimap</value></data>
   <data name="About.Status.Basic" xml:space="preserve"><value>Základní informace o aplikaci jsou zobrazené. Diagnostická data lze zobrazit nebo zkopírovat pro podporu.</value></data>
   <data name="About.Status.DiagnosticsCopied" xml:space="preserve"><value>Diagnostická data byla zkopírována do schránky.</value></data>
   <data name="About.Status.DiagnosticsCopyFailed" xml:space="preserve"><value>Diagnostická data se nepodařilo zkopírovat.</value></data>
