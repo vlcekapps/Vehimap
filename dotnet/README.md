@@ -17,6 +17,8 @@ Desktop publish a release balicky musi obsahovat `LICENSE`, `COPYING`, `COPYRIGH
 
 Aktualni zamer:
 
+- desktop používá Avalonia 12.1.2; instalaci knihoven zajistí `dotnet restore`, nikoli samostatný instalátor Avalonie. Android/Mobile zůstává na 12.0.4. Stav a limity ověření upgradu jsou v [desktopové accessibility evidenci](docs/accessibility-evidence/2026-09-06-desktop-avalonia-upgrade.md).
+
 - brat `.NET + Avalonia` jako primarni desktopovou vetev Vehimapu
 - drzet C# Avalonia jako jedinou aktivni aplikaci; AHK runtime, knihovny a testy jsou po dokoncenem retirementu odstranene
 - pouzivat od rady 2.0 primarne SQLite databazi `data/vehimap.db`

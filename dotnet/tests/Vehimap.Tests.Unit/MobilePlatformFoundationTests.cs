@@ -520,9 +520,9 @@ public sealed class MobilePlatformFoundationTests
     [Fact]
     public void Android_talkback_role_limitation_is_reviewed_for_the_pinned_Avalonia_version()
     {
+        // Desktop UIA upgrades have their own evidence; do not invalidate the unchanged Android baseline.
         var projectPaths = new[]
         {
-            RepositoryPath("src", "Vehimap.Desktop", "Vehimap.Desktop.csproj"),
             RepositoryPath("src", "Vehimap.Mobile", "Vehimap.Mobile.csproj"),
             RepositoryPath("src", "Vehimap.Android", "Vehimap.Android.csproj")
         };

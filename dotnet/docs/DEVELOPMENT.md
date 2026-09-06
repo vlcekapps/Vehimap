@@ -28,6 +28,12 @@ Install these tools on every development platform:
 
 Avalonia does not require a separate installation. `dotnet restore` downloads Avalonia 12 and all other NuGet packages declared by the solution.
 
+The desktop host currently pins Avalonia **12.1.2**. The independent Android/Mobile
+host remains on **12.0.4** until its own device/accessibility upgrade validation.
+Restoring or building the desktop solution does not require an Android workload or
+Avalonia templates. Keep the packages within each host consistent; desktop UIA
+evidence must not be mistaken for Android TalkBack validation.
+
 Verify the common environment from the repository root:
 
 ```text

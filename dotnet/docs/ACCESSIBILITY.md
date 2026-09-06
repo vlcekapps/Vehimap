@@ -23,6 +23,27 @@ for a future ACR/VPAT-style report if one is needed.
   improves practical NVDA usability in nightly builds, but it is not acceptable as a
   final answer for a formal ACR/VPAT claim.
 
+## Desktop framework review (2026-09-06)
+
+The desktop host now uses Avalonia **12.1.2**, independently of the Android/Mobile
+12.0.4 baseline below. Relevant upstream changes include the detached-control focus
+restore fix (#22113), AccessKeyHandler handling with no focused descendant (#21920),
+ComboBox selected-item scrolling (#21764), Windows UIA ExpandCollapseState ordering
+(#21693), and decimal UIA value marshaling (#21634).
+
+These are upstream fixes, not evidence of complete Vehimap conformance. Review the
+[desktop upgrade evidence](accessibility-evidence/2026-09-06-desktop-avalonia-upgrade.md)
+for executed checks and remaining manual validation. Release references:
+[12.1.2](https://github.com/AvaloniaUI/Avalonia/releases/tag/12.1.2),
+[12.1.1](https://github.com/AvaloniaUI/Avalonia/releases/tag/12.1.1), and
+[12.1.0](https://github.com/AvaloniaUI/Avalonia/releases/tag/12.1.0).
+
+Issue [#9770](https://github.com/AvaloniaUI/Avalonia/issues/9770) is still open on
+this review date. The released 12.1.2 `TextBoxAutomationPeer` still implements
+`IValueProvider`, not the native text provider needed to retire our temporary text
+navigation fallback. Keep the fallback and existing keyboard/focus regression tests;
+do not remove working accessibility behavior merely because the framework was upgraded.
+
 ## Avalonia rules for new UI
 
 - Prefer standard Avalonia controls before custom controls. If a custom `Control` or
@@ -234,7 +255,7 @@ Framework source references:
 - [Avalonia 12.0.4 Android accessibility bridge](https://github.com/AvaloniaUI/Avalonia/blob/12.0.4/src/Android/Avalonia.Android/AvaloniaAccessHelper.cs#L195)
 - [Avalonia 12.1.0 Android accessibility bridge](https://github.com/AvaloniaUI/Avalonia/blob/12.1.0/src/Android/Avalonia.Android/AvaloniaAccessHelper.cs#L234)
 
-Every Avalonia package upgrade must repeat the Android TalkBack role smoke before the
+Every Android/Mobile Avalonia package upgrade must repeat the Android TalkBack role smoke before the
 version is accepted:
 
 - install the current Android nightly on a physical device with TalkBack enabled;

@@ -2,7 +2,7 @@
   "project": "Vehimap",
   "repository": "https://github.com/vlcekapps/Vehimap",
   "declared_project_license": "GPL-3.0-or-later",
-  "generated_on": "2026-07-01",
+  "generated_on": "2026-09-06",
   "scope": "Runtime notices are based on direct, transitive and native NuGet dependencies observed via dotnet list package --include-transitive and checked against the Windows x64 publish payload; this is not a legal audit.",
   "copyright_holder": "Pavel Vlček",
   "runtime_dependency_metadata": "docs/licensing/metadata/runtime-nuget-dependencies-win-x64.csv",
@@ -11,21 +11,21 @@
   "direct_dependencies": [
     {
       "package": "Avalonia",
-      "version": "12.0.4",
+      "version": "12.1.2",
       "project_file": "dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj",
       "license": "MIT",
       "notice": "Copyright 2013-2026 © The AvaloniaUI Project."
     },
     {
       "package": "Avalonia.Desktop",
-      "version": "12.0.4",
+      "version": "12.1.2",
       "project_file": "dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj",
       "license": "MIT",
       "notice": "Copyright 2013-2026 © The AvaloniaUI Project."
     },
     {
       "package": "Avalonia.Themes.Fluent",
-      "version": "12.0.4",
+      "version": "12.1.2",
       "project_file": "dotnet/src/Vehimap.Desktop/Vehimap.Desktop.csproj",
       "license": "MIT",
       "notice": "Copyright 2013-2026 © The AvaloniaUI Project."

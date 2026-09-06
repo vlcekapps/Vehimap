@@ -1,6 +1,6 @@
 # Changelog
 
-- Android TalkBack baseline now records a framework-level role announcement limitation in Avalonia 12.0.4, confirms that the released 12.1.0 source still lacks native role mapping, and deliberately keeps standard controls instead of adding visible role words or Vehimap-specific automation peers. A regression guard requires the review and evidence version to be updated whenever Avalonia packages change.
+- Android TalkBack baseline now records a framework-level role announcement limitation in Avalonia 12.0.4, confirms that the released 12.1.0 source still lacks native role mapping, and deliberately keeps standard controls instead of adding visible role words or Vehimap-specific automation peers. A regression guard requires the review and evidence version to be updated whenever Android/Mobile Avalonia packages change.
 Všechny významné změny ve Vehimapu budou zapisovány sem.
 Formát vychází z [Keep a Changelog](https://keepachangelog.com/cs/1.1.0/)
 a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
@@ -23,6 +23,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Přibyla dokumentační sada `dotnet/docs/accessibility/` pro ACR-ready přípravu Vehimapu 2.0: VPAT 2.5Rev INT draft, WCAG2ICT/2.2 AA matrix, remediation backlog a ruční testovací protokol. Zatím jde o evidenční draft, ne o formální prohlášení o shodě.
 
 ### Změněno
+- Desktop byl aktualizován na Avalonia 12.1.2 s upstream opravami návratu focusu, přístupových kláves a Windows UI Automation. Funkční klávesové opravy a dočasný TextBox fallback zůstávají zachované, protože příslušná upstream issue není vyřešená. Android/Mobile zůstává na 12.0.4 a má samostatnou validační bránu.
 - Mobilní detail připomínky používá srozumitelné `Upozornit před termínem` / `Notify before due date` místo technického pojmu `předstih upozornění` / `reminder lead time`.
 - Mobilní shell a hlavní desktopové plochy používají stručnější produktový jazyk: zmizely tutorialové úvody, výčet samozřejmých voleb navigace, vývojářský preview text, dlouhá desktopová patička a nápověda opakující běžné ovládání seznamů. Prázdné detailní panely nyní oznamují neutrální stav bez příkazů uživateli; validační hlášky, následky rizikových akcí a nestandardní klávesové pokyny zůstávají zachované.
 - Android system Back now follows Avalonia `TopLevel.BackRequested`: from a secondary primary destination or a nested vehicle route it navigates inside Vehimap first, while Back from `Home` exits normally. The behavior was verified on a physical Android 16 device using three-button navigation, and the same framework event also covers gesture navigation.

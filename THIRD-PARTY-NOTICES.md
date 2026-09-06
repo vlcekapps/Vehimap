@@ -1,6 +1,6 @@
 # Third-party notices for Vehimap
 
-Generated: **2026-07-01**
+Desktop dependencies reviewed: **2026-09-06**. Android dependency baseline unchanged.
 
 Project license: **GNU GPL v3 or later** (`GPL-3.0-or-later`).
 
@@ -13,24 +13,24 @@ This file lists third-party components used by the .NET desktop application, sel
 | Component | Version observed | License | Notes |
 |---|---:|---|---|
 | .NET runtime and framework assemblies | 10.0.x release toolchain | MIT | Self-contained desktop releases include Microsoft .NET runtime/framework components. |
-| Avalonia | 12.0.4 | MIT | Avalonia UI framework, including desktop UI assemblies. Copyright 2013-2026 The AvaloniaUI Project. |
-| Avalonia.Desktop | 12.0.4 | MIT | Avalonia desktop host package. |
+| Avalonia | 12.1.2 desktop / 12.0.4 Android | MIT | Avalonia UI framework, including desktop UI assemblies. Copyright 2013-2026 The AvaloniaUI Project. |
+| Avalonia.Desktop | 12.1.2 | MIT | Avalonia desktop host package. |
 | Avalonia.Android | 12.0.4 | MIT | Avalonia Android host package included in the experimental APK. |
-| Avalonia.Themes.Fluent | 12.0.4 | MIT | Avalonia Fluent theme package. |
-| Avalonia.FreeDesktop | 12.0.4 | MIT | Transitive Avalonia package used for desktop platform support. |
-| Avalonia.FreeDesktop.AtSpi | 12.0.4 | MIT | Transitive Avalonia accessibility/platform package. |
-| Avalonia.HarfBuzz | 12.0.4 | MIT | Transitive Avalonia text shaping integration. |
-| Avalonia.Native | 12.0.4 | MIT | Transitive Avalonia native platform integration. |
-| Avalonia.Remote.Protocol | 12.0.4 | MIT | Transitive Avalonia protocol package. |
-| Avalonia.Skia | 12.0.4 | MIT | Transitive Avalonia rendering package. |
-| Avalonia.Win32 | 12.0.4 | MIT | Windows platform backend included in Windows builds. |
-| Avalonia.X11 | 12.0.4 | MIT | Transitive Avalonia Linux/X11 package; included by restore graph and relevant to non-Windows builds. |
+| Avalonia.Themes.Fluent | 12.1.2 desktop / 12.0.4 Android | MIT | Avalonia Fluent theme package. |
+| Avalonia.FreeDesktop | 12.1.2 | MIT | Transitive Avalonia package used for desktop platform support. |
+| Avalonia.FreeDesktop.AtSpi | 12.1.2 | MIT | Transitive Avalonia accessibility/platform package. |
+| Avalonia.HarfBuzz | 12.1.2 | MIT | Transitive Avalonia text shaping integration. |
+| Avalonia.Native | 12.1.2 | MIT | Transitive Avalonia native platform integration. |
+| Avalonia.Remote.Protocol | 12.1.2 desktop / 12.0.4 Android | MIT | Transitive Avalonia protocol package. |
+| Avalonia.Skia | 12.1.2 desktop / 12.0.4 Android | MIT | Transitive Avalonia rendering package. |
+| Avalonia.Win32 | 12.1.2 | MIT | Windows platform backend included in Windows builds. |
+| Avalonia.X11 | 12.1.2 | MIT | Transitive Avalonia Linux/X11 package; included by restore graph and relevant to non-Windows builds. |
 | Avalonia.Angle.Windows.Natives | 2.1.27548.20260419 | BSD-style | ANGLE Windows native assets. See `LICENSES/ANGLE-BSD-3-Clause.txt`. |
 | CommunityToolkit.Mvvm | 8.4.2 | MIT | MVVM helpers from .NET Community Toolkit. |
 | HarfBuzzSharp | 8.3.1.3 | MIT | Text shaping bindings. |
 | HarfBuzzSharp.NativeAssets.Win32 | 8.3.1.3 | MIT | Windows native HarfBuzz assets used by Windows builds. |
 | HarfBuzzSharp.NativeAssets.Android | 8.3.1.3 | MIT | Android native HarfBuzz assets included in the APK. |
-| MicroCom.Runtime | 0.11.4 | MIT | Transitive COM interop runtime used by Avalonia. |
+| MicroCom.Runtime | 0.11.6 desktop / 0.11.4 Android | MIT | Transitive COM interop runtime used by Avalonia. |
 | Microsoft.Data.Sqlite | 10.0.0 | MIT | SQLite ADO.NET provider. |
 | Microsoft.Data.Sqlite.Core | 10.0.0 | MIT | Transitive core SQLite provider package. |
 | Microsoft.Win32.SystemEvents | 10.0.0 | MIT | Windows system event integration. |
@@ -42,7 +42,7 @@ This file lists third-party components used by the .NET desktop application, sel
 | SQLitePCLRaw.config.e_sqlite3 | 3.0.3 | Apache-2.0 | SQLitePCLRaw configuration package. |
 | SQLitePCLRaw.core | 3.0.3 | Apache-2.0 | SQLitePCLRaw core package. |
 | SQLitePCLRaw.provider.e_sqlite3 | 3.0.3 | Apache-2.0 | SQLitePCLRaw provider package. |
-| Tmds.DBus.Protocol | 0.92.0 | MIT | Transitive DBus protocol package used by Avalonia platform support. |
+| Tmds.DBus.Protocol | 0.94.1 | MIT | Transitive DBus protocol package used by Avalonia platform support. |
 | Xamarin.AndroidX binding packages | versions resolved by `Vehimap.Android.sln` | MIT AND Apache-2.0 | AndroidX Activity, AppCompat, Core, Fragment, Lifecycle, SavedState, Window, SplashScreen and their transitive binding families included in the APK. |
 | Xamarin.Kotlin and KotlinX binding packages | versions resolved by `Vehimap.Android.sln` | MIT AND Apache-2.0 | Kotlin standard library, coroutines and serialization bindings included transitively in the APK. |
 | Xamarin Google/annotation binding packages | versions resolved by `Vehimap.Android.sln` | MIT AND Apache-2.0 | Guava ListenableFuture, JetBrains annotations and JSpecify bindings included transitively in the APK. |
