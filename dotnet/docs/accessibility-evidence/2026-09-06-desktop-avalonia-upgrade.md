@@ -64,7 +64,15 @@ This is an engineering validation record, not an ACR `Supports` claim.
   user input detected. Do not count this as a passing cancel/focus regression.
 - The user stopped Computer Use with physical Escape before the independent
   save/cancel and TextBox cursor tests could finish. No further UI actions were made.
-- NVDA/Narrator spoken output has not been manually verified in this checkpoint.
+- NVDA/Narrator spoken output was not independently verified by the agent.
   Retest startup announcement, Alt/F10, list navigation, TextBox character/selection
   feedback, ComboBox opening, save/cancel focus return and tray actions before claiming
   assistive-technology conformance. UI Automation tree inspection alone is not enough.
+
+## User Follow-up
+
+After the automated interaction was stopped, the user reported on 2026-09-06 that
+the remaining checks were completed manually and passed. This resolves the outstanding
+practical smoke check for this desktop upgrade based on the user's report, rather
+than an executed Appium run. The exact screen reader/version and individual scenario
+results were not supplied, so this is not a complete formal ACR test record.
