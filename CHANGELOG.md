@@ -15,6 +15,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ### Dokumentace
 - Vývojářská příručka obsahuje instalaci a volitelný testovací režim NovaWindows. Pilot na Windows 11 odhalil timeout v PowerShell inicializaci ovladače ještě před spuštěním aplikace; nejde o úspěšný UI smoke a výchozí CI se proto nemění. Testy nově umožňují explicitně zvolit ovladač a běží sériově nad izolovanými daty.
+- Navazující srovnání WinAppDriveru a NovaWindows 2 preview má samostatný protokol: Nova prošla startem, ale ne pěti navazujícími testy editoru a klávesnice; WinAppDriver selhal při vytvoření spojení. Lokální porovnání lze chránit režimem `VEHIMAP_UI_ISOLATED_LAUNCH_ONLY=1`, který zakáže náhradní připojení k jiné spuštěné instanci podle titulku. Výchozí CI ani aplikace se nemění.
 - Kořenový `CONTRIBUTING.md` je nyní výslovně povolený v allowlistovém `.gitignore` a skutečně verzovaný; čistý GitHub Actions checkout proto obsahuje stejnou vývojářskou příručku jako lokální pracovní strom.
 - Nový `dotnet/docs/MOBILE.md` stanovuje mapování desktopových workspace na mobilní routes, pravidlo společné aplikační vrstvy a zákaz inline editorů. Každý mobilní editor bude samostatná celostránková nebo modalní obrazovka s jasným režimem, uložením, zrušením a návratem.
 - Vývojářská dokumentace nyní vysvětluje Android SDK/JDK/workload a instalaci přes ADB i důvod, proč jsou spravované `.dll` běžnou součástí skutečných Linux/macOS .NET balíčků vedle ELF/Mach-O apphostu a nativních `.so`/`.dylib` knihoven.

@@ -114,21 +114,47 @@ $env:VEHIMAP_UI_AUTOMATION_NAME = "NovaWindows"
 $env:VEHIMAP_APPIUM_SERVER_URL = "http://127.0.0.1:4725/"
 $env:VEHIMAP_UI_APP = (Resolve-Path ./artifacts/nightly/win-x64/app/Vehimap.exe).Path
 $env:VEHIMAP_UI_REQUIRE_APPIUM = "1"
+$env:VEHIMAP_UI_ISOLATED_LAUNCH_ONLY = "1"
 dotnet test ./tests/Vehimap.Tests.UI/Vehimap.Tests.UI.csproj -c Release --filter "FullyQualifiedName~Main_shell_exposes_visible_startup_controls"
 ```
 
 An unset `VEHIMAP_UI_AUTOMATION_NAME` keeps `Windows` (WinAppDriver). Unknown values
 fail explicitly. Live tests run serially, use isolated portable data, and seed Czech
 UI preferences for their Czech assertions. NovaWindows does not fall back to finding
-an existing Vehimap window by title. Keep Appium bound to loopback; these tests do not
+an existing Vehimap window by title. Set `VEHIMAP_UI_ISOLATED_LAUNCH_ONLY=1` for local
+comparisons with either backend: a failed launch must not attach to another Vehimap
+instance by title. The legacy Windows CI fallback is unchanged when the variable is
+unset. Keep Appium bound to loopback; these tests do not
 need `--relaxed-security` or arbitrary PowerShell execution capabilities.
 
-**Pilot status, 2026-09-06: installed, but blocked before application launch.**
+**Stable Nova pilot, 2026-09-06: installed, but blocked before application launch.**
 NovaWindows 1.4.5 on this Windows 11 host timed out during its PowerShell handshake.
 A standalone transport probe emitted `?` instead of its `U+F2EE` completion marker
 through `Write-Output`, even after selecting UTF-8. This is not a passed UI smoke or
 a reason to replace the CI backend yet. See the
 [pilot evidence](accessibility-evidence/2026-09-06-novawindows-pilot.md).
+
+**Preview comparison, 2026-09-06: startup passed, workflow acceptance failed.**
+NovaWindows `2.0.0-preview.2` uses the upstream C# backend and passed the real startup
+focus test on the same published Vehimap. Five further keyboard/editor tests failed.
+WinAppDriver `1.2.2009.02003` with the existing Appium Windows wrapper `5.1.9` failed
+session creation after launching the isolated app. Neither result justifies changing
+the CI default. See the [comparison evidence and follow-up](accessibility-evidence/2026-09-06-windows-driver-comparison.md).
+
+To experiment with the pinned preview without replacing the default installed drivers,
+use a separate Appium home in the server terminal:
+
+```powershell
+$env:APPIUM_HOME = Join-Path $env:USERPROFILE ".appium-novawindows-preview"
+appium driver install --source=npm appium-novawindows-driver@2.0.0-preview.2
+appium --address 127.0.0.1 --port 4725 --use-drivers novawindows
+```
+
+Wait for `/status` to report `value.ready=true` before starting the test terminal
+above. The first preview driver load took about 21 seconds on the pilot host. The
+client selects the running server through `VEHIMAP_APPIUM_SERVER_URL`; it does not
+need to share `APPIUM_HOME`. Remove that environment variable from the server
+terminal when returning to the default driver installation.
 
 ## Linux Development
 

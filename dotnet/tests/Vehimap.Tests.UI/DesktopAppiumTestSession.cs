@@ -365,8 +365,8 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         }
         catch (Exception ex) when (ex is WebDriverException or InvalidOperationException)
         {
-            // The NovaWindows pilot must not attach to an unrelated, already running user instance.
-            if (configuration.UsesNovaWindows)
+            // Driver comparisons must not attach to an unrelated, already running user instance.
+            if (!configuration.AllowRootWindowFallback)
             {
                 throw;
             }

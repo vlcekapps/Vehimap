@@ -62,6 +62,10 @@ The blocked deletion was not retried through another mechanism.
 
 ## Follow-up
 
+The subsequent [WinAppDriver / NovaWindows 2 preview comparison](2026-09-06-windows-driver-comparison.md)
+is recorded separately. It does not replace or turn the failed 1.4.5 attempts above
+into passing evidence.
+
 Prepare a minimal upstream report of the completion-marker transport problem before
 adopting a backend workaround. Do not infer that a different issue about PowerShell
 process exit is the same bug. No upstream issue has been submitted by this pilot.

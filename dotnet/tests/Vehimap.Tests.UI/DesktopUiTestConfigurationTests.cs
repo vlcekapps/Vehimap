@@ -22,4 +22,19 @@ public sealed class DesktopUiTestConfigurationTests
     {
         Assert.Throws<ArgumentException>(() => DesktopUiTestConfiguration.ResolveAutomationName("NovaWindow"));
     }
+
+    [Theory]
+    [InlineData("Windows", false, true)]
+    [InlineData("Windows", true, false)]
+    [InlineData("NovaWindows", false, false)]
+    [InlineData("NovaWindows", true, false)]
+    public void Isolated_comparisons_never_attach_to_an_existing_window(
+        string automationName, bool isolatedLaunchOnly, bool allowFallback)
+    {
+        var configuration = new DesktopUiTestConfiguration(
+            new Uri("http://127.0.0.1:4725/"), "unused-app-path", TimeSpan.FromSeconds(90),
+            automationName, isolatedLaunchOnly);
+
+        Assert.Equal(allowFallback, configuration.AllowRootWindowFallback);
+    }
 }

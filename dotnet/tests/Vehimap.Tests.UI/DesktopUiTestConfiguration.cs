@@ -3,9 +3,16 @@ using System.Net.Http;
 
 namespace Vehimap.Tests.UI;
 
-internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath, TimeSpan CommandTimeout, string AutomationName = "Windows")
+internal sealed record DesktopUiTestConfiguration(
+    Uri ServerUri,
+    string AppPath,
+    TimeSpan CommandTimeout,
+    string AutomationName = "Windows",
+    bool IsolatedLaunchOnly = false)
 {
     public bool UsesNovaWindows => AutomationName == "NovaWindows";
+
+    public bool AllowRootWindowFallback => !UsesNovaWindows && !IsolatedLaunchOnly;
 
     internal static string ResolveAutomationName(string? value) => value?.Trim().ToLowerInvariant() switch
     {
@@ -53,7 +60,9 @@ internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath,
         }
 
         var automationName = ResolveAutomationName(Environment.GetEnvironmentVariable("VEHIMAP_UI_AUTOMATION_NAME"));
-        configuration = new DesktopUiTestConfiguration(serverUri, appPath, TimeSpan.FromSeconds(90), automationName);
+        var isolatedLaunchOnly = string.Equals(
+            Environment.GetEnvironmentVariable("VEHIMAP_UI_ISOLATED_LAUNCH_ONLY"), "1", StringComparison.Ordinal);
+        configuration = new DesktopUiTestConfiguration(serverUri, appPath, TimeSpan.FromSeconds(90), automationName, isolatedLaunchOnly);
         reason = string.Empty;
         return true;
     }
