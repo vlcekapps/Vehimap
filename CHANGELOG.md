@@ -14,6 +14,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Přibyl první Android základ Vehimapu 2.0: samostatný `net10.0-android` host, sdílený přístupný EN/CS read-only seznam a detail vozidel nad SQLite a oddělené nightly AppId. Nové readiness skripty ověřují API 31/36, APK metadata, ARM64/x86-64 nativní knihovny, licenční soubory, SHA-256 a umožňují jedním příkazem vytvořit shodně verzované lokální nightly pro Windows, Linux, macOS i Android.
 
 ### Dokumentace
+- Vývojářská příručka obsahuje instalaci a volitelný testovací režim NovaWindows. Pilot na Windows 11 odhalil timeout v PowerShell inicializaci ovladače ještě před spuštěním aplikace; nejde o úspěšný UI smoke a výchozí CI se proto nemění. Testy nově umožňují explicitně zvolit ovladač a běží sériově nad izolovanými daty.
 - Kořenový `CONTRIBUTING.md` je nyní výslovně povolený v allowlistovém `.gitignore` a skutečně verzovaný; čistý GitHub Actions checkout proto obsahuje stejnou vývojářskou příručku jako lokální pracovní strom.
 - Nový `dotnet/docs/MOBILE.md` stanovuje mapování desktopových workspace na mobilní routes, pravidlo společné aplikační vrstvy a zákaz inline editorů. Každý mobilní editor bude samostatná celostránková nebo modalní obrazovka s jasným režimem, uložením, zrušením a návratem.
 - Vývojářská dokumentace nyní vysvětluje Android SDK/JDK/workload a instalaci přes ADB i důvod, proč jsou spravované `.dll` běžnou součástí skutečných Linux/macOS .NET balíčků vedle ELF/Mach-O apphostu a nativních `.so`/`.dylib` knihoven.

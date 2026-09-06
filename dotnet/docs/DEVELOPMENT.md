@@ -95,6 +95,41 @@ dotnet test ./tests/Vehimap.Tests.UI/Vehimap.Tests.UI.csproj -c Release
 
 Use NVDA and Narrator for the documented manual accessibility matrix. Appium does not replace screen-reader testing.
 
+#### Optional NovaWindows Pilot
+
+The [Appium Windows driver documentation](https://github.com/appium/appium-windows-driver#readme)
+warns that Microsoft's WinAppDriver has not been maintained for years and suggests
+[NovaWindows](https://github.com/AutomateThePlanet/appium-novawindows-driver) as an alternative.
+Vehimap can select either driver without changing the application or the current CI default:
+
+```powershell
+appium driver install --source=npm appium-novawindows-driver@1.4.5
+appium --address 127.0.0.1 --port 4725 --use-drivers novawindows
+```
+
+Run the following in a second terminal from `dotnet/`:
+
+```powershell
+$env:VEHIMAP_UI_AUTOMATION_NAME = "NovaWindows"
+$env:VEHIMAP_APPIUM_SERVER_URL = "http://127.0.0.1:4725/"
+$env:VEHIMAP_UI_APP = (Resolve-Path ./artifacts/nightly/win-x64/app/Vehimap.exe).Path
+$env:VEHIMAP_UI_REQUIRE_APPIUM = "1"
+dotnet test ./tests/Vehimap.Tests.UI/Vehimap.Tests.UI.csproj -c Release --filter "FullyQualifiedName~Main_shell_exposes_visible_startup_controls"
+```
+
+An unset `VEHIMAP_UI_AUTOMATION_NAME` keeps `Windows` (WinAppDriver). Unknown values
+fail explicitly. Live tests run serially, use isolated portable data, and seed Czech
+UI preferences for their Czech assertions. NovaWindows does not fall back to finding
+an existing Vehimap window by title. Keep Appium bound to loopback; these tests do not
+need `--relaxed-security` or arbitrary PowerShell execution capabilities.
+
+**Pilot status, 2026-09-06: installed, but blocked before application launch.**
+NovaWindows 1.4.5 on this Windows 11 host timed out during its PowerShell handshake.
+A standalone transport probe emitted `?` instead of its `U+F2EE` completion marker
+through `Write-Output`, even after selecting UTF-8. This is not a passed UI smoke or
+a reason to replace the CI backend yet. See the
+[pilot evidence](accessibility-evidence/2026-09-06-novawindows-pilot.md).
+
 ## Linux Development
 
 Vehimap currently publishes `linux-x64`. Avalonia 12 targets X11 directly; Wayland users need XWayland until the native Wayland backend becomes a supported path. Skia requires `glibc` 2.17 or later.

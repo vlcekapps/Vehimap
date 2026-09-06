@@ -365,6 +365,12 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         }
         catch (Exception ex) when (ex is WebDriverException or InvalidOperationException)
         {
+            // The NovaWindows pilot must not attach to an unrelated, already running user instance.
+            if (configuration.UsesNovaWindows)
+            {
+                throw;
+            }
+
             launchError = ex;
         }
 
@@ -382,28 +388,34 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         DesktopUiTestConfiguration configuration,
         (string AppPath, string RootPath) isolatedLaunch)
     {
-        var options = CreateBaseWindowsOptions();
+        var options = CreateBaseWindowsOptions(configuration);
         options.App = isolatedLaunch.AppPath;
         options.AddAdditionalAppiumOption("appWorkingDir", isolatedLaunch.RootPath);
-        options.AddAdditionalAppiumOption("ms:waitForAppLaunch", 45);
+        if (!configuration.UsesNovaWindows)
+        {
+            options.AddAdditionalAppiumOption("ms:waitForAppLaunch", 45);
+        }
 
         return new WindowsDriver(configuration.ServerUri, options, configuration.CommandTimeout);
     }
 
     private static WindowsDriver CreateDriverFromWindowHandle(DesktopUiTestConfiguration configuration, string windowHandle)
     {
-        var options = CreateBaseWindowsOptions();
+        var options = CreateBaseWindowsOptions(configuration);
         options.AddAdditionalAppiumOption("appTopLevelWindow", windowHandle);
 
         return new WindowsDriver(configuration.ServerUri, options, configuration.CommandTimeout);
     }
 
-    private static AppiumOptions CreateBaseWindowsOptions()
+    private static AppiumOptions CreateBaseWindowsOptions(DesktopUiTestConfiguration configuration)
     {
         var options = new AppiumOptions();
         options.PlatformName = "Windows";
-        options.AutomationName = "Windows";
-        options.DeviceName = "WindowsPC";
+        options.AutomationName = configuration.AutomationName;
+        if (!configuration.UsesNovaWindows)
+        {
+            options.DeviceName = "WindowsPC";
+        }
         return options;
     }
 
@@ -418,7 +430,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         WindowsDriver? rootDriver = null;
         try
         {
-            var rootOptions = CreateBaseWindowsOptions();
+            var rootOptions = CreateBaseWindowsOptions(configuration);
             rootOptions.App = "Root";
 
             rootDriver = new WindowsDriver(configuration.ServerUri, rootOptions, configuration.CommandTimeout);
@@ -616,6 +628,7 @@ mnt_1	veh_1	Motorový olej	15000	12	{{historyDate:dd.MM.yyyy}}	123000	1	Každoro
 """);
         File.WriteAllText(Path.Combine(dataPath, "settings.ini"), """
 [app]
+language=cs-CZ
 technical_reminder_days=30
 green_card_reminder_days=30
 maintenance_reminder_days=21

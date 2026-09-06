@@ -3,8 +3,17 @@ using System.Net.Http;
 
 namespace Vehimap.Tests.UI;
 
-internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath, TimeSpan CommandTimeout)
+internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath, TimeSpan CommandTimeout, string AutomationName = "Windows")
 {
+    public bool UsesNovaWindows => AutomationName == "NovaWindows";
+
+    internal static string ResolveAutomationName(string? value) => value?.Trim().ToLowerInvariant() switch
+    {
+        null or "" or "windows" => "Windows",
+        "novawindows" => "NovaWindows",
+        _ => throw new ArgumentException("VEHIMAP_UI_AUTOMATION_NAME must be Windows or NovaWindows.", nameof(value))
+    };
+
     public static bool RequireAvailability =>
         string.Equals(Environment.GetEnvironmentVariable("VEHIMAP_UI_REQUIRE_APPIUM"), "1", StringComparison.Ordinal);
 
@@ -43,7 +52,8 @@ internal sealed record DesktopUiTestConfiguration(Uri ServerUri, string AppPath,
             return false;
         }
 
-        configuration = new DesktopUiTestConfiguration(serverUri, appPath, TimeSpan.FromSeconds(90));
+        var automationName = ResolveAutomationName(Environment.GetEnvironmentVariable("VEHIMAP_UI_AUTOMATION_NAME"));
+        configuration = new DesktopUiTestConfiguration(serverUri, appPath, TimeSpan.FromSeconds(90), automationName);
         reason = string.Empty;
         return true;
     }
