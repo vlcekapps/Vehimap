@@ -11,6 +11,7 @@ Aplikace vzniká i s důrazem na přístupnost pro handicapované uživatele. D�
 - [Systémové požadavky](#systémové-požadavky)
 - [Instalace](#instalace)
 - [Rychlý start](#rychlý-start)
+- [Jazyk a jednotky](#jazyk-a-jednotky)
 - [Nejdůležitější funkce](#nejdůležitější-funkce)
 - [Data a soukromí](#data-a-soukromí)
 - [Licence](#licence)
@@ -120,6 +121,12 @@ Pro běžné používání vybírejte stabilní vydání. Nightly verze jsou ur�
 4. V kartách vozidla postupně přidávejte historii, tankování, doklady, připomínky a údržbu.
 5. V přehledech používejte dashboard, audit dat a chytrého poradce, které upozorní na důležité nebo chybějící informace.
 6. Pravidelně používejte zálohu dat, zejména před většími změnami nebo aktualizacemi.
+
+## Jazyk A Jednotky
+
+Vehimap 2.0 nabízí češtinu a angličtinu. Jazyk vyberete v nastavení aplikace; po uložení aplikaci restartujte, aby se změna projevila všude. Volba `Podle systému` použije češtinu pro český systém, jinak angličtinu.
+
+Nezávisle na jazyku si zvolíte kilometry nebo míle, litry nebo americké či britské galony, oddělovače čísel a měnu. Již nastavené jednotky, oddělovače a měna se při změně jazyka nemění. Vzdálenosti a objemy se pro zobrazení přepočítávají; změna měny pouze změní označení částek, nikoli jejich hodnotu podle kurzu. Názvy vozidel, poznámky a další vlastní texty se nepřekládají.
 
 ## Nejdůležitější Funkce
 

@@ -105,6 +105,14 @@ public sealed class ResourceAppLocalizer : IAppLocalizer
         {
             yield return culture.TwoLetterISOLanguageName;
         }
+
+        // The shipped Czech catalog is specific; a neutral "cs" request must use
+        // it rather than accidentally falling through to the English resources.
+        if (string.Equals(culture.TwoLetterISOLanguageName, "cs", StringComparison.OrdinalIgnoreCase)
+            && !string.Equals(culture.Name, AppCultureService.CzechLanguage, StringComparison.OrdinalIgnoreCase))
+        {
+            yield return AppCultureService.CzechLanguage;
+        }
     }
 
     private static Assembly? TryLoadSatelliteAssembly(Assembly applicationAssembly, string cultureName)

@@ -8,6 +8,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- Jazyková brána nově porovnává každý z 2 890 textů v obou jazycích se skutečně sestavenými resources, ověřuje platnost formátovacích šablon i jazykové fallbacky a hlídá texty všech XAML obrazovek místo jen pilotních dialogů. Desktop publish selže, pokud chybí společná resource assembly nebo český jazykový soubor.
 - Kořenový `vehimap-logo.png` je nyní verzovaný jako sdílený vizuální asset, desktop jej přístupně zobrazuje v dialogu `O programu` a regresní test hlídá shodu s launcher grafikou Android aplikace. Windows EXE, tray a zástupci dál používají platformně vhodný `favicon.ico`.
 - Android centrum vozidla nově otevírá čtyři plnohodnotné read-only evidence: Historii, Tankování, Doklady a Připomínky. Každá používá samostatný seznam a detail položky, lokalizuje známé legacy hodnoty a systémové Zpět prochází celou vnořenou navigaci bez inline editoru. Doklady oznamují dostupnost spravované či externí přílohy bez zveřejnění interní cesty; připomínky mají lokalizovaný termín, opakování, předstih a vypočtený stav.
 - Android klient má první skutečný mobilní shell se čtyřmi cíli `Domů`, `Vozidla`, `Upozornění` a `Více`. Domovská obrazovka a upozornění používají stejná SQLite data, audit, časovou osu, analýzu tankování a Chytrého poradce jako desktop; seznam vozidel otevírá samostatné mobilní centrum vozidla místo vkládání detailu pod seznam.
@@ -25,6 +26,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Přibyla dokumentační sada `dotnet/docs/accessibility/` pro ACR-ready přípravu Vehimapu 2.0: VPAT 2.5Rev INT draft, WCAG2ICT/2.2 AA matrix, remediation backlog a ruční testovací protokol. Zatím jde o evidenční draft, ne o formální prohlášení o shodě.
 
 ### Změněno
+- Dotažen aktuální EN/CS lokalizační základ desktopu; české i anglické uživatelské README nyní vysvětlují volbu jazyka, nezávislé jednotky a oddělovače i měnu bez kurzové konverze. Nové obrazovky musí rozšiřovat stejné překlady a regresní bránu, ne zavádět další pilotní výjimky.
+- Volba jazyka `Podle systému` si pamatuje výchozí jazyk procesu a po ručním přepnutí nepřebírá poslední jazyk aplikace. Obecná kultura `cs` načte český překlad místo anglického fallbacku. Stav v kopírované diagnostice datové sady je také lokalizovaný, například `V pořádku` místo `Healthy`.
 - Desktop byl aktualizován na Avalonia 12.1.2 s upstream opravami návratu focusu, přístupových kláves a Windows UI Automation. Funkční klávesové opravy a dočasný TextBox fallback zůstávají zachované, protože příslušná upstream issue není vyřešená. Android/Mobile zůstává na 12.0.4 a má samostatnou validační bránu.
 - Mobilní detail připomínky používá srozumitelné `Upozornit před termínem` / `Notify before due date` místo technického pojmu `předstih upozornění` / `reminder lead time`.
 - Mobilní shell a hlavní desktopové plochy používají stručnější produktový jazyk: zmizely tutorialové úvody, výčet samozřejmých voleb navigace, vývojářský preview text, dlouhá desktopová patička a nápověda opakující běžné ovládání seznamů. Prázdné detailní panely nyní oznamují neutrální stav bez příkazů uživateli; validační hlášky, následky rizikových akcí a nestandardní klávesové pokyny zůstávají zachované.

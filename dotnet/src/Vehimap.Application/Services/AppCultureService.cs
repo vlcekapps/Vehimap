@@ -20,12 +20,16 @@ public sealed class AppCultureService : IAppCultureService
     private static readonly string[] SupportedThousandsSeparators = [CultureSeparator, SpaceSeparator, CommaSeparator, DotSeparator, NoSeparator];
     private static readonly string[] SupportedDecimalSeparators = [CultureSeparator, CommaSeparator, DotSeparator];
 
+    // Capture the process UI language before ApplyThreadCulture changes it. "system"
+    // must not mean the language most recently selected inside the application.
+    private static readonly CultureInfo StartupUICulture = CultureInfo.ReadOnly((CultureInfo)CultureInfo.CurrentUICulture.Clone());
+
     public CultureInfo ResolveCulture(string language)
     {
         var normalized = NormalizeLanguage(language);
         if (string.Equals(normalized, SystemLanguage, StringComparison.Ordinal))
         {
-            var systemCulture = CultureInfo.CurrentUICulture;
+            var systemCulture = StartupUICulture;
             return string.Equals(systemCulture.TwoLetterISOLanguageName, "cs", StringComparison.OrdinalIgnoreCase)
                 ? CultureInfo.GetCultureInfo(CzechLanguage)
                 : CultureInfo.GetCultureInfo(EnglishLanguage);

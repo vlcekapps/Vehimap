@@ -51,7 +51,12 @@ public sealed partial class DataStoreHealthDialogViewModel : ObservableObject
             new[]
             {
                 L("DataStoreHealth.Diagnostics.Title"),
-                LF("DataStoreHealth.Diagnostics.Status", report.Status),
+                LF("DataStoreHealth.Diagnostics.Status", report.Status switch
+                {
+                    DataStoreHealthStatus.Healthy => L("DataStoreHealth.Status.Healthy"),
+                    DataStoreHealthStatus.Warning => L("DataStoreHealth.Status.Warning"),
+                    _ => L("DataStoreHealth.Status.Error")
+                }),
                 LF("DataStoreHealth.Diagnostics.Summary", report.Summary),
                 LF("DataStoreHealth.Diagnostics.DatabasePath", report.DatabasePath),
                 LF("DataStoreHealth.Diagnostics.DataPath", report.DataPath),

@@ -48,6 +48,13 @@
           Condition="'@(UpdaterBuildFiles)' != ''" />
   </Target>
 
+  <Target Name="VerifyPublishedLanguages" AfterTargets="Publish">
+    <Error Condition="!Exists('$(PublishDir)Vehimap.Application.dll')"
+           Text="The desktop publish is missing its shared English resource assembly." />
+    <Error Condition="!Exists('$(PublishDir)cs-CZ/Vehimap.Application.resources.dll')"
+           Text="The desktop publish is missing the Czech resource assembly. Both supported languages must be shipped." />
+  </Target>
+
   <Target Name="CopyUpdaterToPublishOutput" AfterTargets="Publish">
     <PropertyGroup>
       <UpdaterPublishDir>$(PublishDir)updater-temp\</UpdaterPublishDir>

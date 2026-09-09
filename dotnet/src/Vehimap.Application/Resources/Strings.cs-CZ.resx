@@ -74,6 +74,9 @@
   <data name="DataStoreHealth.Diagnostics.Details" xml:space="preserve"><value>Detaily:</value></data>
   <data name="DataStoreHealth.Diagnostics.PreMigrationBackupPath" xml:space="preserve"><value>Předmigrační záloha: {0}</value></data>
   <data name="DataStoreHealth.Diagnostics.Status" xml:space="preserve"><value>Stav: {0}</value></data>
+  <data name="DataStoreHealth.Status.Healthy" xml:space="preserve"><value>V pořádku</value></data>
+  <data name="DataStoreHealth.Status.Warning" xml:space="preserve"><value>Upozornění</value></data>
+  <data name="DataStoreHealth.Status.Error" xml:space="preserve"><value>Chyba</value></data>
   <data name="DataStoreHealth.Diagnostics.Summary" xml:space="preserve"><value>Souhrn: {0}</value></data>
   <data name="DataStoreHealth.Diagnostics.Title" xml:space="preserve"><value>Vehimap - kontrola datové sady 2.0</value></data>
   <data name="DataStoreHealth.HeadingError" xml:space="preserve"><value>Datová sada 2.0 má problém</value></data>

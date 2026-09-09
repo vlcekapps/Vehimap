@@ -6,14 +6,17 @@ namespace Vehimap.Application.Services;
 public sealed class AppLocaleDefaultsService
 {
     public static AppLocaleDefaults GetCurrentCultureDefaults() =>
-        new AppLocaleDefaultsService().GetDefaultsForLanguage(AppCultureService.SystemLanguage);
+        new AppLocaleDefaultsService().GetDefaultsForLanguage(
+            string.Equals(System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, "cs", StringComparison.OrdinalIgnoreCase)
+                ? AppCultureService.CzechLanguage
+                : AppCultureService.EnglishLanguage);
 
     public AppLocaleDefaults GetDefaultsForLanguage(string? language)
     {
         var normalized = AppCultureService.NormalizeLanguage(language);
         if (string.Equals(normalized, AppCultureService.SystemLanguage, StringComparison.Ordinal))
         {
-            normalized = ResolveSystemDefaultLanguage();
+            normalized = new AppCultureService().ResolveCulture(AppCultureService.SystemLanguage).Name;
         }
 
         return string.Equals(normalized, AppCultureService.CzechLanguage, StringComparison.Ordinal)
@@ -32,9 +35,4 @@ public sealed class AppLocaleDefaultsService
                 AppUnitFormatService.UsGallons,
                 AppCurrencyFormatService.UsDollars);
     }
-
-    private static string ResolveSystemDefaultLanguage() =>
-        string.Equals(System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, "cs", StringComparison.OrdinalIgnoreCase)
-            ? AppCultureService.CzechLanguage
-            : AppCultureService.EnglishLanguage;
 }

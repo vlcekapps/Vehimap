@@ -11,6 +11,7 @@ The application is also built with accessibility for disabled users in mind. It 
 - [System Requirements](#system-requirements)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [Language And Units](#language-and-units)
 - [Key Features](#key-features)
 - [Data And Privacy](#data-and-privacy)
 - [License](#license)
@@ -120,6 +121,12 @@ For everyday use, choose a stable release. Nightly builds are intended for brave
 4. Use the vehicle tabs to add history, fuel records, documents, reminders, and maintenance.
 5. Use the overview screens, dashboard, data audit, and smart advisor to find important or missing information.
 6. Back up your data regularly, especially before major changes or updates.
+
+## Language And Units
+
+Vehimap 2.0 offers Czech and English. Choose the language in the application settings, then restart the application after saving so the change takes effect everywhere. The system-language option uses Czech on a Czech system and English otherwise.
+
+Independently of the language, you can choose kilometers or miles, liters or US/imperial gallons, number separators and currency. Changing the language preserves previously selected units, separators and currency. Distances and volumes are converted for display; changing the currency only changes the amount labels, not the amounts through an exchange rate. Vehicle names, notes and other text you enter are not translated.
 
 ## Key Features
 

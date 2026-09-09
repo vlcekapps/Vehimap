@@ -74,6 +74,9 @@
   <data name="DataStoreHealth.Diagnostics.Details" xml:space="preserve"><value>Details:</value></data>
   <data name="DataStoreHealth.Diagnostics.PreMigrationBackupPath" xml:space="preserve"><value>Pre-migration backup: {0}</value></data>
   <data name="DataStoreHealth.Diagnostics.Status" xml:space="preserve"><value>Status: {0}</value></data>
+  <data name="DataStoreHealth.Status.Healthy" xml:space="preserve"><value>Healthy</value></data>
+  <data name="DataStoreHealth.Status.Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="DataStoreHealth.Status.Error" xml:space="preserve"><value>Error</value></data>
   <data name="DataStoreHealth.Diagnostics.Summary" xml:space="preserve"><value>Summary: {0}</value></data>
   <data name="DataStoreHealth.Diagnostics.Title" xml:space="preserve"><value>Vehimap - data set 2.0 check</value></data>
   <data name="DataStoreHealth.HeadingError" xml:space="preserve"><value>Data set 2.0 has a problem</value></data>
