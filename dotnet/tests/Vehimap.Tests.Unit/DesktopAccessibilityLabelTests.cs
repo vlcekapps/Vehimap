@@ -1173,6 +1173,19 @@ public sealed class DesktopAccessibilityLabelTests
     }
 
     [Fact]
+    public void Editor_dialogs_should_belong_to_the_open_workspace_and_restore_its_focus()
+    {
+        var code = ReadViewCodeBehind("MainWindow.axaml.cs");
+        Assert.Contains("var owner = _activeWorkspaceWindow ?? this;", code);
+        Assert.Contains("dialog.ShowDialog<bool?>(owner)", code);
+        Assert.Contains("dialog.ShowDialog<bool?>(_activeWorkspaceWindow ?? this)", code);
+        Assert.Contains("OfferPendingVehicleStarterBundleAsync(owner)", code);
+        Assert.Contains("dialog.ShowDialog<VehicleStarterBundleDialogResult?>(owner)", code);
+        Assert.Contains("_activeWorkspaceWindow = previousWorkspaceWindow;", code);
+        Assert.Contains("workspace.TryRequestFocus(target)", code);
+    }
+
+    [Fact]
     public void Editor_dialogs_should_use_shared_lifecycle_and_keep_forms_out_of_workspaces()
     {
         var editorWindows = new[]

@@ -6,6 +6,8 @@ Požadované nástroje, instalační příkazy pro Windows/macOS/Linux, voliteln
 
 ## Vehimap .NET rewrite
 
+Živé lokální ověření Windows UI spouští z kořene repozitáře `pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Core`. Vyžaduje běžící Appium server a ukončené instance Vehimapu; pracuje výhradně s dočasnou kopií aplikace a syntetickými daty. Postup a přesné limity jsou ve [vývojářské příručce](docs/DEVELOPMENT.md#strict-local-verification) a [protokolu obnovení Appia](docs/accessibility-evidence/2026-09-09-appium-recovery.md).
+
 Tato slozka obsahuje novou C# codebase pro multiplatformni desktopovy Vehimap.
 
 ## EN/CS Lokalizační Základ

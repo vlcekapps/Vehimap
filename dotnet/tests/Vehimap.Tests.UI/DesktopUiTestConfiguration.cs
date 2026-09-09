@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Net.Http;
+using System.Diagnostics;
 
 namespace Vehimap.Tests.UI;
 
@@ -8,11 +9,29 @@ internal sealed record DesktopUiTestConfiguration(
     string AppPath,
     TimeSpan CommandTimeout,
     string AutomationName = "Windows",
-    bool IsolatedLaunchOnly = false)
+    bool IsolatedLaunchOnly = false,
+    int AppLaunchWaitSeconds = 45)
 {
     public bool UsesNovaWindows => AutomationName == "NovaWindows";
 
     public bool AllowRootWindowFallback => !UsesNovaWindows && !IsolatedLaunchOnly;
+
+    public bool ForceQuitIsolatedApplication => !UsesNovaWindows && IsolatedLaunchOnly;
+
+    internal static int ResolveAppLaunchWaitSeconds(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return 45;
+        }
+
+        if (int.TryParse(value, out var seconds) && seconds is >= 0 and <= 50)
+        {
+            return seconds;
+        }
+
+        throw new ArgumentException("VEHIMAP_UI_LAUNCH_WAIT_SECONDS must be an integer from 0 to 50.", nameof(value));
+    }
 
     internal static string ResolveAutomationName(string? value) => value?.Trim().ToLowerInvariant() switch
     {
@@ -62,7 +81,27 @@ internal sealed record DesktopUiTestConfiguration(
         var automationName = ResolveAutomationName(Environment.GetEnvironmentVariable("VEHIMAP_UI_AUTOMATION_NAME"));
         var isolatedLaunchOnly = string.Equals(
             Environment.GetEnvironmentVariable("VEHIMAP_UI_ISOLATED_LAUNCH_ONLY"), "1", StringComparison.Ordinal);
-        configuration = new DesktopUiTestConfiguration(serverUri, appPath, TimeSpan.FromSeconds(90), automationName, isolatedLaunchOnly);
+        if (isolatedLaunchOnly)
+        {
+            var runningProcesses = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(appPath));
+            try
+            {
+                if (runningProcesses.Length > 0)
+                {
+                    reason = $"Close existing Vehimap processes before isolated UI tests (PID: {string.Join(", ", runningProcesses.Select(process => process.Id))}). No running application will be reused or terminated by this preflight.";
+                    return false;
+                }
+            }
+            finally
+            {
+                foreach (var process in runningProcesses)
+                {
+                    process.Dispose();
+                }
+            }
+        }
+        var launchWaitSeconds = ResolveAppLaunchWaitSeconds(Environment.GetEnvironmentVariable("VEHIMAP_UI_LAUNCH_WAIT_SECONDS"));
+        configuration = new DesktopUiTestConfiguration(serverUri, appPath, TimeSpan.FromSeconds(90), automationName, isolatedLaunchOnly, launchWaitSeconds);
         reason = string.Empty;
         return true;
     }

@@ -456,7 +456,7 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         var session = startedSession!;
         using (session)
         {
-            session.ClickByAccessibilityId("VehicleListBox");
+            Assert.Equal("VehicleListBox", session.WaitForFocusedAutomationId(12, "VehicleListBox"));
             session.SendKeysToActiveElement(Keys.F10);
 
             var focusedId = session.WaitForFocusedAutomationId(12, "FileMenuRoot");
@@ -966,7 +966,9 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         {
             session.ClickByAccessibilityId("DetailTabButton");
             session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
+            session.WithinWindow("VehicleDetailWindow");
             session.ClickByAccessibilityId("EditVehicleButton");
+            session.WithinWindow("VehicleEditorWindow");
             session.ReplaceTextByAccessibilityId("VehicleEditorNameBox", "Abcd");
             session.ClickByAccessibilityId("VehicleEditorNameBox");
             Assert.Equal("VehicleEditorNameBox", session.WaitForFocusedAutomationId(12, "VehicleEditorNameBox"));
@@ -996,12 +998,19 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         {
             session.ClickByAccessibilityId("DetailTabButton");
             session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
+            session.WithinWindow("VehicleDetailWindow");
             session.ClickByAccessibilityId("EditVehicleButton");
-            session.ClickByAccessibilityId("VehicleEditorCategoryBox");
+            session.WithinWindow("VehicleEditorWindow");
+            Assert.Equal("VehicleEditorNameBox", session.WaitForFocusedAutomationId(12, "VehicleEditorNameBox"));
+            session.SendKeysToActiveElement(Keys.Tab);
             Assert.Equal("VehicleEditorCategoryBox", session.WaitForFocusedAutomationId(12, "VehicleEditorCategoryBox"));
+            Assert.Equal("Collapsed", session.GetExpandCollapseStateByAccessibilityId("VehicleEditorCategoryBox"));
 
             session.SendKeysToActiveElement(Keys.ArrowDown);
 
+            session.WaitUntilCondition(
+                () => session.GetExpandCollapseStateByAccessibilityId("VehicleEditorCategoryBox") == "Expanded",
+                "ArrowDown must expand the focused category without a mouse click or Alt.");
             Assert.NotNull(session.WaitForElementByName("Motocykly", 6));
         }
     }
@@ -1019,11 +1028,14 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         {
             session.ClickByAccessibilityId("DetailTabButton");
             session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
+            session.WithinWindow("VehicleDetailWindow");
             session.ClickByAccessibilityId("EditVehicleButton");
+            session.WithinWindow("VehicleEditorWindow");
             session.ReplaceTextByAccessibilityId("VehicleEditorNameBox", "Milena accessibility test");
 
             session.ClickByAccessibilityId("SaveVehicleButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveVehicleButton");
+            session.WithinWindow("VehicleDetailWindow");
 
             Assert.Equal("EditVehicleButton", session.WaitForFocusedAutomationId(12, "EditVehicleButton"));
 
@@ -1048,11 +1060,14 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         {
             session.ClickByAccessibilityId("DetailTabButton");
             session.ClickByAccessibilityId("OpenVehicleDetailWindowButton");
+            session.WithinWindow("VehicleDetailWindow");
             session.ClickByAccessibilityId("EditVehicleButton");
+            session.WithinWindow("VehicleEditorWindow");
             session.ReplaceTextByAccessibilityId("VehicleEditorNameBox", "Milena cancel accessibility test");
 
             session.ClickByAccessibilityId("CancelVehicleButton");
             session.WaitForElementToDisappearByAccessibilityId("CancelVehicleButton");
+            session.WithinWindow("VehicleDetailWindow");
 
             Assert.Equal("EditVehicleButton", session.WaitForFocusedAutomationId(12, "EditVehicleButton"));
 

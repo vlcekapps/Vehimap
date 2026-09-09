@@ -4,6 +4,7 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Windows;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 
 namespace Vehimap.Tests.UI;
 
@@ -14,14 +15,24 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     private const uint GlobalMemoryZeroInit = 0x0040;
     private const string NativeWindowHandleAttribute = "NativeWindowHandle";
     private const string NameAttribute = "Name";
+    private const string WindowsKeysCommand = "vehimapWindowsKeys";
 
     private readonly WindowsDriver _driver;
     private readonly string? _temporaryAppRoot;
+    private readonly bool _isolatedLaunchOnly;
+    private readonly bool _usesNovaWindows;
+    private string? _windowAutomationId;
 
-    private DesktopAppiumTestSession(WindowsDriver driver, string? temporaryAppRoot)
+    private DesktopAppiumTestSession(WindowsDriver driver, string? temporaryAppRoot, DesktopUiTestConfiguration configuration)
     {
         _driver = driver;
         _temporaryAppRoot = temporaryAppRoot;
+        _isolatedLaunchOnly = configuration.IsolatedLaunchOnly;
+        _usesNovaWindows = configuration.UsesNovaWindows;
+        if (!_usesNovaWindows)
+        {
+            _driver.RegisterCustomDriverCommand(WindowsKeysCommand, "POST", "/session/{sessionId}/keys");
+        }
     }
 
     public string? TemporaryDataPath =>
@@ -47,7 +58,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             var isolatedLaunch = CreateIsolatedLaunchCopy(configuration.AppPath);
             var driver = CreateDriver(configuration, isolatedLaunch);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
-            session = new DesktopAppiumTestSession(driver, isolatedLaunch.RootPath);
+            session = new DesktopAppiumTestSession(driver, isolatedLaunch.RootPath, configuration);
             session.WaitForElementByAccessibilityId("VehicleListBox");
             return true;
         }
@@ -67,15 +78,36 @@ internal sealed class DesktopAppiumTestSession : IDisposable
 
     public IWebElement WaitForElementByAccessibilityId(string automationId, int timeoutSeconds = 12)
     {
-        return WaitUntil(
-            () => _driver.FindElement(MobileBy.AccessibilityId(automationId)),
-            timeoutSeconds);
+        try
+        {
+            return WaitUntil(
+                () => _driver.FindElement(AccessibilityLocator(automationId)),
+                timeoutSeconds);
+        }
+        catch (TimeoutException)
+        {
+            CaptureDiagnostics($"Element not found: {automationId}");
+            throw;
+        }
     }
 
     public void ClickByAccessibilityId(string automationId, int timeoutSeconds = 12)
     {
         WaitForElementByAccessibilityId(automationId, timeoutSeconds).Click();
     }
+
+    public void WithinWindow(string automationId)
+    {
+        // Scope UIA lookups only. Never activate/refocus a window to satisfy a focus assertion.
+        WaitUntil(() => _driver.FindElement(MobileBy.AccessibilityId(automationId)), 12);
+        _windowAutomationId = automationId;
+    }
+
+    private string WindowScope => _windowAutomationId is null ? string.Empty : $"//*[@AutomationId='{_windowAutomationId}']";
+
+    private By AccessibilityLocator(string automationId) => _windowAutomationId is null
+        ? MobileBy.AccessibilityId(automationId)
+        : By.XPath($"{WindowScope}//*[@AutomationId='{automationId}']");
 
     public void ClickMenuItem(string menuAutomationId, string itemAutomationId, int timeoutSeconds = 12)
     {
@@ -90,14 +122,28 @@ internal sealed class DesktopAppiumTestSession : IDisposable
 
     public IWebElement WaitForElementByName(string name, int timeoutSeconds = 12)
     {
+        // Selenium's By.Name is a CSS selector; Windows has a native name locator.
         return WaitUntil(
-            () => _driver.FindElement(By.Name(name)),
+            () => _driver.FindElement("name", name),
             timeoutSeconds);
     }
 
     public string GetNameByAccessibilityId(string automationId, int timeoutSeconds = 12)
     {
         return WaitForElementByAccessibilityId(automationId, timeoutSeconds).GetAttribute("Name") ?? string.Empty;
+    }
+
+    public string? GetExpandCollapseStateByAccessibilityId(string automationId)
+    {
+        // WinAppDriver serializes this UIA pattern in PageSource but returns null
+        // from GetAttribute("ExpandCollapseState"). Read the actual pattern state.
+        var document = XDocument.Parse(_driver.PageSource);
+        var scope = _windowAutomationId is null
+            ? document.Root
+            : document.Descendants().FirstOrDefault(element => (string?)element.Attribute("AutomationId") == _windowAutomationId);
+        return (string?)scope?.DescendantsAndSelf()
+            .FirstOrDefault(element => (string?)element.Attribute("AutomationId") == automationId)
+            ?.Attribute("ExpandCollapseState");
     }
 
     public bool IsEnabledByAccessibilityId(string automationId, int timeoutSeconds = 12)
@@ -244,7 +290,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
 
     public string GetFocusedAutomationId()
     {
-        if (TryGetActiveElement(out var activeElement))
+        if (_windowAutomationId is null && TryGetActiveElement(out var activeElement))
         {
             return activeElement.GetAttribute("AutomationId") ?? string.Empty;
         }
@@ -281,11 +327,24 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             Thread.Sleep(150);
         }
 
+        CaptureDiagnostics($"Focus not found: {string.Join(", ", expected)}");
         throw new TimeoutException("Fokus se nepřesunul na očekávaný UI prvek.");
     }
 
     public void SendKeysToActiveElement(string text)
     {
+        // WinAppDriver supports session keys, but not W3C key input sources.
+        // Sending to the session also avoids refocusing an editor on every key.
+        // NULL releases modifiers after each chord, including Shift+Tab and Ctrl+C.
+        if (!_usesNovaWindows)
+        {
+            _driver.ExecuteCustomDriverCommand(WindowsKeysCommand, new Dictionary<string, object>
+            {
+                ["value"] = new[] { text + Keys.Null }
+            });
+            return;
+        }
+
         if (TryGetActiveElement(out var activeElement))
         {
             activeElement.SendKeys(text);
@@ -298,7 +357,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     public void WaitForElementToDisappearByAccessibilityId(string automationId, int timeoutSeconds = 12)
     {
         WaitUntilMissing(
-            () => _driver.FindElements(MobileBy.AccessibilityId(automationId)).Any(element => element.Displayed),
+            () => _driver.FindElements(AccessibilityLocator(automationId)).Any(element => element.Displayed),
             timeoutSeconds);
     }
 
@@ -316,11 +375,38 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             Thread.Sleep(250);
         }
 
+        CaptureDiagnostics(failureMessage);
         throw new TimeoutException(failureMessage);
+    }
+
+    private void CaptureDiagnostics(string reason)
+    {
+        var evidencePath = Environment.GetEnvironmentVariable("VEHIMAP_UI_EVIDENCE_PATH");
+        if (!_isolatedLaunchOnly || string.IsNullOrWhiteSpace(evidencePath))
+        {
+            return;
+        }
+
+        try
+        {
+            Directory.CreateDirectory(evidencePath);
+            var path = Path.Combine(evidencePath, $"ui-{Guid.NewGuid():N}.xml");
+            File.WriteAllText(path, _driver.PageSource);
+            Console.Error.WriteLine($"{reason}. UI tree: {path}. Window: {_driver.CurrentWindowHandle}; windows: {string.Join(", ", _driver.WindowHandles)}");
+        }
+        catch (Exception ex) when (ex is WebDriverException or IOException or UnauthorizedAccessException)
+        {
+            Console.Error.WriteLine($"Could not capture UI diagnostics: {ex.Message}");
+        }
     }
 
     public void Dispose()
     {
+        if (_isolatedLaunchOnly)
+        {
+            ExitIsolatedApplication();
+        }
+
         try
         {
             _driver.Quit();
@@ -338,6 +424,46 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             catch
             {
             }
+        }
+    }
+
+    private void ExitIsolatedApplication()
+    {
+        _windowAutomationId = null;
+        // Window Close is intentionally Minimize to Tray in Vehimap. Dismiss
+        // test-owned dialogs, then use the actual application shutdown command.
+        for (var attempt = 0; attempt < 8; attempt++)
+        {
+            try
+            {
+                var fileMenu = _driver.FindElements(MobileBy.AccessibilityId("FileMenuRoot"))
+                    .FirstOrDefault(element => element.Displayed && element.Enabled);
+                if (fileMenu is not null)
+                {
+                    if (!_driver.FindElements(MobileBy.AccessibilityId("FileExitAppButton")).Any(element => element.Displayed))
+                    {
+                        fileMenu.Click();
+                    }
+                    ClickByAccessibilityId("FileExitAppButton", 3);
+                    return;
+                }
+            }
+            catch (Exception ex) when (ex is WebDriverException or InvalidOperationException or TimeoutException)
+            {
+                Console.Error.WriteLine($"Isolated UI teardown attempt {attempt + 1}: {ex.GetType().Name}: {ex.Message}");
+            }
+
+            try
+            {
+                SendKeysToActiveElement(Keys.Escape);
+            }
+            catch (WebDriverException ex)
+            {
+                Console.Error.WriteLine($"Could not dismiss a test dialog: {ex.Message}");
+                return;
+            }
+
+            Thread.Sleep(200);
         }
     }
 
@@ -393,7 +519,13 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         options.AddAdditionalAppiumOption("appWorkingDir", isolatedLaunch.RootPath);
         if (!configuration.UsesNovaWindows)
         {
-            options.AddAdditionalAppiumOption("ms:waitForAppLaunch", 45);
+            options.AddAdditionalAppiumOption("ms:waitForAppLaunch", configuration.AppLaunchWaitSeconds);
+            if (configuration.ForceQuitIsolatedApplication)
+            {
+                // Closing Vehimap's main window minimizes it to the tray. Let the
+                // driver terminate only the isolated app it launched on session end.
+                options.AddAdditionalAppiumOption("ms:forcequit", true);
+            }
         }
 
         return new WindowsDriver(configuration.ServerUri, options, configuration.CommandTimeout);
@@ -487,7 +619,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     {
         try
         {
-            return rootDriver.FindElements(MobileBy.Name(name));
+            return rootDriver.FindElements("name", name);
         }
         catch (WebDriverException)
         {
@@ -722,7 +854,7 @@ channel={{channel}}
         {
             try
             {
-                foreach (var element in _driver.FindElements(MobileBy.AccessibilityId(automationId)))
+                foreach (var element in _driver.FindElements(AccessibilityLocator(automationId)))
                 {
                     if (IsElementFocused(element))
                     {
@@ -742,7 +874,7 @@ channel={{channel}}
     {
         try
         {
-            return _driver.FindElements(By.XPath("//*[@HasKeyboardFocus='True' or @HasKeyboardFocus='true' or @HasKeyboardFocus='1']"));
+            return _driver.FindElements(By.XPath($"{WindowScope}//*[@HasKeyboardFocus='True' or @HasKeyboardFocus='true' or @HasKeyboardFocus='1']"));
         }
         catch (WebDriverException)
         {

@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ using Vehimap.Application.Services;
 using Vehimap.Desktop.Localization;
 using Vehimap.Desktop.Services;
 using Vehimap.Desktop.ViewModels;
+using Vehimap.Desktop.Views.Workspaces;
 
 namespace Vehimap.Desktop.Views;
 
@@ -75,6 +77,7 @@ public partial class MainWindow : Window
     private bool _syncingVehicleSelection;
     private bool _vehicleEditorDialogOpen;
     private bool _workspaceEditorDialogOpen;
+    private Window? _activeWorkspaceWindow;
     private Control? _lastNonMenuFocusTarget;
 
     public Func<Task>? ExitApplicationRequested { get; set; }
@@ -189,6 +192,22 @@ public partial class MainWindow : Window
     {
         Dispatcher.UIThread.Post(() =>
         {
+            if (_vehicleEditorDialogOpen || _workspaceEditorDialogOpen)
+            {
+                return;
+            }
+
+            if (_activeWorkspaceWindow is { IsVisible: true } workspaceWindow)
+            {
+                var workspace = workspaceWindow.GetVisualDescendants().OfType<IWorkspaceView>().FirstOrDefault();
+                if (workspace is not null && !workspace.TryRequestFocus(target))
+                {
+                    workspace.FocusDefaultControl();
+                }
+
+                return;
+            }
+
             if (!TryFocusTarget(target))
             {
                 Dispatcher.UIThread.Post(() => TryFocusTarget(target), DispatcherPriority.Input);
@@ -1298,10 +1317,11 @@ public partial class MainWindow : Window
                 DataContext = viewModel.VehicleDetailWorkspace
             };
 
-            var saved = await dialog.ShowDialog<bool?>(this).ConfigureAwait(true) == true;
+            var owner = _activeWorkspaceWindow ?? this;
+            var saved = await dialog.ShowDialog<bool?>(owner).ConfigureAwait(true) == true;
             if (saved)
             {
-                await OfferPendingVehicleStarterBundleAsync().ConfigureAwait(true);
+                await OfferPendingVehicleStarterBundleAsync(owner).ConfigureAwait(true);
             }
         }
         finally
@@ -1332,7 +1352,7 @@ public partial class MainWindow : Window
                 _ => throw new InvalidOperationException(DesktopLocalization.Localizer.GetString("WorkspaceEditor.Error.UnknownKind"))
             };
 
-            await dialog.ShowDialog<bool?>(this).ConfigureAwait(true);
+            await dialog.ShowDialog<bool?>(_activeWorkspaceWindow ?? this).ConfigureAwait(true);
         }
         finally
         {
@@ -1341,7 +1361,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private async Task OfferPendingVehicleStarterBundleAsync()
+    private async Task OfferPendingVehicleStarterBundleAsync(Window owner)
     {
         if (_viewModel is null || !_viewModel.VehicleDetailWorkspace.TryConsumePendingVehicleStarterBundleOffer())
         {
@@ -1366,7 +1386,7 @@ public partial class MainWindow : Window
                     _viewModel.CurrentUnitPreferences)
             };
 
-            var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(this).ConfigureAwait(true);
+            var result = await dialog.ShowDialog<VehicleStarterBundleDialogResult?>(owner).ConfigureAwait(true);
             if (result is null)
             {
                 return;
@@ -1406,8 +1426,17 @@ public partial class MainWindow : Window
             DataContext = workspace
         };
 
-        await dialog.ShowDialog(this).ConfigureAwait(true);
-        RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : returnFocusTarget);
+        var previousWorkspaceWindow = _activeWorkspaceWindow;
+        _activeWorkspaceWindow = dialog;
+        try
+        {
+            await dialog.ShowDialog(previousWorkspaceWindow ?? this).ConfigureAwait(true);
+        }
+        finally
+        {
+            _activeWorkspaceWindow = previousWorkspaceWindow;
+            RequestFocus(_viewModel.HasPendingEdits ? _viewModel.GetPendingEditFocusTarget() : returnFocusTarget);
+        }
     }
 
     private async Task OpenVehicleDetailWindowAsync(bool startCreate = false, bool startEdit = false, bool allowActiveEditor = false)

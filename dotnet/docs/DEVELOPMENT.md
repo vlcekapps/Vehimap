@@ -95,6 +95,56 @@ dotnet test ./tests/Vehimap.Tests.UI/Vehimap.Tests.UI.csproj -c Release
 
 Use NVDA and Narrator for the documented manual accessibility matrix. Appium does not replace screen-reader testing.
 
+#### Strict Local Verification
+
+Use `appium.cmd` (and `npm.cmd`) if PowerShell rejects the npm-generated `.ps1`
+launcher with "running scripts is disabled". This does not require changing the
+execution policy. Developer Mode is a WinAppDriver prerequisite; disabling UAC,
+antivirus, or Appium security is not part of this setup.
+
+The Windows 6.1.1 comparison installation uses a separate Appium home. In the
+server terminal, keep this loopback-only server running:
+
+```powershell
+$env:APPIUM_HOME = Join-Path $env:USERPROFILE ".appium-novawindows-preview"
+appium.cmd --address 127.0.0.1 --port 4725 --use-drivers windows --log-no-colors
+```
+
+This command selects the installed Windows driver, not NovaWindows, even if both
+appear in the startup log. "No plugins have been installed" is informational:
+these UI tests require a driver, not an Appium plugin.
+
+After closing all Vehimap instances through their **Exit** command (closing the
+main window only minimizes to the tray), run from the repository root:
+
+```powershell
+pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Startup
+pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Core
+```
+
+`Startup` requires one real startup/focus test; `Core` requires six named startup,
+menu, save, cancel, TextBox and ComboBox scenarios. `All` is the broader suite,
+not a claim that it has already passed. The gate requires a ready server, disables
+silent availability skips and title-based attachment, and refuses to start while
+any Vehimap process is running. It never terminates an unrelated application.
+Every session copies the published application into a temporary portable directory
+with synthetic Czech test data; installed-channel data is not reused.
+
+Results are recorded under `dotnet/artifacts/windows-ui/<run-id>/`. Timeouts in an
+isolated run also capture the application UI tree for diagnosis. The final gate
+checks the expected executed/passed count and rejects a leftover Vehimap process.
+Session cleanup uses the application's File -> Exit command, not window Close.
+WinAppDriver keyboard input uses its documented session `/keys` endpoint instead
+of unsupported W3C keyboard Actions; the opt-in NovaWindows path is separate.
+The local gate uses a five-second launch delay (`-LaunchWaitSeconds`, range 0-50);
+ordinary CI retains the existing 45-second default. Modal selectors are scoped to
+their window, so a background window's equally named live region is not mistaken
+for the editor's region. Scoping does not activate or refocus the window.
+Neither an HTTP-ready server nor a skipped ordinary test suite is live UI evidence.
+
+See the [2026-09-09 recovery evidence](accessibility-evidence/2026-09-09-appium-recovery.md)
+for the exact verified coverage and remaining limits.
+
 #### Optional NovaWindows Pilot
 
 The [Appium Windows driver documentation](https://github.com/appium/appium-windows-driver#readme)

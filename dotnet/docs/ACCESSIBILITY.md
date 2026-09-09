@@ -153,6 +153,11 @@ do not remove working accessibility behavior merely because the framework was up
   status region and an explicit return-focus target chosen by the workflow that opened
   it. Workspace cards must stay overview surfaces with lists, details and actions, not
   inline form hosts.
+- An editor opened from a standalone workspace must use that workspace window as
+  its modal owner, not the disabled main shell. Return focus is resolved inside
+  the same workspace after save/cancel; shared focus events must not target hidden
+  or disabled workspace views. UI tests scope selectors to the dialog without
+  activating it to manufacture a passing focus assertion.
 - The editor dialog tab order must stay standard. The only intentional boundary override
   is `Shift+Tab` from the first logical field to the `Zrusit` button; from every other
   field, `Shift+Tab` moves exactly one previous control in normal tab order.

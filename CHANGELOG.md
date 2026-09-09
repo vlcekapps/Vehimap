@@ -8,6 +8,7 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
+- Nová přísná lokální Appium brána ověřuje skutečný start, menu a editorové klávesové scénáře; odmítne chybějící spojení, připojení k již běžícímu Vehimapu i zbylý testovací proces. Diagnostika a výsledky se ukládají do `dotnet/artifacts/windows-ui/`.
 - Jazyková brána nově porovnává každý z 2 890 textů v obou jazycích se skutečně sestavenými resources, ověřuje platnost formátovacích šablon i jazykové fallbacky a hlídá texty všech XAML obrazovek místo jen pilotních dialogů. Desktop publish selže, pokud chybí společná resource assembly nebo český jazykový soubor.
 - Kořenový `vehimap-logo.png` je nyní verzovaný jako sdílený vizuální asset, desktop jej přístupně zobrazuje v dialogu `O programu` a regresní test hlídá shodu s launcher grafikou Android aplikace. Windows EXE, tray a zástupci dál používají platformně vhodný `favicon.ico`.
 - Android centrum vozidla nově otevírá čtyři plnohodnotné read-only evidence: Historii, Tankování, Doklady a Připomínky. Každá používá samostatný seznam a detail položky, lokalizuje známé legacy hodnoty a systémové Zpět prochází celou vnořenou navigaci bez inline editoru. Doklady oznamují dostupnost spravované či externí přílohy bez zveřejnění interní cesty; připomínky mají lokalizovaný termín, opakování, předstih a vypočtený stav.
@@ -26,6 +27,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 - Přibyla dokumentační sada `dotnet/docs/accessibility/` pro ACR-ready přípravu Vehimapu 2.0: VPAT 2.5Rev INT draft, WCAG2ICT/2.2 AA matrix, remediation backlog a ruční testovací protokol. Zatím jde o evidenční draft, ne o formální prohlášení o shodě.
 
 ### Změněno
+- Editory otevřené ze samostatného přehledu nyní patří správnému rodičovskému oknu a po uložení či zrušení vracejí fokus do tohoto přehledu, nikoli do hlavního okna pod ním. Stejný rodič zůstává zachovaný i pro nabídku balíčku nového vozidla.
+- Obnoveno klávesové testování přes Appium Windows/WinAppDriver: testy používají podporovaný vstupní protokol, uvolňují modifikační klávesy, rozlišují stejně pojmenované prvky různých dialogů a testovací aplikaci ukončují skutečným příkazem Ukončit místo minimalizace do tray.
 - Dotažen aktuální EN/CS lokalizační základ desktopu; české i anglické uživatelské README nyní vysvětlují volbu jazyka, nezávislé jednotky a oddělovače i měnu bez kurzové konverze. Nové obrazovky musí rozšiřovat stejné překlady a regresní bránu, ne zavádět další pilotní výjimky.
 - Volba jazyka `Podle systému` si pamatuje výchozí jazyk procesu a po ručním přepnutí nepřebírá poslední jazyk aplikace. Obecná kultura `cs` načte český překlad místo anglického fallbacku. Stav v kopírované diagnostice datové sady je také lokalizovaný, například `V pořádku` místo `Healthy`.
 - Desktop byl aktualizován na Avalonia 12.1.2 s upstream opravami návratu focusu, přístupových kláves a Windows UI Automation. Funkční klávesové opravy a dočasný TextBox fallback zůstávají zachované, protože příslušná upstream issue není vyřešená. Android/Mobile zůstává na 12.0.4 a má samostatnou validační bránu.

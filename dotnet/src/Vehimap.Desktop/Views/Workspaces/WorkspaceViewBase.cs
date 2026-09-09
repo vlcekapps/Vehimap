@@ -11,6 +11,7 @@ namespace Vehimap.Desktop.Views.Workspaces;
 public interface IWorkspaceView
 {
     void FocusDefaultControl();
+    bool TryRequestFocus(DesktopFocusTarget target);
 }
 
 public abstract class WorkspaceViewBase<TViewModel> : UserControl, IWorkspaceView
@@ -50,6 +51,17 @@ public abstract class WorkspaceViewBase<TViewModel> : UserControl, IWorkspaceVie
         }
     }
 
+    public bool TryRequestFocus(DesktopFocusTarget target)
+    {
+        if (!SupportsFocusTarget(target))
+        {
+            return false;
+        }
+
+        RequestFocus(target);
+        return true;
+    }
+
     protected abstract DesktopFocusTarget? GetDefaultFocusTarget();
 
     protected abstract bool SupportsFocusTarget(DesktopFocusTarget target);
@@ -81,7 +93,8 @@ public abstract class WorkspaceViewBase<TViewModel> : UserControl, IWorkspaceVie
     {
         Dispatcher.UIThread.Post(() =>
         {
-            if (ResolveFocusTarget(target) is not { } control)
+            // Shared workspace events must not move focus into a disabled modal owner.
+            if (!IsEffectivelyVisible || !IsEffectivelyEnabled || ResolveFocusTarget(target) is not { } control)
             {
                 return;
             }
