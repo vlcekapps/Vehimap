@@ -6,6 +6,24 @@ namespace Vehimap.Tests.UI;
 public sealed class DesktopUiTestConfigurationTests
 {
     [Theory]
+    [InlineData(0, true, 0)]
+    [InlineData(1, true, 1)]
+    [InlineData(100, false, 50)]
+    public void Teardown_removes_fixture_only_after_confirmed_process_exit(int runningProbes, bool expected, int expectedWaits)
+    {
+        var waits = 0;
+        Assert.Equal(expected, DesktopAppiumTestSession.WaitForApplicationExit(() => runningProbes-- > 0, () => waits++));
+        Assert.Equal(expectedWaits, waits);
+    }
+
+    [Fact]
+    public void Teardown_preserves_fixture_when_process_status_cannot_be_read()
+    {
+        Assert.False(DesktopAppiumTestSession.WaitForApplicationExit(
+            () => throw new System.ComponentModel.Win32Exception("unavailable"), () => { }));
+    }
+
+    [Theory]
     [InlineData("<Window IsModal='False' />", false)]
     [InlineData("<Window><Window IsModal='True' IsOffscreen='False' /></Window>", true)]
     [InlineData("<Window><Window IsModal='true' /></Window>", true)]

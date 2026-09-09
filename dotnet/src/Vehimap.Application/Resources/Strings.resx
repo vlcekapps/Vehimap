@@ -3124,4 +3124,10 @@ Resolution: {6}</value>
   <data name="Repairs.Error.Save" xml:space="preserve">
     <value>The repair could not be saved. Your entries remain in the dialog; try again.</value>
   </data>
+  <data name="Error.Detail.ArchiveLimitExceeded" xml:space="preserve">
+    <value>The backup or vehicle package exceeds the safe size or file-count limits. Use a smaller package; see the import limits in the documentation.</value>
+  </data>
+  <data name="AppShell.VehiclePackage.ImportInProgress" xml:space="preserve">
+    <value>Importing a vehicle package. Please wait before editing data or closing the application.</value>
+  </data>
 </root>

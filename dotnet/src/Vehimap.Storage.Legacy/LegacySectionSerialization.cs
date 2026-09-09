@@ -483,6 +483,7 @@ internal static class LegacySectionSerialization
         var resolvedLocalizer = ResolveLocalizer(localizer);
         var (header, rows) = ReadDataRows(content, resolvedLocalizer);
         EnsureAllowedHeader(header, resolvedLocalizer, AttachmentsHeaderV1);
+        if (rows.Count > DataArchiveLimits.Default.Entries) throw new DataArchiveLimitException();
 
         return rows.Select((row, index) =>
         {

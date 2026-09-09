@@ -1,5 +1,11 @@
 # Vehimap Developer README
 
+## Bezpečnost Importu Před Betou
+
+Zálohy SQLite i balíčky vozidel používají kontrolovaný ZIP import s limity velikosti/počtu souborů a striktními cestami; staré textové zálohy mají vlastní limit. Export ověří stejnou politiku před přepsáním cílového archivu. Čísla, kompatibilita ZIP64 a zbývající rizika jsou v [IMPORT-SAFETY.md](docs/IMPORT-SAFETY.md).
+
+`IVehiclePackageService.ImportVehicleAsync` nyní samo potvrzuje SQLite transakci pod storage lease. Shell až potom převezme výsledek; druhý zápis se nesmí přidávat. Neúspěšný import uklízí své nové přílohy a odblokuje UI. Storage gate zahrnuje regresní testy výpadku zápisu, zrušení a limitů archivů. Nejde o záruku pro násilné ukončení procesu nebo výpadek napájení.
+
 ## Závady A Plánované Opravy
 
 Desktopová nightly 2.0 má vlastní modalní přehled `Vozidlo -> Závady a plánované opravy` a vstup z detailu. Editory nejsou inline. Bez termínu závada čeká na naplánování; blížící se a uplynulé termíny se promítají do auditu/dashboardu, nikoli do systémových notifikací. Akce jsou dostupné i před termínem. `Nelze opravit` vyžaduje důvod a zůstává jako nevyřešená závada v auditu, ale bez starého upozornění na termín. Uzavřené záznamy jsou v této první verzi pouze pro čtení.

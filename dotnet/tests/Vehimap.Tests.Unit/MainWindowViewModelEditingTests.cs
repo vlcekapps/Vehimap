@@ -1407,7 +1407,8 @@ public sealed partial class MainWindowViewModelEditingTests : IDisposable
         TestCultureInitializer.ResetToCzech();
     }
 
-    private MainWindowViewModel CreateViewModel(VehimapDataRoot dataRoot, MutableStubLegacyDataStore dataStore)
+    private MainWindowViewModel CreateViewModel(VehimapDataRoot dataRoot, MutableStubLegacyDataStore dataStore,
+        IVehiclePackageService? vehiclePackageService = null)
     {
         var bootstrapper = new LegacyVehimapBootstrapper(new StubDataRootLocator(dataRoot), dataStore);
         return new MainWindowViewModel(
@@ -1419,7 +1420,7 @@ public sealed partial class MainWindowViewModelEditingTests : IDisposable
             new LegacyGlobalSearchService(new ManagedAttachmentPathService()),
             new LegacyTimelineService(),
             new LegacyCalendarExportService(),
-            new StubTextFileSaveService());
+            new StubTextFileSaveService(), vehiclePackageService: vehiclePackageService);
     }
 
     private static VehimapDataSet BuildBaseDataSet()

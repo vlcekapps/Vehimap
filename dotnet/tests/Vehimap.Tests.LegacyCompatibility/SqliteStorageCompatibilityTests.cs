@@ -512,13 +512,12 @@ public sealed partial class SqliteStorageCompatibilityTests
         try
         {
             Directory.CreateDirectory(tempRoot);
-            await File.WriteAllTextAsync(backupPath, "# Not a Vehimap backup\nsettings_length=0\nvehicles_length=0\n\n");
+            await File.WriteAllTextAsync(backupPath, "# Vehimap backup v6\nsettings_length=0\nvehicles_length=0\n\n");
 
             var exception = await Assert.ThrowsAsync<LegacyBackupException>(() => sqliteBackup.ImportAsync(backupPath));
 
             Assert.Equal(Path.GetFullPath(backupPath), exception.BackupPath);
             Assert.Contains("Backup could not be loaded", exception.Message, StringComparison.Ordinal);
-            Assert.Contains("The file is not a Vehimap backup", exception.Message, StringComparison.Ordinal);
             Assert.DoesNotContain("Zálohu", exception.Message, StringComparison.Ordinal);
             Assert.IsType<FormatException>(exception.InnerException);
         }

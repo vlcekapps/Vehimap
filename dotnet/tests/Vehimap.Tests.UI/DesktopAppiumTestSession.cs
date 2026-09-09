@@ -21,6 +21,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     private readonly string? _temporaryAppRoot;
     private readonly bool _isolatedLaunchOnly;
     private readonly bool _usesNovaWindows;
+    private readonly string _appProcessName;
     private string? _windowAutomationId;
 
     private DesktopAppiumTestSession(WindowsDriver driver, string? temporaryAppRoot, DesktopUiTestConfiguration configuration)
@@ -29,6 +30,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         _temporaryAppRoot = temporaryAppRoot;
         _isolatedLaunchOnly = configuration.IsolatedLaunchOnly;
         _usesNovaWindows = configuration.UsesNovaWindows;
+        _appProcessName = Path.GetFileNameWithoutExtension(configuration.AppPath);
         if (!_usesNovaWindows)
         {
             _driver.RegisterCustomDriverCommand(WindowsKeysCommand, "POST", "/session/{sessionId}/keys");
@@ -421,6 +423,13 @@ internal sealed class DesktopAppiumTestSession : IDisposable
 
         if (!string.IsNullOrWhiteSpace(_temporaryAppRoot))
         {
+            // A broken Appium connection is not proof of process exit. Preserve the
+            // complete test copy if shutdown failed instead of deleting a running app.
+            if (!WaitForApplicationExit(HasRunningApplication, () => Thread.Sleep(100)))
+            {
+                Console.Error.WriteLine($"Retaining isolated app because shutdown is unconfirmed: {_temporaryAppRoot}");
+                return;
+            }
             try
             {
                 Directory.Delete(_temporaryAppRoot, true);
@@ -428,6 +437,30 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             catch
             {
             }
+        }
+    }
+
+    private bool HasRunningApplication()
+    {
+        var processes = System.Diagnostics.Process.GetProcessesByName(_appProcessName);
+        try { return processes.Length > 0; }
+        finally { foreach (var process in processes) process.Dispose(); }
+    }
+
+    internal static bool WaitForApplicationExit(Func<bool> isRunning, Action wait)
+    {
+        try
+        {
+            for (var attempt = 0; attempt < 50; attempt++)
+            {
+                if (!isRunning()) return true;
+                wait();
+            }
+            return !isRunning();
+        }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException)
+        {
+            return false;
         }
     }
 

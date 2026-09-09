@@ -24,6 +24,7 @@ internal sealed class DesktopAppShellController
 
     public async Task OpenSettingsAsync(Window owner, MainWindowViewModel shell, CancellationToken cancellationToken = default)
     {
+        if (shell.BlockActionDuringDataImport()) return;
         try
         {
             var result = await _dialogService
@@ -283,6 +284,7 @@ internal sealed class DesktopAppShellController
 
     public async Task<bool> ConfirmDiscardPendingChangesAsync(Window owner, MainWindowViewModel shell, string actionDescription)
     {
+        if (shell.BlockActionDuringDataImport()) return false;
         if (!shell.HasPendingEdits)
         {
             return true;

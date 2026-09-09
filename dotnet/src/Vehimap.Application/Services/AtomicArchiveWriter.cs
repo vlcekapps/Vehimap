@@ -15,6 +15,7 @@ public static class AtomicArchiveWriter
         {
             cancellationToken.ThrowIfCancellationRequested();
             ZipFile.CreateFromDirectory(sourceDirectory, temporaryPath, CompressionLevel.Optimal, includeBaseDirectory: false);
+            SafeDataArchive.Validate(temporaryPath, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             File.Move(temporaryPath, targetPath, overwrite: true);
         }

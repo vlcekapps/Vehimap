@@ -169,6 +169,11 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
 
     private void OnMainWindowClosing(object? sender, WindowClosingEventArgs e)
     {
+        if (_shell.BlockActionDuringDataImport())
+        {
+            e.Cancel = true;
+            return;
+        }
         if (_allowClose)
         {
             return;
@@ -207,7 +212,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         var background = _shell.BuildBackgroundSnapshot();
         await _trayService.UpdateToolTipAsync(background.ToolTipText).ConfigureAwait(false);
 
-        if (DesktopBackgroundRuntimePolicy.CanRunAutomaticBackup(runAutomaticBackup, hasPendingEdits))
+        if (DesktopBackgroundRuntimePolicy.CanRunAutomaticBackup(runAutomaticBackup, _shell.HasPendingEdits))
         {
             var backupResult = await _shell.RunAutomaticBackupCheckAsync().ConfigureAwait(false);
             if (DesktopBackgroundRuntimePolicy.CanShowAutomaticBackupNotification(notifyWhenHidden, backupResult.Created, backupResult.IsError))
@@ -217,7 +222,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
         }
 
         if (notifyDue
-            && !hasPendingEdits
+            && !_shell.HasPendingEdits
             && DesktopBackgroundRuntimePolicy.CanShowDueNotification(background.HasNotification, background.NotificationKey, _lastNotificationKey)
             && await _shell.ShouldShowAndRememberDueNotificationAsync(background.NotificationKey).ConfigureAwait(false))
         {
@@ -431,6 +436,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
 
     private async Task ConfirmAndCloseMainWindowAsync()
     {
+        if (_shell.BlockActionDuringDataImport()) return;
         _closeConfirmationInProgress = true;
         try
         {
@@ -456,6 +462,7 @@ internal sealed class DesktopAppRuntimeController : IAsyncDisposable
 
     private async Task ExitApplicationCoreAsync()
     {
+        if (_shell.BlockActionDuringDataImport()) return;
         if (_shell.HasPendingEdits)
         {
             if (!_mainWindow.IsVisible)

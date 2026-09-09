@@ -13,6 +13,7 @@ public interface IVehiclePackageService
         string vehicleId,
         CancellationToken cancellationToken = default);
 
+    /// <summary>Imports attachments and commits the merged dataset before returning it to the caller.</summary>
     Task<VehiclePackageImportResult> ImportVehicleAsync(
         string packagePath,
         VehimapDataRoot dataRoot,

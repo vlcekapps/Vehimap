@@ -3124,4 +3124,10 @@ Výsledek: {6}</value>
   <data name="Repairs.Error.Save" xml:space="preserve">
     <value>Opravu se nepodařilo uložit. Zadané údaje zůstávají v dialogu; zkuste uložení znovu.</value>
   </data>
+  <data name="Error.Detail.ArchiveLimitExceeded" xml:space="preserve">
+    <value>Záloha nebo balíček vozidla překračuje bezpečný limit velikosti nebo počtu souborů. Použijte menší balíček; limity importu najdete v dokumentaci.</value>
+  </data>
+  <data name="AppShell.VehiclePackage.ImportInProgress" xml:space="preserve">
+    <value>Importuje se balíček vozidla. Před úpravou dat nebo zavřením aplikace prosím vyčkejte.</value>
+  </data>
 </root>

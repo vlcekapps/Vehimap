@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.IO.Compression;
 using System.Text.Json;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -23,10 +22,15 @@ public sealed class VehiclePackageService : IVehiclePackageService
     };
 
     private readonly IAppLocalizer _localizer;
+    private readonly Action? _beforeCommit;
 
     public VehiclePackageService(IAppLocalizer? localizer = null)
+        : this(localizer, null) { }
+
+    internal VehiclePackageService(IAppLocalizer? localizer, Action? beforeCommit)
     {
         _localizer = localizer ?? new ResourceAppLocalizer();
+        _beforeCommit = beforeCommit;
     }
 
     public async Task<VehiclePackageExportResult> ExportVehicleAsync(
@@ -86,9 +90,10 @@ public sealed class VehiclePackageService : IVehiclePackageService
         cancellationToken.ThrowIfCancellationRequested();
         using var lease = SqliteStorageLease.EnterStable(dataRoot);
         var tempDirectory = CreateTemporaryDirectory("vehimap-vehicle-package-import");
+        var createdFiles = new List<string>();
         try
         {
-            ZipFile.ExtractToDirectory(packagePath, tempDirectory);
+            await SafeDataArchive.ExtractAsync(packagePath, tempDirectory, cancellationToken).ConfigureAwait(false);
             var manifest = await ReadJsonAsync<VehiclePackageManifest>(Path.Combine(tempDirectory, ManifestFileName), cancellationToken).ConfigureAwait(false)
                 ?? throw new FormatException(L("VehiclePackage.Error.InvalidManifest"));
             if (!string.Equals(manifest.Format, PackageFormat, StringComparison.Ordinal) || manifest.Version is < 1 or > PackageVersion)
@@ -109,16 +114,32 @@ public sealed class VehiclePackageService : IVehiclePackageService
             var importedVehicleId = ResolveImportedVehicleId(currentDataSet, sourceVehicle.Id);
             var remapped = RemapPackageData(packageData, currentDataSet, sourceVehicle.Id, importedVehicleId);
             VehicleRepairService.ValidateReferences(MergeDataSets(currentDataSet, remapped));
-            var restoredAttachments = RestorePackageAttachments(
+            var restoredAttachments = await RestorePackageAttachmentsAsync(
                 tempDirectory,
                 dataRoot,
                 remapped.Records,
                 importedVehicleId,
-                cancellationToken);
+                createdFiles,
+                cancellationToken).ConfigureAwait(false);
 
             var mergedData = MergeDataSets(currentDataSet, remapped);
             var importedVehicle = mergedData.Vehicles.First(item => string.Equals(item.Id, importedVehicleId, StringComparison.Ordinal));
+            _beforeCommit?.Invoke();
+            await SqliteVehimapDataStore.SaveUnderLeaseAsync(dataRoot, mergedData, cancellationToken).ConfigureAwait(false);
             return new VehiclePackageImportResult(mergedData, importedVehicle.Id, importedVehicle.Name, restoredAttachments);
+        }
+        catch (Exception failure)
+        {
+            var cleanupFailures = new List<Exception>();
+            foreach (var path in createdFiles)
+            {
+                try { File.Delete(path); }
+                catch (Exception cleanupFailure) when (cleanupFailure is IOException or UnauthorizedAccessException)
+                { cleanupFailures.Add(cleanupFailure); }
+            }
+            if (cleanupFailures.Count > 0)
+                throw new AggregateException("Package import failed and some new attachments could not be removed.", [failure, .. cleanupFailures]);
+            throw;
         }
         finally
         {
@@ -305,11 +326,12 @@ public sealed class VehiclePackageService : IVehiclePackageService
         return $"{SqliteStoragePaths.AttachmentsDirectoryName}/{vehicleId}/{fileName}";
     }
 
-    private int RestorePackageAttachments(
+    private async Task<int> RestorePackageAttachmentsAsync(
         string packageDirectory,
         VehimapDataRoot dataRoot,
         List<VehicleRecord> records,
         string importedVehicleId,
+        List<string> createdFiles,
         CancellationToken cancellationToken)
     {
         var restoredCount = 0;
@@ -352,25 +374,15 @@ public sealed class VehiclePackageService : IVehiclePackageService
             records[index] = record with { FilePath = targetRelativePath };
         }
 
-        var createdFiles = new List<string>();
-        try
+        foreach (var (targetPath, sourcePath) in plannedCopies)
         {
-            foreach (var (targetPath, sourcePath) in plannedCopies)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                Directory.CreateDirectory(Path.GetDirectoryName(targetPath)!);
-                using var source = File.OpenRead(sourcePath);
-                using var destination = new FileStream(targetPath, FileMode.CreateNew, FileAccess.Write);
-                createdFiles.Add(targetPath);
-                source.CopyTo(destination);
-                restoredCount++;
-            }
-        }
-        catch
-        {
-            foreach (var path in createdFiles)
-                File.Delete(path);
-            throw;
+            cancellationToken.ThrowIfCancellationRequested();
+            Directory.CreateDirectory(Path.GetDirectoryName(targetPath)!);
+            using var source = File.OpenRead(sourcePath);
+            using var destination = new FileStream(targetPath, FileMode.CreateNew, FileAccess.Write);
+            createdFiles.Add(targetPath);
+            await source.CopyToAsync(destination, cancellationToken).ConfigureAwait(false);
+            restoredCount++;
         }
         return restoredCount;
     }

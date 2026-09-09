@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-using System.IO.Compression;
 using System.Text;
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
@@ -101,23 +100,17 @@ public sealed class SqliteBackupService : IBackupService
 
     public async Task<VehimapBackupBundle> ImportAsync(string backupPath, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (SafeDataArchive.HasLegacyBackupHeader(backupPath))
+            return await _legacyBackupService.ImportAsync(backupPath, cancellationToken).ConfigureAwait(false);
         var tempDirectory = CreateTemporaryDirectory("vehimap-backup-import");
         try
         {
-            try
-            {
-                ZipFile.ExtractToDirectory(backupPath, tempDirectory);
-            }
-            catch (InvalidDataException)
-            {
-                TryDeleteDirectory(tempDirectory);
-                return await _legacyBackupService.ImportAsync(backupPath, cancellationToken).ConfigureAwait(false);
-            }
+            await SafeDataArchive.ExtractAsync(backupPath, tempDirectory, cancellationToken).ConfigureAwait(false);
 
             if (!IsSqliteBackup(tempDirectory))
             {
-                TryDeleteDirectory(tempDirectory);
-                return await _legacyBackupService.ImportAsync(backupPath, cancellationToken).ConfigureAwait(false);
+                throw new InvalidDataException("Archive is not a supported SQLite backup.");
             }
 
             var tempRoot = new VehimapDataRoot(tempDirectory, tempDirectory, true);

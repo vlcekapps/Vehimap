@@ -15,6 +15,7 @@ public static class UserFacingExceptionMessageService
         var effectiveException = exception.GetBaseException();
         var resourceKey = effectiveException switch
         {
+            DataArchiveLimitException => "Error.Detail.ArchiveLimitExceeded",
             UnauthorizedAccessException or SecurityException => "Error.Detail.AccessDenied",
             FileNotFoundException or DirectoryNotFoundException or DriveNotFoundException => "Error.Detail.FileOrFolderUnavailable",
             HttpRequestException => "Error.Detail.NetworkFailed",

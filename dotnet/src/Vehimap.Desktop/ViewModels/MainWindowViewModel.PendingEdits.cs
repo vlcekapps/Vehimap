@@ -7,9 +7,18 @@ public sealed partial class MainWindowViewModel
 {
     private Func<string, Task<bool>>? _confirmPendingEditsHandler;
     private Func<string, Task<bool>>? _confirmVehicleDeleteHandler;
+    private bool _isImportingVehiclePackage;
+
+    internal bool BlockActionDuringDataImport()
+    {
+        if (!_isImportingVehiclePackage) return false;
+        ShellStatus = LP("AppShell.VehiclePackage.ImportInProgress");
+        return true;
+    }
 
     internal bool HasPendingEdits =>
-        IsRepairsWindowOpen
+        _isImportingVehiclePackage
+        || IsRepairsWindowOpen
         || VehicleDetailWorkspace.IsEditingVehicle
         || IsEditingHistory
         || IsEditingFuel
@@ -26,12 +35,12 @@ public sealed partial class MainWindowViewModel
     public bool CanUseWorkspaceNavigation => !HasPendingEdits;
 
     public string VehicleListLockStatus =>
-        HasPendingEdits
+        _isImportingVehiclePackage ? LP("AppShell.VehiclePackage.ImportInProgress") : HasPendingEdits
             ? LFP("PendingEdits.VehicleListLockStatus", GetPendingEditLabel())
             : string.Empty;
 
     public string WorkspaceNavigationLockStatus =>
-        HasPendingEdits
+        _isImportingVehiclePackage ? LP("AppShell.VehiclePackage.ImportInProgress") : HasPendingEdits
             ? LFP("PendingEdits.WorkspaceNavigationLockStatus", GetPendingEditLabel())
             : string.Empty;
 
@@ -126,6 +135,11 @@ public sealed partial class MainWindowViewModel
 
     internal async Task<bool> ConfirmDiscardPendingEditsAsync(string actionDescription)
     {
+        if (_isImportingVehiclePackage)
+        {
+            ShellStatus = LP("AppShell.VehiclePackage.ImportInProgress");
+            return false;
+        }
         if (!HasPendingEdits)
         {
             return true;
@@ -235,6 +249,11 @@ public sealed partial class MainWindowViewModel
 
     internal bool BlockDataActionIfEditing(string actionDescription)
     {
+        if (_isImportingVehiclePackage)
+        {
+            ShellStatus = LP("AppShell.VehiclePackage.ImportInProgress");
+            return true;
+        }
         if (!HasPendingEdits)
         {
             return false;

@@ -58,6 +58,13 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
     {
         cancellationToken.ThrowIfCancellationRequested();
         using var lease = SqliteStorageLease.Enter(dataRoot);
+        await SaveUnderLeaseAsync(dataRoot, dataSet, cancellationToken).ConfigureAwait(false);
+    }
+
+    // The package importer holds the same storage lease through attachment copy and commit.
+    internal static async Task SaveUnderLeaseAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
         var recovered = SqliteRestoreJournal.Exists(dataRoot);
         SqliteRestoreJournal.RecoverUnderLease(dataRoot);
         if (recovered)

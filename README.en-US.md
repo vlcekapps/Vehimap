@@ -162,6 +162,8 @@ The data audit finds missing or suspicious information. The smart advisor builds
 
 Data can be exported to a backup and restored later. Newer Vehimap versions use a local database and can safely migrate older data when upgrading.
 
+Nightly 2.0 checks safe size limits when importing backups and vehicle packages. An oversized or unsafe archive is rejected with an explanation. Keep the original backup in that case; the limits are listed in the [import safety documentation](dotnet/docs/IMPORT-SAFETY.md).
+
 ### Accessibility
 
 Vehimap is designed as a keyboard-first application. Important screens provide keyboard control, screen-reader-friendly labels, and separate dialogs for editing records.

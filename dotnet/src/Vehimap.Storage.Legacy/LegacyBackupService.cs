@@ -46,7 +46,7 @@ public sealed class LegacyBackupService : IBackupService
     {
         try
         {
-            var content = await File.ReadAllTextAsync(backupPath, Encoding.UTF8, cancellationToken).ConfigureAwait(false);
+            var content = await SafeDataArchive.ReadLegacyTextAsync(backupPath, cancellationToken).ConfigureAwait(false);
             var payload = LegacyBackupSerialization.Parse(content, _localizer);
 
             var data = new VehimapDataSet

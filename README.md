@@ -162,6 +162,8 @@ Audit dat hledá chybějící nebo podezřelé údaje. Chytrý poradce z existuj
 
 Data lze exportovat do zálohy a později obnovit. Novější verze Vehimapu používají lokální databázi a starší data umí při přechodu bezpečně převést.
 
+Nightly 2.0 při importu kontroluje bezpečnou velikost záloh a balíčků vozidel. Příliš velký či nebezpečný archiv odmítne s vysvětlením. Původní zálohu v takovém případě ponechte; přehled omezení najdete v [dokumentaci bezpečnosti importu](dotnet/docs/IMPORT-SAFETY.md).
+
 ### Přístupnost
 
 Vehimap je navržený jako keyboard-first aplikace. Důležité obrazovky mají klávesové ovládání, popsané prvky pro čtečky obrazovky a samostatné dialogy pro editaci záznamů.

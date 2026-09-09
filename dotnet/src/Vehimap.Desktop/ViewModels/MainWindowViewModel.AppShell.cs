@@ -211,13 +211,16 @@ public sealed partial class MainWindowViewModel
             return ShellStatus;
         }
 
+        _isImportingVehiclePackage = true;
+        NotifyPendingEditStateChanged();
+        ShellStatus = LO("AppShell.VehiclePackage.ImportInProgress");
         try
         {
-            var result = await _vehiclePackageService
-                .ImportVehicleAsync(packagePath, _dataRoot, _dataSet, cancellationToken)
-                .ConfigureAwait(false);
+            var result = await Task.Run(() => _vehiclePackageService
+                .ImportVehicleAsync(packagePath, _dataRoot, _dataSet, cancellationToken), cancellationToken)
+                .ConfigureAwait(true);
             _session.RestoreDataSet(result.DataSet);
-            await _session.PersistAsync(cancellationToken).ConfigureAwait(false);
+            _isImportingVehiclePackage = false;
             RefreshShellFromSessionState(result.ImportedVehicleId, DetailTabIndex, applyLaunchTabPreference: false);
             ShellStatus = LFO("AppShell.VehiclePackage.ImportSuccess", result.ImportedVehicleName);
             if (result.RestoredAttachmentCount > 0)
@@ -230,9 +233,19 @@ public sealed partial class MainWindowViewModel
 
             RequestBackgroundRefresh();
         }
-        catch (Exception ex) when (ex is not OperationCanceledException)
+        catch (OperationCanceledException)
+        {
+            ShellStatus = LO("AppShell.Controller.ImportVehiclePackageCancelled");
+            throw;
+        }
+        catch (Exception ex)
         {
             ShellStatus = LFO("AppShell.VehiclePackage.ImportFailed", UserFacingError(ex));
+        }
+        finally
+        {
+            _isImportingVehiclePackage = false;
+            NotifyPendingEditStateChanged();
         }
 
         return ShellStatus;
@@ -249,6 +262,7 @@ public sealed partial class MainWindowViewModel
 
     internal async Task SaveSupportedSettingsAsync(DesktopSupportedSettingsSnapshot snapshot)
     {
+        if (BlockActionDuringDataImport()) return;
         if (!_session.IsLoaded)
         {
             return;
@@ -266,6 +280,7 @@ public sealed partial class MainWindowViewModel
 
     internal async Task SetDashboardShowOnLaunchAsync(bool showDashboardOnLaunch)
     {
+        if (BlockActionDuringDataImport()) return;
         if (!_session.IsLoaded)
         {
             DashboardWorkspace.SyncShowDashboardOnLaunch(showDashboardOnLaunch);
@@ -314,6 +329,8 @@ public sealed partial class MainWindowViewModel
 
     internal async Task<AutomaticBackupResult> RunAutomaticBackupCheckAsync(CancellationToken cancellationToken = default)
     {
+        if (_isImportingVehiclePackage)
+            return new AutomaticBackupResult(false, false, string.Empty, LO("AppShell.VehiclePackage.ImportInProgress"));
         if (!_session.IsLoaded)
         {
             return new AutomaticBackupResult(false, true, string.Empty, LO("AppShell.AutomaticBackup.NotLoaded"));
@@ -330,7 +347,7 @@ public sealed partial class MainWindowViewModel
 
     internal Task<bool> ShouldShowAndRememberDueNotificationAsync(string notificationKey, CancellationToken cancellationToken = default)
     {
-        return _session.IsLoaded
+        return _session.IsLoaded && !_isImportingVehiclePackage
             ? _session.ShouldShowAndRememberDueNotificationAsync(notificationKey, DateOnly.FromDateTime(DateTime.Today), cancellationToken)
             : Task.FromResult(false);
     }
