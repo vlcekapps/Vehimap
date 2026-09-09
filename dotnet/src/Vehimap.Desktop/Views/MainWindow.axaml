@@ -173,6 +173,10 @@
                     AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.HistoryName}"
                     AutomationProperties.AcceleratorKey="Ctrl+H"
                     AutomationProperties.AutomationId="OpenHistoryMenuItem" />
+          <MenuItem Header="{i18n:Loc UnplannedRepair.Title}"
+                    Command="{Binding RecordUnplannedRepairCommand}"
+                    AutomationProperties.Name="{i18n:Loc UnplannedRepair.Title}"
+                    AutomationProperties.AutomationId="RecordUnplannedRepairMenuItem" />
           <MenuItem x:Name="OpenFuelMenuItem"
                     Header="{i18n:Loc MainMenu.Vehicle.Fuel}"
                     InputGesture="Ctrl+K"

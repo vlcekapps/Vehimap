@@ -1,5 +1,15 @@
 # Vehimap Developer README
 
+## Neplánované Opravy
+
+Desktopová nightly má vstup `Vozidlo -> Zaznamenat neplánovanou opravu` a tlačítko `Neplánovaná oprava` v Historii (na kartě i v samostatném okně). Zapisuje již provedený úkon, nikoli závadu čekající na opravu. Dialog využívá stejnou validaci, jednotky, číselné formátování a lifecycle jako Historie; první fokus je na datu, `Shift+Tab` odtud vede na Zrušit, `Esc` ruší a `Ctrl+S` ukládá. Po zavření se fokus vrací na tlačítko Neplánovaná oprava, i když historie zatím nemá žádné položky. Uložený záznam zůstává vybraný v Historii. Návratový focus editorů se po zavření doručuje přes workspace mechanismus také do karet hlavního okna.
+
+Vzniká pouze jeden `VehicleHistoryEntry`, který již používají náklady a servisní knížka. Existující servisní plány ani jejich datum provedení se nemění. Pozdější úprava/odstranění probíhá v Historii; nevzniká zvláštní trvalá kategorie oprav ani nový datový formát. Případnou fakturu lze vést v Dokladech, ale stejnou cenu nezadávejte podruhé: nynější náklady sčítají ceny historie i dokladů. Nový dialog neukládá překlad jako uživatelský popis.
+
+Testy: `UnplannedRepairEditingTests.cs` ověřuje EN/CS, km/mi, cenu, SQLite restart, bezezměnné plány, validaci, zrušení a opakování po chybě zápisu. Živá Appium regrese `Unplanned_repair_dialog_saves_once_and_restores_focus_when_appium_is_available` pokrývá menu, kartu i samostatné okno Historie.
+
+Samostatně ji lze spustit přes `pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Repairs` z kořene repozitáře. Brána vyžaduje všechny tři živé scénáře bez přeskočení a po testu kontroluje, že nezůstal běžet Vehimap.
+
 ## Přesné Termíny Vozidla
 
 Editor podporuje den, měsíc a rok u poslední/příští TK i platnosti zelené karty od/do. České zadávání přijímá `3.7.2027` i `03.07.2027`, anglické `7/3/2027`, v obou jazycích lze zadat `2027-07-03`. Neexistující dny včetně nepřestupného 29. února se neuloží a fokus zůstane na chybném poli. Zadané přesné termíny používají stejný den v přehledech, oznámeních a ICS exportu.

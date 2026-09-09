@@ -146,6 +146,8 @@ K vozidlu můžete připojit doklady a soubory. Vehimap podporuje externí cesty
 
 K dispozici je plán údržby, servisní historie a servisní knížka. Užitečné je to pro běžný provoz, veterány i firemní nebo pracovní vozidla.
 
+Desktopová nightly 2.0 navíc nabízí **Vozidlo -> Zaznamenat neplánovanou opravu**, dostupné také tlačítkem v Historii. Zapište již provedenou opravu, datum a případně tachometr, cenu a poznámku. Záznam se objeví v historii, nákladech i servisní knížce, bez zakládání pravidelného servisního plánu. Dosud neopravené závady tato akce nesleduje.
+
 ### Tankování A Náklady
 
 Vehimap eviduje tankování, místo tankování, detail paliva, cenu a tachometr. Umí dopočítat spotřebu, cenu za litr a upozornit na podezřelé záznamy.

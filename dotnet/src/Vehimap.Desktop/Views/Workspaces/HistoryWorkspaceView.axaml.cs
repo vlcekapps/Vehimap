@@ -20,13 +20,15 @@ public partial class HistoryWorkspaceView : WorkspaceViewBase<HistoryWorkspaceVi
 
     protected override bool SupportsFocusTarget(DesktopFocusTarget target) =>
         target is DesktopFocusTarget.HistorySearch
-            or DesktopFocusTarget.HistoryList;
+            or DesktopFocusTarget.HistoryList
+            or DesktopFocusTarget.RecordUnplannedRepairAction;
 
     protected override Control? ResolveFocusTarget(DesktopFocusTarget target) =>
         target switch
         {
             DesktopFocusTarget.HistorySearch => this.FindControl<TextBox>("HistorySearchBox"),
             DesktopFocusTarget.HistoryList => this.FindControl<ListBox>("HistoryListBox"),
+            DesktopFocusTarget.RecordUnplannedRepairAction => this.FindControl<Button>("RecordUnplannedRepairButton"),
             _ => null
         };
 

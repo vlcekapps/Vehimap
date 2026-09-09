@@ -562,6 +562,7 @@ public sealed partial class MainWindowViewModel
     internal void NotifyHistoryWorkspaceEditingChanged()
     {
         CreateHistoryCommand.NotifyCanExecuteChanged();
+        RecordUnplannedRepairCommand.NotifyCanExecuteChanged();
         EditSelectedHistoryCommand.NotifyCanExecuteChanged();
         DeleteSelectedHistoryCommand.NotifyCanExecuteChanged();
         SaveHistoryCommand.NotifyCanExecuteChanged();

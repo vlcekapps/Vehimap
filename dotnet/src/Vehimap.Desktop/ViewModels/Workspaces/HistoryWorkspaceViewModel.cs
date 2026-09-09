@@ -51,6 +51,17 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     [ObservableProperty]
     private bool isEditingHistory;
 
+    // This is an entry shortcut, not a persisted classification of user-authored history.
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HistoryEditorTypeLabel))]
+    [NotifyPropertyChangedFor(nameof(HistoryEditorTypeName))]
+    [NotifyPropertyChangedFor(nameof(HistoryEditorTypeExample))]
+    private bool isRecordingUnplannedRepair;
+
+    public string HistoryEditorTypeLabel => L(IsRecordingUnplannedRepair ? "UnplannedRepair.DescriptionLabel" : "HistoryEditor.TypeLabel");
+    public string HistoryEditorTypeName => L(IsRecordingUnplannedRepair ? "UnplannedRepair.DescriptionLabel" : "HistoryEditor.TypeName");
+    public string HistoryEditorTypeExample => L(IsRecordingUnplannedRepair ? "UnplannedRepair.DescriptionExample" : "HistoryEditor.TypeExample");
+
     [ObservableProperty]
     private string historyEditorStatus = string.Empty;
 
@@ -80,6 +91,7 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
     public bool IsHistoryDetailVisible => !IsEditingHistory;
 
     public ICommand CreateHistoryCommand => Root.CreateHistoryCommand;
+    public ICommand RecordUnplannedRepairCommand => Root.RecordUnplannedRepairCommand;
     public ICommand EditSelectedHistoryCommand => Root.EditSelectedHistoryCommand;
     public ICommand DeleteSelectedHistoryCommand => Root.DeleteSelectedHistoryCommand;
     public ICommand SaveHistoryCommand => Root.SaveHistoryCommand;
@@ -162,7 +174,7 @@ public sealed partial class HistoryWorkspaceViewModel : WorkspaceViewModelBase
         if (value)
         {
             HistoryEditorHeading = Root.GetEditingHistoryId() is null
-                ? L("HistoryEditor.NewTitle")
+                ? L(IsRecordingUnplannedRepair ? "UnplannedRepair.Title" : "HistoryEditor.NewTitle")
                 : L("HistoryEditor.EditTitle");
             NotifyUnitMetadataChanged();
         }

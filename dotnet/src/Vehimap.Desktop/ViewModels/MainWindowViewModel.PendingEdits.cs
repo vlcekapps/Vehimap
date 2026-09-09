@@ -193,6 +193,7 @@ public sealed partial class MainWindowViewModel
         DeleteSelectedVehicleCommand.NotifyCanExecuteChanged();
         OpenSelectedVehicleCostsCommand.NotifyCanExecuteChanged();
         CreateHistoryCommand.NotifyCanExecuteChanged();
+        RecordUnplannedRepairCommand.NotifyCanExecuteChanged();
         EditSelectedHistoryCommand.NotifyCanExecuteChanged();
         DeleteSelectedHistoryCommand.NotifyCanExecuteChanged();
         CreateFuelCommand.NotifyCanExecuteChanged();

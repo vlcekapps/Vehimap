@@ -2952,4 +2952,11 @@ Navržená akce: {6}</value></data>
   <data name="VehicleEditor.DateHelp" xml:space="preserve"><value>Celé datum, např. {0}. Starší měsíc/rok je nadále podporován.</value></data>
   <data name="Audit.Title.MonthPrecisionVehicleDate" xml:space="preserve"><value>Doplňte přesné datum: {0}</value></data>
   <data name="Audit.Message.MonthPrecisionVehicleDate" xml:space="preserve"><value>Pole {0} obsahuje pouze měsíc a rok ({1}). V editoru vozidla doplňte den podle dokladu. U upozornění na konec platnosti se měsíc bez dne nadále počítá jako konec měsíce a upozornění může přijít pozdě.</value></data>
+  <data name="UnplannedRepair.Title" xml:space="preserve"><value>Zaznamenat neplánovanou opravu</value></data>
+  <data name="UnplannedRepair.Action" xml:space="preserve"><value>Neplánovaná oprava</value></data>
+  <data name="UnplannedRepair.CreatePrompt" xml:space="preserve"><value>Zaznamenejte již provedenou opravu. Zobrazí se v historii, nákladech a servisní knížce, aniž by založila nebo dokončila servisní plán.</value></data>
+  <data name="UnplannedRepair.DescriptionLabel" xml:space="preserve"><value>Provedená oprava</value></data>
+  <data name="UnplannedRepair.DescriptionExample" xml:space="preserve"><value>Například výměna prasklé pružiny</value></data>
+  <data name="UnplannedRepair.DescriptionRequired" xml:space="preserve"><value>Popište, jaká oprava byla provedena.</value></data>
+  <data name="UnplannedRepair.Created" xml:space="preserve"><value>Neplánovaná oprava byla uložena do historie. Servisní plány se nezměnily.</value></data>
 </root>

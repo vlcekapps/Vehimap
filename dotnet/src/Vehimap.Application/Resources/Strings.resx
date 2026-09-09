@@ -2952,4 +2952,11 @@ Suggested action: {6}</value></data>
   <data name="VehicleEditor.DateHelp" xml:space="preserve"><value>Full date, e.g. {0}. Older month/year dates are still accepted.</value></data>
   <data name="Audit.Title.MonthPrecisionVehicleDate" xml:space="preserve"><value>Add an exact date: {0}</value></data>
   <data name="Audit.Message.MonthPrecisionVehicleDate" xml:space="preserve"><value>{0} contains only a month and year ({1}). Add the day from the document in the vehicle editor. For expiry reminders, month-only dates are still treated as the end of the month and may warn too late.</value></data>
+  <data name="UnplannedRepair.Title" xml:space="preserve"><value>Record an unplanned repair</value></data>
+  <data name="UnplannedRepair.Action" xml:space="preserve"><value>Unplanned repair</value></data>
+  <data name="UnplannedRepair.CreatePrompt" xml:space="preserve"><value>Record a completed repair. It will appear in history, costs and the service book without creating or completing a maintenance plan.</value></data>
+  <data name="UnplannedRepair.DescriptionLabel" xml:space="preserve"><value>Repair carried out</value></data>
+  <data name="UnplannedRepair.DescriptionExample" xml:space="preserve"><value>For example, replacement of a broken spring</value></data>
+  <data name="UnplannedRepair.DescriptionRequired" xml:space="preserve"><value>Describe the repair that was carried out.</value></data>
+  <data name="UnplannedRepair.Created" xml:space="preserve"><value>The unplanned repair was saved in history. Maintenance plans were not changed.</value></data>
 </root>

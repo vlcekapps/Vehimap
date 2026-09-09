@@ -100,25 +100,30 @@
           <TextBlock FontSize="18"
                      FontWeight="SemiBold"
                      Text="{Binding HistoryPanelHeading}" />
-          <WrapPanel x:Name="HistoryActionPanel"
+          <StackPanel x:Name="HistoryActionPanel"
                      Grid.Row="1"
-                     Margin="0,14,0,0"
-                     ItemWidth="128"
-                     ItemHeight="34">
-            <Button Command="{Binding CreateHistoryCommand}"
-                    Content="{i18n:Loc HistoryWorkspace.Create}"
-                    AutomationProperties.Name="{i18n:Loc HistoryWorkspace.CreateName}"
-                    AutomationProperties.AutomationId="CreateHistoryButton" />
-            <Button Command="{Binding EditSelectedHistoryCommand}"
-                    Content="{i18n:Loc Common.Edit}"
-                    AutomationProperties.Name="{i18n:Loc HistoryWorkspace.EditName}"
-                    AutomationProperties.AutomationId="EditHistoryButton" />
-            <Button Command="{Binding DeleteSelectedHistoryCommand}"
-                    Content="{i18n:Loc Common.Delete}"
-                    AutomationProperties.Name="{i18n:Loc HistoryWorkspace.DeleteName}"
-                    AutomationProperties.HelpText="{i18n:Loc HistoryWorkspace.DeleteHelp}"
-                    AutomationProperties.AutomationId="DeleteHistoryButton" />
-          </WrapPanel>
+                     Margin="0,14,0,0" Spacing="8">
+            <WrapPanel ItemWidth="128" ItemHeight="34">
+              <Button Command="{Binding CreateHistoryCommand}"
+                      Content="{i18n:Loc HistoryWorkspace.Create}"
+                      AutomationProperties.Name="{i18n:Loc HistoryWorkspace.CreateName}"
+                      AutomationProperties.AutomationId="CreateHistoryButton" />
+              <Button Command="{Binding EditSelectedHistoryCommand}"
+                      Content="{i18n:Loc Common.Edit}"
+                      AutomationProperties.Name="{i18n:Loc HistoryWorkspace.EditName}"
+                      AutomationProperties.AutomationId="EditHistoryButton" />
+              <Button Command="{Binding DeleteSelectedHistoryCommand}"
+                      Content="{i18n:Loc Common.Delete}"
+                      AutomationProperties.Name="{i18n:Loc HistoryWorkspace.DeleteName}"
+                      AutomationProperties.HelpText="{i18n:Loc HistoryWorkspace.DeleteHelp}"
+                      AutomationProperties.AutomationId="DeleteHistoryButton" />
+            </WrapPanel>
+            <Button x:Name="RecordUnplannedRepairButton"
+                    Command="{Binding RecordUnplannedRepairCommand}"
+                    Content="{i18n:Loc UnplannedRepair.Action}"
+                    AutomationProperties.Name="{i18n:Loc UnplannedRepair.Title}"
+                    AutomationProperties.AutomationId="RecordUnplannedRepairButton" />
+          </StackPanel>
           <TextBlock Grid.Row="2"
                      Margin="0,12,0,0"
                      Opacity="0.82"

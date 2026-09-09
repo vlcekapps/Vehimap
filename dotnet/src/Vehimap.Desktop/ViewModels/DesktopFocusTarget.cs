@@ -67,5 +67,6 @@ public enum DesktopFocusTarget
     DashboardCostList,
     DashboardTimelineList,
     SmartAdvisorSearch,
-    SmartAdvisorList
+    SmartAdvisorList,
+    RecordUnplannedRepairAction
 }

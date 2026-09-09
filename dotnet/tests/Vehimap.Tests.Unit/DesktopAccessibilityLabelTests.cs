@@ -14,6 +14,26 @@ namespace Vehimap.Tests.Unit;
 public sealed class DesktopAccessibilityLabelTests
 {
     [Fact]
+    public void Unplanned_repair_reuses_accessible_modal_history_editor_from_menu_and_workspace()
+    {
+        var menu = ReadViewFile("MainWindow.axaml");
+        var workspace = ReadWorkspaceOrView("HistoryWorkspaceView.axaml", true);
+        var editor = ReadViewFile("HistoryEditorWindow.axaml");
+        Assert.Contains("AutomationProperties.AutomationId=\"RecordUnplannedRepairMenuItem\"", menu);
+        Assert.Contains("Command=\"{Binding RecordUnplannedRepairCommand}\"", menu);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc UnplannedRepair.Title}\"", menu);
+        Assert.Contains("AutomationProperties.AutomationId=\"RecordUnplannedRepairButton\"", workspace);
+        Assert.Contains("Command=\"{Binding RecordUnplannedRepairCommand}\"", workspace);
+        Assert.Contains("AutomationProperties.Name=\"{i18n:Loc UnplannedRepair.Title}\"", workspace);
+        Assert.DoesNotContain("HistoryEditorTypeBox", workspace);
+        Assert.Contains("AutomationProperties.Name=\"{Binding HistoryEditorTypeName}\"", editor);
+        Assert.Contains("AutomationProperties.HelpText=\"{Binding HistoryEditorTypeExample}\"", editor);
+        Assert.Contains("AutomationProperties.IsRequiredForForm=\"True\"", editor);
+        Assert.Contains("AutomationProperties.HeadingLevel=\"1\"", editor);
+        Assert.Contains("viewModel.RequestWorkspaceFocus(viewModel.HasPendingEdits ? viewModel.GetPendingEditFocusTarget() : request.ReturnFocusTarget)", ReadViewFile("MainWindow.axaml.cs"));
+    }
+
+    [Fact]
     public void Vehicle_list_items_should_expose_human_readable_labels()
     {
         var item = new VehicleListItemViewModel(

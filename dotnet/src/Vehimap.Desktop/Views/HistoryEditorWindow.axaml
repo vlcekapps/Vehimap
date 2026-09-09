@@ -51,12 +51,12 @@
               Margin="0,14,0,0"
               ColumnDefinitions="*,160">
           <StackPanel Margin="0,0,12,0" Spacing="6">
-            <TextBlock FontWeight="SemiBold" Text="{i18n:Loc HistoryEditor.TypeLabel}" />
+            <TextBlock FontWeight="SemiBold" Text="{Binding HistoryEditorTypeLabel}" />
             <TextBox x:Name="HistoryEditorTypeBox"
                      Text="{Binding HistoryEditorType}"
-                     PlaceholderText="{i18n:Loc HistoryEditor.TypeExample}"
-                     AutomationProperties.Name="{i18n:Loc HistoryEditor.TypeName}"
-                     AutomationProperties.HelpText="{i18n:Loc HistoryEditor.TypeExample}"
+                     PlaceholderText="{Binding HistoryEditorTypeExample}"
+                     AutomationProperties.Name="{Binding HistoryEditorTypeName}"
+                     AutomationProperties.HelpText="{Binding HistoryEditorTypeExample}"
                      AutomationProperties.AutomationId="HistoryEditorTypeBox"
                      AutomationProperties.IsRequiredForForm="True" />
           </StackPanel>

@@ -843,6 +843,85 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         }
     }
 
+    [AppiumTheory]
+    [InlineData("menu")]
+    [InlineData("tab")]
+    [InlineData("window")]
+    public void Unplanned_repair_dialog_saves_once_and_restores_focus_when_appium_is_available(string origin)
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
+            throw new InvalidOperationException(reason);
+
+        using var session = startedSession!;
+        var original = ReadPersistedData(session);
+        if (origin == "menu")
+        {
+            session.ClickMenuItem("VehicleMenuRoot", "RecordUnplannedRepairMenuItem");
+        }
+        else
+        {
+            session.ClickByAccessibilityId("HistoryTabButton");
+            if (origin == "window")
+            {
+                session.ClickByAccessibilityId("OpenHistoryWindowButton");
+                session.WithinWindow("HistoryWindow");
+            }
+            session.ClickByAccessibilityId("RecordUnplannedRepairButton");
+        }
+
+        session.WithinWindow("HistoryEditorWindow");
+        Assert.Equal("Zaznamenat neplánovanou opravu", session.GetNameByAccessibilityId("HistoryEditorHeadingText"));
+        Assert.Equal("Provedená oprava", session.GetNameByAccessibilityId("HistoryEditorTypeBox"));
+        Assert.Equal("HistoryEditorDateBox", session.WaitForFocusedAutomationId(12, "HistoryEditorDateBox"));
+        session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+        Assert.Equal("CancelHistoryButton", session.WaitForFocusedAutomationId(12, "CancelHistoryButton"));
+        session.SendKeysToActiveElement(Keys.Tab);
+        Assert.Equal("HistoryEditorDateBox", session.WaitForFocusedAutomationId(12, "HistoryEditorDateBox"));
+        session.SendKeysToActiveElement(Keys.Tab);
+        Assert.Equal("HistoryEditorTypeBox", session.WaitForFocusedAutomationId(12, "HistoryEditorTypeBox"));
+        session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+        Assert.Equal("HistoryEditorDateBox", session.WaitForFocusedAutomationId(12, "HistoryEditorDateBox"));
+        session.SendKeysToActiveElement(Keys.Escape);
+        session.WaitForElementToDisappearByAccessibilityId("CancelHistoryButton");
+        session.WithinWindow(origin == "window" ? "HistoryWindow" : "MainWindow");
+        Assert.Equal("RecordUnplannedRepairButton", session.WaitForFocusedAutomationId(12, "RecordUnplannedRepairButton"));
+        session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+        Assert.Equal("CreateHistoryButton", session.WaitForFocusedAutomationId(12, "CreateHistoryButton"));
+        session.SendKeysToActiveElement(Keys.Tab);
+        Assert.Equal("RecordUnplannedRepairButton", session.WaitForFocusedAutomationId(12, "RecordUnplannedRepairButton"));
+        Assert.Equal(original.HistoryEntries, ReadPersistedData(session).HistoryEntries);
+
+        session.ClickByAccessibilityId("RecordUnplannedRepairButton");
+        session.WithinWindow("HistoryEditorWindow");
+        session.ReplaceTextByAccessibilityId("HistoryEditorDateBox", "31.02.2026");
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        Assert.Equal("HistoryEditorDateBox", session.WaitForFocusedAutomationId(12, "HistoryEditorDateBox"));
+        session.ReplaceTextByAccessibilityId("HistoryEditorDateBox", "9.9.2026");
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        Assert.Equal("HistoryEditorTypeBox", session.WaitForFocusedAutomationId(12, "HistoryEditorTypeBox"));
+        session.ReplaceTextByAccessibilityId("HistoryEditorTypeBox", "Appium: výměna prasklé pružiny");
+        session.ReplaceTextByAccessibilityId("HistoryEditorOdometerBox", "123456");
+        session.ReplaceTextByAccessibilityId("HistoryEditorCostBox", "2500,50");
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        session.WaitForElementToDisappearByAccessibilityId("SaveHistoryButton");
+        session.WithinWindow(origin == "window" ? "HistoryWindow" : "MainWindow");
+        Assert.Equal("RecordUnplannedRepairButton", session.WaitForFocusedAutomationId(12, "RecordUnplannedRepairButton"));
+        session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+        Assert.Equal("DeleteHistoryButton", session.WaitForFocusedAutomationId(12, "DeleteHistoryButton"));
+        session.SendKeysToActiveElement(Keys.Tab);
+        Assert.Equal("RecordUnplannedRepairButton", session.WaitForFocusedAutomationId(12, "RecordUnplannedRepairButton"));
+
+        var data = ReadPersistedData(session);
+        var saved = Assert.Single(data.HistoryEntries, item => item.EventType == "Appium: výměna prasklé pružiny");
+        Assert.Equal(original.HistoryEntries.Count + 1, data.HistoryEntries.Count);
+        Assert.Equal("09.09.2026", saved.EventDate);
+        Assert.Equal("123456", saved.Odometer);
+        Assert.Equal("2500.5", saved.Cost);
+        Assert.Equal(original.MaintenancePlans, data.MaintenancePlans);
+        Assert.Equal(original.Records, data.Records);
+        AssertSqliteRuntimeDataOnly(session.TemporaryDataPath!);
+    }
+
     [AppiumFact]
     public void Fuel_editor_runs_in_standalone_window_when_appium_is_available()
     {

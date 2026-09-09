@@ -1357,7 +1357,8 @@ public partial class MainWindow : Window
         finally
         {
             _workspaceEditorDialogOpen = false;
-            RequestFocus(viewModel.HasPendingEdits ? viewModel.GetPendingEditFocusTarget() : request.ReturnFocusTarget);
+            // Card controls live in workspace name scopes, not in MainWindow's local focus map.
+            viewModel.RequestWorkspaceFocus(viewModel.HasPendingEdits ? viewModel.GetPendingEditFocusTarget() : request.ReturnFocusTarget);
         }
     }
 

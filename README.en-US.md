@@ -146,6 +146,8 @@ You can attach documents and files to a vehicle. Vehimap supports both external 
 
 Vehimap includes maintenance plans, service history, and a service book. This is useful for everyday vehicles, vintage vehicles, and company or work vehicles.
 
+Desktop nightly 2.0 also offers **Vehicle -> Record an unplanned repair**, available as a button in History. Enter the completed repair, its date and, optionally, the odometer, cost and notes. The record appears in history, costs and the service book without creating a recurring maintenance plan. This action does not track outstanding faults.
+
 ### Fuel And Costs
 
 Vehimap records fuel entries, fuel location, fuel details, total price, and odometer values. It can calculate consumption, price per liter, and warn about suspicious records.

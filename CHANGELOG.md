@@ -7,7 +7,11 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ## [Unreleased]
 
+### Přidáno
+- Desktopová nightly nabízí v menu Vozidlo a v Historii akci pro zaznamenání již provedené neplánované opravy. Samostatný dialog uloží datum, popis, tachometr, cenu a poznámku do historie; náklad i servisní knížka používají tento jediný záznam. Servisní plány se nezakládají ani neoznačují za dokončené. Rozhraní je česky i anglicky a zrušení nic nezapisuje. Evidence dosud neopravených závad není součástí této verze.
+
 ### Opraveno
+- Návrat z evidenčního editoru se doručuje i do workspace karty hlavního okna, nejen do samostatného okna evidence. Nová akce neplánované opravy vrací fokus na své tlačítko místo prázdného, nefocusovatelného seznamu historie.
 - Termíny poslední/příští TK a platnosti zelené karty nově přijímají celé datum (česky `d.m.rrrr` nebo `dd.mm.rrrr`, anglicky podle jazyka). Validace respektuje délku měsíců a přestupné roky; termíny, upozornění a kalendář už u přesného data nečekají na konec měsíce. Starší `MM/RRRR` zůstává beze změny, audit pouze u takto vyplněných polí doporučí doplnit den. Anglické rozhraní používá označení `Vehicle insurance` místo `Green card`.
 - Appium při úklidu nejprve zavře otevřené modalní dialogy a teprve potom použije menu Ukončit; nepokouší se klikat na blokované hlavní okno a nevytváří tím falešné diagnostické timeouty.
 - Obnova zálohy má obnovovací žurnál: po přerušení procesu se před načtením dat vrátí původní databáze i přílohy, nebo se ponechá již potvrzená obnova. Bezpečnostní kopie v `import-backups` se při zotavení nespotřebuje; kontrolní součty brání obnově z neúplných či změněných podkladů. Nové regresní testy skutečně ukončují pomocný proces také během zotavení. Nejde zatím o záruku proti výpadku napájení ani o opravný průvodce poškozenou databází.

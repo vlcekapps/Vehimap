@@ -203,23 +203,30 @@ public sealed partial class MainWindowViewModel
     }
 
     [RelayCommand(CanExecute = nameof(CanCreateHistory))]
-    private void CreateHistory()
+    private void CreateHistory() => BeginHistoryEntry(isUnplannedRepair: false);
+
+    [RelayCommand(CanExecute = nameof(CanCreateHistory))]
+    private void RecordUnplannedRepair() => BeginHistoryEntry(isUnplannedRepair: true);
+
+    private void BeginHistoryEntry(bool isUnplannedRepair)
     {
-        if (SelectedVehicle is null)
+        if (!CanCreateHistory)
         {
             return;
         }
 
         _editingHistoryId = null;
+        HistoryWorkspace.IsRecordingUnplannedRepair = isUnplannedRepair;
         HistoryEditorDate = string.Empty;
         HistoryEditorType = string.Empty;
         HistoryEditorOdometer = string.Empty;
         HistoryEditorCost = string.Empty;
         HistoryEditorNote = string.Empty;
-        HistoryEditorStatus = LO("HistoryEditor.Status.CreatePrompt");
+        HistoryEditorStatus = LO(isUnplannedRepair ? "UnplannedRepair.CreatePrompt" : "HistoryEditor.Status.CreatePrompt");
         IsEditingHistory = true;
         SelectedVehicleTabIndex = HistoryTabIndex;
-        RequestWorkspaceEditorDialog(WorkspaceEditorKind.History, DesktopFocusTarget.HistoryList);
+        RequestWorkspaceEditorDialog(WorkspaceEditorKind.History,
+            isUnplannedRepair ? DesktopFocusTarget.RecordUnplannedRepairAction : DesktopFocusTarget.HistoryList);
     }
 
     [RelayCommand(CanExecute = nameof(CanEditSelectedHistory))]
@@ -232,6 +239,7 @@ public sealed partial class MainWindowViewModel
         }
 
         _editingHistoryId = entry.Id;
+        HistoryWorkspace.IsRecordingUnplannedRepair = false;
         HistoryEditorDate = FormatCanonicalDateForEditor(entry.EventDate);
         HistoryEditorType = entry.EventType;
         HistoryEditorOdometer = FormatCanonicalOdometerForEditor(entry.Odometer);
@@ -268,7 +276,9 @@ public sealed partial class MainWindowViewModel
 
         if (eventType.Length == 0)
         {
-            HistoryEditorStatus = LO("HistoryEditor.Validation.TypeRequired");
+            HistoryEditorStatus = LO(HistoryWorkspace.IsRecordingUnplannedRepair
+                ? "UnplannedRepair.DescriptionRequired"
+                : "HistoryEditor.Validation.TypeRequired");
             RequestFocus(DesktopFocusTarget.HistoryEditorType);
             return;
         }
@@ -302,6 +312,7 @@ public sealed partial class MainWindowViewModel
             cost,
             (HistoryEditorNote ?? string.Empty).Trim());
 
+        var wasUnplannedRepair = HistoryWorkspace.IsRecordingUnplannedRepair;
         var rollbackDataSet = CloneDataSet(_dataSet);
         UpsertHistoryEntry(updatedEntry);
         if (!await PersistDataAndRestoreSelectionAsync(
@@ -318,11 +329,11 @@ public sealed partial class MainWindowViewModel
 
         var wasNew = _editingHistoryId is null;
         CancelHistoryEditCore(clearStatus: false);
-        HistoryEditorStatus = wasNew
-            ? LO("HistoryEditor.Status.Created")
-            : LO("HistoryEditor.Status.Updated");
+        HistoryEditorStatus = wasUnplannedRepair
+            ? LO("UnplannedRepair.Created")
+            : wasNew ? LO("HistoryEditor.Status.Created") : LO("HistoryEditor.Status.Updated");
         SelectedHistory = FindById(SelectedVehicleHistory, item => item.Id, historyId);
-        RequestFocus(DesktopFocusTarget.HistoryList);
+        RequestFocus(wasUnplannedRepair ? DesktopFocusTarget.RecordUnplannedRepairAction : DesktopFocusTarget.HistoryList);
     }
 
     [RelayCommand(CanExecute = nameof(CanCancelHistoryEdit))]
@@ -954,6 +965,7 @@ public sealed partial class MainWindowViewModel
     {
         _editingHistoryId = null;
         IsEditingHistory = false;
+        HistoryWorkspace.IsRecordingUnplannedRepair = false;
         HistoryEditorDate = string.Empty;
         HistoryEditorType = string.Empty;
         HistoryEditorOdometer = string.Empty;
