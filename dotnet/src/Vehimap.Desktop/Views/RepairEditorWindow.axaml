@@ -1,0 +1,57 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization" xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.RepairEditorWindow" x:DataType="vm:RepairEditorViewModel"
+        Title="{Binding Heading}" AutomationProperties.Name="{Binding Heading}" AutomationProperties.AutomationId="RepairEditorWindow"
+        AutomationProperties.HelpText="{i18n:Loc Repairs.EditorHelp}" Width="680" Height="700" MinWidth="500" MinHeight="450" CanResize="True" WindowStartupLocation="CenterOwner">
+  <Grid Margin="20" RowDefinitions="Auto,Auto,*,Auto">
+    <TextBlock Text="{Binding Heading}" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding Heading}" AutomationProperties.AutomationId="RepairEditorHeading" AutomationProperties.HeadingLevel="1" />
+    <TextBlock Grid.Row="1" Text="{Binding Status}" TextWrapping="Wrap" Margin="0,8"
+               AutomationProperties.Name="{Binding Status}" AutomationProperties.AutomationId="RepairEditorStatusText" AutomationProperties.LiveSetting="Assertive" />
+    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                  AutomationProperties.Name="{i18n:Loc Repairs.Fields}" AutomationProperties.AutomationId="RepairEditorScrollViewer">
+      <StackPanel Spacing="8">
+        <StackPanel Spacing="6" IsVisible="{Binding IsDefinition}">
+          <TextBlock Text="{i18n:Loc Repairs.TitleLabel}" />
+          <TextBox x:Name="RepairTitleBox" Text="{Binding RepairTitle}" AutomationProperties.Name="{i18n:Loc Repairs.TitleLabel}" AutomationProperties.AutomationId="RepairTitleBox" AutomationProperties.IsRequiredForForm="True" />
+          <TextBlock Text="{i18n:Loc Repairs.Description}" />
+          <TextBox Text="{Binding Description}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="75" AutomationProperties.Name="{i18n:Loc Repairs.Description}" AutomationProperties.AutomationId="RepairDescriptionBox" />
+          <TextBlock Text="{i18n:Loc Repairs.ReportedDate}" />
+          <TextBox x:Name="RepairReportedDateBox" Text="{Binding ReportedDate}" PlaceholderText="{Binding DateExample}" AutomationProperties.HelpText="{Binding DateExample}"
+                   AutomationProperties.Name="{i18n:Loc Repairs.ReportedDate}" AutomationProperties.AutomationId="RepairReportedDateBox" AutomationProperties.IsRequiredForForm="True" />
+          <TextBlock Text="{i18n:Loc Repairs.ReminderDays}" />
+          <TextBox x:Name="RepairReminderDaysBox" Text="{Binding ReminderDays}" AutomationProperties.Name="{i18n:Loc Repairs.ReminderDays}" AutomationProperties.AutomationId="RepairReminderDaysBox" AutomationProperties.IsRequiredForForm="True" />
+        </StackPanel>
+        <StackPanel Spacing="6" IsVisible="{Binding HasPlannedDate}">
+          <TextBlock Text="{i18n:Loc Repairs.PlannedDate}" />
+          <TextBox x:Name="RepairPlannedDateBox" Text="{Binding PlannedDate}" PlaceholderText="{Binding DateExample}" AutomationProperties.HelpText="{Binding DateExample}"
+                   AutomationProperties.Name="{i18n:Loc Repairs.PlannedDate}" AutomationProperties.AutomationId="RepairPlannedDateBox" AutomationProperties.IsRequiredForForm="{Binding IsReschedule}" />
+        </StackPanel>
+        <StackPanel Spacing="6" IsVisible="{Binding IsCompletion}">
+          <TextBlock Text="{i18n:Loc Repairs.History}" />
+          <ComboBox x:Name="RepairHistoryBox" ItemsSource="{Binding HistoryOptions}" SelectedItem="{Binding SelectedHistory}" HorizontalAlignment="Stretch"
+                    AutomationProperties.Name="{i18n:Loc Repairs.History}" AutomationProperties.AutomationId="RepairHistoryBox" />
+          <StackPanel Spacing="6" IsVisible="{Binding NeedsNewHistory}">
+            <TextBlock Text="{i18n:Loc Repairs.CompletedDate}" />
+            <TextBox x:Name="RepairCompletedDateBox" Text="{Binding CompletedDate}" PlaceholderText="{Binding DateExample}" AutomationProperties.HelpText="{Binding DateExample}"
+                     AutomationProperties.Name="{i18n:Loc Repairs.CompletedDate}" AutomationProperties.AutomationId="RepairCompletedDateBox" AutomationProperties.IsRequiredForForm="True" />
+            <TextBlock Text="{Binding OdometerLabel}" />
+            <TextBox x:Name="RepairOdometerBox" Text="{Binding Odometer}" AutomationProperties.Name="{Binding OdometerLabel}" AutomationProperties.AutomationId="RepairOdometerBox" />
+            <TextBlock Text="{i18n:Loc Repairs.Cost}" />
+            <TextBox x:Name="RepairCostBox" Text="{Binding Cost}" AutomationProperties.Name="{i18n:Loc Repairs.Cost}" AutomationProperties.AutomationId="RepairCostBox" />
+          </StackPanel>
+        </StackPanel>
+        <StackPanel Spacing="6" IsVisible="{Binding HasReason}">
+          <TextBlock Text="{Binding ReasonLabel}" />
+          <TextBox x:Name="RepairReasonBox" Text="{Binding Reason}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="85"
+                   AutomationProperties.Name="{Binding ReasonLabel}" AutomationProperties.AutomationId="RepairReasonBox" AutomationProperties.IsRequiredForForm="{Binding RequiresReason}" />
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+    <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="12" Margin="0,15,0,0">
+      <Button Content="{i18n:Loc Common.Save}" Click="OnSaveClick" AutomationProperties.Name="{i18n:Loc Common.Save}" AutomationProperties.AutomationId="SaveRepairButton" AutomationProperties.AcceleratorKey="Ctrl+S" />
+      <Button x:Name="CancelRepairButton" Content="{i18n:Loc Common.Cancel}" Click="OnCancelClick" AutomationProperties.Name="{i18n:Loc Common.Cancel}" AutomationProperties.AutomationId="CancelRepairButton" AutomationProperties.AcceleratorKey="Esc" />
+    </StackPanel>
+  </Grid>
+</Window>

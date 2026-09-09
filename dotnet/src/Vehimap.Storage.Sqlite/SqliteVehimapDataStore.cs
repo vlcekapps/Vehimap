@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using Microsoft.Data.Sqlite;
+using System.Text.Json;
 using Vehimap.Application.Abstractions;
+using Vehimap.Application.Services;
 using Vehimap.Domain.Enums;
 using Vehimap.Domain.Models;
 
@@ -17,7 +19,8 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
         "DELETE FROM fuel_entries;",
         "DELETE FROM records;",
         "DELETE FROM reminders;",
-        "DELETE FROM maintenance_plans;"
+        "DELETE FROM maintenance_plans;",
+        "DELETE FROM vehicle_repairs;"
     ];
 
     public async Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
@@ -35,7 +38,7 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
         using var snapshot = connection.BeginTransaction(deferred: true);
         await ValidateSchemaAsync(connection, cancellationToken).ConfigureAwait(false);
 
-        return new VehimapDataSet
+        var dataSet = new VehimapDataSet
         {
             Settings = await LoadSettingsAsync(connection, cancellationToken).ConfigureAwait(false),
             Vehicles = await LoadVehiclesAsync(connection, cancellationToken).ConfigureAwait(false),
@@ -44,8 +47,11 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
             Records = await LoadRecordsAsync(connection, cancellationToken).ConfigureAwait(false),
             VehicleMetaEntries = await LoadVehicleMetaAsync(connection, cancellationToken).ConfigureAwait(false),
             Reminders = await LoadRemindersAsync(connection, cancellationToken).ConfigureAwait(false),
-            MaintenancePlans = await LoadMaintenancePlansAsync(connection, cancellationToken).ConfigureAwait(false)
+            MaintenancePlans = await LoadMaintenancePlansAsync(connection, cancellationToken).ConfigureAwait(false),
+            Repairs = await LoadRepairsAsync(connection, cancellationToken).ConfigureAwait(false)
         };
+        VehicleRepairService.ValidateReferences(dataSet);
+        return dataSet;
     }
 
     public async Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
@@ -61,6 +67,7 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
 
     private static async Task SaveCoreAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken)
     {
+        VehicleRepairService.ValidateReferences(dataSet);
         Directory.CreateDirectory(dataRoot.DataPath);
         var isNewDatabase = !File.Exists(SqliteStoragePaths.GetDatabasePath(dataRoot));
         await using var connection = new SqliteConnection(BuildConnectionString(dataRoot));
@@ -70,10 +77,23 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
             await EnsureSchemaAsync(connection, cancellationToken).ConfigureAwait(false);
         }
 
+        await ValidateSchemaAsync(connection, cancellationToken).ConfigureAwait(false);
+        if (!isNewDatabase && !await HasRepairSchemaAsync(connection, cancellationToken).ConfigureAwait(false))
+        {
+            var directory = Path.Combine(dataRoot.DataPath, "schema-backups");
+            Directory.CreateDirectory(directory);
+            await using var backup = new SqliteConnection(new SqliteConnectionStringBuilder
+            {
+                DataSource = Path.Combine(directory, $"before-repairs-{Guid.NewGuid():N}.db"), Pooling = false
+            }.ToString());
+            await backup.OpenAsync(cancellationToken).ConfigureAwait(false);
+            connection.BackupDatabase(backup);
+        }
         await using var transaction = (SqliteTransaction)await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             await ValidateSchemaAsync(connection, cancellationToken).ConfigureAwait(false);
+            await ExecuteAsync(connection, transaction, RepairSchema, cancellationToken).ConfigureAwait(false);
             foreach (var statement in ResetTableStatements)
             {
                 await ExecuteAsync(connection, transaction, statement, cancellationToken).ConfigureAwait(false);
@@ -250,6 +270,17 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
                     .ConfigureAwait(false);
             }
 
+            foreach (var repair in dataSet.Repairs)
+            {
+                await ExecuteAsync(connection, transaction, """
+                    INSERT INTO vehicle_repairs(id, vehicle_id, title, description, reported_date, planned_date,
+                        reminder_days, state, resolution, history_entry_id, schedule_changes)
+                    VALUES ($id, $vehicle, $title, $description, $reported, $planned, $days, $state, $resolution, $history, $changes);
+                    """, cancellationToken, ("$id", repair.Id), ("$vehicle", repair.VehicleId), ("$title", repair.Title),
+                    ("$description", repair.Description), ("$reported", repair.ReportedDate), ("$planned", repair.PlannedDate),
+                    ("$days", repair.ReminderDays), ("$state", repair.State), ("$resolution", repair.Resolution),
+                    ("$history", repair.HistoryEntryId), ("$changes", JsonSerializer.Serialize(repair.ScheduleChanges))).ConfigureAwait(false);
+            }
             await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
         }
         catch
@@ -295,8 +326,41 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
             while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
                 versions.Add(reader.GetString(0));
         }
-        if (versions.Count != 1 || versions[0] != "2.0-initial")
+        if (!versions.Contains("2.0-initial") || versions.Any(v => v is not ("2.0-initial" or "2.0-repairs"))
+            || versions.Count is < 1 or > 2 || versions.Contains("2.0-repairs") && !tables.Contains("vehicle_repairs")
+            || !versions.Contains("2.0-repairs") && tables.Contains("vehicle_repairs"))
             throw new InvalidDataException("SQLite schema version is missing or unsupported by this application.");
+    }
+
+    private const string RepairSchema = """
+        CREATE TABLE IF NOT EXISTS vehicle_repairs(
+            id TEXT PRIMARY KEY, vehicle_id TEXT NOT NULL, title TEXT NOT NULL, description TEXT NOT NULL,
+            reported_date TEXT NOT NULL, planned_date TEXT NOT NULL, reminder_days INTEGER NOT NULL,
+            state TEXT NOT NULL, resolution TEXT NOT NULL, history_entry_id TEXT NOT NULL, schedule_changes TEXT NOT NULL
+        );
+        INSERT OR IGNORE INTO schema_migrations(id, applied_utc)
+        VALUES ('2.0-repairs', strftime('%Y-%m-%dT%H:%M:%fZ', 'now'));
+        """;
+
+    private static async Task<bool> HasRepairSchemaAsync(SqliteConnection connection, CancellationToken cancellationToken)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT COUNT(*) FROM schema_migrations WHERE id = '2.0-repairs';";
+        return Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)) == 1;
+    }
+
+    private static async Task<List<VehicleRepair>> LoadRepairsAsync(SqliteConnection connection, CancellationToken cancellationToken)
+    {
+        if (!await HasRepairSchemaAsync(connection, cancellationToken).ConfigureAwait(false)) return [];
+        var repairs = new List<VehicleRepair>();
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT id, vehicle_id, title, description, reported_date, planned_date, reminder_days, state, resolution, history_entry_id, schedule_changes FROM vehicle_repairs ORDER BY rowid;";
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+        while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+            repairs.Add(new VehicleRepair(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3),
+                reader.GetString(4), reader.GetString(5), reader.GetInt32(6), reader.GetString(7), reader.GetString(8), reader.GetString(9),
+                JsonSerializer.Deserialize<RepairScheduleChange[]>(reader.GetString(10)) ?? throw new InvalidDataException("Missing repair schedule history.")));
+        return repairs;
     }
 
     private static async Task EnsureSchemaAsync(SqliteConnection connection, CancellationToken cancellationToken)

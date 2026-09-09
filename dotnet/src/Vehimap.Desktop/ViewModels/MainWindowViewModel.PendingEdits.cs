@@ -9,7 +9,8 @@ public sealed partial class MainWindowViewModel
     private Func<string, Task<bool>>? _confirmVehicleDeleteHandler;
 
     internal bool HasPendingEdits =>
-        VehicleDetailWorkspace.IsEditingVehicle
+        IsRepairsWindowOpen
+        || VehicleDetailWorkspace.IsEditingVehicle
         || IsEditingHistory
         || IsEditingFuel
         || IsEditingReminder
@@ -49,6 +50,7 @@ public sealed partial class MainWindowViewModel
     internal string GetPendingEditLabel()
     {
         var labels = new List<string>();
+        if (IsRepairsWindowOpen) labels.Add(LP("Repairs.Title"));
         if (VehicleDetailWorkspace.IsEditingVehicle)
         {
             labels.Add(LP("PendingEdits.Label.VehicleDetail"));

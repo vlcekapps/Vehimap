@@ -8,7 +8,9 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Přidáno
-- Desktopová nightly nabízí v menu Vozidlo a v Historii akci pro zaznamenání již provedené neplánované opravy. Samostatný dialog uloží datum, popis, tachometr, cenu a poznámku do historie; náklad i servisní knížka používají tento jediný záznam. Servisní plány se nezakládají ani neoznačují za dokončené. Rozhraní je česky i anglicky a zrušení nic nezapisuje. Evidence dosud neopravených závad není součástí této verze.
+- Desktopová nightly přidává samostatnou evidenci závad a jednorázových plánovaných oprav v menu Vozidlo i detailu vozidla. Modalní dialogy umí založení, úpravu, přesun termínu s dohledatelným původním datem, dokončení a stav Nelze opravit s důvodem. Audit a dashboard upozorní na blížící se či uplynulý termín; systémová oznámení se pro závady neposílají. Dokončení vytvoří jediný záznam historie nebo propojí existující, bez dvojí ceny. Všechny nové texty jsou česky i anglicky.
+- SQLite při prvním zápisu doplní tabulku oprav v transakci a před rozšířením staršího schématu vytvoří kopii databáze v `schema-backups`. Zálohy zahrnují opravy; balíčky vozidel mají verzi 2, zachovávají přesuny termínů i vazby na historii a dál načítají verzi 1. Starší aplikace nové schéma/balíčky odmítnou místo ztráty nových údajů.
+- Desktopová nightly nabízí v menu Vozidlo a v Historii akci pro zaznamenání již provedené neplánované opravy. Samostatný dialog uloží datum, popis, tachometr, cenu a poznámku do historie; náklad i servisní knížka používají tento jediný záznam. Servisní plány se nezakládají ani neoznačují za dokončené. Rozhraní je česky i anglicky a zrušení nic nezapisuje.
 
 ### Opraveno
 - Návrat z evidenčního editoru se doručuje i do workspace karty hlavního okna, nejen do samostatného okna evidence. Nová akce neplánované opravy vrací fokus na své tlačítko místo prázdného, nefocusovatelného seznamu historie.

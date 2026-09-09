@@ -137,6 +137,7 @@ public sealed partial class MainWindowViewModel
         _dataSet.Records.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
         _dataSet.Reminders.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
         _dataSet.MaintenancePlans.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
+        _dataSet.Repairs.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
         _dataSet.VehicleMetaEntries.RemoveAll(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal));
 
         if (!await PersistDataAndRestoreSelectionAsync(

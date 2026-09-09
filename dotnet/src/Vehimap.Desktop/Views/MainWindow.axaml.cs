@@ -118,6 +118,7 @@ public partial class MainWindow : Window
         if (_viewModel is not null)
         {
             _viewModel.FocusRequested -= OnFocusRequested;
+            _viewModel.RepairsRequested -= OnRepairsRequested;
             _viewModel.VehicleEditorDialogRequested -= OnVehicleEditorDialogRequested;
             _viewModel.WorkspaceEditorDialogRequested -= OnWorkspaceEditorDialogRequested;
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
@@ -130,6 +131,7 @@ public partial class MainWindow : Window
         {
             var viewModel = _viewModel;
             viewModel.FocusRequested += OnFocusRequested;
+            viewModel.RepairsRequested += OnRepairsRequested;
             viewModel.VehicleEditorDialogRequested += OnVehicleEditorDialogRequested;
             viewModel.WorkspaceEditorDialogRequested += OnWorkspaceEditorDialogRequested;
             viewModel.PropertyChanged += OnViewModelPropertyChanged;
@@ -820,6 +822,16 @@ public partial class MainWindow : Window
     {
         await OpenServiceBookWindowAsync();
     }
+
+    private async void OnOpenRepairsMenuClick(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is not null) await RepairsWindow.ShowAsync(this, _viewModel);
+    }
+
+    private void OnRepairsRequested(string id) => Dispatcher.UIThread.Post(async () =>
+    {
+        if (_viewModel is not null) await RepairsWindow.ShowAsync(_activeWorkspaceWindow ?? this, _viewModel, id);
+    }, DispatcherPriority.Background);
 
     private async void OnOpenSelectedVehicleCostsMenuClick(object? sender, RoutedEventArgs e)
     {

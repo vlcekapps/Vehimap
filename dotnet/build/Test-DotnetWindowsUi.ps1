@@ -3,7 +3,7 @@ param(
     [uri]$ServerUrl = 'http://127.0.0.1:4725/',
     [ValidateSet('Windows', 'NovaWindows')]
     [string]$AutomationName = 'Windows',
-    [ValidateSet('Startup', 'Core', 'Editors', 'Repairs', 'All')]
+    [ValidateSet('Startup', 'Core', 'Editors', 'Repairs', 'PendingRepairs', 'All')]
     [string]$Profile = 'Core',
     [string]$AppPath,
     [string]$Configuration = 'Release',
@@ -37,6 +37,7 @@ $filter = switch ($Profile) {
     'Core' { ($core | ForEach-Object { "FullyQualifiedName=Vehimap.Tests.UI.DesktopContinuousIntegrationSmokeTests.$_" }) -join '|' }
     'Editors' { 'FullyQualifiedName~DesktopContinuousIntegrationSmokeTests&FullyQualifiedName~editor_runs_in_standalone_window|FullyQualifiedName~DesktopContinuousIntegrationSmokeTests.Editor_dialog_shift_tab|FullyQualifiedName~DesktopContinuousIntegrationSmokeTests.Cancelling_modal_editor' }
     'Repairs' { 'FullyQualifiedName=Vehimap.Tests.UI.DesktopContinuousIntegrationSmokeTests.Unplanned_repair_dialog_saves_once_and_restores_focus_when_appium_is_available' }
+    'PendingRepairs' { 'FullyQualifiedName=Vehimap.Tests.UI.DesktopContinuousIntegrationSmokeTests.Pending_repairs_support_modal_create_reschedule_and_complete_when_appium_is_available' }
     'All' { 'FullyQualifiedName~DesktopContinuousIntegrationSmokeTests|FullyQualifiedName~DesktopAccessibilitySmokeTests' }
 }
 
@@ -79,7 +80,7 @@ try {
 
     [xml]$results = Get-Content -LiteralPath (Join-Path $runRoot 'windows-ui.trx') -Raw
     $counters = $results.TestRun.ResultSummary.Counters
-    $expected = switch ($Profile) { 'Startup' { 1 } 'Core' { $core.Count } 'Editors' { 12 } 'Repairs' { 3 } 'All' { [int]$counters.total } }
+    $expected = switch ($Profile) { 'Startup' { 1 } 'Core' { $core.Count } 'Editors' { 12 } 'Repairs' { 3 } 'PendingRepairs' { 2 } 'All' { [int]$counters.total } }
     if ($expected -lt 1 -or [int]$counters.total -ne $expected -or [int]$counters.passed -ne $expected -or [int]$counters.executed -ne $expected) {
         throw 'The live UI gate did not execute and pass every expected scenario.'
     }

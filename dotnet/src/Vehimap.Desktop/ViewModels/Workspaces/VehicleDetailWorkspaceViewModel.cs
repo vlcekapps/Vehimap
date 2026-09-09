@@ -368,6 +368,8 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
     public ServiceBookWindowViewModel? BuildVehicleServiceBookModel() =>
         CanOpenVehicleRelatedWorkspace ? Root.BuildSelectedVehicleServiceBookModel() : null;
 
+    public MainWindowViewModel RepairsHost => Root;
+
     internal void SetVehicleEditingState(bool isEditing, bool isNewVehicle)
     {
         VehiclePanelHeading = L("VehicleDetail.PanelHeading");

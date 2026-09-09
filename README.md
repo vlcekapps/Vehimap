@@ -148,6 +148,8 @@ K dispozici je plán údržby, servisní historie a servisní knížka. Užiteč
 
 Desktopová nightly 2.0 navíc nabízí **Vozidlo -> Zaznamenat neplánovanou opravu**, dostupné také tlačítkem v Historii. Zapište již provedenou opravu, datum a případně tachometr, cenu a poznámku. Záznam se objeví v historii, nákladech i servisní knížce, bez zakládání pravidelného servisního plánu. Dosud neopravené závady tato akce nesleduje.
 
+Pro závady čekající na servis má desktopová nightly 2.0 samostatné **Vozidlo -> Závady a plánované opravy**, dostupné také z detailu vozidla. Zadejte závadu, datum zjištění a případně termín opravy. Audit upozorní zvolený počet dní před termínem (výchozí hodnota je 7) i po jeho uplynutí, bez systémových oznámení. Termín můžete přesunout, zaznamenat provedení opravy nebo důvod, proč opravit nelze. Dokončenou opravu lze propojit s již existující historií místo druhého zápisu stejné ceny. Pravidelná údržba zůstává oddělená.
+
 ### Tankování A Náklady
 
 Vehimap eviduje tankování, místo tankování, detail paliva, cenu a tachometr. Umí dopočítat spotřebu, cenu za litr a upozornit na podezřelé záznamy.

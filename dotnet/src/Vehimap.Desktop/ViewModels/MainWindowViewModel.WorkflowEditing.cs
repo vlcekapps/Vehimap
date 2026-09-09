@@ -350,6 +350,13 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        if (_dataSet.Repairs.Any(r => r.HistoryEntryId == SelectedHistory.Id))
+        {
+            HistoryEditorStatus = LO("Repairs.Error.LinkedHistory");
+            RequestFocus(DesktopFocusTarget.HistoryList);
+            return;
+        }
+
         var rollbackDataSet = CloneDataSet(_dataSet);
         _dataSet.HistoryEntries.RemoveAll(item => string.Equals(item.Id, SelectedHistory.Id, StringComparison.Ordinal));
         if (!await PersistDataAndRestoreSelectionAsync(

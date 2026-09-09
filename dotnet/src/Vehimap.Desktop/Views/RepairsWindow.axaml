@@ -1,0 +1,39 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i18n="using:Vehimap.Desktop.Localization" xmlns:vm="using:Vehimap.Desktop.ViewModels"
+        x:Class="Vehimap.Desktop.Views.RepairsWindow" x:DataType="vm:RepairsWindowViewModel"
+        Title="{Binding Heading}" AutomationProperties.Name="{Binding Heading}" AutomationProperties.AutomationId="RepairsWindow"
+        Width="850" Height="740" MinWidth="600" MinHeight="480" CanResize="True" WindowStartupLocation="CenterOwner">
+  <Window.KeyBindings><KeyBinding Gesture="Escape" Command="{Binding CloseCommand}" /></Window.KeyBindings>
+  <Grid Margin="20" RowDefinitions="Auto,Auto,2*,*,Auto,Auto">
+    <TextBlock Text="{Binding Heading}" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap"
+               AutomationProperties.Name="{Binding Heading}" AutomationProperties.AutomationId="RepairsHeading" AutomationProperties.HeadingLevel="1" />
+    <WrapPanel Grid.Row="1" Margin="0,12">
+      <Button x:Name="NewRepairButton" Content="{i18n:Loc Repairs.Action.Create}" Tag="Create" Click="OnActionClick" Margin="0,0,8,8"
+              AutomationProperties.Name="{i18n:Loc Repairs.Action.Create}" AutomationProperties.AutomationId="NewRepairButton" />
+      <Button Content="{i18n:Loc Repairs.Action.Edit}" Tag="Edit" Click="OnActionClick" IsEnabled="{Binding CanChange}" Margin="0,0,8,8"
+              AutomationProperties.Name="{i18n:Loc Repairs.Action.Edit}" AutomationProperties.AutomationId="EditRepairButton" />
+      <Button Content="{i18n:Loc Repairs.Action.Reschedule}" Tag="Reschedule" Click="OnActionClick" IsEnabled="{Binding CanChange}" Margin="0,0,8,8"
+              AutomationProperties.Name="{i18n:Loc Repairs.Action.Reschedule}" AutomationProperties.AutomationId="RescheduleRepairButton" />
+      <Button Content="{i18n:Loc Repairs.Action.Complete}" Tag="Complete" Click="OnActionClick" IsEnabled="{Binding CanChange}" Margin="0,0,8,8"
+              AutomationProperties.Name="{i18n:Loc Repairs.Action.Complete}" AutomationProperties.AutomationId="CompleteRepairButton" />
+      <Button Content="{i18n:Loc Repairs.Action.CannotRepair}" Tag="CannotRepair" Click="OnActionClick" IsEnabled="{Binding CanChange}" Margin="0,0,8,8"
+              AutomationProperties.Name="{i18n:Loc Repairs.Action.CannotRepair}" AutomationProperties.AutomationId="CannotRepairButton" />
+    </WrapPanel>
+    <ListBox x:Name="RepairsListBox" Grid.Row="2" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}"
+             AutomationProperties.Name="{i18n:Loc Repairs.List}" AutomationProperties.AutomationId="RepairsListBox">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="vm:RepairListItemViewModel">
+          <TextBlock Text="{Binding Label}" TextWrapping="Wrap" AutomationProperties.Name="{Binding AccessibleLabel}"
+                     AutomationProperties.AutomationId="{Binding Id}" AutomationProperties.ItemType="{i18n:Loc Repairs.ItemType}" AutomationProperties.ItemStatus="{Binding StateLabel}" />
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+    <TextBox Grid.Row="3" Margin="0,12,0,0" Text="{Binding SelectedDetail}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
+             AutomationProperties.Name="{i18n:Loc Repairs.DetailName}" AutomationProperties.AutomationId="RepairDetailBox" />
+    <TextBlock Grid.Row="4" Text="{Binding Status}" TextWrapping="Wrap" AutomationProperties.Name="{Binding Status}"
+               AutomationProperties.AutomationId="RepairsStatusText" AutomationProperties.LiveSetting="Polite" />
+    <Button Grid.Row="5" Margin="0,12,0,0" HorizontalAlignment="Right" Content="{i18n:Loc Common.Close}" Command="{Binding CloseCommand}"
+            AutomationProperties.Name="{i18n:Loc Common.Close}" AutomationProperties.AutomationId="CloseRepairsButton" AutomationProperties.AcceleratorKey="Esc" />
+  </Grid>
+</Window>

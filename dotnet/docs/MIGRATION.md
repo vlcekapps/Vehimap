@@ -1,5 +1,11 @@
 # Migrace AHK -> .NET
 
+## Jednorázové závady a opravy (nightly 2.0)
+
+Nová evidence je oddělená od pravidelných servisních plánů. Přidává tabulku SQLite `vehicle_repairs` a marker `2.0-repairs`; při prvním zápisu do staršího schématu se před změnou uloží konzistentní databázová kopie do `schema-backups`. Rozšíření schématu i následný zápis jsou transakční. Čtení původního schématu zůstává podporované, cizí či neúplné schéma se automaticky neopravuje. Starší aplikace rozšířené schéma odmítne; pro návrat použijte zachovanou zálohu, nikoli přepis markerů.
+
+SQLite backup zahrnuje opravy automaticky. Balíčky vozidel verze 2 obsahují i závady, přesuny termínů a vazby na historii. Import verze 1 je zachován, kolize ID se přemapují včetně propojené historie. Legacy TSV/INI se znovu nezavádí. UI je zatím desktopové; sdílená storage zachovává novou evidenci i při práci ostatních aktuálně sestavených klientů.
+
 Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, knihovny a smoke testy byly po prvnim stabilnim Windows release odstraneny; dokument zustava jako historicka mapa parity a dalsich kroku multiplatformni vetve.
 
 ## Storage 2.0

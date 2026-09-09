@@ -237,13 +237,19 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         var count = Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
         if (count == 1)
         {
-            command.CommandText = "SELECT COUNT(*) FROM schema_migrations;";
-            if (Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)) != 1)
+            command.CommandText = "SELECT COUNT(*) FROM schema_migrations WHERE id NOT IN ('2.0-initial', '2.0-repairs');";
+            if (Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)) != 0)
             {
                 details.Add(L("DataStoreHealth.Report.SchemaMarkerUnsupported"));
                 return DataStoreHealthStatus.Error;
             }
 
+            command.CommandText = "SELECT (SELECT COUNT(*) FROM schema_migrations WHERE id = '2.0-repairs') - (SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'vehicle_repairs');";
+            if (Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)) != 0)
+            {
+                details.Add(L("DataStoreHealth.Report.SchemaMarkerUnsupported"));
+                return DataStoreHealthStatus.Error;
+            }
             details.Add(L("DataStoreHealth.Report.SchemaMarkerPresent"));
             return DataStoreHealthStatus.Healthy;
         }

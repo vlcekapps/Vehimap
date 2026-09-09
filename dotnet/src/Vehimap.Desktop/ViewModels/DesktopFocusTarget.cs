@@ -68,5 +68,7 @@ public enum DesktopFocusTarget
     DashboardTimelineList,
     SmartAdvisorSearch,
     SmartAdvisorList,
-    RecordUnplannedRepairAction
+    RecordUnplannedRepairAction,
+    RepairTitle, RepairReportedDate, RepairPlannedDate, RepairReminderDays,
+    RepairCompletedDate, RepairReason, RepairOdometer, RepairCost
 }

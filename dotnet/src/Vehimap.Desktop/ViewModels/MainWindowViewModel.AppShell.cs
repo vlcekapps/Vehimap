@@ -420,13 +420,15 @@ public sealed partial class MainWindowViewModel
                 true);
         }
 
-        if (AuditItems.Count > 0)
+        // Repair reminders belong in the audit/dashboard, never in desktop notifications.
+        var notificationAuditItems = AuditItems.Where(item => item.EntityKind != ApplicationEntityKinds.Repair).ToList();
+        if (notificationAuditItems.Count > 0)
         {
-            var firstAudit = AuditItems[0];
+            var firstAudit = notificationAuditItems[0];
             return new DesktopBackgroundSnapshot(
                 string.Join(Environment.NewLine, toolTipLines),
-                $"audit|{AuditItems.Count}|{firstAudit.VehicleId}|{firstAudit.EntityKind}|{firstAudit.EntityId}",
-                FormatPlural("AppShell.Background.NotificationAuditTitle", AuditItems.Count, AuditItems.Count),
+                $"audit|{notificationAuditItems.Count}|{firstAudit.VehicleId}|{firstAudit.EntityKind}|{firstAudit.EntityId}",
+                FormatPlural("AppShell.Background.NotificationAuditTitle", notificationAuditItems.Count, notificationAuditItems.Count),
                 LFO("AppShell.Background.NotificationAuditMessage", firstAudit.VehicleName, firstAudit.Title, firstAudit.Message),
                 true);
         }

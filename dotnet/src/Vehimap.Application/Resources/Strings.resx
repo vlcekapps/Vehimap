@@ -2959,4 +2959,169 @@ Suggested action: {6}</value></data>
   <data name="UnplannedRepair.DescriptionExample" xml:space="preserve"><value>For example, replacement of a broken spring</value></data>
   <data name="UnplannedRepair.DescriptionRequired" xml:space="preserve"><value>Describe the repair that was carried out.</value></data>
   <data name="UnplannedRepair.Created" xml:space="preserve"><value>The unplanned repair was saved in history. Maintenance plans were not changed.</value></data>
+  <data name="Repairs.Title" xml:space="preserve">
+    <value>Faults and planned repairs</value>
+  </data>
+  <data name="Repairs.OpenShort" xml:space="preserve">
+    <value>Faults and repairs</value>
+  </data>
+  <data name="Repairs.WindowTitle" xml:space="preserve">
+    <value>Faults and repairs - {0}</value>
+  </data>
+  <data name="Repairs.Action.Create" xml:space="preserve">
+    <value>New fault / planned repair</value>
+  </data>
+  <data name="Repairs.Action.Edit" xml:space="preserve">
+    <value>Edit fault</value>
+  </data>
+  <data name="Repairs.Action.Reschedule" xml:space="preserve">
+    <value>Reschedule repair</value>
+  </data>
+  <data name="Repairs.Action.Complete" xml:space="preserve">
+    <value>Repair completed</value>
+  </data>
+  <data name="Repairs.Action.CannotRepair" xml:space="preserve">
+    <value>Cannot be repaired</value>
+  </data>
+  <data name="Repairs.TitleLabel" xml:space="preserve">
+    <value>Fault name</value>
+  </data>
+  <data name="Repairs.Description" xml:space="preserve">
+    <value>Fault description</value>
+  </data>
+  <data name="Repairs.ReportedDate" xml:space="preserve">
+    <value>Date discovered</value>
+  </data>
+  <data name="Repairs.PlannedDate" xml:space="preserve">
+    <value>Repair date (optional when creating a fault)</value>
+  </data>
+  <data name="Repairs.ReminderDays" xml:space="preserve">
+    <value>Show in audit this many days before the repair</value>
+  </data>
+  <data name="Repairs.History" xml:space="preserve">
+    <value>Record of the completed repair</value>
+  </data>
+  <data name="Repairs.NewHistory" xml:space="preserve">
+    <value>Create a new history entry</value>
+  </data>
+  <data name="Repairs.CompletedDate" xml:space="preserve">
+    <value>Date repaired</value>
+  </data>
+  <data name="Repairs.Odometer" xml:space="preserve">
+    <value>Odometer ({0})</value>
+  </data>
+  <data name="Repairs.Cost" xml:space="preserve">
+    <value>Actual repair cost</value>
+  </data>
+  <data name="Repairs.Work" xml:space="preserve">
+    <value>Work carried out (required for a new history entry)</value>
+  </data>
+  <data name="Repairs.Reason" xml:space="preserve">
+    <value>Reason / note</value>
+  </data>
+  <data name="Repairs.EditorHelp" xml:space="preserve">
+    <value>Ctrl+S saves. Esc cancels without saving. Dates follow your language settings.</value>
+  </data>
+  <data name="Repairs.Fields" xml:space="preserve">
+    <value>Repair fields</value>
+  </data>
+  <data name="Repairs.List" xml:space="preserve">
+    <value>Vehicle faults and repairs</value>
+  </data>
+  <data name="Repairs.DetailName" xml:space="preserve">
+    <value>Selected fault details and rescheduled dates</value>
+  </data>
+  <data name="Repairs.ItemType" xml:space="preserve">
+    <value>Vehicle fault</value>
+  </data>
+  <data name="Repairs.Empty" xml:space="preserve">
+    <value>No fault selected. Add a fault or planned repair.</value>
+  </data>
+  <data name="Repairs.NoDate" xml:space="preserve">
+    <value>Not scheduled</value>
+  </data>
+  <data name="Repairs.Item" xml:space="preserve">
+    <value>{0}; {1}; repair date: {2}</value>
+  </data>
+  <data name="Repairs.Detail" xml:space="preserve">
+    <value>{0}
+{1}
+Discovered: {2}
+Repair date: {3}
+Days before the repair to show in audit: {4}
+State: {5}
+Resolution: {6}</value>
+  </data>
+  <data name="Repairs.ScheduleChange" xml:space="preserve">
+    <value>Rescheduled: {0} -&gt; {1}. {2}</value>
+  </data>
+  <data name="Repairs.State.Waiting" xml:space="preserve">
+    <value>Awaiting repair</value>
+  </data>
+  <data name="Repairs.State.Unscheduled" xml:space="preserve">
+    <value>Awaiting scheduling</value>
+  </data>
+  <data name="Repairs.State.Repaired" xml:space="preserve">
+    <value>Repaired</value>
+  </data>
+  <data name="Repairs.State.Unrepairable" xml:space="preserve">
+    <value>Cannot be repaired</value>
+  </data>
+  <data name="Repairs.Audit.Unscheduled" xml:space="preserve">
+    <value>Fault awaiting scheduling</value>
+  </data>
+  <data name="Repairs.Audit.Upcoming" xml:space="preserve">
+    <value>Planned repair is approaching</value>
+  </data>
+  <data name="Repairs.Audit.Overdue" xml:space="preserve">
+    <value>Planned repair date has passed</value>
+  </data>
+  <data name="Repairs.Audit.Unrepairable" xml:space="preserve">
+    <value>Unresolved fault: cannot be repaired</value>
+  </data>
+  <data name="Repairs.Saved" xml:space="preserve">
+    <value>Repair record saved.</value>
+  </data>
+  <data name="Repairs.Error.Vehicle" xml:space="preserve">
+    <value>Select an existing vehicle.</value>
+  </data>
+  <data name="Repairs.Error.Missing" xml:space="preserve">
+    <value>This fault no longer exists. Reopen the list.</value>
+  </data>
+  <data name="Repairs.Error.Closed" xml:space="preserve">
+    <value>This fault is already closed. It cannot be completed again.</value>
+  </data>
+  <data name="Repairs.Error.Title" xml:space="preserve">
+    <value>Enter the fault name.</value>
+  </data>
+  <data name="Repairs.Error.Date" xml:space="preserve">
+    <value>Enter a valid full date. The repair cannot precede discovery of the fault.</value>
+  </data>
+  <data name="Repairs.Error.PlannedDate" xml:space="preserve">
+    <value>Enter a valid repair date on or after the discovery date.</value>
+  </data>
+  <data name="Repairs.Error.Days" xml:space="preserve">
+    <value>Enter a whole number of days from 0 to 3650.</value>
+  </data>
+  <data name="Repairs.Error.Reason" xml:space="preserve">
+    <value>Explain why the fault cannot be repaired.</value>
+  </data>
+  <data name="Repairs.Error.Work" xml:space="preserve">
+    <value>Describe the work carried out.</value>
+  </data>
+  <data name="Repairs.Error.Odometer" xml:space="preserve">
+    <value>Enter a valid non-negative odometer reading in the selected unit.</value>
+  </data>
+  <data name="Repairs.Error.Cost" xml:space="preserve">
+    <value>Enter a valid non-negative repair cost.</value>
+  </data>
+  <data name="Repairs.Error.History" xml:space="preserve">
+    <value>Choose an unlinked history entry for this vehicle, dated on or after discovery of the fault.</value>
+  </data>
+  <data name="Repairs.Error.LinkedHistory" xml:space="preserve">
+    <value>This history entry documents a completed fault repair and cannot be deleted. You can edit its details.</value>
+  </data>
+  <data name="Repairs.Error.Save" xml:space="preserve">
+    <value>The repair could not be saved. Your entries remain in the dialog; try again.</value>
+  </data>
 </root>

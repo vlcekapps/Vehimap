@@ -148,6 +148,8 @@ Vehimap includes maintenance plans, service history, and a service book. This is
 
 Desktop nightly 2.0 also offers **Vehicle -> Record an unplanned repair**, available as a button in History. Enter the completed repair, its date and, optionally, the odometer, cost and notes. The record appears in history, costs and the service book without creating a recurring maintenance plan. This action does not track outstanding faults.
 
+For faults awaiting service, desktop nightly 2.0 provides **Vehicle -> Faults and planned repairs**, also available in the vehicle detail. Enter the fault, discovery date and an optional repair date. The audit flags the repair the chosen number of days before its date (7 by default) and after it becomes overdue, without desktop notifications. You can reschedule it, record completion, or explain why it cannot be repaired. A completed repair can link to an existing history entry instead of recording the same cost twice. Recurring maintenance remains separate.
+
 ### Fuel And Costs
 
 Vehimap records fuel entries, fuel location, fuel details, total price, and odometer values. It can calculate consumption, price per liter, and warn about suspicious records.

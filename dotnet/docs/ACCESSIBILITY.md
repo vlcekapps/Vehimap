@@ -23,6 +23,19 @@ for a future ACR/VPAT-style report if one is needed.
   improves practical NVDA usability in nightly builds, but it is not acceptable as a
   final answer for a formal ACR/VPAT claim.
 
+## Fault and repair dialogs (2026-09-09)
+
+The new desktop fault overview and action-specific modal editor reuse the shared
+dialog lifecycle. They expose standard controls, explicit names/IDs, required
+fields, a heading, live validation status and scrollable forms. Only Shift+Tab
+from the first logical field cycles to Cancel; other fields keep their normal
+order. The detail entry has a short visible label and a full accessible name.
+
+The [pending repairs evidence](accessibility-evidence/2026-09-09-pending-repairs.md)
+records two live Appium paths and their limits. Manual NVDA/Narrator speech,
+contrast and scaled-layout checks remain required; passing driver assertions
+does not establish conformance.
+
 ## Desktop framework review (2026-09-06)
 
 The desktop host now uses Avalonia **12.1.2**, independently of the Android/Mobile

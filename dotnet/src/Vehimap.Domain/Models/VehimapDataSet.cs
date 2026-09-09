@@ -11,4 +11,5 @@ public sealed class VehimapDataSet
     public List<VehicleMeta> VehicleMetaEntries { get; init; } = new();
     public List<VehicleReminder> Reminders { get; init; } = new();
     public List<MaintenancePlan> MaintenancePlans { get; init; } = new();
+    public List<VehicleRepair> Repairs { get; init; } = new();
 }

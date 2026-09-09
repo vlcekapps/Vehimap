@@ -922,6 +922,112 @@ public sealed class DesktopContinuousIntegrationSmokeTests
         AssertSqliteRuntimeDataOnly(session.TemporaryDataPath!);
     }
 
+    [AppiumTheory]
+    [InlineData("menu")]
+    [InlineData("detail")]
+    public void Pending_repairs_support_modal_create_reschedule_and_complete_when_appium_is_available(string origin)
+    {
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason)) throw new InvalidOperationException(reason);
+        using var session = startedSession!;
+        var original = ReadPersistedData(session);
+        Assert.Equal("VehicleListBox", session.WaitForFocusedAutomationId(12, "VehicleListBox"));
+        if (origin == "menu") session.ClickMenuItem("VehicleMenuRoot", "OpenRepairsMenuItem");
+        else
+        {
+            session.ClickByAccessibilityId("DetailTabButton");
+            // Tab also scrolls the related action into view on smaller displays.
+            for (var i = 0; i < 35 && session.GetFocusedAutomationId() != "OpenDetailRepairsButton"; i++)
+                session.SendKeysToActiveElement(Keys.Tab);
+            Assert.Equal("OpenDetailRepairsButton", session.WaitForFocusedAutomationId(12, "OpenDetailRepairsButton"));
+            session.SendKeysToActiveElement(Keys.Enter);
+        }
+        session.WithinWindow("RepairsWindow");
+        Assert.Equal("NewRepairButton", session.WaitForFocusedAutomationId(12, "NewRepairButton"));
+        session.ClickByAccessibilityId("NewRepairButton");
+        session.WithinWindow("RepairEditorWindow");
+        Assert.Equal("RepairTitleBox", session.WaitForFocusedAutomationId(12, "RepairTitleBox"));
+        session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+        Assert.Equal("CancelRepairButton", session.WaitForFocusedAutomationId(12, "CancelRepairButton"));
+        session.SendKeysToActiveElement(Keys.Tab);
+        Assert.Equal("RepairTitleBox", session.WaitForFocusedAutomationId(12, "RepairTitleBox"));
+        session.SendKeysToActiveElement(Keys.Tab);
+        Assert.Equal("RepairDescriptionBox", session.WaitForFocusedAutomationId(12, "RepairDescriptionBox"));
+        session.SendKeysToActiveElement(Keys.Shift + Keys.Tab);
+        Assert.Equal("RepairTitleBox", session.WaitForFocusedAutomationId(12, "RepairTitleBox"));
+        session.SendKeysToActiveElement(Keys.Escape);
+        session.WaitForElementToDisappearByAccessibilityId("SaveRepairButton");
+        session.WithinWindow("RepairsWindow");
+        Assert.Equal("NewRepairButton", session.WaitForFocusedAutomationId(12, "NewRepairButton"));
+        Assert.Empty(ReadPersistedData(session).Repairs);
+        session.ClickByAccessibilityId("NewRepairButton");
+        session.WithinWindow("RepairEditorWindow");
+        session.ReplaceTextByAccessibilityId("RepairTitleBox", "Appium: závada topení");
+        session.ReplaceTextByAccessibilityId("RepairReportedDateBox", "31.2.2026");
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        Assert.Equal("RepairReportedDateBox", session.WaitForFocusedAutomationId(12, "RepairReportedDateBox"));
+        session.ReplaceTextByAccessibilityId("RepairReportedDateBox", "1.9.2026");
+        session.ReplaceTextByAccessibilityId("RepairPlannedDateBox", "20.9.2026");
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        session.WaitForElementToDisappearByAccessibilityId("SaveRepairButton");
+        session.WithinWindow("RepairsWindow");
+        Assert.Equal("NewRepairButton", session.WaitForFocusedAutomationId(12, "NewRepairButton"));
+        session.ClickByAccessibilityId("RescheduleRepairButton");
+        session.WithinWindow("RepairEditorWindow");
+        Assert.Equal("RepairPlannedDateBox", session.WaitForFocusedAutomationId(12, "RepairPlannedDateBox"));
+        session.ReplaceTextByAccessibilityId("RepairPlannedDateBox", "30.9.2026");
+        session.ReplaceTextByAccessibilityId("RepairReasonBox", "Čekání na náhradní díl");
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        session.WaitForElementToDisappearByAccessibilityId("SaveRepairButton");
+        session.WithinWindow("RepairsWindow");
+        Assert.Equal("RescheduleRepairButton", session.WaitForFocusedAutomationId(12, "RescheduleRepairButton"));
+        session.ClickByAccessibilityId("CompleteRepairButton");
+        session.WithinWindow("RepairEditorWindow");
+        Assert.Equal("RepairHistoryBox", session.WaitForFocusedAutomationId(12, "RepairHistoryBox"));
+        session.ReplaceTextByAccessibilityId("RepairCompletedDateBox", "21.9.2026");
+        session.ReplaceTextByAccessibilityId("RepairCostBox", "2500,50");
+        session.ReplaceTextByAccessibilityId("RepairReasonBox", "Appium: oprava topení");
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        session.WaitForElementToDisappearByAccessibilityId("SaveRepairButton");
+        session.WithinWindow("RepairsWindow");
+        var persisted = ReadPersistedData(session);
+        var repair = Assert.Single(persisted.Repairs);
+        Assert.Equal("repaired", repair.State);
+        Assert.Equal("30.09.2026", repair.PlannedDate);
+        Assert.Single(repair.ScheduleChanges);
+        Assert.Equal("2500.5", persisted.HistoryEntries.Single(h => h.Id == repair.HistoryEntryId).Cost);
+        Assert.Equal(original.HistoryEntries.Count + 1, persisted.HistoryEntries.Count);
+        Assert.Equal(original.MaintenancePlans, persisted.MaintenancePlans);
+        session.ClickByAccessibilityId("NewRepairButton");
+        session.WithinWindow("RepairEditorWindow");
+        session.ReplaceTextByAccessibilityId("RepairTitleBox", "Appium: nedostupný díl");
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        session.WaitForElementToDisappearByAccessibilityId("SaveRepairButton");
+        session.WithinWindow("RepairsWindow");
+        session.ClickByAccessibilityId("CannotRepairButton");
+        session.WithinWindow("RepairEditorWindow");
+        Assert.Equal("RepairReasonBox", session.WaitForFocusedAutomationId(12, "RepairReasonBox"));
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        Assert.Equal("RepairReasonBox", session.WaitForFocusedAutomationId(12, "RepairReasonBox"));
+        session.ReplaceTextByAccessibilityId("RepairReasonBox", "Náhradní díl se nevyrábí");
+        session.SendKeysToActiveElement(Keys.Control + "s");
+        session.WaitForElementToDisappearByAccessibilityId("SaveRepairButton");
+        session.WithinWindow("RepairsWindow");
+        var unresolved = ReadPersistedData(session).Repairs.Single(r => r.Title == "Appium: nedostupný díl");
+        Assert.Equal("unrepairable", unresolved.State);
+        Assert.Equal("Náhradní díl se nevyrábí", unresolved.Resolution);
+        Assert.Equal(original.HistoryEntries.Count + 1, ReadPersistedData(session).HistoryEntries.Count);
+        session.ClickByAccessibilityId("CloseRepairsButton");
+        session.WithinWindow("MainWindow");
+        session.ClickByAccessibilityId("AuditTabButton");
+        session.ReplaceTextByAccessibilityId("AuditSearchBox", "Appium: nedostupný díl");
+        session.ClickByAccessibilityId("AuditOpenItemButton");
+        session.WithinWindow("RepairsWindow");
+        Assert.Contains("Appium: nedostupný díl", session.CopyTextByAccessibilityId("RepairDetailBox"));
+        session.ClickByAccessibilityId("CloseRepairsButton");
+        session.WithinWindow("MainWindow");
+        AssertSqliteRuntimeDataOnly(session.TemporaryDataPath!);
+    }
+
     [AppiumFact]
     public void Fuel_editor_runs_in_standalone_window_when_appium_is_available()
     {

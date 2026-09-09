@@ -2959,4 +2959,169 @@ Navržená akce: {6}</value></data>
   <data name="UnplannedRepair.DescriptionExample" xml:space="preserve"><value>Například výměna prasklé pružiny</value></data>
   <data name="UnplannedRepair.DescriptionRequired" xml:space="preserve"><value>Popište, jaká oprava byla provedena.</value></data>
   <data name="UnplannedRepair.Created" xml:space="preserve"><value>Neplánovaná oprava byla uložena do historie. Servisní plány se nezměnily.</value></data>
+  <data name="Repairs.Title" xml:space="preserve">
+    <value>Závady a plánované opravy</value>
+  </data>
+  <data name="Repairs.OpenShort" xml:space="preserve">
+    <value>Závady a opravy</value>
+  </data>
+  <data name="Repairs.WindowTitle" xml:space="preserve">
+    <value>Závady a opravy - {0}</value>
+  </data>
+  <data name="Repairs.Action.Create" xml:space="preserve">
+    <value>Nová závada / plánovaná oprava</value>
+  </data>
+  <data name="Repairs.Action.Edit" xml:space="preserve">
+    <value>Upravit závadu</value>
+  </data>
+  <data name="Repairs.Action.Reschedule" xml:space="preserve">
+    <value>Přesunout termín opravy</value>
+  </data>
+  <data name="Repairs.Action.Complete" xml:space="preserve">
+    <value>Oprava provedena</value>
+  </data>
+  <data name="Repairs.Action.CannotRepair" xml:space="preserve">
+    <value>Nelze opravit</value>
+  </data>
+  <data name="Repairs.TitleLabel" xml:space="preserve">
+    <value>Název závady</value>
+  </data>
+  <data name="Repairs.Description" xml:space="preserve">
+    <value>Popis závady</value>
+  </data>
+  <data name="Repairs.ReportedDate" xml:space="preserve">
+    <value>Datum zjištění</value>
+  </data>
+  <data name="Repairs.PlannedDate" xml:space="preserve">
+    <value>Termín opravy (při založení závady nepovinný)</value>
+  </data>
+  <data name="Repairs.ReminderDays" xml:space="preserve">
+    <value>Zobrazit v auditu tolik dní před opravou</value>
+  </data>
+  <data name="Repairs.History" xml:space="preserve">
+    <value>Záznam provedené opravy</value>
+  </data>
+  <data name="Repairs.NewHistory" xml:space="preserve">
+    <value>Vytvořit nový záznam historie</value>
+  </data>
+  <data name="Repairs.CompletedDate" xml:space="preserve">
+    <value>Datum provedení opravy</value>
+  </data>
+  <data name="Repairs.Odometer" xml:space="preserve">
+    <value>Tachometr ({0})</value>
+  </data>
+  <data name="Repairs.Cost" xml:space="preserve">
+    <value>Skutečná cena opravy</value>
+  </data>
+  <data name="Repairs.Work" xml:space="preserve">
+    <value>Provedená práce (povinná pro nový záznam historie)</value>
+  </data>
+  <data name="Repairs.Reason" xml:space="preserve">
+    <value>Důvod / poznámka</value>
+  </data>
+  <data name="Repairs.EditorHelp" xml:space="preserve">
+    <value>Ctrl+S uloží. Esc zruší bez uložení. Data zadávejte podle nastaveného jazyka.</value>
+  </data>
+  <data name="Repairs.Fields" xml:space="preserve">
+    <value>Údaje opravy</value>
+  </data>
+  <data name="Repairs.List" xml:space="preserve">
+    <value>Závady a opravy vozidla</value>
+  </data>
+  <data name="Repairs.DetailName" xml:space="preserve">
+    <value>Podrobnosti vybrané závady a přesunuté termíny</value>
+  </data>
+  <data name="Repairs.ItemType" xml:space="preserve">
+    <value>Závada vozidla</value>
+  </data>
+  <data name="Repairs.Empty" xml:space="preserve">
+    <value>Není vybrána závada. Přidejte závadu nebo plánovanou opravu.</value>
+  </data>
+  <data name="Repairs.NoDate" xml:space="preserve">
+    <value>Nenaplánováno</value>
+  </data>
+  <data name="Repairs.Item" xml:space="preserve">
+    <value>{0}; {1}; termín opravy: {2}</value>
+  </data>
+  <data name="Repairs.Detail" xml:space="preserve">
+    <value>{0}
+{1}
+Zjištěno: {2}
+Termín opravy: {3}
+Počet dní před opravou pro zobrazení v auditu: {4}
+Stav: {5}
+Výsledek: {6}</value>
+  </data>
+  <data name="Repairs.ScheduleChange" xml:space="preserve">
+    <value>Přesunutí termínu: {0} -&gt; {1}. {2}</value>
+  </data>
+  <data name="Repairs.State.Waiting" xml:space="preserve">
+    <value>Čeká na opravu</value>
+  </data>
+  <data name="Repairs.State.Unscheduled" xml:space="preserve">
+    <value>Čeká na naplánování</value>
+  </data>
+  <data name="Repairs.State.Repaired" xml:space="preserve">
+    <value>Opraveno</value>
+  </data>
+  <data name="Repairs.State.Unrepairable" xml:space="preserve">
+    <value>Nelze opravit</value>
+  </data>
+  <data name="Repairs.Audit.Unscheduled" xml:space="preserve">
+    <value>Závada čeká na naplánování opravy</value>
+  </data>
+  <data name="Repairs.Audit.Upcoming" xml:space="preserve">
+    <value>Blíží se plánovaná oprava</value>
+  </data>
+  <data name="Repairs.Audit.Overdue" xml:space="preserve">
+    <value>Termín plánované opravy uplynul</value>
+  </data>
+  <data name="Repairs.Audit.Unrepairable" xml:space="preserve">
+    <value>Nevyřešená závada: nelze opravit</value>
+  </data>
+  <data name="Repairs.Saved" xml:space="preserve">
+    <value>Záznam opravy byl uložen.</value>
+  </data>
+  <data name="Repairs.Error.Vehicle" xml:space="preserve">
+    <value>Vyberte existující vozidlo.</value>
+  </data>
+  <data name="Repairs.Error.Missing" xml:space="preserve">
+    <value>Tato závada už neexistuje. Otevřete seznam znovu.</value>
+  </data>
+  <data name="Repairs.Error.Closed" xml:space="preserve">
+    <value>Tato závada je již uzavřená. Nelze ji dokončit znovu.</value>
+  </data>
+  <data name="Repairs.Error.Title" xml:space="preserve">
+    <value>Zadejte název závady.</value>
+  </data>
+  <data name="Repairs.Error.Date" xml:space="preserve">
+    <value>Zadejte platné celé datum. Oprava nemůže předcházet zjištění závady.</value>
+  </data>
+  <data name="Repairs.Error.PlannedDate" xml:space="preserve">
+    <value>Zadejte platný termín opravy, který není před datem zjištění závady.</value>
+  </data>
+  <data name="Repairs.Error.Days" xml:space="preserve">
+    <value>Zadejte celý počet dní od 0 do 3650.</value>
+  </data>
+  <data name="Repairs.Error.Reason" xml:space="preserve">
+    <value>Uveďte důvod, proč závadu nelze opravit.</value>
+  </data>
+  <data name="Repairs.Error.Work" xml:space="preserve">
+    <value>Popište provedenou práci.</value>
+  </data>
+  <data name="Repairs.Error.Odometer" xml:space="preserve">
+    <value>Zadejte platný nezáporný stav tachometru ve zvolené jednotce.</value>
+  </data>
+  <data name="Repairs.Error.Cost" xml:space="preserve">
+    <value>Zadejte platnou nezápornou cenu opravy.</value>
+  </data>
+  <data name="Repairs.Error.History" xml:space="preserve">
+    <value>Vyberte dosud nepropojený záznam historie tohoto vozidla s datem nejdříve v den zjištění závady.</value>
+  </data>
+  <data name="Repairs.Error.LinkedHistory" xml:space="preserve">
+    <value>Tento záznam historie dokládá dokončenou opravu závady a nelze jej odstranit. Jeho podrobnosti můžete upravit.</value>
+  </data>
+  <data name="Repairs.Error.Save" xml:space="preserve">
+    <value>Opravu se nepodařilo uložit. Zadané údaje zůstávají v dialogu; zkuste uložení znovu.</value>
+  </data>
 </root>

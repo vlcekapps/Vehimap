@@ -221,6 +221,8 @@
                     IsEnabled="{Binding CanOpenSelectedVehicleServiceBook}"
                     AutomationProperties.Name="{i18n:Loc MainMenu.Vehicle.ServiceBookName}"
                     AutomationProperties.AutomationId="OpenServiceBookMenuItem" />
+          <MenuItem Header="{i18n:Loc Repairs.Title}" Click="OnOpenRepairsMenuClick" IsEnabled="{Binding CanOpenSelectedVehicleServiceBook}"
+                    AutomationProperties.Name="{i18n:Loc Repairs.Title}" AutomationProperties.AutomationId="OpenRepairsMenuItem" />
           <MenuItem x:Name="OpenVehicleStarterBundleMenuItem"
                     Header="{i18n:Loc MainMenu.Vehicle.StarterBundle}"
                     Click="OnOpenVehicleStarterBundleMenuClick"

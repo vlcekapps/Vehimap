@@ -156,6 +156,7 @@ public sealed class LegacyAuditService : IAuditService
         AddFuelAuditItems(items, vehiclesById, dataSet.FuelEntries);
         AddMaintenanceAuditItems(items, vehiclesById, dataSet.MaintenancePlans, dataSet.HistoryEntries, dataSet.FuelEntries);
 
+        items.AddRange(new VehicleRepairService(_localizer).BuildAudit(dataSet, DateOnly.FromDateTime(DateTime.Today)));
         return items
             .OrderByDescending(item => item.Severity)
             .ThenBy(item => item.VehicleName, StringComparer.CurrentCultureIgnoreCase)

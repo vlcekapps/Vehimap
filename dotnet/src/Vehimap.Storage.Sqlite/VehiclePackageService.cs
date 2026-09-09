@@ -15,7 +15,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
     private const string DataFileName = "vehicle.json";
     private const string AttachmentFallbackFileName = "attachment.bin";
     private const string PackageFormat = "vehimap.vehicle-package";
-    private const int PackageVersion = 1;
+    private const int PackageVersion = 2;
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
@@ -91,13 +91,14 @@ public sealed class VehiclePackageService : IVehiclePackageService
             ZipFile.ExtractToDirectory(packagePath, tempDirectory);
             var manifest = await ReadJsonAsync<VehiclePackageManifest>(Path.Combine(tempDirectory, ManifestFileName), cancellationToken).ConfigureAwait(false)
                 ?? throw new FormatException(L("VehiclePackage.Error.InvalidManifest"));
-            if (!string.Equals(manifest.Format, PackageFormat, StringComparison.Ordinal) || manifest.Version != PackageVersion)
+            if (!string.Equals(manifest.Format, PackageFormat, StringComparison.Ordinal) || manifest.Version is < 1 or > PackageVersion)
             {
                 throw new FormatException(L("VehiclePackage.Error.UnsupportedFormat"));
             }
 
             var packageData = await ReadJsonAsync<VehiclePackageData>(Path.Combine(tempDirectory, DataFileName), cancellationToken).ConfigureAwait(false)
                 ?? throw new FormatException(L("VehiclePackage.Error.MissingVehicleData"));
+            if (manifest.Version == 1 && packageData.Repairs is null) packageData = packageData with { Repairs = [] };
             if (packageData.Vehicles is not { Count: 1 } || packageData.Vehicles[0] is null)
             {
                 throw new FormatException(L("VehiclePackage.Error.ExactlyOneVehicleRequired"));
@@ -107,6 +108,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
             ValidatePackageData(packageData, manifest.VehicleId);
             var importedVehicleId = ResolveImportedVehicleId(currentDataSet, sourceVehicle.Id);
             var remapped = RemapPackageData(packageData, currentDataSet, sourceVehicle.Id, importedVehicleId);
+            VehicleRepairService.ValidateReferences(MergeDataSets(currentDataSet, remapped));
             var restoredAttachments = RestorePackageAttachments(
                 tempDirectory,
                 dataRoot,
@@ -129,14 +131,21 @@ public sealed class VehiclePackageService : IVehiclePackageService
         var id = data.Vehicles[0].Id;
         if (string.IsNullOrWhiteSpace(id) || id != manifestVehicleId
             || data.VehicleMetaEntries is null || data.HistoryEntries is null || data.FuelEntries is null
-            || data.Records is null || data.Reminders is null || data.MaintenancePlans is null
+            || data.Records is null || data.Reminders is null || data.MaintenancePlans is null || data.Repairs is null
             || data.VehicleMetaEntries.Count > 1
             || data.VehicleMetaEntries.Any(item => item is null || item.VehicleId != id)
             || data.HistoryEntries.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id))
             || data.FuelEntries.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id))
             || data.Records.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id) || !Enum.IsDefined(item.AttachmentMode))
             || data.Reminders.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id))
-            || data.MaintenancePlans.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id)))
+            || data.MaintenancePlans.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id))
+            || data.HistoryEntries.Select(h => h.Id).Distinct().Count() != data.HistoryEntries.Count
+            || data.Repairs.Select(r => r?.Id).Distinct().Count() != data.Repairs.Count
+            || data.Repairs.Any(r => r is null || r.VehicleId != id || string.IsNullOrWhiteSpace(r.Id)
+                || r.State is not (VehicleRepair.Waiting or VehicleRepair.Repaired or VehicleRepair.Unrepairable)
+                || r.ScheduleChanges is null || r.ScheduleChanges.Any(c => c is null)
+                || r.State == VehicleRepair.Repaired && !data.HistoryEntries.Any(h => h.Id == r.HistoryEntryId)
+                || r.State != VehicleRepair.Repaired && !string.IsNullOrEmpty(r.HistoryEntryId)))
         {
             throw new FormatException(L("VehiclePackage.Error.MissingVehicleData"));
         }
@@ -150,7 +159,8 @@ public sealed class VehiclePackageService : IVehiclePackageService
             dataSet.FuelEntries.Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal)).ToList(),
             dataSet.Records.Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal)).ToList(),
             dataSet.Reminders.Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal)).ToList(),
-            dataSet.MaintenancePlans.Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal)).ToList());
+            dataSet.MaintenancePlans.Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal)).ToList(),
+            dataSet.Repairs.Where(item => string.Equals(item.VehicleId, vehicleId, StringComparison.Ordinal)).ToList());
 
     private static VehiclePackageData RemapPackageData(
         VehiclePackageData packageData,
@@ -185,6 +195,8 @@ public sealed class VehiclePackageService : IVehiclePackageService
         var existingRecordIds = currentDataSet.Records.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
         var existingReminderIds = currentDataSet.Reminders.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
         var existingMaintenanceIds = currentDataSet.MaintenancePlans.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
+        var existingRepairIds = currentDataSet.Repairs.Select(item => item.Id).ToHashSet(StringComparer.Ordinal);
+        var historyIds = packageData.HistoryEntries.ToDictionary(h => h.Id, h => ResolveId(h.Id, existingHistoryIds, "hist"));
 
         return new VehiclePackageData(
             packageData.Vehicles
@@ -196,7 +208,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
             packageData.HistoryEntries
                 .Select(item => item with
                 {
-                    Id = ResolveId(item.Id, existingHistoryIds, "hist"),
+                    Id = historyIds[item.Id],
                     VehicleId = importedVehicleId
                 })
                 .ToList(),
@@ -227,7 +239,12 @@ public sealed class VehiclePackageService : IVehiclePackageService
                     Id = ResolveId(item.Id, existingMaintenanceIds, "maint"),
                     VehicleId = importedVehicleId
                 })
-                .ToList());
+                .ToList(),
+            packageData.Repairs!.Select(r => r with
+            {
+                Id = ResolveId(r.Id, existingRepairIds, "repair"), VehicleId = importedVehicleId,
+                HistoryEntryId = string.IsNullOrEmpty(r.HistoryEntryId) ? "" : historyIds[r.HistoryEntryId]
+            }).ToList());
     }
 
     private static VehimapDataSet MergeDataSets(VehimapDataSet currentDataSet, VehiclePackageData packageData) =>
@@ -240,7 +257,8 @@ public sealed class VehiclePackageService : IVehiclePackageService
             FuelEntries = [.. currentDataSet.FuelEntries, .. packageData.FuelEntries],
             Records = [.. currentDataSet.Records, .. packageData.Records],
             Reminders = [.. currentDataSet.Reminders, .. packageData.Reminders],
-            MaintenancePlans = [.. currentDataSet.MaintenancePlans, .. packageData.MaintenancePlans]
+            MaintenancePlans = [.. currentDataSet.MaintenancePlans, .. packageData.MaintenancePlans],
+            Repairs = [.. currentDataSet.Repairs, .. packageData.Repairs!]
         };
 
     private static VehimapSettings CloneSettings(VehimapSettings source)
@@ -480,7 +498,8 @@ public sealed class VehiclePackageService : IVehiclePackageService
         List<FuelEntry> FuelEntries,
         List<VehicleRecord> Records,
         List<VehicleReminder> Reminders,
-        List<MaintenancePlan> MaintenancePlans);
+        List<MaintenancePlan> MaintenancePlans,
+        List<VehicleRepair>? Repairs = null);
 
     private sealed record AttachmentCopyResult(int IncludedCount, int MissingCount);
 }

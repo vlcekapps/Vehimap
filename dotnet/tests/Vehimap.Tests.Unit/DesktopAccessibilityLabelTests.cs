@@ -517,7 +517,8 @@ public sealed class DesktopAccessibilityLabelTests
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenServiceBookName}\"", xaml);
         Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailCostsButton\"", xaml);
         Assert.Contains("AutomationProperties.Name=\"{i18n:Loc VehicleDetail.OpenCostsName}\"", xaml);
-        Assert.Equal(8, Regex.Matches(xaml, "IsEnabled=\"\\{Binding CanOpenVehicleRelatedWorkspace\\}\"").Count);
+        Assert.Contains("AutomationProperties.AutomationId=\"OpenDetailRepairsButton\"", xaml);
+        Assert.Equal(9, Regex.Matches(xaml, "IsEnabled=\"\\{Binding CanOpenVehicleRelatedWorkspace\\}\"").Count);
     }
 
     [Fact]
@@ -1877,6 +1878,12 @@ public sealed class DesktopAccessibilityLabelTests
     {
         var requiredFields = new Dictionary<string, string>(StringComparer.Ordinal)
         {
+            ["RepairTitleBox"] = "True",
+            ["RepairReportedDateBox"] = "True",
+            ["RepairReminderDaysBox"] = "True",
+            ["RepairPlannedDateBox"] = "{Binding IsReschedule}",
+            ["RepairCompletedDateBox"] = "True",
+            ["RepairReasonBox"] = "{Binding RequiresReason}",
             ["FuelEditorDateBox"] = "True",
             ["FuelEditorOdometerBox"] = "True",
             ["HistoryEditorDateBox"] = "True",
@@ -2113,6 +2120,7 @@ public sealed class DesktopAccessibilityLabelTests
     {
         var expectedStatusBindings = new Dictionary<string, string>(StringComparer.Ordinal)
         {
+            ["RepairListItemViewModel"] = "StateLabel",
             ["AuditItemViewModel"] = "Severity",
             ["CostVehicleItemViewModel"] = "Status",
             ["FuelAnalysisWarningItemViewModel"] = "Severity",

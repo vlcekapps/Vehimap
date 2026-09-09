@@ -1681,6 +1681,12 @@ public sealed partial class MainWindowViewModel : ObservableObject
             return;
         }
 
+        if (ApplicationEntityKinds.Normalize(entityKind) == ApplicationEntityKinds.Repair)
+        {
+            if (SelectVehicleById(vehicleId)) RepairsRequested?.Invoke(entityId);
+            return;
+        }
+
         var plan = _navigationCoordinator.BuildForEntity(vehicleId, entityKind, entityId);
         ApplyNavigationPlan(plan);
     }
@@ -1764,6 +1770,8 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         switch (DesktopEntityKinds.Normalize(entityKind))
         {
+            case ApplicationEntityKinds.Repair:
+                return;
             case DesktopEntityKinds.History:
                 ExecuteWorkspaceShortcut(EditSelectedHistoryCommand);
                 break;

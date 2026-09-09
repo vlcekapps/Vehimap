@@ -1,5 +1,17 @@
 # Vehimap Developer README
 
+## Závady A Plánované Opravy
+
+Desktopová nightly 2.0 má vlastní modalní přehled `Vozidlo -> Závady a plánované opravy` a vstup z detailu. Editory nejsou inline. Bez termínu závada čeká na naplánování; blížící se a uplynulé termíny se promítají do auditu/dashboardu, nikoli do systémových notifikací. Akce jsou dostupné i před termínem. `Nelze opravit` vyžaduje důvod a zůstává jako nevyřešená závada v auditu, ale bez starého upozornění na termín. Uzavřené záznamy jsou v této první verzi pouze pro čtení.
+
+`VehicleRepairService` odděluje jednorázovou závadu od `MaintenancePlan`. Přesuny zachovávají původní/nové datum, čas a důvod. Dokončení a jeden nový `VehicleHistoryEntry` se ukládají stejnou SQLite transakcí; alternativně lze propojit existující záznam stejného vozidla. Propojenou historii nelze smazat, její údaje lze nadále upravovat. Odhad ceny se neeviduje; do nákladů vstupuje pouze cena v historii. Stejnou cenu znovu nezadávejte do dokladu/faktury.
+
+První zápis do starší SQLite vytvoří konzistentní kopii v `schema-backups/before-repairs-<id>.db` a transakčně přidá tabulku `vehicle_repairs` a marker `2.0-repairs`. Čtení starého schématu nic nemění. Nové schéma není určeno pro downgrade do starší aplikace. Backup zůstává SQLite; export balíčku vozidla používá verzi 2 a import stále přijímá verzi 1. Při kolizi ID se přemapují i vazby oprav na historii. Mobilní UI pro tuto novou evidenci zatím nevzniká, sdílená storage ji zachovává.
+
+Regrese: `VehicleRepairTests`, `RepairWorkspaceTests`, `SqliteRepairTests`; živé dialogy z menu/detailu: `pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile PendingRepairs`. `Ctrl+S` ukládá, `Esc` ruší, `Shift+Tab` cyklí na Zrušit jen z prvního pole daného režimu. Překlady, data, chybné datum, dvojité dokončení, chyba zápisu a vazby v balíčcích jsou pod testy.
+
+Ověření 9. 9. 2026: celé řešení prošlo (822 unit, 79 compatibility, 33 UI configuration; 71 opt-in UI testů mimo tento běh). Samostatně prošel živý profil PendingRepairs 2/2 bez přeskočení, storage gate 67 + 3 testy, license gate a win-x64 nightly readiness. Lokální build je `2.0.0-nightly.local.20260909211256`. Podrobnosti a hranice ověření: [evidence dialogů oprav](docs/accessibility-evidence/2026-09-09-pending-repairs.md). Ruční NVDA/Narrator a spuštění instalátoru nejsou tímto záznamem potvrzené.
+
 ## Neplánované Opravy
 
 Desktopová nightly má vstup `Vozidlo -> Zaznamenat neplánovanou opravu` a tlačítko `Neplánovaná oprava` v Historii (na kartě i v samostatném okně). Zapisuje již provedený úkon, nikoli závadu čekající na opravu. Dialog využívá stejnou validaci, jednotky, číselné formátování a lifecycle jako Historie; první fokus je na datu, `Shift+Tab` odtud vede na Zrušit, `Esc` ruší a `Ctrl+S` ukládá. Po zavření se fokus vrací na tlačítko Neplánovaná oprava, i když historie zatím nemá žádné položky. Uložený záznam zůstává vybraný v Historii. Návratový focus editorů se po zavření doručuje přes workspace mechanismus také do karet hlavního okna.

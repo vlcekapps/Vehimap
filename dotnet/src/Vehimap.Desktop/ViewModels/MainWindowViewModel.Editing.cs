@@ -655,7 +655,8 @@ public sealed partial class MainWindowViewModel
             Records = [.. source.Records],
             VehicleMetaEntries = [.. source.VehicleMetaEntries],
             Reminders = [.. source.Reminders],
-            MaintenancePlans = [.. source.MaintenancePlans]
+            MaintenancePlans = [.. source.MaintenancePlans],
+            Repairs = [.. source.Repairs]
         };
     }
 

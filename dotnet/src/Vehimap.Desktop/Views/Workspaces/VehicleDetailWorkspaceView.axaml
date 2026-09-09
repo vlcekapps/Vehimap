@@ -149,6 +149,8 @@
                       IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
                       AutomationProperties.Name="{i18n:Loc VehicleDetail.OpenServiceBookName}"
                       AutomationProperties.AutomationId="OpenDetailServiceBookButton" />
+              <Button Click="OnOpenRepairsClick" Content="{i18n:Loc Repairs.OpenShort}" IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"
+                      AutomationProperties.Name="{i18n:Loc Repairs.Title}" AutomationProperties.AutomationId="OpenDetailRepairsButton" />
               <Button Click="OnOpenVehicleCostsWorkspaceClick"
                       Content="{i18n:Loc VehicleDetail.OpenCosts}"
                       IsEnabled="{Binding CanOpenVehicleRelatedWorkspace}"

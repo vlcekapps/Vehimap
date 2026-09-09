@@ -139,6 +139,12 @@ public partial class VehicleDetailWorkspaceView : WorkspaceViewBase<VehicleDetai
         CloseVehicleDetailWindowIfNeeded(model.DidOpenSelectedItem);
     }
 
+    private async void OnOpenRepairsClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (ViewModel is not null && TopLevel.GetTopLevel(this) is Window owner)
+            await RepairsWindow.ShowAsync(owner, ViewModel.RepairsHost);
+    }
+
     private async void OnOpenVehicleCostsWorkspaceClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         if (ViewModel is null)

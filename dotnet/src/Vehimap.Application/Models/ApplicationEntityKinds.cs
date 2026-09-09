@@ -10,6 +10,7 @@ public static class ApplicationEntityKinds
     public const string Maintenance = "maintenance";
     public const string Reminder = "reminder";
     public const string Costs = "costs";
+    public const string Repair = "repair";
 
     public static string Normalize(string? value)
     {
