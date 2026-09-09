@@ -29,6 +29,7 @@ public sealed class SqliteBackupService : IBackupService
 
     private readonly IVehimapDataStore _dataStore;
     private readonly IBackupService _legacyBackupService;
+    private readonly Action<string>? _restoreCheckpoint;
 
     public SqliteBackupService()
         : this(new SqliteVehimapDataStore(), CreateLegacyBackupService(null))
@@ -41,9 +42,15 @@ public sealed class SqliteBackupService : IBackupService
     }
 
     public SqliteBackupService(IVehimapDataStore dataStore, IBackupService legacyBackupService)
+        : this(dataStore, legacyBackupService, null)
+    {
+    }
+
+    internal SqliteBackupService(IVehimapDataStore dataStore, IBackupService legacyBackupService, Action<string>? restoreCheckpoint)
     {
         _dataStore = dataStore;
         _legacyBackupService = legacyBackupService;
+        _restoreCheckpoint = restoreCheckpoint;
     }
 
     private static IBackupService CreateLegacyBackupService(IAppLocalizer? localizer) =>
@@ -55,6 +62,8 @@ public sealed class SqliteBackupService : IBackupService
         VehimapDataSet dataSet,
         CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        using var lease = SqliteStorageLease.EnterStable(dataRoot);
         var tempDirectory = CreateTemporaryDirectory("vehimap-backup");
         try
         {
@@ -146,34 +155,46 @@ public sealed class SqliteBackupService : IBackupService
             // Validate the incoming database before touching any live file, including
             // malformed rows that would cause the real SQLite transaction to fail.
             await _dataStore.SaveAsync(stagingRoot, backupBundle.Data, cancellationToken).ConfigureAwait(false);
+            var verified = await _dataStore.LoadAsync(stagingRoot, cancellationToken).ConfigureAwait(false);
+            SqliteDataMigrationService.VerifyRoundTrip(backupBundle.Data, verified);
+            using var lease = SqliteStorageLease.Enter(dataRoot);
+            SqliteRestoreJournal.RecoverUnderLease(dataRoot);
             var preRestoreBackupPath = BackupCurrentDataBeforeRestore(dataRoot, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
-            var attachmentsRoot = SqliteStoragePaths.GetAttachmentsPath(dataRoot);
+            var attachmentsRoot = SqliteRestoreJournal.SafePath(dataRoot.DataPath, SqliteStoragePaths.AttachmentsDirectoryName);
             var previousAttachments = Path.Combine(preRestoreBackupPath, "replaced-attachments");
             var hadAttachments = Directory.Exists(attachmentsRoot);
-            if (hadAttachments)
-                Directory.Move(attachmentsRoot, previousAttachments);
-            var installedAttachments = false;
+            var journal = SqliteRestoreJournal.Prepare(dataRoot, preRestoreBackupPath,
+                File.Exists(SqliteStoragePaths.GetDatabasePath(dataRoot)), hadAttachments);
             try
             {
+                _restoreCheckpoint?.Invoke("prepared");
+                if (hadAttachments)
+                    Directory.Move(attachmentsRoot, previousAttachments);
+                _restoreCheckpoint?.Invoke("attachments-removed");
                 Directory.Move(SqliteStoragePaths.GetAttachmentsPath(stagingRoot), attachmentsRoot);
-                installedAttachments = true;
-                await _dataStore.SaveAsync(dataRoot, backupBundle.Data, cancellationToken).ConfigureAwait(false);
+                _restoreCheckpoint?.Invoke("attachments-installed");
+                cancellationToken.ThrowIfCancellationRequested();
+                SqliteDatabaseSnapshot.Replace(SqliteStoragePaths.GetDatabasePath(stagingRoot),
+                    SqliteRestoreJournal.SafePath(dataRoot.DataPath, SqliteStoragePaths.DatabaseFileName));
+                _restoreCheckpoint?.Invoke("database-installed");
+                cancellationToken.ThrowIfCancellationRequested();
+                SqliteRestoreJournal.Commit(dataRoot, journal);
+                _restoreCheckpoint?.Invoke("committed");
             }
             catch
             {
-                // Rollback must also run after cancellation; never delete the safety copy.
-                if (installedAttachments)
-                    Directory.Move(attachmentsRoot, SqliteStoragePaths.GetAttachmentsPath(stagingRoot));
-                if (hadAttachments)
-                    Directory.Move(previousAttachments, attachmentsRoot);
+                // A failed rollback keeps the journal and all safety files, so normal
+                // storage access fails closed or retries recovery on the next start.
+                SqliteRestoreJournal.RecoverUnderLease(dataRoot);
                 throw;
             }
+            SqliteRestoreJournal.RecoverUnderLease(dataRoot);
             return new BackupRestoreResult(preRestoreBackupPath, paths.Count);
         }
         finally
         {
-            TryDeleteDirectory(stagingPath);
+            if (!SqliteRestoreJournal.Exists(dataRoot)) TryDeleteDirectory(stagingPath);
         }
     }
 
@@ -272,19 +293,12 @@ public sealed class SqliteBackupService : IBackupService
         cancellationToken.ThrowIfCancellationRequested();
         Directory.CreateDirectory(dataRoot.DataPath);
 
-        var backupRoot = Path.Combine(dataRoot.DataPath, SqliteStoragePaths.ImportBackupsDirectoryName);
+        var backupRoot = SqliteRestoreJournal.SafePath(dataRoot.DataPath, SqliteStoragePaths.ImportBackupsDirectoryName);
         Directory.CreateDirectory(backupRoot);
-
-        var baseName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-        var backupPath = Path.Combine(backupRoot, baseName);
-        for (var suffix = 2; Directory.Exists(backupPath); suffix++)
-        {
-            backupPath = Path.Combine(backupRoot, $"{baseName}-{suffix}");
-        }
-
+        var backupPath = Path.Combine(backupRoot, Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(backupPath);
 
-        var databasePath = SqliteStoragePaths.GetDatabasePath(dataRoot);
+        var databasePath = SqliteRestoreJournal.SafePath(dataRoot.DataPath, SqliteStoragePaths.DatabaseFileName);
         if (File.Exists(databasePath))
         {
             SqliteDatabaseSnapshot.Copy(databasePath, Path.Combine(backupPath, SqliteStoragePaths.DatabaseFileName));
@@ -300,10 +314,10 @@ public sealed class SqliteBackupService : IBackupService
             }
         }
 
-        var attachmentsRoot = SqliteStoragePaths.GetAttachmentsPath(dataRoot);
+        var attachmentsRoot = SqliteRestoreJournal.SafePath(dataRoot.DataPath, SqliteStoragePaths.AttachmentsDirectoryName);
         if (Directory.Exists(attachmentsRoot))
         {
-            CopyDirectory(attachmentsRoot, Path.Combine(backupPath, SqliteStoragePaths.AttachmentsDirectoryName), cancellationToken);
+            SqliteRestoreJournal.CopyDirectory(attachmentsRoot, Path.Combine(backupPath, SqliteStoragePaths.AttachmentsDirectoryName), cancellationToken);
         }
 
         return backupPath;
@@ -316,30 +330,6 @@ public sealed class SqliteBackupService : IBackupService
         return normalized.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
             ? normalized[prefix.Length..]
             : normalized;
-    }
-
-    private static void CopyDirectory(string sourceDirectory, string targetDirectory, CancellationToken cancellationToken)
-    {
-        foreach (var directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var relativePath = Path.GetRelativePath(sourceDirectory, directory);
-            Directory.CreateDirectory(Path.Combine(targetDirectory, relativePath));
-        }
-
-        foreach (var file in Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var relativePath = Path.GetRelativePath(sourceDirectory, file);
-            var targetPath = Path.Combine(targetDirectory, relativePath);
-            var targetParent = Path.GetDirectoryName(targetPath);
-            if (!string.IsNullOrWhiteSpace(targetParent))
-            {
-                Directory.CreateDirectory(targetParent);
-            }
-
-            File.Copy(file, targetPath, overwrite: true);
-        }
     }
 
     private static string CreateTemporaryDirectory(string prefix)

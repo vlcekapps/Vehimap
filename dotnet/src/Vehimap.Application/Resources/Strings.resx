@@ -2947,4 +2947,6 @@ Suggested action: {6}</value></data>
   <data name="UpdateService.Install.InvalidAssetKind" xml:space="preserve"><value>This update package type is not supported.</value></data>
   <data name="Maintenance.Status.InvalidNextServiceDate" xml:space="preserve"><value>The next service date is outside the supported range. Check the date and interval.</value></data>
   <data name="DataStoreHealth.Report.SchemaMarkerUnsupported" xml:space="preserve"><value>The database contains a schema version not supported by this version of Vehimap. Do not overwrite it; use a compatible application version.</value></data>
+  <data name="DataStoreHealth.Report.RestorePendingSummary" xml:space="preserve"><value>An interrupted backup restore needs recovery.</value></data>
+  <data name="DataStoreHealth.Report.RestorePendingDetail" xml:space="preserve"><value>Restart Vehimap to finish recovery before editing data. If recovery fails, keep the entire data folder, including .restore-journal.json and import-backups; do not delete or replace individual database files.</value></data>
 </root>

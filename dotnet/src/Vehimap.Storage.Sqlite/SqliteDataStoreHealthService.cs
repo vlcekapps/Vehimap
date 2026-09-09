@@ -62,6 +62,13 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
                 dataPath);
         }
 
+        if (SqliteRestoreJournal.Exists(dataRoot))
+        {
+            return BuildReport(DataStoreHealthStatus.Error,
+                L("DataStoreHealth.Report.RestorePendingSummary"),
+                [L("DataStoreHealth.Report.RestorePendingDetail")], databasePath, dataPath);
+        }
+
         if (!File.Exists(databasePath))
         {
             return BuildReport(

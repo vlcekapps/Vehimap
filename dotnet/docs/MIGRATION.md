@@ -4,6 +4,8 @@ Tato mapa drzi prepis Vehimapu z puvodni AHK aplikace do C#/.NET. AHK runtime, k
 
 ## Storage 2.0
 
+- Obnova SQLite zálohy má žurnál `.restore-journal.json`; zotavení proběhne před detekcí legacy dat i před běžným načtením. Nepotvrzená obnova vrací původní databázi a přílohy z `import-backups/<id>/`, potvrzená obnova ponechá nová data. Formát `.vehimapbak` ani databázové schéma se nemění. `.storage.lock` koordinuje přístup aktuálních SQLite služeb. Žurnál a bezpečnostní kopie se při chybě nesmějí ručně mazat; viz [RESTORE-RECOVERY.md](RESTORE-RECOVERY.md).
+
 - Vehimap 2.0 pouziva jako primarni runtime storage SQLite databazi `data/vehimap.db`.
 - Legacy `TSV/INI` soubory z 1.0.2 se pouzivaji jen jako jednorazovy migracni vstup: pri prvnim startu bez `vehimap.db` aplikace vytvori `data/migration-backups/<cas>`, zkopiruje puvodni soubory i `data/attachments`, nacte data pres `Vehimap.Storage.Legacy`, ulozi je do SQLite a po overenem nacteni databaze presune zive TSV/INI soubory do `data/migration-backups/<cas>/removed-from-data-root/`.
 - Pokud uz `vehimap.db` existuje a v koreni `data/` zustaly legacy TSV/INI soubory po starsi nightly, start aplikace je odlozi do nove migracni zalohy bez opakovaneho importu. Aktivni `data/attachments` zustava na miste, protoze spravovane prilohy jsou soucasti datove sady 2.0.

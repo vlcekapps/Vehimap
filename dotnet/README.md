@@ -6,6 +6,8 @@ Požadované nástroje, instalační příkazy pro Windows/macOS/Linux, voliteln
 
 ## Vehimap .NET rewrite
 
+Obnova záloh nyní používá `.restore-journal.json` a bezpečnostní kopii v `data/import-backups/<id>/`. Po přerušení procesu se nejprve sjednotí databáze a přílohy, teprve potom aplikace načte data. Pokud zotavení selže, zachovejte celou datovou složku včetně žurnálu a bezpečnostní kopie; jednotlivé soubory nemažte. `.storage.lock` je běžný podpůrný soubor, nikoli závada nebo legacy data. Podrobný postup, testy a zbývající omezení obsahuje [RESTORE-RECOVERY.md](docs/RESTORE-RECOVERY.md).
+
 Předbeta kontrola kódu, storage, aktualizací a testů je zaznamenána v [PRE-BETA-AUDIT.md](docs/PRE-BETA-AUDIT.md). Obsahuje opravy i zbývající rizika; zelené unit testy samy o sobě neznamenají schválení bety. Rozšířené živé ověření editorů spouští `pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Editors` z kořene repozitáře. Bez Appia jsou příslušné testy nově výslovně přeskočené.
 
 Živé lokální ověření Windows UI spouští z kořene repozitáře `pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Core`. Vyžaduje běžící Appium server a ukončené instance Vehimapu; pracuje výhradně s dočasnou kopií aplikace a syntetickými daty. Postup a přesné limity jsou ve [vývojářské příručce](docs/DEVELOPMENT.md#strict-local-verification) a [protokolu obnovení Appia](docs/accessibility-evidence/2026-09-09-appium-recovery.md).

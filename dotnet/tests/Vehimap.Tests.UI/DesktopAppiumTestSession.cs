@@ -440,8 +440,12 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         {
             try
             {
-                var fileMenu = _driver.FindElements(MobileBy.AccessibilityId("FileMenuRoot"))
-                    .FirstOrDefault(element => element.Displayed && element.Enabled);
+                // UIA may report the owner menu as enabled below a modal. Dismiss
+                // the modal first rather than clicking through its blocked owner.
+                var fileMenu = HasOpenModalWindow(_driver.PageSource)
+                    ? null
+                    : _driver.FindElements(MobileBy.AccessibilityId("FileMenuRoot"))
+                        .FirstOrDefault(element => element.Displayed && element.Enabled);
                 if (fileMenu is not null)
                 {
                     if (!_driver.FindElements(MobileBy.AccessibilityId("FileExitAppButton")).Any(element => element.Displayed))
@@ -452,7 +456,7 @@ internal sealed class DesktopAppiumTestSession : IDisposable
                     return;
                 }
             }
-            catch (Exception ex) when (ex is WebDriverException or InvalidOperationException or TimeoutException)
+            catch (Exception ex) when (ex is WebDriverException or InvalidOperationException or TimeoutException or System.Xml.XmlException)
             {
                 Console.Error.WriteLine($"Isolated UI teardown attempt {attempt + 1}: {ex.GetType().Name}: {ex.Message}");
             }
@@ -470,6 +474,12 @@ internal sealed class DesktopAppiumTestSession : IDisposable
             Thread.Sleep(200);
         }
     }
+
+    internal static bool HasOpenModalWindow(string source) =>
+        XDocument.Parse(source).Descendants().Any(element =>
+            element.Name.LocalName == "Window"
+            && string.Equals((string?)element.Attribute("IsModal"), "true", StringComparison.OrdinalIgnoreCase)
+            && !string.Equals((string?)element.Attribute("IsOffscreen"), "true", StringComparison.OrdinalIgnoreCase));
 
     private static (string AppPath, string RootPath) CreateIsolatedLaunchCopy(string sourceAppPath)
     {

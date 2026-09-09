@@ -37,6 +37,8 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
     {
         Directory.CreateDirectory(dataRoot.DataPath);
 
+        SqliteRestoreJournal.RecoverIfNeeded(dataRoot);
+
         var databasePath = SqliteStoragePaths.GetDatabasePath(dataRoot);
         if (File.Exists(databasePath))
         {
@@ -89,7 +91,7 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
             LF("DataMigration.LegacyMigrationCompleted", backupPath));
     }
 
-    private static void VerifyRoundTrip(VehimapDataSet expected, VehimapDataSet actual)
+    internal static void VerifyRoundTrip(VehimapDataSet expected, VehimapDataSet actual)
     {
         var settingsMatch = expected.Settings.Sections.Count == actual.Settings.Sections.Count
             && expected.Settings.Sections.All(section =>
@@ -104,7 +106,7 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
             || !expected.Reminders.SequenceEqual(actual.Reminders)
             || !expected.MaintenancePlans.SequenceEqual(actual.MaintenancePlans))
         {
-            throw new InvalidDataException("SQLite migration verification failed; original data and migration backup were preserved.");
+            throw new InvalidDataException("SQLite staging verification failed; original data and safety backup were preserved.");
         }
     }
 

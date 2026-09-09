@@ -6,6 +6,17 @@ namespace Vehimap.Tests.UI;
 public sealed class DesktopUiTestConfigurationTests
 {
     [Theory]
+    [InlineData("<Window IsModal='False' />", false)]
+    [InlineData("<Window><Window IsModal='True' IsOffscreen='False' /></Window>", true)]
+    [InlineData("<Window><Window IsModal='true' /></Window>", true)]
+    [InlineData("<Window><Window IsModal='True' IsOffscreen='True' /></Window>", false)]
+    [InlineData("<Window><Menu IsModal='True' /></Window>", false)]
+    public void Teardown_dismisses_visible_modal_windows_before_using_the_owner_menu(string source, bool expected)
+    {
+        Assert.Equal(expected, DesktopAppiumTestSession.HasOpenModalWindow(source));
+    }
+
+    [Theory]
     [InlineData(false, null, true)]
     [InlineData(false, "", true)]
     [InlineData(false, "http://127.0.0.1:4725", false)]

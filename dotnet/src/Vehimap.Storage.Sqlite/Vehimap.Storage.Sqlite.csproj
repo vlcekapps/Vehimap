@@ -1,6 +1,9 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <InternalsVisibleTo Include="Vehimap.Tests.LegacyCompatibility" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Vehimap.Application\Vehimap.Application.csproj" />
     <ProjectReference Include="..\Vehimap.Domain\Vehimap.Domain.csproj" />
     <ProjectReference Include="..\Vehimap.Storage.Legacy\Vehimap.Storage.Legacy.csproj" />

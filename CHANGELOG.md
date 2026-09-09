@@ -8,6 +8,8 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 ## [Unreleased]
 
 ### Opraveno
+- Appium při úklidu nejprve zavře otevřené modalní dialogy a teprve potom použije menu Ukončit; nepokouší se klikat na blokované hlavní okno a nevytváří tím falešné diagnostické timeouty.
+- Obnova zálohy má obnovovací žurnál: po přerušení procesu se před načtením dat vrátí původní databáze i přílohy, nebo se ponechá již potvrzená obnova. Bezpečnostní kopie v `import-backups` se při zotavení nespotřebuje; kontrolní součty brání obnově z neúplných či změněných podkladů. Nové regresní testy skutečně ukončují pomocný proces také během zotavení. Nejde zatím o záruku proti výpadku napájení ani o opravný průvodce poškozenou databází.
 - Migrace SQLite nejprve ověří úplný převod v pracovní kopii a teprve potom zveřejní databázi. Načítání již potichu neopravuje neúplné schéma; bezpečnostní snapshoty zahrnují i potvrzené změny z WAL.
 - Obnova zálohy předem validuje data i přílohy a při chybě uložení vrací původní přílohy. Import balíčku nepřipojí cizí existující soubor místo chybějící přílohy; spravované cesty odmítají odkazy mimo úložiště i nejednoznačné konce názvů.
 - Aktualizace znovu ověřuje kanál, HTTPS adresu, druh balíčku, hash a rozsah stahování. ZIP helper přestane při neukončené aplikaci, běží mimo přepisovanou instalaci a zachovává kopii původních souborů pro rollback.

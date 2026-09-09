@@ -2947,4 +2947,6 @@ Navržená akce: {6}</value></data>
   <data name="UpdateService.Install.InvalidAssetKind" xml:space="preserve"><value>Tento typ aktualizačního balíčku není podporován.</value></data>
   <data name="Maintenance.Status.InvalidNextServiceDate" xml:space="preserve"><value>Příští servisní termín je mimo podporovaný rozsah. Zkontrolujte datum a interval.</value></data>
   <data name="DataStoreHealth.Report.SchemaMarkerUnsupported" xml:space="preserve"><value>Databáze obsahuje verzi schématu, kterou tato verze Vehimapu nepodporuje. Nepřepisujte ji; použijte kompatibilní verzi aplikace.</value></data>
+  <data name="DataStoreHealth.Report.RestorePendingSummary" xml:space="preserve"><value>Přerušená obnova zálohy vyžaduje dokončení zotavení.</value></data>
+  <data name="DataStoreHealth.Report.RestorePendingDetail" xml:space="preserve"><value>Před úpravou dat restartujte Vehimap, aby dokončil zotavení. Pokud se nezdaří, zachovejte celou datovou složku včetně .restore-journal.json a import-backups; nemažte ani nenahrazujte jednotlivé databázové soubory.</value></data>
 </root>

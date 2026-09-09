@@ -22,9 +22,12 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
 
     public async Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        using var lease = SqliteStorageLease.Enter(dataRoot);
+        SqliteRestoreJournal.RecoverUnderLease(dataRoot);
         if (!File.Exists(SqliteStoragePaths.GetDatabasePath(dataRoot)))
         {
-            await SaveAsync(dataRoot, new VehimapDataSet(), cancellationToken).ConfigureAwait(false);
+            await SaveCoreAsync(dataRoot, new VehimapDataSet(), cancellationToken).ConfigureAwait(false);
         }
         var readConnection = new SqliteConnectionStringBuilder(BuildConnectionString(dataRoot)) { Mode = SqliteOpenMode.ReadOnly };
         await using var connection = new SqliteConnection(readConnection.ToString());
@@ -46,6 +49,17 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
     }
 
     public async Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        using var lease = SqliteStorageLease.Enter(dataRoot);
+        var recovered = SqliteRestoreJournal.Exists(dataRoot);
+        SqliteRestoreJournal.RecoverUnderLease(dataRoot);
+        if (recovered)
+            throw new IOException("Backup recovery completed; reload the dataset before saving changes.");
+        await SaveCoreAsync(dataRoot, dataSet, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task SaveCoreAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(dataRoot.DataPath);
         var isNewDatabase = !File.Exists(SqliteStoragePaths.GetDatabasePath(dataRoot));

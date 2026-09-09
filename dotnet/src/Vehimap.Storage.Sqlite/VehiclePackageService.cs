@@ -36,6 +36,8 @@ public sealed class VehiclePackageService : IVehiclePackageService
         string vehicleId,
         CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        using var lease = SqliteStorageLease.EnterStable(dataRoot);
         var vehicle = dataSet.Vehicles.FirstOrDefault(item => string.Equals(item.Id, vehicleId, StringComparison.Ordinal))
             ?? throw new InvalidOperationException(L("VehiclePackage.Error.SelectedVehicleMissing"));
 
@@ -81,6 +83,8 @@ public sealed class VehiclePackageService : IVehiclePackageService
         VehimapDataSet currentDataSet,
         CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        using var lease = SqliteStorageLease.EnterStable(dataRoot);
         var tempDirectory = CreateTemporaryDirectory("vehimap-vehicle-package-import");
         try
         {

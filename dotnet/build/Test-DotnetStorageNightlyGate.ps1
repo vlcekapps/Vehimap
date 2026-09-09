@@ -17,6 +17,7 @@ Write-Host "Configuration: $Configuration"
 Write-Host "Project: $compatibilityProject"
 Write-Host ""
 Write-Host "Overuji migraci legacy fixture dat, health check SQLite databaze, SQLite-only runtime zapis, SQLite backup, import stare zalohy a balicek vozidla."
+Write-Host "Includes restore journal recovery after process termination and interrupted rollback."
 
 Push-Location $dotnetRoot
 try {

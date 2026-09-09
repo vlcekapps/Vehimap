@@ -124,7 +124,10 @@ public sealed partial class SqliteStorageCompatibilityTests
             var attachment = Path.Combine(root.DataPath, "attachments", "original.txt");
             Directory.CreateDirectory(Path.GetDirectoryName(attachment)!);
             await File.WriteAllTextAsync(attachment, "original");
-            var backup = new SqliteBackupService(new RejectLiveSaveStore(root.DataPath), new LegacyBackupService());
+            var backup = new SqliteBackupService(store, new LegacyBackupService(), phase =>
+            {
+                if (phase == "database-installed") throw new OperationCanceledException("Injected interruption after live commit.");
+            });
             await Assert.ThrowsAsync<OperationCanceledException>(() => backup.RestoreAsync(root,
                 new VehimapBackupBundle(BuildSampleDataSet("Incoming"), [new("attachments/new.txt", [1])])));
             Assert.Equal("Original", Assert.Single((await store.LoadAsync(root)).Vehicles).Name);
@@ -172,17 +175,6 @@ public sealed partial class SqliteStorageCompatibilityTests
             Assert.Single(Directory.GetFiles(directory));
         }
         finally { DeleteTempRoot(directory); }
-    }
-
-    private sealed class RejectLiveSaveStore(string livePath) : IVehimapDataStore
-    {
-        public Task<VehimapDataSet> LoadAsync(VehimapDataRoot root, CancellationToken cancellationToken = default) =>
-            new SqliteVehimapDataStore().LoadAsync(root, cancellationToken);
-
-        public Task SaveAsync(VehimapDataRoot root, VehimapDataSet data, CancellationToken cancellationToken = default) =>
-            root.DataPath == livePath
-                ? throw new OperationCanceledException("Injected interruption at live commit.")
-                : new SqliteVehimapDataStore().SaveAsync(root, data, cancellationToken);
     }
 
     [Fact]
