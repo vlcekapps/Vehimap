@@ -66,12 +66,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
                 Directory.CreateDirectory(targetDirectory);
             }
 
-            if (File.Exists(packagePath))
-            {
-                File.Delete(packagePath);
-            }
-
-            ZipFile.CreateFromDirectory(tempDirectory, packagePath, CompressionLevel.Optimal, includeBaseDirectory: false);
+            AtomicArchiveWriter.CreateFromDirectory(tempDirectory, packagePath, cancellationToken);
             return new VehiclePackageExportResult(packagePath, vehicle.Id, vehicle.Name, attachmentResult.IncludedCount, attachmentResult.MissingCount);
         }
         finally
@@ -99,12 +94,13 @@ public sealed class VehiclePackageService : IVehiclePackageService
 
             var packageData = await ReadJsonAsync<VehiclePackageData>(Path.Combine(tempDirectory, DataFileName), cancellationToken).ConfigureAwait(false)
                 ?? throw new FormatException(L("VehiclePackage.Error.MissingVehicleData"));
-            if (packageData.Vehicles.Count != 1)
+            if (packageData.Vehicles is not { Count: 1 } || packageData.Vehicles[0] is null)
             {
                 throw new FormatException(L("VehiclePackage.Error.ExactlyOneVehicleRequired"));
             }
 
             var sourceVehicle = packageData.Vehicles[0];
+            ValidatePackageData(packageData, manifest.VehicleId);
             var importedVehicleId = ResolveImportedVehicleId(currentDataSet, sourceVehicle.Id);
             var remapped = RemapPackageData(packageData, currentDataSet, sourceVehicle.Id, importedVehicleId);
             var restoredAttachments = RestorePackageAttachments(
@@ -121,6 +117,24 @@ public sealed class VehiclePackageService : IVehiclePackageService
         finally
         {
             TryDeleteDirectory(tempDirectory);
+        }
+    }
+
+    private void ValidatePackageData(VehiclePackageData data, string manifestVehicleId)
+    {
+        var id = data.Vehicles[0].Id;
+        if (string.IsNullOrWhiteSpace(id) || id != manifestVehicleId
+            || data.VehicleMetaEntries is null || data.HistoryEntries is null || data.FuelEntries is null
+            || data.Records is null || data.Reminders is null || data.MaintenancePlans is null
+            || data.VehicleMetaEntries.Count > 1
+            || data.VehicleMetaEntries.Any(item => item is null || item.VehicleId != id)
+            || data.HistoryEntries.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id))
+            || data.FuelEntries.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id))
+            || data.Records.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id) || !Enum.IsDefined(item.AttachmentMode))
+            || data.Reminders.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id))
+            || data.MaintenancePlans.Any(item => item is null || item.VehicleId != id || string.IsNullOrWhiteSpace(item.Id)))
+        {
+            throw new FormatException(L("VehiclePackage.Error.MissingVehicleData"));
         }
     }
 
@@ -277,8 +291,10 @@ public sealed class VehiclePackageService : IVehiclePackageService
         CancellationToken cancellationToken)
     {
         var restoredCount = 0;
-        var originalToTarget = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        var copiedTargets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var comparer = OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+        var originalToTarget = new Dictionary<string, string>(comparer);
+        var reservedTargets = new HashSet<string>(comparer);
+        var plannedCopies = new Dictionary<string, string>(comparer);
         foreach (var record in records.Where(record => record.AttachmentMode == VehicleRecordAttachmentMode.Managed).ToList())
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -293,41 +309,54 @@ public sealed class VehiclePackageService : IVehiclePackageService
             }
 
             var packageSourcePath = ManagedAttachmentPathGuard.ResolveManagedAttachmentPath(packageDirectory, expectedSourceRelativePath);
-            if (!File.Exists(packageSourcePath))
+            if (string.IsNullOrEmpty(expectedSourceRelativePath))
             {
                 continue;
             }
 
             if (!originalToTarget.TryGetValue(expectedSourceRelativePath, out var targetRelativePath))
             {
-                targetRelativePath = ResolveUniqueAttachmentRelativePath(dataRoot, importedVehicleId, expectedSourceRelativePath);
+                targetRelativePath = ResolveUniqueAttachmentRelativePath(dataRoot, importedVehicleId, expectedSourceRelativePath, reservedTargets);
                 originalToTarget[expectedSourceRelativePath] = targetRelativePath;
             }
 
             var targetPath = SqliteStoragePaths.ResolveManagedAttachmentPath(dataRoot, targetRelativePath);
-            var targetParent = Path.GetDirectoryName(targetPath);
-            if (!string.IsNullOrWhiteSpace(targetParent))
-            {
-                Directory.CreateDirectory(targetParent);
-            }
-
-            if (copiedTargets.Add(targetRelativePath))
-            {
-                File.Copy(packageSourcePath, targetPath, overwrite: true);
-                restoredCount++;
-            }
+            if (File.Exists(packageSourcePath))
+                plannedCopies[targetPath] = packageSourcePath;
 
             var index = records.IndexOf(record);
+            // Missing source files also receive a new, unoccupied path. Otherwise an
+            // existing destination attachment could silently become the imported one.
             records[index] = record with { FilePath = targetRelativePath };
         }
 
+        var createdFiles = new List<string>();
+        try
+        {
+            foreach (var (targetPath, sourcePath) in plannedCopies)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                Directory.CreateDirectory(Path.GetDirectoryName(targetPath)!);
+                using var source = File.OpenRead(sourcePath);
+                using var destination = new FileStream(targetPath, FileMode.CreateNew, FileAccess.Write);
+                createdFiles.Add(targetPath);
+                source.CopyTo(destination);
+                restoredCount++;
+            }
+        }
+        catch
+        {
+            foreach (var path in createdFiles)
+                File.Delete(path);
+            throw;
+        }
         return restoredCount;
     }
 
-    private string ResolveUniqueAttachmentRelativePath(VehimapDataRoot dataRoot, string vehicleId, string sourceRelativePath)
+    private string ResolveUniqueAttachmentRelativePath(VehimapDataRoot dataRoot, string vehicleId, string sourceRelativePath, HashSet<string> reservedTargets)
     {
         var baseRelativePath = BuildImportedAttachmentRelativePath(vehicleId, sourceRelativePath);
-        if (!File.Exists(SqliteStoragePaths.ResolveManagedAttachmentPath(dataRoot, baseRelativePath)))
+        if (!Path.Exists(SqliteStoragePaths.ResolveManagedAttachmentPath(dataRoot, baseRelativePath)) && reservedTargets.Add(baseRelativePath))
         {
             return baseRelativePath;
         }
@@ -340,7 +369,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
         for (var suffix = 2; ; suffix++)
         {
             var candidate = $"{folder}/{fileName}-{suffix}{extension}";
-            if (!File.Exists(SqliteStoragePaths.ResolveManagedAttachmentPath(dataRoot, candidate)))
+            if (!Path.Exists(SqliteStoragePaths.ResolveManagedAttachmentPath(dataRoot, candidate)) && reservedTargets.Add(candidate))
             {
                 return candidate;
             }
@@ -355,7 +384,7 @@ public sealed class VehiclePackageService : IVehiclePackageService
     {
         var includedCount = 0;
         var missingCount = 0;
-        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var seen = new HashSet<string>(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
         foreach (var record in records.Where(record => record.AttachmentMode == VehicleRecordAttachmentMode.Managed))
         {
             cancellationToken.ThrowIfCancellationRequested();

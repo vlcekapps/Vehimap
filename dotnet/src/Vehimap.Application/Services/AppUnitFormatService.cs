@@ -19,6 +19,32 @@ public sealed class AppUnitFormatService : IAppUnitFormatService
     private static readonly string[] SupportedDistanceUnits = [Kilometers, Miles];
     private static readonly string[] SupportedVolumeUnits = [Liters, UsGallons, ImperialGallons];
 
+    public static bool TryConvertWholeKilometers(decimal input, AppUnitPreferences preferences, out int kilometers)
+    {
+        kilometers = 0;
+        if (input < 0 || input > int.MaxValue) return false;
+        var converted = NormalizeDistanceUnit(preferences.DistanceUnit) == Miles ? input * KilometersPerMile : input;
+        var rounded = decimal.Round(converted, 0, MidpointRounding.AwayFromZero);
+        if (rounded > int.MaxValue) return false;
+        kilometers = (int)rounded;
+        return true;
+    }
+
+    public static bool TryConvertLiters(decimal input, AppUnitPreferences preferences, out decimal liters)
+    {
+        liters = 0;
+        if (input < 0) return false;
+        var factor = NormalizeVolumeUnit(preferences.VolumeUnit) switch
+        {
+            UsGallons => LitersPerUsGallon,
+            ImperialGallons => LitersPerImperialGallon,
+            _ => 1m
+        };
+        if (input > decimal.MaxValue / factor) return false;
+        liters = input * factor;
+        return true;
+    }
+
     private readonly IAppNumberFormatService _numberFormatService;
 
     public AppUnitFormatService()

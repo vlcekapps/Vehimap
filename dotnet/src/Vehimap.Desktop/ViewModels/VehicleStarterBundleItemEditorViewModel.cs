@@ -200,13 +200,12 @@ public sealed partial class VehicleStarterBundleItemEditorViewModel : Observable
         }
 
         if (!NumberFormatService.TryParseDecimal(value, _culturePreferences, out var distance)
-            && !VehimapValueParser.TryParseDecimalNumber(value, out distance))
+            || !AppUnitFormatService.TryConvertWholeKilometers(distance, _unitPreferences, out var kilometers))
         {
             return value;
         }
 
-        var kilometers = UnitFormatService.ConvertDistanceToKilometers(distance, _unitPreferences);
-        return ((int)Math.Round(kilometers, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture);
+        return kilometers.ToString(CultureInfo.InvariantCulture);
     }
 
     private static string LF(string key, params object?[] args) => DesktopLocalization.Localizer.Format(key, args);

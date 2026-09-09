@@ -52,10 +52,31 @@ public sealed class AppNumberFormatService : IAppNumberFormatService
 
     public bool TryParseDecimal(string text, AppCulturePreferences preferences, out decimal value)
     {
+        value = 0;
+        if (string.IsNullOrWhiteSpace(text)) return false;
         var format = CreateNumberFormat(preferences);
+        var input = text.Trim();
+        if (format.NumberGroupSeparator == format.NumberDecimalSeparator) return false;
+        if (!string.IsNullOrEmpty(format.NumberGroupSeparator) && string.IsNullOrWhiteSpace(format.NumberGroupSeparator))
+        {
+            input = input.Replace('\u00a0', ' ').Replace('\u202f', ' ');
+            format.NumberGroupSeparator = " ";
+        }
+        var unsigned = input.StartsWith(format.NegativeSign, StringComparison.Ordinal) ? input[format.NegativeSign.Length..]
+            : input.StartsWith(format.PositiveSign, StringComparison.Ordinal) ? input[format.PositiveSign.Length..] : input;
+        var parts = unsigned.Split(format.NumberDecimalSeparator, StringSplitOptions.None);
+        if (parts.Length > 2 || (parts.Length == 2 && !parts[1].All(char.IsAsciiDigit))) return false;
+        var integer = parts[0];
+        if (!string.IsNullOrEmpty(format.NumberGroupSeparator) && integer.Contains(format.NumberGroupSeparator, StringComparison.Ordinal))
+        {
+            var groups = integer.Split(format.NumberGroupSeparator, StringSplitOptions.None);
+            if (groups[0].Length is < 1 or > 3 || !groups[0].All(char.IsAsciiDigit)
+                || groups.Skip(1).Any(group => group.Length != 3 || !group.All(char.IsAsciiDigit))) return false;
+        }
+        else if (!integer.All(char.IsAsciiDigit)) return false;
         return decimal.TryParse(
-            text.Trim(),
-            NumberStyles.Number,
+            input,
+            NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint | NumberStyles.AllowThousands,
             format,
             out value);
     }

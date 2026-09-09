@@ -120,10 +120,14 @@ main window only minimizes to the tray), run from the repository root:
 ```powershell
 pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Startup
 pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Core
+pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Editors
 ```
 
 `Startup` requires one real startup/focus test; `Core` requires six named startup,
-menu, save, cancel, TextBox and ComboBox scenarios. `All` is the broader suite,
+menu, save, cancel, TextBox and ComboBox scenarios. `Editors` requires twelve
+workspace/dialog save, cancellation and first/subsequent-field tab-order cases.
+Do not run a solution build at the same time: the live testhost locks its DLL.
+`All` is the broader suite,
 not a claim that it has already passed. The gate requires a ready server, disables
 silent availability skips and title-based attachment, and refuses to start while
 any Vehimap process is running. It never terminates an unrelated application.
@@ -136,6 +140,10 @@ checks the expected executed/passed count and rejects a leftover Vehimap process
 Session cleanup uses the application's File -> Exit command, not window Close.
 WinAppDriver keyboard input uses its documented session `/keys` endpoint instead
 of unsupported W3C keyboard Actions; the opt-in NovaWindows path is separate.
+Fixture text replacement uses Ctrl+V and verifies the actual text with Ctrl+A/Ctrl+C:
+WinAppDriver can map number-row keys to punctuation/letters on Czech layouts.
+Cursor and navigation tests still exercise real key input, not value injection.
+Live tests use the clipboard; avoid editing or copying other content during a run.
 The local gate uses a five-second launch delay (`-LaunchWaitSeconds`, range 0-50);
 ordinary CI retains the existing 45-second default. Modal selectors are scoped to
 their window, so a background window's equally named live region is not mistaken

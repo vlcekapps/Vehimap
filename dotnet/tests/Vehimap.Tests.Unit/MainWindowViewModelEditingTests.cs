@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Vehimap.Tests.Unit;
 
-public sealed class MainWindowViewModelEditingTests : IDisposable
+public sealed partial class MainWindowViewModelEditingTests : IDisposable
 {
     private readonly string _tempRoot;
 
@@ -460,7 +460,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         viewModel.EditSelectedHistoryCommand.Execute(null);
 
-        Assert.Equal("100", viewModel.HistoryWorkspace.HistoryEditorOdometer);
+        Assert.Equal("100.0", viewModel.HistoryWorkspace.HistoryEditorOdometer);
         Assert.Equal("Odometer (mi)", viewModel.HistoryWorkspace.HistoryEditorOdometerLabel);
 
         viewModel.HistoryWorkspace.HistoryEditorOdometer = "200";
@@ -535,7 +535,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.FuelWorkspace.FuelEditorFuelType = "Nafta";
         viewModel.FuelWorkspace.FuelEditorFuelDetail = "Shell FuelSave";
         viewModel.FuelWorkspace.FuelEditorStation = "Shell Brno Vídeňská";
-        viewModel.FuelWorkspace.FuelEditorVolume = "38.5";
+        viewModel.FuelWorkspace.FuelEditorVolume = "38,5";
         viewModel.FuelWorkspace.FuelEditorTotalCost = "1890";
         viewModel.FuelWorkspace.FuelEditorOdometer = "123789";
         viewModel.FuelWorkspace.FuelEditorFullTank = false;
@@ -665,7 +665,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         viewModel.CreateFuelCommand.Execute(null);
         viewModel.FuelWorkspace.FuelEditorDate = "20.10.2026";
         viewModel.FuelWorkspace.FuelEditorFuelType = "Natural 95";
-        viewModel.FuelWorkspace.FuelEditorVolume = "38.5";
+        viewModel.FuelWorkspace.FuelEditorVolume = "38,5";
         viewModel.FuelWorkspace.FuelEditorTotalCost = "1890";
         viewModel.FuelWorkspace.FuelEditorOdometer = "123789";
 
@@ -903,7 +903,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
         var dialogViewModel = viewModel.BuildMaintenanceCompletionDialogViewModel();
 
         Assert.NotNull(dialogViewModel);
-        Assert.Equal("100", dialogViewModel!.CompletedOdometer);
+        Assert.Equal("100.0", dialogViewModel!.CompletedOdometer);
         Assert.Equal("Completion odometer (mi)", dialogViewModel.CompletedOdometerLabel);
 
         dialogViewModel.CompletedOdometer = "200";
@@ -914,7 +914,7 @@ public sealed class MainWindowViewModelEditingTests : IDisposable
 
         var savedPlan = Assert.Single(dataStore.CurrentDataSet.MaintenancePlans);
         Assert.Equal("322", savedPlan.LastServiceOdometer);
-        Assert.Contains("200 mi", message);
+        Assert.Contains("200.1 mi", message); // 322 canonical km, displayed to one decimal place.
         Assert.DoesNotContain("322 km", message);
     }
 

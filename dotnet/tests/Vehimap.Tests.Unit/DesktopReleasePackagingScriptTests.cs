@@ -19,6 +19,44 @@ public sealed class DesktopReleasePackagingScriptTests : IDisposable
     }
 
     [Fact]
+    public async Task Readiness_refuses_to_delete_portable_user_data_before_building()
+    {
+        var powerShell = ResolvePowerShell();
+        Assert.NotNull(powerShell);
+        var build = Path.Combine(_tempRoot, "dotnet", "build");
+        Directory.CreateDirectory(build);
+        Directory.CreateDirectory(Path.Combine(_tempRoot, "src"));
+        await File.WriteAllTextAsync(Path.Combine(_tempRoot, "src", "VERSION"), "2.0.0");
+        var script = Path.Combine(build, "Test-DotnetReleaseReadiness.ps1");
+        File.Copy(Path.Combine(FindRepositoryRoot(), "dotnet", "build", Path.GetFileName(script)), script);
+        var data = Path.Combine(_tempRoot, "dotnet", "artifacts", "nightly", "win-x64", "app", "data");
+        Directory.CreateDirectory(data);
+        var database = Path.Combine(data, "vehimap.db");
+        await File.WriteAllTextAsync(database, "user data must survive");
+
+        var result = await RunPowerShellAsync(powerShell!, script, ("Channel", "nightly"), ("RuntimeIdentifier", "win-x64"));
+
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.Contains("Portable data exists", result.CombinedOutput);
+        Assert.Equal("user data must survive", await File.ReadAllTextAsync(database));
+    }
+
+    [Theory]
+    [InlineData("Nightly")]
+    [InlineData("Beta")]
+    [InlineData("Stable")]
+    public async Task Readiness_wrapper_propagates_failed_child_exit_code(string channel)
+    {
+        var powerShell = ResolvePowerShell();
+        Assert.NotNull(powerShell);
+        var wrapper = Path.Combine(_tempRoot, $"Test-Dotnet{channel}Readiness.ps1");
+        File.Copy(Path.Combine(FindRepositoryRoot(), "dotnet", "build", Path.GetFileName(wrapper)), wrapper);
+        await File.WriteAllTextAsync(Path.Combine(_tempRoot, "Test-DotnetReleaseReadiness.ps1"), "param($RuntimeIdentifier, $Configuration, $Channel)\nexit 42\n");
+        var result = await RunPowerShellAsync(powerShell!, wrapper);
+        Assert.Equal(42, result.ExitCode);
+    }
+
+    [Fact]
     public async Task Package_script_creates_archive_metadata_checksum_and_update_manifest()
     {
         var powerShell = ResolvePowerShell();

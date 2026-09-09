@@ -120,6 +120,7 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         var builder = new SqliteConnectionStringBuilder
         {
             DataSource = databasePath,
+            Mode = SqliteOpenMode.ReadOnly,
             ForeignKeys = false,
             Pooling = false
         };
@@ -227,8 +228,15 @@ public sealed class SqliteDataStoreHealthService : IDataStoreHealthService
         await using var command = connection.CreateCommand();
         command.CommandText = "SELECT COUNT(*) FROM schema_migrations WHERE id = '2.0-initial';";
         var count = Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
-        if (count > 0)
+        if (count == 1)
         {
+            command.CommandText = "SELECT COUNT(*) FROM schema_migrations;";
+            if (Convert.ToInt32(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false)) != 1)
+            {
+                details.Add(L("DataStoreHealth.Report.SchemaMarkerUnsupported"));
+                return DataStoreHealthStatus.Error;
+            }
+
             details.Add(L("DataStoreHealth.Report.SchemaMarkerPresent"));
             return DataStoreHealthStatus.Healthy;
         }

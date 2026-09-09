@@ -2942,4 +2942,9 @@ Navržená akce: {6}</value></data>
   <data name="Mobile.Value.NoCategory" xml:space="preserve"><value>Bez kategorie</value></data>
   <data name="Mobile.Value.NotEntered" xml:space="preserve"><value>Nevyplněno</value></data>
   <data name="Mobile.Value.NoNote" xml:space="preserve"><value>Bez poznámky</value></data>
+  <data name="UpdateService.Check.ChannelMismatch" xml:space="preserve"><value>Aktualizace patří do kanálu {0}, nikoli do kanálu {1} této aplikace.</value></data>
+  <data name="UpdateService.Install.InvalidAssetUrl" xml:space="preserve"><value>Aktualizace musí mít platnou adresu pro stažení přes HTTPS.</value></data>
+  <data name="UpdateService.Install.InvalidAssetKind" xml:space="preserve"><value>Tento typ aktualizačního balíčku není podporován.</value></data>
+  <data name="Maintenance.Status.InvalidNextServiceDate" xml:space="preserve"><value>Příští servisní termín je mimo podporovaný rozsah. Zkontrolujte datum a interval.</value></data>
+  <data name="DataStoreHealth.Report.SchemaMarkerUnsupported" xml:space="preserve"><value>Databáze obsahuje verzi schématu, kterou tato verze Vehimapu nepodporuje. Nepřepisujte ji; použijte kompatibilní verzi aplikace.</value></data>
 </root>

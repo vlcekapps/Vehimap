@@ -81,12 +81,7 @@ public sealed class SqliteBackupService : IBackupService
                 Directory.CreateDirectory(targetDirectory);
             }
 
-            if (File.Exists(backupPath))
-            {
-                File.Delete(backupPath);
-            }
-
-            ZipFile.CreateFromDirectory(tempDirectory, backupPath, CompressionLevel.Optimal, includeBaseDirectory: false);
+            AtomicArchiveWriter.CreateFromDirectory(tempDirectory, backupPath, cancellationToken);
             return new BackupExportResult(backupPath, attachments.IncludedCount, attachments.MissingCount);
         }
         finally
@@ -132,36 +127,54 @@ public sealed class SqliteBackupService : IBackupService
         VehimapBackupBundle backupBundle,
         CancellationToken cancellationToken = default)
     {
-        var preRestoreBackupPath = BackupCurrentDataBeforeRestore(dataRoot, cancellationToken);
-
-        await _dataStore.SaveAsync(dataRoot, backupBundle.Data, cancellationToken).ConfigureAwait(false);
-        var attachmentsRoot = SqliteStoragePaths.GetAttachmentsPath(dataRoot);
-        if (Directory.Exists(attachmentsRoot))
+        Directory.CreateDirectory(dataRoot.DataPath);
+        var stagingPath = Path.Combine(dataRoot.DataPath, $".restore-{Guid.NewGuid():N}");
+        var stagingRoot = new VehimapDataRoot(stagingPath, stagingPath, true);
+        Directory.CreateDirectory(SqliteStoragePaths.GetAttachmentsPath(stagingRoot));
+        try
         {
-            Directory.Delete(attachmentsRoot, recursive: true);
-        }
-
-        var restoredAttachmentCount = 0;
-        foreach (var attachment in backupBundle.Attachments)
-        {
+            var paths = new HashSet<string>(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+            foreach (var attachment in backupBundle.Attachments)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var targetPath = SqliteStoragePaths.ResolveManagedAttachmentPath(stagingRoot, attachment.RelativePath);
+                if (string.IsNullOrEmpty(targetPath) || !paths.Add(targetPath))
+                    throw new InvalidDataException("Backup contains an empty or duplicate attachment path.");
+                Directory.CreateDirectory(Path.GetDirectoryName(targetPath)!);
+                await File.WriteAllBytesAsync(targetPath, attachment.Content, cancellationToken).ConfigureAwait(false);
+            }
+            // Validate the incoming database before touching any live file, including
+            // malformed rows that would cause the real SQLite transaction to fail.
+            await _dataStore.SaveAsync(stagingRoot, backupBundle.Data, cancellationToken).ConfigureAwait(false);
+            var preRestoreBackupPath = BackupCurrentDataBeforeRestore(dataRoot, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
-            var targetPath = SqliteStoragePaths.ResolveManagedAttachmentPath(dataRoot, attachment.RelativePath);
-            if (string.IsNullOrWhiteSpace(targetPath))
+            var attachmentsRoot = SqliteStoragePaths.GetAttachmentsPath(dataRoot);
+            var previousAttachments = Path.Combine(preRestoreBackupPath, "replaced-attachments");
+            var hadAttachments = Directory.Exists(attachmentsRoot);
+            if (hadAttachments)
+                Directory.Move(attachmentsRoot, previousAttachments);
+            var installedAttachments = false;
+            try
             {
-                continue;
+                Directory.Move(SqliteStoragePaths.GetAttachmentsPath(stagingRoot), attachmentsRoot);
+                installedAttachments = true;
+                await _dataStore.SaveAsync(dataRoot, backupBundle.Data, cancellationToken).ConfigureAwait(false);
             }
-
-            var directory = Path.GetDirectoryName(targetPath);
-            if (!string.IsNullOrWhiteSpace(directory))
+            catch
             {
-                Directory.CreateDirectory(directory);
+                // Rollback must also run after cancellation; never delete the safety copy.
+                if (installedAttachments)
+                    Directory.Move(attachmentsRoot, SqliteStoragePaths.GetAttachmentsPath(stagingRoot));
+                if (hadAttachments)
+                    Directory.Move(previousAttachments, attachmentsRoot);
+                throw;
             }
-
-            await File.WriteAllBytesAsync(targetPath, attachment.Content, cancellationToken).ConfigureAwait(false);
-            restoredAttachmentCount++;
+            return new BackupRestoreResult(preRestoreBackupPath, paths.Count);
         }
-
-        return new BackupRestoreResult(preRestoreBackupPath, restoredAttachmentCount);
+        finally
+        {
+            TryDeleteDirectory(stagingPath);
+        }
     }
 
     private static string BuildManifest()
@@ -218,7 +231,7 @@ public sealed class SqliteBackupService : IBackupService
         string targetAttachmentsRoot,
         CancellationToken cancellationToken)
     {
-        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var seen = new HashSet<string>(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
         var includedCount = 0;
         var missingCount = 0;
 
@@ -274,7 +287,7 @@ public sealed class SqliteBackupService : IBackupService
         var databasePath = SqliteStoragePaths.GetDatabasePath(dataRoot);
         if (File.Exists(databasePath))
         {
-            File.Copy(databasePath, Path.Combine(backupPath, SqliteStoragePaths.DatabaseFileName), overwrite: true);
+            SqliteDatabaseSnapshot.Copy(databasePath, Path.Combine(backupPath, SqliteStoragePaths.DatabaseFileName));
         }
 
         foreach (var legacyFileName in LegacyFileNames)

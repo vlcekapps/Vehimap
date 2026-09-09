@@ -30,3 +30,4 @@ if ($InstallSmoke) {
 }
 
 & (Join-Path $PSScriptRoot "Test-DotnetReleaseReadiness.ps1") @arguments
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

@@ -92,6 +92,21 @@ public static class ManagedAttachmentPathGuard
             throw new InvalidDataException("Resolved managed attachment path escapes the target root.");
         }
 
+        // Lexical containment alone does not protect a copy through an existing
+        // junction/symlink underneath the managed root.
+        var currentPath = rootFullPath;
+        foreach (var segment in normalizedRelativePath.Split('/'))
+        {
+            currentPath = Path.Combine(currentPath, segment);
+            try
+            {
+                if ((File.GetAttributes(currentPath) & FileAttributes.ReparsePoint) != 0)
+                    throw new InvalidDataException("Managed attachment paths cannot traverse symbolic links or reparse points.");
+            }
+            catch (FileNotFoundException) { break; }
+            catch (DirectoryNotFoundException) { break; }
+        }
+
         return candidatePath;
     }
 
@@ -104,6 +119,7 @@ public static class ManagedAttachmentPathGuard
         string.IsNullOrWhiteSpace(segment)
         || string.Equals(segment, ".", StringComparison.Ordinal)
         || string.Equals(segment, "..", StringComparison.Ordinal)
+        || segment.EndsWith(' ') || segment.EndsWith('.')
         || segment.Any(IsInvalidFileNameCharacter);
 
     private static bool IsInvalidFileNameCharacter(char value) =>

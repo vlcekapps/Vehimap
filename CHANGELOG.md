@@ -7,7 +7,17 @@ a projekt používá [Semantic Versioning](https://semver.org/lang/cs/).
 
 ## [Unreleased]
 
+### Opraveno
+- Migrace SQLite nejprve ověří úplný převod v pracovní kopii a teprve potom zveřejní databázi. Načítání již potichu neopravuje neúplné schéma; bezpečnostní snapshoty zahrnují i potvrzené změny z WAL.
+- Obnova zálohy předem validuje data i přílohy a při chybě uložení vrací původní přílohy. Import balíčku nepřipojí cizí existující soubor místo chybějící přílohy; spravované cesty odmítají odkazy mimo úložiště i nejednoznačné konce názvů.
+- Aktualizace znovu ověřuje kanál, HTTPS adresu, druh balíčku, hash a rozsah stahování. ZIP helper přestane při neukončené aplikaci, běží mimo přepisovanou instalaci a zachovává kopii původních souborů pro rollback.
+- Číselné vstupy odmítají chybné seskupení a přetečení, editory správně formátují peníze a opakované uložení mílí či galonů neztrácí přesnost běžných hodnot. Průměrná cena tankování vychází jen ze záznamů se známou cenou i objemem; neplatně vzdálený servisní termín nezpůsobí pád.
+- Výpočet spotřeby už nevynechává tankování se známým datem a objemem jen kvůli chybějícímu tachometru. Nejednoznačné pořadí záznamů nevytváří zavádějící úsek; diagnostika SQLite odmítá i nepodporovaný dodatečný marker schématu.
+- Zrušení editoru nemůže přerušit probíhající ukládání jeho stavu. Komunikace jediné instance má omezenou délku i čas a oddělení uživatelů. Readiness nikdy nesmaže portable `app/data` a jeho obalové skripty správně vracejí neúspěch sestavení.
+- Dialogy historie, tankování, připomínek, údržby a dokladů mají stejně jako editor vozidla nejprve tlačítko Uložit a poté Zrušit. Tab ze Zrušit a Shift+Tab z prvního pole tak odpovídají stejnému pořadí, místo aby jeden směr přeskakoval Uložit.
+
 ### Přidáno
+- Předbeta audit má samostatný technický protokol `dotnet/docs/PRE-BETA-AUDIT.md` s nálezy, regresními testy a výslovně zbývajícími akceptačními kroky. Živá Appium brána přidává profil `Editors`; nepřítomnost Appia už testy nevykazují jako úspěch.
 - Nová přísná lokální Appium brána ověřuje skutečný start, menu a editorové klávesové scénáře; odmítne chybějící spojení, připojení k již běžícímu Vehimapu i zbylý testovací proces. Diagnostika a výsledky se ukládají do `dotnet/artifacts/windows-ui/`.
 - Jazyková brána nově porovnává každý z 2 890 textů v obou jazycích se skutečně sestavenými resources, ověřuje platnost formátovacích šablon i jazykové fallbacky a hlídá texty všech XAML obrazovek místo jen pilotních dialogů. Desktop publish selže, pokud chybí společná resource assembly nebo český jazykový soubor.
 - Kořenový `vehimap-logo.png` je nyní verzovaný jako sdílený vizuální asset, desktop jej přístupně zobrazuje v dialogu `O programu` a regresní test hlídá shodu s launcher grafikou Android aplikace. Windows EXE, tray a zástupci dál používají platformně vhodný `favicon.ico`.

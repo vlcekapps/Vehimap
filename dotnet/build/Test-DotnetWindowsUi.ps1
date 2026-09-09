@@ -3,7 +3,7 @@ param(
     [uri]$ServerUrl = 'http://127.0.0.1:4725/',
     [ValidateSet('Windows', 'NovaWindows')]
     [string]$AutomationName = 'Windows',
-    [ValidateSet('Startup', 'Core', 'All')]
+    [ValidateSet('Startup', 'Core', 'Editors', 'All')]
     [string]$Profile = 'Core',
     [string]$AppPath,
     [string]$Configuration = 'Release',
@@ -35,6 +35,7 @@ $core = @(
 $filter = switch ($Profile) {
     'Startup' { "FullyQualifiedName=Vehimap.Tests.UI.DesktopContinuousIntegrationSmokeTests.$startup" }
     'Core' { ($core | ForEach-Object { "FullyQualifiedName=Vehimap.Tests.UI.DesktopContinuousIntegrationSmokeTests.$_" }) -join '|' }
+    'Editors' { 'FullyQualifiedName~DesktopContinuousIntegrationSmokeTests&FullyQualifiedName~editor_runs_in_standalone_window|FullyQualifiedName~DesktopContinuousIntegrationSmokeTests.Editor_dialog_shift_tab|FullyQualifiedName~DesktopContinuousIntegrationSmokeTests.Cancelling_modal_editor' }
     'All' { 'FullyQualifiedName~DesktopContinuousIntegrationSmokeTests|FullyQualifiedName~DesktopAccessibilitySmokeTests' }
 }
 
@@ -77,7 +78,7 @@ try {
 
     [xml]$results = Get-Content -LiteralPath (Join-Path $runRoot 'windows-ui.trx') -Raw
     $counters = $results.TestRun.ResultSummary.Counters
-    $expected = switch ($Profile) { 'Startup' { 1 } 'Core' { $core.Count } 'All' { [int]$counters.total } }
+    $expected = switch ($Profile) { 'Startup' { 1 } 'Core' { $core.Count } 'Editors' { 12 } 'All' { [int]$counters.total } }
     if ($expected -lt 1 -or [int]$counters.total -ne $expected -or [int]$counters.passed -ne $expected -or [int]$counters.executed -ne $expected) {
         throw 'The live UI gate did not execute and pass every expected scenario.'
     }

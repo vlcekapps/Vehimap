@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 param(
+    [ValidateSet("win-x64", "linux-x64", "osx-x64", "osx-arm64")]
     [string]$RuntimeIdentifier = "win-x64",
     [string]$Configuration = "Release",
     [ValidateSet("stable", "beta", "nightly")]
@@ -60,6 +61,20 @@ $publishDirectory = Join-Path $readinessRoot "app"
 $releaseDirectory = Join-Path $readinessRoot "release"
 $manifestPath = Join-Path $readinessRoot $manifestFileName
 $installerSmokeScript = Join-Path $PSScriptRoot "Test-DotnetInstallerSmoke.ps1"
+
+$artifactsRoot = [IO.Path]::GetFullPath((Join-Path $dotnetRoot "artifacts")) + [IO.Path]::DirectorySeparatorChar
+$readinessRoot = [IO.Path]::GetFullPath($readinessRoot)
+if (-not $readinessRoot.StartsWith($artifactsRoot, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "Readiness output must remain inside the workspace artifacts directory."
+}
+if (Test-Path -LiteralPath (Join-Path $publishDirectory "data")) {
+    throw "Portable data exists in '$publishDirectory\data'. Move it to a safe location before rebuilding; readiness never deletes user data."
+}
+foreach ($path in @((Join-Path $dotnetRoot "artifacts"), (Join-Path $dotnetRoot "artifacts\$channelName"), $readinessRoot, $publishDirectory)) {
+    if ((Test-Path -LiteralPath $path) -and ((Get-Item -LiteralPath $path -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+        throw "Readiness refuses to replace a linked output directory: $path"
+    }
+}
 
 Write-Host "Vehimap .NET desktop release readiness"
 Write-Host "Base version: $version"

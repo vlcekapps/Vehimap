@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Vehimap.Tests.Unit;
 
-public sealed class AppShellServicesTests : IDisposable
+public sealed partial class AppShellServicesTests : IDisposable
 {
     private readonly string _tempRoot;
 
@@ -410,7 +410,9 @@ public sealed class AppShellServicesTests : IDisposable
 
         Assert.True(result.IsReady);
         Assert.NotNull(result.InstallPlan);
-        Assert.Equal(updaterPath, result.InstallPlan!.UpdaterPath);
+        Assert.NotEqual(updaterPath, result.InstallPlan!.UpdaterPath);
+        Assert.Equal("stub", await File.ReadAllTextAsync(result.InstallPlan.UpdaterPath));
+        Assert.Equal("updater-host", Path.GetFileName(Path.GetDirectoryName(result.InstallPlan.UpdaterPath)));
         Assert.Equal(AppContext.BaseDirectory, result.InstallPlan.TargetDirectory);
         Assert.Equal("1.0.9", result.InstallPlan.ExpectedVersion);
         Assert.True(File.Exists(Path.Combine(result.InstallPlan.SourceDirectory, "vehimap.exe")));
@@ -555,7 +557,7 @@ public sealed class AppShellServicesTests : IDisposable
                     $"https://example.com/{manifestFileName}",
                     "https://github.com/vlcekapps/Vehimap/releases",
                     Path.Combine(_tempRoot, "Vehimap.Updater.exe"),
-                    true));
+                    false));
 
             using var httpClient = new HttpClient(new StubHttpMessageHandler(Encoding.UTF8.GetBytes(remoteManifest)));
             var service = new LegacyUpdateService(buildInfo, httpClient, () => EnglishLocalizer());

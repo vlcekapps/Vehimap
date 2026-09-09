@@ -245,7 +245,8 @@ public sealed class LegacyServiceBookService : IServiceBookService
         {
             if (VehimapValueParser.TryParseEventDate(plan.LastServiceDate, out var lastServiceDate))
             {
-                var nextDate = lastServiceDate.AddMonths(intervalMonths);
+                if (!CalendarArithmetic.TryAddMonths(lastServiceDate, intervalMonths, out var nextDate))
+                    return L("Maintenance.Status.InvalidNextServiceDate");
                 var delta = nextDate.DayNumber - today.DayNumber;
                 parts.Add(delta switch
                 {
@@ -265,7 +266,7 @@ public sealed class LegacyServiceBookService : IServiceBookService
         {
             if (VehimapValueParser.TryParseOdometer(plan.LastServiceOdometer, out var lastServiceOdometer) && currentOdometer.HasValue)
             {
-                var remainingKm = (lastServiceOdometer + intervalKm) - currentOdometer.Value;
+                var remainingKm = ((long)lastServiceOdometer + intervalKm) - currentOdometer.Value;
                 parts.Add(remainingKm switch
                 {
                     < 0 => LF("ServiceBook.Value.OverDistanceLimit", FormatDistance(Math.Abs(remainingKm))),

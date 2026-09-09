@@ -69,9 +69,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
         var totalCost = parsedEntries
             .Where(item => item.TotalCost.HasValue)
             .Sum(item => item.TotalCost!.Value);
-        decimal? averagePrice = totalLiters > 0m && totalCost > 0m
-            ? totalCost / totalLiters
-            : null;
+        var averagePrice = CalculateAveragePrice(parsedEntries);
         var totalSegmentDistance = segments.Sum(item => item.DistanceKm);
         var totalSegmentLiters = segments.Sum(item => item.Liters);
         decimal? averageConsumption = totalSegmentDistance > 0
@@ -189,10 +187,20 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
         ICollection<FuelAnalysisWarning> warnings)
     {
         var segments = new List<FuelConsumptionSegment>();
+        // An undated purchase cannot safely be placed outside any full-tank interval.
+        if (parsedEntries.Any(item => !item.Date.HasValue))
+        {
+            return segments;
+        }
+
+        var ambiguousDates = parsedEntries
+            .GroupBy(item => item.Date!.Value)
+            .Where(group => group.Count() > 1 && group.Any(item => !item.Odometer.HasValue))
+            .Select(group => group.Key)
+            .ToHashSet();
         var orderedEntries = parsedEntries
-            .Where(item => item.Date.HasValue && item.Odometer.HasValue)
             .OrderBy(item => item.Date!.Value)
-            .ThenBy(item => item.Odometer!.Value)
+            .ThenBy(item => item.Odometer)
             .ThenBy(item => item.Entry.Id, StringComparer.Ordinal)
             .ToList();
 
@@ -201,25 +209,30 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
         decimal windowLiters = 0m;
         decimal windowCost = 0m;
         var windowHasMissingLiters = false;
+        var windowHasMissingCost = false;
         var windowHasOdometerRegression = false;
 
         foreach (var sample in orderedEntries)
         {
-            if (previousSample is not null && sample.Odometer!.Value < previousSample.Odometer!.Value)
+            if (sample.Odometer.HasValue && previousSample is not null && sample.Odometer.Value < previousSample.Odometer!.Value)
             {
                 windowHasOdometerRegression = true;
             }
 
-            previousSample = sample;
+            if (sample.Odometer.HasValue)
+            {
+                previousSample = sample;
+            }
 
             if (lastFullTank is null)
             {
-                if (sample.Entry.FullTank)
+                if (sample.Entry.FullTank && sample.Odometer.HasValue)
                 {
                     lastFullTank = sample;
                     windowLiters = 0m;
                     windowCost = 0m;
                     windowHasMissingLiters = false;
+                    windowHasMissingCost = false;
                     windowHasOdometerRegression = false;
                 }
 
@@ -239,16 +252,21 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
             {
                 windowCost += sample.TotalCost.Value;
             }
+            else
+            {
+                windowHasMissingCost = true;
+            }
 
-            if (!sample.Entry.FullTank)
+            if (!sample.Entry.FullTank || !sample.Odometer.HasValue)
             {
                 continue;
             }
 
             var distance = sample.Odometer!.Value - lastFullTank.Odometer!.Value;
-            if (distance > 0 && windowLiters > 0m && !windowHasMissingLiters && !windowHasOdometerRegression)
+            var hasAmbiguousOrder = ambiguousDates.Any(date => date >= lastFullTank.Date!.Value && date <= sample.Date!.Value);
+            if (distance > 0 && windowLiters > 0m && !windowHasMissingLiters && !windowHasOdometerRegression && !hasAmbiguousOrder)
             {
-                decimal? pricePerLiter = windowCost > 0m ? windowCost / windowLiters : null;
+                decimal? pricePerLiter = !windowHasMissingCost ? windowCost / windowLiters : null;
                 segments.Add(new FuelConsumptionSegment(
                     $"fuel-segment-{lastFullTank.Entry.Id}-{sample.Entry.Id}",
                     lastFullTank.Entry.Id,
@@ -262,7 +280,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     windowCost,
                     windowLiters / distance * 100m,
                     pricePerLiter,
-                    windowCost > 0m ? windowCost / distance : null));
+                    !windowHasMissingCost ? windowCost / distance : null));
             }
             else if (distance <= 0)
             {
@@ -278,6 +296,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
             windowLiters = 0m;
             windowCost = 0m;
             windowHasMissingLiters = false;
+            windowHasMissingCost = false;
             windowHasOdometerRegression = false;
         }
 
@@ -414,7 +433,7 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
                     group.Count(),
                     totalLiters,
                     totalCost,
-                    totalLiters > 0m && totalCost > 0m ? totalCost / totalLiters : null,
+                    CalculateAveragePrice(group),
                     latest.Date);
             })
             .OrderByDescending(item => item.TotalCost)
@@ -422,6 +441,14 @@ public sealed class LegacyFuelAnalysisService : IFuelAnalysisService
             .ThenBy(item => item.Station, StringComparer.CurrentCultureIgnoreCase)
             .ThenBy(item => item.FuelType, StringComparer.CurrentCultureIgnoreCase)
             .ToList();
+    }
+
+    private static decimal? CalculateAveragePrice(IEnumerable<ParsedFuelEntry> entries)
+    {
+        // Missing prices/volumes are unknown, not free fuel or a zero-volume purchase.
+        var samples = entries.Where(item => item.Liters is > 0m && item.TotalCost.HasValue).ToArray();
+        var liters = samples.Sum(item => item.Liters!.Value);
+        return liters > 0 ? samples.Sum(item => item.TotalCost!.Value) / liters : null;
     }
 
     private string BuildStatus(int entryCount, int segmentCount)

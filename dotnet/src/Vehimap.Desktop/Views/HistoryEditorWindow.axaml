@@ -96,18 +96,18 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
                 Spacing="10">
-      <Button x:Name="CancelHistoryButton"
-              MinWidth="110"
-              Content="{i18n:Loc Common.Cancel}"
-              Click="OnCancelClick"
-              AutomationProperties.Name="{i18n:Loc HistoryEditor.CancelName}"
-              AutomationProperties.AutomationId="CancelHistoryButton" />
       <Button MinWidth="110"
               Content="{i18n:Loc Common.Save}"
               IsEnabled="{Binding IsEditingHistory}"
               Click="OnSaveClick"
               AutomationProperties.Name="{i18n:Loc HistoryEditor.SaveName}"
               AutomationProperties.AutomationId="SaveHistoryButton" />
+      <Button x:Name="CancelHistoryButton"
+              MinWidth="110"
+              Content="{i18n:Loc Common.Cancel}"
+              Click="OnCancelClick"
+              AutomationProperties.Name="{i18n:Loc HistoryEditor.CancelName}"
+              AutomationProperties.AutomationId="CancelHistoryButton" />
     </StackPanel>
   </Grid>
 </Window>

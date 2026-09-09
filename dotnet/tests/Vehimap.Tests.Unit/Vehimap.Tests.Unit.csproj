@@ -19,5 +19,6 @@
     <ProjectReference Include="..\..\src\Vehimap.Mobile\Vehimap.Mobile.csproj" />
     <ProjectReference Include="..\..\src\Vehimap.Storage.Legacy\Vehimap.Storage.Legacy.csproj" />
     <ProjectReference Include="..\..\src\Vehimap.Storage.Sqlite\Vehimap.Storage.Sqlite.csproj" />
+    <ProjectReference Include="..\..\src\Vehimap.Updater\Vehimap.Updater.csproj" />
   </ItemGroup>
 </Project>

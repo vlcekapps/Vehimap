@@ -98,14 +98,13 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         if (!string.IsNullOrWhiteSpace(completedOdometerText))
         {
             if (!NumberFormatService.TryParseDecimal(completedOdometerText, _culturePreferences, out var parsedOdometer)
-                || parsedOdometer < 0m)
+                || !AppUnitFormatService.TryConvertWholeKilometers(parsedOdometer, _unitPreferences, out var convertedKilometers))
             {
                 SetError(_localizer.Format("MaintenanceCompletion.Validation.CompletedOdometerNumber", DistanceUnitLabel), "MaintenanceCompletionOdometerBox");
                 return false;
             }
 
-            var convertedKilometers = UnitFormatService.ConvertDistanceToKilometers(parsedOdometer, _unitPreferences);
-            normalizedOdometer = ((int)Math.Round(convertedKilometers, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture);
+            normalizedOdometer = convertedKilometers.ToString(CultureInfo.InvariantCulture);
         }
         else if (RequiresOdometer)
         {
@@ -117,7 +116,7 @@ public sealed partial class MaintenanceCompletionDialogViewModel : ObservableObj
         var normalizedCost = string.Empty;
         if (!string.IsNullOrWhiteSpace(historyCostText))
         {
-            if (!VehimapValueParser.TryParseMoney(historyCostText, out var parsedCost))
+            if (!NumberFormatService.TryParseDecimal(historyCostText, _culturePreferences, out var parsedCost) || parsedCost < 0m)
             {
                 SetError(_localizer.GetString("MaintenanceCompletion.Validation.HistoryCost"), "MaintenanceCompletionHistoryCostBox");
                 return false;

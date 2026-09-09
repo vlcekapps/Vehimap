@@ -130,18 +130,18 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
                 Spacing="10">
-      <Button x:Name="CancelFuelButton"
-              MinWidth="110"
-              Content="{i18n:Loc Common.Cancel}"
-              Click="OnCancelClick"
-              AutomationProperties.Name="{i18n:Loc FuelEditor.CancelName}"
-              AutomationProperties.AutomationId="CancelFuelButton" />
       <Button MinWidth="110"
               Content="{i18n:Loc Common.Save}"
               IsEnabled="{Binding IsEditingFuel}"
               Click="OnSaveClick"
               AutomationProperties.Name="{i18n:Loc FuelEditor.SaveName}"
               AutomationProperties.AutomationId="SaveFuelButton" />
+      <Button x:Name="CancelFuelButton"
+              MinWidth="110"
+              Content="{i18n:Loc Common.Cancel}"
+              Click="OnCancelClick"
+              AutomationProperties.Name="{i18n:Loc FuelEditor.CancelName}"
+              AutomationProperties.AutomationId="CancelFuelButton" />
     </StackPanel>
   </Grid>
 </Window>

@@ -22,10 +22,15 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
 
     public async Task<VehimapDataSet> LoadAsync(VehimapDataRoot dataRoot, CancellationToken cancellationToken = default)
     {
-        Directory.CreateDirectory(dataRoot.DataPath);
-        await using var connection = new SqliteConnection(BuildConnectionString(dataRoot));
+        if (!File.Exists(SqliteStoragePaths.GetDatabasePath(dataRoot)))
+        {
+            await SaveAsync(dataRoot, new VehimapDataSet(), cancellationToken).ConfigureAwait(false);
+        }
+        var readConnection = new SqliteConnectionStringBuilder(BuildConnectionString(dataRoot)) { Mode = SqliteOpenMode.ReadOnly };
+        await using var connection = new SqliteConnection(readConnection.ToString());
         await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-        await EnsureSchemaAsync(connection, cancellationToken).ConfigureAwait(false);
+        using var snapshot = connection.BeginTransaction(deferred: true);
+        await ValidateSchemaAsync(connection, cancellationToken).ConfigureAwait(false);
 
         return new VehimapDataSet
         {
@@ -43,13 +48,18 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
     public async Task SaveAsync(VehimapDataRoot dataRoot, VehimapDataSet dataSet, CancellationToken cancellationToken = default)
     {
         Directory.CreateDirectory(dataRoot.DataPath);
+        var isNewDatabase = !File.Exists(SqliteStoragePaths.GetDatabasePath(dataRoot));
         await using var connection = new SqliteConnection(BuildConnectionString(dataRoot));
         await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-        await EnsureSchemaAsync(connection, cancellationToken).ConfigureAwait(false);
+        if (isNewDatabase)
+        {
+            await EnsureSchemaAsync(connection, cancellationToken).ConfigureAwait(false);
+        }
 
         await using var transaction = (SqliteTransaction)await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
         try
         {
+            await ValidateSchemaAsync(connection, cancellationToken).ConfigureAwait(false);
             foreach (var statement in ResetTableStatements)
             {
                 await ExecuteAsync(connection, transaction, statement, cancellationToken).ConfigureAwait(false);
@@ -230,7 +240,7 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
         }
         catch
         {
-            await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+            await transaction.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
             throw;
         }
     }
@@ -248,6 +258,31 @@ public sealed class SqliteVehimapDataStore : IVehimapDataStore
         };
 
         return builder.ToString();
+    }
+
+    private static async Task ValidateSchemaAsync(SqliteConnection connection, CancellationToken cancellationToken)
+    {
+        string[] requiredTables = ["schema_migrations", "settings", "vehicles", "vehicle_meta", "history_entries", "fuel_entries", "records", "reminders", "maintenance_plans"];
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT name FROM sqlite_master WHERE type = 'table';";
+        var tables = new HashSet<string>(StringComparer.Ordinal);
+        await using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+        {
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                tables.Add(reader.GetString(0));
+        }
+        if (!requiredTables.All(tables.Contains))
+            throw new InvalidDataException("SQLite database is missing required tables; automatic repair is not supported.");
+
+        command.CommandText = "SELECT id FROM schema_migrations;";
+        var versions = new List<string>();
+        await using (var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+        {
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                versions.Add(reader.GetString(0));
+        }
+        if (versions.Count != 1 || versions[0] != "2.0-initial")
+            throw new InvalidDataException("SQLite schema version is missing or unsupported by this application.");
     }
 
     private static async Task EnsureSchemaAsync(SqliteConnection connection, CancellationToken cancellationToken)

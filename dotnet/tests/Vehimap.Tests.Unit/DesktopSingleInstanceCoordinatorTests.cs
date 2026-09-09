@@ -7,6 +7,30 @@ namespace Vehimap.Tests.Unit;
 public sealed class DesktopSingleInstanceCoordinatorTests
 {
     [Fact]
+    public void Instance_names_do_not_collide_between_user_sessions()
+    {
+        var first = DesktopSingleInstanceCoordinator.BuildNames("nightly", "user/session-1");
+        var second = DesktopSingleInstanceCoordinator.BuildNames("nightly", "user/session-2");
+        Assert.NotEqual(first, second);
+        Assert.Equal(first, DesktopSingleInstanceCoordinator.BuildNames("nightly", "user/session-1"));
+    }
+
+    [Fact]
+    public async Task Idle_pipe_client_does_not_block_subsequent_activation()
+    {
+        var channel = $"unit-{Guid.NewGuid():N}";
+        using var primary = DesktopSingleInstanceCoordinator.Acquire(channel);
+        using var idle = new System.IO.Pipes.NamedPipeClientStream(".", DesktopSingleInstanceCoordinator.BuildNames(channel).PipeName, System.IO.Pipes.PipeDirection.Out);
+        await idle.ConnectAsync(3000);
+        var activated = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        primary.SetActivationHandler(() => { activated.TrySetResult(); return Task.CompletedTask; });
+        await Task.Delay(TimeSpan.FromSeconds(2.5));
+        using var secondary = DesktopSingleInstanceCoordinator.Acquire(channel);
+        Assert.True(await secondary.TrySignalExistingInstanceAsync(TimeSpan.FromSeconds(3)));
+        await activated.Task.WaitAsync(TimeSpan.FromSeconds(3));
+    }
+
+    [Fact]
     public void Build_names_are_channel_specific_and_safe()
     {
         var stable = DesktopSingleInstanceCoordinator.BuildNames("stable");

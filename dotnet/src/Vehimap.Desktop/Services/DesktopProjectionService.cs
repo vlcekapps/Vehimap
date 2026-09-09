@@ -1156,7 +1156,8 @@ internal sealed class DesktopProjectionService
         {
             if (TryParseReminderDate(plan.LastServiceDate, out var lastServiceDate))
             {
-                var nextDate = lastServiceDate.AddMonths(intervalMonths);
+                if (!CalendarArithmetic.TryAddMonths(lastServiceDate, intervalMonths, out var nextDate))
+                    return L("Maintenance.Status.InvalidNextServiceDate");
                 var delta = nextDate.DayNumber - today.DayNumber;
                 if (delta < 0)
                 {
@@ -1182,7 +1183,7 @@ internal sealed class DesktopProjectionService
         {
             if (VehimapValueParser.TryParseOdometer(plan.LastServiceOdometer, out var lastServiceOdometer) && currentOdometer.HasValue)
             {
-                var remainingKm = (lastServiceOdometer + intervalKm) - currentOdometer.Value;
+                var remainingKm = ((long)lastServiceOdometer + intervalKm) - currentOdometer.Value;
                 if (remainingKm < 0)
                 {
                     parts.Add(LF("Maintenance.Status.OverDistanceLimit", FormatDistance(Math.Abs(remainingKm), decimalPlaces: 0)));

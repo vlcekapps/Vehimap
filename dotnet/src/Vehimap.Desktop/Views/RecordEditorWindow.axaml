@@ -156,18 +156,18 @@
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
                 Spacing="10">
-      <Button x:Name="CancelRecordButton"
-              MinWidth="110"
-              Content="{i18n:Loc Common.Cancel}"
-              Click="OnCancelClick"
-              AutomationProperties.Name="{i18n:Loc RecordEditor.CancelName}"
-              AutomationProperties.AutomationId="CancelRecordButton" />
       <Button MinWidth="110"
               Content="{i18n:Loc Common.Save}"
               IsEnabled="{Binding IsEditingRecord}"
               Click="OnSaveClick"
               AutomationProperties.Name="{i18n:Loc RecordEditor.SaveName}"
               AutomationProperties.AutomationId="SaveRecordButton" />
+      <Button x:Name="CancelRecordButton"
+              MinWidth="110"
+              Content="{i18n:Loc Common.Cancel}"
+              Click="OnCancelClick"
+              AutomationProperties.Name="{i18n:Loc RecordEditor.CancelName}"
+              AutomationProperties.AutomationId="CancelRecordButton" />
     </StackPanel>
   </Grid>
 </Window>

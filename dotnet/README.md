@@ -6,13 +6,15 @@ Požadované nástroje, instalační příkazy pro Windows/macOS/Linux, voliteln
 
 ## Vehimap .NET rewrite
 
+Předbeta kontrola kódu, storage, aktualizací a testů je zaznamenána v [PRE-BETA-AUDIT.md](docs/PRE-BETA-AUDIT.md). Obsahuje opravy i zbývající rizika; zelené unit testy samy o sobě neznamenají schválení bety. Rozšířené živé ověření editorů spouští `pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Editors` z kořene repozitáře. Bez Appia jsou příslušné testy nově výslovně přeskočené.
+
 Živé lokální ověření Windows UI spouští z kořene repozitáře `pwsh ./dotnet/build/Test-DotnetWindowsUi.ps1 -Profile Core`. Vyžaduje běžící Appium server a ukončené instance Vehimapu; pracuje výhradně s dočasnou kopií aplikace a syntetickými daty. Postup a přesné limity jsou ve [vývojářské příručce](docs/DEVELOPMENT.md#strict-local-verification) a [protokolu obnovení Appia](docs/accessibility-evidence/2026-09-09-appium-recovery.md).
 
 Tato slozka obsahuje novou C# codebase pro multiplatformni desktopovy Vehimap.
 
 ## EN/CS Lokalizační Základ
 
-Současný desktopový rozsah má dokončený EN/CS základ, nikoli pouze pilotní překlad. `LocalizationCompletionTests` kontroluje všech 2 890 položek každého sestaveného jazykového katalogu, platnost formátovacích šablon, jazykové fallbacky a zákaz hardcoded textů napříč XAML. Stávající projekční a storage testy dál ověřují, že jazyk, jednotky, měna a oddělovače nemění uživatelská data. Desktop publish vyžaduje i českou resource assembly.
+Současný desktopový rozsah má dokončený EN/CS základ, nikoli pouze pilotní překlad. `LocalizationCompletionTests` kontroluje všechny položky každého sestaveného jazykového katalogu, platnost formátovacích šablon, jazykové fallbacky a zákaz hardcoded textů napříč XAML. Stávající projekční a storage testy dál ověřují, že jazyk, jednotky, měna a oddělovače nemění uživatelská data. Desktop publish vyžaduje i českou resource assembly.
 
 Volba `Podle systému` se nezmění následkem ručního přepnutí jazyka; obecné `cs` používá český katalog. Pravidla i dokončovací checkpoint jsou v [docs/I18N.md](docs/I18N.md). Nové UI dodává oba překlady ve stejném commitu. Tento checkpoint nenahrazuje živé accessibility ověření; lokální UI sada bez dostupného Appium serveru není důkazem funkčnosti se čtečkou.
 

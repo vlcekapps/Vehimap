@@ -1188,6 +1188,10 @@ public sealed class DesktopAccessibilityLabelTests
     [Fact]
     public void Editor_dialogs_should_use_shared_lifecycle_and_keep_forms_out_of_workspaces()
     {
+        // Source contract; live save/cancel coverage is maintained separately in Appium.
+        var lifecycle = ReadViewCodeBehind("EditorDialogFocusHelpers.cs");
+        Assert.Contains("if (_closeRequested || _saveInProgress)", lifecycle);
+        Assert.Contains("if (_saveInProgress)\n        {\n            e.Cancel = true;", lifecycle.Replace("\r\n", "\n"));
         var editorWindows = new[]
         {
             ("VehicleEditorWindow.axaml", "VehicleEditorWindow.axaml.cs", "VehicleEditorNameBox", "CancelVehicleButton", "SaveVehicleButton"),
@@ -1220,6 +1224,10 @@ public sealed class DesktopAccessibilityLabelTests
                 $"{xamlFile} must expose Escape/Cancel editor help text directly or through a localized resource.");
             Assert.Contains($"AutomationProperties.AutomationId=\"{cancelButtonId}\"", xaml);
             Assert.Contains($"AutomationProperties.AutomationId=\"{saveButtonId}\"", xaml);
+            Assert.True(
+                xaml.IndexOf($"AutomationProperties.AutomationId=\"{saveButtonId}\"", StringComparison.Ordinal)
+                    < xaml.IndexOf($"AutomationProperties.AutomationId=\"{cancelButtonId}\"", StringComparison.Ordinal),
+                $"{xamlFile} must place Cancel last so backward and forward tab order agree.");
         }
 
         var workspaceFiles = new[]

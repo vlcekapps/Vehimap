@@ -2942,4 +2942,9 @@ Suggested action: {6}</value></data>
   <data name="Mobile.Value.NoCategory" xml:space="preserve"><value>No category</value></data>
   <data name="Mobile.Value.NotEntered" xml:space="preserve"><value>Not entered</value></data>
   <data name="Mobile.Value.NoNote" xml:space="preserve"><value>No note</value></data>
+  <data name="UpdateService.Check.ChannelMismatch" xml:space="preserve"><value>The update belongs to the {0} channel, not this application's {1} channel.</value></data>
+  <data name="UpdateService.Install.InvalidAssetUrl" xml:space="preserve"><value>The update must have a valid HTTPS download address.</value></data>
+  <data name="UpdateService.Install.InvalidAssetKind" xml:space="preserve"><value>This update package type is not supported.</value></data>
+  <data name="Maintenance.Status.InvalidNextServiceDate" xml:space="preserve"><value>The next service date is outside the supported range. Check the date and interval.</value></data>
+  <data name="DataStoreHealth.Report.SchemaMarkerUnsupported" xml:space="preserve"><value>The database contains a schema version not supported by this version of Vehimap. Do not overwrite it; use a compatible application version.</value></data>
 </root>

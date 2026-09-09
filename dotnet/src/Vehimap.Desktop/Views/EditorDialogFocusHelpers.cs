@@ -188,7 +188,7 @@ internal sealed class EditorDialogLifecycle<TViewModel>
 
     public void CancelAndClose()
     {
-        if (_closeRequested)
+        if (_closeRequested || _saveInProgress)
         {
             return;
         }
@@ -223,6 +223,11 @@ internal sealed class EditorDialogLifecycle<TViewModel>
 
     private void OnClosing(object? sender, WindowClosingEventArgs e)
     {
+        if (_saveInProgress)
+        {
+            e.Cancel = true;
+            return;
+        }
         if (!_closeRequested && _viewModel is { } viewModel && _isEditing(viewModel))
         {
             ExecuteCancel(viewModel);

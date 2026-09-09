@@ -52,6 +52,8 @@ public sealed class LegacyUpdateService : IUpdateService
         try
         {
             var manifest = await LoadManifestAsync(appInfo, cancellationToken).ConfigureAwait(false);
+            if (!string.Equals(manifest.Channel, appInfo.ReleaseChannel, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException(LF("UpdateService.Check.ChannelMismatch", manifest.Channel, appInfo.ReleaseChannel));
             var comparison = SemVersionService.Compare(currentVersion, manifest.Version);
             var automaticInstallUnavailableReason = comparison < 0
                 ? BuildAutomaticInstallUnavailableReason(appInfo, manifest)
@@ -115,6 +117,10 @@ public sealed class LegacyUpdateService : IUpdateService
                 manifest.AssetKind,
                 manifest.Channel);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
         catch (UpdateManifestUnavailableException ex)
         {
             return new UpdateCheckResult(
@@ -168,6 +174,11 @@ public sealed class LegacyUpdateService : IUpdateService
             return new UpdateInstallResult(false, L("UpdateService.Install.ManualOnly"), null);
         }
 
+        if (!appInfo.IsPublishedBuild)
+            return new UpdateInstallResult(false, L("UpdateService.Install.PublishedBuildOnly"), null);
+        if (!string.Equals(update.ReleaseChannel, appInfo.ReleaseChannel, StringComparison.OrdinalIgnoreCase))
+            return new UpdateInstallResult(false, LF("UpdateService.Check.ChannelMismatch", update.ReleaseChannel, appInfo.ReleaseChannel), null);
+
         if (!ValidateInstallMetadata(update, out var validationError))
         {
             return new UpdateInstallResult(false, validationError, null);
@@ -213,8 +224,17 @@ public sealed class LegacyUpdateService : IUpdateService
             ZipFile.ExtractToDirectory(downloadPath, extractRoot);
             progress?.Report(new UpdateInstallProgress(L("UpdateService.Install.ArchiveReadyProgress"), totalBytes, totalBytes));
             var sourceDirectory = ResolvePayloadRoot(extractRoot);
+            // Run outside the installation: the update also replaces the helper and its runtime.
+            var helperDirectory = Path.Combine(tempRoot, "updater-host");
+            Directory.CreateDirectory(helperDirectory);
+            foreach (var file in Directory.EnumerateFiles(Path.GetDirectoryName(appInfo.UpdaterPath)!))
+            {
+                if ((File.GetAttributes(file) & FileAttributes.ReparsePoint) != 0)
+                    throw new IOException("The updater runtime contains a linked file.");
+                File.Copy(file, Path.Combine(helperDirectory, Path.GetFileName(file)));
+            }
             var archivePlan = new UpdateInstallPlan(
-                appInfo.UpdaterPath,
+                Path.Combine(helperDirectory, Path.GetFileName(appInfo.UpdaterPath)),
                 sourceDirectory,
                 AppContext.BaseDirectory,
                 appInfo.ApplicationPath,
@@ -223,6 +243,11 @@ public sealed class LegacyUpdateService : IUpdateService
                 "archive");
 
             return new UpdateInstallResult(true, L("UpdateService.Install.ArchiveReadyResult"), archivePlan);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            TryDeleteDirectory(tempRoot);
+            throw;
         }
         catch (Exception ex)
         {
@@ -234,7 +259,7 @@ public sealed class LegacyUpdateService : IUpdateService
     private async Task<LegacyUpdateManifest> LoadManifestAsync(AppBuildInfo appInfo, CancellationToken cancellationToken)
     {
         var manifestFileName = GetManifestFileName(appInfo.UpdateManifestUrl);
-        var localManifestPath = FindLocalManifestPath(AppContext.BaseDirectory, manifestFileName);
+        var localManifestPath = appInfo.IsPublishedBuild ? null : FindLocalManifestPath(AppContext.BaseDirectory, manifestFileName);
         if (!string.IsNullOrWhiteSpace(localManifestPath))
         {
             var localManifest = await TryLoadLocalManifestAsync(localManifestPath, cancellationToken).ConfigureAwait(false);
@@ -342,13 +367,19 @@ public sealed class LegacyUpdateService : IUpdateService
 
     private bool ValidateInstallMetadata(UpdateCheckResult update, out string error)
     {
-        if (string.IsNullOrWhiteSpace(update.AssetUrl))
+        if (!Uri.TryCreate(update.AssetUrl, UriKind.Absolute, out var assetUri) || assetUri.Scheme != Uri.UriSchemeHttps)
         {
-            error = L("UpdateService.Install.MissingAssetUrl");
+            error = L("UpdateService.Install.InvalidAssetUrl");
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(update.Sha256) || update.Sha256.Length != 64)
+        if (!IsArchiveAsset(update.AssetKind) && !IsInstallerAsset(update.AssetKind))
+        {
+            error = L("UpdateService.Install.InvalidAssetKind");
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(update.Sha256) || update.Sha256.Length != 64 || !update.Sha256.All(Uri.IsHexDigit))
         {
             error = L("UpdateService.Install.InvalidSha256");
             return false;
@@ -401,9 +432,9 @@ public sealed class LegacyUpdateService : IUpdateService
             throw new InvalidOperationException(LF("UpdateService.Download.HttpFailed", (int)response.StatusCode));
         }
 
-        var totalBytes = response.Content.Headers.ContentLength is > 0
-            ? response.Content.Headers.ContentLength.Value
-            : expectedSize;
+        if (response.Content.Headers.ContentLength is { } declaredSize && declaredSize != expectedSize)
+            throw new InvalidDataException(L("UpdateService.Download.SizeMismatch"));
+        var totalBytes = expectedSize;
         var receivedBytes = 0L;
         var buffer = new byte[81920];
         await using var sourceStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
@@ -416,6 +447,8 @@ public sealed class LegacyUpdateService : IUpdateService
                 break;
             }
 
+            if (read > expectedSize - receivedBytes)
+                throw new InvalidDataException(L("UpdateService.Download.SizeMismatch"));
             await destinationStream.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
             receivedBytes += read;
             progress?.Report(new UpdateInstallProgress(L("UpdateService.Install.DownloadProgress"), receivedBytes, totalBytes));

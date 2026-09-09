@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.IO.Pipes;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Vehimap.Desktop.Services;
@@ -37,12 +38,14 @@ internal sealed class DesktopSingleInstanceCoordinator : IDisposable
         return new DesktopSingleInstanceCoordinator(mutex, names.PipeName, createdNew);
     }
 
-    internal static DesktopSingleInstanceNames BuildNames(string releaseChannel)
+    internal static DesktopSingleInstanceNames BuildNames(string releaseChannel, string? userScope = null)
     {
         var token = BuildSafeChannelToken(releaseChannel);
+        userScope ??= $"{Environment.UserDomainName}/{Environment.UserName}/{(OperatingSystem.IsWindows() ? System.Diagnostics.Process.GetCurrentProcess().SessionId.ToString() : Environment.GetEnvironmentVariable("DISPLAY"))}";
+        var scope = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(userScope)))[..16];
         return new DesktopSingleInstanceNames(
-            $"Vehimap.Desktop.{token}.SingleInstance",
-            $"Vehimap.Desktop.{token}.Activation");
+            $"Vehimap.Desktop.{token}.{scope}.SingleInstance",
+            $"Vehimap.Desktop.{token}.{scope}.Activation");
     }
 
     public void SetActivationHandler(Func<Task> activationRequested)
@@ -141,12 +144,19 @@ internal sealed class DesktopSingleInstanceCoordinator : IDisposable
                     PipeDirection.In,
                     maxNumberOfServerInstances: 1,
                     PipeTransmissionMode.Byte,
-                    PipeOptions.Asynchronous);
+                    PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
 
                 await server.WaitForConnectionAsync(_cancellation.Token).ConfigureAwait(false);
-                using var reader = new StreamReader(server, Encoding.UTF8, leaveOpen: true);
-                var message = await reader.ReadLineAsync(_cancellation.Token).ConfigureAwait(false);
-                if (string.Equals(message, ActivationMessage, StringComparison.Ordinal))
+                using var readTimeout = CancellationTokenSource.CreateLinkedTokenSource(_cancellation.Token);
+                readTimeout.CancelAfter(DefaultSignalTimeout);
+                var message = new StringBuilder();
+                var buffer = new byte[1];
+                while (message.Length < 16 && await server.ReadAsync(buffer, readTimeout.Token).ConfigureAwait(false) != 0)
+                {
+                    if (buffer[0] == '\n') break;
+                    if (buffer[0] != '\r') message.Append((char)buffer[0]);
+                }
+                if (string.Equals(message.ToString(), ActivationMessage, StringComparison.Ordinal))
                 {
                     await InvokeActivationHandlerAsync().ConfigureAwait(false);
                 }
@@ -154,6 +164,10 @@ internal sealed class DesktopSingleInstanceCoordinator : IDisposable
             catch (OperationCanceledException) when (_cancellation.IsCancellationRequested)
             {
                 return;
+            }
+            catch (OperationCanceledException)
+            {
+                // An idle client must not prevent later activation requests.
             }
             catch (ObjectDisposedException) when (_cancellation.IsCancellationRequested)
             {

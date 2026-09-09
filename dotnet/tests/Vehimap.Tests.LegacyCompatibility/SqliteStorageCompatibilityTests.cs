@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Vehimap.Tests.LegacyCompatibility;
 
-public sealed class SqliteStorageCompatibilityTests
+public sealed partial class SqliteStorageCompatibilityTests
 {
     private static readonly string[] LegacyFileNames =
     [

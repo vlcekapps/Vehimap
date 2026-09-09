@@ -45,7 +45,7 @@ public sealed partial class MainWindowViewModel
         FormatCanonicalDistanceForEditor(canonicalKilometers, allowDecimalMiles: true);
 
     private string FormatCanonicalOdometerForEditor(string? canonicalKilometers) =>
-        FormatCanonicalDistanceForEditor(canonicalKilometers, allowDecimalMiles: false);
+        FormatCanonicalDistanceForEditor(canonicalKilometers, allowDecimalMiles: true);
 
     private string FormatCanonicalDateForEditor(string? canonicalDate)
     {
@@ -76,6 +76,11 @@ public sealed partial class MainWindowViewModel
 
     private string FormatDateForDisplay(DateOnly date) =>
         EditorDateFormatService.FormatDate(date, CurrentCulturePreferences);
+
+    private string FormatCanonicalMoneyForEditor(string? value) =>
+        VehimapValueParser.TryParseMoney(value, out var amount)
+            ? EditorNumberFormatService.FormatDecimal(amount, CurrentCulturePreferences, CountMeaningfulDecimalPlaces(amount, 2))
+            : value ?? string.Empty;
 
     private string FormatCanonicalDistanceForEditor(string? canonicalKilometers, bool allowDecimalMiles)
     {
@@ -115,7 +120,7 @@ public sealed partial class MainWindowViewModel
         var volume = EditorUnitFormatService.ConvertVolumeFromLiters(liters, units);
         var maxDecimalPlaces = string.Equals(AppUnitFormatService.NormalizeVolumeUnit(units.VolumeUnit), AppUnitFormatService.Liters, StringComparison.Ordinal)
             ? 2
-            : 3;
+            : 5;
         var decimalPlaces = CountMeaningfulDecimalPlaces(volume, maxDecimalPlaces);
         return EditorNumberFormatService.FormatDecimal(volume, CurrentCulturePreferences, decimalPlaces);
     }
@@ -129,14 +134,14 @@ public sealed partial class MainWindowViewModel
             return allowEmpty;
         }
 
-        if (!TryParseEditorDecimal(value, out var distance) || distance < 0m)
+        if (!TryParseEditorDecimal(value, out var distance)
+            || !AppUnitFormatService.TryConvertWholeKilometers(distance, CurrentUnitPreferences, out var convertedKilometers))
         {
             kilometers = string.Empty;
             return false;
         }
 
-        var convertedKilometers = EditorUnitFormatService.ConvertDistanceToKilometers(distance, CurrentUnitPreferences);
-        kilometers = ((int)Math.Round(convertedKilometers, MidpointRounding.AwayFromZero)).ToString(CultureInfo.InvariantCulture);
+        kilometers = convertedKilometers.ToString(CultureInfo.InvariantCulture);
         return true;
     }
 
@@ -159,13 +164,13 @@ public sealed partial class MainWindowViewModel
             return allowEmpty;
         }
 
-        if (!TryParseEditorDecimal(value, out var volume) || volume < 0m)
+        if (!TryParseEditorDecimal(value, out var volume)
+            || !AppUnitFormatService.TryConvertLiters(volume, CurrentUnitPreferences, out var convertedLiters))
         {
             liters = string.Empty;
             return false;
         }
 
-        var convertedLiters = EditorUnitFormatService.ConvertVolumeToLiters(volume, CurrentUnitPreferences);
         liters = convertedLiters.ToString("0.##", CultureInfo.InvariantCulture);
         return true;
     }
@@ -185,8 +190,7 @@ public sealed partial class MainWindowViewModel
     }
 
     private bool TryParseEditorDecimal(string value, out decimal number) =>
-        EditorNumberFormatService.TryParseDecimal(value, CurrentCulturePreferences, out number)
-        || VehimapValueParser.TryParseDecimalNumber(value, out number);
+        EditorNumberFormatService.TryParseDecimal(value, CurrentCulturePreferences, out number);
 
     private static string LWF(string key, params object?[] args) =>
         DesktopLocalization.Localizer.Format(key, args);
@@ -231,7 +235,7 @@ public sealed partial class MainWindowViewModel
         HistoryEditorDate = FormatCanonicalDateForEditor(entry.EventDate);
         HistoryEditorType = entry.EventType;
         HistoryEditorOdometer = FormatCanonicalOdometerForEditor(entry.Odometer);
-        HistoryEditorCost = entry.Cost;
+        HistoryEditorCost = FormatCanonicalMoneyForEditor(entry.Cost);
         HistoryEditorNote = entry.Note;
         HistoryEditorStatus = LO("HistoryEditor.Status.EditPrompt");
         IsEditingHistory = true;
@@ -278,7 +282,7 @@ public sealed partial class MainWindowViewModel
 
         if (costText.Length > 0)
         {
-            if (!VehimapValueParser.TryParseMoney(costText, out var parsedCost) || parsedCost < 0)
+            if (!TryParseEditorDecimal(costText, out var parsedCost) || parsedCost < 0)
             {
                 HistoryEditorStatus = LO("HistoryEditor.Validation.CostInvalid");
                 RequestFocus(DesktopFocusTarget.HistoryEditorCost);
@@ -390,7 +394,7 @@ public sealed partial class MainWindowViewModel
         FuelEditorFuelDetail = entry.FuelDetail;
         FuelEditorStation = entry.Station;
         FuelEditorVolume = FormatCanonicalVolumeForEditor(entry.Liters);
-        FuelEditorTotalCost = entry.TotalCost;
+        FuelEditorTotalCost = FormatCanonicalMoneyForEditor(entry.TotalCost);
         FuelEditorOdometer = FormatCanonicalOdometerForEditor(entry.Odometer);
         FuelEditorFullTank = entry.FullTank;
         FuelEditorNote = entry.Note;
@@ -440,7 +444,7 @@ public sealed partial class MainWindowViewModel
 
         if (totalCostText.Length > 0)
         {
-            if (!VehimapValueParser.TryParseMoney(totalCostText, out var parsedTotalCost) || parsedTotalCost < 0)
+            if (!TryParseEditorDecimal(totalCostText, out var parsedTotalCost) || parsedTotalCost < 0)
             {
                 FuelEditorStatus = LO("FuelEditor.Validation.TotalCostInvalid");
                 RequestFocus(DesktopFocusTarget.FuelEditorTotalCost);

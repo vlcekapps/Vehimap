@@ -336,7 +336,7 @@ public sealed partial class MainWindowViewModel
 
         if (priceText.Length > 0)
         {
-            if (!VehimapValueParser.TryParseMoney(priceText, out var parsedPrice) || parsedPrice < 0)
+            if (!TryParseEditorDecimal(priceText, out var parsedPrice) || parsedPrice < 0)
             {
                 RecordEditorStatus = LO("RecordEditor.Validation.PriceInvalid");
                 RequestFocus(DesktopFocusTarget.RecordEditorPrice);
@@ -455,7 +455,7 @@ public sealed partial class MainWindowViewModel
         RecordEditorProvider = record.Provider;
         RecordEditorValidFrom = record.ValidFrom;
         RecordEditorValidTo = record.ValidTo;
-        RecordEditorPrice = record.Price;
+        RecordEditorPrice = FormatCanonicalMoneyForEditor(record.Price);
         SelectedRecordEditorAttachmentMode = preferManagedImport
             ? RecordWorkspaceViewModel.ManagedAttachmentModeLabel
             : RecordWorkspaceViewModel.GetAttachmentModeLabel(record.AttachmentMode);
@@ -492,8 +492,7 @@ public sealed partial class MainWindowViewModel
             return false;
         }
 
-        nextDueDate = currentDueDate.AddMonths(intervalMonths);
-        return true;
+        return CalendarArithmetic.TryAddMonths(currentDueDate, intervalMonths, out nextDueDate);
     }
 
     private static bool TryGetReminderRepeatIntervalMonths(string? repeatMode, out int intervalMonths)

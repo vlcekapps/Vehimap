@@ -24,6 +24,8 @@ public sealed class ManagedAttachmentPathGuardTests
     [InlineData("/tmp/x")]
     [InlineData("data/../../x")]
     [InlineData("external/file.pdf")]
+    [InlineData("attachments/.. /outside.txt")]
+    [InlineData("attachments/veh_1./file.pdf")]
     public void Normalize_attachment_relative_path_rejects_unsafe_or_non_managed_paths(string input)
     {
         Assert.Throws<InvalidDataException>(() => ManagedAttachmentPathGuard.NormalizeAttachmentRelativePath(input));
@@ -36,5 +38,27 @@ public sealed class ManagedAttachmentPathGuardTests
         var resolved = ManagedAttachmentPathGuard.ResolveManagedAttachmentPath(root, "attachments/veh_1/file.pdf");
 
         Assert.Equal(Path.Combine(root, "attachments", "veh_1", "file.pdf"), resolved);
+    }
+
+    [Fact]
+    public void Resolve_managed_attachment_rejects_a_symbolic_link_below_the_root()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "vehimap-path-link-" + Guid.NewGuid());
+        var outside = Path.Combine(root, "outside");
+        var data = Path.Combine(root, "data");
+        var link = Path.Combine(data, "attachments");
+        Directory.CreateDirectory(outside);
+        Directory.CreateDirectory(data);
+        try
+        {
+            Directory.CreateSymbolicLink(link, outside);
+            Assert.Throws<InvalidDataException>(() => ManagedAttachmentPathGuard.ResolveManagedAttachmentPath(data, "attachments/file.pdf"));
+            Assert.Empty(Directory.GetFiles(outside));
+        }
+        finally
+        {
+            if (Directory.Exists(link)) Directory.Delete(link);
+            Directory.Delete(root, recursive: true);
+        }
     }
 }

@@ -1,104 +1,39 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 using System.Diagnostics;
+using Vehimap.Updater;
 
-if (args.Length < 3)
+try
 {
-    Console.Error.WriteLine("Usage: Vehimap.Updater --source <folder> --target <folder> [--pid <processId>] [--entry <appPath>]");
+    var options = new Dictionary<string, string>(StringComparer.Ordinal);
+    if (args.Length % 2 != 0) throw new ArgumentException("Expected named argument/value pairs.");
+    for (var i = 0; i < args.Length; i += 2)
+    {
+        if (args[i] is not ("--source" or "--target" or "--pid" or "--entry") || !options.TryAdd(args[i], args[i + 1]))
+            throw new ArgumentException("Unknown or duplicate argument.");
+    }
+    var source = options["--source"];
+    var target = options["--target"];
+    options.TryGetValue("--entry", out var entry);
+    ArchiveInstaller.ValidatePaths(source, target, entry);
+    if (options.TryGetValue("--pid", out var processId))
+    {
+        if (!int.TryParse(processId, out var pid) || pid <= 0) throw new ArgumentException("Invalid process ID.");
+        if (!ArchiveInstaller.WaitForApplicationExit(pid))
+            throw new TimeoutException("The application is still running. No files were replaced.");
+    }
+    ArchiveInstaller.Install(source, target);
+    if (!string.IsNullOrWhiteSpace(entry))
+    {
+        Process.Start(new ProcessStartInfo(Path.GetFullPath(entry))
+        {
+            WorkingDirectory = Path.GetFullPath(target),
+            UseShellExecute = true
+        });
+    }
+    return 0;
+}
+catch (Exception ex)
+{
+    Console.Error.WriteLine($"Update failed: {ex.Message}");
     return 1;
-}
-
-string? source = null;
-string? target = null;
-string? entry = null;
-int? pid = null;
-
-for (var i = 0; i < args.Length; i++)
-{
-    switch (args[i])
-    {
-        case "--source":
-            source = i + 1 < args.Length ? args[++i] : null;
-            break;
-        case "--target":
-            target = i + 1 < args.Length ? args[++i] : null;
-            break;
-        case "--entry":
-            entry = i + 1 < args.Length ? args[++i] : null;
-            break;
-        case "--pid":
-            if (i + 1 < args.Length && int.TryParse(args[++i], out var parsedPid))
-            {
-                pid = parsedPid;
-            }
-            break;
-    }
-}
-
-if (string.IsNullOrWhiteSpace(source) || string.IsNullOrWhiteSpace(target))
-{
-    Console.Error.WriteLine("Missing required --source or --target.");
-    return 2;
-}
-
-source = Path.GetFullPath(source);
-target = Path.GetFullPath(target);
-
-if (!Directory.Exists(source))
-{
-    Console.Error.WriteLine($"Source folder not found: {source}");
-    return 3;
-}
-
-if (pid is { } processId)
-{
-    try
-    {
-        using var process = Process.GetProcessById(processId);
-        process.WaitForExit(30_000);
-    }
-    catch
-    {
-    }
-}
-
-Directory.CreateDirectory(target);
-CopyDirectory(source, target, preserveDataDirectory: true);
-
-if (!string.IsNullOrWhiteSpace(entry) && File.Exists(entry))
-{
-    Process.Start(new ProcessStartInfo
-    {
-        FileName = entry,
-        WorkingDirectory = Path.GetDirectoryName(entry) ?? target,
-        UseShellExecute = true
-    });
-}
-
-return 0;
-
-static void CopyDirectory(string sourceDirectory, string targetDirectory, bool preserveDataDirectory)
-{
-    foreach (var directory in Directory.GetDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
-    {
-        var relative = Path.GetRelativePath(sourceDirectory, directory);
-        if (preserveDataDirectory && relative.StartsWith("data", StringComparison.OrdinalIgnoreCase))
-        {
-            continue;
-        }
-
-        Directory.CreateDirectory(Path.Combine(targetDirectory, relative));
-    }
-
-    foreach (var file in Directory.GetFiles(sourceDirectory, "*", SearchOption.AllDirectories))
-    {
-        var relative = Path.GetRelativePath(sourceDirectory, file);
-        if (preserveDataDirectory && relative.StartsWith("data", StringComparison.OrdinalIgnoreCase))
-        {
-            continue;
-        }
-
-        var destination = Path.Combine(targetDirectory, relative);
-        Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
-        File.Copy(file, destination, true);
-    }
 }

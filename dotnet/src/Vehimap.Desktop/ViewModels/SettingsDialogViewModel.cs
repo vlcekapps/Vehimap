@@ -283,15 +283,13 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
         var culturePreferences = BuildCulturePreferences();
         var unitPreferences = BuildUnitPreferences();
         if (!_numberFormatService.TryParseDecimal(MaintenanceReminderDistance, culturePreferences, out var distance)
-            || distance <= 0m)
+            || !AppUnitFormatService.TryConvertWholeKilometers(distance, unitPreferences, out var roundedKilometers))
         {
             kilometers = 0;
             errorMessage = BuildMaintenanceReminderDistanceRangeMessage(culturePreferences, unitPreferences);
             return false;
         }
 
-        var convertedKilometers = _unitFormatService.ConvertDistanceToKilometers(distance, unitPreferences);
-        var roundedKilometers = (int)Math.Round(convertedKilometers, MidpointRounding.AwayFromZero);
         if (roundedKilometers < MinMaintenanceReminderDistanceKilometers || roundedKilometers > MaxMaintenanceReminderDistanceKilometers)
         {
             kilometers = 0;
@@ -327,7 +325,7 @@ public sealed partial class SettingsDialogViewModel : ObservableObject
         var culturePreferences = BuildCulturePreferences(language, thousandsSeparator, decimalSeparator);
         var unitPreferences = BuildUnitPreferences(distanceUnit);
         if (_numberFormatService.TryParseDecimal(MaintenanceReminderDistance, culturePreferences, out var distance)
-            && distance > 0m)
+            && distance > 0m && distance <= int.MaxValue)
         {
             var convertedKilometers = _unitFormatService.ConvertDistanceToKilometers(distance, unitPreferences);
             if (convertedKilometers >= MinMaintenanceReminderDistanceKilometers && convertedKilometers <= MaxMaintenanceReminderDistanceKilometers)

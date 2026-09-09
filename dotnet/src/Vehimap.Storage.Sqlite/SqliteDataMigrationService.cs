@@ -2,6 +2,7 @@
 using Vehimap.Application.Abstractions;
 using Vehimap.Application.Models;
 using Vehimap.Application.Services;
+using Vehimap.Domain.Models;
 
 namespace Vehimap.Storage.Sqlite;
 
@@ -71,14 +72,40 @@ public sealed class SqliteDataMigrationService : IDataMigrationService
         legacyData.Settings.SetValue("migration", "storage_version", "2.0");
         legacyData.Settings.SetValue("migration", "migrated_utc", DateTime.UtcNow.ToString("O"));
         legacyData.Settings.SetValue("migration", "pre_migration_backup_path", backupPath);
-        await _targetDataStore.SaveAsync(dataRoot, legacyData, cancellationToken).ConfigureAwait(false);
-        await _targetDataStore.LoadAsync(dataRoot, cancellationToken).ConfigureAwait(false);
+        // An interrupted conversion must never leave a live database that a restart
+        // could mistake for a completed migration. Keep staging with the safety copy.
+        var stagingPath = Path.Combine(backupPath, "converted");
+        var stagingRoot = new VehimapDataRoot(stagingPath, stagingPath, true);
+        await _targetDataStore.SaveAsync(stagingRoot, legacyData, cancellationToken).ConfigureAwait(false);
+        var verified = await _targetDataStore.LoadAsync(stagingRoot, cancellationToken).ConfigureAwait(false);
+        VerifyRoundTrip(legacyData, verified);
+        cancellationToken.ThrowIfCancellationRequested();
+        SqliteDatabaseSnapshot.Copy(SqliteStoragePaths.GetDatabasePath(stagingRoot), databasePath);
         ArchiveLiveLegacyFiles(dataRoot, backupPath, legacyFiles, cancellationToken);
 
         return new DataMigrationResult(
             true,
             backupPath,
             LF("DataMigration.LegacyMigrationCompleted", backupPath));
+    }
+
+    private static void VerifyRoundTrip(VehimapDataSet expected, VehimapDataSet actual)
+    {
+        var settingsMatch = expected.Settings.Sections.Count == actual.Settings.Sections.Count
+            && expected.Settings.Sections.All(section =>
+                actual.Settings.Sections.TryGetValue(section.Key, out var values)
+                && section.Value.Count == values.Count
+                && section.Value.All(entry => values.TryGetValue(entry.Key, out var value) && value == entry.Value));
+        if (!settingsMatch || !expected.Vehicles.SequenceEqual(actual.Vehicles)
+            || !expected.VehicleMetaEntries.SequenceEqual(actual.VehicleMetaEntries)
+            || !expected.HistoryEntries.SequenceEqual(actual.HistoryEntries)
+            || !expected.FuelEntries.SequenceEqual(actual.FuelEntries)
+            || !expected.Records.SequenceEqual(actual.Records)
+            || !expected.Reminders.SequenceEqual(actual.Reminders)
+            || !expected.MaintenancePlans.SequenceEqual(actual.MaintenancePlans))
+        {
+            throw new InvalidDataException("SQLite migration verification failed; original data and migration backup were preserved.");
+        }
     }
 
     private static IReadOnlyList<string> GetLiveLegacyFiles(VehimapDataRoot dataRoot) =>

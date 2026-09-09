@@ -161,6 +161,10 @@ do not remove working accessibility behavior merely because the framework was up
 - The editor dialog tab order must stay standard. The only intentional boundary override
   is `Shift+Tab` from the first logical field to the `Zrusit` button; from every other
   field, `Shift+Tab` moves exactly one previous control in normal tab order.
+  Editor footer buttons must be ordered Save, Cancel, with Cancel last. Forward
+  `Tab` from Cancel must return to the first field: the reverse-boundary rule must
+  never skip a Save button that still follows Cancel in the actual control order.
+  The source contract and live six-editor theory cover both directions.
 - Text fields must stay standard Avalonia `TextBox` controls. Until Avalonia exposes
   enough native UIA text/caret information for our NVDA target, see
   [AvaloniaUI/Avalonia#9770](https://github.com/AvaloniaUI/Avalonia/issues/9770), the

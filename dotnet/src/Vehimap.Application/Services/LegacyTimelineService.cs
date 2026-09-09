@@ -298,7 +298,7 @@ public sealed class LegacyTimelineService : ITimelineService
             return false;
         }
 
-        dueDate = lastServiceDate.AddMonths(intervalMonths);
+        if (!CalendarArithmetic.TryAddMonths(lastServiceDate, intervalMonths, out dueDate)) return false;
 
         string? nextOdometerText = null;
         string? odometerStatus = null;
@@ -306,7 +306,7 @@ public sealed class LegacyTimelineService : ITimelineService
         {
             if (VehimapValueParser.TryParseOdometer(plan.LastServiceOdometer, out var lastServiceOdometer))
             {
-                var nextOdometer = lastServiceOdometer + intervalKm;
+                var nextOdometer = (long)lastServiceOdometer + intervalKm;
                 nextOdometerText = FormatDistance(unitFormatService, culturePreferences, unitPreferences, nextOdometer);
                 if (currentOdometer.HasValue)
                 {

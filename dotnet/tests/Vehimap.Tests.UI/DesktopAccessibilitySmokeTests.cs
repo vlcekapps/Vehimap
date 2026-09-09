@@ -19,12 +19,12 @@ public sealed class DesktopAccessibilitySmokeTests
         "settings.ini"
     ];
 
-    [Fact]
+    [AppiumFact]
     public void Main_shell_exposes_vehicle_list_and_menu_actions_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -46,12 +46,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void App_shell_dialogs_open_and_close_from_menu_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -76,12 +76,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void App_menu_opens_accessible_tray_actions_dialog_and_routes_current_alert_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -108,12 +108,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Settings_dialog_saves_dashboard_launch_preference_and_updates_dashboard_state_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -151,12 +151,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Settings_dialog_keeps_focusable_error_state_for_invalid_values_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -173,12 +173,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void About_dialog_copies_support_diagnostics_to_clipboard_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -221,12 +221,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Update_dialog_copies_result_details_to_clipboard_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -267,12 +267,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void File_menu_data_actions_are_accessible_and_create_manual_automatic_backup_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -305,12 +305,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Quick_actions_menu_disables_missing_targets_and_opens_available_target_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -334,12 +334,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Current_background_alert_quick_action_opens_matching_workspace_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -356,12 +356,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Vehicle_menu_opens_starter_bundle_for_selected_vehicle_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -382,12 +382,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Maintenance_workspace_opens_recommended_templates_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -410,12 +410,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Maintenance_workspace_opens_completion_dialog_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -441,12 +441,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Dashboard_opens_maintenance_completion_dialog_when_maintenance_term_is_selected()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -479,12 +479,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Main_menu_can_be_invoked_with_f10_without_entering_regular_tab_order_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -510,12 +510,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Main_menu_roots_are_skipped_by_regular_tab_navigation_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -558,12 +558,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Workspace_windows_open_from_selected_tabs_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -637,12 +637,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Workspace_window_can_be_closed_with_escape_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -658,12 +658,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Reminder_editor_runs_in_standalone_window_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -674,22 +674,23 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("CloseRemindersWindowButton"));
 
             session.ClickByAccessibilityId("CreateReminderButton");
+            session.WithinWindow("ReminderEditorWindow");
             Assert.Equal("Název připomínky", session.GetNameByAccessibilityId("ReminderEditorTitleBox"));
             Assert.Equal("Termín připomínky", session.GetNameByAccessibilityId("ReminderEditorDueDateBox"));
 
-            session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Appium připomínka");
-            session.SendKeysByAccessibilityId("ReminderEditorDueDateBox", "12/2026");
+            session.ReplaceTextByAccessibilityId("ReminderEditorTitleBox", "Appium připomínka");
+            session.ReplaceTextByAccessibilityId("ReminderEditorDueDateBox", "12/2026");
             session.ClickByAccessibilityId("SaveReminderButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveReminderButton");
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Record_editor_runs_in_standalone_window_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -700,21 +701,22 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("CloseRecordsWindowButton"));
 
             session.ClickByAccessibilityId("CreateRecordButton");
+            session.WithinWindow("RecordEditorWindow");
             Assert.Equal("Název dokladu", session.GetNameByAccessibilityId("RecordEditorTitleBox"));
             Assert.Equal("Režim přílohy dokladu", session.GetNameByAccessibilityId("RecordAttachmentModeComboBox"));
 
-            session.SendKeysByAccessibilityId("RecordEditorTitleBox", "Appium doklad");
+            session.ReplaceTextByAccessibilityId("RecordEditorTitleBox", "Appium doklad");
             session.ClickByAccessibilityId("SaveRecordButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveRecordButton");
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Record_workspace_copies_resolved_attachment_path_to_clipboard_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -757,12 +759,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void History_editor_runs_in_standalone_window_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -773,25 +775,26 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.NotNull(session.WaitForElementByAccessibilityId("CloseHistoryWindowButton"));
 
             session.ClickByAccessibilityId("CreateHistoryButton");
+            session.WithinWindow("HistoryEditorWindow");
             Assert.Equal("Datum historického záznamu", session.GetNameByAccessibilityId("HistoryEditorDateBox"));
             Assert.Equal("Typ historické události", session.GetNameByAccessibilityId("HistoryEditorTypeBox"));
 
-            session.SendKeysByAccessibilityId("HistoryEditorDateBox", "15.10.2026");
-            session.SendKeysByAccessibilityId("HistoryEditorTypeBox", "Servis");
-            session.SendKeysByAccessibilityId("HistoryEditorOdometerBox", "123456");
-            session.SendKeysByAccessibilityId("HistoryEditorCostBox", "2500");
-            session.SendKeysByAccessibilityId("HistoryEditorNoteBox", "Appium historický záznam");
+            session.ReplaceTextByAccessibilityId("HistoryEditorDateBox", "15.10.2026");
+            session.ReplaceTextByAccessibilityId("HistoryEditorTypeBox", "Servis");
+            session.ReplaceTextByAccessibilityId("HistoryEditorOdometerBox", "123456");
+            session.ReplaceTextByAccessibilityId("HistoryEditorCostBox", "2500");
+            session.ReplaceTextByAccessibilityId("HistoryEditorNoteBox", "Appium historický záznam");
             session.ClickByAccessibilityId("SaveHistoryButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveHistoryButton");
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Fuel_editor_runs_in_standalone_window_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -800,31 +803,33 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("FuelTabButton");
             session.ClickByAccessibilityId("OpenFuelWindowButton");
             session.ClickByAccessibilityId("CreateFuelButton");
+            session.WithinWindow("FuelEditorWindow");
 
             Assert.Equal("Datum tankování", session.GetNameByAccessibilityId("FuelEditorDateBox"));
             Assert.Equal("Typ paliva", session.GetNameByAccessibilityId("FuelEditorFuelTypeBox"));
             Assert.Equal("Detail paliva", session.GetNameByAccessibilityId("FuelEditorFuelDetailBox"));
             Assert.Equal("Místo tankování", session.GetNameByAccessibilityId("FuelEditorStationBox"));
 
-            session.SendKeysByAccessibilityId("FuelEditorDateBox", "20.10.2026");
-            session.SendKeysByAccessibilityId("FuelEditorFuelTypeBox", "Nafta");
-            session.SendKeysByAccessibilityId("FuelEditorFuelDetailBox", "Shell FuelSave");
-            session.SendKeysByAccessibilityId("FuelEditorStationBox", "Shell Brno Vídeňská");
-            session.SendKeysByAccessibilityId("FuelEditorVolumeBox", "38.5");
-            session.SendKeysByAccessibilityId("FuelEditorTotalCostBox", "1890");
-            session.SendKeysByAccessibilityId("FuelEditorOdometerBox", "123789");
-            session.SendKeysByAccessibilityId("FuelEditorNoteBox", "Appium tankování");
+            session.ReplaceTextByAccessibilityId("FuelEditorDateBox", "20.10.2026");
+            session.ClickByAccessibilityId("FuelEditorFuelTypeBox");
+            session.ClickByName("Nafta");
+            session.ReplaceTextByAccessibilityId("FuelEditorFuelDetailBox", "Shell FuelSave");
+            session.ReplaceTextByAccessibilityId("FuelEditorStationBox", "Shell Brno Vídeňská");
+            session.ReplaceTextByAccessibilityId("FuelEditorVolumeBox", "38,5");
+            session.ReplaceTextByAccessibilityId("FuelEditorTotalCostBox", "1890");
+            session.ReplaceTextByAccessibilityId("FuelEditorOdometerBox", "123789");
+            session.ReplaceTextByAccessibilityId("FuelEditorNoteBox", "Appium tankování");
             session.ClickByAccessibilityId("SaveFuelButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveFuelButton");
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Maintenance_editor_runs_in_standalone_window_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -833,27 +838,28 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("MaintenanceTabButton");
             session.ClickByAccessibilityId("OpenMaintenanceWindowButton");
             session.ClickByAccessibilityId("CreateMaintenanceButton");
+            session.WithinWindow("MaintenanceEditorWindow");
 
             Assert.Equal("Název servisního úkonu", session.GetNameByAccessibilityId("MaintenanceEditorTitleBox"));
             Assert.Equal("Interval údržby v km", session.GetNameByAccessibilityId("MaintenanceEditorIntervalDistanceBox"));
 
-            session.SendKeysByAccessibilityId("MaintenanceEditorTitleBox", "Motorový olej");
-            session.SendKeysByAccessibilityId("MaintenanceEditorIntervalDistanceBox", "15000");
-            session.SendKeysByAccessibilityId("MaintenanceEditorIntervalMonthsBox", "12");
-            session.SendKeysByAccessibilityId("MaintenanceEditorLastServiceDateBox", "01.04.2026");
-            session.SendKeysByAccessibilityId("MaintenanceEditorLastServiceOdometerBox", "120000");
-            session.SendKeysByAccessibilityId("MaintenanceEditorNoteBox", "Appium servisní plán");
+            session.ReplaceTextByAccessibilityId("MaintenanceEditorTitleBox", "Motorový olej");
+            session.ReplaceTextByAccessibilityId("MaintenanceEditorIntervalDistanceBox", "15000");
+            session.ReplaceTextByAccessibilityId("MaintenanceEditorIntervalMonthsBox", "12");
+            session.ReplaceTextByAccessibilityId("MaintenanceEditorLastServiceDateBox", "01.04.2026");
+            session.ReplaceTextByAccessibilityId("MaintenanceEditorLastServiceOdometerBox", "120000");
+            session.ReplaceTextByAccessibilityId("MaintenanceEditorNoteBox", "Appium servisní plán");
             session.ClickByAccessibilityId("SaveMaintenanceButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveMaintenanceButton");
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Vehicle_detail_editor_saves_new_vehicle_and_opens_starter_bundle_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -866,12 +872,12 @@ public sealed class DesktopAccessibilitySmokeTests
             Assert.Equal("Název vozidla", session.GetNameByAccessibilityId("VehicleEditorNameBox"));
             Assert.Equal("Kategorie vozidla", session.GetNameByAccessibilityId("VehicleEditorCategoryBox"));
 
-            session.SendKeysByAccessibilityId("VehicleEditorNameBox", "Appium vozidlo");
-            session.SendKeysByAccessibilityId("VehicleEditorMakeModelBox", "Test model");
-            session.SendKeysByAccessibilityId("VehicleEditorNextTkBox", "12/2099");
-            session.SendKeysByAccessibilityId("VehicleEditorStateBox", "Běžný provoz");
-            session.SendKeysByAccessibilityId("VehicleEditorPowertrainBox", "Benzín");
-            session.SendKeysByAccessibilityId("VehicleEditorNoteBox", "Vytvořeno UI testem");
+            session.ReplaceTextByAccessibilityId("VehicleEditorNameBox", "Appium vozidlo");
+            session.ReplaceTextByAccessibilityId("VehicleEditorMakeModelBox", "Test model");
+            session.ReplaceTextByAccessibilityId("VehicleEditorNextTkBox", "12/2099");
+            session.ReplaceTextByAccessibilityId("VehicleEditorStateBox", "Běžný provoz");
+            session.ReplaceTextByAccessibilityId("VehicleEditorPowertrainBox", "Benzín");
+            session.ReplaceTextByAccessibilityId("VehicleEditorNoteBox", "Vytvořeno UI testem");
             session.ClickByAccessibilityId("SaveVehicleButton");
 
             Assert.NotNull(session.WaitForElementByAccessibilityId("VehicleStarterBundleWindow"));
@@ -885,12 +891,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Vehicle_detail_editor_shift_tab_from_name_returns_focus_to_cancel_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -907,12 +913,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
-    public void Closing_standalone_editor_with_pending_changes_prompts_for_discard_when_appium_is_available()
+    [AppiumFact]
+    public void Cancelling_modal_editor_discards_changes_and_restores_workspace_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -923,21 +929,21 @@ public sealed class DesktopAccessibilitySmokeTests
             session.ClickByAccessibilityId("CreateReminderButton");
             session.SendKeysByAccessibilityId("ReminderEditorTitleBox", "Rozpracovaná připomínka");
 
-            session.ClickByAccessibilityId("CloseRemindersWindowButton");
-            Assert.NotNull(session.WaitForElementByAccessibilityId("ConfirmationCancelButton"));
-            session.ClickByAccessibilityId("ConfirmationCancelButton");
-
-            Assert.NotNull(session.WaitForElementByAccessibilityId("SaveReminderButton"));
-            Assert.Equal("ReminderEditorTitleBox", session.GetFocusedAutomationId());
+            session.WithinWindow("ReminderEditorWindow");
+            session.ClickByAccessibilityId("CancelReminderButton");
+            session.WaitForElementToDisappearByAccessibilityId("CancelReminderButton");
+            session.WithinWindow("RemindersWindow");
+            Assert.True(session.IsEnabledByAccessibilityId("CloseRemindersWindowButton"));
+            Assert.Contains(session.WaitForFocusedAutomationId(12, "VehicleRemindersListBox", "CreateReminderButton"), new[] { "VehicleRemindersListBox", "CreateReminderButton" });
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Global_search_can_open_matching_record_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -950,12 +956,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Timeline_can_open_matching_reminder_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -968,12 +974,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Upcoming_overview_can_open_matching_item_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -986,12 +992,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Overdue_overview_can_open_matching_item_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;
@@ -1004,12 +1010,12 @@ public sealed class DesktopAccessibilitySmokeTests
         }
     }
 
-    [Fact]
+    [AppiumFact]
     public void Cost_workspace_can_open_selected_vehicle_with_enter_when_appium_is_available()
     {
-        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out _))
+        if (!DesktopAppiumTestSession.TryStart(out var startedSession, out var reason))
         {
-            return;
+            throw new InvalidOperationException(reason);
         }
 
         var session = startedSession!;

@@ -9,6 +9,86 @@ namespace Vehimap.Tests.Unit;
 
 public sealed class LegacyFuelAnalysisServiceTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Dated_purchase_without_odometer_still_contributes_to_the_full_tank_interval(bool fullTank)
+    {
+        var data = new VehimapDataSet
+        {
+            FuelEntries =
+            [
+                new("start", "v", "2026-01-01", "100", "10", "400", true, "Benzin", ""),
+                new("middle", "v", "2026-01-02", "", "10", "400", fullTank, "Benzin", ""),
+                new("end", "v", "2026-01-03", "300", "10", "400", true, "Benzin", "")
+            ]
+        };
+        var segment = Assert.Single(new LegacyFuelAnalysisService().BuildVehicleFuelAnalysis(data, "v").ConsumptionSegments);
+        Assert.Equal(20m, segment.Liters);
+        Assert.Equal(10m, segment.ConsumptionLitersPer100Km);
+        Assert.Equal(40m, segment.PricePerLiter);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("not-a-date")]
+    [InlineData("2026-01-01")]
+    [InlineData("2026-01-03")]
+    public void Ambiguous_purchase_order_does_not_produce_an_understated_consumption(string date)
+    {
+        var data = new VehimapDataSet
+        {
+            FuelEntries =
+            [
+                new("start", "v", "2026-01-01", "100", "10", "400", true, "Benzin", ""),
+                new("middle", "v", date, "", "10", "400", false, "Benzin", ""),
+                new("end", "v", "2026-01-03", "300", "10", "400", true, "Benzin", "")
+            ]
+        };
+        var summary = new LegacyFuelAnalysisService().BuildVehicleFuelAnalysis(data, "v");
+        Assert.Empty(summary.ConsumptionSegments);
+        Assert.Null(summary.AverageConsumptionLitersPer100Km);
+        Assert.Equal(30m, summary.TotalLiters);
+        Assert.Contains(summary.Warnings, warning => warning.Id == "fuel-analysis-consumption-unavailable");
+    }
+
+    [Fact]
+    public void Segment_with_unknown_cost_keeps_consumption_but_not_misleading_unit_prices()
+    {
+        var data = new VehimapDataSet
+        {
+            FuelEntries =
+            [
+                new("start", "v", "2026-01-01", "100", "10", "400", true, "Benzin", ""),
+                new("partial", "v", "2026-01-02", "200", "10", "", false, "Benzin", ""),
+                new("end", "v", "2026-01-03", "300", "10", "400", true, "Benzin", "")
+            ]
+        };
+        var segment = Assert.Single(new LegacyFuelAnalysisService().BuildVehicleFuelAnalysis(data, "v").ConsumptionSegments);
+        Assert.Equal(10m, segment.ConsumptionLitersPer100Km);
+        Assert.Null(segment.PricePerLiter);
+        Assert.Null(segment.CostPerKm);
+    }
+
+    [Fact]
+    public void Average_price_uses_only_matching_known_cost_and_volume_samples()
+    {
+        var data = new VehimapDataSet
+        {
+            FuelEntries =
+            [
+                new("priced", "v", "2026-01-01", "", "10", "400", false, "Benzin", ""),
+                new("unknown-cost", "v", "2026-01-02", "", "10", "", false, "Benzin", ""),
+                new("unknown-volume", "v", "2026-01-03", "", "", "100", false, "Benzin", "")
+            ]
+        };
+        var summary = new LegacyFuelAnalysisService().BuildVehicleFuelAnalysis(data, "v");
+        Assert.Equal(20m, summary.TotalLiters);
+        Assert.Equal(500m, summary.TotalCost);
+        Assert.Equal(40m, summary.AveragePricePerLiter);
+        Assert.Equal(40m, Assert.Single(summary.GroupSummaries).AveragePricePerLiter);
+    }
+
     [Fact]
     public void BuildVehicleFuelAnalysis_calculates_consumption_between_full_tanks()
     {

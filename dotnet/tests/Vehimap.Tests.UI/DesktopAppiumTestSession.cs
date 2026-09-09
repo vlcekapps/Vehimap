@@ -165,17 +165,20 @@ internal sealed class DesktopAppiumTestSession : IDisposable
     {
         var element = WaitForElementByAccessibilityId(automationId, timeoutSeconds);
         element.Click();
-        try
+        WaitForFocusedAutomationId(timeoutSeconds, automationId);
+        // WinAppDriver maps digits through the active keyboard layout (15000
+        // becomes punctuation/accented letters on Czech keyboards). Paste fixture
+        // text through the real editor; dedicated cursor tests still send keys.
+        SetWindowsClipboardText(text);
+        SendKeysToActiveElement(Keys.Control + "a");
+        SendKeysToActiveElement(Keys.Control + "v");
+        Thread.Sleep(150); // Allow clipboard paste before CopyText clears the clipboard for verification.
+        var actual = CopyTextByAccessibilityId(automationId, timeoutSeconds);
+        if (!string.Equals(actual, text, StringComparison.Ordinal))
         {
-            element.Clear();
+            CaptureDiagnostics($"Keyboard input mismatch in {automationId}: expected '{text}', received '{actual}'");
+            throw new InvalidOperationException($"Keyboard input mismatch in {automationId}: expected '{text}', received '{actual}'.");
         }
-        catch (WebDriverException)
-        {
-            element.SendKeys(Keys.Control + "a");
-            element.SendKeys(Keys.Backspace);
-        }
-
-        element.SendKeys(text);
     }
 
     public string CopyTextByAccessibilityId(string automationId, int timeoutSeconds = 12)
@@ -183,8 +186,9 @@ internal sealed class DesktopAppiumTestSession : IDisposable
         var element = WaitForElementByAccessibilityId(automationId, timeoutSeconds);
         SetWindowsClipboardText(string.Empty);
         element.Click();
-        element.SendKeys(Keys.Control + "a");
-        element.SendKeys(Keys.Control + "c");
+        WaitForFocusedAutomationId(timeoutSeconds, automationId);
+        SendKeysToActiveElement(Keys.Control + "a");
+        SendKeysToActiveElement(Keys.Control + "c");
         Thread.Sleep(150);
         return GetWindowsClipboardText();
     }

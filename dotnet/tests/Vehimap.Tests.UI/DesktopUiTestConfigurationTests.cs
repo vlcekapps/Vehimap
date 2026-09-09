@@ -6,6 +6,16 @@ namespace Vehimap.Tests.UI;
 public sealed class DesktopUiTestConfigurationTests
 {
     [Theory]
+    [InlineData(false, null, true)]
+    [InlineData(false, "", true)]
+    [InlineData(false, "http://127.0.0.1:4725", false)]
+    [InlineData(true, null, false)]
+    public void Live_tests_are_skipped_only_when_not_requested(bool required, string? url, bool expectedSkip)
+    {
+        Assert.Equal(expectedSkip, AppiumFactAttribute.GetSkipReason(required, url) is not null);
+    }
+
+    [Theory]
     [InlineData(null, 45)]
     [InlineData("", 45)]
     [InlineData("5", 5)]
