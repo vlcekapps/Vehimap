@@ -114,7 +114,7 @@ public sealed class LegacyTimelineService : ITimelineService
                 vehicle.Plate,
                 vehicle.MakeModel,
                 technicalDate,
-                vehicle.NextTk,
+                VehicleDateService.FormatForDisplay(vehicle.NextTk, _culturePreferences),
                 L("Timeline.Title.NextTechnicalInspection"),
                 BuildVehicleDetail(vehicle),
                 BuildExpirationStatusText(technicalDate, today, GetReminderDays(dataSet.Settings, "technical_reminder_days", 31)),
@@ -133,7 +133,7 @@ public sealed class LegacyTimelineService : ITimelineService
                 vehicle.Plate,
                 vehicle.MakeModel,
                 greenDate,
-                vehicle.GreenCardTo,
+                VehicleDateService.FormatForDisplay(vehicle.GreenCardTo, _culturePreferences),
                 L("Timeline.Title.GreenCardEnd"),
                 BuildVehicleDetail(vehicle),
                 BuildExpirationStatusText(greenDate, today, GetReminderDays(dataSet.Settings, "green_card_reminder_days", 31)),
@@ -364,16 +364,8 @@ public sealed class LegacyTimelineService : ITimelineService
             : 1000;
     }
 
-    internal static bool TryParseDueDate(string? text, out DateOnly date)
-    {
-        if (!VehimapValueParser.TryParseMonthYear(text, out date))
-        {
-            return false;
-        }
-
-        date = new DateOnly(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
-        return true;
-    }
+    internal static bool TryParseDueDate(string? text, out DateOnly date) =>
+        VehicleDateService.TryGetDueDate(text, out date);
 
     internal static string BuildExpirationStatus(DateOnly dueDate, DateOnly today, int reminderDays) =>
         BuildExpirationStatusCore(

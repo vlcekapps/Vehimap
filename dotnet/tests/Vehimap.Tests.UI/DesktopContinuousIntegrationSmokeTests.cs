@@ -1079,11 +1079,25 @@ public sealed class DesktopContinuousIntegrationSmokeTests
             session.WithinWindow("VehicleEditorWindow");
             session.ReplaceTextByAccessibilityId("VehicleEditorNameBox", "Milena accessibility test");
 
+            session.ReplaceTextByAccessibilityId("VehicleEditorNextTkBox", "31.02.2028");
+            session.ClickByAccessibilityId("SaveVehicleButton");
+            Assert.Equal("VehicleEditorNextTkBox", session.WaitForFocusedAutomationId(12, "VehicleEditorNextTkBox"));
+            session.ReplaceTextByAccessibilityId("VehicleEditorLastTkBox", "29.2.2028");
+            session.ReplaceTextByAccessibilityId("VehicleEditorNextTkBox", "3.7.2029");
+            session.ReplaceTextByAccessibilityId("VehicleEditorGreenCardFromBox", "4.7.2028");
+            session.ReplaceTextByAccessibilityId("VehicleEditorGreenCardToBox", "3.7.2029");
+
             session.ClickByAccessibilityId("SaveVehicleButton");
             session.WaitForElementToDisappearByAccessibilityId("SaveVehicleButton");
             session.WithinWindow("VehicleDetailWindow");
 
             Assert.Equal("EditVehicleButton", session.WaitForFocusedAutomationId(12, "EditVehicleButton"));
+
+            var saved = Assert.Single(ReadPersistedData(session).Vehicles, item => item.Name == "Milena accessibility test");
+            Assert.Equal("29.02.2028", saved.LastTk);
+            Assert.Equal("03.07.2029", saved.NextTk);
+            Assert.Equal("04.07.2028", saved.GreenCardFrom);
+            Assert.Equal("03.07.2029", saved.GreenCardTo);
 
             session.SendKeysToActiveElement(Keys.Tab);
             Assert.Equal("DeleteVehicleButton", session.WaitForFocusedAutomationId(12, "DeleteVehicleButton"));

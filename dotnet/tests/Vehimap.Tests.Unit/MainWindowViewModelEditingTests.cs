@@ -1046,7 +1046,7 @@ public sealed partial class MainWindowViewModelEditingTests : IDisposable
         await viewModel.SaveVehicleCommand.ExecuteAsync(null);
 
         Assert.True(viewModel.VehicleDetailWorkspace.IsEditingVehicle);
-        Assert.Equal("Pole Příští TK je povinné a musí být ve formátu MM/RRRR.", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
+        Assert.Equal("Datum příští TK je povinné. Zadejte d.m.rrrr nebo dd.mm.rrrr; starší formát MM/RRRR je také podporován.", viewModel.VehicleDetailWorkspace.VehicleEditorStatus);
         Assert.Equal(DesktopFocusTarget.VehicleEditorNextTk, Assert.Single(requestedTargets));
         Assert.DoesNotContain(dataStore.CurrentDataSet.Vehicles, item => item.Name == "Božena");
     }

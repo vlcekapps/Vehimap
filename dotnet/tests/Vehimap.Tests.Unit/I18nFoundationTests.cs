@@ -188,7 +188,7 @@ public sealed class I18nFoundationTests
         Assert.Equal("Bylo obnoveno 5 spravovaných příloh.", service.Format(czech, "AppShell.ImportBackup.RestoredManagedAttachments", 5, 5));
         Assert.Equal("- 1 document", service.Format(english, "VehicleDelete.Confirmation.RecordCount", 1, 1));
         Assert.Equal("- 4 doklady", service.Format(czech, "VehicleDelete.Confirmation.RecordCount", 4, 4));
-        Assert.Equal("1 green card needs review. The matching overview is open.", service.Format(english, "QuickActions.Status.ReviewGreenOpened", 1, 1));
+        Assert.Equal("1 vehicle insurance date needs review. The matching overview is open.", service.Format(english, "QuickActions.Status.ReviewGreenOpened", 1, 1));
         Assert.Equal("3 termíny technické kontroly vyžadují kontrolu. Otevřen je příslušný přehled.", service.Format(czech, "QuickActions.Status.ReviewTechnicalOpened", 3, 3));
         Assert.Equal("Celkem 5 položek", service.Format(czech, "TimelineWorkspace.Summary.TotalCount", 5, 5));
         Assert.Equal("Po filtru zobrazeny 2 položky", service.Format(czech, "TimelineWorkspace.Summary.VisibleCount", 2, 2));

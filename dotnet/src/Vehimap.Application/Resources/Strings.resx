@@ -194,7 +194,7 @@
   <data name="GlobalSearch.Accessible.VehicleLabel" xml:space="preserve"><value>vehicle</value></data>
   <data name="GlobalSearch.Attachment.External" xml:space="preserve"><value>External path</value></data>
   <data name="GlobalSearch.Attachment.Managed" xml:space="preserve"><value>Managed copy</value></data>
-  <data name="GlobalSearch.Attention.GreenCard" xml:space="preserve"><value>Green card</value></data>
+  <data name="GlobalSearch.Attention.GreenCard" xml:space="preserve"><value>Vehicle insurance</value></data>
   <data name="GlobalSearch.Attention.StatusPart" xml:space="preserve"><value>{0}: {1}</value></data>
   <data name="GlobalSearch.Attention.TechnicalInspection" xml:space="preserve"><value>Technical inspection</value></data>
   <data name="DesktopEntityKind.Costs" xml:space="preserve"><value>Costs</value></data>
@@ -776,8 +776,8 @@ Vehicle: {2}
   <data name="MainMenu.QuickActions.BackgroundNotification" xml:space="preserve"><value>Current notification</value></data>
   <data name="MainMenu.QuickActions.BackgroundNotificationName" xml:space="preserve"><value>Open the current background notification</value></data>
   <data name="MainMenu.QuickActions.Name" xml:space="preserve"><value>Quick actions menu</value></data>
-  <data name="MainMenu.QuickActions.NearestGreenCard" xml:space="preserve"><value>Nearest green card</value></data>
-  <data name="MainMenu.QuickActions.NearestGreenCardName" xml:space="preserve"><value>Open the nearest green card</value></data>
+  <data name="MainMenu.QuickActions.NearestGreenCard" xml:space="preserve"><value>Nearest insurance expiry</value></data>
+  <data name="MainMenu.QuickActions.NearestGreenCardName" xml:space="preserve"><value>Open the nearest vehicle insurance expiry date</value></data>
   <data name="MainMenu.QuickActions.NearestMaintenance" xml:space="preserve"><value>Nearest service</value></data>
   <data name="MainMenu.QuickActions.NearestMaintenanceName" xml:space="preserve"><value>Open the nearest service task</value></data>
   <data name="MainMenu.QuickActions.NearestRecord" xml:space="preserve"><value>Nearest document</value></data>
@@ -786,8 +786,8 @@ Vehicle: {2}
   <data name="MainMenu.QuickActions.NearestReminderName" xml:space="preserve"><value>Open the nearest custom reminder</value></data>
   <data name="MainMenu.QuickActions.NearestTechnical" xml:space="preserve"><value>Nearest technical inspection</value></data>
   <data name="MainMenu.QuickActions.NearestTechnicalName" xml:space="preserve"><value>Open the nearest technical inspection</value></data>
-  <data name="MainMenu.QuickActions.ReviewGreenCards" xml:space="preserve"><value>Check green cards</value></data>
-  <data name="MainMenu.QuickActions.ReviewGreenCardsName" xml:space="preserve"><value>Check green cards</value></data>
+  <data name="MainMenu.QuickActions.ReviewGreenCards" xml:space="preserve"><value>Check vehicle insurance dates</value></data>
+  <data name="MainMenu.QuickActions.ReviewGreenCardsName" xml:space="preserve"><value>Check vehicle insurance dates</value></data>
   <data name="MainMenu.QuickActions.ReviewMaintenance" xml:space="preserve"><value>Check maintenance</value></data>
   <data name="MainMenu.QuickActions.ReviewMaintenanceName" xml:space="preserve"><value>Check maintenance plan</value></data>
   <data name="MainMenu.QuickActions.ReviewRecords" xml:space="preserve"><value>Check documents</value></data>
@@ -797,37 +797,37 @@ Vehicle: {2}
   <data name="MainMenu.QuickActions.ReviewTechnical" xml:space="preserve"><value>Check technical inspections</value></data>
   <data name="MainMenu.QuickActions.ReviewTechnicalName" xml:space="preserve"><value>Check technical inspections</value></data>
   <data name="QuickActions.Action.OpenBackgroundNotification" xml:space="preserve"><value>open current notification</value></data>
-  <data name="QuickActions.Action.OpenNearestGreenCard" xml:space="preserve"><value>open nearest green card</value></data>
+  <data name="QuickActions.Action.OpenNearestGreenCard" xml:space="preserve"><value>open nearest insurance expiry</value></data>
   <data name="QuickActions.Action.OpenNearestMaintenance" xml:space="preserve"><value>open nearest service task</value></data>
   <data name="QuickActions.Action.OpenNearestRecord" xml:space="preserve"><value>open nearest document</value></data>
   <data name="QuickActions.Action.OpenNearestReminder" xml:space="preserve"><value>open nearest reminder</value></data>
   <data name="QuickActions.Action.OpenNearestTechnical" xml:space="preserve"><value>open nearest technical inspection</value></data>
-  <data name="QuickActions.Action.ReviewGreenCards" xml:space="preserve"><value>check green cards</value></data>
+  <data name="QuickActions.Action.ReviewGreenCards" xml:space="preserve"><value>check vehicle insurance dates</value></data>
   <data name="QuickActions.Action.ReviewMaintenance" xml:space="preserve"><value>check maintenance plan</value></data>
   <data name="QuickActions.Action.ReviewRecords" xml:space="preserve"><value>check documents</value></data>
   <data name="QuickActions.Action.ReviewReminders" xml:space="preserve"><value>check reminders</value></data>
   <data name="QuickActions.Action.ReviewTechnical" xml:space="preserve"><value>check technical inspections</value></data>
-  <data name="QuickActions.Status.MissingGreenCardsOpened.One" xml:space="preserve"><value>1 vehicle does not have a completed green card. The upcoming due date overview is open.</value></data>
-  <data name="QuickActions.Status.MissingGreenCardsOpened.Few" xml:space="preserve"><value>{0} vehicles do not have a completed green card. The upcoming due date overview is open.</value></data>
-  <data name="QuickActions.Status.MissingGreenCardsOpened.Other" xml:space="preserve"><value>{0} vehicles do not have a completed green card. The upcoming due date overview is open.</value></data>
-  <data name="QuickActions.Status.NearestGreenCard" xml:space="preserve"><value>Nearest green card: {0} - {1}.</value></data>
+  <data name="QuickActions.Status.MissingGreenCardsOpened.One" xml:space="preserve"><value>1 vehicle does not have an insurance expiry date entered. The upcoming due date overview is open.</value></data>
+  <data name="QuickActions.Status.MissingGreenCardsOpened.Few" xml:space="preserve"><value>{0} vehicles do not have an insurance expiry date entered. The upcoming due date overview is open.</value></data>
+  <data name="QuickActions.Status.MissingGreenCardsOpened.Other" xml:space="preserve"><value>{0} vehicles do not have an insurance expiry date entered. The upcoming due date overview is open.</value></data>
+  <data name="QuickActions.Status.NearestGreenCard" xml:space="preserve"><value>Nearest insurance expiry: {0} - {1}.</value></data>
   <data name="QuickActions.Status.NearestMaintenance" xml:space="preserve"><value>Nearest service: {0} - {1} ({2}).</value></data>
   <data name="QuickActions.Status.NearestRecord" xml:space="preserve"><value>Nearest document: {0} - {1} ({2}).</value></data>
   <data name="QuickActions.Status.NearestReminder" xml:space="preserve"><value>Nearest reminder: {0} - {1} ({2}).</value></data>
   <data name="QuickActions.Status.NearestTechnical" xml:space="preserve"><value>Nearest technical inspection: {0} - {1}.</value></data>
   <data name="QuickActions.Status.NoBackgroundNotification" xml:space="preserve"><value>There is currently no current notification to open.</value></data>
-  <data name="QuickActions.Status.NoGreenCardsConfigured" xml:space="preserve"><value>No vehicle has a green card filled in. You can add it in the vehicle detail.</value></data>
-  <data name="QuickActions.Status.NoGreenCardsDue" xml:space="preserve"><value>No filled green card currently needs attention.</value></data>
-  <data name="QuickActions.Status.NoGreenCardsDueWithMissing" xml:space="preserve"><value>No filled green card currently needs attention. Some vehicles still do not have a green card filled in.</value></data>
+  <data name="QuickActions.Status.NoGreenCardsConfigured" xml:space="preserve"><value>No vehicle has an insurance expiry date entered. You can add it in the vehicle editor.</value></data>
+  <data name="QuickActions.Status.NoGreenCardsDue" xml:space="preserve"><value>No recorded vehicle insurance expiry date currently needs attention.</value></data>
+  <data name="QuickActions.Status.NoGreenCardsDueWithMissing" xml:space="preserve"><value>No recorded vehicle insurance expiry date currently needs attention. Some vehicles still have no insurance expiry date entered.</value></data>
   <data name="QuickActions.Status.NoMaintenance" xml:space="preserve"><value>No maintenance task currently has an upcoming or overdue due date.</value></data>
   <data name="QuickActions.Status.NoRecord" xml:space="preserve"><value>No document currently has an upcoming or overdue validity date.</value></data>
   <data name="QuickActions.Status.NoReminder" xml:space="preserve"><value>No custom reminder currently has an upcoming or overdue due date.</value></data>
   <data name="QuickActions.Status.NoTechnical" xml:space="preserve"><value>No vehicles currently have an upcoming or overdue technical inspection alert.</value></data>
   <data name="QuickActions.Status.OpenedBackgroundAudit" xml:space="preserve"><value>Opened audit item: {0} - {1}.</value></data>
   <data name="QuickActions.Status.OpenedBackgroundTimeline" xml:space="preserve"><value>Opened current notification: {0} - {1} ({2}).</value></data>
-  <data name="QuickActions.Status.ReviewGreenOpened.One" xml:space="preserve"><value>1 green card needs review. The matching overview is open.</value></data>
-  <data name="QuickActions.Status.ReviewGreenOpened.Few" xml:space="preserve"><value>{0} green cards need review. The matching overview is open.</value></data>
-  <data name="QuickActions.Status.ReviewGreenOpened.Other" xml:space="preserve"><value>{0} green cards need review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened.One" xml:space="preserve"><value>1 vehicle insurance date needs review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened.Few" xml:space="preserve"><value>{0} vehicle insurance dates need review. The matching overview is open.</value></data>
+  <data name="QuickActions.Status.ReviewGreenOpened.Other" xml:space="preserve"><value>{0} vehicle insurance dates need review. The matching overview is open.</value></data>
   <data name="QuickActions.Status.ReviewMaintenanceOpened.One" xml:space="preserve"><value>1 maintenance task needs review. The matching overview is open.</value></data>
   <data name="QuickActions.Status.ReviewMaintenanceOpened.Few" xml:space="preserve"><value>{0} maintenance tasks need review. The matching overview is open.</value></data>
   <data name="QuickActions.Status.ReviewMaintenanceOpened.Other" xml:space="preserve"><value>{0} maintenance tasks need review. The matching overview is open.</value></data>
@@ -958,8 +958,8 @@ Vehicle: {2}
   <data name="TrayActions.OpenBackgroundStatusName" xml:space="preserve"><value>Open the current background alert</value></data>
   <data name="TrayActions.OpenDataFolderLabel" xml:space="preserve"><value>Open data folder</value></data>
   <data name="TrayActions.OpenDataFolderName" xml:space="preserve"><value>Open the Vehimap data folder</value></data>
-  <data name="TrayActions.OpenNearestGreenCardLabel" xml:space="preserve"><value>Nearest green card</value></data>
-  <data name="TrayActions.OpenNearestGreenCardName" xml:space="preserve"><value>Open the nearest green card due date</value></data>
+  <data name="TrayActions.OpenNearestGreenCardLabel" xml:space="preserve"><value>Nearest insurance expiry</value></data>
+  <data name="TrayActions.OpenNearestGreenCardName" xml:space="preserve"><value>Open the nearest vehicle insurance due date</value></data>
   <data name="TrayActions.OpenNearestMaintenanceLabel" xml:space="preserve"><value>Nearest service</value></data>
   <data name="TrayActions.OpenNearestMaintenanceName" xml:space="preserve"><value>Open the nearest maintenance item</value></data>
   <data name="TrayActions.OpenNearestRecordLabel" xml:space="preserve"><value>Nearest document</value></data>
@@ -974,8 +974,8 @@ Vehicle: {2}
   <data name="TrayActions.OpenSettingsName" xml:space="preserve"><value>Open application settings</value></data>
   <data name="TrayActions.ReloadDataLabel" xml:space="preserve"><value>Reload data</value></data>
   <data name="TrayActions.ReloadDataName" xml:space="preserve"><value>Reload data</value></data>
-  <data name="TrayActions.ReviewGreenCardsLabel" xml:space="preserve"><value>Review green cards</value></data>
-  <data name="TrayActions.ReviewGreenCardsName" xml:space="preserve"><value>Review green cards</value></data>
+  <data name="TrayActions.ReviewGreenCardsLabel" xml:space="preserve"><value>Review vehicle insurance dates</value></data>
+  <data name="TrayActions.ReviewGreenCardsName" xml:space="preserve"><value>Review vehicle insurance dates</value></data>
   <data name="TrayActions.ReviewMaintenanceLabel" xml:space="preserve"><value>Review maintenance</value></data>
   <data name="TrayActions.ReviewMaintenanceName" xml:space="preserve"><value>Review the maintenance plan</value></data>
   <data name="TrayActions.ReviewRecordsLabel" xml:space="preserve"><value>Review documents</value></data>
@@ -1010,7 +1010,7 @@ Vehicle: {2}
   <data name="Audit.Category.Costs" xml:space="preserve"><value>Costs</value></data>
   <data name="Audit.Category.Document" xml:space="preserve"><value>Document</value></data>
   <data name="Audit.Category.Fuel" xml:space="preserve"><value>Fuel</value></data>
-  <data name="Audit.Category.GreenCard" xml:space="preserve"><value>Green card</value></data>
+  <data name="Audit.Category.GreenCard" xml:space="preserve"><value>Vehicle insurance</value></data>
   <data name="Audit.Category.History" xml:space="preserve"><value>History</value></data>
   <data name="Audit.Category.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
   <data name="Audit.Category.TechnicalInspection" xml:space="preserve"><value>Technical inspection</value></data>
@@ -1019,7 +1019,7 @@ Vehicle: {2}
   <data name="Audit.Message.FuelMissingUsableDate" xml:space="preserve"><value>The refuel entry has a price but no usable date.</value></data>
   <data name="Audit.Message.HistoryInvalidAmount" xml:space="preserve"><value>The historical event contains an amount that could not be converted to a number.</value></data>
   <data name="Audit.Message.HistoryMissingUsableDate" xml:space="preserve"><value>The historical event has a price but no usable date.</value></data>
-  <data name="Audit.Message.InvalidGreenCardRange" xml:space="preserve"><value>The green card range is invalid because Valid from is later than Valid to.</value></data>
+  <data name="Audit.Message.InvalidGreenCardRange" xml:space="preserve"><value>The vehicle insurance range is invalid because Valid from is later than Valid to.</value></data>
   <data name="Audit.Message.InvalidValidityRange" xml:space="preserve"><value>The valid-from date is later than the valid-to date.</value></data>
   <data name="Audit.Message.MaintenanceMissingUsableOdometer" xml:space="preserve"><value>The maintenance plan uses a distance interval, but no usable current odometer is available for the vehicle.</value></data>
   <data name="Audit.Message.MissingAttachment" xml:space="preserve"><value>The document attachment file is not available at the expected location.</value></data>
@@ -1044,7 +1044,7 @@ Vehicle: {2}
   <data name="Audit.Summary.WarningCount.Few" xml:space="preserve"><value>{0} warnings</value></data>
   <data name="Audit.Summary.WarningCount.Other" xml:space="preserve"><value>{0} warnings</value></data>
   <data name="Audit.Title.InvalidAmount" xml:space="preserve"><value>Invalid amount</value></data>
-  <data name="Audit.Title.InvalidGreenCardRange" xml:space="preserve"><value>Invalid green card range</value></data>
+  <data name="Audit.Title.InvalidGreenCardRange" xml:space="preserve"><value>Invalid vehicle insurance range</value></data>
   <data name="Audit.Title.InvalidValidityRange" xml:space="preserve"><value>Invalid validity range</value></data>
   <data name="Audit.Title.MissingExternalAttachment" xml:space="preserve"><value>Missing external attachment</value></data>
   <data name="Audit.Title.MissingManagedAttachment" xml:space="preserve"><value>Missing managed attachment</value></data>
@@ -1198,8 +1198,8 @@ Vehicle: {2}
   <data name="Settings.DistanceUnit" xml:space="preserve"><value>Distance unit</value></data>
   <data name="Settings.Currency" xml:space="preserve"><value>Currency</value></data>
   <data name="Settings.CurrencyHelp" xml:space="preserve"><value>Currency affects displayed and exported money labels. It does not convert existing stored amounts.</value></data>
-  <data name="Settings.GreenCardReminderDays" xml:space="preserve"><value>Green card reminder (days)</value></data>
-  <data name="Settings.GreenCardReminderDaysName" xml:space="preserve"><value>Green card reminder in days</value></data>
+  <data name="Settings.GreenCardReminderDays" xml:space="preserve"><value>Vehicle insurance reminder (days)</value></data>
+  <data name="Settings.GreenCardReminderDaysName" xml:space="preserve"><value>Vehicle insurance reminder in days</value></data>
   <data name="Settings.HelpText" xml:space="preserve"><value>Ctrl+S saves settings, Ctrl+B creates a backup now and Escape closes the dialog without saving.</value></data>
   <data name="Settings.HideOnLaunch" xml:space="preserve"><value>Automatically hide to tray on launch</value></data>
   <data name="Settings.Language" xml:space="preserve"><value>Language</value></data>
@@ -1601,11 +1601,11 @@ Note: {5}</value></data>
   <data name="UpcomingOverviewWorkspace.DetailHeading" xml:space="preserve"><value>Due date detail</value></data>
   <data name="UpcomingOverviewWorkspace.FilterLabel" xml:space="preserve"><value>Filter</value></data>
   <data name="UpcomingOverviewWorkspace.FilterName" xml:space="preserve"><value>Upcoming due date filter</value></data>
-  <data name="UpcomingOverviewWorkspace.Help" xml:space="preserve"><value>The due date overview shows upcoming technical inspections, green cards, reminders, documents and maintenance tasks with dates.</value></data>
+  <data name="UpcomingOverviewWorkspace.Help" xml:space="preserve"><value>The due date overview shows upcoming technical inspections, vehicle insurance dates, reminders, documents and maintenance tasks with dates.</value></data>
   <data name="UpcomingOverviewWorkspace.IncludeDataIssues" xml:space="preserve"><value>Show data issues too</value></data>
   <data name="UpcomingOverviewWorkspace.IncludeDataIssuesName" xml:space="preserve"><value>Also show audit data issues in the due date overview</value></data>
-  <data name="UpcomingOverviewWorkspace.IncludeMissingGreenCards" xml:space="preserve"><value>Show vehicles without green card too</value></data>
-  <data name="UpcomingOverviewWorkspace.IncludeMissingGreenCardsName" xml:space="preserve"><value>Also show vehicles without a filled green card in the due date overview</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeMissingGreenCards" xml:space="preserve"><value>Show vehicles without an insurance expiry date too</value></data>
+  <data name="UpcomingOverviewWorkspace.IncludeMissingGreenCardsName" xml:space="preserve"><value>Also show vehicles without an insurance expiry date entered in the due date overview</value></data>
   <data name="UpcomingOverviewWorkspace.ItemType" xml:space="preserve"><value>Timeline item</value></data>
   <data name="UpcomingOverviewWorkspace.ListName" xml:space="preserve"><value>Upcoming due dates across vehicles</value></data>
   <data name="UpcomingOverviewWorkspace.OpenEvidenceName" xml:space="preserve"><value>Open the record for the selected upcoming due date</value></data>
@@ -1661,14 +1661,14 @@ Detail: {5}</value></data>
 Status: {5}</value></data>
   <data name="Overview.Filter.All" xml:space="preserve"><value>All</value></data>
   <data name="Overview.Filter.DataIssues" xml:space="preserve"><value>Data issues</value></data>
-  <data name="Overview.Filter.GreenCards" xml:space="preserve"><value>Green cards</value></data>
+  <data name="Overview.Filter.GreenCards" xml:space="preserve"><value>Vehicle insurance dates</value></data>
   <data name="Overview.Filter.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
   <data name="Overview.Filter.Records" xml:space="preserve"><value>Documents</value></data>
   <data name="Overview.Filter.Reminders" xml:space="preserve"><value>Reminders</value></data>
   <data name="Overview.Filter.Technical" xml:space="preserve"><value>Technical inspections</value></data>
   <data name="Overview.MissingGreen.Date" xml:space="preserve"><value>Not filled</value></data>
   <data name="Overview.MissingGreen.Status" xml:space="preserve"><value>Missing</value></data>
-  <data name="Overview.MissingGreen.Title" xml:space="preserve"><value>Missing green card</value></data>
+  <data name="Overview.MissingGreen.Title" xml:space="preserve"><value>Missing vehicle insurance expiry date</value></data>
   <data name="Overview.Persistence.Error" xml:space="preserve"><value>Failed to save due date overview preferences</value></data>
   <data name="Persistence.GenericSaveFailed" xml:space="preserve"><value>Changes could not be saved</value></data>
   <data name="Error.Detail.AccessDenied" xml:space="preserve"><value>Access to the requested file or folder was denied.</value></data>
@@ -1697,10 +1697,10 @@ Status: {5}</value></data>
   <data name="Overview.Summary.UpcomingEmpty" xml:space="preserve"><value>The available data does not contain any upcoming due dates with a concrete date yet.</value></data>
   <data name="Overview.Summary.UpcomingEmptyWithDataIssues" xml:space="preserve"><value>The available data does not contain any upcoming due dates or data issues to complete yet.</value></data>
   <data name="Overview.Summary.UpcomingInitial" xml:space="preserve"><value>Upcoming due dates across vehicles will appear after the data is loaded.</value></data>
-  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden" xml:space="preserve"><value>{0} vehicles do not have a filled green card; you can add them with the option below the filter.</value></data>
-  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden.One" xml:space="preserve"><value>{0} vehicle does not have a filled green card; you can add it with the option below the filter.</value></data>
-  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden.Few" xml:space="preserve"><value>{0} vehicles do not have a filled green card; you can add them with the option below the filter.</value></data>
-  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden.Other" xml:space="preserve"><value>{0} vehicles do not have a filled green card; you can add them with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden" xml:space="preserve"><value>{0} vehicles do not have an insurance expiry date entered; you can add them with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden.One" xml:space="preserve"><value>{0} vehicle does not have an insurance expiry date entered; you can add it with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden.Few" xml:space="preserve"><value>{0} vehicles do not have an insurance expiry date entered; you can add them with the option below the filter.</value></data>
+  <data name="Overview.Summary.UpcomingMissingGreenCardsHidden.Other" xml:space="preserve"><value>{0} vehicles do not have an insurance expiry date entered; you can add them with the option below the filter.</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues" xml:space="preserve"><value>Data issues included: {0}.</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues.One" xml:space="preserve"><value>Data issue included: {0}.</value></data>
   <data name="Overview.Summary.UpcomingVisibleDataIssues.Few" xml:space="preserve"><value>Data issues included: {0}.</value></data>
@@ -1711,7 +1711,7 @@ Status: {5}</value></data>
   <data name="Overview.Summary.UpcomingWithItems.Other" xml:space="preserve"><value>Upcoming items: {0}.</value></data>
   <data name="Timeline.Detail.DateAndOdometer" xml:space="preserve"><value>{0} | {1}</value></data>
   <data name="Timeline.Kind.Fuel" xml:space="preserve"><value>Fuel</value></data>
-  <data name="Timeline.Kind.GreenCard" xml:space="preserve"><value>Green card</value></data>
+  <data name="Timeline.Kind.GreenCard" xml:space="preserve"><value>Vehicle insurance</value></data>
   <data name="Timeline.Kind.History" xml:space="preserve"><value>History</value></data>
   <data name="Timeline.Kind.Maintenance" xml:space="preserve"><value>Maintenance plan</value></data>
   <data name="Timeline.Kind.Record" xml:space="preserve"><value>Document</value></data>
@@ -1729,7 +1729,7 @@ Status: {5}</value></data>
   <data name="Timeline.Status.Today" xml:space="preserve"><value>Due today</value></data>
   <data name="Timeline.Status.WithinDistance" xml:space="preserve"><value>Within {0}</value></data>
   <data name="Timeline.Title.Fuel" xml:space="preserve"><value>Fuel</value></data>
-  <data name="Timeline.Title.GreenCardEnd" xml:space="preserve"><value>Green card end</value></data>
+  <data name="Timeline.Title.GreenCardEnd" xml:space="preserve"><value>Vehicle insurance expiry</value></data>
   <data name="Timeline.Title.NextTechnicalInspection" xml:space="preserve"><value>Next technical inspection</value></data>
   <data name="Timeline.Title.Record" xml:space="preserve"><value>{0}: {1}</value></data>
   <data name="Timeline.Value.Cost" xml:space="preserve"><value>{0}</value></data>
@@ -1911,8 +1911,8 @@ Status: {5}</value></data>
   <data name="VehicleEditor.Climate" xml:space="preserve"><value>Air conditioning</value></data>
   <data name="VehicleEditor.ClimateName" xml:space="preserve"><value>Vehicle air conditioning</value></data>
   <data name="VehicleEditor.FieldsName" xml:space="preserve"><value>Vehicle editor fields</value></data>
-  <data name="VehicleEditor.GreenCardFrom" xml:space="preserve"><value>Green card from</value></data>
-  <data name="VehicleEditor.GreenCardTo" xml:space="preserve"><value>Green card to</value></data>
+  <data name="VehicleEditor.GreenCardFrom" xml:space="preserve"><value>Vehicle insurance valid from</value></data>
+  <data name="VehicleEditor.GreenCardTo" xml:space="preserve"><value>Vehicle insurance valid to</value></data>
   <data name="VehicleEditor.HelpText" xml:space="preserve"><value>Standalone vehicle editor. Ctrl+S saves, Escape or Cancel closes without saving.</value></data>
   <data name="VehicleEditor.LastTk" xml:space="preserve"><value>Last technical inspection</value></data>
   <data name="VehicleEditor.MakeModel" xml:space="preserve"><value>Make and model</value></data>
@@ -1946,13 +1946,13 @@ Status: {5}</value></data>
   <data name="VehicleEditor.Transmission" xml:space="preserve"><value>Transmission</value></data>
   <data name="VehicleEditor.TransmissionName" xml:space="preserve"><value>Vehicle transmission</value></data>
   <data name="VehicleEditor.Validation.CategoryRequired" xml:space="preserve"><value>The vehicle must have a category.</value></data>
-  <data name="VehicleEditor.Validation.GreenCardFromInvalid" xml:space="preserve"><value>The Green card from field must use the MM/YYYY format.</value></data>
-  <data name="VehicleEditor.Validation.GreenCardRangeInvalid" xml:space="preserve"><value>The Green card from field must not be later than the Green card to field.</value></data>
-  <data name="VehicleEditor.Validation.GreenCardToInvalid" xml:space="preserve"><value>The Green card to field must use the MM/YYYY format.</value></data>
-  <data name="VehicleEditor.Validation.LastTkInvalid" xml:space="preserve"><value>The Last technical inspection field must use the MM/YYYY format.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardFromInvalid" xml:space="preserve"><value>Enter the vehicle insurance start date as MM/DD/YYYY (or YYYY-MM-DD). Older MM/YYYY dates are also supported.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardRangeInvalid" xml:space="preserve"><value>The vehicle insurance start date must not be later than its end date.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardToInvalid" xml:space="preserve"><value>Enter the vehicle insurance end date as MM/DD/YYYY (or YYYY-MM-DD). Older MM/YYYY dates are also supported.</value></data>
+  <data name="VehicleEditor.Validation.LastTkInvalid" xml:space="preserve"><value>Enter the last inspection date as MM/DD/YYYY (or YYYY-MM-DD). Older MM/YYYY dates are also supported.</value></data>
   <data name="VehicleEditor.Validation.MakeModelRequired" xml:space="preserve"><value>The vehicle must have a make and model.</value></data>
   <data name="VehicleEditor.Validation.NameRequired" xml:space="preserve"><value>The vehicle must have a name.</value></data>
-  <data name="VehicleEditor.Validation.NextTkRequired" xml:space="preserve"><value>The Next technical inspection field is required and must use the MM/YYYY format.</value></data>
+  <data name="VehicleEditor.Validation.NextTkRequired" xml:space="preserve"><value>The next inspection date is required. Enter MM/DD/YYYY (or YYYY-MM-DD); older MM/YYYY dates are also supported.</value></data>
   <data name="VehicleEditor.Validation.YearInvalid" xml:space="preserve"><value>Enter the production year as a four-digit year, or leave the field empty.</value></data>
   <data name="VehicleEditor.Warning" xml:space="preserve"><value>Changing the vehicle keeps related history, fuel records, documents, reminders and maintenance.</value></data>
   <data name="VehicleEditor.Year" xml:space="preserve"><value>Year</value></data>
@@ -2060,10 +2060,10 @@ Status: {5}</value></data>
   <data name="PrintableReport.Column.Tags" xml:space="preserve"><value>Tags</value></data>
   <data name="PrintableReport.Column.LastTechnical" xml:space="preserve"><value>Last inspection</value></data>
   <data name="PrintableReport.Column.NextTechnical" xml:space="preserve"><value>Next inspection</value></data>
-  <data name="PrintableReport.Column.GreenCardTo" xml:space="preserve"><value>Green card valid to</value></data>
+  <data name="PrintableReport.Column.GreenCardTo" xml:space="preserve"><value>Vehicle insurance valid to</value></data>
   <data name="PrintableReport.Column.Status" xml:space="preserve"><value>Status</value></data>
   <data name="PrintableReport.Status.Technical" xml:space="preserve"><value>Inspection</value></data>
-  <data name="PrintableReport.Status.GreenCard" xml:space="preserve"><value>Green card</value></data>
+  <data name="PrintableReport.Status.GreenCard" xml:space="preserve"><value>Vehicle insurance</value></data>
   <data name="PrintableReport.Status.Reminder" xml:space="preserve"><value>Reminder</value></data>
   <data name="PrintableReport.Status.Maintenance" xml:space="preserve"><value>Maintenance</value></data>
   <data name="AppShell.Background.TooltipSummary" xml:space="preserve"><value>{0} | {1} | {2}</value></data>
@@ -2544,7 +2544,7 @@ Tags: {4}
 Last odometer: {5}
 Note: {6}</value></data>
   <data name="VehicleDetail.Projection.Dates" xml:space="preserve"><value>Next technical inspection: {0}
-Green card until: {1}
+Vehicle insurance until: {1}
 Status summary: {2}</value></data>
   <data name="VehicleDetail.Projection.Profile" xml:space="preserve"><value>Powertrain: {0}
 Climate: {1}
@@ -2662,7 +2662,7 @@ Transmission: {3}</value></data>
   <data name="VehicleList.FilterOption.AllVehicles" xml:space="preserve"><value>All vehicles</value></data>
   <data name="VehicleList.FilterOption.Attention" xml:space="preserve"><value>Only vehicles needing review</value></data>
   <data name="VehicleList.FilterOption.Overdue" xml:space="preserve"><value>Only overdue vehicles</value></data>
-  <data name="VehicleList.FilterOption.MissingGreenCard" xml:space="preserve"><value>Only missing green card</value></data>
+  <data name="VehicleList.FilterOption.MissingGreenCard" xml:space="preserve"><value>Only missing vehicle insurance expiry date</value></data>
   <data name="VehicleList.Filter.Category" xml:space="preserve"><value>category {0}</value></data>
   <data name="VehicleList.Filter.HideInactive" xml:space="preserve"><value>excluding archived and parked</value></data>
   <data name="VehicleList.Filter.Search" xml:space="preserve"><value>search "{0}"</value></data>
@@ -2698,10 +2698,10 @@ Transmission: {3}</value></data>
   <data name="WorkspaceSort.Category" xml:space="preserve"><value>Record area</value></data>
   <data name="WorkspaceSort.Summary" xml:space="preserve"><value>Summary</value></data>
   <data name="VehicleList.Status.Technical" xml:space="preserve"><value>Technical inspection: {0}</value></data>
-  <data name="VehicleList.Status.GreenCard" xml:space="preserve"><value>Green card: {0}</value></data>
+  <data name="VehicleList.Status.GreenCard" xml:space="preserve"><value>Vehicle insurance: {0}</value></data>
   <data name="VehicleList.Status.Reminder" xml:space="preserve"><value>Reminder: {0}</value></data>
   <data name="VehicleList.Status.Maintenance" xml:space="preserve"><value>Maintenance: {0}</value></data>
-  <data name="VehicleList.Status.MissingGreenCard" xml:space="preserve"><value>Green card missing</value></data>
+  <data name="VehicleList.Status.MissingGreenCard" xml:space="preserve"><value>Vehicle insurance expiry date missing</value></data>
   <data name="VehicleList.Status.AttentionCount" xml:space="preserve"><value>{0} items to review</value></data>
   <data name="VehicleList.Status.AttentionCount.One" xml:space="preserve"><value>{0} item to review</value></data>
   <data name="VehicleList.Status.AttentionCount.Few" xml:space="preserve"><value>{0} items to review</value></data>
@@ -2929,7 +2929,7 @@ Suggested action: {6}</value></data>
   <data name="Mobile.VehicleDetail.Year" xml:space="preserve"><value>Year</value></data>
   <data name="Mobile.VehicleDetail.Power" xml:space="preserve"><value>Power</value></data>
   <data name="Mobile.VehicleDetail.NextTechnicalInspection" xml:space="preserve"><value>Next technical inspection</value></data>
-  <data name="Mobile.VehicleDetail.GreenCardTo" xml:space="preserve"><value>Green card valid to</value></data>
+  <data name="Mobile.VehicleDetail.GreenCardTo" xml:space="preserve"><value>Vehicle insurance valid to</value></data>
   <data name="Mobile.VehicleDetail.Note" xml:space="preserve"><value>Note</value></data>
   <data name="Mobile.Action.Reload" xml:space="preserve"><value>Reload</value></data>
   <data name="Mobile.Action.ReloadName" xml:space="preserve"><value>Reload data</value></data>
@@ -2949,4 +2949,7 @@ Suggested action: {6}</value></data>
   <data name="DataStoreHealth.Report.SchemaMarkerUnsupported" xml:space="preserve"><value>The database contains a schema version not supported by this version of Vehimap. Do not overwrite it; use a compatible application version.</value></data>
   <data name="DataStoreHealth.Report.RestorePendingSummary" xml:space="preserve"><value>An interrupted backup restore needs recovery.</value></data>
   <data name="DataStoreHealth.Report.RestorePendingDetail" xml:space="preserve"><value>Restart Vehimap to finish recovery before editing data. If recovery fails, keep the entire data folder, including .restore-journal.json and import-backups; do not delete or replace individual database files.</value></data>
+  <data name="VehicleEditor.DateHelp" xml:space="preserve"><value>Full date, e.g. {0}. Older month/year dates are still accepted.</value></data>
+  <data name="Audit.Title.MonthPrecisionVehicleDate" xml:space="preserve"><value>Add an exact date: {0}</value></data>
+  <data name="Audit.Message.MonthPrecisionVehicleDate" xml:space="preserve"><value>{0} contains only a month and year ({1}). Add the day from the document in the vehicle editor. For expiry reminders, month-only dates are still treated as the end of the month and may warn too late.</value></data>
 </root>

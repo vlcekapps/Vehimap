@@ -48,6 +48,15 @@ public static class LocalizedResourceValueMatcher
             yield return currentLocalizer.GetString(resourceKey);
             yield return EnglishLocalizer.GetString(resourceKey);
             yield return CzechLocalizer.GetString(resourceKey);
+            // Older nightlies persisted these English labels before stable preference keys.
+            if (resourceKey == "Overview.Filter.GreenCards")
+            {
+                yield return "Green cards";
+            }
+            else if (resourceKey == "VehicleList.FilterOption.MissingGreenCard")
+            {
+                yield return "Only missing green card";
+            }
         }
     }
 }

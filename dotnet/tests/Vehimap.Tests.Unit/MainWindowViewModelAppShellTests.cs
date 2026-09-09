@@ -522,7 +522,7 @@ public sealed class MainWindowViewModelAppShellTests
 
             Assert.True(snapshot.HasNotification);
             Assert.Equal("Vehimap: 1 due date to review", snapshot.NotificationTitle);
-            Assert.Contains("Green card end", snapshot.NotificationMessage, StringComparison.Ordinal);
+            Assert.Contains("Vehicle insurance expiry", snapshot.NotificationMessage, StringComparison.Ordinal);
             Assert.Contains("Overdue", snapshot.NotificationMessage, StringComparison.Ordinal);
             Assert.Contains("1 vehicle", snapshot.ToolTipText, StringComparison.Ordinal);
             Assert.DoesNotContain("Termíny", snapshot.ToolTipText, StringComparison.Ordinal);
@@ -543,7 +543,7 @@ public sealed class MainWindowViewModelAppShellTests
             Settings = new VehimapSettings(),
             Vehicles =
             [
-                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "", "1988", "43", "", "12/2099", "05/2025", "12/2099")
+                new Vehicle("veh_1", "Milena", "Osobní vozidla", "Rodinné auto", "Škoda 120L", "", "1988", "43", "", "31.12.2099", "01.05.2025", "31.12.2099")
             ]
         };
         dataSet.Settings.SetValue("notifications", "technical_reminder_days", "30");

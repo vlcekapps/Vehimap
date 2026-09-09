@@ -88,8 +88,8 @@ internal sealed class DesktopProjectionService
                     FormatValue(vehicle.Plate, L("Projection.Value.NoPlate")),
                     FormatValue(vehicle.MakeModel, L("Projection.Value.NoMakeModel")),
                     vehicle.VehicleNote,
-                    vehicle.NextTk,
-                    vehicle.GreenCardTo,
+                    VehicleDateService.FormatForDisplay(vehicle.NextTk, _culturePreferences),
+                    VehicleDateService.FormatForDisplay(vehicle.GreenCardTo, _culturePreferences),
                     FormatKnownOrEmpty(meta?.State, FormatVehicleState),
                     FormatKnownOrEmpty(meta?.Powertrain, FormatPowertrain),
                     BuildVehicleStatusSummary(vehicle, meta, auditItems, timelineItems));

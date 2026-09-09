@@ -93,10 +93,10 @@ public sealed partial class MainWindowViewModel
         VehicleDetailWorkspace.VehicleEditorPlate = vehicle.Plate;
         VehicleDetailWorkspace.VehicleEditorYear = vehicle.Year;
         VehicleDetailWorkspace.VehicleEditorPower = vehicle.Power;
-        VehicleDetailWorkspace.VehicleEditorLastTk = vehicle.LastTk;
-        VehicleDetailWorkspace.VehicleEditorNextTk = vehicle.NextTk;
-        VehicleDetailWorkspace.VehicleEditorGreenCardFrom = vehicle.GreenCardFrom;
-        VehicleDetailWorkspace.VehicleEditorGreenCardTo = vehicle.GreenCardTo;
+        VehicleDetailWorkspace.VehicleEditorLastTk = VehicleDateService.FormatForDisplay(vehicle.LastTk, CurrentCulturePreferences);
+        VehicleDetailWorkspace.VehicleEditorNextTk = VehicleDateService.FormatForDisplay(vehicle.NextTk, CurrentCulturePreferences);
+        VehicleDetailWorkspace.VehicleEditorGreenCardFrom = VehicleDateService.FormatForDisplay(vehicle.GreenCardFrom, CurrentCulturePreferences);
+        VehicleDetailWorkspace.VehicleEditorGreenCardTo = VehicleDateService.FormatForDisplay(vehicle.GreenCardTo, CurrentCulturePreferences);
         VehicleDetailWorkspace.VehicleEditorState = KnownValueOptions.NormalizeVehicleStateValue(meta?.State);
         VehicleDetailWorkspace.VehicleEditorTags = meta?.Tags ?? string.Empty;
         VehicleDetailWorkspace.VehicleEditorPowertrain = KnownValueOptions.NormalizeVehiclePowertrainValue(meta?.Powertrain);
@@ -182,10 +182,10 @@ public sealed partial class MainWindowViewModel
         var nextTkText = (VehicleDetailWorkspace.VehicleEditorNextTk ?? string.Empty).Trim();
         var greenCardFromText = (VehicleDetailWorkspace.VehicleEditorGreenCardFrom ?? string.Empty).Trim();
         var greenCardToText = (VehicleDetailWorkspace.VehicleEditorGreenCardTo ?? string.Empty).Trim();
-        var lastTk = LegacyVehicleValueNormalization.NormalizeMonthYear(lastTkText);
-        var nextTk = LegacyVehicleValueNormalization.NormalizeMonthYear(nextTkText);
-        var greenCardFrom = LegacyVehicleValueNormalization.NormalizeMonthYear(greenCardFromText);
-        var greenCardTo = LegacyVehicleValueNormalization.NormalizeMonthYear(greenCardToText);
+        var lastTk = VehicleDateService.NormalizeInput(lastTkText, CurrentCulturePreferences);
+        var nextTk = VehicleDateService.NormalizeInput(nextTkText, CurrentCulturePreferences);
+        var greenCardFrom = VehicleDateService.NormalizeInput(greenCardFromText, CurrentCulturePreferences);
+        var greenCardTo = VehicleDateService.NormalizeInput(greenCardToText, CurrentCulturePreferences);
 
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -236,9 +236,7 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        if (LegacyVehicleValueNormalization.TryGetMonthYearOrder(greenCardFrom, out var greenCardFromOrder)
-            && LegacyVehicleValueNormalization.TryGetMonthYearOrder(greenCardTo, out var greenCardToOrder)
-            && greenCardFromOrder > greenCardToOrder)
+        if (VehicleDateService.HasInvalidRange(greenCardFrom, greenCardTo))
         {
             VehicleDetailWorkspace.VehicleEditorStatus = LO("VehicleEditor.Validation.GreenCardRangeInvalid");
             RequestFocus(DesktopFocusTarget.VehicleEditorGreenCardFrom);

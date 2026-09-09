@@ -12,6 +12,26 @@ namespace Vehimap.Tests.Unit;
 public sealed class DesktopPrintableVehicleReportServiceTests
 {
     [Fact]
+    public void Printable_overview_sorts_and_formats_precise_dates_without_rounding_to_month_end()
+    {
+        var localizer = new ResourceAppLocalizer(CultureInfo.GetCultureInfo("en-US"));
+        var service = new DesktopPrintableVehicleReportService(localizer);
+        var data = new VehimapDataSet
+        {
+            Vehicles =
+            [
+                new Vehicle("later", "AAA later", "Osobní vozidla", "", "User model", "", "", "", "", "27.07.2027", "", "27.07.2027"),
+                new Vehicle("earlier", "ZZZ earlier", "Osobní vozidla", "", "User model", "", "", "", "", "03.07.2027", "", "03.07.2027")
+            ]
+        };
+        var html = WebUtility.HtmlDecode(service.BuildHtml(data, new Dictionary<string, VehicleMeta>(), new LegacyTimelineService(localizer), new DateOnly(2027, 7, 1), new DateTime(2027, 7, 1)));
+        Assert.True(html.IndexOf("ZZZ earlier", StringComparison.Ordinal) < html.IndexOf("AAA later", StringComparison.Ordinal));
+        Assert.Contains("<td>7/3/2027</td>", html);
+        Assert.Contains("<td>7/27/2027</td>", html);
+        Assert.DoesNotContain("<td>03.07.2027</td>", html);
+    }
+
+    [Fact]
     public void Build_file_name_should_be_stable_and_html()
     {
         var service = new DesktopPrintableVehicleReportService();
@@ -105,10 +125,10 @@ public sealed class DesktopPrintableVehicleReportServiceTests
         Assert.Contains("Passenger vehicles (1)", decodedHtml);
         Assert.Contains("Normal operation", decodedHtml);
         Assert.Contains("<th>Name</th>", decodedHtml);
-        Assert.Contains("<th>Green card valid to</th>", decodedHtml);
+        Assert.Contains("<th>Vehicle insurance valid to</th>", decodedHtml);
         Assert.Contains("There is no vehicle in this category.", decodedHtml);
         Assert.Contains("Inspection: In 27 days", decodedHtml);
-        Assert.Contains("Green card: In 27 days", decodedHtml);
+        Assert.Contains("Vehicle insurance: In 27 days", decodedHtml);
         Assert.DoesNotContain("Tiskový přehled", decodedHtml);
         Assert.DoesNotContain("Osobní vozidla", decodedHtml);
         Assert.DoesNotContain("Běžný provoz", decodedHtml);

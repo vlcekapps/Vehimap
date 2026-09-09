@@ -113,6 +113,8 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.LastTk}" />
             <TextBox x:Name="VehicleEditorLastTkBox"
                      Text="{Binding VehicleEditorLastTk}"
+                     PlaceholderText="{Binding VehicleEditorDateHelp}"
+                     AutomationProperties.HelpText="{Binding VehicleEditorDateHelp}"
                      AutomationProperties.Name="{i18n:Loc VehicleEditor.LastTk}"
                      AutomationProperties.AutomationId="VehicleEditorLastTkBox" />
           </StackPanel>
@@ -120,6 +122,8 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.NextTk}" />
             <TextBox x:Name="VehicleEditorNextTkBox"
                      Text="{Binding VehicleEditorNextTk}"
+                     PlaceholderText="{Binding VehicleEditorDateHelp}"
+                     AutomationProperties.HelpText="{Binding VehicleEditorDateHelp}"
                      AutomationProperties.Name="{i18n:Loc VehicleEditor.NextTk}"
                      AutomationProperties.AutomationId="VehicleEditorNextTkBox"
                      AutomationProperties.IsRequiredForForm="True" />
@@ -131,6 +135,8 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.GreenCardFrom}" />
             <TextBox x:Name="VehicleEditorGreenCardFromBox"
                      Text="{Binding VehicleEditorGreenCardFrom}"
+                     PlaceholderText="{Binding VehicleEditorDateHelp}"
+                     AutomationProperties.HelpText="{Binding VehicleEditorDateHelp}"
                      AutomationProperties.Name="{i18n:Loc VehicleEditor.GreenCardFrom}"
                      AutomationProperties.AutomationId="VehicleEditorGreenCardFromBox" />
           </StackPanel>
@@ -138,6 +144,8 @@
             <TextBlock FontWeight="SemiBold" Text="{i18n:Loc VehicleEditor.GreenCardTo}" />
             <TextBox x:Name="VehicleEditorGreenCardToBox"
                      Text="{Binding VehicleEditorGreenCardTo}"
+                     PlaceholderText="{Binding VehicleEditorDateHelp}"
+                     AutomationProperties.HelpText="{Binding VehicleEditorDateHelp}"
                      AutomationProperties.Name="{i18n:Loc VehicleEditor.GreenCardTo}"
                      AutomationProperties.AutomationId="VehicleEditorGreenCardToBox" />
           </StackPanel>

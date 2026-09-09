@@ -1946,13 +1946,13 @@ Stav: {5}</value></data>
   <data name="VehicleEditor.Transmission" xml:space="preserve"><value>Převodovka</value></data>
   <data name="VehicleEditor.TransmissionName" xml:space="preserve"><value>Převodovka vozidla</value></data>
   <data name="VehicleEditor.Validation.CategoryRequired" xml:space="preserve"><value>Vozidlo musí mít kategorii.</value></data>
-  <data name="VehicleEditor.Validation.GreenCardFromInvalid" xml:space="preserve"><value>Pole Zelená karta od musí být ve formátu MM/RRRR.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardFromInvalid" xml:space="preserve"><value>Zadejte začátek platnosti zelené karty jako d.m.rrrr nebo dd.mm.rrrr. Starší formát MM/RRRR je také podporován.</value></data>
   <data name="VehicleEditor.Validation.GreenCardRangeInvalid" xml:space="preserve"><value>Pole Zelená karta od nesmí být později než pole Zelená karta do.</value></data>
-  <data name="VehicleEditor.Validation.GreenCardToInvalid" xml:space="preserve"><value>Pole Zelená karta do musí být ve formátu MM/RRRR.</value></data>
-  <data name="VehicleEditor.Validation.LastTkInvalid" xml:space="preserve"><value>Pole Poslední TK musí být ve formátu MM/RRRR.</value></data>
+  <data name="VehicleEditor.Validation.GreenCardToInvalid" xml:space="preserve"><value>Zadejte konec platnosti zelené karty jako d.m.rrrr nebo dd.mm.rrrr. Starší formát MM/RRRR je také podporován.</value></data>
+  <data name="VehicleEditor.Validation.LastTkInvalid" xml:space="preserve"><value>Zadejte datum poslední TK jako d.m.rrrr nebo dd.mm.rrrr. Starší formát MM/RRRR je také podporován.</value></data>
   <data name="VehicleEditor.Validation.MakeModelRequired" xml:space="preserve"><value>Vozidlo musí mít vyplněnou značku a model.</value></data>
   <data name="VehicleEditor.Validation.NameRequired" xml:space="preserve"><value>Vozidlo musí mít název.</value></data>
-  <data name="VehicleEditor.Validation.NextTkRequired" xml:space="preserve"><value>Pole Příští TK je povinné a musí být ve formátu MM/RRRR.</value></data>
+  <data name="VehicleEditor.Validation.NextTkRequired" xml:space="preserve"><value>Datum příští TK je povinné. Zadejte d.m.rrrr nebo dd.mm.rrrr; starší formát MM/RRRR je také podporován.</value></data>
   <data name="VehicleEditor.Validation.YearInvalid" xml:space="preserve"><value>Rok výroby zadejte jako čtyřciferný rok, nebo pole nechte prázdné.</value></data>
   <data name="VehicleEditor.Warning" xml:space="preserve"><value>Změna vozidla zachová související historii, tankování, doklady, připomínky i údržbu.</value></data>
   <data name="VehicleEditor.Year" xml:space="preserve"><value>Rok</value></data>
@@ -2949,4 +2949,7 @@ Navržená akce: {6}</value></data>
   <data name="DataStoreHealth.Report.SchemaMarkerUnsupported" xml:space="preserve"><value>Databáze obsahuje verzi schématu, kterou tato verze Vehimapu nepodporuje. Nepřepisujte ji; použijte kompatibilní verzi aplikace.</value></data>
   <data name="DataStoreHealth.Report.RestorePendingSummary" xml:space="preserve"><value>Přerušená obnova zálohy vyžaduje dokončení zotavení.</value></data>
   <data name="DataStoreHealth.Report.RestorePendingDetail" xml:space="preserve"><value>Před úpravou dat restartujte Vehimap, aby dokončil zotavení. Pokud se nezdaří, zachovejte celou datovou složku včetně .restore-journal.json a import-backups; nemažte ani nenahrazujte jednotlivé databázové soubory.</value></data>
+  <data name="VehicleEditor.DateHelp" xml:space="preserve"><value>Celé datum, např. {0}. Starší měsíc/rok je nadále podporován.</value></data>
+  <data name="Audit.Title.MonthPrecisionVehicleDate" xml:space="preserve"><value>Doplňte přesné datum: {0}</value></data>
+  <data name="Audit.Message.MonthPrecisionVehicleDate" xml:space="preserve"><value>Pole {0} obsahuje pouze měsíc a rok ({1}). V editoru vozidla doplňte den podle dokladu. U upozornění na konec platnosti se měsíc bez dne nadále počítá jako konec měsíce a upozornění může přijít pozdě.</value></data>
 </root>

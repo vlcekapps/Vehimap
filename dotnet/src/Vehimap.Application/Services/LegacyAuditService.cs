@@ -59,7 +59,12 @@ public sealed class LegacyAuditService : IAuditService
                     L("Audit.Message.MissingNextTechnicalInspection")));
             }
 
-            if (HasInvalidGreenCardRange(vehicle))
+            AddMonthPrecisionWarning(items, vehicle, vehicle.LastTk, "VehicleEditor.LastTk", "Audit.Category.TechnicalInspection");
+            AddMonthPrecisionWarning(items, vehicle, vehicle.NextTk, "VehicleEditor.NextTk", "Audit.Category.TechnicalInspection");
+            AddMonthPrecisionWarning(items, vehicle, vehicle.GreenCardFrom, "VehicleEditor.GreenCardFrom", "Audit.Category.GreenCard");
+            AddMonthPrecisionWarning(items, vehicle, vehicle.GreenCardTo, "VehicleEditor.GreenCardTo", "Audit.Category.GreenCard");
+
+            if (VehicleDateService.HasInvalidRange(vehicle.GreenCardFrom, vehicle.GreenCardTo))
             {
                 items.Add(CreateVehicleAudit(
                     AuditSeverity.Error,
@@ -362,11 +367,17 @@ public sealed class LegacyAuditService : IAuditService
         return new AuditItem(severity, category, vehicle.Id, vehicle.Name, EntityVehicle, vehicle.Id, title, message);
     }
 
-    private static bool HasInvalidGreenCardRange(Vehicle vehicle)
+    private void AddMonthPrecisionWarning(List<AuditItem> items, Vehicle vehicle, string value, string fieldKey, string categoryKey)
     {
-        return VehimapValueParser.TryParseMonthYear(vehicle.GreenCardFrom, out var from)
-               && VehimapValueParser.TryParseMonthYear(vehicle.GreenCardTo, out var to)
-               && from > to;
+        if (VehimapValueParser.TryParseMonthYear(value, out _))
+        {
+            items.Add(CreateVehicleAudit(
+                AuditSeverity.Warning,
+                L(categoryKey),
+                vehicle,
+                LF("Audit.Title.MonthPrecisionVehicleDate", L(fieldKey)),
+                LF("Audit.Message.MonthPrecisionVehicleDate", L(fieldKey), value.Trim())));
+        }
     }
 
     private static bool IsVehicleInactive(Vehicle vehicle, IReadOnlyDictionary<string, VehicleMeta> metaByVehicleId)

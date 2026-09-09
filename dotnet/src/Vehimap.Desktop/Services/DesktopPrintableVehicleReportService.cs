@@ -104,7 +104,7 @@ internal sealed class DesktopPrintableVehicleReportService
         return categories;
     }
 
-    private static string BuildCategorySection(
+    private string BuildCategorySection(
         string category,
         VehimapDataSet dataSet,
         IReadOnlyDictionary<string, VehicleMeta> metaByVehicleId,
@@ -155,9 +155,9 @@ internal sealed class DesktopPrintableVehicleReportService
             builder.AppendLine($"        <td>{Html(vehicle.Power)}</td>");
             builder.AppendLine($"        <td>{Html(FormatVehicleState(meta?.State, localizer))}</td>");
             builder.AppendLine($"        <td>{Html(meta?.Tags ?? string.Empty)}</td>");
-            builder.AppendLine($"        <td>{Html(vehicle.LastTk)}</td>");
-            builder.AppendLine($"        <td>{Html(vehicle.NextTk)}</td>");
-            builder.AppendLine($"        <td>{Html(vehicle.GreenCardTo)}</td>");
+            builder.AppendLine($"        <td>{Html(VehicleDateService.FormatForDisplay(vehicle.LastTk, _culturePreferences))}</td>");
+            builder.AppendLine($"        <td>{Html(VehicleDateService.FormatForDisplay(vehicle.NextTk, _culturePreferences))}</td>");
+            builder.AppendLine($"        <td>{Html(VehicleDateService.FormatForDisplay(vehicle.GreenCardTo, _culturePreferences))}</td>");
             builder.AppendLine($"        <td>{Html(BuildPrintableStatusText(timeline, localizer))}</td>");
             builder.AppendLine("      </tr>");
         }
@@ -230,12 +230,11 @@ internal sealed class DesktopPrintableVehicleReportService
 
     private static int BuildDueSortKey(string? dueText)
     {
-        if (!VehimapValueParser.TryParseMonthYear(dueText, out var monthDate))
+        if (!VehicleDateService.TryGetDueDate(dueText, out var dueDate))
         {
             return int.MaxValue;
         }
 
-        var dueDate = new DateOnly(monthDate.Year, monthDate.Month, DateTime.DaysInMonth(monthDate.Year, monthDate.Month));
         return dueDate.DayNumber;
     }
 

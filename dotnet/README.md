@@ -1,5 +1,11 @@
 # Vehimap Developer README
 
+## Přesné Termíny Vozidla
+
+Editor podporuje den, měsíc a rok u poslední/příští TK i platnosti zelené karty od/do. České zadávání přijímá `3.7.2027` i `03.07.2027`, anglické `7/3/2027`, v obou jazycích lze zadat `2027-07-03`. Neexistující dny včetně nepřestupného 29. února se neuloží a fokus zůstane na chybném poli. Zadané přesné termíny používají stejný den v přehledech, oznámeních a ICS exportu.
+
+Staré hodnoty `07/2027` zůstávají s měsíční přesností; aplikace si den nevymýšlí. Audit doporučí doplnění pouze u vyplněných hodnot v tomto starém formátu, ne u prázdných polí nebo úplných dat. Do doplnění dne zůstává původní výpočet konce měsíce, který může upozornit pozdě. EN UI používá `Vehicle insurance`; názvy datových polí a uživatelské texty se nemění. Kontrakt a testy jsou v [I18N.md](docs/I18N.md#vehicle-inspection-and-insurance-dates).
+
 Tento dokument je určený pro vývojáře, testování, release přípravu a technické plánování. Uživatelský úvod k aplikaci je v kořenovém [README.md](../README.md).
 
 Požadované nástroje, instalační příkazy pro Windows/macOS/Linux, volitelné Appium a release nástroje i Android prerequisites jsou v [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md). Základní prostředí lze ověřit bez IDE příkazem `pwsh ./build/Test-DotnetDeveloperEnvironment.ps1` ze složky `dotnet`; Android nástroje přepínačem `-IncludeAndroidTools`.

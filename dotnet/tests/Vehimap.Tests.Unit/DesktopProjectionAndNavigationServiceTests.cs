@@ -172,7 +172,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.DoesNotContain("SPZ", vehicle.AccessibleLabel, StringComparison.Ordinal);
         Assert.DoesNotContain("stav", vehicle.AccessibleLabel, StringComparison.Ordinal);
         Assert.Contains("Testovací vozidlo", vehicle.AccessibleLabel, StringComparison.Ordinal);
-        Assert.Contains("Green card missing", vehicle.StatusSummary, StringComparison.Ordinal);
+        Assert.Contains("Vehicle insurance expiry date missing", vehicle.StatusSummary, StringComparison.Ordinal);
         Assert.DoesNotContain("ZK chybí", vehicle.StatusSummary, StringComparison.Ordinal);
         Assert.Equal("Vehicle list: 1 vehicle.", vehicleList.Summary);
 
@@ -190,9 +190,9 @@ public sealed class DesktopProjectionAndNavigationServiceTests
         Assert.Contains("Tags: veterán; rodina", detail.Overview, StringComparison.Ordinal);
         Assert.Contains("Note: Rodinné auto z garáže", detail.Overview, StringComparison.Ordinal);
         Assert.Contains("Next technical inspection: 08/2026", detail.Dates, StringComparison.Ordinal);
-        Assert.Contains("Green card until: not filled", detail.Dates, StringComparison.Ordinal);
+        Assert.Contains("Vehicle insurance until: not filled", detail.Dates, StringComparison.Ordinal);
         Assert.Contains("Status summary:", detail.Dates, StringComparison.Ordinal);
-        Assert.Contains("Green card missing", detail.Dates, StringComparison.Ordinal);
+        Assert.Contains("Vehicle insurance expiry date missing", detail.Dates, StringComparison.Ordinal);
         Assert.DoesNotContain("Příští TK", detail.Dates, StringComparison.Ordinal);
         Assert.DoesNotContain("Zelená karta", detail.Dates, StringComparison.Ordinal);
         Assert.Contains("Powertrain: Gasoline", detail.Profile, StringComparison.Ordinal);
@@ -251,7 +251,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
                 "05/2026",
                 "Veteran",
                 "Gasoline",
-                "Green card missing");
+                "Vehicle insurance expiry date missing");
             Assert.Contains("license plate No license plate", vehicle.AccessibleLabel, StringComparison.Ordinal);
             Assert.Contains("state Veteran", vehicle.AccessibleLabel, StringComparison.Ordinal);
             Assert.DoesNotContain("SPZ", vehicle.AccessibleLabel, StringComparison.Ordinal);
@@ -926,7 +926,7 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             Assert.Equal("Gasoline", vehicle.Powertrain);
             Assert.Contains("No license plate", vehicle.AccessibleLabel, StringComparison.Ordinal);
             Assert.Contains("Next technical inspection", detail.Dates, StringComparison.Ordinal);
-            Assert.Contains("Green card", detail.Dates, StringComparison.Ordinal);
+            Assert.Contains("Vehicle insurance", detail.Dates, StringComparison.Ordinal);
             Assert.Contains("Powertrain: Gasoline", detail.Profile, StringComparison.Ordinal);
             Assert.Contains("History", detail.EvidenceSummaries.Select(item => item.Title));
             Assert.Contains("Fuel", detail.EvidenceSummaries.Select(item => item.Title));
@@ -938,8 +938,8 @@ public sealed class DesktopProjectionAndNavigationServiceTests
             Assert.Equal("Service document", records.Items.Single().RecordType);
             Assert.Equal("Managed copy", records.Items.Single().AttachmentMode);
             Assert.Equal("File available", records.Items.Single().AttachmentState);
-            Assert.Contains(timeline.Items, item => item.Title.Contains("Green card end", StringComparison.Ordinal));
-            Assert.Contains(dashboard.Items, item => item.Title.Contains("Green card end", StringComparison.Ordinal));
+            Assert.Contains(timeline.Items, item => item.Title.Contains("Vehicle insurance expiry", StringComparison.Ordinal));
+            Assert.Contains(dashboard.Items, item => item.Title.Contains("Vehicle insurance expiry", StringComparison.Ordinal));
             Assert.Contains("Warning", projectionService.BuildAuditItems(audit).Select(item => item.Severity));
             Assert.Contains("$", projectionService.BuildCostSummary(costSummary), StringComparison.Ordinal);
             Assert.Equal("Passenger vehicles", serviceBook.VehicleCategory);

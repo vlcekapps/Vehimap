@@ -627,7 +627,7 @@ public sealed class MainWindowViewModelVehicleListAndQuickActionsTests
             Settings = BuildSettings(),
             Vehicles =
             [
-                new Vehicle("veh_quiet", "Klidné auto", "Osobní vozidla", "", "Škoda Octavia", "1AB2345", "2024", "110", "", "12/2099", "01/2099", "12/2099")
+                new Vehicle("veh_quiet", "Klidné auto", "Osobní vozidla", "", "Škoda Octavia", "1AB2345", "2024", "110", "", "31.12.2099", "01.01.2099", "31.12.2099")
             ]
         };
     }

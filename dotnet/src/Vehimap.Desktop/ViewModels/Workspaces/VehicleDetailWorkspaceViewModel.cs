@@ -45,6 +45,8 @@ public sealed class VehicleDetailWorkspaceViewModel : WorkspaceViewModelBase
 
     public string WindowTitle => Root.VehicleDetailWindowTitle;
 
+    public string VehicleEditorDateHelp => LF("VehicleEditor.DateHelp", Root.CurrentDateExample);
+
     internal AppCulturePreferences CurrentCulturePreferences => Root.CurrentCulturePreferences;
 
     internal AppUnitPreferences CurrentUnitPreferences => Root.CurrentUnitPreferences;
